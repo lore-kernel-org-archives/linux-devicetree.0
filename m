@@ -1,69 +1,195 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
-Date: Tue, 20 May 2014 17:42:23 -0600
-Message-ID: <537BE85F.2060906@wwwdotorg.org>
-References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com> <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
+Date: Tue, 20 May 2014 16:54:29 -0700
+Message-ID: <CAL85gmDjVszNd3TB51BGa+78wEEZmJfBOLNKOpTEvMTGU2VdBA@mail.gmail.com>
+References: <1400263432-922-1-git-send-email-fkan@apm.com>
+ <1400263432-922-2-git-send-email-fkan@apm.com>
+ <CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alexandre Courbot <gnurou@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, patches <patches@apm.com>, Will Deacon <will.deacon@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2014 05:28 PM, Dylan Reid wrote:
-> On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->> On 05/20/2014 02:37 PM, Dylan Reid wrote:
->>> On Tue, May 20, 2014 at 11:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> On 05/20/2014 12:24 PM, Stephen Warren wrote:
->>>>> On 05/19/2014 08:35 PM, Dylan Reid wrote:
->>>>>> Add a device node for the HDA controller found on Tegra124.
->> ...
->>>> Even after fixing that, I can't play audio on Venice2:
->>>>
->>>> root@localhost:~# speaker-test -Dhw:0,3 -c 2
->>>>
->>>> speaker-test 1.0.27.1
->>>>
->>>> Playback device is hw:0,3
->>>> Stream parameters are 48000Hz, S16_LE, 2 channels
->>>> Using 16 octaves of pink noise
->>>> Rate set to 48000Hz (requested 48000Hz)
->>>> Buffer size range from 64 to 16384
->>>> Period size range from 32 to 8192
->>>> Using max buffer size 16384
->>>> Periods = 4
->>>> was set period_size = 4096
->>>> was set buffer_size = 16384
->>>>  0 - Front Left
->>>> Write error: -32,Broken pipe
->>>> Write error: -32,Broken pipe
->>>> Write error: -32,Broken pipe
->>>> ^C 1 - Front Right
->>>> Time per period = 1.799791
->>>>
->>>
->>> Thanks for checking Stephen.  I'll fix the reset name.
->>>
->>> This is the state of the tree I used when I tested on Venice2 just now:
->>> * ae57dbf - (HEAD) ARM: tegra: venice2 - Enable HDA (2 minutes ago)
->>> * 6224524 - ARM: tegra: Add Tegra124 HDA support (2 minutes ago)
->>> * 468ca57 - ALSA: hda - Add driver for Tegra SoC HDA (2 minutes ago)
->>> * 928099e - ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support (2 minutes ago)
->>> * 701eac4 - clk: tegra124: Enable hda to hdmi clocks (3 minutes ago)
->>
->> Ah, I was missing that clock patch. Hopefully Peter will pick it up for
->> the Tegra clock tree soon.
->>
->> Now I have the same results as Thierry; speaker-test looks like it
->> should be working, yet I don't hear any audio from the monitor. I know
->> the monitor works, since I've used it extensively for testing GeForce
->> GPU HDMI audio.
-> 
-> Probably a silly question: Is it un-muted?
-> amixer -c0 cset name='IEC958 Playback Switch' on
+> +static void xgene_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +{
+> +       struct xgene_gpio_bank *bank =
+> +                       container_of(gc, struct xgene_gpio_bank, chip);
+> +       unsigned long flags;
+> +       u32 data;
+> +
+> +       spin_lock_irqsave(&bank->lock, flags);
+> +
+> +       data = ioread32(bank->set_dr);
+> +       data = val ? data | GPIO_SET_MASK(gpio) : data & ~GPIO_SET_MASK(gpio);
 
-Yes (well I used alsamixer interactively, but it's the same thing, I
-believe)
+>Couldn't you use set_bit() / clear_bit() instead here?
+Set_bit/clear_bit seems a bit heavy, I can use the non atomic methods
+of _set_bit/clear_bit
+if you agree? In which case I will rewrite all the other method in
+likewise fashion.
+
+
+>> +       bank = &gpio->banks[offs];
+>> +       bank->gpio = gpio;
+>> +       spin_lock_init(&bank->lock);
+>> +
+>> +       if (of_property_read_u32(bank_np, "ngpios", &ngpio))
+>> +               ngpio = 16;
+>
+> Here I think you want to distinguish between "property not defined"
+> (-EINVAL) and "property has no value" (-ENODATA) and other possible
+> errors. In the later cases you will want to signal the error and
+> return from here.
+
+I kinda messed up here a bit, I am trying to support ACPI booting but other
+properties are also affected. I will rewrite this part so minimum of_ access
+methods are required.
+
+
+>
+>> +
+>> +       if ((ngpio > 16) || (ngpio < 1)) {
+>> +               dev_info(gpio->dev, "Incorrect number of gpio specified: %s\n",
+>> +                        bank_np->full_name);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       bank->data = gpio->regs + GPIO_DATA + (bank_idx * GPIO_DATA_OFFSET);
+>> +       bank->od = gpio->regs + GPIO_OD + (bank_idx * GPIO_OD_OFFSET);
+>> +       bank->mux = gpio->regs + GPIO_MUX + (bank_idx * GPIO_MUX_OFFSET);
+>> +       bank->set_dr = gpio->regs + GPIO_SET_DR
+>> +                               + (bank_idx * GPIO_SET_DR_OFFSET);
+>> +
+>> +       bank->chip.direction_input = xgene_gpio_dir_in;
+>> +       bank->chip.direction_output = xgene_gpio_dir_out;
+>> +       bank->chip.get = xgene_gpio_get;
+>> +       bank->chip.set = xgene_gpio_set;
+>> +
+>> +       if (!of_property_read_u32(bank_np, "odcfg", &odcfg))
+>> +               iowrite32(odcfg, bank->od);
+>> +
+>> +       bank->chip.ngpio = ngpio;
+>> +       bank->chip.of_node = bank_np;
+>> +       bank->chip.base = bank_idx * ngpio;
+>> +
+>> +       err = gpiochip_add(&bank->chip);
+>> +       if (err)
+>> +               dev_err(gpio->dev, "failed to register gpiochip for %s\n",
+>> +                       bank_np->full_name);
+>> +
+>> +       return err;
+>> +}
+>> +
+>> +static int xgene_gpio_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device_node *np = pdev->dev.of_node;
+>> +       struct resource *res;
+>> +       struct xgene_gpio *gpio;
+>> +       int err;
+>> +       unsigned int offs = 0;
+>> +
+>> +       gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>> +       if (!gpio)
+>> +               return -ENOMEM;
+>> +       gpio->dev = &pdev->dev;
+>> +
+>> +       gpio->nr_banks = of_get_child_count(pdev->dev.of_node);
+>> +       if (!gpio->nr_banks) {
+>> +               err = -EINVAL;
+>> +               goto err;
+>> +       }
+>
+> Might be worth checking whether nr_banks >= XGENE_GPIO_MAX_PORTS and
+> return an error here.
+>
+>> +
+>> +       gpio->banks = devm_kzalloc(&pdev->dev, gpio->nr_banks *
+>> +                                  sizeof(*gpio->banks), GFP_KERNEL);
+>> +       if (!gpio->banks) {
+>> +               err = -ENOMEM;
+>> +               goto err;
+>> +       }
+>
+> I'm fine with printing the error status the way you do, but could you
+> also do the same for the first kzalloc too?
+>
+> Or maybe you could put your banks member at the end of the xgene_gpio
+> struct as a flexible array member and perform only one kzalloc of size
+> (sizeof(*gpio) + (sizeof(*gpio->banks) * gpio->nr_banks))?
+>
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       gpio->regs = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(gpio->regs)) {
+>> +               err = PTR_ERR(gpio->regs);
+>> +               goto err;
+>> +       }
+>> +
+>> +       for_each_child_of_node(pdev->dev.of_node, np) {
+>> +               err = xgene_gpio_add_bank(gpio, np, offs++);
+>> +               if (err)
+>> +                       goto err;
+>> +       }
+>> +
+>> +       platform_set_drvdata(pdev, gpio);
+>> +
+>> +       dev_info(&pdev->dev, "X-Gene GPIO driver registered\n");
+>> +       return 0;
+>> +err:
+>> +       dev_err(&pdev->dev, "X-Gene GPIO driver registration failed\n");
+>> +       return err;
+>> +}
+>> +
+>> +static const struct of_device_id xgene_gpio_of_match[] = {
+>> +       { .compatible = "apm,xgene-gpio", },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, xgene_gpio_of_match);
+>> +
+>> +static struct platform_driver xgene_gpio_driver = {
+>> +       .driver = {
+>> +               .name = "xgene-gpio",
+>> +               .owner = THIS_MODULE,
+>> +               .of_match_table = xgene_gpio_of_match,
+>> +       },
+>> +       .probe = xgene_gpio_probe,
+>> +};
+>> +
+>> +static int __init xgene_gpio_init(void)
+>> +{
+>> +       return platform_driver_register(&xgene_gpio_driver);
+>> +}
+>> +postcore_initcall(xgene_gpio_init);
+>> +
+>> +MODULE_AUTHOR("AppliedMicro");
+>> +MODULE_DESCRIPTION("APM X-Gene GPIO driver");
+>> +MODULE_LICENSE("GPL");
+>> --
+>> 1.9.1
+>>
+>
+> Globally the driver looks well-written, but I don't understand the
+> need to have one gpio_chip per bank. Could you elaborate on the
+> reasons for this design?
+I see each bank as separate gpio chip. It is a simple way to
+abstract the banks since they can operate independently. It also
+provided me a way to fix the sysfs gpio base number, regardless if
+a particular bank node is pulled out. This is also done in similar way
+in some other gpio drivers such as the dwapb gpio driver.
+
+
+>
+> Alex.
