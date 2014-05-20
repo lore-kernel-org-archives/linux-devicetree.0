@@ -1,80 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] ASoC: samsung: Add 'mclk' handling for
- Snow sound-card driver
-Date: Tue, 20 May 2014 12:16:00 +0100
-Message-ID: <20140520111600.GL12304@sirena.org.uk>
-References: <1400559942-5666-1-git-send-email-tushar.behera@linaro.org>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC V6 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Tue, 20 May 2014 13:49:39 +0200
+Message-ID: <537B4153.8030203@samsung.com>
+References: <1400520171-6698-1-git-send-email-s.nawrocki@samsung.com>
+ <1400520171-6698-3-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1722724084882285034=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1400559942-5666-1-git-send-email-tushar.behera@linaro.org>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: dianders@chromium.org, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-doc@vger.kernel.org, sbkim73@samsung.com, t.figa@samsung.com, rdunlap@infradead.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1400520171-6698-3-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 19/05/14 19:22, Sylwester Nawrocki wrote:
+> @@ -2620,7 +2639,10 @@ void __init of_clk_init(const struct of_device_id *matches)
+>  		list_for_each_entry_safe(clk_provider, next,
+>  					&clk_provider_list, node) {
+>  			if (force || parent_ready(clk_provider->np)) {
+> +
+>  				clk_provider->clk_init_cb(clk_provider->np);
+> +				of_clk_set_defaults(np, true);
 
---===============1722724084882285034==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="P/co8ZP+C4wcN8Yg"
-Content-Disposition: inline
+There is an error in this patch, this line should read:
 
++				of_clk_set_defaults(clk_provider->np, true);
 
---P/co8ZP+C4wcN8Yg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+>  				list_del(&clk_provider->node);
+>  				kfree(clk_provider);
+>  				is_init_done = true;
 
-On Tue, May 20, 2014 at 09:55:42AM +0530, Tushar Behera wrote:
-> For audio to work on Snow board, we need the codec master clock 'mclk'
-> to be properly configured.
->=20
-> Currently XCLKOUT is configured as 'mclk' for codec chip and it is
-> required to be clocked at 24MHz for the codec to work properly.
->=20
-> Add appropriate clock handling within Snow sound-card driver to set
-> 'mclk' to operate at 24MHz.
-
-The clock here is connected to the CODEC on the board so it should be
-connected to the CODEC in the device tree too.
-
---P/co8ZP+C4wcN8Yg
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTezltAAoJELSic+t+oim9pTsP/j2J/0qbHTLC/QBWUCY5IppL
-9OWrNQUz4XE3lAUVM0yRuVTt90+EdgM21A1qTq2ojz/MZXdST6udFkRBw6YRJKNL
-xG0antQhhd1ez05mg78bkK2qzGb/oCGUQgJfPQoFhTlb471GnnfmR3K5TR98I08D
-1IyA3SLq6JcRA0bBIWED1cGRw0T639QV3RGuTEbHUQ6ZDG5Nl8CwI8RdgPWxzkn2
-xcTaMQa0cMDozcxz38cuqIWnO+jwv30fPPxn7CnzF+HE/qzKMj8PAdlc2WUQqNks
-6YCbkM4N8EbodVQ5CUJ0/EmuZTA9lHazKsUF01eVFayM/QYcdZXoN7+Pqo/B+KSX
-GMsYggkduK3A/vj5YbdtjDBGI+Hbt0wEQmuyPE3SCCbUKdrmGlvUNthlwmdMLpYP
-QmKczhQuIJZSYy7QOf+jTi3v62CzqURBXr/p6qiNXwrVT7lGUdlUHug5i2igaCkO
-VE3wQx5y5oIStUqOzdzi5Gr2PU6Vs7x4l/hMP0STRVlismD4AxSdDbXO8edF8BJ8
-4Lr80mOIc7A5YSngWEbyyEydIcoRSKEmERmNF4R4/QW1Ja0emwgiHpLKRBQkrPE9
-Vbq9mFUfJojXKFU2ZBb8rYKXznl737Nmm9XFsg2OcodtxShGo0TkSAi2jp9/97vF
-fc9nkwdtSiXdRsD/cmOi
-=z2EL
------END PGP SIGNATURE-----
-
---P/co8ZP+C4wcN8Yg--
-
---===============1722724084882285034==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1722724084882285034==--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
