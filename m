@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 03/10] irqchip: versatile-fpga: add pass-thru enable support
-Date: Tue, 20 May 2014 16:09:29 -0500
-Message-ID: <1400620176-7239-4-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 04/10] irqchip: versatile-fpga: add DT init
+Date: Tue, 20 May 2014 16:09:30 -0500
+Message-ID: <1400620176-7239-5-git-send-email-robherring2@gmail.com>
 References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1400620176-7239-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,47 +12,34 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Set the PIC_ENABLES register when the passthru-mask property is present.
-This enables interrupts on the secondary controller to be passed thru
-directly to the primary controller.
+Add IRQCHIP_DECLARE call for the versatile-fpga interrupt controller so
+that initialization from DT will work.
 
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 ---
- drivers/irqchip/irq-versatile-fpga.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/irqchip/irq-versatile-fpga.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 3ae2bb8..328440b 100644
+index 328440b..11ab10d 100644
 --- a/drivers/irqchip/irq-versatile-fpga.c
 +++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -26,6 +26,8 @@
- #define FIQ_ENABLE_SET		0x28
- #define FIQ_ENABLE_CLEAR	0x2C
+@@ -14,6 +14,8 @@
+ #include <asm/exception.h>
+ #include <asm/mach/irq.h>
  
-+#define PIC_ENABLES             0x20	/* set interrupt pass through bits */
++#include "irqchip.h"
 +
- /**
-  * struct fpga_irq_data - irq data container for the FPGA IRQ controller
-  * @base: memory offset in virtual memory
-@@ -185,6 +187,7 @@ int __init fpga_irq_of_init(struct device_node *node,
- 	void __iomem *base;
- 	u32 clear_mask;
- 	u32 valid_mask;
-+	u32 passthru_mask;
- 	int parent_irq;
+ #define IRQ_STATUS		0x00
+ #define IRQ_RAW_STATUS		0x04
+ #define IRQ_ENABLE_SET		0x08
+@@ -217,4 +219,5 @@ int __init fpga_irq_of_init(struct device_node *node,
  
- 	if (WARN_ON(!node))
-@@ -209,6 +212,9 @@ int __init fpga_irq_of_init(struct device_node *node,
- 	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
- 	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
- 
-+	if (!of_property_read_u32(node, "passthru-mask", &passthru_mask))
-+		writel(passthru_mask, base + PIC_ENABLES);
-+
  	return 0;
  }
++IRQCHIP_DECLARE(arm_fpga, "arm,versatile-sic", fpga_irq_of_init);
  #endif
 -- 
 1.9.1
