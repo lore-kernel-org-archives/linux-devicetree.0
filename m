@@ -1,67 +1,36 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net-next 4/9] net: systemport: use the new fixed PHY helpers
-Date: Mon, 19 May 2014 17:56:19 -0700
-Message-ID: <1400547384-11363-5-git-send-email-f.fainelli@gmail.com>
-References: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: netdev@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, Florian Fainelli <f.fainelli@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, davem@davemlof.net, Vitaly Bordug <vbordug@ru.mvista.com>, Kumar Gala <galak@codeaurora.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>, David S.
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 2/2] ARM: tegra: venice2 - Enable HDA
+Date: Mon, 19 May 2014 19:35:46 -0700
+Message-ID: <1400553346-23238-2-git-send-email-dgreid@chromium.org>
+References: <1400553346-23238-1-git-send-email-dgreid@chromium.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400553346-23238-1-git-send-email-dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-b2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluaygpIGlzIGJlY29taW5nIG9ic29sZXRlLCBhbmQgYWxz
-byByZXF1aXJlZApwbGF0Zm9ybSBjb2RlIHRvIHJlZ2lzdGVyIHRoZSBmaXhlZCBQSFlzIGF0IHRo
-ZSBzcGVjaWZpZWQgYWRkcmVzc2VzIGZvcgp0aG9zZSB0byBiZSB1c2FibGUuIEdldCByaWQgb2Yg
-aXQgYW5kIHVzZSB0aGUgbmV3IG9mX3BoeV9pc19maXhlZF9saW5rKCkKcGx1cyBvZl9waHlfcmVn
-aXN0ZXJfZml4ZWRfbGluaygpIGhlbHBlcnMgdG8gdHJhbnNpdGlvbiBvdmVyIHRoZSBuZXcKc2No
-ZW1lLgoKU2lnbmVkLW9mZi1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5j
-b20+Ci0tLQogZHJpdmVycy9uZXQvZXRoZXJuZXQvYnJvYWRjb20vYmNtc3lzcG9ydC5jIHwgMTcg
-KysrKysrKysrKysrKysrLS0KIGRyaXZlcnMvbmV0L2V0aGVybmV0L2Jyb2FkY29tL2JjbXN5c3Bv
-cnQuaCB8ICAxICsKIDIgZmlsZXMgY2hhbmdlZCwgMTYgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlv
-bnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9ldGhlcm5ldC9icm9hZGNvbS9iY21zeXNw
-b3J0LmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9icm9hZGNvbS9iY21zeXNwb3J0LmMKaW5kZXgg
-ZDQwYzViOTY5ZTllLi5kYzcwOGE4ODhmODAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvbmV0L2V0aGVy
-bmV0L2Jyb2FkY29tL2JjbXN5c3BvcnQuYworKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9icm9h
-ZGNvbS9iY21zeXNwb3J0LmMKQEAgLTEzMjcsOCArMTMyNyw4IEBAIHN0YXRpYyBpbnQgYmNtX3N5
-c3BvcnRfb3BlbihzdHJ1Y3QgbmV0X2RldmljZSAqZGV2KQogCS8qIFJlYWQgQ1JDIGZvcndhcmQg
-Ki8KIAlwcml2LT5jcmNfZndkID0gISEodW1hY19yZWFkbChwcml2LCBVTUFDX0NNRCkgJiBDTURf
-Q1JDX0ZXRCk7CiAKLQlwcml2LT5waHlkZXYgPSBvZl9waHlfY29ubmVjdF9maXhlZF9saW5rKGRl
-diwgYmNtX3N5c3BvcnRfYWRqX2xpbmssCi0JCQkJCQkJcHJpdi0+cGh5X2ludGVyZmFjZSk7CisJ
-cHJpdi0+cGh5ZGV2ID0gb2ZfcGh5X2Nvbm5lY3QoZGV2LCBwcml2LT5waHlfZG4sIGJjbV9zeXNw
-b3J0X2Fkal9saW5rLAorCQkJCQkwLCBwcml2LT5waHlfaW50ZXJmYWNlKTsKIAlpZiAoIXByaXYt
-PnBoeWRldikgewogCQluZXRkZXZfZXJyKGRldiwgImNvdWxkIG5vdCBhdHRhY2ggdG8gUEhZXG4i
-KTsKIAkJcmV0dXJuIC1FTk9ERVY7CkBAIC0xNTUxLDYgKzE1NTEsMTkgQEAgc3RhdGljIGludCBi
-Y21fc3lzcG9ydF9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2KQogCWlmIChwcml2
-LT5waHlfaW50ZXJmYWNlIDwgMCkKIAkJcHJpdi0+cGh5X2ludGVyZmFjZSA9IFBIWV9JTlRFUkZB
-Q0VfTU9ERV9HTUlJOwogCisJLyogSW4gdGhlIGNhc2Ugb2YgYSBmaXhlZCBQSFksIHRoZSBEVCBu
-b2RlIGFzc29jaWF0ZWQKKwkgKiB0byB0aGUgUEhZIGlzIHRoZSBFdGhlcm5ldCBNQUMgRFQgbm9k
-ZS4KKwkgKi8KKwlpZiAob2ZfcGh5X2lzX2ZpeGVkX2xpbmsoZG4pKSB7CisJCXJldCA9IG9mX3Bo
-eV9yZWdpc3Rlcl9maXhlZF9saW5rKGRuKTsKKwkJaWYgKHJldCkgeworCQkJZGV2X2VycigmcGRl
-di0+ZGV2LCAiZmFpbGVkIHRvIHJlZ2lzdGVyIGZpeGVkIFBIWVxuIik7CisJCQlnb3RvIGVycjsK
-KwkJfQorCisJCXByaXYtPnBoeV9kbiA9IGRuOworCX0KKwogCS8qIEluaXRpYWxpemUgbmV0ZGV2
-aWNlIG1lbWJlcnMgKi8KIAltYWNhZGRyID0gb2ZfZ2V0X21hY19hZGRyZXNzKGRuKTsKIAlpZiAo
-IW1hY2FkZHIgfHwgIWlzX3ZhbGlkX2V0aGVyX2FkZHIobWFjYWRkcikpIHsKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvbmV0L2V0aGVybmV0L2Jyb2FkY29tL2JjbXN5c3BvcnQuaCBiL2RyaXZlcnMvbmV0
-L2V0aGVybmV0L2Jyb2FkY29tL2JjbXN5c3BvcnQuaAppbmRleCBhYmRlYjYyNjE2ZGYuLjczZmQw
-NGE5NDc5NyAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvYnJvYWRjb20vYmNtc3lz
-cG9ydC5oCisrKyBiL2RyaXZlcnMvbmV0L2V0aGVybmV0L2Jyb2FkY29tL2JjbXN5c3BvcnQuaApA
-QCAtNjU2LDYgKzY1Niw3IEBAIHN0cnVjdCBiY21fc3lzcG9ydF9wcml2IHsKIAl1bnNpZ25lZCBp
-bnQJCXJ4X2NfaW5kZXg7CiAKIAkvKiBQSFkgZGV2aWNlICovCisJc3RydWN0IGRldmljZV9ub2Rl
-CSpwaHlfZG47CiAJc3RydWN0IHBoeV9kZXZpY2UJKnBoeWRldjsKIAlwaHlfaW50ZXJmYWNlX3QJ
-CXBoeV9pbnRlcmZhY2U7CiAJaW50CQkJb2xkX3BhdXNlOwotLSAKMS45LjEKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5n
-IGxpc3QKTGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMu
-b3JnL2xpc3RpbmZvL2xpbnV4cHBjLWRldg==
+Turn on the HDA controller in Venice2, it is used for HDMI audio.
+
+Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra124-venice2.dts | 4 ++++
+ 1 file changed, 4 insertions(+)
+
+diff --git a/arch/arm/boot/dts/tegra124-venice2.dts b/arch/arm/boot/dts/tegra124-venice2.dts
+index f0bb842..f2a69cf 100644
+--- a/arch/arm/boot/dts/tegra124-venice2.dts
++++ b/arch/arm/boot/dts/tegra124-venice2.dts
+@@ -940,6 +940,10 @@
+ 		nvidia,sys-clock-req-active-high;
+ 	};
+ 
++	hda@0,70030000 {
++		status = "okay";
++	};
++
+ 	sdhci@0,700b0400 {
+ 		cd-gpios = <&gpio TEGRA_GPIO(V, 2) GPIO_ACTIVE_HIGH>;
+ 		power-gpios = <&gpio TEGRA_GPIO(R, 0) GPIO_ACTIVE_HIGH>;
+-- 
+1.8.1.3.605.g02339dd
