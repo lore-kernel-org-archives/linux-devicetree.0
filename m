@@ -1,88 +1,67 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH 2/3] usb: host: xhci-plat: add support for the R-Car H2
- and M2 xHCI controllers
-Date: Tue, 20 May 2014 18:35:27 +0900
-Message-ID: <537B21DF.4000202@renesas.com>
-References: <5379D805.3070002@renesas.com> <5379F5BC.6010204@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5379F5BC.6010204@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH v6 0/4] Add STiH407 SoC and reference board support
+Date: Tue, 20 May 2014 11:46:28 +0200
+Message-ID: <1400579192-17620-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This series adds basic support to the STMicroelectronics STiH407 SoC and its
+B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
+STB market.
 
-(2014/05/19 21:14), Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 19-05-2014 14:08, Yoshihiro Shimoda wrote:
-< snip >
->>   static int xhci_plat_start(struct usb_hcd *hcd)
->>   {
->> +	struct device_node *of_node = hcd->self.controller->of_node;
->> +
->> +	if (of_device_is_compatible(of_node, "renesas,r8a7790-xhci") ||
->> +	    of_device_is_compatible(of_node, "renesas,r8a7790-xhci"))
-> 
->     Perhaps "renesas,r8a7791-xhci"?
+Changes since v5:
+-----------------
+   - Sort STi boards in DTS'es Makefile
+   - Re-order compatibles in STi boards from specific to generic
+   - Only contains DT patches, other patches being merged
 
-Yes. I will correct this.
+Changes since v4:
+-----------------
+    - remove patches already present in v3.15 (pinctrl)
+    - rebase on top of v3.15-rc2
 
-< snip >
->> +/* FW Download Control & Status */
->> +#define RCAR_USB3_DL_CTRL		0x250
-> 
->     Already #define'd.
+Changes since v3:
+-----------------
+    - Removed SOC_STIH407 as unused for now
+    - Cosmetic changes in DT
+    - Added new lines in pinctrl-st around if:s
+    - Use ARRAY_SIZE instead of raw values
 
-Thank you for the point! I will remove this.
+Changes since v2:
+-----------------
+    - Reordered the pinctrl patches
+    - Moved stih407_flashdata to stih407 pinctrl patch
 
->> +/* USB3.0 Configuraion */
-> 
->     Configuration.
+Changes since v1:
+-----------------
+    - Changed patch 2 commit title
+    - Rebased pinctrl patches to linux-pinctrl/devel
+    - Rebased ARM patches to arm_soc/for-next
 
-I will correct this.
+Maxime Coquelin (4):
+  ARM: dts: Sort STi boards in Makefile
+  ARM: dts: Fix STi boards compatibles
+  ARM: dts: Add STiH407 SoC support
+  ARM: dts: STiH407: Add B2120 board support
 
->> +int xhci_rcar_start(struct usb_hcd *hcd)
->> +{
->> +	if (hcd->regs != NULL) {
->> +		u32 temp;
-> 
->     Need empty line here... and should perhaps return error if hcd->regs NULL?
-
-I will add empty line.
-If this function returns error and xhci_plat_start() also returns error,
-the xhci driver was not able to work.
-So, I will change the prototype of this function to "void".
-
-Best regards,
-Yoshihiro Shimoda
-
->> +		/* Interrupt Enable */
->> +		temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
->> +		temp |= RCAR_USB3_INT_ENA_VAL;
->> +		writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
->> +		/* LCLK Select */
->> +		writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
->> +		/* USB3.0 Configuration */
->> +		writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
->> +		writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
->> +		writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
->> +		/* USB3.0 Polariy */
->> +		writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
->> +		writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
->> +	}
->> +
->> +	return 0;
->> +}
-> [...]
-> 
-> WBR, Sergei
-> 
+ arch/arm/boot/dts/Makefile             |   5 +-
+ arch/arm/boot/dts/stih407-b2120.dts    |  78 +++++
+ arch/arm/boot/dts/stih407-clock.dtsi   |  40 +++
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 615 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stih407.dtsi         | 263 ++++++++++++++
+ arch/arm/boot/dts/stih415-b2000.dts    |   2 +-
+ arch/arm/boot/dts/stih415-b2020.dts    |   2 +-
+ arch/arm/boot/dts/stih416-b2000.dts    |   3 +-
+ arch/arm/boot/dts/stih416-b2020.dts    |   3 +-
+ 9 files changed, 1003 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
+ create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407.dtsi
 
 -- 
-Yoshihiro Shimoda
-EC No.
+1.9.1
+
