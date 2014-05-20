@@ -1,126 +1,85 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v4 6/6] ARM: dts: STiH407: Add B2120 board support
-Date: Mon, 19 May 2014 23:18:03 -0700
-Message-ID: <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
-	<1394614210-15698-7-git-send-email-maxime.coquelin@st.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1394614210-15698-7-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-qxv4g6HH51o@public.gmane.org>, Stuart Menefy <stuart.menefy-qxv4g6HH51o@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCHv5 1/4] ARM: dts: exynos4: add PMU syscon node
+Date: Tue, 20 May 2014 11:06:27 +0900
+Message-ID: <1400551590-7772-2-git-send-email-chanho61.park@samsung.com>
+References: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patch adds a PMU(Power Management Unit) syscon node. This
+should be required for USB Phy syscon regmap I/F.
 
-Just a quick drive-by review since I was looking at these patches in
-the pull request you sent.
+Cc: Kamil Debski <k.debski@samsung.com>
+Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+---
+ Documentation/devicetree/bindings/arm/samsung/pmu.txt | 3 +++
+ arch/arm/boot/dts/exynos4.dtsi                        | 5 +++++
+ arch/arm/boot/dts/exynos4412.dtsi                     | 4 ++++
+ arch/arm/boot/dts/exynos4x12.dtsi                     | 4 ++++
+ 4 files changed, 16 insertions(+)
 
-
-
-On Wed, Mar 12, 2014 at 1:50 AM, Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org> wrote:
-> B2120 HDK is the reference board for STiH407 SoC.
-> It has the following characteristics:
->  - 1GB DDR3
->  - 8GB eMMC / SD-Card slot
->  - 32MB NOR Flash
->  - 1 x Gbit Ethernet
->  - 1 x USB 3.0 port
->  - 1 x Mini-PCIe
->  - 1 x SATA
->  - 1 x HDMI output
->  - 1 x HDMI input
->  - 1 x SPDIF
->
-> This patch only introduces basic functionnalities, such as I2C and UART.
->
-> Acked-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-> ---
->  arch/arm/boot/dts/Makefile          |  3 +-
->  arch/arm/boot/dts/stih407-b2120.dts | 78 +++++++++++++++++++++++++++++++++++++
->  2 files changed, 80 insertions(+), 1 deletion(-)
->  create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 12455cf..f760a88 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -317,7 +317,8 @@ dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
->  dtb-$(CONFIG_ARCH_STI)+= stih415-b2000.dtb \
->         stih416-b2000.dtb \
->         stih415-b2020.dtb \
-> -       stih416-b2020.dtb
-> +       stih416-b2020.dtb \
-> +       stih407-b2120.dtb
-
-These should be in alphanumerical order. 407 comes before 415. You've
-been out of order with others as well.
-
->  dtb-$(CONFIG_ARCH_SUNXI) += \
->         sun4i-a10-a1000.dtb \
->         sun4i-a10-cubieboard.dtb \
-> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
-> new file mode 100644
-> index 0000000..9c97da4
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/stih407-b2120.dts
-> @@ -0,0 +1,78 @@
-> +/*
-> + * Copyright (C) 2014 STMicroelectronics (R&D) Limited.
-> + * Author: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +/dts-v1/;
-> +#include "stih407.dtsi"
-> +/ {
-> +       model = "STiH407 B2120";
-> +       compatible = "st,stih407", "st,stih407-b2120";
-
-This should go from specific to generic, so the order needs to be the other way.
-
-Please check other dts files for the same (I didn't).
-
-> +
-> +       chosen {
-> +               bootargs = "console=ttyAS0,115200";
-> +               linux,stdout-path = &sbc_serial0;
-> +       };
-> +
-> +       memory {
-> +               device_type = "memory";
-> +               reg = <0x40000000 0x80000000>;
-> +       };
-> +
-> +       aliases {
-> +               ttyAS0 = &sbc_serial0;
-> +       };
-> +
-> +       soc {
-> +               sbc_serial0: serial@9530000 {
-> +                       status = "okay";
-> +               };
-
-You might want to consider reference-based syntax here instead, so you
-don't have to mimic the hierarchy. That'd be (at the root level of the
-file, below this secion:
-
-&sbc_serial0: {
-        status = "okay";
-};
-
-Same for others.
-
-
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+index f1f1552..b562634 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+@@ -2,6 +2,9 @@ SAMSUNG Exynos SoC series PMU Registers
+ 
+ Properties:
+  - compatible : should contain two values. First value must be one from following list:
++		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
++		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
++		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+ 		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+ 		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+ 		second value must be always "syscon".
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 58ff8e2..da29a2a 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -110,6 +110,11 @@
+ 		reg = <0x10010000 0x400>;
+ 	};
+ 
++	pmu_system_controller: system-controller@10020000 {
++		compatible = "samsung,exynos4210-pmu", "syscon";
++		reg = <0x10020000 0x4000>;
++	};
++
+ 	dsi_0: dsi@11C80000 {
+ 		compatible = "samsung,exynos4210-mipi-dsi";
+ 		reg = <0x11C80000 0x10000>;
+diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
+index 15d3c0a..c42a3e1 100644
+--- a/arch/arm/boot/dts/exynos4412.dtsi
++++ b/arch/arm/boot/dts/exynos4412.dtsi
+@@ -29,4 +29,8 @@
+ 	gic: interrupt-controller@10490000 {
+ 		cpu-offset = <0x4000>;
+ 	};
++
++	pmu_system_controller: system-controller@10020000 {
++		compatible = "samsung,exynos4412-pmu", "syscon";
++	};
+ };
+diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+index 70e3765..2f1e6c1 100644
+--- a/arch/arm/boot/dts/exynos4x12.dtsi
++++ b/arch/arm/boot/dts/exynos4x12.dtsi
+@@ -137,6 +137,10 @@
+ 		interrupts = <0 72 0>;
+ 	};
+ 
++	pmu_system_controller: system-controller@10020000 {
++		compatible = "samsung,exynos4212-pmu", "syscon";
++	};
++
+ 	g2d@10800000 {
+ 		compatible = "samsung,exynos4212-g2d";
+ 		reg = <0x10800000 0x1000>;
+-- 
+1.8.3.2
