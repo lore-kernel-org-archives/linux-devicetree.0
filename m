@@ -1,79 +1,46 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net-next 8/9] of: mdio: remove of_phy_connect_fixed_link
-Date: Mon, 19 May 2014 17:56:23 -0700
-Message-ID: <1400547384-11363-9-git-send-email-f.fainelli@gmail.com>
-References: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppd-linuxppc64-dev=m.gmane.org@lists.ozlabs.org>
-To: netdev@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, Florian Fainelli <f.fainelli@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, davem@davemlof.net, Vitaly Bordug <vbordug@ru.mvista.com>, Kumar Gala <galak@codeaurora.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>, David S.
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCHv5 3/4] ARM: dts: exynos4: add hsotg device node
+Date: Tue, 20 May 2014 11:06:29 +0900
+Message-ID: <1400551590-7772-4-git-send-email-chanho61.park@samsung.com>
+References: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-QWxsIGluLXRyZWUgZHJpdmVycyBoYXZlIGJlZW4gY29udmVydGVkIHRvIHVzZSB0aGUgbmV3IHBh
-aXIgb2YKZnVuY3Rpb25zOiBvZl9pc19maXhlZF9waHlfbGluaygpIHBsdXMgb2ZfcGh5X3JlZ2lz
-dGVyX2ZpeGVkX2xpbmsoKSwgd2UKY2FuIG5vdyBzYWZlbHkgcmVtb3ZlIG9mX3BoeV9jb25uZWN0
-X2ZpeGVkX2xpbmsuCgpTaWduZWQtb2ZmLWJ5OiBGbG9yaWFuIEZhaW5lbGxpIDxmLmZhaW5lbGxp
-QGdtYWlsLmNvbT4KLS0tCiBkcml2ZXJzL29mL29mX21kaW8uYyAgICB8IDM4IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCiBpbmNsdWRlL2xpbnV4L29mX21kaW8uaCB8IDEw
-IC0tLS0tLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgNDggZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9vZi9vZl9tZGlvLmMgYi9kcml2ZXJzL29mL29mX21kaW8uYwppbmRleCAxZGVm
-MGJiNWNiMzcuLjRjMWUwMWVkMTZkYyAxMDA2NDQKLS0tIGEvZHJpdmVycy9vZi9vZl9tZGlvLmMK
-KysrIGIvZHJpdmVycy9vZi9vZl9tZGlvLmMKQEAgLTI0Niw0NCArMjQ2LDYgQEAgc3RydWN0IHBo
-eV9kZXZpY2UgKm9mX3BoeV9jb25uZWN0KHN0cnVjdCBuZXRfZGV2aWNlICpkZXYsCiBFWFBPUlRf
-U1lNQk9MKG9mX3BoeV9jb25uZWN0KTsKIAogLyoqCi0gKiBvZl9waHlfY29ubmVjdF9maXhlZF9s
-aW5rIC0gUGFyc2UgZml4ZWQtbGluayBwcm9wZXJ0eSBhbmQgcmV0dXJuIGEgZHVtbXkgcGh5Ci0g
-KiBAZGV2OiBwb2ludGVyIHRvIG5ldF9kZXZpY2UgY2xhaW1pbmcgdGhlIHBoeQotICogQGhuZGxy
-OiBMaW5rIHN0YXRlIGNhbGxiYWNrIGZvciB0aGUgbmV0d29yayBkZXZpY2UKLSAqIEBpZmFjZTog
-UEhZIGRhdGEgaW50ZXJmYWNlIHR5cGUKLSAqCi0gKiBUaGlzIGZ1bmN0aW9uIGlzIGEgdGVtcG9y
-YXJ5IHN0b3AtZ2FwIGFuZCB3aWxsIGJlIHJlbW92ZWQgc29vbi4gIEl0IGlzCi0gKiBvbmx5IHRv
-IHN1cHBvcnQgdGhlIGZzX2VuZXQsIHVjY19nZXRoIGFuZCBnaWFuZmFyIEV0aGVybmV0IGRyaXZl
-cnMuICBEbwotICogbm90IGNhbGwgdGhpcyBmdW5jdGlvbiBmcm9tIG5ldyBkcml2ZXJzLgotICov
-Ci1zdHJ1Y3QgcGh5X2RldmljZSAqb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluayhzdHJ1Y3QgbmV0
-X2RldmljZSAqZGV2LAotCQkJCQkgICAgIHZvaWQgKCpobmRscikoc3RydWN0IG5ldF9kZXZpY2Ug
-KiksCi0JCQkJCSAgICAgcGh5X2ludGVyZmFjZV90IGlmYWNlKQotewotCXN0cnVjdCBkZXZpY2Vf
-bm9kZSAqbmV0X25wOwotCWNoYXIgYnVzX2lkW01JSV9CVVNfSURfU0laRSArIDNdOwotCXN0cnVj
-dCBwaHlfZGV2aWNlICpwaHk7Ci0JY29uc3QgX19iZTMyICpwaHlfaWQ7Ci0JaW50IHN6OwotCi0J
-aWYgKCFkZXYtPmRldi5wYXJlbnQpCi0JCXJldHVybiBOVUxMOwotCi0JbmV0X25wID0gZGV2LT5k
-ZXYucGFyZW50LT5vZl9ub2RlOwotCWlmICghbmV0X25wKQotCQlyZXR1cm4gTlVMTDsKLQotCXBo
-eV9pZCA9IG9mX2dldF9wcm9wZXJ0eShuZXRfbnAsICJmaXhlZC1saW5rIiwgJnN6KTsKLQlpZiAo
-IXBoeV9pZCB8fCBzeiA8IHNpemVvZigqcGh5X2lkKSkKLQkJcmV0dXJuIE5VTEw7Ci0KLQlzcHJp
-bnRmKGJ1c19pZCwgUEhZX0lEX0ZNVCwgImZpeGVkLTAiLCBiZTMyX3RvX2NwdShwaHlfaWRbMF0p
-KTsKLQotCXBoeSA9IHBoeV9jb25uZWN0KGRldiwgYnVzX2lkLCBobmRsciwgaWZhY2UpOwotCXJl
-dHVybiBJU19FUlIocGh5KSA/IE5VTEwgOiBwaHk7Ci19Ci1FWFBPUlRfU1lNQk9MKG9mX3BoeV9j
-b25uZWN0X2ZpeGVkX2xpbmspOwotCi0vKioKICAqIG9mX3BoeV9hdHRhY2ggLSBBdHRhY2ggdG8g
-YSBQSFkgd2l0aG91dCBzdGFydGluZyB0aGUgc3RhdGUgbWFjaGluZQogICogQGRldjogcG9pbnRl
-ciB0byBuZXRfZGV2aWNlIGNsYWltaW5nIHRoZSBwaHkKICAqIEBwaHlfbnA6IE5vZGUgcG9pbnRl
-ciBmb3IgdGhlIFBIWQpkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9vZl9tZGlvLmggYi9pbmNs
-dWRlL2xpbnV4L29mX21kaW8uaAppbmRleCAwYWEzNjdlMzE2Y2IuLmQ0NDkwMThkMDcyNiAxMDA2
-NDQKLS0tIGEvaW5jbHVkZS9saW51eC9vZl9tZGlvLmgKKysrIGIvaW5jbHVkZS9saW51eC9vZl9t
-ZGlvLmgKQEAgLTIyLDkgKzIyLDYgQEAgZXh0ZXJuIHN0cnVjdCBwaHlfZGV2aWNlICpvZl9waHlf
-Y29ubmVjdChzdHJ1Y3QgbmV0X2RldmljZSAqZGV2LAogc3RydWN0IHBoeV9kZXZpY2UgKm9mX3Bo
-eV9hdHRhY2goc3RydWN0IG5ldF9kZXZpY2UgKmRldiwKIAkJCQkgc3RydWN0IGRldmljZV9ub2Rl
-ICpwaHlfbnAsIHUzMiBmbGFncywKIAkJCQkgcGh5X2ludGVyZmFjZV90IGlmYWNlKTsKLWV4dGVy
-biBzdHJ1Y3QgcGh5X2RldmljZSAqb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluayhzdHJ1Y3QgbmV0
-X2RldmljZSAqZGV2LAotCQkJCQkgdm9pZCAoKmhuZGxyKShzdHJ1Y3QgbmV0X2RldmljZSAqKSwK
-LQkJCQkJIHBoeV9pbnRlcmZhY2VfdCBpZmFjZSk7CiAKIGV4dGVybiBzdHJ1Y3QgbWlpX2J1cyAq
-b2ZfbWRpb19maW5kX2J1cyhzdHJ1Y3QgZGV2aWNlX25vZGUgKm1kaW9fbnApOwogCkBAIC01OSwx
-MyArNTYsNiBAQCBzdGF0aWMgaW5saW5lIHN0cnVjdCBwaHlfZGV2aWNlICpvZl9waHlfYXR0YWNo
-KHN0cnVjdCBuZXRfZGV2aWNlICpkZXYsCiAJcmV0dXJuIE5VTEw7CiB9CiAKLXN0YXRpYyBpbmxp
-bmUgc3RydWN0IHBoeV9kZXZpY2UgKm9mX3BoeV9jb25uZWN0X2ZpeGVkX2xpbmsoc3RydWN0IG5l
-dF9kZXZpY2UgKmRldiwKLQkJCQkJCQkgICB2b2lkICgqaG5kbHIpKHN0cnVjdCBuZXRfZGV2aWNl
-ICopLAotCQkJCQkJCSAgIHBoeV9pbnRlcmZhY2VfdCBpZmFjZSkKLXsKLQlyZXR1cm4gTlVMTDsK
-LX0KLQogc3RhdGljIGlubGluZSBzdHJ1Y3QgbWlpX2J1cyAqb2ZfbWRpb19maW5kX2J1cyhzdHJ1
-Y3QgZGV2aWNlX25vZGUgKm1kaW9fbnApCiB7CiAJcmV0dXJuIE5VTEw7Ci0tIAoxLjkuMQoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KTGludXhwcGMtZGV2
-IG1haWxpbmcgbGlzdApMaW51eHBwYy1kZXZAbGlzdHMub3psYWJzLm9yZwpodHRwczovL2xpc3Rz
-Lm96bGFicy5vcmcvbGlzdGluZm8vbGludXhwcGMtZGV2
+This patch adds a hsotg node for exynos4 USB2.0 device controller.
+
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Kamil Debski <k.debski@samsung.com>
+Cc: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index 8a02810..13d1ca2 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -286,6 +286,17 @@
+ 		status = "disabled";
+ 	};
+ 
++	hsotg@12480000 {
++		compatible = "samsung,s3c6400-hsotg";
++		reg = <0x12480000 0x20000>;
++		interrupts = <0 71 0>;
++		clocks = <&clock CLK_USB_DEVICE>;
++		clock-names = "otg";
++		phys = <&exynos_usbphy 0>;
++		phy-names = "usb2-phy";
++		status = "disabled";
++	};
++
+ 	ehci@12580000 {
+ 		compatible = "samsung,exynos4210-ehci";
+ 		reg = <0x12580000 0x100>;
+-- 
+1.8.3.2
