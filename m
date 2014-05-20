@@ -1,61 +1,75 @@
-From: Chanho Park <chanho61.park@samsung.com>
-Subject: [PATCHv5 2/4] ARM: dts: exynos4: add exynos_usbphy node
-Date: Tue, 20 May 2014 11:06:28 +0900
-Message-ID: <1400551590-7772-3-git-send-email-chanho61.park@samsung.com>
-References: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
+From: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v2] ARM: OMAP2+: gpmc: enable wait-pin monitoring for NAND devices via DT
+Date: Tue, 20 May 2014 11:54:24 +0530
+Message-ID: <1400567064-20033-1-git-send-email-pekon@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables a exynos_usbphy node for exynos4 SoCs.
-A exynos4x12 usb phy node is almost same with 4210's one
-except compatible string and pmu syscon.
+This patch enables 'wait-pin' monitoring in NAND driver if following properties
+are present under NAND DT node
+  gpmc,wait-pin = <wait-pin number>
+  gpmc,wait-on-read
+  gpmc,wait-on-write
+As NAND generic framework uses common path nand_chip->dev_ready() for monitoring
+completion of Read and Write status, so wait-pin monitoring is enabled only when
+*both* 'gpmc,wait-on-read' and 'gpmc,wait-on-write' are specified.
 
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: Kamil Debski <k.debski@samsung.com>
-Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
 ---
- arch/arm/boot/dts/exynos4.dtsi    | 10 ++++++++++
- arch/arm/boot/dts/exynos4x12.dtsi |  5 +++++
- 2 files changed, 15 insertions(+)
+ Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++++++
+ arch/arm/mach-omap2/gpmc-nand.c                     | 8 +++++---
+ 2 files changed, 13 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index da29a2a..8a02810 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -276,6 +276,16 @@
- 		status = "disabled";
- 	};
+diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+index eb81435..4039032 100644
+--- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
++++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+@@ -45,6 +45,14 @@ Optional properties:
+ 		ELM hardware engines should specify this device node in .dtsi
+ 		Using ELM for ECC error correction frees some CPU cycles.
  
-+	exynos_usbphy: exynos-usbphy@125B0000 {
-+		compatible = "samsung,exynos4210-usb2-phy";
-+		reg = <0x125B0000 0x100>;
-+		samsung,pmureg-phandle = <&pmu_system_controller>;
-+		clocks = <&clock CLK_USB_DEVICE>, <&clock CLK_XUSBXTI>;
-+		clock-names = "phy", "ref";
-+		#phy-cells = <1>;
-+		status = "disabled";
-+	};
++ - gpmc,wait-pin=<pin number>	Specifies GPMC wait-pin number to monitor
++ - gpmc,wait-on-read		Enable wait-pin monitoring for Read accesses
++ - gpmc,wait-on-write		Enable wait-pin monitoring for Write accesses
++		As NAND generic framework uses single common function
++		nand_chip->dev_ready() for polling wait-pin both for Read and
++		Write accesses. So for NAND devices both 'gpmc,wait-on-read' and
++		'gpmc,wait-on-write' need to be specified together.
 +
- 	ehci@12580000 {
- 		compatible = "samsung,exynos4210-ehci";
- 		reg = <0x12580000 0x100>;
-diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-index 2f1e6c1..c5a943d 100644
---- a/arch/arm/boot/dts/exynos4x12.dtsi
-+++ b/arch/arm/boot/dts/exynos4x12.dtsi
-@@ -265,4 +265,9 @@
- 		clock-names = "biu", "ciu";
- 		status = "disabled";
- 	};
-+
-+	exynos-usbphy@125B0000 {
-+		compatible = "samsung,exynos4x12-usb2-phy";
-+		samsung,sysreg-phandle = <&sys_reg>;
-+	};
- };
+ For inline partiton table parsing (optional):
+ 
+  - #address-cells: should be set to 1
+diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
+index 17cd393..62bc3de 100644
+--- a/arch/arm/mach-omap2/gpmc-nand.c
++++ b/arch/arm/mach-omap2/gpmc-nand.c
+@@ -123,11 +123,13 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
+ 		}
+ 	}
+ 
+-	if (gpmc_nand_data->of_node)
++	if (gpmc_nand_data->of_node) {
+ 		gpmc_read_settings_dt(gpmc_nand_data->of_node, &s);
+-	else
++		if (s.wait_on_read && s.wait_on_write)
++			gpmc_nand_data->dev_ready = true;
++	} else {
+ 		gpmc_set_legacy(gpmc_nand_data, &s);
+-
++	}
+ 	s.device_nand = true;
+ 
+ 	err = gpmc_cs_program_settings(gpmc_nand_data->cs, &s);
 -- 
-1.8.3.2
+1.8.5.1.163.gd7aced9
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
