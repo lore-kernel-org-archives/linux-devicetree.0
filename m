@@ -1,43 +1,61 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 6/7] i2c: ChromeOS EC tunnel driver
-Date: Tue, 20 May 2014 09:43:30 +0100
-Message-ID: <20140520084330.GA24991@lee--X1>
-References: <1398879850-9111-1-git-send-email-dianders@chromium.org>
- <1398879850-9111-7-git-send-email-dianders@chromium.org>
- <20140519105055.GA2612@katana>
- <20140519172258.GD20435@lee--X1>
- <20140519221902.GA2871@katana>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
+Date: Tue, 20 May 2014 10:44:30 +0200
+Message-ID: <5759329.P75jKFdv3B@wuerfel>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <4292818.mI6kZGgTzd@wuerfel> <CA+sq2Ce+8YB+02B7zhxTXwropZXv9spy-w=AJ8YXCP69kr-_1A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140519221902.GA2871@katana>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Wolfram Sang <wsa@the-dreams.de>
-Cc: Doug Anderson <dianders@chromium.org>, swarren@nvidia.com, abrestic@chromium.org, dgreid@chromium.org, olof@lixom.net, sjg@chromium.org, linux-samsung-soc@vger.kernel.org, linux-tegra@vger.kernel.org, Vincent Palatin <vpalatin@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sameo@linux.intel.com, jdelvare@suse.de, shane.huang@amd.com, maxime.ripard@free-electrons.com, laurent.pinchart+renesas@ideasonboard.com, u.kleine-koenig@pengutronix.de, bjorn.andersson@sonymobile.com, kevin.strasser@linux.intel.com, linux@prisktech.co.nz, andrew@lunn.ch, andriy.shevchenko@linux.intel.com, schwidefsky@de.ibm.com, matt.porter@linaro.org, ch.naveen@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CA+sq2Ce+8YB+02B7zhxTXwropZXv9spy-w=AJ8YXCP69kr-_1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sunil Kovvuri <sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Lurndal <kdb-JdWt/H98ok1AfugRpC6u6w@public.gmane.org>, "yu.zhao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <yu.zhao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> > > Code looks good, so
-> > >=20
-> > > Reviewed-by: Wolfram Sang <wsa@the-dreams.de>
-> > >=20
-> > > I don't mind how it gets upstream. I can take it, but you can als=
-o keep
-> > > it in this series.
-> >=20
-> > Let's keep the series together.  Are you happy with me just merging=
- it
-> > through MFD, or would you like a pull-request, so you can take it i=
-n
-> > too?
->=20
-> Just merge it...
+On Tuesday 20 May 2014 09:52:33 Sunil Kovvuri wrote:
+> >> In sriov_enable() (drivers/pci/iov.c)
+> >>
+> >>  296        for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
+> >>  297                 bars |= (1 << (i + PCI_IOV_RESOURCES));
+> >>  298                 res = dev->resource + PCI_IOV_RESOURCES + i;
+> >>  299                 if (res->parent)
+> >>  300                         nres++;
+> >>  301         }
+> >>  302         if (nres != iov->nres) {
+> >>  303                 dev_err(&dev->dev, "not enough MMIO resources for
+> >>  SR-IOV\n");
+> >>  304                 return -ENOMEM;
+> >>  305         }
+> >>
+> >> Here its checking if physical function's IOV resource has a parent or not.
+> >> Which is pci-pci bridge in this case. Otherwise it doesn't consider
+> >> that resource.
+> >>
+> >> Added below api to your patch.
+> >> This will try to claim a resource while creating a PCI device which
+> >> inturn sets 'res->parent'.
+> >
+> > This looks like the wrong approach. The PCI host controller should
+> > really have been registered with the root 'iomem_resource' during
+> > the probe of the host controller.
+> >
+> I didn't get this, if a SR-IOV device is connected to a PCI-PCI bridge
+> and inturn bridge connected to root port. Then the parent bus is not root,
+> but the bridge.  The issue is either hierarchy should not be checked for
+> SR-IOV resources or someone should set the hierarchy (i.e parent resources).
 
-Thanks dude.
+Ah, I misunderstood the problem, I thought the PCI core was complaining
+about lack of space in the resources, not about a lack of BARs.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+It seems there is code like yours in a couple of architectures, but they
+only claim the resources of bridges, not the actual devices as you
+seem to be doing. Can you check if the x86 version of
+pcibios_allocate_bus_resources() does the trick for you? Maybe we can
+turn that into a generic helper.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
