@@ -1,61 +1,72 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: Re: [RFC PATCH] of/irq: do irq resolution in platform_get_irq_byname()
-Date: Tue, 20 May 2014 13:45:24 +0300
-Message-ID: <537B3244.3010808@ti.com>
-References: <1400506259-18397-1-git-send-email-grygorii.strashko@ti.com>	<20140519125738.GB9466@ulmo> <20140520061700.ED542C41087@trevor.secretlab.ca>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH 02/18] drm/exynos: use wait_event_timeout() for safety
+ usage
+Date: Tue, 20 May 2014 18:02:54 +0800
+Message-ID: <CAGS+omDx1zLBuE_J9CQW=65WkMKO51eCDzSfjazoQoC15_J=Cg@mail.gmail.com>
+References: <1400048825-6052-1-git-send-email-yj44.cho@samsung.com>
+ <1400048825-6052-3-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140520061700.ED542C41087@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, santosh.shilimkar@ti.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1400048825-6052-3-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
-
-On 05/20/2014 09:17 AM, Grant Likely wrote:
-> On Mon, 19 May 2014 14:57:39 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
->> On Mon, May 19, 2014 at 04:30:59PM +0300, Grygorii Strashko wrote:
->> [...]
->>> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
->> [...]
->>>   /**
->>> + * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
->>> + * @dev: pointer to device tree node
->>> + * @name: zero-based index of the irq
->>
->> This is a name, not an index.
->>
->>> + *
->>> + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
->>> + * is not yet created, or errorno in case of failure.
->>
->> s/errorno/error code/? Also EPROBE_DEFER is also an error code, so I'm
->> not sure if it's worth a special case in the description here.
->>
->>> + *
->>> + */
->>> +int of_irq_get_byname(struct device_node *dev, const char *name)
->>> +{
->>> +	const char *name_irq = NULL;
->>> +	int index = 0;
->>> +
->>> +	if (unlikely(!name))
->>> +		return -EINVAL;
->>> +
->>> +	while (!of_property_read_string_index(dev, "interrupt-names",
->>> +					      index, &name_irq))
->>> +		if (!strcmp(name, name_irq))
->>> +			return of_irq_get(dev, index);
->>
->> Isn't this missing an index++ somewhere? Otherwise it seems like this
->> would loop infinitely if there was no match on the first entry.
+On Wed, May 14, 2014 at 2:26 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
 >
-> Better yet, use of_property_match_string().
+> There could be the case that the page flip operation isn't finished correctly
+> with some abnormal condition such as panel reset. So this patch replaces
+> wait_event() with wait_event_timeout() to avoid waiting for page flip completion
+> infinitely.
 
-yep. Thanks. I've just come to the same idea. Patch re-sent.
 
-Regards,
--grygorii
+This solution looks like we aren't really handling some conditions
+completely (such as "panel reset"?). In cases where this timeout can
+occur, shouldn't we be clearing pending_flip when we detect that the
+flip will never complete?
+
+-Dan
+
+>
+>
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_crtc.c |    5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+> index 95c9435..485fa26 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+> @@ -69,8 +69,9 @@ static void exynos_drm_crtc_dpms(struct drm_crtc *crtc, int mode)
+>
+>         if (mode > DRM_MODE_DPMS_ON) {
+>                 /* wait for the completion of page flip. */
+> -               wait_event(exynos_crtc->pending_flip_queue,
+> -                               atomic_read(&exynos_crtc->pending_flip) == 0);
+> +               wait_event_timeout(exynos_crtc->pending_flip_queue,
+> +                               !atomic_read(&exynos_crtc->pending_flip),
+> +                               HZ/20);
+>                 drm_vblank_off(crtc->dev, exynos_crtc->pipe);
+>         }
+>
+> --
+> 1.7.9.5
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
