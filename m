@@ -1,60 +1,109 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
-Date: Tue, 20 May 2014 10:44:30 +0200
-Message-ID: <5759329.P75jKFdv3B@wuerfel>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com> <4292818.mI6kZGgTzd@wuerfel> <CA+sq2Ce+8YB+02B7zhxTXwropZXv9spy-w=AJ8YXCP69kr-_1A@mail.gmail.com>
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: OMAP2+: gpmc: enable wait-pin monitoring for NAND
+ devices via DT
+Date: Tue, 20 May 2014 10:34:34 +0200
+Message-ID: <CABxcv=k_6gk2QhZj3LVaNgPkg7HnSwfskgJa3y7ORDSFZNRcmA@mail.gmail.com>
+References: <1400567064-20033-1-git-send-email-pekon@ti.com>
+	<537B0803.6070702@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CA+sq2Ce+8YB+02B7zhxTXwropZXv9spy-w=AJ8YXCP69kr-_1A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <537B0803.6070702-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sunil Kovvuri <sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Lurndal <kdb-JdWt/H98ok1AfugRpC6u6w@public.gmane.org>, "yu.zhao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <yu.zhao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 May 2014 09:52:33 Sunil Kovvuri wrote:
-> >> In sriov_enable() (drivers/pci/iov.c)
-> >>
-> >>  296        for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
-> >>  297                 bars |= (1 << (i + PCI_IOV_RESOURCES));
-> >>  298                 res = dev->resource + PCI_IOV_RESOURCES + i;
-> >>  299                 if (res->parent)
-> >>  300                         nres++;
-> >>  301         }
-> >>  302         if (nres != iov->nres) {
-> >>  303                 dev_err(&dev->dev, "not enough MMIO resources for
-> >>  SR-IOV\n");
-> >>  304                 return -ENOMEM;
-> >>  305         }
-> >>
-> >> Here its checking if physical function's IOV resource has a parent or not.
-> >> Which is pci-pci bridge in this case. Otherwise it doesn't consider
-> >> that resource.
-> >>
-> >> Added below api to your patch.
-> >> This will try to claim a resource while creating a PCI device which
-> >> inturn sets 'res->parent'.
-> >
-> > This looks like the wrong approach. The PCI host controller should
-> > really have been registered with the root 'iomem_resource' during
-> > the probe of the host controller.
-> >
-> I didn't get this, if a SR-IOV device is connected to a PCI-PCI bridge
-> and inturn bridge connected to root port. Then the parent bus is not root,
-> but the bridge.  The issue is either hierarchy should not be checked for
-> SR-IOV resources or someone should set the hierarchy (i.e parent resources).
+On Tue, May 20, 2014 at 9:45 AM, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> wrote:
+> Hi Pekon,
+>
+> On 05/20/2014 09:24 AM, Pekon Gupta wrote:
+>> This patch enables 'wait-pin' monitoring in NAND driver if following properties
+>> are present under NAND DT node
+>>   gpmc,wait-pin = <wait-pin number>
+>>   gpmc,wait-on-read
+>>   gpmc,wait-on-write
+>> As NAND generic framework uses common path nand_chip->dev_ready() for monitoring
+>> completion of Read and Write status, so wait-pin monitoring is enabled only when
+>> *both* 'gpmc,wait-on-read' and 'gpmc,wait-on-write' are specified.
+>>
+>> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++++++
+>>  arch/arm/mach-omap2/gpmc-nand.c                     | 8 +++++---
+>>  2 files changed, 13 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+>> index eb81435..4039032 100644
+>> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+>> @@ -45,6 +45,14 @@ Optional properties:
+>>               ELM hardware engines should specify this device node in .dtsi
+>>               Using ELM for ECC error correction frees some CPU cycles.
+>>
+>> + - gpmc,wait-pin=<pin number>        Specifies GPMC wait-pin number to monitor
+>> + - gpmc,wait-on-read         Enable wait-pin monitoring for Read accesses
+>> + - gpmc,wait-on-write                Enable wait-pin monitoring for Write accesses
+>> +             As NAND generic framework uses single common function
+>> +             nand_chip->dev_ready() for polling wait-pin both for Read and
+>> +             Write accesses. So for NAND devices both 'gpmc,wait-on-read' and
+>> +             'gpmc,wait-on-write' need to be specified together.
+>> +
+>>  For inline partiton table parsing (optional):
+>>
 
-Ah, I misunderstood the problem, I thought the PCI core was complaining
-about lack of space in the resources, not about a lack of BARs.
+Pekon,
 
-It seems there is code like yours in a couple of architectures, but they
-only claim the resources of bridges, not the actual devices as you
-seem to be doing. Can you check if the x86 version of
-pcibios_allocate_bus_resources() does the trick for you? Maybe we can
-turn that into a generic helper.
+Please do not add Linux specific information in Device Tree binding
+documents. Remember that DT are meant to be used by any operating
+system that implements DT parsing so we should not leak Linux
+implementation details in the documents. They should just describe the
+hardware and how each property configures it.
 
-	Arnd
+In fact Device Tree source files and documents will be split from the
+kernel repository in the future to make this more clear.
+
+>
+>
+>>   - #address-cells: should be set to 1
+>> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
+>> index 17cd393..62bc3de 100644
+>> --- a/arch/arm/mach-omap2/gpmc-nand.c
+>> +++ b/arch/arm/mach-omap2/gpmc-nand.c
+>> @@ -123,11 +123,13 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
+>>               }
+>>       }
+>>
+>> -     if (gpmc_nand_data->of_node)
+>> +     if (gpmc_nand_data->of_node) {
+>>               gpmc_read_settings_dt(gpmc_nand_data->of_node, &s);
+>> -     else
+>> +             if (s.wait_on_read && s.wait_on_write)
+>> +                     gpmc_nand_data->dev_ready = true;
+>> +     } else {
+>>               gpmc_set_legacy(gpmc_nand_data, &s);
+>> -
+>> +     }
+>>       s.device_nand = true;
+>
+> NACK.
+>
+> For NAND, we only need the wait-pin property. The wait-on-read/wait-on-write flags are meaningless.
+> Also, the wait-pin number needs to be communicated to the NAND driver and omap_dev_ready() function updated so that it checks for the right wait pin status.
+>
+
+Thanks a lot for your explanations Roger.
+
+>>
+>>       err = gpmc_cs_program_settings(gpmc_nand_data->cs, &s);
+>>
+>
+> cheers,
+> -roger
+
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
