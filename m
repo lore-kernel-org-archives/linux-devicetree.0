@@ -1,42 +1,137 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 08/11] ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
-Date: Tue, 20 May 2014 15:22:52 +0200
-Message-ID: <1400592175-13176-9-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 06/11] ARM: STi: DT: STiH416: 416 DT Entry for clockgen
+ A9/DDR/GPU
+Date: Tue, 20 May 2014 15:22:50 +0200
+Message-ID: <1400592175-13176-7-git-send-email-gabriel.fernandez@linaro.org>
 References: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, Pankaj Dev <pankaj.dev@st.com>, linux-arm-kernel@lists.infradead.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-CLK_S_ICN_REG_0 clock is no longer used.
+Patch adds DT entries for clockgen A9/DDR/GPU
 
+Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
 ---
- arch/arm/boot/dts/stih415-clock.dtsi | 10 ----------
- 1 file changed, 10 deletions(-)
+ arch/arm/boot/dts/stih416-clock.dtsi | 79 ++++++++++++++++++++++++++++++++----
+ 1 file changed, 70 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index 3016e53..b36a92c 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -32,16 +32,6 @@
- 			clock-frequency = <500000000>;
+diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
+index 0eeadc7..5b4fb83 100644
+--- a/arch/arm/boot/dts/stih416-clock.dtsi
++++ b/arch/arm/boot/dts/stih416-clock.dtsi
+@@ -25,15 +25,6 @@
  		};
  
--		/*
--		 * Bootloader initialized system infrastructure clock for
--		 * serial devices.
+ 		/*
+-		 * ARM Peripheral clock for timers
 -		 */
--		CLKS_ICN_REG_0: CLKS_ICN_REG_0 {
+-		arm_periph_clk: arm_periph_clk {
 -			#clock-cells = <0>;
 -			compatible = "fixed-clock";
--			clock-frequency = <100000000>;
+-			clock-frequency = <600000000>;
 -		};
 -
- 		CLKS_GMAC0_PHY: clockgenA1@7 {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
+-		/*
+ 		 * ClockGenAs on SASG2
+ 		 */
+ 		clockgen-a@fee62000 {
+@@ -504,6 +495,45 @@
+ 		};
+ 
+ 		/*
++		 * A9 PLL
++		 */
++		clockgen-a9@fdde08b0 {
++			reg = <0xfdde08b0 0x70>;
++
++			clockgen_a9_pll: clockgen-a9-pll {
++				#clock-cells = <1>;
++				compatible = "st,stih416-plls-c32-a9", "st,clkgen-plls-c32";
++
++				clocks = <&clk_sysin>;
++				clock-output-names = "clockgen-a9-pll-odf";
++			};
++		};
++
++		/*
++		 * ARM CPU related clocks
++		 */
++		clk_m_a9: clk-m-a9@fdde08ac {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgen-a9-mux", "st,clkgen-mux";
++			reg = <0xfdde08ac 0x4>;
++			clocks = <&clockgen_a9_pll 0>,
++				 <&clockgen_a9_pll 0>,
++				 <&clk_m_a0_div1 2>,
++				 <&clk_m_a9_ext2f_div2>;
++		};
++
++		/*
++		 * ARM Peripheral clock for timers
++		 */
++		arm_periph_clk: clk-m-a9-periphs {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++			clocks = <&clk_m_a9>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		/*
+ 		 * Frequency synthesizers on the SASG2
+ 		 */
+ 		clockgen_b0: clockgen-b0@fee108b4 {
+@@ -691,5 +721,36 @@
+ 					      "clk-m-pix-hdmirx-0",
+ 					      "clk-m-pix-hdmirx-1";
+ 		};
++
++		/*
++		 * DDR PLL
++		 */
++		clockgen-ddr@0xfdde07d8 {
++			reg = <0xfdde07d8 0x110>;
++
++			clockgen_ddr_pll: clockgen-ddr-pll {
++				#clock-cells = <1>;
++				compatible = "st,stih416-plls-c32-ddr", "st,clkgen-plls-c32";
++
++				clocks = <&clk_sysin>;
++				clock-output-names = "clockgen-ddr0",
++						     "clockgen-ddr1";
++			};
++		};
++
++		/*
++		 * GPU PLL
++		 */
++		clockgen-gpu@fd68ff00 {
++			reg = <0xfd68ff00 0x910>;
++
++			clockgen_gpu_pll: clockgen-gpu-pll {
++				#clock-cells = <1>;
++				compatible = "st,stih416-gpu-pll-c32", "st,clkgengpu-pll-c32";
++
++				clocks = <&clk_sysin>;
++				clock-output-names = "clockgen-gpu-pll";
++			};
++		};
+ 	};
+ };
 -- 
 1.9.1
