@@ -1,88 +1,102 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v6 3/4] ARM: dts: Add STiH407 SoC support
-Date: Tue, 20 May 2014 15:08:41 +0200
-Message-ID: <537B53D9.9080206@st.com>
-References: <1400579192-17620-1-git-send-email-maxime.coquelin@st.com> <1400579192-17620-4-git-send-email-maxime.coquelin@st.com> <20140520121717.GL24991@lee--X1>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: Re: [Patch v3 0/5] Introduce keystone reset driver
+Date: Tue, 20 May 2014 16:16:08 +0300
+Message-ID: <537B5598.8070603@ti.com>
+References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com> <537A1E2C.8040102@ti.com> <5095812.b6DgWAxYzH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140520121717.GL24991@lee--X1>
+In-Reply-To: <5095812.b6DgWAxYzH@wuerfel>
 Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Olof Johansson <olof@lixom.net>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+To: Arnd Bergmann <arnd@arndb.de>, Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-
-On 05/20/2014 02:17 PM, Lee Jones wrote:
->> The STiH407 is advanced multi-HD AVC processor with 3D graphics acceleration
->> and 1.5-GHz ARM Cortex-A9 SMP CPU.
+On 05/19/2014 08:47 PM, Arnd Bergmann wrote:
+> On Monday 19 May 2014 11:07:24 Santosh Shilimkar wrote:
+>> On Monday 19 May 2014 06:25 AM, Ivan Khoronzhuk wrote:
+>>> These patches introduce keystone reset driver.
+>>>
+>>> The keystone SoC can be rebooted in several ways. By external reset
+>>> pin, by soft and by watchdogs. This driver allows software reset and reset
+>>> by one of the watchdogs. Also added opportunity to set soft/hard reset type.
+>>>
+>>> Based on v3.15-rc5
+>>>
+>> Arnd,
+>> Can I have have your ack/reviewed-by please since you did gave few comments
+>> on previous version.
+> Sorry for not getting back to you earlier on this topic.
+>
+>> On 04/14/2014 09:44 PM, Arnd Bergmann wrote:
+>>> On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
+>>>> +Optional properties:
+>>>> +
+>>>> +- ti,soft-reset:       Boolean option indicating soft reset.
+>>>> +                       By default hard reset is used.
+>>>> +
+>>>> +- ti,wdt_list:         WDT list that can cause SoC reset.
+>>>> +                       The list in format: <0>, <2>;
+>>>> +                       Begins from 0 to 3, as keystone can contain up
+>>>> +                       to 4 SoC reset watchdogs.
+>>> This looks like your binding just describes a subset of the
+>>> watchdog timer registers. If so, don't do a standalone reset
+>> The registers are not a subset of watchdog hardware it's SoC specific future
+>> controlled by SoC specific registers (bootregs and PLL regs).
 >>
->> Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->> Acked-by: Lee Jones <lee.jones@linaro.org>
->> Acked-by: Patrice Chotard <patrice.chotard@st.com>
->> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
->> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
->> ---
->>   arch/arm/boot/dts/stih407-clock.dtsi   |  40 +++
->>   arch/arm/boot/dts/stih407-pinctrl.dtsi | 615 +++++++++++++++++++++++++++++++++
->>   arch/arm/boot/dts/stih407.dtsi         | 263 ++++++++++++++
->>   3 files changed, 918 insertions(+)
->>   create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
->>   create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
->>   create mode 100644 arch/arm/boot/dts/stih407.dtsi
+>> For watchog IP setup, the Keystone uses the watchdog driver common with
+>> other
+>> SoCs -- davinci_watchdog that is not depend on other SoC settings like
+>> this driver does.
 >>
->> diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
->> new file mode 100644
->> index 0000000..ae8068c
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/stih407-clock.dtsi
->> @@ -0,0 +1,40 @@
->> +/*
->> + * Copyright (C) 2014 STMicroelectronics R&D Limited
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +/ {
->> +	clocks {
->> +		/*
->> +		 * Fixed 30MHz oscillator inputs to SoC
->> +		 */
->> +		CLK_SYSIN: CLK_SYSIN {
+>> The Keystone SoCs have separate registers to tune Keystone2 reset
+>> functionality
+>> by configuring Reset multiplexer &  PLL. And it tunes not only watchdog
+>> usage.
+>> The keystone SoC can be rebooted in several ways. By external reset pin,
+>> by soft and
+>> by watchdogs. This driver allows software reset or reset by one of the
+>> watchdogs
+>> (and other settings) independently on watchdog driver settings. This is
+>> job of reset driver.
+> It sounds like you use a syscon area in the reset driver. This is not
+> uncommon, but it means you should probably have a generic node for
+> the SoC specific registers that contains all of them at once and
+> exports them as a regmap using the drivers/mfd/syscon.c driver.
 >
-> I thought we weren't using upper case clk names anymore?
->
->> +			#clock-cells = <0>;
->> +			compatible = "fixed-clock";
->> +			clock-frequency = <30000000>;
->> +			clock-output-names = "CLK_SYSIN";
->> +		};
->> +
->> +		/*
->> +		 * ARM Peripheral clock for timers
->> +		 */
->> +		arm_periph_clk: arm_periph_clk {
->> +			#clock-cells = <0>;
->> +			compatible = "fixed-clock";
->> +			clock-frequency = <600000000>;
->> +		};
->> +
->> +		/*
->> +		 * Bootloader initialized system infrastructure clock for
->> +		 * serial devices.
->> +		 */
->> +		CLK_EXT2F_A9: clockgenC0@13 {
->
-> Or camel?
+> 	Arnd
 
-Good catch, v7 is in the pipe.
+Arnd,
+Thank for the reply
 
-Thanks,
-Maxime
+The reset driver uses two ranges:
+- RSTYPE, RSTCTRL,RSTCFG, RSISO  (Reset Main PLL Controller)
+- RESETMUX8-10 registers
 
->
-> [...]
->
+The content of these register ranges are completely used by the reset 
+driver.
+Currently no one on the SoC can access them instead of the reset driver.
+Also we don't use syscon/regmap at all - so adding this will be some 
+overhead.
+
+As I posted previously:
+"...configuring Reset multiplexer & PLL. And it tunes not only watchdog 
+usage..."
+
+Yes, it tunes not only watchdog usage and uses part of registers from 
+PLL controller,
+but all it works with are connected with reset functionality. These 
+ranges are used only
+by reset driver and their purpose is reset functionality.
+
+Maybe in the future some soft can use ranges in question for own tasks, 
+but it should be
+done via reset driver. So as I see there is no reasons to use regmap for 
+reset driver.
+
+-- 
+Regards,
+Ivan Khoronzhuk
+
