@@ -1,260 +1,427 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH RESEND 1/2] irqchip: add Broadcom Set Top Box Level-2 interrupt controller
-Date: Tue, 20 May 2014 12:13:48 -0700
-Message-ID: <1400613229-19049-2-git-send-email-f.fainelli@gmail.com>
-References: <1400613229-19049-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400613229-19049-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: arm@kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-arm-kernel@vger.kernel.org, jason@lakedaemon.net
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH RESEND] devicetree: bindings: separate CPU enable method descriptions
+Date: Tue, 20 May 2014 14:20:49 -0500
+Message-ID: <1400613649-13099-1-git-send-email-elder@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, lorenzo.pieralisi@arm.com, gregory.clement@free-electrons.com, rvaswani@codeaurora.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support for the Level-2 interrupt controller hardware
-found in Broadcom Set Top Box System-on-a-Chip devices. This interrupt
-controller is implemented using the generic IRQ chip driver with
-separate enable and disable registers.
+The bindings for CPU enable methods are defined in ".../arm/cpus.txt".  As
+additional 32-bit ARM CPUS are converted to use the "enable-method" CPU
+property to imply a particular set of SMP operations to use, the list of these
+methods is likely to become unwieldy.  The current documentation already
+contains several property descriptions that are meaningful only for certain
+enable methods.
 
-Signed-off-by: Brian Norris <computersforpeace@gmail.com>
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+This patch defines a new Documentation subdirectory whose purpose is to give
+each CPU enable method its own place to define how and when it's used, as
+well as what other properties (optional or required) are associated with
+the method.  The existing enable method documentation is expanded and moved
+from ".../arm/cpus.txt" into new files accordingly.
+
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/irqchip/Kconfig          |   6 ++
- drivers/irqchip/Makefile         |   1 +
- drivers/irqchip/irq-brcmstb-l2.c | 200 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 207 insertions(+)
- create mode 100644 drivers/irqchip/irq-brcmstb-l2.c
+v2:  Rename "arm,psci.txt" to be "psci.txt" and fix its content
 
-diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
-index d770f7406631..bbb746e35500 100644
---- a/drivers/irqchip/Kconfig
-+++ b/drivers/irqchip/Kconfig
-@@ -30,6 +30,12 @@ config ARM_VIC_NR
- 	  The maximum number of VICs available in the system, for
- 	  power management.
- 
-+config BRCMSTB_L2_IRQ
-+	bool
-+	depends on ARM
-+	select GENERIC_IRQ_CHIP
-+	select IRQ_DOMAIN
-+
- config DW_APB_ICTL
- 	bool
- 	select IRQ_DOMAIN
-diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
-index f180f8d5fb7b..62a13e5ef98f 100644
---- a/drivers/irqchip/Makefile
-+++ b/drivers/irqchip/Makefile
-@@ -29,3 +29,4 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
- obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
- obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
- obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
-+obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
-diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+ .../bindings/arm/cpu-enable-method/README          | 20 +++++
+ .../bindings/arm/cpu-enable-method/psci.txt        | 45 ++++++++++
+ .../arm/cpu-enable-method/qcom,gcc-msm8660         | 30 +++++++
+ .../arm/cpu-enable-method/qcom,kpss-acc-v1         | 56 +++++++++++++
+ .../arm/cpu-enable-method/qcom,kpss-acc-v2         | 56 +++++++++++++
+ .../bindings/arm/cpu-enable-method/spin-table.txt  | 95 ++++++++++++++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     | 29 +------
+ 7 files changed, 305 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/README
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/README b/Documentation/devicetree/bindings/arm/cpu-enable-method/README
 new file mode 100644
-index 000000000000..336f0ae5591a
+index 0000000..cc9431e
 --- /dev/null
-+++ b/drivers/irqchip/irq-brcmstb-l2.c
-@@ -0,0 +1,200 @@
-+/*
-+ * Generic Broadcom Set Top Box Level 2 Interrupt controller driver
-+ *
-+ * Copyright (C) 2014 Broadcom Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/README
+@@ -0,0 +1,20 @@
++==========================
++CPU enable-method bindings
++==========================
 +
-+#define pr_fmt(fmt)	KBUILD_MODNAME	": " fmt
++The device tree describes the layout of CPUs in a machine in a single "cpus"
++node, which in turn contains a number of "cpu" sub-nodes defining properties
++for each cpu.
 +
-+#include <linux/init.h>
-+#include <linux/slab.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/of_irq.h>
-+#include <linux/of_address.h>
-+#include <linux/of_platform.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/io.h>
-+#include <linux/irqdomain.h>
-+#include <linux/irqchip.h>
-+#include <linux/irqchip/chained_irq.h>
++For multiprocessing configurations, CPU cores can be individually enabled
++and disabled.  The enabling capability is used for SMP startup as well as
++CPU hotplug.  A CPU enable method--normally specified in the device tree
++using an "enable-method" property--defines how cores are enabled.  If all
++CPUs in a machine use the same enable method and related property values,
++these properties should be defined in the "cpus" node, which associates the
++property values with all CPUs.  Alternatively, every "cpu" node can define
++its "enable-method" separately.
 +
-+#include <asm/mach/irq.h>
++Documents in this directory define how each of the CPU enable methods are to
++be used, as well the names and possible values of related properties that
++are required by or affect each enable method.
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt b/Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt
+new file mode 100644
+index 0000000..68b26c2
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt
+@@ -0,0 +1,45 @@
++================================
++CPU enable-method "psci" binding
++================================
 +
-+#include "irqchip.h"
++This document describes the "psci" method for enabling secondary CPUs.  A
++"psci" enable method is supported only in individual "cpu" nodes (even if
++	all CPU cores use the "psci" enable method).
 +
-+/* Register offsets in the L2 interrupt controller */
-+#define CPU_STATUS	0x00
-+#define CPU_SET		0x04
-+#define CPU_CLEAR	0x08
-+#define CPU_MASK_STATUS	0x0c
-+#define CPU_MASK_SET	0x10
-+#define CPU_MASK_CLEAR	0x14
++Enable method name:	"psci"
++Compatible cpus:	"arm,cortex-a57" (?)
++Related properties:	(none)
 +
-+/* L2 intc private data structure */
-+struct brcmstb_l2_intc_data {
-+	int parent_irq;
-+	void __iomem *base;
-+	struct irq_domain *domain;
-+	bool can_wake;
-+	u32 saved_mask; /* for suspend/resume */
++Note:
++This enable method is only available if a valid PSCI node[1] (compatible
++with "arm,psci") is present in the device tree, and it defines a "cpu_on"
++property.
++
++Example (contrived 2-core ARM Cortex-A57 64-bit system):
++
++	psci {
++		compatible = "arm,psci";
++		method = "smc";
++		cpu_on = 0x1;
++	};
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x0>;
++			enable-method = "psci";
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++			enable-method = "psci";
++		};
++	};
++
++--
++[1] arm/psci.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+new file mode 100644
+index 0000000..b19f51c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+@@ -0,0 +1,30 @@
++======================================================
++Secondary CPU enable-method "qcom,gcc-msm8660" binding
++======================================================
++
++This document describes the "qcom,gcc-msm8660" method for enabling secondary
++CPUs.  A "qcom,gcc-msm8660" enable method should only be used in the "cpus"
++node, to apply to all CPUs.
++
++Enable method name:	"qcom,gcc-msm8660"
++Compatible cpu:		"qcom,scorpion"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,scorpion";
++		enable-method = "qcom,gcc-msm8660";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+new file mode 100644
+index 0000000..3f6ce56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+@@ -0,0 +1,56 @@
++======================================================
++Secondary CPU enable-method "qcom,kpss-acc-v1" binding
++======================================================
++
++This document describes the "qcom,kpss-acc-v1" method for enabling CPUs.
++This enable method can be used in either the "cpus" node or in individual
++"cpu" nodes.  Note that each "cpu" node must have both "qcom,saw" and
++"qcom,acc" properties defined (even if the "enable-method" property was
++defined only in the "cpus" node).
++
++Enable method name:	"qcom,kpss-acc-v1"
++Compatible machine:	"qcom,msm8960"
++Compatible cpu:		"qcom,krait"
++Related properties:
++	- qcom,saw
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the SAW[1] node associated with this CPU.
++
++	- qcom,acc
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the ACC[2] node associated with this CPU.
++
++Example:
++
++/ {
++	compatible = "qcom,msm8960";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v1";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++	};
 +};
 +
-+static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
-+{
-+	struct brcmstb_l2_intc_data *b = irq_desc_get_handler_data(desc);
-+	struct irq_chip *chip = irq_get_chip(irq);
-+	u32 status;
++--
++[1] arm/msm/qcom,saw2.txt
++[2] arm/msm/qcom,kpss-acc.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+new file mode 100644
+index 0000000..4368d904
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+@@ -0,0 +1,56 @@
++======================================================
++Secondary CPU enable-method "qcom,kpss-acc-v2" binding
++======================================================
 +
-+	chained_irq_enter(chip, desc);
++This document describes the "qcom,kpss-acc-v2" method for enabling CPUs.
++This enable method can be used in either the "cpus" node or in individual
++"cpu" nodes.  Note that each "cpu" node must have both "qcom,saw" and
++"qcom,acc" properties defined (even if the "enable-method" property was
++defined only in the "cpus" node).
 +
-+	status = __raw_readl(b->base + CPU_STATUS) &
-+		~(__raw_readl(b->base + CPU_MASK_STATUS));
++Enable method name:	"qcom,kpss-acc-v2"
++Compatible machine:	"qcom,msm8974"
++Compatible cpu:		"qcom,krait"
++Related properties:
++	- qcom,saw
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the SAW[1] node associated with this CPU.
 +
-+	if (status == 0) {
-+		do_bad_IRQ(irq, desc);
-+		goto out;
-+	}
++	- qcom,acc
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the ACC[2] node associated with this CPU.
 +
-+	do {
-+		irq = ffs(status) - 1;
-+		/* ack at our level */
-+		__raw_writel(1 << irq, b->base + CPU_CLEAR);
-+		status &= ~(1 << irq);
-+		generic_handle_irq(irq_find_mapping(b->domain, irq));
-+	} while (status);
-+out:
-+	chained_irq_exit(chip, desc);
-+}
++Example:
 +
-+static void brcmstb_l2_intc_suspend(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_l2_intc_data *b = gc->private;
++/ {
++	compatible = "qcom,msm8974";
 +
-+	irq_gc_lock(gc);
-+	/* Save the current mask */
-+	b->saved_mask = __raw_readl(b->base + CPU_MASK_STATUS);
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v2";
 +
-+	if (b->can_wake) {
-+		/* Program the wakeup mask */
-+		__raw_writel(~gc->wake_active, b->base + CPU_MASK_SET);
-+		__raw_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
-+	}
-+	irq_gc_unlock(gc);
-+}
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
 +
-+static void brcmstb_l2_intc_resume(struct irq_data *d)
-+{
-+	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
-+	struct brcmstb_l2_intc_data *b = gc->private;
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++	};
++};
 +
-+	irq_gc_lock(gc);
-+	/* Clear unmasked non-wakeup interrupts */
-+	__raw_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
++--
++[1] arm/msm/qcom,saw2.txt
++[2] arm/msm/qcom,kpss-acc.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt b/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+new file mode 100644
+index 0000000..aee3617
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+@@ -0,0 +1,95 @@
++================================================
++Secondary CPU enable-method "spin-table" binding
++================================================
 +
-+	/* Restore the saved mask */
-+	__raw_writel(b->saved_mask, b->base + CPU_MASK_SET);
-+	__raw_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
-+	irq_gc_unlock(gc);
-+}
++This document describes the "spin-table" method for enabling secondary CPUs.
++A "spin-table" enable method can be used in either the "cpus" node or in
++individual "cpu" nodes.
 +
-+int __init brcmstb_l2_intc_of_init(struct device_node *np,
-+					struct device_node *parent)
-+{
-+	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
-+	struct brcmstb_l2_intc_data *data;
-+	struct irq_chip_generic *gc;
-+	struct irq_chip_type *ct;
-+	int ret;
++Enable method name:	"spin-table"
++Compatible cpus:	"arm,cortex-a57" (?)
++Related properties:
++	- cpu-release-addr
++		Usage:		required
++		Value type:	<prop-encoded-array>
++		Definition:
++			A two cell value identifying a 64-bit memory location
++			used by the boot CPU to inform a secondary CPU it
++			should begin its kernel bootstrap.  Memory at this
++			location must initially be zeroed.
 +
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
++Examples (contrived 4-core ARM Cortex-A57 64-bit systems):
 +
-+	data->base = of_iomap(np, 0);
-+	if (!data->base) {
-+		pr_err("failed to remap intc L2 registers\n");
-+		return -ENOMEM;
-+	}
++The first example uses the same enable method for all cores.
 +
-+	/* Disable all interrupts by default */
-+	__raw_writel(0xffffffff, data->base + CPU_MASK_SET);
-+	__raw_writel(0xffffffff, data->base + CPU_CLEAR);
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
++		enable-method = "spin-table";
++		cpu-release-addr = <0 0x20000000>;
 +
-+	data->parent_irq = irq_of_parse_and_map(np, 0);
-+	if (data->parent_irq < 0) {
-+		pr_err("failed to find parent interrupt\n");
-+		ret = data->parent_irq;
-+		goto out_unmap;
-+	}
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x0>;
++		};
 +
-+	data->domain = irq_domain_add_linear(np, 32,
-+				&irq_generic_chip_ops, NULL);
-+	if (!data->domain) {
-+		ret = -ENOMEM;
-+		goto out_unmap;
-+	}
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++		};
 +
-+	/* Allocate a single Generic IRQ chip for this node */
-+	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
-+				np->full_name, handle_level_irq, clr, 0, 0);
-+	if (ret) {
-+		pr_err("failed to allocate generic irq chip\n");
-+		goto out_free_domain;
-+	}
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x100>;
++		};
 +
-+	/* Set the IRQ chaining logic */
-+	irq_set_handler_data(data->parent_irq, data);
-+	irq_set_chained_handler(data->parent_irq, brcmstb_l2_intc_irq_handle);
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x101>;
++		};
++	};
 +
-+	gc = irq_get_domain_generic_chip(data->domain, 0);
-+	gc->reg_base = data->base;
-+	gc->private = data;
-+	ct = gc->chip_types;
 +
-+	ct->chip.irq_ack = irq_gc_ack_set_bit;
-+	ct->regs.ack = CPU_CLEAR;
++The second example uses specifies distinct enable method properties for each
++CPU core.
 +
-+	ct->chip.irq_mask = irq_gc_mask_disable_reg;
-+	ct->regs.disable = CPU_MASK_SET;
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
 +
-+	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
-+	ct->regs.enable = CPU_MASK_CLEAR;
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000000>;
++		};
 +
-+	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
-+	ct->chip.irq_resume = brcmstb_l2_intc_resume;
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000008>;
++		};
 +
-+	if (of_property_read_bool(np, "brcm,irq-can-wake")) {
-+		data->can_wake = true;
-+		/* This IRQ chip can wake the system, set all child interrupts
-+		 * in wake_enabled mask
-+		 */
-+		gc->wake_enabled = 0xffffffff;
-+		ct->chip.irq_set_wake = irq_gc_set_wake;
-+	}
++		cpu@100 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x100>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000010>;
++		};
 +
-+	pr_info("registered L2 intc (mem: 0x%p, parent irq: %d)\n",
-+			data->base, data->parent_irq);
-+
-+	return 0;
-+
-+out_free_domain:
-+	irq_domain_remove(data->domain);
-+out_unmap:
-+	iounmap(data->base);
-+	kfree(data);
-+	return ret;
-+}
-+IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_intc_of_init);
++		cpu@101 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x101>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0 0x20000018>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 333f4ae..2bb2a3e 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -185,30 +185,8 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,gcc-msm8660"
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
+-
+-	- cpu-release-addr
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "spin-table".
+-		Value type: <prop-encoded-array>
+-		Definition:
+-			# On ARM v8 64-bit systems must be a two cell
+-			  property identifying a 64-bit zero-initialised
+-			  memory location.
+-
+-	- qcom,saw
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "qcom,kpss-acc-v1" or
+-		       "qcom,kpss-acc-v2"
+-		Value type: <phandle>
+-		Definition: Specifies the SAW[1] node associated with this CPU.
+-
+-	- qcom,acc
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "qcom,kpss-acc-v1" or
+-		       "qcom,kpss-acc-v2"
+-		Value type: <phandle>
+-		Definition: Specifies the ACC[2] node associated with this CPU.
+-
++		Details about use of these CPU enable methods is documented
++		elsewhere[1].
+ 
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
+@@ -403,5 +381,4 @@ cpus {
+ };
+ 
+ --
+-[1] arm/msm/qcom,saw2.txt
+-[2] arm/msm/qcom,kpss-acc.txt
++[1] arm/cpu-enable-method/
 -- 
 1.9.1
+
