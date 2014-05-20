@@ -1,126 +1,160 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Tue, 20 May 2014 23:10:47 +0200
-Message-ID: <20140520211046.GA3476@earth.universe>
-References: <20140515182133.GC23659@atomide.com>
- <5375A8A8.7080306@ti.com>
- <20140516160717.GD22031@atomide.com>
- <20140516174158.GA11733@earth.universe>
- <20140516180154.GG22031@atomide.com>
- <5379CD24.6040508@ti.com>
- <20140519160447.GB4849@atomide.com>
- <537A55EB.1080507@ti.com>
- <20140520051203.GB28812@earth.universe>
- <20140520054852.GA12384@atomide.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 4/9] of: mtd: add documentation for the ONFI NAND timing
+ mode property
+Date: Tue, 20 May 2014 23:32:04 +0200
+Message-ID: <537BC9D4.6070200@free-electrons.com>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com> <1394647664-8258-5-git-send-email-b.brezillon.dev@gmail.com> <20140520182542.GS28907@ld-irv-0074> <537BAD59.3060902@free-electrons.com> <20140520195240.GW28907@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140520054852.GA12384@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140520195240.GW28907@ld-irv-0074>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robherring2@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
 
---XsQoSWH+UP9D9v3l
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 20/05/2014 21:52, Brian Norris wrote:
+> On Tue, May 20, 2014 at 09:30:33PM +0200, Boris BREZILLON wrote:
+>> Hi Brian,
+>>
+>> On 20/05/2014 20:25, Brian Norris wrote:
+>>> Hi Boris,
+>>>
+>>> On Wed, Mar 12, 2014 at 07:07:39PM +0100, Boris BREZILLON wrote:
+>>>> Add documentation for the ONFI NAND timing mode property.
+>>>>
+>>>> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/mtd/nand.txt |    8 ++++++++
+>>>>  1 file changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+>>>> index b53f92e..2046027 100644
+>>>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+>>>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+>>>> @@ -19,3 +19,11 @@ errors per {size} bytes".
+>>>>  The interpretation of these parameters is implementation-defined, so not all
+>>>>  implementations must support all possible combinations. However, implementations
+>>>>  are encouraged to further specify the value(s) they support.
+>>>> +
+>>>> +- onfi,nand-timing-mode: an integer encoding the supported ONFI timing modes of
+>>>> +  the NAND chip. Each supported mode is represented as a bit position (i.e. :
+>>>> +  mode 0 and 1 => (1 << 0) | (1 << 1) = 0x3).
+>>>> +  This is only used when the chip does not support the ONFI standard.
+>>>> +  The last bit set represent the closest mode fulfilling the NAND chip timings.
+>>>> +  For a full description of the different timing modes see this document:
+>>>> +  www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf
+>>> I'm not 100% convinced this property should go in the device tree. With
+>>> most other flash properties (device size, page size, and even minimum
+>>> ECC requirements), we try to auto-detect these parameters to some
+>>> extent. ONFI makes it easy for some class of chips, but for others, we
+>>> typically rely on an in-kernel device ID table or ID decoding heuristic
+>>> -- we don't require a DT description of every property of the flash. So
+>>> what makes this property different?
+>> AFAICT nothing, but the same goes for the ECC requirements, and we've
+>> recently added DT bindings to define these requirements.
+>> I'm not telling we should drop these ECC requirements bindings (actually
+>> I'm using them :-)), but what's different with the timings requirements ?
+> ECC selection is not quite as scientific; with ECC, there are external
+> factors that influence the ECC mode that you should use, since any data
+> read/written from Linux has to be compatible with any data read/written
+> with another entity (e.g., bootloader). Note that the ECC bindings do
+> not represent a property of the flash chip itself (i.e., they don't hold
+> the "minimum required ECC strength"), but of the entire flash system
+> (i.e., "what ECC must I use to play nicely with the rest of the world").
 
-On Mon, May 19, 2014 at 10:48:52PM -0700, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@kernel.org> [140519 22:13]:
-> > On Mon, May 19, 2014 at 10:05:15PM +0300, Tomi Valkeinen wrote:
-> > > On 19/05/14 19:04, Tony Lindgren wrote:
-> > >=20
-> > > > In many cases however we do have multiple compatible strings that
-> > > > describe how the device is wired. See drivers/tty/serial/of_serial.c
-> > > > for example. It has "ns16550" but then it also has additional
-> > > > "nvidia,tegra20-uart", "nxp,lpc3220-uart" and "ibm,qpace-nwp-serial=
-".
-> > >=20
-> > > All those sound like SoC components. In that case it sounds fine to h=
-ave
-> > > the device compatible contain the SoC name. We're talking here about
-> > > external, detachable devices.
->=20
-> Yes I agree it's also hackish. But playing with the compatible flags
-> avoids adding other custom workarounds.
->=20
-> > > >>> Not use what you're after with the SPI example though, but sounds
-> > > >>> like that's something different.
-> > > >>
-> > > >> I think Sebastien's example is just like the issue here.
-> > > >=20
-> > > > Hmm is there some existing example in the kernel like that?
-> > >=20
-> > > No, Sebastien's example was just a hypothetical case. Here, using your
-> > > way of having SoC specific data in the .dts, we would have
-> > > "sharp,ls037v7dw01-omap-dss", and in Sebastien's example with a touch
-> > > sensor we'd have, say, "synaptics,xyz123-omap-spi".
-> >=20
-> > Yes, that's what I wanted to say :)
->=20
-> Hmm I think we need to add few things to the hypothetical SPI case
-> to get it even close to the panel example. Like assume that no SPI bus
-> exists, [...]
+If the ECC bindings don't encode the "minimum required ECC strength" but
+rather the "ECC config on a specific board" then I guess "minimum
+required ECC strength" for non-ONFI chips should be defined somewhere
+else (stored in the device ID table ?).
 
-The important thing is not, that there is an SPI bus (hardware), but
-that there is a common SPI client framework (software). That's one
-of the problem's I see with the modified compatible value.
+Actually, in the sunxi NAND controller driver, I'm using the DT defined
+ECC config when the NAND does not support ONFI timings retrieval.
 
-Basically I see the following problem with the appended -omapdss in
-the compatible string:
+>
+> With timing modes, this is purely a property of the flash chip, and we
+> do not have to synchronize it with the bootloader. We don't exactly care
+> if a bootloader and Linux use slightly different timing modes.
 
- * You can read the -omapdss as "to be used with omapdss driver". In
-   this case the compatible string is just needed for driver loading,
-   which is frowned upon DT binding maintainers AFAIK.
- * Alternatively one can read it as "connected to omapdss". In this
-   case we add unneeded redundancy to the DT. This does not belong
-   into a compatible string, since its encoded in the DT hierarchy.
+Agreed.
 
-And btw. Tomi's rewrite hack basically works exactly like this, just
-without adding the redundancy explicitly into the DT. Instead of
-prefixing the comaptible string he could also add a -omapdss sufix.
-That's basically a proof, that the suffix adds useless redudancy.
 
-> [...] and that potentially multiple different Synaptics drivers are
-> trying to share the same compatible flag for a non-existing generic
-> binding.
+>
+>> Moreover, we will end up with a lot of new entries in the device ID
+>> table if we decide to put these informations in this table.
+> Yes, that could be a problem.
+>
+> What sort of non-ONFI flash chips do you have that need this property?
 
-If there was no common SPI client framework you would need two
-different SPI client drivers for two different SPI host controllers.
+I only have the Hynix one defined in my patch series.
+Other people tested my driver on different boards but I don't recall
+exactly which NAND they had (a samsung one IIRC).
 
-Obviously its a bad idea to have no SPI framework, but that's not
-important for the example (except that there should obviously be a
-common panel framework) :)
+> And what timing mode(s) do they use? Is there, for instance, a pattern
+> such that all Hynix MLC of a certain generation use a particular timing
+> mode?
 
-> I think then it's getting close to the panel example :)
+I'll take a look.
 
--- Sebastian
+>
+>>> I realize that we may not include device ID entries for every flash that
+>>> you need in the ID table (although we still are able to detect the
+>>> important properties accurately, like page and block size). But would it
+>>> suffice to default these flash to a lowest common timing mode, like mode
+>>> 0?
+>> IMHO this is not a good solution: you'll end up with lower perfomances
+>> on most of the supported NAND chips and I'm not sure this is what we want.
+> No, we wouldn't want to always use mode 0. But it's possible we can get
+> good enough heuristics for most flash, if we can integrate timing modes
+> into the current extended ID decoding. Not sure.
+>
+> I'm also concerned here that this kind of binding will be difficult to
+> use properly. A user/developer/board-designer would have to read the
+> datasheet and compare all its values to the ONFI spec to find the
+> closest match, and they would have to do this for each new flash they
+> use. If we can help them by autodetecting this, that would be great.
+ 
 
---XsQoSWH+UP9D9v3l
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>
+>>> If no other option works well, then I am still open to describing the
+>>> supported timing modes in the DT.
+>>>
+>>> BTW, this bitfield property looks kinda strange to me. Do non-ONFI flash
+>>> typically support multiple timing modes? And if so, how are we supposed
+>>> to *change* modes? AFAIK, ONFI provides the only standard for
+>>> configuring the flash's timing mode. So maybe you're really only wanting
+>>> a "default timing mode" property that is a single integer, not a
+>>> bitfield.
+>> Indeed, I based it on the ONFI NAND timings mode model, but AFAIK (tell
+>> me if I'm wrong), it should work because most of the timings are min
+>> requirements.
+>> This means, even if you provide slower signals transitions, the NAND
+>> will work as expected.
+> So you're saying that even though the chip actually specifies a single
+> set of timings, you would describe this as a bitmask of several
+> supported ONFI timing modes, up to the "max performance"?
+>
+> Is there ever a case where (for instance) a non-ONFI flash supports the
+> equivalent of timing mode 3, but it does not support mode 2 or 1?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+I don't think so.
 
-iQIcBAEBCgAGBQJTe8TWAAoJENju1/PIO/qaYxgP/joS7fClYFQXSFXi+oe1Xfe0
-n3Hl3futAbZ1cgauu54pWTbnwzv6JdfedmV6GXAfrKkwBZCVKR6P/dN2TFOYHUdV
-lPJN/k3VSieJUx2sUTTthegaIGymiZwEtrJGSCv7b9Oz6vjTZAYKR24MEUA9DTXR
-mfOM1DX7sCP7DugPyeP7vcAQ1dr8E9IhRYIEEbyzafi5dkgO1ojUbYCugKDk9NL3
-jrEdw1Cbmw+1EUV6ATjbLVF/GiTmU1QunYGh29oGamLrnI6DrfU/I/FqYwC9Dxnp
-mjoYxyQ3Qk+FzGvYmD1BdwzHe/3oOuL0aOps6ytq5C+ktU3uPQxEATzlVEgZRBzD
-pMEh9JkQKqPyWyc/T83TFrBzuKvw3gVvy2un7Hirur9FE7TVaiS0yuZyR0o9IWI/
-WFlufQckSzQFcKA9nCB7k5foy01c77FQ6KKsEbNgx+MLOyDcAA/kYTeuGlQzl3Fu
-RkFmwmlx4HvI3dO1CUQY+YQn+4FUKsvd3CDnYvvkdklrQw5aZV9xiIBLBGGfRzEk
-zoJgo+6jFfeimP+fDzIuMVWocLfxZbXKN+PJ7Mt2AHIrxNdYDYZPgEQTv6ANKLtM
-evt8Zc6ootQzFCvZCp4jVMcylFjP8nWPnM5ZJ0g296UAanSXtDWqP0hMd92NgYl6
-2eWfaMhblzgbBhL9ICaI
-=oeEM
------END PGP SIGNATURE-----
+>> But I can modify the bindings to just encode the maximum supported
+>> timing mode.
+> AIUI, the non-ONFI datasheets really only specify a single timing mode,
+> so I think we should only specify the "max." And as a bonus, this
+> actually makes the binding easier to use. A driver does not care about
+> how many different modes are supported; it only needs to know what the
+> max is.
 
---XsQoSWH+UP9D9v3l--
+Agreed, actually my first binding was defining it this way.
+
+>
+> Brian
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
