@@ -1,67 +1,103 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [Patch v3 0/5] Introduce keystone reset driver
-Date: Tue, 20 May 2014 21:27:48 +0200
-Message-ID: <10992709.10WgsOixXr@wuerfel>
-References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com> <537B5D5D.8030106@ti.com> <537BA06B.5060200@ti.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v3 4/9] of: mtd: add documentation for the ONFI NAND timing
+ mode property
+Date: Tue, 20 May 2014 21:30:33 +0200
+Message-ID: <537BAD59.3060902@free-electrons.com>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com> <1394647664-8258-5-git-send-email-b.brezillon.dev@gmail.com> <20140520182542.GS28907@ld-irv-0074>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537BA06B.5060200-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
-Cc: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, w-kwok2-l0cyMroinI0@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140520182542.GS28907@ld-irv-0074>
+Sender: linux-doc-owner@vger.kernel.org
+To: Brian Norris <computersforpeace@gmail.com>
+Cc: Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robherring2@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 May 2014 21:35:23 Ivan Khoronzhuk wrote:
-> Thank for the note.
-> 
-> Ok.
-> 
-> Memory map:
-> [00 02310000 - 00 023101FF] size=512 PLL Controller
-> [00 02620000 - 00 02620FFF] size=4K device state control registers
-> 
-> I'll define in DT two new syscon compatible nodes like:
-> 
->          pllctrl: pll_controller {
->              compatible = "syscon";
->              reg = <0x2310000 0x200>;
->          };
-> 
->          devctrl: device_state_control {
->              compatible = "syscon";
->              reg = <0x2620000 0x1000>;
->          };
+Hi Brian,
 
-Please add a well-defined compatible-string in addition to "syscon" as
-well.
+On 20/05/2014 20:25, Brian Norris wrote:
+> Hi Boris,
+>
+> On Wed, Mar 12, 2014 at 07:07:39PM +0100, Boris BREZILLON wrote:
+>> Add documentation for the ONFI NAND timing mode property.
+>>
+>> Signed-off-by: Boris BREZILLON <b.brezillon.dev@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/mtd/nand.txt |    8 ++++++++
+>>  1 file changed, 8 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/mtd/nand.txt b/Documentation/devicetree/bindings/mtd/nand.txt
+>> index b53f92e..2046027 100644
+>> --- a/Documentation/devicetree/bindings/mtd/nand.txt
+>> +++ b/Documentation/devicetree/bindings/mtd/nand.txt
+>> @@ -19,3 +19,11 @@ errors per {size} bytes".
+>>  The interpretation of these parameters is implementation-defined, so not all
+>>  implementations must support all possible combinations. However, implementations
+>>  are encouraged to further specify the value(s) they support.
+>> +
+>> +- onfi,nand-timing-mode: an integer encoding the supported ONFI timing modes of
+>> +  the NAND chip. Each supported mode is represented as a bit position (i.e. :
+>> +  mode 0 and 1 => (1 << 0) | (1 << 1) = 0x3).
+>> +  This is only used when the chip does not support the ONFI standard.
+>> +  The last bit set represent the closest mode fulfilling the NAND chip timings.
+>> +  For a full description of the different timing modes see this document:
+>> +  www.onfi.org/~/media/ONFI/specs/onfi_3_1_spec.pdf
+> I'm not 100% convinced this property should go in the device tree. With
+> most other flash properties (device size, page size, and even minimum
+> ECC requirements), we try to auto-detect these parameters to some
+> extent. ONFI makes it easy for some class of chips, but for others, we
+> typically rely on an in-kernel device ID table or ID decoding heuristic
+> -- we don't require a DT description of every property of the flash. So
+> what makes this property different?
 
-> then correct reset-controller node like:
-> 
->          rstctrl: reset-controller {
->              compatible = "ti,keystone-reset";
->              reg = <0xE4 0x10>, <0x328 0x10>;
->              reg-names = "pllregs", "muxregs";
->              syscon1 = <&pllctrl>;
->              syscon2 = <&devctrl>;
->              ti,wdt_list = <0>;
->          };
+AFAICT nothing, but the same goes for the ECC requirements, and we've
+recently added DT bindings to define these requirements.
+I'm not telling we should drop these ECC requirements bindings (actually
+I'm using them :-)), but what's different with the timings requirements ?
 
-You can't really use the "reg" property to refer to syscon
-registers, but you can make up your own property for that,
-or put the register numbers into the syscon1/2 properties,
-or just hardcode the offsets in the driver.
+Moreover, we will end up with a lot of new entries in the device ID
+table if we decide to put these informations in this table.
 
-> And correct reset-controller code to get regmap by phandle,
-> then access registers by regmap.
-> 
-> Also I'll post two separate patches that add syscon nodes in question.
+>
+> I realize that we may not include device ID entries for every flash that
+> you need in the ID table (although we still are able to detect the
+> important properties accurately, like page and block size). But would it
+> suffice to default these flash to a lowest common timing mode, like mode
+> 0?
 
-Sounds good, thanks!
+IMHO this is not a good solution: you'll end up with lower perfomances
+on most of the supported NAND chips and I'm not sure this is what we want.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> If no other option works well, then I am still open to describing the
+> supported timing modes in the DT.
+>
+> BTW, this bitfield property looks kinda strange to me. Do non-ONFI flash
+> typically support multiple timing modes? And if so, how are we supposed
+> to *change* modes? AFAIK, ONFI provides the only standard for
+> configuring the flash's timing mode. So maybe you're really only wanting
+> a "default timing mode" property that is a single integer, not a
+> bitfield.
+
+Indeed, I based it on the ONFI NAND timings mode model, but AFAIK (tell
+me if I'm wrong), it should work because most of the timings are min
+requirements.
+This means, even if you provide slower signals transitions, the NAND
+will work as expected.
+
+But I can modify the bindings to just encode the maximum supported
+timing mode.
+
+Thanks for your feedback.
+
+Best Regards,
+
+Boris
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
