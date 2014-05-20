@@ -1,49 +1,48 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3 0/2] ARM: dts: add device data for exynos4412-trats2
-Date: Wed, 21 May 2014 00:45:33 +0200
-Message-ID: <537BDB0D.6060804@gmail.com>
-References: <537B32E5.2070606@samsung.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC] Migrate to Hz resolution for OPP binding
+Date: Tue, 20 May 2014 18:11:33 -0500
+Message-ID: <CAGo_u6rftjYAEy0wSFA6aqCDNsriC9r-cMVSqeX1xqKCVBqe7g@mail.gmail.com>
+References: <672dd8e9-2857-49fb-848f-d38d38b23c9b@BN1BFFO11FD024.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <537B32E5.2070606@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <672dd8e9-2857-49fb-848f-d38d38b23c9b@BN1BFFO11FD024.protection.gbl>
+Sender: linux-pm-owner@vger.kernel.org
+To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, lkml <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dt list <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20.05.2014 12:48, Beomho Seo wrote:
-> This patchset add some device node for exynos4412-trats2.
-> It is based on v3.15-next/dt-samsung-2 branch.
-> 
-> exynos4412-trats2.dts
-> - Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-kasei,ak8975".
-> - Add cm36651 light/proximity sensor device node.
-> - Change gpio-key device node. fix incorrect gpio property, and then add "ok-key" node.
-> 
-> Changes in v3:
-> - Patch set based on v3.16-next/dt-samsung
-> - ARM: dts: fix incorrect compatible for exynos4412 patch is applied.
-> - Remove device node property; status, interrupt-parent, interrupt
-> - Changes gpio/interrupt specified index.
-> 
-> Changes in v2:
-> 
-> - Change ak8975 magnetic sensor compatible according to binding document.
-> - Change cm36651 light/proximity sensor compatible according to binding document and driver.
-> 
-> Beomho Seo (2):
->   ARM: dts: add cm36651 light/proximity sensor node
->   ARM: dts: fixed gpio key node for exynos4412
-> 
->  arch/arm/boot/dts/exynos4412-trats2.dts |   46 +++++++++++++++++++++++++------
->  1 file changed, 38 insertions(+), 8 deletions(-)
-> 
+On Tue, May 20, 2014 at 5:30 PM, S=C3=B6ren Brinkmann
+<soren.brinkmann@xilinx.com> wrote:
+> Hi,
+>
+> I guess this is just to evaluate how big the lynch mob will be. Anywa=
+y:
+> Triggered by this discussion https://lkml.org/lkml/2014/5/15/46, I
+> looked a little into what it would take to migrate everybody to Hz
+> frequency resolutions to avoid all the conversions between cpufreq, C=
+CF,
+> OPPs, etc.
+> Turns out, OPPs are already stored in Hz resolution in the kernel, bu=
+t the DT
+> bindings use kHz resolution to specify them in DT. So, code-wise ther=
+e
+> is just a removal of a multiplication in the OPP parser (see below), =
+but
+> then there are the DT bindings...
 
-For the whole series:
+Yep :( unfortunately, so :(
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+>
+> As plan B, I was thinking to add the property 'operating-points-hz'..=
+=2E
+>
+> Any better ideas?
 
-Best regards,
-Tomasz
+property operating-points-hz as a bool perhaps -> that modifies the
+description and maintains legacy dtb support sounds OK to me if DT
+folks and Rafael are ok with it as well.
+
+Regards,
+Nishanth Menon
