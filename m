@@ -1,59 +1,70 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/4] mfd: bcm590xx: add support for secondary I2C
- slave address
-Date: Tue, 20 May 2014 17:11:31 +0100
-Message-ID: <20140520161131.GB32025@lee--X1>
-References: <1398295293-11033-1-git-send-email-mporter@linaro.org>
- <1398295293-11033-3-git-send-email-mporter@linaro.org>
- <20140428115627.GY21279@lee--X1>
- <20140428140910.GB7719@beef>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 0/9 net-next] net: of_phy_connect_fixed_link removal
+Date: Tue, 20 May 2014 09:13:39 -0700
+Message-ID: <CAGVrzcZ98LbqzgpLxsyNvXiZ35oMq9xw76X7BUjHCwd3oEjAdA@mail.gmail.com>
+References: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140428140910.GB7719@beef>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+In-Reply-To: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
+List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
+List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
+List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
+List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
+List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
+ <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
+Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
+Sender: "Linuxppc-dev"
+ <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
+To: netdev <netdev@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, Florian Fainelli <f.fainelli@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, Vitaly Bordug <vbordug@ru.mvista.com>, Kumar Gala <galak@codeaurora.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@daveml>
 List-Id: devicetree@vger.kernel.org
 
-> > > BCM590xx utilizes a secondary I2C slave address to access additio=
-nal
-> > > register space. Add support for the secondary address space by
-> > > instantiating a dummy I2C device with the appropriate secondary
-> > > I2C slave address. Also expose a secondary regmap register space =
-so
-> > > that MFD drivers can access this secondary i2c slave address spac=
-e.
-> > >=20
-> > > Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > ---
-> > >  drivers/mfd/bcm590xx.c       | 60 ++++++++++++++++++++++++++++++=
-+++-----------
-> > >  include/linux/mfd/bcm590xx.h |  9 ++++---
-> > >  2 files changed, 52 insertions(+), 17 deletions(-)
-> >=20
-> > Nice, flows much better now.
-> >=20
-> > Can I just apply the two MFD patches, or are there cross-deps?
->=20
-> There's cross-deps so the regulator driver will need to go with it.
-> Mark mentioned earlier in the thread that he wanted to merge through
-> the regulator tree though.
-
-Still nothing.
-
-Mark,
-  Can I apply this set and supply you with a pull-request?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+MjAxNC0wNS0xOSAxNzo1NiBHTVQtMDc6MDAgRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBn
+bWFpbC5jb20+Ogo+IEhpIGFsbCwKPgo+IFRoaXMgcGF0Y2ggc2V0IHJlbW92ZXMgb2ZfcGh5X2Nv
+bm5lY3RfZml4ZWRfbGluaygpIGZyb20gdGhlIHRyZWUgbm93IHRoYXQKPiB3ZSBoYXZlIGEgYmV0
+dGVyIHNvbHV0aW9uIGZvciBkZWFsaW5nIHdpdGggZml4ZWQgUEhZIChlbXVsYXRlZCBQSFkpIGRl
+dmljZXMKPiBmb3IgZHJpdmVycyB0aGF0IHJlcXVpcmUgdGhlbS4KPgo+IEZpcnN0IHR3byBwYXRj
+aGVzIHVwZGF0ZSB0aGUgJ2ZpeGVkLWxpbmsnIERldmljZSBUcmVlIGJpbmRpbmcgYW5kIGRyaXZl
+cnMgdG8KPiByZWZlcmUgdG8gaXQuCj4KPiBQYXRjaGVzIDMgdG8gNyB1cGRhdGUgdGhlIGluLXRy
+ZWUgbmV0d29yayBkcml2ZXJzIHRoYXQgdXNlCj4gb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluaygp
+Cj4KPiBQYXRjaCA4IHJlbW92ZXMgb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluawo+Cj4gUGF0Y2gg
+OSByZW1vdmVzIHRoZSBQb3dlclBDIGNvZGUgdGhhdCBwYXJzZWQgdGhlICdmaXhlZC1saW5rJyBw
+cm9wZXJ0eS4KPgo+IFBhdGNoIDkgY2FuIGJlIG1lcmdlZCB2aWEgdGhlIG5ldC1uZXh0IHRyZWUg
+aWYgdGhlIFBvd2VyUEMgZm9sa3MgYWNrIGl0LAo+IGJ1dCBpdCByZWFsbHkgaGFzIHRvIGJlIG1l
+cmdlZCBhZnRlciB0aGUgZmlyc3QgOCBwYXRjaGVzIGluIG9yZGVyIHRvIGF2b2lkCj4gYnJlYWth
+Z2UuCgpGb3Igc29tZSByZWFzb24gdGhlc2UgcGF0Y2hlcyBkaWQgbm90IG1ha2UgaXQgdG8gdGhl
+IG5ldGRldiBwYXRjaHdvcmsKaW5zdGFuY2UsIGFsdG91Z2ggbmV0ZGV2IGlzIGluIENDLCBJIHdp
+bGwgcHJvYmFibHkgcmVzZW5kIHRoZW4gd2l0aCBhCnRyaW1tZWQgQ0MgbGlzdCBhbmQganVzdCBr
+ZWVwIGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnIGZvciBpbnN0YW5jZS4KCj4KPiBGbG9yaWFu
+IEZhaW5lbGxpICg5KToKPiAgIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IGFkZCBvbGQgYW5k
+IGRlcHJlY2F0ZWQgJ2ZpeGVkLWxpbmsnCj4gICBEb2N1bWVudGF0aW9uOiBkZXZpY2V0cmVlOiBu
+ZXQ6IHJlZmVyIHRvIGZpeGVkLWxpbmsudHh0Cj4gICBuZXQ6IGJjbWdlbmV0OiB1c2UgdGhlIG5l
+dyBmaXhlZCBQSFkgaGVscGVycwo+ICAgbmV0OiBzeXN0ZW1wb3J0OiB1c2UgdGhlIG5ldyBmaXhl
+ZCBQSFkgaGVscGVycwo+ICAgZnNfZW5ldDogdXNlIHRoZSBuZXcgZml4ZWQgUEhZIGhlbHBlcnMK
+PiAgIGdpYW5mYXI6IHVzZSB0aGUgbmV3IGZpeGVkIFBIWSBoZWxwZXJzCj4gICB1Y2NfZ2V0aDog
+dXNlIHRoZSBuZXcgZml4ZWQgUEhZIGhlbHBlcnMKPiAgIG9mOiBtZGlvOiByZW1vdmUgb2ZfcGh5
+X2Nvbm5lY3RfZml4ZWRfbGluawo+ICAgcG93ZXJwYy9mc2w6IGZzbF9zb2M6IHJlbW92ZSAnZml4
+ZWQtbGluaycgcGFyc2luZyBjb2RlCj4KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Jy
+b2FkY29tLWJjbWdlbmV0LnR4dCAgfCAgMiArLQo+ICAuLi4vYmluZGluZ3MvbmV0L2Jyb2FkY29t
+LXN5c3RlbXBvcnQudHh0ICAgICAgICAgICB8ICAyICstCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL25ldC9maXhlZC1saW5rLnR4dCAgICAgICAgIHwgMTIgKysrKysrKwo+ICAuLi4vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9uZXQvZnNsLXRzZWMtcGh5LnR4dCAgICAgICB8ICA1ICstLQo+ICBhcmNo
+L3Bvd2VycGMvc3lzZGV2L2ZzbF9zb2MuYyAgICAgICAgICAgICAgICAgICAgICB8IDMyIC0tLS0t
+LS0tLS0tLS0tLS0tLQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9icm9hZGNvbS9iY21zeXNwb3J0
+LmMgICAgICAgICB8IDE3ICsrKysrKysrLS0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvYnJvYWRj
+b20vYmNtc3lzcG9ydC5oICAgICAgICAgfCAgMSArCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2Jy
+b2FkY29tL2dlbmV0L2JjbW1paS5jICAgICAgIHwgMjEgKysrKysrKy0tLS0tCj4gIC4uLi9uZXQv
+ZXRoZXJuZXQvZnJlZXNjYWxlL2ZzX2VuZXQvZnNfZW5ldC1tYWluLmMgIHwgMTYgKysrKystLS0t
+Cj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9naWFuZmFyLmMgICAgICAgICAgIHwg
+MTQgKysrKysrLS0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL3VjY19nZXRoLmMg
+ICAgICAgICAgfCAxNCArKysrKystLQo+ICBkcml2ZXJzL29mL29mX21kaW8uYyAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgICB8IDM4IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgaW5jbHVk
+ZS9saW51eC9vZl9tZGlvLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMCAtLS0tLS0K
+PiAgMTMgZmlsZXMgY2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKSwgMTA5IGRlbGV0aW9ucygtKQo+
+Cj4gLS0KPiAxLjkuMQo+CgoKCi0tIApGbG9yaWFuCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMt
+ZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xp
+bnV4cHBjLWRldg==
