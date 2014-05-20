@@ -1,57 +1,57 @@
-From: Brian Norris <computersforpeace@gmail.com>
-Subject: Re: [PATCH v3 4/9] of: mtd: add documentation for the ONFI NAND
- timing mode property
-Date: Tue, 20 May 2014 12:55:04 -0700
-Message-ID: <20140520195504.GX28907@ld-irv-0074>
-References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
- <1394647664-8258-5-git-send-email-b.brezillon.dev@gmail.com>
- <20140520182542.GS28907@ld-irv-0074>
- <537BAD59.3060902@free-electrons.com>
- <20140520195140.GA32287@obsidianresearch.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2 0/6] soc: ti: Add Keystone Navigator drivers
+Date: Wed, 21 May 2014 05:01:04 +0900
+Message-ID: <20140520200104.GA27786@kroah.com>
+References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
+ <537B5F5E.9080703@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140520195140.GA32287@obsidianresearch.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robherring2@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
+In-Reply-To: <537B5F5E.9080703@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 01:51:40PM -0600, Jason Gunthorpe wrote:
-> On Tue, May 20, 2014 at 09:30:33PM +0200, Boris BREZILLON wrote:
-> > AFAICT nothing, but the same goes for the ECC requirements, and we've
-> > recently added DT bindings to define these requirements.
-> > I'm not telling we should drop these ECC requirements bindings (actually
-> > I'm using them :-)), but what's different with the timings requirements ?
+On Tue, May 20, 2014 at 09:57:50AM -0400, Santosh Shilimkar wrote:
+> Greg,
 > 
-> ECC requirements are almost always something that has to be matched to
-> the bootloader (since the bootloader typicaly reads the NAND to boot),
-> so it is sensible to put that in the DT
+> On Wednesday 23 April 2014 07:46 PM, Santosh Shilimkar wrote:
+> > Here is an updated version of the Keystone Navigator drivers after
+> > addressing comments from earlier version [1].
+> > 
+> > The QMSS found on Keystone SOCs is one of the main hardware sub
+> > system which forms the backbone of the Keystone Multi-core Navigator.
+> > QMSS consist of queue managers, packed-data structure processors(PDSP),
+> > linking RAM, descriptor pools and infrastructure DMA.
+> > 
+> > After the discussion and alignment [2] on Navigator DMA, now we pair
+> > this driver along with QMSS. Initially this driver was proposed as DMA
+> > engine driver but since the hardware is not typical DMA engine and doesn't
+> > comply with typical DMA engine driver needs, that approach was naked.
+> > 
+> > These two drivers works as infrastructure drivers for subsystems like
+> > Ethernet subsystem, SRIO subsystem, Crypto Engines etc on Keystone
+> > SOC families. Testing is done with NetCP(ethernet) subsystem drivers.
+> > 
+> > I would like to get these drivers merged in upcoming(3.16) window, so
+> > any help in terms of review is appreciated. Thanks
+> > 
+> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > Cc: Kumar Gala <galak@codeaurora.org>
+> > Cc: Olof Johansson <olof@lixom.net>
+> > Cc: Arnd Bergmann <arnd@arndb.de>
+> > Cc: Grant Likely <grant.likely@linaro.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > 
+> I plan to respin v3 of the series for the few device tree related
+> comments I received from Rob H (thanks Rob). Can you please have a
+> look and gsee if you have any comments so that I can include them
+> in next version.
 
-+1 You beat me to this :)
+I am so far behind in patch review, please just redo them based on
+other's comments and resend, don't wait for me.
 
-> The timings are a property of the chip, and if they can be detected
-> they should be. IMHO, the main purpose of a DT property would be to
-> lower the speed if, for some reason, the board cannot support the
-> device's full speed.
-
-Agreed.
-
-Now, we still have the open question of whether we can autodetect timing
-modes easily for non-ONFI chips.
-
-> > Indeed, I based it on the ONFI NAND timings mode model, but AFAIK
-> > (tell me if I'm wrong), it should work because most of the timings
-> > are min requirements.  This means, even if you provide slower
-> > signals transitions, the NAND will work as expected.
-> 
-> IIRC for ONFI a device must always work in the mode 0 timings, without
-> requiring a command?
-
-I believe so.
-
-FYI, despite the name of the binding, we are mostly interested in
-non-ONFI NAND here.
-
-Brian
+greg k-h
