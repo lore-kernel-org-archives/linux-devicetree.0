@@ -1,33 +1,41 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 1/3] ARM: shmobile: r8a7791: add internal PCI bridge
- nodes
-Date: Tue, 20 May 2014 14:45:43 +0400
-Message-ID: <537B3257.5000105@cogentembedded.com>
-References: <201405200148.28683.sergei.shtylyov@cogentembedded.com> <201405200152.06575.sergei.shtylyov@cogentembedded.com> <5095898.2pUCzGkcW7@wuerfel>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: [PATCH v3 0/2] ARM: dts: add device data for exynos4412-trats2
+Date: Tue, 20 May 2014 19:48:05 +0900
+Message-ID: <537B32E5.2070606@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <5095898.2pUCzGkcW7@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patchset add some device node for exynos4412-trats2.
+It is based on v3.15-next/dt-samsung-2 branch.
 
-On 20-05-2014 12:04, Arnd Bergmann wrote:
+exynos4412-trats2.dts
+- Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-kasei,ak8975".
+- Add cm36651 light/proximity sensor device node.
+- Change gpio-key device node. fix incorrect gpio property, and then add "ok-key" node.
 
->> +               interrupt-map-mask = <0xff00 0 0 0x7>;
->> +               interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->> +                                0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->> +                                0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+Changes in v3:
+- Patch set based on v3.16-next/dt-samsung
+- ARM: dts: fix incorrect compatible for exynos4412 patch is applied.
+- Remove device node property; status, interrupt-parent, interrupt
+- Changes gpio/interrupt specified index.
 
-> Are there only internal devices on this PCI host?
+Changes in v2:
 
-    Yes, and all populated device slots are listed.
+- Change ak8975 magnetic sensor compatible according to binding document.
+- Change cm36651 light/proximity sensor compatible according to binding document and driver.
 
-> 	Arnd
+Beomho Seo (2):
+  ARM: dts: add cm36651 light/proximity sensor node
+  ARM: dts: fixed gpio key node for exynos4412
 
-WBR, Sergei
+ arch/arm/boot/dts/exynos4412-trats2.dts |   46 +++++++++++++++++++++++++------
+ 1 file changed, 38 insertions(+), 8 deletions(-)
 
+-- 
+1.7.9.5
