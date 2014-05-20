@@ -1,52 +1,49 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH net-next 2/4] net: systemport: use the new fixed PHY helpers
-Date: Mon, 19 May 2014 16:31:26 -0700
-Message-ID: <CAGVrzcYHQ7dXOi8z8W6d0u-bxLas8Za4O6n6_n1M6y+X9PH2Dw@mail.gmail.com>
-References: <1400528625-32744-1-git-send-email-f.fainelli@gmail.com>
- <1400528625-32744-3-git-send-email-f.fainelli@gmail.com> <20140519221946.27dbad55@free-electrons.com>
- <CAGVrzcYwp6W7YgDmAbe3d+LEX105d+s1j2jV4zvAm52rWTt5rg@mail.gmail.com> <20140520000420.7039e1bc@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Mon, 19 May 2014 19:35:45 -0700
+Message-ID: <1400553346-23238-1-git-send-email-dgreid@chromium.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140520000420.7039e1bc-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-19 15:04 GMT-07:00 Thomas Petazzoni
-<thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>:
-> Dear Florian Fainelli,
->
-> On Mon, 19 May 2014 14:52:57 -0700, Florian Fainelli wrote:
->
->> >> +     /* SYSTEMPORT uses the old 'fixed-link' 5-digit property which is
->> >> +      * deprecated, we need to register the fixed PHY using the Ethernet
->> >> +      * MAC node since we do not have a 'fixed-link' subnode.
->> >> +      */
->> >
->> > Actually even if you use the new fixed PHY DT binding, the DT node
->> > linked to the PHY is the Ethernet MAC node. This is because I didn't
->> > want to have a difference between how things are handled between the
->> > old and the new binding.
->>
->> Sure, I agree, and the comment still stands, I am just expressing it
->> that we are not looking for the 'fixed-link' subnode, but the
->> 'fixed-link' 5-digit property here. Would you want me to rephrase
->> that?
->
-> What I found misleading in the comment is that you simply to imply that
-> because you're not using the new DT binding for fixed-link, the DT node
-> that is associated to the PHY is the Ethernet MAC.
->
-> The truth is that the DT node associated to the fixed PHY is always the
-> Ethernet MAC, regardless of whether you're using the old or the new DT
-> binding.
+Add a device node for the HDA controller found on Tegra124.
 
-Right, I will respin without this misleading comment and also to
-address the formatting issue spotted by Sergei. Thanks!
+Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/tegra124.dtsi | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
+index 6e6bc4e..7890641 100644
+--- a/arch/arm/boot/dts/tegra124.dtsi
++++ b/arch/arm/boot/dts/tegra124.dtsi
+@@ -449,6 +449,21 @@
+ 		clock-names = "pclk", "clk32k_in";
+ 	};
+ 
++	hda@0,70030000 {
++		compatible = "nvidia,tegra124-hda", "nvidia,tegra30-hda";
++		reg = <0x0 0x70030000 0x0 0x10000>;
++		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&tegra_car TEGRA124_CLK_HDA>,
++		         <&tegra_car TEGRA124_CLK_HDA2HDMI>,
++			 <&tegra_car TEGRA124_CLK_HDA2CODEC_2X>;
++		clock-names = "hda", "hda2hdmi", "hdacodec_2x";
++		resets = <&tegra_car 125>, /* hda */
++			 <&tegra_car 128>, /* hda2hdmi */
++			 <&tegra_car 111>; /* hda2codec_2x */
++		reset-names = "hda", "hda2hdmi", "hdacodec_2x";
++		status = "disabled";
++	};
++
+ 	sdhci@0,700b0000 {
+ 		compatible = "nvidia,tegra124-sdhci";
+ 		reg = <0x0 0x700b0000 0x0 0x200>;
 -- 
-Florian
+1.8.1.3.605.g02339dd
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
