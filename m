@@ -1,122 +1,68 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH] ASoC: samsung: Add 'mclk' handling for Snow sound-card driver
-Date: Tue, 20 May 2014 09:55:42 +0530
-Message-ID: <1400559942-5666-1-git-send-email-tushar.behera@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
-Cc: lgirdwood@gmail.com, robh+dt@kernel.org, sbkim73@samsung.com, rdunlap@infradead.org, broonie@kernel.org, dianders@chromium.org, t.figa@samsung.com
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Mon, 19 May 2014 22:48:52 -0700
+Message-ID: <20140520054852.GA12384@atomide.com>
+References: <537487AE.3060906@ti.com>
+ <20140515182133.GC23659@atomide.com>
+ <5375A8A8.7080306@ti.com>
+ <20140516160717.GD22031@atomide.com>
+ <20140516174158.GA11733@earth.universe>
+ <20140516180154.GG22031@atomide.com>
+ <5379CD24.6040508@ti.com>
+ <20140519160447.GB4849@atomide.com>
+ <537A55EB.1080507@ti.com>
+ <20140520051203.GB28812@earth.universe>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140520051203.GB28812-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For audio to work on Snow board, we need the codec master clock 'mclk'
-to be properly configured.
+* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [140519 22:13]:
+> On Mon, May 19, 2014 at 10:05:15PM +0300, Tomi Valkeinen wrote:
+> > On 19/05/14 19:04, Tony Lindgren wrote:
+> > 
+> > > In many cases however we do have multiple compatible strings that
+> > > describe how the device is wired. See drivers/tty/serial/of_serial.c
+> > > for example. It has "ns16550" but then it also has additional
+> > > "nvidia,tegra20-uart", "nxp,lpc3220-uart" and "ibm,qpace-nwp-serial".
+> > 
+> > All those sound like SoC components. In that case it sounds fine to have
+> > the device compatible contain the SoC name. We're talking here about
+> > external, detachable devices.
 
-Currently XCLKOUT is configured as 'mclk' for codec chip and it is
-required to be clocked at 24MHz for the codec to work properly.
+Yes I agree it's also hackish. But playing with the compatible flags
+avoids adding other custom workarounds.
 
-Add appropriate clock handling within Snow sound-card driver to set
-'mclk' to operate at 24MHz.
+> > >>> Not use what you're after with the SPI example though, but sounds
+> > >>> like that's something different.
+> > >>
+> > >> I think Sebastien's example is just like the issue here.
+> > > 
+> > > Hmm is there some existing example in the kernel like that?
+> > 
+> > No, Sebastien's example was just a hypothetical case. Here, using your
+> > way of having SoC specific data in the .dts, we would have
+> > "sharp,ls037v7dw01-omap-dss", and in Sebastien's example with a touch
+> > sensor we'd have, say, "synaptics,xyz123-omap-spi".
+> 
+> Yes, that's what I wanted to say :)
 
-Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
----
- Documentation/devicetree/bindings/sound/snow.txt |    7 ++++++
- sound/soc/samsung/snow.c                         |   26 +++++++++++++++++++++-
- 2 files changed, 32 insertions(+), 1 deletion(-)
+Hmm I think we need to add few things to the hypothetical SPI case
+to get it even close to the panel example. Like assume that no SPI bus
+exists, and that potentially multiple different Synaptics drivers are
+trying to share the same compatible flag for a non-existing generic
+binding.. I think then it's getting close to the panel example :)
 
-diff --git a/Documentation/devicetree/bindings/sound/snow.txt b/Documentation/devicetree/bindings/sound/snow.txt
-index 678b191..94dd29c 100644
---- a/Documentation/devicetree/bindings/sound/snow.txt
-+++ b/Documentation/devicetree/bindings/sound/snow.txt
-@@ -7,6 +7,10 @@ Required properties:
- - samsung,i2s-controller: The phandle of the Samsung I2S controller
- - samsung,audio-codec: The phandle of the audio codec
- 
-+Optional properties:
-+- clocks: The phandle of the master clock to audio codec
-+- clock-names: Should be "mclk"
-+
- Example:
- 
- sound {
-@@ -14,4 +18,7 @@ sound {
- 
- 		samsung,i2s-controller = <&i2s0>;
- 		samsung,audio-codec = <&max98095>;
-+
-+		clocks = <&pmu_system_controller>;
-+		clock-names = "mclk";
- };
-diff --git a/sound/soc/samsung/snow.c b/sound/soc/samsung/snow.c
-index 014c177..c910739 100644
---- a/sound/soc/samsung/snow.c
-+++ b/sound/soc/samsung/snow.c
-@@ -15,13 +15,18 @@
- #include <linux/platform_device.h>
- #include <linux/of.h>
- #include <linux/of_device.h>
-+#include <linux/clk.h>
- 
- #include <sound/soc.h>
- 
- #include "i2s.h"
- 
-+/* Desired clock rate for codec mclk */
- #define FIN_PLL_RATE		24000000
- 
-+static struct clk *mclk;
-+static unsigned long mclk_rate;
-+
- static struct snd_soc_dai_link snow_dai[] = {
- 	{
- 		.name = "Primary",
-@@ -41,7 +46,7 @@ static int snow_late_probe(struct snd_soc_card *card)
- 
- 	/* Set the MCLK rate for the codec */
- 	ret = snd_soc_dai_set_sysclk(codec_dai, 0,
--					FIN_PLL_RATE, SND_SOC_CLOCK_IN);
-+					mclk_rate, SND_SOC_CLOCK_IN);
- 	if (ret < 0)
- 		return ret;
- 
-@@ -68,6 +73,16 @@ static int snow_probe(struct platform_device *pdev)
- 	struct device_node *i2s_node, *codec_node;
- 	int i, ret;
- 
-+	/* The codec MCLK should be clocked at 24MHz */
-+	mclk = devm_clk_get(&pdev->dev, "mclk");
-+	if (!IS_ERR(mclk)) {
-+		clk_prepare_enable(mclk);
-+		clk_set_rate(mclk, FIN_PLL_RATE);
-+		mclk_rate = clk_get_rate(mclk);
-+	} else {
-+		mclk_rate = FIN_PLL_RATE;
-+	}
-+
- 	i2s_node = of_parse_phandle(pdev->dev.of_node,
- 				    "samsung,i2s-controller", 0);
- 	if (!i2s_node) {
-@@ -101,6 +116,14 @@ static int snow_probe(struct platform_device *pdev)
- 	return ret;
- }
- 
-+static int snow_remove(struct platform_device *pdev)
-+{
-+	if (!IS_ERR(mclk))
-+		clk_disable_unprepare(mclk);
-+
-+	return 0;
-+}
-+
- static const struct of_device_id snow_of_match[] = {
- 	{ .compatible = "google,snow-audio-max98090", },
- 	{ .compatible = "google,snow-audio-max98095", },
-@@ -115,6 +138,7 @@ static struct platform_driver snow_driver = {
- 		.of_match_table = snow_of_match,
- 	},
- 	.probe = snow_probe,
-+	.remove = snow_remove,
- };
- 
- module_platform_driver(snow_driver);
--- 
-1.7.9.5
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
