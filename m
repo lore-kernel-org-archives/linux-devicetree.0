@@ -1,101 +1,45 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 10/10] clk: versatile: add versatile OSC support
-Date: Tue, 20 May 2014 16:09:36 -0500
-Message-ID: <1400620176-7239-11-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 08/10] dt/bindings: add compatible string for versatile osc clock
+Date: Tue, 20 May 2014 16:09:34 -0500
+Message-ID: <1400620176-7239-9-git-send-email-robherring2@gmail.com>
 References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1400620176-7239-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Versatile platforms share the same OSC programming model as Integrator
-platforms. Add the necessary parameters and init functions for Versatile.
-
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 ---
- drivers/clk/versatile/Makefile         |  3 +--
- drivers/clk/versatile/clk-integrator.c | 35 ++++++++++++++++++++++++++++++++--
- 2 files changed, 34 insertions(+), 4 deletions(-)
+ Documentation/devicetree/bindings/clock/arm-integrator.txt | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/clk/versatile/Makefile b/drivers/clk/versatile/Makefile
-index c16ca78..fb7f916 100644
---- a/drivers/clk/versatile/Makefile
-+++ b/drivers/clk/versatile/Makefile
-@@ -1,6 +1,5 @@
- # Makefile for Versatile-specific clocks
--obj-$(CONFIG_ICST)		+= clk-icst.o
--obj-$(CONFIG_ARCH_INTEGRATOR)	+= clk-integrator.o
-+obj-$(CONFIG_ICST)		+= clk-icst.o clk-integrator.o
- obj-$(CONFIG_INTEGRATOR_IMPD1)	+= clk-impd1.o
- obj-$(CONFIG_ARCH_REALVIEW)	+= clk-realview.o
- obj-$(CONFIG_ARCH_VEXPRESS)	+= clk-vexpress.o clk-sp810.o
-diff --git a/drivers/clk/versatile/clk-integrator.c b/drivers/clk/versatile/clk-integrator.c
-index 734c4b8..fe52a79 100644
---- a/drivers/clk/versatile/clk-integrator.c
-+++ b/drivers/clk/versatile/clk-integrator.c
-@@ -17,6 +17,9 @@
+diff --git a/Documentation/devicetree/bindings/clock/arm-integrator.txt b/Documentation/devicetree/bindings/clock/arm-integrator.txt
+index 652914b..ecc6952 100644
+--- a/Documentation/devicetree/bindings/clock/arm-integrator.txt
++++ b/Documentation/devicetree/bindings/clock/arm-integrator.txt
+@@ -1,4 +1,4 @@
+-Clock bindings for ARM Integrator Core Module clocks
++Clock bindings for ARM Integrator and Versatile Core Module clocks
  
- #define INTEGRATOR_HDR_LOCK_OFFSET	0x14
+ Auxilary Oscillator Clock
  
-+#define VERSATILE_SYS_OSCCLCD_OFFSET	0x1c
-+#define VERSATILE_SYS_LOCK_OFFSET	0x20
-+
- /* Base offset for the core module */
- static void __iomem *cm_base;
+@@ -12,7 +12,7 @@ parent node.
  
-@@ -37,11 +40,27 @@ static const struct clk_icst_desc __initdata cm_auxosc_desc = {
- 	.lock_offset = INTEGRATOR_HDR_LOCK_OFFSET,
- };
  
--static void __init of_integrator_cm_osc_setup(struct device_node *np)
-+static const struct icst_params versatile_auxosc_params = {
-+	.vco_max	= ICST307_VCO_MAX,
-+	.vco_min	= ICST307_VCO_MIN,
-+	.vd_min		= 4 + 8,
-+	.vd_max		= 511 + 8,
-+	.rd_min		= 1 + 2,
-+	.rd_max		= 127 + 2,
-+	.s2div		= icst307_s2div,
-+	.idx2s		= icst307_idx2s,
-+};
-+
-+static const struct clk_icst_desc versatile_auxosc_desc __initconst = {
-+	.params = &versatile_auxosc_params,
-+	.vco_offset = VERSATILE_SYS_OSCCLCD_OFFSET,
-+	.lock_offset = VERSATILE_SYS_LOCK_OFFSET,
-+};
-+static void __init cm_osc_setup(struct device_node *np,
-+				const struct clk_icst_desc *desc)
- {
- 	struct clk *clk = ERR_PTR(-EINVAL);
- 	const char *clk_name = np->name;
--	const struct clk_icst_desc *desc = &cm_auxosc_desc;
- 	const char *parent_name;
+ Required properties:
+-- compatible: must be "arm,integrator-cm-auxosc"
++- compatible: must be "arm,integrator-cm-auxosc" or "arm,versatile-cm-auxosc"
+ - #clock-cells: must be <0>
  
- 	if (!cm_base) {
-@@ -65,5 +84,17 @@ static void __init of_integrator_cm_osc_setup(struct device_node *np)
- 	if (!IS_ERR(clk))
- 		of_clk_add_provider(np, of_clk_src_simple_get, clk);
- }
-+
-+static void __init of_integrator_cm_osc_setup(struct device_node *np)
-+{
-+	cm_osc_setup(np, &cm_auxosc_desc);
-+}
- CLK_OF_DECLARE(integrator_cm_auxosc_clk,
- 	"arm,integrator-cm-auxosc", of_integrator_cm_osc_setup);
-+
-+static void __init of_versatile_cm_osc_setup(struct device_node *np)
-+{
-+	cm_osc_setup(np, &versatile_auxosc_desc);
-+}
-+CLK_OF_DECLARE(versatile_cm_auxosc_clk,
-+	       "arm,versatile-cm-auxosc", of_versatile_cm_osc_setup);
+ Optional properties:
 -- 
 1.9.1
 
