@@ -1,78 +1,87 @@
-From: Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 0/4] ARM: dts: enable display for peach-pit and snow boards
-Date: Tue, 20 May 2014 10:41:25 +0530
-Message-ID: <CAPdUM4OcHOiSAbNt_6yEo_YY3FqGxef=p33opW21nEt7P+m6Xw@mail.gmail.com>
-References: <1399630186-22610-1-git-send-email-rahul.sharma@samsung.com>
-	<537A25F8.4040604@samsung.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH v4 6/6] ARM: dts: STiH407: Add B2120 board support
+Date: Tue, 20 May 2014 00:24:31 -0700
+Message-ID: <CAOesGMioLwX3jgGEsR=rHV0u6yR54b4x8BfyZ91vjJnMapUHew@mail.gmail.com>
+References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
+	<1394614210-15698-7-git-send-email-maxime.coquelin@st.com>
+	<CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
+	<20140520072048.GC20874@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537A25F8.4040604-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sunil joshi <joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140520072048.GC20874@lee--X1>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Maxime COQUELIN <maxime.coquelin@st.com>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Kukjin,
+On Tue, May 20, 2014 at 12:20 AM, Lee Jones <lee.jones@linaro.org> wrote:
+>> > B2120 HDK is the reference board for STiH407 SoC.
+>> > It has the following characteristics:
+>> >  - 1GB DDR3
+>> >  - 8GB eMMC / SD-Card slot
+>> >  - 32MB NOR Flash
+>> >  - 1 x Gbit Ethernet
+>> >  - 1 x USB 3.0 port
+>> >  - 1 x Mini-PCIe
+>> >  - 1 x SATA
+>> >  - 1 x HDMI output
+>> >  - 1 x HDMI input
+>> >  - 1 x SPDIF
+>> >
+>> > This patch only introduces basic functionnalities, such as I2C and UART.
+>> >
+>> > Acked-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>> > Acked-by: Lee Jones <lee.jones@linaro.org>
+>> > Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>> > Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
+>> > ---
+>> >  arch/arm/boot/dts/Makefile          |  3 +-
+>> >  arch/arm/boot/dts/stih407-b2120.dts | 78 +++++++++++++++++++++++++++++++++++++
+>> >  2 files changed, 80 insertions(+), 1 deletion(-)
+>> >  create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
+>
+> [...]
+>
+>> > +/ {
+>> > +       model = "STiH407 B2120";
+>> > +       compatible = "st,stih407", "st,stih407-b2120";
+>>
+>> This should go from specific to generic, so the order needs to be the other way.
+>
+> I did have a patch-set that changed all of these.  Wonder where that went!
 
-I have changed it in my environment now.
+Cool.
 
-Regards,
-Rahul Sharma.
+>
+> [...]
+>
+>> > +       soc {
+>> > +               sbc_serial0: serial@9530000 {
+>> > +                       status = "okay";
+>> > +               };
+>>
+>> You might want to consider reference-based syntax here instead, so you
+>> don't have to mimic the hierarchy. That'd be (at the root level of the
+>> file, below this secion:
+>>
+>> &sbc_serial0: {
+>>         status = "okay";
+>> };
+>
+> I'm personally not keen on this scheme.  It's sometimes helpful to know
+> the hierarchy and I don't think it's a large overhead to format the
+> subordinate DTS files in this way.
+>
+> Please consider not enforcing this.
 
-On 19 May 2014 21:10, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 05/09/14 19:09, Rahul Sharma wrote:
->>
->> From: Rahul Sharma<Rahul.Sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->
->
-> Probably, should be "Rahul Sharma <rahul.sharma@...>"
->
-> Please make sure your gitconfig has no problem.
->
-> Just note, I found same thing and fixed your email address in my tree...
->
->
->>
->> Add nodes for fimd and dp controller for exynos5250 based snow
->> and exynos5420 based peach-pit board.
->>
->> This series is based on Kukjin Kims, for-next branch.
->>
->> V3:
->> 1) Dropped 1 patch "ARM: dts: move dp hpd line to the board file for
->>   exynos5420".
->> 2) Extra blank lines for readability.
->> 3) dp hpd gpio name change (dp_hpd ->  dp_hpd_gpio)
->>
->> V2:
->> 1) Rebase on Peach-pit dependent patches.
->>
->> It is dependent on
->> 1) Andrew Bresticker's patch for hpd gpio addition, avilable at
->> http://www.spinics.net/lists/linux-samsung-soc/msg28827.html [Patch is
->> 'ACK'ed.]
->> 2) Arun's patch for adding peach-pit board dts file at
->> http://www.spinics.net/lists/linux-samsung-soc/msg30103.html. [Patch is
->> 'ACK'ed.]
->>
->> Rahul Sharma (4):
->>    ARM: dts: enable fimd for exynos5250 based snow board
->>    ARM: dts: enable dp-controller for exynos5250 based snow board
->>    ARM: dts: enable fimd for exynos5420 based peach-pit board
->>    ARM: dts: enable dp-controller for exynos5420 based peach-pit board
->>
->>   arch/arm/boot/dts/exynos5250-snow.dts      |   35
->> ++++++++++++++++++++++++
->>   arch/arm/boot/dts/exynos5420-peach-pit.dts |   41
->> ++++++++++++++++++++++++++++
->>   2 files changed, 76 insertions(+)
->>
-> OK, applied whole series with Jingoo's 'reviewed-by'.
->
-> Thanks,
-> Kukjin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Definitely not enforcing it, and I didn't use to like it either but it
+has some real upsides.
+
+In particular, it saves a lot of grief when you're changing something
+like the unit-id of a node in .dtsi and forget to do the same update
+in the dts.
+
+
+
+-Olof
