@@ -1,67 +1,84 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] of/irq: do irq resolution in platform_get_irq_byname()
-Date: Tue, 20 May 2014 15:17:00 +0900
-Message-ID: <20140520061700.ED542C41087@trevor.secretlab.ca>
-References: <1400506259-18397-1-git-send-email-grygorii.strashko@ti.com>
- <20140519125738.GB9466@ulmo>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Tue, 20 May 2014 06:57:49 +0200
+Message-ID: <20140520045748.GA28812@earth.universe>
+References: <537487AE.3060906@ti.com>
+ <20140515182133.GC23659@atomide.com>
+ <5375A8A8.7080306@ti.com>
+ <20140516160717.GD22031@atomide.com>
+ <20140516174158.GA11733@earth.universe>
+ <20140516180154.GG22031@atomide.com>
+ <20140516213907.GL12881@atomide.com>
+ <5379D35F.8040207@ti.com>
+ <20140519155732.GA4849@atomide.com>
+ <537A540E.8070302@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140519125738.GB9466@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <537A540E.8070302-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 May 2014 14:57:39 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
-> On Mon, May 19, 2014 at 04:30:59PM +0300, Grygorii Strashko wrote:
-> [...]
-> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> [...]
-> >  /**
-> > + * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
-> > + * @dev: pointer to device tree node
-> > + * @name: zero-based index of the irq
-> 
-> This is a name, not an index.
-> 
-> > + *
-> > + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
-> > + * is not yet created, or errorno in case of failure.
-> 
-> s/errorno/error code/? Also EPROBE_DEFER is also an error code, so I'm
-> not sure if it's worth a special case in the description here.
-> 
-> > + *
-> > + */
-> > +int of_irq_get_byname(struct device_node *dev, const char *name)
-> > +{
-> > +	const char *name_irq = NULL;
-> > +	int index = 0;
-> > +
-> > +	if (unlikely(!name))
-> > +		return -EINVAL;
-> > +
-> > +	while (!of_property_read_string_index(dev, "interrupt-names",
-> > +					      index, &name_irq))
-> > +		if (!strcmp(name, name_irq))
-> > +			return of_irq_get(dev, index);
-> 
-> Isn't this missing an index++ somewhere? Otherwise it seems like this
-> would loop infinitely if there was no match on the first entry.
 
-Better yet, use of_property_match_string().
+--r5Pyd7+fXNt84Ff3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-g.
+Hi,
 
-> 
-> Thierry
+On Mon, May 19, 2014 at 09:57:18PM +0300, Tomi Valkeinen wrote:
+> > 3. Having to maintain a database in kernel of display mappings separate=
+ly
+> >    in addition to the .dts files.
+>=20
+> Yes, that's slightly annoying. Not really a big burden, though, as it's
+> quite rare to get a new encoder or panel driver.
+
+I wonder if the "omapdss," prefix could be added to *all* remote
+endpoints seen by omapdss. Pseudocode:
+
+for each port in dss {
+    for each endpoint in port {
+        panel =3D get_phandle(endpoint, "remote-endpoint");
+
+        /* only add prefix if it's not already there (kexec) */
+        if (panel.compatible !=3D "omapdss,.*")
+            panel.compatible =3D "omapdss," + panel.compatible;
+    }
+}
+
+-- Sebastian
+
+--r5Pyd7+fXNt84Ff3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTeuDMAAoJENju1/PIO/qaa90P/jWbyjy8ne+1LaxDrjVzww9Y
+bLdyw0T0BD643YSAq/0OC/akNUVeANZyEqsTME+eE8gW9X8Q1jaDoTYCFRRCgMsG
+vBXv3l0IAl3m97uxZEnriBqgOva4GxgZ+aRil0fjB+yq6mok+OqULRi92Gj5mfmm
+0u1L5uOdv3fAJmW6UK6XepTJgW+tv5hxYKP/MznaVxQ/SlXweTf5jf2oPHBFjlg6
+j4GaeJN30AH87J9xNFlrSzihvSUY73oT1mG1f7yrdLShVU6rkp3sVeDfLs9Tf/rn
+8mw/FYh0JnJO0jqdw1OWPOGimSLE0zKIS1JZWF8Rb6K5lMijlkEctjKobu8aHKAc
+R/dfe4wFCKzzcjRx1ar/cCYPcca740It+cJ9O1Gr+Jy5hhVRX44MqDKA9sSRuNG8
+SDzQztmbsj7YWze87YrWLLU42E8dJHtusESYgSMkI5Ww0x1jo9aImLTe0vizt1Dg
+RUIJlAiAG06o2lwGdmo40wZ63d+91ldxPC8m2hZE5WnwH42dYIQiK7K5OloFJTOU
+P2lHVLEVeZ3weIdBZW2qCVsLDcOhFnK8ePqYpXQfzYx+Roh/f1d9P30qb6GS7cTk
+txLFq1tqJzAiS5dfoC3aAVkKvM9iMFqbQwtNVW+mmd2CbKCqh6PJOsOU7Z933AbG
+gJrX0Mw8OleUAWUnGqNm
+=mWXY
+-----END PGP SIGNATURE-----
+
+--r5Pyd7+fXNt84Ff3--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
