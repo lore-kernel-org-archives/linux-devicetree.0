@@ -1,67 +1,79 @@
-From: Maxime COQUELIN <maxime.coquelin@st.com>
-Subject: [PATCH v6 0/4] Add STiH407 SoC and reference board support
-Date: Tue, 20 May 2014 11:46:28 +0200
-Message-ID: <1400579192-17620-1-git-send-email-maxime.coquelin@st.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
-Cc: lee.jones@linaro.org
+From: Maxime COQUELIN <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Subject: [PATCH v6 2/4] ARM: dts: Fix STi boards compatibles
+Date: Tue, 20 May 2014 11:46:30 +0200
+Message-ID: <1400579192-17620-3-git-send-email-maxime.coquelin@st.com>
+References: <1400579192-17620-1-git-send-email-maxime.coquelin@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400579192-17620-1-git-send-email-maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This series adds basic support to the STMicroelectronics STiH407 SoC and its
-B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
-STB market.
+The compatible strings have to be ordered from specific to generic.
+This patch fixes this for STi boards, which did the exact opposite.
 
-Changes since v5:
------------------
-   - Sort STi boards in DTS'es Makefile
-   - Re-order compatibles in STi boards from specific to generic
-   - Only contains DT patches, other patches being merged
+Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Signed-off-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
+---
+ arch/arm/boot/dts/stih415-b2000.dts | 2 +-
+ arch/arm/boot/dts/stih415-b2020.dts | 2 +-
+ arch/arm/boot/dts/stih416-b2000.dts | 3 +--
+ arch/arm/boot/dts/stih416-b2020.dts | 3 +--
+ 4 files changed, 4 insertions(+), 6 deletions(-)
 
-Changes since v4:
------------------
-    - remove patches already present in v3.15 (pinctrl)
-    - rebase on top of v3.15-rc2
-
-Changes since v3:
------------------
-    - Removed SOC_STIH407 as unused for now
-    - Cosmetic changes in DT
-    - Added new lines in pinctrl-st around if:s
-    - Use ARRAY_SIZE instead of raw values
-
-Changes since v2:
------------------
-    - Reordered the pinctrl patches
-    - Moved stih407_flashdata to stih407 pinctrl patch
-
-Changes since v1:
------------------
-    - Changed patch 2 commit title
-    - Rebased pinctrl patches to linux-pinctrl/devel
-    - Rebased ARM patches to arm_soc/for-next
-
-Maxime Coquelin (4):
-  ARM: dts: Sort STi boards in Makefile
-  ARM: dts: Fix STi boards compatibles
-  ARM: dts: Add STiH407 SoC support
-  ARM: dts: STiH407: Add B2120 board support
-
- arch/arm/boot/dts/Makefile             |   5 +-
- arch/arm/boot/dts/stih407-b2120.dts    |  78 +++++
- arch/arm/boot/dts/stih407-clock.dtsi   |  40 +++
- arch/arm/boot/dts/stih407-pinctrl.dtsi | 615 +++++++++++++++++++++++++++++++++
- arch/arm/boot/dts/stih407.dtsi         | 263 ++++++++++++++
- arch/arm/boot/dts/stih415-b2000.dts    |   2 +-
- arch/arm/boot/dts/stih415-b2020.dts    |   2 +-
- arch/arm/boot/dts/stih416-b2000.dts    |   3 +-
- arch/arm/boot/dts/stih416-b2020.dts    |   3 +-
- 9 files changed, 1003 insertions(+), 8 deletions(-)
- create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
- create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
- create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
- create mode 100644 arch/arm/boot/dts/stih407.dtsi
-
+diff --git a/arch/arm/boot/dts/stih415-b2000.dts b/arch/arm/boot/dts/stih415-b2000.dts
+index d4af531..bdfbd37 100644
+--- a/arch/arm/boot/dts/stih415-b2000.dts
++++ b/arch/arm/boot/dts/stih415-b2000.dts
+@@ -11,5 +11,5 @@
+ #include "stih41x-b2000.dtsi"
+ / {
+ 	model = "STiH415 B2000 Board";
+-	compatible = "st,stih415", "st,stih415-b2000";
++	compatible = "st,stih415-b2000", "st,stih415";
+ };
+diff --git a/arch/arm/boot/dts/stih415-b2020.dts b/arch/arm/boot/dts/stih415-b2020.dts
+index 442b019..71903a8 100644
+--- a/arch/arm/boot/dts/stih415-b2020.dts
++++ b/arch/arm/boot/dts/stih415-b2020.dts
+@@ -11,5 +11,5 @@
+ #include "stih41x-b2020.dtsi"
+ / {
+ 	model = "STiH415 B2020 Board";
+-	compatible = "st,stih415", "st,stih415-b2020";
++	compatible = "st,stih415-b2020", "st,stih415";
+ };
+diff --git a/arch/arm/boot/dts/stih416-b2000.dts b/arch/arm/boot/dts/stih416-b2000.dts
+index a5eb6ee..488e80a 100644
+--- a/arch/arm/boot/dts/stih416-b2000.dts
++++ b/arch/arm/boot/dts/stih416-b2000.dts
+@@ -9,8 +9,7 @@
+ /dts-v1/;
+ #include "stih416.dtsi"
+ #include "stih41x-b2000.dtsi"
+-
+ / {
+-	compatible = "st,stih416", "st,stih416-b2000";
+ 	model = "STiH416 B2000";
++	compatible = "st,stih416-b2000", "st,stih416";
+ };
+diff --git a/arch/arm/boot/dts/stih416-b2020.dts b/arch/arm/boot/dts/stih416-b2020.dts
+index 276f28d..4e2df66 100644
+--- a/arch/arm/boot/dts/stih416-b2020.dts
++++ b/arch/arm/boot/dts/stih416-b2020.dts
+@@ -11,6 +11,5 @@
+ #include "stih41x-b2020.dtsi"
+ / {
+ 	model = "STiH416 B2020";
+-	compatible = "st,stih416", "st,stih416-b2020";
+-
++	compatible = "st,stih416-b2020", "st,stih416";
+ };
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
