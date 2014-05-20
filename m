@@ -1,61 +1,60 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/7] mfd: twl4030-power: Fix hang on reboot if sleep
- configuration was loaded earlier
-Date: Tue, 20 May 2014 18:37:05 +0100
-Message-ID: <20140520173705.GA1458@lee--X1>
-References: <1400031250-29542-1-git-send-email-tony@atomide.com>
- <1400031250-29542-2-git-send-email-tony@atomide.com>
- <20140520150119.GW24991@lee--X1>
- <20140520150748.GD27830@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140520150748.GD27830@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH v4 0/5] ARM: SMP: support Broadcom mobile SoCs
+Date: Tue, 20 May 2014 12:40:01 -0500
+Message-ID: <1400607606-10810-1-git-send-email-elder@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: mporter@linaro.org, bcm@fixthebug.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, jason@lakedaemon.net, lorenzo.pieralisi@arm.com, mark.rutland@arm.com, pawel.moll@arm.com, rdunlap@infradead.org, rjui@broadcom.com, robh+dt@kernel.org, rvaswani@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-> > > Looks like we can still hit the issue of wrong load order of
-> > > twl4030 configuration. If we have a sleep configuration loaded,
-> > > and do a warm reset, the device can hang while initializing the
-> > > wakeup12 sequence. We do have a warning message about wrong order
-> > > of twl4030 configuration, but in this case it does not help as
-> > > the sleep configuration was loaded during the previous boot and
-> > > the state of twl4030 is maintained throughout the warm reset.
-> > >=20
-> > > Fix the issue by clearing any existing sleep configuration
-> > > before we load the warm reset configuration.
-> > >=20
-> > > Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > > ---
-> > >  drivers/mfd/twl4030-power.c | 6 ++++++
-> > >  1 file changed, 6 insertions(+)
-> >=20
-> > Can't vouch for the semantics of the patch, but the code looks good=
-=2E
-> >=20
-> >   Acked-by: Lee Jones <lee.jones@linaro.org>
-> >=20
-> > Can I just apply this, or would you like Peter to review it first?
->=20
-> As far as I'm concerned you can go ahead an apply, it's been
-> floating on the list for a while and Peter is probably busy
-> with other things.
+This series adds SMP support for two Broadcom mobile SoC families.
+It uses CPU_METHOD_OF_DECLARE() so that SMP operations are assigned
+using device tree rather than adding it to a machine definition in a
+board file.
 
-No problem.  Just a couple of things for you to look at in the other
-patches, then we can go ahead and apply for v3.16.
+The enable method starts a secondary core by writing to a register
+monitored by CPUs spinning in a ROM-based holding pen loop.  The
+address of this register is recorded as a property in the "cpus"
+node of the device tree.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+					-Alex
+
+Note:
+This series is based on v3.15-rc4, plus one more recently-posted patch:
+    http://permalink.gmane.org/gmane.linux.kernel/1683693
+
+History
+v3: - Renamed "platsmp.c" to be "kona_smp.c".
+    - Rebased onto v3.15-rc5
+v3: - Dropped definition and use of CPU_METHOD_OF_DECLARE_SETUP()
+    - Added documentation for "enable-method"
+    - Rebased onto v3.15-rc4
+v2: - Fixed a Makefile error (:= should have been +=)
+    - No longer set CONFIG_NR_CPUS in bcm_defconfig
+    - Rebased onto v3.15-rc1
+
+This series is available here:
+    http://git.linaro.org/landing-teams/working/broadcom/kernel.git
+    Branch review/bcm-smp-v4
+
+Alex Elder (5):
+  devicetree: bindings: document Broadcom CPU enable method
+  ARM: add SMP support for Broadcom mobile SoCs
+  ARM: configs: enable SMP in bcm_defconfig
+  ARM: dts: enable SMP support for bcm28155
+  ARM: dts: enable SMP support for bcm21664
+
+ Documentation/devicetree/bindings/arm/cpus.txt |  12 ++
+ arch/arm/boot/dts/bcm11351.dtsi                |  19 +++
+ arch/arm/boot/dts/bcm21664.dtsi                |  19 +++
+ arch/arm/configs/bcm_defconfig                 |   1 +
+ arch/arm/mach-bcm/Kconfig                      |  18 ++-
+ arch/arm/mach-bcm/Makefile                     |   3 +
+ arch/arm/mach-bcm/kona_smp.c                   | 202 +++++++++++++++++++++++++
+ 7 files changed, 271 insertions(+), 3 deletions(-)
+ create mode 100644 arch/arm/mach-bcm/kona_smp.c
+
+-- 
+1.9.1
+
