@@ -1,84 +1,382 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Tue, 20 May 2014 06:57:49 +0200
-Message-ID: <20140520045748.GA28812@earth.universe>
-References: <537487AE.3060906@ti.com>
- <20140515182133.GC23659@atomide.com>
- <5375A8A8.7080306@ti.com>
- <20140516160717.GD22031@atomide.com>
- <20140516174158.GA11733@earth.universe>
- <20140516180154.GG22031@atomide.com>
- <20140516213907.GL12881@atomide.com>
- <5379D35F.8040207@ti.com>
- <20140519155732.GA4849@atomide.com>
- <537A540E.8070302@ti.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
+Date: Tue, 20 May 2014 15:04:17 +0900
+Message-ID: <CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
+References: <1400263432-922-1-git-send-email-fkan@apm.com>
+ <1400263432-922-2-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="r5Pyd7+fXNt84Ff3"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <537A540E.8070302-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400263432-922-2-git-send-email-fkan@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Feng Kan <fkan@apm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, patches@apm.com, Will Deacon <will.deacon@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, May 17, 2014 at 3:03 AM, Feng Kan <fkan@apm.com> wrote:
+> Add APM X-Gene SoC gpio controller driver.
+>
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>  drivers/gpio/Kconfig      |   9 ++
+>  drivers/gpio/Makefile     |   1 +
+>  drivers/gpio/gpio-xgene.c | 264 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 274 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-xgene.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index a86c49a..8f89643 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -324,6 +324,15 @@ config GPIO_TZ1090_PDC
+>         help
+>           Say yes here to support Toumaz Xenif TZ1090 PDC GPIOs.
+>
+> +config GPIO_XGENE
+> +       bool "APM X-Gene GPIO controller support"
+> +       depends on ARM64 && OF_GPIO
+> +       help
+> +         This driver is to support the GPIO block within the APM X-Gene
+> +         platform's generic flash controller. The GPIO pins are muxed with
+> +         the generic flash controller's address and data pins. Say yes
+> +         here to enable the GFC GPIO functionality.
+> +
+>  config GPIO_XILINX
+>         bool "Xilinx GPIO support"
+>         depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 6309aff..f0f2830 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -98,6 +98,7 @@ obj-$(CONFIG_GPIO_VX855)      += gpio-vx855.o
+>  obj-$(CONFIG_GPIO_WM831X)      += gpio-wm831x.o
+>  obj-$(CONFIG_GPIO_WM8350)      += gpio-wm8350.o
+>  obj-$(CONFIG_GPIO_WM8994)      += gpio-wm8994.o
+> +obj-$(CONFIG_GPIO_XGENE)       += gpio-xgene.o
+>  obj-$(CONFIG_GPIO_XILINX)      += gpio-xilinx.o
+>  obj-$(CONFIG_GPIO_XTENSA)      += gpio-xtensa.o
+>  obj-$(CONFIG_GPIO_ZEVIO)       += gpio-zevio.o
+> diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+> new file mode 100644
+> index 0000000..5c26a19
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-xgene.c
+> @@ -0,0 +1,264 @@
+> +/*
+> + * AppliedMicro X-Gene SoC GPIO Driver
+> + *
+> + * Copyright (c) 2014, Applied Micro Circuits Corporation
+> + * Author: Feng Kan <fkan@apm.com>.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/gpio.h>
+> +#include <linux/types.h>
+> +#include <linux/slab.h>
+> +#include <linux/clk.h>
+> +
+> +#define GPIO_MASK(x)           (1U << ((x) % 32))
 
---r5Pyd7+fXNt84Ff3
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+BIT((x) % 32) maybe? (same below where it applies)
 
-Hi,
+> +#define GPIO_MUX_SEL(x)                (3U << ((x * 2) % 32))
+> +#define GPIO_SET_MASK(x)       (1U << ((x + 16) % 32))
+> +
+> +#define GPIO_SET_DR            0x0c
+> +#define GPIO_SET_DR_OFFSET     0x0c
+> +#define GPIO_DATA              0x14
+> +#define GPIO_DATA_OFFSET       0x0c
+> +#define GPIO_OD                        0x30
+> +#define GPIO_OD_OFFSET         0x04
+> +#define GPIO_MUX               0x10
+> +#define GPIO_MUX_OFFSET                0x0c
+> +
+> +#define XGENE_GPIO_MAX_PORTS           3
+> +
+> +struct xgene_gpio;
+> +
+> +struct xgene_gpio_bank {
+> +       struct gpio_chip        chip;
+> +       void __iomem            *data;
+> +       void __iomem            *set_dr;
+> +       void __iomem            *od;
+> +       void __iomem            *mux;
+> +       struct xgene_gpio       *gpio;
+> +       spinlock_t              lock;
+> +};
+> +
+> +struct xgene_gpio {
+> +       struct  device          *dev;
+> +       void __iomem            *regs;
+> +       struct xgene_gpio_bank  *banks;
+> +       unsigned int            nr_banks;
+> +};
 
-On Mon, May 19, 2014 at 09:57:18PM +0300, Tomi Valkeinen wrote:
-> > 3. Having to maintain a database in kernel of display mappings separate=
-ly
-> >    in addition to the .dts files.
->=20
-> Yes, that's slightly annoying. Not really a big burden, though, as it's
-> quite rare to get a new encoder or panel driver.
+At first sight it really looks like the gpio_chip should belong to the
+xgene_gpio struct. What is the purpose of having the driver
+instanciated once per bank?
 
-I wonder if the "omapdss," prefix could be added to *all* remote
-endpoints seen by omapdss. Pseudocode:
+> +
+> +static int xgene_gpio_get(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +       struct xgene_gpio_bank *bank =
+> +                       container_of(gc, struct xgene_gpio_bank, chip);
+> +
+> +       return (ioread32(bank->data) & GPIO_MASK(gpio));
 
-for each port in dss {
-    for each endpoint in port {
-        panel =3D get_phandle(endpoint, "remote-endpoint");
+Since you are using ioread32, wouldn't the member be better defined as
+"u32 __iomem *data" ?
 
-        /* only add prefix if it's not already there (kexec) */
-        if (panel.compatible !=3D "omapdss,.*")
-            panel.compatible =3D "omapdss," + panel.compatible;
-    }
-}
+> +}
+> +
+> +static void xgene_gpio_set(struct gpio_chip *gc, unsigned int gpio, int val)
+> +{
+> +       struct xgene_gpio_bank *bank =
+> +                       container_of(gc, struct xgene_gpio_bank, chip);
+> +       unsigned long flags;
+> +       u32 data;
+> +
+> +       spin_lock_irqsave(&bank->lock, flags);
+> +
+> +       data = ioread32(bank->set_dr);
+> +       data = val ? data | GPIO_SET_MASK(gpio) : data & ~GPIO_SET_MASK(gpio);
 
--- Sebastian
+Couldn't you use set_bit() / clear_bit() instead here?
 
---r5Pyd7+fXNt84Ff3
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +       iowrite32(data, bank->set_dr);
+> +
+> +       spin_unlock_irqrestore(&bank->lock, flags);
+> +}
+> +
+> +static void xgene_gpio_muxcfg(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +       struct xgene_gpio_bank *bank =
+> +                       container_of(gc, struct xgene_gpio_bank, chip);
+> +       u32 data;
+> +
+> +       data = ioread32(bank->mux);
+> +       data |= GPIO_MUX_SEL(gpio);
+> +       iowrite32(data, bank->mux);
+> +}
+> +
+> +static int xgene_gpio_dir_in(struct gpio_chip *gc, unsigned int gpio)
+> +{
+> +       struct xgene_gpio_bank *bank =
+> +                       container_of(gc, struct xgene_gpio_bank, chip);
+> +       unsigned long flags;
+> +       u32 data;
+> +
+> +       spin_lock_irqsave(&bank->lock, flags);
+> +
+> +       data = ioread32(bank->set_dr);
+> +       data |= GPIO_MASK(gpio);
+> +       iowrite32(data, bank->set_dr);
+> +       xgene_gpio_muxcfg(gc, gpio);
+> +
+> +       spin_unlock_irqrestore(&bank->lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int xgene_gpio_dir_out(struct gpio_chip *gc, unsigned int gpio, int val)
+> +{
+> +       struct xgene_gpio_bank *bank =
+> +                       container_of(gc, struct xgene_gpio_bank, chip);
+> +       unsigned long flags;
+> +       u32 data;
+> +
+> +       spin_lock_irqsave(&bank->lock, flags);
+> +       data = ioread32(bank->set_dr);
+> +       data = data & ~GPIO_MASK(gpio);
+> +       iowrite32(data, bank->set_dr);
+> +       xgene_gpio_muxcfg(gc, gpio);
+> +
+> +       spin_unlock_irqrestore(&bank->lock, flags);
+> +
+> +       return 0;
+> +}
+> +
+> +static int xgene_gpio_add_bank(struct xgene_gpio *gpio,
+> +                              struct device_node *bank_np,
+> +                              unsigned int offs)
+> +{
+> +       struct xgene_gpio_bank *bank;
+> +       u32 bank_idx, ngpio, odcfg;
+> +       int err;
+> +
+> +       if (of_property_read_u32(bank_np, "bank", &bank_idx) ||
+> +               bank_idx >= XGENE_GPIO_MAX_PORTS) {
+> +               dev_err(gpio->dev, "missing/invalid bank index for %s index %d\n",
+> +                               bank_np->full_name, bank_idx);
+> +               return -EINVAL;
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Could you return the error returned by of_property_read_u32() instead?
 
-iQIcBAEBCgAGBQJTeuDMAAoJENju1/PIO/qaa90P/jWbyjy8ne+1LaxDrjVzww9Y
-bLdyw0T0BD643YSAq/0OC/akNUVeANZyEqsTME+eE8gW9X8Q1jaDoTYCFRRCgMsG
-vBXv3l0IAl3m97uxZEnriBqgOva4GxgZ+aRil0fjB+yq6mok+OqULRi92Gj5mfmm
-0u1L5uOdv3fAJmW6UK6XepTJgW+tv5hxYKP/MznaVxQ/SlXweTf5jf2oPHBFjlg6
-j4GaeJN30AH87J9xNFlrSzihvSUY73oT1mG1f7yrdLShVU6rkp3sVeDfLs9Tf/rn
-8mw/FYh0JnJO0jqdw1OWPOGimSLE0zKIS1JZWF8Rb6K5lMijlkEctjKobu8aHKAc
-R/dfe4wFCKzzcjRx1ar/cCYPcca740It+cJ9O1Gr+Jy5hhVRX44MqDKA9sSRuNG8
-SDzQztmbsj7YWze87YrWLLU42E8dJHtusESYgSMkI5Ww0x1jo9aImLTe0vizt1Dg
-RUIJlAiAG06o2lwGdmo40wZ63d+91ldxPC8m2hZE5WnwH42dYIQiK7K5OloFJTOU
-P2lHVLEVeZ3weIdBZW2qCVsLDcOhFnK8ePqYpXQfzYx+Roh/f1d9P30qb6GS7cTk
-txLFq1tqJzAiS5dfoC3aAVkKvM9iMFqbQwtNVW+mmd2CbKCqh6PJOsOU7Z933AbG
-gJrX0Mw8OleUAWUnGqNm
-=mWXY
------END PGP SIGNATURE-----
+> +       }
+> +
+> +       bank = &gpio->banks[offs];
+> +       bank->gpio = gpio;
+> +       spin_lock_init(&bank->lock);
+> +
+> +       if (of_property_read_u32(bank_np, "ngpios", &ngpio))
+> +               ngpio = 16;
 
---r5Pyd7+fXNt84Ff3--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Here I think you want to distinguish between "property not defined"
+(-EINVAL) and "property has no value" (-ENODATA) and other possible
+errors. In the later cases you will want to signal the error and
+return from here.
+
+> +
+> +       if ((ngpio > 16) || (ngpio < 1)) {
+> +               dev_info(gpio->dev, "Incorrect number of gpio specified: %s\n",
+> +                        bank_np->full_name);
+> +               return -EINVAL;
+> +       }
+> +
+> +       bank->data = gpio->regs + GPIO_DATA + (bank_idx * GPIO_DATA_OFFSET);
+> +       bank->od = gpio->regs + GPIO_OD + (bank_idx * GPIO_OD_OFFSET);
+> +       bank->mux = gpio->regs + GPIO_MUX + (bank_idx * GPIO_MUX_OFFSET);
+> +       bank->set_dr = gpio->regs + GPIO_SET_DR
+> +                               + (bank_idx * GPIO_SET_DR_OFFSET);
+> +
+> +       bank->chip.direction_input = xgene_gpio_dir_in;
+> +       bank->chip.direction_output = xgene_gpio_dir_out;
+> +       bank->chip.get = xgene_gpio_get;
+> +       bank->chip.set = xgene_gpio_set;
+> +
+> +       if (!of_property_read_u32(bank_np, "odcfg", &odcfg))
+> +               iowrite32(odcfg, bank->od);
+> +
+> +       bank->chip.ngpio = ngpio;
+> +       bank->chip.of_node = bank_np;
+> +       bank->chip.base = bank_idx * ngpio;
+> +
+> +       err = gpiochip_add(&bank->chip);
+> +       if (err)
+> +               dev_err(gpio->dev, "failed to register gpiochip for %s\n",
+> +                       bank_np->full_name);
+> +
+> +       return err;
+> +}
+> +
+> +static int xgene_gpio_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct resource *res;
+> +       struct xgene_gpio *gpio;
+> +       int err;
+> +       unsigned int offs = 0;
+> +
+> +       gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+> +       if (!gpio)
+> +               return -ENOMEM;
+> +       gpio->dev = &pdev->dev;
+> +
+> +       gpio->nr_banks = of_get_child_count(pdev->dev.of_node);
+> +       if (!gpio->nr_banks) {
+> +               err = -EINVAL;
+> +               goto err;
+> +       }
+
+Might be worth checking whether nr_banks >= XGENE_GPIO_MAX_PORTS and
+return an error here.
+
+> +
+> +       gpio->banks = devm_kzalloc(&pdev->dev, gpio->nr_banks *
+> +                                  sizeof(*gpio->banks), GFP_KERNEL);
+> +       if (!gpio->banks) {
+> +               err = -ENOMEM;
+> +               goto err;
+> +       }
+
+I'm fine with printing the error status the way you do, but could you
+also do the same for the first kzalloc too?
+
+Or maybe you could put your banks member at the end of the xgene_gpio
+struct as a flexible array member and perform only one kzalloc of size
+(sizeof(*gpio) + (sizeof(*gpio->banks) * gpio->nr_banks))?
+
+> +
+> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +       gpio->regs = devm_ioremap_resource(&pdev->dev, res);
+> +       if (IS_ERR(gpio->regs)) {
+> +               err = PTR_ERR(gpio->regs);
+> +               goto err;
+> +       }
+> +
+> +       for_each_child_of_node(pdev->dev.of_node, np) {
+> +               err = xgene_gpio_add_bank(gpio, np, offs++);
+> +               if (err)
+> +                       goto err;
+> +       }
+> +
+> +       platform_set_drvdata(pdev, gpio);
+> +
+> +       dev_info(&pdev->dev, "X-Gene GPIO driver registered\n");
+> +       return 0;
+> +err:
+> +       dev_err(&pdev->dev, "X-Gene GPIO driver registration failed\n");
+> +       return err;
+> +}
+> +
+> +static const struct of_device_id xgene_gpio_of_match[] = {
+> +       { .compatible = "apm,xgene-gpio", },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, xgene_gpio_of_match);
+> +
+> +static struct platform_driver xgene_gpio_driver = {
+> +       .driver = {
+> +               .name = "xgene-gpio",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = xgene_gpio_of_match,
+> +       },
+> +       .probe = xgene_gpio_probe,
+> +};
+> +
+> +static int __init xgene_gpio_init(void)
+> +{
+> +       return platform_driver_register(&xgene_gpio_driver);
+> +}
+> +postcore_initcall(xgene_gpio_init);
+> +
+> +MODULE_AUTHOR("AppliedMicro");
+> +MODULE_DESCRIPTION("APM X-Gene GPIO driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 1.9.1
+>
+
+Globally the driver looks well-written, but I don't understand the
+need to have one gpio_chip per bank. Could you elaborate on the
+reasons for this design?
+
+Alex.
