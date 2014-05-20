@@ -1,88 +1,69 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
-Date: Tue, 20 May 2014 12:08:44 +0200
-Message-ID: <5080348.QmhgfQRxZW@wuerfel>
-References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
-	<20140519172113.GA13858@e103592.cambridge.arm.com>
-	<20140519203232.GD30737@mithrandir>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] usb: host: xhci-plat: add support for the R-Car H2 and M2 xHCI controllers
+Date: Tue, 20 May 2014 12:11:30 +0200
+Message-ID: <5727435.rfALGRgzCB@wuerfel>
+References: <5379D805.3070002@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140519203232.GD30737@mithrandir>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <5379D805.3070002@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: mathias.nyman@intel.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 May 2014 22:32:33 Thierry Reding wrote:
-> On Mon, May 19, 2014 at 06:22:31PM +0100, Dave Martin wrote:
-> > On Mon, May 19, 2014 at 01:53:37PM +0100, Thierry Reding wrote:
-> [...]
-> > > My understanding here is mostly based on the OpenFirmware working group
-> > > proposal for the dma-ranges property[0]. I'll give another example to
-> > > try and clarify how I had imagined this to work:
-> > > 
-> > >     / {
-> > >             #address-cells = <2>;
-> > >             #size-cells = <2>;
-> > > 
-> > >             iommu {
-> > >                     /*
-> > >                      * This is somewhat unusual (or maybe not) in that we
-> > >                      * need 2 cells to represent the size of an address
-> > >                      * space that is 32 bits long.
-> > >                      */
-> > >                     #address-cells = <1>;
-> > >                     #size-cells = <2>;
-> > > 
-> > >                     #iommu-cells = <1>;
-> > >             };
-> > > 
-> > >             master {
-> > >                     iommus = <&/iommu 42>;
-> > 
-> > Comparing this with the other discussion thread, we have a similar
-> > concept here, in that the iommu is made a logical parent, however...
-> > 
-> > Firstly, there's an implicit assumption here that the only kind of
-> > thing the master could possibly be connected to is an IOMMU, with
-> > no non-trivial interconnect in between.  I'm not sure this is going
-> > to scale to complex SoCs.
+On Monday 19 May 2014 19:08:05 Yoshihiro Shimoda wrote:
 > 
-> Here we go again. We're now in the very same bad spot that we've been in
-> so many times before. There are at least two SoCs that we know do not
-> require anything fancy, yet we're blocking adding support for those use
-> cases because we think that at some point some IOMMU may require more
-> than that. But at the same time it seems like we don't have enough data
-> about what exactly that is, so we keep speculating. At this rate we're
-> making it impossible to get a reasonable feature set supported upstream.
+>  #include "xhci.h"
+>  #include "xhci-mvebu.h"
+> +#include "xhci-rcar.h"
 > 
-> That's very frustrating.
-
-I agree. While I just commented that I want to think through how this
-would look for other IOMMUs, the generic case of all masters that Dave
-wants is going overboard with the complexity and we'd be better off
-deferring this to whenever someone needs it, which I assume is never.
-
-> > If a range of Stream IDs may be issued (especially from something like
-> > a PCIe RC where the stream ID may be a many-bit value), describing
-> > the IDs individually may be impractical.
+>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>  {
+> @@ -39,6 +40,12 @@ static int xhci_plat_setup(struct usb_hcd *hcd)
 > 
-> The IOMMU specifier is completely specific to the IOMMU. If an IOMMU has
-> a need to represent the stream IDs as a range there's nothing keeping it
-> from defining the specifier accordingly.
+>  static int xhci_plat_start(struct usb_hcd *hcd)
+>  {
+> +	struct device_node *of_node = hcd->self.controller->of_node;
+> +
+> +	if (of_device_is_compatible(of_node, "renesas,r8a7790-xhci") ||
+> +	    of_device_is_compatible(of_node, "renesas,r8a7790-xhci"))
+> +		xhci_rcar_start(hcd);
+> +
+>  	return xhci_run(hcd);
+>  }
+> 
+> @@ -165,6 +172,15 @@ static int xhci_plat_probe(struct platform_device *pdev)
+>  			goto unmap_registers;
+>  	}
+> 
+> +	if (of_device_is_compatible(pdev->dev.of_node,
+> +				    "renesas,r8a7790-xhci") ||
+> +	    of_device_is_compatible(pdev->dev.of_node,
+> +				    "renesas,r8a7791-xhci")) {
+> +		ret = xhci_rcar_init_quirk(pdev);
+> +		if (ret)
+> +			goto disable_clk;
+> +	}
+> +
+>  	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (ret)
+>  		goto disable_clk;
+> @@ -270,6 +286,8 @@ static const struct of_device_id usb_xhci_of_match[] = {
+>  	{ .compatible = "xhci-platform" },
+>  	{ .compatible = "marvell,armada-375-xhci"},
+>  	{ .compatible = "marvell,armada-380-xhci"},
+> +	{ .compatible = "renesas,r8a7790-xhci"},
+> +	{ .compatible = "renesas,r8a7791-xhci"},
+>  	{ },
+>  };
+>  MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
 
-If we make the IOMMU address space look like the PCI address space, we
-can have a simple representation for this in DT. For the code, I assume
-that we will always have to treat PCI and platform devices differently.
+Like the drivers before, this is way more than a quirk, and deserves to
+be its own driver. It would be better to have an abstract way to split
+out soc specific xhci front-ends and export functions from the xhci-platform
+code.
 
 	Arnd
+
