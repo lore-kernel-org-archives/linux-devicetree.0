@@ -1,57 +1,123 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 02/18] drm/exynos: use wait_event_timeout() for safety
- usage
-Date: Tue, 20 May 2014 11:51:35 +0200
-Message-ID: <537B25A7.30805@samsung.com>
-References: <1400048825-6052-1-git-send-email-yj44.cho@samsung.com>
- <1400048825-6052-3-git-send-email-yj44.cho@samsung.com>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: [PATCH v1] of/irq: do irq resolution in platform_get_irq_byname()
+Date: Tue, 20 May 2014 13:42:02 +0300
+Message-ID: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <1400048825-6052-3-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>, airlied@linux.ie, dri-devel@lists.freedesktop.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: santosh.shilimkar-l0cyMroinI0@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2014 08:26 AM, YoungJun Cho wrote:
-> There could be the case that the page flip operation isn't finished correctly
-> with some abnormal condition such as panel reset. So this patch replaces
-> wait_event() with wait_event_timeout() to avoid waiting for page flip completion
-> infinitely.
->
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+The commit 9ec36cafe43bf835f8f29273597a5b0cbc8267ef
+"of/irq: do irq resolution in platform_get_irq" from Rob Herring -
+moves resolving of the interrupt resources in platform_get_irq().
+But this solution isn't complete because platform_get_irq_byname()
+need to be modified the same way.
 
-Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
+Hence, fix it by adding interrupt resolution code at the
+platform_get_irq_byname() function too.
 
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_crtc.c |    5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
-> index 95c9435..485fa26 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
-> @@ -69,8 +69,9 @@ static void exynos_drm_crtc_dpms(struct drm_crtc *crtc, int mode)
->  
->  	if (mode > DRM_MODE_DPMS_ON) {
->  		/* wait for the completion of page flip. */
-> -		wait_event(exynos_crtc->pending_flip_queue,
-> -				atomic_read(&exynos_crtc->pending_flip) == 0);
-> +		wait_event_timeout(exynos_crtc->pending_flip_queue,
-> +				!atomic_read(&exynos_crtc->pending_flip),
-> +				HZ/20);
->  		drm_vblank_off(crtc->dev, exynos_crtc->pipe);
->  	}
->  
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+---
+Changes in v1:
+- use of_property_match_string() to get IRQ index by name
+- minor comments fixed
+
+RFC:
+ https://lkml.org/lkml/2014/5/19/325
+
+ drivers/base/platform.c |    7 +++++--
+ drivers/of/irq.c        |   22 ++++++++++++++++++++++
+ include/linux/of_irq.h  |    5 +++++
+ 3 files changed, 32 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+index 5b47210..9e9227e 100644
+--- a/drivers/base/platform.c
++++ b/drivers/base/platform.c
+@@ -131,9 +131,12 @@ EXPORT_SYMBOL_GPL(platform_get_resource_byname);
+  */
+ int platform_get_irq_byname(struct platform_device *dev, const char *name)
+ {
+-	struct resource *r = platform_get_resource_byname(dev, IORESOURCE_IRQ,
+-							  name);
++	struct resource *r;
++
++	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node)
++		return of_irq_get_byname(dev->dev.of_node, name);
+ 
++	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
+ 	return r ? r->start : -ENXIO;
+ }
+ EXPORT_SYMBOL_GPL(platform_get_irq_byname);
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 5aeb894..3e06a69 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -406,6 +406,28 @@ int of_irq_get(struct device_node *dev, int index)
+ }
+ 
+ /**
++ * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
++ * @dev: pointer to device tree node
++ * @name: irq name
++ *
++ * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
++ * is not yet created, or error code in case of any other failure.
++ */
++int of_irq_get_byname(struct device_node *dev, const char *name)
++{
++	int index;
++
++	if (unlikely(!name))
++		return -EINVAL;
++
++	index = of_property_match_string(dev, "interrupt-names", name);
++	if (index < 0)
++		return index;
++
++	return of_irq_get(dev, index);
++}
++
++/**
+  * of_irq_count - Count the number of IRQs a node uses
+  * @dev: pointer to device tree node
+  */
+diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
+index 6404253..bfec136 100644
+--- a/include/linux/of_irq.h
++++ b/include/linux/of_irq.h
+@@ -45,6 +45,7 @@ extern void of_irq_init(const struct of_device_id *matches);
+ #ifdef CONFIG_OF_IRQ
+ extern int of_irq_count(struct device_node *dev);
+ extern int of_irq_get(struct device_node *dev, int index);
++extern int of_irq_get_byname(struct device_node *dev, const char *name);
+ #else
+ static inline int of_irq_count(struct device_node *dev)
+ {
+@@ -54,6 +55,10 @@ static inline int of_irq_get(struct device_node *dev, int index)
+ {
+ 	return 0;
+ }
++static inline int of_irq_get_byname(struct device_node *dev, const char *name)
++{
++	return 0;
++}
+ #endif
+ 
+ #if defined(CONFIG_OF)
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
