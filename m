@@ -1,59 +1,68 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 5/9] ASoC: simple-card: Support setting mclk via a
- fixed factor
-Date: Tue, 20 May 2014 23:13:59 +0100
-Message-ID: <20140520221359.GF12304@sirena.org.uk>
-References: <1399141819-23924-1-git-send-email-andrew@lunn.ch>
- <1399141819-23924-6-git-send-email-andrew@lunn.ch>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 2/4] mfd: bcm590xx: add support for secondary I2C
+ slave address
+Date: Tue, 20 May 2014 23:17:58 +0100
+Message-ID: <20140520221758.GH12304@sirena.org.uk>
+References: <1398295293-11033-1-git-send-email-mporter@linaro.org>
+ <1398295293-11033-3-git-send-email-mporter@linaro.org>
+ <20140428115627.GY21279@lee--X1>
+ <20140428140910.GB7719@beef>
+ <20140520161131.GB32025@lee--X1>
+ <20140520190055.GQ12304@sirena.org.uk>
+ <20140520202923.GT32082@beef>
+ <20140520214439.GS12304@sirena.org.uk>
+ <20140520215726.GU32082@beef>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SKnaiO/TCj3ZfC7z"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="Rl31vBGKDBpRqJCj"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1399141819-23924-6-git-send-email-andrew-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <20140520215726.GU32082@beef>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matt Porter <mporter@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Devicetree List <devicetree@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Tim Kryger <tim.kryger@linaro.org>, Markus Mayer <markus.mayer@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---SKnaiO/TCj3ZfC7z
+--Rl31vBGKDBpRqJCj
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sat, May 03, 2014 at 08:30:15PM +0200, Andrew Lunn wrote:
-> Some platforms require that the codecs mclk is a fixed multiplication
-> factor of the audio stream rate. Add a optional property to the
-> binding to hold this factor and implement a hw_params() function to
-> make use of it.
+On Tue, May 20, 2014 at 05:57:26PM -0400, Matt Porter wrote:
+> On Tue, May 20, 2014 at 10:44:39PM +0100, Mark Brown wrote:
 
-This doesn't apply against current code, can you please check and
-resend?
+> > I looked at that but it seems I already acked the regulator part of the
+> > series and nothing else looked immediately relevant?
 
---SKnaiO/TCj3ZfC7z
+> The series has cross dependencies (shared header include) and thus needs
+> to have both the mfd and regulator portions merged together. You had
+> mentioned in the v1 version that you'd like to take it through the
+> regulator tree and so Lee's comments earlier were with regard to you
+> taking the mfd portions.
+
+Right, OK - because it depends on the earlier MFD patches (I think?) I
+was expecting it to be applied in MFD and merged over to regulator.
+
+--Rl31vBGKDBpRqJCj
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTe9OjAAoJELSic+t+oim90zwP/3cNFdU4GRF0FcSPQqNM6Uqc
-QHEFCYczoyAj9lVpGEFZ8wEej/lE3Zlu333bSpi8BWf77xQi1vWldycjrdfRegqJ
-Q2f/+r1QgCED/OkUgXG+vyTsuZ3jvbr49eTQIKF9+Uzw1XcT/3j/kJtGh9PbCTFq
-jGsc7TvJ6dLwpL+PJyKAhmI4ZHPU+45sgXTKA4xf1ian9igBcD8pwOMK7DPRlF0x
-olNJnPKz6wyByfgT3Ay4BbtC2rh+Hm+/+prgvjO/4A833PiEmCXPXXDJQ06P9D+u
-weN0qsV/AV/QAqCJjhDX9sQb6k3NSNAirxR3EIG5RDiGX8bv0ZeU183AHgLjS9AJ
-dHGA/tUb4qgS2dtlc/2Ol9GmRY8yEUysY4SlujPGnX30QuvcHVj14unbGWNgKfLQ
-3zwLrWwU0aQBKijCV9iZgAmj4mDGSwJSQ9ui5LLdcL0pVEtsdEX7yh49lT/ZtU23
-KRDIbtIeVUf9udUaAqTAWZDX1hHPVx/Ph29gRW0qPIaRGjh9PNrlKTnSFBRJ5jMX
-xE2bnN3G/+Mhnl3Nb6wi0txMSBIFYPdt2wDykU6eK97oFTwKkihPNhO5JzzTbm7L
-VVyT4LWc3t2nIaHQkX2GWuheux10qd2AGMTBsKMrJ0yDim4UtC/m4WYnSTU9Bxcg
-HBEYw+aiXyQ4oa4Smo3i
-=rumL
+iQIcBAEBAgAGBQJTe9SSAAoJELSic+t+oim9QOIP/16xpmlilX1hQbrOrr75vRYK
+SkMn8naEAWOn/gphQvLAatKSiAEbpZa0ITzknU3tjszoMNpCxZmiwzP79acJDmJQ
+tfD55V279M11FrBLGHkkmkBTaahFclPG16dD3GmdOXPjBya1EOCnAmml3XSnEwF5
+i56ZcC+UrCif9dQ64Km86+U95P7DvjVeuh9AaE3ScztzKTroguOmqoIbrVixdcCl
+sS6RmaNnXam0aXjiAoyN6kTuFdTk5tAo0u7Gf1ej4CSalKJnwySr5ejcEAYHACkN
+aTdHVM6tbnTffWp8bL1VwFc3QyLp3+QKnU7nrRtGPnTHItYCNduGK+IEo9cuMITe
+GyEcdfrJ4Z+N7TgHEfbT+H3iC9X59rPgQKz9LBi86gfsnYmeUkGYwDK97HFOXGEv
+B9ITG8rbY4xriYtS6FK0em04ylGfaMRGhEZX9eKT3DCSa0OLUdNBUOX3lDCJgMjB
+EgwNQ2kVtE7/FtNzHQjak5kB933g3YHCWfgNRB6jqjq3astg/JtGX/yzqGW99uK9
+Tumz1a3gBDaDOWpCpxQmjraXdKAAgDsAM2R7DymaFPkE0BDlFaJ2blw6vbNBz90b
+8XLLdukw6zYds01xE+R7yMQDG5EHmz0wvb/O/+xEuRd9zKKnUDG76mW3qGGEVVRO
+8Q+kUiNRm2WRNOvLtuxP
+=Cjmu
 -----END PGP SIGNATURE-----
 
---SKnaiO/TCj3ZfC7z--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--Rl31vBGKDBpRqJCj--
