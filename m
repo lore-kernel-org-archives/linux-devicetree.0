@@ -1,57 +1,103 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net-next 7/9] ucc_geth: use the new fixed PHY helpers
-Date: Mon, 19 May 2014 17:56:22 -0700
-Message-ID: <1400547384-11363-8-git-send-email-f.fainelli@gmail.com>
-References: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: RE: [PATCHv4 1/4] ARM: dts: exynos4: add PMU syscon node
+Date: Tue, 20 May 2014 11:01:18 +0900
+Message-ID: <011701cf73cf$63f61590$2be240b0$@samsung.com>
+References: <1399004769-31033-1-git-send-email-chanho61.park@samsung.com>
+ <1399004769-31033-2-git-send-email-chanho61.park@samsung.com>
+ <5374F447.9030102@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: netdev@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, Florian Fainelli <f.fainelli@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, davem@davemlof.net, Vitaly Bordug <vbordug@ru.mvista.com>, Kumar Gala <galak@codeaurora.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>, David S.
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <5374F447.9030102@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <t.figa@samsung.com>, kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, k.debski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-b2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluaygpIGlzIGJlY29taW5nIG9ic29sZXRlLCBhbmQgYWxz
-byByZXF1aXJlZApwbGF0Zm9ybSBjb2RlIHRvIHJlZ2lzdGVyIHRoZSBmaXhlZCBQSFlzIGF0IHRo
-ZSBzcGVjaWZpZWQgYWRkcmVzc2VzIGZvcgp0aG9zZSB0byBiZSB1c2FibGUuIEdldCByaWQgb2Yg
-aXQgYW5kIHVzZSB0aGUgbmV3IG9mX3BoeV9pc19maXhlZF9saW5rKCkKcGx1cyBvZl9waHlfcmVn
-aXN0ZXJfZml4ZWRfbGluaygpIGhlbHBlcnMgdG8gdHJhbnNpdGlvbiBvdmVyIHRoZSBuZXcKc2No
-ZW1lLgoKU2lnbmVkLW9mZi1ieTogRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBnbWFpbC5j
-b20+Ci0tLQogZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL3VjY19nZXRoLmMgfCAxNCAr
-KysrKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKyksIDMgZGVsZXRp
-b25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL3VjY19n
-ZXRoLmMgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9mcmVlc2NhbGUvdWNjX2dldGguYwppbmRleCBj
-ODI5OWMzMWIyMWYuLmZhYjM5ZTI5NTQ0MSAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJu
-ZXQvZnJlZXNjYWxlL3VjY19nZXRoLmMKKysrIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNj
-YWxlL3VjY19nZXRoLmMKQEAgLTE3MjgsOSArMTcyOCw2IEBAIHN0YXRpYyBpbnQgaW5pdF9waHko
-c3RydWN0IG5ldF9kZXZpY2UgKmRldikKIAogCXBoeWRldiA9IG9mX3BoeV9jb25uZWN0KGRldiwg
-dWdfaW5mby0+cGh5X25vZGUsICZhZGp1c3RfbGluaywgMCwKIAkJCQlwcml2LT5waHlfaW50ZXJm
-YWNlKTsKLQlpZiAoIXBoeWRldikKLQkJcGh5ZGV2ID0gb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGlu
-ayhkZXYsICZhZGp1c3RfbGluaywKLQkJCQkJCSAgIHByaXYtPnBoeV9pbnRlcmZhY2UpOwogCWlm
-ICghcGh5ZGV2KSB7CiAJCWRldl9lcnIoJmRldi0+ZGV2LCAiQ291bGQgbm90IGF0dGFjaCB0byBQ
-SFlcbiIpOwogCQlyZXR1cm4gLUVOT0RFVjsKQEAgLTM3OTAsNiArMzc4NywxNyBAQCBzdGF0aWMg
-aW50IHVjY19nZXRoX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UqIG9mZGV2KQogCXVnX2lu
-Zm8tPnVmX2luZm8uaXJxID0gaXJxX29mX3BhcnNlX2FuZF9tYXAobnAsIDApOwogCiAJdWdfaW5m
-by0+cGh5X25vZGUgPSBvZl9wYXJzZV9waGFuZGxlKG5wLCAicGh5LWhhbmRsZSIsIDApOworCWlm
-ICghdWdfaW5mby0+cGh5X25vZGUpIHsKKwkJLyogSW4gdGhlIGNhc2Ugb2YgYSBmaXhlZCBQSFks
-IHRoZSBEVCBub2RlIGFzc29jaWF0ZWQKKwkJICogdG8gdGhlIFBIWSBpcyB0aGUgRXRoZXJuZXQg
-TUFDIERUIG5vZGUuCisJCSAqLworCQlpZiAob2ZfcGh5X2lzX2ZpeGVkX2xpbmsobnApKSB7CisJ
-CQllcnIgPSBvZl9waHlfcmVnaXN0ZXJfZml4ZWRfbGluayhucCk7CisJCQlpZiAoZXJyKQorCQkJ
-CXJldHVybiBlcnI7CisJCX0KKwkJdWdfaW5mby0+cGh5X25vZGUgPSBucDsKKwl9CiAKIAkvKiBG
-aW5kIHRoZSBUQkkgUEhZIG5vZGUuICBJZiBpdCdzIG5vdCB0aGVyZSwgd2UgZG9uJ3Qgc3VwcG9y
-dCBTR01JSSAqLwogCXVnX2luZm8tPnRiaV9ub2RlID0gb2ZfcGFyc2VfcGhhbmRsZShucCwgInRi
-aS1oYW5kbGUiLCAwKTsKLS0gCjEuOS4xCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpMaW51eHBwYy1kZXYgbWFpbGluZyBsaXN0CkxpbnV4cHBjLWRldkBs
-aXN0cy5vemxhYnMub3JnCmh0dHBzOi8vbGlzdHMub3psYWJzLm9yZy9saXN0aW5mby9saW51eHBw
-Yy1kZXY=
+Hi Tomasz,
+
+> -----Original Message-----
+> From: Tomasz Figa [mailto:t.figa@samsung.com]
+> Sent: Friday, May 16, 2014 2:07 AM
+> To: Chanho Park; kgene.kim@samsung.com; linux-samsung-
+> soc@vger.kernel.org
+> Cc: devicetree@vger.kernel.org; k.debski@samsung.com
+> Subject: Re: [PATCHv4 1/4] ARM: dts: exynos4: add PMU syscon node
+> 
+> Hi Chanho,
+> 
+> When testing some other patches with this series applied I found one
+> more issue. Please see below.
+> 
+> On 02.05.2014 06:26, Chanho Park wrote:
+> > This patch adds a PMU(Power Management Unit) syscon node. This
+> > should be required for USB Phy syscon regmap I/F.
+> >
+> > Cc: Kamil Debski <k.debski@samsung.com>
+> > Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+> > Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> > ---
+> >  Documentation/devicetree/bindings/arm/samsung/pmu.txt | 3 +++
+> >  arch/arm/boot/dts/exynos4.dtsi                        | 5 +++++
+> >  arch/arm/boot/dts/exynos4x12.dtsi                     | 4 ++++
+> >  3 files changed, 12 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > index f1f1552..b562634 100644
+> > --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+> > @@ -2,6 +2,9 @@ SAMSUNG Exynos SoC series PMU Registers
+> >
+> >  Properties:
+> >   - compatible : should contain two values. First value must be one
+> from following list:
+> > +		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
+> > +		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
+> > +		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+> 
+> Here two compatible strings are specified, one for each SoC in 4x12
+> family, but...
+> 
+> >  		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
+> >  		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
+> >  		second value must be always "syscon".
+> > diff --git a/arch/arm/boot/dts/exynos4.dtsi
+> b/arch/arm/boot/dts/exynos4.dtsi
+> > index 2f8bcd0..264066f 100644
+> > --- a/arch/arm/boot/dts/exynos4.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4.dtsi
+> > @@ -110,6 +110,11 @@
+> >  		reg = <0x10010000 0x400>;
+> >  	};
+> >
+> > +	pmu_system_controller: system-controller@10020000 {
+> > +		compatible = "samsung,exynos4210-pmu", "syscon";
+> > +		reg = <0x10020000 0x4000>;
+> > +	};
+> > +
+> >  	dsi_0: dsi@11C80000 {
+> >  		compatible = "samsung,exynos4210-mipi-dsi";
+> >  		reg = <0x11C80000 0x10000>;
+> > diff --git a/arch/arm/boot/dts/exynos4x12.dtsi
+> b/arch/arm/boot/dts/exynos4x12.dtsi
+> > index c4a9306..7f767f7 100644
+> > --- a/arch/arm/boot/dts/exynos4x12.dtsi
+> > +++ b/arch/arm/boot/dts/exynos4x12.dtsi
+> > @@ -119,6 +119,10 @@
+> >  		interrupts = <0 72 0>;
+> >  	};
+> >
+> > +	pmu_system_controller: system-controller@10020000 {
+> > +		compatible = "samsung,exynos4x12-pmu", "syscon";
+> 
+> Here one node is added for both using an undocumented compatible string.
+> Please fix this according to documentation.
+
+OK. I forgot to change it. I'll update it.
+Thanks.
+
+Best Regards,
+Chanho Park
