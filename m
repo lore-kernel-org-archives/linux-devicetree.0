@@ -1,52 +1,49 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [RFC] Migrate to Hz resolution for OPP binding
-Date: Tue, 20 May 2014 15:30:12 -0700
-Message-ID: <672dd8e9-2857-49fb-848f-d38d38b23c9b@BN1BFFO11FD024.protection.gbl>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3 0/2] ARM: dts: add device data for exynos4412-trats2
+Date: Wed, 21 May 2014 00:45:33 +0200
+Message-ID: <537BDB0D.6060804@gmail.com>
+References: <537B32E5.2070606@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <537B32E5.2070606@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 20.05.2014 12:48, Beomho Seo wrote:
+> This patchset add some device node for exynos4412-trats2.
+> It is based on v3.15-next/dt-samsung-2 branch.
+> 
+> exynos4412-trats2.dts
+> - Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-kasei,ak8975".
+> - Add cm36651 light/proximity sensor device node.
+> - Change gpio-key device node. fix incorrect gpio property, and then add "ok-key" node.
+> 
+> Changes in v3:
+> - Patch set based on v3.16-next/dt-samsung
+> - ARM: dts: fix incorrect compatible for exynos4412 patch is applied.
+> - Remove device node property; status, interrupt-parent, interrupt
+> - Changes gpio/interrupt specified index.
+> 
+> Changes in v2:
+> 
+> - Change ak8975 magnetic sensor compatible according to binding document.
+> - Change cm36651 light/proximity sensor compatible according to binding document and driver.
+> 
+> Beomho Seo (2):
+>   ARM: dts: add cm36651 light/proximity sensor node
+>   ARM: dts: fixed gpio key node for exynos4412
+> 
+>  arch/arm/boot/dts/exynos4412-trats2.dts |   46 +++++++++++++++++++++++++------
+>  1 file changed, 38 insertions(+), 8 deletions(-)
+> 
 
-I guess this is just to evaluate how big the lynch mob will be. Anyway:
-Triggered by this discussion https://lkml.org/lkml/2014/5/15/46, I
-looked a little into what it would take to migrate everybody to Hz
-frequency resolutions to avoid all the conversions between cpufreq, CCF=
-,
-OPPs, etc.
-Turns out, OPPs are already stored in Hz resolution in the kernel, but =
-the DT
-bindings use kHz resolution to specify them in DT. So, code-wise there
-is just a removal of a multiplication in the OPP parser (see below), bu=
-t
-then there are the DT bindings...
+For the whole series:
 
-As plan B, I was thinking to add the property 'operating-points-hz'...
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-Any better ideas?
-
-
-diff --git a/drivers/base/power/opp.c b/drivers/base/power/opp.c
-index 25538675d59e..61795111e8ca 100644
---- a/drivers/base/power/opp.c
-+++ b/drivers/base/power/opp.c
-@@ -731,7 +731,7 @@ int of_init_opp_table(struct device *dev)
-=20
- 	val =3D prop->value;
- 	while (nr) {
--		unsigned long freq =3D be32_to_cpup(val++) * 1000;
-+		unsigned long freq =3D be32_to_cpup(val++);
- 		unsigned long volt =3D be32_to_cpup(val++);
-=20
- 		if (dev_pm_opp_add(dev, freq, volt)) {
-
-
-	Thanks,
-	S=C3=B6ren
-
+Best regards,
+Tomasz
