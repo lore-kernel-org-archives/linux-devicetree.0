@@ -1,102 +1,71 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [Patch v3 0/5] Introduce keystone reset driver
-Date: Tue, 20 May 2014 16:16:08 +0300
-Message-ID: <537B5598.8070603@ti.com>
-References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com> <537A1E2C.8040102@ti.com> <5095812.b6DgWAxYzH@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Maxime COQUELIN <maxime.coquelin@st.com>
+Subject: [PATCH v7 0/4] Add STiH407 SoC and reference board support
+Date: Tue, 20 May 2014 15:17:28 +0200
+Message-ID: <1400591852-17577-1-git-send-email-maxime.coquelin@st.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5095812.b6DgWAxYzH@wuerfel>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Maxime Coquelin <maxime.coquelin@st.com>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com
+Cc: lee.jones@linaro.org
 List-Id: devicetree@vger.kernel.org
 
+This series adds basic support to the STMicroelectronics STiH407 SoC and its
+B2120 reference board. The STiH407 is a dual-core ARM Cortex-A9 CPU aimed at
+STB market.
 
-On 05/19/2014 08:47 PM, Arnd Bergmann wrote:
-> On Monday 19 May 2014 11:07:24 Santosh Shilimkar wrote:
->> On Monday 19 May 2014 06:25 AM, Ivan Khoronzhuk wrote:
->>> These patches introduce keystone reset driver.
->>>
->>> The keystone SoC can be rebooted in several ways. By external reset
->>> pin, by soft and by watchdogs. This driver allows software reset and reset
->>> by one of the watchdogs. Also added opportunity to set soft/hard reset type.
->>>
->>> Based on v3.15-rc5
->>>
->> Arnd,
->> Can I have have your ack/reviewed-by please since you did gave few comments
->> on previous version.
-> Sorry for not getting back to you earlier on this topic.
->
->> On 04/14/2014 09:44 PM, Arnd Bergmann wrote:
->>> On Monday 14 April 2014 20:41:20 Ivan Khoronzhuk wrote:
->>>> +Optional properties:
->>>> +
->>>> +- ti,soft-reset:       Boolean option indicating soft reset.
->>>> +                       By default hard reset is used.
->>>> +
->>>> +- ti,wdt_list:         WDT list that can cause SoC reset.
->>>> +                       The list in format: <0>, <2>;
->>>> +                       Begins from 0 to 3, as keystone can contain up
->>>> +                       to 4 SoC reset watchdogs.
->>> This looks like your binding just describes a subset of the
->>> watchdog timer registers. If so, don't do a standalone reset
->> The registers are not a subset of watchdog hardware it's SoC specific future
->> controlled by SoC specific registers (bootregs and PLL regs).
->>
->> For watchog IP setup, the Keystone uses the watchdog driver common with
->> other
->> SoCs -- davinci_watchdog that is not depend on other SoC settings like
->> this driver does.
->>
->> The Keystone SoCs have separate registers to tune Keystone2 reset
->> functionality
->> by configuring Reset multiplexer &  PLL. And it tunes not only watchdog
->> usage.
->> The keystone SoC can be rebooted in several ways. By external reset pin,
->> by soft and
->> by watchdogs. This driver allows software reset or reset by one of the
->> watchdogs
->> (and other settings) independently on watchdog driver settings. This is
->> job of reset driver.
-> It sounds like you use a syscon area in the reset driver. This is not
-> uncommon, but it means you should probably have a generic node for
-> the SoC specific registers that contains all of them at once and
-> exports them as a regmap using the drivers/mfd/syscon.c driver.
->
-> 	Arnd
+Changes since v6:
+-----------------
+    - No more uppercase and camelcase in DT labels and node names
 
-Arnd,
-Thank for the reply
+Changes since v5:
+-----------------
+    - Sort STi boards in DTS'es Makefile
+    - Re-order compatibles in STi boards from specific to generic
+    - Only contains DT patches, other patches being merged
 
-The reset driver uses two ranges:
-- RSTYPE, RSTCTRL,RSTCFG, RSISO  (Reset Main PLL Controller)
-- RESETMUX8-10 registers
+Changes since v4:
+-----------------
+    - remove patches already present in v3.15 (pinctrl)
+    - rebase on top of v3.15-rc2
 
-The content of these register ranges are completely used by the reset 
-driver.
-Currently no one on the SoC can access them instead of the reset driver.
-Also we don't use syscon/regmap at all - so adding this will be some 
-overhead.
+Changes since v3:
+-----------------
+    - Removed SOC_STIH407 as unused for now
+    - Cosmetic changes in DT
+    - Added new lines in pinctrl-st around if:s
+    - Use ARRAY_SIZE instead of raw values
 
-As I posted previously:
-"...configuring Reset multiplexer & PLL. And it tunes not only watchdog 
-usage..."
+Changes since v2:
+-----------------
+    - Reordered the pinctrl patches
+    - Moved stih407_flashdata to stih407 pinctrl patch
 
-Yes, it tunes not only watchdog usage and uses part of registers from 
-PLL controller,
-but all it works with are connected with reset functionality. These 
-ranges are used only
-by reset driver and their purpose is reset functionality.
+Changes since v1:
+-----------------
+    - Changed patch 2 commit title
+    - Rebased pinctrl patches to linux-pinctrl/devel
+    - Rebased ARM patches to arm_soc/for-next
 
-Maybe in the future some soft can use ranges in question for own tasks, 
-but it should be
-done via reset driver. So as I see there is no reasons to use regmap for 
-reset driver.
+Maxime Coquelin (4):
+  ARM: dts: Sort STi boards in Makefile
+  ARM: dts: Fix STi boards compatibles
+  ARM: dts: Add STiH407 SoC support
+  ARM: dts: STiH407: Add B2120 board support
+
+ arch/arm/boot/dts/Makefile             |   5 +-
+ arch/arm/boot/dts/stih407-b2120.dts    |  78 +++++
+ arch/arm/boot/dts/stih407-clock.dtsi   |  39 +++
+ arch/arm/boot/dts/stih407-pinctrl.dtsi | 615 +++++++++++++++++++++++++++++++++
+ arch/arm/boot/dts/stih407.dtsi         | 263 ++++++++++++++
+ arch/arm/boot/dts/stih415-b2000.dts    |   2 +-
+ arch/arm/boot/dts/stih415-b2020.dts    |   2 +-
+ arch/arm/boot/dts/stih416-b2000.dts    |   3 +-
+ arch/arm/boot/dts/stih416-b2020.dts    |   3 +-
+ 9 files changed, 1002 insertions(+), 8 deletions(-)
+ create mode 100644 arch/arm/boot/dts/stih407-b2120.dts
+ create mode 100644 arch/arm/boot/dts/stih407-clock.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407-pinctrl.dtsi
+ create mode 100644 arch/arm/boot/dts/stih407.dtsi
 
 -- 
-Regards,
-Ivan Khoronzhuk
+1.9.1
 
