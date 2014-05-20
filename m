@@ -1,77 +1,132 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Tue, 20 May 2014 16:40:58 +0200
-Message-ID: <20140520144058.GE21579@kwain>
-References: <1400576675-25265-1-git-send-email-antoine.tenart@free-electrons.com>
- <1400576675-25265-2-git-send-email-antoine.tenart@free-electrons.com>
- <1821771.zFvTDGF2Ae@amdc1032>
- <20140520140652.GB21579@kwain>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
+ controller
+Date: Tue, 20 May 2014 16:44:47 +0200
+Message-ID: <20140520144446.GJ949@pengutronix.de>
+References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
+ <1400169891-29546-2-git-send-email-tthayer@altera.com>
+ <20140516075344.GF949@pengutronix.de>
+ <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
+ <20140519191206.GH949@pengutronix.de>
+ <CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
+ <CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140520140652.GB21579@kwain>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <delicious.quinoa@gmail.com>
+Cc: Thor Thayer <tthayer.linux@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 04:06:52PM +0200, Antoine T=E9nart wrote:
-> Hi,
->=20
-> On Tue, May 20, 2014 at 02:34:20PM +0200, Bartlomiej Zolnierkiewicz w=
-rote:
-> > On Tuesday, May 20, 2014 11:04:29 AM Antoine T=E9nart wrote:
-> > > +
-> > > +static struct phy_berlin_desc desc[] =3D {
-> > > +	{ .val =3D POWER_DOWN_PHY0 },
-> > > +	{ .val =3D POWER_DOWN_PHY1 },
-> >=20
-> > Only .val entry of struct phy_berlin_desc is initialized and needed=
-,
-> > it seems that u32 vals[] should be used instead of desc[].
->=20
-> Sure.
->=20
-> > > +
-> > > +static int phy_berlin_sata_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct device *dev =3D &pdev->dev;
-> > > +	struct phy *phy;
-> > > +	struct phy_provider *phy_provider;
-> > > +	struct phy_berlin_priv *priv;
-> > > +	struct resource *res;
-> > > +	int i;
-> > > +
-> > > +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> > > +	if (!priv)
-> > > +		return -ENOMEM;
-> > > +
-> > > +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+Hi!
 
-We also need to check res isn't NULL here.
+On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
+> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+> 
+> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >>> >> new file mode 100644
+> >>> >> index 0000000..8f8746b
+> >>> >> --- /dev/null
+> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >>> >> @@ -0,0 +1,11 @@
+> >>> >> +Altera SOCFPGA SDRAM Controller
+> >>> >> +
+> >>> >> +Required properties:
+> >>> >> +- compatible : "altr,sdr-ctl";
+> >>> >> +- reg : Should contain 1 register ranges(address and length)
+> >>> >> +
+> >>> >> +Example:
+> >>> >> +     sdrctl@ffc25000 {
+> >>> >> +             compatible = "altr,sdr-ctl";
+> >>> >> +             reg = <0xffc25000 0x1000>;
+> >>> >> +     };
+> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> >>> >> index df43702..6ce912e 100644
+> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> >>> >> @@ -676,6 +676,11 @@
+> >>> >>                       clocks = <&l4_sp_clk>;
+> >>> >>               };
+> >>> >>
+> >>> >> +             sdrctl@ffc25000 {
+> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
+> >>> >                                                    ^^^^^^^^^^
+> >>> >
+> >>> > Get rid of that, too, please.
+> >>>
+> >>> Hi Steffan,
+> >>>
+> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
+> >>> that has the ECC enable bitfield also includes the DRAM configuration
+> >>> bitfields that other drivers will want to access (specifically the
+> >>> FPGA bridge needs this information). Since this register will be
+> >>> shared between drivers,  syscon seems like the best solution.
+> >>>
+> >>
+> >> Hm, from looking at the documentation of the ctrlcfg I can't really
+> >> understand which bits you would need for the FPGA brigde and why.
+> 
+> Hi Steffen,
+> 
+> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
+> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
+> allows an FPGA port to come out of reset (enables that port).  Has no
+> other effect on SDRAM configuration.
+> 
+> >> That all sounds like stuff you would want to set for the specific
+> >> RAM you are dealing with on a specific board.
+> >> What bridge are you talking about? The SDRAM bridge?
+> 
+> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
+> register the only register in the sdr that the bridge driver needs.
+> 
 
-> > > +	priv->base =3D devm_ioremap(dev, res->start, resource_size(res)=
-);
-> > > +	if (IS_ERR(priv->base))
-> > > +		return PTR_ERR(priv->base);
-> >=20
-> > devm_ioremap() (contrary to devm_ioremap_resource()) returns a vali=
-d
-> > pointer or NULL so return value checking should be fixed.
->=20
-> I'll fix this.
+So, what I suggested down ...
 
-Antoine
+> >>
+> >> I can see the problem with the ECC enable, though.
+> >>
+> >> Regards,
+> >> Steffen
+> >>
+> >
+> >>> >                 sdrctl@ffc25000 {
+> >>> >                         compatible = "altr,sdr-ctl";
+> >>> >                         reg = <0xffc25000 0x1000>;
+> >>> >                         ranges;
+> >>> >
+> >>> >                         edac@ffc2502c {
+> >>> >                                 compatible = "altr,sdram-edac";
+> >>> >                                 reg = <0xffc2502c 0x50>;
+> >>> >                                 interrupts = <0 39 4>;
+> >>> >                         };
+> >>> >                 };
+> >>> >
+> >>> > Then we can later add:
+> >>> >
+> >>> >                         sdr-ports: ports@ffc2507c {
+> >>> >                                 #reset-cells = <1>;
+> >>> >                                 compatible = "altr,sdr-ports";
+> >>> >                                 reg = <0xffc2507c 0x10>;
+> >>> >                                 clocks = <&ddr_dqs_clk>;
+> >>> >                                 ...
+> >>> >                         };
+>
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+... here should work. No?! Just a simple driver that registers with the
+reset-framework. I would add 0x7c to that driver and than that driver could
+"configure" the port and let it out of reset.
+
+I have done the same thing for the other 3 bridges, but am not finished yet.
+Especially the GPV-stuff needs to at least be able to be added later if not now.
+
+Regard,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
