@@ -1,43 +1,44 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] NFC: dts: st21nfca_i2c: Correct minor typo in documentation
-Date: Tue, 20 May 2014 21:45:04 +0200
-Message-ID: <1400615104-3864-1-git-send-email-christophe-h.ricard@st.com>
+From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+Subject: Re: [PATCH v3 4/9] of: mtd: add documentation for the ONFI NAND
+ timing mode property
+Date: Tue, 20 May 2014 13:51:40 -0600
+Message-ID: <20140520195140.GA32287@obsidianresearch.com>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1394647664-8258-5-git-send-email-b.brezillon.dev@gmail.com>
+ <20140520182542.GS28907@ld-irv-0074>
+ <537BAD59.3060902@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537BAD59.3060902@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Brian Norris <computersforpeace@gmail.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robherring2@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mtd@lists.infradead.org, dev@linux-sunxi.org
 List-Id: devicetree@vger.kernel.org
 
-Replaced st,st21nfca-i2c by st,st21nfca_i2c to be concistent
-with below configuration and driver in drivers/nfc/st21nfca/
+On Tue, May 20, 2014 at 09:30:33PM +0200, Boris BREZILLON wrote:
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
----
- Documentation/devicetree/bindings/net/nfc/st21nfca.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> AFAICT nothing, but the same goes for the ECC requirements, and we've
+> recently added DT bindings to define these requirements.
+> I'm not telling we should drop these ECC requirements bindings (actually
+> I'm using them :-)), but what's different with the timings requirements ?
 
-diff --git a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt b/D=
-ocumentation/devicetree/bindings/net/nfc/st21nfca.txt
-index 4724fe6..e4faa2e 100644
---- a/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
-+++ b/Documentation/devicetree/bindings/net/nfc/st21nfca.txt
-@@ -1,7 +1,7 @@
- * STMicroelectronics SAS. ST21NFCA NFC Controller
-=20
- Required properties:
--- compatible: Should be "st,st21nfca-i2c".
-+- compatible: Should be "st,st21nfca_i2c".
- - clock-frequency: I=C2=B2C work frequency.
- - reg: address on the bus
- - interrupt-parent: phandle for the interrupt gpio controller
---=20
-1.9.1
+ECC requirements are almost always something that has to be matched to
+the bootloader (since the bootloader typicaly reads the NAND to boot),
+so it is sensible to put that in the DT
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The timings are a property of the chip, and if they can be detected
+they should be. IMHO, the main purpose of a DT property would be to
+lower the speed if, for some reason, the board cannot support the
+device's full speed.
+
+> Indeed, I based it on the ONFI NAND timings mode model, but AFAIK
+> (tell me if I'm wrong), it should work because most of the timings
+> are min requirements.  This means, even if you provide slower
+> signals transitions, the NAND will work as expected.
+
+IIRC for ONFI a device must always work in the mode 0 timings, without
+requiring a command?
+
+Jason
