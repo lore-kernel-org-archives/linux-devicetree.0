@@ -1,82 +1,91 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH v2 09/10] ARM: STi: DT: STiH415: 415 DT Entry for clockgen
- A9
-Date: Mon, 19 May 2014 23:21:40 -0700
-Message-ID: <CAOesGMhH0B80mjH3w9nVa1CWxST2HVpyDZjjfX4koYgDaPYK2w@mail.gmail.com>
-References: <1400073858-28912-1-git-send-email-gabriel.fernandez@linaro.org>
- <1400073858-28912-10-git-send-email-gabriel.fernandez@linaro.org>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: OMAP2+: gpmc: enable wait-pin monitoring for
+ NAND devices via DT
+Date: Tue, 20 May 2014 10:45:07 +0300
+Message-ID: <537B0803.6070702@ti.com>
+References: <1400567064-20033-1-git-send-email-pekon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400073858-28912-10-git-send-email-gabriel.fernandez@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, "kernel@stlinux.com" <kernel@stlinux.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Kumar Gala <galak@codeaurora.org>, Pankaj Dev <pankaj.dev@st.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime Coquelin <maxime.coquelin@st.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400567064-20033-1-git-send-email-pekon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 14, 2014 at 6:24 AM, Gabriel FERNANDEZ
-<gabriel.fernandez@st.com> wrote:
-> Patch adds DT entries for clockgen A9
->
-> Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Hi Pekon,
+
+On 05/20/2014 09:24 AM, Pekon Gupta wrote:
+> This patch enables 'wait-pin' monitoring in NAND driver if following properties
+> are present under NAND DT node
+>   gpmc,wait-pin = <wait-pin number>
+>   gpmc,wait-on-read
+>   gpmc,wait-on-write
+> As NAND generic framework uses common path nand_chip->dev_ready() for monitoring
+> completion of Read and Write status, so wait-pin monitoring is enabled only when
+> *both* 'gpmc,wait-on-read' and 'gpmc,wait-on-write' are specified.
+> 
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stih415-clock.dtsi | 48 +++++++++++++++++++++++++++++-------
->  1 file changed, 39 insertions(+), 9 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-> index 8618851..5d161ee 100644
-> --- a/arch/arm/boot/dts/stih415-clock.dtsi
-> +++ b/arch/arm/boot/dts/stih415-clock.dtsi
-> @@ -24,15 +24,6 @@
->                 };
->
->                 /*
-> -                * ARM Peripheral clock for timers
-> -                */
-> -               arm_periph_clk: arm_periph_clk {
-> -                       #clock-cells = <0>;
-> -                       compatible = "fixed-clock";
-> -                       clock-frequency = <500000000>;
-> -               };
+>  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++++++
+>  arch/arm/mach-omap2/gpmc-nand.c                     | 8 +++++---
+>  2 files changed, 13 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> index eb81435..4039032 100644
+> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
+> @@ -45,6 +45,14 @@ Optional properties:
+>  		ELM hardware engines should specify this device node in .dtsi
+>  		Using ELM for ECC error correction frees some CPU cycles.
+>  
+> + - gpmc,wait-pin=<pin number>	Specifies GPMC wait-pin number to monitor
+> + - gpmc,wait-on-read		Enable wait-pin monitoring for Read accesses
+> + - gpmc,wait-on-write		Enable wait-pin monitoring for Write accesses
+> +		As NAND generic framework uses single common function
+> +		nand_chip->dev_ready() for polling wait-pin both for Read and
+> +		Write accesses. So for NAND devices both 'gpmc,wait-on-read' and
+> +		'gpmc,wait-on-write' need to be specified together.
+> +
+>  For inline partiton table parsing (optional):
+>  
+
+
+>   - #address-cells: should be set to 1
+> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
+> index 17cd393..62bc3de 100644
+> --- a/arch/arm/mach-omap2/gpmc-nand.c
+> +++ b/arch/arm/mach-omap2/gpmc-nand.c
+> @@ -123,11 +123,13 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
+>  		}
+>  	}
+>  
+> -	if (gpmc_nand_data->of_node)
+> +	if (gpmc_nand_data->of_node) {
+>  		gpmc_read_settings_dt(gpmc_nand_data->of_node, &s);
+> -	else
+> +		if (s.wait_on_read && s.wait_on_write)
+> +			gpmc_nand_data->dev_ready = true;
+> +	} else {
+>  		gpmc_set_legacy(gpmc_nand_data, &s);
 > -
-> -               /*
->                  * ClockGenAs on SASG1
->                  */
->                 clockgenA@fee62000 {
-> @@ -499,5 +490,44 @@
->                                                 /* Remaining outputs unused */
->                         };
->                 };
-> +
-> +               /*
-> +                * A9 PLL
-> +                */
-> +               clockgenA9 {
+> +	}
+>  	s.device_nand = true;
 
-This is a somewhat odd node name. We usually don't use caps mixed like
-this. Also, the node should have a unit address (same as the address
-portion of the reg value).
+NACK.
 
-clockgen-a9 would be a more natural one.
+For NAND, we only need the wait-pin property. The wait-on-read/wait-on-write flags are meaningless.
+Also, the wait-pin number needs to be communicated to the NAND driver and omap_dev_ready() function updated so that it checks for the right wait pin status.
 
-> +                       reg = <0xfdde00d8 0x70>;
-> +
-> +                       CLOCKGEN_A9_PLL: CLOCKGEN_A9_PLL {
+>  
+>  	err = gpmc_cs_program_settings(gpmc_nand_data->cs, &s);
+> 
 
-I'm really not a fan of the all-caps node names you guys are using.
-Please switch to lower case like most other platforms. Just as in C,
-we tend to keep all-caps to be used for constants and preprocessor
-stuff.
-
-
--Olof
+cheers,
+-roger
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
