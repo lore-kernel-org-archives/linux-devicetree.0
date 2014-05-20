@@ -1,69 +1,101 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v2 0/6] soc: ti: Add Keystone Navigator drivers
-Date: Tue, 20 May 2014 16:08:05 -0400
-Message-ID: <537BB625.2000802@ti.com>
-References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
- <537B5F5E.9080703@ti.com> <20140520200104.GA27786@kroah.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+Date: Wed, 21 May 2014 00:12:30 +0400
+Message-ID: <201405210012.31347.sergei.shtylyov@cogentembedded.com>
+References: <201405210008.15145.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140520200104.GA27786@kroah.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201405210008.15145.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 May 2014 04:01 PM, Greg Kroah-Hartman wrote:
-> On Tue, May 20, 2014 at 09:57:50AM -0400, Santosh Shilimkar wrote:
->> Greg,
->>
->> On Wednesday 23 April 2014 07:46 PM, Santosh Shilimkar wrote:
->>> Here is an updated version of the Keystone Navigator drivers after
->>> addressing comments from earlier version [1].
->>>
->>> The QMSS found on Keystone SOCs is one of the main hardware sub
->>> system which forms the backbone of the Keystone Multi-core Navigator.
->>> QMSS consist of queue managers, packed-data structure processors(PDSP),
->>> linking RAM, descriptor pools and infrastructure DMA.
->>>
->>> After the discussion and alignment [2] on Navigator DMA, now we pair
->>> this driver along with QMSS. Initially this driver was proposed as DMA
->>> engine driver but since the hardware is not typical DMA engine and doesn't
->>> comply with typical DMA engine driver needs, that approach was naked.
->>>
->>> These two drivers works as infrastructure drivers for subsystems like
->>> Ethernet subsystem, SRIO subsystem, Crypto Engines etc on Keystone
->>> SOC families. Testing is done with NetCP(ethernet) subsystem drivers.
->>>
->>> I would like to get these drivers merged in upcoming(3.16) window, so
->>> any help in terms of review is appreciated. Thanks
->>>
->>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>> Cc: Kumar Gala <galak@codeaurora.org>
->>> Cc: Olof Johansson <olof@lixom.net>
->>> Cc: Arnd Bergmann <arnd@arndb.de>
->>> Cc: Grant Likely <grant.likely@linaro.org>
->>> Cc: Rob Herring <robh+dt@kernel.org>
->>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>
->> I plan to respin v3 of the series for the few device tree related
->> comments I received from Rob H (thanks Rob). Can you please have a
->> look and gsee if you have any comments so that I can include them
->> in next version.
-> 
-> I am so far behind in patch review, please just redo them based on
-> other's comments and resend, don't wait for me.
-> 
-OK. Thanks for quick response !!
+From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-regards,
-Santosh
+Add device nodes for the R8A7790 internal PCI bridge devices.
+
+Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+[Sergei: added interrupt-related properties to the PCI bridge nodes]
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+---
+Changes in version 3:
+- added interrupt-related properties to the PCI bridge nodes;
+- refreshed the patch.
+
+Changes in version 2:
+- reworded summary (fixing typo) and changelog;
+- removed extra spaces before {;
+- refreshed the patch.
+
+ arch/arm/boot/dts/r8a7790.dtsi |   54 +++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 54 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
++++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+@@ -876,4 +876,58 @@
+ 		#size-cells = <0>;
+ 		status = "disabled";
+ 	};
++
++	pci0: pci@ee090000 {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee090000 0x0 0xc00>,
++		      <0x0 0xee080000 0x0 0x1100>;
++		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++
++		bus-range = <0 0>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xff00 0 0 0x7>;
++		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
++			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
++			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	pci1: pci@ee0b0000 {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee0b0000 0x0 0xc00>,
++		      <0x0 0xee0a0000 0x0 0x1100>;
++		interrupts = <0 112 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++
++		bus-range = <1 1>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xff00 0 0 0x7>;
++		interrupt-map = <0x0000 0 0 1 &gic 0 112 IRQ_TYPE_LEVEL_HIGH
++			      	 0x0800 0 0 1 &gic 0 112 IRQ_TYPE_LEVEL_HIGH
++			      	 0x1000 0 0 2 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>;
++	};
++
++	pci2: pci@ee0d0000 {
++		compatible = "renesas,pci-r8a7790";
++		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
++		reg = <0x0 0xee0d0000 0x0 0xc00>,
++		      <0x0 0xee0c0000 0x0 0x1100>;
++		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
++		status = "disabled";
++
++		bus-range = <2 2>;
++		#address-cells = <3>;
++		#size-cells = <2>;
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0xff00 0 0 0x7>;
++		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
++			      	 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
++			      	 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++	};
+ };
