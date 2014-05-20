@@ -1,48 +1,91 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFC] Migrate to Hz resolution for OPP binding
-Date: Tue, 20 May 2014 18:11:33 -0500
-Message-ID: <CAGo_u6rftjYAEy0wSFA6aqCDNsriC9r-cMVSqeX1xqKCVBqe7g@mail.gmail.com>
-References: <672dd8e9-2857-49fb-848f-d38d38b23c9b@BN1BFFO11FD024.protection.gbl>
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Tue, 20 May 2014 16:28:45 -0700
+Message-ID: <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com>
+References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com>
+ <537BCF39.6050909@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <672dd8e9-2857-49fb-848f-d38d38b23c9b@BN1BFFO11FD024.protection.gbl>
-Sender: linux-pm-owner@vger.kernel.org
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, lkml <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dt list <devicetree@vger.kernel.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537BCF39.6050909-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 5:30 PM, S=C3=B6ren Brinkmann
-<soren.brinkmann@xilinx.com> wrote:
-> Hi,
+On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 05/20/2014 02:37 PM, Dylan Reid wrote:
+>> On Tue, May 20, 2014 at 11:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>> On 05/20/2014 12:24 PM, Stephen Warren wrote:
+>>>> On 05/19/2014 08:35 PM, Dylan Reid wrote:
+>>>>> Add a device node for the HDA controller found on Tegra124.
+> ...
+>>> Even after fixing that, I can't play audio on Venice2:
+>>>
+>>> root@localhost:~# speaker-test -Dhw:0,3 -c 2
+>>>
+>>> speaker-test 1.0.27.1
+>>>
+>>> Playback device is hw:0,3
+>>> Stream parameters are 48000Hz, S16_LE, 2 channels
+>>> Using 16 octaves of pink noise
+>>> Rate set to 48000Hz (requested 48000Hz)
+>>> Buffer size range from 64 to 16384
+>>> Period size range from 32 to 8192
+>>> Using max buffer size 16384
+>>> Periods = 4
+>>> was set period_size = 4096
+>>> was set buffer_size = 16384
+>>>  0 - Front Left
+>>> Write error: -32,Broken pipe
+>>> Write error: -32,Broken pipe
+>>> Write error: -32,Broken pipe
+>>> ^C 1 - Front Right
+>>> Time per period = 1.799791
+>>>
+>>
+>> Thanks for checking Stephen.  I'll fix the reset name.
+>>
+>> This is the state of the tree I used when I tested on Venice2 just now:
+>> * ae57dbf - (HEAD) ARM: tegra: venice2 - Enable HDA (2 minutes ago)
+>> * 6224524 - ARM: tegra: Add Tegra124 HDA support (2 minutes ago)
+>> * 468ca57 - ALSA: hda - Add driver for Tegra SoC HDA (2 minutes ago)
+>> * 928099e - ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support (2 minutes ago)
+>> * 701eac4 - clk: tegra124: Enable hda to hdmi clocks (3 minutes ago)
 >
-> I guess this is just to evaluate how big the lynch mob will be. Anywa=
-y:
-> Triggered by this discussion https://lkml.org/lkml/2014/5/15/46, I
-> looked a little into what it would take to migrate everybody to Hz
-> frequency resolutions to avoid all the conversions between cpufreq, C=
-CF,
-> OPPs, etc.
-> Turns out, OPPs are already stored in Hz resolution in the kernel, bu=
-t the DT
-> bindings use kHz resolution to specify them in DT. So, code-wise ther=
-e
-> is just a removal of a multiplication in the OPP parser (see below), =
-but
-> then there are the DT bindings...
+> Ah, I was missing that clock patch. Hopefully Peter will pick it up for
+> the Tegra clock tree soon.
+>
+> Now I have the same results as Thierry; speaker-test looks like it
+> should be working, yet I don't hear any audio from the monitor. I know
+> the monitor works, since I've used it extensively for testing GeForce
+> GPU HDMI audio.
 
-Yep :( unfortunately, so :(
+Probably a silly question: Is it un-muted?
+amixer -c0 cset name='IEC958 Playback Switch' on
 
 >
-> As plan B, I was thinking to add the property 'operating-points-hz'..=
-=2E
+>> * 6b6ba7b - (next-20140520, linux-next/master) Add linux-next specific
+>> files for 20140520 (11 hours ago)
+>>
+>> My speaker-test output is similar to yours, minus the errors, and I
+>> hear noise from the attached monitor.
+>>
+>> I tried with the reset name fixed to hda2codec_2x as well and it still
+>> works for me.
+>>
+>> Were you testing on one of your public trees?  I couldn't get your
+>> github tree to boot.
 >
-> Any better ideas?
+> I am using:
+>
+> git://github.com/swarren/linux-tegra.git tegra_dev
+>
+> You might also need the latest version of my github U-Boot to use my
+> github kernel, since I fiddle with the pinmux initialization a bit:
+>
+> git://github.com/swarren/u-boot.git tegra_dev
 
-property operating-points-hz as a bool perhaps -> that modifies the
-description and maintains legacy dtb support sounds OK to me if DT
-folks and Rafael are ok with it as well.
+That might be it.  I'll give it a try.
 
-Regards,
-Nishanth Menon
+-Dylan
