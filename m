@@ -1,57 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/9] DT instantiation of sound on T5325
-Date: Tue, 20 May 2014 22:47:18 +0100
-Message-ID: <20140520214718.GT12304@sirena.org.uk>
-References: <1399141819-23924-1-git-send-email-andrew@lunn.ch>
- <20140508173748.GK27377@lunn.ch>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Tue, 20 May 2014 15:55:05 -0600
+Message-ID: <537BCF39.6050909@wwwdotorg.org>
+References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8I2A5AXbe7mGM+Sj"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140508173748.GK27377-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 05/20/2014 02:37 PM, Dylan Reid wrote:
+> On Tue, May 20, 2014 at 11:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 05/20/2014 12:24 PM, Stephen Warren wrote:
+>>> On 05/19/2014 08:35 PM, Dylan Reid wrote:
+>>>> Add a device node for the HDA controller found on Tegra124.
+...
+>> Even after fixing that, I can't play audio on Venice2:
+>>
+>> root@localhost:~# speaker-test -Dhw:0,3 -c 2
+>>
+>> speaker-test 1.0.27.1
+>>
+>> Playback device is hw:0,3
+>> Stream parameters are 48000Hz, S16_LE, 2 channels
+>> Using 16 octaves of pink noise
+>> Rate set to 48000Hz (requested 48000Hz)
+>> Buffer size range from 64 to 16384
+>> Period size range from 32 to 8192
+>> Using max buffer size 16384
+>> Periods = 4
+>> was set period_size = 4096
+>> was set buffer_size = 16384
+>>  0 - Front Left
+>> Write error: -32,Broken pipe
+>> Write error: -32,Broken pipe
+>> Write error: -32,Broken pipe
+>> ^C 1 - Front Right
+>> Time per period = 1.799791
+>>
+> 
+> Thanks for checking Stephen.  I'll fix the reset name.
+> 
+> This is the state of the tree I used when I tested on Venice2 just now:
+> * ae57dbf - (HEAD) ARM: tegra: venice2 - Enable HDA (2 minutes ago)
+> * 6224524 - ARM: tegra: Add Tegra124 HDA support (2 minutes ago)
+> * 468ca57 - ALSA: hda - Add driver for Tegra SoC HDA (2 minutes ago)
+> * 928099e - ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support (2 minutes ago)
+> * 701eac4 - clk: tegra124: Enable hda to hdmi clocks (3 minutes ago)
 
---8I2A5AXbe7mGM+Sj
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Ah, I was missing that clock patch. Hopefully Peter will pick it up for
+the Tegra clock tree soon.
 
-On Thu, May 08, 2014 at 07:37:48PM +0200, Andrew Lunn wrote:
+Now I have the same results as Thierry; speaker-test looks like it
+should be working, yet I don't hear any audio from the monitor. I know
+the monitor works, since I've used it extensively for testing GeForce
+GPU HDMI audio.
 
-> The ARM mvebu maintainer is happy with these patches. Does anybody
-> have any comments on the sound/soc parts? Mark, will you take the
-> alc5623 and simple-card patches?
+> * 6b6ba7b - (next-20140520, linux-next/master) Add linux-next specific
+> files for 20140520 (11 hours ago)
+> 
+> My speaker-test output is similar to yours, minus the errors, and I
+> hear noise from the attached monitor.
+>
+> I tried with the reset name fixed to hda2codec_2x as well and it still
+> works for me.
+> 
+> Were you testing on one of your public trees?  I couldn't get your
+> github tree to boot.
 
-Are there dependencies here?  If not then yes.
+I am using:
 
---8I2A5AXbe7mGM+Sj
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+git://github.com/swarren/linux-tegra.git tegra_dev
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+You might also need the latest version of my github U-Boot to use my
+github kernel, since I fiddle with the pinmux initialization a bit:
 
-iQIcBAEBAgAGBQJTe81jAAoJELSic+t+oim9V18P/10eCOMP8Q5DCQXwTiHZFe4I
-eYGY48+8VEwZDYcLG9vOa660jh26aN6c75aqZmuqFi81Qv02+Uc01+SCTsgZapjZ
-Qno5bE2fkej6i4tqQeLTYwzEVvmsf7hm9xqOZ1XptuE8FLG3J0qiRcHXZsvVI8pn
-TM/+JIYZWjycikmmA/A7vfjjMrj64Vix79DmKvCBZ5x4MWXe/h/1M1BfsEUG6KU7
-WayPe+7H29mdeptc6I1Cq9xoyHc1e5VcDOzQrHfmlm02iTEM0fIxgRy2Qezx3E88
-c2HLfiTsUW3eP+s/Y+AEfS4EFFGmZPicOvzE6INZUmZtTnfReNZrKUQJ7ogFK+hS
-UzebgL1IUq/jRMWgzvrgQGKgvN9HzIt2MCGWa+JsbnSu3WIHrKQ01ZHfaDSDa6Tl
-fN47/7YRjzQ/N/TtlYf1bFEB/3qE7eEdcbD5qfH6C37wLf0Euh9A4mxde9jbDwWQ
-b1g2NQoAj+xBxVz5TaEA61BHIL2zSz//sS5drI5krULRned1eBY5z54ouasPVw2u
-m8Vf/gOw2dNVg4nKEbGkIXmok/Woh5VGY/zQjOdYb3ODXLzGihZClnZNdtAMqYiq
-wdtliEf5BdJn2dq3kjd+ByTJARnegMMnkX3eXo+nGhLDILVx86h5Vjfj6xBSjbCo
-hQDiY5Y4RE5P2Ef1KWld
-=yXg8
------END PGP SIGNATURE-----
-
---8I2A5AXbe7mGM+Sj--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+git://github.com/swarren/u-boot.git tegra_dev
