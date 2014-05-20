@@ -1,56 +1,221 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 00/11] ARM: STi: Add Clock driver support STiH415 & STiH416
-Date: Tue, 20 May 2014 15:22:44 +0200
-Message-ID: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v3 05/11] ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+Date: Tue, 20 May 2014 15:22:49 +0200
+Message-ID: <1400592175-13176-6-git-send-email-gabriel.fernandez@linaro.org>
+References: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Changes in v2:
- - cosmetic changes (lower case of clock nodes and names)
+Patch adds DT entries for clockgen B/C/D/E/F
 
-Changes in v2:
- - move stih415-clks.h & stih416-clks.h to include/dt-bindings/clock/
- - add clk_ignore_unused to bootargs. Interconnect clocks are not yet
-   managed at the init, then we have to start the kernel with 
-   clk_ignore_unused.
+Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ arch/arm/boot/dts/stih416-clock.dtsi | 189 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 189 insertions(+)
 
-The goal of this series is to add DT definition for STiH415 
-and STiH416 SoCs on B2000 and B2020 boards.
-
-Gabriel Fernandez (11):
-  ARM: STi: DT: STiH41x: Rename CLK_SYSIN into clk_sysin
-  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
-  ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
-  ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
-    fixed clocks
-  ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
-  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
-  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
-  ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
-  ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
-    fixed clocks
-  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
-  ARM: STi: DT: STiH41x Add clk_ignore_unused to bootargs
-
- arch/arm/boot/dts/stih415-clock.dtsi     | 519 +++++++++++++++++++++-
- arch/arm/boot/dts/stih415.dtsi           |  18 +-
- arch/arm/boot/dts/stih416-clock.dtsi     | 735 ++++++++++++++++++++++++++++++-
- arch/arm/boot/dts/stih416.dtsi           |  18 +-
- arch/arm/boot/dts/stih41x-b2000.dtsi     |   2 +-
- arch/arm/boot/dts/stih41x-b2020.dtsi     |   2 +-
- include/dt-bindings/clock/stih415-clks.h |  15 +
- include/dt-bindings/clock/stih416-clks.h |  15 +
- 8 files changed, 1268 insertions(+), 56 deletions(-)
- create mode 100644 include/dt-bindings/clock/stih415-clks.h
- create mode 100644 include/dt-bindings/clock/stih416-clks.h
-
+diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
+index 072c587..0eeadc7 100644
+--- a/arch/arm/boot/dts/stih416-clock.dtsi
++++ b/arch/arm/boot/dts/stih416-clock.dtsi
+@@ -502,5 +502,194 @@
+ 						     /* Remaining outputs unused */
+ 			};
+ 		};
++
++		/*
++		 * Frequency synthesizers on the SASG2
++		 */
++		clockgen_b0: clockgen-b0@fee108b4 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs216", "st,quadfs";
++			reg = <0xfee108b4 0x44>;
++
++			clocks = <&clk_sysin>;
++			clock-output-names = "clk-s-usb48",
++					     "clk-s-dss",
++					     "clk-s-stfe-frc-2",
++					     "clk-s-thsens-scard";
++		};
++
++		clockgen_b1: clockgen-b1@fe8308c4 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs216", "st,quadfs";
++			reg = <0xfe8308c4 0x44>;
++
++			clocks = <&clk_sysin>;
++			clock-output-names = "clk-s-pcm-0",
++					     "clk-s-pcm-1",
++					     "clk-s-pcm-2",
++					     "clk-s-pcm-3";
++		};
++
++		clockgen_c: clockgen-c@fe8307d0 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs432", "st,quadfs";
++			reg = <0xfe8307d0 0x44>;
++
++			clocks = <&clk_sysin>;
++			clock-output-names = "clk-s-c-fs0-ch0",
++					     "clk-s-c-vcc-sd",
++					     "clk-s-c-fs0-ch2";
++		};
++
++		clk_s_vcc_hd: clk-s-vcc-hd@fe8308b8 {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenc-vcc-hd", "st,clkgen-mux";
++			reg = <0xfe8308b8 0x4>; /* SYSCFG2558 */
++
++			clocks = <&clk_sysin>,
++				 <&clockgen_c 0>;
++		};
++
++		/*
++		 * Add a dummy clock for the HDMI PHY for the VCC input mux
++		 */
++		clk_s_tmds_fromphy: clk-s-tmds-fromphy {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <0>;
++		};
++
++		clockgen_c_vcc: clockgen-c-vcc@fe8308ac {
++			#clock-cells = <1>;
++			compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
++			reg = <0xfe8308ac 0xc>; /* SYSCFG2555,2556,2557 */
++
++			clocks = <&clk_s_vcc_hd>,
++				 <&clockgen_c 1>,
++				 <&clk_s_tmds_fromphy>,
++				 <&clockgen_c 2>;
++
++			clock-output-names  = "clk-s-pix-hdmi",
++					      "clk-s-pix-dvo",
++					      "clk-s-out-dvo",
++					      "clk-s-pix-hd",
++					      "clk-s-hddac",
++					      "clk-s-denc",
++					      "clk-s-sddac",
++					      "clk-s-pix-main",
++					      "clk-s-pix-aux",
++					      "clk-s-stfe-frc-0",
++					      "clk-s-ref-mcru",
++					      "clk-s-slave-mcru",
++					      "clk-s-tmds-hdmi",
++					      "clk-s-hdmi-reject-pll",
++					      "clk-s-thsens";
++		};
++
++		clockgen_d: clockgen-d@fee107e0 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs216", "st,quadfs";
++			reg = <0xfee107e0 0x44>;
++
++			clocks = <&clk_sysin>;
++			clock-output-names = "clk-s-ccsc",
++					     "clk-s-stfe-frc-1",
++					     "clk-s-tsout-1",
++					     "clk-s-mchi";
++		};
++
++		/*
++		 * Frequency synthesizers on the MPE42
++		 */
++		clockgen_e: clockgen-e@fd3208bc {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs660-E", "st,quadfs";
++			reg = <0xfd3208bc 0xb0>;
++
++			clocks = <&clk_sysin>;
++			clock-output-names = "clk-m-pix-mdtp-0",
++					     "clk-m-pix-mdtp-1",
++					     "clk-m-pix-mdtp-2",
++					     "clk-m-mpelpc";
++		};
++
++		clockgen_f: clockgen-f@fd320878 {
++			#clock-cells = <1>;
++			compatible = "st,stih416-quadfs660-F", "st,quadfs";
++			reg = <0xfd320878 0xf0>;
++
++			clocks = <&clk_sysin>;
++			clock-output-names = "clk-m-main-vidfs",
++					     "clk-m-hva-fs",
++					     "clk-m-fvdp-vcpu",
++					     "clk-m-fvdp-proc-fs";
++		};
++
++		clk_m_fvdp_proc: clk-m-fvdp-proc@fd320910 {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-fvdp", "st,clkgen-mux";
++			reg = <0xfd320910 0x4>; /* SYSCFG8580 */
++
++			clocks = <&clk_m_a1_div2 0>,
++				 <&clockgen_f 3>;
++		};
++
++		clk_m_hva: clk-m-hva@fd690868 {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
++			reg = <0xfd690868 0x4>; /* SYSCFG9538 */
++
++			clocks = <&clockgen_f 1>,
++				 <&clk_m_a1_div0 3>;
++		};
++
++		clk_m_f_vcc_hd: clk-m-f-vcc-hd@fd32086c {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-hd", "st,clkgen-mux";
++			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
++
++			clocks = <&clockgen_c_vcc 7>,
++				 <&clockgen_f 0>;
++		};
++
++		clk_m_f_vcc_sd: clk-m-f-vcc-sd@fd32086c {
++			#clock-cells = <0>;
++			compatible = "st,stih416-clkgenf-vcc-sd", "st,clkgen-mux";
++			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
++
++			clocks = <&clockgen_c_vcc 8>,
++				 <&clockgen_f 1>;
++		};
++
++		/*
++		 * Add a dummy clock for the HDMIRx external signal clock
++		 */
++		clk_m_pix_hdmirx_sas: clk-m-pix-hdmirx-sas {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <0>;
++		};
++
++		clockgen_f_vcc: clockgen-f-vcc@fd32086c {
++			#clock-cells = <1>;
++			compatible = "st,stih416-clkgenf", "st,clkgen-vcc";
++			reg = <0xfd32086c 0xc>; /* SYSCFG8539,8540,8541 */
++
++			clocks = <&clk_m_f_vcc_hd>,
++				 <&clk_m_f_vcc_sd>,
++				 <&clockgen_f 0>,
++				 <&clk_m_pix_hdmirx_sas>;
++
++			clock-output-names  = "clk-m-pix-main-pipe",
++					      "clk-m-pix-aux-pipe",
++					      "clk-m-pix-main-cru",
++					      "clk-m-pix-aux-cru",
++					      "clk-m-xfer-be-compo",
++					      "clk-m-xfer-pip-compo",
++					      "clk-m-xfer-aux-compo",
++					      "clk-m-vsens",
++					      "clk-m-pix-hdmirx-0",
++					      "clk-m-pix-hdmirx-1";
++		};
+ 	};
+ };
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
