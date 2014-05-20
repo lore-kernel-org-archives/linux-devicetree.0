@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 06/10] dts: versatile: add pl180 compatible strings
-Date: Tue, 20 May 2014 16:09:32 -0500
-Message-ID: <1400620176-7239-7-git-send-email-robherring2@gmail.com>
+Subject: [PATCH 05/10] ARM: versatile: remove init_irq hook for DT boot
+Date: Tue, 20 May 2014 16:09:31 -0500
+Message-ID: <1400620176-7239-6-git-send-email-robherring2@gmail.com>
 References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1400620176-7239-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,41 +12,26 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-While not needed for probing, add the "arm,pl180" compatible string for
-completeness.
+Now that versatile's irqchips are initialized from DT, the init_irq hook
+can be removed.
 
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/versatile-ab.dts | 2 +-
- arch/arm/boot/dts/versatile-pb.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/mach-versatile/versatile_dt.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 90a9f61..e4cba63 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -188,7 +188,7 @@
- 				interrupts = <24>;
- 			};
- 			mmc@5000 {
--				compatible = "arm,primecell";
-+				compatible = "arm,pl180", "arm,primecell";
- 				reg = < 0x5000 0x1000>;
- 				interrupts-extended = <&vic 22 &sic 2>;
- 			};
-diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
-index 65f6577..a428541 100644
---- a/arch/arm/boot/dts/versatile-pb.dts
-+++ b/arch/arm/boot/dts/versatile-pb.dts
-@@ -39,7 +39,7 @@
- 				interrupts = <5>;
- 			};
- 			mmc@b000 {
--				compatible = "arm,primecell";
-+				compatible = "arm,pl180", "arm,primecell";
- 				reg = <0xb000 0x1000>;
- 				interrupts-extended = <&vic 23 &sic 2>;
- 			};
+diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
+index 3621b00..9f9bc61 100644
+--- a/arch/arm/mach-versatile/versatile_dt.c
++++ b/arch/arm/mach-versatile/versatile_dt.c
+@@ -44,7 +44,6 @@ static const char *versatile_dt_match[] __initconst = {
+ DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
+ 	.map_io		= versatile_map_io,
+ 	.init_early	= versatile_init_early,
+-	.init_irq	= versatile_init_irq,
+ 	.init_machine	= versatile_dt_init,
+ 	.dt_compat	= versatile_dt_match,
+ 	.restart	= versatile_restart,
 -- 
 1.9.1
 
