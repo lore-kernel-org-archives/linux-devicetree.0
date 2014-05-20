@@ -1,79 +1,83 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
-Date: Tue, 20 May 2014 15:50:14 +0900
-Message-ID: <20140520065014.493C3C412E3@trevor.secretlab.ca>
-References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-	<CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guido =?iso-8859-1?q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Tue, 20 May 2014 08:21:19 +0300
+Message-ID: <537AE64F.4020907@ti.com>
+References: <537487AE.3060906@ti.com> <20140515182133.GC23659@atomide.com> <5375A8A8.7080306@ti.com> <20140516160717.GD22031@atomide.com> <20140516174158.GA11733@earth.universe> <20140516180154.GG22031@atomide.com> <20140516213907.GL12881@atomide.com> <5379D35F.8040207@ti.com> <20140519155732.GA4849@atomide.com> <537A540E.8070302@ti.com> <20140520045748.GA28812@earth.universe>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140520045748.GA28812@earth.universe>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 18 May 2014 18:11:07 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Sun, May 18, 2014 at 12:01 PM, Ezequiel Garcia
-> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> > When creating a device object for a devicetree node, the device name
-> > is created by using the node name and the 'reg' property, to make a name
-> > such as "a000.foo_device".
-> >
-> > For certain devices without an associated address, and hence no 'reg' property,
-> > the current code attempts to make a unique name, by using a global integer.
-> > Names look like "foo_device.1", "bar_device.2", and so on.
-> > Examples of such devices are: gpio-keys', backlights and rotary-encoders.
-> >
-> > The system cannot know such devices name before hand, given they are determined
-> > by the kernel probe order and by the nodes present in the devicetree. This can
-> > be problematic, on systems that are tied to the device's name, e.g. when
-> > catching hotplug events.
+--Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-The device's uevent file in sysfs contains both the ->name and
-->full_name values for a node. Does that help you?
+On 20/05/14 07:57, Sebastian Reichel wrote:
+> Hi,
+>=20
+> On Mon, May 19, 2014 at 09:57:18PM +0300, Tomi Valkeinen wrote:
+>>> 3. Having to maintain a database in kernel of display mappings separa=
+tely
+>>>    in addition to the .dts files.
+>>
+>> Yes, that's slightly annoying. Not really a big burden, though, as it'=
+s
+>> quite rare to get a new encoder or panel driver.
+>=20
+> I wonder if the "omapdss," prefix could be added to *all* remote
+> endpoints seen by omapdss. Pseudocode:
+>=20
+> for each port in dss {
+>     for each endpoint in port {
+>         panel =3D get_phandle(endpoint, "remote-endpoint");
+>=20
+>         /* only add prefix if it's not already there (kexec) */
+>         if (panel.compatible !=3D "omapdss,.*")
+>             panel.compatible =3D "omapdss," + panel.compatible;
+>     }
+> }
 
-The big problem is not the structure under /sys/devices, but rather the
-symlinks to devices that appear under /sys/bus/*/devices. If two leaf
-nodes have the same name, then they will conflict when they get added to
-a bus_type's array of devices.
+Hmm, yes, I think that would work. It would remove the need for the
+database, but the code would be slightly more complex as we'd need to
+travel through the graph, not just the nodes that are directly connected
+to omapdss. I need to try this approach also.
 
-Another way to handle it is to only add the suffix when a conflict
-actually occurs. That requires checking first whether or not a name will
-conflict and ammending it only when that happens. I don't know if that
-can be done nicely. I'll take a look.
+ Tomi
 
-> >
-> > In order to fix the name, this commit removes the global integer uniqueness
-> > enforcement and instead uses the node name for the device name. The rationale
-> > behind such change, is that there's no way two nodes with the same node name
-> > are associated to two different devices, by the nature of the devicetree.
-> > In other words, it's impossible to produce a name collision for these kind
-> > of devices.
-> 
-> This is perfectly legal:
-> 
-> /bus1/device
-> /bus2/device
-> 
-> Only the full name has to be unique.
-> 
-> >
-> > Signed-off-by: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> > ---
-> > Hello Grant, Rob:
-> >
-> > I'm pretty sure there's a good reason for the existence of the atomic magic
-> > integer, so this is not a *real* patch, but rather a bold attempt at asking you
-> > some explanations for this.
-> >
-> > Under what circumstances does the magic integer avoids a name collision?
-> > Will this propposal introduce a regression?
-> 
-> See the recent changes to this function in linux-next and the
-> associated discussion of those commits.
-> 
-> Rob
+Ps. Sorry for misspelling your name, twice. If I recall right, I even
+checked if your name is written with an 'a' or an 'e', but somehow still
+managed to get it wrong.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+--Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTeuZPAAoJEPo9qoy8lh71HecQAIUfK7fGdPc0wzbxBYco52ob
+ihcH084kqYmRowE/INlVX6RRs/AOY7hUpBGFJvGoLNyJyQt2hepnb6IzvfTLvKS1
+EIZ60StRGprISzAH5kvoJK2KUaL/gD9OsZs7qTsbWQ349WhWDZP5vLb59Dgxrxw3
+R+lCwpSp0SgIQEugkT+SxHwLL0VPKr2cJKJVzxHahO3TpzLlojoQoNrIiVvZ9qjR
+iPT7QeDyKlGZerA7ewvhHcI105KtMM9k+EBlQlLTPFmvvRsR4o+KIEl7uLYbZcfH
+upmdI0BtYY4J86qZed1K0O/pa5uR1T9hSnjtC1TSbxMs6j4diOeOTUpIIQc6EAOk
+nPcGr9VSL5SIEYiWDvmGO3KRU+adpkWlIIxp1+GKmOwxGN793pivzTnzSde6m+h2
+wDqU3oO1KTxPZFlSLUr5hjXHZycqsd2zoT11eycAONXPfaC+ojT8jfT4a0P+po0k
+I35G/8akmKQGUW2aQdfb6/fQrnmP3Kpl2gzSG9DlC4pbng1JKNZLh+6O9iC7GpkW
+nfFab/A6hLT1lNXXzCTBdYheOCu4Eyq2zkQEk2yAwUoR12pLeVNWwo26oyeA82Sa
+jwPPhxQolRkEnB6zdP0Tuv2emIM5XUHX6tKTfa/Ya4XWsbrpEDmgykhAt2VZfsLQ
+1T/m17F94IxTWUOOxPOS
+=cous
+-----END PGP SIGNATURE-----
+
+--Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe--
