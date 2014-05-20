@@ -1,61 +1,61 @@
-From: Sunil Kovvuri <sunil.kovvuri@gmail.com>
-Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
-Date: Tue, 20 May 2014 09:52:33 +0530
-Message-ID: <CA+sq2Ce+8YB+02B7zhxTXwropZXv9spy-w=AJ8YXCP69kr-_1A@mail.gmail.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
-	<CA+sq2Ccok5wtKjCZUkBhhj3WsiqFAoMgHK7LY210aBtMku+8SA@mail.gmail.com>
-	<4292818.mI6kZGgTzd@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4292818.mI6kZGgTzd@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Scott Lurndal <kdb@lurndal.org>, "yu.zhao@intel.com" <yu.zhao@intel.com>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCHv5 2/4] ARM: dts: exynos4: add exynos_usbphy node
+Date: Tue, 20 May 2014 11:06:28 +0900
+Message-ID: <1400551590-7772-3-git-send-email-chanho61.park@samsung.com>
+References: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 19, 2014 at 6:31 PM, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Friday 16 May 2014 16:03:04 Sunil Kovvuri wrote:
->> When the SR-IOV capable device's driver tries to enable sriov
->> (pci_enable_sriov()) it fails to create/add PCI device for each
->> virtual function reporting  "not enough MMIO resources for SR-IOV".
->
-> I assume you have checked that there is indeed enough MMIO space
-> available, right?
->
-Yes, i have checked for enough MMIO space multiple times.
+This patch enables a exynos_usbphy node for exynos4 SoCs.
+A exynos4x12 usb phy node is almost same with 4210's one
+except compatible string and pmu syscon.
 
->> In sriov_enable() (drivers/pci/iov.c)
->>
->>  296        for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
->>  297                 bars |= (1 << (i + PCI_IOV_RESOURCES));
->>  298                 res = dev->resource + PCI_IOV_RESOURCES + i;
->>  299                 if (res->parent)
->>  300                         nres++;
->>  301         }
->>  302         if (nres != iov->nres) {
->>  303                 dev_err(&dev->dev, "not enough MMIO resources for
->>  SR-IOV\n");
->>  304                 return -ENOMEM;
->>  305         }
->>
->> Here its checking if physical function's IOV resource has a parent or not.
->> Which is pci-pci bridge in this case. Otherwise it doesn't consider
->> that resource.
->>
->> Added below api to your patch.
->> This will try to claim a resource while creating a PCI device which
->> inturn sets 'res->parent'.
->
-> This looks like the wrong approach. The PCI host controller should
-> really have been registered with the root 'iomem_resource' during
-> the probe of the host controller.
->
->         Arnd
-I didn't get this, if a SR-IOV device is connected to a PCI-PCI bridge
-and inturn bridge connected to root port. Then the parent bus is not root,
-but the bridge.  The issue is either hierarchy should not be checked for
-SR-IOV resources or someone should set the hierarchy (i.e parent resources).
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Kamil Debski <k.debski@samsung.com>
+Signed-off-by: Chanho Park <chanho61.park@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi    | 10 ++++++++++
+ arch/arm/boot/dts/exynos4x12.dtsi |  5 +++++
+ 2 files changed, 15 insertions(+)
 
-Regards,
-Sunil.
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index da29a2a..8a02810 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -276,6 +276,16 @@
+ 		status = "disabled";
+ 	};
+ 
++	exynos_usbphy: exynos-usbphy@125B0000 {
++		compatible = "samsung,exynos4210-usb2-phy";
++		reg = <0x125B0000 0x100>;
++		samsung,pmureg-phandle = <&pmu_system_controller>;
++		clocks = <&clock CLK_USB_DEVICE>, <&clock CLK_XUSBXTI>;
++		clock-names = "phy", "ref";
++		#phy-cells = <1>;
++		status = "disabled";
++	};
++
+ 	ehci@12580000 {
+ 		compatible = "samsung,exynos4210-ehci";
+ 		reg = <0x12580000 0x100>;
+diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
+index 2f1e6c1..c5a943d 100644
+--- a/arch/arm/boot/dts/exynos4x12.dtsi
++++ b/arch/arm/boot/dts/exynos4x12.dtsi
+@@ -265,4 +265,9 @@
+ 		clock-names = "biu", "ciu";
+ 		status = "disabled";
+ 	};
++
++	exynos-usbphy@125B0000 {
++		compatible = "samsung,exynos4x12-usb2-phy";
++		samsung,sysreg-phandle = <&sys_reg>;
++	};
+ };
+-- 
+1.8.3.2
