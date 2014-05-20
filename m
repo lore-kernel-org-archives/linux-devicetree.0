@@ -1,57 +1,25 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v2 0/6] soc: ti: Add Keystone Navigator drivers
-Date: Wed, 21 May 2014 05:01:04 +0900
-Message-ID: <20140520200104.GA27786@kroah.com>
-References: <1398296783-1176-1-git-send-email-santosh.shilimkar@ti.com>
- <537B5F5E.9080703@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/2] Add R8A7790/Lager board PCI USB DT support
+Date: Wed, 21 May 2014 00:08:14 +0400
+Message-ID: <201405210008.15145.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <537B5F5E.9080703@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 09:57:50AM -0400, Santosh Shilimkar wrote:
-> Greg,
-> 
-> On Wednesday 23 April 2014 07:46 PM, Santosh Shilimkar wrote:
-> > Here is an updated version of the Keystone Navigator drivers after
-> > addressing comments from earlier version [1].
-> > 
-> > The QMSS found on Keystone SOCs is one of the main hardware sub
-> > system which forms the backbone of the Keystone Multi-core Navigator.
-> > QMSS consist of queue managers, packed-data structure processors(PDSP),
-> > linking RAM, descriptor pools and infrastructure DMA.
-> > 
-> > After the discussion and alignment [2] on Navigator DMA, now we pair
-> > this driver along with QMSS. Initially this driver was proposed as DMA
-> > engine driver but since the hardware is not typical DMA engine and doesn't
-> > comply with typical DMA engine driver needs, that approach was naked.
-> > 
-> > These two drivers works as infrastructure drivers for subsystems like
-> > Ethernet subsystem, SRIO subsystem, Crypto Engines etc on Keystone
-> > SOC families. Testing is done with NetCP(ethernet) subsystem drivers.
-> > 
-> > I would like to get these drivers merged in upcoming(3.16) window, so
-> > any help in terms of review is appreciated. Thanks
-> > 
-> > Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> > Cc: Kumar Gala <galak@codeaurora.org>
-> > Cc: Olof Johansson <olof@lixom.net>
-> > Cc: Arnd Bergmann <arnd@arndb.de>
-> > Cc: Grant Likely <grant.likely@linaro.org>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > 
-> I plan to respin v3 of the series for the few device tree related
-> comments I received from Rob H (thanks Rob). Can you please have a
-> look and gsee if you have any comments so that I can include them
-> in next version.
+Hello.
 
-I am so far behind in patch review, please just redo them based on
-other's comments and resend, don't wait for me.
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-v3.15-rc5-20140517' tag. Here we add PCI USB device tree support
+for the R8A7790-based Lager board. The patchset requires the 'pci-rcar-gen2'
+driver device tree support (re-posted yesterday) in order to work.
 
-greg k-h
+[1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+[2/2] ARM: shmobile: lager: enable internal PCI
+
+WBR, Sergei
