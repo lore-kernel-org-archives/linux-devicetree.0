@@ -1,58 +1,38 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
-Date: Tue, 20 May 2014 16:26:59 +0100
-Message-ID: <20140520152659.GA30404@arm.com>
-References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
- <5080348.QmhgfQRxZW@wuerfel>
- <20140520130659.GA5041@e103592.cambridge.arm.com>
- <6382280.3uMvoxaUSK@wuerfel>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 04/10] clk: tegra: Initialize xusb clocks
+Date: Tue, 20 May 2014 18:41:45 +0300
+Message-ID: <20140520154145.GY15168@tbergstrom-lnx.Nvidia.com>
+References: <1400113986-339-1-git-send-email-abrestic@chromium.org>
+ <1400113986-339-5-git-send-email-abrestic@chromium.org>
+ <537513D8.7060203@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6382280.3uMvoxaUSK@wuerfel>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <537513D8.7060203-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jim Lin <jilin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 02:23:47PM +0100, Arnd Bergmann wrote:
-> 	Bit#   33222222 22221111 11111100 00000000
-> 	       10987654 32109876 54321098 76543210
-> phys.hi cell:  npt000ss bbbbbbbb dddddfff rrrrrrrr
-> phys.mid cell: hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh
-> phys.lo cell:  llllllll llllllll llllllll llllllll
+On Thu, May 15, 2014 at 09:22:00PM +0200, Stephen Warren wrote:
+> On 05/14/2014 06:33 PM, Andrew Bresticker wrote:
+> > Initialize the XUSB-related clocks with appropriate parents and rates
+> > for both Tegra114 and Tegra124.
 > 
-> where:
-> n is 0 if the address is relocatable, 1 otherwise
-> p is 1 if the addressable region is "prefetchable", 0 otherwise
-> t is 1 if the address is aliased (for non-relocatable I/O),
->  below 1 MB (for Memory), or below 64 KB (for relocatable I/O).
-> ss is the space code, denoting the address space
-> bbbbbbbb is the 8-bit Bus Number
-> ddddd is the 5-bit Device Number
-> fff is the 3-bit Function Number
-> rrrrrrrr is the 8-bit Register Number
-> hh...hh is a 32-bit unsigned number
-> ll...ll is a 32-bit unsigned number
+> These first 4 clock driver patches look plausible to me, although I
+> didn't look that hard!
 > 
-> We can ignore n, p, t and r here, and use the same format for a DMA
-> address, then define an empty "dma-ranges" property. That would
-> imply that using b/d/f is sufficient to identify each master at the
-> iommu. Any device outside of the PCI host but connected to the same
-> iommu can use the same notation to list the logical b/d/f that gets
-> sent to the IOMMU in bus master transactions.
-> 
-> Do you think this is sufficient for the ARM SMMU, or do we need
-> something beyond that?
+> Peter or Mike, if they look OK to you, can you please pick them up for
+> 3.16 so that by the time we apply the rest of the patches in this series
+> for 3.17, the clock dependencies are already there? Thanks.
 
-I think it can define the common-cases for the existing implementations,
-yes. I anticipate Stream-IDs becoming > 16-bit in the near future though,
-so we'd need extra bits if we're describing other devices coming into the
-SMMU.
+Looks fine to me. Applied for 3.16, hopefully it will still make it.
 
-Note that we already have a binding for the current SMMU driver, so I'm not
-really in a position to shift over to a new binding until the next version of
-the SMMU architecture comes along...
+Cheers,
 
-Will
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
