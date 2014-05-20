@@ -1,66 +1,59 @@
-From: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
-Date: Tue, 20 May 2014 15:37:29 -0300
-Message-ID: <20140520183729.GA17353@arch.cereza>
-References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
- <CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
- <20140520065014.493C3C412E3@trevor.secretlab.ca>
- <CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA@mail.gmail.com>
+From: Brian Norris <computersforpeace@gmail.com>
+Subject: Re: [PATCH v3 5/9] mtd: nand: add sunxi NAND flash controller support
+Date: Tue, 20 May 2014 11:49:42 -0700
+Message-ID: <20140520184942.GT28907@ld-irv-0074>
+References: <1394647664-8258-1-git-send-email-b.brezillon.dev@gmail.com>
+ <1394647664-8258-6-git-send-email-b.brezillon.dev@gmail.com>
+ <20140509160341.GA6984@arch.cereza>
+ <536D069A.40401@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guido =?iso-8859-1?Q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+In-Reply-To: <536D069A.40401@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <b.brezillon.dev@gmail.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Emilio =?iso-8859-1?Q?L=F3pez?= <emilio@elopez.com.ar>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robherring2@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Grant Likely <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Arnd Bergmann <arnd@arndb.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, dev@linux-sunxi.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20 May 01:30 PM, Rob Herring wrote:
-> On Tue, May 20, 2014 at 1:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Sun, 18 May 2014 18:11:07 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> On Sun, May 18, 2014 at 12:01 PM, Ezequiel Garcia
-> >> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> >> > When creating a device object for a devicetree node, the device name
-> >> > is created by using the node name and the 'reg' property, to make a name
-> >> > such as "a000.foo_device".
-> >> >
-> >> > For certain devices without an associated address, and hence no 'reg' property,
-> >> > the current code attempts to make a unique name, by using a global integer.
-> >> > Names look like "foo_device.1", "bar_device.2", and so on.
-> >> > Examples of such devices are: gpio-keys', backlights and rotary-encoders.
-> >> >
-> >> > The system cannot know such devices name before hand, given they are determined
-> >> > by the kernel probe order and by the nodes present in the devicetree. This can
-> >> > be problematic, on systems that are tied to the device's name, e.g. when
-> >> > catching hotplug events.
-> >
-> > The device's uevent file in sysfs contains both the ->name and
-> > ->full_name values for a node. Does that help you?
-> >
-> > The big problem is not the structure under /sys/devices, but rather the
-> > symlinks to devices that appear under /sys/bus/*/devices. If two leaf
-> > nodes have the same name, then they will conflict when they get added to
-> > a bus_type's array of devices.
-> >
-> > Another way to handle it is to only add the suffix when a conflict
-> > actually occurs. That requires checking first whether or not a name will
-> > conflict and ammending it only when that happens. I don't know if that
-> > can be done nicely. I'll take a look.
+On Fri, May 09, 2014 at 06:47:22PM +0200, Boris BREZILLON wrote:
+> On 09/05/2014 18:03, Ezequiel Garcia wrote:
+> > On 12 Mar 07:07 PM, Boris BREZILLON wrote:
+> >> --- /dev/null
+> >> +++ b/drivers/mtd/nand/sunxi_nand.c
+> >> @@ -0,0 +1,1276 @@
+...
+> >> +static int sunxi_nand_ecc_init(struct mtd_info *mtd, struct nand_ecc_ctrl *ecc,
+> >> +			       struct device_node *np)
+> >> +{
+> >> +	struct nand_chip *nand = mtd->priv;
+> >> +	int ecc_step_size, ecc_strength;
+> >> +	int ret;
+> >> +
+> >> +	ecc_step_size = of_get_nand_ecc_step_size(np);
+> >> +	ecc_strength = of_get_nand_ecc_strength(np);
+> >> +	if (ecc_step_size > 0 && ecc_strength > 0) {
+> >> +		ecc->size = ecc_step_size;
+> >> +		ecc->strength = ecc_strength;
+> >> +	} else {
+> >> +		ecc->size = nand->ecc_step_ds;
+> >> +		ecc->strength = nand->ecc_strength_ds;
+> >> +	}
+> >> +
+> > Shouldn't you check the devicetree value is not weaker than the ONFI-obtained?
 > 
-> That was my idea as well and to move to a local number so you have
-> something like deviceA, deviceA.1, deviceB, deviceB.1 (maybe the
-> number is always appended). Perhaps a random number instead so no one
-> expects the names to be an ABI. ;)
-> 
-> I think it should be doable.
-> 
+> I can definitely do that.
 
-That would be very nice :)
--- 
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+You can do that here, but take a look at the discussion Ezequiel and I
+had about this:
+
+  http://thread.gmane.org/gmane.linux.drivers.devicetree/67462
+
+We probably don't want to be doing anything drastic like overriding the
+device tree configuration. Instead, we might want to stick a warning
+into the core nand_base code that does the proper comparison of the
+'*_ds' values with the actual values chosen in
+chip->ecc->{size,strength}. The comparison is kind of subtle, actually,
+so it'd be good to do it exactly once for everyone.
+
+Brian
