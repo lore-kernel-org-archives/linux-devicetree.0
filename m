@@ -1,91 +1,67 @@
-From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: OMAP2+: gpmc: enable wait-pin monitoring for
- NAND devices via DT
-Date: Tue, 20 May 2014 10:45:07 +0300
-Message-ID: <537B0803.6070702@ti.com>
-References: <1400567064-20033-1-git-send-email-pekon@ti.com>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [RFC PATCH] of/irq: do irq resolution in platform_get_irq_byname()
+Date: Tue, 20 May 2014 15:17:00 +0900
+Message-ID: <20140520061700.ED542C41087@trevor.secretlab.ca>
+References: <1400506259-18397-1-git-send-email-grygorii.strashko@ti.com>
+ <20140519125738.GB9466@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400567064-20033-1-git-send-email-pekon-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140519125738.GB9466@ulmo>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Grygorii Strashko <grygorii.strashko@ti.com>
+Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pekon,
-
-On 05/20/2014 09:24 AM, Pekon Gupta wrote:
-> This patch enables 'wait-pin' monitoring in NAND driver if following properties
-> are present under NAND DT node
->   gpmc,wait-pin = <wait-pin number>
->   gpmc,wait-on-read
->   gpmc,wait-on-write
-> As NAND generic framework uses common path nand_chip->dev_ready() for monitoring
-> completion of Read and Write status, so wait-pin monitoring is enabled only when
-> *both* 'gpmc,wait-on-read' and 'gpmc,wait-on-write' are specified.
+On Mon, 19 May 2014 14:57:39 +0200, Thierry Reding <thierry.reding@gmail.com> wrote:
+> On Mon, May 19, 2014 at 04:30:59PM +0300, Grygorii Strashko wrote:
+> [...]
+> > diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+> [...]
+> >  /**
+> > + * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
+> > + * @dev: pointer to device tree node
+> > + * @name: zero-based index of the irq
 > 
-> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++++++
->  arch/arm/mach-omap2/gpmc-nand.c                     | 8 +++++---
->  2 files changed, 13 insertions(+), 3 deletions(-)
+> This is a name, not an index.
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> index eb81435..4039032 100644
-> --- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-> @@ -45,6 +45,14 @@ Optional properties:
->  		ELM hardware engines should specify this device node in .dtsi
->  		Using ELM for ECC error correction frees some CPU cycles.
->  
-> + - gpmc,wait-pin=<pin number>	Specifies GPMC wait-pin number to monitor
-> + - gpmc,wait-on-read		Enable wait-pin monitoring for Read accesses
-> + - gpmc,wait-on-write		Enable wait-pin monitoring for Write accesses
-> +		As NAND generic framework uses single common function
-> +		nand_chip->dev_ready() for polling wait-pin both for Read and
-> +		Write accesses. So for NAND devices both 'gpmc,wait-on-read' and
-> +		'gpmc,wait-on-write' need to be specified together.
-> +
->  For inline partiton table parsing (optional):
->  
-
-
->   - #address-cells: should be set to 1
-> diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
-> index 17cd393..62bc3de 100644
-> --- a/arch/arm/mach-omap2/gpmc-nand.c
-> +++ b/arch/arm/mach-omap2/gpmc-nand.c
-> @@ -123,11 +123,13 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
->  		}
->  	}
->  
-> -	if (gpmc_nand_data->of_node)
-> +	if (gpmc_nand_data->of_node) {
->  		gpmc_read_settings_dt(gpmc_nand_data->of_node, &s);
-> -	else
-> +		if (s.wait_on_read && s.wait_on_write)
-> +			gpmc_nand_data->dev_ready = true;
-> +	} else {
->  		gpmc_set_legacy(gpmc_nand_data, &s);
-> -
-> +	}
->  	s.device_nand = true;
-
-NACK.
-
-For NAND, we only need the wait-pin property. The wait-on-read/wait-on-write flags are meaningless.
-Also, the wait-pin number needs to be communicated to the NAND driver and omap_dev_ready() function updated so that it checks for the right wait pin status.
-
->  
->  	err = gpmc_cs_program_settings(gpmc_nand_data->cs, &s);
+> > + *
+> > + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
+> > + * is not yet created, or errorno in case of failure.
 > 
+> s/errorno/error code/? Also EPROBE_DEFER is also an error code, so I'm
+> not sure if it's worth a special case in the description here.
+> 
+> > + *
+> > + */
+> > +int of_irq_get_byname(struct device_node *dev, const char *name)
+> > +{
+> > +	const char *name_irq = NULL;
+> > +	int index = 0;
+> > +
+> > +	if (unlikely(!name))
+> > +		return -EINVAL;
+> > +
+> > +	while (!of_property_read_string_index(dev, "interrupt-names",
+> > +					      index, &name_irq))
+> > +		if (!strcmp(name, name_irq))
+> > +			return of_irq_get(dev, index);
+> 
+> Isn't this missing an index++ somewhere? Otherwise it seems like this
+> would loop infinitely if there was no match on the first entry.
 
-cheers,
--roger
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Better yet, use of_property_match_string().
+
+g.
+
+> 
+> Thierry
