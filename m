@@ -1,81 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
-Date: Tue, 20 May 2014 22:40:50 +0200
-Message-ID: <4511166.2tFHJMxbnG@wuerfel>
-References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
-	<20140520152659.GA30404@arm.com>
-	<20140520163912.GC5041@e103592.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140520163912.GC5041-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH 00/10] ARM: Versatile irq and clock DT support
+Date: Tue, 20 May 2014 16:09:26 -0500
+Message-ID: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 20 May 2014 17:39:12 Dave Martin wrote:
-> On Tue, May 20, 2014 at 04:26:59PM +0100, Will Deacon wrote:
-> > On Tue, May 20, 2014 at 02:23:47PM +0100, Arnd Bergmann wrote:
-> > > 	Bit#   33222222 22221111 11111100 00000000
-> > > 	       10987654 32109876 54321098 76543210
-> > > phys.hi cell:  npt000ss bbbbbbbb dddddfff rrrrrrrr
-> > > phys.mid cell: hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh
-> > > phys.lo cell:  llllllll llllllll llllllll llllllll
-> > > 
-> > > where:
-> > > n is 0 if the address is relocatable, 1 otherwise
-> > > p is 1 if the addressable region is "prefetchable", 0 otherwise
-> > > t is 1 if the address is aliased (for non-relocatable I/O),
-> > >  below 1 MB (for Memory), or below 64 KB (for relocatable I/O).
-> > > ss is the space code, denoting the address space
-> > > bbbbbbbb is the 8-bit Bus Number
-> > > ddddd is the 5-bit Device Number
-> > > fff is the 3-bit Function Number
-> > > rrrrrrrr is the 8-bit Register Number
-> > > hh...hh is a 32-bit unsigned number
-> > > ll...ll is a 32-bit unsigned number
-> > > 
-> > > We can ignore n, p, t and r here, and use the same format for a DMA
-> > > address, then define an empty "dma-ranges" property. That would
-> > > imply that using b/d/f is sufficient to identify each master at the
-> > > iommu. Any device outside of the PCI host but connected to the same
-> > > iommu can use the same notation to list the logical b/d/f that gets
-> > > sent to the IOMMU in bus master transactions.
-> > > 
-> > > Do you think this is sufficient for the ARM SMMU, or do we need
-> > > something beyond that?
-> > 
-> > I think it can define the common-cases for the existing implementations,
-> > yes. I anticipate Stream-IDs becoming > 16-bit in the near future though,
-> > so we'd need extra bits if we're describing other devices coming into the
-> > SMMU.
-> > 
-> > Note that we already have a binding for the current SMMU driver, so I'm not
-> > really in a position to shift over to a new binding until the next version of
-> > the SMMU architecture comes along...
-> 
-> How much code relies on the meaning of the nptsbdf bits?
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Not much at all, I think this was defined mostly for open firmware
-client interfaces, which we don't use with FDT.
+This series is some preparation work to fully convert Versatile platform 
+to DT. This converts the IRQ initialization to DT based init and adds 
+clocks to the Versatile DT. This doesn't actually enable using common 
+clock framework, but that is only a matter of removing the old clock 
+code and enabling the appropriate Kconfig options. This will be done 
+when Versatile can be completely converted over to DT boot. I have that 
+working in my tree, but full DT conversion is also dependent on DT PCI 
+support.
 
-n, t and r are probably only used in PCI functions that are listed
-in DT, not in the host bridge.
+I've tested under QEMU and Linus Walleij has tested an earlier version 
+on Versatile AB h/w.
 
-b/d/f I think is mostly used for the interrupt-maps property, when
-describing hardwired interrupts.
+Rob
 
-p and s are used when setting up the translation for inbound MMIO
-and PIO.
+Rob Herring (10):
+  dt/bindings: add passthru-mask property to versatile-fpga-irq
+  dts: versatile: add missing irq controller properties
+  irqchip: versatile-fpga: add pass-thru enable support
+  irqchip: versatile-fpga: add DT init
+  ARM: versatile: remove init_irq hook for DT boot
+  dts: versatile: add pl180 compatible strings
+  dt/bindings: arm-boards: add binding for Versatile core module
+  dt/bindings: add compatible string for versatile osc clock
+  dts: versatile: add clock tree
+  clk: versatile: add versatile OSC support
 
-	Arnd
+ Documentation/devicetree/bindings/arm/arm-boards   |  6 ++
+ .../devicetree/bindings/arm/versatile-fpga-irq.txt |  3 +
+ .../devicetree/bindings/clock/arm-integrator.txt   |  4 +-
+ arch/arm/boot/dts/versatile-ab.dts                 | 81 +++++++++++++++++++++-
+ arch/arm/boot/dts/versatile-pb.dts                 | 12 +++-
+ arch/arm/mach-versatile/versatile_dt.c             |  1 -
+ drivers/clk/versatile/Makefile                     |  3 +-
+ drivers/clk/versatile/clk-integrator.c             | 35 +++++++++-
+ drivers/irqchip/irq-versatile-fpga.c               |  9 +++
+ 9 files changed, 145 insertions(+), 9 deletions(-)
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
