@@ -1,49 +1,126 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 08/10] dt/bindings: add compatible string for versatile osc clock
-Date: Tue, 20 May 2014 16:09:34 -0500
-Message-ID: <1400620176-7239-9-git-send-email-robherring2@gmail.com>
-References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400620176-7239-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Tue, 20 May 2014 23:10:47 +0200
+Message-ID: <20140520211046.GA3476@earth.universe>
+References: <20140515182133.GC23659@atomide.com>
+ <5375A8A8.7080306@ti.com>
+ <20140516160717.GD22031@atomide.com>
+ <20140516174158.GA11733@earth.universe>
+ <20140516180154.GG22031@atomide.com>
+ <5379CD24.6040508@ti.com>
+ <20140519160447.GB4849@atomide.com>
+ <537A55EB.1080507@ti.com>
+ <20140520051203.GB28812@earth.universe>
+ <20140520054852.GA12384@atomide.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="XsQoSWH+UP9D9v3l"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140520054852.GA12384@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/arm-integrator.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+--XsQoSWH+UP9D9v3l
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/clock/arm-integrator.txt b/Documentation/devicetree/bindings/clock/arm-integrator.txt
-index 652914b..ecc6952 100644
---- a/Documentation/devicetree/bindings/clock/arm-integrator.txt
-+++ b/Documentation/devicetree/bindings/clock/arm-integrator.txt
-@@ -1,4 +1,4 @@
--Clock bindings for ARM Integrator Core Module clocks
-+Clock bindings for ARM Integrator and Versatile Core Module clocks
- 
- Auxilary Oscillator Clock
- 
-@@ -12,7 +12,7 @@ parent node.
- 
- 
- Required properties:
--- compatible: must be "arm,integrator-cm-auxosc"
-+- compatible: must be "arm,integrator-cm-auxosc" or "arm,versatile-cm-auxosc"
- - #clock-cells: must be <0>
- 
- Optional properties:
--- 
-1.9.1
+On Mon, May 19, 2014 at 10:48:52PM -0700, Tony Lindgren wrote:
+> * Sebastian Reichel <sre@kernel.org> [140519 22:13]:
+> > On Mon, May 19, 2014 at 10:05:15PM +0300, Tomi Valkeinen wrote:
+> > > On 19/05/14 19:04, Tony Lindgren wrote:
+> > >=20
+> > > > In many cases however we do have multiple compatible strings that
+> > > > describe how the device is wired. See drivers/tty/serial/of_serial.c
+> > > > for example. It has "ns16550" but then it also has additional
+> > > > "nvidia,tegra20-uart", "nxp,lpc3220-uart" and "ibm,qpace-nwp-serial=
+".
+> > >=20
+> > > All those sound like SoC components. In that case it sounds fine to h=
+ave
+> > > the device compatible contain the SoC name. We're talking here about
+> > > external, detachable devices.
+>=20
+> Yes I agree it's also hackish. But playing with the compatible flags
+> avoids adding other custom workarounds.
+>=20
+> > > >>> Not use what you're after with the SPI example though, but sounds
+> > > >>> like that's something different.
+> > > >>
+> > > >> I think Sebastien's example is just like the issue here.
+> > > >=20
+> > > > Hmm is there some existing example in the kernel like that?
+> > >=20
+> > > No, Sebastien's example was just a hypothetical case. Here, using your
+> > > way of having SoC specific data in the .dts, we would have
+> > > "sharp,ls037v7dw01-omap-dss", and in Sebastien's example with a touch
+> > > sensor we'd have, say, "synaptics,xyz123-omap-spi".
+> >=20
+> > Yes, that's what I wanted to say :)
+>=20
+> Hmm I think we need to add few things to the hypothetical SPI case
+> to get it even close to the panel example. Like assume that no SPI bus
+> exists, [...]
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The important thing is not, that there is an SPI bus (hardware), but
+that there is a common SPI client framework (software). That's one
+of the problem's I see with the modified compatible value.
+
+Basically I see the following problem with the appended -omapdss in
+the compatible string:
+
+ * You can read the -omapdss as "to be used with omapdss driver". In
+   this case the compatible string is just needed for driver loading,
+   which is frowned upon DT binding maintainers AFAIK.
+ * Alternatively one can read it as "connected to omapdss". In this
+   case we add unneeded redundancy to the DT. This does not belong
+   into a compatible string, since its encoded in the DT hierarchy.
+
+And btw. Tomi's rewrite hack basically works exactly like this, just
+without adding the redundancy explicitly into the DT. Instead of
+prefixing the comaptible string he could also add a -omapdss sufix.
+That's basically a proof, that the suffix adds useless redudancy.
+
+> [...] and that potentially multiple different Synaptics drivers are
+> trying to share the same compatible flag for a non-existing generic
+> binding.
+
+If there was no common SPI client framework you would need two
+different SPI client drivers for two different SPI host controllers.
+
+Obviously its a bad idea to have no SPI framework, but that's not
+important for the example (except that there should obviously be a
+common panel framework) :)
+
+> I think then it's getting close to the panel example :)
+
+-- Sebastian
+
+--XsQoSWH+UP9D9v3l
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTe8TWAAoJENju1/PIO/qaYxgP/joS7fClYFQXSFXi+oe1Xfe0
+n3Hl3futAbZ1cgauu54pWTbnwzv6JdfedmV6GXAfrKkwBZCVKR6P/dN2TFOYHUdV
+lPJN/k3VSieJUx2sUTTthegaIGymiZwEtrJGSCv7b9Oz6vjTZAYKR24MEUA9DTXR
+mfOM1DX7sCP7DugPyeP7vcAQ1dr8E9IhRYIEEbyzafi5dkgO1ojUbYCugKDk9NL3
+jrEdw1Cbmw+1EUV6ATjbLVF/GiTmU1QunYGh29oGamLrnI6DrfU/I/FqYwC9Dxnp
+mjoYxyQ3Qk+FzGvYmD1BdwzHe/3oOuL0aOps6ytq5C+ktU3uPQxEATzlVEgZRBzD
+pMEh9JkQKqPyWyc/T83TFrBzuKvw3gVvy2un7Hirur9FE7TVaiS0yuZyR0o9IWI/
+WFlufQckSzQFcKA9nCB7k5foy01c77FQ6KKsEbNgx+MLOyDcAA/kYTeuGlQzl3Fu
+RkFmwmlx4HvI3dO1CUQY+YQn+4FUKsvd3CDnYvvkdklrQw5aZV9xiIBLBGGfRzEk
+zoJgo+6jFfeimP+fDzIuMVWocLfxZbXKN+PJ7Mt2AHIrxNdYDYZPgEQTv6ANKLtM
+evt8Zc6ootQzFCvZCp4jVMcylFjP8nWPnM5ZJ0g296UAanSXtDWqP0hMd92NgYl6
+2eWfaMhblzgbBhL9ICaI
+=oeEM
+-----END PGP SIGNATURE-----
+
+--XsQoSWH+UP9D9v3l--
