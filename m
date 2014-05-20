@@ -1,83 +1,91 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Tue, 20 May 2014 08:21:19 +0300
-Message-ID: <537AE64F.4020907@ti.com>
-References: <537487AE.3060906@ti.com> <20140515182133.GC23659@atomide.com> <5375A8A8.7080306@ti.com> <20140516160717.GD22031@atomide.com> <20140516174158.GA11733@earth.universe> <20140516180154.GG22031@atomide.com> <20140516213907.GL12881@atomide.com> <5379D35F.8040207@ti.com> <20140519155732.GA4849@atomide.com> <537A540E.8070302@ti.com> <20140520045748.GA28812@earth.universe>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [PATCH v4 6/6] ARM: dts: STiH407: Add B2120 board support
+Date: Tue, 20 May 2014 10:27:10 +0200
+Message-ID: <537B11DE.6040000@st.com>
+References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>	<1394614210-15698-7-git-send-email-maxime.coquelin@st.com>
+ <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140520045748.GA28812@earth.universe>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
---Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Olof,
 
-On 20/05/14 07:57, Sebastian Reichel wrote:
+On 05/20/2014 08:18 AM, Olof Johansson wrote:
 > Hi,
->=20
-> On Mon, May 19, 2014 at 09:57:18PM +0300, Tomi Valkeinen wrote:
->>> 3. Having to maintain a database in kernel of display mappings separa=
-tely
->>>    in addition to the .dts files.
+>
+> Just a quick drive-by review since I was looking at these patches in
+> the pull request you sent.
+>
+>
+>
+
+Thanks for the review.
+I will send a new series taking your comments into account, except the 
+one about reference-based syntax.
+
+[...]
+
 >>
->> Yes, that's slightly annoying. Not really a big burden, though, as it'=
-s
->> quite rare to get a new encoder or panel driver.
->=20
-> I wonder if the "omapdss," prefix could be added to *all* remote
-> endpoints seen by omapdss. Pseudocode:
->=20
-> for each port in dss {
->     for each endpoint in port {
->         panel =3D get_phandle(endpoint, "remote-endpoint");
->=20
->         /* only add prefix if it's not already there (kexec) */
->         if (panel.compatible !=3D "omapdss,.*")
->             panel.compatible =3D "omapdss," + panel.compatible;
->     }
-> }
+>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+>> index 12455cf..f760a88 100644
+>> --- a/arch/arm/boot/dts/Makefile
+>> +++ b/arch/arm/boot/dts/Makefile
+>> @@ -317,7 +317,8 @@ dtb-$(CONFIG_ARCH_SPEAR6XX)+= spear600-evb.dtb
+>>   dtb-$(CONFIG_ARCH_STI)+= stih415-b2000.dtb \
+>>          stih416-b2000.dtb \
+>>          stih415-b2020.dtb \
+>> -       stih416-b2020.dtb
+>> +       stih416-b2020.dtb \
+>> +       stih407-b2120.dtb
+>
+> These should be in alphanumerical order. 407 comes before 415. You've
+> been out of order with others as well.
 
-Hmm, yes, I think that would work. It would remove the need for the
-database, but the code would be slightly more complex as we'd need to
-travel through the graph, not just the nodes that are directly connected
-to omapdss. I need to try this approach also.
+Ok, it will be re-ordered in the next series.
 
- Tomi
+>
+>>   dtb-$(CONFIG_ARCH_SUNXI) += \
+>>          sun4i-a10-a1000.dtb \
+>>          sun4i-a10-cubieboard.dtb \
+>> diff --git a/arch/arm/boot/dts/stih407-b2120.dts b/arch/arm/boot/dts/stih407-b2120.dts
+>> new file mode 100644
+>> index 0000000..9c97da4
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/stih407-b2120.dts
+>> @@ -0,0 +1,78 @@
+>> +/*
+>> + * Copyright (C) 2014 STMicroelectronics (R&D) Limited.
+>> + * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +/dts-v1/;
+>> +#include "stih407.dtsi"
+>> +/ {
+>> +       model = "STiH407 B2120";
+>> +       compatible = "st,stih407", "st,stih407-b2120";
+>
+> This should go from specific to generic, so the order needs to be the other way.
+>
+> Please check other dts files for the same (I didn't).
+>
 
-Ps. Sorry for misspelling your name, twice. If I recall right, I even
-checked if your name is written with an 'a' or an 'e', but somehow still
-managed to get it wrong.
-
-
-
---Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTeuZPAAoJEPo9qoy8lh71HecQAIUfK7fGdPc0wzbxBYco52ob
-ihcH084kqYmRowE/INlVX6RRs/AOY7hUpBGFJvGoLNyJyQt2hepnb6IzvfTLvKS1
-EIZ60StRGprISzAH5kvoJK2KUaL/gD9OsZs7qTsbWQ349WhWDZP5vLb59Dgxrxw3
-R+lCwpSp0SgIQEugkT+SxHwLL0VPKr2cJKJVzxHahO3TpzLlojoQoNrIiVvZ9qjR
-iPT7QeDyKlGZerA7ewvhHcI105KtMM9k+EBlQlLTPFmvvRsR4o+KIEl7uLYbZcfH
-upmdI0BtYY4J86qZed1K0O/pa5uR1T9hSnjtC1TSbxMs6j4diOeOTUpIIQc6EAOk
-nPcGr9VSL5SIEYiWDvmGO3KRU+adpkWlIIxp1+GKmOwxGN793pivzTnzSde6m+h2
-wDqU3oO1KTxPZFlSLUr5hjXHZycqsd2zoT11eycAONXPfaC+ojT8jfT4a0P+po0k
-I35G/8akmKQGUW2aQdfb6/fQrnmP3Kpl2gzSG9DlC4pbng1JKNZLh+6O9iC7GpkW
-nfFab/A6hLT1lNXXzCTBdYheOCu4Eyq2zkQEk2yAwUoR12pLeVNWwo26oyeA82Sa
-jwPPhxQolRkEnB6zdP0Tuv2emIM5XUHX6tKTfa/Ya4XWsbrpEDmgykhAt2VZfsLQ
-1T/m17F94IxTWUOOxPOS
-=cous
------END PGP SIGNATURE-----
-
---Rw174HVeVPPMlb1VpDXpRvsRWUgRn2lMe--
+Ok, I will change that for this dts and also the other ones.
+Thanks,
+Maxime
