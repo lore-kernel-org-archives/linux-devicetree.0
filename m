@@ -1,74 +1,71 @@
-From: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
-Subject: [PATCH v2] ARM: OMAP2+: gpmc: enable wait-pin monitoring for NAND devices via DT
-Date: Tue, 20 May 2014 11:54:24 +0530
-Message-ID: <1400567064-20033-1-git-send-email-pekon@ti.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Tue, 20 May 2014 09:38:49 +0200
+Message-ID: <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140520055026.E3A98C412DA-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Stefan Roese <sr-ynQEQJNshbs@public.gmane.org>, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables 'wait-pin' monitoring in NAND driver if following properties
-are present under NAND DT node
-  gpmc,wait-pin = <wait-pin number>
-  gpmc,wait-on-read
-  gpmc,wait-on-write
-As NAND generic framework uses common path nand_chip->dev_ready() for monitoring
-completion of Read and Write status, so wait-pin monitoring is enabled only when
-*both* 'gpmc,wait-on-read' and 'gpmc,wait-on-write' are specified.
+Hi Grant,
 
-CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Pekon Gupta <pekon-l0cyMroinI0@public.gmane.org>
----
- Documentation/devicetree/bindings/mtd/gpmc-nand.txt | 8 ++++++++
- arch/arm/mach-omap2/gpmc-nand.c                     | 8 +++++---
- 2 files changed, 13 insertions(+), 3 deletions(-)
+On Tue, May 20, 2014 at 7:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> Why has the overlay system been designed for plugging and unpluging whole
+>> overlays?
+>> That means the kernel has to remember the full stack, causing issues with
+>> e.g. kexec.
+>
+> Mostly so that drivers don't see any difference in the livetree data
+> structure. It also means that userspace sees a single representation of
+> the hardware at any given time.
 
-diff --git a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-index eb81435..4039032 100644
---- a/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-+++ b/Documentation/devicetree/bindings/mtd/gpmc-nand.txt
-@@ -45,6 +45,14 @@ Optional properties:
- 		ELM hardware engines should specify this device node in .dtsi
- 		Using ELM for ECC error correction frees some CPU cycles.
- 
-+ - gpmc,wait-pin=<pin number>	Specifies GPMC wait-pin number to monitor
-+ - gpmc,wait-on-read		Enable wait-pin monitoring for Read accesses
-+ - gpmc,wait-on-write		Enable wait-pin monitoring for Write accesses
-+		As NAND generic framework uses single common function
-+		nand_chip->dev_ready() for polling wait-pin both for Read and
-+		Write accesses. So for NAND devices both 'gpmc,wait-on-read' and
-+		'gpmc,wait-on-write' need to be specified together.
-+
- For inline partiton table parsing (optional):
- 
-  - #address-cells: should be set to 1
-diff --git a/arch/arm/mach-omap2/gpmc-nand.c b/arch/arm/mach-omap2/gpmc-nand.c
-index 17cd393..62bc3de 100644
---- a/arch/arm/mach-omap2/gpmc-nand.c
-+++ b/arch/arm/mach-omap2/gpmc-nand.c
-@@ -123,11 +123,13 @@ int gpmc_nand_init(struct omap_nand_platform_data *gpmc_nand_data,
- 		}
- 	}
- 
--	if (gpmc_nand_data->of_node)
-+	if (gpmc_nand_data->of_node) {
- 		gpmc_read_settings_dt(gpmc_nand_data->of_node, &s);
--	else
-+		if (s.wait_on_read && s.wait_on_write)
-+			gpmc_nand_data->dev_ready = true;
-+	} else {
- 		gpmc_set_legacy(gpmc_nand_data, &s);
--
-+	}
- 	s.device_nand = true;
- 
- 	err = gpmc_cs_program_settings(gpmc_nand_data->cs, &s);
--- 
-1.8.5.1.163.gd7aced9
+Sorry, I don't follow the argument about the "single representation of the
+hardware".
 
+>> Why not allowing the addition of removal of subtrees of the full device
+>> tree?
+>
+> Overlays is more than just a subtree. A single overlay can make
+> manipulations of multiple subtrees that should be handled as logically
+> atomic.
+
+Sure, it's more complicated due to the atomicity of multiple changes.
+
+>> This is similar to other hotpluggable subsystems (which are not necessarily
+>> DT-based), like PCI Express. That way the kernel can pass a
+>> DT-representation of the actual current device tree to a kexec'ed kernel.
+>
+> I'm not following you argument. Hardware hotplug systems like PCIe don't
+> manipulate the firmware data. The kernel detects the new device and
+> populates the Linux device model directly. Firmware provided data (ACPI
+> or FDT) isn't involved.
+
+I mean the kernel doesn't remember the exact order in a stack, to reverse
+operations. E.g. I can add hotplug a PCIe bridge with multiple devices
+behind it, and unplug a single device later. It's still one subtree, though.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
