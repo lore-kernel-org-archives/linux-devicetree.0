@@ -1,69 +1,85 @@
-From: Sunil Kovvuri <sunil.kovvuri-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
-Date: Tue, 20 May 2014 14:25:11 +0530
-Message-ID: <CA+sq2CeyUkg6ELYrWYqtxaXhNVeQ9UWiMC=GY4ADE-ZWS1bf9g@mail.gmail.com>
-References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
-	<4292818.mI6kZGgTzd@wuerfel>
-	<CA+sq2Ce+8YB+02B7zhxTXwropZXv9spy-w=AJ8YXCP69kr-_1A@mail.gmail.com>
-	<5759329.P75jKFdv3B@wuerfel>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv5 2/2] ALSA: hda - Add driver for Tegra SoC HDA
+Date: Tue, 20 May 2014 10:59:27 +0200
+Message-ID: <20140520085925.GA10210@ulmo>
+References: <1400552307-20192-1-git-send-email-dgreid@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5759329.P75jKFdv3B@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LAKML <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Scott Lurndal <kdb-JdWt/H98ok1AfugRpC6u6w@public.gmane.org>, "yu.zhao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <yu.zhao-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="sdtB3X0nJg68CQEu"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400552307-20192-1-git-send-email-dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 2:14 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Tuesday 20 May 2014 09:52:33 Sunil Kovvuri wrote:
->> >> In sriov_enable() (drivers/pci/iov.c)
->> >>
->> >>  296        for (i = 0; i < PCI_SRIOV_NUM_BARS; i++) {
->> >>  297                 bars |= (1 << (i + PCI_IOV_RESOURCES));
->> >>  298                 res = dev->resource + PCI_IOV_RESOURCES + i;
->> >>  299                 if (res->parent)
->> >>  300                         nres++;
->> >>  301         }
->> >>  302         if (nres != iov->nres) {
->> >>  303                 dev_err(&dev->dev, "not enough MMIO resources for
->> >>  SR-IOV\n");
->> >>  304                 return -ENOMEM;
->> >>  305         }
->> >>
->> >> Here its checking if physical function's IOV resource has a parent or not.
->> >> Which is pci-pci bridge in this case. Otherwise it doesn't consider
->> >> that resource.
->> >>
->> >> Added below api to your patch.
->> >> This will try to claim a resource while creating a PCI device which
->> >> inturn sets 'res->parent'.
->> >
->> > This looks like the wrong approach. The PCI host controller should
->> > really have been registered with the root 'iomem_resource' during
->> > the probe of the host controller.
->> >
->> I didn't get this, if a SR-IOV device is connected to a PCI-PCI bridge
->> and inturn bridge connected to root port. Then the parent bus is not root,
->> but the bridge.  The issue is either hierarchy should not be checked for
->> SR-IOV resources or someone should set the hierarchy (i.e parent resources).
->
-> Ah, I misunderstood the problem, I thought the PCI core was complaining
-> about lack of space in the resources, not about a lack of BARs.
->
-> It seems there is code like yours in a couple of architectures, but they
-> only claim the resources of bridges, not the actual devices as you
-> seem to be doing. Can you check if the x86 version of
-> pcibios_allocate_bus_resources() does the trick for you? Maybe we can
-> turn that into a generic helper.
->
-Thanks for the suggestion. Will try that once.
-FYI, IA64 architecture does claim resources for devices as well.
-arch/ia64/pci/pci.c  'pcibios_fixup_device_resources()'
 
-Thanks,
-Sunil.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--sdtB3X0nJg68CQEu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, May 19, 2014 at 07:18:27PM -0700, Dylan Reid wrote:
+> This adds a driver for the HDA block in Tegra SoCs.  The HDA bus is
+> used to communicate with the HDMI codec on Tegra124.
+>=20
+> Most of the code is re-used from the Intel/PCI HDA driver.  It brings
+> over only two of the module params, power_save and probe_mask.
+>=20
+> Signed-off-by: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Reviewed-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+
+When I run this on Jetson TK1 I get the following:
+
+	[    1.571912] tegra-hda 70030000.hda: CORB reset timeout#1, CORBRP =3D 0
+
+Is that expected?
+
+The device seems to register properly:
+
+	$ aplay -l
+	**** List of PLAYBACK Hardware Devices ****
+	card 0: tegrahda [tegra-hda], device 3: HDMI 0 [HDMI 0]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+	card 1: TK1 [NVIDIA Tegra Jetson TK1], device 0: RT5640 PCM rt5640-aif1-0 =
+[]
+	  Subdevices: 1/1
+	  Subdevice #0: subdevice #0
+
+Would you mind sharing the procedure how you test this? I tried various
+incantations of this sort:
+
+	$ aplay -D hw:0,3 /usr/share/sounds/alsa/Noise.wav
+
+or
+
+	$ aplay -D plughw:0,3 /usr/share/sounds/alsa/Noise.wav
+
+to no avail.
+
+Thierry
+
+--sdtB3X0nJg68CQEu
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTexltAAoJEN0jrNd/PrOh4eYP/RGTvGCqyp9fFgHD8lLMDcKg
+jZ4nkfki2EDx1jDvwtuPlRJH5g6Dq1/6SsflGo7PIAx/oL2ppC0hkTNEmsAauaA6
+G9Nh1hzHZRSR38P6R0hBXRdKEV82b9z2cz9bs+l84Ws0hbJe71xTfzjIPORs6Eeh
+LEFFc9Mt5+ydbImQjuQLAcCOabKeIPWf94Rl9U2NwaEPK+AcDjWinO1utscCUTGA
+5m+D5FTxP+sRGOwBtoYpbdOqEdaIpRAlWjSsd2GhSj+Uu7AF0AjyDWPy+gxIXcha
+AE/oxdlM1gvzJgVNB8IZf2ugcVhL5MuFn4tWhQns0E2zE1TBeq3hBwxrIEtWJ9uG
+BfcrPuMtCaTif5JKvFMIzwDk0I2z8CDacpVcoeD4JgLrWvV6DO34QARAoHVqU0/H
+HlzLe3zdNrnSsJKzUo8/xxBkO/wPQn+cr4btBE7jDCUBWvXFqthCBHyBmrx5uUMF
+r7pYo2v/fUH9+kiZffOBlQNhdKvNTLG5zt41Wsw+zNsd2vt76LOuxdMLW2/sIMBN
+UTCe51rzKowyvNqT2SFSteSD+CwQAod8xz4CiSy/n6MXY6RKrgWXbzB8PY3/vMAK
+NBv3g198q+hBFxqX/GIGfs0KK5zWN7+d6CdrjPYLnkasnO1yr4RosM5wYsYXHoe8
+P++WAvr6KsFS4q5wU6gu
+=oAqY
+-----END PGP SIGNATURE-----
+
+--sdtB3X0nJg68CQEu--
