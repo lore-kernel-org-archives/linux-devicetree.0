@@ -1,93 +1,114 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] Documentation: add Device tree bindings for Hisilicon
- hix5hd2 ethernet
-Date: Tue, 20 May 2014 10:12:23 +0800
-Message-ID: <537ABA07.7020308@linaro.org>
-References: <1400504227-12047-1-git-send-email-zhangfei.gao@linaro.org> <1400504227-12047-3-git-send-email-zhangfei.gao@linaro.org> <537A30AA.8080107@cogentembedded.com>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH 3/3] Documentation: gpio: Add APM X-Gene SoC GPIO
+ controller DTS binding
+Date: Tue, 20 May 2014 15:11:20 +0900
+Message-ID: <CAAVeFuLjv2uu_jm84CwCOMLZwFc3c8Vbof4GW21pLpQdh3syvQ@mail.gmail.com>
+References: <1400263432-922-1-git-send-email-fkan@apm.com>
+ <1400263432-922-4-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537A30AA.8080107-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400263432-922-4-git-send-email-fkan@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Feng Kan <fkan@apm.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, patches@apm.com, Will Deacon <will.deacon@arm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, May 17, 2014 at 3:03 AM, Feng Kan <fkan@apm.com> wrote:
+> Documentation for APM X-Gene SoC GPIO controller DTS binding.
+>
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>  .../devicetree/bindings/gpio/gpio-xgene.txt        | 57 ++++++++++++++++++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+> new file mode 100644
+> index 0000000..e19eb5f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+> @@ -0,0 +1,57 @@
+> +APM X-Gene SoC GPIO controller bindings
+> +
+> +This is a gpio controller that is part of the flash controller.
+> +All registers are 32bit and in little endian format.
+> +
+> +Required properties:
+> +- compatible: "apm,xgene-gpio" for X-Gene GPIO controller
+> +- reg: Physical base address and length of the controller's registers
+> +
+> +The gpio controller has multiple banks, each bank will have 16 or less
+> +gpio pins. All cfg field will be little endian and least significant
+> +bit indicate lowest number of gpio.
+> +
+> +Required properties:
+> +- #gpio-cells: Should be two.
+> +       - first cell is the pin number
+> +       - second cell is used to specify optional parameters (unused)
+> +- gpio-controller: Marks the device node as a GPIO controller.
 
+Shouldnt these properties be part of the parent instead of being
+repeated for each bank?
 
-On 05/20/2014 12:26 AM, Sergei Shtylyov wrote:
-> On 05/19/2014 04:57 PM, Zhangfei Gao wrote:
->> +Hisilicon hix5hd2 Ethernet Controller
->> +
->> +Required properties:
->> +- compatible: should be "hisilicon,hix5hd2-mac".
->> +- reg : Specifies base physical address(s) and size of the device
->> registers.
->
->     Er, I must note that the colon style here is not consistent with the
-> rest of the properties, i.e. there's space before the colon here, while
-> in other cases there's none.
-Will remove the space.
+> +- bank:  This is to specifiy which gpio bank the dts node is describing.
 
->
->> +  The first region is the mac register base and size.
->
->     s/mac/MAC/.
->
->> +  The second region is external interface control register.
->> +- interrupts: Should contain the MAC interrupts
->> +- #address-cells: Must be <1>.
->> +- #size-cells: Must be <0>.
->
->     Descriptions should consistently start with a lower case, I think...
-OK.
->
->> +- phy-mode: see ethernet.txt [1].
->> +- phy-handle: see ethernet.txt [1].
->> +- mac-address: see ethernet.txt [1].
->> +- clocks: clock phandle and specifier pair.
->> +
->> +- phy subnode: inherits from phy binding [2]
->
->     s/phy/PHY/.
->
->> +
->> +[1] Documentation/devicetree/bindings/net/ethernet.txt
->> +[2] Documentation/devicetree/bindings/net/phy.txt
->> +
->> +Example:
->> +    gmac0: ethernet@f9840000 {
->> +        compatible = "hisilicon,hix5hd2-mac";
->> +        reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
->> +        #address-cells = <1>;
->> +        #size-cells = <0>;
->> +        phy-handle = <&phy0>;
->> +        phy-mode = "mii";
->> +        mac-address = [00 00 00 00 00 00];
->
->     Don't think that's a good value, unless this is only a placeholder.
-Yes, mac-address is placeholder here and would be filled by boot-loader.
-Otherwise random mac addr will be used.
+I suspect you could use the reg property for this, as it seems like
+you would need it for DT compliance anyway (but I'm not 100% sure
+here).
 
->
->> +        interrupts = <0 71 4>;
->> +        clocks = <&clock HIX5HD2_MAC0_CLK>;
->> +
->> +        phy0: ethernet-phy@2 {
->
->     I'd rather label ut phy2...
-OK
->
->> +            reg = <2>;
->> +            compatible = "ethernet-phy-ieee802.3-c22";
->
->     This is the default "compatible", i.e. there's no need to specify
-> it, IIRC.
-Got it, find it is clarified in phy.txt.
+> +
+> +Optional properties:
+> +- ngpio: Specify the number of GPIOs per bank. It is defaulted to 16
+> +        if not specified. Number of gpio can't be greater than 16 or
+> +        0.
+> +- odcfg: This is gpio open drain/normal configuration. It is a 16 bit
+> +        field, setting 1 will mean the pin is set in open drain
+> +        configuration, 0 will mean normal configuration. Default will
+> +        be normal configuration.
+> +
+> +Example:
+> +       gpio: gpio@1701c000 {
+> +               compatible = "apm,xgene-gpio";
+> +               reg = <0x0 0x1701c000 0x0 0x1000>;
+> +
+> +               banka: gpio-controller@0 {
+> +                       compatible = "apm,xgene-gpio-port";
 
-Thanks
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This property is not documented. Besides I don't see it anywhere in
+your driver implementation so I would say it is probably not needed at
+all.
+
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       ngpios = <16>;
+> +                       bank = <0>;
+> +                       odcfg = <0xffff>;   /* Optional */
+> +               };
+> +               bankb: gpio-controller@1 {
+> +                       compatible = "apm,xgene-gpio-port";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       ngpios = <16>;
+> +                       bank = <1>;
+> +               };
+> +               bankc: gpio-controller@2 {
+> +                       compatible = "apm,xgene-gpio-port";
+> +                       gpio-controller;
+> +                       #gpio-cells = <2>;
+> +                       ngpios = <16>;
+> +                       bank = <2>;
+> +               };
+> +       };
+> --
+> 1.9.1
+>
