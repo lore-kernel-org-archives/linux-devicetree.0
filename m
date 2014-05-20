@@ -1,221 +1,158 @@
-From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH v3 05/11] ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
-Date: Tue, 20 May 2014 15:22:49 +0200
-Message-ID: <1400592175-13176-6-git-send-email-gabriel.fernandez@linaro.org>
-References: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
-Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Pankaj Dev <pankaj.dev@st.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
+Date: Tue, 20 May 2014 15:23:47 +0200
+Message-ID: <6382280.3uMvoxaUSK@wuerfel>
+References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
+	<5080348.QmhgfQRxZW@wuerfel>
+	<20140520130659.GA5041@e103592.cambridge.arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140520130659.GA5041-M5GwZQ6tE7x5pKCnmE3YQBJ8xKzm50AiAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Patch adds DT entries for clockgen B/C/D/E/F
+On Tuesday 20 May 2014 14:07:09 Dave Martin wrote:
+> On Tue, May 20, 2014 at 12:08:44PM +0200, Arnd Bergmann wrote:
+> > On Monday 19 May 2014 22:32:33 Thierry Reding wrote:
+> > > On Mon, May 19, 2014 at 06:22:31PM +0100, Dave Martin wrote:
+> > > > On Mon, May 19, 2014 at 01:53:37PM +0100, Thierry Reding wrote:
+> > > [...]
+> > > > > My understanding here is mostly based on the OpenFirmware working group
+> > > > > proposal for the dma-ranges property[0]. I'll give another example to
+> > > > > try and clarify how I had imagined this to work:
+> > > > > 
+> > > > >     / {
+> > > > >             #address-cells = <2>;
+> > > > >             #size-cells = <2>;
+> > > > > 
+> > > > >             iommu {
+> > > > >                     /*
+> > > > >                      * This is somewhat unusual (or maybe not) in that we
+> > > > >                      * need 2 cells to represent the size of an address
+> > > > >                      * space that is 32 bits long.
+> > > > >                      */
+> > > > >                     #address-cells = <1>;
+> > > > >                     #size-cells = <2>;
+> > > > > 
+> > > > >                     #iommu-cells = <1>;
+> > > > >             };
+> > > > > 
+> > > > >             master {
+> > > > >                     iommus = <&/iommu 42>;
+> > > > 
+> > > > Comparing this with the other discussion thread, we have a similar
+> > > > concept here, in that the iommu is made a logical parent, however...
+> > > > 
+> > > > Firstly, there's an implicit assumption here that the only kind of
+> > > > thing the master could possibly be connected to is an IOMMU, with
+> > > > no non-trivial interconnect in between.  I'm not sure this is going
+> > > > to scale to complex SoCs.
+> > > 
+> > > Here we go again. We're now in the very same bad spot that we've been in
+> > > so many times before. There are at least two SoCs that we know do not
+> > > require anything fancy, yet we're blocking adding support for those use
+> > > cases because we think that at some point some IOMMU may require more
+> > > than that. But at the same time it seems like we don't have enough data
+> > > about what exactly that is, so we keep speculating. At this rate we're
+> > > making it impossible to get a reasonable feature set supported upstream.
+> > > 
+> > > That's very frustrating.
+> > 
+> > I agree. While I just commented that I want to think through how this
+> > would look for other IOMMUs, the generic case of all masters that Dave
+> > wants is going overboard with the complexity and we'd be better off
+> 
+> I don't want that, and actually I agree with the conclusion "overboard".
+> 
+> It was really about exploring the problem space, including things that
+> we can reasonably foresee.  Any bindings today should necessarily be
+> much simpler, and that's certainly the correct approach.
+> 
+> I've been neglecting this thread (apologies) -- but although I have to
+> think a bit about Thierry's most recent suggestions, I think there's
+> actually reasonable alignment now.
+> 
+> > deferring this to whenever someone needs it, which I assume is never.
+> 
+> Well, some of it might be.  But I'm not saying we should give in to
+> wild speculation (except to get a feel for what we're ruling out, and
+> the consequences of that).
 
-Signed-off-by: Pankaj Dev <pankaj.dev@st.com>
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
----
- arch/arm/boot/dts/stih416-clock.dtsi | 189 +++++++++++++++++++++++++++++++++++
- 1 file changed, 189 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index 072c587..0eeadc7 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -502,5 +502,194 @@
- 						     /* Remaining outputs unused */
- 			};
- 		};
-+
-+		/*
-+		 * Frequency synthesizers on the SASG2
-+		 */
-+		clockgen_b0: clockgen-b0@fee108b4 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs216", "st,quadfs";
-+			reg = <0xfee108b4 0x44>;
-+
-+			clocks = <&clk_sysin>;
-+			clock-output-names = "clk-s-usb48",
-+					     "clk-s-dss",
-+					     "clk-s-stfe-frc-2",
-+					     "clk-s-thsens-scard";
-+		};
-+
-+		clockgen_b1: clockgen-b1@fe8308c4 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs216", "st,quadfs";
-+			reg = <0xfe8308c4 0x44>;
-+
-+			clocks = <&clk_sysin>;
-+			clock-output-names = "clk-s-pcm-0",
-+					     "clk-s-pcm-1",
-+					     "clk-s-pcm-2",
-+					     "clk-s-pcm-3";
-+		};
-+
-+		clockgen_c: clockgen-c@fe8307d0 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs432", "st,quadfs";
-+			reg = <0xfe8307d0 0x44>;
-+
-+			clocks = <&clk_sysin>;
-+			clock-output-names = "clk-s-c-fs0-ch0",
-+					     "clk-s-c-vcc-sd",
-+					     "clk-s-c-fs0-ch2";
-+		};
-+
-+		clk_s_vcc_hd: clk-s-vcc-hd@fe8308b8 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenc-vcc-hd", "st,clkgen-mux";
-+			reg = <0xfe8308b8 0x4>; /* SYSCFG2558 */
-+
-+			clocks = <&clk_sysin>,
-+				 <&clockgen_c 0>;
-+		};
-+
-+		/*
-+		 * Add a dummy clock for the HDMI PHY for the VCC input mux
-+		 */
-+		clk_s_tmds_fromphy: clk-s-tmds-fromphy {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
-+
-+		clockgen_c_vcc: clockgen-c-vcc@fe8308ac {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
-+			reg = <0xfe8308ac 0xc>; /* SYSCFG2555,2556,2557 */
-+
-+			clocks = <&clk_s_vcc_hd>,
-+				 <&clockgen_c 1>,
-+				 <&clk_s_tmds_fromphy>,
-+				 <&clockgen_c 2>;
-+
-+			clock-output-names  = "clk-s-pix-hdmi",
-+					      "clk-s-pix-dvo",
-+					      "clk-s-out-dvo",
-+					      "clk-s-pix-hd",
-+					      "clk-s-hddac",
-+					      "clk-s-denc",
-+					      "clk-s-sddac",
-+					      "clk-s-pix-main",
-+					      "clk-s-pix-aux",
-+					      "clk-s-stfe-frc-0",
-+					      "clk-s-ref-mcru",
-+					      "clk-s-slave-mcru",
-+					      "clk-s-tmds-hdmi",
-+					      "clk-s-hdmi-reject-pll",
-+					      "clk-s-thsens";
-+		};
-+
-+		clockgen_d: clockgen-d@fee107e0 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs216", "st,quadfs";
-+			reg = <0xfee107e0 0x44>;
-+
-+			clocks = <&clk_sysin>;
-+			clock-output-names = "clk-s-ccsc",
-+					     "clk-s-stfe-frc-1",
-+					     "clk-s-tsout-1",
-+					     "clk-s-mchi";
-+		};
-+
-+		/*
-+		 * Frequency synthesizers on the MPE42
-+		 */
-+		clockgen_e: clockgen-e@fd3208bc {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs660-E", "st,quadfs";
-+			reg = <0xfd3208bc 0xb0>;
-+
-+			clocks = <&clk_sysin>;
-+			clock-output-names = "clk-m-pix-mdtp-0",
-+					     "clk-m-pix-mdtp-1",
-+					     "clk-m-pix-mdtp-2",
-+					     "clk-m-mpelpc";
-+		};
-+
-+		clockgen_f: clockgen-f@fd320878 {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-quadfs660-F", "st,quadfs";
-+			reg = <0xfd320878 0xf0>;
-+
-+			clocks = <&clk_sysin>;
-+			clock-output-names = "clk-m-main-vidfs",
-+					     "clk-m-hva-fs",
-+					     "clk-m-fvdp-vcpu",
-+					     "clk-m-fvdp-proc-fs";
-+		};
-+
-+		clk_m_fvdp_proc: clk-m-fvdp-proc@fd320910 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-fvdp", "st,clkgen-mux";
-+			reg = <0xfd320910 0x4>; /* SYSCFG8580 */
-+
-+			clocks = <&clk_m_a1_div2 0>,
-+				 <&clockgen_f 3>;
-+		};
-+
-+		clk_m_hva: clk-m-hva@fd690868 {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
-+			reg = <0xfd690868 0x4>; /* SYSCFG9538 */
-+
-+			clocks = <&clockgen_f 1>,
-+				 <&clk_m_a1_div0 3>;
-+		};
-+
-+		clk_m_f_vcc_hd: clk-m-f-vcc-hd@fd32086c {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-hd", "st,clkgen-mux";
-+			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
-+
-+			clocks = <&clockgen_c_vcc 7>,
-+				 <&clockgen_f 0>;
-+		};
-+
-+		clk_m_f_vcc_sd: clk-m-f-vcc-sd@fd32086c {
-+			#clock-cells = <0>;
-+			compatible = "st,stih416-clkgenf-vcc-sd", "st,clkgen-mux";
-+			reg = <0xfd32086c 0x4>; /* SYSCFG8539 */
-+
-+			clocks = <&clockgen_c_vcc 8>,
-+				 <&clockgen_f 1>;
-+		};
-+
-+		/*
-+		 * Add a dummy clock for the HDMIRx external signal clock
-+		 */
-+		clk_m_pix_hdmirx_sas: clk-m-pix-hdmirx-sas {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <0>;
-+		};
-+
-+		clockgen_f_vcc: clockgen-f-vcc@fd32086c {
-+			#clock-cells = <1>;
-+			compatible = "st,stih416-clkgenf", "st,clkgen-vcc";
-+			reg = <0xfd32086c 0xc>; /* SYSCFG8539,8540,8541 */
-+
-+			clocks = <&clk_m_f_vcc_hd>,
-+				 <&clk_m_f_vcc_sd>,
-+				 <&clockgen_f 0>,
-+				 <&clk_m_pix_hdmirx_sas>;
-+
-+			clock-output-names  = "clk-m-pix-main-pipe",
-+					      "clk-m-pix-aux-pipe",
-+					      "clk-m-pix-main-cru",
-+					      "clk-m-pix-aux-cru",
-+					      "clk-m-xfer-be-compo",
-+					      "clk-m-xfer-pip-compo",
-+					      "clk-m-xfer-aux-compo",
-+					      "clk-m-vsens",
-+					      "clk-m-pix-hdmirx-0",
-+					      "clk-m-pix-hdmirx-1";
-+		};
- 	};
- };
--- 
-1.9.1
+Ok, fair enough.
+
+> > > > If a range of Stream IDs may be issued (especially from something like
+> > > > a PCIe RC where the stream ID may be a many-bit value), describing
+> > > > the IDs individually may be impractical.
+> > > 
+> > > The IOMMU specifier is completely specific to the IOMMU. If an IOMMU has
+> > > a need to represent the stream IDs as a range there's nothing keeping it
+> > > from defining the specifier accordingly.
+> > 
+> > If we make the IOMMU address space look like the PCI address space, we
+> > can have a simple representation for this in DT. For the code, I assume
+> > that we will always have to treat PCI and platform devices differently.
+> 
+> Can you elaborate on that?
+> 
+> Master ID signals in ARM systems and how they are handled are rather
+> under-specified today.  Treating the master ID bits as some extra bits
+> in some kind of extended bus address could work for ARM IOMMUs etc.,
+> but I didn't have a complete answer yet.
+
+The PCI binding at http://www.openfirmware.org/1275/bindings/pci/pci2_1.pdf
+defines a 96-bit address space for MMIO registers and other things, so
+it can uniquely identify not just an address on the bus, but also 
+any standard resource as seen by the device, quoting from there:
+
+2.2.1.1. Numerical Representation
+(The Numerical Representation of an address is the format that Open
+ Firmware uses for storing an address within a property value and on
+ the stack, as an argument to a package method.) The numerical
+ representation of a PCI address consists of three cells, encoded as
+ follows. For this purpose, the least-significant 32 bits of a cell is used;
+ if the cell size is larger than 32 bits, any additional high-order bits
+ are zero. Bit# 0 refers to the least-significant bit.
+
+	Bit#   33222222 22221111 11111100 00000000
+	       10987654 32109876 54321098 76543210
+phys.hi cell:  npt000ss bbbbbbbb dddddfff rrrrrrrr
+phys.mid cell: hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh
+phys.lo cell:  llllllll llllllll llllllll llllllll
+
+where:
+n is 0 if the address is relocatable, 1 otherwise
+p is 1 if the addressable region is "prefetchable", 0 otherwise
+t is 1 if the address is aliased (for non-relocatable I/O),
+ below 1 MB (for Memory), or below 64 KB (for relocatable I/O).
+ss is the space code, denoting the address space
+bbbbbbbb is the 8-bit Bus Number
+ddddd is the 5-bit Device Number
+fff is the 3-bit Function Number
+rrrrrrrr is the 8-bit Register Number
+hh...hh is a 32-bit unsigned number
+ll...ll is a 32-bit unsigned number
+
+We can ignore n, p, t and r here, and use the same format for a DMA
+address, then define an empty "dma-ranges" property. That would
+imply that using b/d/f is sufficient to identify each master at the
+iommu. Any device outside of the PCI host but connected to the same
+iommu can use the same notation to list the logical b/d/f that gets
+sent to the IOMMU in bus master transactions.
+
+Do you think this is sufficient for the ARM SMMU, or do we need
+something beyond that?
+
+	Arnd
