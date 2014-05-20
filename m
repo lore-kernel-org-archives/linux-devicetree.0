@@ -1,85 +1,93 @@
-From: Chanho Park <chanho61.park@samsung.com>
-Subject: [PATCHv5 1/4] ARM: dts: exynos4: add PMU syscon node
-Date: Tue, 20 May 2014 11:06:27 +0900
-Message-ID: <1400551590-7772-2-git-send-email-chanho61.park@samsung.com>
-References: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
+From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] Documentation: add Device tree bindings for Hisilicon
+ hix5hd2 ethernet
+Date: Tue, 20 May 2014 10:12:23 +0800
+Message-ID: <537ABA07.7020308@linaro.org>
+References: <1400504227-12047-1-git-send-email-zhangfei.gao@linaro.org> <1400504227-12047-3-git-send-email-zhangfei.gao@linaro.org> <537A30AA.8080107@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537A30AA.8080107-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, David.Laight-ZS65k/vG3HxXrIkS9f7CXA@public.gmane.org, eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a PMU(Power Management Unit) syscon node. This
-should be required for USB Phy syscon regmap I/F.
 
-Cc: Kamil Debski <k.debski@samsung.com>
-Signed-off-by: Chanho Park <chanho61.park@samsung.com>
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
----
- Documentation/devicetree/bindings/arm/samsung/pmu.txt | 3 +++
- arch/arm/boot/dts/exynos4.dtsi                        | 5 +++++
- arch/arm/boot/dts/exynos4412.dtsi                     | 4 ++++
- arch/arm/boot/dts/exynos4x12.dtsi                     | 4 ++++
- 4 files changed, 16 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-index f1f1552..b562634 100644
---- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
-@@ -2,6 +2,9 @@ SAMSUNG Exynos SoC series PMU Registers
- 
- Properties:
-  - compatible : should contain two values. First value must be one from following list:
-+		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
-+		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
-+		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
- 		   - "samsung,exynos5250-pmu" - for Exynos5250 SoC,
- 		   - "samsung,exynos5420-pmu" - for Exynos5420 SoC.
- 		second value must be always "syscon".
-diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-index 58ff8e2..da29a2a 100644
---- a/arch/arm/boot/dts/exynos4.dtsi
-+++ b/arch/arm/boot/dts/exynos4.dtsi
-@@ -110,6 +110,11 @@
- 		reg = <0x10010000 0x400>;
- 	};
- 
-+	pmu_system_controller: system-controller@10020000 {
-+		compatible = "samsung,exynos4210-pmu", "syscon";
-+		reg = <0x10020000 0x4000>;
-+	};
-+
- 	dsi_0: dsi@11C80000 {
- 		compatible = "samsung,exynos4210-mipi-dsi";
- 		reg = <0x11C80000 0x10000>;
-diff --git a/arch/arm/boot/dts/exynos4412.dtsi b/arch/arm/boot/dts/exynos4412.dtsi
-index 15d3c0a..c42a3e1 100644
---- a/arch/arm/boot/dts/exynos4412.dtsi
-+++ b/arch/arm/boot/dts/exynos4412.dtsi
-@@ -29,4 +29,8 @@
- 	gic: interrupt-controller@10490000 {
- 		cpu-offset = <0x4000>;
- 	};
-+
-+	pmu_system_controller: system-controller@10020000 {
-+		compatible = "samsung,exynos4412-pmu", "syscon";
-+	};
- };
-diff --git a/arch/arm/boot/dts/exynos4x12.dtsi b/arch/arm/boot/dts/exynos4x12.dtsi
-index 70e3765..2f1e6c1 100644
---- a/arch/arm/boot/dts/exynos4x12.dtsi
-+++ b/arch/arm/boot/dts/exynos4x12.dtsi
-@@ -137,6 +137,10 @@
- 		interrupts = <0 72 0>;
- 	};
- 
-+	pmu_system_controller: system-controller@10020000 {
-+		compatible = "samsung,exynos4212-pmu", "syscon";
-+	};
-+
- 	g2d@10800000 {
- 		compatible = "samsung,exynos4212-g2d";
- 		reg = <0x10800000 0x1000>;
--- 
-1.8.3.2
+On 05/20/2014 12:26 AM, Sergei Shtylyov wrote:
+> On 05/19/2014 04:57 PM, Zhangfei Gao wrote:
+>> +Hisilicon hix5hd2 Ethernet Controller
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hix5hd2-mac".
+>> +- reg : Specifies base physical address(s) and size of the device
+>> registers.
+>
+>     Er, I must note that the colon style here is not consistent with the
+> rest of the properties, i.e. there's space before the colon here, while
+> in other cases there's none.
+Will remove the space.
+
+>
+>> +  The first region is the mac register base and size.
+>
+>     s/mac/MAC/.
+>
+>> +  The second region is external interface control register.
+>> +- interrupts: Should contain the MAC interrupts
+>> +- #address-cells: Must be <1>.
+>> +- #size-cells: Must be <0>.
+>
+>     Descriptions should consistently start with a lower case, I think...
+OK.
+>
+>> +- phy-mode: see ethernet.txt [1].
+>> +- phy-handle: see ethernet.txt [1].
+>> +- mac-address: see ethernet.txt [1].
+>> +- clocks: clock phandle and specifier pair.
+>> +
+>> +- phy subnode: inherits from phy binding [2]
+>
+>     s/phy/PHY/.
+>
+>> +
+>> +[1] Documentation/devicetree/bindings/net/ethernet.txt
+>> +[2] Documentation/devicetree/bindings/net/phy.txt
+>> +
+>> +Example:
+>> +    gmac0: ethernet@f9840000 {
+>> +        compatible = "hisilicon,hix5hd2-mac";
+>> +        reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+>> +        #address-cells = <1>;
+>> +        #size-cells = <0>;
+>> +        phy-handle = <&phy0>;
+>> +        phy-mode = "mii";
+>> +        mac-address = [00 00 00 00 00 00];
+>
+>     Don't think that's a good value, unless this is only a placeholder.
+Yes, mac-address is placeholder here and would be filled by boot-loader.
+Otherwise random mac addr will be used.
+
+>
+>> +        interrupts = <0 71 4>;
+>> +        clocks = <&clock HIX5HD2_MAC0_CLK>;
+>> +
+>> +        phy0: ethernet-phy@2 {
+>
+>     I'd rather label ut phy2...
+OK
+>
+>> +            reg = <2>;
+>> +            compatible = "ethernet-phy-ieee802.3-c22";
+>
+>     This is the default "compatible", i.e. there's no need to specify
+> it, IIRC.
+Got it, find it is clarified in phy.txt.
+
+Thanks
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
