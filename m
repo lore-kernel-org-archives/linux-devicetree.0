@@ -1,79 +1,85 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 2/3] [media] rc: add sunxi-ir driver
-Date: Tue, 20 May 2014 09:18:59 +0200
-Message-ID: <537B01E3.2060206@redhat.com>
-References: <1400104602-16431-1-git-send-email-bay@hackerdom.ru> <1400104602-16431-3-git-send-email-bay@hackerdom.ru> <20140519202616.GA25415@hardeman.nu>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB7ED5SNQKGQELUJUMXQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140519202616.GA25415-0WFrdVpeebksCylrc8G9yg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Tue, 20 May 2014 14:50:26 +0900
+Message-ID: <20140520055026.E3A98C412DA@trevor.secretlab.ca>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 16 May 2014 13:52:42 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Grant,
+> 
+> On Fri, May 16, 2014 at 12:58 PM, Grant Likely
+> <grant.likely@secretlab.ca> wrote:
+> > On Thu, 15 May 2014 09:20:24 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> >> On Thu, May 15, 2014 at 9:12 AM, Pantelis Antoniou
+> >> <pantelis.antoniou@konsulko.com> wrote:
+> >> >> We also need to think about kexec. Kexec works by sucking the live tree
+> >> >> out of the kernel and creating a .dtb from it to pass to the new kernel.
+> >> >> What will the rules be when kexecing? Do all the overlays need to be
+> >> >> removed, or does the kernel get the tree with all the overlays applied
+> >> >> (in which case none of the overlays can be removed on the other side of
+> >> >> kexec).
+> >> >
+> >> > We can add a sysfs attribute that configures whether overlays are reverted before
+> >> > kexec or not. I can't really tell which is the correct option, so let's allow the
+> >> > policy up to user-space.
+> >>
+> >> Kexec'ing into a new kernel doesn't change the hardware, so IMHO the
+> >> in-kernel DT should not change.
+> >
+> > Conceptually though, if overlays are applied then the new kernel has a
+> > different tree from the old one. If the overlay is hotpluggable, then
+> > after the kexec, the new kernel would no longer be able to unplug the
+> > overlay if it uses the current state of the tree instead of pulling the
+> > overlays off first.
+> 
+> Which brings me to another question...
+> 
+> Why has the overlay system been designed for plugging and unpluging whole
+> overlays?
+> That means the kernel has to remember the full stack, causing issues with
+> e.g. kexec.
 
-On 05/19/2014 10:26 PM, David H=E4rdeman wrote:
-> On Thu, May 15, 2014 at 03:56:41AM +0600, Alexander Bersenev wrote:
->> This patch adds driver for sunxi IR controller.
->> It is based on Alexsey Shestacov's work based on the original driver
->> supplied by Allwinner.
->>
->=20
-> ...
->=20
->> +static irqreturn_t sunxi_ir_irq(int irqno, void *dev_id)
->> +{
->> +	unsigned long status;
->> +	unsigned char dt;
->> +	unsigned int cnt, rc;
->> +	struct sunxi_ir *ir =3D dev_id;
->> +	DEFINE_IR_RAW_EVENT(rawir);
->> +
->> +	spin_lock(&ir->ir_lock);
->> +
->> +	status =3D readl(ir->base + SUNXI_IR_RXSTA_REG);
->> +
->> +	/* clean all pending statuses */
->> +	writel(status | REG_RXSTA_CLEARALL, ir->base + SUNXI_IR_RXSTA_REG);
->> +
->> +	if (status & REG_RXINT_RAI_EN) {
->> +		/* How many messages in fifo */
->> +		rc  =3D (status >> REG_RXSTA_RAC__SHIFT) & REG_RXSTA_RAC__MASK;
->> +		/* Sanity check */
->> +		rc =3D rc > SUNXI_IR_FIFO_SIZE ? SUNXI_IR_FIFO_SIZE : rc;
->> +		/* If we have data */
->> +		for (cnt =3D 0; cnt < rc; cnt++) {
->> +			/* for each bit in fifo */
->> +			dt =3D readb(ir->base + SUNXI_IR_RXFIFO_REG);
->> +			rawir.pulse =3D (dt & 0x80) !=3D 0;
->> +			rawir.duration =3D (dt & 0x7f) * SUNXI_IR_SAMPLE;
->=20
-> Can the hardware actually return a zero duration or should that be dt &
-> 0x7f + 1?
->=20
-> (Not familiar with this particular hardware but I know I've seen that
-> behaviour before).
+Mostly so that drivers don't see any difference in the livetree data
+structure. It also means that userspace sees a single representation of
+the hardware at any given time.
 
-Good point, I've just checked and the datasheet says the reported pulse
-duration can be up to 128, so that would make the range 1-128 not 0-127,
-so I believe we indeed need to add 1 to this.
+> Why not allowing the addition of removal of subtrees of the full device
+> tree?
 
-Regards,
+Overlays is more than just a subtree. A single overlay can make
+manipulations of multiple subtrees that should be handled as logically
+atomic.
 
-Hans
+> This is similar to other hotpluggable subsystems (which are not necessarily
+> DT-based), like PCI Express. That way the kernel can pass a
+> DT-representation of the actual current device tree to a kexec'ed kernel.
 
+I'm not following you argument. Hardware hotplug systems like PCIe don't
+manipulate the firmware data. The kernel detects the new device and
+populates the Linux device model directly. Firmware provided data (ACPI
+or FDT) isn't involved.
 
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+> 
+> I missed the initial design discussions, so forgive me if this has been
+> beaten to death before.
+
+It's a good question. An alternative would be to keep the overlay tree
+as a separate data structure and figure out how to make the core code
+reference the overlay when iterating over nodes and properties. I don't
+know how complex it would be to do that. We would definitely need to
+adjust the data structure a bit, but that isn't an insurmountable
+barrier.
+
+g.
