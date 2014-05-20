@@ -1,56 +1,108 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
-Date: Tue, 20 May 2014 12:31:30 -0600
-Message-ID: <537B9F82.6070805@wwwdotorg.org>
-References: <1400553346-23238-1-git-send-email-dgreid@chromium.org> <537B9DE3.5020807@wwwdotorg.org>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: Re: [Patch v3 0/5] Introduce keystone reset driver
+Date: Tue, 20 May 2014 21:35:23 +0300
+Message-ID: <537BA06B.5060200@ti.com>
+References: <1400495155-11136-1-git-send-email-ivan.khoronzhuk@ti.com> <5095812.b6DgWAxYzH@wuerfel> <537B5598.8070603@ti.com> <5272855.vIyLIadgKe@wuerfel> <537B5D5D.8030106@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537B9DE3.5020807-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <537B5D5D.8030106@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2014 12:24 PM, Stephen Warren wrote:
-> On 05/19/2014 08:35 PM, Dylan Reid wrote:
->> Add a device node for the HDA controller found on Tegra124.
-> 
->> diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-> 
->> +	hda@0,70030000 {
->> +		compatible = "nvidia,tegra124-hda", "nvidia,tegra30-hda";
->> +		reg = <0x0 0x70030000 0x0 0x10000>;
->> +		interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
->> +		clocks = <&tegra_car TEGRA124_CLK_HDA>,
->> +		         <&tegra_car TEGRA124_CLK_HDA2HDMI>,
->> +			 <&tegra_car TEGRA124_CLK_HDA2CODEC_2X>;
->> +		clock-names = "hda", "hda2hdmi", "hdacodec_2x";
-> 
-> I think that should be "hda2codec_2x". Same for the reset-names property
-> below. This fix also needs to be propagated into the DT binding
-> documentation.
 
-Even after fixing that, I can't play audio on Venice2:
+On 05/20/2014 04:49 PM, Santosh Shilimkar wrote:
+> On Tuesday 20 May 2014 09:44 AM, Arnd Bergmann wrote:
+>> On Tuesday 20 May 2014 16:16:08 Ivan Khoronzhuk wrote:
+>>> Thank for the reply
+>>>
+>>> The reset driver uses two ranges:
+>>> - RSTYPE, RSTCTRL,RSTCFG, RSISO  (Reset Main PLL Controller)
+>>> - RESETMUX8-10 registers
+>>>
+>>> The content of these register ranges are completely used by the reset
+>>> driver.
+>>> Currently no one on the SoC can access them instead of the reset driver.
+>>> Also we don't use syscon/regmap at all - so adding this will be some
+>>> overhead.
+>>>
+>>> As I posted previously:
+>>> "...configuring Reset multiplexer & PLL. And it tunes not only watchdog
+>>> usage..."
+>>>
+>>> Yes, it tunes not only watchdog usage and uses part of registers from
+>>> PLL controller,
+>>> but all it works with are connected with reset functionality. These
+>>> ranges are used only
+>>> by reset driver and their purpose is reset functionality.
+>>>
+>>> Maybe in the future some soft can use ranges in question for own tasks,
+>>> but it should be
+>>> done via reset driver. So as I see there is no reasons to use regmap for
+>>> reset driver.
+>> You should not look at these registers in isolation, they are part of
+>> some register area that has other functions as well and that you should
+>> at least represent correctly in DT.
+>>
+>> When I see something like
+>>
+>> +                       reg = <0x23100e4 0x10>,
+>> +                             <0x2620328 0x10>;
+>>
+>> I am certain that there are other things between 0x2310000 and 0x23100e3, and
+>> probably after 0x23100f4 as well. There must be some data sheet that
+>> gives this register range a proper name, so put that into DT rather than
+>> making up some arbitrary stuff that happens to match how today's kernel
+>> driver needs it.
+>>
+> Even though there are no other users, I think you have a valid point about
+> DT representing the hardware layout in the correct form.
+>
+> Regards,
+> Santosh
+>
 
-root@localhost:~# speaker-test -Dhw:0,3 -c 2
+Thank for the note.
 
-speaker-test 1.0.27.1
+Ok.
 
-Playback device is hw:0,3
-Stream parameters are 48000Hz, S16_LE, 2 channels
-Using 16 octaves of pink noise
-Rate set to 48000Hz (requested 48000Hz)
-Buffer size range from 64 to 16384
-Period size range from 32 to 8192
-Using max buffer size 16384
-Periods = 4
-was set period_size = 4096
-was set buffer_size = 16384
- 0 - Front Left
-Write error: -32,Broken pipe
-Write error: -32,Broken pipe
-Write error: -32,Broken pipe
-^C 1 - Front Right
-Time per period = 1.799791
+Memory map:
+[00 02310000 - 00 023101FF] size=512 PLL Controller
+[00 02620000 - 00 02620FFF] size=4K device state control registers
+
+I'll define in DT two new syscon compatible nodes like:
+
+         pllctrl: pll_controller {
+             compatible = "syscon";
+             reg = <0x2310000 0x200>;
+         };
+
+         devctrl: device_state_control {
+             compatible = "syscon";
+             reg = <0x2620000 0x1000>;
+         };
+
+
+then correct reset-controller node like:
+
+         rstctrl: reset-controller {
+             compatible = "ti,keystone-reset";
+             reg = <0xE4 0x10>, <0x328 0x10>;
+             reg-names = "pllregs", "muxregs";
+             syscon1 = <&pllctrl>;
+             syscon2 = <&devctrl>;
+             ti,wdt_list = <0>;
+         };
+
+And correct reset-controller code to get regmap by phandle,
+then access registers by regmap.
+
+Also I'll post two separate patches that add syscon nodes in question.
+
+-- 
+Regards,
+Ivan Khoronzhuk
+
