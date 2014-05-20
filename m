@@ -1,70 +1,89 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 0/9 net-next] net: of_phy_connect_fixed_link removal
-Date: Tue, 20 May 2014 09:13:39 -0700
-Message-ID: <CAGVrzcZ98LbqzgpLxsyNvXiZ35oMq9xw76X7BUjHCwd3oEjAdA@mail.gmail.com>
-References: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
+From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
+Date: Tue, 20 May 2014 17:39:12 +0100
+Message-ID: <20140520163912.GC5041@e103592.cambridge.arm.com>
+References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
+	<5080348.QmhgfQRxZW@wuerfel>
+	<20140520130659.GA5041@e103592.cambridge.arm.com>
+	<6382280.3uMvoxaUSK@wuerfel> <20140520152659.GA30404@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-In-Reply-To: <1400547384-11363-1-git-send-email-f.fainelli@gmail.com>
-List-Unsubscribe: <https://lists.ozlabs.org/options/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=unsubscribe>
-List-Archive: <http://lists.ozlabs.org/pipermail/linuxppc-dev/>
-List-Post: <mailto:linuxppc-dev@lists.ozlabs.org>
-List-Help: <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=help>
-List-Subscribe: <https://lists.ozlabs.org/listinfo/linuxppc-dev>,
- <mailto:linuxppc-dev-request@lists.ozlabs.org?subject=subscribe>
-Errors-To: linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org
-Sender: "Linuxppc-dev"
- <linuxppc-dev-bounces+glppe-linuxppc-embedded-2=m.gmane.org@lists.ozlabs.org>
-To: netdev <netdev@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, Paul Mackerras <paulus@samba.org>, Florian Fainelli <f.fainelli@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, Grant Likely <grant.likely@linaro.org>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Randy Dunlap <rdunlap@infradead.org>, open list <linux-kernel@vger.kernel.org>, Vitaly Bordug <vbordug@ru.mvista.com>, Kumar Gala <galak@codeaurora.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>, "David S. Miller" <davem@daveml>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140520152659.GA30404-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNC0wNS0xOSAxNzo1NiBHTVQtMDc6MDAgRmxvcmlhbiBGYWluZWxsaSA8Zi5mYWluZWxsaUBn
-bWFpbC5jb20+Ogo+IEhpIGFsbCwKPgo+IFRoaXMgcGF0Y2ggc2V0IHJlbW92ZXMgb2ZfcGh5X2Nv
-bm5lY3RfZml4ZWRfbGluaygpIGZyb20gdGhlIHRyZWUgbm93IHRoYXQKPiB3ZSBoYXZlIGEgYmV0
-dGVyIHNvbHV0aW9uIGZvciBkZWFsaW5nIHdpdGggZml4ZWQgUEhZIChlbXVsYXRlZCBQSFkpIGRl
-dmljZXMKPiBmb3IgZHJpdmVycyB0aGF0IHJlcXVpcmUgdGhlbS4KPgo+IEZpcnN0IHR3byBwYXRj
-aGVzIHVwZGF0ZSB0aGUgJ2ZpeGVkLWxpbmsnIERldmljZSBUcmVlIGJpbmRpbmcgYW5kIGRyaXZl
-cnMgdG8KPiByZWZlcmUgdG8gaXQuCj4KPiBQYXRjaGVzIDMgdG8gNyB1cGRhdGUgdGhlIGluLXRy
-ZWUgbmV0d29yayBkcml2ZXJzIHRoYXQgdXNlCj4gb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluaygp
-Cj4KPiBQYXRjaCA4IHJlbW92ZXMgb2ZfcGh5X2Nvbm5lY3RfZml4ZWRfbGluawo+Cj4gUGF0Y2gg
-OSByZW1vdmVzIHRoZSBQb3dlclBDIGNvZGUgdGhhdCBwYXJzZWQgdGhlICdmaXhlZC1saW5rJyBw
-cm9wZXJ0eS4KPgo+IFBhdGNoIDkgY2FuIGJlIG1lcmdlZCB2aWEgdGhlIG5ldC1uZXh0IHRyZWUg
-aWYgdGhlIFBvd2VyUEMgZm9sa3MgYWNrIGl0LAo+IGJ1dCBpdCByZWFsbHkgaGFzIHRvIGJlIG1l
-cmdlZCBhZnRlciB0aGUgZmlyc3QgOCBwYXRjaGVzIGluIG9yZGVyIHRvIGF2b2lkCj4gYnJlYWth
-Z2UuCgpGb3Igc29tZSByZWFzb24gdGhlc2UgcGF0Y2hlcyBkaWQgbm90IG1ha2UgaXQgdG8gdGhl
-IG5ldGRldiBwYXRjaHdvcmsKaW5zdGFuY2UsIGFsdG91Z2ggbmV0ZGV2IGlzIGluIENDLCBJIHdp
-bGwgcHJvYmFibHkgcmVzZW5kIHRoZW4gd2l0aCBhCnRyaW1tZWQgQ0MgbGlzdCBhbmQganVzdCBr
-ZWVwIGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnIGZvciBpbnN0YW5jZS4KCj4KPiBGbG9yaWFu
-IEZhaW5lbGxpICg5KToKPiAgIERvY3VtZW50YXRpb246IGRldmljZXRyZWU6IGFkZCBvbGQgYW5k
-IGRlcHJlY2F0ZWQgJ2ZpeGVkLWxpbmsnCj4gICBEb2N1bWVudGF0aW9uOiBkZXZpY2V0cmVlOiBu
-ZXQ6IHJlZmVyIHRvIGZpeGVkLWxpbmsudHh0Cj4gICBuZXQ6IGJjbWdlbmV0OiB1c2UgdGhlIG5l
-dyBmaXhlZCBQSFkgaGVscGVycwo+ICAgbmV0OiBzeXN0ZW1wb3J0OiB1c2UgdGhlIG5ldyBmaXhl
-ZCBQSFkgaGVscGVycwo+ICAgZnNfZW5ldDogdXNlIHRoZSBuZXcgZml4ZWQgUEhZIGhlbHBlcnMK
-PiAgIGdpYW5mYXI6IHVzZSB0aGUgbmV3IGZpeGVkIFBIWSBoZWxwZXJzCj4gICB1Y2NfZ2V0aDog
-dXNlIHRoZSBuZXcgZml4ZWQgUEhZIGhlbHBlcnMKPiAgIG9mOiBtZGlvOiByZW1vdmUgb2ZfcGh5
-X2Nvbm5lY3RfZml4ZWRfbGluawo+ICAgcG93ZXJwYy9mc2w6IGZzbF9zb2M6IHJlbW92ZSAnZml4
-ZWQtbGluaycgcGFyc2luZyBjb2RlCj4KPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Jy
-b2FkY29tLWJjbWdlbmV0LnR4dCAgfCAgMiArLQo+ICAuLi4vYmluZGluZ3MvbmV0L2Jyb2FkY29t
-LXN5c3RlbXBvcnQudHh0ICAgICAgICAgICB8ICAyICstCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL25ldC9maXhlZC1saW5rLnR4dCAgICAgICAgIHwgMTIgKysrKysrKwo+ICAuLi4vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9uZXQvZnNsLXRzZWMtcGh5LnR4dCAgICAgICB8ICA1ICstLQo+ICBhcmNo
-L3Bvd2VycGMvc3lzZGV2L2ZzbF9zb2MuYyAgICAgICAgICAgICAgICAgICAgICB8IDMyIC0tLS0t
-LS0tLS0tLS0tLS0tLQo+ICBkcml2ZXJzL25ldC9ldGhlcm5ldC9icm9hZGNvbS9iY21zeXNwb3J0
-LmMgICAgICAgICB8IDE3ICsrKysrKysrLS0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvYnJvYWRj
-b20vYmNtc3lzcG9ydC5oICAgICAgICAgfCAgMSArCj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2Jy
-b2FkY29tL2dlbmV0L2JjbW1paS5jICAgICAgIHwgMjEgKysrKysrKy0tLS0tCj4gIC4uLi9uZXQv
-ZXRoZXJuZXQvZnJlZXNjYWxlL2ZzX2VuZXQvZnNfZW5ldC1tYWluLmMgIHwgMTYgKysrKystLS0t
-Cj4gIGRyaXZlcnMvbmV0L2V0aGVybmV0L2ZyZWVzY2FsZS9naWFuZmFyLmMgICAgICAgICAgIHwg
-MTQgKysrKysrLS0KPiAgZHJpdmVycy9uZXQvZXRoZXJuZXQvZnJlZXNjYWxlL3VjY19nZXRoLmMg
-ICAgICAgICAgfCAxNCArKysrKystLQo+ICBkcml2ZXJzL29mL29mX21kaW8uYyAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICB8IDM4IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiAgaW5jbHVk
-ZS9saW51eC9vZl9tZGlvLmggICAgICAgICAgICAgICAgICAgICAgICAgICAgfCAxMCAtLS0tLS0K
-PiAgMTMgZmlsZXMgY2hhbmdlZCwgNzUgaW5zZXJ0aW9ucygrKSwgMTA5IGRlbGV0aW9ucygtKQo+
-Cj4gLS0KPiAxLjkuMQo+CgoKCi0tIApGbG9yaWFuCl9fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fCkxpbnV4cHBjLWRldiBtYWlsaW5nIGxpc3QKTGludXhwcGMt
-ZGV2QGxpc3RzLm96bGFicy5vcmcKaHR0cHM6Ly9saXN0cy5vemxhYnMub3JnL2xpc3RpbmZvL2xp
-bnV4cHBjLWRldg==
+On Tue, May 20, 2014 at 04:26:59PM +0100, Will Deacon wrote:
+> On Tue, May 20, 2014 at 02:23:47PM +0100, Arnd Bergmann wrote:
+> > 	Bit#   33222222 22221111 11111100 00000000
+> > 	       10987654 32109876 54321098 76543210
+> > phys.hi cell:  npt000ss bbbbbbbb dddddfff rrrrrrrr
+> > phys.mid cell: hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh
+> > phys.lo cell:  llllllll llllllll llllllll llllllll
+> > 
+> > where:
+> > n is 0 if the address is relocatable, 1 otherwise
+> > p is 1 if the addressable region is "prefetchable", 0 otherwise
+> > t is 1 if the address is aliased (for non-relocatable I/O),
+> >  below 1 MB (for Memory), or below 64 KB (for relocatable I/O).
+> > ss is the space code, denoting the address space
+> > bbbbbbbb is the 8-bit Bus Number
+> > ddddd is the 5-bit Device Number
+> > fff is the 3-bit Function Number
+> > rrrrrrrr is the 8-bit Register Number
+> > hh...hh is a 32-bit unsigned number
+> > ll...ll is a 32-bit unsigned number
+> > 
+> > We can ignore n, p, t and r here, and use the same format for a DMA
+> > address, then define an empty "dma-ranges" property. That would
+> > imply that using b/d/f is sufficient to identify each master at the
+> > iommu. Any device outside of the PCI host but connected to the same
+> > iommu can use the same notation to list the logical b/d/f that gets
+> > sent to the IOMMU in bus master transactions.
+> > 
+> > Do you think this is sufficient for the ARM SMMU, or do we need
+> > something beyond that?
+> 
+> I think it can define the common-cases for the existing implementations,
+> yes. I anticipate Stream-IDs becoming > 16-bit in the near future though,
+> so we'd need extra bits if we're describing other devices coming into the
+> SMMU.
+> 
+> Note that we already have a binding for the current SMMU driver, so I'm not
+> really in a position to shift over to a new binding until the next version of
+> the SMMU architecture comes along...
+
+How much code relies on the meaning of the nptsbdf bits?
+
+Following the general model of concatenating the master ID with the
+address bits and trasting that as a single input to the IOMMU seems
+reasonable -- maybe we either don't care about the attribute bits and
+can replace them with master ID bits, or instead we could extend with
+more master ID bits at bit 96 and up.
+
+npts looks like memory type information.  What memory type information
+we need to describe for coherent masters on ARM is a bit of an open
+question.  Perhaps we can come up with a good ARM-specific interpretation
+of these bits, but I wonder whether they are enough.
+
+If there is a real PCI bus in the system of course, then we are fine
+once we reach it.  The only problem is for the stuff on AMBA buses etc.
+
+In theory, we could have to describe memory types, cacheability
+attributes and coherency domains, but we may be able to squeeze the
+possibilities down to a smaller set of sane memory types.
+
+Cheers
+---Dave
