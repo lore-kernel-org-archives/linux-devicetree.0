@@ -1,137 +1,43 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH V3 18/19] mmc: mmci: Enforce DMA configuration through DT
-Date: Tue, 20 May 2014 06:24:22 +0200
-Message-ID: <CAPDyKFpzOyHXy3qJG63ki7tFZvz+U+P1dCEd=WYO+_iGZR429A@mail.gmail.com>
-References: <1397132462-8005-1-git-send-email-ulf.hansson@linaro.org>
-	<1397132462-8005-19-git-send-email-ulf.hansson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1397132462-8005-19-git-send-email-ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Chanho Park <chanho61.park@samsung.com>
+Subject: [PATCHv5 0/4] Enable usbphy and hsotg for exynos4
+Date: Tue, 20 May 2014 11:06:26 +0900
+Message-ID: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org, Chanho Park <chanho61.park@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 10 April 2014 14:21, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Remove the option to provide DMA configuration as platform data,
-> enforce it through DT.
->
-> Signed-off-by: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+This patchset enables a exynos4 usbphy and hsotg DT node for exynos4. The usb
+phy node uses generic exynos phy driver. The driver uses PMU syscon and SYSREG
+syscon phandles.
 
-This patch breaks compiling of arch/arm/mach-lpc32xx/phy3250.c. Found
-by Fengguang's "kbuild test robot" while testing in Linux next.
+Changes from v4:
+ - Correct 4212/4412 PMU syscon node according to documentation
 
-The .dma_filter platform callback were assigned to NULL, thus the
-callback can't just be removed - stupid me.
+Change from v3:
+ - Place a status field at the end of the nodes for readability
 
-I drop this patch from my next branch for now - and will send a v4.
+Change from v2:
+ - Split 4x12 compatibles to 4212 and 4412
 
-Kind regards
-Ulf Hansson
+Changes from v1: Applied Tomasz Figa's comments
+ - Document PMU syscon compatibles for exynos4210/4x12
+ - Use clock macro instead of raw clock number
+ - Correct phy name to "usb2-phy"
 
-> ---
->  drivers/mmc/host/mmci.c   |   24 +-----------------------
->  include/linux/amba/mmci.h |   17 -----------------
->  2 files changed, 1 insertion(+), 40 deletions(-)
->
-> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> index 9a87bad..04cff5e 100644
-> --- a/drivers/mmc/host/mmci.c
-> +++ b/drivers/mmc/host/mmci.c
-> @@ -366,7 +366,6 @@ static void mmci_init_sg(struct mmci_host *host, struct mmc_data *data)
->  #ifdef CONFIG_DMA_ENGINE
->  static void mmci_dma_setup(struct mmci_host *host)
->  {
-> -       struct mmci_platform_data *plat = host->plat;
->         const char *rxname, *txname;
->         dma_cap_mask_t mask;
->
-> @@ -380,25 +379,6 @@ static void mmci_dma_setup(struct mmci_host *host)
->         dma_cap_zero(mask);
->         dma_cap_set(DMA_SLAVE, mask);
->
-> -       if (plat && plat->dma_filter) {
-> -               if (!host->dma_rx_channel && plat->dma_rx_param) {
-> -                       host->dma_rx_channel = dma_request_channel(mask,
-> -                                                          plat->dma_filter,
-> -                                                          plat->dma_rx_param);
-> -                       /* E.g if no DMA hardware is present */
-> -                       if (!host->dma_rx_channel)
-> -                               dev_err(mmc_dev(host->mmc), "no RX DMA channel\n");
-> -               }
-> -
-> -               if (!host->dma_tx_channel && plat->dma_tx_param) {
-> -                       host->dma_tx_channel = dma_request_channel(mask,
-> -                                                          plat->dma_filter,
-> -                                                          plat->dma_tx_param);
-> -                       if (!host->dma_tx_channel)
-> -                               dev_warn(mmc_dev(host->mmc), "no TX DMA channel\n");
-> -               }
-> -       }
-> -
->         /*
->          * If only an RX channel is specified, the driver will
->          * attempt to use it bidirectionally, however if it is
-> @@ -446,11 +426,9 @@ static void mmci_dma_setup(struct mmci_host *host)
->   */
->  static inline void mmci_dma_release(struct mmci_host *host)
->  {
-> -       struct mmci_platform_data *plat = host->plat;
-> -
->         if (host->dma_rx_channel)
->                 dma_release_channel(host->dma_rx_channel);
-> -       if (host->dma_tx_channel && plat->dma_tx_param)
-> +       if (host->dma_tx_channel)
->                 dma_release_channel(host->dma_tx_channel);
->         host->dma_rx_channel = host->dma_tx_channel = NULL;
->  }
-> diff --git a/include/linux/amba/mmci.h b/include/linux/amba/mmci.h
-> index b992fc9..bf339ff 100644
-> --- a/include/linux/amba/mmci.h
-> +++ b/include/linux/amba/mmci.h
-> @@ -6,9 +6,6 @@
->
->  #include <linux/mmc/host.h>
->
-> -/* Just some dummy forwarding */
-> -struct dma_chan;
-> -
->  /**
->   * struct mmci_platform_data - platform configuration for the MMCI
->   * (also known as PL180) block.
-> @@ -29,17 +26,6 @@ struct dma_chan;
->   * @gpio_wp: read this GPIO pin to see if the card is write protected
->   * @gpio_cd: read this GPIO pin to detect card insertion
->   * @cd_invert: true if the gpio_cd pin value is active low
-> - * @dma_filter: function used to select an appropriate RX and TX
-> - * DMA channel to be used for DMA, if and only if you're deploying the
-> - * generic DMA engine
-> - * @dma_rx_param: parameter passed to the DMA allocation
-> - * filter in order to select an appropriate RX channel. If
-> - * there is a bidirectional RX+TX channel, then just specify
-> - * this and leave dma_tx_param set to NULL
-> - * @dma_tx_param: parameter passed to the DMA allocation
-> - * filter in order to select an appropriate TX channel. If this
-> - * is NULL the driver will attempt to use the RX channel as a
-> - * bidirectional channel
->   */
->  struct mmci_platform_data {
->         unsigned int f_max;
-> @@ -49,9 +35,6 @@ struct mmci_platform_data {
->         int     gpio_wp;
->         int     gpio_cd;
->         bool    cd_invert;
-> -       bool (*dma_filter)(struct dma_chan *chan, void *filter_param);
-> -       void *dma_rx_param;
-> -       void *dma_tx_param;
->  };
->
->  #endif
-> --
-> 1.7.9.5
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Chanho Park (4):
+  ARM: dts: exynos4: add PMU syscon node
+  ARM: dts: exynos4: add exynos_usbphy node
+  ARM: dts: exynos4: add hsotg device node
+  ARM: dts: exynos4412-trats2: enable usb nodes
+
+ .../devicetree/bindings/arm/samsung/pmu.txt        |  3 +++
+ arch/arm/boot/dts/exynos4.dtsi                     | 26 ++++++++++++++++++++++
+ arch/arm/boot/dts/exynos4412-trats2.dts            | 10 +++++++++
+ arch/arm/boot/dts/exynos4412.dtsi                  |  4 ++++
+ arch/arm/boot/dts/exynos4x12.dtsi                  |  9 ++++++++
+ 5 files changed, 52 insertions(+)
+
+-- 
+1.8.3.2
