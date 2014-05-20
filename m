@@ -1,142 +1,52 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
-Subject: [PATCH v3 01/11] ARM: STi: DT: STiH41x: Rename CLK_SYSIN into clk_sysin
-Date: Tue, 20 May 2014 15:22:45 +0200
-Message-ID: <1400592175-13176-2-git-send-email-gabriel.fernandez@linaro.org>
-References: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
+Subject: [PATCH v3 00/11] ARM: STi: Add Clock driver support STiH415 & STiH416
+Date: Tue, 20 May 2014 15:22:44 +0200
+Message-ID: <1400592175-13176-1-git-send-email-gabriel.fernandez@linaro.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400592175-13176-1-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Srinivas Kandagatla <srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>, Patrice Chotard <patrice.chotard-qxv4g6HH51o@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-all-caps node name is not very usual.
+Changes in v2:
+ - cosmetic changes (lower case of clock nodes and names)
 
-Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- arch/arm/boot/dts/stih415-clock.dtsi | 2 +-
- arch/arm/boot/dts/stih415.dtsi       | 8 ++++----
- arch/arm/boot/dts/stih416-clock.dtsi | 5 +++--
- arch/arm/boot/dts/stih416.dtsi       | 8 ++++----
- 4 files changed, 12 insertions(+), 11 deletions(-)
+Changes in v2:
+ - move stih415-clks.h & stih416-clks.h to include/dt-bindings/clock/
+ - add clk_ignore_unused to bootargs. Interconnect clocks are not yet
+   managed at the init, then we have to start the kernel with 
+   clk_ignore_unused.
 
-diff --git a/arch/arm/boot/dts/stih415-clock.dtsi b/arch/arm/boot/dts/stih415-clock.dtsi
-index d047dbc..8ef9964 100644
---- a/arch/arm/boot/dts/stih415-clock.dtsi
-+++ b/arch/arm/boot/dts/stih415-clock.dtsi
-@@ -10,7 +10,7 @@
- 		/*
- 		 * Fixed 30MHz oscillator input to SoC
- 		 */
--		CLK_SYSIN: CLK_SYSIN {
-+		clk_sysin: clk-sysin {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <30000000>;
-diff --git a/arch/arm/boot/dts/stih415.dtsi b/arch/arm/boot/dts/stih415.dtsi
-index d89064c..a2dafe9 100644
---- a/arch/arm/boot/dts/stih415.dtsi
-+++ b/arch/arm/boot/dts/stih415.dtsi
-@@ -91,7 +91,7 @@
- 			status 		= "disabled";
- 			reg		= <0xfe531000 0x2c>;
- 			interrupts	= <0 210 0>;
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			pinctrl-names 	= "default";
- 			pinctrl-0	= <&pinctrl_sbc_serial1>;
- 		};
-@@ -126,7 +126,7 @@
- 			compatible	= "st,comms-ssc4-i2c";
- 			reg		= <0xfe540000 0x110>;
- 			interrupts	= <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>;
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			clock-names	= "ssc";
- 			clock-frequency = <400000>;
- 			pinctrl-names	= "default";
-@@ -139,7 +139,7 @@
- 			compatible	= "st,comms-ssc4-i2c";
- 			reg		= <0xfe541000 0x110>;
- 			interrupts	= <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			clock-names	= "ssc";
- 			clock-frequency = <400000>;
- 			pinctrl-names	= "default";
-@@ -200,7 +200,7 @@
- 			compatible	= "st,comms-irb";
- 			reg		= <0xfe518000 0x234>;
- 			interrupts	=  <0 203 0>;
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			rx-mode		= "infrared";
- 			pinctrl-names 	= "default";
- 			pinctrl-0	= <&pinctrl_ir>;
-diff --git a/arch/arm/boot/dts/stih416-clock.dtsi b/arch/arm/boot/dts/stih416-clock.dtsi
-index a6942c7..10f8389 100644
---- a/arch/arm/boot/dts/stih416-clock.dtsi
-+++ b/arch/arm/boot/dts/stih416-clock.dtsi
-@@ -6,16 +6,17 @@
-  * it under the terms of the GNU General Public License version 2 as
-  * published by the Free Software Foundation.
-  */
-+
- / {
- 	clocks {
-+
- 		/*
- 		 * Fixed 30MHz oscillator inputs to SoC
- 		 */
--		CLK_SYSIN: CLK_SYSIN {
-+		clk_sysin: clk-sysin {
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <30000000>;
--			clock-output-names = "CLK_SYSIN";
- 		};
- 
- 		/*
-diff --git a/arch/arm/boot/dts/stih416.dtsi b/arch/arm/boot/dts/stih416.dtsi
-index 78746d2..cc616b4 100644
---- a/arch/arm/boot/dts/stih416.dtsi
-+++ b/arch/arm/boot/dts/stih416.dtsi
-@@ -102,7 +102,7 @@
- 			interrupts	= <0 210 0>;
- 			pinctrl-names 	= "default";
- 			pinctrl-0 	= <&pinctrl_sbc_serial1>;
--			clocks          = <&CLK_SYSIN>;
-+			clocks          = <&clk_sysin>;
- 		};
- 
- 		i2c@fed40000 {
-@@ -135,7 +135,7 @@
- 			compatible	= "st,comms-ssc4-i2c";
- 			reg		= <0xfe540000 0x110>;
- 			interrupts	= <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>;
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			clock-names	= "ssc";
- 			clock-frequency = <400000>;
- 			pinctrl-names	= "default";
-@@ -148,7 +148,7 @@
- 			compatible	= "st,comms-ssc4-i2c";
- 			reg		= <0xfe541000 0x110>;
- 			interrupts	= <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>;
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			clock-names	= "ssc";
- 			clock-frequency = <400000>;
- 			pinctrl-names	= "default";
-@@ -206,7 +206,7 @@
- 			reg		= <0xfe518000 0x234>;
- 			interrupts	=  <0 203 0>;
- 			rx-mode         = "infrared";
--			clocks		= <&CLK_SYSIN>;
-+			clocks		= <&clk_sysin>;
- 			pinctrl-names 	= "default";
- 			pinctrl-0	= <&pinctrl_ir>;
- 			resets		= <&softreset STIH416_IRB_SOFTRESET>;
+The goal of this series is to add DT definition for STiH415 
+and STiH416 SoCs on B2000 and B2020 boards.
+
+Gabriel Fernandez (11):
+  ARM: STi: DT: STiH41x: Rename CLK_SYSIN into clk_sysin
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH416: Remove unused CLK_S_ICN_REG_0 fixed clock
+  ARM: STi: DT: STiH416: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+    fixed clocks
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen B/C/D/E/F
+  ARM: STi: DT: STiH416: 416 DT Entry for clockgen A9/DDR/GPU
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A0/1/10/11/12
+  ARM: STi: DT: STiH415: Remove unused CLK_S_ICN_REG_0 fixed clock
+  ARM: STi: DT: STiH415: Remove unused CLK_S_GMAC0_PHY & CLK_S_ETH1_PHY
+    fixed clocks
+  ARM: STi: DT: STiH415: 415 DT Entry for clockgen A9
+  ARM: STi: DT: STiH41x Add clk_ignore_unused to bootargs
+
+ arch/arm/boot/dts/stih415-clock.dtsi     | 519 +++++++++++++++++++++-
+ arch/arm/boot/dts/stih415.dtsi           |  18 +-
+ arch/arm/boot/dts/stih416-clock.dtsi     | 735 ++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/stih416.dtsi           |  18 +-
+ arch/arm/boot/dts/stih41x-b2000.dtsi     |   2 +-
+ arch/arm/boot/dts/stih41x-b2020.dtsi     |   2 +-
+ include/dt-bindings/clock/stih415-clks.h |  15 +
+ include/dt-bindings/clock/stih416-clks.h |  15 +
+ 8 files changed, 1268 insertions(+), 56 deletions(-)
+ create mode 100644 include/dt-bindings/clock/stih415-clks.h
+ create mode 100644 include/dt-bindings/clock/stih416-clks.h
+
 -- 
 1.9.1
 
