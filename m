@@ -1,86 +1,63 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3] cpufreq: exynos:  Fix the compile error
-Date: Tue, 20 May 2014 09:29:36 +0900
-Message-ID: <013c01cf73c2$94289150$bc79b3f0$@samsung.com>
-References: <000001cf70f0$2e48f930$8adaeb90$@samsung.com>
- <037e01cf70f5$25b374d0$711a5e70$@samsung.com>
- <2553916.Pl2B0tVZGR@vostro.rjw.lan> <1655043.7FHqnunz6p@vostro.rjw.lan>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 6/6] ARM: dts: STiH407: Add B2120 board support
+Date: Tue, 20 May 2014 08:20:48 +0100
+Message-ID: <20140520072048.GC20874@lee--X1>
+References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
+ <1394614210-15698-7-git-send-email-maxime.coquelin@st.com>
+ <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <cpufreq-owner@vger.kernel.org>
-In-reply-to: <1655043.7FHqnunz6p@vostro.rjw.lan>
-Content-language: ko
-Sender: cpufreq-owner@vger.kernel.org
-To: "'Rafael J. Wysocki'" <rjw@rjwysocki.net>
-Cc: 'Jonghwan Choi' <jhbird.choi@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, cpufreq@vger.kernel.org, 'Jonghwan Choi' <jhbird.choi@gmail.com>, 'Viresh Kumar' <viresh.kumar@linaro.org>, 'Tomasz Figa' <t.figa@samsung.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, kernel@stlinux.com, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Menefy <stuart.menefy@st.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Maxime COQUELIN <maxime.coquelin@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Rafael J. Wysocki wrote:
-> 
-> On Saturday, May 17, 2014 01:04:29 AM Rafael J. Wysocki wrote:
-> > On Friday, May 16, 2014 07:54:01 PM Kukjin Kim wrote:
-> > > Jonghwan Choi wrote:
-> > > >
-> > > > Commit 7da83a80 ("ARM: EXYNOS: Migrate Exynos specific macros from
-> plat to
-> > > > mach") which lands in samsung tree causes build breakage
-> > > > for cpufreq-exynos like following:
-> > > >
-> > > > drivers/cpufreq/exynos-cpufreq.c: In function 'exynos_cpufreq_probe':
-> > > > drivers/cpufreq/exynos-cpufreq.c:166:2: error: implicit declaration
-> of
-> > > > function 'soc_is_exynos4210'
-> > > > [-Werror=implicit-function-declaration]
-> > > > drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration
-> of
-> > > > function 'soc_is_exynos4212'
-> > > > [-Werror=implicit-function-declaration]
-> > > > drivers/cpufreq/exynos-cpufreq.c:168:2: error: implicit declaration
-> of
-> > > > function 'soc_is_exynos4412'
-> > > > [-Werror=implicit-function-declaration]
-> > > > drivers/cpufreq/exynos-cpufreq.c:170:2: error: implicit declaration
-> of
-> > > > function 'soc_is_exynos5250'
-> > > > [-Werror=implicit-function-declaration]
-> > > > cc1: some warnings being treated as errors
-> > > > make[2]: *** [drivers/cpufreq/exynos-cpufreq.o] Error 1
-> > > > make[2]: *** Waiting for unfinished jobs....
-> > > > drivers/cpufreq/exynos4x12-cpufreq.c: In function
-> 'exynos4x12_set_clkdiv':
-> > > > drivers/cpufreq/exynos4x12-cpufreq.c:118:2: error: implicit
-> declaration of
-> > > > function 'soc_is_exynos4212'
-> > > > [-Werror=implicit-function-declaration]
-> > > > cc1: some warnings being treated as errors
-> > > > make[2]: *** [drivers/cpufreq/exynos4x12-cpufreq.o] Error 1
-> > > > make[1]: *** [drivers/cpufreq] Error 2
-> > > > This fixes above error with getting SoC information via
-> > > > of_machine_is_compatible() instead of soc_is_exynosXXXX().
-> > > >
-> > >
-> > > Probably,
-> > > Suggested-by: Tomasz Figa ?
-> > >
-> > > > Signed-off-by: Jonghwan Choi <jhbird.choi@samsung.com>
-> > >
-> > > Looks better.
-> > >
-> > > Rafael, if you have no objection on this, shall I pick this into
-> samsung
-> > > tree for 3.16 because of the current build breakage with enabling
-> exynos
-> > > cpufreq?
-> >
-> > Please go ahead.
-> 
-> Actually, this conflicts with one patch already in my tree.  The
-> resoultion
-> is quite obvious, but it would be better to avoid this conflict altogether.
-> 
-Yeah. If you don't mind, shall I pick the patch (commit e5eaa445b0dc)into samsung tree with your ack?
-
-Thanks,
-Kukjin
-
+PiA+IEIyMTIwIEhESyBpcyB0aGUgcmVmZXJlbmNlIGJvYXJkIGZvciBTVGlINDA3IFNvQy4KPiA+
+IEl0IGhhcyB0aGUgZm9sbG93aW5nIGNoYXJhY3RlcmlzdGljczoKPiA+ICAtIDFHQiBERFIzCj4g
+PiAgLSA4R0IgZU1NQyAvIFNELUNhcmQgc2xvdAo+ID4gIC0gMzJNQiBOT1IgRmxhc2gKPiA+ICAt
+IDEgeCBHYml0IEV0aGVybmV0Cj4gPiAgLSAxIHggVVNCIDMuMCBwb3J0Cj4gPiAgLSAxIHggTWlu
+aS1QQ0llCj4gPiAgLSAxIHggU0FUQQo+ID4gIC0gMSB4IEhETUkgb3V0cHV0Cj4gPiAgLSAxIHgg
+SERNSSBpbnB1dAo+ID4gIC0gMSB4IFNQRElGCj4gPgo+ID4gVGhpcyBwYXRjaCBvbmx5IGludHJv
+ZHVjZXMgYmFzaWMgZnVuY3Rpb25uYWxpdGllcywgc3VjaCBhcyBJMkMgYW5kIFVBUlQuCj4gPgo+
+ID4gQWNrZWQtYnk6IEdpdXNlcHBlIENhdmFsbGFybyA8cGVwcGUuY2F2YWxsYXJvQHN0LmNvbT4K
+PiA+IEFja2VkLWJ5OiBMZWUgSm9uZXMgPGxlZS5qb25lc0BsaW5hcm8ub3JnPgo+ID4gU2lnbmVk
+LW9mZi1ieTogR2l1c2VwcGUgQ2F2YWxsYXJvIDxwZXBwZS5jYXZhbGxhcm9Ac3QuY29tPgo+ID4g
+U2lnbmVkLW9mZi1ieTogTWF4aW1lIENvcXVlbGluIDxtYXhpbWUuY29xdWVsaW5Ac3QuY29tPgo+
+ID4gLS0tCj4gPiAgYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgICAgICAgICAgfCAgMyArLQo+
+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3N0aWg0MDctYjIxMjAuZHRzIHwgNzggKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKysrKysrKysrKwo+ID4gIDIgZmlsZXMgY2hhbmdlZCwgODAgaW5zZXJ0
+aW9ucygrKSwgMSBkZWxldGlvbigtKQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9i
+b290L2R0cy9zdGloNDA3LWIyMTIwLmR0cwoKWy4uLl0KCj4gPiArLyB7Cj4gPiArICAgICAgIG1v
+ZGVsID0gIlNUaUg0MDcgQjIxMjAiOwo+ID4gKyAgICAgICBjb21wYXRpYmxlID0gInN0LHN0aWg0
+MDciLCAic3Qsc3RpaDQwNy1iMjEyMCI7Cj4gCj4gVGhpcyBzaG91bGQgZ28gZnJvbSBzcGVjaWZp
+YyB0byBnZW5lcmljLCBzbyB0aGUgb3JkZXIgbmVlZHMgdG8gYmUgdGhlIG90aGVyIHdheS4KCkkg
+ZGlkIGhhdmUgYSBwYXRjaC1zZXQgdGhhdCBjaGFuZ2VkIGFsbCBvZiB0aGVzZS4gIFdvbmRlciB3
+aGVyZSB0aGF0IHdlbnQhCgpbLi4uXQoKPiA+ICsgICAgICAgc29jIHsKPiA+ICsgICAgICAgICAg
+ICAgICBzYmNfc2VyaWFsMDogc2VyaWFsQDk1MzAwMDAgewo+ID4gKyAgICAgICAgICAgICAgICAg
+ICAgICAgc3RhdHVzID0gIm9rYXkiOwo+ID4gKyAgICAgICAgICAgICAgIH07Cj4gCj4gWW91IG1p
+Z2h0IHdhbnQgdG8gY29uc2lkZXIgcmVmZXJlbmNlLWJhc2VkIHN5bnRheCBoZXJlIGluc3RlYWQs
+IHNvIHlvdQo+IGRvbid0IGhhdmUgdG8gbWltaWMgdGhlIGhpZXJhcmNoeS4gVGhhdCdkIGJlIChh
+dCB0aGUgcm9vdCBsZXZlbCBvZiB0aGUKPiBmaWxlLCBiZWxvdyB0aGlzIHNlY2lvbjoKPiAKPiAm
+c2JjX3NlcmlhbDA6IHsKPiAgICAgICAgIHN0YXR1cyA9ICJva2F5IjsKPiB9OwoKSSdtIHBlcnNv
+bmFsbHkgbm90IGtlZW4gb24gdGhpcyBzY2hlbWUuICBJdCdzIHNvbWV0aW1lcyBoZWxwZnVsIHRv
+IGtub3cKdGhlIGhpZXJhcmNoeSBhbmQgSSBkb24ndCB0aGluayBpdCdzIGEgbGFyZ2Ugb3Zlcmhl
+YWQgdG8gZm9ybWF0IHRoZQpzdWJvcmRpbmF0ZSBEVFMgZmlsZXMgaW4gdGhpcyB3YXkuCgpQbGVh
+c2UgY29uc2lkZXIgbm90IGVuZm9yY2luZyB0aGlzLgoKLS0gCkxlZSBKb25lcwpMaW5hcm8gU1RN
+aWNyb2VsZWN0cm9uaWNzIExhbmRpbmcgVGVhbSBMZWFkCkxpbmFyby5vcmcg4pSCIE9wZW4gc291
+cmNlIHNvZnR3YXJlIGZvciBBUk0gU29DcwpGb2xsb3cgTGluYXJvOiBGYWNlYm9vayB8IFR3aXR0
+ZXIgfCBCbG9nCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
+ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCg==
