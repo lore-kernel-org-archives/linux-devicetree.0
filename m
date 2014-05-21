@@ -1,313 +1,240 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 3/7] mfd: twl4030-power: Add generic reset configuration
-Date: Tue, 20 May 2014 19:39:40 -0700
-Message-ID: <20140521023939.GB17417@atomide.com>
-References: <1400031250-29542-1-git-send-email-tony@atomide.com>
- <1400031250-29542-4-git-send-email-tony@atomide.com>
- <20140520151205.GY24991@lee--X1>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
+Date: Tue, 20 May 2014 19:41:22 -0700
+Message-ID: <537C1252.3090900@gmail.com>
+References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org> <1399993115-21552-3-git-send-email-grant.likely@linaro.org> <53757D25.1060005@gmail.com> <20140516105444.C1DB7C42277@trevor.secretlab.ca> <20140518092730.109AAC40B8A@trevor.secretlab.ca>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140520151205.GY24991@lee--X1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Robert Nelson <robertcnelson@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140518092730.109AAC40B8A-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [140520 08:13]:
-> > 
-> > http://www.omappedia.com/wiki/TWL4030_power_scripts
+On 5/18/2014 2:27 AM, Grant Likely wrote:
+
+> On Fri, 16 May 2014 11:54:44 +0100, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+
+>> On Thu, 15 May 2014 19:51:17 -0700, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+>>> On 5/13/2014 7:58 AM, Grant Likely wrote:
+
+>>>> Make of_find_node_by_path() handle aliases as prefixes. To make this
+
+>>>> work the name search is refactored to search by path component instead
+
+>>>> of by full string. This should be a more efficient search, and it makes
+
+>>>> it possible to start a search at a subnode of a tree.
+
+>>>>
+
+>>>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+
+>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+
+>>>> [grant.likely: Rework to not require allocating at runtime]
+
+>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+>>>> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+>>>> ---
+
+>>>>  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
+
+>>>>  1 file changed, 56 insertions(+), 4 deletions(-)
+
+>>>>
+
+>>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+
+>>>> index 6e240698353b..60089b9a3014 100644
+
+>>>> --- a/drivers/of/base.c
+
+>>>> +++ b/drivers/of/base.c
+
+>>>> @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
+
+>>>>  }
+
+>>>>  EXPORT_SYMBOL(of_get_child_by_name);
+
+>>>>  
+
+>>>> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
+
+>>>> +						const char *path)
+
+>>>> +{
+
+>>>> +	struct device_node *child;
+
+>>>> +	int len = strchrnul(path, '/') - path;
+
+>>>> +
+
+>>>> +	if (!len)
+
+>>>> +		return parent;
+
+>>>
+
+>>> (!len) is true if the the final character of the path passed into of_find_node_by_path()
+
+>>> was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
+
+>>> should be NULL, indicating that the match fails.
+
+>>
+
+>> Ah, good catch. I should add a test case for that.
+
 > 
-> Do you really want this bumph in the commit log?
 
-Removed the links from the commit log.
- 
-> > +#define TWL_RESOURCE_ON(res)						\
-> > +	{ MSG_SINGULAR(DEV_GRP_NULL, (res), RES_STATE_ACTIVE), 0x02 }
+> In my testing this looks okay. The while loop that calls into
+
+> __of_find_node_by_path() looks like this:
+
 > 
-> Was ist das? Magic, floating, fluffy numbers.
 
-Ja, I added some comments and combined them further with defines to
-make the configuration more readable.
- 
-> > -static int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
-> > +static int
-> > +twl4030_power_configure_scripts(const struct twl4030_power_data *pdata)
+> 	while (np && *path == '/') {
+
+> 		path++; /* Increment past '/' delimiter */
+
+> 		np = __of_find_node_by_path(np, path);
+
+> 		path = strchrnul(path, '/');
+
+> 	}
+
 > 
-> Is this doing anything besides some sneaky clean-up?  If not, it
-> might be worth mentioning that you're taking advantage of these
-> changes to conduct such activities.
 
-Added a note about that too..
- 
-> >  {
-> >  	int err;
-> >  	int i;
-> > @@ -518,7 +544,8 @@ static int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
-> >  	return 0;
-> >  }
-> >  
-> > -static int twl4030_power_configure_resources(struct twl4030_power_data *pdata)
-> > +static int
-> > +twl4030_power_configure_resources(const struct twl4030_power_data *pdata)
+> If the path ends with a '/', then the loop will go around one more time.
+
+> The pointer will be incremented to point at the null character and len
+
+> will be null because strchrnul() will point at the last item.
+
+
+
+Yes, that was my point.  The old version of of_find_node_by_path() would not
+
+find a match if the path ended with a "/" (unless the full path was "/").
+
+This patch series changes the behavior to be a match.
+
+
+I will reply to this email with an additional patch that restores the
+
+original behavior.
+
+
+If you move the additional test cases you provide below and the test cases
+
+in patch 3 to the beginning of the series, you can see the before and after
+
+behavior of adding patch 1 and patch 2.
+
+
 > 
-> Ditto.
+
+> I've added a couple of test cases to make sure it works correctly:
+
 > 
-> >  {
-> >  	struct twl4030_resconfig *resconfig = pdata->resource_config;
-> >  	int err;
-> > @@ -550,7 +577,7 @@ void twl4030_power_off(void)
-> >  		pr_err("TWL4030 Unable to power off\n");
-> >  }
-> >  
-> > -static bool twl4030_power_use_poweroff(struct twl4030_power_data *pdata,
-> > +static bool twl4030_power_use_poweroff(const struct twl4030_power_data *pdata,
-> >  					struct device_node *node)
+
+> diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
+
+> index a9d00e8c17ea..10900b18fc06 100644
+
+> --- a/drivers/of/selftest.c
+
+> +++ b/drivers/of/selftest.c
+
+> @@ -40,6 +40,12 @@ static void __init of_selftest_find_node_by_name(void)
+
+>  	 	"find /testcase-data failed\n");
+
+>  	of_node_put(np);
+
+>  
+
+> +	/* Test if trailing '/' works */
+
+> +	np = of_find_node_by_path("/testcase-data/");
+
+> +	selftest(np && !strcmp("/testcase-data", np->full_name),
+
+> +	 	"find /testcase-data/ failed\n");
+
+> +	of_node_put(np);
+
+> +
+
+>  	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
+
+>  	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
+
+>  	 	"find /testcase-data/phandle-tests/consumer-a failed\n");
+
+> @@ -50,6 +56,12 @@ static void __init of_selftest_find_node_by_name(void)
+
+>  	 	"find testcase-alias failed\n");
+
+>  	of_node_put(np);
+
+>  
+
+> +	/* Test if trailing '/' works on aliases */
+
+> +	np = of_find_node_by_path("testcase-alias/");
+
+> +	selftest(np && !strcmp("/testcase-data", np->full_name),
+
+> +	 	"find testcase-alias/ failed\n");
+
+> +	of_node_put(np);
+
+> +
+
+>  	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
+
+>  	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
+
+>  	 	"find testcase-alias/phandle-tests/consumer-a failed\n");
+
 > 
-> Etc.
 
-..regarding all of these so we can use it also for match->data.
-Updated patch below.
+> g.
 
-Regards,
+> 
 
-Tony
+> 
 
-8< ----------------------------
-From: Tony Lindgren <tony@atomide.com>
-Date: Tue, 20 May 2014 11:17:54 -0700
-Subject: [PATCH] mfd: twl4030-power: Add generic reset configuration
+>>
 
-The twl4030 PMIC needs to be configured properly for things like
-warm reset and deeper idle states so the PMIC manages the regulators
-properly based on the hardware triggers from the SoC. Earlier
-we have configured twl4030 using platform data, but we want to
-do it for device tree based booting also.
+>>>
 
-In some cases configuring twl4030 is needed for things to work.
-For example, when rebooting an OMAP3530 at 125 MHz, it hangs.
-With this patch, TWL4030 will be reset when a warm reset occures,
-and OMAP3530 does not hang on reboot.
+>>>> +
 
-Let's add device tree support and configure things for warm reset
-as the default when compatible = "ti,twl4030-power". More
-complicated configurations can be added to the driver based on
-other compatible flags.
+>>>> +	for_each_child_of_node(parent, child) {
 
-Note we now also make the pdata const like it should be.
-This allows use it for match->data with the device tree
-related functions.
+>>>> +		const char *name = strrchr(child->full_name, '/');
 
-Based on earlier patch by Matthias Brugger <matthias.bgg@gmail.com>
-and Lesly A M <leslyam@ti.com>.
+>>>> +		if (WARN(!name, "malformed device_node %s\n", child->full_name))
 
-Cc: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Robert Nelson <robertcnelson@gmail.com>
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+>>>> +			continue;
 
---- a/Documentation/devicetree/bindings/mfd/twl4030-power.txt
-+++ b/Documentation/devicetree/bindings/mfd/twl4030-power.txt
-@@ -5,7 +5,12 @@ to control the power resources, including power scripts. For now, the
- binding only supports the complete shutdown of the system after poweroff.
- 
- Required properties:
--- compatible : must be "ti,twl4030-power"
-+- compatible : must be one of the following
-+	"ti,twl4030-power"
-+	"ti,twl4030-power-reset"
-+
-+The use of ti,twl4030-power-reset is recommended at least on
-+3530 that needs a special configuration for warm reset to work.
- 
- Optional properties:
- - ti,use_poweroff: With this flag, the chip will initiates an ACTIVE-to-OFF or
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -29,6 +29,7 @@
- #include <linux/i2c/twl.h>
- #include <linux/platform_device.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- 
- #include <asm/mach-types.h>
- 
-@@ -128,6 +129,40 @@ static u8 res_config_addrs[] = {
- 	[RES_MAIN_REF]	= 0x94,
- };
- 
-+/*
-+ * Usable values for .remap_sleep and .remap_off
-+ * Based on table "5.3.3 Resource Operating modes"
-+ */
-+enum {
-+	TWL_REMAP_OFF = 0,
-+	TWL_REMAP_SLEEP = 8,
-+	TWL_REMAP_ACTIVE = 9,
-+};
-+
-+/*
-+ * Macros to configure the PM register states for various resources.
-+ * Note that we can make MSG_SINGULAR etc private to this driver once
-+ * omap3 has been made DT only.
-+ */
-+#define TWL_DFLT_DELAY		2	/* typically 2 32 KiHz cycles */
-+#define TWL_RESOURCE_SET(res, state)					\
-+	{ MSG_SINGULAR(DEV_GRP_NULL, (res), (state)), TWL_DFLT_DELAY }
-+#define TWL_RESOURCE_ON(res)	TWL_RESOURCE_SET(res, RES_STATE_ACTIVE)
-+#define TWL_RESOURCE_OFF(res)	TWL_RESOURCE_SET(res, RES_STATE_OFF)
-+#define TWL_RESOURCE_RESET(res)	TWL_RESOURCE_SET(res, RES_STATE_WRST)
-+/*
-+ * It seems that type1 and type2 is just the resource init order
-+ * number for the type1 and type2 group.
-+ */
-+#define TWL_RESOURCE_GROUP_RESET(group, type1, type2)			\
-+	{ MSG_BROADCAST(DEV_GRP_NULL, (group), (type1), (type2),	\
-+		RES_STATE_WRST), TWL_DFLT_DELAY }
-+#define TWL_REMAP_SLEEP(res, devgrp, typ, typ2)				\
-+	{ .resource = (res), .devgroup = (devgrp),			\
-+	  .type = (typ), .type2 = (typ2),				\
-+	  .remap_off = TWL_REMAP_OFF,					\
-+	  .remap_sleep = TWL_REMAP_SLEEP, }
-+
- static int twl4030_write_script_byte(u8 address, u8 byte)
- {
- 	int err;
-@@ -502,7 +537,8 @@ int twl4030_remove_script(u8 flags)
- 	return err;
- }
- 
--static int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
-+static int
-+twl4030_power_configure_scripts(const struct twl4030_power_data *pdata)
- {
- 	int err;
- 	int i;
-@@ -518,7 +554,8 @@ static int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
- 	return 0;
- }
- 
--static int twl4030_power_configure_resources(struct twl4030_power_data *pdata)
-+static int
-+twl4030_power_configure_resources(const struct twl4030_power_data *pdata)
- {
- 	struct twl4030_resconfig *resconfig = pdata->resource_config;
- 	int err;
-@@ -550,7 +587,7 @@ void twl4030_power_off(void)
- 		pr_err("TWL4030 Unable to power off\n");
- }
- 
--static bool twl4030_power_use_poweroff(struct twl4030_power_data *pdata,
-+static bool twl4030_power_use_poweroff(const struct twl4030_power_data *pdata,
- 					struct device_node *node)
- {
- 	if (pdata && pdata->use_poweroff)
-@@ -562,10 +599,60 @@ static bool twl4030_power_use_poweroff(struct twl4030_power_data *pdata,
- 	return false;
- }
- 
-+#ifdef CONFIG_OF
-+
-+/* Generic warm reset configuration for omap3 */
-+
-+static struct twl4030_ins omap3_wrst_seq[] = {
-+	TWL_RESOURCE_OFF(RES_NRES_PWRON),
-+	TWL_RESOURCE_OFF(RES_RESET),
-+	TWL_RESOURCE_RESET(RES_MAIN_REF),
-+	TWL_RESOURCE_GROUP_RESET(RES_GRP_ALL, RES_TYPE_R0, RES_TYPE2_R2),
-+	TWL_RESOURCE_RESET(RES_VUSB_3V1),
-+	TWL_RESOURCE_GROUP_RESET(RES_GRP_ALL, RES_TYPE_R0, RES_TYPE2_R1),
-+	TWL_RESOURCE_GROUP_RESET(RES_GRP_RC, RES_TYPE_ALL, RES_TYPE2_R0),
-+	TWL_RESOURCE_ON(RES_RESET),
-+	TWL_RESOURCE_ON(RES_NRES_PWRON),
-+};
-+
-+static struct twl4030_script omap3_wrst_script = {
-+	.script	= omap3_wrst_seq,
-+	.size	= ARRAY_SIZE(omap3_wrst_seq),
-+	.flags	= TWL4030_WRST_SCRIPT,
-+};
-+
-+static struct twl4030_script *omap3_reset_scripts[] = {
-+	&omap3_wrst_script,
-+};
-+
-+static struct twl4030_resconfig omap3_rconfig[] = {
-+	TWL_REMAP_SLEEP(RES_HFCLKOUT, DEV_GRP_P3, -1, -1),
-+	TWL_REMAP_SLEEP(RES_VDD1, DEV_GRP_P1, -1, -1),
-+	TWL_REMAP_SLEEP(RES_VDD2, DEV_GRP_P1, -1, -1),
-+	{ 0, 0 },
-+};
-+
-+static struct twl4030_power_data omap3_reset = {
-+	.scripts		= omap3_reset_scripts,
-+	.num			= ARRAY_SIZE(omap3_reset_scripts),
-+	.resource_config	= omap3_rconfig,
-+};
-+
-+static struct of_device_id twl4030_power_of_match[] = {
-+	{
-+		.compatible = "ti,twl4030-power-reset",
-+		.data = &omap3_reset,
-+	},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, twl4030_power_of_match);
-+#endif	/* CONFIG_OF */
-+
- static int twl4030_power_probe(struct platform_device *pdev)
- {
--	struct twl4030_power_data *pdata = dev_get_platdata(&pdev->dev);
-+	const struct twl4030_power_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct device_node *node = pdev->dev.of_node;
-+	const struct of_device_id *match;
- 	int err = 0;
- 	int err2 = 0;
- 	u8 val;
-@@ -586,8 +673,12 @@ static int twl4030_power_probe(struct platform_device *pdev)
- 		return err;
- 	}
- 
-+	match = of_match_device(of_match_ptr(twl4030_power_of_match),
-+				&pdev->dev);
-+	if (match && match->data)
-+		pdata = match->data;
-+
- 	if (pdata) {
--		/* TODO: convert to device tree */
- 		err = twl4030_power_configure_scripts(pdata);
- 		if (err) {
- 			pr_err("TWL4030 failed to load scripts\n");
-@@ -637,14 +728,6 @@ static int twl4030_power_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--#ifdef CONFIG_OF
--static const struct of_device_id twl4030_power_of_match[] = {
--	{.compatible = "ti,twl4030-power", },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, twl4030_power_of_match);
--#endif
--
- static struct platform_driver twl4030_power_driver = {
- 	.driver = {
- 		.name	= "twl4030_power",
-diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
-index d2b1670..36e5496 100644
---- a/include/linux/i2c/twl.h
-+++ b/include/linux/i2c/twl.h
-@@ -498,7 +498,10 @@ static inline int twl6030_mmc_card_detect(struct device *dev, int slot)
- #define RES_GRP_ALL		0x7	/* All resource groups */
- 
- #define RES_TYPE2_R0		0x0
-+#define RES_TYPE2_R1		0x1
-+#define RES_TYPE2_R2		0x2
- 
-+#define RES_TYPE_R0		0x0
- #define RES_TYPE_ALL		0x7
- 
- /* Resource states */
+>>>> +		name++;
+
+
+< snip >
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
