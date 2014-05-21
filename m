@@ -1,84 +1,158 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 04/18] video: add command mode and command mode
- display timing
-Date: Wed, 21 May 2014 13:02:05 +0200
-Message-ID: <20140521110204.GB2014@ulmo>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-5-git-send-email-yj44.cho@samsung.com>
+From: Sunil Kovvuri <sunil.kovvuri@gmail.com>
+Subject: Re: [PATCH v7 0/3] Add support for PCI in AArch64
+Date: Wed, 21 May 2014 16:45:29 +0530
+Message-ID: <CA+sq2Ccp0_4hgbbWa27bkYcqiXY6Ckr8eckWnHwANvhWNo97fg@mail.gmail.com>
+References: <1394811258-1500-1-git-send-email-Liviu.Dudau@arm.com>
+	<CA+sq2Ccok5wtKjCZUkBhhj3WsiqFAoMgHK7LY210aBtMku+8SA@mail.gmail.com>
+	<20140516132451.GK967@e106497-lin.cambridge.arm.com>
+	<CA+sq2CejJFg--0rS1arr4Sactp-ssENB8Y3g4b61JPGPBCms=A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1502002990=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1400647390-26590-5-git-send-email-yj44.cho@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CA+sq2CejJFg--0rS1arr4Sactp-ssENB8Y3g4b61JPGPBCms=A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sunil Kovvuri <sunil.kovvuri@gmail.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, "kdb@lurndal.org" <kdb@lurndal.org>, "yu.zhao@intel.com" <yu.zhao@intel.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Liviu,
 
---===============1502002990==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="l76fUT7nc3MelDdI"
-Content-Disposition: inline
+Sorry for the trouble.
+I got why 'res->parent' is not set in my case.
+Basically my SR-IOV device has fixed resources, so resources will not
+be allocated/assigned and hence parent resource is not set.
+I will move the resource claiming to host controller driver as a fixup
+so that parent resource hierarchy is set.
+
+Thanks for the support.
+
+Regards,
+Sunil.
 
 
---l76fUT7nc3MelDdI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, May 21, 2014 at 01:42:56PM +0900, YoungJun Cho wrote:
-> This patch is based on videomode and display_timing relevant codes.
-> To support command mode panel, it does not need to guide its timing
-> information to the display controller like video mode panel,
-> but it requires signal timings to transfer video data.
-> So this patch adds cmdmode struct, cmdmode_display_timing struct and
-> the according helper functions to convert cmdmode_display_timing
-> to a generic cmdmode.
-
-Can you point me to relevant documentation? I wasn't able to find it by
-a quick scan through the DSI specification.
-
-Thierry
-
---l76fUT7nc3MelDdI
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTfIesAAoJEN0jrNd/PrOhCJsP/2FtDc23LCdSlPlg2shCqHZQ
-mqqvD8IU5s92KHzQr5OwRtSLyoXyTs3qUvSJ3ciaBNO1OPSY4kZ1tDlRYGhNq7UU
-WewXCfqL626rAdmsu2C1XvVwTKeD6XfL3lALylRCivCQLrg762WlMtG2fjH4ob3g
-OppvTuRcE83KvKeYFDlyiuIsaL7kl4KZVd5wZhrTspuRd1pYEudXvwiVpzwyaCK9
-BW7FWSQ37uhu/OsrC/6Voxrt3VFbZjJYYLa0UYvudX4mKicMfpd+w3D6wYIMLhfR
-4HRxEDb9sO2U6SJiKFbO4mKiApdKgDuquE8WdKlD0k4RYPw2OhWLCbHRtNEDg/8M
-42VwW2KEfz43xa9RILl+Y+Xvv1ciLjKsf/NhIHDUoPLa8EyJ13t6xA2GJ14iJqtW
-YEayjdV7CVnfayKnasA7Xs1J92Pquq1HT8OKwPDoUwFir60nXM3N+rXzASKSakQw
-zQKHxai0wZz4fwdf5/Noj9OFdqfyT2kSYs/KcUXmzQ7oG7hca38SrHGv/7+fZehp
-uoRiBV7MA+Yy14DchxPwnW2/JuaK5fRO83dXO63prvVKOwaQIna+/efPm78LjegD
-qIXeUzo6ghFuk87lL5j9bYGV8JfqAUKvZ00n1pOBnoip1tbywRsTRAyJl0QN2FZy
-e/EuAeyglu/sAdXxuaja
-=Q9Mv
------END PGP SIGNATURE-----
-
---l76fUT7nc3MelDdI--
-
---===============1502002990==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============1502002990==--
+On Fri, May 16, 2014 at 11:12 PM, Sunil Kovvuri <sunil.kovvuri@gmail.co=
+m> wrote:
+> Hi Liviu,
+>
+> Issue may not be only with SR-IOV resources.
+>
+> I am not an expert with Linux PCI core. But i am trying to understand
+> how even for a non SR-IOV capable device's resource, gets a parent
+> associated with it.
+>
+> When a PCI device driver calls pci_enable_device() which inturn calls
+> 'arch/arm64/kernel/pci.c' pcibios_enable_device() which uses Linux PC=
+I core
+> API 'pci_enable_resources'. This API checks 'res->parent' for all
+> valid resources
+> before enabling them, otherwise it fails.
+>                 if (!r->parent) {
+>                         dev_err(&dev->dev, "device not available "
+>                                 "(can't reserve %pR)\n", r);
+>                         return -EINVAL;
+>                 }
+>
+> Can you please let me know where this hierarchy is being set for
+> 'pcibios_enable_resources' to work.
+>
+> I could only find request_resource() API which sets the parent and
+> pci_claim_resource() uses this.
+>
+> Thanks,
+> Sunil.
+>
+> On Fri, May 16, 2014 at 6:54 PM, Liviu Dudau <Liviu.Dudau@arm.com> wr=
+ote:
+>> Hi Sunil,
+>>
+>> On Fri, May 16, 2014 at 11:33:04AM +0100, Sunil Kovvuri wrote:
+>>> Hi Liviu,
+>>>
+>>> I am using your ARM64 PCIe patches to write a PCIe host controller
+>>> driver for our SOC. I am facing an issue with SR-IOV capable device=
+=2E
+>>>
+>>> Consider an PCI Express endpoint connected to a PCI Express
+>>> Root Port.  The PCI Express endpoint provides PCI-SIG SR-IOV
+>>> capabilities with a single physical function and a large number
+>>> of virtual functions.  The Root Port contains a pci-pci bridge in
+>>> between it and the SR-IOV device.
+>>>
+>>> When the SR-IOV capable device's driver tries to enable sriov
+>>> (pci_enable_sriov()) it fails to create/add PCI device for each
+>>> virtual function reporting  "not enough MMIO resources for SR-IOV".
+>>>
+>>> In sriov_enable() (drivers/pci/iov.c)
+>>>
+>>>  296        for (i =3D 0; i < PCI_SRIOV_NUM_BARS; i++) {
+>>>  297                 bars |=3D (1 << (i + PCI_IOV_RESOURCES));
+>>>  298                 res =3D dev->resource + PCI_IOV_RESOURCES + i;
+>>>  299                 if (res->parent)
+>>>  300                         nres++;
+>>>  301         }
+>>>  302         if (nres !=3D iov->nres) {
+>>>  303                 dev_err(&dev->dev, "not enough MMIO resources =
+for
+>>>  SR-IOV\n");
+>>>  304                 return -ENOMEM;
+>>>  305         }
+>>>
+>>> Here its checking if physical function's IOV resource has a parent =
+or not.
+>>> Which is pci-pci bridge in this case. Otherwise it doesn't consider
+>>> that resource.
+>>>
+>>> Added below api to your patch.
+>>> This will try to claim a resource while creating a PCI device which
+>>> inturn sets 'res->parent'.
+>>>
+>>> Let me know if this is okay.
+>>>
+>>> diff --git a/arch/arm64/kernel/pci.c b/arch/arm64/kernel/pci.c
+>>> index 9f29c9a..fbfb48f 100644
+>>> --- a/arch/arm64/kernel/pci.c
+>>> +++ b/arch/arm64/kernel/pci.c
+>>> @@ -125,6 +125,21 @@ resource_size_t pcibios_align_resource(void
+>>> *data, const struct resource *res,
+>>>         return res->start;
+>>>  }
+>>>
+>>> +int pcibios_add_device(struct pci_dev *pdev)
+>>> +{
+>>> +        unsigned int i, type_mask =3D IORESOURCE_IO | IORESOURCE_M=
+EM;
+>>> +        struct resource *res;
+>>> +
+>>> +        for (i =3D 0; i < PCI_NUM_RESOURCES; i++) {
+>>> +                res =3D &pdev->resource[i];
+>>> +                if (res->parent || !(res->flags & type_mask))
+>>> +                        continue;
+>>> +                pci_claim_resource(pdev, i);
+>>> +        }
+>>> +
+>>>
+>>
+>> I would like not to have to add your patch in this file as I am tryi=
+ng to
+>> remove it entirely. I don't have an SR-IOV capable device in my setu=
+p so
+>> I am not able to debug your problem, but could you have a go and try=
+ to
+>> figure out why the SR-IOV resources do not get a parent associated w=
+ith
+>> when they get created?
+>>
+>> Many thanks,
+>> Liviu
+>>
+>>
+>> --
+>> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>> | I would like to |
+>> | fix the world,  |
+>> | but they're not |
+>> | giving me the   |
+>>  \ source code!  /
+>>   ---------------
+>>     =C2=AF\_(=E3=83=84)_/=C2=AF
+>>
