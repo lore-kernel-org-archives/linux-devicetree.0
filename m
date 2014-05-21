@@ -1,103 +1,62 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
- support
-Date: Wed, 21 May 2014 16:24:59 +0200
-Message-ID: <20140521142459.GB27779@earth.universe>
-References: <5375A8A8.7080306@ti.com>
- <20140516160717.GD22031@atomide.com>
- <20140516174158.GA11733@earth.universe>
- <20140516180154.GG22031@atomide.com>
- <20140516213907.GL12881@atomide.com>
- <5379D35F.8040207@ti.com>
- <20140519155732.GA4849@atomide.com>
- <537A540E.8070302@ti.com>
- <20140519195100.GB11945@atomide.com>
- <537CA4B4.2040001@ti.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [Patch v4 0/5] Introduce keystone reset driver
+Date: Wed, 21 May 2014 17:27:29 +0300
+Message-ID: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <537CA4B4.2040001@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+These patches introduce keystone reset driver.
 
---JP+T4n/bALQSJXh8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+The keystone SoC can be rebooted in several ways. By external reset
+pin, by soft and by watchdogs. This driver allows software reset and reset
+by one of the watchdogs. Also added opportunity to set soft/hard reset type.
 
-Hi,
+Based on linux-next/master
 
-On Wed, May 21, 2014 at 04:05:56PM +0300, Tomi Valkeinen wrote:
-> I'll try and see how the other options work, which are:
->=20
-> - Bailing out from module_init in each display driver. The reason I
-> don't like this (although I haven't tried it) is that all the display
-> drivers need the modification, and because I need to catch the
-> module_init, I cannot use the helpers like module_platform_driver(), so
-> it adds multiple lines to every driver.
+v4..v3
+  Power: reset: keystone-reset: introduce keystone reset driver
+  	- change to use syscon framework
+  	- change to use regmap to access registers
+  Power: reset: add bindings for keystone reset driver
+  	- deleted properties "reg", "reg-names"
+	- added properties "ti,syscon-pll", "ti,syscon-dev"
+  ARM: dts: keystone: update reset node to work with reset driver
+  	- deleted properties "reg", "reg-names"
+	- added properties "ti,syscon-pll", "ti,syscon-dev"
 
-You could create your own omapdss_driver() define for that.
-This can be replaced more simply once no longer needed and
-creates less bloat.
+v2..v3
+  Power: reset: keystone-reset: introduce keystone reset driver
+	- no functional changes, only sanity
+  Power: reset: add bindings for keystone reset driver
+  	- corrected WDT numeration in examples
+	- extended description of wdt_list property
 
-I see one more disadvantage for this approach:
+v1..v2
+	- re basedon on v3.15-rc1 without changes
 
-assumed situation (some future 3.16+x kernel):
- * The kernel has an common display framework (CDF)
- * The kernel has an panel driver using CDF
- * There also exists omapdss driver for the same panel
- * omapdss does not (yet) adopt CDF
- * CDF and omapdss are enabled in .config
- * Kernel is booted from an OMAP system
+Ivan Khoronzhuk (5):
+  Power: reset: keystone-reset: introduce keystone reset driver
+  Power: reset: add bindings for keystone reset driver
+  ARM: keystone: remove redundant reset stuff
+  ARM: dts: keystone: update reset node to work with reset driver
+  ARM: keystone: enable reset driver support
 
-This would result in both drivers being loaded using the same
-DT compatible string. The same scenario works using the rewriting
-method, since the common display framework would only see the
-rewritten compatible string.
+ .../bindings/power/reset/keystone-reset.txt        |  66 +++++++++
+ arch/arm/boot/dts/keystone.dtsi                    |   4 +-
+ arch/arm/configs/keystone_defconfig                |   3 +
+ arch/arm/mach-keystone/keystone.c                  |  34 -----
+ drivers/power/reset/Kconfig                        |   8 ++
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/keystone-reset.c               | 153 +++++++++++++++++++++
+ 7 files changed, 234 insertions(+), 35 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+ create mode 100644 drivers/power/reset/keystone-reset.c
 
-Of course this scenario only happens when omapdss is not adopted
-to the common display framework from the start on.
+-- 
+1.8.3.2
 
-> - Traveling the video graph, starting from omapdss. This one is possibly
-> better performance-wise than my original version, as we only need to
-> search for the omapdss node and can then follow the links. But the code
-> will be more complex.
-
-I think the main advantage is the missing lookup table/whitelist,
-which adds redundancy. Not having it has some advantages:
-
-* new drivers don't need to touch any existing files (making
-  rebasing etc. easier)
-* table can get out of sync (though that shouldn't happen anyway,
-  since the binding is supposed to be stable)
-
--- Sebastian
-
---JP+T4n/bALQSJXh8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTfLc7AAoJENju1/PIO/qaVmsQAJP3lRtzFdHGO9oufke5LxIT
-oCnpe7v1evjMQi/PdbhHTmrx/FIaxNKmkCl5VPGMYJqf+pF/sa6G7yrS0ZUq8jGI
-XFJEyB6M2/IjcuAVrj8qHdCMabnqa2q5C4xMtURRfsraipDsFv7LX/2STH8CcrlX
-oP60OdAvQmv5w7PVMdRnuQ94/wsXTZWP6tqy78+e67w0hYlvNUxhsntoPWdHtbLu
-l8MLEC58/5mFIwAX7sRQQgr7q8CZAvhUE7dkYLvIGcxKXgGfzeuzggR5/Bsj4vfR
-gPDV6vEe2S2PrjcCMLslITCeSGQhKz99p1DiY/xfYBHO+aF/UIXtCBpNdDz8hk1M
-gh62Q3avLzFF24ckyero/YX7AMPxPK4jtypIrgvNYQ2LwRKt36XsdcoU15Ya4viu
-QuFpH2ivq3A4Y7vMyhRzGDlTIUrrCFtKlETQsDc+s7exiK0Yg97pp40koVjR+4aX
-8Saw5+0tsmaTsJ8AlTyX0uIw3D/3jErab1n2Hl06iAuiFNWXO+o6uvVazSIKPu52
-a/Bv7xPPihrMN1daE40EtRX8y+HEvzPGBYAlbTiM0UviDToZSbIZykGC/bZ2WKPb
-9YsusjSpMJrFCtGX19lPLzE9Ej4JiIXD2cvGzYRuXismzMCy51ti6/30XOHLe/7e
-Iu4hpr0bgYDB8W3BwYg6
-=AsiA
------END PGP SIGNATURE-----
-
---JP+T4n/bALQSJXh8--
