@@ -1,76 +1,32 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: bcm590xx: add support for GPLDO and
- VBUS regulators
-Date: Wed, 21 May 2014 10:29:13 +0100
-Message-ID: <20140521092913.GG6679@lee--X1>
-References: <1398295293-11033-1-git-send-email-mporter@linaro.org>
- <1398295293-11033-5-git-send-email-mporter@linaro.org>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
+Date: Wed, 21 May 2014 11:32:23 +0200
+Message-ID: <11242680.PQytQQqlPJ@wuerfel>
+References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com> <4506822.XX7GrvtHhk@wuerfel> <20140521090244.GB19268@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1398295293-11033-5-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140521090244.GB19268@ulmo>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Stephen Warren <swarren@wwwdotorg.org>, Will Deacon <will.deacon@arm.com>, linux-kernel@vger.kernel.org, Marc Zyngier <marc.zyngier@arm.com>, iommu@lists.linux-foundation.org, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-tegra@vger.kernel.org, Cho KyongHo <pullip.cho@samsung.com>, Dave Martin <Dave.Martin@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-> Adds additional nodes to support GPLDO1-6 and VBUS regulators which
-> are now supported in the bcm590xx regulator driver.
->=20
-> Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  arch/arm/boot/dts/bcm59056.dtsi | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+On Wednesday 21 May 2014 11:02:45 Thierry Reding wrote:
+> On Wed, May 21, 2014 at 10:54:42AM +0200, Arnd Bergmann wrote:
+>
+> > Right. As long as we always unmap the buffers from the IOMMU after they
+> > have stopped being in use, it's very unlikely that even a broken device
+> > driver causes a DMA into some bus address that happens to be mapped for
+> > another device.
+> 
+> I think that if buffers remain mapped in the IOMMU when they have been
+> deallocated that should be considered a bug.
 
-I'm not going to apply this with the rest of the set.  It will have to
-go in via your normal arch/arm route.
+You could see it as a performance optimization in some cases, e.g. when you
+cannot flush individual IOTLBs or doing so is expensive, and you just keep
+assigning new addresses until every one has been used, then you do a global
+IOTLB flush once. Obviously you have to maintain the IO page tables correctly.
 
-> diff --git a/arch/arm/boot/dts/bcm59056.dtsi b/arch/arm/boot/dts/bcm5=
-9056.dtsi
-> index dfadaaa..066adfb 100644
-> --- a/arch/arm/boot/dts/bcm59056.dtsi
-> +++ b/arch/arm/boot/dts/bcm59056.dtsi
-> @@ -70,5 +70,26 @@
-> =20
->  		vsr_reg: vsr {
->  		};
-> +
-> +		gpldo1_reg: gpldo1 {
-> +		};
-
-What do these empty nodes do in any case?
-
-Don't you at least need a status property in there or something?
-
-> +		gpldo2_reg: gpldo2 {
-> +		};
-> +
-> +		gpldo3_reg: gpldo3 {
-> +		};
-> +
-> +		gpldo4_reg: gpldo4 {
-> +		};
-> +
-> +		gpldo5_reg: gpldo5 {
-> +		};
-> +
-> +		gpldo6_reg: gpldo6 {
-> +		};
-> +
-> +		vbus_reg: vbus {
-> +		};
->  	};
->  };
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
