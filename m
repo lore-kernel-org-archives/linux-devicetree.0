@@ -1,72 +1,41 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: [PATCHv4 3/4] Documentation: dt: Document TSC2005 DT binding
-Date: Wed, 21 May 2014 19:36:13 +0200
-Message-ID: <1400693774-21306-4-git-send-email-sre@kernel.org>
-References: <1400693774-21306-1-git-send-email-sre@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400693774-21306-1-git-send-email-sre@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@ring0.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Dmitry Torokhov <dtor@mail.ru>, linux-input@vger.kernel.org, Tony Lindgren <tony@atomide.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] ARM: dts: sun7i: cubietruck: set mmc3
+ bus-width property
+Date: Wed, 21 May 2014 19:43:30 +0200
+Message-ID: <1400694211-29903-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBSOL6ONQKGQEW4XE6SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding documentation for TSC2005 touchscreen.
+bus-width defaults to 1, and all 4 lines are hooked up at the cubietruck,
+properly set bus-width to 4.
 
-Reviewed-by: Pavel Machek <pavel@ucw.cz>
-Acked-by: Aaro Koskinen <aaro.koskinen@iki.fi>
-Signed-off-by: Sebastian Reichel <sre@kernel.org>
+Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- .../bindings/input/touchscreen/tsc2005.txt         | 42 ++++++++++++++++++++++
- 1 file changed, 42 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-new file mode 100644
-index 0000000..4b641c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
-@@ -0,0 +1,42 @@
-+* Texas Instruments tsc2005 touchscreen controller
-+
-+Required properties:
-+ - compatible		      : "ti,tsc2005"
-+ - reg			      : SPI device address
-+ - spi-max-frequency	      : Maximal SPI speed
-+ - interrupts		      : IRQ specifier
-+ - reset-gpios		      : GPIO specifier
-+ - vio-supply                 : Regulator specifier
-+
-+Optional properties:
-+ - ti,x-plate-ohms	      : integer, resistance of the touchscreen's X plates
-+				in ohm (defaults to 280)
-+ - ti,esd-recovery-timeout-ms : integer, if the touchscreen does not respond after
-+				the configured time (in milli seconds), the driver
-+				will reset it. This is disabled by default.
-+ - properties defined in touchscreen.txt
-+
-+Example:
-+
-+&mcspi1 {
-+	tsc2005@0 {
-+		compatible = "ti,tsc2005";
-+		spi-max-frequency = <6000000>;
-+		reg = <0>;
-+
-+		vio-supply = <&vio>;
-+
-+		reset-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>; /* 104 */
-+		interrupts-extended = <&gpio4 4 IRQ_TYPE_EDGE_RISING>; /* 100 */
-+
-+		touchscreen-fuzz-x = <4>;
-+		touchscreen-fuzz-y = <7>;
-+		touchscreen-fuzz-pressure = <2>;
-+		touchscreen-max-x = <4096>;
-+		touchscreen-max-y = <4096>;
-+		touchscreen-max-pressure = <2048>;
-+
-+		ti,x-plate-ohms = <280>;
-+		ti,esd-recovery-timeout-ms = <8000>;
-+	};
-+}
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index 765191d..70271f6 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -34,6 +34,7 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&mmc3_pins_a>;
+ 			vmmc-supply = <&reg_vmmc3>;
++			bus-width = <4>;
+ 			non-removable;
+ 			status = "okay";
+ 		};
 -- 
-2.0.0.rc2
+1.9.0
