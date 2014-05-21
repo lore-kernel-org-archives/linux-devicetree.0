@@ -1,59 +1,103 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] regulator: gpio-regulator: Add required
- regulator-type property
-Date: Wed, 21 May 2014 15:22:23 +0100
-Message-ID: <20140521142223.GR12304@sirena.org.uk>
-References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <2193707.R9XiqBsnU4@avalon>
- <20140513165921.GK12304@sirena.org.uk>
- <1885616.D9TNdZVfuO@avalon>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH 3/4] OMAPDSS: panel-sharp-ls037v7dw01: add device tree
+ support
+Date: Wed, 21 May 2014 16:24:59 +0200
+Message-ID: <20140521142459.GB27779@earth.universe>
+References: <5375A8A8.7080306@ti.com>
+ <20140516160717.GD22031@atomide.com>
+ <20140516174158.GA11733@earth.universe>
+ <20140516180154.GG22031@atomide.com>
+ <20140516213907.GL12881@atomide.com>
+ <5379D35F.8040207@ti.com>
+ <20140519155732.GA4849@atomide.com>
+ <537A540E.8070302@ti.com>
+ <20140519195100.GB11945@atomide.com>
+ <537CA4B4.2040001@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ylLDPojcDoueJWW3"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="JP+T4n/bALQSJXh8"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1885616.D9TNdZVfuO@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <537CA4B4.2040001@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Javier Martinez Canillas <javier@dowhile0.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
---ylLDPojcDoueJWW3
+--JP+T4n/bALQSJXh8
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, May 21, 2014 at 03:44:56PM +0200, Laurent Pinchart wrote:
-> On Tuesday 13 May 2014 17:59:21 Mark Brown wrote:
+Hi,
 
-> > I don't really care either way, I did write a patch for the bindings but
-> > there was some language lawyering over it and I never cared enough to
-> > get round to updating it.
+On Wed, May 21, 2014 at 04:05:56PM +0300, Tomi Valkeinen wrote:
+> I'll try and see how the other options work, which are:
+>=20
+> - Bailing out from module_init in each display driver. The reason I
+> don't like this (although I haven't tried it) is that all the display
+> drivers need the modification, and because I need to catch the
+> module_init, I cannot use the helpers like module_platform_driver(), so
+> it adds multiple lines to every driver.
 
-> Could you please point me to the patch ?
+You could create your own omapdss_driver() define for that.
+This can be replaced more simply once no longer needed and
+creates less bloat.
 
-I appear to have discarded it I'm afraid.
+I see one more disadvantage for this approach:
 
---ylLDPojcDoueJWW3
+assumed situation (some future 3.16+x kernel):
+ * The kernel has an common display framework (CDF)
+ * The kernel has an panel driver using CDF
+ * There also exists omapdss driver for the same panel
+ * omapdss does not (yet) adopt CDF
+ * CDF and omapdss are enabled in .config
+ * Kernel is booted from an OMAP system
+
+This would result in both drivers being loaded using the same
+DT compatible string. The same scenario works using the rewriting
+method, since the common display framework would only see the
+rewritten compatible string.
+
+Of course this scenario only happens when omapdss is not adopted
+to the common display framework from the start on.
+
+> - Traveling the video graph, starting from omapdss. This one is possibly
+> better performance-wise than my original version, as we only need to
+> search for the omapdss node and can then follow the links. But the code
+> will be more complex.
+
+I think the main advantage is the missing lookup table/whitelist,
+which adds redundancy. Not having it has some advantages:
+
+* new drivers don't need to touch any existing files (making
+  rebasing etc. easier)
+* table can get out of sync (though that shouldn't happen anyway,
+  since the binding is supposed to be stable)
+
+-- Sebastian
+
+--JP+T4n/bALQSJXh8
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTfLabAAoJELSic+t+oim9OpEP/AuSVV248aeQkpjNO6JT3IWl
-vitgVHh1nQ0BZMQYlhiWiX0q6lAh8iHTdETstWwlRLdiFgr3IG5yS8CTh29e7Pm0
-3KrpP+UBIvNf1k6e9MraIGCjbm3X/lyYO8m99s/RarZS/2pDti6lGI2/Qs3AL1YD
-2QUYcZGPdRLTwJ9D6s/XI6wiyhmSsASYZth10h3X0i7wF3Zbt59yz/4EYBEEjMVb
-KU5K7+eIcEerPr7egj2f569LnWDcGqB/y/w2PFzc4enTPbb1Wa7PX+9Dp1W31AyS
-mOSPGdrc2Li0B+OJMV0NusdQeAZ6glEkxINb8GPJyl2VlOXS8EztmQx0Obauxr5R
-eDi0g1Sh7Br76WfTtQyIzFr+FJEvuCCnCwjR1S26e/oa/dOuGdVc3Rl0KdCYApQa
-W6hzvZov8e4Dv8kcak4gvRjKAaaI/53JbEO29e5mtvuKWzXOAJT/DTUCXSEkXFIn
-y2kfQ2eFWe2cdMFfiOa72VyFbmPCjqNKVX0mBwihtZjRN0qSvOwiMKfnTde8E3Tr
-6POyCg4v7mByLAukB7etamY08palIWxEvAYGqlYeGg0mkO4JhlsEcOZF6jw0c2ID
-My7i2Z6uY6QzOrX8T83+HCd1atbXIZYv9qjXrRF1czMFycpv2X38TdurtqILCyXi
-7nSZt0ABGgM81iqVK+JL
-=s9ui
+iQIcBAEBCgAGBQJTfLc7AAoJENju1/PIO/qaVmsQAJP3lRtzFdHGO9oufke5LxIT
+oCnpe7v1evjMQi/PdbhHTmrx/FIaxNKmkCl5VPGMYJqf+pF/sa6G7yrS0ZUq8jGI
+XFJEyB6M2/IjcuAVrj8qHdCMabnqa2q5C4xMtURRfsraipDsFv7LX/2STH8CcrlX
+oP60OdAvQmv5w7PVMdRnuQ94/wsXTZWP6tqy78+e67w0hYlvNUxhsntoPWdHtbLu
+l8MLEC58/5mFIwAX7sRQQgr7q8CZAvhUE7dkYLvIGcxKXgGfzeuzggR5/Bsj4vfR
+gPDV6vEe2S2PrjcCMLslITCeSGQhKz99p1DiY/xfYBHO+aF/UIXtCBpNdDz8hk1M
+gh62Q3avLzFF24ckyero/YX7AMPxPK4jtypIrgvNYQ2LwRKt36XsdcoU15Ya4viu
+QuFpH2ivq3A4Y7vMyhRzGDlTIUrrCFtKlETQsDc+s7exiK0Yg97pp40koVjR+4aX
+8Saw5+0tsmaTsJ8AlTyX0uIw3D/3jErab1n2Hl06iAuiFNWXO+o6uvVazSIKPu52
+a/Bv7xPPihrMN1daE40EtRX8y+HEvzPGBYAlbTiM0UviDToZSbIZykGC/bZ2WKPb
+9YsusjSpMJrFCtGX19lPLzE9Ej4JiIXD2cvGzYRuXismzMCy51ti6/30XOHLe/7e
+Iu4hpr0bgYDB8W3BwYg6
+=AsiA
 -----END PGP SIGNATURE-----
 
---ylLDPojcDoueJWW3--
+--JP+T4n/bALQSJXh8--
