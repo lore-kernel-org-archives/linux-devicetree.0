@@ -1,217 +1,85 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 21 May 2014 10:16:09 +0200
-Message-ID: <20140521081608.GA11068@ulmo>
-References: <1400242998-437-1-git-send-email-thierry.reding@gmail.com>
-	<4161434.ylGuoPKcfs@wuerfel> <20140520135956.GA23140@ulmo>
-	<5123714.0MpMQfsmcr@wuerfel>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCHv3 1/3] ARM: mm: allow sub-architectures to override PCI I/O memory type
+Date: Wed, 21 May 2014 10:20:57 +0200
+Message-ID: <8688804.rOhvi9AvoE@wuerfel>
+References: <1400145519-28530-1-git-send-email-thomas.petazzoni@free-electrons.com> <20140516095333.GE12341@arm.com> <20140521052007.GA14888@obsidianresearch.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2451171645162206626=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <5123714.0MpMQfsmcr@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140521052007.GA14888-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tuesday 20 May 2014 23:20:07 Jason Gunthorpe wrote:
+> On Fri, May 16, 2014 at 10:53:33AM +0100, Will Deacon wrote:
+> 
+> > > Correct. Assume a PCI device uses PIO and DMA. It sends a DMA to main memory
+> > > and lets the CPU know about the data using a level (IntA as opposed to MSI)
+> > > interrupt. The CPU performs an outl() operation to an I/O port to let the
+> > > hardware know it has received the IRQ and the response of the outl() is
+> > > guaranteed to flush the DMA transaction: by the time the outl() completes
+> > > we know that the data in memory is valid because it is strongly ordered
+> > > relative to the DMA.
+> 
+> Keep in mind that the IntA message itself is going to flush the DMA,
+> no sane host bridge implementation should process the IntA until all
+> prior DMA writes are completed, just like MSI.
 
---===============2451171645162206626==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gKMricLos+KVdGMg"
-Content-Disposition: inline
+I was thinking of PCI, not PCIe here, where the interrupt can be directly
+wired to the irqchip.
 
+> Also, legacy non-MSI interrupts are always sharable, so the ISR must
+> always start with a read of a device specific status reguster, which
+> will also flush any DMA writes.
 
---gKMricLos+KVdGMg
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Right, good point.
 
-On Tue, May 20, 2014 at 10:31:29PM +0200, Arnd Bergmann wrote:
-> On Tuesday 20 May 2014 16:00:02 Thierry Reding wrote:
-> > On Tue, May 20, 2014 at 03:34:46PM +0200, Arnd Bergmann wrote:
-> > > On Tuesday 20 May 2014 15:17:43 Thierry Reding wrote:
-> > > > On Tue, May 20, 2014 at 02:41:18PM +0200, Arnd Bergmann wrote:
-> > > > > On Tuesday 20 May 2014 14:02:43 Thierry Reding wrote:
-> > > > [...]
-> > > > > > Couldn't a single-master IOMMU be windowed?
-> > > > >=20
-> > > > > Ah, yes. That would actually be like an IBM pSeries, which has a =
-windowed
-> > > > > IOMMU but uses one window per virtual machine. In that case, the =
-window could
-> > > > > be a property of the iommu node though, rather than part of the a=
-ddress
-> > > > > in the link.
-> > > >=20
-> > > > Does that mean that the IOMMU has one statically configured window =
-which
-> > > > is the same for each virtual machine? That would require some other
-> > > > mechanism to assign separate address spaces to each virtual machine,
-> > > > wouldn't it? But I suspect that if the IOMMU allows that it could be
-> > > > allocated dynamically at runtime.
-> > >=20
-> > > The way it works on pSeries is that upon VM creation, the guest is as=
-signed
-> > > one 256MB window for use by assigned DMA capable devices. When the gu=
-est
-> > > creates a mapping, it uses a hypercall to associate a bus address in =
-that
-> > > range with a guest physical address. The hypervisor checks that the b=
-us
-> > > address is within the allowed range, and translates the guest physical
-> > > address into a host physical address, then enters both into the I/O p=
-age
-> > > table or I/O TLB.
-> >=20
-> > So when a VM is booted it is passed a device tree with that DMA window?
->=20
-> Correct.
->=20
-> > Given what you describe above this seems to be more of a configuration
-> > option to restrict the IOMMU to a subset of the physical memory for
-> > purposes of virtualization. So I agree that this wouldn't be a good fit
-> > for what we're trying to achieve with iommus or dma-ranges in this
-> > binding.
->=20
-> Thinking about it again now, I wonder if there are any other use cases
-> for windowed IOMMUs. If this is the only one, there might be no use
-> in the #address-cells model I suggested instead of your original
-> #iommu-cells.
+> The simplest common scenario to show synchronous outl is this:
+> 
+> void pci_isr()
+> {
+>    if (inl(status_reg) & INT_PENDING)
+>       outl(ACK_INT,status_reg);
+> }
+> 
+> Where the outl is not expected to complete at the CPU until the device
+> has lowered the level triggered interrupt line.
+> 
+> If outl is not synchronous then a spurious interrupt will be caused.
+> 
+> When converting a driver to MMIO you'd often have to do this:
+> 
+> void pci_isr()
+> {
+>    if (readl(status_reg) & INT_PENDING) {
+>       writel(ACK_INT,status_reg);
+>       readl(status_reg); // Synchronizing read, flushes write.
+>    }
+> }
+> 
+> Which is one of the software visible impacts of io vs mmio.
+> 
+> > Hmm, when you say `guaranteed to flush the DMA transaction', is that a PCI
+> > requirement? If so, whether or not that DMA data is then visible to the CPU
+> > is really specific to the host-controller implementation. It could easily be
+> > buffered somewhere between the host controller and memory, for example.
+> 
+> PCI has the producer/consumer ordering model as part of the
+> driving concept in the spec. Basically it wants to see the ordering
+> model preserved right to the driver code itself.
+> 
+> Realistically, way back, archs that couldn't do the synchronous IO
+> (like my old MIPS design) had to convert their drivers to MMIO and run
+> that way. It never worked 100% properly, or made sense to try an use an
+> async outl, even though some systems provided it 
 
-So in this case virtualization is the reason why we need the DMA window.
-The reason for that is that the guest has no other way of knowing what
-other guests might be using, so it's essentially a mechanism for the
-host to manage the DMA region and allocate subregions for each guest. If
-virtualization isn't an issue then it seems to me that the need for DMA
-windows goes away because the operating system will track DMA regions
-anyway.
+Thanks for the extra background information!
 
-The only reason I can think of why a windowed IOMMU would be useful is
-to prevent two or more devices from stepping on each others' toes. But
-that's a problem that the OS should already be handling during DMA
-buffer allocation, isn't it?
-
-> > > > > I would like to add an explanation about dma-ranges to the bindin=
-g:
-> > > > >=20
-> > > > > 8<--------
-> > > > > The parent bus of the iommu must have a valid "dma-ranges" proper=
-ty
-> > > > > describing how the physical address space of the IOMMU maps into
-> > > > > memory.
-> > > >=20
-> > > > With physical address space you mean the addresses after translatio=
-n,
-> > > > not the I/O virtual addresses, right? But even so, how will this wo=
-rk
-> > > > when there are multiple IOMMU devices? What determines which IOMMU =
-is
-> > > > mapped via which entry?
-> > > >=20
-> > > > Perhaps having multiple IOMMUs implies that there will have to be s=
-ome
-> > > > partitioning of the parent address space to make sure two IOMMUs do=
-n't
-> > > > translate to the same ranges?
-> > >=20
-> > > These dma-ranges properties would almost always be for the entire RAM,
-> > > and we can treat anything else as a bug.
-> >=20
-> > Would it typically be a 1:1 mapping? In that case could we define an
-> > empty dma-ranges property to mean exactly that? That would make it
-> > consistent with the ranges property.
->=20
-> Yes, I believe that is how it's already defined.
-
-I've gone through the proposal at [0] again, but couldn't find a mention
-of an empty "dma-ranges" property. But regardless I think that a 1:1
-mapping is the obvious meaning of an empty "dma-ranges" property.
-
-[0]: http://www.openfirmware.org/ofwg/proposals/Closed/Accepted/410-it.txt
-
-One thing I'm not sure about is whether dma-ranges should be documented
-in this binding at all. Since there's an accepted standard proposal it
-would seem that it doesn't need to be specifically mentioned. One other
-option would be to link to the above proposal from the binding and then
-complement that with what an empty "dma-ranges" property means.
-
-Or we could possible document this in a file along with other standard
-properties. I don't think we currently do that for any properties, but
-my concern is that there will always be a limited number of people
-knowing about how such properties are supposed to work. If all of a
-sudden all these people would disappear, everybody else would be left
-with references to these properties but nowhere to look for their
-meaning.
-
-> > > > > A device with an "iommus" property will ignore the "dma-ranges" p=
-roperty
-> > > > > of the parent node and rely on the IOMMU for translation instead.
-> > > >=20
-> > > > Do we need to consider the case where an IOMMU listed in iommus isn=
-'t
-> > > > enabled (status =3D "disabled")? In that case presumably the device=
- would
-> > > > either not function or may optionally continue to master onto the p=
-arent
-> > > > untranslated.
-> > >=20
-> > > My reasoning was that the DT should specify whether we use the IOMMU
-> > > or not. Being able to just switch on or off the IOMMU sounds nice as
-> > > well, so we could change the text above to do that.
-> > >=20
-> > > Another option would be to do this in the IOMMU code, basically
-> > > falling back to the IOMMU parent's dma-ranges property and using
-> > > linear dma_map_ops when that is disabled.
-> >=20
-> > Yes, it should be trivial for the IOMMU core code to take care of this
-> > special case. Still I think it's worth mentioning it in the binding so
-> > that it's clearly specified.
->=20
-> Agreed.
-
-Okay, I have a new version of the binding that I think incorporates all
-the changes discussed so far. It uses #address-cells and #size-cells to
-define the length of the specifier, but if we decide against that it can
-easily be changed again.
-
-Thierry
-
---gKMricLos+KVdGMg
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTfGDIAAoJEN0jrNd/PrOhVooP/27Bf22lkTAWzMAboZ3YpGFh
-e7okRs+gzx4zl75Du9xT38uDzDvdHY/TBrmPtuziyBdb6VVAX+tcTiWQrFhqXHFl
-7jRqtWAhMgFkZRuD5cZ7MuwuuqfX0+3Oi0ctqH8+V6fMsKSP1s5pRElLBWigaG/p
-ggqIeioDIYLtVE4rFSq6HpjF7gqMA6+HsT3V/MGlNd+ej9LpMBgeiCWQxZaFANYi
-N/AVmE9PmlxMupt0sAeU6mYhhUcAFsZRqZG6BAvtax94B1SvYu5vBDj2HHlXkf2C
-yW1Gj5gUdMr6GT3/kAprsZQggxEUdk+4n/zco5l7NhzJxTdKCUVbtBcZdBZUxq6U
-qVqtng+54UW3/FQC+MWt7+9SzdcSAuuceI7nxj5SDLW8bg44rewz84jC82g08EIc
-0zgZvzOuIN2UuGc1k2whSMFCrFTcSFZB0FJnPNU44qAUhS0qy7s1qj0sDYbV7r2F
-b8j+11zeFuuNChS+3mjyX6UfYy+r6X811vTrkosRrQw7898zQI5HsOcWia2q1CrY
-cIaLsLNGA/M+R6ywwbl9B5ED6hWD+bvQz+VhvHX0LqOVmHQCi59DdAhfPzE5owOy
-3Fhxb0pXNs4/KA6alQGcpy0FHikotDWQsWIkXK+avCfnSB54nWwmKorkwCa8tRBv
-5K+uVvmdZN6R6zVXp36C
-=5MKV
------END PGP SIGNATURE-----
-
---gKMricLos+KVdGMg--
-
---===============2451171645162206626==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============2451171645162206626==--
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
