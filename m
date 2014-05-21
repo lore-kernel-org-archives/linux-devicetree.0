@@ -1,57 +1,145 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: mux: Add more warnings to i2c-arb-gpio-challenge
- docs
-Date: Wed, 21 May 2014 12:29:16 +0200
-Message-ID: <20140521102916.GL2708@katana>
-References: <1398792651-27115-1-git-send-email-dianders@chromium.org>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v2 02/18] drm/exynos: use wait_event_timeout() for safety
+ usage
+Date: Wed, 21 May 2014 19:37:36 +0900
+Message-ID: <537C81F0.3060108@samsung.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-3-git-send-email-yj44.cho@samsung.com>
+ <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
+ <537C4775.1050702@samsung.com>
+ <CAGS+omB_xgErG9u_0XB=UpJCrMhhkOu-Sjv_zupOn1V4i-V_-w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lHuqAdgBYNjQz/wy"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1398792651-27115-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAGS+omB_xgErG9u_0XB=UpJCrMhhkOu-Sjv_zupOn1V4i-V_-w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, s.trumtrar@pengutronix.de, Kyungmin Park <kyungmin.park@samsung.com>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Daniel,
 
---lHuqAdgBYNjQz/wy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 05/21/2014 03:45 PM, Daniel Kurtz wrote:
+> On Wed, May 21, 2014 at 2:28 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+>> Hi Daniel
+>>
+>>
+>> On 05/21/2014 03:01 PM, Daniel Kurtz wrote:
+>>>
+>>> On Wed, May 21, 2014 at 12:42 PM, YoungJun Cho <yj44.cho@samsung.com>
+>>> wrote:
+>>>>
+>>>> There could be the case that the page flip operation isn't finished
+>>>> correctly
+>>>> with some abnormal condition such as panel reset. So this patch replaces
+>>>> wait_event() with wait_event_timeout() to avoid waiting for page flip
+>>>> completion
+>>>> infinitely.
+>>>> And clears exynos_crtc->pending_flip in exynos_drm_crtc_page_flip() when
+>>>> exynos_drm_crtc_mode_set_commit() is failed.
+>>>>
+>>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>> ---
+>>>>    drivers/gpu/drm/exynos/exynos_drm_crtc.c |    7 +++++--
+>>>>    1 file changed, 5 insertions(+), 2 deletions(-)
+>>>>
+>>>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>>> b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>>> index 95c9435..3bf091d 100644
+>>>> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>>> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>>> @@ -69,8 +69,10 @@ static void exynos_drm_crtc_dpms(struct drm_crtc
+>>>> *crtc, int mode)
+>>>>
+>>>>           if (mode > DRM_MODE_DPMS_ON) {
+>>>>                   /* wait for the completion of page flip. */
+>>>> -               wait_event(exynos_crtc->pending_flip_queue,
+>>>> -                               atomic_read(&exynos_crtc->pending_flip)
+>>>> == 0);
+>>>> +               if (!wait_event_timeout(exynos_crtc->pending_flip_queue,
+>>>> +                               !atomic_read(&exynos_crtc->pending_flip),
+>>>> +                               HZ/20))
+>>>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
+>>>
+>>>
+>>> I meant that changing this to wait_event_timeout() seems to be masking
+>>> the original problem, that pending_flip wasn't being cleared.
+>>
+>>
+>> Yes, I agree.
+>>
+>> The original purpose of this patch is to avoid lock-up during modetest (with
+>> test_vsync) with command mode panel.
+>> In MIPI DSI command mode interface, the display controller can not generate
+>> VSYNC signal and uses TE signal instead which is generated by panel.
+>> If there is an abnormal power off or reset condition, it is possible that
 
-On Tue, Apr 29, 2014 at 10:30:51AM -0700, Doug Anderson wrote:
-> This adds some more warnings to the i2c-arb-gpio-challenge docs to
-> help encourage people not to use it in their designs unless they have
-> no choice.
->=20
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
+At first, I omitted the keyword "panel" at previous reply.
+The abnormal power off or reset condition could be happened in panel
+which generates TE signal.
 
-Woha, you forgot to add the i2c list. It nearly slipped through.
-Luckily, I found it nonetheless :) Applied to for-next, thanks!
+>> the display controller misses the TE signal and it makes lock-up.
+>> So I needed this patch.
+>
+> If flips are not completing on MIPI DSI, may I recommend that you
+> start a timer when scheduling such a flip in the MIPI DSI driver that
+> will expire after a timeout.  In that timer's expiration handler, you
 
+The MIPI DSI doesn't take care page flip operation at all.
+And the exynos_drm_crtc_finish_page_flip() is called only by interrupt 
+handler of display controllers.
+So there is no suitable place to set time-out for this.
 
---lHuqAdgBYNjQz/wy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> can then go through the normal process of completing a flip.  This
+> would make the timeout transparent to the generic exynos_drm_crtc
+> layer, which can then do its normal flip complete processing: send
+> pending vblank events, put vblank, clear pending_flip, etc.
+> Does that make sense?
+> Is it possible?
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.15 (GNU/Linux)
+This function is exynos_drm_crtc_dpms() and my patch is for DPMS OFF case.
+That means all page flip operations should be finished already to
+control DPMS off and in almost every case, there is no problem.
 
-iQIcBAEBAgAGBQJTfH/8AAoJEBQN5MwUoCm29HgQAINpfBjhm47mPkMwwwWq0IL0
-lT9P2jq9Ad1P0ixLa4nju4n6W/nNonGEVMCzZKBOT/AAZADYU8gczsU5a+2tBlR/
-r63HFipAPOhuNz2a2DslzsrvXGETcTaxBXRNgeyEgrtuA2ZuCROUnK17efDlVlEJ
-hnIMD3nrNJvJ77+mKAGvFkpz+6bP9E8uCcplho5NZbAqnf1CKh7Weqsr45nfp56U
-Y3qW1A1RiAhGMuMCYAtD5HoKO9zRnecX/Kvv0PXakYOCbhygEH+vQxo0AdsAEYTM
-ZJNymbAPjjEsSjASQ2JulwMD//KJ4Pn7F+xYik8ZulLNw9JVubq2YFkXVRidE4V3
-Mz/7816uI/O0K9MpdLtqQX53UrhwOqQ0vEHgtmRCeKIFpeP2AX4iNesG/h/K7rJg
-0vniJcqUs/iJnAlAnQQ3ez0ryT2oeBCHzWKAAuYiux8FHof2DIoVHhWzneymutkO
-+Y/sEB9SWAW1KpYvFOUTIspAixKiRg7TDO9PQk5W4cRwvp3Q/sed3nYDXkHRXNOt
-IfJsdvO9e+D7pPP+wl+iBNte2MLe0gvr/dQN3gGwrzMsd3tz662IqLJTsqsBMPbm
-9iZSzsbeujtnjLMyrLS6VY23SOKORCMqvwExnMDl3hBTqvd9xM5prxOZUZQLZqgJ
-2NbFXMay5tRPXMum2NgA
-=itao
------END PGP SIGNATURE-----
+But if there is an issue like this lock-up, I think it should escape 
+this condition.
 
---lHuqAdgBYNjQz/wy--
+Thank you.
+Best regards YJ
+
+>
+> -Dan
+>
+>>> Now that you are now clearing pending_flip in the error path, you
+>>> don't need the timeout, right?
+>>>
+>>
+>> There might be my missing point. Would you explain more detail?
+>>
+>>
+>> Thank you.
+>> Best regards YJ
+>>
+>>> -Dan
+>>>
+>>>>                   drm_vblank_off(crtc->dev, exynos_crtc->pipe);
+>>>>           }
+>>>>
+>>>> @@ -259,6 +261,7 @@ static int exynos_drm_crtc_page_flip(struct drm_crtc
+>>>> *crtc,
+>>>>                           spin_lock_irq(&dev->event_lock);
+>>>>                           drm_vblank_put(dev, exynos_crtc->pipe);
+>>>>                           list_del(&event->base.link);
+>>>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
+>>>>                           spin_unlock_irq(&dev->event_lock);
+>>>>
+>>>>                           goto out;
+>>>> --
+>>>> 1.7.9.5
+>>>>
+>>>
+>>
+>
