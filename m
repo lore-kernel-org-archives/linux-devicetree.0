@@ -1,72 +1,115 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: Re: [PATCH] ARM: dts: duovero-parlor: Add HDMI output
-Date: Wed, 21 May 2014 08:43:07 +0200
-Message-ID: <537C4AFB.3050307@epfl.ch>
-References: <1400595946-1294-1-git-send-email-florian.vaussard@epfl.ch> <CAGhQ9VxtJwrKzW77mo=y9_gvCRW_8TJEp90OVN+YPg2RpC=b_w@mail.gmail.com>
-Reply-To: florian.vaussard@epfl.ch
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v2 02/18] drm/exynos: use wait_event_timeout() for safety usage
+Date: Wed, 21 May 2014 14:45:25 +0800
+Message-ID: <CAGS+omB_xgErG9u_0XB=UpJCrMhhkOu-Sjv_zupOn1V4i-V_-w@mail.gmail.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-3-git-send-email-yj44.cho@samsung.com> <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
+ <537C4775.1050702@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CAGhQ9VxtJwrKzW77mo=y9_gvCRW_8TJEp90OVN+YPg2RpC=b_w@mail.gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Joachim Eastwood <manabian@gmail.com>
-Cc: Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <537C4775.1050702@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, s.trumtrar@pengutronix.de, Kyungmin Park <kyungmin.park@samsung.com>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joachim,
-
-On 05/20/2014 08:09 PM, Joachim Eastwood wrote:
-> On 20 May 2014 16:25, Florian Vaussard <florian.vaussard@epfl.ch> wrote:
->> Add the necessary DTS nodes to enable the micro-HDMI output on Parlor
->> board.
+On Wed, May 21, 2014 at 2:28 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+> Hi Daniel
+>
+>
+> On 05/21/2014 03:01 PM, Daniel Kurtz wrote:
 >>
->> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
->> ---
->>  arch/arm/boot/dts/omap4-duovero-parlor.dts | 42 ++++++++++++++++++++++++++++++
->>  1 file changed, 42 insertions(+)
+>> On Wed, May 21, 2014 at 12:42 PM, YoungJun Cho <yj44.cho@samsung.com>
+>> wrote:
+>>>
+>>> There could be the case that the page flip operation isn't finished
+>>> correctly
+>>> with some abnormal condition such as panel reset. So this patch replaces
+>>> wait_event() with wait_event_timeout() to avoid waiting for page flip
+>>> completion
+>>> infinitely.
+>>> And clears exynos_crtc->pending_flip in exynos_drm_crtc_page_flip() when
+>>> exynos_drm_crtc_mode_set_commit() is failed.
+>>>
+>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>> ---
+>>>   drivers/gpu/drm/exynos/exynos_drm_crtc.c |    7 +++++--
+>>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>> b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>> index 95c9435..3bf091d 100644
+>>> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>>> @@ -69,8 +69,10 @@ static void exynos_drm_crtc_dpms(struct drm_crtc
+>>> *crtc, int mode)
+>>>
+>>>          if (mode > DRM_MODE_DPMS_ON) {
+>>>                  /* wait for the completion of page flip. */
+>>> -               wait_event(exynos_crtc->pending_flip_queue,
+>>> -                               atomic_read(&exynos_crtc->pending_flip)
+>>> == 0);
+>>> +               if (!wait_event_timeout(exynos_crtc->pending_flip_queue,
+>>> +                               !atomic_read(&exynos_crtc->pending_flip),
+>>> +                               HZ/20))
+>>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
 >>
->> diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
->> index 96f51d8..3b234b8 100644
->> --- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
->> +++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
->> @@ -15,6 +15,10 @@
->>         model = "OMAP4430 Gumstix Duovero on Parlor";
->>         compatible = "gumstix,omap4-duovero-parlor", "gumstix,omap4-duovero", "ti,omap4430", "ti,omap4";
 >>
->> +       aliases {
->> +               display0 = &hdmi0;
->> +       };
->> +
->>         leds {
->>                 compatible = "gpio-leds";
->>                 led0 {
->> @@ -35,6 +39,19 @@
->>                         gpio-key,wakeup;
->>                 };
->>         };
->> +
->> +       hdmi0: connector@0 {
->> +               compatible = "hdmi-connector";
->> +               label = "hdmi";
->> +
->> +               type = "d";
->> +
->> +               port {
->> +                       hdmi_connector_in: endpoint {
->> +                               remote-endpoint = <&hdmi_out>;
->> +                       };
->> +               };
->> +       };
->>  };
-> 
-> No, HPD (hotplug) pin?
-> 
-> I think Parlor has one and the "hdmi-connector" binding now supports
-> it. See Tomi's 3.16/fbdev-omap branch.
-> 
+>> I meant that changing this to wait_event_timeout() seems to be masking
+>> the original problem, that pending_flip wasn't being cleared.
+>
+>
+> Yes, I agree.
+>
+> The original purpose of this patch is to avoid lock-up during modetest (with
+> test_vsync) with command mode panel.
+> In MIPI DSI command mode interface, the display controller can not generate
+> VSYNC signal and uses TE signal instead which is generated by panel.
+> If there is an abnormal power off or reset condition, it is possible that
+> the display controller misses the TE signal and it makes lock-up.
+> So I needed this patch.
 
-I will check. Thank you for the heads up.
+If flips are not completing on MIPI DSI, may I recommend that you
+start a timer when scheduling such a flip in the MIPI DSI driver that
+will expire after a timeout.  In that timer's expiration handler, you
+can then go through the normal process of completing a flip.  This
+would make the timeout transparent to the generic exynos_drm_crtc
+layer, which can then do its normal flip complete processing: send
+pending vblank events, put vblank, clear pending_flip, etc.
+Does that make sense?
+Is it possible?
 
-Regards,
-Florian
+-Dan
+
+>> Now that you are now clearing pending_flip in the error path, you
+>> don't need the timeout, right?
+>>
+>
+> There might be my missing point. Would you explain more detail?
+>
+>
+> Thank you.
+> Best regards YJ
+>
+>> -Dan
+>>
+>>>                  drm_vblank_off(crtc->dev, exynos_crtc->pipe);
+>>>          }
+>>>
+>>> @@ -259,6 +261,7 @@ static int exynos_drm_crtc_page_flip(struct drm_crtc
+>>> *crtc,
+>>>                          spin_lock_irq(&dev->event_lock);
+>>>                          drm_vblank_put(dev, exynos_crtc->pipe);
+>>>                          list_del(&event->base.link);
+>>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
+>>>                          spin_unlock_irq(&dev->event_lock);
+>>>
+>>>                          goto out;
+>>> --
+>>> 1.7.9.5
+>>>
+>>
+>
