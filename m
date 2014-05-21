@@ -1,82 +1,64 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 8/9] DMA: shdma: initial of common code
-Date: Wed, 21 May 2014 22:14:47 +0200
-Message-ID: <CAMuHMdU-FEnAjjcACaFt_-5i4EFDnj=uqrM_ew+nz7n9+ndbSQ@mail.gmail.com>
-References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
-	<1397511312-4845-9-git-send-email-ben.dooks@codethink.co.uk>
-	<4431489.B0PGdfS6ct@wuerfel>
-	<534D01EB.3080702@codethink.co.uk>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v1 1/4] ARM: dts: qcom: Add APQ8084 SoC support
+Date: Wed, 21 May 2014 23:16:09 +0300
+Message-ID: <537D0989.6080108@mm-sol.com>
+References: <1400684225-21381-1-git-send-email-gdjakov@mm-sol.com> <1400684225-21381-2-git-send-email-gdjakov@mm-sol.com> <537CE141.6010500@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <534D01EB.3080702@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linux-sh list <linux-sh@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <537CE141.6010500@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+On 21.05.14, 20:24, Stephen Boyd wrote:
+> On 05/21/14 07:57, Georgi Djakov wrote:
+>> +
+>> +		L2: l2-cache {
+>> +			compatible = "qcom,arch-cache";
+>> +			cache-level = <2>;
+>> +			interrupts = <0 2 0x4>;
+> 
+> Let's leave out interrupts until the binding is accepted.
+> 
+>> +			qcom,saw = <&saw_l2>;
+>> +		};
+>> +	};
+>> +
+>> +	cpu-pmu {
+>> +		compatible = "qcom,krait-pmu";
+>> +		interrupts = <1 7 0xf04>;
+>> +	};
+>> +
+>> +	soc: soc {
+>> +		#address-cells = <1>;
+>> +		#size-cells = <1>;
+>> +		ranges;
+>> +		compatible = "simple-bus";
+>> +
+>> +		intc: interrupt-controller@f9000000 {
+>> +			compatible = "qcom,msm-qgic2";
+>> +			interrupt-controller;
+>> +			#interrupt-cells = <3>;
+>> +			reg = <0xf9000000 0x1000>,
+>> +			      <0xf9002000 0x1000>;
+>> +		};
+>> +
+>> +		timer {
+>> +			compatible = "arm,armv7-timer";
+>> +			interrupts = <1 2 0xf08>,
+>> +				     <1 3 0xf08>,
+>> +				     <1 4 0xf08>,
+>> +				     <1 1 0xf08>;
+>> +			clock-frequency = <19200000>;
+>> +		};
+> 
+> Please move this timer node out of the soc container below the pmu.
+> 
 
-On Tue, Apr 15, 2014 at 11:54 AM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
->>>   static struct dma_chan *shdma_of_xlate(struct of_phandle_args
->>> *dma_spec,
->>>                                        struct of_dma *ofdma)
->>>   {
->>> +       struct platform_device *pdev = ofdma->of_dma_data;
->>>         u32 id = dma_spec->args[0];
->>>         dma_cap_mask_t mask;
->>>         struct dma_chan *chan;
->>>
->>> -       if (dma_spec->args_count != 1)
->>> +       if (dma_spec->args_count == 2) {
->>> +               struct shdma_of_state *state =
->>> platform_get_drvdata(pdev);
->>> +               struct shdma_of_client *client;
->>> +
->>> +               client = shdma_of_find_client(state, id);
->>> +               if (!client) {
->>> +                       client = devm_kzalloc(&pdev->dev,
->>> sizeof(*client),
->>> +                                             GFP_KERNEL);
->>> +                       if (!client)
->>> +                               return NULL;
->>> +
->>> +                       client->index =
->>> atomic_inc_return(&of_slave_index);
->>> +                       client->cfg.slave_id = id;
->>> +                       client->cfg.mid_rid = id;
->>> +                       client->cfg.chcr = dma_spec->args[1];
->>
->>
->> Can you explain the purpose of setting the chcr in DT? For all I can
->> tell, this should come from the device driver when that calls the
->> dma_slave_config function, unlike the mid_rid value.
->
->
-> See previous note about transfer-widths and register-sizes not always
-> matching. I also do not have any idea about other SoCs in the series
-> if there are any differences between channel settings.
+Will do. Thanks for the comments!
 
-If you look for sh_dmae_slave_config in arch/arm arch/sh, you find the values
-for the existing board support.
-
-The same device always seem to use the same value, i.e. MMC always uses
-32-bit, SCIF uses 8-bit, SDHI uses 16-bit. So I think it could be hardcoded
-in the device driver (passed via enum dma_slave_buswidth {src,dst}_addr_width
-in dma_slave_config?), and you can drop the field in the bindings.
-
-Notes:
-  - RSPI is special: on SH, it's 16-bit, while QSPI on R-Car uses 8-bit.
-  - SDHI uses 32-bit according to the R-Car docs, but the (working) code
-    uses 16-bit?
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+BR,
+Georgi
