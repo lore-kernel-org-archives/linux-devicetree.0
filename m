@@ -1,74 +1,62 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/2] irqchip: Add generic gic-v1/gic-v2 compat strings.
-Date: Wed, 21 May 2014 16:27:33 -0500
-Message-ID: <CAL_JsqKpgWBQ6qFrDHt13wqRx1afPeapEz5z16enUyUX1fgUJg@mail.gmail.com>
-References: <1400680085-10430-1-git-send-email-Nikolay.Borisov@arm.com>
-	<1400680085-10430-2-git-send-email-Nikolay.Borisov@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH RESEND 0/9 net-next] net: of_phy_connect_fixed_link removal
+Date: Wed, 21 May 2014 14:38:42 -0700
+Message-ID: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400680085-10430-2-git-send-email-Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 21, 2014 at 8:48 AM, Nikolay Borisov
-<Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org> wrote:
-> The current set of GIC compatible strings only contains specific
-> implementations (e.g. arm,cortex-a9-gic) rather than revisions of the
-> standard (e.g. arm,gic-v2), so each new implementation must either claim
-> to be an extension of an existing implementation or have a new string
-> added to the driver. This may be problematic when workarounds are
-> required for bugs in particular implementations, as said workaround may
-> end up targeting a wider set of implementations than intended.
->
-> To prevent these issues, this patch adds compatible strings for the
-> revisions of the GIC spec which all GIC implementations should be able
-> to claim conformance to in addition to any particular implementation
-> specific string, e.g.
+Hi all,
 
-This just encourages not having specific properties which then also
-prevents being able to add work-arounds later. SOCs using the a9 or
-a15 string ONLY that are not an a9 or a15 are wrong. That's what we
-should fix. Adding more generic strings is not going to help that. Do
-you have a specific work-around you need to implement?
+This patch set removes of_phy_connect_fixed_link() from the tree now that
+we have a better solution for dealing with fixed PHY (emulated PHY) devices
+for drivers that require them.
 
-Given that the GIC specs are obviously meaningless since we now have
-GICv2 with 16 core support as well as the special exynos gics, I'm not
-inclined to accept this.
+First two patches update the 'fixed-link' Device Tree binding and drivers to
+refere to it.
 
-Rob
+Patches 3 to 7 update the in-tree network drivers that use
+of_phy_connect_fixed_link()
 
-> compatible = "$VENDOR,specific-gic-variant", "arm,gic-v2";
->
-> Signed-off-by: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-> Acked-by: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/irqchip/irq-gic.c | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 57d165e..89e9b05 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -1073,6 +1073,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
->  }
->  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
->  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
-> +IRQCHIP_DECLARE(gic_v1, "arm,gic-v1", gic_of_init);
-> +IRQCHIP_DECLARE(gic_v2, "arm,gic-v2", gic_of_init);
->  IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
->  IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
->
-> --
-> 1.8.1.5
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Patch 8 removes of_phy_connect_fixed_link
+
+Patch 9 removes the PowerPC code that parsed the 'fixed-link' property.
+
+Patch 9 can be merged via the net-next tree if the PowerPC folks ack it,
+but it really has to be merged after the first 8 patches in order to avoid
+breakage.
+
+Florian Fainelli (9):
+  Documentation: devicetree: add old and deprecated 'fixed-link'
+  Documentation: devicetree: net: refer to fixed-link.txt
+  net: bcmgenet: use the new fixed PHY helpers
+  net: systemport: use the new fixed PHY helpers
+  fs_enet: use the new fixed PHY helpers
+  gianfar: use the new fixed PHY helpers
+  ucc_geth: use the new fixed PHY helpers
+  of: mdio: remove of_phy_connect_fixed_link
+  powerpc/fsl: fsl_soc: remove 'fixed-link' parsing code
+
+ .../devicetree/bindings/net/broadcom-bcmgenet.txt  |  2 +-
+ .../bindings/net/broadcom-systemport.txt           |  2 +-
+ .../devicetree/bindings/net/fixed-link.txt         | 12 +++++++
+ .../devicetree/bindings/net/fsl-tsec-phy.txt       |  5 +--
+ arch/powerpc/sysdev/fsl_soc.c                      | 32 ------------------
+ drivers/net/ethernet/broadcom/bcmsysport.c         | 17 ++++++++--
+ drivers/net/ethernet/broadcom/bcmsysport.h         |  1 +
+ drivers/net/ethernet/broadcom/genet/bcmmii.c       | 21 +++++++-----
+ .../net/ethernet/freescale/fs_enet/fs_enet-main.c  | 16 +++++----
+ drivers/net/ethernet/freescale/gianfar.c           | 14 ++++++--
+ drivers/net/ethernet/freescale/ucc_geth.c          | 14 ++++++--
+ drivers/of/of_mdio.c                               | 38 ----------------------
+ include/linux/of_mdio.h                            | 10 ------
+ 13 files changed, 75 insertions(+), 109 deletions(-)
+
+-- 
+1.9.1
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
