@@ -1,151 +1,55 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
-Date: Wed, 21 May 2014 10:38:34 -0500
-Message-ID: <CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
-References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
-	<1400169891-29546-2-git-send-email-tthayer@altera.com>
-	<20140516075344.GF949@pengutronix.de>
-	<CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
-	<20140519191206.GH949@pengutronix.de>
-	<CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
-	<CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
-	<20140520144446.GJ949@pengutronix.de>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v1 3/4] ARM: qcom: Add APQ8084-MTP board to mach-qcom
+Date: Wed, 21 May 2014 18:39:47 +0300
+Message-ID: <537CC8C3.6040600@mm-sol.com>
+References: <1400684225-21381-1-git-send-email-gdjakov@mm-sol.com> <1400684225-21381-4-git-send-email-gdjakov@mm-sol.com> <A6B00F86-FFD3-4FEF-B39E-EAA511565B80@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140520144446.GJ949@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Alan Tull <delicious.quinoa@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <A6B00F86-FFD3-4FEF-B39E-EAA511565B80@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> Hi!
+On 05/21/2014 06:18 PM, Kumar Gala wrote:
 >
-> On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
->> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+> On May 21, 2014, at 9:57 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote=
+:
+>
+>> Add board compatibility string to the board machine descriptors.
 >>
->> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> >>> >> new file mode 100644
->> >>> >> index 0000000..8f8746b
->> >>> >> --- /dev/null
->> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> >>> >> @@ -0,0 +1,11 @@
->> >>> >> +Altera SOCFPGA SDRAM Controller
->> >>> >> +
->> >>> >> +Required properties:
->> >>> >> +- compatible : "altr,sdr-ctl";
->> >>> >> +- reg : Should contain 1 register ranges(address and length)
->> >>> >> +
->> >>> >> +Example:
->> >>> >> +     sdrctl@ffc25000 {
->> >>> >> +             compatible = "altr,sdr-ctl";
->> >>> >> +             reg = <0xffc25000 0x1000>;
->> >>> >> +     };
->> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> >>> >> index df43702..6ce912e 100644
->> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
->> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> >>> >> @@ -676,6 +676,11 @@
->> >>> >>                       clocks = <&l4_sp_clk>;
->> >>> >>               };
->> >>> >>
->> >>> >> +             sdrctl@ffc25000 {
->> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
->> >>> >                                                    ^^^^^^^^^^
->> >>> >
->> >>> > Get rid of that, too, please.
->> >>>
->> >>> Hi Steffan,
->> >>>
->> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
->> >>> that has the ECC enable bitfield also includes the DRAM configuration
->> >>> bitfields that other drivers will want to access (specifically the
->> >>> FPGA bridge needs this information). Since this register will be
->> >>> shared between drivers,  syscon seems like the best solution.
->> >>>
->> >>
->> >> Hm, from looking at the documentation of the ctrlcfg I can't really
->> >> understand which bits you would need for the FPGA brigde and why.
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>> ---
+>> arch/arm/mach-qcom/board.c |    1 +
+>> 1 file changed, 1 insertion(+)
 >>
->> Hi Steffen,
+>> diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
+>> index bae617e..ae0a405 100644
+>> --- a/arch/arm/mach-qcom/board.c
+>> +++ b/arch/arm/mach-qcom/board.c
+>> @@ -18,6 +18,7 @@ static const char * const qcom_dt_match[] __initco=
+nst =3D {
+>> 	"qcom,msm8660-surf",
+>> 	"qcom,msm8960-cdp",
+>> 	"qcom,apq8074-dragonboard",
+>> +	"qcom,apq8084-mtp",
+>> 	NULL
+>> };
 >>
->> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
->> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
->> allows an FPGA port to come out of reset (enables that port).  Has no
->> other effect on SDRAM configuration.
->>
->> >> That all sounds like stuff you would want to set for the specific
->> >> RAM you are dealing with on a specific board.
->> >> What bridge are you talking about? The SDRAM bridge?
->>
->> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
->> register the only register in the sdr that the bridge driver needs.
+>> --
+>> 1.7.9.5
 >>
 >
-> So, what I suggested down ...
+> Let=92s just make this =93qcom,apq8084=94 to cover other future apq80=
+84 based boards.
 >
->> >>
->> >> I can see the problem with the ECC enable, though.
->> >>
->> >> Regards,
->> >> Steffen
->> >>
->> >
->> >>> >                 sdrctl@ffc25000 {
->> >>> >                         compatible = "altr,sdr-ctl";
->> >>> >                         reg = <0xffc25000 0x1000>;
->> >>> >                         ranges;
->> >>> >
->> >>> >                         edac@ffc2502c {
->> >>> >                                 compatible = "altr,sdram-edac";
->> >>> >                                 reg = <0xffc2502c 0x50>;
->> >>> >                                 interrupts = <0 39 4>;
->> >>> >                         };
->> >>> >                 };
->> >>> >
->> >>> > Then we can later add:
->> >>> >
->> >>> >                         sdr-ports: ports@ffc2507c {
->> >>> >                                 #reset-cells = <1>;
->> >>> >                                 compatible = "altr,sdr-ports";
->> >>> >                                 reg = <0xffc2507c 0x10>;
->> >>> >                                 clocks = <&ddr_dqs_clk>;
->> >>> >                                 ...
->> >>> >                         };
->>
+> - k
 >
-> ... here should work. No?! Just a simple driver that registers with the
-> reset-framework. I would add 0x7c to that driver and than that driver could
-> "configure" the port and let it out of reset.
->
-> I have done the same thing for the other 3 bridges, but am not finished yet.
-> Especially the GPV-stuff needs to at least be able to be added later if not now.
->
-> Regard,
-> Steffen
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Hi Steffen!
+Ok, agree!
 
-I'm not clear on how the EDAC driver will interact with the registers
-allocated to the SDRAM controller. If the group of registers from
-0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
-controller, how does the EDAC driver cleanly access that single
-register inside this range?
-
-Is the solution that I don't use request_region() (and therefore not
-request exclusive access) when setting up the SDRAM controller?
-
-If you could point me to your drivers for the other bridges that you
-reference, your code may answer my question.
-
-Thanks for your comments and insight.
-
-Thor
+Thanks,
+Georgi
