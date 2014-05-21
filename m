@@ -1,55 +1,74 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH] ARM: dts: move dp hpd gpio pin to pinctrl_0 for exynos5420
- peach_pit
-Date: Wed, 21 May 2014 17:57:22 +0530
-Message-ID: <1400675242-7423-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
+ for omap3-evm and ldp
+Date: Wed, 21 May 2014 15:44:54 +0300
+Message-ID: <537C9FC6.8020104@ti.com>
+References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-5-git-send-email-tony@atomide.com> <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com> <20140430174751.GA12362@atomide.com> <20140505183919.GA15463@atomide.com> <20140508233628.GJ2198@atomide.com> <536C7EA7.5000306@ti.com> <20140509153723.GD17814@atomide.com> <20140513213205.GB18001@atomide.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140513213205.GB18001@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-DP Hpd Gpio pin which is "gpx2-6" in Exynos 5420 based peach board,
-belongs to Pinctrl_0. It has moved to pinctrl_0 from pinctrl_3.
+--xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
-Based on Kukjin's for-next branch.
+On 14/05/14 00:32, Tony Lindgren wrote:
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts |   14 +++++++-------
- 1 file changed, 7 insertions(+), 7 deletions(-)
+> +&dss {
+> +	status =3D "ok";
+> +	vdds_dsi-supply =3D <&vpll2>;
+> +	port {
+> +		dpi_out: endpoint {
+> +			remote-endpoint =3D <&lcd_in>;
+> +			data-lines =3D <18>;
+> +		};
+> +	};
+> +};
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index d4127b0..29f64de 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -117,6 +117,13 @@
- 		samsung,pin-pud = <1>;
- 		samsung,pin-drv = <0>;
- 	};
-+
-+	dp_hpd_gpio: dp_hpd_gpio {
-+		samsung,pins = "gpx2-6";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <3>;
-+		samsung,pin-drv = <0>;
-+	};
- };
- 
- &pinctrl_3 {
-@@ -133,13 +140,6 @@
- 		samsung,pin-pud = <0>;
- 		samsung,pin-drv = <0>;
- 	};
--
--	dp_hpd_gpio: dp_hpd_gpio {
--		samsung,pins = "gpx2-6";
--		samsung,pin-function = <0>;
--		samsung,pin-pud = <3>;
--		samsung,pin-drv = <0>;
--	};
- };
- 
- &rtc {
--- 
-1.7.9.5
+I just noticed the vdds_dsi-supply there. While the driver currently
+uses that if available, I think it should be removed, and done the same
+way Florian did with his overo patches:
+
+/* Needed to power the DPI pins */
+&vpll2 {
+	regulator-always-on;
+};
+
+That supply is not DSS's supply, but it's used to power up the pins. If
+the pins were used as GPIOs, that power should be enabled.
+
+ Tomi
+
+
+
+--xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTfJ/GAAoJEPo9qoy8lh716JsP/1ZfdXg29Y4pgxRAe29m9sex
+wNKAIbnYzl8MMQviJ9BMHKSIqryYT8375JOL69P1JzDtZ6ZZCXinYxpS44RU5FDi
++klfT5IOMeC75au+uHKdeGOOky+zoNpzaVhs4HvJw77gFpRMvzvkZIjP2GqwapZe
+/o7//zcnpzhsyBzAY8od9NYR0FWMYDca2b6oYqohJmnN1SJpTanivxmBYQ8swYEr
+X+S9B7DuGDJaJajFeZR1uo5RBig5gVEmMF5O/y7zgfeLMSyUkWtOGW51GJWPifbi
+RNxci+lia0ZHelIRxxMBfYDft3diiO8ZKA25HcTqerxQBn0SMI5KwRgdkFfGjGVY
+Ht7vmZO4J8U6iVYAAPh3jwE8qss9dR4qLrH9sQzVkMHZuACKhniHf2tf8+eG9/u/
+9/O6OCf+RIbjR6+ITkmdknroBM4onUboNT41bU5Fcpn6UxglJ0a9/9xkYZGxpPOX
+u49/YYOY3dGekYsY5Pa0ba9eZ+eI52AbPwOFc0d9ei3uupZt9SXg2vSI2oaG8eHR
+iouihZ4ZyXY6Le91DirttrwU3+pmnu0OW4oPRylyWFXQYXGNso8+1w83oaevThk+
+MPoauEjatreqhpq5GdqnEJWz8VQuSmaLjhjIwM7JWzZprqRO5jG8LsJCv2auxoeH
+28Wjn78xXc44wOrvY2Dj
+=GcNQ
+-----END PGP SIGNATURE-----
+
+--xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB--
