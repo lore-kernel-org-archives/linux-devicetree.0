@@ -1,56 +1,75 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [PATCH v2 04/18] video: add command mode and command mode display
- timing
-Date: Wed, 21 May 2014 20:41:39 +0900
-Message-ID: <537C90F3.7050404@samsung.com>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-5-git-send-email-yj44.cho@samsung.com>
- <20140521110204.GB2014@ulmo>
+From: Neil Zhang <zhangwm-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Wed, 21 May 2014 04:46:41 -0700
+Message-ID: <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
+References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
+ <20140422103642.GF7484@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
+ <20140423170821.GJ5649@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+ <5360FB07.5030407@arm.com>
+ <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
+ <20140513184503.GF16388@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A087573F@SC-VEXCH4.marvell.com>
+ <537337F3.4080300@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140521110204.GB2014@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537337F3.4080300-5wv7dgnIgG8@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: 'Sudeep Holla' <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: "'linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org'" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "'linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org'" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "'linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "'devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org'" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Therry
-
-On 05/21/2014 08:02 PM, Thierry Reding wrote:
-> On Wed, May 21, 2014 at 01:42:56PM +0900, YoungJun Cho wrote:
->> This patch is based on videomode and display_timing relevant codes.
->> To support command mode panel, it does not need to guide its timing
->> information to the display controller like video mode panel,
->> but it requires signal timings to transfer video data.
->> So this patch adds cmdmode struct, cmdmode_display_timing struct and
->> the according helper functions to convert cmdmode_display_timing
->> to a generic cmdmode.
->
-> Can you point me to relevant documentation? I wasn't able to find it by
-> a quick scan through the DSI specification.
->
-
-I'm sorry to say that there is no specific one document.
-
-I referred to several ones, CPU interface, I80 interface and
-DBI document(last time you said it).
-I think this is good to check it.
-[ http://cache.freescale.com/files/dsp/doc/app_note/AN4180.pdf ]
-
-And I asked panel vendor custom service centre also.
-
-Thank you.
-Best regards YJ
-
-> Thierry
->
+U3VkZWVw77yMDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU3VkZWVw
+IEhvbGxhIFttYWlsdG86c3VkZWVwLmhvbGxhQGFybS5jb21dDQo+IFNlbnQ6IDIwMTTlubQ15pyI
+MTTml6UgMTc6MzINCj4gVG86IE5laWwgWmhhbmc7IFdpbGwgRGVhY29uDQo+IENjOiBTdWRlZXAg
+SG9sbGE7ICdsaW51eEBhcm0ubGludXgub3JnLnVrJzsNCj4gJ2xpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZyc7ICdsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnJzsNCj4gJ2Rl
+dmljZXRyZWVAdmdlci5rZXJuZWwub3JnJw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBBUk06
+IHBlcmY6IHNhdmUvcmVzdG9yZSBwbXUgcmVnaXN0ZXJzIGluIHBtIG5vdGlmaWVyDQo+IA0KPiAN
+Cj4gDQo+IE9uIDE0LzA1LzE0IDAzOjI4LCBOZWlsIFpoYW5nIHdyb3RlOg0KPiA+PiAtLS0tLU9y
+aWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+PiBGcm9tOiBXaWxsIERlYWNvbiBbbWFpbHRvOndpbGwu
+ZGVhY29uQGFybS5jb21dDQo+ID4+IFNlbnQ6IDIwMTTlubQ15pyIMTTml6UgMjo0NQ0KPiA+PiBU
+bzogTmVpbCBaaGFuZw0KPiA+PiBDYzogU3VkZWVwIEhvbGxhOyAnbGludXhAYXJtLmxpbnV4Lm9y
+Zy51ayc7DQo+ID4+ICdsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcnOw0KPiA+
+PiAnbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2VybmVs
+Lm9yZycNCj4gPj4gU3ViamVjdDogUmU6IFtQQVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3Rv
+cmUgcG11IHJlZ2lzdGVycyBpbiBwbQ0KPiA+PiBub3RpZmllcg0KPiA+Pg0KPiA+PiBPbiBNb24s
+IE1heSAxMiwgMjAxNCBhdCAxMToyMjowOUFNICswMTAwLCBOZWlsIFpoYW5nIHdyb3RlOg0KPiA+
+Pj4+PiBUaGUgZGV2aWNlIHRyZWUgYmluZGluZ3MgZm9yIHBvd2VyIGRvbWFpbnMgaXMgdW5kZXIg
+ZGlzY3Vzc2lvbiBbMV0NCj4gPj4+Pg0KPiA+Pj4+IFRoYW5rcyBmb3IgdGhlIGluZm9ybWF0aW9u
+Lg0KPiA+Pj4+IEJ1dCBpdCBjdXJyZW50bHkgZm9yIGRldmljZSBvbmx5LCBjb3JlIHJlbGF0ZWQg
+c3R1ZmYgYXJlIG5vdCBzdXBwb3J0ZWQuDQo+ID4+Pj4gQW5kIGlzIGl0IHJlYWxseSBnb29kIHRv
+IHJlZ2lzdGVyIHBvd2VyIHByb3ZpZGVyIGZvciBjb3JlIGFuZCBsZXQNCj4gPj4+PiB2ZnAgLyBw
+bXUgZXRjIHRvIGdldCBpdD8NCj4gPj4+Pg0KPiA+Pj4NCj4gPj4+IFdoYXQncyB5b3VyIHN1Z2dl
+c3Rpb24gYWJvdXQgaXQ/DQo+ID4+PiBJcyBpdCBPSyB0aGF0IEkgYWRkIGl0IHVuZGVyIHRoZSBQ
+TVUgbm9kZT8NCj4gPj4NCj4gPj4gSSBkb24ndCByZWFsbHkgbWluZC4gSSBqdXN0IHdhbnQgdG8g
+YXZvaWQgcmUtaW52ZW50aW5nIHRoZSB3aGVlbCBpbiBhDQo+ID4+IFBNVS1zcGVjaWZpYyB3YXkg
+YW5kIGhhdmluZyB0byBtYWludGFpbiB0aGF0IGNvZGUgZm9yZXZlciBiZWNhdXNlIGl0DQo+ID4+
+IGVuZGVkIHVwIGluIG91ciBEVCBkZXNjcmlwdGlvbi4NCj4gPj4NCj4gPj4gV2lsbA0KPiA+DQo+
+ID4gSSB3aWxsIHByZXBhcmUgYW5vdGhlciBwYXRjaCB0byBhZGQgRFQgZGVzY3JpcHRpb24gdW5k
+ZXIgUE1VIHNpbmNlDQo+ID4gdGhlcmUgaXMgbm8gZ2VuZXJpYyBwb3dlciBkb21haW4gc3VwcG9y
+dCBmb3IgcG0gbm90aWZpZXIgaWYgbm8gb3RoZXINCj4gY29uY2VybnMuDQo+ID4gV2UgY2FuIGNo
+YW5nZSB0aGUgbWFubmVyIGlmIHRoZXJlIGlzIGdlbmVyaWMgcG93ZXIgZG9tYWluIHN1cHBvcnQg
+Zm9yDQo+IHBtIG5vdGlmaWVyIGxhdGVyLg0KPiA+IFRoYW5rcy4NCj4gDQo+IE5vLCBwbGVhc2Ug
+ZG9uJ3QgYWRkIGFueSBEVCBiaW5kaW5ncyBmb3IgcG93ZXIgZG9tYWlucyBzcGVjaWZpYyB0byBQ
+TVUNCj4gbm9kZS4NCj4gV2UgY2FuJ3QgY2hhbmdlIHRoZSBEVCBiaW5kaW5ncyBvbmNlIGFkZGVk
+Lg0KPiANCj4gQXMgSSBwb2ludGVkIG91dCB0aGUgRFQgYmluZGluZ3MgZm9yIGdlbmVyaWMgcG93
+ZXIgZG9tYWlucyBhcmUgdW5kZXINCj4gZGlzY3Vzc2lvbi4NCj4gU2VlIGlmIHlvdSBjYW4gcmV1
+c2UgaXQsIGlmIG5vdCBoZWxwIGluIGV4dGVuZGluZyBpdCBzbyB0aGF0IGl0IGNhbiBiZSB1c2Vk
+Lg0KPiANCg0KU29ycnkgZm9yIHJlcGx5IGxhdGVyLg0KQXMgSSBzYWlkIGJlZm9yZSB0aGUgdW5k
+ZXIgZGlzY3Vzc2VkIGdlbmVyaWMgcG93ZXIgZG9tYWluIGlzIG5vdCBzdWl0YWJsZSBmb3INCkNQ
+VSBwZXJpcGhlcmFscyBzaW5jZSB0aGV5IGFyZSBhbGwga25vd24gYmVsb25nIHRvIENQVSBvciBj
+bHVzdGVyIHBvd2VyIGRvbWFpbi4NCklmIHdlIHdhbnQgdG8gZm9sbG93IHRoZSB3YXkgdGhleSBh
+cmUgZGlzY3Vzc2lvbiwgd2UgbmVlZCB0byByZWdpc3RlciBjb3JlIA0KYW5kIGNsdXN0ZXIgcG93
+ZXIgcHJvdmlkZXIsIGFuZCBuZWVkIHZmcC9naWMvcG11IGV0YyB0byByZXF1aXJlIHRoZW0uDQpJ
+cyBpdCByZWFsbHkgc3VpdGFibGU/DQoNCj4gUmVnYXJkcywNCj4gU3VkZWVwDQo+IA0KPiANCg0K
+QmVzdCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
