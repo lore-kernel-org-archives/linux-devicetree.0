@@ -1,53 +1,81 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v1 4/4] ARM: debug: qcom: Add APQ8084 DEBUG_LL UART support
-Date: Wed, 21 May 2014 14:14:29 -0500
-Message-ID: <A9A4B705-E550-407D-BDAD-91083417B356@codeaurora.org>
-References: <1400684225-21381-1-git-send-email-gdjakov@mm-sol.com> <1400684225-21381-5-git-send-email-gdjakov@mm-sol.com> <4365639.JcFl1cP048@wuerfel> <1400686086.856.15.camel@iivanov-dev>
-Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1400686086.856.15.camel@iivanov-dev>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Georgi Djakov <gdjakov@mm-sol.com>, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 1/2] ARM: topology: Use a clock if possible to get the CPU frequency
+Date: Wed, 21 May 2014 21:33:15 +0200
+Message-ID: <1400700796-5763-2-git-send-email-maxime.ripard@free-electrons.com>
+References: <1400700796-5763-1-git-send-email-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400700796-5763-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+The Cortex-A7 and Cortex-A15 based SoCs need a clock-frequency property in the
+topology code.
 
-On May 21, 2014, at 10:28 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote=
-:
+Allow to use a clock to provide the same information.
 
-> Hi,=20
->=20
-> On Wed, 2014-05-21 at 17:18 +0200, Arnd Bergmann wrote:
->> On Wednesday 21 May 2014 17:57:05 Georgi Djakov wrote:
->=20
->>>=20
->>> +#ifdef CONFIG_DEBUG_APQ8084_UART
->>> +#define MSM_DEBUG_UART_BASE    0xFA75E000
->>> +#define MSM_DEBUG_UART_PHYS    0xF995E000
->>> +#endif
->>> +
->=20
->> Maybe we should move debug/msm.S over to use
->> CONFIG_DEBUG_UART_PHYS/CONFIG_DEBUG_UART_VIRT now?
->>=20
->=20
-> There is patch which do this [1]. It was reviewed=20
-> by Stephen Boyd [2].
->=20
-> Regards,
-> Ivan
->=20
->=20
-> [1] https://lkml.org/lkml/2014/4/14/312
-> [2] https://lkml.org/lkml/2014/4/14/542
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/kernel/topology.c | 24 +++++++++++++++++-------
+ 1 file changed, 17 insertions(+), 7 deletions(-)
 
-I=92ll grab Ivan=92s patch and send via my qcom tree to arm-soc.
+diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
+index 0bc94b1fd1ae..2885993ccf53 100644
+--- a/arch/arm/kernel/topology.c
++++ b/arch/arm/kernel/topology.c
+@@ -11,6 +11,7 @@
+  * for more details.
+  */
+ 
++#include <linux/clk.h>
+ #include <linux/cpu.h>
+ #include <linux/cpumask.h>
+ #include <linux/export.h>
+@@ -100,8 +101,8 @@ static void __init parse_dt_topology(void)
+ 	__cpu_capacity = kzalloc(alloc_size, GFP_NOWAIT);
+ 
+ 	for_each_possible_cpu(cpu) {
+-		const u32 *rate;
+-		int len;
++		struct clk *clk;
++		u32 rate = 0;
+ 
+ 		/* too early to use cpu->of_node */
+ 		cn = of_get_cpu_node(cpu, NULL);
+@@ -117,14 +118,23 @@ static void __init parse_dt_topology(void)
+ 		if (cpu_eff->compatible == NULL)
+ 			continue;
+ 
+-		rate = of_get_property(cn, "clock-frequency", &len);
+-		if (!rate || len != 4) {
+-			pr_err("%s missing clock-frequency property\n",
+-				cn->full_name);
++		clk = of_clk_get(cn, 0);
++		if (!IS_ERR(clk)) {
++			rate = clk_get_rate(clk);
++		} else {
++			if (of_property_read_u32(cn, "clock-frequency", &rate)) {
++				pr_err("%s missing clocks or clock-frequency properties\n",
++				       cn->full_name);
++				continue;
++			}
++		}
++
++		if (!rate) {
++			pr_err("%s invalid CPU frequency", cn->full_name);
+ 			continue;
+ 		}
+ 
+-		capacity = ((be32_to_cpup(rate)) >> 20) * cpu_eff->efficiency;
++		capacity = ((rate) >> 20) * cpu_eff->efficiency;
+ 
+ 		/* Save min capacity of the system */
+ 		if (capacity < min_capacity)
+-- 
+1.9.3
 
-- k
-
---=20
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
