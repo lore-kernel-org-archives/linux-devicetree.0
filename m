@@ -1,64 +1,56 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RESEND net-next 4/9] net: systemport: use the new fixed
- PHY helpers
-Date: Wed, 21 May 2014 15:02:42 -0700
-Message-ID: <CAGVrzcbBQFhw-dUh+tFm8H5m9-fmVgutChS8wUG-F6sTBoRq-g@mail.gmail.com>
-References: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com>
- <1400708331-18088-5-git-send-email-f.fainelli@gmail.com> <537D20EA.1000305@cogentembedded.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCHv5 09/10] DTS: ARM: OMAP3-N900: Add SSI support
+Date: Wed, 21 May 2014 15:08:07 -0700
+Message-ID: <20140521220807.GB14520@atomide.com>
+References: <1399739870-13526-1-git-send-email-sre@kernel.org>
+ <1399739870-13526-10-git-send-email-sre@kernel.org>
+ <20140514215503.GM27426@atomide.com>
+ <20140520003538.GD15793@atomide.com>
+ <20140521182513.GA26285@earth.universe>
+ <20140521184319.GL17417@atomide.com>
+ <20140521194527.GM17417@atomide.com>
+ <20140521215055.GA26362@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537D20EA.1000305-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140521215055.GA26362@earth.universe>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-21 14:55 GMT-07:00 Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>:
-> On 05/22/2014 01:38 AM, Florian Fainelli wrote:
->
->> of_phy_connect_fixed_link() is becoming obsolete, and also required
->> platform code to register the fixed PHYs at the specified addresses for
->> those to be usable. Get rid of it and use the new of_phy_is_fixed_link()
->> plus of_phy_register_fixed_link() helpers to transition over the new
->> scheme.
->
->
->> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->> ---
->>   drivers/net/ethernet/broadcom/bcmsysport.c | 17 +++++++++++++++--
->>   drivers/net/ethernet/broadcom/bcmsysport.h |  1 +
->>   2 files changed, 16 insertions(+), 2 deletions(-)
->
->
->> diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c
->> b/drivers/net/ethernet/broadcom/bcmsysport.c
->> index d40c5b969e9e..dc708a888f80 100644
->> --- a/drivers/net/ethernet/broadcom/bcmsysport.c
->> +++ b/drivers/net/ethernet/broadcom/bcmsysport.c
->> @@ -1327,8 +1327,8 @@ static int bcm_sysport_open(struct net_device *dev)
->>         /* Read CRC forward */
->>         priv->crc_fwd = !!(umac_readl(priv, UMAC_CMD) & CMD_CRC_FWD);
->>
->> -       priv->phydev = of_phy_connect_fixed_link(dev,
->> bcm_sysport_adj_link,
->> -
->> priv->phy_interface);
->> +       priv->phydev = of_phy_connect(dev, priv->phy_dn,
->> bcm_sysport_adj_link,
->> +                                       0, priv->phy_interface);
->
->
->    The continuation line should start on the next character after ( on the
-> above line, according to the networking coding style.
+* Sebastian Reichel <sre@kernel.org> [140521 14:51]:
+> On Wed, May 21, 2014 at 12:45:28PM -0700, Tony Lindgren wrote:
+> 
+> Right. The only documentation of the SSI module is existing
+> code sent by Carlos / included in the maemo kernel.
 
-Unless I am once again not following the coding style, the patch in
-patchwork has this correctly, and so does my file locally:
+That's probably better than any documentation though :)
+ 
+> > > It's probably something with the sysc or idlemodes that
+> > > keeps things from idling. Maybe wrong address? Or wrong
+> > > flags? I'm pretty sure it was the first .dts patch out of
+> > > these two as the second one alone did not apply.
+> > 
+> > Hmm yeah below is probably how it should be, does this
+> > work for you? With this fix applied and your ssi dts
+> > patches n900 keeps hitting off-idle for me.
+> 
+> I can confirm, that the N900 hits idle states when the DT
+> patch and the hwmod patch is applied. I have not actually
+> tested if it also works without your hwmod patch.
+> 
+> There are still problems with the idle state if the driver is
+> actually loaded (and I see 100% runtime pm usage in powertop),
+> but that can be fixed later.
+> 
+> Feel free to add Tested-by/Acked-By to the hwmod patch.
 
-http://patchwork.ozlabs.org/patch/351323/
--- 
-Florian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK thanks for testing. I'll apply your dts changes as soon
+as I have an ack from Paul on the hwmod changes. Probably
+best to queue them together to avoid PM breaking.
+
+Regards,
+
+Tony
