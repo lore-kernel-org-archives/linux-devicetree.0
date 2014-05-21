@@ -1,73 +1,102 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv4 4/4] DTS: ARM: OMAP3-N900: Add tsc2005 support
-Date: Wed, 21 May 2014 15:19:55 -0700
-Message-ID: <20140521221955.GC14520@atomide.com>
-References: <1400693774-21306-1-git-send-email-sre@kernel.org>
- <1400693774-21306-5-git-send-email-sre@kernel.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
+Date: Thu, 22 May 2014 02:23:44 +0400
+Message-ID: <537D2770.2040605@cogentembedded.com>
+References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com> <53557BFE.5020908@cogentembedded.com> <53578FA8.6040607@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400693774-21306-5-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53578FA8.6040607@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [140521 10:38]:
-> This adds support for the tsc2005 touchscreen
-> to the Nokia N900 DTS file.
-> 
-> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Hello.
 
-Dmitry, if no other comments, feel free to pick this one too.
-This does not seem to conflict with anything I have queued:
+On 04/23/2014 02:02 PM, Kishon Vijay Abraham I wrote:
 
-Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+>>>> This PHY, though formally being a part of Renesas USBHS controller, contains
+>>>> the
+>>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
+>>>> them
+>>>> channels) to the different USB controllers: channel 0 can be connected to
+>>>> either
+>>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
+>>>> or xHCI controllers.
 
-> ---
->  arch/arm/boot/dts/omap3-n900.dts | 17 ++++++++++++++++-
->  1 file changed, 16 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
-> index 1a57b61..cb8ed2d5 100644
-> --- a/arch/arm/boot/dts/omap3-n900.dts
-> +++ b/arch/arm/boot/dts/omap3-n900.dts
-> @@ -580,9 +580,24 @@
->  	 * Also... order in the device tree actually matters here.
->  	 */
->  	tsc2005@0 {
-> -		compatible = "tsc2005";
-> +		compatible = "ti,tsc2005";
->  		spi-max-frequency = <6000000>;
->  		reg = <0>;
-> +
-> +		vio-supply = <&vio>;
-> +
-> +		reset-gpios = <&gpio4 8 GPIO_ACTIVE_HIGH>; /* 104 */
-> +		interrupts-extended = <&gpio4 4 IRQ_TYPE_EDGE_RISING>; /* 100 */
-> +
-> +		touchscreen-fuzz-x = <4>;
-> +		touchscreen-fuzz-y = <7>;
-> +		touchscreen-fuzz-pressure = <2>;
-> +		touchscreen-max-x = <4096>;
-> +		touchscreen-max-y = <4096>;
-> +		touchscreen-max-pressure = <2048>;
-> +
-> +		ti,x-plate-ohms = <280>;
-> +		ti,esd-recovery-timeout-ms = <8000>;
->  	};
->  
->  	acx565akm@2 {
-> -- 
-> 2.0.0.rc2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> This is a new driver for this USB PHY currently already supported under
+>>>> drivers/
+>>>> usb/phy/. The reason for writing the new driver was the requirement that the
+>>>> multiplexing of USB channels to the controller be dynamic, depending on what
+>>>> USB drivers are loaded,  rather than static as provided by the old driver.
+>>>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
+>>>> ideally. The new driver only supports device tree probing for now.
+
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>> [...]
+
+>>>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
+>>>> ===================================================================
+>>>> --- /dev/null
+>>>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
+>>>> @@ -0,0 +1,283 @@
+
+>> [...]
+
+>>>> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
+>>>> +{
+
+>> [...]
+
+>>>> +    drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>>>> +    drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
+>>>> +    drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>>>> +    drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
+>>>> +    drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>>>> +    drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
+>>>> +    drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>>>> +    drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
+>>>> +
+>>>> +    for (i = 0; i < NUM_USB_CHANNELS; i++) {
+
+>>> Instead of hard coding the number of channels,
+
+>>     It's hard coded in the hardware. We can even decrease that number to 2 as
+
+> right, that's why thought dt should have that information.
+
+    So you want a dedicated property for that or you meant something else?
+
+>> for the channel #1 we have nothing to do, regardless of whether it's present or
+>> not...
+
+>>> we can model the channels (PHYs) as sub-nodes of the main PHY
+
+>>     Hm, I don't think such representation would be adequate: the channels
+>> themselves do not usually correspond to any particular PHY, that's why I used
+>> #phy-cells = <2>.
+
+>>> in dt and use it to create individual PHYs.
+
+>>     Well, we probably can... however, I fail to see any immediate gain from
+>> it here...
+>>     I have to ask why you've selected this particular driver for such DT
+>> representation experiments, despite it not being the first one supporting
+>> multiple PHYs?
+
+> just that it didn't strike before.. but I think all multiple PHYs should be
+> modelled this way.
+
+    I've basically reimplemented the driver to parse the info from the 
+subnodes and it's now became larger in size, not smaller. :-/ Overall, I'm not 
+content with the changes, nor do I think such a change in the DT 
+representation was a great idea...
+
+> Thanks
+> Kishon
+
+WBR, Sergei
+
