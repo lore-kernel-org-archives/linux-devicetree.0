@@ -1,62 +1,81 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [Patch] ARM: dts: keystone: add pll controller syscon entry
-Date: Wed, 21 May 2014 22:22:50 +0400
-Message-ID: <537CEEFA.8080805@cogentembedded.com>
-References: <1400681875-24432-1-git-send-email-ivan.khoronzhuk@ti.com> <537CEE13.5040908@cogentembedded.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv5 09/10] DTS: ARM: OMAP3-N900: Add SSI support
+Date: Wed, 21 May 2014 20:25:14 +0200
+Message-ID: <20140521182513.GA26285@earth.universe>
+References: <1399739870-13526-1-git-send-email-sre@kernel.org>
+ <1399739870-13526-10-git-send-email-sre@kernel.org>
+ <20140514215503.GM27426@atomide.com>
+ <20140520003538.GD15793@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537CEE13.5040908-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Q68bSM7Ycu6FN28Q"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140520003538.GD15793@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/2014 10:18 PM, Sergei Shtylyov wrote:
 
->> The pll controller register set includes sets of registers with
->> different purposes, so it's logically to add syscon entry to be able
->> to access them from appropriate places.
+--Q68bSM7Ycu6FN28Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
->> ---
+Hi,
 
->> Based on linux-next/master
+On Mon, May 19, 2014 at 05:35:39PM -0700, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [140514 14:57]:
+> > * Sebastian Reichel <sre@kernel.org> [140510 09:40]:
+> > > Add SSI device tree data for OMAP3 and Nokia N900.
+> >=20
+> > Picking this patch into omap-for-v3.16/dt thanks.
+>=20
+> Just noticed that this patch seems to somehow break idle
+> modes on n900, so dropping both dts changes for now.
+>=20
+> Basically the n900 debug LEDs won't ever go off with
+> these two dts patches enabled, even without the modem
+> drivers loaded. I did not dig deeper, but it's probably
+> something related to hwmod using this data for some
+> settings.
 
->>   arch/arm/boot/dts/keystone.dtsi | 5 +++++
->>   1 file changed, 5 insertions(+)
->
->> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
->> index d9f99e7..5e67c5b 100644
->> --- a/arch/arm/boot/dts/keystone.dtsi
->> +++ b/arch/arm/boot/dts/keystone.dtsi
->> @@ -66,6 +66,11 @@
->>           ranges = <0x0 0x0 0x0 0xc0000000>;
->>           dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
->>
->> +        pllctrl: pll_controller {
+Is hwmod data interpreted at all without the DT entries?
+The hwmod data may be wrong. The information from commit
+398917ce161e10d3c66afaefdb89c73c64c4b02d was simply
+interpolated from all information I found. The OMAP3
+public TRM does not contain *any* information about the
+ssi IP-Core.
 
->    I think it's better to follow the pattern established by "reset-controller"
-> and use hyphen ISO dash in the node name. This is also a common practice to
+> Sorry did not notice it earlier as I did not have the
+> PM regression fix patches merged with my testing branch.
 
-    Oops, hyphen and dash are basically the same thing; I meant 
-s/dash/underscore/.
+I hoped to see working modem in 3.16, which will probably
+be used for the next Debian stable :(
 
-> use hyphens in the device trees overall.
+-- Sebastian
 
->> +            compatible = "ti,keystone-pllctrl", "syscon";
->> +            reg = <0x2310000 0x200>;
->> +        };
->> +
->>           rstctrl: reset-controller {
->>               compatible = "ti,keystone-reset";
->>               reg = <0x023100e8 4>;    /* pll reset control reg */
->>
+--Q68bSM7Ycu6FN28Q
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-WBR, Sergei
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBCgAGBQJTfO+JAAoJENju1/PIO/qaa5wP/i+jGUtLwNgMyVplgZdMvC6W
+NzJnNZN6um2eipY5aHNXn6SdLPM+EqhopTPrsVopm01xXHjRAJxzHI2skSjQgnP7
+ipEIHRNceMr946NTJtP8YUGO04pOhu6HiXmsfqBp00LbWvFeGSTTMNhY308WU+LQ
+A/jvVilsfItfUvy1mG9ZYlDUGvpz8GptheTw3bPbZ4oW9XgnNiUWgfpvgbPkFu8n
+iw4hcBY5TLeLAcUEBSbpPXfy370h86PSvfmX9LmOTEKwNgtIMi7+dPl6vRjHUbIi
+H8dCdPlaRBOIUlqCTVfHqE8kJx628hI/6RJKYAWe/+LuWdzZrnY1lqgxidJUd2Xc
+bgB+2qammupvS6Xw3wv35cniUT3h8x0LrTIAHxK/7RiEzXRzj7PVX9N4ygv2Wk9Y
+SR3ZU8oAPld0xKOiDiaDX8LEt3AdD+f4Ok5KYhj5wKX4tRnP45NfOR6Vzg5tnFvg
+II1f+xWRvv7TtwnSekMWov2SzNwvblja1GuOnkULoAIJAPM+Bkrb1It98bqOTthO
+6VsXW2OSVcBNeUrkViNTo0mtgKtKglxE41lmdJ0kuGRjv/XPk0e+MY+afo2NBdnB
+uhuA53YHvpRs04xLt/RhdFcar15IfZw2YzyZpUYeEkWbFcPx6clTI948EqzmSW7b
+OHDamv85gjC5+n6ZDR8x
+=uNaS
+-----END PGP SIGNATURE-----
+
+--Q68bSM7Ycu6FN28Q--
