@@ -1,129 +1,99 @@
-From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
-Subject: Re: [PATCH v2] DMA: add a driver for AMBA AXI NBPF DMAC IP cores
-Date: Wed, 21 May 2014 08:22:08 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1405210802580.10381@axis700.grange>
-References: <Pine.LNX.4.64.1404261344520.21367@axis700.grange>
- <20140507064453.GJ28638@intel.com> <Pine.LNX.4.64.1405101009220.29796@axis700.grange>
- <20140521052348.GG21128@intel.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v2 02/18] drm/exynos: use wait_event_timeout() for safety
+ usage
+Date: Wed, 21 May 2014 15:28:05 +0900
+Message-ID: <537C4775.1050702@samsung.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-3-git-send-email-yj44.cho@samsung.com>
+ <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140521052348.GG21128-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Kurtz <djkurtz@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+Hi Daniel
 
-As you've seen, I've submitted a v3 of this patch with all your comments 
-addressed - except one - macros vs. numbers. Would that version be 
-acceptable or would you like a v4? Also see a couple of comments below.
+On 05/21/2014 03:01 PM, Daniel Kurtz wrote:
+> On Wed, May 21, 2014 at 12:42 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+>> There could be the case that the page flip operation isn't finished correctly
+>> with some abnormal condition such as panel reset. So this patch replaces
+>> wait_event() with wait_event_timeout() to avoid waiting for page flip completion
+>> infinitely.
+>> And clears exynos_crtc->pending_flip in exynos_drm_crtc_page_flip() when
+>> exynos_drm_crtc_mode_set_commit() is failed.
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   drivers/gpu/drm/exynos/exynos_drm_crtc.c |    7 +++++--
+>>   1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>> index 95c9435..3bf091d 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+>> @@ -69,8 +69,10 @@ static void exynos_drm_crtc_dpms(struct drm_crtc *crtc, int mode)
+>>
+>>          if (mode > DRM_MODE_DPMS_ON) {
+>>                  /* wait for the completion of page flip. */
+>> -               wait_event(exynos_crtc->pending_flip_queue,
+>> -                               atomic_read(&exynos_crtc->pending_flip) == 0);
+>> +               if (!wait_event_timeout(exynos_crtc->pending_flip_queue,
+>> +                               !atomic_read(&exynos_crtc->pending_flip),
+>> +                               HZ/20))
+>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
+>
+> I meant that changing this to wait_event_timeout() seems to be masking
+> the original problem, that pending_flip wasn't being cleared.
 
-On Wed, 21 May 2014, Vinod Koul wrote:
+Yes, I agree.
 
-> On Sat, May 10, 2014 at 11:15:28AM +0200, Guennadi Liakhovetski wrote:
-> > Hi Vinod,
-> > 
-> > Thanks for a review.
-> > 
-> > On Wed, 7 May 2014, Vinod Koul wrote:
-> > 
-> > > On Sat, Apr 26, 2014 at 02:03:44PM +0200, Guennadi Liakhovetski wrote:
-> > > > This patch adds a driver for NBPF DMAC IP cores from Renesas, designed for
-> > > > the AMBA AXI bus.
-> > > > 
-> > >  
-> > > > diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
-> > > > new file mode 100644
-> > > > index 0000000..d5e2522
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+The original purpose of this patch is to avoid lock-up during modetest 
+(with test_vsync) with command mode panel.
+In MIPI DSI command mode interface, the display controller can not 
+generate VSYNC signal and uses TE signal instead which is generated by 
+panel.
+If there is an abnormal power off or reset condition, it is possible 
+that the display controller misses the TE signal and it makes lock-up.
+So I needed this patch.
 
-[snip]
+> Now that you are now clearing pending_flip in the error path, you
+> don't need the timeout, right?
+>
 
-> > > Pls split the DT bindings to seprate patch. This part needs ack from DT folks
-> > 
-> > I thaught it would be preferable for both to go into the tree 
-> > simultaneously, i.e. as a single patch, they can review and ack this patch 
-> > too, but ok, can do, np.
-> That helps in getting that part acked by DT folks and track independent of DMA
-> changes. Ofocurse both will be applied togther or DT first :)
+There might be my missing point. Would you explain more detail?
 
-Done. As for applying after the DT part is in - can it also not be helped 
-by the fact, that I'm not adding any own bindings, only using standard 
-dmaengine ones?
+Thank you.
+Best regards YJ
 
-> > > > +static size_t nbpf_xfer_size(struct nbpf_device *nbpf,
-> > > > +			     enum dma_slave_buswidth width, u32 burst)
-> > > > +{
-> > > > +	size_t size;
-> > > > +
-> > > > +	if (!burst)
-> > > > +		burst = 1;
-> > > > +
-> > > > +	switch (width) {
-> > > > +	case DMA_SLAVE_BUSWIDTH_8_BYTES:
-> > > > +		size = 8 * burst;
-> > > > +		break;
-> > > > +	case DMA_SLAVE_BUSWIDTH_4_BYTES:
-> > > > +		size = 4 * burst;
-> > > > +		break;
-> > > > +	case DMA_SLAVE_BUSWIDTH_2_BYTES:
-> > > > +		size = 2 * burst;
-> > > why not
-> > > 		size = width * burst; 
-> > > for all these three cases?
-> > 
-> > because width is an enum, that "accidentally" coincides with the 
-> > respective numerical value. I find this confusing - if it's an enum, you 
-> > shouldn't use it in calculations. If it's a numerical value, just use it 
-> > explicitly, but mixing both...
-> ah, i dont agree with the reasoning. We have fair examples of using enums for
-> these calculations to covert dmaengine values to driver type. This is juts a
-> conversion and saves code space and simplfies the routine...
-
-I'm fine with using the width for calculations, but then 
-DMA_SLAVE_BUSWIDTH_*_BYTES should be killed! Looking through grep results, 
-personally I would find
-
-	.src_info.data_width = 1,
-
-in drivers/dma/ste_dma40.c at least as understandable as the present
-
-	.src_info.data_width = DMA_SLAVE_BUSWIDTH_1_BYTE,
-
-or even more. And if someone doesn't find this clear enough, you can 
-always add comments. Then all calculations are jastified, including those, 
-using the BIT() macro.
-
-[snip]
-
-> > > > +static enum dma_status nbpf_tx_status(struct dma_chan *dchan,
-> > > > +		dma_cookie_t cookie, struct dma_tx_state *state)
-> > > > +{
-> > > > +	struct nbpf_channel *chan = nbpf_to_chan(dchan);
-> > > > +	enum dma_status status = dma_cookie_status(dchan, cookie, state);
-> > > > +	dma_cookie_t running = chan->running ? chan->running->async_tx.cookie : -EINVAL;
-> > > > +
-> > > > +	if (chan->paused)
-> > > > +		status = DMA_PAUSED;
-> > > > +
-> > > > +	/* Note: we cannot return residues for old cookies */
-> > > ??? If cookie is completed then reside is 0. So how is this comment valid?
-> > 
-> > For completed ones it's 0, sure.
-> so what does comment mean here about "old" cookies?
-
-Think about the amba-pl011.c serial driver. The way it handles Rx is it 
-submits a 4k buffer, but then waits for an Rx timeout IRQ and pauses, 
-reads out status / residue and terminates that transfer. So, Rx transfers 
-are routinely incomplete. Their residue was != 0, but ones they are 
-terminated you cannot retrieve that residue any longer.
-
-Thanks
-Guennadi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> -Dan
+>
+>>                  drm_vblank_off(crtc->dev, exynos_crtc->pipe);
+>>          }
+>>
+>> @@ -259,6 +261,7 @@ static int exynos_drm_crtc_page_flip(struct drm_crtc *crtc,
+>>                          spin_lock_irq(&dev->event_lock);
+>>                          drm_vblank_put(dev, exynos_crtc->pipe);
+>>                          list_del(&event->base.link);
+>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
+>>                          spin_unlock_irq(&dev->event_lock);
+>>
+>>                          goto out;
+>> --
+>> 1.7.9.5
+>>
+>
