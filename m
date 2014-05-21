@@ -1,140 +1,77 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
-Date: Wed, 21 May 2014 11:23:21 +0900
-Message-ID: <20140521022321.BA085C41B26@trevor.secretlab.ca>
-References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-	<CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
-	<20140520065014.493C3C412E3@trevor.secretlab.ca>
-	<CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA@mail.gmail.com>
-	<20140521005357.4CAE4C418EF@trevor.secretlab.ca>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140521005357.4CAE4C418EF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guido =?iso-8859-1?q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH RESEND 2/2] Documentation: add Broadcom STB Level-2
+ interrupt controller binding
+Date: Tue, 20 May 2014 19:24:16 -0700
+Message-ID: <537C0E50.4050409@gmail.com>
+References: <1400613229-19049-1-git-send-email-f.fainelli@gmail.com>
+ <1400613229-19049-3-git-send-email-f.fainelli@gmail.com>
+ <20140521013027.GD8664@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"; Format="flowed"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140521013027.GD8664@titan.lakedaemon.net>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, DOCUMENTATION <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, arm@kernel.org, Kumar Gala <galak@codeaurora.org>, Thomas Gleixner <tglx@linutronix.de>, Brian Norris <computersforpeace@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 21 May 2014 09:53:57 +0900, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> On Tue, 20 May 2014 13:30:02 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > On Tue, May 20, 2014 at 1:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > > On Sun, 18 May 2014 18:11:07 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >> On Sun, May 18, 2014 at 12:01 PM, Ezequiel Garcia
-> > >> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> > >> > When creating a device object for a devicetree node, the device name
-> > >> > is created by using the node name and the 'reg' property, to make a name
-> > >> > such as "a000.foo_device".
-> > >> >
-> > >> > For certain devices without an associated address, and hence no 'reg' property,
-> > >> > the current code attempts to make a unique name, by using a global integer.
-> > >> > Names look like "foo_device.1", "bar_device.2", and so on.
-> > >> > Examples of such devices are: gpio-keys', backlights and rotary-encoders.
-> > >> >
-> > >> > The system cannot know such devices name before hand, given they are determined
-> > >> > by the kernel probe order and by the nodes present in the devicetree. This can
-> > >> > be problematic, on systems that are tied to the device's name, e.g. when
-> > >> > catching hotplug events.
-> > >
-> > > The device's uevent file in sysfs contains both the ->name and
-> > > ->full_name values for a node. Does that help you?
-> > >
-> > > The big problem is not the structure under /sys/devices, but rather the
-> > > symlinks to devices that appear under /sys/bus/*/devices. If two leaf
-> > > nodes have the same name, then they will conflict when they get added to
-> > > a bus_type's array of devices.
-> > >
-> > > Another way to handle it is to only add the suffix when a conflict
-> > > actually occurs. That requires checking first whether or not a name will
-> > > conflict and ammending it only when that happens. I don't know if that
-> > > can be done nicely. I'll take a look.
-> > 
-> > That was my idea as well and to move to a local number so you have
-> > something like deviceA, deviceA.1, deviceB, deviceB.1 (maybe the
-> > number is always appended). Perhaps a random number instead so no one
-> > expects the names to be an ABI. ;)
-> 
-> Another idea: how about fix the name to alwasy be the final component of
-> the path name, followed by phandle. Anything that doesn't have a phandle
-> can be assigned one at boot. That would guarantee uniqueness without the
-> cost of trying to find duplicates.
-> 
-> for example:
-> 	uart@10043000:0012
+Le 20/05/2014 18:30, Jason Cooper a =E9crit :
+> On Tue, May 20, 2014 at 12:13:49PM -0700, Florian Fainelli wrote:
+>> This patch adds the Device Tree binding document for the Broadcom
+>> Set-top-box Level 2 interrupt controller hardware.
+>>
+>> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>   .../bindings/interrupt-controller/brcm,l2-intc.txt | 29 ++++++++++++++=
+++++++++
+>>   1 file changed, 29 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/interrupt-control=
+ler/brcm,l2-intc.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/brcm=
+,l2-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/brcm,=
+l2-intc.txt
+>> new file mode 100644
+>> index 000000000000..448273a30a11
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/interrupt-controller/brcm,l2-int=
+c.txt
+>> @@ -0,0 +1,29 @@
+>> +Broadcom Generic Level 2 Interrupt Controller
+>> +
+>> +Required properties:
+>> +
+>> +- compatible: should be "brcm,l2-intc"
+>> +- reg: specifies the base physical address and size of the registers
+>> +- interrupt-controller: identifies the node as an interrupt controller
+>> +- #interrupt-cells: specifies the number of cells needed to encode an
+>> +  interrupt source. Should be 1.
+>> +- interrupt-parent: specifies the phandle to the parent interrupt contr=
+oller
+>> +  this controller is cacaded from
+>> +- interrupts: specifies the interrupt line in the interrupt-parent irq =
+space
+>> +  to be used for cascading
+>> +
+>> +Optional properties:
+>> +
+>> +- brcm,irq-can-wake: If present, this means the L2 controller can be us=
+ed as a
+>> +  wakeup source for system suspend/resume.
+>
+> Do we need a vendor-specific property here?  I'd much prefer to see a
+> generic implementation.
 
-The following actually works. I don't like it because it results in very
-long names, but it does work.
+Is there an usable generic property? We came up with a custom one =
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 9c121819e813..6e11c70b0616 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -74,60 +74,7 @@ EXPORT_SYMBOL(of_find_device_by_node);
-  */
- void of_device_make_bus_id(struct device *dev)
- {
--	static atomic_t bus_no_reg_magic;
--	struct device_node *node = dev->of_node;
--	const __be32 *reg;
--	u64 addr;
--	const __be32 *addrp;
--	int magic;
--
--#ifdef CONFIG_PPC_DCR
--	/*
--	 * If it's a DCR based device, use 'd' for native DCRs
--	 * and 'D' for MMIO DCRs.
--	 */
--	reg = of_get_property(node, "dcr-reg", NULL);
--	if (reg) {
--#ifdef CONFIG_PPC_DCR_NATIVE
--		dev_set_name(dev, "d%x.%s", *reg, node->name);
--#else /* CONFIG_PPC_DCR_NATIVE */
--		u64 addr = of_translate_dcr_address(node, *reg, NULL);
--		if (addr != OF_BAD_ADDR) {
--			dev_set_name(dev, "D%llx.%s",
--				     (unsigned long long)addr, node->name);
--			return;
--		}
--#endif /* !CONFIG_PPC_DCR_NATIVE */
--	}
--#endif /* CONFIG_PPC_DCR */
--
--	/*
--	 * For MMIO, get the physical address
--	 */
--	reg = of_get_property(node, "reg", NULL);
--	if (reg) {
--		if (of_can_translate_address(node)) {
--			addr = of_translate_address(node, reg);
--		} else {
--			addrp = of_get_address(node, 0, NULL, NULL);
--			if (addrp)
--				addr = of_read_number(addrp, 1);
--			else
--				addr = OF_BAD_ADDR;
--		}
--		if (addr != OF_BAD_ADDR) {
--			dev_set_name(dev, "%llx.%s",
--				     (unsigned long long)addr, node->name);
--			return;
--		}
--	}
--
--	/*
--	 * No BusID, use the node name and add a globally incremented
--	 * counter (and pray...)
--	 */
--	magic = atomic_add_return(1, &bus_no_reg_magic);
--	dev_set_name(dev, "%s.%d", node->name, magic - 1);
-+	dev_set_name(dev, dev->of_node->full_name);
- }
- 
- /**
-
-> 
-> g.
-> 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+because there is not a generic one AFAICT.
