@@ -1,99 +1,48 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [PATCH v2 02/18] drm/exynos: use wait_event_timeout() for safety
- usage
-Date: Wed, 21 May 2014 15:28:05 +0900
-Message-ID: <537C4775.1050702@samsung.com>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-3-git-send-email-yj44.cho@samsung.com>
- <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
+From: Florian Vaussard <florian.vaussard@epfl.ch>
+Subject: Re: [PATCH] ARM: dts: duovero-parlor: Add HDMI output
+Date: Wed, 21 May 2014 08:41:10 +0200
+Message-ID: <537C4A86.1010507@epfl.ch>
+References: <1400595946-1294-1-git-send-email-florian.vaussard@epfl.ch> <20140520143932.GA27830@atomide.com>
+Reply-To: florian.vaussard@epfl.ch
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Kurtz <djkurtz@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, s.trumtrar@pengutronix.de
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140520143932.GA27830@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel
 
-On 05/21/2014 03:01 PM, Daniel Kurtz wrote:
-> On Wed, May 21, 2014 at 12:42 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
->> There could be the case that the page flip operation isn't finished correctly
->> with some abnormal condition such as panel reset. So this patch replaces
->> wait_event() with wait_event_timeout() to avoid waiting for page flip completion
->> infinitely.
->> And clears exynos_crtc->pending_flip in exynos_drm_crtc_page_flip() when
->> exynos_drm_crtc_mode_set_commit() is failed.
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   drivers/gpu/drm/exynos/exynos_drm_crtc.c |    7 +++++--
->>   1 file changed, 5 insertions(+), 2 deletions(-)
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->> index 95c9435..3bf091d 100644
->> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->> @@ -69,8 +69,10 @@ static void exynos_drm_crtc_dpms(struct drm_crtc *crtc, int mode)
->>
->>          if (mode > DRM_MODE_DPMS_ON) {
->>                  /* wait for the completion of page flip. */
->> -               wait_event(exynos_crtc->pending_flip_queue,
->> -                               atomic_read(&exynos_crtc->pending_flip) == 0);
->> +               if (!wait_event_timeout(exynos_crtc->pending_flip_queue,
->> +                               !atomic_read(&exynos_crtc->pending_flip),
->> +                               HZ/20))
->> +                       atomic_set(&exynos_crtc->pending_flip, 0);
->
-> I meant that changing this to wait_event_timeout() seems to be masking
-> the original problem, that pending_flip wasn't being cleared.
+On 05/20/2014 04:39 PM, Tony Lindgren wrote:
+> * Florian Vaussard <florian.vaussard@epfl.ch> [140520 07:26]:
+>> @@ -77,6 +94,15 @@
+>>  			0x30 (PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a24.gpio_48: amdix enabled */
+>>  		>;
+>>  	};
+>> +
+>> +	dss_hdmi_pins: pinmux_dss_hdmi_pins {
+>> +		pinctrl-single,pins = <
+>> +			0x58 (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_hpd.hdmi_hpd */
+>> +			0x5a (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
+>> +			0x5c (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_scl.hdmi_ddc_scl */
+>> +			0x5e (PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_sda.hdmi_ddc_sda */
+>> +		>;
+>> +	};
+>>  };
+>>  
+>>  &i2c2 {
+> 
+> This seems to apply with fuzz against omap-for-v3.16/dt-v2, but
+> should be updated against omap-for-v3.16/dt-v2 to use OMAP4_IOPAD
+> as omap4-duovero-parlor.dts is now using it. That makes checking
+> the muxing easier against the TRM. See commit 5efa994b0d49 for
+> the script Joachim used.
+> 
 
-Yes, I agree.
+It is based on Tomi's for-next, which is based on 3.15-rc4, so the fuzz
+is not surprising. I will update against omap-for-v3.16/dt-v2.
 
-The original purpose of this patch is to avoid lock-up during modetest 
-(with test_vsync) with command mode panel.
-In MIPI DSI command mode interface, the display controller can not 
-generate VSYNC signal and uses TE signal instead which is generated by 
-panel.
-If there is an abnormal power off or reset condition, it is possible 
-that the display controller misses the TE signal and it makes lock-up.
-So I needed this patch.
-
-> Now that you are now clearing pending_flip in the error path, you
-> don't need the timeout, right?
->
-
-There might be my missing point. Would you explain more detail?
-
-Thank you.
-Best regards YJ
-
-> -Dan
->
->>                  drm_vblank_off(crtc->dev, exynos_crtc->pipe);
->>          }
->>
->> @@ -259,6 +261,7 @@ static int exynos_drm_crtc_page_flip(struct drm_crtc *crtc,
->>                          spin_lock_irq(&dev->event_lock);
->>                          drm_vblank_put(dev, exynos_crtc->pipe);
->>                          list_del(&event->base.link);
->> +                       atomic_set(&exynos_crtc->pending_flip, 0);
->>                          spin_unlock_irq(&dev->event_lock);
->>
->>                          goto out;
->> --
->> 1.7.9.5
->>
->
+Regards,
+Florian
