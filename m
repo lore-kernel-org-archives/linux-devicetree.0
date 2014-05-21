@@ -1,75 +1,52 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] Input: mcs_touchkey: add device tree binding document
-Date: Wed, 21 May 2014 14:53:06 +0100
-Message-ID: <20140521135306.GH17827@leverpostej>
-References: <537C3EFD.8040601@samsung.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v6 10/17] ARM: mvebu: add USB3 support for Armada 38x
+Date: Wed, 21 May 2014 15:53:22 +0200
+Message-ID: <537CAFD2.3080807@free-electrons.com>
+References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>	 <1400149062-32661-11-git-send-email-gregory.clement@free-electrons.com>	 <20140516190729.GN27822@titan.lakedaemon.net> <1400497768.2007.10.camel@x220>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-input-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <537C3EFD.8040601@samsung.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400497768.2007.10.camel@x220>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 21, 2014 at 06:51:57AM +0100, Beomho Seo wrote:
-> This patch add simple device tree bindings to
-> MELFAS MCS5000/5080 controller.
+On 19/05/2014 13:09, Paul Bolle wrote:
+> On Fri, 2014-05-16 at 15:07 -0400, Jason Cooper wrote:
+>> On Thu, May 15, 2014 at 12:17:35PM +0200, Gregory CLEMENT wrote:
+>>> This patch adds the selection of the config symbol needed to build the
+>>> USB3 support for Armada 38x into mvebu_v7_defconfig.
+>>>
+>>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  arch/arm/mach-mvebu/Kconfig | 1 +
+>>>  1 file changed, 1 insertion(+)
+>>
+>> Patches 10 and 11 applied to mvebu/soc
 > 
-> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
-> ---
->  .../devicetree/bindings/input/mcs-touchkey.txt     |   25 ++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/mcs-touchkey.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/mcs-touchkey.txt b/Documentation/devicetree/bindings/input/mcs-touchkey.txt
-> new file mode 100644
-> index 0000000..8364799
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/mcs-touchkey.txt
-> @@ -0,0 +1,25 @@
-> +* mcs_touchkey MELFAS MCS5000/5080 controller
-> +
-> +Required properties:
-> +- compatible: must be "mcs5000_touchkey" or "mcs5080_touchkey"
+> These two just hit linux-next (in next-20140519). They're pointless, as
+> config USB_ARCH_HAS_XHCI was dropped in commit b797b76fb464 ("usb: host:
+> remove USB_ARCH_HAS_?HCI").
 
-NAK. These should be in "$VENDOR,$DEVICE" format (e.g. "melfas,mcs5000").
+Right! We didn't notice it.
 
-It looks like "melfas" is already used, but is undocumented. Please add
-it to vendor-prefixes.txt.
+Jason you can simply remove them from mvebu/soc when you will submit the pull request
 
-> +- reg : I2C address of the chip
-> +- interrupts: interrupt to which the chip is connected
-> +- key_maxval: size of keycode table
 
-Surely this is already implicit in the size of the linux,code property
-data?
+Thanks,
 
-This is superfluous and broken. Please get rid of it.
+Gregory
 
-> +- code: key code for this device
 
-This doesn't match the example or driver. If this is a standard
-property, please refer to a definition of the format.
-
-> +
-> +Example:
-> +
-> +	i2c_touch_key: i2c-gpio-0 {
-> +	       /* ... */
-> +
-> +	       touch_key@20 {
-> +		       compatible = "mcs5080_touchkey";
-> +		       reg = <0x20>;
-> +		       interrupt-patrent = <gpj0>;
-> +		       key_maxval = <2>;
-> +		       linux, code = <0x0000009e
-> +			              0x000000a9>;
-
-Random spacing?
-
-Please bracket individual list elements.
-
-Cheers,
-Mark.
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
