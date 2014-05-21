@@ -1,38 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [Patch v4 2/5] Power: reset: add bindings for keystone reset
- driver
-Date: Wed, 21 May 2014 18:07:40 +0200
-Message-ID: <13696681.6eGQ96hCX4@wuerfel>
-References: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com>
- <5023955.Vhmhn25HgF@wuerfel> <537CCE5A.7030909@ti.com>
+From: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>
+Subject: Re: [RFC PATCH 00/16] OMAP: GPMC: Restructure OMAP GPMC driver (NAND)
+Date: Wed, 21 May 2014 13:08:18 -0300
+Message-ID: <20140521160818.GA1150@arch.cereza>
+References: <1400671264-10702-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <537CCE5A.7030909@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, dbaryshkov@gmail.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net, robh+dt@kernel.org, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org, galak@codeaurora.org, grant.likely@linaro.org, dwmw2@infradead.org, w-kwok2@ti.com
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400671264-10702-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: tony@atomide.com, computersforpeace@gmail.com, pekon@ti.com, robertcnelson@gmail.com, jg1.han@samsung.com, dwmw2@infradead.org, javier@dowhile0.org, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 May 2014 19:03:38 Ivan Khoronzhuk wrote:
-> 
-> I've slightly confused where should I add these bindings.
-> The main pll controller mostly used by clk driver....
-> As its register set is used also by reset driver it's logically to put 
-> it to bindings/mfd,
-> but pll controller in mfd it's strange....
-> 
-> Could you please help to decide where should it be?.
+Hi Roger,
 
-Put it into Documentation/devicetree/bindings/clock/keystone-pll.txt
+On 21 May 02:20 PM, Roger Quadros wrote:
+>=20
+> For DT boot:
+> - The GPMC controller node should have a chip select (CS) node for ea=
+ch used
+>   chip select. The CS node must have a child device node for each dev=
+ice
+>   attached to that chip select. Properties for that child are GPMC ag=
+nostic.
+>=20
+>   i.e.
+> 	gpmc {
+> 		cs0 {
+> 			nand0 {
+> 			}
+> 		};
+>=20
+> 		cs1 {
+> 			nor0 {
+> 			}
+> 		}
+> 		...
+> 	};
+>=20
 
-	Arnd
+While I agree that the GPMC driver is a bit messy, I'm not sure it's po=
+ssible
+to go through such a complete devicetree binding re-design (breaking ba=
+ckwards
+compatibility) now that the binding is already in production.
+
+AFAIK, TI's SDK 7.0 is released, with a v3.8.x kernel which uses this G=
+PMC
+binding. And then you have the ISEE board too, using this binding.
+
+Also, what's the problem with the current devicetree binding (not that =
+I'm fan
+of it)?
+--=20
+Ezequiel Garc=EDa, Free Electrons
+Embedded Linux, Kernel and Android Engineering
+http://free-electrons.com
