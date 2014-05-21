@@ -1,37 +1,66 @@
-From: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH RESEND 0/2] Add generic GIC compat strings
-Date: Wed, 21 May 2014 14:48:03 +0100
-Message-ID: <1400680085-10430-1-git-send-email-Nikolay.Borisov@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v3 0/2] ARM: dts: add device data for exynos4412-trats2
+Date: Wed, 21 May 2014 22:49:52 +0900
+Message-ID: <036e01cf74fb$8a96b6a0$9fc423e0$@samsung.com>
+References: <537B32E5.2070606@samsung.com> <537BDB0D.6060804@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <537BDB0D.6060804@gmail.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Beomho Seo' <beomho.seo@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'Tomasz Figa' <t.figa@samsung.com>
+Cc: 'Myungjoo Ham' <myungjoo.ham@samsung.com>, 'Chanwoo Choi' <cw00.choi@samsung.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Currently the GIC (in drivers/irqchip/irq-gic.c) is referred to with
-implementation-specific strings (e.g. "arm.cortex-a9-gic"), which is a
-little unwieldy due to the number of different CPUs we now have with GIC
-support.
+Tomasz Figa wrote:
+> 
+> On 20.05.2014 12:48, Beomho Seo wrote:
+> > This patchset add some device node for exynos4412-trats2.
+> > It is based on v3.15-next/dt-samsung-2 branch.
+> >
+> > exynos4412-trats2.dts
+> > - Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-
+> kasei,ak8975".
+> > - Add cm36651 light/proximity sensor device node.
+> > - Change gpio-key device node. fix incorrect gpio property, and then add
+> "ok-key" node.
+> >
+> > Changes in v3:
+> > - Patch set based on v3.16-next/dt-samsung
+> > - ARM: dts: fix incorrect compatible for exynos4412 patch is applied.
+> > - Remove device node property; status, interrupt-parent, interrupt
+> > - Changes gpio/interrupt specified index.
+> >
+> > Changes in v2:
+> >
+> > - Change ak8975 magnetic sensor compatible according to binding
+document.
+> > - Change cm36651 light/proximity sensor compatible according to binding
+> document and driver.
+> >
+> > Beomho Seo (2):
+> >   ARM: dts: add cm36651 light/proximity sensor node
+> >   ARM: dts: fixed gpio key node for exynos4412
+> >
+> >  arch/arm/boot/dts/exynos4412-trats2.dts |   46
+> +++++++++++++++++++++++++------
+> >  1 file changed, 38 insertions(+), 8 deletions(-)
+> >
+> 
+> For the whole series:
+> 
+> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
+> 
+Looks good to me too except useless 2 empty line like following?
 
-These 2 patches add the generic arm,gic-v[1,2] compat strings and also chan=
-ge
-the respective documentation.
 
-Nikolay Borisov (2):
-  irqchip: Add generic gic-v1/gic-v2 compat strings.
-  documentation/devicetree: Update GIC compat strings
++		};
++
+ 	};
 
- Documentation/devicetree/bindings/arm/gic.txt | 2 ++
- drivers/irqchip/irq-gic.c                     | 2 ++
- 2 files changed, 4 insertions(+)
+Will apply with removing them :-)
 
---=20
-1.8.1.5
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Kukjin
