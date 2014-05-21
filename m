@@ -1,109 +1,66 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH] ARM: dts: move dp hpd gpio pin to pinctrl_0 for exynos5420
- peach_pit
-Date: Wed, 21 May 2014 22:36:57 +0900
-Message-ID: <036b01cf74f9$bcaf7d90$360e78b0$@samsung.com>
-References: <1400675242-7423-1-git-send-email-rahul.sharma@samsung.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 1/2] regulator: gpio-regulator: Add required regulator-type property
+Date: Wed, 21 May 2014 15:44:56 +0200
+Message-ID: <1885616.D9TNdZVfuO@avalon>
+References: <1385653493-9952-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <2193707.R9XiqBsnU4@avalon> <20140513165921.GK12304@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1400675242-7423-1-git-send-email-rahul.sharma@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Rahul Sharma' <rahul.sharma@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: multipart/signed; boundary="nextPart1818049.ItSK0xXosh"; micalg="pgp-sha1"; protocol="application/pgp-signature"
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140513165921.GK12304@sirena.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Rahul Sharma wrote:
-> 
-> DP Hpd Gpio pin which is "gpx2-6" in Exynos 5420 based peach board,
-> belongs to Pinctrl_0. It has moved to pinctrl_0 from pinctrl_3.
-> 
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
-> Based on Kukjin's for-next branch.
-> 
->  arch/arm/boot/dts/exynos5420-peach-pit.dts |   14 +++++++-------
->  1 file changed, 7 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> index d4127b0..29f64de 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> @@ -117,6 +117,13 @@
->  		samsung,pin-pud = <1>;
->  		samsung,pin-drv = <0>;
->  	};
-> +
-> +	dp_hpd_gpio: dp_hpd_gpio {
-> +		samsung,pins = "gpx2-6";
-> +		samsung,pin-function = <0>;
-> +		samsung,pin-pud = <3>;
-> +		samsung,pin-drv = <0>;
-> +	};
->  };
-> 
->  &pinctrl_3 {
-> @@ -133,13 +140,6 @@
->  		samsung,pin-pud = <0>;
->  		samsung,pin-drv = <0>;
->  	};
-> -
-> -	dp_hpd_gpio: dp_hpd_gpio {
-> -		samsung,pins = "gpx2-6";
-> -		samsung,pin-function = <0>;
-> -		samsung,pin-pud = <3>;
-> -		samsung,pin-drv = <0>;
-> -	};
->  };
-> 
->  &rtc {
-> --
-> 1.7.9.5
 
-Yeah, probably it happened when I applied your patch with rebase on top of
-samsung-dt branch. Sorry about that.
+--nextPart1818049.ItSK0xXosh
+Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
 
-BTW, I think alphabetical ordering would be nice like following...
+On Tuesday 13 May 2014 17:59:21 Mark Brown wrote:
+> On Tue, May 13, 2014 at 02:06:23AM +0200, Laurent Pinchart wrote:
+> > What's the status of this ? The gpio regulator driver now defaults =
+to
+> > voltage regulator when the regulator-type property is not set. Shou=
+ld the
+> > DT bindings document the property as optional (I can submit a patch=
+ for
+> > that), or do you consider that the gpio regulator driver should sup=
+port
+> > voltage regulators only when used with DT, and just keep the
+> > regulator-type property support in the driver for backward compatib=
+ility
+> > ?
+>=20
+> I don't really care either way, I did write a patch for the bindings =
+but
+> there was some language lawyering over it and I never cared enough to=
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index d4127b0..79008ac 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -111,6 +111,13 @@
- 		samsung,pin-drv = <0>;
- 	};
- 
-+	dp_hpd_gpio: dp_hpd_gpio {
-+		samsung,pins = "gpx2-6";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <3>;
-+		samsung,pin-drv = <0>;
-+	};
-+
- 	hdmi_hpd_irq: hdmi-hpd-irq {
- 		samsung,pins = "gpx3-7";
- 		samsung,pin-function = <0>;
-@@ -133,13 +140,6 @@
- 		samsung,pin-pud = <0>;
- 		samsung,pin-drv = <0>;
- 	};
--
--	dp_hpd_gpio: dp_hpd_gpio {
--		samsung,pins = "gpx2-6";
--		samsung,pin-function = <0>;
--		samsung,pin-pud = <3>;
--		samsung,pin-drv = <0>;
--	};
- };
- 
- &rtc {
+> get round to updating it.
 
+Could you please point me to the patch ?
 
-I will take this ;-)
+=2D-=20
+Regards,
 
-Thanks,
-Kukjin
+Laurent Pinchart
+
+--nextPart1818049.ItSK0xXosh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: This is a digitally signed message part.
+Content-Transfer-Encoding: 7Bit
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQEcBAABAgAGBQJTfK3dAAoJEIkPb2GL7hl1oA4IALQEal7dcRGY5e5H3z+MJtga
+rPmqakhShuJEFlR2qSgUtdKlvF9cs28o8XLIF0w8Yzp8KmuJwgCYhRXlm9pmFKvW
+k428y2vHWUOelJmmFvse9nfvgcDHb0UQ9+Ky9igsqzMcYmuR9mVkzqa8MX7hcimQ
+8G8pRmtec7W7Z7F+7lwv/AON9Bs+fC1Fh6rKnq9UokdIQqo7dF0ok1M/O/tbnC1K
+wrSO2gMe2DoaAxnB84S0ygUGvTbq+h4Bt11r6zInLRVfN0cLffGf+udeixWjqxMb
+OYN1EKgpNaz/3vjpIgChJjv2IoeZbPwwGzSpnioMIs8aJFJ4tIqmtyqoX5Yd4MA=
+=4vxS
+-----END PGP SIGNATURE-----
+
+--nextPart1818049.ItSK0xXosh--
+
