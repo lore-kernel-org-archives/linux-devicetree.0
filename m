@@ -1,65 +1,61 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH RESEND net-next 3/9] net: bcmgenet: use the new fixed PHY helpers
-Date: Wed, 21 May 2014 14:38:45 -0700
-Message-ID: <1400708331-18088-4-git-send-email-f.fainelli@gmail.com>
-References: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Vitaly Bordug <vbordug@ru.mvista.com>, Li Yang <leoli@freescale.com>, Grant Likely <grant.likely@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Richard Cochran <richardcochran@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RESEND net-next 1/9] Documentation: devicetree: add old
+ and deprecated 'fixed-link'
+Date: Thu, 22 May 2014 01:48:31 +0400
+Message-ID: <537D1F2F.6050100@cogentembedded.com>
+References: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com> <1400708331-18088-2-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400708331-18088-2-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-of_phy_connect_fixed_link() is becoming obsolete, and also required
-platform code to register the fixed PHYs at the specified addresses for
-those to be usable. Get rid of it and use the new of_phy_is_fixed_link()
-plus of_phy_register_fixed_link() helpers to transition over the new
-scheme.
+Hello.
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/net/ethernet/broadcom/genet/bcmmii.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+On 05/22/2014 01:38 AM, Florian Fainelli wrote:
 
-diff --git a/drivers/net/ethernet/broadcom/genet/bcmmii.c b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-index 4608673beaff..add8d8596084 100644
---- a/drivers/net/ethernet/broadcom/genet/bcmmii.c
-+++ b/drivers/net/ethernet/broadcom/genet/bcmmii.c
-@@ -298,6 +298,7 @@ int bcmgenet_mii_config(struct net_device *dev)
- static int bcmgenet_mii_probe(struct net_device *dev)
- {
- 	struct bcmgenet_priv *priv = netdev_priv(dev);
-+	struct device_node *dn = priv->pdev->dev.of_node;
- 	struct phy_device *phydev;
- 	unsigned int phy_flags;
- 	int ret;
-@@ -307,15 +308,19 @@ static int bcmgenet_mii_probe(struct net_device *dev)
- 		return 0;
- 	}
- 
--	if (priv->phy_dn)
--		phydev = of_phy_connect(dev, priv->phy_dn,
--					bcmgenet_mii_setup, 0,
--					priv->phy_interface);
--	else
--		phydev = of_phy_connect_fixed_link(dev,
--					bcmgenet_mii_setup,
--					priv->phy_interface);
-+	/* In the case of a fixed PHY, the DT node associated
-+	 * to the PHY is the Ethernet MAC DT node.
-+	 */
-+	if (of_phy_is_fixed_link(dn)) {
-+		ret = of_phy_register_fixed_link(dn);
-+		if (ret)
-+			return ret;
-+
-+		priv->phy_dn = dn;
-+	}
- 
-+	phydev = of_phy_connect(dev, priv->phy_dn, bcmgenet_mii_setup, 0,
-+				priv->phy_interface);
- 	if (!phydev) {
- 		pr_err("could not attach to PHY\n");
- 		return -ENODEV;
--- 
-1.9.1
+> Update the fixed-link Device Tree binding documentation to contain
+> information about the old and deprecated 5-digit 'fixed-link' property.
+
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>   Documentation/devicetree/bindings/net/fixed-link.txt | 12 ++++++++++++
+>   1 file changed, 12 insertions(+)
+
+> diff --git a/Documentation/devicetree/bindings/net/fixed-link.txt b/Documentation/devicetree/bindings/net/fixed-link.txt
+> index e956de1be935..34a991eb213f 100644
+> --- a/Documentation/devicetree/bindings/net/fixed-link.txt
+> +++ b/Documentation/devicetree/bindings/net/fixed-link.txt
+> @@ -18,6 +18,18 @@ properties:
+>   * 'asym-pause' (boolean, optional), to indicate that asym_pause should
+>     be enabled.
+>
+> +Old, deprecated 'fixed-link' binding:
+> +
+> +* A 'fixed-link' property in the EThernet MAC node, with 5 cells, of the
+
+    s/EThernet/Ethernet/
+
+> +  form <a b c d e> with the following accepted values:
+> +  - a: emulated phy id, choose any but but unique to the all specified
+
+    s/phy id/PHY ID/
+
+> +    fixed-links, from 0 to 31
+> +  - b: duplex configuration: 0 for half duplex, 1 for full duplex
+> +  - c: link speed in Mbits/sec, accepted values are: 10, 100 and 1000
+> +  - d: pause configuration: 0 for no pause, 1 for pause
+> +  - e: asymetric pause configuration: 0 for no asymetric pause, 1 for asymetric
+
+    Asymmetric.
+
+WBR, Sergei
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
