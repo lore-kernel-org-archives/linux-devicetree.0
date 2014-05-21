@@ -1,63 +1,65 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: dts: bcm590xx: add support for GPLDO and
- VBUS regulators
-Date: Wed, 21 May 2014 08:02:57 -0400
-Message-ID: <20140521120257.GV32082@beef>
-References: <1398295293-11033-1-git-send-email-mporter@linaro.org>
- <1398295293-11033-5-git-send-email-mporter@linaro.org>
- <20140521092913.GG6679@lee--X1>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v2] ARM: dts: duovero-parlor: Add HDMI output
+Date: Wed, 21 May 2014 15:03:59 +0300
+Message-ID: <537C962F.6050104@ti.com>
+References: <1400663706-24104-1-git-send-email-florian.vaussard@epfl.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140521092913.GG6679@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1400663706-24104-1-git-send-email-florian.vaussard@epfl.ch>
+Sender: linux-omap-owner@vger.kernel.org
+To: Florian Vaussard <florian.vaussard@epfl.ch>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 21, 2014 at 10:29:13AM +0100, Lee Jones wrote:
-> > Adds additional nodes to support GPLDO1-6 and VBUS regulators which
-> > are now supported in the bcm590xx regulator driver.
-> > 
-> > Signed-off-by: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/arm/boot/dts/bcm59056.dtsi | 21 +++++++++++++++++++++
-> >  1 file changed, 21 insertions(+)
-> 
-> I'm not going to apply this with the rest of the set.  It will have to
-> go in via your normal arch/arm route.
+--GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Ok
+On 21/05/14 12:15, Florian Vaussard wrote:
+> Add the necessary DTS nodes to enable the micro-HDMI output on Parlor
+> board.
+>=20
+> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
+> ---
+> v1->v2:
+> - Rebased on Tony's omap-for-v3.16/dt-v2
+> - Use OMAP4_IOPAD macro
+> - Use hpd pin as GPIO with hdmi-connector
+>=20
+>  arch/arm/boot/dts/omap4-duovero-parlor.dts | 44 ++++++++++++++++++++++=
+++++++++
+>  1 file changed, 44 insertions(+)
 
-> > diff --git a/arch/arm/boot/dts/bcm59056.dtsi b/arch/arm/boot/dts/bcm59056.dtsi
-> > index dfadaaa..066adfb 100644
-> > --- a/arch/arm/boot/dts/bcm59056.dtsi
-> > +++ b/arch/arm/boot/dts/bcm59056.dtsi
-> > @@ -70,5 +70,26 @@
-> >  
-> >  		vsr_reg: vsr {
-> >  		};
-> > +
-> > +		gpldo1_reg: gpldo1 {
-> > +		};
-> 
-> What do these empty nodes do in any case?
+Looks good to me.
 
-They instantiate regulators. The bcm590xx binding specifies the
-allowable subnode names permitted here. This replaces the old method
-of specifying an index or the deprecated regulator-compatible property.
-The board-specific dts includes this dtsi and applies any board
-constraints to a subset of regulators that need them. Unused regulators
-are all disabled which is what we want.
+ Tomi
 
-> Don't you at least need a status property in there or something?
 
-Not necessary for these subnodes.
 
--Matt
+--GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTfJYvAAoJEPo9qoy8lh71c40P/2+5NgA9MKzjhM6h48ol+H5X
+NP2S9GONO/ovh05UEOlLh6y/lRuR8bQYpi5WVSqFZWp4It1GSYJM5r3YZMXz+UEA
+2Vr+yns1o1yMcJ/fHybLlXgGxl32TZb+Rc51TVjqa7YVjQxzhgK82Vf6IBsKg75E
+LqZdiBCmDfz+j6f1e8+HGvC0np0LjfNXntUog0uhQ/8ppitscMfxIutWRIYr3NT5
+8ENMJmMDgQ+CEYWNZc+9abL9KEBFQGNV1XApSwUTq1154odA7zOr4QswoWQQcgcu
+NVQZz1Er3d+90uH3f+DXLt1ku0FSu+GQg92wN+yOriVxPP2TLF4PRH/IbzfaQetI
+lXd4NL9n4Cz0lA89Z5v2PxYOH41pqWKVCQ0/wea0iFCl8bbteqMlZAxMZcXlxSA9
+cTCKFO2Zov/ujrPKJhPQGuQgDOa94U2xC4Ma6pBZgclRUF4YPhaaloUMEiHgwV3g
+NyUkLQ0msyLs2Afddl+jqMYD5IPwEzjtnM8W4OxgI5+NWvuIWBLoswlDG053+HFW
+N7cdM1eWxhM/V5+q5ow5Nj6snGrjNKugsOz6tC//nTrJT4ZaqkojnYsvip4/COFA
+nH8P30Jd/gov5j5EUmuu9oX/gGfIdo7u5BiDHtc4T+D1aXoH4dKWbZ17vVX73AmN
+eW4S2BdBoYOHbu/wgBKa
+=bfhk
+-----END PGP SIGNATURE-----
+
+--GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH--
