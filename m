@@ -1,55 +1,32 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [Patch v4 4/5] ARM: dts: keystone: update reset node to work with reset driver
-Date: Wed, 21 May 2014 16:50:55 +0200
-Message-ID: <15259908.YoiO6LMEzV@wuerfel>
-References: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com> <1400682454-24535-5-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: Re: [Patch v4 0/5] Introduce keystone reset driver
+Date: Wed, 21 May 2014 16:52:20 +0200
+Message-ID: <8843733.6ZFJt7BN6L@wuerfel>
+References: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400682454-24535-5-git-send-email-ivan.khoronzhuk@ti.com>
+In-Reply-To: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com
+To: linux-arm-kernel@lists.infradead.org
+Cc: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 May 2014 17:27:33 Ivan Khoronzhuk wrote:
-> The keystone driver requires the next additional properties:
+On Wednesday 21 May 2014 17:27:29 Ivan Khoronzhuk wrote:
+> These patches introduce keystone reset driver.
 > 
-> "ti,syscon-pll" - syscon register range used to access pll controller
->                   registers in order to use reset control registers.
-> "ti,syscon-dev" - syscon register range used to access device state
->                   control registers in order to use mux block
->                   registers for all watchdogs.
+> The keystone SoC can be rebooted in several ways. By external reset
+> pin, by soft and by watchdogs. This driver allows software reset and reset
+> by one of the watchdogs. Also added opportunity to set soft/hard reset type.
 > 
-> "ti,wdt_list"   - option to declare what watchdog are used to reboot
->                   the SoC, so set "0" WDT as default.
-> 
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> Based on linux-next/master
 
-Same comment as what I had for the binding: it's not a register range
-any more, but a phandle for a device.
+Hi Ivan,
 
-> ---
->  arch/arm/boot/dts/keystone.dtsi | 4 +++-
->  1 file changed, 3 insertions(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index 8b899ba..783da60 100644
-> --- a/arch/arm/boot/dts/keystone.dtsi
-> +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -78,7 +78,9 @@
->  
->                 rstctrl: reset-controller {
->                         compatible = "ti,keystone-reset";
-> -                       reg = <0x023100e8 4>;   /* pll reset control reg */
-> +                       ti,syscon-pll = <&pllctrl>;
-> +                       ti,syscon-dev = <&devctrl>;
-> +                       ti,wdt_list = <0>;
->                 };
->  
+The code looks good to me now, but I have some comments about the
+binding. Patches 1, 3 and 5
 
-I don't see a definition for the two labels, so this will cause a
-build error. It makes sense to add them in the same patch.
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
 
-	Arnd
+Thanks for the quick update.
