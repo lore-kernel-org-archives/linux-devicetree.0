@@ -1,55 +1,76 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: [PATCH 2/2] Input: mcs_touchkey: add device tree binding document
-Date: Wed, 21 May 2014 14:51:57 +0900
-Message-ID: <537C3EFD.8040601@samsung.com>
+From: Daniel Kurtz <djkurtz@chromium.org>
+Subject: Re: [PATCH v2 02/18] drm/exynos: use wait_event_timeout() for safety
+ usage
+Date: Wed, 21 May 2014 14:01:12 +0800
+Message-ID: <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-3-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-Sender: linux-input-owner@vger.kernel.org
-To: linux-input@vger.kernel.org, devicetree@vger.kernel.org, dmitry.torokhov@gmail.com, Joonyoung Shim <jy0922.shim@samsung.com>, mark.rutland@arm.com
-Cc: Myungjoo Ham <myungjoo.ham@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1400647390-26590-3-git-send-email-yj44.cho@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Seung-Woo Kim <sw0312.kim@samsung.com>, dri-devel <dri-devel@lists.freedesktop.org>, Andrzej Hajda <a.hajda@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This patch add simple device tree bindings to
-MELFAS MCS5000/5080 controller.
+On Wed, May 21, 2014 at 12:42 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+> There could be the case that the page flip operation isn't finished correctly
+> with some abnormal condition such as panel reset. So this patch replaces
+> wait_event() with wait_event_timeout() to avoid waiting for page flip completion
+> infinitely.
+> And clears exynos_crtc->pending_flip in exynos_drm_crtc_page_flip() when
+> exynos_drm_crtc_mode_set_commit() is failed.
+>
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  drivers/gpu/drm/exynos/exynos_drm_crtc.c |    7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+> index 95c9435..3bf091d 100644
+> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
+> @@ -69,8 +69,10 @@ static void exynos_drm_crtc_dpms(struct drm_crtc *crtc, int mode)
+>
+>         if (mode > DRM_MODE_DPMS_ON) {
+>                 /* wait for the completion of page flip. */
+> -               wait_event(exynos_crtc->pending_flip_queue,
+> -                               atomic_read(&exynos_crtc->pending_flip) == 0);
+> +               if (!wait_event_timeout(exynos_crtc->pending_flip_queue,
+> +                               !atomic_read(&exynos_crtc->pending_flip),
+> +                               HZ/20))
+> +                       atomic_set(&exynos_crtc->pending_flip, 0);
 
-Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
----
- .../devicetree/bindings/input/mcs-touchkey.txt     |   25 ++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/mcs-touchkey.txt
+I meant that changing this to wait_event_timeout() seems to be masking
+the original problem, that pending_flip wasn't being cleared.
+Now that you are now clearing pending_flip in the error path, you
+don't need the timeout, right?
 
-diff --git a/Documentation/devicetree/bindings/input/mcs-touchkey.txt b/Documentation/devicetree/bindings/input/mcs-touchkey.txt
-new file mode 100644
-index 0000000..8364799
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/mcs-touchkey.txt
-@@ -0,0 +1,25 @@
-+* mcs_touchkey MELFAS MCS5000/5080 controller
-+
-+Required properties:
-+- compatible: must be "mcs5000_touchkey" or "mcs5080_touchkey"
-+- reg : I2C address of the chip
-+- interrupts: interrupt to which the chip is connected
-+- key_maxval: size of keycode table
-+- code: key code for this device
-+
-+Example:
-+
-+	i2c_touch_key: i2c-gpio-0 {
-+	       /* ... */
-+
-+	       touch_key@20 {
-+		       compatible = "mcs5080_touchkey";
-+		       reg = <0x20>;
-+		       interrupt-patrent = <gpj0>;
-+		       key_maxval = <2>;
-+		       linux, code = <0x0000009e
-+			              0x000000a9>;
-+	       };
-+
-+	       /* ... */
-+	};
--- 
-1.7.9.5
+-Dan
+
+>                 drm_vblank_off(crtc->dev, exynos_crtc->pipe);
+>         }
+>
+> @@ -259,6 +261,7 @@ static int exynos_drm_crtc_page_flip(struct drm_crtc *crtc,
+>                         spin_lock_irq(&dev->event_lock);
+>                         drm_vblank_put(dev, exynos_crtc->pipe);
+>                         list_del(&event->base.link);
+> +                       atomic_set(&exynos_crtc->pending_flip, 0);
+>                         spin_unlock_irq(&dev->event_lock);
+>
+>                         goto out;
+> --
+> 1.7.9.5
+>
