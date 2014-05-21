@@ -1,7 +1,7 @@
 From: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH 2/2] documentation/devicetree: Update GIC compat strings
-Date: Wed, 21 May 2014 14:48:05 +0100
-Message-ID: <1400680085-10430-3-git-send-email-Nikolay.Borisov@arm.com>
+Subject: [PATCH RESEND 1/2] irqchip: Add generic gic-v1/gic-v2 compat strings.
+Date: Wed, 21 May 2014 14:48:04 +0100
+Message-ID: <1400680085-10430-2-git-send-email-Nikolay.Borisov@arm.com>
 References: <1400680085-10430-1-git-send-email-Nikolay.Borisov@arm.com>
 Content-Type: text/plain; charset=WINDOWS-1252
 Content-Transfer-Encoding: quoted-printable
@@ -12,33 +12,41 @@ To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 Cc: jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds two new implementation-agonostic GIC compatible strings,
-"gic-v1" and "gic-v2". Any implementation compatible with these revisions=
-=20
-of the spec may include these strings in their compatible list in addition=
-=20
-to any more specific string.
+The current set of GIC compatible strings only contains specific
+implementations (e.g. arm,cortex-a9-gic) rather than revisions of the
+standard (e.g. arm,gic-v2), so each new implementation must either claim
+to be an extension of an existing implementation or have a new string
+added to the driver. This may be problematic when workarounds are
+required for bugs in particular implementations, as said workaround may
+end up targeting a wider set of implementations than intended.
 
-Signed-off-by: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>i
+To prevent these issues, this patch adds compatible strings for the
+revisions of the GIC spec which all GIC implementations should be able
+to claim conformance to in addition to any particular implementation
+specific string, e.g.
+
+compatible =3D "$VENDOR,specific-gic-variant", "arm,gic-v2";
+
+Signed-off-by: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
 Acked-by: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>
 ---
- Documentation/devicetree/bindings/arm/gic.txt | 2 ++
+ drivers/irqchip/irq-gic.c | 2 ++
  1 file changed, 2 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/=
-devicetree/bindings/arm/gic.txt
-index 5573c08..223b4cc 100644
---- a/Documentation/devicetree/bindings/arm/gic.txt
-+++ b/Documentation/devicetree/bindings/arm/gic.txt
-@@ -12,6 +12,8 @@ Main node required properties:
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 57d165e..89e9b05 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1073,6 +1073,8 @@ gic_of_init(struct device_node *node, struct device_n=
+ode *parent)
+ }
+ IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
++IRQCHIP_DECLARE(gic_v1, "arm,gic-v1", gic_of_init);
++IRQCHIP_DECLARE(gic_v2, "arm,gic-v2", gic_of_init);
+ IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
+ IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
 =20
- - compatible : should be one of:
- =09"arm,gic-400"
-+=09"arm,gic-v1"
-+=09"arm,gic-v2"
- =09"arm,cortex-a15-gic"
- =09"arm,cortex-a9-gic"
- =09"arm,cortex-a7-gic"
 --=20
 1.8.1.5
 
