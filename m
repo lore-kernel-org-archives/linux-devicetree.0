@@ -1,66 +1,75 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v3 0/2] ARM: dts: add device data for exynos4412-trats2
-Date: Wed, 21 May 2014 22:49:52 +0900
-Message-ID: <036e01cf74fb$8a96b6a0$9fc423e0$@samsung.com>
-References: <537B32E5.2070606@samsung.com> <537BDB0D.6060804@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 2/2] Input: mcs_touchkey: add device tree binding document
+Date: Wed, 21 May 2014 14:53:06 +0100
+Message-ID: <20140521135306.GH17827@leverpostej>
+References: <537C3EFD.8040601@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <537BDB0D.6060804@gmail.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Tomasz Figa' <tomasz.figa@gmail.com>, 'Beomho Seo' <beomho.seo@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, 'Tomasz Figa' <t.figa@samsung.com>
-Cc: 'Myungjoo Ham' <myungjoo.ham@samsung.com>, 'Chanwoo Choi' <cw00.choi@samsung.com>, 'Jaehoon Chung' <jh80.chung@samsung.com>
+Return-path: <linux-input-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537C3EFD.8040601@samsung.com>
+Sender: linux-input-owner@vger.kernel.org
+To: Beomho Seo <beomho.seo@samsung.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Tomasz Figa wrote:
+On Wed, May 21, 2014 at 06:51:57AM +0100, Beomho Seo wrote:
+> This patch add simple device tree bindings to
+> MELFAS MCS5000/5080 controller.
 > 
-> On 20.05.2014 12:48, Beomho Seo wrote:
-> > This patchset add some device node for exynos4412-trats2.
-> > It is based on v3.15-next/dt-samsung-2 branch.
-> >
-> > exynos4412-trats2.dts
-> > - Fix incorrect compatible. Compatible of AK8975 are "ak8975" or "asahi-
-> kasei,ak8975".
-> > - Add cm36651 light/proximity sensor device node.
-> > - Change gpio-key device node. fix incorrect gpio property, and then add
-> "ok-key" node.
-> >
-> > Changes in v3:
-> > - Patch set based on v3.16-next/dt-samsung
-> > - ARM: dts: fix incorrect compatible for exynos4412 patch is applied.
-> > - Remove device node property; status, interrupt-parent, interrupt
-> > - Changes gpio/interrupt specified index.
-> >
-> > Changes in v2:
-> >
-> > - Change ak8975 magnetic sensor compatible according to binding
-document.
-> > - Change cm36651 light/proximity sensor compatible according to binding
-> document and driver.
-> >
-> > Beomho Seo (2):
-> >   ARM: dts: add cm36651 light/proximity sensor node
-> >   ARM: dts: fixed gpio key node for exynos4412
-> >
-> >  arch/arm/boot/dts/exynos4412-trats2.dts |   46
-> +++++++++++++++++++++++++------
-> >  1 file changed, 38 insertions(+), 8 deletions(-)
-> >
+> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+> ---
+>  .../devicetree/bindings/input/mcs-touchkey.txt     |   25 ++++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/mcs-touchkey.txt
 > 
-> For the whole series:
-> 
-> Reviewed-by: Tomasz Figa <t.figa@samsung.com>
-> 
-Looks good to me too except useless 2 empty line like following?
+> diff --git a/Documentation/devicetree/bindings/input/mcs-touchkey.txt b/Documentation/devicetree/bindings/input/mcs-touchkey.txt
+> new file mode 100644
+> index 0000000..8364799
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/input/mcs-touchkey.txt
+> @@ -0,0 +1,25 @@
+> +* mcs_touchkey MELFAS MCS5000/5080 controller
+> +
+> +Required properties:
+> +- compatible: must be "mcs5000_touchkey" or "mcs5080_touchkey"
 
+NAK. These should be in "$VENDOR,$DEVICE" format (e.g. "melfas,mcs5000").
 
-+		};
-+
- 	};
+It looks like "melfas" is already used, but is undocumented. Please add
+it to vendor-prefixes.txt.
 
-Will apply with removing them :-)
+> +- reg : I2C address of the chip
+> +- interrupts: interrupt to which the chip is connected
+> +- key_maxval: size of keycode table
 
-Thanks,
-Kukjin
+Surely this is already implicit in the size of the linux,code property
+data?
+
+This is superfluous and broken. Please get rid of it.
+
+> +- code: key code for this device
+
+This doesn't match the example or driver. If this is a standard
+property, please refer to a definition of the format.
+
+> +
+> +Example:
+> +
+> +	i2c_touch_key: i2c-gpio-0 {
+> +	       /* ... */
+> +
+> +	       touch_key@20 {
+> +		       compatible = "mcs5080_touchkey";
+> +		       reg = <0x20>;
+> +		       interrupt-patrent = <gpj0>;
+> +		       key_maxval = <2>;
+> +		       linux, code = <0x0000009e
+> +			              0x000000a9>;
+
+Random spacing?
+
+Please bracket individual list elements.
+
+Cheers,
+Mark.
