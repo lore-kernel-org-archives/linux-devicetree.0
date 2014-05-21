@@ -1,13 +1,13 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [Patch] ARM: dts: keystone: add pll controller syscon entry
-Date: Wed, 21 May 2014 17:56:25 +0300
-Message-ID: <537CBE99.9090800@ti.com>
-References: <1400681875-24432-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: Re: [Patch] ARM: dts: keystone: add device state control syscon entry
+Date: Wed, 21 May 2014 17:56:41 +0300
+Message-ID: <537CBEA9.2090105@ti.com>
+References: <1400681760-24351-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400681875-24432-1-git-send-email-ivan.khoronzhuk@ti.com>
+In-Reply-To: <1400681760-24351-1-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: santosh.shilimkar@ti.com
 Cc: galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, m-karicheri2@ti.com
@@ -16,10 +16,10 @@ List-Id: devicetree@vger.kernel.org
 Ignore this. It'll be included in "Introduce keystone reset driver" 
 patch series
 
-On 05/21/2014 05:17 PM, Ivan Khoronzhuk wrote:
-> The pll controller register set includes sets of registers with
-> different purposes, so it's logically to add syscon entry to be able
-> to access them from appropriate places.
+On 05/21/2014 05:16 PM, Ivan Khoronzhuk wrote:
+> Device state control registers has register regions with different
+> purposes so add syscon entry in order to be able to correctly access
+> them from appropriate places.
 >
 > Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 > ---
@@ -30,16 +30,16 @@ On 05/21/2014 05:17 PM, Ivan Khoronzhuk wrote:
 >   1 file changed, 5 insertions(+)
 >
 > diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
-> index d9f99e7..5e67c5b 100644
+> index 5e67c5b..8b899ba 100644
 > --- a/arch/arm/boot/dts/keystone.dtsi
 > +++ b/arch/arm/boot/dts/keystone.dtsi
-> @@ -66,6 +66,11 @@
->   		ranges = <0x0 0x0 0x0 0xc0000000>;
->   		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+> @@ -71,6 +71,11 @@
+>   			reg = <0x2310000 0x200>;
+>   		};
 >   
-> +		pllctrl: pll_controller {
-> +			compatible = "ti,keystone-pllctrl", "syscon";
-> +			reg = <0x2310000 0x200>;
+> +		devctrl: device_state_control {
+> +			compatible = "ti,keystone-devctrl", "syscon";
+> +			reg = <0x2620000 0x1000>;
 > +		};
 > +
 >   		rstctrl: reset-controller {
