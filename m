@@ -1,94 +1,82 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 5/7] mfd: twl4030-power: Add support for board specific
- configuration
-Date: Tue, 20 May 2014 19:45:53 -0700
-Message-ID: <20140521024552.GD17417@atomide.com>
-References: <1400031250-29542-1-git-send-email-tony@atomide.com>
- <1400031250-29542-6-git-send-email-tony@atomide.com>
- <20140520151722.GA24991@lee--X1>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
+Date: Tue, 20 May 2014 19:46:19 -0700
+Message-ID: <537C137B.2000007@gmail.com>
+References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org> <1399993115-21552-3-git-send-email-grant.likely@linaro.org> <53757D25.1060005@gmail.com> <20140516105444.C1DB7C42277@trevor.secretlab.ca> <20140518092730.109AAC40B8A@trevor.secretlab.ca> <537C1252.3090900@gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140520151722.GA24991@lee--X1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537C1252.3090900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [140520 08:18]:
-> 
-> Ah, I forgot to Ack this last time, didn't I?
-> 
->   Acked-by: Lee Jones <lee.jones@linaro.org>
+On 5/20/2014 7:41 PM, Frank Rowand wrote:
 
-Yeah, here's this one updated with your ack.
 
-Regards,
 
-Tony
+< snip >
 
-8< ---------------------------
-From: Tony Lindgren <tony@atomide.com>
-Date: Tue, 20 May 2014 11:17:54 -0700
-Subject: [PATCH] mfd: twl4030-power: Add support for board specific configuration
 
-With the recommended twl4030 configuration added, we can now add
-board specific changes as modifications to the recommended
-configuration.
 
-Note that the data is private to this driver, and the data must
-always have a NULL resource in the sentinel.
+> I will reply to this email with an additional patch that restores the
 
-Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Signed-off-by: Tony Lindgren <tony@atomide.com>
+> original behavior.
 
---- a/drivers/mfd/twl4030-power.c
-+++ b/drivers/mfd/twl4030-power.c
-@@ -567,13 +567,34 @@ twl4030_power_configure_scripts(const struct twl4030_power_data *pdata)
- 	return 0;
- }
+
+
+< snip >
+
+
+
+From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+
+If __of_find_node_by_path() returns parent when the remaining portion of the
+path is "/" then the behavior of of_find_node_by_path() has changed.
+
+Previously, adding an extraneous "/" on the end of a path would result
+in of_find_node_by_path() not finding a match.
+
+Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+---
+ drivers/of/base.c |   13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
+
+Index: b/drivers/of/base.c
+===================================================================
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -778,7 +778,7 @@ static struct device_node *__of_find_nod
+ 	int len = strchrnul(path, '/') - path;
  
-+static void twl4030_patch_rconfig(struct twl4030_resconfig *common,
-+				  struct twl4030_resconfig *board)
-+{
-+	while (common->resource) {
-+		struct twl4030_resconfig *b = board;
-+
-+		while (b->resource) {
-+			if (b->resource == common->resource) {
-+				*common = *b;
+ 	if (!len)
+-		return parent;
++		return NULL;
+ 
+ 	for_each_child_of_node(parent, child) {
+ 		const char *name = strrchr(child->full_name, '/');
+@@ -813,6 +813,17 @@ struct device_node *of_find_node_by_path
+ 	struct property *pp;
+ 	unsigned long flags;
+ 
++	if (strcmp(path, "/") == 0) {
++		raw_spin_lock_irqsave(&devtree_lock, flags);
++		for (; np; np = np->allnext) {
++			if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
++			    && of_node_get(np))
 +				break;
-+			}
-+			b++;
 +		}
-+		common++;
++		raw_spin_unlock_irqrestore(&devtree_lock, flags);
++		return np;
 +	}
-+}
 +
- static int
- twl4030_power_configure_resources(const struct twl4030_power_data *pdata)
- {
- 	struct twl4030_resconfig *resconfig = pdata->resource_config;
-+	struct twl4030_resconfig *boardconf = pdata->board_config;
- 	int err;
- 
- 	if (resconfig) {
-+		if (boardconf)
-+			twl4030_patch_rconfig(resconfig, boardconf);
-+
- 		while (resconfig->resource) {
- 			err = twl4030_configure_resource(resconfig);
- 			if (err)
---- a/include/linux/i2c/twl.h
-+++ b/include/linux/i2c/twl.h
-@@ -674,6 +674,7 @@ struct twl4030_power_data {
- 	struct twl4030_script **scripts;
- 	unsigned num;
- 	struct twl4030_resconfig *resource_config;
-+	struct twl4030_resconfig *board_config;
- #define TWL4030_RESCONFIG_UNDEF	((u8)-1)
- 	bool use_poweroff;	/* Board is wired for TWL poweroff */
- };
+ 	/* The path could begin with an alias */
+ 	if (*path != '/') {
+ 		char *p = strchrnul(path, '/');
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
