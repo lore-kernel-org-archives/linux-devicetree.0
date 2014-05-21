@@ -1,53 +1,55 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH v8 1/2] can: Add xilinx CAN device tree bindings documentation.
-Date: Wed, 21 May 2014 14:53:07 +0200
-Message-ID: <537CA1B3.6030603@pengutronix.de>
-References: <17489036-3743-4393-afc6-a9064325b4d5@BN1BFFO11FD053.protection.gbl>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/2] documentation/devicetree: Update GIC compat strings
+Date: Wed, 21 May 2014 09:01:47 -0400
+Message-ID: <20140521130147.GH8664@titan.lakedaemon.net>
+References: <1400664501-4208-1-git-send-email-Nikolay.Borisov@arm.com>
+ <1400664501-4208-3-git-send-email-Nikolay.Borisov@arm.com>
+ <20140521102439.GE17827@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="OA18bPXHFkMhNgQv47qwovqBE7SgLHs90"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <17489036-3743-4393-afc6-a9064325b4d5@BN1BFFO11FD053.protection.gbl>
-Sender: linux-can-owner@vger.kernel.org
-To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140521102439.GE17827@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---OA18bPXHFkMhNgQv47qwovqBE7SgLHs90
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+Nikolay,
 
-On 05/21/2014 01:41 PM, Kedareswara rao Appana wrote:
-> Add xilinx CAN bindings documentation.
->=20
-> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+On Wed, May 21, 2014 at 11:24:39AM +0100, Mark Rutland wrote:
+> [Adding devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org]
+> 
+> On Wed, May 21, 2014 at 10:28:21AM +0100, Nikolay Borisov wrote:
+> > Document the addition of 2 new, implementation-agnostic compatible
+> > strings. This allows for more flexibility such that new implementation 
+> > can either state whether they are an extension of an existing implementation,
+> > a brand new implementation or just that they conform to a standard revision
+> > of the GIC spec.
+> 
+> From my POV it makes sense to have these to make it possible to write
+> DTs with new GIC variants which are implementations of the standard
+> rather than extensions of existing implementations.
+> 
+> However, DTs using these should also state exactly what variant they
+> are, and those strings should be documented (even if not supported
+> directly by the driver). It would be nice to have that mentioned in the
+> commit message.
 
-Applied both to can-next.
+Please tweak the commit message as Mark suggested and resend, including
+me in the Cc.  I'll queue it up for tglx.
 
-Thanks,
-Marc
+> Otherwise:
+> 
+> Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> 
 
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+Also, please include Mark's Acks.
 
+thx,
 
---OA18bPXHFkMhNgQv47qwovqBE7SgLHs90
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlN8obMACgkQjTAFq1RaXHMPuwCeLQgO8KVxco4cPD3LAfOFiT1d
-5KoAoJbqvZr+Fw+XX2tj0k/xHHlSi04X
-=LI0a
------END PGP SIGNATURE-----
-
---OA18bPXHFkMhNgQv47qwovqBE7SgLHs90--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
