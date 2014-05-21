@@ -1,74 +1,53 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
- for omap3-evm and ldp
-Date: Wed, 21 May 2014 15:44:54 +0300
-Message-ID: <537C9FC6.8020104@ti.com>
-References: <1398815562-24113-1-git-send-email-tony@atomide.com> <1398815562-24113-5-git-send-email-tony@atomide.com> <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com> <20140430174751.GA12362@atomide.com> <20140505183919.GA15463@atomide.com> <20140508233628.GJ2198@atomide.com> <536C7EA7.5000306@ti.com> <20140509153723.GD17814@atomide.com> <20140513213205.GB18001@atomide.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH v8 1/2] can: Add xilinx CAN device tree bindings documentation.
+Date: Wed, 21 May 2014 14:53:07 +0200
+Message-ID: <537CA1B3.6030603@pengutronix.de>
+References: <17489036-3743-4393-afc6-a9064325b4d5@BN1BFFO11FD053.protection.gbl>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140513213205.GB18001@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Florian Vaussard <florian.vaussard@epfl.ch>
+ protocol="application/pgp-signature";
+ boundary="OA18bPXHFkMhNgQv47qwovqBE7SgLHs90"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <17489036-3743-4393-afc6-a9064325b4d5@BN1BFFO11FD053.protection.gbl>
+Sender: linux-can-owner@vger.kernel.org
+To: Kedareswara rao Appana <appana.durga.rao@xilinx.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
---xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB
-Content-Type: text/plain; charset=ISO-8859-1
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--OA18bPXHFkMhNgQv47qwovqBE7SgLHs90
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-On 14/05/14 00:32, Tony Lindgren wrote:
+On 05/21/2014 01:41 PM, Kedareswara rao Appana wrote:
+> Add xilinx CAN bindings documentation.
+>=20
+> Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
 
-> +&dss {
-> +	status =3D "ok";
-> +	vdds_dsi-supply =3D <&vpll2>;
-> +	port {
-> +		dpi_out: endpoint {
-> +			remote-endpoint =3D <&lcd_in>;
-> +			data-lines =3D <18>;
-> +		};
-> +	};
-> +};
+Applied both to can-next.
 
-I just noticed the vdds_dsi-supply there. While the driver currently
-uses that if available, I think it should be removed, and done the same
-way Florian did with his overo patches:
+Thanks,
+Marc
 
-/* Needed to power the DPI pins */
-&vpll2 {
-	regulator-always-on;
-};
-
-That supply is not DSS's supply, but it's used to power up the pins. If
-the pins were used as GPIOs, that power should be enabled.
-
- Tomi
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-
---xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB
+--OA18bPXHFkMhNgQv47qwovqBE7SgLHs90
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: OpenPGP digital signature
 Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTfJ/GAAoJEPo9qoy8lh716JsP/1ZfdXg29Y4pgxRAe29m9sex
-wNKAIbnYzl8MMQviJ9BMHKSIqryYT8375JOL69P1JzDtZ6ZZCXinYxpS44RU5FDi
-+klfT5IOMeC75au+uHKdeGOOky+zoNpzaVhs4HvJw77gFpRMvzvkZIjP2GqwapZe
-/o7//zcnpzhsyBzAY8od9NYR0FWMYDca2b6oYqohJmnN1SJpTanivxmBYQ8swYEr
-X+S9B7DuGDJaJajFeZR1uo5RBig5gVEmMF5O/y7zgfeLMSyUkWtOGW51GJWPifbi
-RNxci+lia0ZHelIRxxMBfYDft3diiO8ZKA25HcTqerxQBn0SMI5KwRgdkFfGjGVY
-Ht7vmZO4J8U6iVYAAPh3jwE8qss9dR4qLrH9sQzVkMHZuACKhniHf2tf8+eG9/u/
-9/O6OCf+RIbjR6+ITkmdknroBM4onUboNT41bU5Fcpn6UxglJ0a9/9xkYZGxpPOX
-u49/YYOY3dGekYsY5Pa0ba9eZ+eI52AbPwOFc0d9ei3uupZt9SXg2vSI2oaG8eHR
-iouihZ4ZyXY6Le91DirttrwU3+pmnu0OW4oPRylyWFXQYXGNso8+1w83oaevThk+
-MPoauEjatreqhpq5GdqnEJWz8VQuSmaLjhjIwM7JWzZprqRO5jG8LsJCv2auxoeH
-28Wjn78xXc44wOrvY2Dj
-=GcNQ
+iEYEARECAAYFAlN8obMACgkQjTAFq1RaXHMPuwCeLQgO8KVxco4cPD3LAfOFiT1d
+5KoAoJbqvZr+Fw+XX2tj0k/xHHlSi04X
+=LI0a
 -----END PGP SIGNATURE-----
 
---xpK7v2KfhktUI3jTN0Oj8XrBLrXP9G2hB--
+--OA18bPXHFkMhNgQv47qwovqBE7SgLHs90--
