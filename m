@@ -1,86 +1,96 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v8 1/2] can: Add xilinx CAN device tree bindings documentation.
-Date: Wed, 21 May 2014 12:29:16 +0530
-Message-ID: <59325214-bd7e-4b98-bc0f-c38a9104203b@BL2FFO11FD019.protection.gbl>
+From: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH] iommu: fsl_pamu.c: Fix for possible null pointer
+	dereference
+Date: Wed, 21 May 2014 07:15:28 +0000
+Message-ID: <687709ad1a974bf5a2508b2e78b316d3@BL2PR03MB468.namprd03.prod.outlook.com>
+References: <1400347004-25368-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<28189d9037d244729e10f7b1a22005c5@BLUPR03MB566.namprd03.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com
-Cc: devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <28189d9037d244729e10f7b1a22005c5-GeMU99Gfrru4FpqPz9FowuO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: "Bharat.Bhushan-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Bharat.Bhushan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rickard
+	Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add xilinx CAN bindings documentation.
 
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes for v8:
-- None.
-Changes for v7:
-- Split the devicetree bindings doc as a seperate patch
----
- .../devicetree/bindings/net/can/xilinx_can.txt     |   44 ++++++++++++++++++++
- 1 files changed, 44 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/can/xilinx_can.txt
 
-diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-new file mode 100644
-index 0000000..fe38847
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-@@ -0,0 +1,44 @@
-+Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
-+---------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynq-can-1.0" for Zynq CAN
-+			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
-+			  controllers.
-+- reg			: Physical base address and size of the Axi CAN/Zynq
-+			  CANPS registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- interrupt-parent	: Must be core interrupt controller
-+- clock-names		: List of input clock names - "can_clk", "pclk"
-+			  (For CANPS), "can_clk" , "s_axi_aclk"(For AXI CAN)
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+- tx-fifo-depth		: Can Tx fifo depth.
-+- rx-fifo-depth		: Can Rx fifo depth.
-+
-+
-+Example:
-+
-+For Zynq CANPS Dts file:
-+	zynq_can_0: can@e0008000 {
-+			compatible = "xlnx,zynq-can-1.0";
-+			clocks = <&clkc 19>, <&clkc 36>;
-+			clock-names = "can_clk", "pclk";
-+			reg = <0xe0008000 0x1000>;
-+			interrupts = <0 28 4>;
-+			interrupt-parent = <&intc>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
-+For Axi CAN Dts file:
-+	axi_can_0: axi-can@40000000 {
-+			compatible = "xlnx,axi-can-1.00.a";
-+			clocks = <&clkc 0>, <&clkc 1>;
-+			clock-names = "can_clk","s_axi_aclk" ;
-+			reg = <0x40000000 0x10000>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 59 1>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
--- 
-1.7.4
+> -----Original Message-----
+> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of
+> Bharat.Bhushan-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+> Sent: Wednesday, May 21, 2014 9:28 AM
+> To: Rickard Strandqvist; Joerg Roedel; Grant Likely
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Rob
+> Herring; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Subject: RE: [PATCH] iommu: fsl_pamu.c: Fix for possible null pointer
+> dereference
+> 
+> 
+> 
+> > -----Original Message-----
+> > From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
+> > bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Rickard Strandqvist
+> > Sent: Saturday, May 17, 2014 10:47 PM
+> > To: Joerg Roedel; Grant Likely
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org; Rob
+> > Herring; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Rickard Strandqvist
+> > Subject: [PATCH] iommu: fsl_pamu.c: Fix for possible null pointer
+> > dereference
+> >
+> > There is otherwise a risk of a possible null pointer dereference.
+> 
+> You are right.
+[Sethi Varun-B16395] Thanks for pointing out the issue.
+> 
+> >
+> > Was largely found by using a static code analysis program called
+> cppcheck.
+> >
+> > Signed-off-by: Rickard Strandqvist
+> > <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+> 
+> Reviewed-by: Bharat Bhushan <bharat.bhushan-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Acknowledged-by: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+
+> > ---
+> >  drivers/iommu/fsl_pamu.c |    3 +--
+> >  1 file changed, 1 insertion(+), 2 deletions(-)
+> >
+> > diff --git a/drivers/iommu/fsl_pamu.c b/drivers/iommu/fsl_pamu.c index
+> > cba0498..b99dd88 100644
+> > --- a/drivers/iommu/fsl_pamu.c
+> > +++ b/drivers/iommu/fsl_pamu.c
+> > @@ -592,8 +592,7 @@ found_cpu_node:
+> >  		/* advance to next node in cache hierarchy */
+> >  		node = of_find_node_by_phandle(*prop);
+> >  		if (!node) {
+> > -			pr_debug("Invalid node for cache hierarchy %s\n",
+> > -				node->full_name);
+> > +			pr_debug("Invalid node for cache hierarchy\n");
+> >  			return ~(u32)0;
+> >  		}
+> >  	}
+> > --
+> > 1.7.10.4
+> >
+> > _______________________________________________
+> > iommu mailing list
+> > iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> > https://lists.linuxfoundation.org/mailman/listinfo/iommu
+> _______________________________________________
+> iommu mailing list
+> iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+> https://lists.linuxfoundation.org/mailman/listinfo/iommu
