@@ -1,79 +1,56 @@
-From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
-Subject: [PATCH v8 1/2] can: Add xilinx CAN device tree bindings documentation.
-Date: Wed, 21 May 2014 17:11:29 +0530
-Message-ID: <17489036-3743-4393-afc6-a9064325b4d5@BN1BFFO11FD053.protection.gbl>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v2 04/18] video: add command mode and command mode display
+ timing
+Date: Wed, 21 May 2014 20:41:39 +0900
+Message-ID: <537C90F3.7050404@samsung.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-5-git-send-email-yj44.cho@samsung.com>
+ <20140521110204.GB2014@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-can@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140521110204.GB2014@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Add xilinx CAN bindings documentation.
+Hi Therry
 
-Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
----
-Changes for v8:
-- None.
-Changes for v7:
-- Split the devicetree bindings doc as a seperate patch
----
- .../devicetree/bindings/net/can/xilinx_can.txt     |   44 ++++++++++++++++++++
- 1 files changed, 44 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/net/can/xilinx_can.txt
+On 05/21/2014 08:02 PM, Thierry Reding wrote:
+> On Wed, May 21, 2014 at 01:42:56PM +0900, YoungJun Cho wrote:
+>> This patch is based on videomode and display_timing relevant codes.
+>> To support command mode panel, it does not need to guide its timing
+>> information to the display controller like video mode panel,
+>> but it requires signal timings to transfer video data.
+>> So this patch adds cmdmode struct, cmdmode_display_timing struct and
+>> the according helper functions to convert cmdmode_display_timing
+>> to a generic cmdmode.
+>
+> Can you point me to relevant documentation? I wasn't able to find it by
+> a quick scan through the DSI specification.
+>
 
-diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-new file mode 100644
-index 0000000..fe38847
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
-@@ -0,0 +1,44 @@
-+Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
-+---------------------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynq-can-1.0" for Zynq CAN
-+			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
-+			  controllers.
-+- reg			: Physical base address and size of the Axi CAN/Zynq
-+			  CANPS registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- interrupt-parent	: Must be core interrupt controller
-+- clock-names		: List of input clock names - "can_clk", "pclk"
-+			  (For CANPS), "can_clk" , "s_axi_aclk"(For AXI CAN)
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+- tx-fifo-depth		: Can Tx fifo depth.
-+- rx-fifo-depth		: Can Rx fifo depth.
-+
-+
-+Example:
-+
-+For Zynq CANPS Dts file:
-+	zynq_can_0: can@e0008000 {
-+			compatible = "xlnx,zynq-can-1.0";
-+			clocks = <&clkc 19>, <&clkc 36>;
-+			clock-names = "can_clk", "pclk";
-+			reg = <0xe0008000 0x1000>;
-+			interrupts = <0 28 4>;
-+			interrupt-parent = <&intc>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
-+For Axi CAN Dts file:
-+	axi_can_0: axi-can@40000000 {
-+			compatible = "xlnx,axi-can-1.00.a";
-+			clocks = <&clkc 0>, <&clkc 1>;
-+			clock-names = "can_clk","s_axi_aclk" ;
-+			reg = <0x40000000 0x10000>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 59 1>;
-+			tx-fifo-depth = <0x40>;
-+			rx-fifo-depth = <0x40>;
-+		};
--- 
-1.7.4
+I'm sorry to say that there is no specific one document.
 
+I referred to several ones, CPU interface, I80 interface and
+DBI document(last time you said it).
+I think this is good to check it.
+[ http://cache.freescale.com/files/dsp/doc/app_note/AN4180.pdf ]
 
+And I asked panel vendor custom service centre also.
+
+Thank you.
+Best regards YJ
+
+> Thierry
+>
