@@ -1,30 +1,42 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [RFC] Migrate to Hz resolution for OPP binding
-Date: Wed, 21 May 2014 16:05:38 +0200
-Message-ID: <20140521140538.GC15936@amd.pavel.ucw.cz>
-References: <672dd8e9-2857-49fb-848f-d38d38b23c9b@BN1BFFO11FD024.protection.gbl>
- <CAGo_u6rftjYAEy0wSFA6aqCDNsriC9r-cMVSqeX1xqKCVBqe7g@mail.gmail.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [Patch] ARM: dts: keystone: add device state control syscon entry
+Date: Wed, 21 May 2014 17:16:00 +0300
+Message-ID: <1400681760-24351-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGo_u6rftjYAEy0wSFA6aqCDNsriC9r-cMVSqeX1xqKCVBqe7g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: =?iso-8859-1?Q?S=F6ren?= Brinkmann <soren.brinkmann@xilinx.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Viresh Kumar <viresh.kumar@linaro.org>, lkml <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, dt list <devicetree@vger.kernel.org>
+To: santosh.shilimkar@ti.com
+Cc: galak@codeaurora.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, grygorii.strashko@ti.com, m-karicheri2@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Device state control registers has register regions with different
+purposes so add syscon entry in order to be able to correctly access
+them from appropriate places.
 
-> > As plan B, I was thinking to add the property 'operating-points-hz'...
-> >
-> > Any better ideas?
-> 
-> property operating-points-hz as a bool perhaps -> that modifies the
-> description and maintains legacy dtb support sounds OK to me if DT
-> folks and Rafael are ok with it as well.
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
 
-That should like a terrible hack :-(.
+Based on linux-next/master
 
+ arch/arm/boot/dts/keystone.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/arm/boot/dts/keystone.dtsi b/arch/arm/boot/dts/keystone.dtsi
+index 5e67c5b..8b899ba 100644
+--- a/arch/arm/boot/dts/keystone.dtsi
++++ b/arch/arm/boot/dts/keystone.dtsi
+@@ -71,6 +71,11 @@
+ 			reg = <0x2310000 0x200>;
+ 		};
+ 
++		devctrl: device_state_control {
++			compatible = "ti,keystone-devctrl", "syscon";
++			reg = <0x2620000 0x1000>;
++		};
++
+ 		rstctrl: reset-controller {
+ 			compatible = "ti,keystone-reset";
+ 			reg = <0x023100e8 4>;	/* pll reset control reg */
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.8.3.2
