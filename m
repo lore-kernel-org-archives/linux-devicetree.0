@@ -1,7 +1,7 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [Patch v4 2/5] Power: reset: add bindings for keystone reset driver
-Date: Wed, 21 May 2014 17:27:31 +0300
-Message-ID: <1400682454-24535-3-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [Patch v4 3/5] ARM: keystone: remove redundant reset stuff
+Date: Wed, 21 May 2014 17:27:32 +0300
+Message-ID: <1400682454-24535-4-git-send-email-ivan.khoronzhuk@ti.com>
 References: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,92 +21,78 @@ To: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@ar
 Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This node is intended to allow SoC reset in case of software reset
-or appropriate watchdogs.
-
-The Keystone SoCs can contain up to 4 watchdog timers to reset
-SoC. Each watchdog timer event input is connected to the Reset Mux
-block. The Reset Mux block can be configured to cause reset or not.
-
-Additionally soft or hard reset can be configured.
+Remove reset stuff in flavour of using keystone reset driver:
+driver/power/reset/keystone-reset.c
 
 Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 ---
- .../bindings/power/reset/keystone-reset.txt        | 66 ++++++++++++++++++++++
- 1 file changed, 66 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+ arch/arm/mach-keystone/keystone.c | 34 ----------------------------------
+ 1 file changed, 34 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/power/reset/keystone-reset.txt b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-new file mode 100644
-index 0000000..64cb7b4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-@@ -0,0 +1,66 @@
-+* Device tree bindings for Texas Instruments keystone reset
-+
-+This node is intended to allow SoC reset in case of software reset
-+of selected watchdogs.
-+
-+The Keystone SoCs can contain up to 4 watchdog timers to reset
-+SoC. Each watchdog timer event input is connected to the Reset Mux
-+block. The Reset Mux block can be configured to cause reset or not.
-+
-+Additionally soft or hard reset can be configured.
-+
-+Required properties:
-+
-+- compatible:		ti,keystone-reset
-+
-+- ti,syscon-pll:	syscon register range used to access pll controller
-+			registers in order to use reset control registers.
-+
-+- ti,syscon-dev:	syscon register range used to access device state
-+			control registers in order to use mux block registers
-+			for all watchdogs.
-+
-+Optional properties:
-+
-+- ti,soft-reset:	Boolean option indicating soft reset.
-+			By default hard reset is used.
-+
-+- ti,wdt_list:		WDT list that can cause SoC reset. It's not related
-+			to WDT driver, it's just needed to enable a SoC related
-+			reset that's triggered by one of WDTs. The list is
-+			in format: <0>, <2>; It can be in random order and
-+			begins from 0 to 3, as keystone can contain up to 4 SoC
-+			reset watchdogs and can be in random order.
-+
-+Example 1:
-+Setup keystone reset so that in case software reset or
-+WDT0 is triggered it issues hard reset for SoC.
-+
-+pllctrl: pll_controller {
-+	compatible = "syscon";
-+	reg = <0x2310000 0x200>;
-+};
-+
-+devctrl: device_state_control {
-+	compatible = "syscon";
-+	reg = <0x2620000 0x1000>;
-+};
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	ti,syscon-pll = <&pllctrl>;
-+	ti,syscon-dev = <&devctrl>;
-+	ti,wdt_list = <0>;
-+};
-+
-+Example 2:
-+Setup keystone reset so that in case of software reset or
-+WDT0 or WDT2 is triggered it issues soft reset for SoC.
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	ti,syscon-pll = <&pllctrl>;
-+	ti,syscon-dev = <&devctrl>;
-+	ti,wdt_list = <0>, <2>;
-+	ti,soft-reset;
-+};
+diff --git a/arch/arm/mach-keystone/keystone.c b/arch/arm/mach-keystone/keystone.c
+index 59b8383..1f9ae89 100644
+--- a/arch/arm/mach-keystone/keystone.c
++++ b/arch/arm/mach-keystone/keystone.c
+@@ -26,11 +26,6 @@
+ 
+ #include "keystone.h"
+ 
+-#define PLL_RESET_WRITE_KEY_MASK		0xffff0000
+-#define PLL_RESET_WRITE_KEY			0x5a69
+-#define PLL_RESET				BIT(16)
+-
+-static void __iomem *keystone_rstctrl;
+ static struct notifier_block platform_nb;
+ static unsigned long keystone_dma_pfn_offset __read_mostly;
+ 
+@@ -55,16 +50,6 @@ static int keystone_platform_notifier(struct notifier_block *nb,
+ 
+ static void __init keystone_init(void)
+ {
+-	struct device_node *node;
+-
+-	node = of_find_compatible_node(NULL, NULL, "ti,keystone-reset");
+-	if (WARN_ON(!node))
+-		pr_warn("ti,keystone-reset node undefined\n");
+-
+-	keystone_rstctrl = of_iomap(node, 0);
+-	if (WARN_ON(!keystone_rstctrl))
+-		pr_warn("ti,keystone-reset iomap error\n");
+-
+ 	keystone_pm_runtime_init();
+ 	if (platform_nb.notifier_call)
+ 		bus_register_notifier(&platform_bus_type, &platform_nb);
+@@ -123,24 +108,6 @@ static const char *keystone_match[] __initconst = {
+ 	NULL,
+ };
+ 
+-void keystone_restart(enum reboot_mode mode, const char *cmd)
+-{
+-	u32 val;
+-
+-	BUG_ON(!keystone_rstctrl);
+-
+-	/* Enable write access to RSTCTRL */
+-	val = readl(keystone_rstctrl);
+-	val &= PLL_RESET_WRITE_KEY_MASK;
+-	val |= PLL_RESET_WRITE_KEY;
+-	writel(val, keystone_rstctrl);
+-
+-	/* Reset the SOC */
+-	val = readl(keystone_rstctrl);
+-	val &= ~PLL_RESET;
+-	writel(val, keystone_rstctrl);
+-}
+-
+ DT_MACHINE_START(KEYSTONE, "Keystone")
+ #if defined(CONFIG_ZONE_DMA) && defined(CONFIG_ARM_LPAE)
+ 	.dma_zone_size	= SZ_2G,
+@@ -148,6 +115,5 @@ DT_MACHINE_START(KEYSTONE, "Keystone")
+ 	.smp		= smp_ops(keystone_smp_ops),
+ 	.init_machine	= keystone_init,
+ 	.dt_compat	= keystone_match,
+-	.restart	= keystone_restart,
+ 	.init_meminfo   = keystone_init_meminfo,
+ MACHINE_END
 -- 
 1.8.3.2
