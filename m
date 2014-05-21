@@ -1,100 +1,111 @@
-From: Florian Vaussard <florian.vaussard@epfl.ch>
-Subject: [PATCH v2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Wed, 21 May 2014 11:15:06 +0200
-Message-ID: <1400663706-24104-1-git-send-email-florian.vaussard@epfl.ch>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 5/7] mfd: twl4030-power: Add support for board specific
+ configuration
+Date: Wed, 21 May 2014 10:18:57 +0100
+Message-ID: <20140521091857.GD6679@lee--X1>
+References: <1400031250-29542-1-git-send-email-tony@atomide.com>
+ <1400031250-29542-6-git-send-email-tony@atomide.com>
+ <20140520151722.GA24991@lee--X1>
+ <20140521024552.GD17417@atomide.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140521024552.GD17417@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Tony Lindgren <tony@atomide.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary DTS nodes to enable the micro-HDMI output on Parlor
-board.
+On Tue, 20 May 2014, Tony Lindgren wrote:
 
-Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
----
-v1->v2:
-- Rebased on Tony's omap-for-v3.16/dt-v2
-- Use OMAP4_IOPAD macro
-- Use hpd pin as GPIO with hdmi-connector
+> * Lee Jones <lee.jones@linaro.org> [140520 08:18]:
+> >=20
+> > Ah, I forgot to Ack this last time, didn't I?
+> >=20
+> >   Acked-by: Lee Jones <lee.jones@linaro.org>
+>=20
+> Yeah, here's this one updated with your ack.
 
- arch/arm/boot/dts/omap4-duovero-parlor.dts | 44 ++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Has the code changed at all, or are you just reposting with my Ack
+applied?
 
-diff --git a/arch/arm/boot/dts/omap4-duovero-parlor.dts b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-index cd53a64..6dc84d9 100644
---- a/arch/arm/boot/dts/omap4-duovero-parlor.dts
-+++ b/arch/arm/boot/dts/omap4-duovero-parlor.dts
-@@ -15,6 +15,10 @@
- 	model = "OMAP4430 Gumstix Duovero on Parlor";
- 	compatible = "gumstix,omap4-duovero-parlor", "gumstix,omap4-duovero", "ti,omap4430", "ti,omap4";
- 
-+	aliases {
-+		display0 = &hdmi0;
-+	};
-+
- 	leds {
- 		compatible = "gpio-leds";
- 		led0 {
-@@ -35,6 +39,21 @@
- 			gpio-key,wakeup;
- 		};
- 	};
-+
-+	hdmi0: connector@0 {
-+		compatible = "hdmi-connector";
-+		label = "hdmi";
-+
-+		type = "d";
-+
-+		hpd-gpios = <&gpio2 31 GPIO_ACTIVE_HIGH>;	/* gpio_63 */
-+
-+		port {
-+			hdmi_connector_in: endpoint {
-+				remote-endpoint = <&hdmi_out>;
-+			};
-+		};
-+	};
- };
- 
- &omap4_pmx_core {
-@@ -77,6 +96,15 @@
- 			OMAP4_IOPAD(0x070, PIN_INPUT_PULLUP | MUX_MODE3)	/* gpmc_a24.gpio_48: amdix enabled */
- 		>;
- 	};
-+
-+	dss_hdmi_pins: pinmux_dss_hdmi_pins {
-+		pinctrl-single,pins = <
-+			OMAP4_IOPAD(0x098, PIN_INPUT | MUX_MODE3)		/* hdmi_hpd.gpio_63 */
-+			OMAP4_IOPAD(0x09a, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_cec.hdmi_cec */
-+			OMAP4_IOPAD(0x09c, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_scl.hdmi_ddc_scl */
-+			OMAP4_IOPAD(0x09e, PIN_INPUT_PULLUP | MUX_MODE0)	/* hdmi_ddc_sda.hdmi_ddc_sda */
-+		>;
-+	};
- };
- 
- &i2c2 {
-@@ -143,4 +171,20 @@
- 	};
- };
- 
-+&dss {
-+	status = "ok";
-+};
-+
-+&hdmi {
-+	status = "ok";
-+
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&dss_hdmi_pins>;
-+
-+	port {
-+		hdmi_out: endpoint {
-+			remote-endpoint = <&hdmi_connector_in>;
-+		};
-+	};
-+};
- 
--- 
-1.8.3.2
+> 8< ---------------------------
+> From: Tony Lindgren <tony@atomide.com>
+> Date: Tue, 20 May 2014 11:17:54 -0700
+> Subject: [PATCH] mfd: twl4030-power: Add support for board specific c=
+onfiguration
+>=20
+> With the recommended twl4030 configuration added, we can now add
+> board specific changes as modifications to the recommended
+> configuration.
+>=20
+> Note that the data is private to this driver, and the data must
+> always have a NULL resource in the sentinel.
+>=20
+> Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Acked-by: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+>=20
+> --- a/drivers/mfd/twl4030-power.c
+> +++ b/drivers/mfd/twl4030-power.c
+> @@ -567,13 +567,34 @@ twl4030_power_configure_scripts(const struct tw=
+l4030_power_data *pdata)
+>  	return 0;
+>  }
+> =20
+> +static void twl4030_patch_rconfig(struct twl4030_resconfig *common,
+> +				  struct twl4030_resconfig *board)
+> +{
+> +	while (common->resource) {
+> +		struct twl4030_resconfig *b =3D board;
+> +
+> +		while (b->resource) {
+> +			if (b->resource =3D=3D common->resource) {
+> +				*common =3D *b;
+> +				break;
+> +			}
+> +			b++;
+> +		}
+> +		common++;
+> +	}
+> +}
+> +
+>  static int
+>  twl4030_power_configure_resources(const struct twl4030_power_data *p=
+data)
+>  {
+>  	struct twl4030_resconfig *resconfig =3D pdata->resource_config;
+> +	struct twl4030_resconfig *boardconf =3D pdata->board_config;
+>  	int err;
+> =20
+>  	if (resconfig) {
+> +		if (boardconf)
+> +			twl4030_patch_rconfig(resconfig, boardconf);
+> +
+>  		while (resconfig->resource) {
+>  			err =3D twl4030_configure_resource(resconfig);
+>  			if (err)
+> --- a/include/linux/i2c/twl.h
+> +++ b/include/linux/i2c/twl.h
+> @@ -674,6 +674,7 @@ struct twl4030_power_data {
+>  	struct twl4030_script **scripts;
+>  	unsigned num;
+>  	struct twl4030_resconfig *resource_config;
+> +	struct twl4030_resconfig *board_config;
+>  #define TWL4030_RESCONFIG_UNDEF	((u8)-1)
+>  	bool use_poweroff;	/* Board is wired for TWL poweroff */
+>  };
 
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
