@@ -1,61 +1,58 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v1 1/4] ARM: dts: qcom: Add APQ8084 SoC support
-Date: Wed, 21 May 2014 10:24:17 -0700
-Message-ID: <537CE141.6010500@codeaurora.org>
-References: <1400684225-21381-1-git-send-email-gdjakov@mm-sol.com> <1400684225-21381-2-git-send-email-gdjakov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400684225-21381-2-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: [PATCHv4 0/4] tsc2005 DT binding
+Date: Wed, 21 May 2014 19:36:10 +0200
+Message-ID: <1400693774-21306-1-git-send-email-sre@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dmitry Torokhov <dtor-JGs/UdohzUI@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/14 07:57, Georgi Djakov wrote:
-> +
-> +		L2: l2-cache {
-> +			compatible = "qcom,arch-cache";
-> +			cache-level = <2>;
-> +			interrupts = <0 2 0x4>;
+Hi,
 
-Let's leave out interrupts until the binding is accepted.
+This adds device tree support for the tsc2005 touchscreen
+controller, which is currently only used by the Nokia N900
+board.
 
-> +			qcom,saw = <&saw_l2>;
-> +		};
-> +	};
-> +
-> +	cpu-pmu {
-> +		compatible = "qcom,krait-pmu";
-> +		interrupts = <1 7 0xf04>;
-> +	};
-> +
-> +	soc: soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-> +		compatible = "simple-bus";
-> +
-> +		intc: interrupt-controller@f9000000 {
-> +			compatible = "qcom,msm-qgic2";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			reg = <0xf9000000 0x1000>,
-> +			      <0xf9002000 0x1000>;
-> +		};
-> +
-> +		timer {
-> +			compatible = "arm,armv7-timer";
-> +			interrupts = <1 2 0xf08>,
-> +				     <1 3 0xf08>,
-> +				     <1 4 0xf08>,
-> +				     <1 1 0xf08>;
-> +			clock-frequency = <19200000>;
-> +		};
+The patch does not update the reset pin handling for platform
+data based probe to avoid merge conflicts. The n900 platform
+code will be removed in the near future (3.17?) and the driver
+can be simplified once that has happened.
 
-Please move this timer node out of the soc container below the pmu.
+Changes since v3 [0]:
+ * Move common touchscreen DT handling code into its own file
+ * Add regulator support to tsc2005 driver
+ * Added N900 DTS patch for completeness. It should go via
+   Tony's Tree of course.
+
+[0] https://lkml.org/lkml/2014/4/25/694
+
+-- Sebastian
+
+Sebastian Reichel (4):
+  Input: add common DT binding for touchscreens
+  Input: tsc2005: add DT support
+  Documentation: dt: Document TSC2005 DT binding
+  DTS: ARM: OMAP3-N900: Add tsc2005 support
+
+ .../bindings/input/touchscreen/touchscreen.txt     |  27 +++++
+ .../bindings/input/touchscreen/tsc2005.txt         |  42 +++++++
+ arch/arm/boot/dts/omap3-n900.dts                   |  17 ++-
+ drivers/input/touchscreen/Kconfig                  |   4 +
+ drivers/input/touchscreen/Makefile                 |   1 +
+ drivers/input/touchscreen/of_touchscreen.c         |  44 ++++++++
+ drivers/input/touchscreen/tsc2005.c                | 122 +++++++++++++++++----
+ include/linux/input/touchscreen.h                  |  22 ++++
+ 8 files changed, 258 insertions(+), 21 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
+ create mode 100644 Documentation/devicetree/bindings/input/touchscreen/tsc2005.txt
+ create mode 100644 drivers/input/touchscreen/of_touchscreen.c
+ create mode 100644 include/linux/input/touchscreen.h
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+2.0.0.rc2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
