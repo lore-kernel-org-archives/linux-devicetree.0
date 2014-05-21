@@ -1,115 +1,86 @@
-From: Daniel Kurtz <djkurtz@chromium.org>
-Subject: Re: [PATCH v2 02/18] drm/exynos: use wait_event_timeout() for safety usage
-Date: Wed, 21 May 2014 14:45:25 +0800
-Message-ID: <CAGS+omB_xgErG9u_0XB=UpJCrMhhkOu-Sjv_zupOn1V4i-V_-w@mail.gmail.com>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-3-git-send-email-yj44.cho@samsung.com> <CAGS+omCHJppm=9GeFarb_UhwB-mSJi+nxWFw1FC+ew3OOA-srQ@mail.gmail.com>
- <537C4775.1050702@samsung.com>
+From: Kedareswara rao Appana <appana.durga.rao@xilinx.com>
+Subject: [PATCH v8 1/2] can: Add xilinx CAN device tree bindings documentation.
+Date: Wed, 21 May 2014 12:29:16 +0530
+Message-ID: <59325214-bd7e-4b98-bc0f-c38a9104203b@BL2FFO11FD019.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <537C4775.1050702@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: David Airlie <airlied@linux.ie>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, s.trumtrar@pengutronix.de, Kyungmin Park <kyungmin.park@samsung.com>, InKi Dae <inki.dae@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Seung-Woo Kim <sw0312.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com
+Cc: devicetree@vger.kernel.org, Kedareswara rao Appana <appanad@xilinx.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 21, 2014 at 2:28 PM, YoungJun Cho <yj44.cho@samsung.com> wrote:
-> Hi Daniel
->
->
-> On 05/21/2014 03:01 PM, Daniel Kurtz wrote:
->>
->> On Wed, May 21, 2014 at 12:42 PM, YoungJun Cho <yj44.cho@samsung.com>
->> wrote:
->>>
->>> There could be the case that the page flip operation isn't finished
->>> correctly
->>> with some abnormal condition such as panel reset. So this patch replaces
->>> wait_event() with wait_event_timeout() to avoid waiting for page flip
->>> completion
->>> infinitely.
->>> And clears exynos_crtc->pending_flip in exynos_drm_crtc_page_flip() when
->>> exynos_drm_crtc_mode_set_commit() is failed.
->>>
->>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->>> Acked-by: Inki Dae <inki.dae@samsung.com>
->>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> ---
->>>   drivers/gpu/drm/exynos/exynos_drm_crtc.c |    7 +++++--
->>>   1 file changed, 5 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->>> b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->>> index 95c9435..3bf091d 100644
->>> --- a/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->>> +++ b/drivers/gpu/drm/exynos/exynos_drm_crtc.c
->>> @@ -69,8 +69,10 @@ static void exynos_drm_crtc_dpms(struct drm_crtc
->>> *crtc, int mode)
->>>
->>>          if (mode > DRM_MODE_DPMS_ON) {
->>>                  /* wait for the completion of page flip. */
->>> -               wait_event(exynos_crtc->pending_flip_queue,
->>> -                               atomic_read(&exynos_crtc->pending_flip)
->>> == 0);
->>> +               if (!wait_event_timeout(exynos_crtc->pending_flip_queue,
->>> +                               !atomic_read(&exynos_crtc->pending_flip),
->>> +                               HZ/20))
->>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
->>
->>
->> I meant that changing this to wait_event_timeout() seems to be masking
->> the original problem, that pending_flip wasn't being cleared.
->
->
-> Yes, I agree.
->
-> The original purpose of this patch is to avoid lock-up during modetest (with
-> test_vsync) with command mode panel.
-> In MIPI DSI command mode interface, the display controller can not generate
-> VSYNC signal and uses TE signal instead which is generated by panel.
-> If there is an abnormal power off or reset condition, it is possible that
-> the display controller misses the TE signal and it makes lock-up.
-> So I needed this patch.
+Add xilinx CAN bindings documentation.
 
-If flips are not completing on MIPI DSI, may I recommend that you
-start a timer when scheduling such a flip in the MIPI DSI driver that
-will expire after a timeout.  In that timer's expiration handler, you
-can then go through the normal process of completing a flip.  This
-would make the timeout transparent to the generic exynos_drm_crtc
-layer, which can then do its normal flip complete processing: send
-pending vblank events, put vblank, clear pending_flip, etc.
-Does that make sense?
-Is it possible?
+Signed-off-by: Kedareswara rao Appana <appanad@xilinx.com>
+---
+Changes for v8:
+- None.
+Changes for v7:
+- Split the devicetree bindings doc as a seperate patch
+---
+ .../devicetree/bindings/net/can/xilinx_can.txt     |   44 ++++++++++++++++++++
+ 1 files changed, 44 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/can/xilinx_can.txt
 
--Dan
-
->> Now that you are now clearing pending_flip in the error path, you
->> don't need the timeout, right?
->>
->
-> There might be my missing point. Would you explain more detail?
->
->
-> Thank you.
-> Best regards YJ
->
->> -Dan
->>
->>>                  drm_vblank_off(crtc->dev, exynos_crtc->pipe);
->>>          }
->>>
->>> @@ -259,6 +261,7 @@ static int exynos_drm_crtc_page_flip(struct drm_crtc
->>> *crtc,
->>>                          spin_lock_irq(&dev->event_lock);
->>>                          drm_vblank_put(dev, exynos_crtc->pipe);
->>>                          list_del(&event->base.link);
->>> +                       atomic_set(&exynos_crtc->pending_flip, 0);
->>>                          spin_unlock_irq(&dev->event_lock);
->>>
->>>                          goto out;
->>> --
->>> 1.7.9.5
->>>
->>
->
+diff --git a/Documentation/devicetree/bindings/net/can/xilinx_can.txt b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+new file mode 100644
+index 0000000..fe38847
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/xilinx_can.txt
+@@ -0,0 +1,44 @@
++Xilinx Axi CAN/Zynq CANPS controller Device Tree Bindings
++---------------------------------------------------------
++
++Required properties:
++- compatible		: Should be "xlnx,zynq-can-1.0" for Zynq CAN
++			  controllers and "xlnx,axi-can-1.00.a" for Axi CAN
++			  controllers.
++- reg			: Physical base address and size of the Axi CAN/Zynq
++			  CANPS registers map.
++- interrupts		: Property with a value describing the interrupt
++			  number.
++- interrupt-parent	: Must be core interrupt controller
++- clock-names		: List of input clock names - "can_clk", "pclk"
++			  (For CANPS), "can_clk" , "s_axi_aclk"(For AXI CAN)
++			  (See clock bindings for details).
++- clocks		: Clock phandles (see clock bindings for details).
++- tx-fifo-depth		: Can Tx fifo depth.
++- rx-fifo-depth		: Can Rx fifo depth.
++
++
++Example:
++
++For Zynq CANPS Dts file:
++	zynq_can_0: can@e0008000 {
++			compatible = "xlnx,zynq-can-1.0";
++			clocks = <&clkc 19>, <&clkc 36>;
++			clock-names = "can_clk", "pclk";
++			reg = <0xe0008000 0x1000>;
++			interrupts = <0 28 4>;
++			interrupt-parent = <&intc>;
++			tx-fifo-depth = <0x40>;
++			rx-fifo-depth = <0x40>;
++		};
++For Axi CAN Dts file:
++	axi_can_0: axi-can@40000000 {
++			compatible = "xlnx,axi-can-1.00.a";
++			clocks = <&clkc 0>, <&clkc 1>;
++			clock-names = "can_clk","s_axi_aclk" ;
++			reg = <0x40000000 0x10000>;
++			interrupt-parent = <&intc>;
++			interrupts = <0 59 1>;
++			tx-fifo-depth = <0x40>;
++			rx-fifo-depth = <0x40>;
++		};
+-- 
+1.7.4
