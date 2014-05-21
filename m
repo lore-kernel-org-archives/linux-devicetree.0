@@ -1,66 +1,276 @@
-From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
-Date: Wed, 21 May 2014 09:53:57 +0900
-Message-ID: <20140521005357.4CAE4C418EF@trevor.secretlab.ca>
-References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
-	<CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
-	<20140520065014.493C3C412E3@trevor.secretlab.ca>
-	<CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Guido =?iso-8859-1?q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH RESEND 1/2] irqchip: add Broadcom Set Top Box Level-2
+ interrupt controller
+Date: Tue, 20 May 2014 21:27:16 -0400
+Message-ID: <20140521012716.GC8664@titan.lakedaemon.net>
+References: <1400613229-19049-1-git-send-email-f.fainelli@gmail.com>
+ <1400613229-19049-2-git-send-email-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400613229-19049-2-git-send-email-f.fainelli@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: arm@kernel.org, Brian Norris <computersforpeace@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thomas Gleixner <tglx@linutronix.de>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, linux-arm-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 May 2014 13:30:02 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Tue, May 20, 2014 at 1:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
-> > On Sun, 18 May 2014 18:11:07 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> On Sun, May 18, 2014 at 12:01 PM, Ezequiel Garcia
-> >> <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org> wrote:
-> >> > When creating a device object for a devicetree node, the device name
-> >> > is created by using the node name and the 'reg' property, to make a name
-> >> > such as "a000.foo_device".
-> >> >
-> >> > For certain devices without an associated address, and hence no 'reg' property,
-> >> > the current code attempts to make a unique name, by using a global integer.
-> >> > Names look like "foo_device.1", "bar_device.2", and so on.
-> >> > Examples of such devices are: gpio-keys', backlights and rotary-encoders.
-> >> >
-> >> > The system cannot know such devices name before hand, given they are determined
-> >> > by the kernel probe order and by the nodes present in the devicetree. This can
-> >> > be problematic, on systems that are tied to the device's name, e.g. when
-> >> > catching hotplug events.
-> >
-> > The device's uevent file in sysfs contains both the ->name and
-> > ->full_name values for a node. Does that help you?
-> >
-> > The big problem is not the structure under /sys/devices, but rather the
-> > symlinks to devices that appear under /sys/bus/*/devices. If two leaf
-> > nodes have the same name, then they will conflict when they get added to
-> > a bus_type's array of devices.
-> >
-> > Another way to handle it is to only add the suffix when a conflict
-> > actually occurs. That requires checking first whether or not a name will
-> > conflict and ammending it only when that happens. I don't know if that
-> > can be done nicely. I'll take a look.
+Florian,
+
+On Tue, May 20, 2014 at 12:13:48PM -0700, Florian Fainelli wrote:
+> This patch adds support for the Level-2 interrupt controller hardware
+> found in Broadcom Set Top Box System-on-a-Chip devices. This interrupt
+> controller is implemented using the generic IRQ chip driver with
+> separate enable and disable registers.
 > 
-> That was my idea as well and to move to a local number so you have
-> something like deviceA, deviceA.1, deviceB, deviceB.1 (maybe the
-> number is always appended). Perhaps a random number instead so no one
-> expects the names to be an ABI. ;)
+> Signed-off-by: Brian Norris <computersforpeace@gmail.com>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>  drivers/irqchip/Kconfig          |   6 ++
+>  drivers/irqchip/Makefile         |   1 +
+>  drivers/irqchip/irq-brcmstb-l2.c | 200 +++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 207 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-brcmstb-l2.c
+> 
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index d770f7406631..bbb746e35500 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -30,6 +30,12 @@ config ARM_VIC_NR
+>  	  The maximum number of VICs available in the system, for
+>  	  power management.
+>  
+> +config BRCMSTB_L2_IRQ
+> +	bool
+> +	depends on ARM
+> +	select GENERIC_IRQ_CHIP
+> +	select IRQ_DOMAIN
+> +
+>  config DW_APB_ICTL
+>  	bool
+>  	select IRQ_DOMAIN
+> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+> index f180f8d5fb7b..62a13e5ef98f 100644
+> --- a/drivers/irqchip/Makefile
+> +++ b/drivers/irqchip/Makefile
+> @@ -29,3 +29,4 @@ obj-$(CONFIG_TB10X_IRQC)		+= irq-tb10x.o
+>  obj-$(CONFIG_XTENSA)			+= irq-xtensa-pic.o
+>  obj-$(CONFIG_XTENSA_MX)			+= irq-xtensa-mx.o
+>  obj-$(CONFIG_IRQ_CROSSBAR)		+= irq-crossbar.o
+> +obj-$(CONFIG_BRCMSTB_L2_IRQ)		+= irq-brcmstb-l2.o
+> diff --git a/drivers/irqchip/irq-brcmstb-l2.c b/drivers/irqchip/irq-brcmstb-l2.c
+> new file mode 100644
+> index 000000000000..336f0ae5591a
+> --- /dev/null
+> +++ b/drivers/irqchip/irq-brcmstb-l2.c
+> @@ -0,0 +1,200 @@
+> +/*
+> + * Generic Broadcom Set Top Box Level 2 Interrupt controller driver
+> + *
+> + * Copyright (C) 2014 Broadcom Corporation
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#define pr_fmt(fmt)	KBUILD_MODNAME	": " fmt
+> +
+> +#include <linux/init.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of.h>
+> +#include <linux/of_irq.h>
+> +#include <linux/of_address.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/irq.h>
+> +#include <linux/io.h>
+> +#include <linux/irqdomain.h>
+> +#include <linux/irqchip.h>
+> +#include <linux/irqchip/chained_irq.h>
+> +
+> +#include <asm/mach/irq.h>
+> +
+> +#include "irqchip.h"
+> +
+> +/* Register offsets in the L2 interrupt controller */
+> +#define CPU_STATUS	0x00
+> +#define CPU_SET		0x04
+> +#define CPU_CLEAR	0x08
+> +#define CPU_MASK_STATUS	0x0c
+> +#define CPU_MASK_SET	0x10
+> +#define CPU_MASK_CLEAR	0x14
+> +
+> +/* L2 intc private data structure */
+> +struct brcmstb_l2_intc_data {
+> +	int parent_irq;
+> +	void __iomem *base;
+> +	struct irq_domain *domain;
+> +	bool can_wake;
+> +	u32 saved_mask; /* for suspend/resume */
+> +};
+> +
+> +static void brcmstb_l2_intc_irq_handle(unsigned int irq, struct irq_desc *desc)
+> +{
+> +	struct brcmstb_l2_intc_data *b = irq_desc_get_handler_data(desc);
+> +	struct irq_chip *chip = irq_get_chip(irq);
+> +	u32 status;
+> +
+> +	chained_irq_enter(chip, desc);
+> +
+> +	status = __raw_readl(b->base + CPU_STATUS) &
+> +		~(__raw_readl(b->base + CPU_MASK_STATUS));
+> +
+> +	if (status == 0) {
+> +		do_bad_IRQ(irq, desc);
+> +		goto out;
+> +	}
+> +
+> +	do {
+> +		irq = ffs(status) - 1;
+> +		/* ack at our level */
+> +		__raw_writel(1 << irq, b->base + CPU_CLEAR);
+> +		status &= ~(1 << irq);
+> +		generic_handle_irq(irq_find_mapping(b->domain, irq));
+> +	} while (status);
+> +out:
+> +	chained_irq_exit(chip, desc);
+> +}
+> +
+> +static void brcmstb_l2_intc_suspend(struct irq_data *d)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct brcmstb_l2_intc_data *b = gc->private;
+> +
+> +	irq_gc_lock(gc);
+> +	/* Save the current mask */
+> +	b->saved_mask = __raw_readl(b->base + CPU_MASK_STATUS);
+> +
+> +	if (b->can_wake) {
+> +		/* Program the wakeup mask */
+> +		__raw_writel(~gc->wake_active, b->base + CPU_MASK_SET);
+> +		__raw_writel(gc->wake_active, b->base + CPU_MASK_CLEAR);
+> +	}
+> +	irq_gc_unlock(gc);
+> +}
+> +
+> +static void brcmstb_l2_intc_resume(struct irq_data *d)
+> +{
+> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(d);
+> +	struct brcmstb_l2_intc_data *b = gc->private;
+> +
+> +	irq_gc_lock(gc);
+> +	/* Clear unmasked non-wakeup interrupts */
+> +	__raw_writel(~b->saved_mask & ~gc->wake_active, b->base + CPU_CLEAR);
+> +
+> +	/* Restore the saved mask */
+> +	__raw_writel(b->saved_mask, b->base + CPU_MASK_SET);
+> +	__raw_writel(~b->saved_mask, b->base + CPU_MASK_CLEAR);
+> +	irq_gc_unlock(gc);
+> +}
+> +
+> +int __init brcmstb_l2_intc_of_init(struct device_node *np,
+> +					struct device_node *parent)
+> +{
+> +	unsigned int clr = IRQ_NOREQUEST | IRQ_NOPROBE | IRQ_NOAUTOEN;
+> +	struct brcmstb_l2_intc_data *data;
+> +	struct irq_chip_generic *gc;
+> +	struct irq_chip_type *ct;
+> +	int ret;
+> +
+> +	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> +	if (!data)
+> +		return -ENOMEM;
+> +
+> +	data->base = of_iomap(np, 0);
+> +	if (!data->base) {
+> +		pr_err("failed to remap intc L2 registers\n");
+> +		return -ENOMEM;
+> +	}
 
-Another idea: how about fix the name to alwasy be the final component of
-the path name, followed by phandle. Anything that doesn't have a phandle
-can be assigned one at boot. That would guarantee uniqueness without the
-cost of trying to find duplicates.
+You're mixing error handling techniques here.  Please choose one or the
+other.  If you choose goto's, you need to jump to free(data), below.
 
-for example:
-	uart@10043000:0012
+> +
+> +	/* Disable all interrupts by default */
+> +	__raw_writel(0xffffffff, data->base + CPU_MASK_SET);
+> +	__raw_writel(0xffffffff, data->base + CPU_CLEAR);
+> +
+> +	data->parent_irq = irq_of_parse_and_map(np, 0);
+> +	if (data->parent_irq < 0) {
+> +		pr_err("failed to find parent interrupt\n");
+> +		ret = data->parent_irq;
+> +		goto out_unmap;
+> +	}
+> +
+> +	data->domain = irq_domain_add_linear(np, 32,
+> +				&irq_generic_chip_ops, NULL);
+> +	if (!data->domain) {
+> +		ret = -ENOMEM;
+> +		goto out_unmap;
+> +	}
+> +
+> +	/* Allocate a single Generic IRQ chip for this node */
+> +	ret = irq_alloc_domain_generic_chips(data->domain, 32, 1,
+> +				np->full_name, handle_level_irq, clr, 0, 0);
+> +	if (ret) {
+> +		pr_err("failed to allocate generic irq chip\n");
+> +		goto out_free_domain;
+> +	}
+> +
+> +	/* Set the IRQ chaining logic */
+> +	irq_set_handler_data(data->parent_irq, data);
+> +	irq_set_chained_handler(data->parent_irq, brcmstb_l2_intc_irq_handle);
+> +
+> +	gc = irq_get_domain_generic_chip(data->domain, 0);
+> +	gc->reg_base = data->base;
+> +	gc->private = data;
+> +	ct = gc->chip_types;
+> +
+> +	ct->chip.irq_ack = irq_gc_ack_set_bit;
+> +	ct->regs.ack = CPU_CLEAR;
+> +
+> +	ct->chip.irq_mask = irq_gc_mask_disable_reg;
+> +	ct->regs.disable = CPU_MASK_SET;
+> +
+> +	ct->chip.irq_unmask = irq_gc_unmask_enable_reg;
+> +	ct->regs.enable = CPU_MASK_CLEAR;
+> +
+> +	ct->chip.irq_suspend = brcmstb_l2_intc_suspend;
+> +	ct->chip.irq_resume = brcmstb_l2_intc_resume;
+> +
+> +	if (of_property_read_bool(np, "brcm,irq-can-wake")) {
+> +		data->can_wake = true;
+> +		/* This IRQ chip can wake the system, set all child interrupts
+> +		 * in wake_enabled mask
+> +		 */
+> +		gc->wake_enabled = 0xffffffff;
+> +		ct->chip.irq_set_wake = irq_gc_set_wake;
+> +	}
+> +
+> +	pr_info("registered L2 intc (mem: 0x%p, parent irq: %d)\n",
+> +			data->base, data->parent_irq);
+> +
+> +	return 0;
+> +
+> +out_free_domain:
+> +	irq_domain_remove(data->domain);
+> +out_unmap:
+> +	iounmap(data->base);
 
-g.
+out_free_data:
+> +	kfree(data);
+> +	return ret;
+> +}
+> +IRQCHIP_DECLARE(brcmstb_l2_intc, "brcm,l2-intc", brcmstb_l2_intc_of_init);
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+thx,
+
+Jason.
