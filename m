@@ -1,71 +1,67 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 6/6] ARM: dts: STiH407: Add B2120 board support
-Date: Wed, 21 May 2014 11:02:45 +0100
-Message-ID: <20140521100245.GI6679@lee--X1>
-References: <1394614210-15698-1-git-send-email-maxime.coquelin@st.com>
- <1394614210-15698-7-git-send-email-maxime.coquelin@st.com>
- <CAOesGMg5Jk_XB3zdfKz8VxRObYbFO8OMuRyo7Ba-kavANbci1w@mail.gmail.com>
- <20140520072048.GC20874@lee--X1>
- <CAOesGMioLwX3jgGEsR=rHV0u6yR54b4x8BfyZ91vjJnMapUHew@mail.gmail.com>
- <20140520074353.GD20874@lee--X1>
- <CAOesGMigF7CGtTmLMW4zbRemGaMbWs6NV6KLPFZQFYmnHc=HQw@mail.gmail.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 2/2] documentation/devicetree: Update GIC compat strings
+Date: Wed, 21 May 2014 11:24:39 +0100
+Message-ID: <20140521102439.GE17827@leverpostej>
+References: <1400664501-4208-1-git-send-email-Nikolay.Borisov@arm.com>
+ <1400664501-4208-3-git-send-email-Nikolay.Borisov@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAOesGMigF7CGtTmLMW4zbRemGaMbWs6NV6KLPFZQFYmnHc=HQw@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Maxime COQUELIN <maxime.coquelin@st.com>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Srinivas Kandagatla <srinivas.kandagatla@st.com>, Stuart Menefy <stuart.menefy@st.com>, Linus Walleij <linus.walleij@linaro.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>
+In-Reply-To: <1400664501-4208-3-git-send-email-Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> >> >> > +       soc {
-> >> >> > +               sbc_serial0: serial@9530000 {
-> >> >> > +                       status =3D "okay";
-> >> >> > +               };
-> >> >>
-> >> >> You might want to consider reference-based syntax here instead,=
- so you
-> >> >> don't have to mimic the hierarchy. That'd be (at the root level=
- of the
-> >> >> file, below this secion:
-> >> >>
-> >> >> &sbc_serial0: {
-> >> >>         status =3D "okay";
-> >> >> };
-> >> >
-> >> > I'm personally not keen on this scheme.  It's sometimes helpful =
-to know
-> >> > the hierarchy and I don't think it's a large overhead to format =
-the
-> >> > subordinate DTS files in this way.
-> >> >
-> >> > Please consider not enforcing this.
-> >>
-> >> Definitely not enforcing it, and I didn't use to like it either bu=
-t it
-> >> has some real upsides.
-> >>
-> >> In particular, it saves a lot of grief when you're changing someth=
-ing
-> >> like the unit-id of a node in .dtsi and forget to do the same upda=
-te
-> >> in the dts.
-> >
-> > I'm not entirely sure what a unit-id is, but I can see that there
-> > would be benefits to using the referenced-based syntax as you call
-> > it.  If any of those benefits hold true here I won't push back, but=
- I
-> > would personally like to see us default to the hierarchical scheme.
->=20
-> Sorry, I meant unit-address. I.e. the portion that goes behind the @
-> in the node name.
+[Adding devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org]
 
-Ah yes, makes sense now, thanks.
+On Wed, May 21, 2014 at 10:28:21AM +0100, Nikolay Borisov wrote:
+> Document the addition of 2 new, implementation-agnostic compatible
+> strings. This allows for more flexibility such that new implementation 
+> can either state whether they are an extension of an existing implementation,
+> a brand new implementation or just that they conform to a standard revision
+> of the GIC spec.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>From my POV it makes sense to have these to make it possible to write
+DTs with new GIC variants which are implementations of the standard
+rather than extensions of existing implementations.
+
+However, DTs using these should also state exactly what variant they
+are, and those strings should be documented (even if not supported
+directly by the driver). It would be nice to have that mentioned in the
+commit message.
+
+Otherwise:
+
+Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+
+Cheers,
+Mark.
+
+> 
+> Signed-off-by: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/arm/gic.txt | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
+> index 5573c08..223b4cc 100644
+> --- a/Documentation/devicetree/bindings/arm/gic.txt
+> +++ b/Documentation/devicetree/bindings/arm/gic.txt
+> @@ -12,6 +12,8 @@ Main node required properties:
+>  
+>  - compatible : should be one of:
+>  	"arm,gic-400"
+> +	"arm,gic-v1"
+> +	"arm,gic-v2"
+>  	"arm,cortex-a15-gic"
+>  	"arm,cortex-a9-gic"
+>  	"arm,cortex-a7-gic"
+> -- 
+> 1.8.1.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
