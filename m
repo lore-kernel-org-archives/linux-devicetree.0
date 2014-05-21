@@ -1,65 +1,55 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v2] ARM: dts: duovero-parlor: Add HDMI output
-Date: Wed, 21 May 2014 15:03:59 +0300
-Message-ID: <537C962F.6050104@ti.com>
-References: <1400663706-24104-1-git-send-email-florian.vaussard@epfl.ch>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1400663706-24104-1-git-send-email-florian.vaussard@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH] ARM: dts: move dp hpd gpio pin to pinctrl_0 for exynos5420
+ peach_pit
+Date: Wed, 21 May 2014 17:57:22 +0530
+Message-ID: <1400675242-7423-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+DP Hpd Gpio pin which is "gpx2-6" in Exynos 5420 based peach board,
+belongs to Pinctrl_0. It has moved to pinctrl_0 from pinctrl_3.
 
-On 21/05/14 12:15, Florian Vaussard wrote:
-> Add the necessary DTS nodes to enable the micro-HDMI output on Parlor
-> board.
->=20
-> Signed-off-by: Florian Vaussard <florian.vaussard@epfl.ch>
-> ---
-> v1->v2:
-> - Rebased on Tony's omap-for-v3.16/dt-v2
-> - Use OMAP4_IOPAD macro
-> - Use hpd pin as GPIO with hdmi-connector
->=20
->  arch/arm/boot/dts/omap4-duovero-parlor.dts | 44 ++++++++++++++++++++++=
-++++++++
->  1 file changed, 44 insertions(+)
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+Based on Kukjin's for-next branch.
 
-Looks good to me.
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |   14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
 
- Tomi
-
-
-
---GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTfJYvAAoJEPo9qoy8lh71c40P/2+5NgA9MKzjhM6h48ol+H5X
-NP2S9GONO/ovh05UEOlLh6y/lRuR8bQYpi5WVSqFZWp4It1GSYJM5r3YZMXz+UEA
-2Vr+yns1o1yMcJ/fHybLlXgGxl32TZb+Rc51TVjqa7YVjQxzhgK82Vf6IBsKg75E
-LqZdiBCmDfz+j6f1e8+HGvC0np0LjfNXntUog0uhQ/8ppitscMfxIutWRIYr3NT5
-8ENMJmMDgQ+CEYWNZc+9abL9KEBFQGNV1XApSwUTq1154odA7zOr4QswoWQQcgcu
-NVQZz1Er3d+90uH3f+DXLt1ku0FSu+GQg92wN+yOriVxPP2TLF4PRH/IbzfaQetI
-lXd4NL9n4Cz0lA89Z5v2PxYOH41pqWKVCQ0/wea0iFCl8bbteqMlZAxMZcXlxSA9
-cTCKFO2Zov/ujrPKJhPQGuQgDOa94U2xC4Ma6pBZgclRUF4YPhaaloUMEiHgwV3g
-NyUkLQ0msyLs2Afddl+jqMYD5IPwEzjtnM8W4OxgI5+NWvuIWBLoswlDG053+HFW
-N7cdM1eWxhM/V5+q5ow5Nj6snGrjNKugsOz6tC//nTrJT4ZaqkojnYsvip4/COFA
-nH8P30Jd/gov5j5EUmuu9oX/gGfIdo7u5BiDHtc4T+D1aXoH4dKWbZ17vVX73AmN
-eW4S2BdBoYOHbu/wgBKa
-=bfhk
------END PGP SIGNATURE-----
-
---GBMOpaQWTQSbNecKVx7UtUo4Kijbc7sEH--
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index d4127b0..29f64de 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -117,6 +117,13 @@
+ 		samsung,pin-pud = <1>;
+ 		samsung,pin-drv = <0>;
+ 	};
++
++	dp_hpd_gpio: dp_hpd_gpio {
++		samsung,pins = "gpx2-6";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <3>;
++		samsung,pin-drv = <0>;
++	};
+ };
+ 
+ &pinctrl_3 {
+@@ -133,13 +140,6 @@
+ 		samsung,pin-pud = <0>;
+ 		samsung,pin-drv = <0>;
+ 	};
+-
+-	dp_hpd_gpio: dp_hpd_gpio {
+-		samsung,pins = "gpx2-6";
+-		samsung,pin-function = <0>;
+-		samsung,pin-pud = <3>;
+-		samsung,pin-drv = <0>;
+-	};
+ };
+ 
+ &rtc {
+-- 
+1.7.9.5
