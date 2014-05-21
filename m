@@ -1,34 +1,130 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [Patch v4 2/5] Power: reset: add bindings for keystone reset
- driver
-Date: Wed, 21 May 2014 12:09:50 -0400
-Message-ID: <537CCFCE.7070701@ti.com>
-References: <1400682454-24535-1-git-send-email-ivan.khoronzhuk@ti.com> <5023955.Vhmhn25HgF@wuerfel> <537CCE5A.7030909@ti.com> <13696681.6eGQ96hCX4@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v5 0/6] arm: Add basic support for Mediatek Cortex-A7 SoCs
+Date: Wed, 21 May 2014 18:26:17 +0200
+Message-ID: <1400689583-21119-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <13696681.6eGQ96hCX4@wuerfel>
 Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 21 May 2014 12:07 PM, Arnd Bergmann wrote:
-> On Wednesday 21 May 2014 19:03:38 Ivan Khoronzhuk wrote:
->>
->> I've slightly confused where should I add these bindings.
->> The main pll controller mostly used by clk driver....
->> As its register set is used also by reset driver it's logically to put 
->> it to bindings/mfd,
->> but pll controller in mfd it's strange....
->>
->> Could you please help to decide where should it be?.
-> 
-> Put it into Documentation/devicetree/bindings/clock/keystone-pll.txt
-> 
-I was just about post the same suggestion. Lets do that.
+Fifth round for the Mediatek basic support patches.
 
-regards,
-Santosh
+I changed the compatible string to the first SoC known which integrates the
+timer.
+
+I kept the minimal machine file. The debate about it is ongoing and up to now
+minimal machine files are not removed [0]. This file will probably disappear
+when Robs patch [1] or a similar approach gets accepted.
+
+[0] https://lkml.org/lkml/2014/4/23/833
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2013-November/208878.html
+
+---
+This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
+Support is quite basic, as the only component working up to now are the
+timers.
+
+The patch series is build against torvalds/master tree.
+
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+Changes for v5:
+1. Clocksource timer
+- Change the compatible string to mt6577
+
+2. Timer DT bindings
+- Change compatible string to mt6577
+
+
+Changes for v4:
+1. Clocksource timer
+- use cpu_possible_mask
+
+2. Timer DT bindings
+- Delete comments about the frequency of the clocks
+- Add clock-names for the input clocks
+
+3. Basic SoC support
+- add clock-names for the timer
+- rename the label of the clocks nodes
+
+
+Changes for v3:
+1. Clocksource timer
+- Set cpu_mask_all and irq in clock_event_device
+- Use device private structure for driver specific values
+
+2. Timer DT bindings
+- Define order of the clock phandles
+- Fix typos
+
+3. Basic SoC support
+- DTS: set gic to a15-gic
+- DTS: order by physical address
+- Remove call to dt_init function
+
+
+Changes for v2:
+1. Clocksource timer
+- Delete unused parts for sched_clock_source
+- Use irq_request instead of setup_irq
+- Remove unused SMP parts
+- Fix some style issues
+- use of_address_to resource and request_mem_region
+- delete use of named clock
+- select CLKSRC_MMIO in driver Kconfig
+
+2. DT bindings
+- delete named clock bindings
+
+3. Basic SoC support
+- Clean-up Kconfig
+- Add documentation of the SoC compatible property 
+- DTS: rename SoC file to mt6589.dts
+- DTS: Delete not present cache controller
+- DTS: Add missing GICv2 properties
+- DTS: Change clock names
+- DTS: Add Aquaris5 board
+
+4. Add earlyprintk
+- patch droped until serial driver is available
+
+5. Add support for Aquaris5 mobile phone
+
+---
+
+Matthias Brugger (6):
+  clocksource: Add support for the Mediatek SoCs
+  dt-bindings: add mtk-timer bindings
+  vendor-prefixes: add prefix for Mediaktek Inc.
+  arm: add basic support for Mediatek MT6589 boards
+  dt-bindings: add documentation for Mediatek SoC
+  arm: mediatek: add dts for Aquaris5 mobile phone
+
+ .../devicetree/bindings/arm/mediatek-mt65xx.txt    |   8 +
+ .../bindings/timer/mediatek,mtk-timer.txt          |  18 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |  25 ++
+ arch/arm/boot/dts/mt6589.dtsi                      |  94 ++++++++
+ arch/arm/mach-mediatek/Kconfig                     |   6 +
+ arch/arm/mach-mediatek/Makefile                    |   1 +
+ arch/arm/mach-mediatek/mediatek.c                  |  32 +++
+ drivers/clocksource/Kconfig                        |   4 +
+ drivers/clocksource/Makefile                       |   1 +
+ drivers/clocksource/mtk_timer.c                    | 263 +++++++++++++++++++++
+ 13 files changed, 456 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+ create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+ create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+ create mode 100644 arch/arm/mach-mediatek/Kconfig
+ create mode 100644 arch/arm/mach-mediatek/Makefile
+ create mode 100644 arch/arm/mach-mediatek/mediatek.c
+ create mode 100644 drivers/clocksource/mtk_timer.c
+
+-- 
+1.8.1.2
 
