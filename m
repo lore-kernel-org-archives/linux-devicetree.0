@@ -1,67 +1,57 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/2] irqchip: Add generic gic-v1/gic-v2 compat strings.
-Date: Wed, 21 May 2014 11:27:20 +0100
-Message-ID: <20140521102720.GF17827@leverpostej>
-References: <1400664501-4208-1-git-send-email-Nikolay.Borisov@arm.com>
- <1400664501-4208-2-git-send-email-Nikolay.Borisov@arm.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: mux: Add more warnings to i2c-arb-gpio-challenge
+ docs
+Date: Wed, 21 May 2014 12:29:16 +0200
+Message-ID: <20140521102916.GL2708@katana>
+References: <1398792651-27115-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lHuqAdgBYNjQz/wy"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1400664501-4208-2-git-send-email-Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org" <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org
+In-Reply-To: <1398792651-27115-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: olof@lixom.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-[adding devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org]
 
-On Wed, May 21, 2014 at 10:28:20AM +0100, Nikolay Borisov wrote:
-> The current set of GIC compatible strings only contains specific
-> implementations (e.g. arm,cortex-a9-gic) rather than revisions of the
-> standard (e.g. arm,gic-v2), so each new implementation must either claim
-> to be an extension of an existing implementation or have a new string
-> added to the driver. This may be problematic when workarounds are
-> required for bugs in particular implementations, as said workaround may
-> end up targeting a wider set of implementations than intended.
-> 
-> To prevent these issues, this patch adds compatible strings for the
-> revisions of the GIC spec which all GIC implementations should be able
-> to claim conformance to in addition to any particular implementation
-> specific string, e.g.
-> 
-> compatible = "$VENDOR,specific-gic-variant", "arm,gic-v2";
+--lHuqAdgBYNjQz/wy
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This makes sense to me, so:
+On Tue, Apr 29, 2014 at 10:30:51AM -0700, Doug Anderson wrote:
+> This adds some more warnings to the i2c-arb-gpio-challenge docs to
+> help encourage people not to use it in their designs unless they have
+> no choice.
+>=20
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
 
-Acked-by: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Woha, you forgot to add the i2c list. It nearly slipped through.
+Luckily, I found it nonetheless :) Applied to for-next, thanks!
 
-Cheers,
-Mark.
 
-> 
-> Signed-off-by: Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>
-> ---
->  drivers/irqchip/irq-gic.c | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index 57d165e..89e9b05 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -1073,6 +1073,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
->  }
->  IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
->  IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
-> +IRQCHIP_DECLARE(gic_v1, "arm,gic-v1", gic_of_init);
-> +IRQCHIP_DECLARE(gic_v2, "arm,gic-v2", gic_of_init);
->  IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
->  IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
->  
-> -- 
-> 1.8.1.5
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--lHuqAdgBYNjQz/wy
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.15 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfH/8AAoJEBQN5MwUoCm29HgQAINpfBjhm47mPkMwwwWq0IL0
+lT9P2jq9Ad1P0ixLa4nju4n6W/nNonGEVMCzZKBOT/AAZADYU8gczsU5a+2tBlR/
+r63HFipAPOhuNz2a2DslzsrvXGETcTaxBXRNgeyEgrtuA2ZuCROUnK17efDlVlEJ
+hnIMD3nrNJvJ77+mKAGvFkpz+6bP9E8uCcplho5NZbAqnf1CKh7Weqsr45nfp56U
+Y3qW1A1RiAhGMuMCYAtD5HoKO9zRnecX/Kvv0PXakYOCbhygEH+vQxo0AdsAEYTM
+ZJNymbAPjjEsSjASQ2JulwMD//KJ4Pn7F+xYik8ZulLNw9JVubq2YFkXVRidE4V3
+Mz/7816uI/O0K9MpdLtqQX53UrhwOqQ0vEHgtmRCeKIFpeP2AX4iNesG/h/K7rJg
+0vniJcqUs/iJnAlAnQQ3ez0ryT2oeBCHzWKAAuYiux8FHof2DIoVHhWzneymutkO
++Y/sEB9SWAW1KpYvFOUTIspAixKiRg7TDO9PQk5W4cRwvp3Q/sed3nYDXkHRXNOt
+IfJsdvO9e+D7pPP+wl+iBNte2MLe0gvr/dQN3gGwrzMsd3tz662IqLJTsqsBMPbm
+9iZSzsbeujtnjLMyrLS6VY23SOKORCMqvwExnMDl3hBTqvd9xM5prxOZUZQLZqgJ
+2NbFXMay5tRPXMum2NgA
+=itao
+-----END PGP SIGNATURE-----
+
+--lHuqAdgBYNjQz/wy--
