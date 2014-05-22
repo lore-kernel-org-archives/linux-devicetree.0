@@ -1,69 +1,98 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/4] clk: samsung: Add driver to control CLKOUT line on
- Exynos SoCs
-Date: Thu, 22 May 2014 14:32:33 +0200
-Message-ID: <537DEE61.2050606@samsung.com>
-References: <1400604211-9447-1-git-send-email-t.figa@samsung.com>
- <1400604211-9447-4-git-send-email-t.figa@samsung.com>
- <537D8788.8030904@linaro.org> <537DD2C0.4060802@samsung.com>
- <CAHbNUh2gkpV-rt6S+-bUmFvYAuK_HNoXfyOStwYe29sZMJonUw@mail.gmail.com>
- <537DE714.1090407@samsung.com> <537DECCE.8000301@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <537DECCE.8000301@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>, Tushar Behera <tushar.behera@linaro.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/2] ARM: shmobile: r8a7779 dtsi: Correct #address-cells/#size-cells for clocks
+Date: Thu, 22 May 2014 14:33:16 +0200
+Message-ID: <1400761997-13512-2-git-send-email-geert+renesas@glider.be>
+References: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
+Warning (ranges_format): /clocks has empty "ranges" property but its #address-cells (2) differs from / (1)
+Warning (ranges_format): /clocks has empty "ranges" property but its #size-cells (2) differs from / (1)
 
+As r8a7779 doesn't support LPAE, change #address-cells and #size-cells from
+"<2>" to "<1>" to fix this.
 
-On 22.05.2014 14:25, Sylwester Nawrocki wrote:
-> On 22/05/14 14:01, Tomasz Figa wrote:
->>>>>>>> [ ... ]
->>>>>>>>
->>>>>>>>>> +    clkout->clk_table[0] = clk_register_composite(NULL, "clkout",
->>>>>>>>>> +                            parent_names, parent_count, &clkout->mux.hw,
->>>>>>>>>> +                            &clk_mux_ops, NULL, NULL, &clkout->gate.hw,
->>>>>>>>>> +                            &clk_gate_ops, CLK_SET_RATE_PARENT
->>>>>>>>>> +                            | CLK_SET_RATE_NO_REPARENT);
->>>>>>>>
->>>>>>>> Would you please remove CLK_SET_RATE_NO_REPARENT flag from here? Let me
->>>>>>>> know if you have reservations against this.
->>>>>>
->>>>>> The problem with clock reparenting is that there are certain parent
->>>>>> clocks of CLKOUT, rate of which changes at runtime, e.g. clocks derived
->>>>>> from APLL or bus clocks, which can be reconfigured by cpufreq or devfreq.
->>>>>>
->>>>
->>>> +CC: Sylwester Nawrocki
->>>>
->>>> Okay. But in cases where there is only 1 valid parent clock provided
->>>> through DT (at the moment for Exynos5250/Exynos5420), would it be safe
->>>> to set that clock as the parent of CLKOUT?
->>
->> This is not something to rely on. I have simply omitted remaining CLKOUT
->> parents on Exynos 5 SoCs, as I don't have any board with them on which I
->> could test this. Eventually they will be added.
->>
->>>> Otherwise, this clock is
->>>> not usable ATM.
->>
->> On many boards it is already configured properly by the bootloader.
->> Although I don't see any reason why you couldn't reparent it in
->> (board-specific) sound card driver right now.
-> 
-> This would require passing the parent's clock specifier in 'clocks'
-> property of the sound card device node, which I assume is not something
-> we're generally expected to do in mainline. Although some drivers
-> happen to be doing it already I think that's a bad example. It sounds
-> like an abuse of the current clock bindings.
+Also correct the unit-address for the cpg_clocks node, and add missing
+unit-addresses for the mstp*_clks nodes.
 
-Well, an already board-specific driver might have some knowledge of the
-SoC, so it might not be a huge problem, but I agree that this is not an
-optimal solution.
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+Is it correct that r8a7779 doesn't support LPAE? I don't have the datasheet,
+but the similar r8a7778 doesn't.
 
-Best regards,
-Tomasz
+ arch/arm/boot/dts/r8a7779.dtsi | 20 ++++++++++----------
+ 1 file changed, 10 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+index 038c16a18373..dc624e0d7506 100644
+--- a/arch/arm/boot/dts/r8a7779.dtsi
++++ b/arch/arm/boot/dts/r8a7779.dtsi
+@@ -284,8 +284,8 @@
+ 	};
+ 
+ 	clocks {
+-		#address-cells = <2>;
+-		#size-cells = <2>;
++		#address-cells = <1>;
++		#size-cells = <1>;
+ 		ranges;
+ 
+ 		/* External root clock */
+@@ -298,9 +298,9 @@
+ 		};
+ 
+ 		/* Special CPG clocks */
+-		cpg_clocks: cpg_clocks@0xe6150000 {
++		cpg_clocks: cpg_clocks@0xffc80000 {
+ 			compatible = "renesas,r8a7779-cpg-clocks";
+-			reg = <0 0xffc80000 0 0x30>;
++			reg = <0xffc80000 0x30>;
+ 			clocks = <&extal_clk>;
+ 			#clock-cells = <1>;
+ 			clock-output-names = "plla", "z", "zs", "s",
+@@ -342,10 +342,10 @@
+ 		};
+ 
+ 		/* Gate clocks */
+-		mstp0_clks: mstp0_clks {
++		mstp0_clks: mstp0_clks@ffc80030 {
+ 			compatible = "renesas,r8a7779-mstp-clocks",
+ 			             "renesas,cpg-mstp-clocks";
+-			reg = <0 0xffc80030 0 4>;
++			reg = <0xffc80030 4>;
+ 			clocks = <&cpg_clocks R8A7779_CLK_S>,
+ 			         <&cpg_clocks R8A7779_CLK_P>,
+ 				 <&cpg_clocks R8A7779_CLK_P>,
+@@ -379,10 +379,10 @@
+ 				"scif1", "scif0", "i2c3", "i2c2", "i2c1",
+ 				"i2c0";
+ 		};
+-		mstp1_clks: mstp1_clks {
++		mstp1_clks: mstp1_clks@ffc80034 {
+ 			compatible = "renesas,r8a7779-mstp-clocks",
+ 			             "renesas,cpg-mstp-clocks";
+-			reg = <0 0xffc80034 0 4>, <0 0xffc80044 0 4>;
++			reg = <0xffc80034 4>, <0xffc80044 4>;
+ 			clocks = <&cpg_clocks R8A7779_CLK_P>,
+ 				 <&cpg_clocks R8A7779_CLK_P>,
+ 				 <&cpg_clocks R8A7779_CLK_S>,
+@@ -408,10 +408,10 @@
+ 				"ether", "sata",
+ 				"pcie", "vin3";
+ 		};
+-		mstp3_clks: mstp3_clks {
++		mstp3_clks: mstp3_clks@ffc8003c {
+ 			compatible = "renesas,r8a7779-mstp-clocks",
+ 			             "renesas,cpg-mstp-clocks";
+-			reg = <0 0xffc8003c 0 4>;
++			reg = <0xffc8003c 4>;
+ 			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
+ 				 <&s4_clk>, <&s4_clk>;
+ 			#clock-cells = <1>;
+-- 
+1.9.1
+
