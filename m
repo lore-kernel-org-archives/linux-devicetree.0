@@ -1,98 +1,39 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 1/2] ARM: shmobile: r8a7779 dtsi: Correct #address-cells/#size-cells for clocks
-Date: Thu, 22 May 2014 14:33:16 +0200
-Message-ID: <1400761997-13512-2-git-send-email-geert+renesas@glider.be>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 2/2] ARM: shmobile: marzen dts: Remove superfluous include
+Date: Thu, 22 May 2014 14:33:17 +0200
+Message-ID: <1400761997-13512-3-git-send-email-geert+renesas@glider.be>
 References: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400761997-13512-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Cc: Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Warning (ranges_format): /clocks has empty "ranges" property but its #address-cells (2) differs from / (1)
-Warning (ranges_format): /clocks has empty "ranges" property but its #size-cells (2) differs from / (1)
+<dt-bindings/interrupt-controller/irq.h> is already included by
+r8a7779.dtsi.
 
-As r8a7779 doesn't support LPAE, change #address-cells and #size-cells from
-"<2>" to "<1>" to fix this.
-
-Also correct the unit-address for the cpg_clocks node, and add missing
-unit-addresses for the mstp*_clks nodes.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 ---
-Is it correct that r8a7779 doesn't support LPAE? I don't have the datasheet,
-but the similar r8a7778 doesn't.
+ arch/arm/boot/dts/r8a7779-marzen.dts | 1 -
+ 1 file changed, 1 deletion(-)
 
- arch/arm/boot/dts/r8a7779.dtsi | 20 ++++++++++----------
- 1 file changed, 10 insertions(+), 10 deletions(-)
-
-diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-index 038c16a18373..dc624e0d7506 100644
---- a/arch/arm/boot/dts/r8a7779.dtsi
-+++ b/arch/arm/boot/dts/r8a7779.dtsi
-@@ -284,8 +284,8 @@
- 	};
+diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts b/arch/arm/boot/dts/r8a7779-marzen.dts
+index 321290828eee..649129906d6f 100644
+--- a/arch/arm/boot/dts/r8a7779-marzen.dts
++++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+@@ -12,7 +12,6 @@
+ /dts-v1/;
+ #include "r8a7779.dtsi"
+ #include <dt-bindings/gpio/gpio.h>
+-#include <dt-bindings/interrupt-controller/irq.h>
  
- 	clocks {
--		#address-cells = <2>;
--		#size-cells = <2>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
- 		ranges;
- 
- 		/* External root clock */
-@@ -298,9 +298,9 @@
- 		};
- 
- 		/* Special CPG clocks */
--		cpg_clocks: cpg_clocks@0xe6150000 {
-+		cpg_clocks: cpg_clocks@0xffc80000 {
- 			compatible = "renesas,r8a7779-cpg-clocks";
--			reg = <0 0xffc80000 0 0x30>;
-+			reg = <0xffc80000 0x30>;
- 			clocks = <&extal_clk>;
- 			#clock-cells = <1>;
- 			clock-output-names = "plla", "z", "zs", "s",
-@@ -342,10 +342,10 @@
- 		};
- 
- 		/* Gate clocks */
--		mstp0_clks: mstp0_clks {
-+		mstp0_clks: mstp0_clks@ffc80030 {
- 			compatible = "renesas,r8a7779-mstp-clocks",
- 			             "renesas,cpg-mstp-clocks";
--			reg = <0 0xffc80030 0 4>;
-+			reg = <0xffc80030 4>;
- 			clocks = <&cpg_clocks R8A7779_CLK_S>,
- 			         <&cpg_clocks R8A7779_CLK_P>,
- 				 <&cpg_clocks R8A7779_CLK_P>,
-@@ -379,10 +379,10 @@
- 				"scif1", "scif0", "i2c3", "i2c2", "i2c1",
- 				"i2c0";
- 		};
--		mstp1_clks: mstp1_clks {
-+		mstp1_clks: mstp1_clks@ffc80034 {
- 			compatible = "renesas,r8a7779-mstp-clocks",
- 			             "renesas,cpg-mstp-clocks";
--			reg = <0 0xffc80034 0 4>, <0 0xffc80044 0 4>;
-+			reg = <0xffc80034 4>, <0xffc80044 4>;
- 			clocks = <&cpg_clocks R8A7779_CLK_P>,
- 				 <&cpg_clocks R8A7779_CLK_P>,
- 				 <&cpg_clocks R8A7779_CLK_S>,
-@@ -408,10 +408,10 @@
- 				"ether", "sata",
- 				"pcie", "vin3";
- 		};
--		mstp3_clks: mstp3_clks {
-+		mstp3_clks: mstp3_clks@ffc8003c {
- 			compatible = "renesas,r8a7779-mstp-clocks",
- 			             "renesas,cpg-mstp-clocks";
--			reg = <0 0xffc8003c 0 4>;
-+			reg = <0xffc8003c 4>;
- 			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
- 				 <&s4_clk>, <&s4_clk>;
- 			#clock-cells = <1>;
+ / {
+ 	model = "marzen";
 -- 
 1.9.1
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
