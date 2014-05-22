@@ -1,89 +1,180 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
-Date: Thu, 22 May 2014 10:16:00 +0900
-Message-ID: <20140522011600.C0014C40B13@trevor.secretlab.ca>
-References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org>
-	<1399993115-21552-3-git-send-email-grant.likely@linaro.org>
-	<53757D25.1060005@gmail.com>
-	<20140516105444.C1DB7C42277@trevor.secretlab.ca>
-	<20140518092730.109AAC40B8A@trevor.secretlab.ca>
-	<537C1252.3090900@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <537C1252.3090900@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+From: Beomho Seo <beomho.seo@samsung.com>
+Subject: Re: [PATCH 1/2] Input: mcs_touchkey: add device tree support
+Date: Thu, 22 May 2014 11:27:43 +0900
+Message-ID: <537D609F.6070601@samsung.com>
+References: <537C3EF5.90000@samsung.com> <20140521134819.GG17827@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-input-owner@vger.kernel.org>
+In-reply-to: <20140521134819.GG17827@leverpostej>
+Sender: linux-input-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 May 2014 19:41:22 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 5/18/2014 2:27 AM, Grant Likely wrote:
-> > On Fri, 16 May 2014 11:54:44 +0100, Grant Likely <grant.likely@linaro.org> wrote:
-> >> On Thu, 15 May 2014 19:51:17 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
-> >>> On 5/13/2014 7:58 AM, Grant Likely wrote:
-> >>>> Make of_find_node_by_path() handle aliases as prefixes. To make this
-> >>>> work the name search is refactored to search by path component instead
-> >>>> of by full string. This should be a more efficient search, and it makes
-> >>>> it possible to start a search at a subnode of a tree.
-> >>>>
-> >>>> Signed-off-by: David Daney <david.daney@cavium.com>
-> >>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-> >>>> [grant.likely: Rework to not require allocating at runtime]
-> >>>> Acked-by: Rob Herring <robh@kernel.org>
-> >>>> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> >>>> ---
-> >>>>  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
-> >>>>  1 file changed, 56 insertions(+), 4 deletions(-)
-> >>>>
-> >>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> >>>> index 6e240698353b..60089b9a3014 100644
-> >>>> --- a/drivers/of/base.c
-> >>>> +++ b/drivers/of/base.c
-> >>>> @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
-> >>>>  }
-> >>>>  EXPORT_SYMBOL(of_get_child_by_name);
-> >>>>  
-> >>>> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
-> >>>> +						const char *path)
-> >>>> +{
-> >>>> +	struct device_node *child;
-> >>>> +	int len = strchrnul(path, '/') - path;
-> >>>> +
-> >>>> +	if (!len)
-> >>>> +		return parent;
-> >>>
-> >>> (!len) is true if the the final character of the path passed into of_find_node_by_path()
-> >>> was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
-> >>> should be NULL, indicating that the match fails.
-> >>
-> >> Ah, good catch. I should add a test case for that.
-> > 
-> > In my testing this looks okay. The while loop that calls into
-> > __of_find_node_by_path() looks like this:
-> > 
-> > 	while (np && *path == '/') {
-> > 		path++; /* Increment past '/' delimiter */
-> > 		np = __of_find_node_by_path(np, path);
-> > 		path = strchrnul(path, '/');
-> > 	}
-> > 
-> > If the path ends with a '/', then the loop will go around one more time.
-> > The pointer will be incremented to point at the null character and len
-> > will be null because strchrnul() will point at the last item.
-> 
-> Yes, that was my point.  The old version of of_find_node_by_path() would not
-> find a match if the path ended with a "/" (unless the full path was "/").
-> This patch series changes the behavior to be a match.
-> 
-> I will reply to this email with an additional patch that restores the
-> original behavior.
-> 
-> If you move the additional test cases you provide below and the test cases
-> in patch 3 to the beginning of the series, you can see the before and after
-> behavior of adding patch 1 and patch 2.
+Hello,
 
-Ah, I see. That raises the question about what the behaviour /should/
-be. Off the top of my head, matching against a trailing '/' seems to be
-okay. Are there situations that you see or can think of where matching
-would be the wrong thing to do?
+Thank you for your advice.
 
-g.
+On 05/21/2014 10:48 PM, Mark Rutland wrote:
+> On Wed, May 21, 2014 at 06:51:49AM +0100, Beomho Seo wrote:
+>> Add device tree support for mcs touchkey driver.
+>> Tested on exynos 4412 board.
+>>
+>> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
+>> Cc: Joonyoung Shim <jy0922.shim@samsung.com>
+>> ---
+>>  drivers/input/keyboard/mcs_touchkey.c |   73 +++++++++++++++++++++++++++++++--
+>>  1 file changed, 69 insertions(+), 4 deletions(-)
+>>
+>> diff --git a/drivers/input/keyboard/mcs_touchkey.c b/drivers/input/keyboard/mcs_touchkey.c
+>> index 1da8e0b..9bff47b 100644
+>> --- a/drivers/input/keyboard/mcs_touchkey.c
+>> +++ b/drivers/input/keyboard/mcs_touchkey.c
+>> @@ -19,6 +19,7 @@
+>>  #include <linux/irq.h>
+>>  #include <linux/slab.h>
+>>  #include <linux/pm.h>
+>> +#include <linux/of_gpio.h>
+>>
+>>  /* MCS5000 Touchkey */
+>>  #define MCS5000_TOUCHKEY_STATUS		0x04
+>> @@ -96,6 +97,60 @@ static irqreturn_t mcs_touchkey_interrupt(int irq, void *dev_id)
+>>  	return IRQ_HANDLED;
+>>  }
+>>
+>> +#ifdef CONFIG_OF
+>> +static struct mcs_platform_data *mcs_touchkey_parse_dt(struct device *dev)
+>> +{
+>> +	struct mcs_platform_data *pdata;
+>> +	struct device_node *np = dev->of_node;
+>> +	unsigned int keymap[2];
+>> +	unsigned int len;
+>> +	int i = 0;
+>> +	const __be32 *prop;
+> 
+> Hmm. Almost every use of __be32 *prop values is indicative of something
+> that can be done with existing accessors. I suspect that may be true
+> here...
+> 
+>> +
+>> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
+>> +	if (!pdata) {
+>> +		dev_err(dev, "Failed to allocate platform data\n");
+>> +		return ERR_PTR(-ENOMEM);
+>> +	}
+>> +
+>> +	prop = of_get_property(np, "linux,code", &len);
+>> +	if (!prop) {
+>> +		dev_err(dev, "Failed to get code\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	if (len % sizeof(u32)) {
+>> +		dev_err(dev, "Malformed keycode property\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	pdata->keymap_size = len / sizeof(u32);
+> 
+> Use of_property_count_u32_elems. It does all of this and returns a
+> negative error code if anything is wrong.
+> 
+>> +
+>> +	if (of_property_read_u32(np, "key_maxval", &pdata->key_maxval)) {
+>> +		dev_err(dev, "Failed to get key max value data\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+> 
+> What is this? This sounds like an implementation detail. Why is it in
+> the DT?
+> 
+> Why doesn't it follow dt conventions ('-' rather than '_')?
+> 
+
+OK. I will revise *_parse_dt function on your advice.
+
+>> +
+>> +	if (pdata->keymap_size > pdata->key_maxval) {
+>> +		dev_err(dev, "Key map size overflow\n");
+>> +		return ERR_PTR(-EINVAL);
+>> +	}
+>> +
+>> +	for (i = 0; i < pdata->keymap_size; i++) {
+>> +		u32 code = be32_to_cpup(prop + i);
+> 
+> Use the DT accessors (e.g. of_property_read_u32_index). There is
+> absolutely no reason to touch the raw DTB data here.
+> 
+>> +		keymap[i] = MCS_KEY_MAP(i, code);
+>> +	}
+>> +	pdata->keymap = keymap;
+>> +	return pdata;
+>> +}
+>> +#else
+>> +static inline struct mcs_platform_data *mcs_touchkey_parse_dt
+>> +						(struct device *dev)
+>> +{
+>> +	return NULL;
+>> +}
+>> +#endif
+>> +
+>>  static int mcs_touchkey_probe(struct i2c_client *client,
+>>  		const struct i2c_device_id *id)
+>>  {
+>> @@ -107,10 +162,14 @@ static int mcs_touchkey_probe(struct i2c_client *client,
+>>  	int error;
+>>  	int i;
+>>
+>> -	pdata = dev_get_platdata(&client->dev);
+>> -	if (!pdata) {
+>> -		dev_err(&client->dev, "no platform data defined\n");
+>> -		return -EINVAL;
+>> +	if (&client->dev.of_node)
+>> +		pdata = mcs_touchkey_parse_dt(&client->dev);
+>> +	else
+>> +		pdata = dev_get_platdata(&client->dev);
+>> +
+>> +	if (IS_ERR(pdata)) {
+>> +		dev_err(&client->dev, "Failed to get platform data\n");
+>> +		return PTR_ERR(pdata);
+>>  	}
+>>
+>>  	data = kzalloc(sizeof(struct mcs_touchkey_data) +
+>> @@ -262,11 +321,17 @@ static const struct i2c_device_id mcs_touchkey_id[] = {
+>>  };
+>>  MODULE_DEVICE_TABLE(i2c, mcs_touchkey_id);
+>>
+>> +static struct of_device_id mcs_touchkey_dt_match[] = {
+>> +	{ .compatible = "mcs5000_touchkey", },
+>> +	{ .compatible = "mcs5080_touchkey", },
+> 
+> NAK. These do not follow the "$VENDOR,$DEVICE" pattern.
+> 
+> Mark.
+> 
+
+OK, I will changes to above pattern.
+Additionally, Fix bindings documentation and vendor-prefixes.txt.
+
+>> +};
+>> +
+>>  static struct i2c_driver mcs_touchkey_driver = {
+>>  	.driver = {
+>>  		.name	= "mcs_touchkey",
+>>  		.owner	= THIS_MODULE,
+>>  		.pm	= &mcs_touchkey_pm_ops,
+>> +		.of_match_table = of_match_ptr(mcs_touchkey_dt_match),
+>>  	},
+>>  	.probe		= mcs_touchkey_probe,
+>>  	.remove		= mcs_touchkey_remove,
+>> -- 
+>> 1.7.9.5
+>>
+> 
+Again, thank you for your advice.
+I'll fix them and send v2 patch soon.
+
+Best regards,
+Beomho Seo
