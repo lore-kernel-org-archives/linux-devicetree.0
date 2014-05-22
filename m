@@ -1,231 +1,105 @@
-From: Corentin LABBE <clabbe.montjoie@gmail.com>
-Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
-Date: Thu, 22 May 2014 20:13:03 +0200
-Message-ID: <537E3E2F.7000407@gmail.com>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <1400771396-9686-4-git-send-email-clabbe.montjoie@gmail.com> <7774492.yVryDeoI4M@wuerfel>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
+Date: Thu, 22 May 2014 19:19:48 +0100
+Message-ID: <20140522181948.GP12304@sirena.org.uk>
+References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
+ <1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
+ <537E1D0A.6020303@wwwdotorg.org>
+ <20140522173403.GL12304@sirena.org.uk>
+ <537E38FF.9000407@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-crypto-owner@vger.kernel.org>
-In-Reply-To: <7774492.yVryDeoI4M@wuerfel>
-Sender: linux-crypto-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RPs4rtJ4g1RMOHUG"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <537E38FF.9000407-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jerry.wong-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Le 22/05/2014 17:28, Arnd Bergmann a =E9crit :
-> On Thursday 22 May 2014 17:09:56 LABBE Corentin wrote:
->> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
->> ---
->>  drivers/crypto/Kconfig    |   49 ++
->>  drivers/crypto/Makefile   |    1 +
->>  drivers/crypto/sunxi-ss.c | 1476 ++++++++++++++++++++++++++++++++++=
-+++++++++++
->>  3 files changed, 1526 insertions(+)
->>  create mode 100644 drivers/crypto/sunxi-ss.c
->>
->> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
->> index 03ccdb0..5ea0922 100644
->> --- a/drivers/crypto/Kconfig
->> +++ b/drivers/crypto/Kconfig
->> @@ -418,4 +418,53 @@ config CRYPTO_DEV_MXS_DCP
->>  	  To compile this driver as a module, choose M here: the module
->>  	  will be called mxs-dcp.
->> =20
->> +config CRYPTO_DEV_SUNXI_SS
->> +        tristate "Support for Allwinner Security System cryptograph=
-ic accelerator"
->> +        depends on ARCH_SUNXI
->> +        help
->> +          Some Allwinner processors have a crypto accelerator named
->> +          Security System. Select this if you want to use it.
->> +
->> +          To compile this driver as a module, choose M here: the mo=
-dule
->> +          will be called sunxi-ss.
->> +
->> +if CRYPTO_DEV_SUNXI_SS
->> +config CRYPTO_DEV_SUNXI_SS_PRNG
->> +	bool "Security System PRNG"
->> +	select CRYPTO_RNG2
->> +	help
->> +	  If you enable this option, the SS will provide a pseudo random
->> +	  number generator.
->> +config CRYPTO_DEV_SUNXI_SS_MD5
->> +	bool "Security System MD5"
->> +	select CRYPTO_MD5
->> +	help
->> +	  If you enable this option, the SS will provide MD5 hardware
->> +	  acceleration.
->=20
-> My feeling is that this should either be one driver that provides
-> all five algorithms unconditionally, or five drivers that are each
-> separate loadable modules and based on top of a common module
-> that only exports functions but has no active logic itself
 
-I agree for the split.
-It was my first intention but I feared to add too many files.
-So I propose to split in 6, sunxi-ss-hash.c, sunxi-ss-des.c, sunxi-ss-a=
-es.c, sunxi-ss-rng.c, sunxi-ss-common.c and sunxi-ss.h
-Does can I add a sunxi-ss directory in drivers/crypto ?
+--RPs4rtJ4g1RMOHUG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->=20
->> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
->> +#include <crypto/md5.h>
->> +#define SUNXI_SS_HASH_COMMON
->> +#endif
->> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_SHA1
->> +#include <crypto/sha.h>
->> +#define SUNXI_SS_HASH_COMMON
->> +#endif
->> +#ifdef SUNXI_SS_HASH_COMMON
->> +#include <crypto/hash.h>
->> +#include <crypto/internal/hash.h>
->> +#endif
->> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_AES
->> +#include <crypto/aes.h>
->> +#endif
->> +
->> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_3DES
->> +#define SUNXI_SS_DES
->> +#endif
->> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_DES
->> +#define SUNXI_SS_DES
->> +#endif
->> +#ifdef SUNXI_SS_DES
->> +#include <crypto/des.h>
->> +#endif
->> +
->> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_PRNG
->> +#include <crypto/internal/rng.h>
->=20
-> That would cleanup this #ifdef chain either way.
->=20
->> +/* General notes:
->> + * I cannot use a key/IV cache because each time one of these chang=
-e ALL stuff
->> + * need to be re-writed.
->> + * And for example, with dm-crypt IV changes on each request.
->> + *
->> + * After each request the device must be disabled.
->> + *
->> + * For performance reason, we use writel_relaxed/read_relaxed for a=
-ll
->> + * operations on RX and TX FIFO.
->> + * For all other registers, we use writel.
->> + * See http://permalink.gmane.org/gmane.linux.ports.arm.kernel/1176=
-44
->> + * and http://permalink.gmane.org/gmane.linux.ports.arm.kernel/1176=
-40
->> + * */
->> +
->> +static struct sunxi_ss_ctx {
->> +	void *base;
->=20
-> __iomem ?
+On Thu, May 22, 2014 at 11:50:55AM -0600, Stephen Warren wrote:
 
-ok
+> I think we should nail down exactly what set_sysclk() means. Since it
+> takes an explicit MCLK clock rate (rather than e.g. sample rate) right
+> now, surely it's a notification of what the clock /is/, not a request
+> for the CODEC to set up its input clock. If we expect the CODEC to go to
 
->=20
->> +	int irq;
->> +	struct clk *busclk;
->> +	struct clk *ssclk;
->> +	struct device *dev;
->> +	struct resource *res;
->> +	void *buf_in; /* pointer to data to be uploaded to the device */
->> +	size_t buf_in_size; /* size of buf_in */
->> +	void *buf_out;
->> +	size_t buf_out_size;
->> +} _ss_ctx, *ss_ctx =3D &_ss_ctx;
->> +
->> +static DEFINE_MUTEX(lock);
->> +static DEFINE_MUTEX(bufout_lock);
->> +static DEFINE_MUTEX(bufin_lock);
->=20
-> I guess the mutexes should be part of sunxi_ss_ctx.
->=20
-> Are you sure you need the global _ss_ctx structure?
-> Normally you should get a pointer from whoever calls you.
+It really should be that from a device model/clock API point of view and
+it certainly is with the patch proposed, the fact that it happens not to
+have been is just a product of the poor clock support in Linux than
+anything else.
 
-I will use platform_get_drvdata/platform_set_drvdata for cleaning all t=
-hoses global structures..
+> the clock driver and request an MCLK for itself (e.g. based on sample
+> rate), surely that should happen from some function besides
+> set_sysclk(), with different semantics e.g. hw_params().
 
->=20
->> +struct sunxi_req_ctx {
->> +	u8 key[AES_MAX_KEY_SIZE * 8];
->> +	u32 keylen;
->> +	u32 mode;
->> +	u64 byte_count; /* number of bytes "uploaded" to the device */
->> +	u32 waitbuf; /* a partial word waiting to be completed and
->> +			uploaded to the device */
->> +	/* number of bytes to be uploaded in the waitbuf word */
->> +	unsigned int nbwait;
->> +};
->> +
->> +#ifdef SUNXI_SS_HASH_COMMON
->> +/*=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D*/
->> +/*=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D*/
->=20
-> Please remove all the =3D=3D=3D=3D=3D=3D=3D=3D lines.
+I'm not sure where you see the CODEC going off and deciding the MCLK
+rate itself here?  Essentially all that's happening here is that
+set_sysclk() is behaving like the clock API does and setting its own
+rate to what it was explicitly asked to set, including bouncing that
+request up the chain.
 
-ok
+The rounding could go if we wanted to be a bit stricter - if the machine
+driver is doing a good job it should never change anything - but
+otherwise I just can't see what you're concerned about.
 
->=20
->> +	/* If we have more than one SG, we cannot use kmap_atomic since
->> +	 * we hold the mapping too long*/
->> +	src_addr =3D kmap(sg_page(in_sg)) + in_sg->offset;
->> +	if (src_addr =3D=3D NULL) {
->> +		dev_err(ss_ctx->dev, "KMAP error for src SG\n");
->> +		return -1;
->> +	}
->> +	dst_addr =3D kmap(sg_page(out_sg)) + out_sg->offset;
->> +	if (dst_addr =3D=3D NULL) {
->> +		kunmap(src_addr);
->> +		dev_err(ss_ctx->dev, "KMAP error for dst SG\n");
->> +		return -1;
->> +	}
->> +	src32 =3D (u32 *)src_addr;
->> +	dst32 =3D (u32 *)dst_addr;
->> +	ileft =3D nbytes / 4;
->> +	oleft =3D nbytes / 4;
->> +	sgileft =3D in_sg->length / 4;
->> +	sgoleft =3D out_sg->length / 4;
->> +	do {
->> +		tmp =3D readl_relaxed(ss_ctx->base + SUNXI_SS_FCSR);
->> +		rx_cnt =3D SS_RXFIFO_SPACES(tmp);
->> +		tx_cnt =3D SS_TXFIFO_SPACES(tmp);
->> +		todo =3D min3(rx_cnt, ileft, sgileft);
->> +		if (todo > 0) {
->> +			ileft -=3D todo;
->> +			sgileft -=3D todo;
->> +		}
->> +		while (todo > 0) {
->> +			writel_relaxed(*src32++, ss_ctx->base + SS_RXFIFO);
->> +			todo--;
->> +		}
->=20
-> I wonder if this is meant to be used in combination with a dma engine
-> rather than accessed with writel/readl.
+> I'm not convinced that the CODEC can trigger its input clock changes in
+> general. In Tegra, there needs to be centralized clock management, e.g.
+> to prevent one audio stream using a 44.1KHz-based rate and another using
+> a 48KHz-based rate. That's because the main audio PLL can't generate
+> both sets of frequencies at once. This can't be done in individual CODEC
+> drivers, since they shouldn't know about the Tegra restrictions. Doing
+> it in the clock driver in response to the CODEC's request for a specific
+> input clock, might work, but then the CODEC would have to call into the
+> clk driver from e.g. hw_params() rather than set_sysclk(). If that's how
+> it's supposed to work, then this patch is adding code in the wrong
+> place. If set_sysclk() doesn't get removed from the CODEC API, then
+> doing all this clock setup logic in the machine driver, as the
+> tegra_wm89090.c machine driver does, seems to make the most sense for now.
 
-You could do both, but the dmaengine driver is under development.
-When it will be ready, I will add DMA support.
-But my intention is to keep both mode, since poll mode is better than D=
-MA for small request.
+What you're describing seems to make things worse not better for your
+problem?  I'm sorry, I just can't follow what you're concerned about
+here at all. =20
 
->=20
-> How does the original driver do it?
+The current situation is that the CODEC just gets told what it should
+run SYSCLK at, all the patch does really is factor out the code to call
+clk_set_rate() on a programmable parent clock and look that clock up in
+DT.  Both before and after the patch the CODEC driver takes no decisions
+on the rate.  If we started doing things in hw_params() the CODEC driver
+would have to start taking decisions since it would only get the sample
+rate and so on provided.
 
-There are no original driver, this driver is the first for the Security=
- System.
+--RPs4rtJ4g1RMOHUG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->=20
-> 	Arnd
->=20
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-Thanks for your review.
+iQIcBAEBAgAGBQJTfj/BAAoJELSic+t+oim9M0QP/2KUorIJwGQvrPQqbjnncM7o
+oy5sifPDfRzWuZ+FKKG8yb7p9p3UQnEks7hnxfMY+YNaajEpRcE42yhx84ZHP2ge
+ZMkI3iCNyT0drzPquNUB3d5+iXSeg7S5MpFw1jZUIrMxE40ktHWpjtaZZaEqIwxt
+LtG8stHSw8JANF8bCD78QlAGPyV+hXOocvX2GGe8wRVGv/Fvz649TX9mtDG7JvxO
+XTHb22ixxsE5h200lTdEYrD7TIOyueNFlfkApxouXaONGiPZ5V/UdqCXIQsvy7LZ
++2BEGo/y1e/crjiGb4gu3pr/AWONJwyZHmioytvBXrtyjAePh4rDSvJjMLEU7Y6S
+skHS8GGjQneiWFZllxADwkCdI1M6NNwL/DlgXE5MhaS/4WtxhgQDn6PTnENLOm1F
+cxMFkmtwzui3hwfPVXOAY7XgjGB9pIF5hyZIaIHsfLPUumcDQkY9rq6iO9Pqx/ij
+0C+G8TrMTEFN46fhA4O5/aS5vRO4rUXEF7bMYWiIGlAWBUwUJnR4v7bZ9v9Oc8ep
+GKc7KlPc7mdmEF0eGlB17hi4S0Mo1hLGF4uFemhoauDAluTMKWm6ZGhYurpJRYjJ
+HDWznlbmCHNkwiJE8vEWA2kNLypzossHHvgkvaSplUlzdTsXqx2lbp6rMaE7INb2
+OkXptd6bvrrNnsqu7J4I
+=Uxz5
+-----END PGP SIGNATURE-----
+
+--RPs4rtJ4g1RMOHUG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
