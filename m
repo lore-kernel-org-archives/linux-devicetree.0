@@ -1,52 +1,55 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Thu, 22 May 2014 14:39:20 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1405221431370.17310@knanqh.ubzr>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org> <5057707.jNCXlqf9dH@wuerfel> <alpine.LFD.2.11.1405221406100.17310@knanqh.ubzr> <5233065.1vXjHiDqN2@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] doc: dt bindings: Document Odroid X2/U3 audio
+ subsystem bindings
+Date: Thu, 22 May 2014 19:46:56 +0100
+Message-ID: <20140522184656.GS12304@sirena.org.uk>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5233065.1vXjHiDqN2@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tP+Q+DmL2Hx0hmlt"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 May 2014, Arnd Bergmann wrote:
 
-> On Thursday 22 May 2014 14:09:52 Nicolas Pitre wrote:
-> > On Thu, 22 May 2014, Arnd Bergmann wrote:
-> > 
-> > > On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
-> > > > By making the DMA memory Strongly Ordered, we avoid the
-> > > > L220 write buffer. In addition to the above commit, we also had
-> > > > 2503a5ecd86c (ARM: 6201/1: RealView: Do not use outer_sync() on
-> > > > ARM11MPCore boards with L220).
-> > > 
-> > > Ah, so this also stands in the way of multiplatform realview 
-> > 
-> > Isn't the real value of a multiplatform realview in the ability to use 
-> > it with Qemu?  Did Qemu go to the extreme of emulating all those cache 
-> > issues?
-> 
-> The qemu developers have in the past always argued strongly that they
-> want to run the same kernel that runs on real hardware. Having a kernel
-> that runs only on the emulated version but not on actual hardware is
-> clearly against that goal, and  we should use CONFIG_ARCH_VIRT for
-> that purpose.
+--tP+Q+DmL2Hx0hmlt
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-But the kernel that actually runs on the real hardware also runs on Qemu 
-already.  It is just that, by some coincidence, a multi-platform kernel 
-that pretends to have the same peripherals as a Realview board could 
-also be used on Qemu.
+On Thu, May 22, 2014 at 01:55:07PM +0200, Sylwester Nawrocki wrote:
 
-Otherwise I really don't see the point in making the code more complex 
-just to make a multi-platform kernel run on actual Realview hardware 
-that is quite obsolete now and that very few people have access to.
+> +	sound {
+> +		compatible = "samsung,odroidx2-audio";
+> +		samsung,i2s-controller = <&i2s0>;
+> +		samsung,audio-codec = <&max98090>;
+> +	};
 
+Can this not use simple-card?
 
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--tP+Q+DmL2Hx0hmlt
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfkYcAAoJELSic+t+oim9QBwP/iHC4sNNhsLrlAqpltJ5WM1n
+gWdxCWDSfMVj44ZUWemiNE1u2KCWDA6lGPefw3DJoSjrNJesNxFn09+Uu23Bp0oh
+aHoyBYyyBgEwKnrGHecVGRw/5hQ+tbvERaQ1B/yl01wr30lUiS+omAR8bTN0Y87r
+E7XIiChwRQFn/Lq1NrfPd5rNNNGu+HTwABUxaMm4fMLI4VpcGiaGUInR11I3+89n
+wYisqtxC+20Q/Fe0KpZuEQL2pywBKO81qI+HRSBpUu0Bkqo4hc0yl2GAYAykJbpm
+kgFrZ4gnaB760QlrEyA6YZD4Dec6X8kJOuvg9afVCpfSmmtsK7WlU4OqOKAm4iuv
+nGjc+GRDmMCWTs3fCjr1DQt/Dal8LeKd1s2i6cOGK+rdCSC6uIFyqLuEjmmdx1V6
+lglAY+zXshe98Ahs1Y0TMaCQzC1II9si7nT6oYGyWNFvWTOFlkNAPei0RdLj5D+H
+Y3FtZWFg6DvogtVpyuVZqceZK60DJXIjtX7hpiVVmvdwu2bGTqOL9CsPqGZUq7L2
+tdJ0u18HcTNyP4F+JFdgrLasQmD3QQIIylyhbEXgg1ie2KFcivmo35kH4il3bIWq
+Tiz6VUNwIswYtYidsk/8etOpXx3CZSq2am+NG0lWd+GxJNRMDuy/Jt21KwqrdF1K
+qpE1qquqmYIiVAgsRE2B
+=HW+q
+-----END PGP SIGNATURE-----
+
+--tP+Q+DmL2Hx0hmlt--
