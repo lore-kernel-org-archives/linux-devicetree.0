@@ -1,96 +1,59 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Fri, 23 May 2014 00:34:43 +0200
-Message-ID: <537E7B83.4020900@gmail.com>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org> <201405091244.02066.arnd@arndb.de> <CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA@mail.gmail.com>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
+Date: Thu, 22 May 2014 16:24:55 -0600
+Message-ID: <537E7937.2010408@wwwdotorg.org>
+References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org> <1400750228-13750-2-git-send-email-tushar.behera@linaro.org> <537E1D0A.6020303@wwwdotorg.org> <20140522173403.GL12304@sirena.org.uk> <537E38FF.9000407@wwwdotorg.org> <20140522181948.GP12304@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140522181948.GP12304@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tushar Behera <tushar.behera@linaro.org>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tiwai@suse.de, perex@perex.cz, dianders@chromium.org, jerry.wong@maximintegrated.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2014 09:41 AM, Linus Walleij wrote:
-> On Fri, May 9, 2014 at 12:44 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->>> +++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
->>
->> Can you split this up into an arm-realview.dtsi file for the common parts and
->> a pb1176 specific file for the rest?
+On 05/22/2014 12:19 PM, Mark Brown wrote:
+> On Thu, May 22, 2014 at 11:50:55AM -0600, Stephen Warren wrote:
 > 
-> I wonder if that makes any kind of sense. The RealView platforms does not
-> really share much more than the name, sadly. For example: IP blocks
-> aren't even at the same address.
+>> I think we should nail down exactly what set_sysclk() means. Since it
+>> takes an explicit MCLK clock rate (rather than e.g. sample rate) right
+>> now, surely it's a notification of what the clock /is/, not a request
+>> for the CODEC to set up its input clock. If we expect the CODEC to go to
 > 
-> I could create a .dtsi file but it would be empty :-(
+> It really should be that from a device model/clock API point of view and
+> it certainly is with the patch proposed, the fact that it happens not to
+> have been is just a product of the poor clock support in Linux than
+> anything else.
 > 
->>> +     soc {
->>> +             #address-cells = <1>;
->>> +             #size-cells = <1>;
->>> +             compatible = "simple-bus";
->>> +             ranges;
->>> +
->>> +             syscon: syscon@10000000 {
->>> +                     compatible = "arm,realview-pb1176-syscon", "syscon";
->>> +                     reg = <0x10000000 0x1000>;
->>> +             };
->>
->> Hmm, in order to have a proper reset driver, we probably want a separate
->> node for the reset controller. I believe the x-gene people have just
->> posted a generic reset driver based on syscon. Let's see if we can share
->> that.
+>> the clock driver and request an MCLK for itself (e.g. based on sample
+>> rate), surely that should happen from some function besides
+>> set_sysclk(), with different semantics e.g. hw_params().
 > 
-> I have looked at it. Patch titled
-> "power: reset: Add generic SYSCON register mapped reset"
-> 
-> Sadly it does not work for our case. This is because it assumes that
-> reboot will be triggered by writing one value to one register. The RealViews
-> need you to *first* write to a special unlock register, then write a magic
-> value to a magic register.
-> 
-> So of course we could extend the syscon regmap reset driver by
-> starting to encode a jam table such as a sequence of register writes
-> to a sequence of registers, but we have refused such code in the past
-> because as I recall Grant said, it is the beginning of a byte code
-> interpreter and then we could as well bite the bullet and start
-> implementing open firmware.
-> 
-> This is exactly the type of thing that ACPI AML code usually does
-> by the way so what he says makes a *lot* of sense.
-> 
-> So for now I keep to our special driver.
+> I'm not sure where you see the CODEC going off and deciding the MCLK
+> rate itself here?  Essentially all that's happening here is that
+> set_sysclk() is behaving like the clock API does and setting its own
+> rate to what it was explicitly asked to set, including bouncing that
+> request up the chain.
 
-+1 for drivers/soc _and_ of_xlate for regmap instead of syscon.
+If set_sysclk() is never allowed to do anything other than forward the
+value it receives to the clock API, I'm much less concerned, althoguh
+still a bit.
 
-driven by Mike Turquette's request to join mach-berlin clock node into a
-single node, we currently use pinctrl driver (that must be somewhere in
-Linus inbox) as a crutch to register a regmap for other drivers.
+My main worry is that this patch opens the door for set_sysclk() to
+perform some kind of calculation to determine the MCLK rate. Right now,
+this patch doesn't do that, but there's nothing obvious from the code
+that no CODEC is allowed to do that. After all, sysclk has a parameter
+to indicate *which* clock in the CODEC to set. Some CODEC driver author
+might write something where the machine driver tells the CODEC driver
+the desired rate of some CODEC-internal PLL, from which set_sysclk()
+calculates what it needs for MCLK, and then goes off and requests that
+value from the clock API.
 
-I also saw that Arnd requested to not chop chip registers into tiny
-pieces for Linux subsystems but rather have a single DT node and make
-the drivers use it.
-
-Mike also mentioned he is fine with different subsystem drivers reusing
-the same node property-wise, i.e. reset and clock in a single node.
-
-With Berlin (and other SoCs for sure) ultimately there will be a bunch
-of drivers that require the io resource and the node early and
-non-early. Now, using syscon would still require dummy nodes for each
-subsystem, as there will be only one driver registered to a single DT
-node.
-
-With a drivers/soc we'd have a good place for those messy, SoC-specific
-registers to put a driver that hooks up to a single node and takes care
-of registering e.g. pinctrl and reset the plain-old platform_device
-way. It will be a little bit like arm/mach-foo before, but maybe we
-have to admit that on SoCs there will always be some amount of
-very specific, non-probable, non-describable registers that simply need
-special treatment.
-
-Sebastian
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ignoring that, I'm still not sure that the CODEC driver setting the MCLK
+rate is appropriate. If we have 1 MCLK output from an SoC, connected to
+2 different CODECs, why wouldn't the overall machine driver call
+clk_set_rate() on that clock, and then notify the two CODEC drivers of
+that rate. Making each CODEC's set_sysclk() call clk_set_rate() on the
+same clock with the same value seems redundant, albeit it should work
+out fine since they both request the same rate.
