@@ -1,76 +1,187 @@
-From: Christopher Covington <cov-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH RESEND 1/2] irqchip: Add generic gic-v1/gic-v2 compat
- strings.
-Date: Thu, 22 May 2014 11:26:17 -0400
-Message-ID: <537E1719.4050102@codeaurora.org>
-References: <1400680085-10430-1-git-send-email-Nikolay.Borisov@arm.com> <1400680085-10430-2-git-send-email-Nikolay.Borisov@arm.com> <CAL_JsqKpgWBQ6qFrDHt13wqRx1afPeapEz5z16enUyUX1fgUJg@mail.gmail.com> <20140522090702.GA23478@leverpostej>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
+Date: Thu, 22 May 2014 17:28 +0200
+Message-ID: <7774492.yVryDeoI4M@wuerfel>
+References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <1400771396-9686-4-git-send-email-clabbe.montjoie@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140522090702.GA23478@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Nikolay Borisov <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400771396-9686-4-git-send-email-clabbe.montjoie@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: LABBE Corentin <clabbe.montjoie@gmail.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On 05/22/2014 05:07 AM, Mark Rutland wrote:
-> On Wed, May 21, 2014 at 10:27:33PM +0100, Rob Herring wrote:
->> On Wed, May 21, 2014 at 8:48 AM, Nikolay Borisov
->> <Nikolay.Borisov-5wv7dgnIgG8@public.gmane.org> wrote:
->>> The current set of GIC compatible strings only contains specific
->>> implementations (e.g. arm,cortex-a9-gic) rather than revisions of the
->>> standard (e.g. arm,gic-v2), so each new implementation must either claim
->>> to be an extension of an existing implementation or have a new string
->>> added to the driver. This may be problematic when workarounds are
->>> required for bugs in particular implementations, as said workaround may
->>> end up targeting a wider set of implementations than intended.
->>>
->>> To prevent these issues, this patch adds compatible strings for the
->>> revisions of the GIC spec which all GIC implementations should be able
->>> to claim conformance to in addition to any particular implementation
->>> specific string, e.g.
->>
->> This just encourages not having specific properties which then also
->> prevents being able to add work-arounds later. SOCs using the a9 or
->> a15 string ONLY that are not an a9 or a15 are wrong. That's what we
->> should fix. Adding more generic strings is not going to help that. Do
->> you have a specific work-around you need to implement?
+On Thursday 22 May 2014 17:09:56 LABBE Corentin wrote:
+> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
+> ---
+>  drivers/crypto/Kconfig    |   49 ++
+>  drivers/crypto/Makefile   |    1 +
+>  drivers/crypto/sunxi-ss.c | 1476 +++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 1526 insertions(+)
+>  create mode 100644 drivers/crypto/sunxi-ss.c
 > 
-> AFAIK, we don't have a specific workaround required anywhere that these
-> strings would help with. It's just that generic GIC strings had been
-> brought up repeatedly with no particular conclusion.
-> 
-> If we simply ensure that new DTS that feature a GIC have
-> implementation-specific strings in addition to those we already support
-> (e.g. "arm,cortex-a9-gic"), then I'm fine with that.
-> 
->> Given that the GIC specs are obviously meaningless since we now have
->> GICv2 with 16 core support as well as the special exynos gics, I'm not
->> inclined to accept this.
-> 
-> Arguably neither are "true" GICv2, but your point stands.
+> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+> index 03ccdb0..5ea0922 100644
+> --- a/drivers/crypto/Kconfig
+> +++ b/drivers/crypto/Kconfig
+> @@ -418,4 +418,53 @@ config CRYPTO_DEV_MXS_DCP
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called mxs-dcp.
+>  
+> +config CRYPTO_DEV_SUNXI_SS
+> +        tristate "Support for Allwinner Security System cryptographic accelerator"
+> +        depends on ARCH_SUNXI
+> +        help
+> +          Some Allwinner processors have a crypto accelerator named
+> +          Security System. Select this if you want to use it.
+> +
+> +          To compile this driver as a module, choose M here: the module
+> +          will be called sunxi-ss.
+> +
+> +if CRYPTO_DEV_SUNXI_SS
+> +config CRYPTO_DEV_SUNXI_SS_PRNG
+> +	bool "Security System PRNG"
+> +	select CRYPTO_RNG2
+> +	help
+> +	  If you enable this option, the SS will provide a pseudo random
+> +	  number generator.
+> +config CRYPTO_DEV_SUNXI_SS_MD5
+> +	bool "Security System MD5"
+> +	select CRYPTO_MD5
+> +	help
+> +	  If you enable this option, the SS will provide MD5 hardware
+> +	  acceleration.
 
-I think the generic string (in addition to the specific one) is a good thing,
-and I think it should be done for the PMU and any other specified/architected
-hardware as well. If we don't allow for them, a shortcut would be to
-masquerade hardware as something that's already supported. It seems like this
-needs to be discouraged just as much as omitting the specific string.
+My feeling is that this should either be one driver that provides
+all five algorithms unconditionally, or five drivers that are each
+separate loadable modules and based on top of a common module
+that only exports functions but has no active logic itself
 
-The current behavior is that the driver will not run without a specific string
-present. What if this were preserved (or replaced with a warning) even with
-the addition of support for a generic string?
+> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
+> +#include <crypto/md5.h>
+> +#define SUNXI_SS_HASH_COMMON
+> +#endif
+> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_SHA1
+> +#include <crypto/sha.h>
+> +#define SUNXI_SS_HASH_COMMON
+> +#endif
+> +#ifdef SUNXI_SS_HASH_COMMON
+> +#include <crypto/hash.h>
+> +#include <crypto/internal/hash.h>
+> +#endif
+> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_AES
+> +#include <crypto/aes.h>
+> +#endif
+> +
+> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_3DES
+> +#define SUNXI_SS_DES
+> +#endif
+> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_DES
+> +#define SUNXI_SS_DES
+> +#endif
+> +#ifdef SUNXI_SS_DES
+> +#include <crypto/des.h>
+> +#endif
+> +
+> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_PRNG
+> +#include <crypto/internal/rng.h>
 
-Thanks,
-Christopher
+That would cleanup this #ifdef chain either way.
 
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by the Linux Foundation.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/* General notes:
+> + * I cannot use a key/IV cache because each time one of these change ALL stuff
+> + * need to be re-writed.
+> + * And for example, with dm-crypt IV changes on each request.
+> + *
+> + * After each request the device must be disabled.
+> + *
+> + * For performance reason, we use writel_relaxed/read_relaxed for all
+> + * operations on RX and TX FIFO.
+> + * For all other registers, we use writel.
+> + * See http://permalink.gmane.org/gmane.linux.ports.arm.kernel/117644
+> + * and http://permalink.gmane.org/gmane.linux.ports.arm.kernel/117640
+> + * */
+> +
+> +static struct sunxi_ss_ctx {
+> +	void *base;
+
+__iomem ?
+
+> +	int irq;
+> +	struct clk *busclk;
+> +	struct clk *ssclk;
+> +	struct device *dev;
+> +	struct resource *res;
+> +	void *buf_in; /* pointer to data to be uploaded to the device */
+> +	size_t buf_in_size; /* size of buf_in */
+> +	void *buf_out;
+> +	size_t buf_out_size;
+> +} _ss_ctx, *ss_ctx = &_ss_ctx;
+> +
+> +static DEFINE_MUTEX(lock);
+> +static DEFINE_MUTEX(bufout_lock);
+> +static DEFINE_MUTEX(bufin_lock);
+
+I guess the mutexes should be part of sunxi_ss_ctx.
+
+Are you sure you need the global _ss_ctx structure?
+Normally you should get a pointer from whoever calls you.
+
+> +struct sunxi_req_ctx {
+> +	u8 key[AES_MAX_KEY_SIZE * 8];
+> +	u32 keylen;
+> +	u32 mode;
+> +	u64 byte_count; /* number of bytes "uploaded" to the device */
+> +	u32 waitbuf; /* a partial word waiting to be completed and
+> +			uploaded to the device */
+> +	/* number of bytes to be uploaded in the waitbuf word */
+> +	unsigned int nbwait;
+> +};
+> +
+> +#ifdef SUNXI_SS_HASH_COMMON
+> +/*============================================================================*/
+> +/*============================================================================*/
+
+Please remove all the ======== lines.
+
+> +	/* If we have more than one SG, we cannot use kmap_atomic since
+> +	 * we hold the mapping too long*/
+> +	src_addr = kmap(sg_page(in_sg)) + in_sg->offset;
+> +	if (src_addr == NULL) {
+> +		dev_err(ss_ctx->dev, "KMAP error for src SG\n");
+> +		return -1;
+> +	}
+> +	dst_addr = kmap(sg_page(out_sg)) + out_sg->offset;
+> +	if (dst_addr == NULL) {
+> +		kunmap(src_addr);
+> +		dev_err(ss_ctx->dev, "KMAP error for dst SG\n");
+> +		return -1;
+> +	}
+> +	src32 = (u32 *)src_addr;
+> +	dst32 = (u32 *)dst_addr;
+> +	ileft = nbytes / 4;
+> +	oleft = nbytes / 4;
+> +	sgileft = in_sg->length / 4;
+> +	sgoleft = out_sg->length / 4;
+> +	do {
+> +		tmp = readl_relaxed(ss_ctx->base + SUNXI_SS_FCSR);
+> +		rx_cnt = SS_RXFIFO_SPACES(tmp);
+> +		tx_cnt = SS_TXFIFO_SPACES(tmp);
+> +		todo = min3(rx_cnt, ileft, sgileft);
+> +		if (todo > 0) {
+> +			ileft -= todo;
+> +			sgileft -= todo;
+> +		}
+> +		while (todo > 0) {
+> +			writel_relaxed(*src32++, ss_ctx->base + SS_RXFIFO);
+> +			todo--;
+> +		}
+
+I wonder if this is meant to be used in combination with a dma engine
+rather than accessed with writel/readl.
+
+How does the original driver do it?
+
+	Arnd
