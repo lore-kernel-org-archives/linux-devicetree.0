@@ -1,99 +1,41 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [Patch v6 4/7] power: reset: add bindings for keystone reset
- driver
-Date: Thu, 22 May 2014 21:19:35 +0300
-Message-ID: <537E3FB7.5050003@ti.com>
-References: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com> <1400777062-19276-5-git-send-email-ivan.khoronzhuk@ti.com> <537E3BDD.40106@cogentembedded.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 22 May 2014 20:26:19 +0200
+Message-ID: <5233065.1vXjHiDqN2@wuerfel>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org> <5057707.jNCXlqf9dH@wuerfel> <alpine.LFD.2.11.1405221406100.17310@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <537E3BDD.40106@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, dbaryshkov@gmail.com, dwmw2@infradead.org, lee.jones@linaro.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.LFD.2.11.1405221406100.17310-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thursday 22 May 2014 14:09:52 Nicolas Pitre wrote:
+> On Thu, 22 May 2014, Arnd Bergmann wrote:
+> 
+> > On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
+> > > By making the DMA memory Strongly Ordered, we avoid the
+> > > L220 write buffer. In addition to the above commit, we also had
+> > > 2503a5ecd86c (ARM: 6201/1: RealView: Do not use outer_sync() on
+> > > ARM11MPCore boards with L220).
+> > 
+> > Ah, so this also stands in the way of multiplatform realview 
+> 
+> Isn't the real value of a multiplatform realview in the ability to use 
+> it with Qemu?  Did Qemu go to the extreme of emulating all those cache 
+> issues?
 
-On 05/22/2014 09:03 PM, Sergei Shtylyov wrote:
-> Hello.
->
-> On 05/22/2014 08:44 PM, Ivan Khoronzhuk wrote:
->
->> This node is intended to allow SoC reset in case of software reset
->> or appropriate watchdogs.
->
->> The Keystone SoCs can contain up to 4 watchdog timers to reset
->> SoC. Each watchdog timer event input is connected to the Reset Mux
->> block. The Reset Mux block can be configured to cause reset or not.
->
->> Additionally soft or hard reset can be configured.
->
->> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> ---
->>   .../bindings/power/reset/keystone-reset.txt        | 67 
->> ++++++++++++++++++++++
->>   1 file changed, 67 insertions(+)
->>   create mode 100644 
->> Documentation/devicetree/bindings/power/reset/keystone-reset.txt
->
->> diff --git 
->> a/Documentation/devicetree/bindings/power/reset/keystone-reset.txt 
->> b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
->> new file mode 100644
->> index 0000000..a8a0c31
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
->> @@ -0,0 +1,67 @@
->> +* Device tree bindings for Texas Instruments keystone reset
->> +
->> +This node is intended to allow SoC reset in case of software reset
->> +of selected watchdogs.
->> +
->> +The Keystone SoCs can contain up to 4 watchdog timers to reset
->> +SoC. Each watchdog timer event input is connected to the Reset Mux
->> +block. The Reset Mux block can be configured to cause reset or not.
->> +
->> +Additionally soft or hard reset can be configured.
->> +
->> +Required properties:
->> +
->> +- compatible:        ti,keystone-reset
->> +
->> +- ti,syscon-pll:    phandle/offset pair. The phandle to syscon used to
->> +            access pll controller registers and the offset to use
->> +            reset control registers.
->> +
->> +- ti,syscon-dev:    phandle/offset pair. The phandle to syscon used to
->> +            access device state control registers and the offset
->> +            in order to use mux block registers for all watchdogs.
->> +
->> +Optional properties:
->> +
->> +- ti,soft-reset:    Boolean option indicating soft reset.
->> +            By default hard reset is used.
->> +
->> +- ti,wdt_list:        WDT list that can cause SoC reset. It's not 
->> related
->
->    Hm, why underscore in this property while hyphens are used in the 
-> others? Hyphen is generally preferrable in the device tree names...
+The qemu developers have in the past always argued strongly that they
+want to run the same kernel that runs on real hardware. Having a kernel
+that runs only on the emulated version but not on actual hardware is
+clearly against that goal, and  we should use CONFIG_ARCH_VIRT for
+that purpose.
 
-Yes. You are right. I'll correct
-Thanks!
-
->
->> +            to WDT driver, it's just needed to enable a SoC related
->> +            reset that's triggered by one of WDTs. The list is
->> +            in format: <0>, <2>; It can be in random order and
->> +            begins from 0 to 3, as keystone can contain up to 4 SoC
->> +            reset watchdogs and can be in random order.
->
-> WBR, Sergei
->
-
--- 
-Regards,
-Ivan Khoronzhuk
-
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
