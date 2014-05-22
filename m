@@ -1,97 +1,73 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/8] mmc: sdhci-st: STMicroelectronics SDHCI binding
- documentation.
-Date: Thu, 22 May 2014 17:06:43 +0100
-Message-ID: <20140522160643.GI19747@lee--X1>
-References: <1400771902-26553-1-git-send-email-peter.griffin@linaro.org>
- <1400771902-26553-3-git-send-email-peter.griffin@linaro.org>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 22 May 2014 17:09:08 +0100
+Message-ID: <20140522160908.GD27931@arm.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
+ <5678119.IM3FN0FlT6@wuerfel>
+ <20140522144503.GA27931@arm.com>
+ <5057707.jNCXlqf9dH@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1400771902-26553-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <5057707.jNCXlqf9dH@wuerfel>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> This patch adds the device tree binding documentation for ST
-> SDHCI driver. It contains the differences between the core properties
-> in mmc.txt and the properties used by the sdhci-st driver.
->=20
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mmc/sdhci-st.txt | 26 ++++++++++++=
-++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-st.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-st.txt b/Doc=
-umentation/devicetree/bindings/mmc/sdhci-st.txt
-> new file mode 100644
-> index 0000000..ae3dae0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-st.txt
-> @@ -0,0 +1,26 @@
-> +* STMicroelectronics sdhci-st MMC/SD controller
-> +
-> +This file documents differences between the core properties in mmc.t=
-xt
+On Thu, May 22, 2014 at 04:49:16PM +0100, Arnd Bergmann wrote:
+> On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
+> > On Thu, May 22, 2014 at 09:31:37AM +0100, Arnd Bergmann wrote:
+> > > commit 42c4dafe803dcad82980fd8b0831a89032156f93
+> > > Author: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> > > Date:   Thu Jul 1 13:22:48 2010 +0100
+> > > 
+> > >     ARM: 6202/1: Do not ARM_DMA_MEM_BUFFERABLE on RealView boards with L210/L220
+> > >     
+> > >     RealView boards with certain revisions of the L210/L220 cache controller
+> > >     may have issues (hardware deadlock) with the mandatory barriers (DSB
+> > >     followed by an L2 cache sync) when ARM_DMA_MEM_BUFFERABLE is enabled.
+> > >     The patch disables ARM_DMA_MEM_BUFFERABLE for these boards.
+> > >     
+> > >     Tested-by: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+> > >     Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> > >     Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> > 
+> > Looking through the L220 errata document, I think this relates to 425331
+> > which says that a cache sync can deadlock the system if the write buffer
+> > is not empty.
+> 
+> Hmm, but isn't the write buffer empty here because we have just issued
+> a dsb()?
 
-Where is mmc.txt?
+The problem with these outer caches is that DSB doesn't propagate to
+them (and I hope to never see such caches again ;)). So an mb() on such
+systems needs to be dsb()+outer_sync(). The dsb() pushes data from the
+CPU write buffer into the L2x0 write buffer and outer_sync() does the
+flushing out of the outer cache write buffer (which strangely enough
+buffers even if the memory access is Normal NonCacheable).
 
-> +and the properties used by the sdhci-st driver
-> +
-> +Required properties:
-> +- compatible: "st,sdhci"
-> +- clocks: card clock, must be "mmc".
+> > If we only use the DMA coherent buffers for CLCD on these boards, we
+> > don't really need the outer_sync() either so we could go back to
+> > bufferable DMA memory (strangely enough, this L2 cache workaround looks
+> > similar to Marvell's PCI+PL310 problem where we want to avoid
+> > outer_sync()).
+> 
+> Ah, so you think we can add another hook to NULL out outer_cache.sync
+> per platform?
 
-This isn't correct.  I think you mean it must be a phandle to the
-'mmc' clock.  It's also worth referencing the clock DT documentation
-here.
+Yes, with the note that mb() no longer guarantees the write being
+flushed to RAM but just to the L2 write buffer. If CLCD framebuffer is
+the only DMA device, we don't need to worry about such barriers since we
+map it as writecombine anyway (hence bufferable).
 
-> +Optional properties:
-> +- reset: to provide a reset to the HC.
+Unless Linus or Pawel think there are other DMA capable devices in use
+here, I'm happy to enable ARM_DMA_MEM_BUFFERABLE for these boards.
 
-What is it; integer, string, phandle, something else?
-
-> +- non-removable: non-removable slot (bindings/mmc/mmc.txt).
-
-This however, _is_ a string, so you need to put it in "'s like you did
-with "mmc" above and/or reference the file which documents it.
-
-> +
-> +Example:
-> +
-> +mmc0: sdhci@fe81e000 {
-> +	compatible	=3D "st,sdhci";
-> +	status		=3D "disabled";
-> +	reg		=3D <0xfe81e000 0x1000>;
-> +	interrupts	=3D <GIC_SPI 127 IRQ_TYPE_NONE>;
-> +	interrupt-names	=3D "mmcirq";
-> +	pinctrl-names	=3D "default";
-> +	pinctrl-0	=3D <&pinctrl_mmc0>;
-> +	clock-names	=3D "mmc";
-
-I don't think you need clock-names if you only have one clock.
-
-> +	clocks		=3D <&clk_s_a1_ls 1>;
-> +};
-
-Once fixed you can add my Ack for the next submission:
-
-  Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-- 
+Catalin
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
