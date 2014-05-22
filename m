@@ -1,157 +1,71 @@
-From: Barry Song <baohua-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 65/97] ARM: l2c: prima2: convert to generic l2c initialisation
-Date: Thu, 22 May 2014 20:14:37 +0800
-Message-ID: <CAGsJ_4xSerVN6A_NymMaRqjy9ZA3j542DVE=gvmz=DNF470H2A@mail.gmail.com>
-References: <20140428192419.GV26756@n2100.arm.linux.org.uk> <E1WerHE-0001Y8-2Z@rmk-PC.arm.linux.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 3/4] clk: samsung: Add driver to control CLKOUT line on
+ Exynos SoCs
+Date: Thu, 22 May 2014 14:25:50 +0200
+Message-ID: <537DECCE.8000301@samsung.com>
+References: <1400604211-9447-1-git-send-email-t.figa@samsung.com>
+ <1400604211-9447-4-git-send-email-t.figa@samsung.com>
+ <537D8788.8030904@linaro.org> <537DD2C0.4060802@samsung.com>
+ <CAHbNUh2gkpV-rt6S+-bUmFvYAuK_HNoXfyOStwYe29sZMJonUw@mail.gmail.com>
+ <537DE714.1090407@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <E1WerHE-0001Y8-2Z-eh5Bv4kxaXIANfyc6IWni62ZND6+EDdj@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: linux-arm-kernel-0qwDCntBQCZpWr+L1FloEB2eb7JE58TQ@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <537DE714.1090407@samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tomasz Figa <t.figa@samsung.com>, Tushar Behera <tushar.behera@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Mark Brown <broonie@kernel.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rahul Sharma <rahul.sharma@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-2014-04-29 3:31 GMT+08:00 Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>:
-> Along with this change, we can delete l2x0.c from prima2.
+On 22/05/14 14:01, Tomasz Figa wrote:
+>>>> >>> [ ... ]
+>>>> >>>
+>>>>> >>>> +    clkout->clk_table[0] = clk_register_composite(NULL, "clkout",
+>>>>> >>>> +                            parent_names, parent_count, &clkout->mux.hw,
+>>>>> >>>> +                            &clk_mux_ops, NULL, NULL, &clkout->gate.hw,
+>>>>> >>>> +                            &clk_gate_ops, CLK_SET_RATE_PARENT
+>>>>> >>>> +                            | CLK_SET_RATE_NO_REPARENT);
+>>>> >>>
+>>>> >>> Would you please remove CLK_SET_RATE_NO_REPARENT flag from here? Let me
+>>>> >>> know if you have reservations against this.
+>>> >>
+>>> >> The problem with clock reparenting is that there are certain parent
+>>> >> clocks of CLKOUT, rate of which changes at runtime, e.g. clocks derived
+>>> >> from APLL or bus clocks, which can be reconfigured by cpufreq or devfreq.
+>>> >>
+>> > 
+>> > +CC: Sylwester Nawrocki
+>> > 
+>> > Okay. But in cases where there is only 1 valid parent clock provided
+>> > through DT (at the moment for Exynos5250/Exynos5420), would it be safe
+>> > to set that clock as the parent of CLKOUT?
 >
-> Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> This is not something to rely on. I have simply omitted remaining CLKOUT
+> parents on Exynos 5 SoCs, as I don't have any board with them on which I
+> could test this. Eventually they will be added.
+> 
+>> > Otherwise, this clock is
+>> > not usable ATM.
+>
+> On many boards it is already configured properly by the bootloader.
+> Although I don't see any reason why you couldn't reparent it in
+> (board-specific) sound card driver right now.
 
-if the information you want is l2c_aux_val, l2c_aux_mask for prima2 platform.
+This would require passing the parent's clock specifier in 'clocks'
+property of the sound card device node, which I assume is not something
+we're generally expected to do in mainline. Although some drivers
+happen to be doing it already I think that's a bad example. It sounds
+like an abuse of the current clock bindings.
 
-it is (0, 0xfdffffff), you can cleary know that from the v1 i sent on
-April 15, which was much earlier than your this patch:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/247423.html
-
-and you gave many comments on that, and you read the (0, 0xFDFFFFFUL)
-and disliked the upper letter.
-
-but you just complained that i didn't provide any information to you
-and you felt "frustrated".
-
-i think that man who should fell frustrated is me not you. i feel very
-frustrated for the moment.
-
-> ---
->  arch/arm/boot/dts/marco.dtsi  |  2 +-
->  arch/arm/boot/dts/prima2.dtsi |  2 +-
->  arch/arm/mach-prima2/Makefile |  1 -
->  arch/arm/mach-prima2/common.c |  6 ++++++
->  arch/arm/mach-prima2/l2x0.c   | 30 ------------------------------
->  5 files changed, 8 insertions(+), 33 deletions(-)
->  delete mode 100644 arch/arm/mach-prima2/l2x0.c
->
-> diff --git a/arch/arm/boot/dts/marco.dtsi b/arch/arm/boot/dts/marco.dtsi
-> index 0c9647d28765..fb354225740a 100644
-> --- a/arch/arm/boot/dts/marco.dtsi
-> +++ b/arch/arm/boot/dts/marco.dtsi
-> @@ -36,7 +36,7 @@
->                 ranges = <0x40000000 0x40000000 0xa0000000>;
->
->                 l2-cache-controller@c0030000 {
-> -                       compatible = "sirf,marco-pl310-cache", "arm,pl310-cache";
-> +                       compatible = "arm,pl310-cache";
->                         reg = <0xc0030000 0x1000>;
->                         interrupts = <0 59 0>;
->                         arm,tag-latency = <1 1 1>;
-> diff --git a/arch/arm/boot/dts/prima2.dtsi b/arch/arm/boot/dts/prima2.dtsi
-> index 1e82571d6823..0d6588d549bf 100644
-> --- a/arch/arm/boot/dts/prima2.dtsi
-> +++ b/arch/arm/boot/dts/prima2.dtsi
-> @@ -48,7 +48,7 @@
->                 ranges = <0x40000000 0x40000000 0x80000000>;
->
->                 l2-cache-controller@80040000 {
-> -                       compatible = "arm,pl310-cache", "sirf,prima2-pl310-cache";
-> +                       compatible = "arm,pl310-cache";
->                         reg = <0x80040000 0x1000>;
->                         interrupts = <59>;
->                         arm,tag-latency = <1 1 1>;
-> diff --git a/arch/arm/mach-prima2/Makefile b/arch/arm/mach-prima2/Makefile
-> index 7a6b4a323125..8846e7d87ea5 100644
-> --- a/arch/arm/mach-prima2/Makefile
-> +++ b/arch/arm/mach-prima2/Makefile
-> @@ -2,7 +2,6 @@ obj-y += rstc.o
->  obj-y += common.o
->  obj-y += rtciobrg.o
->  obj-$(CONFIG_DEBUG_LL) += lluart.o
-> -obj-$(CONFIG_CACHE_L2X0) += l2x0.o
->  obj-$(CONFIG_SUSPEND) += pm.o sleep.o
->  obj-$(CONFIG_SMP) += platsmp.o headsmp.o
->  obj-$(CONFIG_HOTPLUG_CPU)  += hotplug.o
-> diff --git a/arch/arm/mach-prima2/common.c b/arch/arm/mach-prima2/common.c
-> index 47c7819edb9b..a860ea27e8ae 100644
-> --- a/arch/arm/mach-prima2/common.c
-> +++ b/arch/arm/mach-prima2/common.c
-> @@ -34,6 +34,8 @@ static const char *atlas6_dt_match[] __initconst = {
->
->  DT_MACHINE_START(ATLAS6_DT, "Generic ATLAS6 (Flattened Device Tree)")
->         /* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
-> +       .l2c_aux_val    = 0,
-> +       .l2c_aux_mask   = ~0,
->         .map_io         = sirfsoc_map_io,
->         .init_late      = sirfsoc_init_late,
->         .dt_compat      = atlas6_dt_match,
-> @@ -48,6 +50,8 @@ static const char *prima2_dt_match[] __initconst = {
->
->  DT_MACHINE_START(PRIMA2_DT, "Generic PRIMA2 (Flattened Device Tree)")
->         /* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
-> +       .l2c_aux_val    = 0,
-> +       .l2c_aux_mask   = ~0,
->         .map_io         = sirfsoc_map_io,
->         .dma_zone_size  = SZ_256M,
->         .init_late      = sirfsoc_init_late,
-> @@ -63,6 +67,8 @@ static const char *marco_dt_match[] __initconst = {
->
->  DT_MACHINE_START(MARCO_DT, "Generic MARCO (Flattened Device Tree)")
->         /* Maintainer: Barry Song <baohua.song-kQvG35nSl+M@public.gmane.org> */
-> +       .l2c_aux_val    = 0,
-> +       .l2c_aux_mask   = ~0,
->         .smp            = smp_ops(sirfsoc_smp_ops),
->         .map_io         = sirfsoc_map_io,
->         .init_late      = sirfsoc_init_late,
-> diff --git a/arch/arm/mach-prima2/l2x0.c b/arch/arm/mach-prima2/l2x0.c
-> deleted file mode 100644
-> index dbd837bdb7f7..000000000000
-> --- a/arch/arm/mach-prima2/l2x0.c
-> +++ /dev/null
-> @@ -1,30 +0,0 @@
-> -/*
-> - * l2 cache initialization for CSR SiRFprimaII
-> - *
-> - * Copyright (c) 2011 Cambridge Silicon Radio Limited, a CSR plc group company.
-> - *
-> - * Licensed under GPLv2 or later.
-> - */
-> -
-> -#include <linux/init.h>
-> -#include <linux/kernel.h>
-> -#include <linux/of.h>
-> -#include <asm/hardware/cache-l2x0.h>
-> -
-> -static const struct of_device_id sirf_l2x0_ids[] __initconst = {
-> -       { .compatible = "sirf,prima2-pl310-cache", .data = &prima2_l2x0_aux, },
-> -       { .compatible = "sirf,marco-pl310-cache", .data = &marco_l2x0_aux, },
-> -       {},
-> -};
-> -
-> -static int __init sirfsoc_l2x0_init(void)
-> -{
-> -       struct device_node *np;
-> -
-> -       np = of_find_matching_node(NULL, sirf_l2x0_ids);
-> -       if (np)
-> -               return l2x0_of_init(0, ~0);
-> -
-> -       return 0;
-> -}
-> -early_initcall(sirfsoc_l2x0_init);
-> --
-> 1.8.3.1
->
-
--barry
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Sylwester
