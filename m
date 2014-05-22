@@ -1,39 +1,94 @@
 From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: [PATCH v1 5/5] ARM: dts: qcom: Add APQ8084 serial port DT node
-Date: Thu, 22 May 2014 19:24:45 +0300
-Message-ID: <1400775885-10296-6-git-send-email-gdjakov@mm-sol.com>
+Subject: [PATCH v1 2/5] clk: qcom: Allow an override function to be passed as
+ data
+Date: Thu, 22 May 2014 19:24:42 +0300
+Message-ID: <1400775885-10296-3-git-send-email-gdjakov@mm-sol.com>
 References: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org, rdunlap@infradead.org
-Cc: linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Georgi Djakov <gdjakov@mm-sol.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Georgi Djakov <gdjakov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary DT node to probe the serial driver on
-APQ8084 platforms.
+The APQ8084 and MSM8974 SoCs share a lot of clock data. Instead of
+duplicating all the data, we can add the support for APQ8084 into
+the MSM8974 code and just describe the differences by using an
+override function.
+
+This patch applies to the clk-next tree and the following patchset
+on top of it: https://lkml.org/lkml/2014/5/16/666
 
 Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
 ---
- arch/arm/boot/dts/qcom-apq8084.dtsi |    7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/clk/qcom/gcc-msm8974.c |   27 +++++++++++++++------------
+ 1 file changed, 15 insertions(+), 12 deletions(-)
 
-diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts/qcom-apq8084.dtsi
-index 2dcd11e..c346549 100644
---- a/arch/arm/boot/dts/qcom-apq8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
-@@ -185,5 +185,12 @@
- 			reg = <0xfc400000 0x4000>;
- 		};
- 
-+		serial@f995e000 {
-+			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
-+			reg = <0xf995e000 0x1000>;
-+			interrupts = <0 114 0x0>;
-+			clocks = <&gcc GCC_BLSP2_UART2_APPS_CLK>, <&gcc GCC_BLSP2_AHB_CLK>;
-+			clock-names = "core", "iface";
-+		};
- 	};
+diff --git a/drivers/clk/qcom/gcc-msm8974.c b/drivers/clk/qcom/gcc-msm8974.c
+index 33eb051..58cb2f5 100644
+--- a/drivers/clk/qcom/gcc-msm8974.c
++++ b/drivers/clk/qcom/gcc-msm8974.c
+@@ -2674,14 +2674,6 @@ static const struct qcom_cc_desc gcc_msm8974_desc = {
+ 	.num_resets = ARRAY_SIZE(gcc_msm8974_resets),
  };
+ 
+-static const struct of_device_id gcc_msm8974_match_table[] = {
+-	{ .compatible = "qcom,gcc-msm8974" },
+-	{ .compatible = "qcom,gcc-msm8974pro" , .data = (void *)1UL },
+-	{ .compatible = "qcom,gcc-msm8974pro-ac", .data = (void *)1UL },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(of, gcc_msm8974_match_table);
+-
+ static void msm8974_pro_clock_override(void)
+ {
+ 	sdcc1_apps_clk_src_init.parent_names = gcc_xo_gpll0_gpll4;
+@@ -2697,20 +2689,31 @@ static void msm8974_pro_clock_override(void)
+ 		&gcc_sdcc1_cdccal_ff_clk.clkr;
+ }
+ 
++static const struct of_device_id gcc_msm8974_match_table[] = {
++	{ .compatible = "qcom,gcc-msm8974" },
++	{ .compatible = "qcom,gcc-msm8974pro",
++		.data =	&msm8974_pro_clock_override },
++	{ .compatible = "qcom,gcc-msm8974pro-ac",
++		.data = &msm8974_pro_clock_override },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, gcc_msm8974_match_table);
++
+ static int gcc_msm8974_probe(struct platform_device *pdev)
+ {
+ 	struct clk *clk;
+ 	struct device *dev = &pdev->dev;
+-	bool pro;
+ 	const struct of_device_id *id;
++	void (*overrides)(void);
+ 
+ 	id = of_match_device(gcc_msm8974_match_table, dev);
+ 	if (!id)
+ 		return -ENODEV;
+-	pro = !!(id->data);
+ 
+-	if (pro)
+-		msm8974_pro_clock_override();
++	if (id->data) {
++		overrides = id->data;
++		overrides();
++	}
+ 
+ 	/* Temporary until RPM clocks supported */
+ 	clk = clk_register_fixed_rate(dev, "xo", NULL, CLK_IS_ROOT, 19200000);
 -- 
 1.7.9.5
