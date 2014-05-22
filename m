@@ -1,36 +1,89 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Thu, 22 May 2014 20:52:38 +0200
-Message-ID: <CACRpkdZX=UFhMfUn68hA+s2FLGRYy_dmjRng_fHtAQEhah0oRA@mail.gmail.com>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
-	<5678119.IM3FN0FlT6@wuerfel>
-	<20140522144503.GA27931@arm.com>
-	<5057707.jNCXlqf9dH@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: samsung: Add machine driver for odroidx2
+Date: Thu, 22 May 2014 19:53:34 +0100
+Message-ID: <20140522185334.GT12304@sirena.org.uk>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+ <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5057707.jNCXlqf9dH@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zRD/YghjZ3m+oDir"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 5:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
 
->> Anyway, I don't think we have any streaming DMA used on these RealView
->> boards.
->
-> Yes, I think that is correct. MMCI, SSP and serial could all use
-> DMA but are not configured to do it.
+--zRD/YghjZ3m+oDir
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-PB1176 has no working DMA (borked DMA hardware), the PB11MPCore
-actually has working DMA but only on UART TX and maybe AACI
-(haven't tested) no clue about the Cortex boards PBA8 and PBX though.
+On Thu, May 22, 2014 at 01:55:08PM +0200, Sylwester Nawrocki wrote:
+> From: Chen Zhen <zhen1.chen@samsung.com>
+>=20
+> This machine driver primary defines the audio path, the supported
+> data formats and sample frequency.
 
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I guess it can't yet, it would have been good to explain that in the
+changelog for the bindings (and include the binding in this patch...).
+
+> +	ret =3D snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
+> +					| SND_SOC_DAIFMT_NB_NF
+> +					| SND_SOC_DAIFMT_CBM_CFM);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	ret =3D snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
+> +					| SND_SOC_DAIFMT_NB_NF
+> +					| SND_SOC_DAIFMT_CBM_CFM);
+> +	if (ret < 0)
+> +		return ret;
+
+These are constant, set these in the dai_link.
+
+> +
+> +	ret =3D snd_soc_dai_set_sysclk(codec_dai, 3, MAX98090_MCLK_FREQ,
+> +				     SND_SOC_CLOCK_IN);
+> +	if (ret < 0) {
+> +		dev_err(codec_dai->dev,
+> +			"Unable to switch to FLL1: %d\n", ret);
+> +		return ret;
+> +	}
+
+So's this - also what is 3?  Set it on init.
+
+> +	ret =3D snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_OPCLK,
+> +					0, MOD_OPCLK_PCLK);
+
+Similarly for the rest of the function.
+
+> +	return snd_soc_register_card(card);
+
+devm_snd_soc_register_card().
+
+--zRD/YghjZ3m+oDir
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfkerAAoJELSic+t+oim9NG4P/jkFUe9ZZ9vC7mhA7YCAV04a
+KnjficN87yVfMTXX2OjO1OH9SXvQnHNnYpKTkjOgLWAuODF6za+gU9a4C3EK3sDo
+wMG7F6jRJAcBnD9aKFLWliISMWEmPgLhvMpAKiucLQ+NEqEUeU7XYhAcFyR154gB
+yZ2oB4k8Ng/t85dugP8xn+hcHpPqwkTN2hmfNTY5sJHtqfwGLxR1aBtOCuQuhG6W
+WMbq1ikfNQtqc1BrK6Mn79xsbWwEkjqGSTV3GaGV4TVWEKkegeZCHEjA+QwX+Tx4
+BNFTipK2tth01IzdxFbdkB1SoEcExdQXLV+s362l3yBzcewcsyEp7j3gpkAQu8sT
+BqYy7vGOzhMvz90YAt8h2U55XjZKAqUoLknXzEnRjB/MYmkphlcPHBaIleY0WxgX
+hlWIefG8Qdpg+mntINZhXhk1r6UGI8Js3pt2510xZZAYofoXYNCJrSvVFM8BbfdO
++0GbkefdDu6opflIF7gx0P7jOfRW3spTHLvtGmohjM8oXfrFkuoX75hIG3KOknzT
+RLW4wPe3WKcom1KtqOeYZlNcDhC7UQ7weLaM3MeSwn3qXSlYrVnaoLD95n4K5rwQ
+1HVUBUCWlHkI+HudcK79mlH0/4nbfSIGHpua53JsvgX0LBm67dfvBCtEcCO6J90I
+TR+Lc2Bdbm+duhKy+3Ek
+=uYEf
+-----END PGP SIGNATURE-----
+
+--zRD/YghjZ3m+oDir--
