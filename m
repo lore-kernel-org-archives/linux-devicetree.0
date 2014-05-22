@@ -1,56 +1,60 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH 3/4] clk: samsung: Add driver to control CLKOUT line on
- Exynos SoCs
-Date: Thu, 22 May 2014 12:30:42 +0200
-Message-ID: <537DD1D2.9010107@samsung.com>
-References: <1400604211-9447-1-git-send-email-t.figa@samsung.com>
- <1400604211-9447-4-git-send-email-t.figa@samsung.com>
- <537D7CF4.6050305@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
+Date: Thu, 22 May 2014 11:30:39 +0100
+Message-ID: <20140522103039.GD12304@sirena.org.uk>
+References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
+ <1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <537D7CF4.6050305@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="3QshgT4nm5mNXvH/"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>
+Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tiwai@suse.de, perex@perex.cz, dianders@chromium.org, jerry.wong@maximintegrated.com
 List-Id: devicetree@vger.kernel.org
 
-On 22.05.2014 06:28, Tushar Behera wrote:
-> On 05/20/2014 10:13 PM, Tomasz Figa wrote:
->> This patch introduces a driver that handles configuration of CLKOUT pin
->> of Exynos SoCs that can be used to output certain clocks from inside of
->> the SoC to a dedicated output pin.
->>
->> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
->> ---
->>  .../devicetree/bindings/arm/samsung/pmu.txt        |  30 ++++
->>  drivers/clk/samsung/Makefile                       |   1 +
->>  drivers/clk/samsung/clk-exynos-clkout.c            | 153 +++++++++++++++++++++
->>  3 files changed, 184 insertions(+)
->>  create mode 100644 drivers/clk/samsung/clk-exynos-clkout.c
->>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> index b562634..5ed94a9 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
->> @@ -11,8 +11,38 @@ Properties:
->>  
->>   - reg : offset and length of the register set.
->>  
->> + - #clock-cells : must be <1>, since PMU requires once cell as clock specifier.
-> 
-> s/once/one
-> 
->> +		The single specifier cell is used as index to list of clocks
->> +		provided by PMU, which is currently:
->> +			0 : SoC clock output (CLKOUT pin)
-> 
-> Will it make more sense if we add a macro for this clock number that
-> would be referred in the device tree files?
 
-Right now, with just one clock, it doesn't make sense, but if further
-clocks show up with newer SoCs, then macros will have to be added.
+--3QshgT4nm5mNXvH/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Best regards,
-Tomasz
+On Thu, May 22, 2014 at 02:47:07PM +0530, Tushar Behera wrote:
+
+> +	max98090->mclk =3D devm_clk_get(codec->dev, "mclk");
+> +	if (!IS_ERR(max98090->mclk))
+> +		clk_prepare_enable(max98090->mclk);
+> +
+
+Ths doesn't handle deferred probe, we need to at least return an error
+if we get -EPROBE_DEFER. =20
+
+It'd also be better to move the enabling to set_bias_level() if possible
+(I don't know if the clock is needed for register access) though less
+essential.
+
+--3QshgT4nm5mNXvH/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfdHMAAoJELSic+t+oim9gUIQAJNKPSihIGnAwBUsNQLw2+42
+yqhHnH53X0OeeR6/CPA0OyDkqmQXEL0p5z2z8nURIzmqH4dxh/gRv6nJJQU398s2
+Sb26E3dSSuzXRd6KVf+BXiWn65LSbnM61ZbucDvkYGRPo8PlpD7DYqThwTP8jlV/
+hgc7c6WbQiQ7gwU6FrCAF/P4AECPKav57uYQage7aL8OEjXAocRiOrmw0rgKnHby
+e9GqvgIvUdTMszXPGsCkb/22+/VwC2YPk0uvoIfYn0L5tFxnBiGLLVZABD4J6F/d
+98TgkxpQ87HqCZdYFdzxOfgqmH0u1Nwh/N0WyeQa2iWPnDsjjwAu96JDVmw0Gw2I
+Ndk3zeCaI8RFp90lCNqACSmpAcCbvja5taZWs5hojnycj7QHmm2sPvdTAQhnz9nA
+PQyYtU/fyxT4Zm2fQGSU2HTnE3yH3KfhqiqBb5bBh8eX+WQQG8+BJNphd/8Ne8sV
+nc9cgR285sbfXOqPCUqWhqVhIfBIRN5wbc8Kh7/6+O188nhFeh/4pYWWx+buUfVk
+1fv//JFHnbKpj9BWZL+AladMgZlX/Yx/N1uF5Imap/W3WdqO6XZbuIChfHraeMCK
+wK+RRiBxCrDn8+Om6HwUxC+uY1cOJ/Du5Um8qYZSC+cs9gLS99KrXAELK6zP+QH5
+fxXwLHx+oDtaK+NeC0hn
+=+iuv
+-----END PGP SIGNATURE-----
+
+--3QshgT4nm5mNXvH/--
