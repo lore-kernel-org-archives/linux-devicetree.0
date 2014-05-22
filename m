@@ -1,54 +1,91 @@
 From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [Patch v6 2/7] clock: keystone-pllctrl: add bindings for keystone pll controller
-Date: Thu, 22 May 2014 19:44:17 +0300
-Message-ID: <1400777062-19276-3-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com>
+Subject: [Patch v6 0/7] Introduce keystone reset driver
+Date: Thu, 22 May 2014 19:44:15 +0300
+Message-ID: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: dbaryshkov@gmail.com, dwmw2@infradead.org, lee.jones@linaro.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
 Cc: rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com, sergei.shtylyov@cogentembedded.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The main pll controller used to drive theC66x CorePacs, the switch fabric,
-and a majority of the peripheral clocks (all but the ARM CorePacs, DDR3 and
-the NETCP modules) requires a PLL Controller to manage the various clock
-divisions, gating, and synchronization.
+These patches introduce keystone reset driver.
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../bindings/clock/ti-keystone-pllctrl.txt           | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+The keystone SoC can be rebooted in several ways. By external reset
+pin, by soft and by watchdogs. This driver allows software reset and reset
+by one of the watchdogs. Also added opportunity to set soft/hard reset type.
+
+Based on linux-next/master
+
+v6..v5
+  clock: keystone-pllctrl: add bindings for keystone pll controller
+  mfd: ti-keystone-devctrl: add bindings for device state control
+  power: reset: add bindings for keystone reset driver
+  ARM: dts: keystone: update reset node to work with reset driver
+  	- for nodes s/device-state-control/device-state-control@02620000/g
+  	- for nodes s/pll-controller/pll-controller@02310000/g
+  mfd: ti-keystone-devctrl: add bindings for device state control
+  	- corrected description for reg property
+
+v5..v4
+  power: reset: keystone-reset: introduce keystone reset driver
+  	- changed to get rsmux and rspll offsets from DT
+  clock: keystone-pllctrl: add bindings for keystone pll controller
+  	- new patch
+  mfd: ti-keystone-devctrl: add bindings for device state control
+  	- new patch
+  power: reset: add bindings for keystone reset driver
+  	- corrected description of "ti,syscon-pll", "ti,syscon-dev" properties
+	- corrected examples
+  ARM: dts: keystone: update reset node to work with reset driver
+  	- added nodes for pll-controller and device-state-controll
+	- added offsets to "ti,syscon-pll", "ti,syscon-dev" properties
+
+v4..v3
+  Power: reset: keystone-reset: introduce keystone reset driver
+  	- changed to use syscon framework
+  	- changed to use regmap to access registers
+  Power: reset: add bindings for keystone reset driver
+  	- deleted properties "reg", "reg-names"
+	- added properties "ti,syscon-pll", "ti,syscon-dev"
+  ARM: dts: keystone: update reset node to work with reset driver
+  	- deleted properties "reg", "reg-names"
+	- added properties "ti,syscon-pll", "ti,syscon-dev"
+
+v2..v3
+  Power: reset: keystone-reset: introduce keystone reset driver
+	- no functional changes, only sanity
+  Power: reset: add bindings for keystone reset driver
+  	- corrected WDT numeration in examples
+	- extended description of wdt_list property
+
+v1..v2
+	- re based on v3.15-rc1 without changes
+
+Ivan Khoronzhuk (7):
+  power: reset: keystone-reset: introduce keystone reset driver
+  clock: keystone-pllctrl: add bindings for keystone pll controller
+  mfd: ti-keystone-devctrl: add bindings for device state control
+  power: reset: add bindings for keystone reset driver
+  ARM: keystone: remove redundant reset stuff
+  ARM: dts: keystone: update reset node to work with reset driver
+  ARM: keystone: enable reset driver support
+
+ .../bindings/clock/ti-keystone-pllctrl.txt         |  20 +++
+ .../bindings/mfd/ti-keystone-devctrl.txt           |  19 +++
+ .../bindings/power/reset/keystone-reset.txt        |  67 +++++++++
+ arch/arm/boot/dts/keystone.dtsi                    |  14 +-
+ arch/arm/configs/keystone_defconfig                |   3 +
+ arch/arm/mach-keystone/keystone.c                  |  34 -----
+ drivers/power/reset/Kconfig                        |   8 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/keystone-reset.c               | 166 +++++++++++++++++++++
+ 9 files changed, 297 insertions(+), 35 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+ create mode 100644 drivers/power/reset/keystone-reset.c
 
-diff --git a/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt b/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
-new file mode 100644
-index 0000000..3e6a81e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
-@@ -0,0 +1,20 @@
-+* Device tree bindings for Texas Instruments keystone pll controller
-+
-+The main pll controller used to drive theC66x CorePacs, the switch fabric,
-+and a majority of the peripheral clocks (all but the ARM CorePacs, DDR3 and
-+the NETCP modules) requires a PLL Controller to manage the various clock
-+divisions, gating, and synchronization.
-+
-+Required properties:
-+
-+- compatible:		"ti,keystone-pllctrl", "syscon"
-+
-+- reg:			contains offset/length value for pll controller
-+			registers space.
-+
-+Example:
-+
-+pllctrl: pll-controller@0x02310000 {
-+	compatible = "ti,keystone-pllctrl", "syscon";
-+	reg = <0x02310000 0x200>;
-+};
 -- 
 1.8.3.2
