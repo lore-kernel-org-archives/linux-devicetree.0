@@ -1,51 +1,77 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v6 10/17] ARM: mvebu: add USB3 support for Armada 38x
-Date: Thu, 22 May 2014 10:08:38 -0400
-Message-ID: <20140522140838.GM8664@titan.lakedaemon.net>
-References: <1400149062-32661-1-git-send-email-gregory.clement@free-electrons.com>
- <1400149062-32661-11-git-send-email-gregory.clement@free-electrons.com>
- <20140516190729.GN27822@titan.lakedaemon.net>
- <1400497768.2007.10.camel@x220>
- <537CAFD2.3080807@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [Patch v5 3/7] mfd: ti-keystone-devctrl: add bindings for device
+ state control
+Date: Thu, 22 May 2014 15:14:32 +0100
+Message-ID: <20140522141432.GA19747@lee--X1>
+References: <1400766516-14537-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1400766516-14537-4-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <537CAFD2.3080807-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <1400766516-14537-4-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 21, 2014 at 03:53:22PM +0200, Gregory CLEMENT wrote:
-> On 19/05/2014 13:09, Paul Bolle wrote:
-> > On Fri, 2014-05-16 at 15:07 -0400, Jason Cooper wrote:
-> >> On Thu, May 15, 2014 at 12:17:35PM +0200, Gregory CLEMENT wrote:
-> >>> This patch adds the selection of the config symbol needed to build the
-> >>> USB3 support for Armada 38x into mvebu_v7_defconfig.
-> >>>
-> >>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >>> ---
-> >>>  arch/arm/mach-mvebu/Kconfig | 1 +
-> >>>  1 file changed, 1 insertion(+)
-> >>
-> >> Patches 10 and 11 applied to mvebu/soc
-> > 
-> > These two just hit linux-next (in next-20140519). They're pointless, as
-> > config USB_ARCH_HAS_XHCI was dropped in commit b797b76fb464 ("usb: host:
-> > remove USB_ARCH_HAS_?HCI").
-> 
-> Right! We didn't notice it.
-> 
-> Jason you can simply remove them from mvebu/soc when you will submit the pull request
+Why do I only have this patch?  Where is the rest of the set?  Also,
+it's on v5 and I don't recall seeing the other 4 versions?
 
-Now dropped from mvebu/soc.
+> The Keystone II devices have a set of registers that are used to cont=
+rol
+> the status of its peripherals. This node is intended to allow access =
+to
+> this functionality.
+>=20
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/ti-keystone-devctrl.txt   | 19 +++++++++=
+++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti-keystone=
+-devctrl.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/ti-keystone-devctr=
+l.txt b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
+> new file mode 100644
+> index 0000000..35f7a66
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
+> @@ -0,0 +1,19 @@
+> +* Device tree bindings for Texas Instruments keystone device state c=
+ontrol
+> +
+> +The Keystone II devices have a set of registers that are used to con=
+trol
+> +the status of its peripherals. This node is intended to allow access=
+ to
+> +this functionality.
+> +
+> +Required properties:
+> +
+> +- compatible:		"ti,keystone-devctrl", "syscon"
+> +
+> +- reg:			contains offset/length value for pll controller
+> +			registers space.
 
-thx,
+Why have you tabbed out all that way?
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +Example:
+> +
+> +devctrl: device-state-control {
+
+This node needs an address:
+
+devctrl: device-state-control@02620000 {
+
+> +	compatible =3D "ti,keystone-devctrl", "syscon";
+> +	reg =3D <0x02620000 0x1000>;
+> +};
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
