@@ -1,42 +1,66 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH net-next v2 0/9] net: of_phy_connect_fixed_link removal
-Date: Thu, 22 May 2014 15:18:17 -0400 (EDT)
-Message-ID: <20140522.151817.763033809324051260.davem@davemloft.net>
-References: <1400777271-32199-1-git-send-email-f.fainelli@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/4] clk: samsung: Add driver to control CLKOUT line on
+ Exynos SoCs
+Date: Thu, 22 May 2014 20:20:57 +0100
+Message-ID: <20140522192057.GU12304@sirena.org.uk>
+References: <1400604211-9447-1-git-send-email-t.figa@samsung.com>
+ <1400604211-9447-4-git-send-email-t.figa@samsung.com>
+ <537D8788.8030904@linaro.org>
+ <537DD2C0.4060802@samsung.com>
+ <CAHbNUh2gkpV-rt6S+-bUmFvYAuK_HNoXfyOStwYe29sZMJonUw@mail.gmail.com>
+ <537DE714.1090407@samsung.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400777271-32199-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="IkIwblIRKmNDLbQ5"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537DE714.1090407@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <t.figa@samsung.com>
+Cc: Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Sylwester Nawrocki <s.nawrocki@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Date: Thu, 22 May 2014 09:47:42 -0700
 
-> This patch set removes of_phy_connect_fixed_link() from the tree now that
-> we have a better solution for dealing with fixed PHY (emulated PHY) devices
-> for drivers that require them.
-> 
-> First two patches update the 'fixed-link' Device Tree binding and drivers to
-> refere to it.
-> 
-> Patches 3 to 7 update the in-tree network drivers that use
-> of_phy_connect_fixed_link()
-> 
-> Patch 8 removes of_phy_connect_fixed_link
-> 
-> Patch 9 removes the PowerPC code that parsed the 'fixed-link' property.
-> 
-> Patch 9 can be merged via the net-next tree if the PowerPC folks ack it,
-> but it really has to be merged after the first 8 patches in order to avoid
-> breakage.
+--IkIwblIRKmNDLbQ5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Series applied, if someone doesn't like patch #9 we can fix it up with a
-followup patch or revert.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, May 22, 2014 at 02:01:24PM +0200, Tomasz Figa wrote:
+> On 22.05.2014 13:44, Tushar Behera wrote:
+
+> > I would be happy to get it done that way. I can see a patch from
+> > Sylwester regarding this, but there hasn't been a conclusion as of
+> > yet.
+
+> > https://lkml.org/lkml/2014/4/9/173
+
+> Have you mentioned your use case there? It might indicate that this is
+> indeed an important problem and that too much bikeshedding doesn't
+> really make us closer to the solution.
+
+I've certainly discussed the requirement for this feature with Mike in
+person a few times, I don't know if anyone else has been doing anything.
+
+--IkIwblIRKmNDLbQ5
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfk4WAAoJELSic+t+oim9NLwP/3pNGAI55UZt9124yUSsfLtp
+IuB8idoanzPbOfFLgBG/d3oMMSF4RVadU/EqzrvZAEXaAfWMUn7xljwWL4KiAKsd
+UGLmM3VDnbcraPF7b6kEw6ak1VD1Or44oYr8IpYyEyr/71i+Eu6qAQEAIxWJLsiT
+vP+b7xa+ifAS4ndFh4bNK65VmiLUN4ugS6Vy+qkZrtfCSJjbwBuPDugX+TTxqrYP
+pQHOqQqtRvTUcdjbL44x8v+vecVjagSc2rsqiscVoyS78Gn30vO5/uFitEYa/P3M
+qKy6UK2A+FNSke115/0xardqrMZRFwQ4+AaQoZsiiQ3R5bafokeSWqzmmeBR43fJ
+cHzbQKc4c2ood+iSObLHgaCXT3osMI17PUQWJmcR4g6h/LOKSah5Y7iYJ6gKUw4k
+YZM7jJLKyPUCsYt1OHp3IqCEs35t2hgV0UfiC7+tMn2Y0I0syrpZaxsbjqoSgiwG
+85s34AL+9PEzUJzZrdVT2qXDI7DnrVLbJ3yscpGIDxJbRkBPfmVyid+PtGQjFznS
+YToau/o10Yr+h5Pq6MriZ30hbpkcURkQ55jfuD9oCTnjP7YJT4mROYNfdL9sDsrQ
+byykg0qtXgC42V/x0ABBTyFTXGgcmW1i5ac6qYTlkuRe+KswotlVUEU07VT/WhJr
+Q7JRJow76Rzrw1la28gh
+=VPpM
+-----END PGP SIGNATURE-----
+
+--IkIwblIRKmNDLbQ5--
