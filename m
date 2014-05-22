@@ -1,72 +1,57 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Thu, 22 May 2014 17:09:08 +0100
-Message-ID: <20140522160908.GD27931@arm.com>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
- <5678119.IM3FN0FlT6@wuerfel>
- <20140522144503.GA27931@arm.com>
- <5057707.jNCXlqf9dH@wuerfel>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [Patch v5 3/7] mfd: ti-keystone-devctrl: add bindings for device
+ state control
+Date: Thu, 22 May 2014 19:14:06 +0300
+Message-ID: <537E224E.3060601@ti.com>
+References: <1400766516-14537-1-git-send-email-ivan.khoronzhuk@ti.com> <1400766516-14537-4-git-send-email-ivan.khoronzhuk@ti.com> <20140522141432.GA19747@lee--X1> <537E0A87.5010408@ti.com> <20140522153309.GB19747@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5057707.jNCXlqf9dH@wuerfel>
+In-Reply-To: <20140522153309.GB19747@lee--X1>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, w-kwok2-l0cyMroinI0@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 04:49:16PM +0100, Arnd Bergmann wrote:
-> On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
-> > On Thu, May 22, 2014 at 09:31:37AM +0100, Arnd Bergmann wrote:
-> > > commit 42c4dafe803dcad82980fd8b0831a89032156f93
-> > > Author: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> > > Date:   Thu Jul 1 13:22:48 2010 +0100
-> > > 
-> > >     ARM: 6202/1: Do not ARM_DMA_MEM_BUFFERABLE on RealView boards with L210/L220
-> > >     
-> > >     RealView boards with certain revisions of the L210/L220 cache controller
-> > >     may have issues (hardware deadlock) with the mandatory barriers (DSB
-> > >     followed by an L2 cache sync) when ARM_DMA_MEM_BUFFERABLE is enabled.
-> > >     The patch disables ARM_DMA_MEM_BUFFERABLE for these boards.
-> > >     
-> > >     Tested-by: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
-> > >     Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-> > >     Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> > 
-> > Looking through the L220 errata document, I think this relates to 425331
-> > which says that a cache sync can deadlock the system if the write buffer
-> > is not empty.
-> 
-> Hmm, but isn't the write buffer empty here because we have just issued
-> a dsb()?
 
-The problem with these outer caches is that DSB doesn't propagate to
-them (and I hope to never see such caches again ;)). So an mb() on such
-systems needs to be dsb()+outer_sync(). The dsb() pushes data from the
-CPU write buffer into the L2x0 write buffer and outer_sync() does the
-flushing out of the outer cache write buffer (which strangely enough
-buffers even if the memory access is Normal NonCacheable).
+On 05/22/2014 06:33 PM, Lee Jones wrote:
+>>> Why do I only have this patch?  Where is the rest of the set?  Also,
+>>> it's on v5 and I don't recall seeing the other 4 versions?
+>> It's strange I've sent whole series on
+>>
+>> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>>
+>> v4 is also was sent to lists in question:
+>> https://lkml.org/lkml/2014/5/21/359
+> But did you send them to me?  I don't parse the list.
+>
 
-> > If we only use the DMA coherent buffers for CLCD on these boards, we
-> > don't really need the outer_sync() either so we could go back to
-> > bufferable DMA memory (strangely enough, this L2 cache workaround looks
-> > similar to Marvell's PCI+PL310 problem where we want to avoid
-> > outer_sync()).
-> 
-> Ah, so you think we can add another hook to NULL out outer_cache.sync
-> per platform?
+Sorry.
+Becouse /scripts/get_maintainer.pl  patches/reset_driver_v6/* hadn't 
+been listed you
+It's because there is no patch with "code" for the bindings you've comment.
 
-Yes, with the note that mb() no longer guarantees the write being
-flushed to RAM but just to the L2 write buffer. If CLCD framebuffer is
-the only DMA device, we don't need to worry about such barriers since we
-map it as writecombine anyway (hence bufferable).
+I should check it by hand for mtd.
 
-Unless Linus or Pawel think there are other DMA capable devices in use
-here, I'm happy to enable ARM_DMA_MEM_BUFFERABLE for these boards.
+The bindings for mtd device_state_control were added only on v5
+And it's added only to describe what is the node we've used in a 
+keystone DT.
+The node is planned to be used only via syscon phandle, there is no 
+driver for it,
+and compatible string for "ti,keystone-devctrl" added only to be matched by
+a high-level device driver if needed.
+
+I'll send new v6 series to you also.
+Once again sorry.
 
 -- 
-Catalin
+Regards,
+Ivan Khoronzhuk
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
