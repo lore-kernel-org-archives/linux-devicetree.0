@@ -1,55 +1,36 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] doc: dt bindings: Document Odroid X2/U3 audio
- subsystem bindings
-Date: Thu, 22 May 2014 19:46:56 +0100
-Message-ID: <20140522184656.GS12304@sirena.org.uk>
-References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 22 May 2014 20:52:38 +0200
+Message-ID: <CACRpkdZX=UFhMfUn68hA+s2FLGRYy_dmjRng_fHtAQEhah0oRA@mail.gmail.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
+	<5678119.IM3FN0FlT6@wuerfel>
+	<20140522144503.GA27931@arm.com>
+	<5057707.jNCXlqf9dH@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tP+Q+DmL2Hx0hmlt"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5057707.jNCXlqf9dH@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 22, 2014 at 5:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
 
---tP+Q+DmL2Hx0hmlt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+>> Anyway, I don't think we have any streaming DMA used on these RealView
+>> boards.
+>
+> Yes, I think that is correct. MMCI, SSP and serial could all use
+> DMA but are not configured to do it.
 
-On Thu, May 22, 2014 at 01:55:07PM +0200, Sylwester Nawrocki wrote:
+PB1176 has no working DMA (borked DMA hardware), the PB11MPCore
+actually has working DMA but only on UART TX and maybe AACI
+(haven't tested) no clue about the Cortex boards PBA8 and PBX though.
 
-> +	sound {
-> +		compatible = "samsung,odroidx2-audio";
-> +		samsung,i2s-controller = <&i2s0>;
-> +		samsung,audio-codec = <&max98090>;
-> +	};
-
-Can this not use simple-card?
-
---tP+Q+DmL2Hx0hmlt
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTfkYcAAoJELSic+t+oim9QBwP/iHC4sNNhsLrlAqpltJ5WM1n
-gWdxCWDSfMVj44ZUWemiNE1u2KCWDA6lGPefw3DJoSjrNJesNxFn09+Uu23Bp0oh
-aHoyBYyyBgEwKnrGHecVGRw/5hQ+tbvERaQ1B/yl01wr30lUiS+omAR8bTN0Y87r
-E7XIiChwRQFn/Lq1NrfPd5rNNNGu+HTwABUxaMm4fMLI4VpcGiaGUInR11I3+89n
-wYisqtxC+20Q/Fe0KpZuEQL2pywBKO81qI+HRSBpUu0Bkqo4hc0yl2GAYAykJbpm
-kgFrZ4gnaB760QlrEyA6YZD4Dec6X8kJOuvg9afVCpfSmmtsK7WlU4OqOKAm4iuv
-nGjc+GRDmMCWTs3fCjr1DQt/Dal8LeKd1s2i6cOGK+rdCSC6uIFyqLuEjmmdx1V6
-lglAY+zXshe98Ahs1Y0TMaCQzC1II9si7nT6oYGyWNFvWTOFlkNAPei0RdLj5D+H
-Y3FtZWFg6DvogtVpyuVZqceZK60DJXIjtX7hpiVVmvdwu2bGTqOL9CsPqGZUq7L2
-tdJ0u18HcTNyP4F+JFdgrLasQmD3QQIIylyhbEXgg1ie2KFcivmo35kH4il3bIWq
-Tiz6VUNwIswYtYidsk/8etOpXx3CZSq2am+NG0lWd+GxJNRMDuy/Jt21KwqrdF1K
-qpE1qquqmYIiVAgsRE2B
-=HW+q
------END PGP SIGNATURE-----
-
---tP+Q+DmL2Hx0hmlt--
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
