@@ -1,48 +1,83 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] ASoC: simple-card: Support setting mclk via a
- fixed factor
-Date: Thu, 22 May 2014 19:52:06 +0200
-Message-ID: <20140522175206.GA24500@lunn.ch>
-References: <20140520221359.GF12304@sirena.org.uk>
- <1400772710-23523-1-git-send-email-andrew@lunn.ch>
- <20140522173919.GM12304@sirena.org.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [Patch v6 4/7] power: reset: add bindings for keystone reset
+ driver
+Date: Thu, 22 May 2014 22:03:09 +0400
+Message-ID: <537E3BDD.40106@cogentembedded.com>
+References: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com> <1400777062-19276-5-git-send-email-ivan.khoronzhuk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140522173919.GM12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1400777062-19276-5-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dbaryshkov@gmail.com, dwmw2@infradead.org, lee.jones@linaro.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 06:39:19PM +0100, Mark Brown wrote:
-> On Thu, May 22, 2014 at 05:31:49PM +0200, Andrew Lunn wrote:
-> > Some platforms require that the codecs mclk is a fixed multiplication
-> > factor of the audio stream rate. Add a optional property to the
-> > binding to hold this factor and implement a hw_params() function to
-> > make use of it.
-> > 
-> > Signed-off-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> 
-> I'm missing the rest of this series - what's the context, are there any
-> interdependencies?
+Hello.
 
-I threaded the patch to your request to respin this patch:
+On 05/22/2014 08:44 PM, Ivan Khoronzhuk wrote:
 
-http://patchwork.ozlabs.org/patch/345353/
+> This node is intended to allow SoC reset in case of software reset
+> or appropriate watchdogs.
 
-and the whole the v2 series is here:
+> The Keystone SoCs can contain up to 4 watchdog timers to reset
+> SoC. Each watchdog timer event input is connected to the Reset Mux
+> block. The Reset Mux block can be configured to cause reset or not.
 
-http://www.spinics.net/linux/lists/arm-kernel/msg328068.html
+> Additionally soft or hard reset can be configured.
 
-You have already accepted patch 1, and Jason Cooper has taken 2, 3, 4,
-6, 7, 8, & 9.
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+>   .../bindings/power/reset/keystone-reset.txt        | 67 ++++++++++++++++++++++
+>   1 file changed, 67 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
 
-There are no build interdependences.
+> diff --git a/Documentation/devicetree/bindings/power/reset/keystone-reset.txt b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+> new file mode 100644
+> index 0000000..a8a0c31
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+> @@ -0,0 +1,67 @@
+> +* Device tree bindings for Texas Instruments keystone reset
+> +
+> +This node is intended to allow SoC reset in case of software reset
+> +of selected watchdogs.
+> +
+> +The Keystone SoCs can contain up to 4 watchdog timers to reset
+> +SoC. Each watchdog timer event input is connected to the Reset Mux
+> +block. The Reset Mux block can be configured to cause reset or not.
+> +
+> +Additionally soft or hard reset can be configured.
+> +
+> +Required properties:
+> +
+> +- compatible:		ti,keystone-reset
+> +
+> +- ti,syscon-pll:	phandle/offset pair. The phandle to syscon used to
+> +			access pll controller registers and the offset to use
+> +			reset control registers.
+> +
+> +- ti,syscon-dev:	phandle/offset pair. The phandle to syscon used to
+> +			access device state control registers and the offset
+> +			in order to use mux block registers for all watchdogs.
+> +
+> +Optional properties:
+> +
+> +- ti,soft-reset:	Boolean option indicating soft reset.
+> +			By default hard reset is used.
+> +
+> +- ti,wdt_list:		WDT list that can cause SoC reset. It's not related
 
-      Andrew
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    Hm, why underscore in this property while hyphens are used in the others? 
+Hyphen is generally preferrable in the device tree names...
+
+> +			to WDT driver, it's just needed to enable a SoC related
+> +			reset that's triggered by one of WDTs. The list is
+> +			in format: <0>, <2>; It can be in random order and
+> +			begins from 0 to 3, as keystone can contain up to 4 SoC
+> +			reset watchdogs and can be in random order.
+
+WBR, Sergei
+
