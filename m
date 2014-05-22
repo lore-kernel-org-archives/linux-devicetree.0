@@ -1,138 +1,103 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7779 dtsi: Correct
- #address-cells/#size-cells for clocks
-Date: Fri, 23 May 2014 01:08:04 +0200
-Message-ID: <155646478.xj0lyDQ1cd@avalon>
-References: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
- <1400761997-13512-2-git-send-email-geert+renesas@glider.be>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
+Date: Fri, 23 May 2014 00:36:28 +0100
+Message-ID: <20140522233628.GW12304@sirena.org.uk>
+References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
+ <1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
+ <537E1D0A.6020303@wwwdotorg.org>
+ <20140522173403.GL12304@sirena.org.uk>
+ <537E38FF.9000407@wwwdotorg.org>
+ <20140522181948.GP12304@sirena.org.uk>
+ <537E7937.2010408@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400761997-13512-2-git-send-email-geert+renesas@glider.be>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-sh@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Wwca24FQN26//Jqu"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537E7937.2010408@wwwdotorg.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Tushar Behera <tushar.behera@linaro.org>, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tiwai@suse.de, perex@perex.cz, dianders@chromium.org, jerry.wong@maximintegrated.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-Thank you for the patch.
+--Wwca24FQN26//Jqu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Thursday 22 May 2014 14:33:16 Geert Uytterhoeven wrote:
-> Warning (ranges_format): /clocks has empty "ranges" property but its
-> #address-cells (2) differs from / (1) Warning (ranges_format): /clocks has
-> empty "ranges" property but its #size-cells (2) differs from / (1)
-> 
-> As r8a7779 doesn't support LPAE, change #address-cells and #size-cells from
-> "<2>" to "<1>" to fix this.
-> 
-> Also correct the unit-address for the cpg_clocks node, and add missing
-> unit-addresses for the mstp*_clks nodes.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->
-> ---
-> Is it correct that r8a7779 doesn't support LPAE? I don't have the datasheet,
-> but the similar r8a7778 doesn't.
-> 
->  arch/arm/boot/dts/r8a7779.dtsi | 20 ++++++++++----------
->  1 file changed, 10 insertions(+), 10 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-> index 038c16a18373..dc624e0d7506 100644
-> --- a/arch/arm/boot/dts/r8a7779.dtsi
-> +++ b/arch/arm/boot/dts/r8a7779.dtsi
-> @@ -284,8 +284,8 @@
->  	};
-> 
->  	clocks {
-> -		#address-cells = <2>;
-> -		#size-cells = <2>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
+On Thu, May 22, 2014 at 04:24:55PM -0600, Stephen Warren wrote:
 
-This looks good to me.
+> My main worry is that this patch opens the door for set_sysclk() to
+> perform some kind of calculation to determine the MCLK rate. Right now,
+> this patch doesn't do that, but there's nothing obvious from the code
+> that no CODEC is allowed to do that. After all, sysclk has a parameter
+> to indicate *which* clock in the CODEC to set. Some CODEC driver author
+> might write something where the machine driver tells the CODEC driver
+> the desired rate of some CODEC-internal PLL, from which set_sysclk()
+> calculates what it needs for MCLK, and then goes off and requests that
+> value from the clock API.
 
->  		ranges;
-> 
->  		/* External root clock */
-> @@ -298,9 +298,9 @@
->  		};
-> 
->  		/* Special CPG clocks */
-> -		cpg_clocks: cpg_clocks@0xe6150000 {
-> +		cpg_clocks: cpg_clocks@0xffc80000 {
+I really think you're reading too much into this - the set_sysclk() API
+isn't any different to the clock API here really and most of the
+potential for doing really problematic stuff and defining your clocks to
+mean funny things exists anyway.  Of course people could do tasteless
+things but that's always going to be a risk and we also want to try to
+minimise the amount of redundant code people have to write.
 
-No need for a 0x prefix.
+It should be fairly easy to spot substantial abuse since the driver
+would need to call clk_set_rate() with a different rate.
 
->  			compatible = "renesas,r8a7779-cpg-clocks";
-> -			reg = <0 0xffc80000 0 0x30>;
-> +			reg = <0xffc80000 0x30>;
+> Ignoring that, I'm still not sure that the CODEC driver setting the MCLK
+> rate is appropriate. If we have 1 MCLK output from an SoC, connected to
+> 2 different CODECs, why wouldn't the overall machine driver call
+> clk_set_rate() on that clock, and then notify the two CODEC drivers of
+> that rate. Making each CODEC's set_sysclk() call clk_set_rate() on the
+> same clock with the same value seems redundant, albeit it should work
+> out fine since they both request the same rate.
 
-This looks good.
+Right, it should work fine and it's less work for the machine drivers.
+The alternative is that every machine driver using a device with a
+programmable input has the code to get that clock from the CODEC device
+and set it in sync with telling the CODEC about it which is redundant
+and makes life harder for generic drivers like simple card (which
+obviously can't know the specifics of every CODEC it works with).
 
->  			clocks = <&extal_clk>;
->  			#clock-cells = <1>;
->  			clock-output-names = "plla", "z", "zs", "s",
-> @@ -342,10 +342,10 @@
->  		};
-> 
->  		/* Gate clocks */
-> -		mstp0_clks: mstp0_clks {
-> +		mstp0_clks: mstp0_clks@ffc80030 {
+It's certainly a more normal thing from a device model and device tree
+point of view for the CODEC to be responsible for getting the resource
+and it seems natural to extend that to such basic management as setting
+the rate. =20
 
-The @address is only mandatory to differentiate between nodes with identical 
-names. As the node name is supposed to describe the device function, maybe we 
-could rename it to clocks@ffc80030 ? As you modify the CPG node address above 
-it might make sense to rename it to clocks@ffc80000 too.
+If anything I think want to expose some or all of the CODEC clock trees
+to the clock API, sometimes (rarely but not never) the CODEC PLLs and
+FLLs are used to supply things outside the audio subsystem if they
+happen to be going spare, it's difficult to do that at the minute since
+there's no guaranteed API for being a clock provider.  At the minute
+we're mostly reimplementing a custom clock API which seems like the
+wrong way to be doing things.  That might go towards answering your
+concerns since set_sysclk() would end up as a clock API call (or at
+least a thin wrapper around one).
 
-I'm not advocating for a rename now, but as your patch touches the names, I 
-think they should be fixed properly (or not at all).
+--Wwca24FQN26//Jqu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->  			compatible = "renesas,r8a7779-mstp-clocks",
->  			             "renesas,cpg-mstp-clocks";
-> -			reg = <0 0xffc80030 0 4>;
-> +			reg = <0xffc80030 4>;
->  			clocks = <&cpg_clocks R8A7779_CLK_S>,
->  			         <&cpg_clocks R8A7779_CLK_P>,
->  				 <&cpg_clocks R8A7779_CLK_P>,
-> @@ -379,10 +379,10 @@
->  				"scif1", "scif0", "i2c3", "i2c2", "i2c1",
->  				"i2c0";
->  		};
-> -		mstp1_clks: mstp1_clks {
-> +		mstp1_clks: mstp1_clks@ffc80034 {
->  			compatible = "renesas,r8a7779-mstp-clocks",
->  			             "renesas,cpg-mstp-clocks";
-> -			reg = <0 0xffc80034 0 4>, <0 0xffc80044 0 4>;
-> +			reg = <0xffc80034 4>, <0xffc80044 4>;
->  			clocks = <&cpg_clocks R8A7779_CLK_P>,
->  				 <&cpg_clocks R8A7779_CLK_P>,
->  				 <&cpg_clocks R8A7779_CLK_S>,
-> @@ -408,10 +408,10 @@
->  				"ether", "sata",
->  				"pcie", "vin3";
->  		};
-> -		mstp3_clks: mstp3_clks {
-> +		mstp3_clks: mstp3_clks@ffc8003c {
->  			compatible = "renesas,r8a7779-mstp-clocks",
->  			             "renesas,cpg-mstp-clocks";
-> -			reg = <0 0xffc8003c 0 4>;
-> +			reg = <0xffc8003c 4>;
->  			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
->  				 <&s4_clk>, <&s4_clk>;
->  			#clock-cells = <1>;
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
--- 
-Regards,
+iQIcBAEBAgAGBQJTfon5AAoJELSic+t+oim90pEQAINzaP+0sN7QLFYXrNMRtkCb
+afNPrx1Nt1kYR3r7RcHX/6DEqigEpydq7I/i6a35+nv08lJLOw2LS2IXyYMLeSm0
+qazYoKfrUH5ZpdLs85ud6srorn4VBJ/U+UaKXUB6BtJzCLAysJnT4/Rkt3DP3KJZ
+TJo7oE5ipj40bThwY7ACHOe9g4+ACSQjBTKBzcov9eU4hfnxZhR+8v/a2rUweV4a
+6BPL2eJ8EJgzmkNEdmUBP5RdsVL0WwCw/xhxH+JyPx0l8cRifD+1XaEloPW8bM6C
+EisdIdt4agUxEBCXtcne7fVpgZCBoYilE2xWGoRzRbP9Voe5nYrzcxu6evBHf5CO
+++0VBc4v/xBmnDkO5lIwR6b7Tu3E8MP+C2dxd5hecmacWd/mcy6tgJxUVhR9aCP2
+q6eeqlGEln/MeC24pinVZL3qllc3ABW+OzRBmS2LA1KtvC7OPa1UxVp5yAH9rEGB
+UjHH9rPXMd7ePPlhWYa5fJC13/Dc/PEr1cN8KAjkinGf+6qHnXwtRQNmry3o22zK
+ZGnBStJwbNttPfHBWHTDnBULSbKO+iNbhr9oBWbx0QPPQNasH5x/ffNeotgvVC9I
+ZZg+M4ks3ADuQQs1g/+R3km/Ed27/c5CdVgUr3yx0OO4H4NJb+CRQ2DWm/crDO8X
+p8yYWIdv4cgsDy2YSupo
+=rYHp
+-----END PGP SIGNATURE-----
 
-Laurent Pinchart
+--Wwca24FQN26//Jqu--
