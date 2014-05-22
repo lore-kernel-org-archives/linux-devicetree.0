@@ -1,36 +1,52 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH 0/3] ARM: dts: replace number by macro in clock binding
- for exynos
-Date: Fri, 23 May 2014 03:38:48 +0900
-Message-ID: <537E4438.4090409@samsung.com>
-References: <537C6640.2010404@samsung.com>
+From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 22 May 2014 14:39:20 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1405221431370.17310@knanqh.ubzr>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org> <5057707.jNCXlqf9dH@wuerfel> <alpine.LFD.2.11.1405221406100.17310@knanqh.ubzr> <5233065.1vXjHiDqN2@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <537C6640.2010404@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Beomho Seo <beomho.seo@samsung.com>
-Cc: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5233065.1vXjHiDqN2@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/21/14 17:39, Beomho Seo wrote:
-> Currently, some device node missed clock macro. This patchset
-> replaced it's magic number with macros in clock binding for
-> exynos4, exynos5250 and exynos 5420.
-> This patchset is based on v3.16-next/clk-samsung branch.
->
-> Beomho Seo (3):
->    ARM: dts: replace number by macro in clock binding for exynos4
->    ARM: dts: replace number by macro in clock binding for exynos5250
->    ARM: dts: replace number by macro in clock binding for exynos5420
->
->   arch/arm/boot/dts/exynos4.dtsi    |    2 +-
->   arch/arm/boot/dts/exynos5250.dtsi |    4 ++--
->   arch/arm/boot/dts/exynos5420.dtsi |    2 +-
->   3 files changed, 4 insertions(+), 4 deletions(-)
->
+On Thu, 22 May 2014, Arnd Bergmann wrote:
 
-Applied, thanks.
+> On Thursday 22 May 2014 14:09:52 Nicolas Pitre wrote:
+> > On Thu, 22 May 2014, Arnd Bergmann wrote:
+> > 
+> > > On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
+> > > > By making the DMA memory Strongly Ordered, we avoid the
+> > > > L220 write buffer. In addition to the above commit, we also had
+> > > > 2503a5ecd86c (ARM: 6201/1: RealView: Do not use outer_sync() on
+> > > > ARM11MPCore boards with L220).
+> > > 
+> > > Ah, so this also stands in the way of multiplatform realview 
+> > 
+> > Isn't the real value of a multiplatform realview in the ability to use 
+> > it with Qemu?  Did Qemu go to the extreme of emulating all those cache 
+> > issues?
+> 
+> The qemu developers have in the past always argued strongly that they
+> want to run the same kernel that runs on real hardware. Having a kernel
+> that runs only on the emulated version but not on actual hardware is
+> clearly against that goal, and  we should use CONFIG_ARCH_VIRT for
+> that purpose.
 
-- Kukjin
+But the kernel that actually runs on the real hardware also runs on Qemu 
+already.  It is just that, by some coincidence, a multi-platform kernel 
+that pretends to have the same peripherals as a Realview board could 
+also be used on Qemu.
+
+Otherwise I really don't see the point in making the code more complex 
+just to make a multi-platform kernel run on actual Realview hardware 
+that is quite obsolete now and that very few people have access to.
+
+
+Nicolas
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
