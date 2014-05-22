@@ -1,99 +1,109 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH 02/47] mtd: nand: stm_nand_bch: provide Device Tree
- documentation
-Date: Thu, 22 May 2014 18:05:03 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAD826F@DBDE04.ent.ti.com>
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Thu, 22 May 2014 11:05:46 -0700
+Message-ID: <CAEUnVG4UettOj0xDy+f6qEhUbhNs=u-wgyCf_Prsd2JpnmFfLw@mail.gmail.com>
+References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com>
+ <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com>
+ <20140521205538.GA6237@mithrandir> <CAEUnVG7tDjw_6wHc=FN0KsOKsSS1u8H8SzYdxt9VCwUsARRTeQ@mail.gmail.com>
+ <20140522094958.GA11585@ulmo> <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ@mail.gmail.com>
+ <537E39D9.2000304@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537E39D9.2000304-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->From: linux-mtd [mailto:linux-mtd-bounces@lists.infradead.org] On Behalf Of Lee Jones
+On Thu, May 22, 2014 at 10:54 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 05/22/2014 11:48 AM, Dylan Reid wrote:
+>> On Thu, May 22, 2014 at 2:50 AM, Thierry Reding
+>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>> On Wed, May 21, 2014 at 02:10:09PM -0700, Dylan Reid wrote:
+>>>> On Wed, May 21, 2014 at 1:55 PM, Thierry Reding
+>>>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>> On Tue, May 20, 2014 at 04:28:45PM -0700, Dylan Reid wrote:
+>>>>>> On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>>>> On 05/20/2014 02:37 PM, Dylan Reid wrote:
+>>>>>>>> On Tue, May 20, 2014 at 11:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>>>>>> On 05/20/2014 12:24 PM, Stephen Warren wrote:
+>>>>>>>>>> On 05/19/2014 08:35 PM, Dylan Reid wrote:
+>>>>>>>>>>> Add a device node for the HDA controller found on Tegra124.
+>>>>>>> ...
+>>>>>>>>> Even after fixing that, I can't play audio on Venice2:
+>>>>>>>>>
+>>>>>>>>> root@localhost:~# speaker-test -Dhw:0,3 -c 2
+>>>>>>>>>
+>>>>>>>>> speaker-test 1.0.27.1
+>>>>>>>>>
+>>>>>>>>> Playback device is hw:0,3
+>>>>>>>>> Stream parameters are 48000Hz, S16_LE, 2 channels
+>>>>>>>>> Using 16 octaves of pink noise
+>>>>>>>>> Rate set to 48000Hz (requested 48000Hz)
+>>>>>>>>> Buffer size range from 64 to 16384
+>>>>>>>>> Period size range from 32 to 8192
+>>>>>>>>> Using max buffer size 16384
+>>>>>>>>> Periods = 4
+>>>>>>>>> was set period_size = 4096
+>>>>>>>>> was set buffer_size = 16384
+>>>>>>>>>  0 - Front Left
+>>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>>> ^C 1 - Front Right
+>>>>>>>>> Time per period = 1.799791
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Thanks for checking Stephen.  I'll fix the reset name.
+>>>>>>>>
+>>>>>>>> This is the state of the tree I used when I tested on Venice2 just now:
+>>>>>>>> * ae57dbf - (HEAD) ARM: tegra: venice2 - Enable HDA (2 minutes ago)
+>>>>>>>> * 6224524 - ARM: tegra: Add Tegra124 HDA support (2 minutes ago)
+>>>>>>>> * 468ca57 - ALSA: hda - Add driver for Tegra SoC HDA (2 minutes ago)
+>>>>>>>> * 928099e - ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support (2 minutes ago)
+>>>>>>>> * 701eac4 - clk: tegra124: Enable hda to hdmi clocks (3 minutes ago)
+>>>>>>>
+>>>>>>> Ah, I was missing that clock patch. Hopefully Peter will pick it up for
+>>>>>>> the Tegra clock tree soon.
+>>>>>>>
+>>>>>>> Now I have the same results as Thierry; speaker-test looks like it
+>>>>>>> should be working, yet I don't hear any audio from the monitor. I know
+>>>>>>> the monitor works, since I've used it extensively for testing GeForce
+>>>>>>> GPU HDMI audio.
+>>>>>>
+>>>>>> Probably a silly question: Is it un-muted?
+>>>>>> amixer -c0 cset name='IEC958 Playback Switch' on
+>>>>>
+>>>>> Dylan, can you provide more detail about the setup that you're running?
+>>>>> There have been similar issues in the past where a driver would work if
+>>>>> it was run on an identical upstream kernel but with a different version
+>>>>> of the bootloader (or a different bootloader altogether). Can you give
+>>>>> further details about your setup? Also perhaps providing a dmesg log or
+>>>>> the clock tree from /sys/kernel/debug/clk/clk_summary could help
+>>>>> determine the diff between a working and a non-working setup.
+>>>>
+>>>> Sure.  I'm running this u-boot:
+>>>> https://chromium.googlesource.com/chromiumos/third_party/u-boot
+>>>> on commit ddde3e9 of the chromeos-v2013.06 branch.
+>>>>
+>>>> I haven't had a chance to flash swarren's u-boot yet it's been one of
+>>>> those days...
+>>>>
+>>>> I attached dmesg and clk_summary.
+>>>>
+>>>> I don't have many modifications to the ubuntu-core rootfs.
+>>>>
+>>>> Thanks for looking at this,
+>>>
+>>> Also perhaps you can share any change to tegra_defconfig that you have
+>>> for this. Perhaps Stephen and I are simply missing some required option
+>>> to make it work.
+>>
+>> Sure, here is the diff from linux-next's tegra defconfig.  Still on
+>> the tree mentioned above.
 >
->This is where we describe the different new and generic options used by
->the ST BCH driver.
->
->Cc: devicetree@vger.kernel.org
->Signed-off-by: Lee Jones <lee.jones@linaro.org>
->---
-> Documentation/devicetree/bindings/mtd/stm-nand.txt | 123 +++++++++++++++++++++
-> 1 file changed, 123 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/mtd/stm-nand.txt
->
->diff --git a/Documentation/devicetree/bindings/mtd/stm-nand.txt
->b/Documentation/devicetree/bindings/mtd/stm-nand.txt
->new file mode 100644
->index 0000000..9f9325f
->--- /dev/null
->+++ b/Documentation/devicetree/bindings/mtd/stm-nand.txt
->@@ -0,0 +1,123 @@
->+STM BCH NAND Support
->+--------------------
->+
->+Required properties:
->+
->+- compatible		: Should be "st,nand-bch"
->+- reg			: Should contain register's location and length
->+- reg-names		: "nand_mem" - NAND Controller register map
->+			  "nand_dma" - BCH Controller DMA configuration map
->+- interrupts		: Interrupt number
->+- interrupt-names	: "nand_irq" - NAND Controller IRQ
->+- st,nand-banks		: Subnode representing one or more "banks" of NAND
->+                          Flash, connected to an STM NAND Controller (see
->+                          description below).
->+- nand-ecc-strength	: Generic NAND property (See mtd/nand.txt)
->+- st,bch-bitflip-threshold
->+			: The threshold at which the number of corrected bit-
->+			  flips per sector is deemed to have reached an
->+			  excessive level (triggers '-EUCLEAN' to be returned
->+			  to the caller).  The value should be in the range 1
->+			  to <ecc-strength> where <ecc-strength> is 18 or 30,
->+			  depending on the BCH ECC mode in operation.  A value
->+			  of 0, or if left unspecified, is interpreted by the
->+			  driver as <ecc-strength>.
->+
-Please drop this one as discussed in other thread that bitflip_threshold
-does not qualify as DT binding (as it's not a hardware or const parameter).
+> My .config does include all the options that your defconfig diff adds.
 
->+Properties describing Bank of NAND Flash ("st,nand-banks"):
->+
->+- st,nand-csn		: Chip select associated with the Bank.
->+- st,nand-timing-spec	: [Optional] NAND Device Timing Data.  All times
->+                          expressed in ns, except where stated otherwise:
-
-I think DT maintainers don't prefer NAND timings being passed by DT,
-Instead they want it parsed from ONFI.
-Refer comments by 'Rob Herring <robherring2@gmail.com>' on
-[PATCH RFC 1/3] Devicetree: Add pl353 smc controller devicetree binding information
-
-
->+                            tR           : Max Page Read delay [us]
-
-(1) Even if you end up requiring these bindings, then please add them
-to NAND generic bindings so that other drivers can re-use them.
-(2) It would be good to have DT-bindings suffixed with timing units
-like "ns" | "ps". Example: "tR-us" or something similar.
-
-[...]
-
->+Note, during initialisation, the NAND Controller timing registers are configured
->+according to one of the following methods, in order of precedence:
->+
->+           1. Configuration based on "st,nand_timing_spec" if supplied.
->+
-Not sure if this mode is really required, as almost all devices are ONFI compliant.
-Please check with 'Rob Herring <robherring2@gmail.com>'
-
->+           2. Configuration based on ONFI timing mode, as advertised by the
->+              device during ONFI-probing (ONFI-compliant NAND only).
->+
->+           3. Use reset/safe timing values
->+
-
-
-with regards, pekon
+OK.  I'll try to dig myself out from these other bugs and give this a
+try on the Jetson this afternoon.
