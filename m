@@ -1,48 +1,72 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH RFC v2 4/7] ARM: dts: Add PPMU device tree support for
- Exynos5420
-Date: Thu, 22 May 2014 21:50:45 +0400
-Message-ID: <537E38F5.4020200@cogentembedded.com>
-References: <1400779322-4410-1-git-send-email-a.kesavan@samsung.com> <1400779322-4410-5-git-send-email-a.kesavan@samsung.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
+Date: Thu, 22 May 2014 11:50:55 -0600
+Message-ID: <537E38FF.9000407@wwwdotorg.org>
+References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org> <1400750228-13750-2-git-send-email-tushar.behera@linaro.org> <537E1D0A.6020303@wwwdotorg.org> <20140522173403.GL12304@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1400779322-4410-5-git-send-email-a.kesavan@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Abhilash Kesavan <a.kesavan@samsung.com>, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, myungjoo.ham@samsung.com, rafael.j.wysocki@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
-Cc: kesavan.abhilash@gmail.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140522173403.GL12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jerry.wong-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2014 09:21 PM, Abhilash Kesavan wrote:
+On 05/22/2014 11:34 AM, Mark Brown wrote:
+> On Thu, May 22, 2014 at 09:51:38AM -0600, Stephen Warren wrote:
+>> On 05/22/2014 03:17 AM, Tushar Behera wrote:
+> 
+>>> +	if (!IS_ERR(max98090->mclk)) {
+>>> +		freq = clk_round_rate(max98090->mclk, freq);
+>>> +		clk_set_rate(max98090->mclk, freq);
+>>> +	}
+> 
+>> What are the intended semantics of set_sysclk()?
+>> sound/soc/tegra/tegra_wm98090.c assumes that set_sysclk() is a
+>> notification to the CODEC driver to tell it what rate the MCLK input is
+>> set to (the rate is set before calling set_sysclk), whereas the code
+>> above assumes that this function is to tell the CODEC to somehow
+>> configure its input clock to be a particular rate. I have a feeling the
+>> code above might fail on Tegra.
+>
+> It's a bit of both.  Since we've never had a generic clock API (and
+> still don't really due to everything being a shambles) it's generally
+> just a notification to the CODEC that it's at the specified rate,
+> however if the CODEC knows about its dependencies it seems sensible for
+> it to tell the clock API about what was asked.  Ideally we want to
+> remove all the ASoC specific clock control and use the clock API.
 
-> PPMU is required by the exynos5420 devfreq driver. Add a device
-> tree node for it.
+I think we should nail down exactly what set_sysclk() means. Since it
+takes an explicit MCLK clock rate (rather than e.g. sample rate) right
+now, surely it's a notification of what the clock /is/, not a request
+for the CODEC to set up its input clock. If we expect the CODEC to go to
+the clock driver and request an MCLK for itself (e.g. based on sample
+rate), surely that should happen from some function besides
+set_sysclk(), with different semantics e.g. hw_params().
 
-> Signed-off-by: Abhilash Kesavan <a.kesavan@samsung.com>
-> ---
->   arch/arm/boot/dts/exynos5420.dtsi |    7 +++++++
->   1 file changed, 7 insertions(+)
+I'm not convinced that the CODEC can trigger its input clock changes in
+general. In Tegra, there needs to be centralized clock management, e.g.
+to prevent one audio stream using a 44.1KHz-based rate and another using
+a 48KHz-based rate. That's because the main audio PLL can't generate
+both sets of frequencies at once. This can't be done in individual CODEC
+drivers, since they shouldn't know about the Tegra restrictions. Doing
+it in the clock driver in response to the CODEC's request for a specific
+input clock, might work, but then the CODEC would have to call into the
+clk driver from e.g. hw_params() rather than set_sysclk(). If that's how
+it's supposed to work, then this patch is adding code in the wrong
+place. If set_sysclk() doesn't get removed from the CODEC API, then
+doing all this clock setup logic in the machine driver, as the
+tegra_wm89090.c machine driver does, seems to make the most sense for now.
 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 8e7e35c..6ab7b03 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -833,4 +833,11 @@
->   		samsung,pmu-syscon = <&pmu_system_controller>;
->   		#phy-cells = <1>;
->   	};
-> +
-> +	ppmu {
+> The Tegra driver will presumably succeed unless someone does the
+> appropriate clock hookup in DT, at which point clk_set_rate() for the
+> rate the clock is already at really ought to succeed so things should
+> continue to work.
 
-    Shouldn't it have the unit-address part, like "ppmu@10d00000"?
-
-> +		compatible = "samsung,exynos5420-int-busfreq";
-> +		reg = <0x10D00000 0x2000	/* PPMU_DMC_0_0 */
-> +		       0x10D10000 0x2000	/* PPMU_DMC_0_1 */
-> +		       0x10D60000 0x2000>;	/* PPMU_DMC_1_0 */
-> +	};
->   };
-
-WBR, Sergei
-
+Ah yes, if we don't add the clock to DT, this code won't do anything, so
+nothing will break.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
