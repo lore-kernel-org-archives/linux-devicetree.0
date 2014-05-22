@@ -1,51 +1,59 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/2] ASoC: max98095: Add master clock handling
-Date: Thu, 22 May 2014 11:31:37 +0100
-Message-ID: <20140522103137.GE12304@sirena.org.uk>
-References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
- <1400750228-13750-3-git-send-email-tushar.behera@linaro.org>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 3/4] clk: samsung: Add driver to control CLKOUT line on
+ Exynos SoCs
+Date: Thu, 22 May 2014 12:34:40 +0200
+Message-ID: <537DD2C0.4060802@samsung.com>
+References: <1400604211-9447-1-git-send-email-t.figa@samsung.com>
+ <1400604211-9447-4-git-send-email-t.figa@samsung.com>
+ <537D8788.8030904@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="AV6bwGDIl1DgWyaJ"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400750228-13750-3-git-send-email-tushar.behera@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tushar Behera <tushar.behera@linaro.org>
-Cc: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, tiwai@suse.de, perex@perex.cz, dianders@chromium.org, jerry.wong@maximintegrated.com, Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <537D8788.8030904@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.behera@linaro.org>, linux-samsung-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+On 22.05.2014 07:13, Tushar Behera wrote:
+> On 05/20/2014 10:13 PM, Tomasz Figa wrote:
+>> This patch introduces a driver that handles configuration of CLKOUT pin
+>> of Exynos SoCs that can be used to output certain clocks from inside of
+>> the SoC to a dedicated output pin.
+>>
+>> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
+>> ---
+>>  .../devicetree/bindings/arm/samsung/pmu.txt        |  30 ++++
+>>  drivers/clk/samsung/Makefile                       |   1 +
+>>  drivers/clk/samsung/clk-exynos-clkout.c            | 153 +++++++++++++++++++++
+>>  3 files changed, 184 insertions(+)
+>>  create mode 100644 drivers/clk/samsung/clk-exynos-clkout.c
+>>
+> 
+> [ ... ]
+> 
+>> +	clkout->clk_table[0] = clk_register_composite(NULL, "clkout",
+>> +				parent_names, parent_count, &clkout->mux.hw,
+>> +				&clk_mux_ops, NULL, NULL, &clkout->gate.hw,
+>> +				&clk_gate_ops, CLK_SET_RATE_PARENT
+>> +				| CLK_SET_RATE_NO_REPARENT);
+> 
+> Would you please remove CLK_SET_RATE_NO_REPARENT flag from here? Let me
+> know if you have reservations against this.
 
---AV6bwGDIl1DgWyaJ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The problem with clock reparenting is that there are certain parent
+clocks of CLKOUT, rate of which changes at runtime, e.g. clocks derived
+from APLL or bus clocks, which can be reconfigured by cpufreq or devfreq.
 
-On Thu, May 22, 2014 at 02:47:08PM +0530, Tushar Behera wrote:
-> If master clock is provided through device tree, then update
-> the master clock frequency during set_sysclk.
+> 
+> With RFC patches, I am able to do a clk_set_rate() on this clock to
+> get a 24MHz output to the codec clock. With this flag set, I again have
+> to rely on the default value set to this register in bootloader.
+> 
 
-Same issues here.
+This problem should be handled by initializing clocks from DT. I'm not
+sure why it hasn't been implemented yet...
 
---AV6bwGDIl1DgWyaJ
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTfdIGAAoJELSic+t+oim9O6wP/1P9klcj7qRF6QcyX1jclMzz
-JRFmSf+Z9v9WuqNiD3TKJUMUjIVvy6YgY5xq8o4NX3IKYABNtoxgek/9pKxCQeWy
-jheEjbCn3moVIpioYXLeK704xeUqLuKSnrvG12Qa2xwwZZQjqfBYKNJkEsmuJZp5
-BMtfTogBVuNOYz6gSPVv7Rb3d23Zmckd2Otb7mKbv9N3THX/aRCJgQLJjpKQn5+4
-JYj6s/nmrgEzCCQ4R77YE4kDinaY2a6nF54RsmMyw9WXcGOVpz5CHpv3WDMtg474
-1H1n5HsCeFoNWV70xSvlXPhWql99If8ka5xI3Uhj2thCENn4Id3HiM+mkYaFP0f/
-6GtyjD10mLARSmAbImjLfn/BQ7qJzZQZbMVEp+Tz3xYwhbc/wAdjRImkwdcRTnrv
-LkDt/IQ1HUz3kciEhy8jVhBCfwvRIdurGeNmkN5hBkF5oSrsvJyBhm4PZ67yy3nZ
-YcSb7VWIV+ltR7KtvLrr9cXs3nDfTMob92ETM09pBjqXn4/vIOVZiWtUed7it1zv
-Abak2Brxy5f+df4dqqnHMHaUzIXwBCpvjpKTURFudyD36Mc4EfJy2cE2lTLo1qSk
-FIUPXDH7OtXkpKTF8FhAisdpayumKn1rTDWxoyWHzE98XJEDo3uFN9jo8zOCyCN2
-2m1C5+AeOmvKcuPEplBQ
-=YGih
------END PGP SIGNATURE-----
-
---AV6bwGDIl1DgWyaJ--
+Best regards,
+Tomasz
