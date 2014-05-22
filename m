@@ -1,68 +1,63 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [RFC PATCH 08/16] mtd: nand: omap: Fix build warning
-Date: Thu, 22 May 2014 09:54:59 +0900
-Message-ID: <02cd01cf7558$7500eb00$5f02c100$%han@samsung.com>
-References: <1400671264-10702-1-git-send-email-rogerq@ti.com>
- <1400671264-10702-9-git-send-email-rogerq@ti.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
+Date: Wed, 21 May 2014 18:27:00 -0700
+Message-ID: <537D5264.7070301@gmail.com>
+References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org> <1399993115-21552-3-git-send-email-grant.likely@linaro.org> <537C15B1.3020006@gmail.com> <20140521160931.DD7F9C4198A@trevor.secretlab.ca>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1400671264-10702-9-git-send-email-rogerq@ti.com>
-Content-language: ko
+In-Reply-To: <20140521160931.DD7F9C4198A@trevor.secretlab.ca>
 Sender: linux-kernel-owner@vger.kernel.org
-To: 'Roger Quadros' <rogerq@ti.com>
-Cc: tony@atomide.com, computersforpeace@gmail.com, pekon@ti.com, ezequiel.garcia@free-electrons.com, robertcnelson@gmail.com, dwmw2@infradead.org, javier@dowhile0.org, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>, 'Christian Engelmayer' <cengelma@gmx.at>
+To: Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, May 21, 2014 8:21 PM, Roger Quadros wrote:
->=20
-> Fix the following warning when CONFIG_MTD_NAND_OMAP_BCH is disabled.
-> warning: =E2=80=98erased_sector_bitflips=E2=80=99 defined but not use=
-d [-Wunused-function]
->=20
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+On 5/21/2014 9:09 AM, Grant Likely wrote:
+> On Tue, 20 May 2014 19:55:45 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
+>> On 5/13/2014 7:58 AM, Grant Likely wrote:
+>>
+>>> Make of_find_node_by_path() handle aliases as prefixes. To make this
 
-(+cc Christian Engelmayer)
+< snip >
 
-The same patch was already sent by Christian Engelmayer. [1]
-Also, it was applied to mtd tree by Brian Norris. [2]
-Thank you.
+>>> ---
+>>
+>>>  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
+>>
+>>>  1 file changed, 56 insertions(+), 4 deletions(-)
+>>
+>>
+>>
+>> Was this patch created against a tree that has modifications to device tree
+>>
+>> locking?
+>>   I get a hang due to deadlock when I apply it.  Patch to verify the
+>> cause is below.
+> 
+> Ummm... I may have forgotten to enable CONFIG_LOCKDEP when testing. Try
+> the following fix, and can you please pass me that brown paper bag.
 
-[1] http://lists.infradead.org/pipermail/linux-mtd/2014-April/053330.ht=
-ml
-[2] http://git.infradead.org/users/dedekind/l2-mtd.git/commit/9fd6c6c18=
-c1a4a3220473c76fd447c5708b5ecf9
+Nononono, I need to keep the bag for my own future use :-)
 
-Best regards,
-Jingoo Han
+The following fix looks good and boots successfully on the dragonboard.
 
-> ---
->  drivers/mtd/nand/omap2.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
-> index 1ff49b8..1b800bc 100644
-> --- a/drivers/mtd/nand/omap2.c
-> +++ b/drivers/mtd/nand/omap2.c
-> @@ -1237,6 +1237,7 @@ static int __maybe_unused omap_calculate_ecc_bc=
-h(struct mtd_info *mtd,
->  	return 0;
->  }
->=20
-> +#ifdef CONFIG_MTD_NAND_OMAP_BCH
->  /**
->   * erased_sector_bitflips - count bit flips
->   * @data:	data sector buffer
-> @@ -1276,7 +1277,6 @@ static int erased_sector_bitflips(u_char *data,=
- u_char *oob,
->  	return flip_bits;
->  }
->=20
-> -#ifdef CONFIG_MTD_NAND_OMAP_BCH
->  /**
->   * omap_elm_correct_data - corrects page data area in case error rep=
-orted
->   * @mtd:	MTD device structure
-> --
-> 1.8.3.2
+-Frank
+
+> 
+> g.
+> 
+> commit 35e9c5ae6c3d0b5eb91579f397d8e1ecb95ee711
+> Author: Grant Likely <grant.likely@linaro.org>
+> Date:   Thu May 22 01:04:17 2014 +0900
+> 
+>     dt: Create unlocked version of for_each_child_of_node()
+>     
+>     When iterating over nodes, sometimes it needs to be done when the DT
+>     lock is already held. This patch makes an unlocked version of the
+>     for_each_child_of_node() macro.
+>     
+>     Signed-off-by: Grant Likely <grant.likely@linaro.org>
+
+< snip >
