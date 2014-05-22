@@ -1,94 +1,61 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: [PATCH v1 2/5] clk: qcom: Allow an override function to be passed as
- data
-Date: Thu, 22 May 2014 19:24:42 +0300
-Message-ID: <1400775885-10296-3-git-send-email-gdjakov@mm-sol.com>
-References: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: Re: [Patch v5 3/7] mfd: ti-keystone-devctrl: add bindings for device
+ state control
+Date: Thu, 22 May 2014 19:30:23 +0300
+Message-ID: <537E261F.10401@ti.com>
+References: <1400766516-14537-1-git-send-email-ivan.khoronzhuk@ti.com> <1400766516-14537-4-git-send-email-ivan.khoronzhuk@ti.com> <20140522141432.GA19747@lee--X1> <537E0A87.5010408@ti.com> <20140522153309.GB19747@lee--X1> <537E224E.3060601@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org, rdunlap@infradead.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Georgi Djakov <gdjakov@mm-sol.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <537E224E.3060601@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The APQ8084 and MSM8974 SoCs share a lot of clock data. Instead of
-duplicating all the data, we can add the support for APQ8084 into
-the MSM8974 code and just describe the differences by using an
-override function.
 
-This patch applies to the clk-next tree and the following patchset
-on top of it: https://lkml.org/lkml/2014/5/16/666
+On 05/22/2014 07:14 PM, Ivan Khoronzhuk wrote:
+>
+> On 05/22/2014 06:33 PM, Lee Jones wrote:
+>>>> Why do I only have this patch?  Where is the rest of the set?  Also,
+>>>> it's on v5 and I don't recall seeing the other 4 versions?
+>>> It's strange I've sent whole series on
+>>>
+>>> linux-kernel@vger.kernel.org
+>>> linux-arm-kernel@lists.infradead.org
+>>> linux-doc@vger.kernel.org
+>>> devicetree@vger.kernel.org
+>>>
+>>> v4 is also was sent to lists in question:
+>>> https://lkml.org/lkml/2014/5/21/359
+>> But did you send them to me?  I don't parse the list.
+>>
+>
+> Sorry.
+> Becouse /scripts/get_maintainer.pl  patches/reset_driver_v6/* hadn't 
+> been listed you
+> It's because there is no patch with "code" for the bindings you've 
+> comment.
+>
+> I should check it by hand for mtd.
+>
+> The bindings for mtd device_state_control were added only on v5
+> And it's added only to describe what is the node we've used in a 
+> keystone DT.
+> The node is planned to be used only via syscon phandle, there is no 
+> driver for it,
+> and compatible string for "ti,keystone-devctrl" added only to be 
+> matched by
+> a high-level device driver if needed.
+>
+> I'll send new v6 series to you also.
+> Once again sorry.
+>
 
-Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
----
- drivers/clk/qcom/gcc-msm8974.c |   27 +++++++++++++++------------
- 1 file changed, 15 insertions(+), 12 deletions(-)
+s/mtd/mfd
 
-diff --git a/drivers/clk/qcom/gcc-msm8974.c b/drivers/clk/qcom/gcc-msm8974.c
-index 33eb051..58cb2f5 100644
---- a/drivers/clk/qcom/gcc-msm8974.c
-+++ b/drivers/clk/qcom/gcc-msm8974.c
-@@ -2674,14 +2674,6 @@ static const struct qcom_cc_desc gcc_msm8974_desc = {
- 	.num_resets = ARRAY_SIZE(gcc_msm8974_resets),
- };
- 
--static const struct of_device_id gcc_msm8974_match_table[] = {
--	{ .compatible = "qcom,gcc-msm8974" },
--	{ .compatible = "qcom,gcc-msm8974pro" , .data = (void *)1UL },
--	{ .compatible = "qcom,gcc-msm8974pro-ac", .data = (void *)1UL },
--	{ }
--};
--MODULE_DEVICE_TABLE(of, gcc_msm8974_match_table);
--
- static void msm8974_pro_clock_override(void)
- {
- 	sdcc1_apps_clk_src_init.parent_names = gcc_xo_gpll0_gpll4;
-@@ -2697,20 +2689,31 @@ static void msm8974_pro_clock_override(void)
- 		&gcc_sdcc1_cdccal_ff_clk.clkr;
- }
- 
-+static const struct of_device_id gcc_msm8974_match_table[] = {
-+	{ .compatible = "qcom,gcc-msm8974" },
-+	{ .compatible = "qcom,gcc-msm8974pro",
-+		.data =	&msm8974_pro_clock_override },
-+	{ .compatible = "qcom,gcc-msm8974pro-ac",
-+		.data = &msm8974_pro_clock_override },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(of, gcc_msm8974_match_table);
-+
- static int gcc_msm8974_probe(struct platform_device *pdev)
- {
- 	struct clk *clk;
- 	struct device *dev = &pdev->dev;
--	bool pro;
- 	const struct of_device_id *id;
-+	void (*overrides)(void);
- 
- 	id = of_match_device(gcc_msm8974_match_table, dev);
- 	if (!id)
- 		return -ENODEV;
--	pro = !!(id->data);
- 
--	if (pro)
--		msm8974_pro_clock_override();
-+	if (id->data) {
-+		overrides = id->data;
-+		overrides();
-+	}
- 
- 	/* Temporary until RPM clocks supported */
- 	clk = clk_register_fixed_rate(dev, "xo", NULL, CLK_IS_ROOT, 19200000);
 -- 
-1.7.9.5
+Regards,
+Ivan Khoronzhuk
+
