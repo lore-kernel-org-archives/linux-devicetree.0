@@ -1,46 +1,41 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] ASoC: simple-card: Support setting mclk via a
- fixed factor
-Date: Thu, 22 May 2014 21:10:13 +0200
-Message-ID: <20140522191013.GC24500@lunn.ch>
-References: <20140520221359.GF12304@sirena.org.uk>
- <1400772710-23523-1-git-send-email-andrew@lunn.ch>
- <20140522173919.GM12304@sirena.org.uk>
- <20140522175206.GA24500@lunn.ch>
- <20140522183054.GQ12304@sirena.org.uk>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH net-next v2 0/9] net: of_phy_connect_fixed_link removal
+Date: Thu, 22 May 2014 15:18:17 -0400 (EDT)
+Message-ID: <20140522.151817.763033809324051260.davem@davemloft.net>
+References: <1400777271-32199-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140522183054.GQ12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <1400777271-32199-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org, leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org, richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 07:30:54PM +0100, Mark Brown wrote:
-> On Thu, May 22, 2014 at 07:52:06PM +0200, Andrew Lunn wrote:
-> > On Thu, May 22, 2014 at 06:39:19PM +0100, Mark Brown wrote:
-> 
-> > > I'm missing the rest of this series - what's the context, are there any
-> > > interdependencies?
-> 
-> > I threaded the patch to your request to respin this patch:
-> 
-> > http://patchwork.ozlabs.org/patch/345353/
-> 
-> Ugh, no - don't do this.  It's just confusing.
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Date: Thu, 22 May 2014 09:47:42 -0700
 
-O.K, i will try to remember this as your way of doing things, when
-submitting to you. The usb-serial maintainer does want replies
-threading to his messages, etc. Takes a while to learn each
-maintainers ways.
+> This patch set removes of_phy_connect_fixed_link() from the tree now that
+> we have a better solution for dealing with fixed PHY (emulated PHY) devices
+> for drivers that require them.
+> 
+> First two patches update the 'fixed-link' Device Tree binding and drivers to
+> refere to it.
+> 
+> Patches 3 to 7 update the in-tree network drivers that use
+> of_phy_connect_fixed_link()
+> 
+> Patch 8 removes of_phy_connect_fixed_link
+> 
+> Patch 9 removes the PowerPC code that parsed the 'fixed-link' property.
+> 
+> Patch 9 can be merged via the net-next tree if the PowerPC folks ack it,
+> but it really has to be merged after the first 8 patches in order to avoid
+> breakage.
 
-What you failed to say is if they will accept this one patch as is, or
-if you want me to post a v4 containing all the patches?
-
-Thanks
-	Andrew
+Series applied, if someone doesn't like patch #9 we can fix it up with a
+followup patch or revert.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
