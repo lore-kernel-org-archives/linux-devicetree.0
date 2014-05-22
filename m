@@ -1,29 +1,53 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH 0/2] ARM: shmobile: r8a7779/marzen CCF DT updates
-Date: Thu, 22 May 2014 14:33:15 +0200
-Message-ID: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/2] ARM: shmobile: marzen dts: Remove superfluous include
+Date: Thu, 22 May 2014 14:50:47 +0200
+Message-ID: <2352184.UXetcfavus@avalon>
+References: <1400761997-13512-1-git-send-email-geert+renesas@glider.be> <1400761997-13512-3-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1400761997-13512-3-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-	Hi Simon,
+Hi Geert,
 
-Here are a few updates for r8a7779/marzen CCF DT:
-  - [1/2] ARM: shmobile: r8a7779 dtsi: Correct #address-cells/#size-cells
-          for clocks
-  - [2/2] ARM: shmobile: marzen dts: Remove superfluous include
+Thank you for the patch.
 
-This was only compile-tested, due to lack of hardware.
+On Thursday 22 May 2014 14:33:17 Geert Uytterhoeven wrote:
+> <dt-bindings/interrupt-controller/irq.h> is already included by
+> r8a7779.dtsi.
 
-Gr{oetje,eeting}s,
+Isn't it better, like with C code, to explicitly include headers that provide 
+the macros you need, instead of relying on implicit #include's that could 
+change later ? OK, in this specific case, it's very unlikely that r8a7779.dtsi 
+would stop including <dt-bindings/interrupt-controller/irq.h>, but in the 
+general case I believe explicit includes to be good practice.
 
-						Geert
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  arch/arm/boot/dts/r8a7779-marzen.dts | 1 -
+>  1 file changed, 1 deletion(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7779-marzen.dts
+> b/arch/arm/boot/dts/r8a7779-marzen.dts index 321290828eee..649129906d6f
+> 100644
+> --- a/arch/arm/boot/dts/r8a7779-marzen.dts
+> +++ b/arch/arm/boot/dts/r8a7779-marzen.dts
+> @@ -12,7 +12,6 @@
+>  /dts-v1/;
+>  #include "r8a7779.dtsi"
+>  #include <dt-bindings/gpio/gpio.h>
+> -#include <dt-bindings/interrupt-controller/irq.h>
+> 
+>  / {
+>  	model = "marzen";
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+-- 
+Regards,
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Laurent Pinchart
+
