@@ -1,150 +1,54 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
-Date: Thu, 22 May 2014 12:13:06 +0900
-Message-ID: <20140522031306.DD6B7C41847@trevor.secretlab.ca>
-References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org>
-	<1399993115-21552-3-git-send-email-grant.likely@linaro.org>
-	<53757D25.1060005@gmail.com>
-	<20140516105444.C1DB7C42277@trevor.secretlab.ca>
-	<20140518092730.109AAC40B8A@trevor.secretlab.ca>
-	<537C1252.3090900@gmail.com> <537C137B.2000007@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <537C137B.2000007@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: frowand.list@gmail.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, David Daney <david.daney@cavium.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+From: Keerthy <j-keerthy@ti.com>
+Subject: [PATCH v3 0/4] tps65917: Drivers for TPS65917 PMIC
+Date: Thu, 22 May 2014 09:30:35 +0530
+Message-ID: <1400731239-3180-1-git-send-email-j-keerthy@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, sameo@linux.intel.com, grant.likely@linaro.org, ian@slimlogic.co.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@linaro.org, lee.jones@linaro.org, linux-omap@vger.kernel.org, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 May 2014 19:46:19 -0700, Frank Rowand <frowand.list@gmail.com> wrote:
-> On 5/20/2014 7:41 PM, Frank Rowand wrote:
-> < snip >
-> > I will reply to this email with an additional patch that restores the
-> > original behavior.
-> < snip >
-> From: Frank Rowand <frank.rowand@sonymobile.com>
-> 
-> If __of_find_node_by_path() returns parent when the remaining portion of the
-> path is "/" then the behavior of of_find_node_by_path() has changed.
-> 
-> Previously, adding an extraneous "/" on the end of a path would result
-> in of_find_node_by_path() not finding a match.
-> 
-> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
-> ---
->  drivers/of/base.c |   13 ++++++++++++-
->  1 file changed, 12 insertions(+), 1 deletion(-)
-> 
-> Index: b/drivers/of/base.c
-> ===================================================================
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -778,7 +778,7 @@ static struct device_node *__of_find_nod
->  	int len = strchrnul(path, '/') - path;
->  
->  	if (!len)
-> -		return parent;
-> +		return NULL;
->  
->  	for_each_child_of_node(parent, child) {
->  		const char *name = strrchr(child->full_name, '/');
-> @@ -813,6 +813,17 @@ struct device_node *of_find_node_by_path
->  	struct property *pp;
->  	unsigned long flags;
->  
-> +	if (strcmp(path, "/") == 0) {
-> +		raw_spin_lock_irqsave(&devtree_lock, flags);
-> +		for (; np; np = np->allnext) {
-> +			if (np->full_name && (of_node_cmp(np->full_name, path) == 0)
-> +			    && of_node_get(np))
-> +				break;
-> +		}
-> +		raw_spin_unlock_irqrestore(&devtree_lock, flags);
-> +		return np;
-> +	}
-> +
+The TPS65917 chip is a power management IC for Portable Navigation Systems
+and Tablet Computing devices. It contains the following components:
 
-Special case for the root node? Could use a comment, and of_allnodes
-will already point to the root node so this could simply be:
+ - Regulators.
+ - GPADC.
+ - Over Temperature warning and Shut down.
 
-	if (strcmp(path, "/") == 0)
-		return of_node_get(np);
+This patch series adds support for TPS65917 mfd device. At this time only
+the regulator functionality is made available.
 
-Here's a complete patch:
+The closest drivers are PALMAS series drivers.
+The register set is changed. Bit-field defenitions are changed.
+Hence based on the PALMAS drivers and created a new set of drivers
+with code changes as required.
 
-commit adc96db6c39ef7b895e75d30dbc69781f6443f1d
-Author: Grant Likely <grant.likely@linaro.org>
-Date:   Thu May 22 11:55:31 2014 +0900
+The patches are boot tested on DRA72-EVM.
 
-    fix trailing '/' case
+Keerthy (4):
+  MFD: DT bindings for the TPS65917 family MFD
+  Regulators: Add TPS65917 Bindings
+  mfd: tps65917: Add driver for the TPS65917 PMIC
+  regulator: tps65917: Add Regulator driver for TPS65917 PMIC
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index c05a143b6a70..45ac44c8dfea 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -790,7 +790,7 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
- 	int len = strchrnul(path, '/') - path;
- 
- 	if (!len)
--		return parent;
-+		return NULL;
- 
- 	__for_each_child_of_node(parent, child) {
- 		const char *name = strrchr(child->full_name, '/');
-@@ -820,10 +820,13 @@ static struct device_node *__of_find_node_by_path(struct device_node *parent,
-  */
- struct device_node *of_find_node_by_path(const char *path)
- {
--	struct device_node *np = of_allnodes;
-+	struct device_node *np = NULL;
- 	struct property *pp;
- 	unsigned long flags;
- 
-+	if (strcmp(path, "/") == 0)
-+		return of_node_get(of_allnodes);
-+
- 	/* The path could begin with an alias */
- 	if (*path != '/') {
- 		char *p = strchrnul(path, '/');
-@@ -833,7 +836,6 @@ struct device_node *of_find_node_by_path(const char *path)
- 		if (!of_aliases)
- 			return NULL;
- 
--		np = NULL;
- 		for_each_property_of_node(of_aliases, pp) {
- 			if (strlen(pp->name) == len && !strncmp(pp->name, path, len)) {
- 				np = of_find_node_by_path(pp->value);
-@@ -847,6 +849,8 @@ struct device_node *of_find_node_by_path(const char *path)
- 
- 	/* Step down the tree matching path components */
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
-+	if (!np)
-+		np = of_node_get(of_allnodes);
- 	while (np && *path == '/') {
- 		path++; /* Increment past '/' delimiter */
- 		np = __of_find_node_by_path(np, path);
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 10900b18fc06..aeb0b5c8b21d 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -42,9 +42,7 @@ static void __init of_selftest_find_node_by_name(void)
- 
- 	/* Test if trailing '/' works */
- 	np = of_find_node_by_path("/testcase-data/");
--	selftest(np && !strcmp("/testcase-data", np->full_name),
--		"find /testcase-data/ failed\n");
--	of_node_put(np);
-+	selftest(!np, "trailing '/' on /testcase-data/ should fail\n");
- 
- 	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
- 	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
-@@ -58,9 +56,7 @@ static void __init of_selftest_find_node_by_name(void)
- 
- 	/* Test if trailing '/' works on aliases */
- 	np = of_find_node_by_path("testcase-alias/");
--	selftest(np && !strcmp("/testcase-data", np->full_name),
--		"find testcase-alias/ failed\n");
--	of_node_put(np);
-+	selftest(!np, "trailing '/' on testcase-alias/ should fail\n");
- 
- 	np = of_find_node_by_path("testcase-alias/phandle-tests/consumer-a");
- 	selftest(np && !strcmp("/testcase-data/phandle-tests/consumer-a", np->full_name),
+ Documentation/devicetree/bindings/mfd/tps65917.txt |   35 +
+ .../bindings/regulator/tps65917-pmic.txt           |   67 +
+ drivers/mfd/Kconfig                                |   12 +
+ drivers/mfd/Makefile                               |    1 +
+ drivers/mfd/tps65917.c                             |  594 ++++++++
+ drivers/regulator/Kconfig                          |   12 +
+ drivers/regulator/Makefile                         |    1 +
+ drivers/regulator/tps65917-regulator.c             |  809 +++++++++++
+ include/linux/mfd/tps65917.h                       | 1485 ++++++++++++++++++++
+ 9 files changed, 3016 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/tps65917.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/tps65917-pmic.txt
+ create mode 100644 drivers/mfd/tps65917.c
+ create mode 100644 drivers/regulator/tps65917-regulator.c
+ create mode 100644 include/linux/mfd/tps65917.h
+
+-- 
+1.7.9.5
+
