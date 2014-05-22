@@ -1,100 +1,66 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: [PATCH 1/2] ASoC: max98090: Add master clock handling
-Date: Thu, 22 May 2014 14:47:07 +0530
-Message-ID: <1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
-References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: tiwai@suse.de, perex@perex.cz, broonie@kernel.org, dianders@chromium.org, jerry.wong@maximintegrated.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: sun7i: cubietruck: set mmc3
+ bus-width property
+Date: Thu, 22 May 2014 11:40:53 +0200
+Message-ID: <20140522094053.GA27329@lukather>
+References: <1400694211-29903-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="s8ux8MQukyWAm3r7"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBH4O66NQKGQEZXLK2WI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400694211-29903-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-If master clock is provided through device tree, then update
-the master clock frequency during set_sysclk.
 
-Documentation has been updated to reflect the change.
+--s8ux8MQukyWAm3r7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Tushar Behera <tushar.behera@linaro.org>
----
- .../devicetree/bindings/sound/max98090.txt         |    6 ++++++
- sound/soc/codecs/max98090.c                        |   13 +++++++++++++
- sound/soc/codecs/max98090.h                        |    1 +
- 3 files changed, 20 insertions(+)
+On Wed, May 21, 2014 at 07:43:30PM +0200, Hans de Goede wrote:
+> bus-width defaults to 1, and all 4 lines are hooked up at the cubietruck,
+> properly set bus-width to 4.
+>=20
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-diff --git a/Documentation/devicetree/bindings/sound/max98090.txt b/Documentation/devicetree/bindings/sound/max98090.txt
-index e4c8b36..a5e63fa 100644
---- a/Documentation/devicetree/bindings/sound/max98090.txt
-+++ b/Documentation/devicetree/bindings/sound/max98090.txt
-@@ -10,6 +10,12 @@ Required properties:
- 
- - interrupts : The CODEC's interrupt output.
- 
-+Optional properties:
-+
-+- clocks: The phandle of the master clock to the CODEC
-+
-+- clock-names: Should be "mclk"
-+
- Pins on the device (for linking into audio routes):
- 
-   * MIC1
-diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
-index 9b76f5a..41c61eb 100644
---- a/sound/soc/codecs/max98090.c
-+++ b/sound/soc/codecs/max98090.c
-@@ -17,6 +17,7 @@
- #include <linux/regmap.h>
- #include <linux/slab.h>
- #include <linux/acpi.h>
-+#include <linux/clk.h>
- #include <sound/jack.h>
- #include <sound/pcm.h>
- #include <sound/pcm_params.h>
-@@ -1929,6 +1930,11 @@ static int max98090_dai_set_sysclk(struct snd_soc_dai *dai,
- 	if (freq == max98090->sysclk)
- 		return 0;
- 
-+	if (!IS_ERR(max98090->mclk)) {
-+		freq = clk_round_rate(max98090->mclk, freq);
-+		clk_set_rate(max98090->mclk, freq);
-+	}
-+
- 	/* Setup clocks for slave mode, and using the PLL
- 	 * PSCLK = 0x01 (when master clk is 10MHz to 20MHz)
- 	 *		 0x02 (when master clk is 20MHz to 40MHz)..
-@@ -2213,6 +2219,10 @@ static int max98090_probe(struct snd_soc_codec *codec)
- 
- 	dev_dbg(codec->dev, "max98090_probe\n");
- 
-+	max98090->mclk = devm_clk_get(codec->dev, "mclk");
-+	if (!IS_ERR(max98090->mclk))
-+		clk_prepare_enable(max98090->mclk);
-+
- 	max98090->codec = codec;
- 
- 	/* Reset the codec, the DSP core, and disable all interrupts */
-@@ -2308,6 +2318,9 @@ static int max98090_remove(struct snd_soc_codec *codec)
- 
- 	cancel_delayed_work_sync(&max98090->jack_work);
- 
-+	if (!IS_ERR(max98090->mclk))
-+		clk_disable_unprepare(max98090->mclk);
-+
- 	return 0;
- }
- 
-diff --git a/sound/soc/codecs/max98090.h b/sound/soc/codecs/max98090.h
-index 5a3c8d0..cf1b606 100644
---- a/sound/soc/codecs/max98090.h
-+++ b/sound/soc/codecs/max98090.h
-@@ -1524,6 +1524,7 @@ struct max98090_priv {
- 	struct snd_soc_codec *codec;
- 	enum max98090_type devtype;
- 	struct max98090_pdata *pdata;
-+	struct clk *mclk;
- 	unsigned int sysclk;
- 	unsigned int bclk;
- 	unsigned int lrclk;
--- 
-1.7.9.5
+Merged the two patches, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--s8ux8MQukyWAm3r7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTfcYlAAoJEBx+YmzsjxAg6boP/iJ3OT3RPjxdM/pjImH3dsiY
+ETOk54uUxbB4WJPAepU/KdGFuzR0Kv52mmjgPCP40YARueTPKCxDaDqOWI7kplf2
+XWSGbaQka5VwhUAXUr+WVeUa1gZYKG7uAjheEoOAZrQ3wqGstKf4tbh8KOws7hRU
+ceZgr/wZGKZLa4ZM51hNEajZoEXUnAr4+pK6xcQtYSpM+uZOtiBSWA8p34/x3WwY
+HIWUqMt2Ad56h0aVihA4wUM2kBPCRzWKAzdsOZmnoK76SJ01JgWQLvWmdbZzV3BH
+cisiZYCixom4pRSDpu3LHs/xN3+tF+o2g9zJpSUcPe6dDpmgRRg23OE/omBQwU+k
+gsg9wD/gS60I764lVr8uAMIMIYbGQWSXtnuJVC4Pwlz/h5tU1tTuEEp1sDNHM85x
+uKYePVCPo5bm5feaw2BSTsUgzWdKMLP2r6zLP94t+rBUzvx5871gbG9l6pdBDYtD
+Usu4tJvo0YVEiMr76sR4V2xjrj1EJMxnsPEV1h1STqnWTQq4OAyNAXp2OpQa5RQ3
+Dx/SXOBBF9l/AfU/MeMyBSg6fmlyOEhQ43MALPnmQRWSoltWsfh4xH9cunA32Lfr
+YTk5KJSNMOg/MvCC8uBKdiyatYtb2BnJsjmK9vT2H/OQfbVQvF/VHWVqs4tysEBp
+kzxr4kkrCkgk3hIs43/g
+=DSF/
+-----END PGP SIGNATURE-----
+
+--s8ux8MQukyWAm3r7--
