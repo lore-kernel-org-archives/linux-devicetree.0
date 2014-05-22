@@ -1,63 +1,42 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH net-next v2 5/9] fs_enet: use the new fixed PHY helpers
-Date: Thu, 22 May 2014 09:47:47 -0700
-Message-ID: <1400777271-32199-6-git-send-email-f.fainelli@gmail.com>
-References: <1400777271-32199-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1400777271-32199-1-git-send-email-f.fainelli@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: davem@davemloft.net, Florian Fainelli <f.fainelli@gmail.com>, Pantelis Antoniou <pantelis.antoniou@gmail.com>, Vitaly Bordug <vbordug@ru.mvista.com>, Li Yang <leoli@freescale.com>, Grant Likely <grant.likely@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Aida Mynzhasova <aida.mynzhasova@skitlab.ru>, Richard Cochran <richardcochran@gmail.com>, Claudiu Manoil <claudiu.manoil@freescale.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev@lists.ozlabs.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [Patch v6 3/7] mfd: ti-keystone-devctrl: add bindings for device
+ state control
+Date: Thu, 22 May 2014 18:11:48 +0100
+Message-ID: <20140522171148.GL19747@lee--X1>
+References: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com>
+ <1400777062-19276-4-git-send-email-ivan.khoronzhuk@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400777062-19276-4-git-send-email-ivan.khoronzhuk@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com, sergei.shtylyov@cogentembedded.com
 List-Id: devicetree@vger.kernel.org
 
-of_phy_connect_fixed_link() is becoming obsolete, and also required
-platform code to register the fixed PHYs at the specified addresses for
-those to be usable. Get rid of it and use the new of_phy_is_fixed_link()
-plus of_phy_register_fixed_link() helpers to transition over the new
-scheme.
+On Thu, 22 May 2014, Ivan Khoronzhuk wrote:
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
-- merge if conditions on the same line as suggested by Sergei
-- add comment explaining the device_node pointer assignment
+> The Keystone II devices have a set of registers that are used to cont=
+rol
+> the status of its peripherals. This node is intended to allow access =
+to
+> this functionality.
+>=20
+> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+> ---
+>  .../devicetree/bindings/mfd/ti-keystone-devctrl.txt   | 19 +++++++++=
+++++++++++
+>  1 file changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/ti-keystone=
+-devctrl.txt
 
- drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c | 17 ++++++++++-------
- 1 file changed, 10 insertions(+), 7 deletions(-)
+Applied, thanks.
 
-diff --git a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-index dc80db41d6b3..cfaf17b70f3f 100644
---- a/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-+++ b/drivers/net/ethernet/freescale/fs_enet/fs_enet-main.c
-@@ -792,10 +792,6 @@ static int fs_init_phy(struct net_device *dev)
- 	phydev = of_phy_connect(dev, fep->fpi->phy_node, &fs_adjust_link, 0,
- 				iface);
- 	if (!phydev) {
--		phydev = of_phy_connect_fixed_link(dev, &fs_adjust_link,
--						   iface);
--	}
--	if (!phydev) {
- 		dev_err(&dev->dev, "Could not attach to PHY\n");
- 		return -ENODEV;
- 	}
-@@ -1029,9 +1025,16 @@ static int fs_enet_probe(struct platform_device *ofdev)
- 	fpi->use_napi = 1;
- 	fpi->napi_weight = 17;
- 	fpi->phy_node = of_parse_phandle(ofdev->dev.of_node, "phy-handle", 0);
--	if ((!fpi->phy_node) && (!of_get_property(ofdev->dev.of_node, "fixed-link",
--						  NULL)))
--		goto out_free_fpi;
-+	if (!fpi->phy_node && of_phy_is_fixed_link(ofdev->dev.of_node)) {
-+		err = of_phy_register_fixed_link(ofdev->dev.of_node);
-+		if (err)
-+			goto out_free_fpi;
-+
-+		/* In the case of a fixed PHY, the DT node associated
-+		 * to the PHY is the Ethernet MAC DT node.
-+		 */
-+		fpi->phy_node = ofdev->dev.of_node;
-+	}
- 
- 	if (of_device_is_compatible(ofdev->dev.of_node, "fsl,mpc5125-fec")) {
- 		phy_connection_type = of_get_property(ofdev->dev.of_node,
--- 
-1.9.1
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
