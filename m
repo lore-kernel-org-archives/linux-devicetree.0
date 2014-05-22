@@ -1,38 +1,54 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH v1 3/5] clk: gcc: Add APQ8084 Global Clock Controller support
-Date: Thu, 22 May 2014 11:38:55 -0500
-Message-ID: <DB9EC1F3-CA2B-47C5-A677-CC1222F05614@codeaurora.org>
-References: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com> <1400775885-10296-4-git-send-email-gdjakov@mm-sol.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Subject: [Patch v6 2/7] clock: keystone-pllctrl: add bindings for keystone pll controller
+Date: Thu, 22 May 2014 19:44:17 +0300
+Message-ID: <1400777062-19276-3-git-send-email-ivan.khoronzhuk@ti.com>
+References: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400775885-10296-4-git-send-email-gdjakov@mm-sol.com>
+In-Reply-To: <1400777062-19276-1-git-send-email-ivan.khoronzhuk@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: dbaryshkov@gmail.com, dwmw2@infradead.org, lee.jones@linaro.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: rdunlap@infradead.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com, sergei.shtylyov@cogentembedded.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+The main pll controller used to drive theC66x CorePacs, the switch fabric,
+and a majority of the peripheral clocks (all but the ARM CorePacs, DDR3 and
+the NETCP modules) requires a PLL Controller to manage the various clock
+divisions, gating, and synchronization.
 
-On May 22, 2014, at 11:24 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
+Reviewed-by: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+---
+ .../bindings/clock/ti-keystone-pllctrl.txt           | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
 
-> This patch adds support for the global clock controller found on
-> the APQ8084 based devices.
-> 
-> The APQ8084 and MSM8974 share a lot of clock data, so instead of
-> duplicating all the data, we add support to the MSM8974 code.
-> 
-> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
-> ---
-> drivers/clk/qcom/Kconfig                     |    4 +-
-> drivers/clk/qcom/gcc-msm8974.c               |  151 +++++++++++++++++++++++++-
-> include/dt-bindings/clock/qcom,gcc-msm8974.h |    4 +
-> 3 files changed, 154 insertions(+), 5 deletions(-)
-
-What about differences in reset?
-
-- k
-
+diff --git a/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt b/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
+new file mode 100644
+index 0000000..3e6a81e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/ti-keystone-pllctrl.txt
+@@ -0,0 +1,20 @@
++* Device tree bindings for Texas Instruments keystone pll controller
++
++The main pll controller used to drive theC66x CorePacs, the switch fabric,
++and a majority of the peripheral clocks (all but the ARM CorePacs, DDR3 and
++the NETCP modules) requires a PLL Controller to manage the various clock
++divisions, gating, and synchronization.
++
++Required properties:
++
++- compatible:		"ti,keystone-pllctrl", "syscon"
++
++- reg:			contains offset/length value for pll controller
++			registers space.
++
++Example:
++
++pllctrl: pll-controller@0x02310000 {
++	compatible = "ti,keystone-pllctrl", "syscon";
++	reg = <0x02310000 0x200>;
++};
 -- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+1.8.3.2
