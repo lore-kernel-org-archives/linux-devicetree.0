@@ -1,143 +1,165 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-Date: Thu, 22 May 2014 17:01:19 +0530
-Message-ID: <20140522113119.GA2646@pratyush-vbox>
-References: <cover.1397555158.git.mohit.kumar@st.com>
- <2CC2A0A4A178534D93D5159BF3BCB6619B94997E2B@EAPEX1MAIL1.st.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Thu, 22 May 2014 13:38:18 +0200
+Message-ID: <537DE1AA.5050606@redhat.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-pci-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB6619B94997E2B@EAPEX1MAIL1.st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: "Arnd Bergmann (arnd@arndb.de)" <arnd@arndb.de>, "'Bjorn Helgaas' (bhelgaas@google.com)" <bhelgaas@google.com>
-Cc: Mohit KUMAR <mohit.kumar@st.com>, spear-devel <spear-devel@list.st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Mark Nicholson <mark@nicholnet.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Tomasz Figa <tomasz.figa@gmail.com>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Arnd/Bjorn,
+Hi,
 
-On Mon, May 19, 2014 at 07:55:12PM +0800, Mohit KUMAR wrote:
-> Hello Arnd,
+On 05/22/2014 12:23 PM, Chen-Yu Tsai wrote:
+> Hi,
 > 
-> > -----Original Message-----
-> > From: Mohit KUMAR DCG
-> > Sent: Tuesday, April 15, 2014 5:20 PM
-> > To: spear-devel; linux-kernel@vger.kernel.org; devicetree@vger.kernel.org;
-> > linux-pci@vger.kernel.org; linux-arm-kernel@lists.infradead.org
-> > Cc: Mohit KUMAR DCG
-> > Subject: [PATCH V8 0/9] PCI: Add SPEAr13xx PCie support
-> > 
-> > Patch# 1 and 2: Improvement and fixes for SPEAr13xx support.
-> > Patch# 3,4 and 6: Add DT bindings for spear1310/40-miphy, misc and pcie
-> > node Patch# 5: Add spear1310/40-miphy driver and support for spear1310/40
-> > miphy wrapper.
-> > Patch# 7-9: Add SPEAr13xx PCIe driver and dt support.
-> > 
-> > These pathes are tested with linux-3.15 tag of arm-soc tree.
-> > Tested with SPEAr1310 evaluation board with:
-> > 	- INTEL PRO 100/100 EP card
-> > 	- USB xhci gen2 card
-> >  	- Above cards connected through LeCROY PTC switch
-> > 
-> > Modifications for SATA are tested with SPEAr1340-evb board
-> > 
+> On Thu, May 22, 2014 at 5:49 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>> Hi All,
+>>
+>> Arend asked me to test these 2 patches for adding devicetree support to brcmfmac sdio devices:
+>> "dt: bindings: add bindings for Broadcom bcm43xx sdio devices"
+>> "brcmfmac: add device tree support for SDIO devices"
+>> https://groups.google.com/forum/#!msg/linux-sunxi/Zph6zDTnAcw/_-wOO-gnIuQJ
+>>
+>> Getting this to do anything at all meant also adding this patch:
+>>
+>> "mmc: Add SDIO function devicetree subnode parsing"
+>> https://lkml.org/lkml/2014/4/3/522
+>>
+>> So that the card / sdio-func devices would actually get their of_node
+>> pointer set to the child node under the mmc controller describing
+>> the sdio wifi module.
+>>
+>> But that does not solve the entire problem. Listing the oob-interrupt info
+>> in the child node works fine. But listing the brcm,wlan-supply gpio does
+>> not. Since these sdio wifi modules are typically soldered onto the
+>> board, there mmc controller device tree node has non-removable; set,
+>> so the mmc subsystem will try to initialize the sdio device as soon
+>> as the mmc driver loads, and if that fails will never look at it again.
+>>
+>> So we need to have the brcm,wlan-supply gpio driven high *before* the mmc
+>> host driver initializes. In case of the brcm,wlan-supply property, this
+>> is actually a problem which we've already solved in a number of dts files
+>> for allwinner boards, simply create a fixed-regulator with an enable/disable
+>> gpio, and set that as vmmc-supply for the mmc-host for the sdio wifi.
+>>
+>> However the "brcmfmac: add device tree support for SDIO devices" patch
+>> also adds support for 2 devicetree controlled clocks. Assuming these need
+>> to be ungated before the sdio module will respond to mmc commands, we have
+>> the same problem.
 > 
-> I think 3.16 windows is about to close, are you planning to merge this series?
-> Pls let me know if something pending on our part.
+> Olof posted an RFC series on this very matter:
+> 
+>   http://www.spinics.net/lists/linux-mmc/msg24411.html
+> 
+> There was a lengthy discussion, however I don't think the matter was settled.
 
-If you could let us know the status of this patch series inclusion.
+Phew that was a long read. Indeed it seems that the matter was not
+entirely settled.  It seems that the discussion did gravitate towards this
+information belonging in child nodes under the host controller node to represent
+the device.
 
-Regards
-Pratyush
+I think we need to do this step by step:
+
+1) Right now, for my use case, I really only care about oob interrupts.
+
+If we can agree that we for additional info for sdio devices we will
+be using a child node under the mmc host with #address-cells = <1>;
+#size-cells = <0>; and reg == function number, iow go with Sacha's
+patch to attach an of node to sdio device functions, then that use case
+is covered.
+
+I think this will cover quite a few use-cases already. and it should not
+get in the way of adding fancier stuff, up to doing the entire device
+instantation statically based on the child node, later.
+
+2) Note that my proposal for the clks is very much like Olof's proposal
+in that it tries to keep things KISS, but instead of adding the info
+to the mmc-host node it adds it to the sdio-func child nodes. We could
+ask someone who has an actual use case where power-sequencing with clks
+and/or resets is needed to first implement things along Olof's proposal,
+but then with the clks and resets using standardized properties inside the
+child nodes. This would keep things KISS, again without getting in the
+way of getting fancier later.
+
+3) If someone has a usecase where 2 does not work or become ugly, we can
+then ask that someone to come up with a proposal for something better.
+
+Regards,
+
+Hans
+
+
 
 > 
-> Regards
-> Mohit
+> CC-ed everyone from that discussion.
 > 
-> > Changes since v7:
-> > - Rebase over for-linus-3.15 tag of arm-soc tree so that complete patch series
-> > can be applied cleanly.
-> > - Incorporated few comments on comment style and superfluous comments
-> > Changes since v6:
-> > - Split miphy driver for SPEAr1310 and SPEAr1340
-> > - Some cleanup and incorporated other minor comments Changes since v5:
-> > - Split DT bindings for misc, miphy-40lp and pcie node into sepearte patches
-> > - Merge config options PCIE_SPEAR13XX and PCI_MSI into defconfig patch
-> > - Incorporated other minor comments
-> > Changes since v4:
-> > - Uses per device function pointers passed from .data field to
-> >   the of_device_id instead of of_device_is_compatible.
-> > - Incorporated other minor comments from v4
-> > 
-> > Changes since v3:
-> > - Phy driver renamed to phy-miphy40lp
-> > - ahci phy hook patch used as suggested by Arnd
-> > - Incorporated other minor comments from v3
-> > 
-> > Changes since v2:
-> > - Incorporated comments to move SPEAr13xx PCIe and SATA phy specific
-> > routines to
-> >   the phy framework
-> > - Modify ahci driver to include phy hooks
-> > - phy-core driver modifications for subsys_initcall()
-> > 
-> > Changes since v1:
-> > - Few patches of the series are already accepted and applied to mainline e.g.
-> >  pcie designware driver improvements,fixes for IO translation bug, PCIe dw
-> > driver maintainer. So dropped these from v2.
-> > - Incorporated comment to move the common/reset PCIe code to the
-> > seperate driver
-> > - PCIe and SATA share common PHY configuration registers, so move SATA
-> > platform code to the system config driver Fourth patch is improves pcie
-> > designware driver and fixes the IO translation bug. IO translation bug fix
-> > leads to the working of PCIe EP devices connected to RC through switch.
-> > 
-> > Mohit Kumar (1):
-> >   SPEAr13xx: defconfig: Update
-> > 
-> > Pratyush Anand (8):
-> >   clk: SPEAr13XX: Fix pcie clock name
-> >   SPEAr13XX: Fix static mapping table
-> >   phy: SPEAr1310/40-miphy: Add binding information
-> >   SPEAr: misc: Add binding information
-> >   phy: SPEAr1310/40-miphy: Add phy driver for PCIe and SATA
-> >   SPEAr13XX: Add binding information for PCIe controller
-> >   SPEAr13XX: dts: Add PCIe node information
-> >   pcie: SPEAr13xx: Add designware wrapper support
-> > 
-> >  .../devicetree/bindings/arm/spear-misc.txt         |    9 +
-> >  .../devicetree/bindings/pci/spear13xx-pcie.txt     |   14 +
-> >  .../devicetree/bindings/phy/st-spear1310-miphy.txt |   12 +
-> >  .../devicetree/bindings/phy/st-spear1340-miphy.txt |   11 +
-> >  MAINTAINERS                                        |    6 +
-> >  arch/arm/boot/dts/spear1310-evb.dts                |    4 +
-> >  arch/arm/boot/dts/spear1310.dtsi                   |   93 +++++-
-> >  arch/arm/boot/dts/spear1340-evb.dts                |    4 +
-> >  arch/arm/boot/dts/spear1340.dtsi                   |   30 ++-
-> >  arch/arm/boot/dts/spear13xx.dtsi                   |    9 +-
-> >  arch/arm/configs/spear13xx_defconfig               |   16 +
-> >  arch/arm/mach-spear/Kconfig                        |    4 +
-> >  arch/arm/mach-spear/include/mach/spear.h           |    4 +-
-> >  arch/arm/mach-spear/spear1340.c                    |  127 +------
-> >  arch/arm/mach-spear/spear13xx.c                    |    2 +-
-> >  drivers/clk/spear/spear1310_clock.c                |    6 +-
-> >  drivers/clk/spear/spear1340_clock.c                |    2 +-
-> >  drivers/pci/host/Kconfig                           |    8 +
-> >  drivers/pci/host/Makefile                          |    1 +
-> >  drivers/pci/host/pcie-spear13xx.c                  |  407 ++++++++++++++++++++
-> >  drivers/phy/Kconfig                                |   12 +
-> >  drivers/phy/Makefile                               |    2 +
-> >  drivers/phy/phy-spear1310-miphy.c                  |  274 +++++++++++++
-> >  drivers/phy/phy-spear1340-miphy.c                  |  300 ++++++++++++++
-> >  24 files changed, 1218 insertions(+), 139 deletions(-)  create mode 100644
-> > Documentation/devicetree/bindings/arm/spear-misc.txt
-> >  create mode 100644 Documentation/devicetree/bindings/pci/spear13xx-
-> > pcie.txt
-> >  create mode 100644 Documentation/devicetree/bindings/phy/st-
-> > spear1310-miphy.txt
-> >  create mode 100644 Documentation/devicetree/bindings/phy/st-
-> > spear1340-miphy.txt
-> >  create mode 100644 drivers/pci/host/pcie-spear13xx.c  create mode 100644
-> > drivers/phy/phy-spear1310-miphy.c  create mode 100644 drivers/phy/phy-
-> > spear1340-miphy.c
+>> I've been thinking a bit about this, and it is a non trivial problem since
+>> sdio devices are normally instantiated when probed, unlike ie spi devices
+>> which are instantiated from devicetree.
+>>
+>> Adding device tree instantiation of sdio devices seems like a bad idea, as
+>> then we get 2 vastly different device instantiation paths. Still we need some
+>> way to get power and clks setup before the mmc host initializes.
+>>
+>> Therefor I would like to suggest to add a number of standard properties to
+>> mmc-bus child nodes. Making the dts for an mmc host with an sdio device which
+>> needs clks setup before it will work look like this:
+>>
+>>                 mmc3: mmc@01c12000 {
+>>                         #address-cells = <1>;
+>>                         #size-cells = <0>;
+>>                         pinctrl-names = "default";
+>>                         pinctrl-0 = <&mmc3_pins_a>;
+>>                         vmmc-supply = <&reg_vmmc3>;
+>>                         bus-width = <4>;
+>>                         non-removable;
+>>                         status = "okay";
+>>
+>>                         brcmf: bcrmf@0 {
+>>                                 reg = <0>;
+>>                                 compatible = "brcm,bcm43xx-fmac";
+>>                                 clocks = <&clk_out_a>, <&clk_out_b>;
+>>                                 clock-frequency = <32768>, <26000000>;
+>>                                 interrupt-parent = <&pio>;
+>>                                 interrupts = <10 4>; /* PH10 / EINT10 */
+>>                                 interrupt-names = "host-wake";
+>>                                 status = "okay";
+>>                         };
+>>                 };
+>>
+>> Where the "clocks" and "clock-frequency" attributes would be something
+>> which we standardize in Documentation/devicetree/bindings/mmc/mmc-bus.txt
+>>
+>> These standard properties would *not* be used by the driver for the
+>> childnode device, so as to avoid the chicken and egg problem of that driver
+>> needing to enable clks, and it only getting bound to the device after
+>> the device has been discovered which requires those clocks.
+>>
+>> Instead these properties would be parsed by mmc_of_parse, and we will
+>> get enabled automatically by mmc_add_host before doing any probing.
+>>
+>> If the optional clock-frequency property is also set, then mmc_add_host
+>> will not only enable the clks but also set them to the specified
+>> frequency.
+>>
+>> Note I've no boards which actually need the clocks, all 3 boards with
+>> sdio wifi which I've use a 26MHz crystal directly attached to the module,
+>> so once I get the oob interrupt working (this needs some work on
+>> the allwinner side) we can merge Arend's patches with the clock bits
+>> dropped for now.
+>>
+>> Still I want to get a discussion going on this, so that when the time
+>> comes that we do need it we know how to deal with this, or ideally
+>> already have code in place to deal with it.
+> 
+> 
+> Cheers
+> ChenYu
 > 
