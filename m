@@ -1,271 +1,142 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Thu, 22 May 2014 09:41:39 +0200
-Message-ID: <CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA@mail.gmail.com>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
-	<201405091244.02066.arnd@arndb.de>
+From: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Subject: Re: [RFC PATCH 00/16] OMAP: GPMC: Restructure OMAP GPMC driver (NAND)
+ : DT binding change proposal
+Date: Thu, 22 May 2014 11:12:42 +0300
+Message-ID: <537DB17A.6060608@ti.com>
+References: <1400671264-10702-1-git-send-email-rogerq@ti.com> <20140521160818.GA1150@arch.cereza>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201405091244.02066.arnd-r2nGTMty4D4@public.gmane.org>
+In-Reply-To: <20140521160818.GA1150-nAQHv47ARr+vIlHkl8J1cg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+To: Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 9, 2014 at 12:44 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+Hi Ezequiel,
 
->> +++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
->
-> Can you split this up into an arm-realview.dtsi file for the common parts and
-> a pb1176 specific file for the rest?
+On 05/21/2014 07:08 PM, Ezequiel Garcia wrote:
+> Hi Roger,
+> 
+> On 21 May 02:20 PM, Roger Quadros wrote:
+>>
+>> For DT boot:
+>> - The GPMC controller node should have a chip select (CS) node for each used
+>>   chip select. The CS node must have a child device node for each device
+>>   attached to that chip select. Properties for that child are GPMC agnostic.
+>>
+>>   i.e.
+>> 	gpmc {
+>> 		cs0 {
+>> 			nand0 {
+>> 			}
+>> 		};
+>>
+>> 		cs1 {
+>> 			nor0 {
+>> 			}
+>> 		}
+>> 		...
+>> 	};
+>>
+> 
+> While I agree that the GPMC driver is a bit messy, I'm not sure it's possible
+> to go through such a complete devicetree binding re-design (breaking backwards
+> compatibility) now that the binding is already in production.
 
-I wonder if that makes any kind of sense. The RealView platforms does not
-really share much more than the name, sadly. For example: IP blocks
-aren't even at the same address.
+Why not? especially if the existing bindings are poorly dones. Is anyone using these
+bindings burning the DT into ROM and can't change it when they update the kernel?
 
-I could create a .dtsi file but it would be empty :-(
+I wouldn't bother much about backward compatibility but just focus on not breaking
+functionality with all GPMC users while cleaning up the existing bindings.
 
->> +     soc {
->> +             #address-cells = <1>;
->> +             #size-cells = <1>;
->> +             compatible = "simple-bus";
->> +             ranges;
->> +
->> +             syscon: syscon@10000000 {
->> +                     compatible = "arm,realview-pb1176-syscon", "syscon";
->> +                     reg = <0x10000000 0x1000>;
->> +             };
->
-> Hmm, in order to have a proper reset driver, we probably want a separate
-> node for the reset controller. I believe the x-gene people have just
-> posted a generic reset driver based on syscon. Let's see if we can share
-> that.
+> 
+> AFAIK, TI's SDK 7.0 is released, with a v3.8.x kernel which uses this GPMC
+> binding. And then you have the ISEE board too, using this binding.
 
-I have looked at it. Patch titled
-"power: reset: Add generic SYSCON register mapped reset"
+How does this prevent them from not using the new bindings when they update the kernel?
 
-Sadly it does not work for our case. This is because it assumes that
-reboot will be triggered by writing one value to one register. The RealViews
-need you to *first* write to a special unlock register, then write a magic
-value to a magic register.
+> 
+> Also, what's the problem with the current devicetree binding (not that I'm fan
+> of it)?
+> 
 
-So of course we could extend the syscon regmap reset driver by
-starting to encode a jam table such as a sequence of register writes
-to a sequence of registers, but we have refused such code in the past
-because as I recall Grant said, it is the beginning of a byte code
-interpreter and then we could as well bite the bullet and start
-implementing open firmware.
+The existing binding uses this format
 
-This is exactly the type of thing that ACPI AML code usually does
-by the way so what he says makes a *lot* of sense.
+	gpmc {
+		ranges <cs-num 0 IO_partition_start IO_partition_size,
+			cs-num 0 IO_partition_start IO_partition_size,
+			...>
 
-So for now I keep to our special driver.
+		node-name0 {
+			compatible = "<id for device on this chip select>";
+			reg = <cs-num IO_offset IO_size>;
 
->> +             pb1176_serial0: uart@1010c000 {
->> +                     compatible = "arm,pl011", "arm,primecell";
->> +                     reg = <0x1010c000 0x1000>;
->> +                     interrupt-parent = <&intc_dc1176>;
->> +                     interrupts = <0 18 IRQ_TYPE_LEVEL_HIGH>;
->> +                     clocks = <&uartclk>, <&pclk>;
->> +                     clock-names = "uartclk", "apb_pclk";
->> +             };
->
-> I believe the "official" name for a uart is serial@1010c000, not uart@1010c000.
-> I know we are inconsistent with that.
+			<gpmc cs properties>;
 
-OK fixed.
+			<device specific properties>;
+		};
 
->> +/* Pointer to the system controller */
->> +struct regmap *syscon_regmap;
->> +u8 syscon_type;
->> +
->> +static struct map_desc realview_dt_io_desc[] __initdata = {
->> +     {
->> +             /* FIXME: static map needed for LED driver */
->> +             .virtual        = IO_ADDRESS(REALVIEW_SYS_BASE),
->> +             .pfn            = __phys_to_pfn(REALVIEW_SYS_BASE),
->> +             .length         = SZ_4K,
->> +             .type           = MT_DEVICE,
->> +     },
->> +};
->
-> I've looked at the driver and I don't see why this is required.
-> The driver does a devm_ioremap_resource(), which should work with
-> or without a static mapping.
+		node-name1 {
+			...
+		};
+	};
 
-Well yeah, the version of the driver that is in linux-next does this.
-This was parallel work and I had no idea which would reach
-mainline first :-)
+with requirements that
+- chip select number (cs-num) is encoded in range id
+- child's node-name is used to identify device type (NAND, Onenand, etc) and driver expects that.
 
-Anyway, I just deleted because I realized it was better if I came
-up with the concept of syscon-leds to handle this through the
-syscon.
+All this results in the following issues
+- No way to define entire GPMC I/O map (typically 1st 1GB), without assigning them to a Chip select. i.e. incomplete hardware description.
+  TI SoCs variants can have different GPMC I/O sizes, some can have 512MB others can have 1GB. There needs to be a way to specify that.
+- No clean way to specify GPMC register map for use by child nodes. NAND controller which can be one of the children needs to use the GPMC register map.
+- Tricky to define multiple devices within a single chip select region.
+- Uses node name to identify device type like nand and onenand. Doesn't use compatible id for them.
+- GPMC CS properties are mixed with device properties, resulting in unnecessary binding documents like
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/net/gpmc-eth.txt
+http://lxr.free-electrons.com/source/Documentation/devicetree/bindings/mtd/gpmc-nor.txt
 
->> +/*
->> + * We detect the different syscon types from the compatible strings.
->> + */
->> +enum realview_syscon {
->> +     REALVIEW_SYSCON_EB,
->> +     REALVIEW_SYSCON_PB1176,
->> +     REALVIEW_SYSCON_PB11MP,
->> +     REALVIEW_SYSCON_PBA8,
->> +     REALVIEW_SYSCON_PBX,
->> +};
->> +
->> +static const struct of_device_id realview_syscon_match[] = {
->> +     {
->> +             .compatible = "arm,realview-eb-syscon",
->> +             .data = (void *)REALVIEW_SYSCON_EB,
->> +     },
->> +     {
->> +             .compatible = "arm,realview-pb1176-syscon",
->> +             .data = (void *)REALVIEW_SYSCON_PB1176,
->> +     },
->> +     {
->> +             .compatible = "arm,realview-pb11mp-syscon",
->> +             .data = (void *)REALVIEW_SYSCON_PB11MP,
->> +     },
->> +     {
->> +             .compatible = "arm,realview-pba8-syscon",
->> +             .data = (void *)REALVIEW_SYSCON_PBA8,
->> +     },
->> +     {
->> +             .compatible = "arm,realview-pbx-syscon",
->> +             .data = (void *)REALVIEW_SYSCON_PBX,
->> +     },
->> +};
->
-> If not the generic syscon reset driver, it should at least live in
-> drivers/power/reset/ rather than here.
+To solve these issues, I'm proposing the following format
 
-This we can fix.
+	gpmc {
+		ranges <0 0 IO_start IO_size		/* entire GPMC I/O space e.g. 1GB or 512MB */
+			1 0 Reg_start Reg_size>;	/* GPMC register space */
 
->> +#if IS_ENABLED(CONFIG_CACHE_L2X0)
->> +     if (of_machine_is_compatible("arm,realview-eb"))
->> +             /*
->> +              * 1MB (128KB/way), 8-way associativity,
->> +              * evmon/parity/share enabled
->> +              * Bits:  .... ...0 0111 1001 0000 .... .... ....
->> +              */
->> +             l2x0_of_init(0x00790000, 0xfe000fff);
->> +     else if (of_machine_is_compatible("arm,realview-pb1176"))
->> +             /*
->> +              * 128Kb (16Kb/way) 8-way associativity.
->> +              * evmon/parity/share enabled.
->> +              */
->> +             l2x0_of_init(0x00730000, 0xfe000fff);
->> +     else if (of_machine_is_compatible("arm,realview-pb11mp"))
->> +             /*
->> +              * 1MB (128KB/way), 8-way associativity,
->> +              * evmon/parity/share enabled
->> +              * Bits:  .... ...0 0111 1001 0000 .... .... ....
->> +              */
->> +             l2x0_of_init(0x00730000, 0xfe000fff);
->> +     else if (of_machine_is_compatible("arm,realview-pbx"))
->> +             /*
->> +              * 16KB way size, 8-way associativity, parity disabled
->> +              * Bits:  .. 0 0 0 0 1 00 1 0 1 001 0 000 0 .... .... ....
->> +              */
->> +             l2x0_of_init(0x02520000, 0xc0000fff);
->> +#endif
->
-> You wrote that you added the #if IS_ENABLED() here. Why?
+		cs0 {
+			ranges <0 0 IO_partition_start IO_partition_size>;	/* CS0 IO partition e.g. 16MB */
 
-Mainly because I had this other review comment that I
-should use IS_ENABLED() rather than #ifdef and it
-seemed better but I don't know anymore...
+			gpmc,cs-num = <0>;		/* pass chip select number explicitly */
+			<gpmc cs properties>;
 
-> l2x0_of_init is already a nop if CONFIG_CACHE_L2X0 is not set. If you want to
-> skip a bit of dead code here, you could make it an inline function and do
->
->         if (IS_ENABLED(CONFIG_CACHE_L2X0))
->                 realview_setup_l2x0();
->
-> Other than that, I still think we should avoid doing anything platform
-> specific here at all, and move it all into the l2x0_of_init function,
-> based on Russell's l2x0 patch series.
+			dev0 {
+				compatible = "<id for device on this chip select>";
+				reg = <0 IO_offset IO_size			/* Device IO region e.g. 1KB */
+					1 Reg_offset Reg_size>;
 
-I just need a base branch I guess, then I can build on
-top of Russell's patches, it's just a matter of dependencies.
+				<device specific properties>;
+			};
 
->> +     soc_dev_attr = kzalloc(sizeof(*soc_dev_attr), GFP_KERNEL);
->> +     if (!soc_dev_attr)
->> +             return;
->> +     ret = of_property_read_string(root, "compatible",
->> +                                   &soc_dev_attr->soc_id);
->> +     if (ret)
->> +             return;
->> +     ret = of_property_read_string(root, "model", &soc_dev_attr->machine);
->> +        if (ret)
->> +             return;
->> +     soc_dev_attr->family = "RealView";
->> +     soc_dev = soc_device_register(soc_dev_attr);
->> +     if (IS_ERR(soc_dev)) {
->> +             kfree(soc_dev_attr);
->> +             return;
->> +     }
->> +     parent = soc_device_to_device(soc_dev);
->> +     ret = of_platform_populate(root, of_default_bus_match_table,
->> +                                NULL, parent);
->> +     if (ret) {
->> +             pr_crit("could not populate device tree\n");
->> +             return;
->> +     }
->
-> I wonder if there is a way to do this without having code in the platform.
-> I would hate it if we get to the point where each platform is completely
-> empty but still requires a copy of this code.
+			dev1 {
+			...
+			};
+		};
+		
+		cs1 {
+			...
+		};
+	};
 
-The question can be rephrased like this:
-Should we create drivers/soc?
+All I'm doing is splitting up the CS node and the device node and removing the cs-num encoding from the ranges property.
+This results in a much cleaner DT binding and code.
 
-The structure of the SoC bus device is maybe a bit irritating but it
-has been hammered into the device core so now we have to live with
-it as it is.
+The format is similar to the one used by the ti-aemif driver.
+http://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/tree/Documentation/devicetree/bindings/memory-controllers/ti-aemif.txt
 
-> We just faced the same discussion on the exynos chip id patches.
+Having a unified format for all TI memory controllers will make life much easier for us.
 
-Yes, same answer :-)
-
-> I also noticed that you pass the DT root here, which isn't actually
-> the intention of the soc device interface: you should pass the DT node
-> that has the on-chip devices but not the board-level (top-level) nodes
-> such as your fixed clocks.
-
-Hm that's true. I introduced yet another set of compatible tuples
-like this:
-compatible = "simple-bus", "arm-realview-pb1176-soc"
-
-It will, just like the reset driver generate a new batch of identical
-compatible-strings and documenation sets, but it does have the
-upside of clean separation.
-
->> diff --git a/arch/arm/mm/Kconfig b/arch/arm/mm/Kconfig
->> index 5bf7c3c3b301..5461c4401ed6 100644
->> --- a/arch/arm/mm/Kconfig
->> +++ b/arch/arm/mm/Kconfig
->> @@ -928,7 +928,7 @@ config ARM_L1_CACHE_SHIFT
->>  config ARM_DMA_MEM_BUFFERABLE
->>       bool "Use non-cacheable memory for DMA" if (CPU_V6 || CPU_V6K) && !CPU_V7
->>       depends on !(MACH_REALVIEW_PB1176 || REALVIEW_EB_ARM11MP || \
->> -                  MACH_REALVIEW_PB11MP)
->> +                  MACH_REALVIEW_PB11MP || REALVIEW_DT)
->>       default y if CPU_V6 || CPU_V6K || CPU_V7
->>       help
->>         Historically, the kernel has used strongly ordered mappings to
->
-> Do you have an explanation for why this is needed? I don't remember seeing
-> this before, but I guess it gets in the way of multiplatform support.
-> Is this just a performance optimization on realview, or is it actually
-> required?
-
-I don't know that actually. And as DMA is likely only used
-on PCI I have no way of testing it either without such hardware.
-But I guess I can just leave it out for the time being.
-
-Yours,
-Linus Walleij
+cheers,
+-roger
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
