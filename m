@@ -1,34 +1,231 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Thu, 22 May 2014 14:09:52 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1405221406100.17310@knanqh.ubzr>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org> <5678119.IM3FN0FlT6@wuerfel> <20140522144503.GA27931@arm.com> <5057707.jNCXlqf9dH@wuerfel>
+From: Corentin LABBE <clabbe.montjoie@gmail.com>
+Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
+Date: Thu, 22 May 2014 20:13:03 +0200
+Message-ID: <537E3E2F.7000407@gmail.com>
+References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <1400771396-9686-4-git-send-email-clabbe.montjoie@gmail.com> <7774492.yVryDeoI4M@wuerfel>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5057707.jNCXlqf9dH@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-crypto-owner@vger.kernel.org>
+In-Reply-To: <7774492.yVryDeoI4M@wuerfel>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 22 May 2014, Arnd Bergmann wrote:
+Le 22/05/2014 17:28, Arnd Bergmann a =E9crit :
+> On Thursday 22 May 2014 17:09:56 LABBE Corentin wrote:
+>> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
+>> ---
+>>  drivers/crypto/Kconfig    |   49 ++
+>>  drivers/crypto/Makefile   |    1 +
+>>  drivers/crypto/sunxi-ss.c | 1476 ++++++++++++++++++++++++++++++++++=
++++++++++++
+>>  3 files changed, 1526 insertions(+)
+>>  create mode 100644 drivers/crypto/sunxi-ss.c
+>>
+>> diff --git a/drivers/crypto/Kconfig b/drivers/crypto/Kconfig
+>> index 03ccdb0..5ea0922 100644
+>> --- a/drivers/crypto/Kconfig
+>> +++ b/drivers/crypto/Kconfig
+>> @@ -418,4 +418,53 @@ config CRYPTO_DEV_MXS_DCP
+>>  	  To compile this driver as a module, choose M here: the module
+>>  	  will be called mxs-dcp.
+>> =20
+>> +config CRYPTO_DEV_SUNXI_SS
+>> +        tristate "Support for Allwinner Security System cryptograph=
+ic accelerator"
+>> +        depends on ARCH_SUNXI
+>> +        help
+>> +          Some Allwinner processors have a crypto accelerator named
+>> +          Security System. Select this if you want to use it.
+>> +
+>> +          To compile this driver as a module, choose M here: the mo=
+dule
+>> +          will be called sunxi-ss.
+>> +
+>> +if CRYPTO_DEV_SUNXI_SS
+>> +config CRYPTO_DEV_SUNXI_SS_PRNG
+>> +	bool "Security System PRNG"
+>> +	select CRYPTO_RNG2
+>> +	help
+>> +	  If you enable this option, the SS will provide a pseudo random
+>> +	  number generator.
+>> +config CRYPTO_DEV_SUNXI_SS_MD5
+>> +	bool "Security System MD5"
+>> +	select CRYPTO_MD5
+>> +	help
+>> +	  If you enable this option, the SS will provide MD5 hardware
+>> +	  acceleration.
+>=20
+> My feeling is that this should either be one driver that provides
+> all five algorithms unconditionally, or five drivers that are each
+> separate loadable modules and based on top of a common module
+> that only exports functions but has no active logic itself
 
-> On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
-> > By making the DMA memory Strongly Ordered, we avoid the
-> > L220 write buffer. In addition to the above commit, we also had
-> > 2503a5ecd86c (ARM: 6201/1: RealView: Do not use outer_sync() on
-> > ARM11MPCore boards with L220).
-> 
-> Ah, so this also stands in the way of multiplatform realview :(
+I agree for the split.
+It was my first intention but I feared to add too many files.
+So I propose to split in 6, sunxi-ss-hash.c, sunxi-ss-des.c, sunxi-ss-a=
+es.c, sunxi-ss-rng.c, sunxi-ss-common.c and sunxi-ss.h
+Does can I add a sunxi-ss directory in drivers/crypto ?
 
-Isn't the real value of a multiplatform realview in the ability to use 
-it with Qemu?  Did Qemu go to the extreme of emulating all those cache 
-issues?
+>=20
+>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_MD5
+>> +#include <crypto/md5.h>
+>> +#define SUNXI_SS_HASH_COMMON
+>> +#endif
+>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_SHA1
+>> +#include <crypto/sha.h>
+>> +#define SUNXI_SS_HASH_COMMON
+>> +#endif
+>> +#ifdef SUNXI_SS_HASH_COMMON
+>> +#include <crypto/hash.h>
+>> +#include <crypto/internal/hash.h>
+>> +#endif
+>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_AES
+>> +#include <crypto/aes.h>
+>> +#endif
+>> +
+>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_3DES
+>> +#define SUNXI_SS_DES
+>> +#endif
+>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_DES
+>> +#define SUNXI_SS_DES
+>> +#endif
+>> +#ifdef SUNXI_SS_DES
+>> +#include <crypto/des.h>
+>> +#endif
+>> +
+>> +#ifdef CONFIG_CRYPTO_DEV_SUNXI_SS_PRNG
+>> +#include <crypto/internal/rng.h>
+>=20
+> That would cleanup this #ifdef chain either way.
+>=20
+>> +/* General notes:
+>> + * I cannot use a key/IV cache because each time one of these chang=
+e ALL stuff
+>> + * need to be re-writed.
+>> + * And for example, with dm-crypt IV changes on each request.
+>> + *
+>> + * After each request the device must be disabled.
+>> + *
+>> + * For performance reason, we use writel_relaxed/read_relaxed for a=
+ll
+>> + * operations on RX and TX FIFO.
+>> + * For all other registers, we use writel.
+>> + * See http://permalink.gmane.org/gmane.linux.ports.arm.kernel/1176=
+44
+>> + * and http://permalink.gmane.org/gmane.linux.ports.arm.kernel/1176=
+40
+>> + * */
+>> +
+>> +static struct sunxi_ss_ctx {
+>> +	void *base;
+>=20
+> __iomem ?
 
+ok
 
-Nicolas
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+>> +	int irq;
+>> +	struct clk *busclk;
+>> +	struct clk *ssclk;
+>> +	struct device *dev;
+>> +	struct resource *res;
+>> +	void *buf_in; /* pointer to data to be uploaded to the device */
+>> +	size_t buf_in_size; /* size of buf_in */
+>> +	void *buf_out;
+>> +	size_t buf_out_size;
+>> +} _ss_ctx, *ss_ctx =3D &_ss_ctx;
+>> +
+>> +static DEFINE_MUTEX(lock);
+>> +static DEFINE_MUTEX(bufout_lock);
+>> +static DEFINE_MUTEX(bufin_lock);
+>=20
+> I guess the mutexes should be part of sunxi_ss_ctx.
+>=20
+> Are you sure you need the global _ss_ctx structure?
+> Normally you should get a pointer from whoever calls you.
+
+I will use platform_get_drvdata/platform_set_drvdata for cleaning all t=
+hoses global structures..
+
+>=20
+>> +struct sunxi_req_ctx {
+>> +	u8 key[AES_MAX_KEY_SIZE * 8];
+>> +	u32 keylen;
+>> +	u32 mode;
+>> +	u64 byte_count; /* number of bytes "uploaded" to the device */
+>> +	u32 waitbuf; /* a partial word waiting to be completed and
+>> +			uploaded to the device */
+>> +	/* number of bytes to be uploaded in the waitbuf word */
+>> +	unsigned int nbwait;
+>> +};
+>> +
+>> +#ifdef SUNXI_SS_HASH_COMMON
+>> +/*=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D*/
+>> +/*=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D*/
+>=20
+> Please remove all the =3D=3D=3D=3D=3D=3D=3D=3D lines.
+
+ok
+
+>=20
+>> +	/* If we have more than one SG, we cannot use kmap_atomic since
+>> +	 * we hold the mapping too long*/
+>> +	src_addr =3D kmap(sg_page(in_sg)) + in_sg->offset;
+>> +	if (src_addr =3D=3D NULL) {
+>> +		dev_err(ss_ctx->dev, "KMAP error for src SG\n");
+>> +		return -1;
+>> +	}
+>> +	dst_addr =3D kmap(sg_page(out_sg)) + out_sg->offset;
+>> +	if (dst_addr =3D=3D NULL) {
+>> +		kunmap(src_addr);
+>> +		dev_err(ss_ctx->dev, "KMAP error for dst SG\n");
+>> +		return -1;
+>> +	}
+>> +	src32 =3D (u32 *)src_addr;
+>> +	dst32 =3D (u32 *)dst_addr;
+>> +	ileft =3D nbytes / 4;
+>> +	oleft =3D nbytes / 4;
+>> +	sgileft =3D in_sg->length / 4;
+>> +	sgoleft =3D out_sg->length / 4;
+>> +	do {
+>> +		tmp =3D readl_relaxed(ss_ctx->base + SUNXI_SS_FCSR);
+>> +		rx_cnt =3D SS_RXFIFO_SPACES(tmp);
+>> +		tx_cnt =3D SS_TXFIFO_SPACES(tmp);
+>> +		todo =3D min3(rx_cnt, ileft, sgileft);
+>> +		if (todo > 0) {
+>> +			ileft -=3D todo;
+>> +			sgileft -=3D todo;
+>> +		}
+>> +		while (todo > 0) {
+>> +			writel_relaxed(*src32++, ss_ctx->base + SS_RXFIFO);
+>> +			todo--;
+>> +		}
+>=20
+> I wonder if this is meant to be used in combination with a dma engine
+> rather than accessed with writel/readl.
+
+You could do both, but the dmaengine driver is under development.
+When it will be ready, I will add DMA support.
+But my intention is to keep both mode, since poll mode is better than D=
+MA for small request.
+
+>=20
+> How does the original driver do it?
+
+There are no original driver, this driver is the first for the Security=
+ System.
+
+>=20
+> 	Arnd
+>=20
+
+Thanks for your review.
