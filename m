@@ -1,156 +1,68 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
- tree
-Date: Thu, 22 May 2014 19:20:55 +0200
-Message-ID: <537E31F7.1030505@gmail.com>
-References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH RESEND net-next 4/9] net: systemport: use the new fixed
+ PHY helpers
+Date: Thu, 22 May 2014 21:21:28 +0400
+Message-ID: <537E3218.6030104@cogentembedded.com>
+References: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com> <1400708331-18088-5-git-send-email-f.fainelli@gmail.com> <537D20EA.1000305@cogentembedded.com> <CAGVrzcbBQFhw-dUh+tFm8H5m9-fmVgutChS8wUG-F6sTBoRq-g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <537DE1AA.5050606@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>
-Cc: Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGVrzcbBQFhw-dUh+tFm8H5m9-fmVgutChS8wUG-F6sTBoRq-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hello.
 
+On 05/22/2014 02:02 AM, Florian Fainelli wrote:
 
-On 22.05.2014 13:38, Hans de Goede wrote:
-> On 05/22/2014 12:23 PM, Chen-Yu Tsai wrote:
->> On Thu, May 22, 2014 at 5:49 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+>>> of_phy_connect_fixed_link() is becoming obsolete, and also required
+>>> platform code to register the fixed PHYs at the specified addresses for
+>>> those to be usable. Get rid of it and use the new of_phy_is_fixed_link()
+>>> plus of_phy_register_fixed_link() helpers to transition over the new
+>>> scheme.
 
-snip
+>>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
+>>>    drivers/net/ethernet/broadcom/bcmsysport.c | 17 +++++++++++++++--
+>>>    drivers/net/ethernet/broadcom/bcmsysport.h |  1 +
+>>>    2 files changed, 16 insertions(+), 2 deletions(-)
 
->>> I've been thinking a bit about this, and it is a non trivial problem since
->>> sdio devices are normally instantiated when probed, unlike ie spi devices
->>> which are instantiated from devicetree.
+>>> diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c
+>>> b/drivers/net/ethernet/broadcom/bcmsysport.c
+>>> index d40c5b969e9e..dc708a888f80 100644
+>>> --- a/drivers/net/ethernet/broadcom/bcmsysport.c
+>>> +++ b/drivers/net/ethernet/broadcom/bcmsysport.c
+>>> @@ -1327,8 +1327,8 @@ static int bcm_sysport_open(struct net_device *dev)
+>>>          /* Read CRC forward */
+>>>          priv->crc_fwd = !!(umac_readl(priv, UMAC_CMD) & CMD_CRC_FWD);
 >>>
->>> Adding device tree instantiation of sdio devices seems like a bad idea, as
->>> then we get 2 vastly different device instantiation paths. Still we need some
->>> way to get power and clks setup before the mmc host initializes.
+>>> -       priv->phydev = of_phy_connect_fixed_link(dev,
+>>> bcm_sysport_adj_link,
+>>> -
+>>> priv->phy_interface);
+>>> +       priv->phydev = of_phy_connect(dev, priv->phy_dn,
+>>> bcm_sysport_adj_link,
+>>> +                                       0, priv->phy_interface);
 
-What about introducing some extra callbacks to mmc drivers to build
-driver data and control power?
+>>     The continuation line should start on the next character after ( on the
+>> above line, according to the networking coding style.
 
-struct mmc_legacy_device {
-	/* ... */
-	struct device_node *of_node;
-	void *driver_data;
-};
+> Unless I am once again not following the coding style, the patch in
+> patchwork has this correctly, and so does my file locally:
 
-struct mmc_driver {
-	/* ... */
-	int (*prepare)(struct mmc_legacy_device *);
-	void (*unprepare)(struct mmc_legacy_device *);
-};
+> http://patchwork.ozlabs.org/patch/351323/
 
-static int my_wlan_prepare(struct mmc_legacy_device *dev)
-{
-	struct my_wlan_data *data;
+    Don't know about your local file but the patchwork still has the 
+indentation wrong. -- you've used only tabs while the last several characters 
+should have been spaces. However, if David himself finds it correct, I guess I 
+just need to shut up. :-)
 
-	data = kzalloc(...);
-	/* ... */
+WBR, Sergei
 
-	of_*();
-	clk_*();
-	regulator_*();
-	/* ... */
-
-	ret = my_wlan_power_on(data);
-	/* ... */
-
-	dev->driver_data = data;	
-}
-
-static void my_wlan_unprepare(struct mmc_legacy_device *dev)
-{
-	struct my_wlan_data *data;
-
-	data = dev->driver_data;
-
-	my_wlan_power_off(data);
-	/* ... */
-
-	dev->driver_data = NULL;
-	kfree(data);
-}
-
-I don't really like this, especially the fact that this would be highly
-MMC-specific, while there are other interfaces that also need this
-problem solved, e.g. USB/HSIC.
-
-I had proposed another solution that would require almost no changes in
-MMC core and could work for any data interface. You can find it
-somewhere in the thread mentioned by Chen-Yu. Unfortunately, for reasons
-that don't appeal to me, it wasn't positively received by MMC people.
-
->>>
->>> Therefor I would like to suggest to add a number of standard properties to
->>> mmc-bus child nodes. Making the dts for an mmc host with an sdio device which
->>> needs clks setup before it will work look like this:
->>>
->>>                 mmc3: mmc@01c12000 {
->>>                         #address-cells = <1>;
->>>                         #size-cells = <0>;
->>>                         pinctrl-names = "default";
->>>                         pinctrl-0 = <&mmc3_pins_a>;
->>>                         vmmc-supply = <&reg_vmmc3>;
->>>                         bus-width = <4>;
->>>                         non-removable;
->>>                         status = "okay";
->>>
->>>                         brcmf: bcrmf@0 {
->>>                                 reg = <0>;
->>>                                 compatible = "brcm,bcm43xx-fmac";
->>>                                 clocks = <&clk_out_a>, <&clk_out_b>;
->>>                                 clock-frequency = <32768>, <26000000>;
->>>                                 interrupt-parent = <&pio>;
->>>                                 interrupts = <10 4>; /* PH10 / EINT10 */
->>>                                 interrupt-names = "host-wake";
->>>                                 status = "okay";
->>>                         };
->>>                 };
->>>
->>> Where the "clocks" and "clock-frequency" attributes would be something
->>> which we standardize in Documentation/devicetree/bindings/mmc/mmc-bus.txt
-
-I like the binding. It has all properties defined where they belong.
-
->>>
->>> These standard properties would *not* be used by the driver for the
->>> childnode device, so as to avoid the chicken and egg problem of that driver
->>> needing to enable clks, and it only getting bound to the device after
->>> the device has been discovered which requires those clocks.
->>>
->>> Instead these properties would be parsed by mmc_of_parse, and we will
->>> get enabled automatically by mmc_add_host before doing any probing.
->>>
->>> If the optional clock-frequency property is also set, then mmc_add_host
->>> will not only enable the clks but also set them to the specified
->>> frequency.
->>>
-
-I don't like power control and parsing in MMC core, because they are
-highly chip-specific. Throwing this kind of knowledge to MMC subsystem
-violates separation and just won't scale as more different WLAN chips
-show up. However, this is at least not enforced by design of the
-bindings and so can be changed at any time in future, while having
-something already working.
-
-See above for my take on other ways of handling this.
-
->>> Note I've no boards which actually need the clocks, all 3 boards with
->>> sdio wifi which I've use a 26MHz crystal directly attached to the module,
->>> so once I get the oob interrupt working (this needs some work on
->>> the allwinner side) we can merge Arend's patches with the clock bits
->>> dropped for now.
-
-Exynos4210-based TRATS and Exynos4412-based TRATS2 boards already
-supported by mainline kernel have WLAN 32k clock driven by PMIC and
-needs to be ungated. For the 26M clock a normal crystal is used as well
-as in your case.
-
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
