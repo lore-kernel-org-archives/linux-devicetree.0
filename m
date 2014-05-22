@@ -1,61 +1,84 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [Patch v5 3/7] mfd: ti-keystone-devctrl: add bindings for device
- state control
-Date: Thu, 22 May 2014 16:48:32 +0300
-Message-ID: <1400766516-14537-4-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1400766516-14537-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+Subject: Re: [Patch] ARM: dts: keystone: add pll controller syscon entry
+Date: Thu, 22 May 2014 16:51:25 +0300
+Message-ID: <537E00DD.4060702@ti.com>
+References: <1400681875-24432-1-git-send-email-ivan.khoronzhuk@ti.com> <537CEE13.5040908@cogentembedded.com> <537CEEFA.8080805@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400766516-14537-1-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537CEEFA.8080805-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, santosh.shilimkar-l0cyMroinI0@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, m-karicheri2-l0cyMroinI0@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Keystone II devices have a set of registers that are used to control
-the status of its peripherals. This node is intended to allow access to
-this functionality.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../devicetree/bindings/mfd/ti-keystone-devctrl.txt   | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
+On 05/21/2014 09:22 PM, Sergei Shtylyov wrote:
+> On 05/21/2014 10:18 PM, Sergei Shtylyov wrote:
+>
+>>> The pll controller register set includes sets of registers with
+>>> different purposes, so it's logically to add syscon entry to be able
+>>> to access them from appropriate places.
+>
+>>> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk-l0cyMroinI0@public.gmane.org>
+>>> ---
+>
+>>> Based on linux-next/master
+>
+>>>   arch/arm/boot/dts/keystone.dtsi | 5 +++++
+>>>   1 file changed, 5 insertions(+)
+>>
+>>> diff --git a/arch/arm/boot/dts/keystone.dtsi 
+>>> b/arch/arm/boot/dts/keystone.dtsi
+>>> index d9f99e7..5e67c5b 100644
+>>> --- a/arch/arm/boot/dts/keystone.dtsi
+>>> +++ b/arch/arm/boot/dts/keystone.dtsi
+>>> @@ -66,6 +66,11 @@
+>>>           ranges = <0x0 0x0 0x0 0xc0000000>;
+>>>           dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
+>>>
+>>> +        pllctrl: pll_controller {
+>
+>>    I think it's better to follow the pattern established by 
+>> "reset-controller"
+>> and use hyphen ISO dash in the node name. This is also a common 
+>> practice to
+>
+>    Oops, hyphen and dash are basically the same thing; I meant 
+> s/dash/underscore/.
 
-diff --git a/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
-new file mode 100644
-index 0000000..35f7a66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
-@@ -0,0 +1,19 @@
-+* Device tree bindings for Texas Instruments keystone device state control
-+
-+The Keystone II devices have a set of registers that are used to control
-+the status of its peripherals. This node is intended to allow access to
-+this functionality.
-+
-+Required properties:
-+
-+- compatible:		"ti,keystone-devctrl", "syscon"
-+
-+- reg:			contains offset/length value for pll controller
-+			registers space.
-+
-+Example:
-+
-+devctrl: device-state-control {
-+	compatible = "ti,keystone-devctrl", "syscon";
-+	reg = <0x02620000 0x1000>;
-+};
+You meant s/underscore/dash.
+I'll replace.
+FYI: the change is included in new series [Patch v5 0/7] Introduce 
+keystone reset driver
+
+And this patch is squashed in:
+[Patch v5 6/7] ARM: dts: keystone: update reset node to work with reset 
+driver
+
+Thanks.
+
+>
+>> use hyphens in the device trees overall.
+>
+>>> +            compatible = "ti,keystone-pllctrl", "syscon";
+>>> +            reg = <0x2310000 0x200>;
+>>> +        };
+>>> +
+>>>           rstctrl: reset-controller {
+>>>               compatible = "ti,keystone-reset";
+>>>               reg = <0x023100e8 4>;    /* pll reset control reg */
+>>>
+>
+> WBR, Sergei
+>
+
 -- 
-1.8.3.2
+Regards,
+Ivan Khoronzhuk
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
