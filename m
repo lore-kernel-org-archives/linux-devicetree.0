@@ -1,98 +1,68 @@
-From: Sebastian Reichel <sre@kernel.org>
-Subject: Re: [PATCHv5 09/10] DTS: ARM: OMAP3-N900: Add SSI support
-Date: Thu, 22 May 2014 02:05:58 +0200
-Message-ID: <20140522000558.GC29118@earth.universe>
-References: <1399739870-13526-1-git-send-email-sre@kernel.org>
- <1399739870-13526-10-git-send-email-sre@kernel.org>
- <20140514215503.GM27426@atomide.com>
- <20140520003538.GD15793@atomide.com>
- <20140521182513.GA26285@earth.universe>
- <20140521184319.GL17417@atomide.com>
- <20140521194527.GM17417@atomide.com>
- <20140521215055.GA26362@earth.universe>
- <20140521220807.GB14520@atomide.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [RFC PATCH 08/16] mtd: nand: omap: Fix build warning
+Date: Thu, 22 May 2014 09:54:59 +0900
+Message-ID: <02cd01cf7558$7500eb00$5f02c100$%han@samsung.com>
+References: <1400671264-10702-1-git-send-email-rogerq@ti.com>
+ <1400671264-10702-9-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="/Uq4LBwYP4y1W6pO"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140521220807.GB14520@atomide.com>
+In-reply-to: <1400671264-10702-9-git-send-email-rogerq@ti.com>
+Content-language: ko
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Paul Walmsley <paul@pwsan.com>
+To: 'Roger Quadros' <rogerq@ti.com>
+Cc: tony@atomide.com, computersforpeace@gmail.com, pekon@ti.com, ezequiel.garcia@free-electrons.com, robertcnelson@gmail.com, dwmw2@infradead.org, javier@dowhile0.org, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>, 'Christian Engelmayer' <cengelma@gmx.at>
 List-Id: devicetree@vger.kernel.org
 
-
---/Uq4LBwYP4y1W6pO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Wed, May 21, 2014 at 03:08:07PM -0700, Tony Lindgren wrote:
-> * Sebastian Reichel <sre@kernel.org> [140521 14:51]:
-> > On Wed, May 21, 2014 at 12:45:28PM -0700, Tony Lindgren wrote:
-> >=20
-> > Right. The only documentation of the SSI module is existing
-> > code sent by Carlos / included in the maemo kernel.
+On Wednesday, May 21, 2014 8:21 PM, Roger Quadros wrote:
 >=20
-> That's probably better than any documentation though :)
-
-Both have their advantages. Just with the code its hard to add
-features like context loss checks.
-
-> > > > It's probably something with the sysc or idlemodes that
-> > > > keeps things from idling. Maybe wrong address? Or wrong
-> > > > flags? I'm pretty sure it was the first .dts patch out of
-> > > > these two as the second one alone did not apply.
-> > >=20
-> > > Hmm yeah below is probably how it should be, does this
-> > > work for you? With this fix applied and your ssi dts
-> > > patches n900 keeps hitting off-idle for me.
-> >=20
-> > I can confirm, that the N900 hits idle states when the DT
-> > patch and the hwmod patch is applied. I have not actually
-> > tested if it also works without your hwmod patch.
-> >=20
-> > There are still problems with the idle state if the driver is
-> > actually loaded (and I see 100% runtime pm usage in powertop),
-> > but that can be fixed later.
-> >=20
-> > Feel free to add Tested-by/Acked-By to the hwmod patch.
+> Fix the following warning when CONFIG_MTD_NAND_OMAP_BCH is disabled.
+> warning: =E2=80=98erased_sector_bitflips=E2=80=99 defined but not use=
+d [-Wunused-function]
 >=20
-> OK thanks for testing.
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 
-You are welcome.
+(+cc Christian Engelmayer)
 
-> I'll apply your dts changes as soon as I have an ack from Paul on
-> the hwmod changes. Probably best to queue them together to avoid
-> PM breaking.
+The same patch was already sent by Christian Engelmayer. [1]
+Also, it was applied to mtd tree by Brian Norris. [2]
+Thank you.
 
-Ok. Sounds legit.
+[1] http://lists.infradead.org/pipermail/linux-mtd/2014-April/053330.ht=
+ml
+[2] http://git.infradead.org/users/dedekind/l2-mtd.git/commit/9fd6c6c18=
+c1a4a3220473c76fd447c5708b5ecf9
 
--- Sebastian
+Best regards,
+Jingoo Han
 
---/Uq4LBwYP4y1W6pO
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBCgAGBQJTfT9mAAoJENju1/PIO/qaBJ8P+wYxFppWYeqJc8XYemc/Dxf4
-qVLjw0FD69M2ElkTkVekQ+QT6AxWeGy8g+kTKaov3p1tkyoPGQxGjcFejI63/giM
-Q+vGv1ojv3sMzx9gNFFVc7tgfqudAL+OWUJdFEdGeYwwvS4WqcmqM81a87FESo/C
-BZIl5wcaXOa+kVu3aLAqPS21z3qoMvrleHcoGKOzRGHwP6J06iq8B3x99GMHVsEX
-V19kWoyN7lIPxaLGBfjARcEN6AuKsJ4npW191qVbYWHOxyltlb+6nkgDAMu5ZFv7
-Z7iTP2GcFpV6+Bgbqyx5T8kDFq95QzE17uM6aAKrlLO/W0zy/B/bAeVTx0R0J3Ki
-dTyGvP8yl5uOkxB5Ozcb9yQ0iiN21WWMEBS+Q5lWDdrJkjaFyliUpFoZllyZSOzS
-ruorXFAp3FuLdk0RIQK10DidXriPA/pXPVI46mK6wKNsyQk8OuT29MGz2l7DjhOu
-oRC5M3j2Xkdc1zwfzz2XLVAc/YuJ6fQC4C5CwbSovlmeLYz47bLYv0EKOe6ugb3Z
-3JsW4XkheBWBj4hi2uHfieMJHVdVu1LvCxhA05841ipSAiDf4T0+3vOEpmC0TtHK
-UeCNfR9Wp/JYUyI7CMBlDQfgDlesnBzHCnNSCqtP9KP5kHlfa9ymM426TDTy+xIw
-aJ5eSo79+niU5E83dlfa
-=LoPK
------END PGP SIGNATURE-----
-
---/Uq4LBwYP4y1W6pO--
+> ---
+>  drivers/mtd/nand/omap2.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+>=20
+> diff --git a/drivers/mtd/nand/omap2.c b/drivers/mtd/nand/omap2.c
+> index 1ff49b8..1b800bc 100644
+> --- a/drivers/mtd/nand/omap2.c
+> +++ b/drivers/mtd/nand/omap2.c
+> @@ -1237,6 +1237,7 @@ static int __maybe_unused omap_calculate_ecc_bc=
+h(struct mtd_info *mtd,
+>  	return 0;
+>  }
+>=20
+> +#ifdef CONFIG_MTD_NAND_OMAP_BCH
+>  /**
+>   * erased_sector_bitflips - count bit flips
+>   * @data:	data sector buffer
+> @@ -1276,7 +1277,6 @@ static int erased_sector_bitflips(u_char *data,=
+ u_char *oob,
+>  	return flip_bits;
+>  }
+>=20
+> -#ifdef CONFIG_MTD_NAND_OMAP_BCH
+>  /**
+>   * omap_elm_correct_data - corrects page data area in case error rep=
+orted
+>   * @mtd:	MTD device structure
+> --
+> 1.8.3.2
