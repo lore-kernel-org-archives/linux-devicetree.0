@@ -1,66 +1,110 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: dts: sun7i: cubietruck: set mmc3
- bus-width property
-Date: Thu, 22 May 2014 11:40:53 +0200
-Message-ID: <20140522094053.GA27329@lukather>
-References: <1400694211-29903-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Thu, 22 May 2014 11:49:38 +0200
+Message-ID: <537DC832.3020006@redhat.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="s8ux8MQukyWAm3r7"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBH4O66NQKGQEZXLK2WI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400694211-29903-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi All,
 
---s8ux8MQukyWAm3r7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Arend asked me to test these 2 patches for adding devicetree support to brcmfmac sdio devices:
+"dt: bindings: add bindings for Broadcom bcm43xx sdio devices"
+"brcmfmac: add device tree support for SDIO devices"
+https://groups.google.com/forum/#!msg/linux-sunxi/Zph6zDTnAcw/_-wOO-gnIuQJ
 
-On Wed, May 21, 2014 at 07:43:30PM +0200, Hans de Goede wrote:
-> bus-width defaults to 1, and all 4 lines are hooked up at the cubietruck,
-> properly set bus-width to 4.
->=20
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Getting this to do anything at all meant also adding this patch:
 
-Merged the two patches, thanks!
-Maxime
+"mmc: Add SDIO function devicetree subnode parsing"
+https://lkml.org/lkml/2014/4/3/522
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+So that the card / sdio-func devices would actually get their of_node
+pointer set to the child node under the mmc controller describing
+the sdio wifi module.
 
---s8ux8MQukyWAm3r7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+But that does not solve the entire problem. Listing the oob-interrupt info
+in the child node works fine. But listing the brcm,wlan-supply gpio does
+not. Since these sdio wifi modules are typically soldered onto the
+board, there mmc controller device tree node has non-removable; set,
+so the mmc subsystem will try to initialize the sdio device as soon
+as the mmc driver loads, and if that fails will never look at it again.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+So we need to have the brcm,wlan-supply gpio driven high *before* the mmc
+host driver initializes. In case of the brcm,wlan-supply property, this
+is actually a problem which we've already solved in a number of dts files
+for allwinner boards, simply create a fixed-regulator with an enable/disable
+gpio, and set that as vmmc-supply for the mmc-host for the sdio wifi.
 
-iQIcBAEBAgAGBQJTfcYlAAoJEBx+YmzsjxAg6boP/iJ3OT3RPjxdM/pjImH3dsiY
-ETOk54uUxbB4WJPAepU/KdGFuzR0Kv52mmjgPCP40YARueTPKCxDaDqOWI7kplf2
-XWSGbaQka5VwhUAXUr+WVeUa1gZYKG7uAjheEoOAZrQ3wqGstKf4tbh8KOws7hRU
-ceZgr/wZGKZLa4ZM51hNEajZoEXUnAr4+pK6xcQtYSpM+uZOtiBSWA8p34/x3WwY
-HIWUqMt2Ad56h0aVihA4wUM2kBPCRzWKAzdsOZmnoK76SJ01JgWQLvWmdbZzV3BH
-cisiZYCixom4pRSDpu3LHs/xN3+tF+o2g9zJpSUcPe6dDpmgRRg23OE/omBQwU+k
-gsg9wD/gS60I764lVr8uAMIMIYbGQWSXtnuJVC4Pwlz/h5tU1tTuEEp1sDNHM85x
-uKYePVCPo5bm5feaw2BSTsUgzWdKMLP2r6zLP94t+rBUzvx5871gbG9l6pdBDYtD
-Usu4tJvo0YVEiMr76sR4V2xjrj1EJMxnsPEV1h1STqnWTQq4OAyNAXp2OpQa5RQ3
-Dx/SXOBBF9l/AfU/MeMyBSg6fmlyOEhQ43MALPnmQRWSoltWsfh4xH9cunA32Lfr
-YTk5KJSNMOg/MvCC8uBKdiyatYtb2BnJsjmK9vT2H/OQfbVQvF/VHWVqs4tysEBp
-kzxr4kkrCkgk3hIs43/g
-=DSF/
------END PGP SIGNATURE-----
+However the "brcmfmac: add device tree support for SDIO devices" patch
+also adds support for 2 devicetree controlled clocks. Assuming these need
+to be ungated before the sdio module will respond to mmc commands, we have
+the same problem.
 
---s8ux8MQukyWAm3r7--
+I've been thinking a bit about this, and it is a non trivial problem since
+sdio devices are normally instantiated when probed, unlike ie spi devices
+which are instantiated from devicetree.
+
+Adding device tree instantiation of sdio devices seems like a bad idea, as
+then we get 2 vastly different device instantiation paths. Still we need some
+way to get power and clks setup before the mmc host initializes.
+
+Therefor I would like to suggest to add a number of standard properties to
+mmc-bus child nodes. Making the dts for an mmc host with an sdio device which
+needs clks setup before it will work look like this:
+
+                mmc3: mmc@01c12000 {
+                        #address-cells = <1>;
+                        #size-cells = <0>;
+                        pinctrl-names = "default";
+                        pinctrl-0 = <&mmc3_pins_a>;
+                        vmmc-supply = <&reg_vmmc3>;
+                        bus-width = <4>;
+                        non-removable;
+                        status = "okay";
+
+                        brcmf: bcrmf@0 {
+                                reg = <0>;
+                                compatible = "brcm,bcm43xx-fmac";
+				clocks = <&clk_out_a>, <&clk_out_b>;
+				clock-frequency = <32768>, <26000000>;
+                                interrupt-parent = <&pio>;
+                                interrupts = <10 4>; /* PH10 / EINT10 */
+                                interrupt-names = "host-wake";
+                                status = "okay";
+                        };
+                };
+
+Where the "clocks" and "clock-frequency" attributes would be something
+which we standardize in Documentation/devicetree/bindings/mmc/mmc-bus.txt
+
+These standard properties would *not* be used by the driver for the
+childnode device, so as to avoid the chicken and egg problem of that driver
+needing to enable clks, and it only getting bound to the device after
+the device has been discovered which requires those clocks.
+
+Instead these properties would be parsed by mmc_of_parse, and we will
+get enabled automatically by mmc_add_host before doing any probing.
+
+If the optional clock-frequency property is also set, then mmc_add_host
+will not only enable the clks but also set them to the specified
+frequency.
+
+Note I've no boards which actually need the clocks, all 3 boards with
+sdio wifi which I've use a 26MHz crystal directly attached to the module,
+so once I get the oob interrupt working (this needs some work on
+the allwinner side) we can merge Arend's patches with the clock bits
+dropped for now.
+
+Still I want to get a discussion going on this, so that when the time
+comes that we do need it we know how to deal with this, or ideally
+already have code in place to deal with it.
+
+Regards,
+
+Hans
+
