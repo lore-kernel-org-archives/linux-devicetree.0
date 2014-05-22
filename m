@@ -1,72 +1,102 @@
 From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
-Date: Thu, 22 May 2014 11:50:55 -0600
-Message-ID: <537E38FF.9000407@wwwdotorg.org>
-References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org> <1400750228-13750-2-git-send-email-tushar.behera@linaro.org> <537E1D0A.6020303@wwwdotorg.org> <20140522173403.GL12304@sirena.org.uk>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Thu, 22 May 2014 11:54:33 -0600
+Message-ID: <537E39D9.2000304@wwwdotorg.org>
+References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com> <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com> <20140521205538.GA6237@mithrandir> <CAEUnVG7tDjw_6wHc=FN0KsOKsSS1u8H8SzYdxt9VCwUsARRTeQ@mail.gmail.com> <20140522094958.GA11585@ulmo> <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140522173403.GL12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jerry.wong-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2014 11:34 AM, Mark Brown wrote:
-> On Thu, May 22, 2014 at 09:51:38AM -0600, Stephen Warren wrote:
->> On 05/22/2014 03:17 AM, Tushar Behera wrote:
+On 05/22/2014 11:48 AM, Dylan Reid wrote:
+> On Thu, May 22, 2014 at 2:50 AM, Thierry Reding
+> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> On Wed, May 21, 2014 at 02:10:09PM -0700, Dylan Reid wrote:
+>>> On Wed, May 21, 2014 at 1:55 PM, Thierry Reding
+>>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Tue, May 20, 2014 at 04:28:45PM -0700, Dylan Reid wrote:
+>>>>> On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>>> On 05/20/2014 02:37 PM, Dylan Reid wrote:
+>>>>>>> On Tue, May 20, 2014 at 11:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>>>>> On 05/20/2014 12:24 PM, Stephen Warren wrote:
+>>>>>>>>> On 05/19/2014 08:35 PM, Dylan Reid wrote:
+>>>>>>>>>> Add a device node for the HDA controller found on Tegra124.
+>>>>>> ...
+>>>>>>>> Even after fixing that, I can't play audio on Venice2:
+>>>>>>>>
+>>>>>>>> root@localhost:~# speaker-test -Dhw:0,3 -c 2
+>>>>>>>>
+>>>>>>>> speaker-test 1.0.27.1
+>>>>>>>>
+>>>>>>>> Playback device is hw:0,3
+>>>>>>>> Stream parameters are 48000Hz, S16_LE, 2 channels
+>>>>>>>> Using 16 octaves of pink noise
+>>>>>>>> Rate set to 48000Hz (requested 48000Hz)
+>>>>>>>> Buffer size range from 64 to 16384
+>>>>>>>> Period size range from 32 to 8192
+>>>>>>>> Using max buffer size 16384
+>>>>>>>> Periods = 4
+>>>>>>>> was set period_size = 4096
+>>>>>>>> was set buffer_size = 16384
+>>>>>>>>  0 - Front Left
+>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>> ^C 1 - Front Right
+>>>>>>>> Time per period = 1.799791
+>>>>>>>>
+>>>>>>>
+>>>>>>> Thanks for checking Stephen.  I'll fix the reset name.
+>>>>>>>
+>>>>>>> This is the state of the tree I used when I tested on Venice2 just now:
+>>>>>>> * ae57dbf - (HEAD) ARM: tegra: venice2 - Enable HDA (2 minutes ago)
+>>>>>>> * 6224524 - ARM: tegra: Add Tegra124 HDA support (2 minutes ago)
+>>>>>>> * 468ca57 - ALSA: hda - Add driver for Tegra SoC HDA (2 minutes ago)
+>>>>>>> * 928099e - ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support (2 minutes ago)
+>>>>>>> * 701eac4 - clk: tegra124: Enable hda to hdmi clocks (3 minutes ago)
+>>>>>>
+>>>>>> Ah, I was missing that clock patch. Hopefully Peter will pick it up for
+>>>>>> the Tegra clock tree soon.
+>>>>>>
+>>>>>> Now I have the same results as Thierry; speaker-test looks like it
+>>>>>> should be working, yet I don't hear any audio from the monitor. I know
+>>>>>> the monitor works, since I've used it extensively for testing GeForce
+>>>>>> GPU HDMI audio.
+>>>>>
+>>>>> Probably a silly question: Is it un-muted?
+>>>>> amixer -c0 cset name='IEC958 Playback Switch' on
+>>>>
+>>>> Dylan, can you provide more detail about the setup that you're running?
+>>>> There have been similar issues in the past where a driver would work if
+>>>> it was run on an identical upstream kernel but with a different version
+>>>> of the bootloader (or a different bootloader altogether). Can you give
+>>>> further details about your setup? Also perhaps providing a dmesg log or
+>>>> the clock tree from /sys/kernel/debug/clk/clk_summary could help
+>>>> determine the diff between a working and a non-working setup.
+>>>
+>>> Sure.  I'm running this u-boot:
+>>> https://chromium.googlesource.com/chromiumos/third_party/u-boot
+>>> on commit ddde3e9 of the chromeos-v2013.06 branch.
+>>>
+>>> I haven't had a chance to flash swarren's u-boot yet it's been one of
+>>> those days...
+>>>
+>>> I attached dmesg and clk_summary.
+>>>
+>>> I don't have many modifications to the ubuntu-core rootfs.
+>>>
+>>> Thanks for looking at this,
+>>
+>> Also perhaps you can share any change to tegra_defconfig that you have
+>> for this. Perhaps Stephen and I are simply missing some required option
+>> to make it work.
 > 
->>> +	if (!IS_ERR(max98090->mclk)) {
->>> +		freq = clk_round_rate(max98090->mclk, freq);
->>> +		clk_set_rate(max98090->mclk, freq);
->>> +	}
-> 
->> What are the intended semantics of set_sysclk()?
->> sound/soc/tegra/tegra_wm98090.c assumes that set_sysclk() is a
->> notification to the CODEC driver to tell it what rate the MCLK input is
->> set to (the rate is set before calling set_sysclk), whereas the code
->> above assumes that this function is to tell the CODEC to somehow
->> configure its input clock to be a particular rate. I have a feeling the
->> code above might fail on Tegra.
->
-> It's a bit of both.  Since we've never had a generic clock API (and
-> still don't really due to everything being a shambles) it's generally
-> just a notification to the CODEC that it's at the specified rate,
-> however if the CODEC knows about its dependencies it seems sensible for
-> it to tell the clock API about what was asked.  Ideally we want to
-> remove all the ASoC specific clock control and use the clock API.
+> Sure, here is the diff from linux-next's tegra defconfig.  Still on
+> the tree mentioned above.
 
-I think we should nail down exactly what set_sysclk() means. Since it
-takes an explicit MCLK clock rate (rather than e.g. sample rate) right
-now, surely it's a notification of what the clock /is/, not a request
-for the CODEC to set up its input clock. If we expect the CODEC to go to
-the clock driver and request an MCLK for itself (e.g. based on sample
-rate), surely that should happen from some function besides
-set_sysclk(), with different semantics e.g. hw_params().
-
-I'm not convinced that the CODEC can trigger its input clock changes in
-general. In Tegra, there needs to be centralized clock management, e.g.
-to prevent one audio stream using a 44.1KHz-based rate and another using
-a 48KHz-based rate. That's because the main audio PLL can't generate
-both sets of frequencies at once. This can't be done in individual CODEC
-drivers, since they shouldn't know about the Tegra restrictions. Doing
-it in the clock driver in response to the CODEC's request for a specific
-input clock, might work, but then the CODEC would have to call into the
-clk driver from e.g. hw_params() rather than set_sysclk(). If that's how
-it's supposed to work, then this patch is adding code in the wrong
-place. If set_sysclk() doesn't get removed from the CODEC API, then
-doing all this clock setup logic in the machine driver, as the
-tegra_wm89090.c machine driver does, seems to make the most sense for now.
-
-> The Tegra driver will presumably succeed unless someone does the
-> appropriate clock hookup in DT, at which point clk_set_rate() for the
-> rate the clock is already at really ought to succeed so things should
-> continue to work.
-
-Ah yes, if we don't add the clock to DT, this code won't do anything, so
-nothing will break.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+My .config does include all the options that your defconfig diff adds.
