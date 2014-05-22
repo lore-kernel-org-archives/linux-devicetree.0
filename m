@@ -1,180 +1,82 @@
-From: Beomho Seo <beomho.seo@samsung.com>
-Subject: Re: [PATCH 1/2] Input: mcs_touchkey: add device tree support
-Date: Thu, 22 May 2014 11:27:43 +0900
-Message-ID: <537D609F.6070601@samsung.com>
-References: <537C3EF5.90000@samsung.com> <20140521134819.GG17827@leverpostej>
+From: Vinod Koul <vinod.koul@intel.com>
+Subject: Re: [PATCH v3 00/13]  ARM/DT: edma: IP configuration from hardware
+ and cleanups
+Date: Thu, 22 May 2014 08:15:53 +0530
+Message-ID: <20140522024553.GS21128@intel.com>
+References: <1400242640-9902-1-git-send-email-peter.ujfalusi@ti.com>
+ <537A01F2.2090107@ti.com>
+ <537A36F9.40004@ti.com>
+ <537B34C9.1020508@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-input-owner@vger.kernel.org>
-In-reply-to: <20140521134819.GG17827@leverpostej>
-Sender: linux-input-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, Joonyoung Shim <jy0922.shim@samsung.com>, Myungjoo Ham <myungjoo.ham@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537B34C9.1020508@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, joelf@ti.com, arnd@arndb.de, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, tony@atomide.com, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, May 20, 2014 at 04:26:09PM +0530, Sekhar Nori wrote:
+> On Monday 19 May 2014 10:23 PM, Peter Ujfalusi wrote:
+> > On 05/19/2014 04:06 PM, Sekhar Nori wrote:
+> >> On Friday 16 May 2014 05:47 PM, Peter Ujfalusi wrote:
+> >>> Hi,
+> >>>
+> >>> Changes since v2:
+> >>> - Comments from Sekhar and Arnd has been addressed best as I could.
+> >>> - Use the CCCFG information in all cases instead of pdata provided information
+> >>> - To achieve this I needed to do a bit more cleanup in this series
+> >>> - In the documentation patch, retrain the old properties for reference
+> >>> - Cleanups in the old davinci board files and removing edma_soc_info members
+> >>>
+> >>> Changes sicne v1:
+> >>> - added missing patch to remove the memset from edma_of_parse_dt()
+> >>>
+> >>> We are requesting redundant information via DT for the driver since the very same
+> >>> data is available in the HW: by reading and decoding the content of CCCFG
+> >>> register we can get:
+> >>> Number of channels: NUM_DMACH
+> >>> Number of regions: NUM_REGN
+> >>> Number of slots (PaRAM sets): NUM_PAENTRY
+> >>> Number of TC/EQ: NUM_EVQUE
+> >>>
+> >>> So these does not need to be provided by the DT binding.
+> >>>
+> >>> The driver will no longer look for these properties from DT and they can be
+> >>> removed from the binding documentation and from the dtsi files as well.
+> >>> The change will not introduce regression when new kernel is booted using older
+> >>> DTB (since we just ignore the mentioned properties).
+> >>
+> >> Applied all patches and pushed to branch v3.16/edma of:
+> >>
+> >> git://git.kernel.org/pub/scm/linux/kernel/git/nsekhar/linux-davinci.git
+> >>
+> >> Since the patches did not apply cleanly, please verify. I tested on
+> >> DA850 EVM using MMC/SD as EDMA user.
+> > 
+> > The patches in this series looks OK in your branch.
+> > However I can not find the following commits in there, which I have in linux-next:
+> > c689a7b79c28 Merge remote-tracking branch 'slave-dma/next'
+> > cdae05a0f0f7 dmaengine: edma: Make reading the position of active channels work
+> > cf7eb979116c ARM: common: edma: Fix xbar mapping
+> > 232b223d8281 dmaengine: edma: Set DMA_CYCLIC capability flag
+> > 7cf2af90cd51 arm: common: edma: Save the number of event queues/TCs
+> > 
+> > They might come via different route...
+> 
+> Vinod,
+> 
+> Do you have an immutable branch based on which I can send this patch
+> series to ARM-SoC? Some of the patches in the series depend on code that
+> went through your tree.
+yup, pls pull my topic/edma for these change. This branch will not be rebased.
 
-Thank you for your advice.
+> Or if you are comfortable taking this series through your tree, thats
+> okay by me too. We are still waiting for acks from DT maintainers on the
+> binding change patches.
+Since these patchs are for ARM, I think they are best suited thru arm tree. If
+you run into issues with that I cna merge this but with right ACKs...
 
-On 05/21/2014 10:48 PM, Mark Rutland wrote:
-> On Wed, May 21, 2014 at 06:51:49AM +0100, Beomho Seo wrote:
->> Add device tree support for mcs touchkey driver.
->> Tested on exynos 4412 board.
->>
->> Signed-off-by: Beomho Seo <beomho.seo@samsung.com>
->> Cc: Joonyoung Shim <jy0922.shim@samsung.com>
->> ---
->>  drivers/input/keyboard/mcs_touchkey.c |   73 +++++++++++++++++++++++++++++++--
->>  1 file changed, 69 insertions(+), 4 deletions(-)
->>
->> diff --git a/drivers/input/keyboard/mcs_touchkey.c b/drivers/input/keyboard/mcs_touchkey.c
->> index 1da8e0b..9bff47b 100644
->> --- a/drivers/input/keyboard/mcs_touchkey.c
->> +++ b/drivers/input/keyboard/mcs_touchkey.c
->> @@ -19,6 +19,7 @@
->>  #include <linux/irq.h>
->>  #include <linux/slab.h>
->>  #include <linux/pm.h>
->> +#include <linux/of_gpio.h>
->>
->>  /* MCS5000 Touchkey */
->>  #define MCS5000_TOUCHKEY_STATUS		0x04
->> @@ -96,6 +97,60 @@ static irqreturn_t mcs_touchkey_interrupt(int irq, void *dev_id)
->>  	return IRQ_HANDLED;
->>  }
->>
->> +#ifdef CONFIG_OF
->> +static struct mcs_platform_data *mcs_touchkey_parse_dt(struct device *dev)
->> +{
->> +	struct mcs_platform_data *pdata;
->> +	struct device_node *np = dev->of_node;
->> +	unsigned int keymap[2];
->> +	unsigned int len;
->> +	int i = 0;
->> +	const __be32 *prop;
-> 
-> Hmm. Almost every use of __be32 *prop values is indicative of something
-> that can be done with existing accessors. I suspect that may be true
-> here...
-> 
->> +
->> +	pdata = devm_kzalloc(dev, sizeof(*pdata), GFP_KERNEL);
->> +	if (!pdata) {
->> +		dev_err(dev, "Failed to allocate platform data\n");
->> +		return ERR_PTR(-ENOMEM);
->> +	}
->> +
->> +	prop = of_get_property(np, "linux,code", &len);
->> +	if (!prop) {
->> +		dev_err(dev, "Failed to get code\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
->> +
->> +	if (len % sizeof(u32)) {
->> +		dev_err(dev, "Malformed keycode property\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
->> +
->> +	pdata->keymap_size = len / sizeof(u32);
-> 
-> Use of_property_count_u32_elems. It does all of this and returns a
-> negative error code if anything is wrong.
-> 
->> +
->> +	if (of_property_read_u32(np, "key_maxval", &pdata->key_maxval)) {
->> +		dev_err(dev, "Failed to get key max value data\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
-> 
-> What is this? This sounds like an implementation detail. Why is it in
-> the DT?
-> 
-> Why doesn't it follow dt conventions ('-' rather than '_')?
-> 
-
-OK. I will revise *_parse_dt function on your advice.
-
->> +
->> +	if (pdata->keymap_size > pdata->key_maxval) {
->> +		dev_err(dev, "Key map size overflow\n");
->> +		return ERR_PTR(-EINVAL);
->> +	}
->> +
->> +	for (i = 0; i < pdata->keymap_size; i++) {
->> +		u32 code = be32_to_cpup(prop + i);
-> 
-> Use the DT accessors (e.g. of_property_read_u32_index). There is
-> absolutely no reason to touch the raw DTB data here.
-> 
->> +		keymap[i] = MCS_KEY_MAP(i, code);
->> +	}
->> +	pdata->keymap = keymap;
->> +	return pdata;
->> +}
->> +#else
->> +static inline struct mcs_platform_data *mcs_touchkey_parse_dt
->> +						(struct device *dev)
->> +{
->> +	return NULL;
->> +}
->> +#endif
->> +
->>  static int mcs_touchkey_probe(struct i2c_client *client,
->>  		const struct i2c_device_id *id)
->>  {
->> @@ -107,10 +162,14 @@ static int mcs_touchkey_probe(struct i2c_client *client,
->>  	int error;
->>  	int i;
->>
->> -	pdata = dev_get_platdata(&client->dev);
->> -	if (!pdata) {
->> -		dev_err(&client->dev, "no platform data defined\n");
->> -		return -EINVAL;
->> +	if (&client->dev.of_node)
->> +		pdata = mcs_touchkey_parse_dt(&client->dev);
->> +	else
->> +		pdata = dev_get_platdata(&client->dev);
->> +
->> +	if (IS_ERR(pdata)) {
->> +		dev_err(&client->dev, "Failed to get platform data\n");
->> +		return PTR_ERR(pdata);
->>  	}
->>
->>  	data = kzalloc(sizeof(struct mcs_touchkey_data) +
->> @@ -262,11 +321,17 @@ static const struct i2c_device_id mcs_touchkey_id[] = {
->>  };
->>  MODULE_DEVICE_TABLE(i2c, mcs_touchkey_id);
->>
->> +static struct of_device_id mcs_touchkey_dt_match[] = {
->> +	{ .compatible = "mcs5000_touchkey", },
->> +	{ .compatible = "mcs5080_touchkey", },
-> 
-> NAK. These do not follow the "$VENDOR,$DEVICE" pattern.
-> 
-> Mark.
-> 
-
-OK, I will changes to above pattern.
-Additionally, Fix bindings documentation and vendor-prefixes.txt.
-
->> +};
->> +
->>  static struct i2c_driver mcs_touchkey_driver = {
->>  	.driver = {
->>  		.name	= "mcs_touchkey",
->>  		.owner	= THIS_MODULE,
->>  		.pm	= &mcs_touchkey_pm_ops,
->> +		.of_match_table = of_match_ptr(mcs_touchkey_dt_match),
->>  	},
->>  	.probe		= mcs_touchkey_probe,
->>  	.remove		= mcs_touchkey_remove,
->> -- 
->> 1.7.9.5
->>
-> 
-Again, thank you for your advice.
-I'll fix them and send v2 patch soon.
-
-Best regards,
-Beomho Seo
+-- 
+~Vinod
