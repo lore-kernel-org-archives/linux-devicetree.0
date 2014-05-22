@@ -1,51 +1,39 @@
 From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCHv5 0/4] Enable usbphy and hsotg for exynos4
-Date: Fri, 23 May 2014 03:32:55 +0900
-Message-ID: <537E42D7.7050608@samsung.com>
-References: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+Subject: Re: [PATCH 0/2] ARM: dts: add pmu syscon handle to exynos hdmi nodes
+Date: Fri, 23 May 2014 03:37:27 +0900
+Message-ID: <537E43E7.407@samsung.com>
+References: <1400593129-21170-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400551590-7772-1-git-send-email-chanho61.park@samsung.com>
+In-Reply-To: <1400593129-21170-1-git-send-email-rahul.sharma@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanho Park <chanho61.park@samsung.com>
-Cc: kgene.kim@samsung.com, linux-samsung-soc@vger.kernel.org, t.figa@samsung.com, k.debski@samsung.com, devicetree@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/14 11:06, Chanho Park wrote:
-> This patchset enables a exynos4 usbphy and hsotg DT node for exynos4. The usb
-> phy node uses generic exynos phy driver. The driver uses PMU syscon and SYSREG
-> syscon phandles.
+On 05/20/14 22:38, Rahul Sharma wrote:
+> Add PMU syscon handle to HDMI dt node for controlling PHY
+> Enable/Disable bit.
 >
-> Changes from v4:
->   - Correct 4212/4412 PMU syscon node according to documentation
+> Patch is dependent for following patch for approval on DT
+> Bindings:
+> http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg31106.html
 >
-> Change from v3:
->   - Place a status field at the end of the nodes for readability
->
-> Change from v2:
->   - Split 4x12 compatibles to 4212 and 4412
->
-> Changes from v1: Applied Tomasz Figa's comments
->   - Document PMU syscon compatibles for exynos4210/4x12
->   - Use clock macro instead of raw clock number
->   - Correct phy name to "usb2-phy"
->
-> Chanho Park (4):
->    ARM: dts: exynos4: add PMU syscon node
->    ARM: dts: exynos4: add exynos_usbphy node
->    ARM: dts: exynos4: add hsotg device node
->    ARM: dts: exynos4412-trats2: enable usb nodes
->
->   .../devicetree/bindings/arm/samsung/pmu.txt        |  3 +++
->   arch/arm/boot/dts/exynos4.dtsi                     | 26 ++++++++++++++++++++++
->   arch/arm/boot/dts/exynos4412-trats2.dts            | 10 +++++++++
->   arch/arm/boot/dts/exynos4412.dtsi                  |  4 ++++
->   arch/arm/boot/dts/exynos4x12.dtsi                  |  9 ++++++++
->   5 files changed, 52 insertions(+)
->
-Looks good to me, applied.
+Yeah, I checked above.
+
+Applied this series.
 
 Thanks,
 Kukjin
+
+> It is based on Kukjin's "for-next" branch.
+>
+> Rahul Sharma (2):
+>    ARM: dts: add pmu syscon handle to exynos5250 hdmi
+>    ARM: dts: add pmu syscon handle to exynos5420 hdmi
+>
+>   arch/arm/boot/dts/exynos5250.dtsi |    1 +
+>   arch/arm/boot/dts/exynos5420.dtsi |    1 +
+>   2 files changed, 2 insertions(+)
