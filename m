@@ -1,35 +1,21 @@
-From: LABBE Corentin <clabbe.montjoie@gmail.com>
-Subject: [PATCH 1/3] dt: Add DT bindings documentation for SUNXI Security System
-Date: Thu, 22 May 2014 17:09:54 +0200
-Message-ID: <1400771396-9686-2-git-send-email-clabbe.montjoie@gmail.com>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Add SDHCI support for STMicroelectronics SoCs
+Date: Thu, 22 May 2014 16:18:14 +0100
+Message-ID: <1400771902-26553-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, chris@printf.net, ulf.hansson@linaro.org
+Cc: peter.griffin@linaro.org, kernel@stlinux.com, lee.jones@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
----
- Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+This series adds a SDHCI platform driver for ST SoCs, along with
+the additional device tree bindings and configuration to enable
+the controller to work properly.
 
-diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-new file mode 100644
-index 0000000..356563b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-@@ -0,0 +1,9 @@
-+* Allwinner Security System found on A20 SoC
-+
-+Required properties:
-+- compatible : Should be "allwinner,sun7i-a20-crypto".
-+- reg: Should contain the SS register location and length.
-+- interrupts: Should contain the IRQ line for the SS.
-+- clocks : A phandle to the functional clock node of the SS module
-+- clock-names : Name of the functional clock, should be "ahb" and "mod".
-+
--- 
-1.8.5.5
+Initially it supports the stih416 and stih415 SoCs, and has
+been tested on a stih416-b2020 board.
+
+regards,
+
+Peter.
+
