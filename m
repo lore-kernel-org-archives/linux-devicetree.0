@@ -1,76 +1,92 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 5/9] ASoC: simple-card: Support setting mclk via a
- fixed factor
-Date: Thu, 22 May 2014 19:30:54 +0100
-Message-ID: <20140522183054.GQ12304@sirena.org.uk>
-References: <20140520221359.GF12304@sirena.org.uk>
- <1400772710-23523-1-git-send-email-andrew@lunn.ch>
- <20140522173919.GM12304@sirena.org.uk>
- <20140522175206.GA24500@lunn.ch>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC/PATCH] of: platform: Remove unique device name enforcement
+Date: Thu, 22 May 2014 13:31:37 -0500
+Message-ID: <CAL_Jsq+pratjukD77FJHyHG5WST=zB=zcUgbpo-sA8X=uCojpA@mail.gmail.com>
+References: <1400432516-6802-1-git-send-email-ezequiel@vanguardiasur.com.ar>
+	<CAL_JsqJKDFJDsGbhB-=W=ujgoRpnJGcJ9a74uhHjj4KFvRK=gg@mail.gmail.com>
+	<20140520065014.493C3C412E3@trevor.secretlab.ca>
+	<CAL_JsqJHhJ1ba5tOGnsNNp1DhPwnJWh8F9f2xL8b3FYj=kC1hA@mail.gmail.com>
+	<20140521005357.4CAE4C418EF@trevor.secretlab.ca>
+	<20140521074353.C8B79C4198A@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ubQMfBEnLCz74m3R"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140522175206.GA24500-g2DYL2Zd6BY@public.gmane.org>
+In-Reply-To: <20140521074353.C8B79C4198A-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Ezequiel Garcia <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, =?UTF-8?Q?Guido_Mart=C3=ADnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 21, 2014 at 2:43 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> On Wed, 21 May 2014 09:53:57 +0900, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+>> On Tue, 20 May 2014 13:30:02 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> > On Tue, May 20, 2014 at 1:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
 
---ubQMfBEnLCz74m3R
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[...]
 
-On Thu, May 22, 2014 at 07:52:06PM +0200, Andrew Lunn wrote:
-> On Thu, May 22, 2014 at 06:39:19PM +0100, Mark Brown wrote:
+>> > > Another way to handle it is to only add the suffix when a conflict
+>> > > actually occurs. That requires checking first whether or not a name will
+>> > > conflict and ammending it only when that happens. I don't know if that
+>> > > can be done nicely. I'll take a look.
+>> >
+>> > That was my idea as well and to move to a local number so you have
+>> > something like deviceA, deviceA.1, deviceB, deviceB.1 (maybe the
+>> > number is always appended). Perhaps a random number instead so no one
+>> > expects the names to be an ABI. ;)
+>>
+>> Another idea: how about fix the name to alwasy be the final component of
+>> the path name, followed by phandle. Anything that doesn't have a phandle
+>> can be assigned one at boot. That would guarantee uniqueness without the
+>> cost of trying to find duplicates.
+>>
+>> for example:
+>>       uart@10043000:0012
+>
+> Yet another approach. How about this patch? If the unit address cannot
+> be translated, then append the translated name of the parent.
 
-> > I'm missing the rest of this series - what's the context, are there any
-> > interdependencies?
+I Ilke this, but...
 
-> I threaded the patch to your request to respin this patch:
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index 9c121819e813..e74fccbeb177 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -74,12 +74,9 @@ EXPORT_SYMBOL(of_find_device_by_node);
+>   */
+>  void of_device_make_bus_id(struct device *dev)
+>  {
+> -       static atomic_t bus_no_reg_magic;
+>         struct device_node *node = dev->of_node;
+>         const __be32 *reg;
+>         u64 addr;
+> -       const __be32 *addrp;
+> -       int magic;
+>
+>  #ifdef CONFIG_PPC_DCR
+>         /*
+> @@ -101,33 +98,26 @@ void of_device_make_bus_id(struct device *dev)
+>         }
+>  #endif /* CONFIG_PPC_DCR */
+>
+> -       /*
+> -        * For MMIO, get the physical address
+> -        */
+> -       reg = of_get_property(node, "reg", NULL);
+> -       if (reg) {
+> -               if (of_can_translate_address(node)) {
+> +       /* Construct the name, using parent nodes if necessary to ensure uniqueness */
+> +       while (node->parent) {
+> +               /*
+> +                * If the address can be translated, then that is as much
+> +                * uniqueness as we need. Make it the first component and return
+> +                */
+> +               reg = of_get_property(node, "reg", NULL);
+> +               if (reg && of_can_translate_address(node)) {
+>                         addr = of_translate_address(node, reg);
 
-> http://patchwork.ozlabs.org/patch/345353/
+This needs to be rebased on my fix and killing off of of_can_translate_address.
 
-Ugh, no - don't do this.  It's just confusing.  Patch series numbering
-is used for ordering within a posting of a patch series, the fact that
-a given patch might have previously been posted along with some others
-isn't relevant if you send it out again in a different form.  People
-will hopefully expect to see the rest of the series so they can check
-for interdependencies and so on, if the subject says there are 9 patches
-in what you're posting then there should be 9 patches.
-
-Similarly threading individual modifications to patches into the middle
-of prior postings makes it hard to track what's going on if things
-aren't applied - "I want version 1 of this patch, version 2 of that one"
-and so on gets hard to follow especially if there's a thread around them.
-You get problems like some revisions getting missed in the middle of the
-thread.
-
---ubQMfBEnLCz74m3R
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTfkJbAAoJELSic+t+oim9VSUP/3OZWe7CmJI7fO747Ijc7+13
-GHljntDS+uRHMQmUCuYE+a0XJW9vYkqwMvJLRm8qd9zPN4cbSNY/q/8FeH/X1T+R
-xV8NevjckkJYS547aeTVPzC7Tu05g+RepMCgVLo4ahqijQZr4qRo/rHoZohRg+R0
-13vf4xrnKtHSTdjmK7+RHXtq3V05Uw+fgl1Iyt62JChoVDDbMpSahkbpRjIsbEbq
-S1x/PoAs91sLzZ9vTIdLc3RqmEcu4dgZk7Cx2AUQuYwafjUh60a7DEyG4VC0G9BC
-WrfkpthwRR9UI8mdzGNFk89mHo8UifLciAgsoqfrdgXJBwlZG+SUCNHV53c+849d
-FQhFgKVYe95dcfAJsIBJ3s5nvYbpNoslBpSb4lDLnNNTeYnw7DEe07xwIeDjsCoQ
-chcw8TCMiMysjybjjqj9JHvqDSEnMT4oce4p/iZ6ABeivAPqUbaHlBypZd6CHECq
-FTj9iqcnsk5vvs2MJi9ay+CxVwnZsxTCJW2lzJ+SEx6JXdkCnhAzL+rXax7PmgHk
-PbOw2O/bwOOstzr987CUKqFm4YP1xFe5Wam/bs1X1/TlznC74nQ4/AeTN8WVR+zA
-QyXOLHJH1XlwO4cvPggwOSEhuACzPAq1UM+MaoeSvBKuETKLm/17r3Q5tpvnlR1Z
-AM+F1g8AQSVNHkDWL5Qo
-=vI0r
------END PGP SIGNATURE-----
-
---ubQMfBEnLCz74m3R--
+Rob
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
