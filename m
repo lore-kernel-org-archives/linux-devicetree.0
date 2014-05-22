@@ -1,42 +1,38 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 2/2] ARM: shmobile: marzen dts: Remove superfluous include
-Date: Thu, 22 May 2014 14:58:57 +0200
-Message-ID: <CAMuHMdXWW-2BaEpMXy3b_scttgo3S1UD73kt-dH44_s-GGf4WQ@mail.gmail.com>
-References: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
-	<1400761997-13512-3-git-send-email-geert+renesas@glider.be>
-	<2352184.UXetcfavus@avalon>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 22 May 2014 15:04:07 +0200
+Message-ID: <CACRpkdYE0Fb+HezqgDbVcqQmWwn7QL2+RWSRyAigv2qcMp2qFQ@mail.gmail.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
+	<201405091244.02066.arnd@arndb.de>
+	<CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA@mail.gmail.com>
+	<5678119.IM3FN0FlT6@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2352184.UXetcfavus@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5678119.IM3FN0FlT6@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 2:50 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Thursday 22 May 2014 14:33:17 Geert Uytterhoeven wrote:
->> <dt-bindings/interrupt-controller/irq.h> is already included by
->> r8a7779.dtsi.
+On Thu, May 22, 2014 at 10:31 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 22 May 2014 09:41:39 Linus Walleij wrote:
+
+>> The question can be rephrased like this:
+>> Should we create drivers/soc?
 >
-> Isn't it better, like with C code, to explicitly include headers that provide
-> the macros you need, instead of relying on implicit #include's that could
-> change later ? OK, in this specific case, it's very unlikely that r8a7779.dtsi
-> would stop including <dt-bindings/interrupt-controller/irq.h>, but in the
-> general case I believe explicit includes to be good practice.
+> I think we just did, not sure if the patches have made it into linux-next
+> already, but there were a couple of other platforms already that want this
+> directory.
 
-You're right. I was a bit overzealous.
+Awesomeness. Can you give me the title of a patch or branch
+from ARM SoC I should pull in to build on top of this? Then I can
+split off all the SoC bus business and have the machine file real
+small, nice and clean.
 
-Simon, please drop this.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Yours,
+Linus Walleij
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
