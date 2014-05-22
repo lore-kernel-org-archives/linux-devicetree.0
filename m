@@ -1,82 +1,61 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: Re: [Patch v5 3/7] mfd: ti-keystone-devctrl: add bindings for device
- state control
-Date: Thu, 22 May 2014 17:32:39 +0300
-Message-ID: <537E0A87.5010408@ti.com>
-References: <1400766516-14537-1-git-send-email-ivan.khoronzhuk@ti.com> <1400766516-14537-4-git-send-email-ivan.khoronzhuk@ti.com> <20140522141432.GA19747@lee--X1>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 22 May 2014 15:45:03 +0100
+Message-ID: <20140522144503.GA27931@arm.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
+ <201405091244.02066.arnd@arndb.de>
+ <CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA@mail.gmail.com>
+ <5678119.IM3FN0FlT6@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140522141432.GA19747@lee--X1>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, olof@lixom.net, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5678119.IM3FN0FlT6@wuerfel>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 22, 2014 at 09:31:37AM +0100, Arnd Bergmann wrote:
+> commit 42c4dafe803dcad82980fd8b0831a89032156f93
+> Author: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+> Date:   Thu Jul 1 13:22:48 2010 +0100
+> 
+>     ARM: 6202/1: Do not ARM_DMA_MEM_BUFFERABLE on RealView boards with L210/L220
+>     
+>     RealView boards with certain revisions of the L210/L220 cache controller
+>     may have issues (hardware deadlock) with the mandatory barriers (DSB
+>     followed by an L2 cache sync) when ARM_DMA_MEM_BUFFERABLE is enabled.
+>     The patch disables ARM_DMA_MEM_BUFFERABLE for these boards.
+>     
+>     Tested-by: Linus Walleij <linus.walleij-0IS4wlFg1OjSUeElwK9/Pw@public.gmane.org>
+>     Signed-off-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+>     Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
 
-On 05/22/2014 05:14 PM, Lee Jones wrote:
-> Why do I only have this patch?  Where is the rest of the set?  Also,
-> it's on v5 and I don't recall seeing the other 4 versions?
+Looking through the L220 errata document, I think this relates to 425331
+which says that a cache sync can deadlock the system if the write buffer
+is not empty. By making the DMA memory Strongly Ordered, we avoid the
+L220 write buffer. In addition to the above commit, we also had
+2503a5ecd86c (ARM: 6201/1: RealView: Do not use outer_sync() on
+ARM11MPCore boards with L220).
 
-It's strange I've sent whole series on
+The above only solves the issue for coherent DMA allocations. Streaming
+DMA requires additional changes to cache-l2x0.c but they are all weird
+and depend on how the L2x0 is wired (for example, using SWP to access
+the L2x0 registers works on one RealView board but not on another).
+Anyway, I don't think we have any streaming DMA used on these RealView
+boards.
 
-linux-kernel@vger.kernel.org
-linux-arm-kernel@lists.infradead.org
-linux-doc@vger.kernel.org
-devicetree@vger.kernel.org
-
-v4 is also was sent to lists in question:
-https://lkml.org/lkml/2014/5/21/359
-
->> The Keystone II devices have a set of registers that are used to control
->> the status of its peripherals. This node is intended to allow access to
->> this functionality.
->>
->> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
->> ---
->>   .../devicetree/bindings/mfd/ti-keystone-devctrl.txt   | 19 +++++++++++++++++++
->>   1 file changed, 19 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
->>
->> diff --git a/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
->> new file mode 100644
->> index 0000000..35f7a66
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
->> @@ -0,0 +1,19 @@
->> +* Device tree bindings for Texas Instruments keystone device state control
->> +
->> +The Keystone II devices have a set of registers that are used to control
->> +the status of its peripherals. This node is intended to allow access to
->> +this functionality.
->> +
->> +Required properties:
->> +
->> +- compatible:		"ti,keystone-devctrl", "syscon"
->> +
->> +- reg:			contains offset/length value for pll controller
->> +			registers space.
-> Why have you tabbed out all that way?
-
-I'll correct
-
->
->> +Example:
->> +
->> +devctrl: device-state-control {
-> This node needs an address:
->
-> devctrl: device-state-control@02620000 {
-
-Thanks!
-I will correct
-
->> +	compatible = "ti,keystone-devctrl", "syscon";
->> +	reg = <0x02620000 0x1000>;
->> +};
+If we only use the DMA coherent buffers for CLCD on these boards, we
+don't really need the outer_sync() either so we could go back to
+bufferable DMA memory (strangely enough, this L2 cache workaround looks
+similar to Marvell's PCI+PL310 problem where we want to avoid
+outer_sync()).
 
 -- 
-Regards,
-Ivan Khoronzhuk
-
+Catalin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
