@@ -1,68 +1,56 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH RESEND net-next 4/9] net: systemport: use the new fixed
- PHY helpers
-Date: Thu, 22 May 2014 21:21:28 +0400
-Message-ID: <537E3218.6030104@cogentembedded.com>
-References: <1400708331-18088-1-git-send-email-f.fainelli@gmail.com> <1400708331-18088-5-git-send-email-f.fainelli@gmail.com> <537D20EA.1000305@cogentembedded.com> <CAGVrzcbBQFhw-dUh+tFm8H5m9-fmVgutChS8wUG-F6sTBoRq-g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcbBQFhw-dUh+tFm8H5m9-fmVgutChS8wUG-F6sTBoRq-g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vitaly Bordug <vbordug-hkdhdckH98+B+jHODAdFcQ@public.gmane.org>, Li Yang <leoli-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Aida Mynzhasova <aida.mynzhasova-Fmhy8gsqeTEvJsYlp49lxw@public.gmane.org>, Richard Cochran <richardcochran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Claudiu Manoil <claudiu.manoil-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:LINUX FOR POWERPC..." <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>
+From: Abhilash Kesavan <a.kesavan@samsung.com>
+Subject: [PATCH RFC v2 0/7] Devfreq support for Exynos5250/5420
+Date: Thu, 22 May 2014 22:51:55 +0530
+Message-ID: <1400779322-4410-1-git-send-email-a.kesavan@samsung.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, myungjoo.ham@samsung.com, rafael.j.wysocki@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kesavan.abhilash@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patchset adds devfreq support on Exynos5250 and Exynos5420.
+The patches add the missing INT clock support for exynos5250 and
+also add a new 5420 driver. We also have patches which add the
+PPMU node and fix a typo in the exynos5250 driver.
 
-On 05/22/2014 02:02 AM, Florian Fainelli wrote:
+Changes since RFC v1:
+	- Exynos5420 support has been added to the existent Exynos5250
+	  driver itself.
+	- Rebased on Chanwoo Choi's devfreq consolidation patchset.
+	- Removed unused clocks from the clock list
+	- Used the PPMU nodes with different compatible strings to
+	  differentiate between exynos5250 and exynos5420.
 
->>> of_phy_connect_fixed_link() is becoming obsolete, and also required
->>> platform code to register the fixed PHYs at the specified addresses for
->>> those to be usable. Get rid of it and use the new of_phy_is_fixed_link()
->>> plus of_phy_register_fixed_link() helpers to transition over the new
->>> scheme.
+The patches have been tested on Exynos5250 based Snow board and Exynos5420
+based Peach-Pit boards. They have been prepared on linux-next(20140521) with
+the devfreq for-next branch merged. Also applied is the "devfreq resource
+management" series from Chanwoo Choi[1].
+[1] https://lkml.org/lkml/2014/4/25/826
 
->>> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>> ---
->>>    drivers/net/ethernet/broadcom/bcmsysport.c | 17 +++++++++++++++--
->>>    drivers/net/ethernet/broadcom/bcmsysport.h |  1 +
->>>    2 files changed, 16 insertions(+), 2 deletions(-)
+Abhilash Kesavan (3):
+  ARM: dts: Add PPMU device tree support for Exynos5250
+  ARM: dts: Add PPMU device tree support for Exynos5420
+  PM / devfreq: exynos: Fix typo in macro
 
->>> diff --git a/drivers/net/ethernet/broadcom/bcmsysport.c
->>> b/drivers/net/ethernet/broadcom/bcmsysport.c
->>> index d40c5b969e9e..dc708a888f80 100644
->>> --- a/drivers/net/ethernet/broadcom/bcmsysport.c
->>> +++ b/drivers/net/ethernet/broadcom/bcmsysport.c
->>> @@ -1327,8 +1327,8 @@ static int bcm_sysport_open(struct net_device *dev)
->>>          /* Read CRC forward */
->>>          priv->crc_fwd = !!(umac_readl(priv, UMAC_CMD) & CMD_CRC_FWD);
->>>
->>> -       priv->phydev = of_phy_connect_fixed_link(dev,
->>> bcm_sysport_adj_link,
->>> -
->>> priv->phy_interface);
->>> +       priv->phydev = of_phy_connect(dev, priv->phy_dn,
->>> bcm_sysport_adj_link,
->>> +                                       0, priv->phy_interface);
+Andrew Bresticker (2):
+  clk: exynos5250: add aliases for clocks used by devfreq
+  PM / devfreq: exynos5250: migrate to common-clock
 
->>     The continuation line should start on the next character after ( on the
->> above line, according to the networking coding style.
+Arjun.K.V (2):
+  clk: exynos5420: Add aliases for clocks used by devfreq
+  PM / devfreq: Add devfreq driver for Exynos5420
 
-> Unless I am once again not following the coding style, the patch in
-> patchwork has this correctly, and so does my file locally:
+ .../bindings/arm/exynos/ppmu-exynos5.txt           |   27 +
+ arch/arm/boot/dts/exynos5250.dtsi                  |    8 +
+ arch/arm/boot/dts/exynos5420.dtsi                  |    7 +
+ drivers/clk/samsung/clk-exynos5250.c               |   25 +-
+ drivers/clk/samsung/clk-exynos5420.c               |   73 ++-
+ drivers/devfreq/Kconfig                            |   10 +-
+ drivers/devfreq/exynos/exynos5_bus.c               |  665 +++++++++++++++++---
+ drivers/devfreq/exynos/exynos_ppmu.h               |    2 +-
+ 8 files changed, 703 insertions(+), 114 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/exynos/ppmu-exynos5.txt
 
-> http://patchwork.ozlabs.org/patch/351323/
+-- 
+1.7.9.5
 
-    Don't know about your local file but the patchwork still has the 
-indentation wrong. -- you've used only tabs while the last several characters 
-should have been spaces. However, if David himself finds it correct, I guess I 
-just need to shut up. :-)
-
-WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
