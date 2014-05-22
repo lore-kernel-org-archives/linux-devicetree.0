@@ -1,71 +1,96 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH 2/5] devicetree: bindings: Properly document micrel ks8851 SPI
- chips
-Date: Thu, 22 May 2014 14:00:10 -0700
-Message-ID: <1400792413-21618-3-git-send-email-sboyd@codeaurora.org>
-References: <1400792413-21618-1-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Fri, 23 May 2014 00:34:43 +0200
+Message-ID: <537E7B83.4020900@gmail.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org> <201405091244.02066.arnd@arndb.de> <CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA@mail.gmail.com>
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400792413-21618-1-git-send-email-sboyd@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "David S . Miller" <davem@davemloft.net>
-Cc: Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The ks8851 SPI ethernet wasn't documented, but we documented the
-optional regulator supply for it under the mll based ethernet
-chip. Furthermore, that compatible string needed another 'l'. Fix
-all of this and document the newly added optional vdd-io and
-reset-gpios properties.
+On 05/22/2014 09:41 AM, Linus Walleij wrote:
+> On Fri, May 9, 2014 at 12:44 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>>> +++ b/arch/arm/boot/dts/arm-realview-pb1176.dts
+>>
+>> Can you split this up into an arm-realview.dtsi file for the common parts and
+>> a pb1176 specific file for the rest?
+> 
+> I wonder if that makes any kind of sense. The RealView platforms does not
+> really share much more than the name, sadly. For example: IP blocks
+> aren't even at the same address.
+> 
+> I could create a .dtsi file but it would be empty :-(
+> 
+>>> +     soc {
+>>> +             #address-cells = <1>;
+>>> +             #size-cells = <1>;
+>>> +             compatible = "simple-bus";
+>>> +             ranges;
+>>> +
+>>> +             syscon: syscon@10000000 {
+>>> +                     compatible = "arm,realview-pb1176-syscon", "syscon";
+>>> +                     reg = <0x10000000 0x1000>;
+>>> +             };
+>>
+>> Hmm, in order to have a proper reset driver, we probably want a separate
+>> node for the reset controller. I believe the x-gene people have just
+>> posted a generic reset driver based on syscon. Let's see if we can share
+>> that.
+> 
+> I have looked at it. Patch titled
+> "power: reset: Add generic SYSCON register mapped reset"
+> 
+> Sadly it does not work for our case. This is because it assumes that
+> reboot will be triggered by writing one value to one register. The RealViews
+> need you to *first* write to a special unlock register, then write a magic
+> value to a magic register.
+> 
+> So of course we could extend the syscon regmap reset driver by
+> starting to encode a jam table such as a sequence of register writes
+> to a sequence of registers, but we have refused such code in the past
+> because as I recall Grant said, it is the beginning of a byte code
+> interpreter and then we could as well bite the bullet and start
+> implementing open firmware.
+> 
+> This is exactly the type of thing that ACPI AML code usually does
+> by the way so what he says makes a *lot* of sense.
+> 
+> So for now I keep to our special driver.
 
-Cc: Nishanth Menon <nm@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
----
- Documentation/devicetree/bindings/net/micrel-ks8851.txt | 15 ++++++++++++---
- 1 file changed, 12 insertions(+), 3 deletions(-)
++1 for drivers/soc _and_ of_xlate for regmap instead of syscon.
 
-diff --git a/Documentation/devicetree/bindings/net/micrel-ks8851.txt b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-index d54d0cc79487..bbdf9a7359a2 100644
---- a/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-+++ b/Documentation/devicetree/bindings/net/micrel-ks8851.txt
-@@ -1,9 +1,18 @@
--Micrel KS8851 Ethernet mac
-+Micrel KS8851 Ethernet mac (MLL)
- 
- Required properties:
--- compatible = "micrel,ks8851-ml" of parallel interface
-+- compatible = "micrel,ks8851-mll" of parallel interface
- - reg : 2 physical address and size of registers for data and command
- - interrupts : interrupt connection
- 
-+Micrel KS8851 Ethernet mac (SPI)
-+
-+Required properties:
-+- compatible = "micrel,ks8851" or the deprecated "ks8851"
-+- reg : chip select number
-+- interrupts : interrupt connection
-+
- Optional properties:
--- vdd-supply:	supply for Ethernet mac
-+- vdd-supply: analog 3.3V supply for Ethernet mac
-+- vdd-io-supply: digital 1.8V IO supply for Ethernet mac
-+- reset-gpios: reset_n input pin
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+driven by Mike Turquette's request to join mach-berlin clock node into a
+single node, we currently use pinctrl driver (that must be somewhere in
+Linus inbox) as a crutch to register a regmap for other drivers.
+
+I also saw that Arnd requested to not chop chip registers into tiny
+pieces for Linux subsystems but rather have a single DT node and make
+the drivers use it.
+
+Mike also mentioned he is fine with different subsystem drivers reusing
+the same node property-wise, i.e. reset and clock in a single node.
+
+With Berlin (and other SoCs for sure) ultimately there will be a bunch
+of drivers that require the io resource and the node early and
+non-early. Now, using syscon would still require dummy nodes for each
+subsystem, as there will be only one driver registered to a single DT
+node.
+
+With a drivers/soc we'd have a good place for those messy, SoC-specific
+registers to put a driver that hooks up to a single node and takes care
+of registering e.g. pinctrl and reset the plain-old platform_device
+way. It will be a little bit like arm/mach-foo before, but maybe we
+have to admit that on SoCs there will always be some amount of
+very specific, non-probable, non-describable registers that simply need
+special treatment.
+
+Sebastian
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
