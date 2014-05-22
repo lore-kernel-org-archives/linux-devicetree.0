@@ -1,47 +1,55 @@
-From: Tushar Behera <tushar.behera@linaro.org>
-Subject: Re: [PATCH 3/4] clk: samsung: Add driver to control CLKOUT line on
- Exynos SoCs
-Date: Thu, 22 May 2014 10:43:44 +0530
-Message-ID: <537D8788.8030904@linaro.org>
-References: <1400604211-9447-1-git-send-email-t.figa@samsung.com> <1400604211-9447-4-git-send-email-t.figa@samsung.com>
+From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v13 0/5] MPC512x DMA slave s/g support, OF DMA
+ lookup
+Date: Thu, 22 May 2014 10:40:23 +0530
+Message-ID: <20140522051023.GV21128@intel.com>
+References: <1400163335-29853-1-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400604211-9447-4-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, linux-samsung-soc@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400163335-29853-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/20/2014 10:13 PM, Tomasz Figa wrote:
-> This patch introduces a driver that handles configuration of CLKOUT pin
-> of Exynos SoCs that can be used to output certain clocks from inside of
-> the SoC to a dedicated output pin.
+On Thu, May 15, 2014 at 06:15:30PM +0400, Alexander Popov wrote:
+> 2013/7/14 Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>:
+> > this series
+> > - introduces slave s/g support (that's support for DMA transfers which
+> >    involve peripherals in contrast to mem-to-mem transfers)
+> > - adds device tree based lookup support for DMA channels
+> > - combines floating patches and related feedback which already covered
+> >    several aspects of what the suggested LPB driver needs, to demonstrate
+> >    how integration might be done
 > 
-> Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-> ---
->  .../devicetree/bindings/arm/samsung/pmu.txt        |  30 ++++
->  drivers/clk/samsung/Makefile                       |   1 +
->  drivers/clk/samsung/clk-exynos-clkout.c            | 153 +++++++++++++++++++++
->  3 files changed, 184 insertions(+)
->  create mode 100644 drivers/clk/samsung/clk-exynos-clkout.c
+> ...
 > 
+> Changes in v12:
+>  A new patch (part 2/7) is added to this series.
+>  Part 6/7:
+>  - change the description of 'compatible' property according part 2/7;
+>  - improve the document according Gerhard's feedback;
+> 
+> Parts 1/7, 2/7 and 4/7 have been applied by Vinod Koul and
+> are excluded from v13.
+> 
+> Changes in v13:
+>  A new patch (part 1/5) is added to this series.
+>  Part 2/5:
+>  - fix style issue;
+>  - improve comments;
 
-[ ... ]
+You need to cc DT- list for 3 to 5 patches. Need ack before we can apply.
+I suspect 4/5 should come first out of these 3.
 
-> +	clkout->clk_table[0] = clk_register_composite(NULL, "clkout",
-> +				parent_names, parent_count, &clkout->mux.hw,
-> +				&clk_mux_ops, NULL, NULL, &clkout->gate.hw,
-> +				&clk_gate_ops, CLK_SET_RATE_PARENT
-> +				| CLK_SET_RATE_NO_REPARENT);
-
-Would you please remove CLK_SET_RATE_NO_REPARENT flag from here? Let me
-know if you have reservations against this.
-
-With RFC patches, I am able to do a clk_set_rate() on this clock to
-get a 24MHz output to the codec clock. With this flag set, I again have
-to rely on the default value set to this register in bootloader.
+Also in future pls use right subsystem name "dmaengine". Also why are these
+tagged as RFC still?
 
 -- 
-Tushar Behera
+~Vinod
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
