@@ -1,57 +1,33 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 00/19] Rework OMAP4+ HDMI audio support
-Date: Fri, 23 May 2014 07:46:17 -0700
-Message-ID: <20140523144617.GD2321@atomide.com>
-References: <cover.1399884780.git.jsarha@ti.com>
- <20140512150616.GF31772@atomide.com>
- <537F2ACD.6030603@ti.com>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v4 3/8] clk: samsung: add infrastructure to register cpu
+ clocks
+Date: Fri, 23 May 2014 16:50:45 +0200
+Message-ID: <537F6045.3050600@samsung.com>
+References: <1400029876-5830-1-git-send-email-thomas.ab@samsung.com>
+ <1400029876-5830-4-git-send-email-thomas.ab@samsung.com>
+ <53764818.5080602@samsung.com>
+ <CAJuA9aho9voY=YKm7mTNA-6vvbDqsp-jDTd=n67_5DvgvPtBDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <537F2ACD.6030603@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: Jyri Sarha <jsarha@ti.com>, alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, detheridge@ti.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-reply-to: <CAJuA9aho9voY=YKm7mTNA-6vvbDqsp-jDTd=n67_5DvgvPtBDA@mail.gmail.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: Thomas Abraham <ta.omasab@gmail.com>
+Cc: "cpufreq@vger.kernel.org" <cpufreq@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-* Tomi Valkeinen <tomi.valkeinen@ti.com> [140523 04:03]:
-> On 12/05/14 18:06, Tony Lindgren wrote:
-> > * Jyri Sarha <jsarha@ti.com> [140512 02:13]:
-> >> Since RFC version of the patch set: 
-> >> - Split callbacks removal patch away from "Integrated ASoC DAI
-> >>   component driver implementation" patches for easier reading
-> >>
-> >> This set of patches fixes OMAP4+ HDMI audio. The structure of the
-> >> implementatin looks a bit different than before. Instead of creating a
-> >> driver specific API for a separate ASoC component driver to connect
-> >> to, this implementation integrates an the component driver into the
-> >> HDMI driver.
-> >>
-> >> The idea is to use an existing ASoC component driver API instead of
-> >> creating a new custom API for each HDMI IP and to avoid splitting the
-> >> driver to half for separate video and audio parts connected with the
-> >> API.
-> >>
-> >> The new implementation also uses simple-audio-card for a machine
-> >> driver instead of having its own HW specific machine driver.
-> > 
-> > Can you guys please post this split into the following separate
-> > parts for the maintainers to merge:
-> > 
-> > - ASoC changes
-> > - DSS changes
-> > - DTS changes
-> > 
-> > And once those are all in, please post the defconfig changes.
-> 
-> Tony, this series will get delayed until 3.17, but I'd like to merge the
-> HDMI DMA channel changes to omap4/omap5.dtsi already to 3.16. They are
-> patches 13 and 15.
-> 
-> Those are very trivial, but I'd rather have acks from you for all the
-> .dts changes I'll be sending.
+Hi Thomas,
 
-OK fine with me:
+On 23.05.2014 16:41, Thomas Abraham wrote:
 
-Acked-by: Tony Lindgren <tony@atomide.com>
+[snip]
+
+> Thanks for your detailed review. I have made all the changes that you
+> have suggested.
+
+Unfortunately it seems like you have missed quite a lot of my comments,
+especially those regarding patch 4/8, which adds DT binding.
+
+Best regards,
+Tomasz
