@@ -1,62 +1,36 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 2/3] ARM: dts: oma3-gta04: Add display support
-Date: Fri, 23 May 2014 11:20:39 +0300
-Message-ID: <537F04D7.4000201@ti.com>
-References: <1399580212-5183-1-git-send-email-marek@goldelico.com> <1399580212-5183-3-git-send-email-marek@goldelico.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: Wiki still links to old mailing list
+Date: Fri, 23 May 2014 10:23:01 +0200
+Message-ID: <CAMuHMdWC=fK53y5MrkJU4o7Rwhz-nhnPQKtX4CbQ4pgWA-SrFQ@mail.gmail.com>
+References: <CAMuHMdXhggB9nH9zthBaVmwGMnh4316-QgOZtNM8fYqeRds+jw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1399580212-5183-3-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Belisko <marek@goldelico.com>, tony@atomide.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, bcousson@baylibre.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXhggB9nH9zthBaVmwGMnh4316-QgOZtNM8fYqeRds+jw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, Dec 12, 2013 at 11:20 AM, Geert Uytterhoeven
+<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> http://www.devicetree.org/Main_Page still points to
+> devicetree-discuss-uLR06cmDAlY/bJ5BZ2RsieG/Ez6ZCGd0@public.gmane.org Can someone please update
+> it, with a link to the new archives (and of course keep a link to the
+> old archives)?
 
-On 08/05/14 23:16, Marek Belisko wrote:
-> This patch add support for lcd display on gta04 board. Display control
-> is connected to spi (used spi bitbang driver).
->=20
-> Signed-off-by: Marek Belisko <marek@goldelico.com>
-> ---
->  arch/arm/boot/dts/omap3-gta04.dts | 87 +++++++++++++++++++++++++++++++=
-++++++++
->  1 file changed, 87 insertions(+)
+Ping?
 
-I can take this via my tree.
+Gr{oetje,eeting}s,
 
-Tony, can I have your ack on this?
+                        Geert
 
- Tomi
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-
-
---1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTfwTXAAoJEPo9qoy8lh71xtQP/1AaQcujZPBukzX0AnjmzEmd
-CSFR+ZOMA5kOv8MeVlVydnMCEEkBL9tbfwux34ynxZVLItKlidMJU/8dm+KArT4D
-BjZNS1WvlbBrWlEIzIJ0m35GDSElBlbGIbQOmKOqhSAwoSVeBR5A9C3AO/Usnnnu
-NGa4E2sjoK8vyTwlBEMzDIuMgawugmfyrFA7nnpRXIHIpA03bIqq4XE5xURTN+LM
-OIaQAQ61/M0mdVunfKIkkawSfLD7VS7UfnVvKPY3j9XhAciV415R1/aG+FszGUOX
-47xYPsiOmyXS59avWCs9zI+z7MgY+czkybyG85k+rqJ4aHYdLwYhVNwHaJwibDHM
-LHkyqRzZT4uylNjY2m81n1jI8cQFyoWsHUtnYiDxRgYOT4BoxaFXBYYYVSmGey/H
-9Wy3FkOtSAoAbPZCHiwIL//mhKBXDJjkSOYZT/m0T61S5aGegpEAR6+Yp7Og7FAp
-xHC5iUzTmrAf0BEtdaw4elFN5MYv6UJWNDaQOfN/xNa33sIexo3RXaqYUTziReBd
-VNOXWQmMC/xftx93J2Efee55Z8pNrhxP4rC2YyXkAybZIrExOS2wa9ttQVQPGXob
-a2TZcu+ZHUD/ny+lUAkwJ1NzJ2nx1o3o5z+ZUIvvdg5ODidwUv507BaoIMdR5N63
-puJySdapu2eGnhTmM/sX
-=JoXo
------END PGP SIGNATURE-----
-
---1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
