@@ -1,61 +1,69 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [RFC PATCH 00/16] OMAP: GPMC: Restructure OMAP GPMC driver
- (NAND) : DT binding change proposal
-Date: Fri, 23 May 2014 07:53:55 -0700
-Message-ID: <20140523145354.GE2321@atomide.com>
-References: <1400671264-10702-1-git-send-email-rogerq@ti.com>
- <20140521160818.GA1150@arch.cereza>
- <537DB17A.6060608@ti.com>
- <CABxcv=nbgGhVN+XYO8s=mYOpoLU9-kWuEqc+FLMaSbWS7BJNyQ@mail.gmail.com>
- <20140522144600.GA1785@arch.cereza>
- <537F03C8.3070101@ti.com>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Fri, 23 May 2014 16:54:59 +0200
+Message-ID: <537F6143.3050703@broadcom.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com> <537F4B5E.80306@broadcom.com> <537F4CE5.10707@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <537F03C8.3070101@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Javier Martinez Canillas <javier@dowhile0.org>, Brian Norris <computersforpeace@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, Robert Nelson <robertcnelson@gmail.com>, Jingoo Han <jg1.han@samsung.com>, dwmw2@infradead.org, nsekhar@ti.com, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <537F4CE5.10707@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-* Roger Quadros <rogerq@ti.com> [140523 01:17]:
-> On 05/22/2014 05:46 PM, Ezequiel Garcia wrote:
-> > On 22 May 01:51 PM, Javier Martinez Canillas wrote:
-> >> On Thu, May 22, 2014 at 10:12 AM, Roger Quadros <rogerq@ti.com> wrote:
-> >>>> On 21 May 02:20 PM, Roger Quadros wrote:
-> >>>> While I agree that the GPMC driver is a bit messy, I'm not sure it's possible
-> >>>> to go through such a complete devicetree binding re-design (breaking backwards
-> >>>> compatibility) now that the binding is already in production.
-> >>>
-> >>> Why not? especially if the existing bindings are poorly dones. Is anyone using these
-> >>> bindings burning the DT into ROM and can't change it when they update the kernel?
-> >>>
-> >>
-> >> While I do agree that your DT bindings are much better than the
-> >> current ones, there is a policy that DT bindings are an external API
-> >> and once are released with a kernel are set in stone and can't be
-> >> changed.
-> >>
-> > 
-> > Exactly. The DT binding is considered an ABI. Thus, invariant across kernel
-> > versions. Users can't be coherced into a DTB update after a kernel update.
-> > 
-> > That said, I don't really care if you break compatilibity in this case.
-> > Rather, I'm suggesting that you make sure this change is going to be accepted
-> > upstream, before doing any more work. The DT maintainers are reluctant to do
-> > so.
-> 
-> Appreciate your concern.
-> 
-> Would be really nice if you can review patches 1-12. They have nothing to do with DT changes.
-> Thanks.
+On 05/23/14 15:28, Hans de Goede wrote:
+> Hi,
+>
+> On 05/23/2014 03:21 PM, Arend van Spriel wrote:
+>> On 05/23/14 13:50, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 05/23/2014 01:22 PM, Mark Brown wrote:
+>>>> On Fri, May 23, 2014 at 11:13:44AM +0200, Hans de Goede wrote:
+>>>>
+>>>>> Thinking more about this, I would like to make one change to my
+>>>>> proposal, the mmc-core should only do power up of child-nodes if
+>>>>> they have a compatible of: "simple-sdio-powerup". This way
+>>>>> when we add something more complex, we can keep the simple powerup
+>>>>> code in the mmc core, keeping what we've already using this working
+>>>>> and the mmc core won't respond to the child nodes for more complex
+>>>>> devices, so it won't conflict with more complex power-up handling
+>>>>> handled by some other driver.
+>>>>
+>>>> Would it not be better to have this be something in the driver struct
+>>>> rather than in the device tree?  Putting a compatible in there would be
+>>>> encoding details of the Linux implementation in the DT which doesn't
+>>>> seem right especially since these are details we're thinking of changing
+>>>> later on.
+>>>
+>>> The compatible is not a Linux specific thing, it is a marking saying
+>>> that something needs to take care of enabling the clks (and whatever
+>>> else we will make part of the binding for this compatible), before
+>>> scanning the mmc bus.
+>>>
+>>>> Something like have the driver set flags saying if it wants
+>>>> to do complicated things.
+>>>
+>>> Chicken<->   egg, we won't know which driver to use before we've probed
+>>> the mmc bus, and we cannot probe the bus before enabling the clks, etc.
+>>
+>> The approach I took with brcmfmac is that upon module init I search the DT for "brcm,bcm43xx-fmac" compatible and get the clock and/or gpio resource and enable them before registering the sdio driver. The difficulty is probably when using the driver built-in as the clocks and gpios may not be available yet and we can not rely on deferred probing in module init stage.
+>
+> I know, and that approach does not work, by the time the brcmfmac loads,
+> the mmc core has long probed the mmc bus and decided no one is home.
 
-I'm mostly concerned about keeping things working. I think the
-only way we can keep things working is to keep support for
-the old binding around in addition to the new one. That way
-we can update devices one at a time.
+Ok. That is due to the non-removable property, right? I assumed a mmc 
+rescan, which is (supposedly) triggered upon sdio driver registration, 
+would subsequently find the device.
 
 Regards,
+Arend
 
-Tony
+> Regards,
+>
+> Hans
+>
+
