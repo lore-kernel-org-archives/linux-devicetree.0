@@ -1,115 +1,98 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 4/5] usb: host: xhci-plat: add optional PHY support
-Date: Fri, 23 May 2014 14:58:52 +0530
-Message-ID: <537F14D4.1090705@ti.com>
-References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com> <1400257376-13251-4-git-send-email-gregory.clement@free-electrons.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] ARM: shmobile: r8a7779 dtsi: Correct #address-cells/#size-cells for clocks
+Date: Fri, 23 May 2014 11:36:16 +0200
+Message-ID: <1821194.NVbl22FVTm@avalon>
+References: <1400831180-20409-1-git-send-email-geert+renesas@glider.be> <1400831180-20409-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400257376-13251-4-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1400831180-20409-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Geert,
 
-On Friday 16 May 2014 09:52 PM, Gregory CLEMENT wrote:
-> This commit extends the xhci-plat so that it can optionally be passed
-> a reference to a PHY through the Device Tree. It will be useful for
-> the Armada 375 SoCs. If no PHY is provided then the behavior of the
-> driver is unchanged.
+Thank you for the patch.
+
+On Friday 23 May 2014 09:46:19 Geert Uytterhoeven wrote:
+> Warning (ranges_format): /clocks has empty "ranges" property but its
+> #address-cells (2) differs from / (1) Warning (ranges_format): /clocks has
+> empty "ranges" property but its #size-cells (2) differs from / (1)
 > 
-> As for the clock, to achieve this, it adds a 'struct phy *' member in
-> xhci_hcd. While only used for now in xhci-plat, here again, it might
-> be used by other drivers in the future.
+> As r8a7779 doesn't support LPAE, change #address-cells and #size-cells from
+> "<2>" to "<1>", and update the affected "reg" properties to fix this.
 > 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->  drivers/usb/host/xhci-plat.c | 29 ++++++++++++++++++++++++++++-
->  drivers/usb/host/xhci.h      |  2 ++
->  2 files changed, 30 insertions(+), 1 deletion(-)
+> Is it correct that r8a7779 doesn't support LPAE? I don't have the datasheet,
+> but the similar r8a7778 doesn't.
 > 
-> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-> index 0f5f4c8f5bf6..34239b582621 100644
-> --- a/drivers/usb/host/xhci-plat.c
-> +++ b/drivers/usb/host/xhci-plat.c
-> @@ -15,6 +15,7 @@
->  #include <linux/dma-mapping.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  
-> @@ -94,6 +95,7 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  	struct resource         *res;
->  	struct usb_hcd		*hcd;
->  	struct clk              *clk;
-> +	struct phy              *phy;
->  	int			ret;
->  	int			irq;
->  
-> @@ -160,9 +162,23 @@ static int xhci_plat_probe(struct platform_device *pdev)
->  			goto unmap_registers;
->  	}
->  
-> +	phy = devm_phy_optional_get(&pdev->dev, "usb");
-> +	if (IS_ERR(phy)) {
-> +		ret = PTR_ERR(phy);
-> +		goto disable_clk;
-> +	} else {
-> +		ret = phy_init(phy);
-> +		if (ret)
-> +			goto disable_phy;
+> v2:
+>   - Spin off unit-addresses updates into a separate patch.
+> 
+>  arch/arm/boot/dts/r8a7779.dtsi | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> index 038c16a18373..395a611e2b5a 100644
+> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> @@ -284,8 +284,8 @@
+>  	};
+> 
+>  	clocks {
+> -		#address-cells = <2>;
+> -		#size-cells = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+>  		ranges;
+> 
+>  		/* External root clock */
+> @@ -300,7 +300,7 @@
+>  		/* Special CPG clocks */
+>  		cpg_clocks: cpg_clocks@0xe6150000 {
+>  			compatible = "renesas,r8a7779-cpg-clocks";
+> -			reg = <0 0xffc80000 0 0x30>;
+> +			reg = <0xffc80000 0x30>;
+>  			clocks = <&extal_clk>;
+>  			#clock-cells = <1>;
+>  			clock-output-names = "plla", "z", "zs", "s",
+> @@ -345,7 +345,7 @@
+>  		mstp0_clks: mstp0_clks {
+>  			compatible = "renesas,r8a7779-mstp-clocks",
+>  			             "renesas,cpg-mstp-clocks";
+> -			reg = <0 0xffc80030 0 4>;
+> +			reg = <0xffc80030 4>;
+>  			clocks = <&cpg_clocks R8A7779_CLK_S>,
+>  			         <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_P>,
+> @@ -382,7 +382,7 @@
+>  		mstp1_clks: mstp1_clks {
+>  			compatible = "renesas,r8a7779-mstp-clocks",
+>  			             "renesas,cpg-mstp-clocks";
+> -			reg = <0 0xffc80034 0 4>, <0 0xffc80044 0 4>;
+> +			reg = <0xffc80034 4>, <0xffc80044 4>;
+>  			clocks = <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_P>,
+>  				 <&cpg_clocks R8A7779_CLK_S>,
+> @@ -411,7 +411,7 @@
+>  		mstp3_clks: mstp3_clks {
+>  			compatible = "renesas,r8a7779-mstp-clocks",
+>  			             "renesas,cpg-mstp-clocks";
+> -			reg = <0 0xffc8003c 0 4>;
+> +			reg = <0xffc8003c 4>;
+>  			clocks = <&s4_clk>, <&s4_clk>, <&s4_clk>, <&s4_clk>,
+>  				 <&s4_clk>, <&s4_clk>;
+>  			#clock-cells = <1>;
 
-I think you meant disable_clk here?
-> +
-> +		ret = phy_power_on(phy);
-> +		if (ret)
-> +			goto disable_phy;
-> +	}
-> +
->  	ret = usb_add_hcd(hcd, irq, IRQF_SHARED);
->  	if (ret)
-> -		goto disable_clk;
-> +		goto power_off_phy;
->  
->  	device_wakeup_enable(hcd->self.controller);
->  
-> @@ -198,6 +214,12 @@ put_usb3_hcd:
->  dealloc_usb2_hcd:
->  	usb_remove_hcd(hcd);
->  
-> +power_off_phy:
-> +	if (!IS_ERR(phy))
+-- 
+Regards,
 
-This check is unnecessary here since you do power_off only if PHY is not error.
-> +		phy_power_off(phy);
-> +disable_phy:
-> +	if (!IS_ERR(phy))
+Laurent Pinchart
 
-same here..
-> +		phy_exit(phy);
->  disable_clk:
->  	if (!IS_ERR(clk))
->  		clk_disable_unprepare(clk);
-> @@ -219,6 +241,7 @@ static int xhci_plat_remove(struct platform_device *dev)
->  	struct usb_hcd	*hcd = platform_get_drvdata(dev);
->  	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
->  	struct clk *clk = xhci->clk;
-> +	struct phy *phy = xhci->phy;
->  
->  	usb_remove_hcd(xhci->shared_hcd);
->  	usb_put_hcd(xhci->shared_hcd);
-> @@ -226,6 +249,10 @@ static int xhci_plat_remove(struct platform_device *dev)
->  	usb_remove_hcd(hcd);
->  	if (!IS_ERR(clk))
->  		clk_disable_unprepare(clk);
-> +	if (!IS_ERR(phy)) {
-
-same here..
-
-Thanks
-Kishon
