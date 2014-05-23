@@ -1,109 +1,163 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] of: Ensure unique names without sacrificing determinism
-Date: Fri, 23 May 2014 08:59:32 -0500
-Message-ID: <CAL_JsqKQ1TMsyzZ-T=RUZsktUE3woPGzTn8P6jMbR0XL2fvUWQ@mail.gmail.com>
-References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org>
-	<1400801769-4506-2-git-send-email-grant.likely@linaro.org>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [RFC v2 03/10] irqchip: gic: Introduce shadow irqs for FIQ
+Date: Fri, 23 May 2014 14:57:51 +0100
+Message-ID: <1400853478-5824-4-git-send-email-daniel.thompson@linaro.org>
+References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
+ <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400801769-4506-2-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Wessel <jason.wessel@windriver.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Sricharan R <r.sricharan@ti.com>, Jiri Slaby <jslaby@suse.cz>, Daniel Thompson <daniel.thompson@linaro.org>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, patches@linaro.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 6:36 PM, Grant Likely <grant.likely@linaro.org> wrote:
-> The way the driver core is implemented, every device using the same bus
-> type is required to have a unique name because a symlink to each device
-> is created in the appropriate /sys/bus/*/devices directory, and two
-> identical names causes a collision.
->
-> The current code handles the requirement by using an globally
-> incremented counter that is appended to the device name. It works, but
-> it means any change to device registration will change the assigned
-> numbers. Instead, if we build up the name by using information from the
-> parent nodes, then it can be guaranteed to be unique without adding a
-> random number to the end of it.
->
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
-> Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-> Cc: Rob Herring <robh@kernel.org>
+This patch registers two virqs for each interrupt source it supports.
+Using multiple virqs allows the GIC driver to automatically modify the group
+register, allowing the new virqs to be used as argument to enable_fiq().
+This also allows FIQ resources to be described in the device tree's
+interrupt list using a special flag (currently 0x80).
 
-Acked-by: Rob Herring <robh@kernel.org>
+Both these aspects combine and allow a driver to deploy a FIQ handler
+without any machine specific knowledge; it can be used effectively on
+multi-arch kernels.
 
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Cc:: Thomas Gleixner <tglx@linutronix.de>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Christoffer Dall <christoffer.dall@linaro.org>
+Cc: Sricharan R <r.sricharan@ti.com>
+---
+ drivers/irqchip/irq-gic.c | 46 +++++++++++++++++++++++++++++++++++++++++-----
+ 1 file changed, 41 insertions(+), 5 deletions(-)
 
-> ---
->  drivers/of/platform.c | 40 +++++++++++++++++++---------------------
->  1 file changed, 19 insertions(+), 21 deletions(-)
->
-> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-> index d0009b3614af..95c133a0554b 100644
-> --- a/drivers/of/platform.c
-> +++ b/drivers/of/platform.c
-> @@ -68,17 +68,15 @@ EXPORT_SYMBOL(of_find_device_by_node);
->   * of_device_make_bus_id - Use the device node data to assign a unique name
->   * @dev: pointer to device structure that is linked to a device tree node
->   *
-> - * This routine will first try using either the dcr-reg or the reg property
-> - * value to derive a unique name.  As a last resort it will use the node
-> - * name followed by a unique number.
-> + * This routine will first try using the translated bus address to
-> + * derive a unique name. If it cannot, then it will prepend names from
-> + * parent nodes until a unique name can be derived.
->   */
->  void of_device_make_bus_id(struct device *dev)
->  {
-> -       static atomic_t bus_no_reg_magic;
->         struct device_node *node = dev->of_node;
->         const __be32 *reg;
->         u64 addr;
-> -       int magic;
->
->  #ifdef CONFIG_PPC_DCR
->         /*
-> @@ -100,25 +98,25 @@ void of_device_make_bus_id(struct device *dev)
->         }
->  #endif /* CONFIG_PPC_DCR */
->
-> -       /*
-> -        * For MMIO, get the physical address
-> -        */
-> -       reg = of_get_property(node, "reg", NULL);
-> -       if (reg) {
-> -               addr = of_translate_address(node, reg);
-> -               if (addr != OF_BAD_ADDR) {
-> -                       dev_set_name(dev, "%llx.%s",
-> -                                    (unsigned long long)addr, node->name);
-> +       /* Construct the name, using parent nodes if necessary to ensure uniqueness */
-> +       while (node->parent) {
-> +               /*
-> +                * If the address can be translated, then that is as much
-> +                * uniqueness as we need. Make it the first component and return
-> +                */
-> +               reg = of_get_property(node, "reg", NULL);
-> +               if (reg && (addr = of_translate_address(node, reg)) != OF_BAD_ADDR) {
-> +                       dev_set_name(dev, dev_name(dev) ? "%llx.%s:%s" : "%llx.%s",
-> +                                    (unsigned long long)addr, node->name,
-> +                                    dev_name(dev));
->                         return;
->                 }
-> -       }
->
-> -       /*
-> -        * No BusID, use the node name and add a globally incremented
-> -        * counter (and pray...)
-> -        */
-> -       magic = atomic_add_return(1, &bus_no_reg_magic);
-> -       dev_set_name(dev, "%s.%d", node->name, magic - 1);
-> +               /* format arguments only used if dev_name() resolves to NULL */
-> +               dev_set_name(dev, dev_name(dev) ? "%s:%s" : "%s",
-> +                            strrchr(node->full_name, '/') + 1, dev_name(dev));
-> +               node = node->parent;
-> +       }
->  }
->
->  /**
-> --
-> 1.9.1
->
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index aa8efe4..0c259ac 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -48,6 +48,8 @@
+ 
+ #include "irqchip.h"
+ 
++#define GIC_INTSPEC_IRQ_IS_FIQ (1 << 7)
++
+ union gic_base {
+ 	void __iomem *common_base;
+ 	void __percpu * __iomem *percpu_base;
+@@ -65,6 +67,7 @@ struct gic_chip_data {
+ #endif
+ 	struct irq_domain *domain;
+ 	unsigned int gic_irqs;
++	unsigned int fiq_shadow_offset;
+ #ifdef CONFIG_GIC_NON_BANKED
+ 	void __iomem *(*get_base)(union gic_base *);
+ #endif
+@@ -143,11 +146,34 @@ static inline void __iomem *gic_cpu_base(struct irq_data *d)
+ 	return gic_data_cpu_base(gic_data);
+ }
+ 
++static inline bool gic_is_fiq(struct irq_data *d)
++{
++	struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
++	return d->hwirq > gic_data->gic_irqs;
++}
++
+ static inline unsigned int gic_irq(struct irq_data *d)
+ {
++	struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
++	if (gic_is_fiq(d))
++		return d->hwirq - gic_data->fiq_shadow_offset;
+ 	return d->hwirq;
+ }
+ 
++static void gic_set_group_irq(struct irq_data *d, int group)
++{
++	unsigned int reg = gic_irq(d) / 32 * 4;
++	u32 mask = 1 << (gic_irq(d) % 32);
++	u32 val;
++
++	val = readl_relaxed(gic_dist_base(d) + GIC_DIST_IGROUP + reg);
++	if (group)
++		val |= mask;
++	else
++		val &= ~mask;
++	writel_relaxed(val, gic_dist_base(d) + GIC_DIST_IGROUP + reg);
++}
++
+ /*
+  * Routines to acknowledge, disable and enable interrupts
+  */
+@@ -159,6 +185,8 @@ static void gic_mask_irq(struct irq_data *d)
+ 	writel_relaxed(mask, gic_dist_base(d) + GIC_DIST_ENABLE_CLEAR + (gic_irq(d) / 32) * 4);
+ 	if (gic_arch_extn.irq_mask)
+ 		gic_arch_extn.irq_mask(d);
++	if (gic_is_fiq(d))
++		gic_set_group_irq(d, 1);
+ 	raw_spin_unlock(&irq_controller_lock);
+ }
+ 
+@@ -167,6 +195,8 @@ static void gic_unmask_irq(struct irq_data *d)
+ 	u32 mask = 1 << (gic_irq(d) % 32);
+ 
+ 	raw_spin_lock(&irq_controller_lock);
++	if (gic_is_fiq(d))
++		gic_set_group_irq(d, 0);
+ 	if (gic_arch_extn.irq_unmask)
+ 		gic_arch_extn.irq_unmask(d);
+ 	writel_relaxed(mask, gic_dist_base(d) + GIC_DIST_ENABLE_SET + (gic_irq(d) / 32) * 4);
+@@ -940,7 +970,12 @@ static int gic_routable_irq_domain_xlate(struct irq_domain *d,
+ 				unsigned long *out_hwirq,
+ 				unsigned int *out_type)
+ {
++	struct gic_chip_data *gic_data = d->host_data;
+ 	*out_hwirq += 16;
++
++	if (intspec[2] & GIC_INTSPEC_IRQ_IS_FIQ)
++		*out_hwirq += gic_data->fiq_shadow_offset;
++
+ 	return 0;
+ }
+ 
+@@ -1026,10 +1061,11 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+ 	gic->gic_irqs = gic_irqs;
+ 
+ 	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
++	gic->fiq_shadow_offset = gic_irqs;
+ 
+ 	if (of_property_read_u32(node, "arm,routable-irqs",
+ 				 &nr_routable_irqs)) {
+-		irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
++		irq_base = irq_alloc_descs(irq_start, 16, 2 * gic_irqs,
+ 					   numa_node_id());
+ 		if (IS_ERR_VALUE(irq_base)) {
+ 			WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
+@@ -1037,12 +1073,12 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
+ 			irq_base = irq_start;
+ 		}
+ 
+-		gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
+-					hwirq_base, &gic_irq_domain_ops, gic);
++		gic->domain =
++		    irq_domain_add_legacy(node, 2 * gic_irqs, irq_base,
++					  hwirq_base, &gic_irq_domain_ops, gic);
+ 	} else {
+ 		gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
+-						    &gic_irq_domain_ops,
+-						    gic);
++						    &gic_irq_domain_ops, gic);
+ 	}
+ 
+ 	if (WARN_ON(!gic->domain))
+-- 
+1.9.0
