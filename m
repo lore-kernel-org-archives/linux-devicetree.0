@@ -1,38 +1,62 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 01/22] serial: 8250_dw: Add optional reset control support
-Date: Fri, 23 May 2014 10:19:47 +0200
-Message-ID: <8689536.mXHvcWVbGA@wuerfel>
-References: <1400831485-28576-1-git-send-email-wens@csie.org> <1400831485-28576-2-git-send-email-wens@csie.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH v3 2/3] ARM: dts: oma3-gta04: Add display support
+Date: Fri, 23 May 2014 11:20:39 +0300
+Message-ID: <537F04D7.4000201@ti.com>
+References: <1399580212-5183-1-git-send-email-marek@goldelico.com> <1399580212-5183-3-git-send-email-marek@goldelico.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1400831485-28576-2-git-send-email-wens@csie.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-serial@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1399580212-5183-3-git-send-email-marek@goldelico.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Belisko <marek@goldelico.com>, tony@atomide.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, bcousson@baylibre.com, linux@arm.linux.org.uk, plagnioj@jcrosoft.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-fbdev@vger.kernel.org, hns@goldelico.com
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 May 2014 15:51:04 Chen-Yu Tsai wrote:
->                 p->regshift = val;
->  
-> +       data->rst = devm_reset_control_get_optional(p->dev, NULL);
-> +
->         /* clock got configured through clk api, all done */
->         if (p->uartclk)
->                 return 0;
-> @@ -362,6 +366,9 @@ static int dw8250_probe(struct platform_device *pdev)
->                 return -ENODEV;
->         }
->  
-> +       if (!IS_ERR_OR_NULL(data->rst))
-> +               reset_control_deassert(data->rst);
-> +
+--1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-You should basically never use IS_ERR_OR_NULL(). devm_reset_control_get_optional()
-doesn't return NULL, so IS_ERR() should be safe.
+On 08/05/14 23:16, Marek Belisko wrote:
+> This patch add support for lcd display on gta04 board. Display control
+> is connected to spi (used spi bitbang driver).
+>=20
+> Signed-off-by: Marek Belisko <marek@goldelico.com>
+> ---
+>  arch/arm/boot/dts/omap3-gta04.dts | 87 +++++++++++++++++++++++++++++++=
+++++++++
+>  1 file changed, 87 insertions(+)
 
-Alternatively, change the code above to set data->rst to NULL if there
-is no reset line or error out if you get a different error (e.g. EPROBE_DEFER).
+I can take this via my tree.
 
-	Arnd
+Tony, can I have your ack on this?
+
+ Tomi
+
+
+
+--1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTfwTXAAoJEPo9qoy8lh71xtQP/1AaQcujZPBukzX0AnjmzEmd
+CSFR+ZOMA5kOv8MeVlVydnMCEEkBL9tbfwux34ynxZVLItKlidMJU/8dm+KArT4D
+BjZNS1WvlbBrWlEIzIJ0m35GDSElBlbGIbQOmKOqhSAwoSVeBR5A9C3AO/Usnnnu
+NGa4E2sjoK8vyTwlBEMzDIuMgawugmfyrFA7nnpRXIHIpA03bIqq4XE5xURTN+LM
+OIaQAQ61/M0mdVunfKIkkawSfLD7VS7UfnVvKPY3j9XhAciV415R1/aG+FszGUOX
+47xYPsiOmyXS59avWCs9zI+z7MgY+czkybyG85k+rqJ4aHYdLwYhVNwHaJwibDHM
+LHkyqRzZT4uylNjY2m81n1jI8cQFyoWsHUtnYiDxRgYOT4BoxaFXBYYYVSmGey/H
+9Wy3FkOtSAoAbPZCHiwIL//mhKBXDJjkSOYZT/m0T61S5aGegpEAR6+Yp7Og7FAp
+xHC5iUzTmrAf0BEtdaw4elFN5MYv6UJWNDaQOfN/xNa33sIexo3RXaqYUTziReBd
+VNOXWQmMC/xftx93J2Efee55Z8pNrhxP4rC2YyXkAybZIrExOS2wa9ttQVQPGXob
+a2TZcu+ZHUD/ny+lUAkwJ1NzJ2nx1o3o5z+ZUIvvdg5ODidwUv507BaoIMdR5N63
+puJySdapu2eGnhTmM/sX
+=JoXo
+-----END PGP SIGNATURE-----
+
+--1xVJCwgQitDeSfiF9inGJJ1rQ4AH41P3w--
