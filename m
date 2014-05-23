@@ -1,66 +1,38 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH v3 0/3] ARM: dts: overo: Add panel support
-Date: Fri, 23 May 2014 11:18:09 +0300
-Message-ID: <537F0441.50507@ti.com>
-References: <1400594337-5096-1-git-send-email-florian.vaussard@epfl.ch> <537EF413.5050600@epfl.ch>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 01/22] serial: 8250_dw: Add optional reset control support
+Date: Fri, 23 May 2014 10:19:47 +0200
+Message-ID: <8689536.mXHvcWVbGA@wuerfel>
+References: <1400831485-28576-1-git-send-email-wens@csie.org> <1400831485-28576-2-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="CXRbvks9B6lERw4vhSC20r8MClh843phI"
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <537EF413.5050600@epfl.ch>
-Sender: linux-omap-owner@vger.kernel.org
-To: Florian Vaussard <florian.vaussard@epfl.ch>, Tony Lindgren <tony@atomide.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <1400831485-28576-2-git-send-email-wens@csie.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Chen-Yu Tsai <wens@csie.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---CXRbvks9B6lERw4vhSC20r8MClh843phI
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On Friday 23 May 2014 15:51:04 Chen-Yu Tsai wrote:
+>                 p->regshift = val;
+>  
+> +       data->rst = devm_reset_control_get_optional(p->dev, NULL);
+> +
+>         /* clock got configured through clk api, all done */
+>         if (p->uartclk)
+>                 return 0;
+> @@ -362,6 +366,9 @@ static int dw8250_probe(struct platform_device *pdev)
+>                 return -ENODEV;
+>         }
+>  
+> +       if (!IS_ERR_OR_NULL(data->rst))
+> +               reset_control_deassert(data->rst);
+> +
 
-On 23/05/14 10:09, Florian Vaussard wrote:
-> Hi Tomi,
->=20
-> On 05/20/2014 03:58 PM, Florian Vaussard wrote:
->> Hi,
->>
->> This series enables the DVI and LCD panels present on some of
->> the Overo expansion boards.
->>
->=20
-> Do you have any more comments on these? If no, do you want to pull them=
+You should basically never use IS_ERR_OR_NULL(). devm_reset_control_get_optional()
+doesn't return NULL, so IS_ERR() should be safe.
 
-> through your tree for 3.16, as discussed with Tony?
+Alternatively, change the code above to set data->rst to NULL if there
+is no reset line or error out if you get a different error (e.g. EPROBE_DEFER).
 
-Yes, I can take these.
-
-Tony, do I have your ack on this series?
-
- Tomi
-
-
-
---CXRbvks9B6lERw4vhSC20r8MClh843phI
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTfwRHAAoJEPo9qoy8lh71VdIQAJkCNh6He1xUmZHWU6kzrE/Y
-JFuCTeNRtFkbARW2dqhRvlIBGHa0/v7JYl1X7z3WFmCXynouZ+bPQKNdYfGf62pC
-X6BWMASnDMbUeXFO2YFdCcPtOcl2yBvcj1WsCCn8o/8JTk3MdMsQZBoHtStMUksX
-0lYbqafLT8knzqrRGTHOfGGkqpRotQrAWx7K7a/5aL5ftw7/X7ENvTzw1FzryA4V
-h5wCSbWgLI15l67vFRKx/msJsiY9XjLqfP6jURmSYdq1HUMoxg2i0aYRPBKDq6Cv
-mhcPtFAYWeb1v7pM7QiKlFIAA/icJw3xFRD7xlLWUptCn4n0OtQuAXcKQE0YBVUe
-eBek50bG/azS8AwIvEB90nE7PUtva30J9d5Tsf03Z2EnZPWzMG08i26qo/q95VSM
-Y9NMjFlHyjAECAygiH+dFtzquBoVUhkB0VLg1TGF83jw2hIzWyddcrbdZG5767id
-NAS+Jb56jEZrUkV+JBlEeKFab1OiUhEam9tKUNmyDcUXeyna9BEsW36dGtF2boSG
-HjQuj02AAqfjqGKKRNQXgQfto5npFJ3qnrjkINFDT/0lR/3jndnxeh04gnVHHuqw
-0wz6OpHYEwYVaWVAaWHmhGHmBAd85E0kKQOUAFTDwEtQDnC3MSCiNQJTHOBWQ6FU
-ffbR6pnm6Yijzc1FcybY
-=j2yq
------END PGP SIGNATURE-----
-
---CXRbvks9B6lERw4vhSC20r8MClh843phI--
+	Arnd
