@@ -1,36 +1,63 @@
-From: Arun Kumar K <arun.kk@samsung.com>
-Subject: [PATCH 3/3] ARM: dts: Add clock property for mfc_pd in 5420
-Date: Fri, 23 May 2014 11:04:48 +0530
-Message-ID: <1400823288-26449-1-git-send-email-arun.kk@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: t.figa@samsung.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, arunkk.samsung@gmail.com
+From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
+Date: Fri, 23 May 2014 11:05:17 +0530
+Message-ID: <CAHbNUh2QHv8n7Y19qfO7BagX5AWe0i17MjDvr7yOpHf6YNGW4A@mail.gmail.com>
+References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
+	<1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
+	<20140522103039.GD12304@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140522103039.GD12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "jerry.wong" <jerry.wong-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Adding the optional clock property for the mfc_pd for
-handling the re-parenting while pd on/off.
+On 22 May 2014 16:00, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, May 22, 2014 at 02:47:07PM +0530, Tushar Behera wrote:
+>
+>> +     max98090->mclk = devm_clk_get(codec->dev, "mclk");
+>> +     if (!IS_ERR(max98090->mclk))
+>> +             clk_prepare_enable(max98090->mclk);
+>> +
+>
+> Ths doesn't handle deferred probe, we need to at least return an error
+> if we get -EPROBE_DEFER.
+>
 
-Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
----
-Corrected a typo error. Sorry for the noise.
----
- arch/arm/boot/dts/exynos5420.dtsi |    3 +++
- 1 file changed, 3 insertions(+)
+Ok.
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index 5a85896..d1170db 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -260,6 +260,9 @@
- 	mfc_pd: power-domain@10044060 {
- 		compatible = "samsung,exynos4210-pd";
- 		reg = <0x10044060 0x20>;
-+		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_SW_ACLK333>,
-+			<&clock CLK_MOUT_USER_ACLK333>;
-+		clock-names = "oscclk", "pclk0", "clk0";
- 	};
- 
- 	disp_pd: power-domain@100440C0 {
+> It'd also be better to move the enabling to set_bias_level() if possible
+> (I don't know if the clock is needed for register access) though less
+> essential.
+
+I tested with moving clk_enable/clk_disable calls to set_bias_level():
+SND_SOC_BIAS_PREPARE. That works well for me. Does it look okay?
+
+@@ -1801,6 +1801,25 @@ static int max98090_set_bias_level(struct
+snd_soc_codec *codec,
+                break;
+
+        case SND_SOC_BIAS_PREPARE:
++               /*
++                * SND_SOC_BIAS_PREPARE is called while preparing for a
++                * transition to ON or away from ON. If current bias_level
++                * is SND_SOC_BIAS_ON, then it is preparing for a transition
++                * away from ON. Disable the clock in that case, otherwise
++                * enable it.
++                */
++               if (!IS_ERR(max98090->mclk)) {
++                       if (codec->dapm.bias_level == SND_SOC_BIAS_ON)
++                               clk_disable(max98090->mclk);
++                       else
++                               clk_enable(max98090->mclk);
++               }
+                break;
+
 -- 
-1.7.9.5
+Tushar Behera
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
