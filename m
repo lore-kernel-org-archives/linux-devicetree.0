@@ -1,86 +1,82 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
-Date: Fri, 23 May 2014 12:46:10 +0200
-Message-ID: <201405231246.10365.arnd@arndb.de>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <7774492.yVryDeoI4M@wuerfel> <537E3E2F.7000407@gmail.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] video: fbdev: grvga.c:  Fix for possible null pointer
+ dereference
+Date: Fri, 23 May 2014 13:49:54 +0300
+Message-ID: <537F27D2.40301@ti.com>
+References: <1400621759-7814-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="KDO98ILTmGgpurB4dIgi2BWd350aPX4PK"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <537E3E2F.7000407@gmail.com>
+In-Reply-To: <1400621759-7814-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Corentin LABBE <clabbe.montjoie@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 May 2014, Corentin LABBE wrote:
-> Le 22/05/2014 17:28, Arnd Bergmann a =E9crit :
-> > On Thursday 22 May 2014 17:09:56 LABBE Corentin wrote:
-> >> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
-> >=20
-> > My feeling is that this should either be one driver that provides
-> > all five algorithms unconditionally, or five drivers that are each
-> > separate loadable modules and based on top of a common module
-> > that only exports functions but has no active logic itself
+--KDO98ILTmGgpurB4dIgi2BWd350aPX4PK
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 21/05/14 00:35, Rickard Strandqvist wrote:
+> There is otherwise a risk of a possible null pointer dereference.
 >=20
-> I agree for the split.
-> It was my first intention but I feared to add too many files.
-> So I propose to split in 6, sunxi-ss-hash.c, sunxi-ss-des.c, sunxi-ss=
--aes.c, sunxi-ss-rng.c, sunxi-ss-common.c and sunxi-ss.h
-> Does can I add a sunxi-ss directory in drivers/crypto ?
-
-Yes, I think a subdirectory would be best.
-
-
-> >> +	/* If we have more than one SG, we cannot use kmap_atomic since
-> >> +	 * we hold the mapping too long*/
-> >> +	src_addr =3D kmap(sg_page(in_sg)) + in_sg->offset;
-> >> +	if (src_addr =3D=3D NULL) {
-> >> +		dev_err(ss_ctx->dev, "KMAP error for src SG\n");
-> >> +		return -1;
-> >> +	}
-> >> +	dst_addr =3D kmap(sg_page(out_sg)) + out_sg->offset;
-> >> +	if (dst_addr =3D=3D NULL) {
-> >> +		kunmap(src_addr);
-> >> +		dev_err(ss_ctx->dev, "KMAP error for dst SG\n");
-> >> +		return -1;
-> >> +	}
-> >> +	src32 =3D (u32 *)src_addr;
-> >> +	dst32 =3D (u32 *)dst_addr;
-> >> +	ileft =3D nbytes / 4;
-> >> +	oleft =3D nbytes / 4;
-> >> +	sgileft =3D in_sg->length / 4;
-> >> +	sgoleft =3D out_sg->length / 4;
-> >> +	do {
-> >> +		tmp =3D readl_relaxed(ss_ctx->base + SUNXI_SS_FCSR);
-> >> +		rx_cnt =3D SS_RXFIFO_SPACES(tmp);
-> >> +		tx_cnt =3D SS_TXFIFO_SPACES(tmp);
-> >> +		todo =3D min3(rx_cnt, ileft, sgileft);
-> >> +		if (todo > 0) {
-> >> +			ileft -=3D todo;
-> >> +			sgileft -=3D todo;
-> >> +		}
-> >> +		while (todo > 0) {
-> >> +			writel_relaxed(*src32++, ss_ctx->base + SS_RXFIFO);
-> >> +			todo--;
-> >> +		}
-> >=20
-> > I wonder if this is meant to be used in combination with a dma engi=
-ne
-> > rather than accessed with writel/readl.
+> Was largely found by using a static code analysis program called cppche=
+ck.
 >=20
-> You could do both, but the dmaengine driver is under development.
-> When it will be ready, I will add DMA support.
-> But my intention is to keep both mode, since poll mode is better than=
- DMA for small request.
-
-Ok, I see.
-
-> > How does the original driver do it?
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital=
+=2Ese>
+> ---
+>  drivers/video/fbdev/grvga.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
 >=20
-> There are no original driver, this driver is the first for the Securi=
-ty System.
+> diff --git a/drivers/video/fbdev/grvga.c b/drivers/video/fbdev/grvga.c
+> index c078701..2db5bb1 100644
+> --- a/drivers/video/fbdev/grvga.c
+> +++ b/drivers/video/fbdev/grvga.c
+> @@ -514,9 +514,10 @@ free_fb:
+>  static int grvga_remove(struct platform_device *device)
+>  {
+>  	struct fb_info *info =3D dev_get_drvdata(&device->dev);
+> -	struct grvga_par *par =3D info->par;
+> +	struct grvga_par *par;
+> =20
+>  	if (info) {
+> +		par =3D info->par;
+>  		unregister_framebuffer(info);
+>  		fb_dealloc_cmap(&info->cmap);
+> =20
 
-Ah, I thought there was one in the allwinner BSP kernel.
+Thanks, queued this and the next one (video: fbdev: s3fb.c:  Fix for
+possible null pointer dereference) for 3.16.
 
-	Arnd
+ Tomi
+
+
+
+
+--KDO98ILTmGgpurB4dIgi2BWd350aPX4PK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTfyfSAAoJEPo9qoy8lh71MbMP+wZ+61e+QEhGJyWC/YMnIfIj
+xUvIxB7QtDLaMMebfj1PY0v9A1rEc+WTOKodxBL/2lulsFMlje50lwHnDHAem7mY
+frmkEt3CK+r2F6Sf1ZG6q6cHhEEXMjMl1rmvp8U1FkgYmvqr7oM6OfZeSmHxSAz5
+W1ykKoYMJZFhyJZ7QBlenzZIpJT09iiSTWM0PU2a+ywzUpapb3aUXgPoX04MCHPQ
+bXIpm8BTaXdRXbhgbbZUmouhf90k/YHs4iQ/yFIBR68dYyJXNekmEHAE+3Dg50bC
+KjhnNJIT1Pf0kXn0NM/fawjJcFHKc2KWLYNJG/jDKJM+Lww7PuYBaFRQuc9iB5xN
+Bp8lQo7sHlJNgnNqw9jwhjTfAKSINEMzGdDTRUuU+UmwZf8NCH+kGuxXyZH7yqoa
+12/vHJK4TpkcQ86v9lJBcmaSLUXJiApbnLO3l0r2laDyl+jjuRbf/R39vjqBBuc8
++Ry17Oa9bZxm4ZwTBxpI7JtG8GMMJlQGKIdZntOtfJ01YIBAvjXtyWtG17MZWl9E
+rAnqeR7nsrcHbtTcdr8yDA1aLqQ8sFtN+UzwSbxI2uC7INKwR5Z8N/LDU/qYJ3Xh
+uJ+EJ+ouM1KFgDU7MO/hbDZsqD8sUqkDkBk/zgjv4ngNl0J/CFdd8PgvxYPa0KPv
+IDLLbOPLlcJnzKXhPsma
+=Vz5T
+-----END PGP SIGNATURE-----
+
+--KDO98ILTmGgpurB4dIgi2BWd350aPX4PK--
