@@ -1,136 +1,60 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH v1] of/irq: do irq resolution in platform_get_irq_byname()
-Date: Fri, 23 May 2014 17:03:33 +0900
-Message-ID: <20140523080333.66720C4176E@trevor.secretlab.ca>
-References: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 03/10] irqchip: versatile-fpga: add pass-thru enable support
+Date: Fri, 23 May 2014 14:56:07 +0200
+Message-ID: <CACRpkdbarWMjn6cVSeWCFO7v9Qj_np5gL+7=NMB7NHkoMEPovA@mail.gmail.com>
+References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
+	<1400620176-7239-4-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Rob Herring <robh@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, santosh.shilimkar@ti.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400620176-7239-4-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 20 May 2014 13:42:02 +0300, Grygorii Strashko <grygorii.strashko@ti.com> wrote:
-> The commit 9ec36cafe43bf835f8f29273597a5b0cbc8267ef
-> "of/irq: do irq resolution in platform_get_irq" from Rob Herring -
-> moves resolving of the interrupt resources in platform_get_irq().
-> But this solution isn't complete because platform_get_irq_byname()
-> need to be modified the same way.
-> 
-> Hence, fix it by adding interrupt resolution code at the
-> platform_get_irq_byname() function too.
-> 
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Tony Lindgren <tony@atomide.com>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Thierry Reding <thierry.reding@gmail.com>
-> 
-> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-Applied, Thanks.
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Set the PIC_ENABLES register when the passthru-mask property is present.
+> This enables interrupts on the secondary controller to be passed thru
+> directly to the primary controller.
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-g.
+(...)
 
-> ---
-> Changes in v1:
-> - use of_property_match_string() to get IRQ index by name
-> - minor comments fixed
-> 
-> RFC:
->  https://lkml.org/lkml/2014/5/19/325
-> 
->  drivers/base/platform.c |    7 +++++--
->  drivers/of/irq.c        |   22 ++++++++++++++++++++++
->  include/linux/of_irq.h  |    5 +++++
->  3 files changed, 32 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 5b47210..9e9227e 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -131,9 +131,12 @@ EXPORT_SYMBOL_GPL(platform_get_resource_byname);
->   */
->  int platform_get_irq_byname(struct platform_device *dev, const char *name)
->  {
-> -	struct resource *r = platform_get_resource_byname(dev, IORESOURCE_IRQ,
-> -							  name);
-> +	struct resource *r;
-> +
-> +	if (IS_ENABLED(CONFIG_OF_IRQ) && dev->dev.of_node)
-> +		return of_irq_get_byname(dev->dev.of_node, name);
->  
-> +	r = platform_get_resource_byname(dev, IORESOURCE_IRQ, name);
->  	return r ? r->start : -ENXIO;
->  }
->  EXPORT_SYMBOL_GPL(platform_get_irq_byname);
-> diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-> index 5aeb894..3e06a69 100644
-> --- a/drivers/of/irq.c
-> +++ b/drivers/of/irq.c
-> @@ -406,6 +406,28 @@ int of_irq_get(struct device_node *dev, int index)
->  }
->  
->  /**
-> + * of_irq_get_byname - Decode a node's IRQ and return it as a Linux irq number
-> + * @dev: pointer to device tree node
-> + * @name: irq name
-> + *
-> + * Returns Linux irq number on success, or -EPROBE_DEFER if the irq domain
-> + * is not yet created, or error code in case of any other failure.
-> + */
-> +int of_irq_get_byname(struct device_node *dev, const char *name)
-> +{
-> +	int index;
-> +
-> +	if (unlikely(!name))
-> +		return -EINVAL;
-> +
-> +	index = of_property_match_string(dev, "interrupt-names", name);
-> +	if (index < 0)
-> +		return index;
-> +
-> +	return of_irq_get(dev, index);
-> +}
-> +
-> +/**
->   * of_irq_count - Count the number of IRQs a node uses
->   * @dev: pointer to device tree node
->   */
-> diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-> index 6404253..bfec136 100644
-> --- a/include/linux/of_irq.h
-> +++ b/include/linux/of_irq.h
-> @@ -45,6 +45,7 @@ extern void of_irq_init(const struct of_device_id *matches);
->  #ifdef CONFIG_OF_IRQ
->  extern int of_irq_count(struct device_node *dev);
->  extern int of_irq_get(struct device_node *dev, int index);
-> +extern int of_irq_get_byname(struct device_node *dev, const char *name);
->  #else
->  static inline int of_irq_count(struct device_node *dev)
->  {
-> @@ -54,6 +55,10 @@ static inline int of_irq_get(struct device_node *dev, int index)
->  {
->  	return 0;
->  }
-> +static inline int of_irq_get_byname(struct device_node *dev, const char *name)
-> +{
-> +	return 0;
-> +}
->  #endif
->  
->  #if defined(CONFIG_OF)
-> -- 
-> 1.7.9.5
-> 
+> +#define PIC_ENABLES             0x20   /* set interrupt pass through bits */
+
+What register is this? In this hardware register 0x20 is
+#define FIQ_STATUS              0x20
+
+Do you mean that this FPGA IRQ controller is an augmented version
+with the FIQ portions removed and instead it has some special
+routing register at 0x20?
+
+In that case it should have a different compatible-string should it not?
+
+I was under the impression that this was just a simple cascaded
+IRQ controller cascaded off bit 31 of the VIC, which is much simpler
+to handle, maybe in the manner of commits
+e641b987c20832dfaaa51d7792ed928c2b2d2dbf
+"irqchip: support cascaded VICs"
+f6da9fe45c3074b909084ae9da5f55034ebffeb4
+"irqchip: vic: Properly chain the cascaded IRQs"
+
+But for the fpga IRQ driver. Atleast that is how the comments in
+the device tree says it should work so something is odd
+here :-/
+
+I really want to know how this special register works.
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
