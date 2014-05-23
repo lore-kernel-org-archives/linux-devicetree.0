@@ -1,107 +1,100 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
-Date: Fri, 23 May 2014 15:55:32 +0530
-Message-ID: <537F221C.10700@ti.com>
-References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com> <53557BFE.5020908@cogentembedded.com> <53578FA8.6040607@ti.com> <537D2770.2040605@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <537D2770.2040605@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
+From: Tarek Dakhran <t.dakhran@samsung.com>
+Subject: [PATCH v10 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
+Date: Fri, 23 May 2014 14:35:41 +0400
+Message-ID: <1400841343-6016-2-git-send-email-t.dakhran@samsung.com>
+References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>, Tarek Dakhran <t.dakhran@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
+Add initial support for this SoC.
 
-On Thursday 22 May 2014 03:53 AM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 04/23/2014 02:02 PM, Kishon Vijay Abraham I wrote:
-> 
->>>>> This PHY, though formally being a part of Renesas USBHS controller, contains
->>>>> the
->>>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
->>>>> them
->>>>> channels) to the different USB controllers: channel 0 can be connected to
->>>>> either
->>>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
->>>>> EHCI/OHCI
->>>>> or xHCI controllers.
-> 
->>>>> This is a new driver for this USB PHY currently already supported under
->>>>> drivers/
->>>>> usb/phy/. The reason for writing the new driver was the requirement that the
->>>>> multiplexing of USB channels to the controller be dynamic, depending on what
->>>>> USB drivers are loaded,  rather than static as provided by the old driver.
->>>>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that
->>>>> purpose
->>>>> ideally. The new driver only supports device tree probing for now.
-> 
->>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
->>> [...]
-> 
->>>>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->>>>> ===================================================================
->>>>> --- /dev/null
->>>>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->>>>> @@ -0,0 +1,283 @@
-> 
->>> [...]
-> 
->>>>> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
->>>>> +{
-> 
->>> [...]
-> 
->>>>> +    drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
->>>>> +    drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
->>>>> +    drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
->>>>> +    drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
->>>>> +    drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
->>>>> +    drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
->>>>> +    drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
->>>>> +    drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
->>>>> +
->>>>> +    for (i = 0; i < NUM_USB_CHANNELS; i++) {
-> 
->>>> Instead of hard coding the number of channels,
-> 
->>>     It's hard coded in the hardware. We can even decrease that number to 2 as
-> 
->> right, that's why thought dt should have that information.
-> 
->    So you want a dedicated property for that or you meant something else?
-> 
->>> for the channel #1 we have nothing to do, regardless of whether it's present or
->>> not...
-> 
->>>> we can model the channels (PHYs) as sub-nodes of the main PHY
-> 
->>>     Hm, I don't think such representation would be adequate: the channels
->>> themselves do not usually correspond to any particular PHY, that's why I used
->>> #phy-cells = <2>.
-> 
->>>> in dt and use it to create individual PHYs.
-> 
->>>     Well, we probably can... however, I fail to see any immediate gain from
->>> it here...
->>>     I have to ask why you've selected this particular driver for such DT
->>> representation experiments, despite it not being the first one supporting
->>> multiple PHYs?
-> 
->> just that it didn't strike before.. but I think all multiple PHYs should be
->> modelled this way.
-> 
->    I've basically reimplemented the driver to parse the info from the subnodes
-> and it's now became larger in size, not smaller. :-/ Overall, I'm not content
-> with the changes, nor do I think such a change in the DT representation was a
-> great idea...
+Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+---
+ arch/arm/mach-exynos/Kconfig    |    8 ++++++++
+ arch/arm/mach-exynos/common.h   |   11 ++++++++++-
+ arch/arm/mach-exynos/firmware.c |    2 +-
+ 3 files changed, 19 insertions(+), 2 deletions(-)
 
-I've seen someone posted a patch with subnodes and that wasn't looking too bad.
-Do you mind posting your patch in the list?
-
-Cheers
-Kishon
+diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+index 1602abc..79a3e85 100644
+--- a/arch/arm/mach-exynos/Kconfig
++++ b/arch/arm/mach-exynos/Kconfig
+@@ -84,6 +84,14 @@ config SOC_EXYNOS5250
+ 	help
+ 	  Enable EXYNOS5250 SoC support
+ 
++config SOC_EXYNOS5410
++	bool "SAMSUNG EXYNOS5410"
++	default y
++	depends on ARCH_EXYNOS5
++	select PM_GENERIC_DOMAINS if PM_RUNTIME
++	help
++	  Enable EXYNOS5410 SoC support
++
+ config SOC_EXYNOS5420
+ 	bool "SAMSUNG EXYNOS5420"
+ 	default y
+diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+index e2d0954..d64c6de 100644
+--- a/arch/arm/mach-exynos/common.h
++++ b/arch/arm/mach-exynos/common.h
+@@ -21,6 +21,7 @@
+ #define EXYNOS4_CPU_MASK	0xFFFE0000
+ 
+ #define EXYNOS5250_SOC_ID	0x43520000
++#define EXYNOS5410_SOC_ID	0xE5410000
+ #define EXYNOS5420_SOC_ID	0xE5420000
+ #define EXYNOS5440_SOC_ID	0xE5440000
+ #define EXYNOS5_SOC_MASK	0xFFFFF000
+@@ -37,6 +38,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
+ IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
+ IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
+ IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
++IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
+ IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
+ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+ 
+@@ -68,6 +70,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+ # define soc_is_exynos5250()	0
+ #endif
+ 
++#if defined(CONFIG_SOC_EXYNOS5410)
++# define soc_is_exynos5410()	is_samsung_exynos5410()
++#else
++# define soc_is_exynos5410()	0
++#endif
++
+ #if defined(CONFIG_SOC_EXYNOS5420)
+ # define soc_is_exynos5420()	is_samsung_exynos5420()
+ #else
+@@ -82,7 +90,8 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+ 
+ #define soc_is_exynos4() (soc_is_exynos4210() || soc_is_exynos4212() || \
+ 			  soc_is_exynos4412())
+-#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5420())
++#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5410() || \
++			  soc_is_exynos5420())
+ 
+ void mct_init(void __iomem *base, int irq_g0, int irq_l0, int irq_l1);
+ 
+diff --git a/arch/arm/mach-exynos/firmware.c b/arch/arm/mach-exynos/firmware.c
+index 739bdc8..971baf0 100644
+--- a/arch/arm/mach-exynos/firmware.c
++++ b/arch/arm/mach-exynos/firmware.c
+@@ -50,7 +50,7 @@ static int exynos_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
+ 
+ 	boot_reg = sysram_ns_base_addr + 0x1c;
+ 
+-	if (!soc_is_exynos4212())
++	if (!soc_is_exynos4212() && !soc_is_exynos5410())
+ 		boot_reg += 4*cpu;
+ 
+ 	__raw_writel(boot_addr, boot_reg);
+-- 
+1.7.9.5
