@@ -1,39 +1,47 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] of: Stop naming platform_device using dcr address
-Date: Fri, 23 May 2014 16:07:08 +0200
-Message-ID: <4587381.5n3eMGkKaq@wuerfel>
-References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org> <1400801769-4506-3-git-send-email-grant.likely@linaro.org>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v1 5/5] ARM: dts: qcom: Add APQ8084 serial port DT node
+Date: Fri, 23 May 2014 17:17:45 +0300
+Message-ID: <537F5889.5080902@mm-sol.com>
+References: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com> <1400775885-10296-6-git-send-email-gdjakov@mm-sol.com> <693A0E52-34CF-4A63-A8D0-A83780F969F0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400801769-4506-3-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <693A0E52-34CF-4A63-A8D0-A83780F969F0@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 May 2014 08:36:09 Grant Likely wrote:
-> There is now a way to ensure all platform devices get a unique name when
-> populated from the device tree, and the DCR_NATIVE code path is broken
-> anyway. PowerPC Cell (PS3) is the only platform that actually uses this
-> path.  Most likely nobody will notice if it is killed. Remove the code
-> and associated ugly #ifdef.
-> 
-> The user-visible impact of this patch is that any DCR device on Cell
-> will get a new name in the /sys/devices hierarchy.
+On 05/22/2014 07:32 PM, Kumar Gala wrote:
+>
+> On May 22, 2014, at 11:24 AM, Georgi Djakov <gdjakov@mm-sol.com> wrot=
+e:
+>
+>> Add the necessary DT node to probe the serial driver on
+>> APQ8084 platforms.
+>>
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>> ---
+>> arch/arm/boot/dts/qcom-apq8084.dtsi |    7 +++++++
+>> 1 file changed, 7 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/qcom-apq8084.dtsi b/arch/arm/boot/dts=
+/qcom-apq8084.dtsi
+>> index 2dcd11e..c346549 100644
+>> --- a/arch/arm/boot/dts/qcom-apq8084.dtsi
+>> +++ b/arch/arm/boot/dts/qcom-apq8084.dtsi
+>> @@ -185,5 +185,12 @@
+>> 			reg =3D <0xfc400000 0x4000>;
+>> 		};
+>>
+>> +		serial@f995e000 {
+>
+> Mark it disabled in the soc.dtsi and =93ok=94 in the board.
+>
 
-Isn't this used on all ppc440+ as well?
+Oh, of course!
 
-I don't think PS3 has it either, it should only be the second generation
-Cell blade doing this, which uses ppc440-derived I/O devices.
-
-We will probably see a bunch of the same devices on APM's X-gene ARM64
-machines as well, but we don't have to maintain a stable device name for
-those yet.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Georgi
