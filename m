@@ -1,82 +1,79 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] video: fbdev: grvga.c:  Fix for possible null pointer
- dereference
-Date: Fri, 23 May 2014 13:49:54 +0300
-Message-ID: <537F27D2.40301@ti.com>
-References: <1400621759-7814-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Keerthy <a0393675@ti.com>
+Subject: Re: [PATCH v3 3/4] mfd: tps65917: Add driver for the TPS65917 PMIC
+Date: Fri, 23 May 2014 16:29:33 +0530
+Message-ID: <537F2A15.9060901@ti.com>
+References: <1400731239-3180-1-git-send-email-j-keerthy@ti.com> <1400731239-3180-4-git-send-email-j-keerthy@ti.com> <20140522083707.GM6679@lee--X1> <537DD836.3040501@ti.com> <20140522114808.GU6679@lee--X1> <537EBEE4.9050309@ti.com> <20140523100634.GP19747@lee--X1>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="KDO98ILTmGgpurB4dIgi2BWd350aPX4PK"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400621759-7814-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sachin Kamat <sachin.kamat@linaro.org>, Jingoo Han <jg1.han@samsung.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140523100634.GP19747@lee--X1>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Keerthy <j-keerthy@ti.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sameo@linux.intel.com, grant.likely@linaro.org, ian@slimlogic.co.uk, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, broonie@linaro.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---KDO98ILTmGgpurB4dIgi2BWd350aPX4PK
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Friday 23 May 2014 03:36 PM, Lee Jones wrote:
+>>>>>> The TPS65917 chip is a power management IC for Portable Navigation Systems
+>>>>>> and Tablet Computing devices. It contains the following components:
+>>>>>>
+>>>>>>   - Regulators.
+>>>>>>   - Over Temperature warning and Shut down.
+>>>>>>
+>>>>>> This patch adds support for tps65917 mfd device. At this time only
+>>>>>> the regulator functionality is made available.
+>>>>>>
+>>>>>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>>>>>> ---
+>>>>>> v3 Changes:
+>>>>>>
+>>>>>>   * Header file formating
+>>>>>>   * Changed the cache_type to REGCACHE_RBTREE
+>>>>>>   * removed unnecessary code
+>>>>>>   * Corrected documentation style
+>>>>>>   * Added pm_power_off function
+>>>>>>
+>>>>>>   v2 Changes:
+>>>>>>
+>>>>>>   * Added volatile register check as some of the registers
+>>>>>>     in the set are volatile.
+>>>>>> drivers/mfd/Kconfig          |   12 +
+>>>>>>   drivers/mfd/Makefile         |    1 +
+>>>>>>   drivers/mfd/tps65917.c       |  594 +++++++++++++++++
+>>>>>>   include/linux/mfd/tps65917.h | 1485 ++++++++++++++++++++++++++++++++++++++++++
+>>>>>>   4 files changed, 2092 insertions(+)
+>>>>>>   create mode 100644 drivers/mfd/tps65917.c
+>>>>>>   create mode 100644 include/linux/mfd/tps65917.h
+> [...]
+>
+>>>>>> +		ret = regmap_read(tps65917->regmap[slave], addr, &reg);
+>>>>>> +		if (ret)
+>>>>>> +			goto err_irq;
+>>>>>> +	}i
+>>>>> What does the read do?  You're not doing anything with the value.
+>>>> This pad1 and pad2 stuff is not needed. I will remove this.
+>>> Then why is it in here?
+>>>
+>>> Did you copy this code from somewhere, if so, where?
+>>>
+>>> Okay, I just answered my own question.  There is so much common code
+>>> in between this and palmas, there is no way I'm going to accept this
+>>> driver.  Please merge it in with the palmas driver!
+>>>
+>> The chip is more like a subset of palmas with lot of register offset changes
+>> and register bit field changes. Adding this would make it clumsy.
+>> There could
+>> be lot of checks. That is why i chose to write a new driver.
+>>
+>> Palmas driver already supports palmas variants and tps659038. Merging
+>> this would mean more and more checks :-/.
+> Then find an elegant way of representing the variants.  I'm not
+> prepared to carry that much duplicated code in MFD.  It's already
+> overladened and in need of an overhaul.  This will exacerbate the
+> matter.
+>
 
-On 21/05/14 00:35, Rickard Strandqvist wrote:
-> There is otherwise a risk of a possible null pointer dereference.
->=20
-> Was largely found by using a static code analysis program called cppche=
-ck.
->=20
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital=
-=2Ese>
-> ---
->  drivers/video/fbdev/grvga.c |    3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/video/fbdev/grvga.c b/drivers/video/fbdev/grvga.c
-> index c078701..2db5bb1 100644
-> --- a/drivers/video/fbdev/grvga.c
-> +++ b/drivers/video/fbdev/grvga.c
-> @@ -514,9 +514,10 @@ free_fb:
->  static int grvga_remove(struct platform_device *device)
->  {
->  	struct fb_info *info =3D dev_get_drvdata(&device->dev);
-> -	struct grvga_par *par =3D info->par;
-> +	struct grvga_par *par;
-> =20
->  	if (info) {
-> +		par =3D info->par;
->  		unregister_framebuffer(info);
->  		fb_dealloc_cmap(&info->cmap);
-> =20
+Okay. I am working on that.
 
-Thanks, queued this and the next one (video: fbdev: s3fb.c:  Fix for
-possible null pointer dereference) for 3.16.
-
- Tomi
-
-
-
-
---KDO98ILTmGgpurB4dIgi2BWd350aPX4PK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTfyfSAAoJEPo9qoy8lh71MbMP+wZ+61e+QEhGJyWC/YMnIfIj
-xUvIxB7QtDLaMMebfj1PY0v9A1rEc+WTOKodxBL/2lulsFMlje50lwHnDHAem7mY
-frmkEt3CK+r2F6Sf1ZG6q6cHhEEXMjMl1rmvp8U1FkgYmvqr7oM6OfZeSmHxSAz5
-W1ykKoYMJZFhyJZ7QBlenzZIpJT09iiSTWM0PU2a+ywzUpapb3aUXgPoX04MCHPQ
-bXIpm8BTaXdRXbhgbbZUmouhf90k/YHs4iQ/yFIBR68dYyJXNekmEHAE+3Dg50bC
-KjhnNJIT1Pf0kXn0NM/fawjJcFHKc2KWLYNJG/jDKJM+Lww7PuYBaFRQuc9iB5xN
-Bp8lQo7sHlJNgnNqw9jwhjTfAKSINEMzGdDTRUuU+UmwZf8NCH+kGuxXyZH7yqoa
-12/vHJK4TpkcQ86v9lJBcmaSLUXJiApbnLO3l0r2laDyl+jjuRbf/R39vjqBBuc8
-+Ry17Oa9bZxm4ZwTBxpI7JtG8GMMJlQGKIdZntOtfJ01YIBAvjXtyWtG17MZWl9E
-rAnqeR7nsrcHbtTcdr8yDA1aLqQ8sFtN+UzwSbxI2uC7INKwR5Z8N/LDU/qYJ3Xh
-uJ+EJ+ouM1KFgDU7MO/hbDZsqD8sUqkDkBk/zgjv4ngNl0J/CFdd8PgvxYPa0KPv
-IDLLbOPLlcJnzKXhPsma
-=Vz5T
------END PGP SIGNATURE-----
-
---KDO98ILTmGgpurB4dIgi2BWd350aPX4PK--
+Regards,
+Keerthy
