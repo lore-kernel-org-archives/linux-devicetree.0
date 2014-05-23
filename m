@@ -1,119 +1,58 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: [PATCH v2] spi: dw-mmio: add oftree support
-Date: Fri, 23 May 2014 11:53:48 +0200
-Message-ID: <1400838828-30998-1-git-send-email-s.trumtrar@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 1/2] doc: dt bindings: Document Odroid X2/U3 audio
+ subsystem bindings
+Date: Fri, 23 May 2014 11:54:31 +0200
+Message-ID: <537F1AD7.1070808@samsung.com>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+ <20140522184656.GS12304@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20140522184656.GS12304@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Allow probing the dw-mmio from devicetree.
+On 22/05/14 20:46, Mark Brown wrote:
+> On Thu, May 22, 2014 at 01:55:07PM +0200, Sylwester Nawrocki wrote:
+> 
+>> +	sound {
+>> +		compatible = "samsung,odroidx2-audio";
+>> +		samsung,i2s-controller = <&i2s0>;
+>> +		samsung,audio-codec = <&max98090>;
+>> +	};
+> 
+> Can this not use simple-card?
 
-Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
----
-Changes since v1:
-	- num-chipselect -> num-cs
-	- snps,dw-spi-mmio -> snps,dw-apb-ssi
+I dug into that and it seems it almost could, but there is one
+thing I'm not sure how to cover with the simple-card DT bindings
+and the related driver.
 
- .../devicetree/bindings/spi/snps,dw-apb-ssi.txt    | 25 ++++++++++++++++++++++
- drivers/spi/spi-dw-mmio.c                          | 20 ++++++++++++++++-
- 2 files changed, 44 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+There are these two calls:
 
-diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-new file mode 100644
-index 0000000..7739bc4
---- /dev/null
-+++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
-@@ -0,0 +1,25 @@
-+Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
-+
-+Required properties:
-+- compatible : "snps,dw-apb-ssi"
-+- reg : The register base for the controller.
-+- interrupts : One interrupt, used by the controller.
-+- #address-cells : <1>, as required by generic SPI binding.
-+- #size-cells : <0>, also as required by generic SPI binding.
-+
-+Optional properties:
-+- num-cs : The number of chipselects. If omitted, this will default to 4.
-+
-+Child nodes as per the generic SPI binding.
-+
-+Example:
-+
-+	spi@fff00000 {
-+		compatible = "snps,dw-apb-ssi";
-+		reg = <0xfff00000 0x1000>;
-+		interrupts = <0 154 4>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		num-cs = <4>;
-+	};
-+
-diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
-index 1492f5e..e5f826e 100644
---- a/drivers/spi/spi-dw-mmio.c
-+++ b/drivers/spi/spi-dw-mmio.c
-@@ -16,6 +16,8 @@
- #include <linux/spi/spi.h>
- #include <linux/scatterlist.h>
- #include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
- 
- #include "spi-dw.h"
- 
-@@ -32,6 +34,7 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 	struct dw_spi *dws;
- 	struct resource *mem;
- 	int ret;
-+	int num_cs;
- 
- 	dwsmmio = devm_kzalloc(&pdev->dev, sizeof(struct dw_spi_mmio),
- 			GFP_KERNEL);
-@@ -62,12 +65,20 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
- 	dwsmmio->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (IS_ERR(dwsmmio->clk))
- 		return PTR_ERR(dwsmmio->clk);
-+
- 	ret = clk_prepare_enable(dwsmmio->clk);
- 	if (ret)
- 		return ret;
- 
- 	dws->bus_num = pdev->id;
--	dws->num_cs = 4;
-+
-+	num_cs = 4;
-+
-+	if (pdev->dev.of_node)
-+		of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
-+
-+	dws->num_cs = num_cs;
-+
- 	dws->max_freq = clk_get_rate(dwsmmio->clk);
- 
- 	ret = dw_spi_add_host(&pdev->dev, dws);
-@@ -92,12 +103,19 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct of_device_id dw_spi_mmio_of_match[] = {
-+	{ .compatible = "snps,dw-apb-ssi", },
-+	{ /* end of table */}
-+};
-+MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
-+
- static struct platform_driver dw_spi_mmio_driver = {
- 	.probe		= dw_spi_mmio_probe,
- 	.remove		= dw_spi_mmio_remove,
- 	.driver		= {
- 		.name	= DRIVER_NAME,
- 		.owner	= THIS_MODULE,
-+		.of_match_table = dw_spi_mmio_of_match,
- 	},
- };
- module_platform_driver(dw_spi_mmio_driver);
++	ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_OPCLK,
++					0, MOD_OPCLK_PCLK);
+
+
++	/* Set the cpu DAI configuration in order to use CDCLK */
++	ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_CDCLK,
++					0, SND_SOC_CLOCK_OUT);
+
+This changes clocks routing so that the CPU DAI in slave mode generates
+master clock for the codec, on the SoC's CDCLK pin. Then this is
+a reference clock for the codec's PLL, which is a source of the I2S
+interface clocks.
+
+It's done this way to avoid changing at runtime frequency of the EPLL
+clock, which may be parent of other clocks than the sound subsystem,
+e.g. MMC.
+
+simple-card just calls set_sysclk once for the CPU DAI and CODEC with
+the second and last argument set to 0.
+I'll try and see again if there is some way to use simple-card.
+
 -- 
-2.0.0.rc0
+Thanks,
+Sylwester
