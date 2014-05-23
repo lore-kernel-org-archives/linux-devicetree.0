@@ -1,7 +1,7 @@
 From: Anders Berg <anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
-Subject: [PATCH v4 5/5] ARM: dts: axxia: Add reset controller
-Date: Fri, 23 May 2014 11:08:39 +0200
-Message-ID: <0f4c77059d58b463781a37d66a703f1cf2d7ed96.1400834521.git.anders.berg@avagotech.com>
+Subject: [PATCH v4 4/5] power: reset: Add Axxia system reset driver
+Date: Fri, 23 May 2014 11:08:38 +0200
+Message-ID: <3f6a31e2515d21dbef4ccf25ebbb090e242c9572.1400834521.git.anders.berg@avagotech.com>
 References: <cover.1400834521.git.anders.berg@avagotech.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <cover.1400834521.git.anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
@@ -9,35 +9,176 @@ In-Reply-To: <cover.1400834521.git.anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gma
 References: <cover.1400834521.git.anders.berg-1wcpHE2jlwO1Z/+hSey0Gg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>
 
-Add the reset controller to the AXM5xx device tree.
+Add Axxia (AXM55xx) SoC system reset driver. This driver handles only system
+reboot (and not power-off).
 
 Signed-off-by: Anders Berg <anders.berg-M7mHMAq9Yzo@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
 Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/axm55xx.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../bindings/power_supply/axxia-reset.txt          | 20 +++++
+ drivers/power/reset/Kconfig                        |  8 ++
+ drivers/power/reset/Makefile                       |  1 +
+ drivers/power/reset/axxia-reset.c                  | 88 ++++++++++++++++++++++
+ 4 files changed, 117 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power_supply/axxia-reset.txt
+ create mode 100644 drivers/power/reset/axxia-reset.c
 
-diff --git a/arch/arm/boot/dts/axm55xx.dtsi b/arch/arm/boot/dts/axm55xx.dtsi
-index 3fbd83c..ea288f0 100644
---- a/arch/arm/boot/dts/axm55xx.dtsi
-+++ b/arch/arm/boot/dts/axm55xx.dtsi
-@@ -101,6 +101,11 @@
- 			reg = <0x20 0x10030000 0 0x2000>;
- 		};
- 
-+		reset: reset@2010031000 {
-+			compatible = "lsi,axm55xx-reset";
-+			syscon = <&syscon>;
-+		};
+diff --git a/Documentation/devicetree/bindings/power_supply/axxia-reset.txt b/Documentation/devicetree/bindings/power_supply/axxia-reset.txt
+new file mode 100644
+index 0000000..47e720d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power_supply/axxia-reset.txt
+@@ -0,0 +1,20 @@
++Axxia Restart Driver
 +
- 		amba {
- 			compatible = "arm,amba-bus";
- 			#address-cells = <2>;
++This driver can do reset of the Axxia SoC. It uses the registers in the syscon
++block to initiate a chip reset.
++
++Required Properties:
++  -compatible: "lsi,axm55xx-reset"
++  -syscon: phandle to the syscon node.
++
++Example:
++
++	syscon: syscon@2010030000 {
++		compatible = "lsi,axxia-syscon", "syscon";
++		reg = <0x20 0x10030000 0 0x2000>;
++	};
++
++	reset: reset@2010031000 {
++		compatible = "lsi,axm55xx-reset";
++		syscon = <&syscon>;
++	};
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index fa0e4e0..49b46e6 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -12,6 +12,14 @@ config POWER_RESET_AS3722
+ 	help
+ 	  This driver supports turning off board via a ams AS3722 power-off.
+ 
++config POWER_RESET_AXXIA
++	bool "LSI Axxia reset driver"
++	depends on POWER_RESET && ARCH_AXXIA
++	help
++	  This driver supports restart for Axxia SoC.
++
++	  Say Y if you have an Axxia family SoC.
++
+ config POWER_RESET_GPIO
+ 	bool "GPIO power-off driver"
+ 	depends on OF_GPIO && POWER_RESET
+diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+index a5b4a77..16c0516 100644
+--- a/drivers/power/reset/Makefile
++++ b/drivers/power/reset/Makefile
+@@ -1,4 +1,5 @@
+ obj-$(CONFIG_POWER_RESET_AS3722) += as3722-poweroff.o
++obj-$(CONFIG_POWER_RESET_AXXIA) += axxia-reset.o
+ obj-$(CONFIG_POWER_RESET_GPIO) += gpio-poweroff.o
+ obj-$(CONFIG_POWER_RESET_MSM) += msm-poweroff.o
+ obj-$(CONFIG_POWER_RESET_QNAP) += qnap-poweroff.o
+diff --git a/drivers/power/reset/axxia-reset.c b/drivers/power/reset/axxia-reset.c
+new file mode 100644
+index 0000000..3b1f8d6
+--- /dev/null
++++ b/drivers/power/reset/axxia-reset.c
+@@ -0,0 +1,88 @@
++/*
++ * Reset driver for Axxia devices
++ *
++ * Copyright (C) 2014 LSI
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ */
++#include <linux/init.h>
++#include <linux/err.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/mfd/syscon.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/platform_device.h>
++#include <linux/reboot.h>
++#include <linux/regmap.h>
++
++#include <asm/system_misc.h>
++
++
++#define SC_CRIT_WRITE_KEY	0x1000
++#define SC_LATCH_ON_RESET	0x1004
++#define SC_RESET_CONTROL	0x1008
++#define   RSTCTL_RST_ZERO	(1<<3)
++#define   RSTCTL_RST_FAB	(1<<2)
++#define   RSTCTL_RST_CHIP	(1<<1)
++#define   RSTCTL_RST_SYS	(1<<0)
++#define SC_EFUSE_INT_STATUS	0x180c
++#define   EFUSE_READ_DONE	(1<<31)
++
++static struct regmap *syscon;
++
++static void do_axxia_restart(enum reboot_mode reboot_mode, const char *cmd)
++{
++	/* Access Key (0xab) */
++	regmap_write(syscon, SC_CRIT_WRITE_KEY, 0xab);
++	/* Select internal boot from 0xffff0000 */
++	regmap_write(syscon, SC_LATCH_ON_RESET, 0x00000040);
++	/* Assert ResetReadDone (to avoid hanging in boot ROM) */
++	regmap_write(syscon, SC_EFUSE_INT_STATUS, EFUSE_READ_DONE);
++	/* Assert chip reset */
++	regmap_update_bits(syscon, SC_RESET_CONTROL,
++			   RSTCTL_RST_CHIP, RSTCTL_RST_CHIP);
++}
++
++static int axxia_reset_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++
++	syscon = syscon_regmap_lookup_by_phandle(dev->of_node, "syscon");
++	if (IS_ERR(syscon)) {
++		pr_err("%s: syscon lookup failed\n", dev->of_node->name);
++		return PTR_ERR(syscon);
++	}
++
++	arm_pm_restart = do_axxia_restart;
++
++	return 0;
++}
++
++static const struct of_device_id of_axxia_reset_match[] = {
++	{ .compatible = "lsi,axm55xx-reset", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, of_axxia_reset_match);
++
++static struct platform_driver axxia_reset_driver = {
++	.probe = axxia_reset_probe,
++	.driver = {
++		.name = "axxia-reset",
++		.of_match_table = of_match_ptr(of_axxia_reset_match),
++	},
++};
++
++static int __init axxia_reset_init(void)
++{
++	return platform_driver_register(&axxia_reset_driver);
++}
++device_initcall(axxia_reset_init);
 -- 
 1.8.3.2
 
