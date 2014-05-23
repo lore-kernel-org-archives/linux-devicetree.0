@@ -1,166 +1,233 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 1/5] phy: add support for USB cluster on the Armada 375
- SoC
-Date: Fri, 23 May 2014 23:50:54 +0200
-Message-ID: <537FC2BE.1040501@free-electrons.com>
-References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com> <537F12F5.2030102@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/3] ARM: EXYNOS: Add support for clock handling in power
+ domain
+Date: Fri, 23 May 2014 23:51:53 +0200
+Message-ID: <537FC2F9.5040100@gmail.com>
+References: <1400821692-22370-1-git-send-email-arun.kk@samsung.com> <1400821692-22370-2-git-send-email-arun.kk@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <537F12F5.2030102-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400821692-22370-2-git-send-email-arun.kk@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: t.figa@samsung.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, arunkk.samsung@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 23/05/2014 11:20, Kishon Vijay Abraham I wrote:
-> Hi,
+Hi,
+
+On 23.05.2014 07:08, Arun Kumar K wrote:
+> From: Prathyush K <prathyush.k@samsung.com>
 > 
-> On Friday 16 May 2014 09:52 PM, Gregory CLEMENT wrote:
->> The Armada 375 SoC comes with an USB2 host and device controller and
->> an USB3 controller. The USB cluster control register allows to manage
->> common features of both USB controllers.
->>
->> This commit adds a driver integrated in the generic PHY framework to
->> control this USB cluster feature.
->>
->> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  drivers/phy/Kconfig                              |   6 +
->>  drivers/phy/Makefile                             |   1 +
->>  drivers/phy/phy-armada375-usb2.c                 | 140 +++++++++++++++++++++++
->>  include/dt-bindings/phy/armada-375-usb-cluster.h |  18 +++
-[...]
-
->> +static struct phy_ops armada375_usb_phy_ops = {
->> +	.init = armada375_usb_phy_init,
->> +	.owner		= THIS_MODULE,
+> While powering on/off a local powerdomain in exynos5 chipsets, the input
+> clocks to each device gets modified. This behaviour is based on the
+> SYSCLK_SYS_PWR_REG registers.
+> E.g. SYSCLK_MFC_SYS_PWR_REG = 0x0, the parent of input clock to MFC
+> 				   (aclk333) gets modified to oscclk
+> 			    = 0x1, no change in clocks.
+> The recommended value of SYSCLK_SYS_PWR_REG before power gating any
+> domain is 0x0. So we must also restore the clocks while powering on a
+> domain everytime.
 > 
-> nitpick: unnecessary tab.
-
-OK
-
->> +};
->> +
->> +/*
->> + * Only one controller can use this PHY. We shouldn't have the case
->> + * when two controllers want to use this PHY. But if this case occurs
->> + * then we provide a phy to the first one and return an error for the
->> + * next one. This error has also to be an error returned by
->> + * devm_phy_optional_get() so different from ENODEV for USB2. In the
->> + * USB3 case it still optional and we use ENODEV.
->> + */
->> +static struct phy *armada375_usb_phy_xlate(struct device *dev,
->> +					struct of_phandle_args *args)
->> +{
->> +	if (WARN_ON(usb_cluster_phy.phy_provided)) {
->> +		dev_err(dev, "This PHY has already been provided!\n");
->> +		dev_err(dev, "Check your device tree, only one controller can use it\n.");
->> +		if (args->args[0] == PHY_USB2)
->> +			return ERR_PTR(-EBUSY);
->> +		else
->> +			return ERR_PTR(-ENODEV);
->> +	}
->> +
->> +	if (args->args[0] == PHY_USB2)
->> +		usb_cluster_phy.use_usb3 = false;
->> +	else if (args->args[0] == PHY_USB3)
->> +		usb_cluster_phy.use_usb3 = true;
->> +	else {
->> +		dev_err(dev, "Invalid PHY mode\n");
->> +		return ERR_PTR(-ENODEV);
->> +	}
+> This patch adds the framework for getting the required mux and parent clocks
+> through a power domain device node. With this patch, while powering off
+> a domain, parent is set to oscclk and while powering back on, its re-set
+> to the correct parent which is as per the recommended pd on/off
+> sequence.
 > 
-> how will this behave if there is a phy_put and then a phy_get?
-
-Badly I think :(
-
-I have to think about a better solution then.
-
->> +
->> +	usb_cluster_phy.phy_provided = true;
->> +
->> +	return usb_cluster_phy.phy;
->> +}
->> +
->> +static int armada375_usb_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct phy *phy;
->> +	struct phy_provider *phy_provider;
->> +	void __iomem *usb_cluster_base;
->> +	struct resource *res;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	usb_cluster_base = devm_ioremap_resource(&pdev->dev, res);
->> +	if (!usb_cluster_base)
->> +		return -ENOMEM;
->> +
->> +	phy = devm_phy_create(dev, &armada375_usb_phy_ops, NULL);
->> +	if (IS_ERR(phy)) {
->> +		dev_err(dev, "failed to create PHY \n");
->> +		return PTR_ERR(phy);
->> +	}
->> +
->> +	usb_cluster_phy.phy = phy;
->> +	usb_cluster_phy.reg = usb_cluster_base;
->> +	phy_set_drvdata(phy, &usb_cluster_phy);
->> +
->> +	phy_provider = devm_of_phy_provider_register(&pdev->dev,
->> +						     armada375_usb_phy_xlate);
->> +	if (IS_ERR(phy_provider))
->> +		return PTR_ERR(phy_provider);
->> +
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id of_usb_cluster_table[] = {
->> +	{ .compatible = "marvell,armada-375-usb-cluster", },
->> +	{ /* end of list */ },
->> +};
->> +MODULE_DEVICE_TABLE(of, of_usb_cluster_table);
->> +
->> +static struct platform_driver armada375_usb_phy_driver = {
->> +	.probe	= armada375_usb_phy_probe,
->> +	.driver = {
->> +		.of_match_table	= of_usb_cluster_table,
->> +		.name  = "armada-375-usb-cluster",
->> +		.owner = THIS_MODULE,
->> +	}
->> +};
->> +module_platform_driver(armada375_usb_phy_driver);
->> +
->> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
->> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>");
->> +MODULE_LICENSE("GPL");
+> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> ---
+>  .../bindings/arm/exynos/power_domain.txt           |   18 +++++++
+>  arch/arm/mach-exynos/pm_domains.c                  |   56 +++++++++++++++++++-
+>  2 files changed, 73 insertions(+), 1 deletion(-)
 > 
-> GPL v2?
+> diff --git a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> index 5216b41..168a191 100644
+> --- a/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> +++ b/Documentation/devicetree/bindings/arm/exynos/power_domain.txt
+> @@ -9,6 +9,16 @@ Required Properties:
+>  - reg: physical base address of the controller and length of memory mapped
+>      region.
+>  
+> +Optional Properties:
+> +- clocks: List of clock handles. The parent clocks of the input clocks to the
+> +  devices in this power domain are set to oscclk before power gating and
+> +  restored back after powering on a domain. This is required for all domains
+> +  which are powered on and off and not required for unused domains.
 
-See the header, I chose "GNU General Public License version 2 or later."
-so "GPL" match it.
+I'd keep it required to all domains that exhibit this behavior, as
+device tree should expose complete information about the hardware
+whenever possible.
 
+> +  The following clocks can be specified:
+> +  - oscclk: oscillator clock.
+> +  - clk(n): input clock to the devices in this power domain
 
-Thanks for your review, once I will have found a proper solution for the
-phy_put/phy_get scenario, I will sent a new version with all the other issues
-fixed.
+s/clk(n)/clkN/
 
+> +  - pclk(n): parent clock of input clock to the devices in this power domain
 
-Gregory
+s/pclk(n)/pclkN/
 
-> 
-> Thanks
-> Kishon
-> 
+The meaning of N should be described and the relation between clkN and
+pclkN with the same value of N.
 
+Also shouldn't this rather be a description of clock-names property?
 
--- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+>  Node of a device using power domains must have a samsung,power-domain property
+>  defined with a phandle to respective power domain.
+>  
+> @@ -19,6 +29,14 @@ Example:
+>  		reg = <0x10023C00 0x10>;
+>  	};
+>  
+> +	mfc_pd: power-domain@10044060 {
+> +		compatible = "samsung,exynos4210-pd";
+> +		reg = <0x10044060 0x20>;
+> +		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_SW_ACLK333>,
+> +			<&clock CLK_MOUT_USER_ACLK333>;
+> +		clock-names = "oscclk", "pclk0", "clk0";
+> +	};
+> +
+>  Example of the node using power domain:
+>  
+>  	node {
+> diff --git a/arch/arm/mach-exynos/pm_domains.c b/arch/arm/mach-exynos/pm_domains.c
+> index fe6570e..e5fe76d 100644
+> --- a/arch/arm/mach-exynos/pm_domains.c
+> +++ b/arch/arm/mach-exynos/pm_domains.c
+> @@ -17,6 +17,7 @@
+>  #include <linux/err.h>
+>  #include <linux/slab.h>
+>  #include <linux/pm_domain.h>
+> +#include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/of_address.h>
+>  #include <linux/of_platform.h>
+> @@ -24,6 +25,8 @@
+>  
+>  #include "regs-pmu.h"
+>  
+> +#define MAX_CLK_PER_DOMAIN			4
+> +
+>  /*
+>   * Exynos specific wrapper around the generic power domain
+>   */
+> @@ -32,6 +35,9 @@ struct exynos_pm_domain {
+>  	char const *name;
+>  	bool is_off;
+>  	struct generic_pm_domain pd;
+> +	struct clk *oscclk;
+> +	struct clk *clk[MAX_CLK_PER_DOMAIN];
+> +	struct clk *pclk[MAX_CLK_PER_DOMAIN];
+>  };
+>  
+>  static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+> @@ -44,6 +50,18 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+>  	pd = container_of(domain, struct exynos_pm_domain, pd);
+>  	base = pd->base;
+>  
+> +	/* Set oscclk before powering off a domain*/
+> +	if (!power_on) {
+> +		int i;
+> +		for (i = 0; i < MAX_CLK_PER_DOMAIN; i++) {
+> +			if (!pd->clk[i])
+> +				break;
+
+Clock handles should be checked for validity using IS_ERR() macro (as
+most of opaque handles, which should not be considered pointers, even if
+they have a pointer type).
+
+> +			if (clk_set_parent(pd->clk[i], pd->oscclk))
+> +				pr_info("%s: error setting oscclk as parent to clock %d\n",
+> +						pd->name, i);
+
+pr_err()?
+
+> +		}
+> +	}
+> +
+>  	pwr = power_on ? S5P_INT_LOCAL_PWR_EN : 0;
+>  	__raw_writel(pwr, base);
+>  
+> @@ -60,6 +78,19 @@ static int exynos_pd_power(struct generic_pm_domain *domain, bool power_on)
+>  		cpu_relax();
+>  		usleep_range(80, 100);
+>  	}
+> +
+> +	/* Restore clocks after powering on a domain*/
+> +	if (power_on) {
+> +		int i;
+> +		for (i = 0; i < MAX_CLK_PER_DOMAIN; i++) {
+> +			if (!pd->clk[i])
+> +				break;
+
+Ditto.
+
+> +			if (clk_set_parent(pd->clk[i], pd->pclk[i]))
+> +				pr_info("%s: error setting parent to clock%d\n",
+> +						pd->name, i);
+
+Ditto.
+
+> +		}
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -152,9 +183,11 @@ static __init int exynos4_pm_init_power_domain(void)
+>  
+>  	for_each_compatible_node(np, NULL, "samsung,exynos4210-pd") {
+>  		struct exynos_pm_domain *pd;
+> -		int on;
+> +		int on, i;
+> +		struct device *dev;
+>  
+>  		pdev = of_find_device_by_node(np);
+> +		dev = &pdev->dev;
+>  
+>  		pd = kzalloc(sizeof(*pd), GFP_KERNEL);
+>  		if (!pd) {
+> @@ -170,6 +203,27 @@ static __init int exynos4_pm_init_power_domain(void)
+>  		pd->pd.power_on = exynos_pd_power_on;
+>  		pd->pd.of_node = np;
+>  
+> +		pd->oscclk = devm_clk_get(dev, "oscclk");
+
+Based on the fact that power domains are not hotpluggable (and not even
+handled by a normal driver in terms of driver core), I don't see a point
+in using managed resources.
+
+> +		if (IS_ERR(pd->oscclk))
+> +			goto no_clk;
+> +
+> +		for (i = 0; i < MAX_CLK_PER_DOMAIN; i++) {
+> +			struct clk *tmp, *tmp_parent;
+> +			char clk_name[8];
+> +
+> +			snprintf(clk_name, sizeof(clk_name), "clk%d", i);
+> +			tmp = devm_clk_get(dev, clk_name);
+
+Ditto.
+
+> +			if (IS_ERR(tmp))
+> +				break;
+> +			snprintf(clk_name, sizeof(clk_name), "pclk%d", i);
+> +			tmp_parent = devm_clk_get(dev, clk_name);
+
+Ditto.
+
+> +			if (IS_ERR(tmp_parent))
+> +				break;
+> +			pd->clk[i] = tmp;
+> +			pd->pclk[i] = tmp_parent;
+
+You should use those directly to store return values of calls to
+clk_get(), to be able check clock handle validity properly.
+
+Best regards,
+Tomasz
