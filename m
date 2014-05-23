@@ -1,36 +1,75 @@
-From: =?ISO-8859-1?Q?Emilio_L=F3pez?= <emilio@elopez.com.ar>
-Subject: Re: [PATCH 07/22] clk: sunxi: Fix PLL6 calculation on sun6i
-Date: Fri, 23 May 2014 10:09:01 -0300
-Message-ID: <537F486D.9060900@elopez.com.ar>
-References: <1400831485-28576-1-git-send-email-wens@csie.org> <1400831485-28576-8-git-send-email-wens@csie.org>
+From: Arend van Spriel <arend@broadcom.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Fri, 23 May 2014 15:21:34 +0200
+Message-ID: <537F4B5E.80306@broadcom.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1400831485-28576-8-git-send-email-wens@csie.org>
-Sender: linux-serial-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <537F3610.3050104@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 05/23/14 13:50, Hans de Goede wrote:
+> Hi,
+>
+> On 05/23/2014 01:22 PM, Mark Brown wrote:
+>> On Fri, May 23, 2014 at 11:13:44AM +0200, Hans de Goede wrote:
+>>
+>>> Thinking more about this, I would like to make one change to my
+>>> proposal, the mmc-core should only do power up of child-nodes if
+>>> they have a compatible of: "simple-sdio-powerup". This way
+>>> when we add something more complex, we can keep the simple powerup
+>>> code in the mmc core, keeping what we've already using this working
+>>> and the mmc core won't respond to the child nodes for more complex
+>>> devices, so it won't conflict with more complex power-up handling
+>>> handled by some other driver.
+>>
+>> Would it not be better to have this be something in the driver struct
+>> rather than in the device tree?  Putting a compatible in there would be
+>> encoding details of the Linux implementation in the DT which doesn't
+>> seem right especially since these are details we're thinking of changing
+>> later on.
+>
+> The compatible is not a Linux specific thing, it is a marking saying
+> that something needs to take care of enabling the clks (and whatever
+> else we will make part of the binding for this compatible), before
+> scanning the mmc bus.
+>
+>> Something like have the driver set flags saying if it wants
+>> to do complicated things.
+>
+> Chicken<->  egg, we won't know which driver to use before we've probed
+> the mmc bus, and we cannot probe the bus before enabling the clks, etc.
 
-El 23/05/14 04:51, Chen-Yu Tsai escribi=F3:
-> The N factor for PLL6 counts from 1 to 32, as specified in the A23
-> manual, and shown in Allwinner's original code.
+The approach I took with brcmfmac is that upon module init I search the 
+DT for "brcm,bcm43xx-fmac" compatible and get the clock and/or gpio 
+resource and enable them before registering the sdio driver. The 
+difficulty is probably when using the driver built-in as the clocks and 
+gpios may not be available yet and we can not rely on deferred probing 
+in module init stage.
 
-Are you sure about this? The A23 manual I'm looking at has a 5-bit fiel=
-d=20
-(so 0-31) on 12:8, and the examples count from 0 (eg Factor=3D0 N=3D1 .=
-=2E.=20
-=46actor=3D31 N=3D32).
+Regards,
+Arend
 
-Cheers,
+>>> FWIW if we ever get truely complex cases I think modeling the
+>>> power-up hardware as a pmic platform device is not a bad idea,
+>>> we would then need to have a generic mmc-host pmic property, which
+>>> would be used both to do the initial powerup before scanning, as
+>>> well as for the sdio device driver to get a handle to the pmic,
+>>> for run time power-management (if desired).
+>>
+>> I don't know if this will ever apply to SDIO but with other buses the
+>> complicated bits come when the driver wants to take over some of the
+>> power management do things like turn some of the supplies or clocks on
+>> and off independently at runtime for low power modes.
+>
+> Hmm, good point in that case actually having these things in the
+> child node makes most sense, because then the driver can find them
+> their. Note that the mmc core enabling things does not mean that
+> the driver cannot later disable them if needed.
 
-Emilio
---
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
