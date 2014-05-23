@@ -1,41 +1,47 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC v2 04/10] ARM: vexpress: Extend UART with FIQ support
-Date: Fri, 23 May 2014 16:04:52 +0100
-Message-ID: <20140523150452.GX3693@n2100.arm.linux.org.uk>
-References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-5-git-send-email-daniel.thompson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1400853478-5824-5-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Nicolas Pitre <nico@linaro.org>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: [PATCH v2 0/4] Add Qualcomm APQ8084 SoC support
+Date: Fri, 23 May 2014 18:12:28 +0300
+Message-ID: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Georgi Djakov <gdjakov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 23, 2014 at 02:57:52PM +0100, Daniel Thompson wrote:
-> @@ -140,7 +140,7 @@
->  			v2m_serial0: uart@090000 {
->  				compatible = "arm,pl011", "arm,primecell";
->  				reg = <0x090000 0x1000>;
-> -				interrupts = <5>;
-> +				interrupts = <5>, <69>;
+This patchset adds basic support for the Qualcomm Snapdragon 805 APQ8084 SoC.
 
-NAK.  This is obviously a Linux implementation detail - the second
-number is your "FIQ" number which you've decided will be offset by
-64.
+The first two patches add device-tree files for the SoC and the board, the
+third adds a board compatible string to the DT machine descriptor.
+The last one adds information about the low-level debug UART base address
+to the DEBUG_QCOM_UARTDM Kconfig help section introduced by [1].
+
+Tested on APQ8084-MTP board.
+
+Changes from v1:
+ - Remove the interrupts property from the l2-cache node as it is still not
+   accepted (suggested by Stephen Boyd)
+ - Move the timer node out of the soc container (suggested by Stephen Boyd)
+ - Add just "qcom,apq8084" in the board machine descriptors to cover other
+   future boards based on apq8084 (suggested by Kumar Gala)
+ - Change the last patch (debug UART) to just add info about the SoC PHYS/VIRT
+   addresses. Requires [1]. (suggestions by Arnd Bergmann and Ivan Ivanov)
+
+[1] https://lkml.org/lkml/2014/4/14/312
+
+Georgi Djakov (4):
+  ARM: dts: qcom: Add APQ8084 SoC support
+  ARM: dts: qcom: Add APQ8084-MTP board support
+  ARM: qcom: Add APQ8084 to mach-qcom
+  ARM: debug: qcom: add UART addresses to Kconfig help
+
+ arch/arm/Kconfig.debug                 |    1 +
+ arch/arm/boot/dts/Makefile             |    3 +-
+ arch/arm/boot/dts/qcom-apq8084-mtp.dts |    6 ++
+ arch/arm/boot/dts/qcom-apq8084.dtsi    |  179 ++++++++++++++++++++++++++++++++
+ arch/arm/mach-qcom/board.c             |    1 +
+ 5 files changed, 189 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/qcom-apq8084-mtp.dts
+ create mode 100644 arch/arm/boot/dts/qcom-apq8084.dtsi
 
 -- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+1.7.9.5
