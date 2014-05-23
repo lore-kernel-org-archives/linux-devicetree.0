@@ -1,106 +1,42 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH v2 2/2] of: Stop naming platform_device using dcr address
-Date: Fri, 23 May 2014 08:36:09 +0900
-Message-ID: <1400801769-4506-3-git-send-email-grant.likely@linaro.org>
-References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400801769-4506-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 04/10] irqchip: versatile-fpga: add DT init
+Date: Fri, 23 May 2014 14:58:54 +0200
+Message-ID: <CACRpkdbcwaLss=9M7FS47_tt8zzpnBCx5NN9a-f5C_c1vKBSuA@mail.gmail.com>
+References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
+	<1400620176-7239-5-git-send-email-robherring2@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400620176-7239-5-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-There is now a way to ensure all platform devices get a unique name when
-populated from the device tree, and the DCR_NATIVE code path is broken
-anyway. PowerPC Cell (PS3) is the only platform that actually uses this
-path.  Most likely nobody will notice if it is killed. Remove the code
-and associated ugly #ifdef.
+On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 
-The user-visible impact of this patch is that any DCR device on Cell
-will get a new name in the /sys/devices hierarchy.
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+> Add IRQCHIP_DECLARE call for the versatile-fpga interrupt controller so
+> that initialization from DT will work.
+>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
----
- arch/powerpc/include/asm/dcr-mmio.h |  4 ----
- arch/powerpc/sysdev/dcr.c           |  6 +++---
- drivers/of/platform.c               | 24 ------------------------
- 3 files changed, 3 insertions(+), 31 deletions(-)
+If the different compatible string indicated that the hardware
+is different that string must be used to augment the runpath,
+right?
 
-diff --git a/arch/powerpc/include/asm/dcr-mmio.h b/arch/powerpc/include/asm/dcr-mmio.h
-index acd491dbd45a..93a68b28e695 100644
---- a/arch/powerpc/include/asm/dcr-mmio.h
-+++ b/arch/powerpc/include/asm/dcr-mmio.h
-@@ -51,10 +51,6 @@ static inline void dcr_write_mmio(dcr_host_mmio_t host,
- 	out_be32(host.token + ((host.base + dcr_n) * host.stride), value);
- }
- 
--extern u64 of_translate_dcr_address(struct device_node *dev,
--				    unsigned int dcr_n,
--				    unsigned int *stride);
--
- #endif /* __KERNEL__ */
- #endif /* _ASM_POWERPC_DCR_MMIO_H */
- 
-diff --git a/arch/powerpc/sysdev/dcr.c b/arch/powerpc/sysdev/dcr.c
-index 1bd0eba4d355..e9056e438575 100644
---- a/arch/powerpc/sysdev/dcr.c
-+++ b/arch/powerpc/sysdev/dcr.c
-@@ -152,9 +152,9 @@ EXPORT_SYMBOL_GPL(dcr_resource_len);
- 
- #ifdef CONFIG_PPC_DCR_MMIO
- 
--u64 of_translate_dcr_address(struct device_node *dev,
--			     unsigned int dcr_n,
--			     unsigned int *out_stride)
-+static u64 of_translate_dcr_address(struct device_node *dev,
-+				    unsigned int dcr_n,
-+				    unsigned int *out_stride)
- {
- 	struct device_node *dp;
- 	const u32 *p;
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 95c133a0554b..52780a72d09d 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -51,10 +51,6 @@ struct platform_device *of_find_device_by_node(struct device_node *np)
- }
- EXPORT_SYMBOL(of_find_device_by_node);
- 
--#if defined(CONFIG_PPC_DCR)
--#include <asm/dcr.h>
--#endif
--
- #ifdef CONFIG_OF_ADDRESS
- /*
-  * The following routines scan a subtree and registers a device for
-@@ -78,26 +74,6 @@ void of_device_make_bus_id(struct device *dev)
- 	const __be32 *reg;
- 	u64 addr;
- 
--#ifdef CONFIG_PPC_DCR
--	/*
--	 * If it's a DCR based device, use 'd' for native DCRs
--	 * and 'D' for MMIO DCRs.
--	 */
--	reg = of_get_property(node, "dcr-reg", NULL);
--	if (reg) {
--#ifdef CONFIG_PPC_DCR_NATIVE
--		dev_set_name(dev, "d%x.%s", *reg, node->name);
--#else /* CONFIG_PPC_DCR_NATIVE */
--		u64 addr = of_translate_dcr_address(node, *reg, NULL);
--		if (addr != OF_BAD_ADDR) {
--			dev_set_name(dev, "D%llx.%s",
--				     (unsigned long long)addr, node->name);
--			return;
--		}
--#endif /* !CONFIG_PPC_DCR_NATIVE */
--	}
--#endif /* CONFIG_PPC_DCR */
--
- 	/* Construct the name, using parent nodes if necessary to ensure uniqueness */
- 	while (node->parent) {
- 		/*
--- 
-1.9.1
+It seems to me that the special routing register will be used
+whenever the DT has this special passthrough property set,
+but that should be *refused* on all other variants, as that
+regiser has a different meaning on the integrator (used for
+FIQ).
+
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
