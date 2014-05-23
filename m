@@ -1,70 +1,77 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH] ARM: dts: AM4372: clk: efuse based crystal frequency
- detect
-Date: Fri, 23 May 2014 14:05:57 +0300
-Message-ID: <537F2B95.1010808@ti.com>
-References: <062e8a534b1e372db7ed3daa3df7e3c5b885ffab.1400062517.git.nsekhar@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: samsung: Add machine driver for odroidx2
+Date: Fri, 23 May 2014 12:05:44 +0100
+Message-ID: <20140523110544.GY12304@sirena.org.uk>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+ <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
+ <20140522185334.GT12304@sirena.org.uk>
+ <537F0A88.8000904@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <062e8a534b1e372db7ed3daa3df7e3c5b885ffab.1400062517.git.nsekhar@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Tony Lindgren <tony@atomide.com>, Benoit Cousson <bcousson@baylibre.com>
-Cc: Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, Device Tree Mailing List <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MZRUDfwK0cLsyVHQ"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537F0A88.8000904@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/14/2014 02:36 PM, Sekhar Nori wrote:
-> From: Afzal Mohammed <afzal@ti.com>
->
-> Currently oscillator frequency is determined based on sysboot settings,
-> it may not be the case always. To determine it properly, efuse settings
-> also has to be read. CONTROL_STATUS register holds this information.
-> Bit 31:	if 0, frequency to be determined based on sysboot
-> 	if 1, frequency to be determined based on efuse
-> Bit 29,30 - for efuse detection of frequency
-> Bit 22,23 - for sysboot detection of frequency
->
-> Add clock nodes (mux) to determine oscillator frequency as above.
->
-> Signed-off-by: Afzal Mohammed <afzal@ti.com>
-> Acked-by: Tero Kristo <t-kristo@ti.com>
-> Signed-off-by: Sekhar Nori <nsekhar@ti.com>
 
-Thanks, queued for 3.16.
+--MZRUDfwK0cLsyVHQ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--Tero
+On Fri, May 23, 2014 at 10:44:56AM +0200, Sylwester Nawrocki wrote:
+> On 22/05/14 20:53, Mark Brown wrote:
 
-> ---
->   arch/arm/boot/dts/am43xx-clocks.dtsi |   16 ++++++++++++++++
->   1 file changed, 16 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> index 142009c..71b029c 100644
-> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
-> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
-> @@ -11,6 +11,22 @@
->   	sys_clkin_ck: sys_clkin_ck {
->   		#clock-cells = <0>;
->   		compatible = "ti,mux-clock";
-> +		clocks = <&sysboot_freq_sel_ck>, <&crystal_freq_sel_ck>;
-> +		ti,bit-shift = <31>;
-> +		reg = <0x0040>;
-> +	};
-> +
-> +	crystal_freq_sel_ck: crystal_freq_sel_ck {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,mux-clock";
-> +		clocks = <&virt_19200000_ck>, <&virt_24000000_ck>, <&virt_25000000_ck>, <&virt_26000000_ck>;
-> +		ti,bit-shift = <29>;
-> +		reg = <0x0040>;
-> +	};
-> +
-> +	sysboot_freq_sel_ck: sysboot_freq_sel_ck@44e10040 {
-> +		#clock-cells = <0>;
-> +		compatible = "ti,mux-clock";
->   		clocks = <&virt_19200000_ck>, <&virt_24000000_ck>, <&virt_25000000_ck>, <&virt_26000000_ck>;
->   		ti,bit-shift = <22>;
->   		reg = <0x0040>;
->
+> As for the DT binding documentation patch, I thought we're supposed to keep
+> documentation in separate patches, so processes of separating it from the
+> kernel is easier ?
 
+I'm not sure what the current theory is - they should definitely be
+separate if they're part of a multi-patch series but for a single patch
+I don't remember what the current taste is.  If you're sending to the
+same recipients anyway splitting isn't going to accomplish much, the
+idea was to only send the DT binding to the DT maintainers and list and
+not the code.
+
+> >> +	ret = snd_soc_dai_set_sysclk(codec_dai, 3, MAX98090_MCLK_FREQ,
+> >> +				     SND_SOC_CLOCK_IN);
+> >> +	if (ret < 0) {
+> >> +		dev_err(codec_dai->dev,
+> >> +			"Unable to switch to FLL1: %d\n", ret);
+> >> +		return ret;
+> >> +	}
+
+> > So's this - also what is 3?  Set it on init.
+
+> OK, will move it. I'm not sure why 3, it seems to be ignored by the codec
+> anyway. Chen, can you confirm the second argument is actually a don't care
+> value ?
+
+If it's don't care supply 0 instead.
+
+--MZRUDfwK0cLsyVHQ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfyuEAAoJELSic+t+oim955YP/0q2lXOX0mplig4lK/bLQD55
+YThdFpX2rEAEI0ZhU+YcfydG2K3Um3tHpoMm9PV9yTBFPjzlVK7Ja1FosyDba5kc
+JhCdG0ckeUvxaj5IZ7Pa9KkxqfW0CIZZ09yk5NqbOnj9C6+vqXKZYCkvL6BavZ3h
+3Voa4TUQY1WLf1Zlx1C+FiMia6aHWfQVmh3tidKkJ/WdwEeHfNJl/Jnl4EDrNJ5I
+KBVXtS4yff+9LZP1qaLtkLkzSVmQrtPGFj6LBrywH67L8rNkdqbN1ZtbeRGU4cx8
+gX+RcdkljWjfP/BUsM6+UlsJ+3Xw4RKK6Qyi8Qy9f//VAPowRRbz7f+9HRao6uHz
+F27YEcqwXTvA1DXJdeX4Uf+c3DUxhJkyQxB6wFgV4fTHfpLNhCLULLeSl/De67Ie
+AZE7lOhGBsa77+T6Ew9M/ZXT9YuK1dIYQhg1YxPn2ZgmLLJi64wTrQaY9GguIxCF
+zO5zR8eh2dxi2GIRyErAR4VP6MT3iVz6qauTYOwEBkQbe7lB09+P9XxP+GXjH1Gh
+xTP5q9SZ7KGpoGJR8NKQwNeWAR6WWFcnLJBpxVuTj4J0tB7G0crBs3P9ZRCXupFs
+F8/D8TAAVFPe/18c2+Q/pgEMXogAnqxZZ5lfvqHyIxwOir1NgB4rRCv+bSxWKBEA
+bejqPtatfOqu5udrR5oQ
+=HKeh
+-----END PGP SIGNATURE-----
+
+--MZRUDfwK0cLsyVHQ--
