@@ -1,41 +1,121 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/5] Documentation: dt-bindings: document the Armada 375
- USB cluster binding
-Date: Fri, 23 May 2014 19:22:48 +0530
-Message-ID: <537F52B0.5030204@ti.com>
-References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com> <1400257376-13251-2-git-send-email-gregory.clement@free-electrons.com> <537F13B2.6070500@ti.com> <20140523132145.GA31314@lunn.ch> <20140523133608.GB31314@lunn.ch>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [RFC v2 00/10] kgdb: NMI/FIQ support for ARM
+Date: Fri, 23 May 2014 14:57:48 +0100
+Message-ID: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
+References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140523133608.GB31314-g2DYL2Zd6BY@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Wessel <jason.wessel@windriver.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Daniel Thompson <daniel.thompson@linaro.org>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, patches@linaro.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfou>
 List-Id: devicetree@vger.kernel.org
 
-hI,
+This patchset makes it possible to use the kgdb NMI infrastructure
+on ARM platforms by providing a mutli-arch compatible means for drivers
+to manage FIQ routings.
 
-On Friday 23 May 2014 07:06 PM, Andrew Lunn wrote:
->> Do you want one .txt file per driver, or can we combine binding
->> documentations into one file? There should already be a mvebu-phy.txt,
->> which contains the sata phy usable on some of the Armada SoC families.
->> This binding could be appended to it.
-> 
-> Ah. Humm, well! It seems the patch adding the mvebu-phy.txt fell
-> through a crack when adding the driver.
-> 
-> Kishon could you take
-> http://www.spinics.net/lists/devicetree/msg17018.html into your tree?
-> It should of been taken the same time you took the actual driver,
-> http://www.spinics.net/lists/devicetree/msg17011.html into your tree.
-> 
-> I can resend that one missing patch if you want.
+First a quick summary of how the mainline kgdb NMI infrastructure
+(mostly found in drivers/tty/serial/kgdb_nmi.c) works. The kgdb
+infrastructure will re-route the kgdb console UART's interrupt signal
+from IRQ to FIQ. Naturally the UART will no longer function normally and
+will instead be managed by kgdb using the polled I/O functions. Any
+character delivered to the UART causes the kgdb handler function to be
+called.
 
-yes please. But it's already too late to go in the next merge window.
+Note that, within this patchset a serial driver explicitly consents (or 
+not) to the abuse outlined by calling the appropriate registration
+during the .poll_init() callback.
 
--Kishon
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The patch set is structured as follows:
+
+  The first six patches modify the interrupt system to make it easier
+  to describe FIQ. The key concept is that a call to enable_fiq() must
+  modify the IRQ/FIQ routing to that the FIQ really is enabled (rather
+  than spuriously delivering the signal on the IRQ). To achieve this
+  each interrupt controller registers two virqs for each hwirq (allowing
+  IRQ and FIQ to be readily distinguished).
+
+  The next two patches (7 and 8) provide kgdb with a FIQ handler and
+  a means for serial drivers to register their FIQ with kgdb.
+
+  Finally two example serial drivers are modified in order to register
+  their FIQs with kgdb.
+
+Major remaining TODO item is to modify the code to halt the other CPUs;
+at present this code sends IPIs (which use a normal IRQ) and busy waits
+for the other CPUs to halt. This means the benefits of invoking the
+debugger via NMI are not support realized on SMP systems. However I plan
+to tackle that later (i.e.  when there's some consensus on whether this
+approach is the right way to handle FIQ).
+ 
+Changes since v1:
+
+* Fully fledged multi-arch support.
+
+* Tested for correct FIQ operation on STiH416/B2020 (Cortex A9),
+  qemu/versatile and qemu/vexpress-a15 (with self-written mods to the
+  GIC model to support FIQ).
+
+* Regression tested (and resulting bugs fixed) on qemu/versatile+DT and
+  qemu/integreatorcp.
+
+
+Anton Vorontsov (2):
+  ARM: Move some macros from entry-armv to entry-header
+  ARM: Add KGDB/KDB FIQ debugger generic code
+
+Daniel Thompson (8):
+  arm: fiq: Allow EOI to be communicated to the intc
+  irqchip: gic: Provide support for interrupt grouping
+  irqchip: gic: Introduce shadow irqs for FIQ
+  ARM: vexpress: Extend UART with FIQ support
+  ARM: STi: STiH41x: Extend UART with FIQ support.
+  irqchip: vic: Introduce shadow irqs for FIQ
+  serial: amba-pl011: Pass on FIQ information to KGDB.
+  serial: asc: Add support for KGDB's FIQ/NMI mode
+
+ arch/arm/Kconfig                            |   2 +
+ arch/arm/Kconfig.debug                      |  18 +++
+ arch/arm/boot/dts/stih415.dtsi              |   4 +-
+ arch/arm/boot/dts/stih416.dtsi              |   4 +-
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi     |   8 +-
+ arch/arm/boot/dts/vexpress-v2p-ca15-tc1.dts |  10 +-
+ arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts  |   8 +-
+ arch/arm/boot/dts/vexpress-v2p-ca5s.dts     |  10 +-
+ arch/arm/include/asm/fiq.h                  |   1 +
+ arch/arm/include/asm/kgdb.h                 |   7 ++
+ arch/arm/kernel/Makefile                    |   1 +
+ arch/arm/kernel/entry-armv.S                | 151 +------------------------
+ arch/arm/kernel/entry-header.S              | 164 ++++++++++++++++++++++++++++
+ arch/arm/kernel/fiq.c                       |  11 ++
+ arch/arm/kernel/kgdb_fiq.c                  | 117 ++++++++++++++++++++
+ arch/arm/kernel/kgdb_fiq_entry.S            |  87 +++++++++++++++
+ arch/arm/mach-ep93xx/core.c                 |   6 +-
+ arch/arm/mach-netx/generic.c                |   3 +-
+ arch/arm/mach-s3c64xx/common.c              |   6 +-
+ arch/arm/mach-versatile/core.c              |   9 +-
+ arch/arm/mach-versatile/include/mach/irqs.h |  76 ++++++-------
+ arch/arm/plat-samsung/s5p-irq.c             |   3 +-
+ drivers/irqchip/irq-gic.c                   |  81 ++++++++++++--
+ drivers/irqchip/irq-vic.c                   |  87 ++++++++++++---
+ drivers/tty/serial/amba-pl011.c             | 101 ++++++++++-------
+ drivers/tty/serial/st-asc.c                 |  27 +++++
+ include/linux/irqchip/arm-gic.h             |   3 +
+ include/linux/irqchip/arm-vic.h             |   8 +-
+ 28 files changed, 733 insertions(+), 280 deletions(-)
+ create mode 100644 arch/arm/kernel/kgdb_fiq.c
+ create mode 100644 arch/arm/kernel/kgdb_fiq_entry.S
+
+-- 
+1.9.0
