@@ -1,83 +1,33 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt/bindings: add passthru-mask property to versatile-fpga-irq
-Date: Fri, 23 May 2014 08:00:40 -0500
-Message-ID: <CAL_JsqJYzMvhWng7YUdQbKdFxVwUXZkB-h_kq7yZAOzi1biiPw@mail.gmail.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 08/10] dt/bindings: add compatible string for versatile
+ osc clock
+Date: Fri, 23 May 2014 15:01:58 +0200
+Message-ID: <CACRpkdYniXn1mJhaVuziE-S9v-=npFgkQs0RBw-+9GbcabFNYg@mail.gmail.com>
 References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
-	<1400620176-7239-2-git-send-email-robherring2@gmail.com>
-	<CACRpkdZGevG9YaUPUs98pQidcGz7MxbxjuSxBn=cqaOYGhWegw@mail.gmail.com>
+	<1400620176-7239-9-git-send-email-robherring2@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZGevG9YaUPUs98pQidcGz7MxbxjuSxBn=cqaOYGhWegw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1400620176-7239-9-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 23, 2014 at 7:46 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+
+> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 >
->> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>
->> Add a passthru-mask property for setting interrupts which are passed
->> through directly to a primary controller.
->>
->> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
->> index c9cf605..956b71d 100644
->> --- a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
->> +++ b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
->> @@ -34,3 +34,6 @@ Optional properties:
->>  - interrupts: if the FPGA IRQ controller is cascaded, i.e. if its IRQ
->>    output is simply connected to the input of another IRQ controller,
->>    then the parent IRQ shall be specified in this property.
->> +- passthru-mask: a u32 number representing a bit mas determining which of
->
-> bit mask
->
-> (speling)
->
->> +  the interrupts are directly passed through to the primary interrupt
->> +  controller.
->
-> This is very confusing on the Integrators. The FPGA IRQ controller
-> *is* the primary interrupt controller on these.
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 
-Yes. Really, the h/w is not the same and we should have different
-compatible strings. Unfortunately, it is Integrator that should
-change.
+Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
->
-> (Further on Integrators with an IM-PD1 expansion board the
-> VIC is actually the secondary controller visavis the FPGA
-> IRQ controller which is the primary one.)
->
-> So on the versatile the FPGA IRQ controller is *not* cascaded
-> off one line of the VIC but rather connected in parallel or
-> something?
-
-See figure in 3.10 of the user guide:
-
-http://infocenter.arm.com/help/topic/com.arm.doc.dui0225d/DUI0225D_versatile_application_baseboard_arm926ej_s_ug.pdf
-
-It is both chained and direct connection. I guess we could just use
-chained mode to simplify things.
-
-> Care to elaborate a bit on how things are cascaded here?
-> And specify that this is for some special usecase or
-> something?
-
-I'll add a reference to the user guide to the binding.
-
-Rob
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
