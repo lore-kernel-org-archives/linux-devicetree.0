@@ -1,214 +1,98 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v10 3/3] ARM: dts: Add initial device tree support for EXYNOS5410
-Date: Fri, 23 May 2014 19:02:59 +0200
-Message-ID: <CABuKBeKgva6gbN1GkVeZNPuagewrw09uz8Fqb8-qKOgaSg4oZw@mail.gmail.com>
-References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com>
-	<1400841343-6016-4-git-send-email-t.dakhran@samsung.com>
+From: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 3/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Fri, 23 May 2014 19:20:06 +0200
+Message-ID: <20140523172006.GA6440@pd.tnic>
+References: <1399590199-12256-1-git-send-email-lho@apm.com>
+ <1399590199-12256-2-git-send-email-lho@apm.com>
+ <1399590199-12256-3-git-send-email-lho@apm.com>
+ <1399590199-12256-4-git-send-email-lho@apm.com>
+ <20140520193930.GA23070@pd.tnic>
+ <CAPw-ZTkOYhWT_5QFJvGBM-aHOOH-1cqsMgnhOVEirRdG9FEosw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400841343-6016-4-git-send-email-t.dakhran@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tarek Dakhran <t.dakhran@samsung.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Romain Naour <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Thomas Abraham <thomas.abraham@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kyungmin Park <kyungmin.park@samsung.com>
+Content-Type: text/plain; charset=utf-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPw-ZTkOYhWT_5QFJvGBM-aHOOH-1cqsMgnhOVEirRdG9FEosw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-23 12:35 GMT+02:00 Tarek Dakhran <t.dakhran@samsung.com>:
-> Add initial device tree nodes for EXYNOS5410 SoC and SMDK5410 board.
->
-> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-> ---
->  arch/arm/boot/dts/Makefile                |    1 +
->  arch/arm/boot/dts/exynos5410-smdk5410.dts |   82 ++++++++++++
->  arch/arm/boot/dts/exynos5410.dtsi         |  206 +++++++++++++++++++++++++++++
->  3 files changed, 289 insertions(+)
->  create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
->  create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index cd399a2..709f862 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -73,6 +73,7 @@ dtb-$(CONFIG_ARCH_EXYNOS) += exynos4210-origen.dtb \
->         exynos5250-smdk5250.dtb \
->         exynos5250-snow.dtb \
->         exynos5260-xyref5260.dtb \
-> +       exynos5410-smdk5410.dtb \
->         exynos5420-arndale-octa.dtb \
->         exynos5420-peach-pit.dtb \
->         exynos5420-smdk5420.dtb \
-> diff --git a/arch/arm/boot/dts/exynos5410-smdk5410.dts b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> new file mode 100644
-> index 0000000..7275bbd
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5410-smdk5410.dts
-> @@ -0,0 +1,82 @@
-> +/*
-> + * SAMSUNG SMDK5410 board device tree source
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *             http://www.samsung.com
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> +*/
-> +
-> +/dts-v1/;
-> +#include "exynos5410.dtsi"
-> +/ {
-> +       model = "Samsung SMDK5410 board based on EXYNOS5410";
-> +       compatible = "samsung,smdk5410", "samsung,exynos5410", "samsung,exynos5";
-> +
-> +       memory {
-> +               reg = <0x40000000 0x80000000>;
-> +       };
-> +
-> +       chosen {
-> +               bootargs = "console=ttySAC2,115200";
-> +       };
-> +
-> +       fin_pll: xxti {
-> +               compatible = "fixed-clock";
-> +               clock-frequency = <24000000>;
-> +               clock-output-names = "fin_pll";
-> +               #clock-cells = <0>;
-> +       };
-> +
-> +       firmware@02037000 {
-> +               compatible = "samsung,secure-firmware";
-> +               reg = <0x02037000 0x1000>;
-> +       };
-> +
-> +};
-> +
-> +&mmc_0 {
-> +       status = "okay";
-> +       num-slots = <1>;
-> +       supports-highspeed;
-> +       broken-cd;
-> +       card-detect-delay = <200>;
-> +       samsung,dw-mshc-ciu-div = <3>;
-> +       samsung,dw-mshc-sdr-timing = <2 3>;
-> +       samsung,dw-mshc-ddr-timing = <1 2>;
-> +
-> +       slot@0 {
-> +               reg = <0>;
-> +               bus-width = <8>;
-> +       };
-> +};
-> +
-> +&mmc_2 {
-> +       status = "okay";
-> +       num-slots = <1>;
-> +       supports-highspeed;
-> +       card-detect-delay = <200>;
-> +       samsung,dw-mshc-ciu-div = <3>;
-> +       samsung,dw-mshc-sdr-timing = <2 3>;
-> +       samsung,dw-mshc-ddr-timing = <1 2>;
-> +
-> +       slot@0 {
-> +               reg = <0>;
-> +               bus-width = <4>;
-> +               disable-wp;
-> +       };
-> +};
-> +
-> +&uart0 {
-> +               status = "okay";
-> +};
-> +
-> +&uart1 {
-> +               status = "okay";
-> +};
-> +
-> +&uart2 {
-> +               status = "okay";
-> +};
-> diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exynos5410.dtsi
-> new file mode 100644
-> index 0000000..3839c26
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/exynos5410.dtsi
-> @@ -0,0 +1,206 @@
-> +/*
-> + * SAMSUNG EXYNOS5410 SoC device tree source
-> + *
-> + * Copyright (c) 2013 Samsung Electronics Co., Ltd.
-> + *             http://www.samsung.com
-> + *
-> + * SAMSUNG EXYNOS5410 SoC device nodes are listed in this file.
-> + * EXYNOS5410 based board files can include this file and provide
-> + * values for board specfic bindings.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include "skeleton.dtsi"
-> +#include <dt-bindings/clock/exynos5410.h>
-> +
-> +/ {
-> +       compatible = "samsung,exynos5410", "samsung,exynos5";
-> +       interrupt-parent = <&gic>;
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +
-> +               CPU0: cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <0x0>;
-> +               };
-> +
-> +               CPU1: cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <0x1>;
-> +               };
-> +
-> +               CPU2: cpu@2 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <0x2>;
-> +               };
-> +
-> +               CPU3: cpu@3 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a15";
-> +                       reg = <0x3>;
-> +               };
-> +       };
-> +
-> +       soc: soc {
-> +               compatible = "simple-bus";
-> +               #address-cells = <1>;
-> +               #size-cells = <1>;
-> +               ranges;
-> +
-> +               combiner: interrupt-controller@10440000 {
-> +                       compatible = "samsung,exynos4210-combiner";
-> +                       #interrupt-cells = <2>;
-> +                       interrupt-controller;
-> +                       samsung,combiner-nr = <32>;
-> +                       reg = <0x10440000 0x1000>;
-> +                       interrupts =    <0 0 0>, <0 1 0>, <0 2 0>, <0 3 0>,
-> +                                       <0 4 0>, <0 5 0>, <0 6 0>, <0 7 0>,
-> +                                       <0 8 0>, <0 9 0>, <0 10 0>, <0 11 0>,
-> +                                       <0 12 0>, <0 13 0>, <0 14 0>, <0 15 0>,
-> +                                       <0 16 0>, <0 17 0>, <0 18 0>, <0 19 0>,
-> +                                       <0 20 0>, <0 21 0>, <0 22 0>, <0 23 0>,
-> +                                       <0 24 0>, <0 25 0>, <0 26 0>, <0 27 0>,
-> +                                       <0 28 0>, <0 29 0>, <0 30 0>, <0 31 0>;
-> +               };
-> +
-> +               gic: interrupt-controller@10481000 {
-> +                       compatible = "arm,cortex-a15-gic", "arm,cortex-a9-gic";
+On Fri, May 23, 2014 at 09:26:12AM -0700, Loc Ho wrote:
+> Hi,
+> 
+> >> +static int xgene_edac_mc_is_active(struct xgene_edac_mc_ctx *ctx, int mc_idx)
+> >> +{
+> >> +     u32 reg;
+> >> +     u32 mcu_mask;
+> >> +
+> >> +     reg = readl(ctx->csw_csr + CSW_CSWCR);
+> >> +     if (reg & CSW_CSWCR_DUALMCB_MASK) {
+> >> +             /*
+> >> +              * Dual MCB active - Determine if all 4 activie or just MCU0
+> >
+> > Spellcheck: "activie"
+> 
+> The proper spelling is "active" from online dictionary.
 
-shouldn't it be just "arm,cortex-a15-gic", as this is your SoC architecture?
+Oh really?! Thanks for teaching me that. Let me try again, this time
+with pointers:
 
-Cheers,
-Matthias
+> >> +              * Dual MCB active - Determine if all 4 activie or just MCU0
+							     ^
+							     |
+							     |
+---------WRONG SPELLING HERE---------------------------------+
+
+You need to open this with an editor that doesn't damage whitespace to
+see where the arrow points at.
+
+> Are you sure about this? With dev_err, it prints the device node info
+> as well. This allows one to determine which instance that has issue.
+> X-Gene has 4 instance of memory controllers.
+
+Ok, we don't have a corresponding functionality in edac for that.
+
+> >> +
+> >> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+> >> +     ctx->mcu_csr = devm_ioremap_resource(&pdev->dev, res);
+> >> +     if (IS_ERR(ctx->mcu_csr)) {
+> >> +             dev_err(&pdev->dev, "no MCU resource address\n");
+> >> +             rc = PTR_ERR(ctx->mcu_csr);
+> >> +             goto err_free;
+> >> +     }
+> >> +     /* Ignore non-active MCU */
+> >> +     if (!xgene_edac_mc_is_active(ctx, ((res->start >> 16) & 0xF) / 4)) {
+> >> +             rc = -ENODEV;
+> >> +             goto err_free;
+> >> +     }
+> >
+> > You could move edac_mc_alloc() here, after the resources have been
+> > collected successfully and simplify the unwinding path.
+> 
+> I need the ctx pointer which is part of the edac_mc_alloc. Can't move it here.
+
+Of course you can - you can use a local ctx and copy it.
+
+edac_mc_alloc is a heavy call and I'd keep it after the lighter
+platform_get_resource() have completed successfully so that you don't
+have to undo it with edac_mc_del_mc.
+
+But hey, this is your driver so it's your decision in the end.
+
+Which reminds me, I'd need an entry for MAINTAINERS from you or someone
+who's going to take care of this driver and whom I should direct bug
+reports to.
+
+Thanks.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Sent from a fat crate under my desk. Formatting is fine.
+--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
