@@ -1,75 +1,64 @@
-From: Arend van Spriel <arend@broadcom.com>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
- tree
-Date: Fri, 23 May 2014 15:21:34 +0200
-Message-ID: <537F4B5E.80306@broadcom.com>
-References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 2/5] Documentation: dt-bindings: document the Armada 375
+ USB cluster binding
+Date: Fri, 23 May 2014 15:24:28 +0200
+Message-ID: <537F4C0C.1080901@free-electrons.com>
+References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com> <1400257376-13251-2-git-send-email-gregory.clement@free-electrons.com> <537F13B2.6070500@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <537F3610.3050104@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <537F13B2.6070500-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/14 13:50, Hans de Goede wrote:
+Hi Kishon,
+
+On 23/05/2014 11:24, Kishon Vijay Abraham I wrote:
 > Hi,
->
-> On 05/23/2014 01:22 PM, Mark Brown wrote:
->> On Fri, May 23, 2014 at 11:13:44AM +0200, Hans de Goede wrote:
+> 
+> On Friday 16 May 2014 09:52 PM, Gregory CLEMENT wrote:
+>> Armada 375 comes with an USB2 host and device controller and an USB3
+>> controller. The USB cluster control register allows to manage common
+>> features of both USB controllers. This commit adds the Device Tree
+>> binding documentation for this piece of hardware.
+> 
+> Pls re-order so that the Documentation patch comes before the driver patch..
+
+OK I will do it
+
 >>
->>> Thinking more about this, I would like to make one change to my
->>> proposal, the mmc-core should only do power up of child-nodes if
->>> they have a compatible of: "simple-sdio-powerup". This way
->>> when we add something more complex, we can keep the simple powerup
->>> code in the mmc core, keeping what we've already using this working
->>> and the mmc core won't respond to the child nodes for more complex
->>> devices, so it won't conflict with more complex power-up handling
->>> handled by some other driver.
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  .../bindings/phy/armada-375-usb-phy-cluster.txt      | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
 >>
->> Would it not be better to have this be something in the driver struct
->> rather than in the device tree?  Putting a compatible in there would be
->> encoding details of the Linux implementation in the DT which doesn't
->> seem right especially since these are details we're thinking of changing
->> later on.
->
-> The compatible is not a Linux specific thing, it is a marking saying
-> that something needs to take care of enabling the clks (and whatever
-> else we will make part of the binding for this compatible), before
-> scanning the mmc bus.
->
->> Something like have the driver set flags saying if it wants
->> to do complicated things.
->
-> Chicken<->  egg, we won't know which driver to use before we've probed
-> the mmc bus, and we cannot probe the bus before enabling the clks, etc.
+>> diff --git a/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt b/Documentation/devicetree/bindings/phy/armada-375-usb-phy-cluster.txt
+> 
+> simpler file name? armada-phy?
 
-The approach I took with brcmfmac is that upon module init I search the 
-DT for "brcm,bcm43xx-fmac" compatible and get the clock and/or gpio 
-resource and enable them before registering the sdio driver. The 
-difficulty is probably when using the driver built-in as the clocks and 
-gpios may not be available yet and we can not rely on deferred probing 
-in module init stage.
+I can remove the "cluster" part but not the 375, there are many SoCs
+from Marvell called Armada, and some of then have nearly nothing in
+common, so I prefer keep this name. If your intent is to have a file
+with all the PHY binding related to an SoC family, then we should call it
+mvebu-phy.
 
-Regards,
-Arend
 
->>> FWIW if we ever get truely complex cases I think modeling the
->>> power-up hardware as a pmic platform device is not a bad idea,
->>> we would then need to have a generic mmc-host pmic property, which
->>> would be used both to do the initial powerup before scanning, as
->>> well as for the sdio device driver to get a handle to the pmic,
->>> for run time power-management (if desired).
->>
->> I don't know if this will ever apply to SDIO but with other buses the
->> complicated bits come when the driver wants to take over some of the
->> power management do things like turn some of the supplies or clocks on
->> and off independently at runtime for low power modes.
->
-> Hmm, good point in that case actually having these things in the
-> child node makes most sense, because then the driver can find them
-> their. Note that the mmc core enabling things does not mean that
-> the driver cannot later disable them if needed.
+Thanks for your review,
 
+Gregory
+
+
+
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
