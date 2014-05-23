@@ -1,305 +1,181 @@
-From: Anders Berg <anders.berg@avagotech.com>
-Subject: [PATCH v4 1/5] ARM: Add platform support for LSI AXM55xx SoC
-Date: Fri, 23 May 2014 11:08:35 +0200
-Message-ID: <d6f29ce8411a42115c10996a0c118c584c292b94.1400834521.git.anders.berg@avagotech.com>
-References: <cover.1400834521.git.anders.berg@avagotech.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Fri, 23 May 2014 11:13:44 +0200
+Message-ID: <537F1148.3010102@redhat.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1400834521.git.anders.berg@avagotech.com>
-In-Reply-To: <cover.1400834521.git.anders.berg@avagotech.com>
-References: <cover.1400834521.git.anders.berg@avagotech.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
-Cc: devicetree@vger.kernel.org, Russell King <linux@arm.linux.org.uk>, Anders Berg <anders.berg@lsi.com>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <537E31F7.1030505@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>
+Cc: Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Anders Berg <anders.berg@lsi.com>
+Hi,
 
-The AXM55xx family consists of devices that may contain up to 16 ARM Cortex-A15
-cores (in a 4x4 cluster configuration). The cores within each cluster share an
-L2 cache, and the clusters are connected to each other via a CCN-504 cache
-coherent interconnect.
+On 05/22/2014 07:20 PM, Tomasz Figa wrote:
+> Hi,
+> 
+> 
+> On 22.05.2014 13:38, Hans de Goede wrote:
+>> On 05/22/2014 12:23 PM, Chen-Yu Tsai wrote:
+>>> On Thu, May 22, 2014 at 5:49 PM, Hans de Goede <hdegoede@redhat.com> wrote:
+> 
+> snip
+> 
+>>>> I've been thinking a bit about this, and it is a non trivial problem since
+>>>> sdio devices are normally instantiated when probed, unlike ie spi devices
+>>>> which are instantiated from devicetree.
+>>>>
+>>>> Adding device tree instantiation of sdio devices seems like a bad idea, as
+>>>> then we get 2 vastly different device instantiation paths. Still we need some
+>>>> way to get power and clks setup before the mmc host initializes.
+> 
+> What about introducing some extra callbacks to mmc drivers to build
+> driver data and control power?
+> 
+> struct mmc_legacy_device {
+> 	/* ... */
+> 	struct device_node *of_node;
+> 	void *driver_data;
+> };
+> 
+> struct mmc_driver {
+> 	/* ... */
+> 	int (*prepare)(struct mmc_legacy_device *);
+> 	void (*unprepare)(struct mmc_legacy_device *);
+> };
+> 
+> static int my_wlan_prepare(struct mmc_legacy_device *dev)
+> {
+> 	struct my_wlan_data *data;
+> 
+> 	data = kzalloc(...);
+> 	/* ... */
+> 
+> 	of_*();
+> 	clk_*();
+> 	regulator_*();
+> 	/* ... */
+> 
+> 	ret = my_wlan_power_on(data);
+> 	/* ... */
+> 
+> 	dev->driver_data = data;	
+> }
+> 
+> static void my_wlan_unprepare(struct mmc_legacy_device *dev)
+> {
+> 	struct my_wlan_data *data;
+> 
+> 	data = dev->driver_data;
+> 
+> 	my_wlan_power_off(data);
+> 	/* ... */
+> 
+> 	dev->driver_data = NULL;
+> 	kfree(data);
+> }
+> 
+> I don't really like this, especially the fact that this would be highly
+> MMC-specific, while there are other interfaces that also need this
+> problem solved, e.g. USB/HSIC.
 
-This machine requires CONFIG_ARM_LPAE enabled as all peripherals are located
-above 4GB in the memory map.
+I don't really like this either :)  My preferred approach is to just go
+with the most KISS approach for now, and slowly make things more complex
+as needed.
 
-Signed-off-by: Anders Berg <anders.berg@lsi.com>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
----
- Documentation/devicetree/bindings/arm/axxia.txt | 12 ++++
- arch/arm/Kconfig                                |  2 +
- arch/arm/Makefile                               |  2 +
- arch/arm/mach-axxia/Kconfig                     | 16 +++++
- arch/arm/mach-axxia/Makefile                    |  2 +
- arch/arm/mach-axxia/axxia.c                     | 28 ++++++++
- arch/arm/mach-axxia/platsmp.c                   | 89 +++++++++++++++++++++++++
- include/dt-bindings/clock/lsi,axm5516-clks.h    | 36 ++++++++++
- 8 files changed, 187 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/axxia.txt
- create mode 100644 arch/arm/mach-axxia/Kconfig
- create mode 100644 arch/arm/mach-axxia/Makefile
- create mode 100644 arch/arm/mach-axxia/axxia.c
- create mode 100644 arch/arm/mach-axxia/platsmp.c
- create mode 100644 include/dt-bindings/clock/lsi,axm5516-clks.h
+> 
+> I had proposed another solution that would require almost no changes in
+> MMC core and could work for any data interface. You can find it
+> somewhere in the thread mentioned by Chen-Yu. Unfortunately, for reasons
+> that don't appeal to me, it wasn't positively received by MMC people.
+> 
+>>>>
+>>>> Therefor I would like to suggest to add a number of standard properties to
+>>>> mmc-bus child nodes. Making the dts for an mmc host with an sdio device which
+>>>> needs clks setup before it will work look like this:
+>>>>
+>>>>                 mmc3: mmc@01c12000 {
+>>>>                         #address-cells = <1>;
+>>>>                         #size-cells = <0>;
+>>>>                         pinctrl-names = "default";
+>>>>                         pinctrl-0 = <&mmc3_pins_a>;
+>>>>                         vmmc-supply = <&reg_vmmc3>;
+>>>>                         bus-width = <4>;
+>>>>                         non-removable;
+>>>>                         status = "okay";
+>>>>
+>>>>                         brcmf: bcrmf@0 {
+>>>>                                 reg = <0>;
+>>>>                                 compatible = "brcm,bcm43xx-fmac";
+>>>>                                 clocks = <&clk_out_a>, <&clk_out_b>;
+>>>>                                 clock-frequency = <32768>, <26000000>;
+>>>>                                 interrupt-parent = <&pio>;
+>>>>                                 interrupts = <10 4>; /* PH10 / EINT10 */
+>>>>                                 interrupt-names = "host-wake";
+>>>>                                 status = "okay";
+>>>>                         };
+>>>>                 };
+>>>>
+>>>> Where the "clocks" and "clock-frequency" attributes would be something
+>>>> which we standardize in Documentation/devicetree/bindings/mmc/mmc-bus.txt
+> 
+> I like the binding. It has all properties defined where they belong.
 
-diff --git a/Documentation/devicetree/bindings/arm/axxia.txt b/Documentation/devicetree/bindings/arm/axxia.txt
-new file mode 100644
-index 0000000..7b4ef9c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/axxia.txt
-@@ -0,0 +1,12 @@
-+Axxia AXM55xx device tree bindings
-+
-+Boards using the AXM55xx SoC need to have the following properties:
-+
-+Required root node property:
-+
-+  - compatible = "lsi,axm5516"
-+
-+Boards:
-+
-+  LSI AXM5516 Validation board (Amarillo)
-+	compatible = "lsi,axm5516-amarillo", "lsi,axm5516"
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 2bb6bce..3bf7041 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -951,6 +951,8 @@ source "arch/arm/mach-mvebu/Kconfig"
- 
- source "arch/arm/mach-at91/Kconfig"
- 
-+source "arch/arm/mach-axxia/Kconfig"
-+
- source "arch/arm/mach-bcm/Kconfig"
- 
- source "arch/arm/mach-berlin/Kconfig"
-diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-index 41c1931..6721fab 100644
---- a/arch/arm/Makefile
-+++ b/arch/arm/Makefile
-@@ -138,10 +138,12 @@ endif
- textofs-$(CONFIG_ARCH_MSM7X30) := 0x00208000
- textofs-$(CONFIG_ARCH_MSM8X60) := 0x00208000
- textofs-$(CONFIG_ARCH_MSM8960) := 0x00208000
-+textofs-$(CONFIG_ARCH_AXXIA) := 0x00308000
- 
- # Machine directory name.  This list is sorted alphanumerically
- # by CONFIG_* macro name.
- machine-$(CONFIG_ARCH_AT91)		+= at91
-+machine-$(CONFIG_ARCH_AXXIA)		+= axxia
- machine-$(CONFIG_ARCH_BCM)		+= bcm
- machine-$(CONFIG_ARCH_BERLIN)		+= berlin
- machine-$(CONFIG_ARCH_CLPS711X)		+= clps711x
-diff --git a/arch/arm/mach-axxia/Kconfig b/arch/arm/mach-axxia/Kconfig
-new file mode 100644
-index 0000000..8be7e0a
---- /dev/null
-+++ b/arch/arm/mach-axxia/Kconfig
-@@ -0,0 +1,16 @@
-+config ARCH_AXXIA
-+	bool "LSI Axxia platforms" if (ARCH_MULTI_V7 && ARM_LPAE)
-+	select ARCH_DMA_ADDR_T_64BIT
-+	select ARM_AMBA
-+	select ARM_GIC
-+	select ARM_TIMER_SP804
-+	select HAVE_ARM_ARCH_TIMER
-+	select MFD_SYSCON
-+	select MIGHT_HAVE_PCI
-+	select PCI_DOMAINS if PCI
-+	select ZONE_DMA
-+	help
-+	  This enables support for the LSI Axxia devices.
-+
-+	  The LSI Axxia platforms require a Flattened Device Tree to be passed
-+	  to the kernel.
-diff --git a/arch/arm/mach-axxia/Makefile b/arch/arm/mach-axxia/Makefile
-new file mode 100644
-index 0000000..ec4f68b
---- /dev/null
-+++ b/arch/arm/mach-axxia/Makefile
-@@ -0,0 +1,2 @@
-+obj-y				+= axxia.o
-+obj-$(CONFIG_SMP)		+= platsmp.o
-diff --git a/arch/arm/mach-axxia/axxia.c b/arch/arm/mach-axxia/axxia.c
-new file mode 100644
-index 0000000..19e5a1d
---- /dev/null
-+++ b/arch/arm/mach-axxia/axxia.c
-@@ -0,0 +1,28 @@
-+/*
-+ * Support for the LSI Axxia SoC devices based on ARM cores.
-+ *
-+ * Copyright (C) 2012 LSI
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
-+#include <linux/init.h>
-+#include <asm/mach/arch.h>
-+
-+static const char *axxia_dt_match[] __initconst = {
-+	"lsi,axm5516",
-+	"lsi,axm5516-sim",
-+	"lsi,axm5516-emu",
-+	NULL
-+};
-+
-+DT_MACHINE_START(AXXIA_DT, "LSI Axxia AXM55XX")
-+	.dt_compat = axxia_dt_match,
-+MACHINE_END
-diff --git a/arch/arm/mach-axxia/platsmp.c b/arch/arm/mach-axxia/platsmp.c
-new file mode 100644
-index 0000000..959d4df
---- /dev/null
-+++ b/arch/arm/mach-axxia/platsmp.c
-@@ -0,0 +1,89 @@
-+/*
-+ * linux/arch/arm/mach-axxia/platsmp.c
-+ *
-+ * Copyright (C) 2012 LSI Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+ */
-+
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/smp.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <asm/cacheflush.h>
-+
-+/* Syscon register offsets for releasing cores from reset */
-+#define SC_CRIT_WRITE_KEY	0x1000
-+#define SC_RST_CPU_HOLD		0x1010
-+
-+/*
-+ * Write the kernel entry point for secondary CPUs to the specified address
-+ */
-+static void write_release_addr(u32 release_phys)
-+{
-+	u32 *virt = (u32 *) phys_to_virt(release_phys);
-+	writel_relaxed(virt_to_phys(secondary_startup), virt);
-+	/* Make sure this store is visible to other CPUs */
-+	smp_wmb();
-+	__cpuc_flush_dcache_area(virt, sizeof(u32));
-+}
-+
-+static int axxia_boot_secondary(unsigned int cpu, struct task_struct *idle)
-+{
-+	struct device_node *syscon_np;
-+	void __iomem *syscon;
-+	u32 tmp;
-+
-+	syscon_np = of_find_compatible_node(NULL, NULL, "lsi,axxia-syscon");
-+	if (!syscon_np)
-+		return -ENOENT;
-+
-+	syscon = of_iomap(syscon_np, 0);
-+	if (!syscon)
-+		return -ENOMEM;
-+
-+	tmp = readl(syscon + SC_RST_CPU_HOLD);
-+	writel(0xab, syscon + SC_CRIT_WRITE_KEY);
-+	tmp &= ~(1 << cpu);
-+	writel(tmp, syscon + SC_RST_CPU_HOLD);
-+
-+	return 0;
-+}
-+
-+static void __init axxia_smp_prepare_cpus(unsigned int max_cpus)
-+{
-+	int cpu_count = 0;
-+	int cpu;
-+
-+	/*
-+	 * Initialise the present map, which describes the set of CPUs actually
-+	 * populated at the present time.
-+	 */
-+	for_each_possible_cpu(cpu) {
-+		struct device_node *np;
-+		u32 release_phys;
-+
-+		np = of_get_cpu_node(cpu, NULL);
-+		if (!np)
-+			continue;
-+		if (of_property_read_u32(np, "cpu-release-addr", &release_phys))
-+			continue;
-+
-+		if (cpu_count < max_cpus) {
-+			set_cpu_present(cpu, true);
-+			cpu_count++;
-+		}
-+
-+		if (release_phys != 0)
-+			write_release_addr(release_phys);
-+	}
-+}
-+
-+static struct smp_operations axxia_smp_ops __initdata = {
-+	.smp_prepare_cpus	= axxia_smp_prepare_cpus,
-+	.smp_boot_secondary	= axxia_boot_secondary,
-+};
-+CPU_METHOD_OF_DECLARE(axxia_smp, "lsi,syscon-release", &axxia_smp_ops);
-diff --git a/include/dt-bindings/clock/lsi,axm5516-clks.h b/include/dt-bindings/clock/lsi,axm5516-clks.h
-new file mode 100644
-index 0000000..beb41ac
---- /dev/null
-+++ b/include/dt-bindings/clock/lsi,axm5516-clks.h
-@@ -0,0 +1,36 @@
-+/*
-+ * Copyright (c) 2014 LSI Corporation
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ */
-+
-+#ifndef _DT_BINDINGS_CLK_AXM5516_H
-+#define _DT_BINDINGS_CLK_AXM5516_H
-+
-+#define AXXIA_CLK_FAB_PLL	0
-+#define AXXIA_CLK_CPU_PLL	1
-+#define AXXIA_CLK_SYS_PLL	2
-+#define AXXIA_CLK_SM0_PLL	3
-+#define AXXIA_CLK_SM1_PLL	4
-+#define AXXIA_CLK_FAB_DIV	5
-+#define AXXIA_CLK_SYS_DIV	6
-+#define AXXIA_CLK_NRCP_DIV	7
-+#define AXXIA_CLK_CPU0_DIV	8
-+#define AXXIA_CLK_CPU1_DIV	9
-+#define AXXIA_CLK_CPU2_DIV	10
-+#define AXXIA_CLK_CPU3_DIV	11
-+#define AXXIA_CLK_PER_DIV	12
-+#define AXXIA_CLK_MMC_DIV	13
-+#define AXXIA_CLK_FAB		14
-+#define AXXIA_CLK_SYS		15
-+#define AXXIA_CLK_NRCP		16
-+#define AXXIA_CLK_CPU0		17
-+#define AXXIA_CLK_CPU1		18
-+#define AXXIA_CLK_CPU2		19
-+#define AXXIA_CLK_CPU3		20
-+#define AXXIA_CLK_PER		21
-+#define AXXIA_CLK_MMC		22
-+
-+#endif
--- 
-1.8.3.2
+I'm glad you like the binding, I really want us to work towards a binding
+where we all agree on the binding bits, so that we can set those in stone,
+then we can go with a simple implementation for now, and move to something
+more complex as needed.
+
+> 
+>>>>
+>>>> These standard properties would *not* be used by the driver for the
+>>>> childnode device, so as to avoid the chicken and egg problem of that driver
+>>>> needing to enable clks, and it only getting bound to the device after
+>>>> the device has been discovered which requires those clocks.
+>>>>
+>>>> Instead these properties would be parsed by mmc_of_parse, and we will
+>>>> get enabled automatically by mmc_add_host before doing any probing.
+>>>>
+>>>> If the optional clock-frequency property is also set, then mmc_add_host
+>>>> will not only enable the clks but also set them to the specified
+>>>> frequency.
+>>>>
+> 
+> I don't like power control and parsing in MMC core, because they are
+> highly chip-specific. Throwing this kind of knowledge to MMC subsystem
+> violates separation and just won't scale as more different WLAN chips
+> show up. However, this is at least not enforced by design of the
+> bindings and so can be changed at any time in future, while having
+> something already working.
+
+Right, the whole idea is to add some simple power up logic to the mmc
+core, as with Olof's original proposal, but make things so that later
+on we can do something more complex as needed.
+
+Also note that adding this to the mmc-core has the advantage that
+we don't need to add power-up logic to each sdio driver separately.
+
+Thinking more about this, I would like to make one change to my
+proposal, the mmc-core should only do power up of child-nodes if
+they have a compatible of: "simple-sdio-powerup". This way
+when we add something more complex, we can keep the simple powerup
+code in the mmc core, keeping what we've already using this working
+and the mmc core won't respond to the child nodes for more complex
+devices, so it won't conflict with more complex power-up handling
+handled by some other driver.
+
+FWIW if we ever get truely complex cases I think modeling the
+power-up hardware as a pmic platform device is not a bad idea,
+we would then need to have a generic mmc-host pmic property, which
+would be used both to do the initial powerup before scanning, as
+well as for the sdio device driver to get a handle to the pmic,
+for run time power-management (if desired).
+
+Regards,
+
+Hans
