@@ -1,40 +1,68 @@
-From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] ASoC: max98090: Add master clock handling
-Date: Fri, 23 May 2014 17:32:45 +0530
-Message-ID: <CAHbNUh2P7gdYPSdNRx8QbxuSc9n38yq3D_TWX2jdkcpE1_N8Rw@mail.gmail.com>
-References: <1400750228-13750-1-git-send-email-tushar.behera@linaro.org>
-	<1400750228-13750-2-git-send-email-tushar.behera@linaro.org>
-	<20140522103039.GD12304@sirena.org.uk>
-	<CAHbNUh2QHv8n7Y19qfO7BagX5AWe0i17MjDvr7yOpHf6YNGW4A@mail.gmail.com>
-	<20140523111446.GA12304@sirena.org.uk>
-	<CAHbNUh152xgyVxcCHiv0M6PLw8DE7KZ990WG7uRWWFBc8sPWRQ@mail.gmail.com>
-	<20140523114113.GE12304@sirena.org.uk>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: dts: bcm590xx: add support for GPLDO and
+ VBUS regulators
+Date: Fri, 23 May 2014 08:09:16 -0400
+Message-ID: <20140523120916.GY32082@beef>
+References: <1398295293-11033-1-git-send-email-mporter@linaro.org>
+ <1398295293-11033-5-git-send-email-mporter@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140523114113.GE12304-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1398295293-11033-5-git-send-email-mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Linux-ALSA <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "jerry.wong" <jerry.wong-zxKO94PEStzToO697jQleEEOCMrvLtNR@public.gmane.org>
+To: Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tim Kryger <tim.kryger-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Markus Mayer <markus.mayer-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23 May 2014 17:11, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, May 23, 2014 at 05:06:27PM +0530, Tushar Behera wrote:
->> On 23 May 2014 16:44, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
->
->> > Should be clk_prepare_enable() and similarly for the disable and you
->> > should check the error codes but yes, that looks good.
->
->> I was planning to keep clk_prepare/clk_unprepare in probe/remove.
->
-> Why - what purpose would it serve to leave the clock prepared but not
-> enabled?
+On Wed, Apr 23, 2014 at 07:21:33PM -0400, Matt Porter wrote:
+> Adds additional nodes to support GPLDO1-6 and VBUS regulators which
+> are now supported in the bcm590xx regulator driver.
 
-I was getting some kernel slow path warning initially while preparing
-this code, but not able to reproduce that warning now.
+Applied to mach-bcm for-3.16/dt
 
--- 
-Tushar Behera
+>  arch/arm/boot/dts/bcm59056.dtsi | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/bcm59056.dtsi b/arch/arm/boot/dts/bcm59056.dtsi
+> index dfadaaa..066adfb 100644
+> --- a/arch/arm/boot/dts/bcm59056.dtsi
+> +++ b/arch/arm/boot/dts/bcm59056.dtsi
+> @@ -70,5 +70,26 @@
+>  
+>  		vsr_reg: vsr {
+>  		};
+> +
+> +		gpldo1_reg: gpldo1 {
+> +		};
+> +
+> +		gpldo2_reg: gpldo2 {
+> +		};
+> +
+> +		gpldo3_reg: gpldo3 {
+> +		};
+> +
+> +		gpldo4_reg: gpldo4 {
+> +		};
+> +
+> +		gpldo5_reg: gpldo5 {
+> +		};
+> +
+> +		gpldo6_reg: gpldo6 {
+> +		};
+> +
+> +		vbus_reg: vbus {
+> +		};
+>  	};
+>  };
+> -- 
+> 1.8.4
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
