@@ -1,121 +1,147 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v1 3/5] clk: gcc: Add APQ8084 Global Clock Controller
- support
-Date: Fri, 23 May 2014 17:20:23 +0300
-Message-ID: <537F5927.1050403@mm-sol.com>
-References: <1400775885-10296-1-git-send-email-gdjakov@mm-sol.com> <1400775885-10296-4-git-send-email-gdjakov@mm-sol.com> <537E3263.7090706@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <537E3263.7090706@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Thomas Abraham <thomas.ab@samsung.com>
+Subject: [PATCH v5 3/7] Documentation: devicetree: add cpu clock configuration data binding for Exynos4/5
+Date: Fri, 23 May 2014 19:57:36 +0530
+Message-ID: <1400855260-6807-4-git-send-email-thomas.ab@samsung.com>
+References: <1400855260-6807-1-git-send-email-thomas.ab@samsung.com>
+Return-path: <cpufreq-owner@vger.kernel.org>
+In-Reply-To: <1400855260-6807-1-git-send-email-thomas.ab@samsung.com>
+Sender: cpufreq-owner@vger.kernel.org
+To: cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, shawn.guo@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, heiko@sntech.de, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2014 08:22 PM, Stephen Boyd wrote:
-> On 05/22/14 09:24, Georgi Djakov wrote:
->> diff --git a/drivers/clk/qcom/gcc-msm8974.c b/drivers/clk/qcom/gcc-msm8974.c
->> index 58cb2f5..c2a8d77 100644
->> --- a/drivers/clk/qcom/gcc-msm8974.c
->> +++ b/drivers/clk/qcom/gcc-msm8974.c
->> @@ -204,6 +204,12 @@ static const struct freq_tbl ftbl_gcc_blsp1_2_qup1_6_i2c_apps_clk[] = {
->>   	{ }
->>   };
->>
->> +static const struct freq_tbl ftbl_gcc_blsp1_2_qup1_6_i2c_apps_clk_apq8084[] = {
->> +	F(19200000, P_XO, 1, 0, 0),
->> +	F(50000000, P_GPLL0, 12, 0, 0),
->> +	{ }
->> +};
->> +
->
-> Just merge this with the other blsp1_2_qup table.
->
->>   static struct clk_rcg2 blsp1_qup1_i2c_apps_clk_src = {
->>   	.cmd_rcgr = 0x0660,
->>   	.hid_width = 5,
->> @@ -768,6 +774,27 @@ static struct clk_rcg2 ce2_clk_src = {
->>   	},
->>   };
->>
->> +static const struct freq_tbl ftbl_gcc_ce3_clk_apq8084[] = {
->> +	F(50000000, P_GPLL0, 12, 0, 0),
->> +	F(85710000, P_GPLL0, 7, 0, 0),
->> +	F(100000000, P_GPLL0, 6, 0, 0),
->> +	F(171430000, P_GPLL0, 3.5, 0, 0),
->> +	{ }
->> +};
->> +
->
-> Ditto.
->
->> +static struct clk_rcg2 ce3_clk_src_apq8084 = {
->
-> Please drop all the _apq8084 stuff. I imagine if we support other chips
-> in this same driver this won't make any sense.
->
->> +	.cmd_rcgr = 0x1d10,
->> +	.hid_width = 5,
->> +	.parent_map = gcc_xo_gpll0_map,
->> +	.freq_tbl = ftbl_gcc_ce3_clk_apq8084,
->> +	.clkr.hw.init = &(struct clk_init_data){
->> +		.name = "ce3_clk_src",
->> +		.parent_names = gcc_xo_gpll0,
->> +		.num_parents = 2,
->> +		.ops = &clk_rcg2_ops,
->> +	},
->> +};
->> +
->>   static const struct freq_tbl ftbl_gcc_gp_clk[] = {
->>   	F(4800000, P_XO, 4, 0, 0),
->>   	F(6000000, P_GPLL0, 10, 1, 10),
->> @@ -780,6 +807,12 @@ static const struct freq_tbl ftbl_gcc_gp_clk[] = {
->>   	{ }
->>   };
->>
->> +static const struct freq_tbl ftbl_gcc_gp_clk_apq8084[] = {
->> +	F(19200000, P_XO, 1, 0, 0),
->> +	F(100000000, P_GPLL0, 6, 0, 0),
->> +	F(200000000, P_GPLL0, 3, 0, 0),
->> +	{ }
->> +};
->
-> Merge with other GP table?
->
->>
->>   static struct clk_rcg2 gp1_clk_src = {
->>   	.cmd_rcgr = 0x1904,
->> @@ -966,6 +999,11 @@ static const struct freq_tbl ftbl_gcc_usb_hs_system_clk[] = {
->>   	{ }
->>   };
->>
->> +static const struct freq_tbl ftbl_gcc_usb_hs_system_clk_apq8084[] = {
->> +	F(75000000, P_GPLL0, 8, 0, 0),
->> +	{ }
->> +};
->> +
->
-> ditto.
->
->>   static struct clk_rcg2 usb_hs_system_clk_src = {
->>   	.cmd_rcgr = 0x0490,
->>   	.hid_width = 5,
->> @@ -1029,6 +1067,11 @@ static const struct freq_tbl ftbl_gcc_usb_hsic_system_clk[] = {
->>   	{ }
->>   };
->>
->> +static const struct freq_tbl ftbl_gcc_usb_hsic_system_clk_apq8084[] = {
->> +	F(75000000, P_GPLL0, 8, 0, 0),
->> +	{ }
->> +};
->> +
->
-> ditto.
->
+From: Thomas Abraham <thomas.ab@samsung.com>
 
-Thanks for all the comments, Stephen. I will make the appropriate changes.
+The clock blocks within the CMU_CPU clock domain are put together into a
+new composite clock type called the cpu clock. This clock type requires
+configuration data that will be atomically programmed in the multiple
+clock blocks encapsulated within the cpu clock type when the parent clock
+frequency is changed. This configuration data is held in the clock controller
+node. Update clock binding documentation about this configuration data format
+for Samsung Exynos4 and Exynos5 platforms.
 
-BR,
-Georgi
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+---
+ .../devicetree/bindings/clock/exynos4-clock.txt    |   37 ++++++++++++++++++++
+ .../devicetree/bindings/clock/exynos5250-clock.txt |   36 +++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/exynos4-clock.txt b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+index f5a5b19..0934e02 100644
+--- a/Documentation/devicetree/bindings/clock/exynos4-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos4-clock.txt
+@@ -15,6 +15,35 @@ Required Properties:
+ 
+ - #clock-cells: should be 1.
+ 
++- samsung,armclk-divider-table: when the frequency of the APLL is changed
++  the divider clocks in CMU_CPU clock domain also need to be updated. These
++  divider clocks have SoC specific divider clock output requirements for a
++  specific APLL clock speeds. When APLL clock rate is changed, these divider
++  clocks are reprogrammed with pre-determined values in order to maintain the
++  SoC specific divider clock outputs. This property lists the divider values
++  for divider clocks in the CMU_CPU block for supported APLL clock speeds.
++  The format of each entry included in the arm-frequency-table should be
++  as defined below
++
++  - for Exynos4210 and Exynos4212 based platforms:
++      cell #1: arm clock parent frequency
++      cell #2 ~ cell 9#: value of clock divider in the following order
++	        corem0_ratio, corem1_ratio, periph_ratio, atb_ratio,
++		pclk_dbg_ratio, apll_ratio, copy_ratio, hpm_ratio.
++
++  - for Exynos4412 based platforms:
++      cell #1: expected arm clock parent frequency
++      cell #2 ~ cell #10: value of clock divider in the following order
++	       corem0_ratio, corem1_ratio, periph_ratio, atb_ratio,
++               pclk_dbg_ratio, apll_ratio, copy_ratio, hpm_ratio, cores_ratio
++
++- samsung,armclk-cells: defines the number of cells in
++  samsung,armclk-divider-table property. The value of this property depends on
++  the SoC type.
++
++  - for Exynos4210 and Exynos4212: the value should be 9.
++  - for Exynos4412: the value should be 10.
++
+ Each clock is assigned an identifier and client nodes can use this identifier
+ to specify the clock which they consume.
+ 
+@@ -28,6 +57,14 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos4210-clock";
+ 		reg = <0x10030000 0x20000>;
+ 		#clock-cells = <1>;
++
++		samsung,armclk-cells = <9>;
++		samsung,armclk-divider-table = <1200000 3 7 3 4 1 7 5 0>,
++					       <1000000 3 7 3 4 1 7 4 0>,
++					       < 800000 3 7 3 3 1 7 3 0>,
++					       < 500000 3 7 3 3 1 7 3 0>,
++					       < 400000 3 7 3 3 1 7 3 0>,
++					       < 200000 1 3 1 1 1 0 3 0>;
+ 	};
+ 
+ Example 2: UART controller node that consumes the clock generated by the clock
+diff --git a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+index 536eacd..3d63d09 100644
+--- a/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos5250-clock.txt
+@@ -13,6 +13,24 @@ Required Properties:
+ 
+ - #clock-cells: should be 1.
+ 
++- samsung,armclk-divider-table: when the frequency of the APLL is changed
++  the divider clocks in CMU_CPU clock domain also need to be updated. These
++  divider clocks have SoC specific divider clock output requirements for a
++  specific APLL clock speeds. When APLL clock rate is changed, these divider
++  clocks are reprogrammed with pre-determined values in order to maintain the
++  SoC specific divider clock outputs. This property lists the divider values
++  for divider clocks in the CMU_CPU block for supported APLL clock speeds.
++  The format of each entry included in the arm-frequency-table should be
++  as defined below
++
++      cell #1: expected arm clock parent frequency
++      cell #2 ~ cell #9: value of clock divider in the following order
++	       cpud_ratio, acp_ratio, periph_ratio, atb_ratio,
++               pclk_dbg_ratio, apll_ratio, copy_ratio, hpm_ratio
++
++- samsung,armclk-cells: defines the number of cells in
++  samsung,armclk-divider-table property. The value of this property should be 9.
++
+ Each clock is assigned an identifier and client nodes can use this identifier
+ to specify the clock which they consume.
+ 
+@@ -26,6 +44,24 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos5250-clock";
+ 		reg = <0x10010000 0x30000>;
+ 		#clock-cells = <1>;
++
++		samsung,armclk-cells = <9>;
++		samsung,armclk-divider-table = <1700000 3 7 7 7 3 5 0 2>,
++					       <1600000 3 7 7 7 1 4 0 2>,
++					       <1500000 2 7 7 7 1 4 0 2>,
++					       <1400000 2 7 7 6 1 4 0 2>,
++					       <1300000 2 7 7 6 1 3 0 2>,
++					       <1200000 2 7 7 5 1 3 0 2>,
++					       <1100000 3 7 7 5 1 3 0 2>,
++					       <1000000 1 7 7 4 1 2 0 2>,
++					       < 900000 1 7 7 4 1 2 0 2>,
++					       < 800000 1 7 7 4 1 2 0 2>,
++					       < 700000 1 7 7 3 1 1 0 2>,
++					       < 600000 1 7 7 3 1 1 0 2>,
++					       < 500000 1 7 7 2 1 1 0 2>,
++					       < 400000 1 7 7 2 1 1 0 2>,
++					       < 300000 1 7 7 1 1 1 0 2>,
++					       < 200000 1 7 7 1 1 1 0 2>;
+ 	};
+ 
+ Example 2: UART controller node that consumes the clock generated by the clock
+-- 
+1.7.9.5
+
