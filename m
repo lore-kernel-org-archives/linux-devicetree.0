@@ -1,99 +1,107 @@
-From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 1/3] mmc: host: add slot argument to mmc_of_parse
-Date: Fri, 23 May 2014 19:25:19 +0900
-Message-ID: <1400840721-11050-2-git-send-email-jh80.chung@samsung.com>
-References: <1400840721-11050-1-git-send-email-jh80.chung@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1400840721-11050-1-git-send-email-jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v3] phy: Renesas R-Car Gen2 PHY driver
+Date: Fri, 23 May 2014 15:55:32 +0530
+Message-ID: <537F221C.10700@ti.com>
+References: <201404120415.43761.sergei.shtylyov@cogentembedded.com> <534B77E2.8060901@ti.com> <53557BFE.5020908@cogentembedded.com> <53578FA8.6040607@ti.com> <537D2770.2040605@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <537D2770.2040605@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
+Cc: linux-sh@vger.kernel.org, magnus.damm@gmail.com, linux-doc@vger.kernel.org, rdunlap@infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Hi,
 
-Some hosts manage several slots. In these case information such as the
-bus width, chi detect and others are into the slot node. So we have to
-parse child node. If not NULL, slot node will be used instead of the
-device node.
+On Thursday 22 May 2014 03:53 AM, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 04/23/2014 02:02 PM, Kishon Vijay Abraham I wrote:
+> 
+>>>>> This PHY, though formally being a part of Renesas USBHS controller, contains
+>>>>> the
+>>>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
+>>>>> them
+>>>>> channels) to the different USB controllers: channel 0 can be connected to
+>>>>> either
+>>>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
+>>>>> EHCI/OHCI
+>>>>> or xHCI controllers.
+> 
+>>>>> This is a new driver for this USB PHY currently already supported under
+>>>>> drivers/
+>>>>> usb/phy/. The reason for writing the new driver was the requirement that the
+>>>>> multiplexing of USB channels to the controller be dynamic, depending on what
+>>>>> USB drivers are loaded,  rather than static as provided by the old driver.
+>>>>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that
+>>>>> purpose
+>>>>> ideally. The new driver only supports device tree probing for now.
+> 
+>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> 
+>>> [...]
+> 
+>>>>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
+>>>>> ===================================================================
+>>>>> --- /dev/null
+>>>>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
+>>>>> @@ -0,0 +1,283 @@
+> 
+>>> [...]
+> 
+>>>>> +static int rcar_gen2_phy_probe(struct platform_device *pdev)
+>>>>> +{
+> 
+>>> [...]
+> 
+>>>>> +    drv->phys[0][0].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>>>>> +    drv->phys[0][0].select_value = USBHS_UGCTRL2_USB0SEL_PCI;
+>>>>> +    drv->phys[0][1].select_mask  = USBHS_UGCTRL2_USB0SEL;
+>>>>> +    drv->phys[0][1].select_value = USBHS_UGCTRL2_USB0SEL_HS_USB;
+>>>>> +    drv->phys[2][0].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>>>>> +    drv->phys[2][0].select_value = USBHS_UGCTRL2_USB2SEL_PCI;
+>>>>> +    drv->phys[2][1].select_mask  = USBHS_UGCTRL2_USB2SEL;
+>>>>> +    drv->phys[2][1].select_value = USBHS_UGCTRL2_USB2SEL_USB30;
+>>>>> +
+>>>>> +    for (i = 0; i < NUM_USB_CHANNELS; i++) {
+> 
+>>>> Instead of hard coding the number of channels,
+> 
+>>>     It's hard coded in the hardware. We can even decrease that number to 2 as
+> 
+>> right, that's why thought dt should have that information.
+> 
+>    So you want a dedicated property for that or you meant something else?
+> 
+>>> for the channel #1 we have nothing to do, regardless of whether it's present or
+>>> not...
+> 
+>>>> we can model the channels (PHYs) as sub-nodes of the main PHY
+> 
+>>>     Hm, I don't think such representation would be adequate: the channels
+>>> themselves do not usually correspond to any particular PHY, that's why I used
+>>> #phy-cells = <2>.
+> 
+>>>> in dt and use it to create individual PHYs.
+> 
+>>>     Well, we probably can... however, I fail to see any immediate gain from
+>>> it here...
+>>>     I have to ask why you've selected this particular driver for such DT
+>>> representation experiments, despite it not being the first one supporting
+>>> multiple PHYs?
+> 
+>> just that it didn't strike before.. but I think all multiple PHYs should be
+>> modelled this way.
+> 
+>    I've basically reimplemented the driver to parse the info from the subnodes
+> and it's now became larger in size, not smaller. :-/ Overall, I'm not content
+> with the changes, nor do I think such a change in the DT representation was a
+> great idea...
 
-Signed-off-by: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- drivers/mmc/core/host.c  |   13 +++++++++----
- include/linux/mmc/host.h |   10 +++++++++-
- 2 files changed, 18 insertions(+), 5 deletions(-)
+I've seen someone posted a patch with subnodes and that wasn't looking too bad.
+Do you mind posting your patch in the list?
 
-diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-index 95cceae..0f677b3 100644
---- a/drivers/mmc/core/host.c
-+++ b/drivers/mmc/core/host.c
-@@ -298,15 +298,17 @@ static inline void mmc_host_clk_sysfs_init(struct mmc_host *host)
- #endif
- 
- /**
-- *	mmc_of_parse() - parse host's device-tree node
-+ *	__mmc_of_parse() - parse host's device-tree node
-  *	@host: host whose node should be parsed.
-+ *	@slot : some device provide several slots so the node to parse
-+ *		is not the host one.
-  *
-  * To keep the rest of the MMC subsystem unaware of whether DT has been
-  * used to to instantiate and configure this host instance or not, we
-  * parse the properties and set respective generic mmc-host flags and
-  * parameters.
-  */
--int mmc_of_parse(struct mmc_host *host)
-+int __mmc_of_parse(struct mmc_host *host, struct device_node *slot)
- {
- 	struct device_node *np;
- 	u32 bus_width;
-@@ -317,7 +319,10 @@ int mmc_of_parse(struct mmc_host *host)
- 	if (!host->parent || !host->parent->of_node)
- 		return 0;
- 
--	np = host->parent->of_node;
-+	if (slot)
-+		np = slot;
-+	else
-+		np = host->parent->of_node;
- 
- 	/* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
- 	if (of_property_read_u32(np, "bus-width", &bus_width) < 0) {
-@@ -459,7 +464,7 @@ out:
- 	return ret;
- }
- 
--EXPORT_SYMBOL(mmc_of_parse);
-+EXPORT_SYMBOL(__mmc_of_parse);
- 
- /**
-  *	mmc_alloc_host - initialise the per-host structure.
-diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-index 7960424..c62af91 100644
---- a/include/linux/mmc/host.h
-+++ b/include/linux/mmc/host.h
-@@ -372,7 +372,15 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *);
- int mmc_add_host(struct mmc_host *);
- void mmc_remove_host(struct mmc_host *);
- void mmc_free_host(struct mmc_host *);
--int mmc_of_parse(struct mmc_host *host);
-+int __mmc_of_parse(struct mmc_host *host, struct device_node *slot);
-+/*
-+ * mmc_of_parse - parse host's device-tree node
-+ *	@host: host whose node should be parsed.
-+ */
-+static inline int mmc_of_parse(struct mmc_host *host)
-+{
-+	return __mmc_of_parse(host, NULL);
-+}
- 
- static inline void *mmc_priv(struct mmc_host *host)
- {
--- 
-1.7.9.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+Kishon
