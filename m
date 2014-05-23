@@ -1,37 +1,42 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [Patch v7 0/7] Introduce keystone reset driver
-Date: Fri, 23 May 2014 17:28:10 -0400
-Message-ID: <537FBD6A.9040308@ti.com>
-References: <1400859812-5761-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Christian Engelmayer <cengelma@gmx.at>
+Subject: [PATCH] of: mdio: fix compile warning in of_mdiobus_register_phy()
+Date: Fri, 23 May 2014 23:33:55 +0200
+Message-ID: <1400880835-29537-1-git-send-email-cengelma@gmx.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400859812-5761-1-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, dbaryshkov@gmail.com, dwmw2@infradead.org, lee.jones@linaro.org, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: rdunlap@infradead.org, mturquette@linaro.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com, sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: netdev@vger.kernel.org
+Cc: s.hauer@pengutronix.de, f.fainelli@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Christian Engelmayer <cengelma@gmx.at>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 23 May 2014 11:43 AM, Ivan Khoronzhuk wrote:
-> These patches introduce keystone reset driver.
-> 
-> The keystone SoC can be rebooted in several ways. By external reset
-> pin, by soft and by watchdogs. This driver allows software reset and reset
-> by one of the watchdogs. Also added opportunity to set soft/hard reset type.
-> 
-> Based on linux-next/master
-> 
-> v7..v6
->   power: reset: keystone-reset: introduce keystone reset driver
->   power: reset: add bindings for keystone reset driver
->   ARM: dts: keystone: update reset node to work with reset driver
-> 	- s/wdt_list/wdt-list/g
-> 
+Commit de906af1 (net: phy: make of_set_phy_supported work with genphy d=
+river)
+removed the last user of variable 'max_speed' in function
+of_mdiobus_register_phy(), leading to compile warning "unused variable
+=E2=80=98max_speed=E2=80=99 [-Wunused-variable]". Thus remove it.
 
-I dropped patch 3/7 since its already queued up in mfd tree. Rest
-of the patches with minor commit edits queued for 3.16. Pull request
-to follow.
+Signed-off-by: Christian Engelmayer <cengelma@gmx.at>
+---
+Compile tested. Applies against branch master in tree
+git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+---
+ drivers/of/of_mdio.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-Regards,
-Santosh
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index b857094..7c6e277 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -46,7 +46,6 @@ static int of_mdiobus_register_phy(struct mii_bus *md=
+io, struct device_node *chi
+ 	struct phy_device *phy;
+ 	bool is_c45;
+ 	int rc;
+-	u32 max_speed =3D 0;
+ 	u32 phy_id;
+=20
+ 	is_c45 =3D of_device_is_compatible(child,
+--=20
+1.9.1
