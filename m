@@ -1,114 +1,68 @@
-From: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Subject: [Patch v7 4/7] power: reset: add bindings for keystone reset driver
-Date: Fri, 23 May 2014 18:43:29 +0300
-Message-ID: <1400859812-5761-5-git-send-email-ivan.khoronzhuk@ti.com>
-References: <1400859812-5761-1-git-send-email-ivan.khoronzhuk@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: Compatible string best practices
+Date: Fri, 23 May 2014 17:03:31 +0100
+Message-ID: <20140523160331.GA6969@leverpostej>
+References: <cc5b8415-4297-49fb-8a2c-bdc4b1b19c2c@BY2FFO11FD033.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400859812-5761-1-git-send-email-ivan.khoronzhuk@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: dbaryshkov@gmail.com, dwmw2@infradead.org, lee.jones@linaro.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, grygorii.strashko@ti.com, linux@arm.linux.org.uk, sergei.shtylyov@cogentembedded.com, linux-doc@vger.kernel.org, w-kwok2@ti.com, rdunlap@infradead.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, m-karicheri2@ti.com, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, olof@lixom.net, mturquette@linaro.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <cc5b8415-4297-49fb-8a2c-bdc4b1b19c2c-neA4ZlFjCT3DAA6W7k9C4mYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This node is intended to allow SoC reset in case of software reset
-or appropriate watchdogs.
+On Fri, May 23, 2014 at 04:03:06PM +0100, S=C3=B6ren Brinkmann wrote:
+> Hi,
 
-The Keystone SoCs can contain up to 4 watchdog timers to reset
-SoC. Each watchdog timer event input is connected to the Reset Mux
-block. The Reset Mux block can be configured to cause reset or not.
+Hi,
 
-Additionally soft or hard reset can be configured.
+> I have a question regarding how a compatible string should be created=
+=2E
+> The simple case is obvious:
+>  <IP-vendor>,<IP-type/name>-<IP-revision>
+>=20
+> But what is the recommended string for a SOC specific implementation =
+of
+> that IP? Let's say for
+>  <SOC-vendor>,<SOC-name>-<SOC-revision>
+> how would I assemble a compatible string to identify the SOC-specific
+> implementation of IP?
+> I think my biggest confusion is which vendor string to use in that ca=
+se.
+> But in general I'm curious whether some best practice exists for thes=
+e
+> cases.
+>=20
+> I think what I've seen most is:
+>  <SOC-vendor>,<SOC-name>-<IP-type>
+>=20
+> But one could probably argue whether to rather use IP-vendor, appendi=
+ng
+> all the revision strings, ...
 
-Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
----
- .../bindings/power/reset/keystone-reset.txt        | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/keystone-reset.txt
+I would expect that the vendor prefix would be the last entity along th=
+e
+chain which altered the IP in some way. Say foo sells device to bar, wh=
+o
+do nothing other than sell it to baz who do some hacks to integrate it.
+=46or that I'd expect something like:
 
-diff --git a/Documentation/devicetree/bindings/power/reset/keystone-reset.txt b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-new file mode 100644
-index 0000000..c82f12e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/keystone-reset.txt
-@@ -0,0 +1,67 @@
-+* Device tree bindings for Texas Instruments keystone reset
-+
-+This node is intended to allow SoC reset in case of software reset
-+of selected watchdogs.
-+
-+The Keystone SoCs can contain up to 4 watchdog timers to reset
-+SoC. Each watchdog timer event input is connected to the Reset Mux
-+block. The Reset Mux block can be configured to cause reset or not.
-+
-+Additionally soft or hard reset can be configured.
-+
-+Required properties:
-+
-+- compatible:		ti,keystone-reset
-+
-+- ti,syscon-pll:	phandle/offset pair. The phandle to syscon used to
-+			access pll controller registers and the offset to use
-+			reset control registers.
-+
-+- ti,syscon-dev:	phandle/offset pair. The phandle to syscon used to
-+			access device state control registers and the offset
-+			in order to use mux block registers for all watchdogs.
-+
-+Optional properties:
-+
-+- ti,soft-reset:	Boolean option indicating soft reset.
-+			By default hard reset is used.
-+
-+- ti,wdt-list:		WDT list that can cause SoC reset. It's not related
-+			to WDT driver, it's just needed to enable a SoC related
-+			reset that's triggered by one of WDTs. The list is
-+			in format: <0>, <2>; It can be in random order and
-+			begins from 0 to 3, as keystone can contain up to 4 SoC
-+			reset watchdogs and can be in random order.
-+
-+Example 1:
-+Setup keystone reset so that in case software reset or
-+WDT0 is triggered it issues hard reset for SoC.
-+
-+pllctrl: pll-controller@02310000 {
-+	compatible = "ti,keystone-pllctrl", "syscon";
-+	reg = <0x02310000 0x200>;
-+};
-+
-+devctrl: device-state-control@02620000 {
-+	compatible = "ti,keystone-devctrl", "syscon";
-+	reg = <0x02620000 0x1000>;
-+};
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	ti,syscon-pll = <&pllctrl 0xe4>;
-+	ti,syscon-dev = <&devctrl 0x328>;
-+	ti,wdt-list = <0>;
-+};
-+
-+Example 2:
-+Setup keystone reset so that in case of software reset or
-+WDT0 or WDT2 is triggered it issues soft reset for SoC.
-+
-+rstctrl: reset-controller {
-+	compatible = "ti,keystone-reset";
-+	ti,syscon-pll = <&pllctrl 0xe4>;
-+	ti,syscon-dev = <&devctrl 0x328>;
-+	ti,wdt-list = <0>, <2>;
-+	ti,soft-reset;
-+};
--- 
-1.8.3.2
+compatible =3D "baz,soc-device", "foo,device";
+
+I'm not sure with revisions (they're not always that useful), but I'd
+expect that to be kept next to the element it represent the revision
+for:
+
+"baz,soc-vX-device-vY", "bar,soc-device-vY", "foo,device-vY",
+"foo,device-vY";
+
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
