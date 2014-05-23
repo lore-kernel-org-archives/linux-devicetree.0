@@ -1,77 +1,103 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH 3/4] edac: Add APM X-Gene SoC EDAC driver
-Date: Fri, 23 May 2014 09:26:12 -0700
-Message-ID: <CAPw-ZTkOYhWT_5QFJvGBM-aHOOH-1cqsMgnhOVEirRdG9FEosw@mail.gmail.com>
-References: <1399590199-12256-1-git-send-email-lho@apm.com>
-	<1399590199-12256-2-git-send-email-lho@apm.com>
-	<1399590199-12256-3-git-send-email-lho@apm.com>
-	<1399590199-12256-4-git-send-email-lho@apm.com>
-	<20140520193930.GA23070@pd.tnic>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Fri, 23 May 2014 17:27:18 +0100
+Message-ID: <20140523162718.GE22111@sirena.org.uk>
+References: <537DC832.3020006@redhat.com>
+ <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com>
+ <537DE1AA.5050606@redhat.com>
+ <537E31F7.1030505@gmail.com>
+ <537F1148.3010102@redhat.com>
+ <20140523112239.GB12304@sirena.org.uk>
+ <537F3610.3050104@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140520193930.GA23070-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6/6uI2huoQv5mg2W"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537F3610.3050104@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
->> +static int xgene_edac_mc_is_active(struct xgene_edac_mc_ctx *ctx, int mc_idx)
->> +{
->> +     u32 reg;
->> +     u32 mcu_mask;
->> +
->> +     reg = readl(ctx->csw_csr + CSW_CSWCR);
->> +     if (reg & CSW_CSWCR_DUALMCB_MASK) {
->> +             /*
->> +              * Dual MCB active - Determine if all 4 activie or just MCU0
->
-> Spellcheck: "activie"
+--6/6uI2huoQv5mg2W
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-The proper spelling is "active" from online dictionary.
+On Fri, May 23, 2014 at 01:50:40PM +0200, Hans de Goede wrote:
+> On 05/23/2014 01:22 PM, Mark Brown wrote:
 
->> +     ctx = mci->pvt_info;
->> +     ctx->name = "xgene_edac_mc_err";
->> +     mci->pdev = &pdev->dev;
->> +     dev_set_drvdata(mci->pdev, mci);
->> +     mci->ctl_name = ctx->name;
->> +     mci->dev_name = ctx->name;
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +     ctx->pcp_csr = devm_ioremap(&pdev->dev, res->start,
->> +                                 resource_size(res));
->> +     if (IS_ERR(ctx->pcp_csr)) {
->> +             dev_err(&pdev->dev, "no PCP resource address\n");
->
-> edac_printk(KERN_ERR, "X-Gene", ... Ditto for all other dev_err calls.
+> > Would it not be better to have this be something in the driver struct
+> > rather than in the device tree?  Putting a compatible in there would be
+> > encoding details of the Linux implementation in the DT which doesn't
+> > seem right especially since these are details we're thinking of changing
+> > later on.
 
-Are you sure about this? With dev_err, it prints the device node info
-as well. This allows one to determine which instance that has issue.
-X-Gene has 4 instance of memory controllers.
+> The compatible is not a Linux specific thing, it is a marking saying
+> that something needs to take care of enabling the clks (and whatever
+> else we will make part of the binding for this compatible), before
+> scanning the mmc bus.
 
->> +
->> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
->> +     ctx->mcu_csr = devm_ioremap_resource(&pdev->dev, res);
->> +     if (IS_ERR(ctx->mcu_csr)) {
->> +             dev_err(&pdev->dev, "no MCU resource address\n");
->> +             rc = PTR_ERR(ctx->mcu_csr);
->> +             goto err_free;
->> +     }
->> +     /* Ignore non-active MCU */
->> +     if (!xgene_edac_mc_is_active(ctx, ((res->start >> 16) & 0xF) / 4)) {
->> +             rc = -ENODEV;
->> +             goto err_free;
->> +     }
->
-> You could move edac_mc_alloc() here, after the resources have been
-> collected successfully and simplify the unwinding path.
+We could just say that the mere presence of a child node with the right
+properties is sufficient to trigger the bus to do the startup?
 
-I need the ctx pointer which is part of the edac_mc_alloc. Can't move it here.
+> > Something like have the driver set flags saying if it wants
+> > to do complicated things.
 
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Chicken <-> egg, we won't know which driver to use before we've probed
+> the mmc bus, and we cannot probe the bus before enabling the clks, etc.
+
+If the device is sufficiently complicated to need a special power up
+sequence I'd expect we'd be able to have a compatible string which would
+provide enough information for us to figure things out.
+
+> >> FWIW if we ever get truely complex cases I think modeling the
+> >> power-up hardware as a pmic platform device is not a bad idea,
+> >> we would then need to have a generic mmc-host pmic property, which
+> >> would be used both to do the initial powerup before scanning, as
+> >> well as for the sdio device driver to get a handle to the pmic,
+> >> for run time power-management (if desired).
+
+> > I don't know if this will ever apply to SDIO but with other buses the
+> > complicated bits come when the driver wants to take over some of the
+> > power management do things like turn some of the supplies or clocks on
+> > and off independently at runtime for low power modes.
+
+> Hmm, good point in that case actually having these things in the
+> child node makes most sense, because then the driver can find them
+> their. Note that the mmc core enabling things does not mean that
+> the driver cannot later disable them if needed.
+
+Right, that's good idea for solving the problem - the child device can
+either share the reference with the bus or have some way of getting at
+the object the bus requested depending on what's sensible.  Only
+potentia complication I can think of with that approach is a device with
+multiple bus interfaces (I'm mainly thinking of SDIO vs SPI) but it
+doesn't seem to hard to deal with that in the bus adaption layers of the
+drivers.
+
+--6/6uI2huoQv5mg2W
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTf3bjAAoJELSic+t+oim9UzQQAIauqh6L/Rggl3tmpNt8Exdy
+u8H3YoNev8qyt9ucYuTWe+lGkIKqZccmSzMvoaheaExP8/YS0q62wk4NsSWYOcgu
+v538lFdH/pXNQhqUq0SS6rb28ATtYSEpQZ+XMOuHO1WusAzf3PzCAierKZcHKfHM
+/KTWKVWFHtJXLhDociANI1DEo8gYHYvrNiANkLNFPAZx/MDvKKc0Tfic9ARWA+G3
+yVR1nHSTpGw31v2rBnRGMLOhiyAy/Uvt13/KcSdymdycXkMKaxeLbTqBovtLqbbc
+GYBrnWmCEcGmhX2Qm8wpFKtgGpr/R+ZdeEKGR6AtxmHkBH8ACS5Mf9iQLvnjbNPf
+f+d3TWrgjzs8QkGfl2aTVMDCjV+SYE5c/IT3OmGXQYDmOBSVgOlOEJ4wdT4a0lzA
++Ba3CbakJnnDgcW3OHcLh/0mYs5uwbMmZ8AOwgqC7XCo4Xn+40508nP8r6c4fr+N
+KCwoF1P1mdcTsGUvWAAqINn0GBZQ0jBwA8DKqHUKqswqgAAQ74HBB7I0FMzDrYE4
+ZgxnlS+c3ze23DlUYSrkweJpn7Mec8mX9Ql9LWdCFZdqGNfXMtqniB2vF7KytQNg
+l4Lbr7oEDiEyriAwQygWPqrgbFG3kbGVIQf63wewp7yW5mIlelo2rbH/TDjdPuAI
+nUNwr596+8D+a60RWPfL
+=w41y
+-----END PGP SIGNATURE-----
+
+--6/6uI2huoQv5mg2W--
