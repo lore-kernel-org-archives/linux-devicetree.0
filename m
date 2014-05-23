@@ -1,114 +1,61 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [RFC v2 10/10] serial: asc: Add support for KGDB's FIQ/NMI mode
-Date: Fri, 23 May 2014 15:50:37 +0100
-Message-ID: <537F603D.20707@linaro.org>
-References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-11-git-send-email-daniel.thompson@linaro.org>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [RFC PATCH 00/16] OMAP: GPMC: Restructure OMAP GPMC driver
+ (NAND) : DT binding change proposal
+Date: Fri, 23 May 2014 07:53:55 -0700
+Message-ID: <20140523145354.GE2321@atomide.com>
+References: <1400671264-10702-1-git-send-email-rogerq@ti.com>
+ <20140521160818.GA1150@arch.cereza>
+ <537DB17A.6060608@ti.com>
+ <CABxcv=nbgGhVN+XYO8s=mYOpoLU9-kWuEqc+FLMaSbWS7BJNyQ@mail.gmail.com>
+ <20140522144600.GA1785@arch.cereza>
+ <537F03C8.3070101@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400853478-5824-11-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>, Jason Wessel <jason.wessel@windriver.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Colin Cross <ccross@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>, Greg
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537F03C8.3070101@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Javier Martinez Canillas <javier@dowhile0.org>, Brian Norris <computersforpeace@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, Robert Nelson <robertcnelson@gmail.com>, Jingoo Han <jg1.han@samsung.com>, dwmw2@infradead.org, nsekhar@ti.com, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+* Roger Quadros <rogerq@ti.com> [140523 01:17]:
+> On 05/22/2014 05:46 PM, Ezequiel Garcia wrote:
+> > On 22 May 01:51 PM, Javier Martinez Canillas wrote:
+> >> On Thu, May 22, 2014 at 10:12 AM, Roger Quadros <rogerq@ti.com> wrote:
+> >>>> On 21 May 02:20 PM, Roger Quadros wrote:
+> >>>> While I agree that the GPMC driver is a bit messy, I'm not sure it's possible
+> >>>> to go through such a complete devicetree binding re-design (breaking backwards
+> >>>> compatibility) now that the binding is already in production.
+> >>>
+> >>> Why not? especially if the existing bindings are poorly dones. Is anyone using these
+> >>> bindings burning the DT into ROM and can't change it when they update the kernel?
+> >>>
+> >>
+> >> While I do agree that your DT bindings are much better than the
+> >> current ones, there is a policy that DT bindings are an external API
+> >> and once are released with a kernel are set in stone and can't be
+> >> changed.
+> >>
+> > 
+> > Exactly. The DT binding is considered an ABI. Thus, invariant across kernel
+> > versions. Users can't be coherced into a DTB update after a kernel update.
+> > 
+> > That said, I don't really care if you break compatilibity in this case.
+> > Rather, I'm suggesting that you make sure this change is going to be accepted
+> > upstream, before doing any more work. The DT maintainers are reluctant to do
+> > so.
+> 
+> Appreciate your concern.
+> 
+> Would be really nice if you can review patches 1-12. They have nothing to do with DT changes.
+> Thanks.
 
-On 23/05/14 14:57, Daniel Thompson wrote:
-> If the platform bus has provided the st-asc with a FIQ resource (i.e. a
-> second IRQ) then speculatively register it with KGDB when the polling
-> driver is initialized.
->
-> By providing this information to KGDB the serial driver offers
-> "permission" for KGDB to route the UART interrupt signal from the
-> drivers own handler to KGDBs FIQ handler (which will eventually use the
-> UART's polled I/O callbacks to interact with the user). This permission
-> also implies the st-asc driver has already unmasked RX interrupts
-> (otherwise the FIQ handler will never trigger). This unmask is copied
-> from similar code in amba-pl011.c .
->
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
-> Cc: Maxime Coquelin <maxime.coquelin@st.com>
-> Cc: Patrice Chotard <patrice.chotard@st.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.cz>
-> Cc: kernel@stlinux.com
-> Cc: linux-serial@vger.kernel.org
-> ---
->   drivers/tty/serial/st-asc.c | 27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
->
+I'm mostly concerned about keeping things working. I think the
+only way we can keep things working is to keep support for
+the old binding around in addition to the new one. That way
+we can update devices one at a time.
 
+Regards,
 
-Also this new entry should be documented in the st-asc dt bindings.
-
-
-> diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
-> index c7f61ac..328720f 100644
-> --- a/drivers/tty/serial/st-asc.c
-> +++ b/drivers/tty/serial/st-asc.c
-> @@ -30,6 +30,7 @@
->   #include <linux/of_platform.h>
->   #include <linux/serial_core.h>
->   #include <linux/clk.h>
-> +#include <linux/kgdb.h>
->
->   #define DRIVER_NAME "st-asc"
->   #define ASC_SERIAL_NAME "ttyAS"
-> @@ -39,6 +40,7 @@
->   struct asc_port {
->   	struct uart_port port;
->   	struct clk *clk;
-> +	int fiq;
->   	unsigned int hw_flow_control:1;
->   	unsigned int force_m1:1;
->   };
-...
-
-
->   #ifdef CONFIG_CONSOLE_POLL
-> +#ifdef CONFIG_KGDB_FIQ
-> +	.poll_init     = asc_poll_init,
-> +#endif /* CONFIG_KGDB_FIQ */
->   	.poll_get_char = asc_get_poll_char,
->   	.poll_put_char = asc_put_poll_char,
->   #endif /* CONFIG_CONSOLE_POLL */
->   };
->
-> +
-
-no need of extra new line here.
-
->   static int asc_init_port(struct asc_port *ascport,
->   			  struct platform_device *pdev)
->   {
-> @@ -673,6 +699,7 @@ static int asc_init_port(struct asc_port *ascport,
->   	port->fifosize	= ASC_FIFO_SIZE;
->   	port->dev	= &pdev->dev;
->   	port->irq	= platform_get_irq(pdev, 0);
-> +	ascport->fiq    = platform_get_irq(pdev, 1);
->
-
-Probably its better to give names to the irq resources and get them. As 
-forcing the order in DT is always tricky highly possible for an error.
-
-
-
-Thanks,
-srini
-
->   	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->   	port->membase = devm_ioremap_resource(&pdev->dev, res);
->
+Tony
