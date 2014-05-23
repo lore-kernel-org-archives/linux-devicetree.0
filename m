@@ -1,78 +1,79 @@
-From: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Subject: Re: [PATCH 2/2] ASoC: samsung: Add machine driver for odroidx2
-Date: Fri, 23 May 2014 10:44:56 +0200
-Message-ID: <537F0A88.8000904@samsung.com>
-References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
- <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
- <20140522185334.GT12304@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <20140522185334.GT12304@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
+From: Anders Berg <anders.berg@avagotech.com>
+Subject: [PATCH v4 0/5] Add platform support for LSI AXM55xx
+Date: Fri, 23 May 2014 11:08:34 +0200
+Message-ID: <cover.1400834521.git.anders.berg@avagotech.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Anders Berg <anders.berg@avagotech.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22/05/14 20:53, Mark Brown wrote:
-> On Thu, May 22, 2014 at 01:55:08PM +0200, Sylwester Nawrocki wrote:
->> From: Chen Zhen <zhen1.chen@samsung.com>
->>
->> This machine driver primary defines the audio path, the supported
->> data formats and sample frequency.
-> 
-> I guess it can't yet, it would have been good to explain that in the
-> changelog for the bindings (and include the binding in this patch...).
+Hi,
 
-Thanks for the review, I'm still rather inexperienced in the ASoC stuff,
-I've obviously overlooked there is actually no routing handling. I'd rather
-add those bits.
-As for the DT binding documentation patch, I thought we're supposed to keep
-documentation in separate patches, so processes of separating it from the
-kernel is easier ?
+Here is version 4 of platform support for AXM5516 SoC.
 
->> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
->> +					| SND_SOC_DAIFMT_NB_NF
->> +					| SND_SOC_DAIFMT_CBM_CFM);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
->> +					| SND_SOC_DAIFMT_NB_NF
->> +					| SND_SOC_DAIFMT_CBM_CFM);
->> +	if (ret < 0)
->> +		return ret;
-> 
-> These are constant, set these in the dai_link.
-> 
->> +
->> +	ret = snd_soc_dai_set_sysclk(codec_dai, 3, MAX98090_MCLK_FREQ,
->> +				     SND_SOC_CLOCK_IN);
->> +	if (ret < 0) {
->> +		dev_err(codec_dai->dev,
->> +			"Unable to switch to FLL1: %d\n", ret);
->> +		return ret;
->> +	}
-> 
-> So's this - also what is 3?  Set it on init.
+The clk driver is now applied to clk-next. The rest should be ready for
+arm-soc. Haven't got any response from the power/reset maintainers... I hope
+this driver can be taken via arm-soc as well.
 
-OK, will move it. I'm not sure why 3, it seems to be ignored by the codec
-anyway. Chen, can you confirm the second argument is actually a don't care
-value ?
+Changes:
 
->> +	ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_OPCLK,
->> +					0, MOD_OPCLK_PCLK);
-> 
-> Similarly for the rest of the function.
-> 
->> +	return snd_soc_register_card(card);
-> 
-> devm_snd_soc_register_card().
+v4:
+    * Updated DTS according to new clk driver binding.
+    * Dropped the clk driver from this series.
 
-Thanks for the suggestions, I'll amend that.
+v3:
+    * Sorted Kconfig entries alphabetically
+
+v2:
+    * Rebased to arm-soc/for-next
+    * Removed redundant HAVE_SMP and ARCH_WANT_OPTIONAL_GPIOLIB from Kconfig
+    * Use CPU_METHOD_OF_DECLARE to register smp_operations
+    * Rework smp operations to avoid holding pen and custom headsmp.S
+    * Clean up board file
+    * Corrected clock properties for arm,sp804 dts node.
+    * Changed machine compatible strings to include full model number.
+    * Break out clk-axxia driver as separate patch
+    * Removed Makefile.boot
 
 
---
-Regards,
-Sylwester
+Anders Berg (5):
+  ARM: Add platform support for LSI AXM55xx SoC
+  ARM: dts: Device tree for AXM55xx.
+  ARM: axxia: Adding defconfig for AXM55xx
+  power: reset: Add Axxia system reset driver
+  ARM: dts: axxia: Add reset controller
+
+ Documentation/devicetree/bindings/arm/axxia.txt    |  12 +
+ .../bindings/power_supply/axxia-reset.txt          |  20 ++
+ arch/arm/Kconfig                                   |   2 +
+ arch/arm/Makefile                                  |   2 +
+ arch/arm/boot/dts/Makefile                         |   1 +
+ arch/arm/boot/dts/axm5516-amarillo.dts             |  51 +++++
+ arch/arm/boot/dts/axm5516-cpus.dtsi                | 204 +++++++++++++++++
+ arch/arm/boot/dts/axm55xx.dtsi                     | 204 +++++++++++++++++
+ arch/arm/configs/axm55xx_defconfig                 | 248 +++++++++++++++++++++
+ arch/arm/mach-axxia/Kconfig                        |  16 ++
+ arch/arm/mach-axxia/Makefile                       |   2 +
+ arch/arm/mach-axxia/axxia.c                        |  28 +++
+ arch/arm/mach-axxia/platsmp.c                      |  89 ++++++++
+ drivers/power/reset/Kconfig                        |   8 +
+ drivers/power/reset/Makefile                       |   1 +
+ drivers/power/reset/axxia-reset.c                  |  88 ++++++++
+ include/dt-bindings/clock/lsi,axm5516-clks.h       |  36 +++
+ 17 files changed, 1012 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/axxia.txt
+ create mode 100644 Documentation/devicetree/bindings/power_supply/axxia-reset.txt
+ create mode 100644 arch/arm/boot/dts/axm5516-amarillo.dts
+ create mode 100644 arch/arm/boot/dts/axm5516-cpus.dtsi
+ create mode 100644 arch/arm/boot/dts/axm55xx.dtsi
+ create mode 100644 arch/arm/configs/axm55xx_defconfig
+ create mode 100644 arch/arm/mach-axxia/Kconfig
+ create mode 100644 arch/arm/mach-axxia/Makefile
+ create mode 100644 arch/arm/mach-axxia/axxia.c
+ create mode 100644 arch/arm/mach-axxia/platsmp.c
+ create mode 100644 drivers/power/reset/axxia-reset.c
+ create mode 100644 include/dt-bindings/clock/lsi,axm5516-clks.h
+
+-- 
+1.8.3.2
