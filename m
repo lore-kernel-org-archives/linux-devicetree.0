@@ -1,44 +1,55 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Add clock property for mfc_pd in 5420
-Date: Fri, 23 May 2014 23:54:10 +0200
-Message-ID: <537FC382.8060602@gmail.com>
-References: <1400821692-22370-1-git-send-email-arun.kk@samsung.com> <1400821692-22370-4-git-send-email-arun.kk@samsung.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH] of: mdio: fix compile warning in of_mdiobus_register_phy()
+Date: Fri, 23 May 2014 14:57:21 -0700
+Message-ID: <CAGVrzcY6CCAFO-vrkB7+H+XfSnPT7uhF2VbDzY5YC_XYa7fTRg@mail.gmail.com>
+References: <1400880835-29537-1-git-send-email-cengelma@gmx.at>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400821692-22370-4-git-send-email-arun.kk@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Arun Kumar K <arun.kk@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: t.figa@samsung.com, kgene.kim@samsung.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, arunkk.samsung@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400880835-29537-1-git-send-email-cengelma@gmx.at>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Engelmayer <cengelma@gmx.at>
+Cc: netdev <netdev@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23.05.2014 07:08, Arun Kumar K wrote:
-> Adding the optional clock property for the mfc_pd for
-> handling the re-parenting while pd on/off.
-> 
-> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+2014-05-23 14:33 GMT-07:00 Christian Engelmayer <cengelma@gmx.at>:
+> Commit de906af1 (net: phy: make of_set_phy_supported work with genphy=
+ driver)
+> removed the last user of variable 'max_speed' in function
+> of_mdiobus_register_phy(), leading to compile warning "unused variabl=
+e
+> =E2=80=98max_speed=E2=80=99 [-Wunused-variable]". Thus remove it.
+>
+> Signed-off-by: Christian Engelmayer <cengelma@gmx.at>
+
+Acked-by: Florian Fainelli <f.fainelli@gmail.com>
+
 > ---
->  arch/arm/boot/dts/exynos5420.dtsi |    3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index 5a85896..890bdac 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -260,6 +260,9 @@
->  	mfc_pd: power-domain@10044060 {
->  		compatible = "samsung,exynos4210-pd";
->  		reg = <0x10044060 0x20>;
-> +		clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MOUT_SW_ACLK333>,
-> +			<&clock CLK_MOUT_USER_ACLK333>,;
-> +		clock-names = "oscclk", "pclk0", "clk0";
->  	};
->  
->  	disp_pd: power-domain@100440C0 {
-> 
+> Compile tested. Applies against branch master in tree
+> git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
+> ---
+>  drivers/of/of_mdio.c | 1 -
+>  1 file changed, 1 deletion(-)
+>
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index b857094..7c6e277 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -46,7 +46,6 @@ static int of_mdiobus_register_phy(struct mii_bus *=
+mdio, struct device_node *chi
+>         struct phy_device *phy;
+>         bool is_c45;
+>         int rc;
+> -       u32 max_speed =3D 0;
+>         u32 phy_id;
+>
+>         is_c45 =3D of_device_is_compatible(child,
+> --
+> 1.9.1
+>
 
-Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-Best regards,
-Tomasz
+
+--=20
+=46lorian
