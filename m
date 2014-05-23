@@ -1,47 +1,33 @@
 From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: [PATCH v2 0/4] Add Qualcomm APQ8084 SoC support
-Date: Fri, 23 May 2014 18:12:28 +0300
-Message-ID: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
+Subject: [PATCH v2 3/4] ARM: qcom: Add APQ8084 to mach-qcom
+Date: Fri, 23 May 2014 18:12:31 +0300
+Message-ID: <1400857952-6963-4-git-send-email-gdjakov@mm-sol.com>
+References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, sboyd@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Georgi Djakov <gdjakov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds basic support for the Qualcomm Snapdragon 805 APQ8084 SoC.
+Add the SoC compatibility string to the board machine descriptors.
 
-The first two patches add device-tree files for the SoC and the board, the
-third adds a board compatible string to the DT machine descriptor.
-The last one adds information about the low-level debug UART base address
-to the DEBUG_QCOM_UARTDM Kconfig help section introduced by [1].
+Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+---
+ arch/arm/mach-qcom/board.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-Tested on APQ8084-MTP board.
-
-Changes from v1:
- - Remove the interrupts property from the l2-cache node as it is still not
-   accepted (suggested by Stephen Boyd)
- - Move the timer node out of the soc container (suggested by Stephen Boyd)
- - Add just "qcom,apq8084" in the board machine descriptors to cover other
-   future boards based on apq8084 (suggested by Kumar Gala)
- - Change the last patch (debug UART) to just add info about the SoC PHYS/VIRT
-   addresses. Requires [1]. (suggestions by Arnd Bergmann and Ivan Ivanov)
-
-[1] https://lkml.org/lkml/2014/4/14/312
-
-Georgi Djakov (4):
-  ARM: dts: qcom: Add APQ8084 SoC support
-  ARM: dts: qcom: Add APQ8084-MTP board support
-  ARM: qcom: Add APQ8084 to mach-qcom
-  ARM: debug: qcom: add UART addresses to Kconfig help
-
- arch/arm/Kconfig.debug                 |    1 +
- arch/arm/boot/dts/Makefile             |    3 +-
- arch/arm/boot/dts/qcom-apq8084-mtp.dts |    6 ++
- arch/arm/boot/dts/qcom-apq8084.dtsi    |  179 ++++++++++++++++++++++++++++++++
- arch/arm/mach-qcom/board.c             |    1 +
- 5 files changed, 189 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/qcom-apq8084-mtp.dts
- create mode 100644 arch/arm/boot/dts/qcom-apq8084.dtsi
-
+diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
+index bae617e..c17e7b0 100644
+--- a/arch/arm/mach-qcom/board.c
++++ b/arch/arm/mach-qcom/board.c
+@@ -18,6 +18,7 @@ static const char * const qcom_dt_match[] __initconst = {
+ 	"qcom,msm8660-surf",
+ 	"qcom,msm8960-cdp",
+ 	"qcom,apq8074-dragonboard",
++	"qcom,apq8084",
+ 	NULL
+ };
+ 
 -- 
 1.7.9.5
