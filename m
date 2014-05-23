@@ -1,89 +1,109 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [RFC v2 01/10] arm: fiq: Allow EOI to be communicated to the intc
-Date: Fri, 23 May 2014 14:57:49 +0100
-Message-ID: <1400853478-5824-2-git-send-email-daniel.thompson@linaro.org>
-References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 1/2] of: Ensure unique names without sacrificing determinism
+Date: Fri, 23 May 2014 08:59:32 -0500
+Message-ID: <CAL_JsqKQ1TMsyzZ-T=RUZsktUE3woPGzTn8P6jMbR0XL2fvUWQ@mail.gmail.com>
+References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org>
+	<1400801769-4506-2-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Wessel <jason.wessel@windriver.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Daniel Thompson <daniel.thompson@linaro.org>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Fabio Estevam <festevam@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, patches@linaro.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400801769-4506-2-git-send-email-grant.likely@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
 List-Id: devicetree@vger.kernel.org
 
-Modern ARM systems require an EOI to be sent to the interrupt controller
-on completion of both IRQ and FIQ. The FIQ code currently does not provide
-any API to perform this. This patch provides this API, implemented by
-hooking into main irq driver in a similar way to the existing
-enable_fiq()/disable_fiq().
+On Thu, May 22, 2014 at 6:36 PM, Grant Likely <grant.likely@linaro.org> wrote:
+> The way the driver core is implemented, every device using the same bus
+> type is required to have a unique name because a symlink to each device
+> is created in the appropriate /sys/bus/*/devices directory, and two
+> identical names causes a collision.
+>
+> The current code handles the requirement by using an globally
+> incremented counter that is appended to the device name. It works, but
+> it means any change to device registration will change the assigned
+> numbers. Instead, if we build up the name by using information from the
+> parent nodes, then it can be guaranteed to be unique without adding a
+> random number to the end of it.
+>
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+> Cc: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+> Cc: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Fabio Estevam <festevam@gmail.com>
-Cc: Nicolas Pitre <nico@linaro.org>
----
- arch/arm/include/asm/fiq.h |  1 +
- arch/arm/kernel/fiq.c      | 11 +++++++++++
- 2 files changed, 12 insertions(+)
+Acked-by: Rob Herring <robh@kernel.org>
 
-diff --git a/arch/arm/include/asm/fiq.h b/arch/arm/include/asm/fiq.h
-index d493d0b..5a2a9b9 100644
---- a/arch/arm/include/asm/fiq.h
-+++ b/arch/arm/include/asm/fiq.h
-@@ -38,6 +38,7 @@ extern void release_fiq(struct fiq_handler *f);
- extern void set_fiq_handler(void *start, unsigned int length);
- extern void enable_fiq(int fiq);
- extern void disable_fiq(int fiq);
-+extern void eoi_fiq(int fiq);
- 
- /* helpers defined in fiqasm.S: */
- extern void __set_fiq_regs(unsigned long const *regs);
-diff --git a/arch/arm/kernel/fiq.c b/arch/arm/kernel/fiq.c
-index 918875d..defbe85 100644
---- a/arch/arm/kernel/fiq.c
-+++ b/arch/arm/kernel/fiq.c
-@@ -40,6 +40,7 @@
- #include <linux/init.h>
- #include <linux/interrupt.h>
- #include <linux/seq_file.h>
-+#include <linux/irq.h>
- 
- #include <asm/cacheflush.h>
- #include <asm/cp15.h>
-@@ -139,6 +140,15 @@ void disable_fiq(int fiq)
- 	disable_irq(fiq + fiq_start);
- }
- 
-+void eoi_fiq(int fiq)
-+{
-+	struct irq_data *irq_data = irq_get_irq_data(fiq + fiq_start);
-+	struct irq_chip *chip = irq_data_get_irq_chip(irq_data);
-+
-+	if (chip->irq_eoi)
-+			chip->irq_eoi(irq_data);
-+}
-+
- EXPORT_SYMBOL(set_fiq_handler);
- EXPORT_SYMBOL(__set_fiq_regs);	/* defined in fiqasm.S */
- EXPORT_SYMBOL(__get_fiq_regs);	/* defined in fiqasm.S */
-@@ -146,6 +156,7 @@ EXPORT_SYMBOL(claim_fiq);
- EXPORT_SYMBOL(release_fiq);
- EXPORT_SYMBOL(enable_fiq);
- EXPORT_SYMBOL(disable_fiq);
-+EXPORT_SYMBOL(eoi_fiq);
- 
- void __init init_FIQ(int start)
- {
--- 
-1.9.0
+
+> ---
+>  drivers/of/platform.c | 40 +++++++++++++++++++---------------------
+>  1 file changed, 19 insertions(+), 21 deletions(-)
+>
+> diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+> index d0009b3614af..95c133a0554b 100644
+> --- a/drivers/of/platform.c
+> +++ b/drivers/of/platform.c
+> @@ -68,17 +68,15 @@ EXPORT_SYMBOL(of_find_device_by_node);
+>   * of_device_make_bus_id - Use the device node data to assign a unique name
+>   * @dev: pointer to device structure that is linked to a device tree node
+>   *
+> - * This routine will first try using either the dcr-reg or the reg property
+> - * value to derive a unique name.  As a last resort it will use the node
+> - * name followed by a unique number.
+> + * This routine will first try using the translated bus address to
+> + * derive a unique name. If it cannot, then it will prepend names from
+> + * parent nodes until a unique name can be derived.
+>   */
+>  void of_device_make_bus_id(struct device *dev)
+>  {
+> -       static atomic_t bus_no_reg_magic;
+>         struct device_node *node = dev->of_node;
+>         const __be32 *reg;
+>         u64 addr;
+> -       int magic;
+>
+>  #ifdef CONFIG_PPC_DCR
+>         /*
+> @@ -100,25 +98,25 @@ void of_device_make_bus_id(struct device *dev)
+>         }
+>  #endif /* CONFIG_PPC_DCR */
+>
+> -       /*
+> -        * For MMIO, get the physical address
+> -        */
+> -       reg = of_get_property(node, "reg", NULL);
+> -       if (reg) {
+> -               addr = of_translate_address(node, reg);
+> -               if (addr != OF_BAD_ADDR) {
+> -                       dev_set_name(dev, "%llx.%s",
+> -                                    (unsigned long long)addr, node->name);
+> +       /* Construct the name, using parent nodes if necessary to ensure uniqueness */
+> +       while (node->parent) {
+> +               /*
+> +                * If the address can be translated, then that is as much
+> +                * uniqueness as we need. Make it the first component and return
+> +                */
+> +               reg = of_get_property(node, "reg", NULL);
+> +               if (reg && (addr = of_translate_address(node, reg)) != OF_BAD_ADDR) {
+> +                       dev_set_name(dev, dev_name(dev) ? "%llx.%s:%s" : "%llx.%s",
+> +                                    (unsigned long long)addr, node->name,
+> +                                    dev_name(dev));
+>                         return;
+>                 }
+> -       }
+>
+> -       /*
+> -        * No BusID, use the node name and add a globally incremented
+> -        * counter (and pray...)
+> -        */
+> -       magic = atomic_add_return(1, &bus_no_reg_magic);
+> -       dev_set_name(dev, "%s.%d", node->name, magic - 1);
+> +               /* format arguments only used if dev_name() resolves to NULL */
+> +               dev_set_name(dev, dev_name(dev) ? "%s:%s" : "%s",
+> +                            strrchr(node->full_name, '/') + 1, dev_name(dev));
+> +               node = node->parent;
+> +       }
+>  }
+>
+>  /**
+> --
+> 1.9.1
+>
