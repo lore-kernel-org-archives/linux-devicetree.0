@@ -1,39 +1,78 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH trivial] of: dma: Grammar s/requests/request/, s/used required/required/
-Date: Fri, 23 May 2014 10:34:35 +0200
-Message-ID: <1400834075-21278-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jiri Kosina <trivial@kernel.org>
-Cc: devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 2/2] ASoC: samsung: Add machine driver for odroidx2
+Date: Fri, 23 May 2014 10:44:56 +0200
+Message-ID: <537F0A88.8000904@samsung.com>
+References: <1400759708-25831-1-git-send-email-s.nawrocki@samsung.com>
+ <1400759708-25831-2-git-send-email-s.nawrocki@samsung.com>
+ <20140522185334.GT12304@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <20140522185334.GT12304@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Chen Zhen <zhen1.chen@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
- Documentation/devicetree/bindings/dma/dma.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On 22/05/14 20:53, Mark Brown wrote:
+> On Thu, May 22, 2014 at 01:55:08PM +0200, Sylwester Nawrocki wrote:
+>> From: Chen Zhen <zhen1.chen@samsung.com>
+>>
+>> This machine driver primary defines the audio path, the supported
+>> data formats and sample frequency.
+> 
+> I guess it can't yet, it would have been good to explain that in the
+> changelog for the bindings (and include the binding in this patch...).
 
-diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-index 8f504e6bae14..82104271e754 100644
---- a/Documentation/devicetree/bindings/dma/dma.txt
-+++ b/Documentation/devicetree/bindings/dma/dma.txt
-@@ -14,7 +14,7 @@ Required property:
- 
- Optional properties:
- - dma-channels: 	Number of DMA channels supported by the controller.
--- dma-requests: 	Number of DMA requests signals supported by the
-+- dma-requests: 	Number of DMA request signals supported by the
- 			controller.
- 
- Example:
-@@ -44,7 +44,7 @@ Required property:
- 			  #dma-cells property in the node referenced by phandle
- 			  containing DMA controller specific information. This
- 			  typically contains a DMA request line number or a
--			  channel number, but can contain any data that is used
-+			  channel number, but can contain any data that is
- 			  required for configuring a channel.
- - dma-names: 		Contains one identifier string for each DMA specifier in
- 			the dmas property. The specific strings that can be used
--- 
-1.9.1
+Thanks for the review, I'm still rather inexperienced in the ASoC stuff,
+I've obviously overlooked there is actually no routing handling. I'd rather
+add those bits.
+As for the DT binding documentation patch, I thought we're supposed to keep
+documentation in separate patches, so processes of separating it from the
+kernel is easier ?
+
+>> +	ret = snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S
+>> +					| SND_SOC_DAIFMT_NB_NF
+>> +					| SND_SOC_DAIFMT_CBM_CFM);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	ret = snd_soc_dai_set_fmt(cpu_dai, SND_SOC_DAIFMT_I2S
+>> +					| SND_SOC_DAIFMT_NB_NF
+>> +					| SND_SOC_DAIFMT_CBM_CFM);
+>> +	if (ret < 0)
+>> +		return ret;
+> 
+> These are constant, set these in the dai_link.
+> 
+>> +
+>> +	ret = snd_soc_dai_set_sysclk(codec_dai, 3, MAX98090_MCLK_FREQ,
+>> +				     SND_SOC_CLOCK_IN);
+>> +	if (ret < 0) {
+>> +		dev_err(codec_dai->dev,
+>> +			"Unable to switch to FLL1: %d\n", ret);
+>> +		return ret;
+>> +	}
+> 
+> So's this - also what is 3?  Set it on init.
+
+OK, will move it. I'm not sure why 3, it seems to be ignored by the codec
+anyway. Chen, can you confirm the second argument is actually a don't care
+value ?
+
+>> +	ret = snd_soc_dai_set_sysclk(cpu_dai, SAMSUNG_I2S_OPCLK,
+>> +					0, MOD_OPCLK_PCLK);
+> 
+> Similarly for the rest of the function.
+> 
+>> +	return snd_soc_register_card(card);
+> 
+> devm_snd_soc_register_card().
+
+Thanks for the suggestions, I'll amend that.
+
+
+--
+Regards,
+Sylwester
