@@ -1,30 +1,45 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v10 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
-Date: Sat, 24 May 2014 00:55:36 +0200
-Message-ID: <537FD1E8.2090705@gmail.com>
-References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com>	<1400841343-6016-2-git-send-email-t.dakhran@samsung.com>	<537FB995.5070604@gmail.com>	<CANhyOUd8Q2nzh_bF6LZNuv8keVUB3F45PocYrLP_B=D_Q3tWuQ@mail.gmail.com> <CANhyOUfp1AL6wJ1Q9kWj=v-n9e2CyxkQOPb8_50M5bY_JN2f9A@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH RESEND v2 0/3] bus: add Broadcom GISB bus arbiter
+ timeout/error handler
+Date: Sat, 24 May 2014 01:00:32 +0200
+Message-ID: <201405240100.32725.arnd@arndb.de>
+References: <1400529962-9612-1-git-send-email-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CANhyOUfp1AL6wJ1Q9kWj=v-n9e2CyxkQOPb8_50M5bY_JN2f9A@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tarek Dakhran <t.dakhran@gmail.com>
-Cc: Tarek Dakhran <t.dakhran@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrad>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400529962-9612-1-git-send-email-f.fainelli@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Randy Dunlap <rdunlap@infradead.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Huang Shijie <b32955@freescale.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, arm@kernel.org, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 24.05.2014 00:48, Tarek Dakhran wrote:
-> Sorry, only now catch it!
-> I agree, this patch is not needed anymore, except Kconfig option.
-> config SOC_EXYNOS5410 is needed to build clock stuff.
-
-Right, I missed this.
-
-> What is your opinion, Tomasz?
+On Monday 19 May 2014, Florian Fainelli wrote:
+> Hi all,
 > 
+> This patch adds support for the Broadcom GISB bus arbiter timeout/error handler.
+> GISB is a custom and proprietary bus used in the Broadcom Set Top Box devices
+> exclusively. The bus arbiter offers the possibly to decode faulting masters as
+> well as masters that are timing out on the bus.
+> 
+> V2 addresses some comments made by Arnd, and widens the audience by posting
+> on linux-arm-kernel as well.
+> 
+> These patches should be merged via the 'arm-soc' tree. I am resending those
+> such that every mailing-list has them in copy.
+> 
+> Thank you!
 
-I'd suggest re-spinning this series once more, removing changes that are
-not needed anymore, but keeping the Kconfig entry.
+Applied to the next/drivers branch now. I've changed the Kconfig and Makefile
+slightly to maintain alphabetical ordering, which helps avoid a merge conflict
+with the vexpress drivers.
 
-Best regards,
-Tomasz
+	Arnd
