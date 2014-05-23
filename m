@@ -1,86 +1,79 @@
-From: Tero Kristo <t-kristo@ti.com>
-Subject: Re: [PATCH 0/3] ARM: OMAP5+: Support Duty Cycle Correction(DCC)
-Date: Fri, 23 May 2014 14:21:16 +0300
-Message-ID: <537F2F2C.3070202@ti.com>
-References: <1400237160-25125-1-git-send-email-nm@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Fri, 23 May 2014 12:22:39 +0100
+Message-ID: <20140523112239.GB12304@sirena.org.uk>
+References: <537DC832.3020006@redhat.com>
+ <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com>
+ <537DE1AA.5050606@redhat.com>
+ <537E31F7.1030505@gmail.com>
+ <537F1148.3010102@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400237160-25125-1-git-send-email-nm@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, =?ISO-8859-1?Q?Beno=EEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Mike Turquette <mturquette@linaro.org>, Paul <paul@pwsan.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LNlQs39W5m9ZWtI7"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <537F1148.3010102@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/16/2014 01:45 PM, Nishanth Menon wrote:
-> Hi,
->
-> This patch series has been carried over in vendor kernel for quiet
-> few years now.
->
-> Unfortunately, it was very recently re-discovered and upstream kernel
-> is noticed to be broken for OMAP5 1.5GHz - at least we are operating
-> DPLL at frequency higher than what it was intended to be when CPUFreq
-> is enabled. Thankfully, with nominal voltage(we dont use AVS yet in
-> upstream for the mentioned platforms) and margins in trimming, we
-> have so far not crashed - but I strongly suspect this might be some
-> boundary case survival.
->
-> Verified on the following impacted platforms using 3.15-rc4 based
-> vendor kernel.
->
-> Before:
-> OMAP5432: http://slexy.org/view/s20cs0qQFg
-> DRA72x: http://slexy.org/view/s2TXtSa6mH (refused to lock)
-> DRA75x: http://slexy.org/view/s20AW8MU5c
-> After:
-> OMAP5432: http://slexy.org/view/s21iAfWxpu
-> DRA72x: http://slexy.org/view/s2hwsvGLmC (locks properly)
-> DRA75x: http://slexy.org/view/s21ehw8WQn
->
-> Hopefully, we can get these into some kernel revision in some form.
 
-Thanks, queued for 3.16/ti-clk-drv. Anybody on the delivery feel free to 
-yell if you got any complaints.
+--LNlQs39W5m9ZWtI7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--Tero
+On Fri, May 23, 2014 at 11:13:44AM +0200, Hans de Goede wrote:
 
->
-> NOTE: Support for 4470(which is the only other platform requiring
-> DCC) is not present in upstream kernel and there are no plans to
-> support that SoC, even if it is added at a later point, support can be
-> extended as needed.
->
-> Series based on v3.15-rc5 tag.
-> Also available on my tree:
-> 	https://github.com/nmenon/linux-2.6-playground/
-> 	branch:  push/clock/dcc
-> 	
-> 	weblink: https://github.com/nmenon/linux-2.6-playground/commits/push/clock/dcc
->
-> Verification:
-> 3.15-rc4 based kernel - DRA75x-evm, 72x-evm, OMAP5uevm
-> 3.15-rc5 - OMAP5uEVM(only one supporting 1.5GHz atm)
->
-> Andrii Tseglytskyi (1):
->    ARM: OMAP5+: dpll: support Duty Cycle Correction(DCC)
->
-> Nishanth Menon (2):
->    clk: dpll: support OMAP5 MPU DPLL that need special handling for
->      higher frequencies
->    ARM: dts: OMAP5/DRA7: use omap5-mpu-dpll-clock capable of dealing
->      with higher frequencies
->
->   .../devicetree/bindings/clock/ti/dpll.txt          |    1 +
->   arch/arm/boot/dts/dra7xx-clocks.dtsi               |    2 +-
->   arch/arm/boot/dts/omap54xx-clocks.dtsi             |    2 +-
->   arch/arm/mach-omap2/dpll3xxx.c                     |    9 +++++++++
->   drivers/clk/ti/dpll.c                              |   21 ++++++++++++++++++++
->   include/linux/clk/ti.h                             |    4 ++++
->   6 files changed, 37 insertions(+), 2 deletions(-)
->
-> Regards,
-> Nishanth Menon
->
+> Thinking more about this, I would like to make one change to my
+> proposal, the mmc-core should only do power up of child-nodes if
+> they have a compatible of: "simple-sdio-powerup". This way
+> when we add something more complex, we can keep the simple powerup
+> code in the mmc core, keeping what we've already using this working
+> and the mmc core won't respond to the child nodes for more complex
+> devices, so it won't conflict with more complex power-up handling
+> handled by some other driver.
 
+Would it not be better to have this be something in the driver struct
+rather than in the device tree?  Putting a compatible in there would be
+encoding details of the Linux implementation in the DT which doesn't
+seem right especially since these are details we're thinking of changing
+later on.  Something like have the driver set flags saying if it wants
+to do complicated things.
+
+> FWIW if we ever get truely complex cases I think modeling the
+> power-up hardware as a pmic platform device is not a bad idea,
+> we would then need to have a generic mmc-host pmic property, which
+> would be used both to do the initial powerup before scanning, as
+> well as for the sdio device driver to get a handle to the pmic,
+> for run time power-management (if desired).
+
+I don't know if this will ever apply to SDIO but with other buses the
+complicated bits come when the driver wants to take over some of the
+power management do things like turn some of the supplies or clocks on
+and off independently at runtime for low power modes.
+
+--LNlQs39W5m9ZWtI7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTfy98AAoJELSic+t+oim994EP/1DO5pPeY5X7JsQofQTdfgfi
+c7shdnCJ50ZGUTspeEUisQWc/8R5nky2FV/GYlbuexm2bB1MBk+2dsYXMWi8Cva8
+ZB1b+fdQNA83o9ZodWMio7RDP4NzyKC+JZjIpMZr1k34V9ls3620zCeOjG+uyfff
+ckVcbMo0aHfsS29o5NH0U+mZRbLJwLXTT+WQmkLIBCYPqEMqFEH5aAAfFXon+8ul
+R2STYUogal4myl83tI1yXO5sNIqJnCZ001ketOjvdW1KPYzBbDIGCrtDEE4MW5RW
+HRI6XXdLwHUGMVSlpYbhgy9VeRveID6r7P1WaA6uKiOqaYLyNog45pRUYdyoq2cS
+3F/NylbpyKgxGn6ji4uyJwdMbBjn/f09AFQpWKSNYbweloM/z0cQ6dDLJYM6gpiC
+mrX06oK1SHhm5TW3GL2awEhMWM8O13IFgNeI4Gb1X8gyXhi9K78bDwCfacbrV++L
+Uxx0WNv2hpkVxpI7S1GacaXvBSNcBbYltt5lnd05LhJyfrQKWnXea3sN5Edd1zt/
+hS7f36tQegeWw2OdjIq/FUsTkCOVk2osuuHi563I6YAHrBqG64bwKvcNWI3d5iBw
+M9krdJfEStuTPlvkMLZEbJd2w18ZjcUI2wRUv0NrZb2tSqurUaRVDNiOudqxJ9dq
+GznQor991yHaujuDGAGX
+=GQ8C
+-----END PGP SIGNATURE-----
+
+--LNlQs39W5m9ZWtI7--
