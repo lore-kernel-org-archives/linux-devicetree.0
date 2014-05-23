@@ -1,220 +1,142 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 23 May 2014 22:36:35 +0200
-Message-ID: <1400877395-4235-1-git-send-email-thierry.reding@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: Add support for CS4265 CODEC
+Date: Fri, 23 May 2014 21:39:45 +0100
+Message-ID: <20140523203945.GN22111@sirena.org.uk>
+References: <1400872614-21666-1-git-send-email-Paul.Handrigan@cirrus.com>
+ <1400872614-21666-2-git-send-email-Paul.Handrigan@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gYUMARwr0Jm6C6Fe"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400872614-21666-2-git-send-email-Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-This commit introduces a generic device tree binding for IOMMU devices.
-Only a very minimal subset is described here, but it is enough to cover
-the requirements of both the Exynos System MMU and Tegra SMMU as
-discussed here:
+--gYUMARwr0Jm6C6Fe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-    https://lkml.org/lkml/2014/4/27/346
+On Fri, May 23, 2014 at 02:16:54PM -0500, Paul Handrigan wrote:
+> This patch adds support for the Cirrus Logic Stereo I2C CODEC
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Apologies for the noise, but apparently I mistyped one of the email
-addresses, should be fixed now.
+This all looks pretty clean and nice, I have got a few comments below
+but they're all pretty small things.
 
-Changes in v2:
-- add notes about "dma-ranges" property (drop note from commit message)
-- document priorities of "iommus" property vs. "dma-ranges" property
-- drop #iommu-cells in favour of #address-cells and #size-cells
-- remove multiple-master device example
+> +	SOC_SINGLE("De-emp 44.1kHz", CS4265_DAC_CTL, 1,
+> +				1, 0),
+> +	SOC_SINGLE("DAC INV", CS4265_DAC_CTL2, 5,
+> +				1, 0),
+> +	SOC_SINGLE("DAC Zero Cross", CS4265_DAC_CTL2, 6,
+> +				1, 0),
+> +	SOC_SINGLE("DAC Soft Ramp", CS4265_DAC_CTL2, 7,
+> +				1, 0),
 
- Documentation/devicetree/bindings/iommu/iommu.txt | 167 ++++++++++++++++++++++
- 1 file changed, 167 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iommu/iommu.txt
+All boolean controls should have Switch at the end of the name.
 
-diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
-new file mode 100644
-index 000000000000..6ce759afcc94
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iommu/iommu.txt
-@@ -0,0 +1,167 @@
-+This document describes the generic device tree binding for IOMMUs and their
-+master(s).
-+
-+
-+IOMMU device node:
-+==================
-+
-+An IOMMU can provide the following services:
-+
-+* Remap address space to allow devices to access physical memory ranges that
-+  they otherwise wouldn't be capable of accessing.
-+
-+  Example: 32-bit DMA to 64-bit physical addresses
-+
-+* Implement scatter-gather at page level granularity so that the device does
-+  not have to.
-+
-+* Provide system protection against "rogue" DMA by forcing all accesses to go
-+  through the IOMMU and faulting when encountering accesses to unmapped
-+  address regions.
-+
-+* Provide address space isolation between multiple contexts.
-+
-+  Example: Virtualization
-+
-+Device nodes compatible with this binding represent hardware with some of the
-+above capabilities.
-+
-+IOMMUs can be single-master or multiple-master. Single-master IOMMU devices
-+typically have a fixed association to the master device, whereas multiple-
-+master IOMMU devices can translate accesses from more than one master.
-+
-+The device tree node of the IOMMU device's parent bus must contain a valid
-+"dma-ranges" property that describes how the physical address space of the
-+IOMMU maps to memory. An empty "dma-ranges" property means that there is a
-+1:1 mapping from IOMMU to memory.
-+
-+Required properties:
-+--------------------
-+- #address-cells: The number of cells in an IOMMU specifier needed to encode
-+  an address.
-+- #size-cells: The number of cells in an IOMMU specifier needed to represent
-+  the length of an address range.
-+
-+Typical values for the above include:
-+- #address-cells = <0>, size-cells = <0>: Single master IOMMU devices are not
-+  configurable and therefore no additional information needs to be encoded in
-+  the specifier. This may also apply to multiple master IOMMU devices that do
-+  not allow the association of masters to be configured.
-+- #address-cells = <1>, size-cells = <0>: Multiple master IOMMU devices may
-+  need to be configured in order to enable translation for a given master. In
-+  such cases the single address cell corresponds to the master device's ID.
-+- #address-cells = <2>, size-cells = <2>: Some IOMMU devices allow the DMA
-+  window for masters to be configured. The first cell of the address in this
-+  may contain the master device's ID for example, while the second cell could
-+  contain the start of the DMA window for the given device. The length of the
-+  DMA window is specified by two additional cells.
-+
-+
-+IOMMU master node:
-+==================
-+
-+Devices that access memory through an IOMMU are called masters. A device can
-+have multiple master interfaces (to one or more IOMMU devices).
-+
-+Required properties:
-+--------------------
-+- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
-+  master interfaces of the device. One entry in the list describes one master
-+  interface of the device.
-+
-+When an "iommus" property is specified in a device tree node, the IOMMU will
-+be used for address translation. If a "dma-ranges" property exists in the
-+device's parent node it will be ignored. An exception to this rule is if the
-+referenced IOMMU is disabled, in which case the "dma-ranges" property of the
-+parent shall take effect.
-+
-+Optional properties:
-+--------------------
-+- iommu-names: A list of names identifying each entry in the "iommus"
-+  property.
-+
-+
-+Notes:
-+======
-+
-+One possible extension to the above is to use an "iommus" property along with
-+a "dma-ranges" property in a bus device node (such as PCI host bridges). This
-+can be useful to describe how children on the bus relate to the IOMMU if they
-+are not explicitly listed in the device tree (e.g. PCI devices). However, the
-+requirements of that use-case haven't been fully determined yet. Implementing
-+this is therefore not recommended without further discussion and extension of
-+this binding.
-+
-+
-+Examples:
-+=========
-+
-+Single-master IOMMU:
-+--------------------
-+
-+	iommu {
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+	};
-+
-+	master {
-+		iommus = <&/iommu>;
-+	};
-+
-+Multiple-master IOMMU with fixed associations:
-+----------------------------------------------
-+
-+	/* multiple-master IOMMU */
-+	iommu {
-+		/*
-+		 * Masters are statically associated with this IOMMU and
-+		 * address translation is always enabled.
-+		 */
-+		#address-cells = <0>;
-+		#size-cells = <0>;
-+	};
-+
-+	/* static association with IOMMU */
-+	master@1 {
-+		reg = <1>;
-+		iommus = <&/iommu>;
-+	};
-+
-+	/* static association with IOMMU */
-+	master@2 {
-+		reg = <2>;
-+		iommus = <&/iommu>;
-+	};
-+
-+Multiple-master IOMMU:
-+----------------------
-+
-+	iommu {
-+		/* the specifier represents the ID of the master */
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+	};
-+
-+	master {
-+		/* device has master ID 42 in the IOMMU */
-+		iommus = <&/iommu 42>;
-+	};
-+
-+Multiple-master IOMMU with configurable DMA window:
-+---------------------------------------------------
-+
-+	/ {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+
-+		iommu {
-+			/* master ID, address of DMA window */
-+			#address-cells = <2>;
-+			#size-cells = <2>;
-+		};
-+
-+		master {
-+			/* master ID 42, 4 GiB DMA window starting at 0 */
-+			iommus = <&/iommu  42 0  0x1 0x0>;
-+		};
-+	};
--- 
-1.9.2
+> +	SOC_SINGLE("ADC HPF Disable", CS4265_ADC_CTL, 1,
+> +				1, 0),
+
+Invert this one and call it ADC HPF Switch (similarly for other disable
+controls).
+
+> +
+> +	for (i = 0; i < ARRAY_SIZE(clk_map_table); i++) {
+> +		if (clk_map_table[i].rate == rate &&
+> +			clk_map_table[i].mclk == mclk)
+> +			return i;
+
+Indent the second line of the if condition with the (.
+
+> +static int cs4265_set_sysclk(struct snd_soc_dai *codec_dai, int clk_id,
+> +			unsigned int freq, int dir)
+> +{
+> +	struct snd_soc_codec *codec = codec_dai->codec;
+> +	struct cs4265_private *cs4265 = snd_soc_codec_get_drvdata(codec);
+> +	int i;
+> +
+> +	for (i = 0; i < ARRAY_SIZE(clk_map_table); i++) {
+> +		if (clk_map_table[i].mclk == freq) {
+
+It's better to check that clk_id is 0 here, just in case you think of
+another clock to control in future (perhaps with a new device that can
+share the same driver even if it's not possible for this one).
+
+> +	{
+> +		.name = "cs4265-spdif",
+> +		.playback = {
+> +			.stream_name = "SPDIF Playback",
+> +			.channels_min = 1,
+> +			.channels_max = 2,
+> +			.rates = CS4265_SPDIF_RATES,
+> +			.formats = CS4265_FORMATS,
+> +		},
+> +		.ops = &cs4265_ops,
+> +	},
+
+You should have separate operations for the DAC and S/PDIF DAIs and only
+mute the relevant interfaces.  If you can't mute the DAC DAIs
+independently just don't provide an operation and let the user control
+it as they like.  This avoids problems if more than one stream is
+running at once.
+
+> +static int cs4265_probe(struct snd_soc_codec *codec)
+> +{
+> +	return 0;
+> +}
+
+Remove empty operations.
+
+> +	} else {
+> +		pdata = devm_kzalloc(&i2c_client->dev,
+> +				     sizeof(struct cs4265_platform_data),
+> +				GFP_KERNEL);
+> +		if (!pdata) {
+> +			dev_err(&i2c_client->dev, "could not allocate pdata\n");
+> +			return -ENOMEM;
+> +		}
+> +		pdata->reset_gpio = of_get_named_gpio(i2c_client->dev.of_node,
+> +						"reset-gpio", 0);
+> +		cs4265->pdata = *pdata;
+> +	}
+
+Can you convert this to use the new gpiod_ APIs and directly request by
+name?  There's also the -gpios thing I mentioned for the binding.
+
+> +	ret =  snd_soc_register_codec(&i2c_client->dev,
+> +			&soc_codec_dev_cs4265, cs4265_dai,
+> +			ARRAY_SIZE(cs4265_dai));
+> +	return ret;
+
+devm_
+
+--gYUMARwr0Jm6C6Fe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTf7INAAoJELSic+t+oim9eYEQAJjkjzEbBUHeDLU60b9uil+V
+pxULoKS3QOMBvBJAT9dYpCp1g2NhWW6LECLTKQ1spUVdKo1zBxIrDc7W/c/P5Mlh
+GGgH9PAtvht4jghzOg6f8jMzGJU5qbHZ3Dqph0psJjLhryO5DTXLrz+e8T6k0Dnl
+2kmSPIdzRe/spXDJ/VWZWcP+mPfuaYRTwLW8o53Rc247+Ftzk7isSuGG74tKTAmk
+q0sJgeU+07I/Jv2zwCckqw5tB8kW5eTVmeGzQYkMedzMPVsyFdp9TnilyOv7D42F
+KPKwP5gR7b+2O6gaEeeWtfyKog/ZrRBoxa9YjXKdamMQuQA5ZrkOuqpkNh8H6+M1
+1ZcWL+OaD+mBEs4t83SHvTsdRh31yF1YjkRPr2+9B4jFM+uOriU5pK+l/wCXH44v
+L6HmVDPUh1ZxrTXKw+nzBalLToUdFoNQZNT2GWUuxmdPSzHaheXtYxfes8NdI4vH
+ZHbloeepf+hjVGKhvk/NuY/mu0juJxjgZ9/QQWxj+EtB+nj7y4NZEiAVU8u7PI0n
+a0Uiiw9C6sluWVZEfqVzy4bRuR+Sig9T03kbOk1VzTvfnrn+IqeRgyimM+FDdKtz
+hHmOyf+fFKi1eaJWitK+CU8/hEZrBZ1Snb+0Mhzp/XjefwaVgL7iKmjpFZlT4/D3
+Pzxoo3dK364Bqtk5bCtH
+=X0XU
+-----END PGP SIGNATURE-----
+
+--gYUMARwr0Jm6C6Fe--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
