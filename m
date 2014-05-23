@@ -1,41 +1,32 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] of: handle NULL node in of_get_next_available_child
-Date: Fri, 23 May 2014 12:43:11 -0700
-Message-ID: <1400874192-29400-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: [PATCH v2 0/4] ks8851 DT/regulator/gpio updates
+Date: Fri, 23 May 2014 12:57:16 -0700
+Message-ID: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "David S . Miller" <davem@davemloft.net>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add an early check for the node argument in
-of_get_next_available_child() to avoid dereferencing a NULL node pointer
-a few lines after.
+This set of patches properly documents the micrel ks8851 spi ethernet
+controller, converts to devm_regulator_get_optional() to make error
+paths slightly simpler, and finally adds supports for another
+optional regulator and a reset gpio. This allows me to use the ks8851
+on my MSM8960 CDP board.
 
-CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/of/base.c | 3 +++
- 1 file changed, 3 insertions(+)
+Changes since v1:
+ * Dropped vendor prefix patch as that should go through DT tree
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index e67b308819c9..9a71bfac78ae 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -746,6 +746,9 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
- 	struct device_node *next;
- 	unsigned long flags;
- 
-+	if (!node)
-+		return NULL;
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	next = prev ? prev->sibling : node->child;
- 	for (; next; next = next->sibling) {
+Stephen Boyd (4):
+  devicetree: bindings: Properly document micrel ks8851 SPI chips
+  net: ks8851: Use devm_regulator_get_optional()
+  net: ks8851: Add optional vdd_io regulator and reset gpio
+  net: ks8851: Add of match table
+
+ .../devicetree/bindings/net/micrel-ks8851.txt      | 15 ++++-
+ drivers/net/ethernet/micrel/ks8851.c               | 71 +++++++++++++++++++---
+ 2 files changed, 74 insertions(+), 12 deletions(-)
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
