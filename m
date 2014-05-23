@@ -1,68 +1,77 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: Compatible string best practices
-Date: Fri, 23 May 2014 17:03:31 +0100
-Message-ID: <20140523160331.GA6969@leverpostej>
-References: <cc5b8415-4297-49fb-8a2c-bdc4b1b19c2c@BY2FFO11FD033.protection.gbl>
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH 3/4] edac: Add APM X-Gene SoC EDAC driver
+Date: Fri, 23 May 2014 09:26:12 -0700
+Message-ID: <CAPw-ZTkOYhWT_5QFJvGBM-aHOOH-1cqsMgnhOVEirRdG9FEosw@mail.gmail.com>
+References: <1399590199-12256-1-git-send-email-lho@apm.com>
+	<1399590199-12256-2-git-send-email-lho@apm.com>
+	<1399590199-12256-3-git-send-email-lho@apm.com>
+	<1399590199-12256-4-git-send-email-lho@apm.com>
+	<20140520193930.GA23070@pd.tnic>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <cc5b8415-4297-49fb-8a2c-bdc4b1b19c2c-neA4ZlFjCT3DAA6W7k9C4mYJ4DzVTqeXkX/xN29GLwg@public.gmane.org>
+In-Reply-To: <20140520193930.GA23070-fF5Pk5pvG8Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
+Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
-
-On Fri, May 23, 2014 at 04:03:06PM +0100, S=C3=B6ren Brinkmann wrote:
-> Hi,
 
 Hi,
 
-> I have a question regarding how a compatible string should be created=
-=2E
-> The simple case is obvious:
->  <IP-vendor>,<IP-type/name>-<IP-revision>
->=20
-> But what is the recommended string for a SOC specific implementation =
-of
-> that IP? Let's say for
->  <SOC-vendor>,<SOC-name>-<SOC-revision>
-> how would I assemble a compatible string to identify the SOC-specific
-> implementation of IP?
-> I think my biggest confusion is which vendor string to use in that ca=
-se.
-> But in general I'm curious whether some best practice exists for thes=
-e
-> cases.
->=20
-> I think what I've seen most is:
->  <SOC-vendor>,<SOC-name>-<IP-type>
->=20
-> But one could probably argue whether to rather use IP-vendor, appendi=
-ng
-> all the revision strings, ...
+>> +static int xgene_edac_mc_is_active(struct xgene_edac_mc_ctx *ctx, int mc_idx)
+>> +{
+>> +     u32 reg;
+>> +     u32 mcu_mask;
+>> +
+>> +     reg = readl(ctx->csw_csr + CSW_CSWCR);
+>> +     if (reg & CSW_CSWCR_DUALMCB_MASK) {
+>> +             /*
+>> +              * Dual MCB active - Determine if all 4 activie or just MCU0
+>
+> Spellcheck: "activie"
 
-I would expect that the vendor prefix would be the last entity along th=
-e
-chain which altered the IP in some way. Say foo sells device to bar, wh=
-o
-do nothing other than sell it to baz who do some hacks to integrate it.
-=46or that I'd expect something like:
+The proper spelling is "active" from online dictionary.
 
-compatible =3D "baz,soc-device", "foo,device";
+>> +     ctx = mci->pvt_info;
+>> +     ctx->name = "xgene_edac_mc_err";
+>> +     mci->pdev = &pdev->dev;
+>> +     dev_set_drvdata(mci->pdev, mci);
+>> +     mci->ctl_name = ctx->name;
+>> +     mci->dev_name = ctx->name;
+>> +
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +     ctx->pcp_csr = devm_ioremap(&pdev->dev, res->start,
+>> +                                 resource_size(res));
+>> +     if (IS_ERR(ctx->pcp_csr)) {
+>> +             dev_err(&pdev->dev, "no PCP resource address\n");
+>
+> edac_printk(KERN_ERR, "X-Gene", ... Ditto for all other dev_err calls.
 
-I'm not sure with revisions (they're not always that useful), but I'd
-expect that to be kept next to the element it represent the revision
-for:
+Are you sure about this? With dev_err, it prints the device node info
+as well. This allows one to determine which instance that has issue.
+X-Gene has 4 instance of memory controllers.
 
-"baz,soc-vX-device-vY", "bar,soc-device-vY", "foo,device-vY",
-"foo,device-vY";
+>> +
+>> +     res = platform_get_resource(pdev, IORESOURCE_MEM, 4);
+>> +     ctx->mcu_csr = devm_ioremap_resource(&pdev->dev, res);
+>> +     if (IS_ERR(ctx->mcu_csr)) {
+>> +             dev_err(&pdev->dev, "no MCU resource address\n");
+>> +             rc = PTR_ERR(ctx->mcu_csr);
+>> +             goto err_free;
+>> +     }
+>> +     /* Ignore non-active MCU */
+>> +     if (!xgene_edac_mc_is_active(ctx, ((res->start >> 16) & 0xF) / 4)) {
+>> +             rc = -ENODEV;
+>> +             goto err_free;
+>> +     }
+>
+> You could move edac_mc_alloc() here, after the resources have been
+> collected successfully and simplify the unwinding path.
 
-Cheers,
-Mark.
+I need the ctx pointer which is part of the edac_mc_alloc. Can't move it here.
+
+-Loc
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
