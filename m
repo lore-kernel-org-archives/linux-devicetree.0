@@ -1,141 +1,123 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: Re: [PATCH] input: zforce: add regulator handling
-Date: Fri, 23 May 2014 09:51:43 +0200
-Message-ID: <6176359.OyJRL3GZkq@phil>
-References: <2587208.XYbbI8xJiH@phil> <60795928.lIAcBxC0Ao@phil>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 14/22] clk: sunxi: Add A23 APB0 support to sun6i-a31-apb0-clk
+Date: Fri, 23 May 2014 15:51:17 +0800
+Message-ID: <1400831485-28576-15-git-send-email-wens@csie.org>
+References: <1400831485-28576-1-git-send-email-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <60795928.lIAcBxC0Ao@phil>
-Sender: linux-input-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Henrik Rydberg <rydberg@euromail.se>, linux-input@vger.kernel.org, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1400831485-28576-1-git-send-email-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>
+Cc: devicetree@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, Chen-Yu Tsai <wens@csie.org>, linux-serial@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry,
+The A23 has an almost identical PRCM clock tree. The difference in
+the APB0 clock is the smallest divisor is 1, instead of 2.
 
-Am Dienstag, 22. April 2014, 21:19:57 schrieb Heiko St=FCbner:
-> From: Heiko Stuebner <heiko.stuebner@bq.com>
->=20
-> It's possible that the controller has an individually switchable powe=
-r
-> supply. Therefore add support to control a supplying regulator.
->=20
-> As this is not always the case, the regulator is requested as optiona=
-l.
->=20
-> Signed-off-by: Heiko Stuebner <heiko.stuebner@bq.com>
+This patch extends the sun6i-a31-apb0-clk driver to take divider
+tables associated to compatibles, and adds a compatible for the A23
+variant.
 
-ping?
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+ drivers/clk/sunxi/clk-sun6i-apb0.c                | 28 ++++++++++++++++++-----
+ 2 files changed, 23 insertions(+), 6 deletions(-)
 
-
-Thanks
-Heiko
-
-> ---
->  .../bindings/input/touchscreen/zforce_ts.txt       |  4 +++
->  drivers/input/touchscreen/zforce_ts.c              | 30
-> ++++++++++++++++++++++ 2 files changed, 34 insertions(+)
->=20
-> diff --git
-> a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt
-> b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.txt i=
-ndex
-> 2faf1f1..80c37df 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.t=
-xt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/zforce_ts.t=
-xt
-> @@ -9,6 +9,9 @@ Required properties:
->  - x-size: horizontal resolution of touchscreen
->  - y-size: vertical resolution of touchscreen
->=20
-> +Optional properties:
-> +- vdd-supply: Regulator controlling the controller supply
-> +
->  Example:
->=20
->  	i2c@00000000 {
-> @@ -18,6 +21,7 @@ Example:
->  			compatible =3D "neonode,zforce";
->  			reg =3D <0x50>;
->  			interrupts =3D <2 0>;
-> +			vdd-supply =3D <&reg_zforce_vdd>;
->=20
->  			gpios =3D <&gpio5 6 0>, /* INT */
->  				<&gpio5 9 0>; /* RST */
-> diff --git a/drivers/input/touchscreen/zforce_ts.c
-> b/drivers/input/touchscreen/zforce_ts.c index 01d30ce..39ca962 100644
-> --- a/drivers/input/touchscreen/zforce_ts.c
-> +++ b/drivers/input/touchscreen/zforce_ts.c
-> @@ -29,6 +29,8 @@
->  #include <linux/sysfs.h>
->  #include <linux/input/mt.h>
->  #include <linux/platform_data/zforce_ts.h>
-> +#include <linux/regulator/consumer.h>
-> +#include <linux/delay.h>
->  #include <linux/of.h>
->  #include <linux/of_gpio.h>
->=20
-> @@ -117,6 +119,8 @@ struct zforce_ts {
->  	const struct zforce_ts_platdata *pdata;
->  	char			phys[32];
->=20
-> +	struct regulator	*reg_vdd;
-> +
->  	bool			suspending;
->  	bool			suspended;
->  	bool			boot_complete;
-> @@ -690,6 +694,11 @@ static void zforce_reset(void *data)
->  	struct zforce_ts *ts =3D data;
->=20
->  	gpio_set_value(ts->pdata->gpio_rst, 0);
-> +
-> +	udelay(10);
-> +
-> +	if (!IS_ERR(ts->reg_vdd))
-> +		regulator_disable(ts->reg_vdd);
->  }
->=20
->  static struct zforce_ts_platdata *zforce_parse_dt(struct device *dev=
-)
-> @@ -765,10 +774,31 @@ static int zforce_probe(struct i2c_client *clie=
-nt,
->  		return ret;
->  	}
->=20
-> +	ts->reg_vdd =3D devm_regulator_get_optional(&client->dev, "vdd");
-> +	if (IS_ERR(ts->reg_vdd) && PTR_ERR(ts->reg_vdd) =3D=3D -EPROBE_DEFE=
-R)
-> +		return PTR_ERR(ts->reg_vdd);
-> +
-> +	if (!IS_ERR(ts->reg_vdd)) {
-> +		ret =3D regulator_enable(ts->reg_vdd);
-> +		if (ret)
-> +			return ret;
-> +
-> +		/*
-> +		 * according to datasheet add 100us grace time after regular
-> +		 * regulator enable delay.
-> +		 */
-> +		udelay(100);
-> +	}
-> +
->  	ret =3D devm_add_action(&client->dev, zforce_reset, ts);
->  	if (ret) {
->  		dev_err(&client->dev, "failed to register reset action, %d\n",
->  			ret);
-> +
-> +		/* hereafter the regulator will be disabled by the action */
-> +		if (!IS_ERR(ts->reg_vdd))
-> +			regulator_disable(ts->reg_vdd);
-> +
->  		return ret;
->  	}
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-input" =
-in
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
+index fa927ba..ae94bbf 100644
+--- a/Documentation/devicetree/bindings/clock/sunxi.txt
++++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+@@ -29,6 +29,7 @@ Required properties:
+ 	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+ 	"allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
+ 	"allwinner,sun6i-a31-apb0-clk" - for the APB0 clock on A31
++	"allwinner,sun8i-a23-apb0-clk" - for the APB0 clock on A23
+ 	"allwinner,sun4i-a10-apb0-gates-clk" - for the APB0 gates on A10
+ 	"allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
+ 	"allwinner,sun5i-a10s-apb0-gates-clk" - for the APB0 gates on A10s
+diff --git a/drivers/clk/sunxi/clk-sun6i-apb0.c b/drivers/clk/sunxi/clk-sun6i-apb0.c
+index 11f17c3..2197ac7 100644
+--- a/drivers/clk/sunxi/clk-sun6i-apb0.c
++++ b/drivers/clk/sunxi/clk-sun6i-apb0.c
+@@ -11,6 +11,7 @@
+ #include <linux/clk-provider.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/platform_device.h>
+ 
+ /*
+@@ -28,6 +29,21 @@ static const struct clk_div_table sun6i_a31_apb0_divs[] = {
+ 	{ /* sentinel */ },
+ };
+ 
++/* The A23 APB0 clock has a standard power of 2 divisor */
++static const struct clk_div_table sun8i_a23_apb0_divs[] = {
++	{ .val = 0, .div = 1, },
++	{ .val = 1, .div = 2, },
++	{ .val = 2, .div = 4, },
++	{ .val = 3, .div = 8, },
++	{ /* sentinel */ },
++};
++
++const struct of_device_id sun6i_a31_apb0_clk_dt_ids[] = {
++	{ .compatible = "allwinner,sun6i-a31-apb0-clk", .data = &sun6i_a31_apb0_divs },
++	{ .compatible = "allwinner,sun8i-a23-apb0-clk", .data = &sun8i_a23_apb0_divs },
++	{ /* sentinel */ }
++};
++
+ static int sun6i_a31_apb0_clk_probe(struct platform_device *pdev)
+ {
+ 	struct device_node *np = pdev->dev.of_node;
+@@ -36,12 +52,17 @@ static int sun6i_a31_apb0_clk_probe(struct platform_device *pdev)
+ 	struct resource *r;
+ 	void __iomem *reg;
+ 	struct clk *clk;
++	const struct of_device_id *device;
+ 
+ 	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+ 	reg = devm_ioremap_resource(&pdev->dev, r);
+ 	if (IS_ERR(reg))
+ 		return PTR_ERR(reg);
+ 
++	device = of_match_device(sun6i_a31_apb0_clk_dt_ids, &pdev->dev);
++	if (!device)
++		return -EINVAL;
++
+ 	clk_parent = of_clk_get_parent_name(np, 0);
+ 	if (!clk_parent)
+ 		return -EINVAL;
+@@ -49,7 +70,7 @@ static int sun6i_a31_apb0_clk_probe(struct platform_device *pdev)
+ 	of_property_read_string(np, "clock-output-names", &clk_name);
+ 
+ 	clk = clk_register_divider_table(&pdev->dev, clk_name, clk_parent,
+-					 0, reg, 0, 2, 0, sun6i_a31_apb0_divs,
++					 0, reg, 0, 2, 0, device->data,
+ 					 NULL);
+ 	if (IS_ERR(clk))
+ 		return PTR_ERR(clk);
+@@ -57,11 +78,6 @@ static int sun6i_a31_apb0_clk_probe(struct platform_device *pdev)
+ 	return of_clk_add_provider(np, of_clk_src_simple_get, clk);
+ }
+ 
+-const struct of_device_id sun6i_a31_apb0_clk_dt_ids[] = {
+-	{ .compatible = "allwinner,sun6i-a31-apb0-clk" },
+-	{ /* sentinel */ }
+-};
+-
+ static struct platform_driver sun6i_a31_apb0_clk_driver = {
+ 	.driver = {
+ 		.name = "sun6i-a31-apb0-clk",
+-- 
+2.0.0.rc2
