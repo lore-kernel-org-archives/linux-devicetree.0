@@ -1,203 +1,67 @@
-From: Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH RFC v5 2/2] clk: Add handling of clk parent and rate assigned
- from DT
-Date: Fri, 23 May 2014 09:37:59 +0300
-Message-ID: <537EECC7.2030605@ti.com>
-References: <1397042790-10636-1-git-send-email-s.nawrocki@samsung.com> <1397042790-10636-3-git-send-email-s.nawrocki@samsung.com> <CAL_JsqKDJ_yFxFYnrTtmzMPoxO2rmypiujybwbhUh35y1LS-Mw@mail.gmail.com> <5347DF4D.5000005@samsung.com> <20140523013406.9521.82891@quantum>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7779 dtsi: Correct
+ #address-cells/#size-cells for clocks
+Date: Fri, 23 May 2014 08:55:23 +0200
+Message-ID: <CAMuHMdUTe5AfGPNZeVApzBr-6xNofutA_BOfQG+xN3aQeZvWPA@mail.gmail.com>
+References: <1400761997-13512-1-git-send-email-geert+renesas@glider.be>
+	<1400761997-13512-2-git-send-email-geert+renesas@glider.be>
+	<155646478.xj0lyDQ1cd@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140523013406.9521.82891@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <155646478.xj0lyDQ1cd@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2014 04:34 AM, Mike Turquette wrote:
-> Quoting Sylwester Nawrocki (2014-04-11 05:25:49)
->>>> +==Assigned clock parents and rates==
->>>> +
->>>> +Some platforms require static initial configuration of parts of the clocks
->>>> +controller. Such a configuration can be specified in a clock consumer node
->>>> +through clock-parents and clock-rates DT properties. The former should
->>>> +contain a list of parent clocks in form of phandle and clock specifier pairs,
->>>> +the latter the list of assigned clock frequency values (one cell each).
->>>> +To skip setting parent or rate of a clock its corresponding entry should be
->>>> +set to 0, or can be omitted if it is not followed by any non-zero entry.
->>>> +
->>>> +    uart@a000 {
->>>> +        compatible = "fsl,imx-uart";
->>>> +        reg = <0xa000 0x1000>;
->>>> +        ...
->>>> +        clocks = <&clkcon 0>, <&clkcon 3>;
->>>> +        clock-names = "baud", "mux";
->>>> +
->>>> +        clock-parents = <0>, <&pll 1>;
->>>> +        clock-rates = <460800>;
->>>
->>> Is this the input frequency or serial baud rate? Looks like a baud
->>> rate, but the clock framework needs input (to the uart) frequency. I
->>> would say this should be clock-frequency and specify the max baud rate
->>> as is being done with i2c bindings. The uart driver should know how to
->>> convert between input clock freq and baud rate.
->>
->> This UART example is not quite representative for the issues I have been
->> trying to address with this patch set. There is a need to set (an initial)
->> input clock frequency. E.g. in case of multimedia devices there may be
->> a need to set clock parent and frequency of an input clock to multiple IP
->> blocks, so they are clocked synchronously and data is carried properly
->> across a whole processing chain. Thus there may not be even clock output
->> in an IP block, but still input clock needs to be set. IIUC there is
->> similar issue with audio, where it is difficult to calculate the clock
->> frequencies/determine parent clocks in individual drivers algorithmically.
->>
->>>> +    };
->>>> +
->>>> +In this example the pll is set as parent of "mux" clock and frequency
->>>> of "baud"
->>>> +clock is specified as 460800 Hz.
->>>
->>> I don't really like clock-parents. The parent information is part of
->>> the clock source, not the consumer.
->>
->> I'm not sure we must always consider the parent information as property
->> of a clock source. If for example we expose a structure like below as
->> single clock object, supporting clock gating, parent and frequency
->> setting the parent setting is still accessible from within a device
->> driver.
->
-> The design of the ccf implementation certainly allows one to hide
-> individually addressable/configurable clock nodes within a single struct
-> clk. But should we? I have always maintained that a clock driver should
-> enumerate clocks in the same way that the data sheet or technical
-> reference manual states. I did make a recent exception[1], but that is
-> going to be rolled back after the coordinated clock rate changes land in
-> mainline.
->
->> And clock parent selection may depend on a system configuration
->> not immediately obvious from within a single device driver perspective.
->>
->>                           MUX
->>                         ,-------.     DIVIDER      GATE
->> common clk source 1 -->|--.    |   ,--------.   ,--------.
->>                         |   \   |   |        |   |        |
->> common clk source 2 -->|-   '--|-->|        |-->|        |--> consumer
->>         ...             |       |   |        |   |        |
->> common clk source N -->|-      |   '--------'   '--------'
->>                         '-------'
->>
->>> We've somewhat decided against having every single clock defined in DT
->>> and rather only describe a clock controller with leaf clocks to
->>> devices. That is not a hard rule, but for complex clock trees that is
->>> the norm. Doing something like this will require all levels of the
->>> clock tree to be described. You may have multiple layers of parents
->>> that have to be configured correctly. How are you configuring the rest
->>> of the tree?
->>
->> I believe even clock controllers where clocks are represented as flat
->> array often describe the clock tree entirely by parenthood, the tree
->> structure is just not obvious from the DT binding.
->> In addition, there seems to be appearing more and more clock controller
->> DT bindings describing their clocks individually.
->
-> I've been discouraging these per-clock node bindings in favor of the
-> per-controller node style.
->
->>
->>>> +Configuring a clock's parent and rate through the device node that uses
->>>> +the clock can be done only for clocks that have a single user. Specifying
->>>> +conflicting parent or rate configuration in multiple consumer nodes for
->>>> +a shared clock is forbidden.
->>>> +
->>>> +Configuration of common clocks, which affect multiple consumer devices
->>>> +can be specified in a dedicated 'assigned-clocks' subnode of a clock
->>>> +provider node, e.g.:
->>>
->>> This seems like a work-around due to having clock-parents in the
->>> consumer node. If (I'm not convinced we should) we have a binding for
->>> parent config, it needs to be a single binding that works for both
->>> cases.
->>
->> When this issue was first raised during an ARM kernel summit it was
->> proposed to add 'assigned' prefix to DT properties for such bindings.
->>
->
-> Yes, I like the "assigned-" prefix.
->
->> How about separate properties for the default clock configuration,
->> e.g. assigned-clocks/assigned-clock-parents/assigned-clock-rates ?
->> So a clock provider would look like:
->>
->>      clkcon {
->>          ...
->>          #clock-cells = <1>;
->>
->>          assigned-clocks = <&clkcon 16>, <&clkcon 17>;
->>          assigned-clock-parents = <0>, <&clkcon 1>;
->>          assigned-clock-rates = <200000>;
->>      };
->>
->> And a consumer device node:
->>
->>      uart@a000 {
->>          compatible = "fsl,imx-uart";
->>          reg = <0xa000 0x1000>;
->>          ...
->>          clocks = <&clkcon 0>;
->>          clock-names = "baud";
->>
->>          assigned-clocks = <&clkcon 3>, <&clkcon 0>;
->>          assigned-clock-parents = <&pll 1>;
->>          assigned-clock-rates = <0>, <460800>;
->> };
->
-> It looks like this idea was dropped for v6. Can we revisit it? Take a
-> look at Tero's example implementation for OMAP using this binding:
->
-> http://www.spinics.net/lists/linux-omap/msg104705.html
->
-> There is a bogus "default-clocks" node made solely for storing this info
-> within the OMAP PRCM clock provider node. This is basically faking a
-> clock consumer. I think with the proposed solution above Tero could have
-> avoided that node entirely and done the following:
->
-> diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
-> index 649b5cd..e3ff1a7 100644
-> --- a/arch/arm/boot/dts/omap4.dtsi
-> +++ b/arch/arm/boot/dts/omap4.dtsi
-> @@ -145,6 +145,11 @@
->   			cm2_clocks: clocks {
->   				#address-cells = <1>;
->   				#size-cells = <0>;
-> +
-> +				assigned-clocks = <&abe_dpll_refclk_mux_ck>,
-> +					<&dpll_usb_ck>, <&dpll_abe_ck>;
-> +				assigned-clock-parents = <&sys_32k_ck>;
-> +				assigned-clock-rates = <0>, <960000000>, <98304000>;
->   			};
->
->   			cm2_clockdomains: clockdomains {
->
->
-> Tero, what do you think?
+Hi Laurent,
 
-Yeah, if we can avoid having a dummy node someplace, it is always 
-better. Only issue might be the initialization order, this was the 
-reason I created the dummy node if I recall right. But I guess we can 
-just scan the clock provider nodes second time at a later phase of boot 
-(or just store the default info for later use.)
+On Fri, May 23, 2014 at 1:08 AM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>> -             cpg_clocks: cpg_clocks@0xe6150000 {
+>> +             cpg_clocks: cpg_clocks@0xffc80000 {
+>
+> No need for a 0x prefix.
 
--Tero
+Thanks, missed that one.
 
+>>                       compatible = "renesas,r8a7779-cpg-clocks";
+>> -                     reg = <0 0xffc80000 0 0x30>;
+>> +                     reg = <0xffc80000 0x30>;
 >
-> Regards,
-> Mike
+> This looks good.
 >
-> [1] http://www.spinics.net/lists/cpufreq/msg10071.html
+>>                       clocks = <&extal_clk>;
+>>                       #clock-cells = <1>;
+>>                       clock-output-names = "plla", "z", "zs", "s",
+>> @@ -342,10 +342,10 @@
+>>               };
+>>
+>>               /* Gate clocks */
+>> -             mstp0_clks: mstp0_clks {
+>> +             mstp0_clks: mstp0_clks@ffc80030 {
 >
+> The @address is only mandatory to differentiate between nodes with identical
+> names. As the node name is supposed to describe the device function, maybe we
+> could rename it to clocks@ffc80030 ? As you modify the CPG node address above
+> it might make sense to rename it to clocks@ffc80000 too.
+
+Sounds good!
+
+> I'm not advocating for a rename now, but as your patch touches the names, I
+> think they should be fixed properly (or not at all).
+
+In hindsight, I should have separated the fix and the "obvious small things",
+as the latter are subject to bike-shedding ;-)
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
