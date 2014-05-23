@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 0/2] Add R8A7790/Lager board PCI USB DT support
-Date: Sat, 24 May 2014 02:23:35 +0400
-Message-ID: <201405240223.36456.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2 0/2] Add USB PHY device tree support for R8A7790/Lager board
+Date: Sat, 24 May 2014 02:26:26 +0400
+Message-ID: <201405240226.27820.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
@@ -12,7 +12,7 @@ To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll
 Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+    Oops, have sent this out with stale subject. Resending...
 
    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
 'renesas-devel-v3.14-20140521' tag plus R8A7790/Lager PCI USB support patches
