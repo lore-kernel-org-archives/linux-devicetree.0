@@ -1,91 +1,113 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 0/3] ARM: OMAP5+: Support Duty Cycle Correction(DCC)
-Date: Fri, 23 May 2014 14:07:20 -0700
-Message-ID: <20140523210720.23136.65858@quantum>
-References: <1400237160-25125-1-git-send-email-nm@ti.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v10 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
+Date: Fri, 23 May 2014 23:11:49 +0200
+Message-ID: <537FB995.5070604@gmail.com>
+References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com> <1400841343-6016-2-git-send-email-t.dakhran@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1400237160-25125-1-git-send-email-nm@ti.com>
+In-Reply-To: <1400841343-6016-2-git-send-email-t.dakhran@samsung.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Tero Kristo <t-kristo@ti.com>, Paul <paul@pwsan.com>
-Cc: Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org
+To: Tarek Dakhran <t.dakhran@samsung.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Nishanth Menon (2014-05-16 03:45:57)
-> Hi,
-> 
-> This patch series has been carried over in vendor kernel for quiet
-> few years now.
-> 
-> Unfortunately, it was very recently re-discovered and upstream kernel
-> is noticed to be broken for OMAP5 1.5GHz - at least we are operating
-> DPLL at frequency higher than what it was intended to be when CPUFreq
-> is enabled. Thankfully, with nominal voltage(we dont use AVS yet in
-> upstream for the mentioned platforms) and margins in trimming, we
-> have so far not crashed - but I strongly suspect this might be some
-> boundary case survival.
+Hi Tarek,
 
-DCC also exists in OMAP4. In some cases customers used it, in other
-cases we just ran the PLL way out of spec and the mpu_clk would divide
-by 2.
+With v2 of the series I mentioned in review of previous version [1],
+this patch can be skipped.
 
-Is this broken for OMAP4 as well?
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg31258.html
 
-Regards,
-Mike
+Best regards,
+Tomasz
 
+On 23.05.2014 12:35, Tarek Dakhran wrote:
+> EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
+> Add initial support for this SoC.
 > 
-> Verified on the following impacted platforms using 3.15-rc4 based
-> vendor kernel.
+> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+> ---
+>  arch/arm/mach-exynos/Kconfig    |    8 ++++++++
+>  arch/arm/mach-exynos/common.h   |   11 ++++++++++-
+>  arch/arm/mach-exynos/firmware.c |    2 +-
+>  3 files changed, 19 insertions(+), 2 deletions(-)
 > 
-> Before:
-> OMAP5432: http://slexy.org/view/s20cs0qQFg
-> DRA72x: http://slexy.org/view/s2TXtSa6mH (refused to lock)
-> DRA75x: http://slexy.org/view/s20AW8MU5c
-> After:
-> OMAP5432: http://slexy.org/view/s21iAfWxpu
-> DRA72x: http://slexy.org/view/s2hwsvGLmC (locks properly)
-> DRA75x: http://slexy.org/view/s21ehw8WQn
-> 
-> Hopefully, we can get these into some kernel revision in some form.
-> 
-> NOTE: Support for 4470(which is the only other platform requiring
-> DCC) is not present in upstream kernel and there are no plans to
-> support that SoC, even if it is added at a later point, support can be
-> extended as needed.
-> 
-> Series based on v3.15-rc5 tag.
-> Also available on my tree:
->         https://github.com/nmenon/linux-2.6-playground/
->         branch:  push/clock/dcc 
->         
->         weblink: https://github.com/nmenon/linux-2.6-playground/commits/push/clock/dcc
-> 
-> Verification:
-> 3.15-rc4 based kernel - DRA75x-evm, 72x-evm, OMAP5uevm
-> 3.15-rc5 - OMAP5uEVM(only one supporting 1.5GHz atm)
-> 
-> Andrii Tseglytskyi (1):
->   ARM: OMAP5+: dpll: support Duty Cycle Correction(DCC)
-> 
-> Nishanth Menon (2):
->   clk: dpll: support OMAP5 MPU DPLL that need special handling for
->     higher frequencies
->   ARM: dts: OMAP5/DRA7: use omap5-mpu-dpll-clock capable of dealing
->     with higher frequencies
-> 
->  .../devicetree/bindings/clock/ti/dpll.txt          |    1 +
->  arch/arm/boot/dts/dra7xx-clocks.dtsi               |    2 +-
->  arch/arm/boot/dts/omap54xx-clocks.dtsi             |    2 +-
->  arch/arm/mach-omap2/dpll3xxx.c                     |    9 +++++++++
->  drivers/clk/ti/dpll.c                              |   21 ++++++++++++++++++++
->  include/linux/clk/ti.h                             |    4 ++++
->  6 files changed, 37 insertions(+), 2 deletions(-)
-> 
-> Regards,
-> Nishanth Menon
-> -- 
-> 1.7.9.5
+> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+> index 1602abc..79a3e85 100644
+> --- a/arch/arm/mach-exynos/Kconfig
+> +++ b/arch/arm/mach-exynos/Kconfig
+> @@ -84,6 +84,14 @@ config SOC_EXYNOS5250
+>  	help
+>  	  Enable EXYNOS5250 SoC support
+>  
+> +config SOC_EXYNOS5410
+> +	bool "SAMSUNG EXYNOS5410"
+> +	default y
+> +	depends on ARCH_EXYNOS5
+> +	select PM_GENERIC_DOMAINS if PM_RUNTIME
+> +	help
+> +	  Enable EXYNOS5410 SoC support
+> +
+>  config SOC_EXYNOS5420
+>  	bool "SAMSUNG EXYNOS5420"
+>  	default y
+> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+> index e2d0954..d64c6de 100644
+> --- a/arch/arm/mach-exynos/common.h
+> +++ b/arch/arm/mach-exynos/common.h
+> @@ -21,6 +21,7 @@
+>  #define EXYNOS4_CPU_MASK	0xFFFE0000
+>  
+>  #define EXYNOS5250_SOC_ID	0x43520000
+> +#define EXYNOS5410_SOC_ID	0xE5410000
+>  #define EXYNOS5420_SOC_ID	0xE5420000
+>  #define EXYNOS5440_SOC_ID	0xE5440000
+>  #define EXYNOS5_SOC_MASK	0xFFFFF000
+> @@ -37,6 +38,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
+>  IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
+>  IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
+>  IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
+> +IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
+>  IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
+>  IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>  
+> @@ -68,6 +70,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>  # define soc_is_exynos5250()	0
+>  #endif
+>  
+> +#if defined(CONFIG_SOC_EXYNOS5410)
+> +# define soc_is_exynos5410()	is_samsung_exynos5410()
+> +#else
+> +# define soc_is_exynos5410()	0
+> +#endif
+> +
+>  #if defined(CONFIG_SOC_EXYNOS5420)
+>  # define soc_is_exynos5420()	is_samsung_exynos5420()
+>  #else
+> @@ -82,7 +90,8 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>  
+>  #define soc_is_exynos4() (soc_is_exynos4210() || soc_is_exynos4212() || \
+>  			  soc_is_exynos4412())
+> -#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5420())
+> +#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5410() || \
+> +			  soc_is_exynos5420())
+>  
+>  void mct_init(void __iomem *base, int irq_g0, int irq_l0, int irq_l1);
+>  
+> diff --git a/arch/arm/mach-exynos/firmware.c b/arch/arm/mach-exynos/firmware.c
+> index 739bdc8..971baf0 100644
+> --- a/arch/arm/mach-exynos/firmware.c
+> +++ b/arch/arm/mach-exynos/firmware.c
+> @@ -50,7 +50,7 @@ static int exynos_set_cpu_boot_addr(int cpu, unsigned long boot_addr)
+>  
+>  	boot_reg = sysram_ns_base_addr + 0x1c;
+>  
+> -	if (!soc_is_exynos4212())
+> +	if (!soc_is_exynos4212() && !soc_is_exynos5410())
+>  		boot_reg += 4*cpu;
+>  
+>  	__raw_writel(boot_addr, boot_reg);
 > 
