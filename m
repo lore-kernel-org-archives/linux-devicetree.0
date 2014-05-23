@@ -1,118 +1,55 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: [PATCH] coccinelle: Check for missing NULL terminators in of_device_id tables
-Date: Fri, 23 May 2014 16:41:44 -0700
-Message-ID: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>
-Cc: linux-kernel@vger.kernel.org, Mitchel Humpherys <mitchelh@codeaurora.org>, Julia Lawall <Julia.Lawall@lip6.fr>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+From: Kevin Hilman <khilman@linaro.org>
+Subject: [PATCH] scripts/dtc: pad DTBs to facilitate later modification
+Date: Fri, 23 May 2014 16:41:47 -0700
+Message-ID: <1400888507-11637-1-git-send-email-khilman@linaro.org>
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linaro-kernel@lists.linaro.org, Nicolas Pitre <nico@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Michal Marek <mmarek@suse.cz>, "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Failure to terminate an of_device_id table can lead to confusing
-failures depending on where the compiler places the array. Add a
-check to make sure these tables are terminated. Thanks to Mitchel
-Humpherys for coming up with the initial pattern.
+By default, add some padding to the DT blobs to facilitate later
+patching.
 
-Cc: Mitchel Humpherys <mitchelh@codeaurora.org>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+An example need for DTB patching is the need to modifiy the command
+line on platforms where ATAGS are not (or cannot) be used to pass the
+commandline.  For example, we do not support a big-endian kernel
+reading ATAGS from a little-endian u-boot, so the only way to pass a
+command line in the DT.
+
+Also, without ATAG support (or if u-boot was built without
+CONFIG_INITRD_TAG) the only way to pass an initrd is by adding an
+initrd= option to command line (in the DT).
+
+Therefore, to facilitate adding to the DT command line directly in the
+DTB, add some padding.
+
+Cc: Nicolas Pitre <nico@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Signed-off-by: Kevin Hilman <khilman@linaro.org>
 ---
- scripts/coccinelle/misc/of_table.cocci | 81 ++++++++++++++++++++++++++++++++++
- 1 file changed, 81 insertions(+)
- create mode 100644 scripts/coccinelle/misc/of_table.cocci
+I kinda pulled 64 bytes out of the air here since it's enough to add
+some common things to the commandline like debug, earlyprink
+initrd=<addr>,<size>, etc., but I'm certainlly not opposed to more
+padding.
 
-diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/misc/of_table.cocci
-new file mode 100644
-index 000000000000..da8bfa69fa3e
---- /dev/null
-+++ b/scripts/coccinelle/misc/of_table.cocci
-@@ -0,0 +1,81 @@
-+/// Make sure of_device_id tables are NULL terminated
-+//
-+// Keywords: of_table
-+// Confidence: Medium
-+// Options: --include-headers
-+
-+virtual patch
-+virtual context
-+virtual org
-+virtual report
-+
-+@bad_of_table exists@
-+identifier var, arr;
-+expression E;
-+@@
-+... struct of_device_id arr[] = {
-+	...,
-+	{
-+	...,
-+	.var = E,
-+	...
-+	}
-+};
-+
-+@depends on bad_of_table && context@
-+identifier var, arr;
-+expression E;
-+@@
-+ ... struct of_device_id arr[] = {
-+	...,
-+	{
-+	...,
-+*	.var = E,
-+	...
-+	}
-+};
-+
-+@depends on bad_of_table && patch@
-+identifier var, arr;
-+expression E;
-+@@
-+... struct of_device_id arr[] = {
-+	...,
-+	{
-+	...,
-+	.var = E,
-+	...
-+-	}
-++	},
-++	{ }
-+};
-+
-+@r depends on bad_of_table exists@
-+position p1;
-+identifier var, arr;
-+expression E;
-+@@
-+... struct of_device_id arr[] = {
-+	...,
-+	{
-+	...,
-+	.var = E,
-+	...
-+	}
-+	@p1
-+};
-+
-+@script:python depends on org@
-+p1 << r.p1;
-+arr << r.arr;
-+@@
-+
-+cocci.print_main(arr,p1)
-+
-+@script:python depends on report@
-+p1 << r.p1;
-+arr << r.arr;
-+@@
-+
-+msg = "%s is not NULL terminated at line %s" % (arr, p1[0].line)
-+coccilib.report.print_report(p1[0],msg)
+ scripts/Makefile.lib | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+index 6a5b0decb797..d7a57c2620f3 100644
+--- a/scripts/Makefile.lib
++++ b/scripts/Makefile.lib
+@@ -264,7 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
+ 
+ quiet_cmd_dtc = DTC     $@
+ cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
+-	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
++	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 -p 64 \
+ 		-i $(dir $<) $(DTC_FLAGS) \
+ 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
+ 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+1.9.2
+
