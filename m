@@ -1,50 +1,38 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH 2/5] Documentation: dt-bindings: document the Armada 375
- USB cluster binding
-Date: Fri, 23 May 2014 15:59:43 +0200
-Message-ID: <20140523135943.GC31314@lunn.ch>
-References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com>
- <1400257376-13251-2-git-send-email-gregory.clement@free-electrons.com>
- <537F13B2.6070500@ti.com>
- <20140523132145.GA31314@lunn.ch>
- <20140523133608.GB31314@lunn.ch>
- <537F52B0.5030204@ti.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] of: Stop naming platform_device using dcr address
+Date: Fri, 23 May 2014 16:07:08 +0200
+Message-ID: <4587381.5n3eMGkKaq@wuerfel>
+References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org> <1400801769-4506-3-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <537F52B0.5030204-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1400801769-4506-3-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 23, 2014 at 07:22:48PM +0530, Kishon Vijay Abraham I wrote:
-> hI,
+On Friday 23 May 2014 08:36:09 Grant Likely wrote:
+> There is now a way to ensure all platform devices get a unique name when
+> populated from the device tree, and the DCR_NATIVE code path is broken
+> anyway. PowerPC Cell (PS3) is the only platform that actually uses this
+> path.  Most likely nobody will notice if it is killed. Remove the code
+> and associated ugly #ifdef.
 > 
-> On Friday 23 May 2014 07:06 PM, Andrew Lunn wrote:
-> >> Do you want one .txt file per driver, or can we combine binding
-> >> documentations into one file? There should already be a mvebu-phy.txt,
-> >> which contains the sata phy usable on some of the Armada SoC families.
-> >> This binding could be appended to it.
-> > 
-> > Ah. Humm, well! It seems the patch adding the mvebu-phy.txt fell
-> > through a crack when adding the driver.
-> > 
-> > Kishon could you take
-> > http://www.spinics.net/lists/devicetree/msg17018.html into your tree?
-> > It should of been taken the same time you took the actual driver,
-> > http://www.spinics.net/lists/devicetree/msg17011.html into your tree.
-> > 
-> > I can resend that one missing patch if you want.
-> 
-> yes please. But it's already too late to go in the next merge window.
+> The user-visible impact of this patch is that any DCR device on Cell
+> will get a new name in the /sys/devices hierarchy.
 
-Gregory, could you pick it up and append your 375 binding to it? We
-can avoid merge conflicts that way.
+Isn't this used on all ppc440+ as well?
 
-Thanks
-	Andrew
+I don't think PS3 has it either, it should only be the second generation
+Cell blade doing this, which uses ppc440-derived I/O devices.
+
+We will probably see a bunch of the same devices on APM's X-gene ARM64
+machines as well, but we don't have to maintain a stable device name for
+those yet.
+
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
