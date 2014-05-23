@@ -1,126 +1,119 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [RFC PATCH 00/16] OMAP: GPMC: Restructure OMAP GPMC driver (NAND)
- : DT binding change proposal
-Date: Fri, 23 May 2014 11:40:11 +0200
-Message-ID: <CABxcv=kJA-kWpvcU0Jiy-gJYZP7W0kJjGtq3Fjr0VUBBC_znHg@mail.gmail.com>
-References: <1400671264-10702-1-git-send-email-rogerq@ti.com>
-	<20140521160818.GA1150@arch.cereza>
-	<537DB17A.6060608@ti.com>
-	<CABxcv=nbgGhVN+XYO8s=mYOpoLU9-kWuEqc+FLMaSbWS7BJNyQ@mail.gmail.com>
-	<20140522144600.GA1785@arch.cereza>
-	<537F03C8.3070101@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <537F03C8.3070101@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Tony Lindgren <tony@atomide.com>, Brian Norris <computersforpeace@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, Robert Nelson <robertcnelson@gmail.com>, Jingoo Han <jg1.han@samsung.com>, David Woodhouse <dwmw2@infradead.org>, nsekhar@ti.com, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH v2] spi: dw-mmio: add oftree support
+Date: Fri, 23 May 2014 11:53:48 +0200
+Message-ID: <1400838828-30998-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello Roger,
+Allow probing the dw-mmio from devicetree.
 
-On Fri, May 23, 2014 at 10:16 AM, Roger Quadros <rogerq@ti.com> wrote:
-> Ezequiel & Javier,
->
-> On 05/22/2014 05:46 PM, Ezequiel Garcia wrote:
->> On 22 May 01:51 PM, Javier Martinez Canillas wrote:
->>> On Thu, May 22, 2014 at 10:12 AM, Roger Quadros <rogerq@ti.com> wrote:
->>>>> On 21 May 02:20 PM, Roger Quadros wrote:
->>>>>>
->>>>>> For DT boot:
->>>>>> - The GPMC controller node should have a chip select (CS) node for each used
->>>>>>   chip select. The CS node must have a child device node for each device
->>>>>>   attached to that chip select. Properties for that child are GPMC agnostic.
->>>>>>
->>>>>>   i.e.
->>>>>>      gpmc {
->>>>>>              cs0 {
->>>>>>                      nand0 {
->>>>>>                      }
->>>>>>              };
->>>>>>
->>>>>>              cs1 {
->>>>>>                      nor0 {
->>>>>>                      }
->>>>>>              }
->>>>>>              ...
->>>>>>      };
->>>>>>
->>>>>
->>>>> While I agree that the GPMC driver is a bit messy, I'm not sure it's possible
->>>>> to go through such a complete devicetree binding re-design (breaking backwards
->>>>> compatibility) now that the binding is already in production.
->>>>
->>>> Why not? especially if the existing bindings are poorly dones. Is anyone using these
->>>> bindings burning the DT into ROM and can't change it when they update the kernel?
->>>>
->>>
->>> While I do agree that your DT bindings are much better than the
->>> current ones, there is a policy that DT bindings are an external API
->>> and once are released with a kernel are set in stone and can't be
->>> changed.
->>>
->>
->> Exactly. The DT binding is considered an ABI. Thus, invariant across kernel
->> versions. Users can't be coherced into a DTB update after a kernel update.
->>
->> That said, I don't really care if you break compatilibity in this case.
->> Rather, I'm suggesting that you make sure this change is going to be accepted
->> upstream, before doing any more work. The DT maintainers are reluctant to do
->> so.
->
-> Appreciate your concern.
->
-> Would be really nice if you can review patches 1-12. They have nothing to do with DT changes.
-> Thanks.
->
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+---
+Changes since v1:
+	- num-chipselect -> num-cs
+	- snps,dw-spi-mmio -> snps,dw-apb-ssi
 
-Overall your patches looks good to me. But I think it's better to wait
-until Tony removes the legacy board files for OMAP2+ since AFAIU at
-least the following patches could be dropped or trimmed down when
-board files are gone:
+ .../devicetree/bindings/spi/snps,dw-apb-ssi.txt    | 25 ++++++++++++++++++++++
+ drivers/spi/spi-dw-mmio.c                          | 20 ++++++++++++++++-
+ 2 files changed, 44 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
 
-[RFC PATCH 04/16] ARM: OMAP2+: gpmc: use platform data to configure CS
-space and poplulate
-[RFC PATCH 06/16] ARM: OMAP2+: gpmc: add NAND specific setup
-[RFC PATCH 07/16] ARM: OMAP2+: nand: Update gpmc_nand_init() to use
-generic_gpmc_init()
-
-Patches 1-3 and 5 are independent and can be applied in the meantime
-as a preparation for further changes following board files removal.
-
-I really like patches 9-12 since those moves some NAND add-hoc code to
-the NAND driver where it really belongs. I think that similar changes
-can be made for OneNAND and push the special case handling code from
-GPMC driver to drivers/mtd/onenand/omap2.c.
-
-Other devices (nor, ethernet, uart, etc) are already using
-gpmc_probe_generic_child() so I hope we can isolate the NAND and
-OneNAND specific changes and just use a single probe function for all
-child devices and possibly get even need the enum gpmc_omap_type you
-are adding on your struct gpmc_omap_cs_data.
-
-So what do you think if as a first step we add the platform data as
-you propose with all the commons timings and settings there, move all
-the possible code to NAND and OneNAND drivers and try to use a single
-configuration function for all child devices?
-
-Then once board files are gone we can do further cleanup in the driver
-and then we can discuss about changing the DT bindings. Maybe we can
-even change it while keeping backwards compatibility? Although I'm not
-sure about the last point I think that at least is worth to discuss
-it.
-
-> cheers,
-> -roger
->
-
-Thanks a lot and best regards,
-Javier
-
->>
->> On the other side, I guess you will also break bisectability while breaking
->> backward compatibility. Doesn't sound very nice.
->>
->
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+new file mode 100644
+index 0000000..7739bc4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+@@ -0,0 +1,25 @@
++Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
++
++Required properties:
++- compatible : "snps,dw-apb-ssi"
++- reg : The register base for the controller.
++- interrupts : One interrupt, used by the controller.
++- #address-cells : <1>, as required by generic SPI binding.
++- #size-cells : <0>, also as required by generic SPI binding.
++
++Optional properties:
++- num-cs : The number of chipselects. If omitted, this will default to 4.
++
++Child nodes as per the generic SPI binding.
++
++Example:
++
++	spi@fff00000 {
++		compatible = "snps,dw-apb-ssi";
++		reg = <0xfff00000 0x1000>;
++		interrupts = <0 154 4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		num-cs = <4>;
++	};
++
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index 1492f5e..e5f826e 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -16,6 +16,8 @@
+ #include <linux/spi/spi.h>
+ #include <linux/scatterlist.h>
+ #include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_platform.h>
+ 
+ #include "spi-dw.h"
+ 
+@@ -32,6 +34,7 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	struct dw_spi *dws;
+ 	struct resource *mem;
+ 	int ret;
++	int num_cs;
+ 
+ 	dwsmmio = devm_kzalloc(&pdev->dev, sizeof(struct dw_spi_mmio),
+ 			GFP_KERNEL);
+@@ -62,12 +65,20 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	dwsmmio->clk = devm_clk_get(&pdev->dev, NULL);
+ 	if (IS_ERR(dwsmmio->clk))
+ 		return PTR_ERR(dwsmmio->clk);
++
+ 	ret = clk_prepare_enable(dwsmmio->clk);
+ 	if (ret)
+ 		return ret;
+ 
+ 	dws->bus_num = pdev->id;
+-	dws->num_cs = 4;
++
++	num_cs = 4;
++
++	if (pdev->dev.of_node)
++		of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
++
++	dws->num_cs = num_cs;
++
+ 	dws->max_freq = clk_get_rate(dwsmmio->clk);
+ 
+ 	ret = dw_spi_add_host(&pdev->dev, dws);
+@@ -92,12 +103,19 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dw_spi_mmio_of_match[] = {
++	{ .compatible = "snps,dw-apb-ssi", },
++	{ /* end of table */}
++};
++MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
++
+ static struct platform_driver dw_spi_mmio_driver = {
+ 	.probe		= dw_spi_mmio_probe,
+ 	.remove		= dw_spi_mmio_remove,
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = dw_spi_mmio_of_match,
+ 	},
+ };
+ module_platform_driver(dw_spi_mmio_driver);
+-- 
+2.0.0.rc0
