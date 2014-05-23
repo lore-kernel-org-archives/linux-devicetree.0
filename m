@@ -1,94 +1,193 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] of: Make of_find_node_by_path() handle /aliases
-Date: Thu, 22 May 2014 18:14:38 -0700
-Message-ID: <537EA0FE.9000809@gmail.com>
-References: <1399993115-21552-1-git-send-email-grant.likely@linaro.org> <1399993115-21552-3-git-send-email-grant.likely@linaro.org> <53757D25.1060005@gmail.com> <20140516105444.C1DB7C42277@trevor.secretlab.ca> <20140518092730.109AAC40B8A@trevor.secretlab.ca> <537C1252.3090900@gmail.com> <20140522011600.C0014C40B13@trevor.secretlab.ca>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH RFC v5 2/2] clk: Add handling of clk parent and rate assigned
+ from DT
+Date: Thu, 22 May 2014 18:34:06 -0700
+Message-ID: <20140523013406.9521.82891@quantum>
+References: <1397042790-10636-1-git-send-email-s.nawrocki@samsung.com>
+ <1397042790-10636-3-git-send-email-s.nawrocki@samsung.com>
+ <CAL_JsqKDJ_yFxFYnrTtmzMPoxO2rmypiujybwbhUh35y1LS-Mw@mail.gmail.com>
+ <5347DF4D.5000005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140522011600.C0014C40B13-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <5347DF4D.5000005-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tero Kristo <t-kristo-l0cyMroinI0@public.gmane.org>, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 5/21/2014 6:16 PM, Grant Likely wrote:
-> On Tue, 20 May 2014 19:41:22 -0700, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On 5/18/2014 2:27 AM, Grant Likely wrote:
->>> On Fri, 16 May 2014 11:54:44 +0100, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> On Thu, 15 May 2014 19:51:17 -0700, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>>>> On 5/13/2014 7:58 AM, Grant Likely wrote:
->>>>>> Make of_find_node_by_path() handle aliases as prefixes. To make this
->>>>>> work the name search is refactored to search by path component instead
->>>>>> of by full string. This should be a more efficient search, and it makes
->>>>>> it possible to start a search at a subnode of a tree.
->>>>>>
->>>>>> Signed-off-by: David Daney <david.daney-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
->>>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>>>> [grant.likely: Rework to not require allocating at runtime]
->>>>>> Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>> ---
->>>>>>  drivers/of/base.c | 60 +++++++++++++++++++++++++++++++++++++++++++++++++++----
->>>>>>  1 file changed, 56 insertions(+), 4 deletions(-)
->>>>>>
->>>>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
->>>>>> index 6e240698353b..60089b9a3014 100644
->>>>>> --- a/drivers/of/base.c
->>>>>> +++ b/drivers/of/base.c
->>>>>> @@ -771,9 +771,38 @@ struct device_node *of_get_child_by_name(const struct device_node *node,
->>>>>>  }
->>>>>>  EXPORT_SYMBOL(of_get_child_by_name);
->>>>>>  
->>>>>> +static struct device_node *__of_find_node_by_path(struct device_node *parent,
->>>>>> +						const char *path)
->>>>>> +{
->>>>>> +	struct device_node *child;
->>>>>> +	int len = strchrnul(path, '/') - path;
->>>>>> +
->>>>>> +	if (!len)
->>>>>> +		return parent;
->>>>>
->>>>> (!len) is true if the the final character of the path passed into of_find_node_by_path()
->>>>> was "/".  Strictly speaking, ->full_name will never end with "/", so the return value
->>>>> should be NULL, indicating that the match fails.
->>>>
->>>> Ah, good catch. I should add a test case for that.
->>>
->>> In my testing this looks okay. The while loop that calls into
->>> __of_find_node_by_path() looks like this:
->>>
->>> 	while (np && *path == '/') {
->>> 		path++; /* Increment past '/' delimiter */
->>> 		np = __of_find_node_by_path(np, path);
->>> 		path = strchrnul(path, '/');
->>> 	}
->>>
->>> If the path ends with a '/', then the loop will go around one more time.
->>> The pointer will be incremented to point at the null character and len
->>> will be null because strchrnul() will point at the last item.
->>
->> Yes, that was my point.  The old version of of_find_node_by_path() would not
->> find a match if the path ended with a "/" (unless the full path was "/").
->> This patch series changes the behavior to be a match.
->>
->> I will reply to this email with an additional patch that restores the
->> original behavior.
->>
->> If you move the additional test cases you provide below and the test cases
->> in patch 3 to the beginning of the series, you can see the before and after
->> behavior of adding patch 1 and patch 2.
+Quoting Sylwester Nawrocki (2014-04-11 05:25:49)
+> >> +==Assigned clock parents and rates==
+> >> +
+> >> +Some platforms require static initial configuration of parts of the clocks
+> >> +controller. Such a configuration can be specified in a clock consumer node
+> >> +through clock-parents and clock-rates DT properties. The former should
+> >> +contain a list of parent clocks in form of phandle and clock specifier pairs,
+> >> +the latter the list of assigned clock frequency values (one cell each).
+> >> +To skip setting parent or rate of a clock its corresponding entry should be
+> >> +set to 0, or can be omitted if it is not followed by any non-zero entry.
+> >> +
+> >> +    uart@a000 {
+> >> +        compatible = "fsl,imx-uart";
+> >> +        reg = <0xa000 0x1000>;
+> >> +        ...
+> >> +        clocks = <&clkcon 0>, <&clkcon 3>;
+> >> +        clock-names = "baud", "mux";
+> >> +
+> >> +        clock-parents = <0>, <&pll 1>;
+> >> +        clock-rates = <460800>;
+> > 
+> > Is this the input frequency or serial baud rate? Looks like a baud
+> > rate, but the clock framework needs input (to the uart) frequency. I
+> > would say this should be clock-frequency and specify the max baud rate
+> > as is being done with i2c bindings. The uart driver should know how to
+> > convert between input clock freq and baud rate.
 > 
-> Ah, I see. That raises the question about what the behaviour /should/
-> be. Off the top of my head, matching against a trailing '/' seems to be
-> okay. Are there situations that you see or can think of where matching
-> would be the wrong thing to do?
+> This UART example is not quite representative for the issues I have been
+> trying to address with this patch set. There is a need to set (an initial)
+> input clock frequency. E.g. in case of multimedia devices there may be
+> a need to set clock parent and frequency of an input clock to multiple IP
+> blocks, so they are clocked synchronously and data is carried properly
+> across a whole processing chain. Thus there may not be even clock output
+> in an IP block, but still input clock needs to be set. IIUC there is
+> similar issue with audio, where it is difficult to calculate the clock
+> frequencies/determine parent clocks in individual drivers algorithmically.
+> 
+> >> +    };
+> >> +
+> >> +In this example the pll is set as parent of "mux" clock and frequency 
+> >> of "baud"
+> >> +clock is specified as 460800 Hz.
+> > 
+> > I don't really like clock-parents. The parent information is part of
+> > the clock source, not the consumer.
+> 
+> I'm not sure we must always consider the parent information as property
+> of a clock source. If for example we expose a structure like below as
+> single clock object, supporting clock gating, parent and frequency
+> setting the parent setting is still accessible from within a device
+> driver.
 
-I have not thought of a case where matching against a trailing '/' would
-hurt anything.  It just seemed better to be consistent in naming.
+The design of the ccf implementation certainly allows one to hide
+individually addressable/configurable clock nodes within a single struct
+clk. But should we? I have always maintained that a clock driver should
+enumerate clocks in the same way that the data sheet or technical
+reference manual states. I did make a recent exception[1], but that is
+going to be rolled back after the coordinated clock rate changes land in
+mainline.
 
+> And clock parent selection may depend on a system configuration
+> not immediately obvious from within a single device driver perspective.
+> 
+>                          MUX
+>                        ,-------.     DIVIDER      GATE
+> common clk source 1 -->|--.    |   ,--------.   ,--------.
+>                        |   \   |   |        |   |        |
+> common clk source 2 -->|-   '--|-->|        |-->|        |--> consumer
+>        ...             |       |   |        |   |        |
+> common clk source N -->|-      |   '--------'   '--------'
+>                        '-------'
+> 
+> > We've somewhat decided against having every single clock defined in DT
+> > and rather only describe a clock controller with leaf clocks to
+> > devices. That is not a hard rule, but for complex clock trees that is
+> > the norm. Doing something like this will require all levels of the
+> > clock tree to be described. You may have multiple layers of parents
+> > that have to be configured correctly. How are you configuring the rest
+> > of the tree?
+> 
+> I believe even clock controllers where clocks are represented as flat
+> array often describe the clock tree entirely by parenthood, the tree
+> structure is just not obvious from the DT binding.
+> In addition, there seems to be appearing more and more clock controller
+> DT bindings describing their clocks individually.
+
+I've been discouraging these per-clock node bindings in favor of the
+per-controller node style.
+
+> 
+> >> +Configuring a clock's parent and rate through the device node that uses
+> >> +the clock can be done only for clocks that have a single user. Specifying
+> >> +conflicting parent or rate configuration in multiple consumer nodes for
+> >> +a shared clock is forbidden.
+> >> +
+> >> +Configuration of common clocks, which affect multiple consumer devices
+> >> +can be specified in a dedicated 'assigned-clocks' subnode of a clock
+> >> +provider node, e.g.:
+> > 
+> > This seems like a work-around due to having clock-parents in the
+> > consumer node. If (I'm not convinced we should) we have a binding for
+> > parent config, it needs to be a single binding that works for both
+> > cases.
+> 
+> When this issue was first raised during an ARM kernel summit it was
+> proposed to add 'assigned' prefix to DT properties for such bindings.
+> 
+
+Yes, I like the "assigned-" prefix.
+
+> How about separate properties for the default clock configuration,
+> e.g. assigned-clocks/assigned-clock-parents/assigned-clock-rates ?
+> So a clock provider would look like:
+> 
+>     clkcon {
+>         ...
+>         #clock-cells = <1>;
+> 
+>         assigned-clocks = <&clkcon 16>, <&clkcon 17>;
+>         assigned-clock-parents = <0>, <&clkcon 1>;
+>         assigned-clock-rates = <200000>;
+>     };
+> 
+> And a consumer device node:
+> 
+>     uart@a000 {
+>         compatible = "fsl,imx-uart";
+>         reg = <0xa000 0x1000>;
+>         ...
+>         clocks = <&clkcon 0>;
+>         clock-names = "baud";
+> 
+>         assigned-clocks = <&clkcon 3>, <&clkcon 0>;
+>         assigned-clock-parents = <&pll 1>;
+>         assigned-clock-rates = <0>, <460800>;
+> };
+
+It looks like this idea was dropped for v6. Can we revisit it? Take a
+look at Tero's example implementation for OMAP using this binding:
+
+http://www.spinics.net/lists/linux-omap/msg104705.html
+
+There is a bogus "default-clocks" node made solely for storing this info
+within the OMAP PRCM clock provider node. This is basically faking a
+clock consumer. I think with the proposed solution above Tero could have
+avoided that node entirely and done the following:
+
+diff --git a/arch/arm/boot/dts/omap4.dtsi b/arch/arm/boot/dts/omap4.dtsi
+index 649b5cd..e3ff1a7 100644
+--- a/arch/arm/boot/dts/omap4.dtsi
++++ b/arch/arm/boot/dts/omap4.dtsi
+@@ -145,6 +145,11 @@
+ 			cm2_clocks: clocks {
+ 				#address-cells = <1>;
+ 				#size-cells = <0>;
++
++				assigned-clocks = <&abe_dpll_refclk_mux_ck>,
++					<&dpll_usb_ck>, <&dpll_abe_ck>;
++				assigned-clock-parents = <&sys_32k_ck>;
++				assigned-clock-rates = <0>, <960000000>, <98304000>;
+ 			};
+ 
+ 			cm2_clockdomains: clockdomains {
+
+
+Tero, what do you think?
+
+Regards,
+Mike
+
+[1] http://www.spinics.net/lists/cpufreq/msg10071.html
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
