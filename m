@@ -1,28 +1,62 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH 0/5] ks8851 DT updates
-Date: Fri, 23 May 2014 15:15:02 -0400 (EDT)
-Message-ID: <20140523.151502.1106354754894891974.davem@davemloft.net>
-References: <1400792413-21618-1-git-send-email-sboyd@codeaurora.org>
+From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 1/2] ASoC: cs4265: bindings: sound: Add bindings for CS4265 CODEC
+Date: Fri, 23 May 2014 14:16:53 -0500
+Message-ID: <1400872614-21666-1-git-send-email-Paul.Handrigan@cirrus.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1400792413-21618-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: sboyd@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, nm@ti.com
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Paul Handrigan <paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Boyd <sboyd@codeaurora.org>
-Date: Thu, 22 May 2014 14:00:08 -0700
+This patch adds binding documentation for the Cirrus Logic CS4265 CODEC.
 
-> This set of patches properly documents the micrel ks8851 spi ethernet
-> controller, converts to devm_regulator_get_optional() to make error
-> paths slightly simpler, and finally adds supports for another
-> optional regulator and a reset gpio.
+Signed-off-by: Paul Handrigan <paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/cs4265.txt | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs4265.txt
 
-Please do not submit patch sets that you expect different trees to
-integrate, this is painful for maintainers to deal with.
+diff --git a/Documentation/devicetree/bindings/sound/cs4265.txt b/Documentation/devicetree/bindings/sound/cs4265.txt
+new file mode 100644
+index 0000000..03d0dde
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs4265.txt
+@@ -0,0 +1,29 @@
++CS4265 audio CODEC
++
++This device supports I2C only.
++
++Required properties:
++
++  - compatible : "cirrus,cs4265"
++
++  - reg : the I2C address of the device for I2C. The I2C address depends on
++          the state of the AD0 pin.  If AD0 is high, the i2c address is 0x4f.
++          If it is low, the i2c address is 0x4e.
++
++Optional properties:
++
++  - reset-gpio : a GPIO spec for the reset pin. If specified, it will be
++		 deasserted before communication to the codec starts.
++
++Examples:
++
++codec_ad0_high: cs4265@4f { /* AD0 Pin is high */
++	compatible = "cirrus,cs4265";
++	reg = <0x4f>;
++};
++
++
++codec_ad0_low: cs4265@4e { /* AD0 Pin is low */
++	compatible = "cirrus,cs4265";
++	reg = <0x4e>;
++};
+-- 
+1.9.1
 
-Instead, submit the changes separately.  One series for one
-maintainer's tree, another for the other maintainer's tree.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
