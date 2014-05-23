@@ -1,61 +1,38 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 07/22] clk: sunxi: Fix PLL6 calculation on sun6i
-Date: Fri, 23 May 2014 22:43:42 +0800
-Message-ID: <CAGb2v64+UBUZeqsy02K2x+HCh=YAAVz_wLaPVRhdD=F5zT+Ccw@mail.gmail.com>
-References: <1400831485-28576-1-git-send-email-wens@csie.org>
- <1400831485-28576-8-git-send-email-wens@csie.org> <537F486D.9060900@elopez.com.ar>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 2/3] ARM: dts: oma3-gta04: Add display support
+Date: Fri, 23 May 2014 07:45:34 -0700
+Message-ID: <20140523144533.GC2321@atomide.com>
+References: <1399580212-5183-1-git-send-email-marek@goldelico.com>
+ <1399580212-5183-3-git-send-email-marek@goldelico.com>
+ <537F04D7.4000201@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <537F486D.9060900@elopez.com.ar>
-Sender: linux-serial-owner@vger.kernel.org
-To: =?UTF-8?Q?Emilio_L=C3=B3pez?= <emilio@elopez.com.ar>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, linux-serial@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <537F04D7.4000201-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>
+Cc: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org> [140523 01:21]:
+> On 08/05/14 23:16, Marek Belisko wrote:
+> > This patch add support for lcd display on gta04 board. Display control
+> > is connected to spi (used spi bitbang driver).
+> > 
+> > Signed-off-by: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/omap3-gta04.dts | 87 +++++++++++++++++++++++++++++++++++++++
+> >  1 file changed, 87 insertions(+)
+> 
+> I can take this via my tree.
+> 
+> Tony, can I have your ack on this?
 
-On Fri, May 23, 2014 at 9:09 PM, Emilio L=C3=B3pez <emilio@elopez.com.a=
-r> wrote:
-> Hi,
->
-> El 23/05/14 04:51, Chen-Yu Tsai escribi=C3=B3:
->
->> The N factor for PLL6 counts from 1 to 32, as specified in the A23
->> manual, and shown in Allwinner's original code.
->
->
-> Are you sure about this? The A23 manual I'm looking at has a 5-bit fi=
-eld (so
-> 0-31) on 12:8, and the examples count from 0 (eg Factor=3D0 N=3D1 ...=
- Factor=3D31
-> N=3D32).
+Yes for the whole series:
 
-=46rom the A23 manual:
-
-=46actor =3D 0, N =3D 1
-=46actor =3D 1, N =3D 2
-=46actor =3D 2, N =3D 3
- and so on
-
-
-=46rom the A20 manual:
-
-=46actor =3D 0, N =3D 0
-=46actor =3D 1, N =3D 1
-=46actor =3D 2, N =3D 2
-
-The "N factor" I referred to in my commit message is the N used in the
-calculation,
-not what is stored in the bit field.
-
-Hope this makes it clear. :)
-
-Cheers
-ChenYu
+Acked-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
 --
-To unsubscribe from this list: send the line "unsubscribe linux-serial"=
- in
-the body of a message to majordomo@vger.kernel.org
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
