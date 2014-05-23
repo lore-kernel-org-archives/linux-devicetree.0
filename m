@@ -1,157 +1,121 @@
-From: Keerthy <a0393675-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] mfd: tps65917: Add driver for the TPS65917 PMIC
-Date: Fri, 23 May 2014 08:52:12 +0530
-Message-ID: <537EBEE4.9050309@ti.com>
-References: <1400731239-3180-1-git-send-email-j-keerthy@ti.com> <1400731239-3180-4-git-send-email-j-keerthy@ti.com> <20140522083707.GM6679@lee--X1> <537DD836.3040501@ti.com> <20140522114808.GU6679@lee--X1>
+From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Thu, 22 May 2014 20:55:54 -0700
+Message-ID: <CAEUnVG42Fmn4QOu-jObpoyViscmfKn35oDmb=WR8t=X7YVSB=Q@mail.gmail.com>
+References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com>
+ <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com>
+ <20140521205538.GA6237@mithrandir> <CAEUnVG7tDjw_6wHc=FN0KsOKsSS1u8H8SzYdxt9VCwUsARRTeQ@mail.gmail.com>
+ <20140522094958.GA11585@ulmo> <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ@mail.gmail.com>
+ <537E39D9.2000304@wwwdotorg.org> <CAEUnVG4UettOj0xDy+f6qEhUbhNs=u-wgyCf_Prsd2JpnmFfLw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140522114808.GU6679@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ian-kDsPt+C1G03kYMGBc/C6ZA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEUnVG4UettOj0xDy+f6qEhUbhNs=u-wgyCf_Prsd2JpnmFfLw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 May 2014 05:18 PM, Lee Jones wrote:
->>>> The TPS65917 chip is a power management IC for Portable Navigation Systems
->>>> and Tablet Computing devices. It contains the following components:
+On Thu, May 22, 2014 at 11:05 AM, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> On Thu, May 22, 2014 at 10:54 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>> On 05/22/2014 11:48 AM, Dylan Reid wrote:
+>>> On Thu, May 22, 2014 at 2:50 AM, Thierry Reding
+>>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>> On Wed, May 21, 2014 at 02:10:09PM -0700, Dylan Reid wrote:
+>>>>> On Wed, May 21, 2014 at 1:55 PM, Thierry Reding
+>>>>> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>>>>>> On Tue, May 20, 2014 at 04:28:45PM -0700, Dylan Reid wrote:
+>>>>>>> On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>>>>> On 05/20/2014 02:37 PM, Dylan Reid wrote:
+>>>>>>>>> On Tue, May 20, 2014 at 11:31 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+>>>>>>>>>> On 05/20/2014 12:24 PM, Stephen Warren wrote:
+>>>>>>>>>>> On 05/19/2014 08:35 PM, Dylan Reid wrote:
+>>>>>>>>>>>> Add a device node for the HDA controller found on Tegra124.
+>>>>>>>> ...
+>>>>>>>>>> Even after fixing that, I can't play audio on Venice2:
+>>>>>>>>>>
+>>>>>>>>>> root@localhost:~# speaker-test -Dhw:0,3 -c 2
+>>>>>>>>>>
+>>>>>>>>>> speaker-test 1.0.27.1
+>>>>>>>>>>
+>>>>>>>>>> Playback device is hw:0,3
+>>>>>>>>>> Stream parameters are 48000Hz, S16_LE, 2 channels
+>>>>>>>>>> Using 16 octaves of pink noise
+>>>>>>>>>> Rate set to 48000Hz (requested 48000Hz)
+>>>>>>>>>> Buffer size range from 64 to 16384
+>>>>>>>>>> Period size range from 32 to 8192
+>>>>>>>>>> Using max buffer size 16384
+>>>>>>>>>> Periods = 4
+>>>>>>>>>> was set period_size = 4096
+>>>>>>>>>> was set buffer_size = 16384
+>>>>>>>>>>  0 - Front Left
+>>>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>>>> Write error: -32,Broken pipe
+>>>>>>>>>> ^C 1 - Front Right
+>>>>>>>>>> Time per period = 1.799791
+>>>>>>>>>>
+>>>>>>>>>
+>>>>>>>>> Thanks for checking Stephen.  I'll fix the reset name.
+>>>>>>>>>
+>>>>>>>>> This is the state of the tree I used when I tested on Venice2 just now:
+>>>>>>>>> * ae57dbf - (HEAD) ARM: tegra: venice2 - Enable HDA (2 minutes ago)
+>>>>>>>>> * 6224524 - ARM: tegra: Add Tegra124 HDA support (2 minutes ago)
+>>>>>>>>> * 468ca57 - ALSA: hda - Add driver for Tegra SoC HDA (2 minutes ago)
+>>>>>>>>> * 928099e - ALSA: hda/hdmi - Add Nvidia Tegra124 HDMI support (2 minutes ago)
+>>>>>>>>> * 701eac4 - clk: tegra124: Enable hda to hdmi clocks (3 minutes ago)
+>>>>>>>>
+>>>>>>>> Ah, I was missing that clock patch. Hopefully Peter will pick it up for
+>>>>>>>> the Tegra clock tree soon.
+>>>>>>>>
+>>>>>>>> Now I have the same results as Thierry; speaker-test looks like it
+>>>>>>>> should be working, yet I don't hear any audio from the monitor. I know
+>>>>>>>> the monitor works, since I've used it extensively for testing GeForce
+>>>>>>>> GPU HDMI audio.
+>>>>>>>
+>>>>>>> Probably a silly question: Is it un-muted?
+>>>>>>> amixer -c0 cset name='IEC958 Playback Switch' on
+>>>>>>
+>>>>>> Dylan, can you provide more detail about the setup that you're running?
+>>>>>> There have been similar issues in the past where a driver would work if
+>>>>>> it was run on an identical upstream kernel but with a different version
+>>>>>> of the bootloader (or a different bootloader altogether). Can you give
+>>>>>> further details about your setup? Also perhaps providing a dmesg log or
+>>>>>> the clock tree from /sys/kernel/debug/clk/clk_summary could help
+>>>>>> determine the diff between a working and a non-working setup.
+>>>>>
+>>>>> Sure.  I'm running this u-boot:
+>>>>> https://chromium.googlesource.com/chromiumos/third_party/u-boot
+>>>>> on commit ddde3e9 of the chromeos-v2013.06 branch.
+>>>>>
+>>>>> I haven't had a chance to flash swarren's u-boot yet it's been one of
+>>>>> those days...
+>>>>>
+>>>>> I attached dmesg and clk_summary.
+>>>>>
+>>>>> I don't have many modifications to the ubuntu-core rootfs.
+>>>>>
+>>>>> Thanks for looking at this,
 >>>>
->>>>   - Regulators.
->>>>   - Over Temperature warning and Shut down.
->>>>
->>>> This patch adds support for tps65917 mfd device. At this time only
->>>> the regulator functionality is made available.
->>>>
->>>> Signed-off-by: Keerthy <j-keerthy-l0cyMroinI0@public.gmane.org>
->>>> ---
->>>> v3 Changes:
->>>>
->>>>   * Header file formating
->>>>   * Changed the cache_type to REGCACHE_RBTREE
->>>>   * removed unnecessary code
->>>>   * Corrected documentation style
->>>>   * Added pm_power_off function
->>>>
->>>>   v2 Changes:
->>>>
->>>>   * Added volatile register check as some of the registers
->>>>     in the set are volatile.
->>>> drivers/mfd/Kconfig          |   12 +
->>>>   drivers/mfd/Makefile         |    1 +
->>>>   drivers/mfd/tps65917.c       |  594 +++++++++++++++++
->>>>   include/linux/mfd/tps65917.h | 1485 ++++++++++++++++++++++++++++++++++++++++++
->>>>   4 files changed, 2092 insertions(+)
->>>>   create mode 100644 drivers/mfd/tps65917.c
->>>>   create mode 100644 include/linux/mfd/tps65917.h
-> [...]
->
->>>> +	for (i = 0; i < TPS65917_NUM_CLIENTS; i++) {
->>>> +		if (i == 0) {
->>>> +			tps65917->i2c_clients[i] = i2c;
->>> This is messy.  Move this line out of the loop and change the loop
->>> parameters to start from 1.  Then we can reduce all of this
->>> unnecessary indentation.
->> There is a common thing we do after if and else. Removing i == 0
->> part out of the
->> loop would mean repeating the common part. This way seems
->> better.
-> Ah yes, good point.
->
->>>> +		} else {
->>>> +			tps65917->i2c_clients[i] =
->>>> +					i2c_new_dummy(i2c->adapter,
->>>> +						      i2c->addr + i);
->>>> +			if (!tps65917->i2c_clients[i]) {
->>>> +				dev_err(tps65917->dev,
->>>> +					"can't attach client %d\n", i);
->>>> +				ret = -ENOMEM;
->>>> +				goto err_i2c;
->>>> +			}
->>>> +
->>>> +			tps65917->i2c_clients[i]->dev.of_node = of_node_get(node);
->>> Don't forget to decrement the reference when you've finished with it.
->> I did not get this.
-> Do you know what of_node_get() does?
->
-> [...]
->
->>> What happens if !node?  Then no children get registered and this has
->>> all been a waste of time?
->> Only DT way is possible. This check is redundant. I will add a check
->> at the beginning for !node.
-> If that's the case you should add 'depends on OF' in the Kconfig.
->
->>>> +struct tps65917_reg_init {
->>>> +	/*
->>>> +	 * 0: reload default values from OTP on warm reset
->>>> +	 * 1: maintain voltage from VSEL on warm reset
->>>> +	 */
->>>> +	bool warm_reset;
->>> Where is this used?
+>>>> Also perhaps you can share any change to tegra_defconfig that you have
+>>>> for this. Perhaps Stephen and I are simply missing some required option
+>>>> to make it work.
 >>>
->>>> +	/*
->>>> +	 * 0: i2c selection of voltage
->>>> +	 * 1: pin selection of voltage.
->>>> +	 */
->>>> +	bool roof_floor;
->>> And this?
->>>
->>>> +	/*
->>>> +	 * For SMPS
->>>> +	 *
->>>> +	 * 0: Off
->>>> +	 * 1: AUTO
->>>> +	 * 2: ECO
->>>> +	 * 3: Forced PWM
->>>> +	 *
->>>> +	 * For LDO
->>>> +	 *
->>>> +	 * 0: Off
->>>> +	 * 1: On
->>>> +	 */
->>>> +	int mode_sleep;
->>> And this?
->>>
->>>> +	u8 vsel;
->>> And this?
->> All of the above can be used by regulator driver.
-> Doesn't the regulator driver have its own header file?  Why are these
-> in a shared file if they're not used anywhere else?
+>>> Sure, here is the diff from linux-next's tegra defconfig.  Still on
+>>> the tree mentioned above.
+>>
+>> My .config does include all the options that your defconfig diff adds.
 >
-> [...]
->
->>>> +	if (pdata->mux_from_pdata) {
->>>> +		reg = pdata->pad1;
->>>> +		ret = regmap_write(tps65917->regmap[slave], addr, reg);
->>>> +		if (ret)
->>>> +			goto err_irq;
->>>> +	} else {
->>>> +		ret = regmap_read(tps65917->regmap[slave], addr, &reg);
->>>> +		if (ret)
->>>> +			goto err_irq;
->>>> +	}i
->>> What does the read do?  You're not doing anything with the value.
->> This pad1 and pad2 stuff is not needed. I will remove this.
-> Then why is it in here?
->
-> Did you copy this code from somewhere, if so, where?
->
-> Okay, I just answered my own question.  There is so much common code
-> in between this and palmas, there is no way I'm going to accept this
-> driver.  Please merge it in with the palmas driver!
->
-The chip is more like a subset of palmas with lot of register offset changes
-and register bit field changes. Adding this would make it clumsy. There 
-could
-be lot of checks. That is why i chose to write a new driver.
+> OK.  I'll try to dig myself out from these other bugs and give this a
+> try on the Jetson this afternoon.
 
-Palmas driver already supports palmas variants and tps659038. Merging
-this would mean more and more checks :-/.
+Took all day, but I did get to try this.
 
-Regards,
-Keerthy
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+on U-Boot commit d7782d0, flashed with Stephen's u-boot flasher from github.
+
+And kernel at 81d0207 - ARM: tegra: enable HD-Audio controller in defconfig
+plus the addition of the hda node "okay"  to the jetson-tk1 DT.
+
+I can hear the jetson's audio on the TV.  This is currently a sample
+size of one TV, I'll set up the Quantum Data tomorrow and check that
+it works there as well.
