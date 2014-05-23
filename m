@@ -1,51 +1,71 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
-Date: Fri, 23 May 2014 13:05:15 -0600
-Message-ID: <537F9BEB.5020102@wwwdotorg.org>
-References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com> <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com> <20140521205538.GA6237@mithrandir> <CAEUnVG7tDjw_6wHc=FN0KsOKsSS1u8H8SzYdxt9VCwUsARRTeQ@mail.gmail.com> <20140522094958.GA11585@ulmo> <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ@mail.gmail.com> <537E39D9.2000304@wwwdotorg.org> <CAEUnVG4UettOj0xDy+f6qEhUbhNs=u-wgyCf_Prsd2JpnmFfLw@mail.gmail.com> <CAEUnVG42Fmn4QOu-jObpoyViscmfKn35oDmb=WR8t=X7YVSB=Q@mail.gmail.com>
+From: Jyri Sarha <jsarha@ti.com>
+Subject: [PATCH 00/13] Fix OMAP4+ HDMI audio
+Date: Fri, 23 May 2014 22:07:49 +0300
+Message-ID: <cover.1400871999.git.jsarha@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAEUnVG42Fmn4QOu-jObpoyViscmfKn35oDmb=WR8t=X7YVSB=Q@mail.gmail.com>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: alsa-devel@alsa-project.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Cc: peter.ujfalusi@ti.com, broonie@kernel.org, liam.r.girdwood@linux.intel.com, bcousson@baylibre.com, tomi.valkeinen@ti.com, detheridge@ti.com, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/22/2014 09:55 PM, Dylan Reid wrote:
-...
->>>>>>>> On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-...
->>>>>>>>> Now I have the same results as Thierry; speaker-test looks like it
->>>>>>>>> should be working, yet I don't hear any audio from the monitor. I know
->>>>>>>>> the monitor works, since I've used it extensively for testing GeForce
->>>>>>>>> GPU HDMI audio.
-...
-> Took all day, but I did get to try this.
-> 
-> on U-Boot commit d7782d0, flashed with Stephen's u-boot flasher from github.
-> 
-> And kernel at 81d0207 - ARM: tegra: enable HD-Audio controller in defconfig
-> plus the addition of the hda node "okay"  to the jetson-tk1 DT.
-> 
-> I can hear the jetson's audio on the TV.  This is currently a sample
-> size of one TV, I'll set up the Quantum Data tomorrow and check that
-> it works there as well.
+This patch set fixes the resource sharing problems between
+omap-hdmi-dai driver and OMAPDSS HDMI driver. It does it by
+registering the OMAP HDMI audio related ASoC drivers from OMAPDSS HDMI
+driver. Platform data structs have been added for omap-hdmi-dai and
+omap-hdmi-card drivers to pass the information and resources from
+OMAPDSS HDMI driver.
 
-I tried that same U-Boot commit (with a few device-mode USB patches on
-top that shouldn't affect anything since I didn't use USB device mode)
-and have the same results.
+The idea of this patch set is to fix HDMI audio for the next release
+after it got broken by OMAPDSS DT changes. It does not mean that I
+have abandoned the patch set that integrates the omap-hdmi-dai driver
+into OMAPDSS HDMI driver. The OMAPDSS side of those patches just had
+some dependencies to the recent ASoC side patches that would have
+caused problems in the next merge. I'll mail a revised and rebased
+version of those patches soon.
 
-My monitor is a Dell U2410 with sound bar.
+Best regards,
+Jyri
 
-I did notice one strange thing: /proc/asound/card0/eld#3.0 said:
+Jyri Sarha (13):
+  ARM: omap4.dtsi: Add audio related parametes to hdmi node
+  ARM: omap5.dtsi: Add audio related parameters to hdmi node
+  ARM: OMAP2+: Remove non working OMAP HDMI audio initialization
+  OMAPDSS: hdmi_wp: Add function for getting hdmi_wp physical base
+    address
+  OMAPDSS: hdmi_audio: Add hdmi_audio.c for registering HDMI audio
+    support
+  ASoC: omap-hdmi-dai: Add platform data struct for omap-hdmi-dai
+    driver
+  ASoC: omap-hdmi-card: Add platform data stuct for omap-hdmi-card
+    driver
+  ASoC: omap-hdmi: Changes for registeing the driver from OMAPDSS
+  ASoC: omap-hdmi-card: Changes for registeing the driver from OMAPDSS
+  OMAPDSS: hdmi4: Register HDMI audio ASoC drivers from HDMI driver
+  OMAPDSS: hdmi.h: Add HDMI_AUDIO_LAYOUT_6CH enum value
+  OMAPDSS: hdmi5: Register HDMI audio ASoC drivers from HDMI driver
+  ASoC: omap: Add Kconfig option for OMAP5 HDMI audio
 
-monitor_present		0
-eld_valid		0
+ arch/arm/boot/dts/omap4.dtsi               |    2 +
+ arch/arm/boot/dts/omap5.dtsi               |    2 +
+ arch/arm/mach-omap2/devices.c              |   28 ---------
+ drivers/video/fbdev/omap2/dss/Makefile     |    2 +-
+ drivers/video/fbdev/omap2/dss/hdmi.h       |   17 ++++-
+ drivers/video/fbdev/omap2/dss/hdmi4.c      |   15 +++++
+ drivers/video/fbdev/omap2/dss/hdmi5.c      |   15 +++++
+ drivers/video/fbdev/omap2/dss/hdmi_audio.c |   92 ++++++++++++++++++++++++++++
+ drivers/video/fbdev/omap2/dss/hdmi_wp.c    |    6 ++
+ include/sound/omap-hdmi-card-pdata.h       |   28 +++++++++
+ include/sound/omap-hdmi-dai-pdata.h        |   31 ++++++++++
+ sound/soc/omap/Kconfig                     |   13 +++-
+ sound/soc/omap/omap-hdmi-card.c            |   20 ++++--
+ sound/soc/omap/omap-hdmi.c                 |   65 +++++---------------
+ 14 files changed, 253 insertions(+), 83 deletions(-)
+ create mode 100644 drivers/video/fbdev/omap2/dss/hdmi_audio.c
+ create mode 100644 include/sound/omap-hdmi-card-pdata.h
+ create mode 100644 include/sound/omap-hdmi-dai-pdata.h
 
-This is odd, since ELD information really should be present. Perhaps
-tegradrm simply doesn't have the code to set up an eld yet though?
-Anyway, I thought that in the absence of ELD information, ALSA core fell
-back to allowing arbitrary audio formats to be used in the hope they'd
-work anyway, so perhaps this isn't an issue.
+-- 
+1.7.9.5
+
