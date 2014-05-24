@@ -1,135 +1,112 @@
-From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Subject: Re: [PATCH] coccinelle: Check for missing NULL terminators in
- of_device_id tables
-Date: Sat, 24 May 2014 09:57:00 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1405240956220.2012@localhost6.localdomain6>
-References: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
+From: Tarek Dakhran <t.dakhran@samsung.com>
+Subject: Re: [PATCH v10 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
+Date: Sat, 24 May 2014 13:33:13 +0400
+Message-ID: <53806759.40908@samsung.com>
+References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com>
+ <1400841343-6016-2-git-send-email-t.dakhran@samsung.com>
+ <537FB995.5070604@gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400888504-31309-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>, Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <537FB995.5070604@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 May 2014, Stephen Boyd wrote:
+Hi Tomasz
 
-> Failure to terminate an of_device_id table can lead to confusing
-> failures depending on where the compiler places the array. Add a
-> check to make sure these tables are terminated. Thanks to Mitchel
-> Humpherys for coming up with the initial pattern.
-> 
-> Cc: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-> Cc: Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>
-> Cc: Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->  scripts/coccinelle/misc/of_table.cocci | 81 ++++++++++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 scripts/coccinelle/misc/of_table.cocci
-> 
-> diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/misc/of_table.cocci
-> new file mode 100644
-> index 000000000000..da8bfa69fa3e
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/of_table.cocci
-> @@ -0,0 +1,81 @@
-> +/// Make sure of_device_id tables are NULL terminated
-> +//
-> +// Keywords: of_table
-> +// Confidence: Medium
-> +// Options: --include-headers
-> +
-> +virtual patch
-> +virtual context
-> +virtual org
-> +virtual report
-> +
-> +@bad_of_table exists@
-> +identifier var, arr;
-> +expression E;
-> +@@
-> +... struct of_device_id arr[] = {
-> +	...,
-> +	{
-> +	...,
-> +	.var = E,
-> +	...
-> +	}
-> +};
+I faced another problem, while changing this patch.
+See below.
 
-You shouldn't need any of the ...s in these rules.
+On 05/24/2014 01:11 AM, Tomasz Figa wrote:
+> Hi Tarek,
+>
+> With v2 of the series I mentioned in review of previous version [1],
+> this patch can be skipped.
+>
+> [1] http://www.spinics.net/lists/linux-samsung-soc/msg31258.html
+>
+> Best regards,
+> Tomasz
+>
+> On 23.05.2014 12:35, Tarek Dakhran wrote:
+>> EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
+>> Add initial support for this SoC.
+>>
+>> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+>> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+>> ---
+>>   arch/arm/mach-exynos/Kconfig    |    8 ++++++++
+>>   arch/arm/mach-exynos/common.h   |   11 ++++++++++-
+>>   arch/arm/mach-exynos/firmware.c |    2 +-
+>>   3 files changed, 19 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+>> index 1602abc..79a3e85 100644
+>> --- a/arch/arm/mach-exynos/Kconfig
+>> +++ b/arch/arm/mach-exynos/Kconfig
+>> @@ -84,6 +84,14 @@ config SOC_EXYNOS5250
+>>   	help
+>>   	  Enable EXYNOS5250 SoC support
+>>   
+>> +config SOC_EXYNOS5410
+>> +	bool "SAMSUNG EXYNOS5410"
+>> +	default y
+>> +	depends on ARCH_EXYNOS5
+>> +	select PM_GENERIC_DOMAINS if PM_RUNTIME
+>> +	help
+>> +	  Enable EXYNOS5410 SoC support
+>> +
+>>   config SOC_EXYNOS5420
+>>   	bool "SAMSUNG EXYNOS5420"
+>>   	default y
+>> diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
+>> index e2d0954..d64c6de 100644
+>> --- a/arch/arm/mach-exynos/common.h
+>> +++ b/arch/arm/mach-exynos/common.h
+>> @@ -21,6 +21,7 @@
+>>   #define EXYNOS4_CPU_MASK	0xFFFE0000
+>>   
+>>   #define EXYNOS5250_SOC_ID	0x43520000
+>> +#define EXYNOS5410_SOC_ID	0xE5410000
+>>   #define EXYNOS5420_SOC_ID	0xE5420000
+>>   #define EXYNOS5440_SOC_ID	0xE5440000
+>>   #define EXYNOS5_SOC_MASK	0xFFFFF000
+>> @@ -37,6 +38,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
+>>   IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
+>>   IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
+>>   IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
+>> +IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
+>>   IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
+>>   IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>>   
+>> @@ -68,6 +70,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>>   # define soc_is_exynos5250()	0
+>>   #endif
+>>   
+>> +#if defined(CONFIG_SOC_EXYNOS5410)
+>> +# define soc_is_exynos5410()	is_samsung_exynos5410()
+>> +#else
+>> +# define soc_is_exynos5410()	0
+>> +#endif
+>> +
+>>   #if defined(CONFIG_SOC_EXYNOS5420)
+>>   # define soc_is_exynos5420()	is_samsung_exynos5420()
+>>   #else
+>> @@ -82,7 +90,8 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>>   
+>>   #define soc_is_exynos4() (soc_is_exynos4210() || soc_is_exynos4212() || \
+>>   			  soc_is_exynos4412())
+>> -#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5420())
+>> +#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5410() || \
+>> +			  soc_is_exynos5420())
+>>   
+This is the place where we need it.
+Or this macro should be changed (maybe read compatible property from dt).
 
-julia
+-- 
+Best regards,
+     Tarek Dakhran
 
-> +@depends on bad_of_table && context@
-> +identifier var, arr;
-> +expression E;
-> +@@
-> + ... struct of_device_id arr[] = {
-> +	...,
-> +	{
-> +	...,
-> +*	.var = E,
-> +	...
-> +	}
-> +};
-> +
-> +@depends on bad_of_table && patch@
-> +identifier var, arr;
-> +expression E;
-> +@@
-> +... struct of_device_id arr[] = {
-> +	...,
-> +	{
-> +	...,
-> +	.var = E,
-> +	...
-> +-	}
-> ++	},
-> ++	{ }
-> +};
-> +
-> +@r depends on bad_of_table exists@
-> +position p1;
-> +identifier var, arr;
-> +expression E;
-> +@@
-> +... struct of_device_id arr[] = {
-> +	...,
-> +	{
-> +	...,
-> +	.var = E,
-> +	...
-> +	}
-> +	@p1
-> +};
-> +
-> +@script:python depends on org@
-> +p1 << r.p1;
-> +arr << r.arr;
-> +@@
-> +
-> +cocci.print_main(arr,p1)
-> +
-> +@script:python depends on report@
-> +p1 << r.p1;
-> +arr << r.arr;
-> +@@
-> +
-> +msg = "%s is not NULL terminated at line %s" % (arr, p1[0].line)
-> +coccilib.report.print_report(p1[0],msg)
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
