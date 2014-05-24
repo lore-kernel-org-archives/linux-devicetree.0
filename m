@@ -1,123 +1,156 @@
-From: Lars-Peter Clausen <lars@metafoo.de>
-Subject: Re: [PATCH 2/2] ASoC: Add support for CS4265 CODEC
-Date: Sat, 24 May 2014 18:14:50 +0200
-Message-ID: <5380C57A.9050603@metafoo.de>
-References: <1400872614-21666-1-git-send-email-Paul.Handrigan@cirrus.com>
- <1400872614-21666-2-git-send-email-Paul.Handrigan@cirrus.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v10 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
+Date: Sat, 24 May 2014 19:44:24 +0200
+Message-ID: <5380DA78.5040900@gmail.com>
+References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com> <1400841343-6016-2-git-send-email-t.dakhran@samsung.com> <537FB995.5070604@gmail.com> <53806759.40908@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1400872614-21666-2-git-send-email-Paul.Handrigan@cirrus.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Paul Handrigan <Paul.Handrigan@cirrus.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, broonie@kernel.org, brian.austin@cirrus.com, lgirdwood@gmail.com, robh+dt@kernel.org, galak@codeaurora.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53806759.40908@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tarek Dakhran <t.dakhran@samsung.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2014 09:16 PM, Paul Handrigan wrote:
-[...]
+Hi Tarek,
 
-A couple of trivial bits:
+On 24.05.2014 11:33, Tarek Dakhran wrote:
+> Hi Tomasz
+> 
+> I faced another problem, while changing this patch.
+> See below.
+> 
+> On 05/24/2014 01:11 AM, Tomasz Figa wrote:
+>> Hi Tarek,
+>>
+>> With v2 of the series I mentioned in review of previous version [1],
+>> this patch can be skipped.
+>>
+>> [1] http://www.spinics.net/lists/linux-samsung-soc/msg31258.html
+>>
+>> Best regards,
+>> Tomasz
+>>
+>> On 23.05.2014 12:35, Tarek Dakhran wrote:
+>>> EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
+>>> Add initial support for this SoC.
+>>>
+>>> Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+>>> Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
+>>> ---
+>>>   arch/arm/mach-exynos/Kconfig    |    8 ++++++++
+>>>   arch/arm/mach-exynos/common.h   |   11 ++++++++++-
+>>>   arch/arm/mach-exynos/firmware.c |    2 +-
+>>>   3 files changed, 19 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
+>>> index 1602abc..79a3e85 100644
+>>> --- a/arch/arm/mach-exynos/Kconfig
+>>> +++ b/arch/arm/mach-exynos/Kconfig
+>>> @@ -84,6 +84,14 @@ config SOC_EXYNOS5250
+>>>       help
+>>>         Enable EXYNOS5250 SoC support
+>>>   +config SOC_EXYNOS5410
+>>> +    bool "SAMSUNG EXYNOS5410"
+>>> +    default y
+>>> +    depends on ARCH_EXYNOS5
+>>> +    select PM_GENERIC_DOMAINS if PM_RUNTIME
+>>> +    help
+>>> +      Enable EXYNOS5410 SoC support
+>>> +
+>>>   config SOC_EXYNOS5420
+>>>       bool "SAMSUNG EXYNOS5420"
+>>>       default y
+>>> diff --git a/arch/arm/mach-exynos/common.h
+>>> b/arch/arm/mach-exynos/common.h
+>>> index e2d0954..d64c6de 100644
+>>> --- a/arch/arm/mach-exynos/common.h
+>>> +++ b/arch/arm/mach-exynos/common.h
+>>> @@ -21,6 +21,7 @@
+>>>   #define EXYNOS4_CPU_MASK    0xFFFE0000
+>>>     #define EXYNOS5250_SOC_ID    0x43520000
+>>> +#define EXYNOS5410_SOC_ID    0xE5410000
+>>>   #define EXYNOS5420_SOC_ID    0xE5420000
+>>>   #define EXYNOS5440_SOC_ID    0xE5440000
+>>>   #define EXYNOS5_SOC_MASK    0xFFFFF000
+>>> @@ -37,6 +38,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID,
+>>> EXYNOS4_CPU_MASK)
+>>>   IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
+>>>   IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
+>>>   IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
+>>> +IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
+>>>   IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
+>>>   IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
+>>>   @@ -68,6 +70,12 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID,
+>>> EXYNOS5_SOC_MASK)
+>>>   # define soc_is_exynos5250()    0
+>>>   #endif
+>>>   +#if defined(CONFIG_SOC_EXYNOS5410)
+>>> +# define soc_is_exynos5410()    is_samsung_exynos5410()
+>>> +#else
+>>> +# define soc_is_exynos5410()    0
+>>> +#endif
+>>> +
+>>>   #if defined(CONFIG_SOC_EXYNOS5420)
+>>>   # define soc_is_exynos5420()    is_samsung_exynos5420()
+>>>   #else
+>>> @@ -82,7 +90,8 @@ IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID,
+>>> EXYNOS5_SOC_MASK)
+>>>     #define soc_is_exynos4() (soc_is_exynos4210() ||
+>>> soc_is_exynos4212() || \
+>>>                 soc_is_exynos4412())
+>>> -#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5420())
+>>> +#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5410()
+>>> || \
+>>> +              soc_is_exynos5420())
+>>>   
+> This is the place where we need it.
+> Or this macro should be changed (maybe read compatible property from dt).
+> 
 
-> @@ -300,6 +301,10 @@ config SND_SOC_CS42L73
->   	tristate "Cirrus Logic CS42L73 CODEC"
->   	depends on I2C
->
-> +config SND_SOC_CS4265
-> +	tristate "Cirrus Logic CS4265 CODEC"
-> +	depends on I2C
+The problem is in fact not here, but in code using this macro. Let's
+see, what git grep[1] gives us:
 
-select REGMAP_I2C
+> arch/arm/mach-exynos/exynos.c-static void __init exynos_map_io(void)
+> arch/arm/mach-exynos/exynos.c-{
+> arch/arm/mach-exynos/exynos.c-  if (soc_is_exynos4())
+> arch/arm/mach-exynos/exynos.c-          iotable_init(exynos4_iodesc, ARRAY_SIZE(exynos4_iodesc));
+> arch/arm/mach-exynos/exynos.c-
+> arch/arm/mach-exynos/exynos.c:  if (soc_is_exynos5())
+> arch/arm/mach-exynos/exynos.c-          iotable_init(exynos5_iodesc, ARRAY_SIZE(exynos5_iodesc));
 
-> +
->   # Cirrus Logic CS4270 Codec
->   config SND_SOC_CS4270
->   	tristate "Cirrus Logic CS4270 CODEC"
-> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-> index 1ccdaf0..b3c6b5f 100644
-[...]
-> diff --git a/sound/soc/codecs/cs4265.c b/sound/soc/codecs/cs4265.c
-> new file mode 100644
-> index 0000000..f7a6be9
-> --- /dev/null
-> +++ b/sound/soc/codecs/cs4265.c
-> @@ -0,0 +1,716 @@
-[...]
-> +struct cs4265_private {
-> +	struct cs4265_platform_data pdata;
-> +	struct regmap *regmap;
-> +	struct snd_soc_codec *codec;
-> +	struct device *dev;
+OK, so we have an array of static mappings, which can't be handled using
+DT yet. That would probably explain why it fails to boot.
 
-Both the codec and the dev field don't seem to be used.
+> arch/arm/mach-exynos/exynos.c-}
 
-> +	u8 format;
-> +	u32 sysclk;
-> +};
-> +
-[...]
-> +
-> +static const struct soc_enum digital_input_mux_enum =
-> +	SOC_ENUM_SINGLE(CS4265_SIG_SEL, 7,
-> +			ARRAY_SIZE(digital_input_mux_text),
-> +			digital_input_mux_text);
+> arch/arm/mach-exynos/exynos.c-static void __init exynos_dt_machine_init(void)
+> arch/arm/mach-exynos/exynos.c-{
+[snip]
+> arch/arm/mach-exynos/exynos.c:  if (soc_is_exynos5()) {
+> arch/arm/mach-exynos/exynos.c-          for_each_compatible_node(i2c_np, NULL, i2c_compat) {
+> arch/arm/mach-exynos/exynos.c-                  if (of_device_is_available(i2c_np)) {
+> arch/arm/mach-exynos/exynos.c-                          id = of_alias_get_id(i2c_np, "i2c");
+> arch/arm/mach-exynos/exynos.c-                          if (id < 4) {
+> arch/arm/mach-exynos/exynos.c-                                  tmp = readl(EXYNOS5_SYS_I2C_CFG);
+> arch/arm/mach-exynos/exynos.c-                                  writel(tmp & ~(0x1 << id),
+> arch/arm/mach-exynos/exynos.c-                                                  EXYNOS5_SYS_I2C_CFG);
+> arch/arm/mach-exynos/exynos.c-                          }
+> arch/arm/mach-exynos/exynos.c-                  }
+> arch/arm/mach-exynos/exynos.c-          }
 
-SOC_ENUM_SINGLE_DECL(), same for the other enums below.
+This one handles I2C interrupt signal mux and I'm not quite sure if
+soc_is_exynos5() is the right condition here, but at least it shouldn't
+cause crashes.
 
-> +
-[...]
-> +static struct snd_soc_dai_ops cs4265_ops = {
+OK, so this means that soc_is_exynos5410() must stay until the remaining
+low level drivers that currently use static mappings are rewritten
+properly. So the only bit to be dropped from this patch is the change to
+firmware.c, which is not needed any longer.
 
-const
+[1] The command used (on linux-next/master):
+git grep -20 soc_is_exynos5\( arch/arm/mach-exynos/
 
-> +	.hw_params	= cs4265_pcm_hw_params,
-> +	.digital_mute	= cs4265_digital_mute,
-> +	.set_fmt	= cs4265_set_fmt,
-> +	.set_sysclk	= cs4265_set_sysclk,
-> +};
-[...]
-> +static struct snd_soc_codec_driver soc_codec_dev_cs4265 = {
-
-const
-
-The soc_codec_dev_foobar naming scheme used in some older driver comes from 
-a time where there were no CODEC drivers. A better naming scheme for new 
-driver is foobar_codec_driver.
-
-> +	.probe = cs4265_probe,
-> +	.remove = cs4265_remove,
-> +	.set_bias_level = cs4265_set_bias_level,
-> +
-> +	.dapm_widgets = cs4265_dapm_widgets,
-> +	.num_dapm_widgets = ARRAY_SIZE(cs4265_dapm_widgets),
-> +	.dapm_routes = cs4265_audio_map,
-> +	.num_dapm_routes = ARRAY_SIZE(cs4265_audio_map),
-> +
-> +	.controls = cs4265_snd_controls,
-> +	.num_controls = ARRAY_SIZE(cs4265_snd_controls),
-> +};
-> +
-> +static struct regmap_config cs4265_regmap = {
-
-const
-
-> +	.reg_bits = 8,
-> +	.val_bits = 8,
-> +
-> +	.max_register = CS4265_MAX_REGISTER,
-> +	.reg_defaults = cs4265_reg_defaults,
-> +	.num_reg_defaults = ARRAY_SIZE(cs4265_reg_defaults),
-> +	.readable_reg = cs4265_readable_register,
-> +	.volatile_reg = cs4265_volatile_register,
-> +	.cache_type = REGCACHE_RBTREE,
-> +};
-> +
-[...]
+Best regards,
+Tomasz
