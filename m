@@ -1,55 +1,110 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: [PATCH] scripts/dtc: pad DTBs to facilitate later modification
-Date: Fri, 23 May 2014 16:41:47 -0700
-Message-ID: <1400888507-11637-1-git-send-email-khilman@linaro.org>
-Return-path: <linux-kbuild-owner@vger.kernel.org>
-Sender: linux-kbuild-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linaro-kernel@lists.linaro.org, Nicolas Pitre <nico@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Michal Marek <mmarek@suse.cz>, "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/5] clk: bcm281xx: add an initialized flag
+Date: Fri, 23 May 2014 17:33:44 -0700
+Message-ID: <20140524003344.23136.68999@quantum>
+References: <1400590362-11177-1-git-send-email-elder@linaro.org>
+ <1400590362-11177-2-git-send-email-elder@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400590362-11177-2-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-By default, add some padding to the DT blobs to facilitate later
-patching.
+Quoting Alex Elder (2014-05-20 05:52:38)
+> Add a flag that tracks whether a clock has already been initialized.
+> This will be used by the next patch to avoid initializing a clock
+> more than once when it's listed as a prerequisite.
+> 
+> Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  drivers/clk/bcm/clk-kona.c | 17 +++++++++++++++--
+>  drivers/clk/bcm/clk-kona.h |  7 +++++++
+>  2 files changed, 22 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+> index d603c4e..d8a7f38 100644
+> --- a/drivers/clk/bcm/clk-kona.c
+> +++ b/drivers/clk/bcm/clk-kona.c
+> @@ -27,6 +27,9 @@
+>  #define CCU_ACCESS_PASSWORD      0xA5A500
+>  #define CLK_GATE_DELAY_LOOP      2000
+>  
+> +#define clk_is_initialized(_clk)       FLAG_TEST((_clk), KONA, INITIALIZED)
+> +#define clk_set_initialized(_clk)      FLAG_SET((_clk), KONA, INITIALIZED)
+> +
+>  /* Bitfield operations */
+>  
+>  /* Produces a mask of set bits covering a range of a 32-bit value */
+> @@ -1194,13 +1197,23 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
+>  
+>  static bool __kona_clk_init(struct kona_clk *bcm_clk)
+>  {
+> +       bool ret;
+> +
+> +       if (clk_is_initialized(bcm_clk))
+> +               return true;
+> +
+>         switch (bcm_clk->type) {
+>         case bcm_clk_peri:
+> -               return __peri_clk_init(bcm_clk);
+> +               ret = __peri_clk_init(bcm_clk);
 
-An example need for DTB patching is the need to modifiy the command
-line on platforms where ATAGS are not (or cannot) be used to pass the
-commandline.  For example, we do not support a big-endian kernel
-reading ATAGS from a little-endian u-boot, so the only way to pass a
-command line in the DT.
+Hi Alex,
 
-Also, without ATAG support (or if u-boot was built without
-CONFIG_INITRD_TAG) the only way to pass an initrd is by adding an
-initrd= option to command line (in the DT).
+Going through this code, it's a bit hard to keep up ;-)
 
-Therefore, to facilitate adding to the DT command line directly in the
-DTB, add some padding.
+Does the call to __peri_clk_init enable the prereq clocks? If so, is
+their clk->prepare_count and clk->enable_count properly incremented?
 
-Cc: Nicolas Pitre <nico@linaro.org>
-Cc: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Signed-off-by: Kevin Hilman <khilman@linaro.org>
----
-I kinda pulled 64 bytes out of the air here since it's enough to add
-some common things to the commandline like debug, earlyprink
-initrd=<addr>,<size>, etc., but I'm certainlly not opposed to more
-padding.
+Thanks,
+Mike
 
- scripts/Makefile.lib | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-index 6a5b0decb797..d7a57c2620f3 100644
---- a/scripts/Makefile.lib
-+++ b/scripts/Makefile.lib
-@@ -264,7 +264,7 @@ $(obj)/%.dtb.S: $(obj)/%.dtb
- 
- quiet_cmd_dtc = DTC     $@
- cmd_dtc = $(CPP) $(dtc_cpp_flags) -x assembler-with-cpp -o $(dtc-tmp) $< ; \
--	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 \
-+	$(objtree)/scripts/dtc/dtc -O dtb -o $@ -b 0 -p 64 \
- 		-i $(dir $<) $(DTC_FLAGS) \
- 		-d $(depfile).dtc.tmp $(dtc-tmp) ; \
- 	cat $(depfile).pre.tmp $(depfile).dtc.tmp > $(depfile)
--- 
-1.9.2
-
+> +               break;
+>         default:
+> +               ret = false;
+>                 BUG();
+>         }
+> -       return -EINVAL;
+> +       if (ret)
+> +               clk_set_initialized(bcm_clk);
+> +
+> +       return ret;
+>  }
+>  
+>  /* Set a CCU and all its clocks into their desired initial state */
+> diff --git a/drivers/clk/bcm/clk-kona.h b/drivers/clk/bcm/clk-kona.h
+> index 2537b30..10e238d 100644
+> --- a/drivers/clk/bcm/clk-kona.h
+> +++ b/drivers/clk/bcm/clk-kona.h
+> @@ -406,6 +406,7 @@ struct kona_clk {
+>         struct clk_init_data init_data; /* includes name of this clock */
+>         struct ccu_data *ccu;   /* ccu this clock is associated with */
+>         enum bcm_clk_type type;
+> +       u32 flags;              /* BCM_CLK_KONA_FLAGS_* below */
+>         union {
+>                 void *data;
+>                 struct peri_clk_data *peri;
+> @@ -414,6 +415,12 @@ struct kona_clk {
+>  #define to_kona_clk(_hw) \
+>         container_of(_hw, struct kona_clk, hw)
+>  
+> +/*
+> + * Kona clock flags:
+> + *   INITIALIZED       clock has been initialized already
+> + */
+> +#define BCM_CLK_KONA_FLAGS_INITIALIZED ((u32)1 << 0)   /* Clock initialized */
+> +
+>  /* Initialization macro for an entry in a CCU's kona_clks[] array. */
+>  #define KONA_CLK(_ccu_name, _clk_name, _type)                          \
+>         {                                                               \
+> -- 
+> 1.9.1
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
