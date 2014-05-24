@@ -1,28 +1,37 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2 0/4] ks8851 DT/regulator/gpio updates
-Date: Sat, 24 May 2014 14:03:58 -0400 (EDT)
-Message-ID: <20140524.140358.1963098926345179335.davem@davemloft.net>
-References: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
+From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+Subject: Re: [PATCH v2 1/2] of: Ensure unique names without sacrificing
+ determinism
+Date: Sat, 24 May 2014 15:10:15 -0300
+Message-ID: <20140524181014.GA4011@arch.cereza>
+References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org>
+ <1400801769-4506-2-git-send-email-grant.likely@linaro.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <1400801769-4506-2-git-send-email-grant.likely@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@codeaurora.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Stephen Boyd <sboyd@codeaurora.org>
-Date: Fri, 23 May 2014 12:57:16 -0700
-
-> This set of patches properly documents the micrel ks8851 spi ethernet
-> controller, converts to devm_regulator_get_optional() to make error
-> paths slightly simpler, and finally adds supports for another
-> optional regulator and a reset gpio. This allows me to use the ks8851
-> on my MSM8960 CDP board.
+On 23 May 08:36 AM, Grant Likely wrote:
+> The way the driver core is implemented, every device using the same bus
+> type is required to have a unique name because a symlink to each device
+> is created in the appropriate /sys/bus/*/devices directory, and two
+> identical names causes a collision.
 > 
-> Changes since v1:
->  * Dropped vendor prefix patch as that should go through DT tree
+> The current code handles the requirement by using an globally
+> incremented counter that is appended to the device name. It works, but
+> it means any change to device registration will change the assigned
+> numbers. Instead, if we build up the name by using information from the
+> parent nodes, then it can be guaranteed to be unique without adding a
+> random number to the end of it.
+> 
+> Signed-off-by: Grant Likely <grant.likely@linaro.org>
 
-Series applied, thanks Stephen!
+Tested-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+
+-- 
+Ezequiel Garcia, VanguardiaSur
+www.vanguardiasur.com.ar
