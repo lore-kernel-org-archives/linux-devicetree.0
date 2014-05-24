@@ -1,61 +1,28 @@
-From: Marek Vasut <marex@denx.de>
-Subject: Re: [PATCH 1/3] dt: Add DT bindings documentation for SUNXI Security
- System
-Date: Sat, 24 May 2014 13:21:32 +0200
-Message-ID: <201405241321.32147.marex@denx.de>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com>
- <1400771396-9686-2-git-send-email-clabbe.montjoie@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v2 0/4] ks8851 DT/regulator/gpio updates
+Date: Sat, 24 May 2014 14:03:58 -0400 (EDT)
+Message-ID: <20140524.140358.1963098926345179335.davem@davemloft.net>
+References: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: Text/Plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400771396-9686-2-git-send-email-clabbe.montjoie@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, rdunlap@infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>, linux-crypto@vger.kernel.org, galak@codeaurora.org, grant.likely@linaro.org, maxime.ripard@free-electrons.com, davem@davemloft.net
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sboyd@codeaurora.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, nm@ti.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday, May 22, 2014 at 05:09:54 PM, LABBE Corentin wrote:
+From: Stephen Boyd <sboyd@codeaurora.org>
+Date: Fri, 23 May 2014 12:57:16 -0700
 
-Missing commit message. Please fix this and send a V2.
-
-> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
-> ---
->  Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
->  1 file changed, 9 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+> This set of patches properly documents the micrel ks8851 spi ethernet
+> controller, converts to devm_regulator_get_optional() to make error
+> paths slightly simpler, and finally adds supports for another
+> optional regulator and a reset gpio. This allows me to use the ks8851
+> on my MSM8960 CDP board.
 > 
-> diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt new file mode
-> 100644
-> index 0000000..356563b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-> @@ -0,0 +1,9 @@
-> +* Allwinner Security System found on A20 SoC
-> +
-> +Required properties:
-> +- compatible : Should be "allwinner,sun7i-a20-crypto".
+> Changes since v1:
+>  * Dropped vendor prefix patch as that should go through DT tree
 
-Why sun7i-a20 ? Is the crypto unit different in other sunxi chips ? Can that not 
-be described by DT props ?
-
-> +- reg: Should contain the SS register location and length.
-
-SS? What is that? Fix this text to be actually descriptive please.
-
-> +- interrupts: Should contain the IRQ line for the SS.
-> +- clocks : A phandle to the functional clock node of the SS module
-> +- clock-names : Name of the functional clock, should be "ahb" and "mod".
-> +
-
-Best regards,
-Marek Vasut
+Series applied, thanks Stephen!
