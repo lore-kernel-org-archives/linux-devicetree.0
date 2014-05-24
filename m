@@ -1,37 +1,50 @@
-From: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
-Subject: Re: [PATCH v2 1/2] of: Ensure unique names without sacrificing
- determinism
-Date: Sat, 24 May 2014 15:10:15 -0300
-Message-ID: <20140524181014.GA4011@arch.cereza>
-References: <1400801769-4506-1-git-send-email-grant.likely@linaro.org>
- <1400801769-4506-2-git-send-email-grant.likely@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/3] dt: Add DT bindings documentation for SUNXI Security
+ System
+Date: Sat, 24 May 2014 21:20:03 +0200
+Message-ID: <5380F0E3.7020008@gmail.com>
+References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <1400771396-9686-2-git-send-email-clabbe.montjoie@gmail.com> <201405241321.32147.marex@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400801769-4506-2-git-send-email-grant.likely@linaro.org>
+In-Reply-To: <201405241321.32147.marex@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh@kernel.org>
+To: Marek Vasut <marex@denx.de>, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, rdunlap@infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>, linux-crypto@vger.kernel.org, galak@codeaurora.org, grant.likely@linaro.org, maxime.ripard@free-electrons.com, davem@davemloft.net
 List-Id: devicetree@vger.kernel.org
 
-On 23 May 08:36 AM, Grant Likely wrote:
-> The way the driver core is implemented, every device using the same bus
-> type is required to have a unique name because a symlink to each device
-> is created in the appropriate /sys/bus/*/devices directory, and two
-> identical names causes a collision.
-> 
-> The current code handles the requirement by using an globally
-> incremented counter that is appended to the device name. It works, but
-> it means any change to device registration will change the assigned
-> numbers. Instead, if we build up the name by using information from the
-> parent nodes, then it can be guaranteed to be unique without adding a
-> random number to the end of it.
-> 
-> Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Hi Marek,
 
-Tested-by: Ezequiel Garcia <ezequiel@vanguardiasur.com.ar>
+On 24.05.2014 13:21, Marek Vasut wrote:
+> On Thursday, May 22, 2014 at 05:09:54 PM, LABBE Corentin wrote:
+> 
+> Missing commit message. Please fix this and send a V2.
+> 
+>> Signed-off-by: LABBE Corentin <clabbe.montjoie@gmail.com>
+>> ---
+>>  Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
+>>  1 file changed, 9 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+>> b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt new file mode
+>> 100644
+>> index 0000000..356563b
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+>> @@ -0,0 +1,9 @@
+>> +* Allwinner Security System found on A20 SoC
+>> +
+>> +Required properties:
+>> +- compatible : Should be "allwinner,sun7i-a20-crypto".
+> 
+> Why sun7i-a20 ? Is the crypto unit different in other sunxi chips ? Can that not 
+> be described by DT props ?
 
--- 
-Ezequiel Garcia, VanguardiaSur
-www.vanguardiasur.com.ar
+A widely used convention is to define compatible strings after first
+SoCs on which particular IP blocks appear. It is quite common among IP
+blocks for which there is no well defined versioning scheme.
+
+Best regards,
+Tomasz
