@@ -1,72 +1,106 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 1/3] dmaengine: mpc512x: add device tree binding document
-Date: Sat, 24 May 2014 13:33:27 +0400
-Message-ID: <1400924009-23992-2-git-send-email-a13xp0p0v88@gmail.com>
-References: <1400924009-23992-1-git-send-email-a13xp0p0v88@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400924009-23992-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Sat, 24 May 2014 12:06:30 +0200
+Message-ID: <53806F26.6050706@redhat.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com> <20140523162718.GE22111@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140523162718.GE22111@sirena.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Introduce a device tree binding document for the MPC512x DMA controller
+Hi,
 
-Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- .../devicetree/bindings/dma/mpc512x-dma.txt        | 40 ++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+On 05/23/2014 06:27 PM, Mark Brown wrote:
+> On Fri, May 23, 2014 at 01:50:40PM +0200, Hans de Goede wrote:
+>> On 05/23/2014 01:22 PM, Mark Brown wrote:
+> 
+>>> Would it not be better to have this be something in the driver struct
+>>> rather than in the device tree?  Putting a compatible in there would be
+>>> encoding details of the Linux implementation in the DT which doesn't
+>>> seem right especially since these are details we're thinking of changing
+>>> later on.
+> 
+>> The compatible is not a Linux specific thing, it is a marking saying
+>> that something needs to take care of enabling the clks (and whatever
+>> else we will make part of the binding for this compatible), before
+>> scanning the mmc bus.
+> 
+> We could just say that the mere presence of a child node with the right
+> properties is sufficient to trigger the bus to do the startup?
 
-diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-new file mode 100644
-index 0000000..b1cbc3f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-@@ -0,0 +1,40 @@
-+* Freescale MPC512x and MPC8308 DMA Controller
-+
-+The DMA controller in Freescale MPC512x and MPC8308 SoCs can move
-+blocks of memory contents between memory and peripherals or
-+from memory to memory.
-+
-+Refer to "Generic DMA Controller and DMA request bindings" in
-+the dma/dma.txt file for a more detailed description of binding.
-+
-+Required properties:
-+- compatible: Should be "fsl,mpc5121-dma" or "fsl,mpc8308-dma"
-+- reg: Address and size of the DMA controller's register set
-+- Interrupt for the DMA controller. Syntax of interrupt client node
-+	is described in interrupt-controller/interrupts.txt
-+
-+Optional properties:
-+- #dma-cells: The length of the DMA specifier, must be <1>.
-+	Each channel of this DMA controller has a peripheral request line,
-+	this assignment is fixed in hardware. The cell in dmas property
-+	of a client device represents the channel number
-+
-+Example:
-+
-+	dma0: dma@14000 {
-+		compatible = "fsl,mpc5121-dma";
-+		reg = <0x14000 0x1800>;
-+		interrupts = <65 0x8>;
-+		#dma-cells = <1>;
-+	};
-+
-+DMA clients must use the format described in dma/dma.txt
-+
-+Example:
-+
-+	sdhc@1500 {
-+		compatible = "fsl,mpc5121-sdhc";
-+		/* ... */
-+		dmas = <&dma0 30>;
-+		dma-names = "rx-tx";
-+	};
--- 
-1.8.4.2
+Yes, except that most involved property names are standardized, ie clocks,
+and we want to be able to opt out of the KISS mmc core code for
+(future) complex power on sequences.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+>>> Something like have the driver set flags saying if it wants
+>>> to do complicated things.
+> 
+>> Chicken <-> egg, we won't know which driver to use before we've probed
+>> the mmc bus, and we cannot probe the bus before enabling the clks, etc.
+> 
+> If the device is sufficiently complicated to need a special power up
+> sequence I'd expect we'd be able to have a compatible string which would
+> provide enough information for us to figure things out.
+
+Hmm, so what you're suggesting is indeed more of an opt out then my initial
+opt-in to KISS powerup idea. So to be clear what you're suggesting is:
+
+mmc core walks host mmc-child nodes. Loads drivers based on compatibles
+there. The checks a flag field in the driver to see if the driver wants to
+opt-out of the KISS powerup code. The problem with this is that it won't
+work reliable with modules, think the mmc probe being done from the ramdisk,
+and the driver in question only being available from the rootfs. I really
+believe that using opt-in with a compatible such as simple-sdio-powerup
+is by far the safest thing to do, and as an added advantage we don't need
+to worry about how to deal with the future complex power on cases at all,
+we leave all the room in the world for various future scenarios. since as
+soon as the simple-sdio-powerup compatible is not there the mmc core will
+behave as it does today.
+
+
+> 
+>>>> FWIW if we ever get truely complex cases I think modeling the
+>>>> power-up hardware as a pmic platform device is not a bad idea,
+>>>> we would then need to have a generic mmc-host pmic property, which
+>>>> would be used both to do the initial powerup before scanning, as
+>>>> well as for the sdio device driver to get a handle to the pmic,
+>>>> for run time power-management (if desired).
+> 
+>>> I don't know if this will ever apply to SDIO but with other buses the
+>>> complicated bits come when the driver wants to take over some of the
+>>> power management do things like turn some of the supplies or clocks on
+>>> and off independently at runtime for low power modes.
+> 
+>> Hmm, good point in that case actually having these things in the
+>> child node makes most sense, because then the driver can find them
+>> their. Note that the mmc core enabling things does not mean that
+>> the driver cannot later disable them if needed.
+> 
+> Right, that's good idea for solving the problem - the child device can
+> either share the reference with the bus or have some way of getting at
+> the object the bus requested depending on what's sensible.  Only
+> potentia complication I can think of with that approach is a device with
+> multiple bus interfaces (I'm mainly thinking of SDIO vs SPI) but it
+> doesn't seem to hard to deal with that in the bus adaption layers of the
+> drivers.
+
+I don't think there is a need to share references, ie for clks multiple drivers
+can hold a reference and they can be enabled / disabled multiple times, only
+when the last enable is countered by a disable the clock will really be disabled,
+iow this should all just work. Anyways these are all implementation details
+lets focus on the bindings bit first.
+
+Regards,
+
+Hans
+
+
+
+
