@@ -1,48 +1,42 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 1/5] phy: add support for USB cluster on the Armada 375
- SoC
-Date: Sat, 24 May 2014 08:46:58 +0200
-Message-ID: <20140524084658.30e307fb@free-electrons.com>
-References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com>
-	<537F12F5.2030102@ti.com>
-	<537FC2BE.1040501@free-electrons.com>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH RFC v13 0/5] MPC512x DMA slave s/g support, OF DMA lookup
+Date: Sat, 24 May 2014 11:33:15 +0400
+Message-ID: <CAF0T0X7v2oFkBOMETRCw128q=6wYZAX5qo3RQ7+0YwuVimMeMg@mail.gmail.com>
+References: <1400163335-29853-1-git-send-email-a13xp0p0v88@gmail.com>
+	<20140522051023.GV21128@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <537FC2BE.1040501@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140522051023.GV21128-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Gregory, Kishon,
+Thank you, Vinod
 
-On Fri, 23 May 2014 23:50:54 +0200, Gregory CLEMENT wrote:
+2014-05-22 9:10 GMT+04:00 Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
+> On Thu, May 15, 2014 at 06:15:30PM +0400, Alexander Popov wrote:
+>> Changes in v13:
+>>  A new patch (part 1/5) is added to this series.
+>>  Part 2/5:
+>>  - fix style issue;
+>>  - improve comments;
+>
+> You need to cc DT- list for 3 to 5 patches. Need ack before we can apply.
+In this v13 series parts 0/5, 3/5, 4/5 and 5/5 do have "Cc:
+devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org".
 
-> >> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
-> >> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>");
-> >> +MODULE_LICENSE("GPL");
-> > 
-> > GPL v2?
-> 
-> See the header, I chose "GNU General Public License version 2 or later."
-> so "GPL" match it.
+> I suspect 4/5 should come first out of these 3.
+Ok. I'll send v14 soon.
 
-And also, the vast majority of kernel drivers use
-MODULE_LICENSE("GPL") :
-
-$ git grep 'MODULE_LICENSE("GPL")' | wc -l
-5615
-$ git grep 'MODULE_LICENSE("GPLv2")' | wc -l
-5
-$ git grep 'MODULE_LICENSE("GPL v2")' | wc -l
-932
+> Also in future pls use right subsystem name "dmaengine". Also why are these
+> tagged as RFC still?
+Ok, thanks.
 
 Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Alexander
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
