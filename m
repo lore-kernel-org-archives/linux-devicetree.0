@@ -1,78 +1,48 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH 2/2] video: clps711x: Add bindings documentation for CLPS711X framebuffer
-Date: Sat, 24 May 2014 09:41:29 +0400
-Message-ID: <1400910089-15185-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 1/5] phy: add support for USB cluster on the Armada 375
+ SoC
+Date: Sat, 24 May 2014 08:46:58 +0200
+Message-ID: <20140524084658.30e307fb@free-electrons.com>
+References: <1400257376-13251-1-git-send-email-gregory.clement@free-electrons.com>
+	<537F12F5.2030102@ti.com>
+	<537FC2BE.1040501@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <537FC2BE.1040501@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Mathias Nyman <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add OF document for Cirrus Logic CLPS711X framebuffer driver.
+Gregory, Kishon,
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../bindings/video/cirrus,clps711x-fb.txt          | 47 ++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
+On Fri, 23 May 2014 23:50:54 +0200, Gregory CLEMENT wrote:
 
-diff --git a/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
-new file mode 100644
-index 0000000..6fc3c6a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
-@@ -0,0 +1,47 @@
-+* Currus Logic CLPS711X Framebuffer
-+
-+Required properties:
-+- compatible: Shall contain "cirrus,clps711x-fb".
-+- reg       : Physical base address and length of the controller's registers +
-+              location and size of the framebuffer memory.
-+- clocks    : phandle + clock specifier pair of the FB reference clock.
-+- display   : phandle to a display node as described in
-+              Documentation/devicetree/bindings/video/display-timing.txt.
-+              Additionally, the display node has to define properties:
-+  - bits-per-pixel: Bits per pixel.
-+  - ac-prescale   : LCD AC bias frequency. This frequency is the required
-+                    AC bias frequency for a given manufacturer's LCD plate.
-+  - cmap-invert   : Invert the color levels (Optional).
-+
-+Optional properties:
-+- lcd-supply: Regulator for LCD supply voltage.
-+
-+Example:
-+	fb: fb@800002c0 {
-+		compatible = "cirrus,ep7312-fb", "cirrus,clps711x-fb";
-+		reg = <0x800002c0 0xd44>, <0x60000000 0xc000>;
-+		clocks = <&clks 2>;
-+		lcd-supply = <&reg5v0>;
-+		display = <&display>;
-+	};
-+
-+	display: display {
-+		model = "320x240x4";
-+		native-mode = <&timing0>;
-+		bits-per-pixel = <4>;
-+		ac-prescale = <17>;
-+
-+		display-timings {
-+			timing0: 320x240 {
-+				hactive = <320>;
-+				hback-porch = <0>;
-+				hfront-porch = <0>;
-+				hsync-len = <0>;
-+				vactive = <240>;
-+				vback-porch = <0>;
-+				vfront-porch = <0>;
-+				vsync-len = <0>;
-+				clock-frequency = <6500000>;
-+			};
-+		};
-+	};
+> >> +MODULE_DESCRIPTION("Armada 375 USB cluster driver");
+> >> +MODULE_AUTHOR("Gregory CLEMENT <gregory.clement@free-electrons.com>");
+> >> +MODULE_LICENSE("GPL");
+> > 
+> > GPL v2?
+> 
+> See the header, I chose "GNU General Public License version 2 or later."
+> so "GPL" match it.
+
+And also, the vast majority of kernel drivers use
+MODULE_LICENSE("GPL") :
+
+$ git grep 'MODULE_LICENSE("GPL")' | wc -l
+5615
+$ git grep 'MODULE_LICENSE("GPLv2")' | wc -l
+5
+$ git grep 'MODULE_LICENSE("GPL v2")' | wc -l
+932
+
+Best regards,
+
+Thomas
 -- 
-1.8.5.5
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
