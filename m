@@ -1,41 +1,134 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH RFC v13 0/5] MPC512x DMA slave s/g support, OF DMA lookup
-Date: Sat, 24 May 2014 11:33:15 +0400
-Message-ID: <CAF0T0X7v2oFkBOMETRCw128q=6wYZAX5qo3RQ7+0YwuVimMeMg@mail.gmail.com>
-References: <1400163335-29853-1-git-send-email-a13xp0p0v88@gmail.com>
-	<20140522051023.GV21128@intel.com>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH] coccinelle: Check for missing NULL terminators in
+ of_device_id tables
+Date: Sat, 24 May 2014 09:57:00 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1405240956220.2012@localhost6.localdomain6>
+References: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140522051023.GV21128-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1400888504-31309-1-git-send-email-sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-b5Z7lJ3WibVrdx17CPfAsdBPR1lH4CV8@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>, Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>, Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thank you, Vinod
+On Fri, 23 May 2014, Stephen Boyd wrote:
 
-2014-05-22 9:10 GMT+04:00 Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>:
-> On Thu, May 15, 2014 at 06:15:30PM +0400, Alexander Popov wrote:
->> Changes in v13:
->>  A new patch (part 1/5) is added to this series.
->>  Part 2/5:
->>  - fix style issue;
->>  - improve comments;
->
-> You need to cc DT- list for 3 to 5 patches. Need ack before we can apply.
-In this v13 series parts 0/5, 3/5, 4/5 and 5/5 do have "Cc:
-devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org".
+> Failure to terminate an of_device_id table can lead to confusing
+> failures depending on where the compiler places the array. Add a
+> check to make sure these tables are terminated. Thanks to Mitchel
+> Humpherys for coming up with the initial pattern.
+> 
+> Cc: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+> Cc: Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>
+> Cc: Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  scripts/coccinelle/misc/of_table.cocci | 81 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/of_table.cocci
+> 
+> diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/misc/of_table.cocci
+> new file mode 100644
+> index 000000000000..da8bfa69fa3e
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/of_table.cocci
+> @@ -0,0 +1,81 @@
+> +/// Make sure of_device_id tables are NULL terminated
+> +//
+> +// Keywords: of_table
+> +// Confidence: Medium
+> +// Options: --include-headers
+> +
+> +virtual patch
+> +virtual context
+> +virtual org
+> +virtual report
+> +
+> +@bad_of_table exists@
+> +identifier var, arr;
+> +expression E;
+> +@@
+> +... struct of_device_id arr[] = {
+> +	...,
+> +	{
+> +	...,
+> +	.var = E,
+> +	...
+> +	}
+> +};
 
-> I suspect 4/5 should come first out of these 3.
-Ok. I'll send v14 soon.
+You shouldn't need any of the ...s in these rules.
 
-> Also in future pls use right subsystem name "dmaengine". Also why are these
-> tagged as RFC still?
-Ok, thanks.
+julia
 
-Best regards,
-Alexander
+> +@depends on bad_of_table && context@
+> +identifier var, arr;
+> +expression E;
+> +@@
+> + ... struct of_device_id arr[] = {
+> +	...,
+> +	{
+> +	...,
+> +*	.var = E,
+> +	...
+> +	}
+> +};
+> +
+> +@depends on bad_of_table && patch@
+> +identifier var, arr;
+> +expression E;
+> +@@
+> +... struct of_device_id arr[] = {
+> +	...,
+> +	{
+> +	...,
+> +	.var = E,
+> +	...
+> +-	}
+> ++	},
+> ++	{ }
+> +};
+> +
+> +@r depends on bad_of_table exists@
+> +position p1;
+> +identifier var, arr;
+> +expression E;
+> +@@
+> +... struct of_device_id arr[] = {
+> +	...,
+> +	{
+> +	...,
+> +	.var = E,
+> +	...
+> +	}
+> +	@p1
+> +};
+> +
+> +@script:python depends on org@
+> +p1 << r.p1;
+> +arr << r.arr;
+> +@@
+> +
+> +cocci.print_main(arr,p1)
+> +
+> +@script:python depends on report@
+> +p1 << r.p1;
+> +arr << r.arr;
+> +@@
+> +
+> +msg = "%s is not NULL terminated at line %s" % (arr, p1[0].line)
+> +coccilib.report.print_report(p1[0],msg)
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
