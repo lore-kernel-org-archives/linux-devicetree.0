@@ -1,69 +1,118 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/4] devicetree: bindings: Properly document micrel
- ks8851 SPI chips
-Date: Sat, 24 May 2014 13:48:58 +0100
-Message-ID: <20140524124858.GR22111@sirena.org.uk>
-References: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
- <1400875040-13269-2-git-send-email-sboyd@codeaurora.org>
+From: "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: Add support for CS4265 CODEC
+Date: Sat, 24 May 2014 14:18:52 +0000
+Message-ID: <4FF8B291-A17F-4C0E-98B9-82BD236440EA@cirrus.com>
+References: <1400872614-21666-1-git-send-email-Paul.Handrigan@cirrus.com>
+ <1400872614-21666-2-git-send-email-Paul.Handrigan@cirrus.com>,<20140523203945.GN22111@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0fu5tullpC+tJp0Y"
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400875040-13269-2-git-send-email-sboyd@codeaurora.org>
-Sender: netdev-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: "David S . Miller" <davem@davemloft.net>, Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140523203945.GN22111-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---0fu5tullpC+tJp0Y
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Fri, May 23, 2014 at 12:57:17PM -0700, Stephen Boyd wrote:
-
->  Optional properties:
-> -- vdd-supply:	supply for Ethernet mac
-> +- vdd-supply: analog 3.3V supply for Ethernet mac
-> +- vdd-io-supply: digital 1.8V IO supply for Ethernet mac
-
-So, according to the datasheet I managed to find this device has a
-supply VDD_IO (so normally written vdd-io-supply here), some other
-supplies which are tied to VDD_IO (so can probably be omitted) and a
-supply VDD_A3.3 none of which are optional.  There is an internal
-regulator which can be used to drop a higher voltage VDD_IO down for
-some of the supplies tied to it but that's essentially a noop from
-software as far as I can tell.  None of these supplies are obviously
-optional, though I've not read the datasheet in detail so I may have
-missed something here.
-
-That said it looks like this is intended to be a supply for an external
-PHY rather than the device itself, but even so my original question
-about it being able to operate without power still applies.  Looking at
-the code it's certainly not doing any of the handling of a missing
-supply that I would associate with using _optional().
-
---0fu5tullpC+tJp0Y
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTgJU3AAoJELSic+t+oim9+tAP/ifbdcUD5cDbQ44onjRvB2p3
-tk9sxYsW87abDW64X9KhzqTm6pUEG9ZBUC8qKN9T9l11RVU9I5PxzV9iEqovIJUV
-nnU9OwnoMjIie5Juwkg3d1gCIGBCB5lCEmPoUWUgop4zZFAxl49e1mCZPUgCofGQ
-qXA6FDoIVX06mWmVOYEZ1tfcTjcp0oZdaSl1sUlc27GJNMV0KCHulA+9PwakxpnS
-aYGVYL6CfO9HLQbkaBn+KvDMO0epfVg0GQVnRYiQ8Fh7ksYIcnz/OqVoKnbWTaMT
-gpcad3H4CmQk/sAUzBU7DPs2fgCWbTyERk864KtPt59rmFTlb9zq5JPxDy0Q+Gqi
-4IUlWDGzZb1ZKrH3nZIR/7bwe5QPZU3hs8JEblkmGNqfpPysP6a+GYF7xhxuUq6y
-IDlqkvEzvmYdiwAPe5UPo2hJ5Ie/UkKIE2MBiHoc09zXm63yj/wIFUb6JDf4In2X
-/QlQYMga49lceFtsuFoIoG/BYYz1CjUjwBFczwVo0aHMJRjNWRhhAB9UD8oR6D9k
-F67KhxClqMKl/MEf/pXVz5O+/CdMeE+m/0mhmHsRPmuIseswXPhD3G62BBG5DYID
-Ew2FjouY0JWsYq3tqKc0Oafn/pmkaDVueBi3VrWFLMOqtFLAuKWetC6Z5e1q7tbl
-t6egA/9IHlhl6LUQT1aq
-=TPgS
------END PGP SIGNATURE-----
-
---0fu5tullpC+tJp0Y--
+> On May 23, 2014, at 3:40 PM, "Mark Brown" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+>> On Fri, May 23, 2014 at 02:16:54PM -0500, Paul Handrigan wrote:
+>> This patch adds support for the Cirrus Logic Stereo I2C CODEC
+> 
+> This all looks pretty clean and nice, I have got a few comments below
+> but they're all pretty small things.
+> 
+>> +    SOC_SINGLE("De-emp 44.1kHz", CS4265_DAC_CTL, 1,
+>> +                1, 0),
+>> +    SOC_SINGLE("DAC INV", CS4265_DAC_CTL2, 5,
+>> +                1, 0),
+>> +    SOC_SINGLE("DAC Zero Cross", CS4265_DAC_CTL2, 6,
+>> +                1, 0),
+>> +    SOC_SINGLE("DAC Soft Ramp", CS4265_DAC_CTL2, 7,
+>> +                1, 0),
+> 
+> All boolean controls should have Switch at the end of the name.
+> 
+>> +    SOC_SINGLE("ADC HPF Disable", CS4265_ADC_CTL, 1,
+>> +                1, 0),
+> 
+> Invert this one and call it ADC HPF Switch (similarly for other disable
+> controls).
+> 
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(clk_map_table); i++) {
+>> +        if (clk_map_table[i].rate == rate &&
+>> +            clk_map_table[i].mclk == mclk)
+>> +            return i;
+> 
+> Indent the second line of the if condition with the (.
+> 
+>> +static int cs4265_set_sysclk(struct snd_soc_dai *codec_dai, int clk_id,
+>> +            unsigned int freq, int dir)
+>> +{
+>> +    struct snd_soc_codec *codec = codec_dai->codec;
+>> +    struct cs4265_private *cs4265 = snd_soc_codec_get_drvdata(codec);
+>> +    int i;
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(clk_map_table); i++) {
+>> +        if (clk_map_table[i].mclk == freq) {
+> 
+> It's better to check that clk_id is 0 here, just in case you think of
+> another clock to control in future (perhaps with a new device that can
+> share the same driver even if it's not possible for this one).
+> 
+>> +    {
+>> +        .name = "cs4265-spdif",
+>> +        .playback = {
+>> +            .stream_name = "SPDIF Playback",
+>> +            .channels_min = 1,
+>> +            .channels_max = 2,
+>> +            .rates = CS4265_SPDIF_RATES,
+>> +            .formats = CS4265_FORMATS,
+>> +        },
+>> +        .ops = &cs4265_ops,
+>> +    },
+> 
+> You should have separate operations for the DAC and S/PDIF DAIs and only
+> mute the relevant interfaces.  If you can't mute the DAC DAIs
+> independently just don't provide an operation and let the user control
+> it as they like.  This avoids problems if more than one stream is
+> running at once.
+> 
+>> +static int cs4265_probe(struct snd_soc_codec *codec)
+>> +{
+>> +    return 0;
+>> +}
+> 
+> Remove empty operations.
+> 
+>> +    } else {
+>> +        pdata = devm_kzalloc(&i2c_client->dev,
+>> +                     sizeof(struct cs4265_platform_data),
+>> +                GFP_KERNEL);
+>> +        if (!pdata) {
+>> +            dev_err(&i2c_client->dev, "could not allocate pdata\n");
+>> +            return -ENOMEM;
+>> +        }
+>> +        pdata->reset_gpio = of_get_named_gpio(i2c_client->dev.of_node,
+>> +                        "reset-gpio", 0);
+>> +        cs4265->pdata = *pdata;
+>> +    }
+> 
+> Can you convert this to use the new gpiod_ APIs and directly request by
+> name?  There's also the -gpios thing I mentioned for the binding.
+> 
+>> +    ret =  snd_soc_register_codec(&i2c_client->dev,
+>> +            &soc_codec_dev_cs4265, cs4265_dai,
+>> +            ARRAY_SIZE(cs4265_dai));
+>> +    return ret;
+> 
+> devm_
+Thanks.  I will make the changes as requested.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
