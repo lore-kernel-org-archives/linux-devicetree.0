@@ -1,136 +1,55 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 2/5] clk: bcm281xx: implement prerequisite clocks
-Date: Fri, 23 May 2014 17:53:58 -0700
-Message-ID: <20140524005358.23136.8918@quantum>
-References: <1400590362-11177-1-git-send-email-elder@linaro.org>
- <1400590362-11177-3-git-send-email-elder@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400590362-11177-3-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Subject: (unknown)
+Date: Fri, 23 May 2014 19:21:03 -0600
+Message-ID: <1400894467-1585-1-git-send-email-lho@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Subject: 
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Alex Elder (2014-05-20 05:52:39)
-> @@ -743,11 +746,16 @@ struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
->         clk = clk_register(NULL, &bcm_clk->hw);
->         if (IS_ERR(clk)) {
->                 pr_err("%s: error registering clock %s (%ld)\n", __func__,
-> -                       init_data->name, PTR_ERR(clk));
-> +                       name, PTR_ERR(clk));
->                 goto out_teardown;
->         }
->         BUG_ON(!clk);
->  
-> +       /*  Make it so we can look the clock up using clk_find() */
+This patch adds support for the APM X-Gene SoC EDAC driver.
 
-s/clk_find/clk_get/ ?
+v2:
+* Add EDAC entry in MAINTAINERS for APM EDAC driver
+* Remove the MC scrub patch
+* Remove the word 'Caches' from Kconfig
+* Change all MASK defines to use BIT(x)
+* Update comment or remove them
+* Wrap error injection code around CONFIG_EDAC_DEBUG
+* Change function name xgene_edac_mc_hw_init to xgene_edac_mc_irq_ctl
+* Change all function XXX_hw_init to XXX_hw_ctl
+* Fix typo 'activie'
+* Move calling function edac_mc_alloc after resource retrieval
+* Check for NULL on platform_get_resource return if reference directly
+* Add documentation for struct xgene_edac_pmd_ctx
+* Move L1 and L2 check out of function xgene_edac_pmd_check to its own
+  functions
+* Use for loop for configure each CPU of an PMD
+* Replace /2 by >> 1
+* Remove unnecessary comment on edac_device_add_device failure
+* Make mem_err_ip static const
+* Unwind EDAC register correctly if failed
+---
+Loc Ho (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
+  Documentation: Add documentation for the APM X-Gene SoC EDAC DTS
+    binding
+  edac: Add APM X-Gene SoC EDAC driver
+  arm64: Add APM X-Gene SoC EDAC DTS entries
 
-> +       bcm_clk->cl.con_id = name;
-> +       bcm_clk->cl.clk = clk;
-> +       clkdev_add(&bcm_clk->cl);
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   70 +
+ MAINTAINERS                                        |    8 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   89 +
+ drivers/edac/Kconfig                               |    9 +-
+ drivers/edac/Makefile                              |    3 +
+ drivers/edac/xgene_edac.c                          | 1993 ++++++++++++++++++++
+ 6 files changed, 2171 insertions(+), 1 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+ create mode 100644 drivers/edac/xgene_edac.c
 
-This is not so nice. I'll explain more below.
-
-> +
->         return clk;
->  out_teardown:
->         bcm_clk_teardown(bcm_clk);
-> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
-> index d8a7f38..fd070d6 100644
-> --- a/drivers/clk/bcm/clk-kona.c
-> +++ b/drivers/clk/bcm/clk-kona.c
-> @@ -1195,6 +1195,48 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
->         return true;
->  }
->  
-> +static bool __kona_clk_init(struct kona_clk *bcm_clk);
-> +static bool __kona_prereq_init(struct kona_clk *bcm_clk)
-> +{
-> +       struct clk *clk;
-> +       struct clk_hw *hw;
-> +       struct kona_clk *prereq;
-> +
-> +       BUG_ON(clk_is_initialized(bcm_clk));
-> +
-> +       if (!bcm_clk->p.prereq)
-> +               return true;
-> +
-> +       clk = clk_get(NULL, bcm_clk->p.prereq);
-
-The clkdev global namespace is getting polluted with all of these new
-prereq clocks. If there was an associated struct device *dev with them
-then it wouldn't be a problem, but you might get collisions with other
-clock drivers that also use NULL for the device.
-
-It would be a lot nicer for the clocks that require a prereq clock to
-just use clk_get(dev, "well_known_name"); in the same way that drivers
-use it, without considering it a special case.
-
-> +       if (IS_ERR(clk)) {
-> +               pr_err("%s: unable to get prereq clock %s for %s\n",
-> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
-> +               return false;
-> +       }
-> +       hw = __clk_get_hw(clk);
-> +       if (!hw) {
-> +               pr_err("%s: null hw pointer for clock %s\n", __func__,
-> +                       bcm_clk->init_data.name);
-> +               return false;
-> +       }
-> +       prereq = to_kona_clk(hw);
-> +       if (prereq->ccu != bcm_clk->ccu) {
-> +               pr_err("%s: prereq clock %s CCU different for clock %s\n",
-> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
-> +               return false;
-> +       }
-> +
-> +       /* Initialize the prerequisite clock first */
-> +       if (!__kona_clk_init(prereq)) {
-> +               pr_err("%s: failed to init prereq %s for clock %s\n",
-> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
-> +               return false;
-> +       }
-> +       bcm_clk->p.prereq_clk = clk;
-
-The above seems like a lot effort to go to. Why not skip all of this and
-just implement the prerequisite logic in the .enable & .disable
-callbacks? E.g. your kona clk .enable callback would look like:
-
-diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
-index d603c4e..51f35b4 100644
---- a/drivers/clk/bcm/clk-kona.c
-+++ b/drivers/clk/bcm/clk-kona.c
-@@ -987,6 +987,12 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
- {
- 	struct kona_clk *bcm_clk = to_kona_clk(hw);
- 	struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
-+	int ret;
-+
-+	hw->prereq_bus_clk = clk_get(hw->ccu, hw->prereq);
-+	ret = clk_enable(prereq_bus_clk);
-+	if (ret)
-+		return ret;
- 
- 	return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
- }
-@@ -997,6 +1003,9 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
- 	struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
- 
- 	(void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
-+
-+	clk_disable(hw->prereq_bus_clk);
-+	clk_put(hw->prereq_bus_clk);
- }
- 
- static int kona_peri_clk_is_enabled(struct clk_hw *hw)
-
-
-I guess it might take some trickery to get clk_get to work like that.
-Let me know if I've completely lost the plot.
-
-Regards,
-Mike
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
