@@ -1,66 +1,107 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] of_pci_irq: kill useless variable in of_irq_parse_pci()
-Date: Sun, 25 May 2014 22:50:06 +0400
-Message-ID: <201405252250.06937.sergei.shtylyov@cogentembedded.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Sun, 25 May 2014 21:20:52 +0200
+Message-ID: <53824294.1090609@redhat.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com> <20140523162718.GE22111@sirena.org.uk> <53806F26.6050706@redhat.com> <20140525123452.GS22111@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140525123452.GS22111@sirena.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-The 'lspec' variable only caused pointless promotions from u8 to u32 on each
-loop iteration, while it's enough to promote only once, after the loop.
+Hi,
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On 05/25/2014 02:34 PM, Mark Brown wrote:
+> On Sat, May 24, 2014 at 12:06:30PM +0200, Hans de Goede wrote:
+>> On 05/23/2014 06:27 PM, Mark Brown wrote:
+>>> On Fri, May 23, 2014 at 01:50:40PM +0200, Hans de Goede wrote:
+>>>> On 05/23/2014 01:22 PM, Mark Brown wrote:
+> 
+>>>> The compatible is not a Linux specific thing, it is a marking saying
+>>>> that something needs to take care of enabling the clks (and whatever
+>>>> else we will make part of the binding for this compatible), before
+>>>> scanning the mmc bus.
+> 
+>>> We could just say that the mere presence of a child node with the right
+>>> properties is sufficient to trigger the bus to do the startup?
+> 
+>> Yes, except that most involved property names are standardized, ie clocks,
+>> and we want to be able to opt out of the KISS mmc core code for
+>> (future) complex power on sequences.
+> 
+> This is why I'm suggesting keying off the specific compatible strings
+> for drivers that want to opt out of the helpers rather than having a
+> compatible string to enable the helpers (which may depend on the
+> particular Linux version if the feature sets of drivers change for
+> example).
+> 
+>>> If the device is sufficiently complicated to need a special power up
+>>> sequence I'd expect we'd be able to have a compatible string which would
+>>> provide enough information for us to figure things out.
+> 
+>> Hmm, so what you're suggesting is indeed more of an opt out then my initial
+>> opt-in to KISS powerup idea. So to be clear what you're suggesting is:
+> 
+>> mmc core walks host mmc-child nodes. Loads drivers based on compatibles
+>> there. The checks a flag field in the driver to see if the driver wants to
+>> opt-out of the KISS powerup code. The problem with this is that it won't
+> 
+> Yes.
+> 
+>> work reliable with modules, think the mmc probe being done from the ramdisk,
+>> and the driver in question only being available from the rootfs. I really
+> 
+> Why is that a problem - if we have no driver for the device there is no
+> point in powering it up in the first place is there?
 
----
-The patch is against Grant Likely's 'linux-2.6.git' repo's 'devicetree/next'
-branch. The original patch also got rid of the 'lspec_be' variable but it turned
-out to have been dealt with already in Grant's tree, so here's what remained...
+Well the driver may show up later, so if we only do the power-up once we have
+a driver, this means we need to re-check if we need to do the powerup later.
 
- drivers/of/of_pci_irq.c |    6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+Also the mmc people are very much against specifying a driver, as that is
+something which should be probed not specified. I agree with them I've
+already seen boards were more or less standardized sdio modules from different
+vendors are used, they have various standard sdio powerup related things, like
+an enable signal in standard places, but different editions of the boards
+have different sdio modules soldered on, using different drivers.
 
-Index: linux-2.6/drivers/of/of_pci_irq.c
-===================================================================
---- linux-2.6.orig/drivers/of/of_pci_irq.c
-+++ linux-2.6/drivers/of/of_pci_irq.c
-@@ -18,7 +18,6 @@ int of_irq_parse_pci(const struct pci_de
- {
- 	struct device_node *dn, *ppnode;
- 	struct pci_dev *ppdev;
--	u32 lspec;
- 	__be32 laddr[3];
- 	u8 pin;
- 	int rc;
-@@ -45,7 +44,6 @@ int of_irq_parse_pci(const struct pci_de
- 		return -ENODEV;
- 
- 	/* Now we walk up the PCI tree */
--	lspec = pin;
- 	for (;;) {
- 		/* Get the pci_dev of our parent */
- 		ppdev = pdev->bus->self;
-@@ -79,13 +77,13 @@ int of_irq_parse_pci(const struct pci_de
- 		/* We can only get here if we hit a P2P bridge with no node,
- 		 * let's do standard swizzling and try again
- 		 */
--		lspec = pci_swizzle_interrupt_pin(pdev, lspec);
-+		pin = pci_swizzle_interrupt_pin(pdev, pin);
- 		pdev = ppdev;
- 	}
- 
- 	out_irq->np = ppnode;
- 	out_irq->args_count = 1;
--	out_irq->args[0] = lspec;
-+	out_irq->args[0] = pin;
- 	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
- 	laddr[1] = laddr[2] = cpu_to_be32(0);
- 	return of_irq_parse_raw(laddr, out_irq);
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I expect that with some care we can make all variants of these boards work with
+a single dts file, by using a simple sdio wifi powerup mechanism, and after
+that letting the mmc core figure out which module is actually soldered on.
+
+>> believe that using opt-in with a compatible such as simple-sdio-powerup
+>> is by far the safest thing to do, and as an added advantage we don't need
+>> to worry about how to deal with the future complex power on cases at all,
+>> we leave all the room in the world for various future scenarios. since as
+>> soon as the simple-sdio-powerup compatible is not there the mmc core will
+>> behave as it does today.
+> 
+> Please remember that the DT is *supposed* to be an ABI - systems are
+> supposed to be able to ship with a fixed DT and have it work with random
+> operating systems they have no knowledge of (and may not even exist at
+> the time the DT is being created).  This means we can't rely on removing
+> a compatible string later on.
+
+I know that the DT is an ABI, and I'm not arguing for removing support for
+the simple-sdio-powerup compatible from the kernel when a more complex
+case arrives, nor am I arguing to remove it from the DT for existing working
+boards. The idea behind the simple-sdio-powerup compatible is that it makes
+the simple powerup behavior opt-in. So if a new board comes along which
+requires something more complex, the people working on this can do what ever
+they want / need without the simple powerup code getting in the way, as
+long as they don't *add* the simple-sdio-powerup compatible to their *new*
+DT file.
+
+Basically the idea behind the simple-sdio-powerup compatible is to make
+the worst case scenario for more complex boards to be the scenario which
+we have today, i.e. no support for sdio powerup at all, rather then having
+something in place which actually may get in the way, making things worse
+then they are today.
+
+Regards,
+
+Hans
