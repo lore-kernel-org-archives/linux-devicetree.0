@@ -1,61 +1,43 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] regulator: fixed: use of_property_read_{bool|u32}()
-Date: Sun, 25 May 2014 23:50:39 +0400
-Message-ID: <201405252350.40402.sergei.shtylyov@cogentembedded.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: Re: [PATCH v10 3/3] ARM: dts: Add initial device tree support for
+ EXYNOS5410
+Date: Mon, 26 May 2014 05:09:30 +0900
+Message-ID: <53824DFA.3020407@samsung.com>
+References: <1400841343-6016-1-git-send-email-t.dakhran@samsung.com> <1400841343-6016-4-git-send-email-t.dakhran@samsung.com> <537FBA7A.3000605@gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <537FBA7A.3000605@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: Tarek Dakhran <t.dakhran@samsung.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Romain Naour <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.>
 List-Id: devicetree@vger.kernel.org
 
-Use more compact of_property_read_{bool|u32}() calls instead of the
-of_{find|get}_property() calls.
+On 05/24/14 06:15, Tomasz Figa wrote:
+> Hi Tarek,
+>
+> On 23.05.2014 12:35, Tarek Dakhran wrote:
+>> Add initial device tree nodes for EXYNOS5410 SoC and SMDK5410 board.
+>>
+>> Signed-off-by: Tarek Dakhran<t.dakhran@samsung.com>
+>> Signed-off-by: Vyacheslav Tyrtov<v.tyrtov@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/Makefile                |    1 +
+>>   arch/arm/boot/dts/exynos5410-smdk5410.dts |   82 ++++++++++++
+>>   arch/arm/boot/dts/exynos5410.dtsi         |  206 +++++++++++++++++++++++++++++
+>>   3 files changed, 289 insertions(+)
+>>   create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+>>   create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+>
+> Looks good. Hopefully we can have this patch applied soon, so it won't
+> get outdated again.
+>
+Yes.
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Tarek, please respin as soon as possible.
 
----
-The patch is against Mark Brown's 'regulator.git' repo's 'for-next' branch.
+> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
+>
 
- drivers/regulator/fixed.c |   13 ++++---------
- 1 file changed, 4 insertions(+), 9 deletions(-)
-
-Index: regulator/drivers/regulator/fixed.c
-===================================================================
---- regulator.orig/drivers/regulator/fixed.c
-+++ regulator/drivers/regulator/fixed.c
-@@ -50,7 +50,6 @@ of_get_fixed_voltage_config(struct devic
- {
- 	struct fixed_voltage_config *config;
- 	struct device_node *np = dev->of_node;
--	const __be32 *delay;
- 	struct regulator_init_data *init_data;
- 
- 	config = devm_kzalloc(dev, sizeof(struct fixed_voltage_config),
-@@ -91,15 +90,11 @@ of_get_fixed_voltage_config(struct devic
- 	if ((config->gpio == -ENODEV) || (config->gpio == -EPROBE_DEFER))
- 		return ERR_PTR(-EPROBE_DEFER);
- 
--	delay = of_get_property(np, "startup-delay-us", NULL);
--	if (delay)
--		config->startup_delay = be32_to_cpu(*delay);
-+	of_property_read_u32(np, "startup-delay-us", &config->startup_delay);
- 
--	if (of_find_property(np, "enable-active-high", NULL))
--		config->enable_high = true;
--
--	if (of_find_property(np, "gpio-open-drain", NULL))
--		config->gpio_is_open_drain = true;
-+	config->enable_high = of_property_read_bool(np, "enable-active-high");
-+	config->gpio_is_open_drain = of_property_read_bool(np,
-+							   "gpio-open-drain");
- 
- 	if (of_find_property(np, "vin-supply", NULL))
- 		config->input_supply = "vin";
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Kukjin
