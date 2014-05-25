@@ -1,43 +1,93 @@
-From: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH 3/3] NFC: nci: Add T1T support notification
-Date: Sun, 25 May 2014 22:35:40 +0200
-Message-ID: <1401050140-15050-4-git-send-email-christophe-h.ricard@st.com>
-References: <1401050140-15050-1-git-send-email-christophe-h.ricard@st.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401050140-15050-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
-Cc: christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Subject: [PATCH v8 0/3] ARM: sunxi: Add support for consumer
+ infrared devices
+Date: Mon, 26 May 2014 04:26:42 +0600
+Message-ID: <1401056805-2218-1-git-send-email-bay@hackerdom.ru>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCLIFP6QZ4HRB463RGOAKGQEV6TSQJI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add T1T matching with Jewel during notification.
-It was causing "the target found does not have the desired protocol"
-to show up.
+This patch introduces Consumer IR(CIR) support for sunxi boards.
 
-Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
+This is based on Alexsey Shestacov's work based on the original driver 
+supplied by Allwinner.
+
+Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+
 ---
- net/nfc/nci/ntf.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+Changes since version 1: 
+ - Fix timer memory leaks 
+ - Fix race condition when driver unloads while interrupt handler is active
+ - Support Cubieboard 2(need testing)
 
-diff --git a/net/nfc/nci/ntf.c b/net/nfc/nci/ntf.c
-index f8f6af2..df91bb9 100644
---- a/net/nfc/nci/ntf.c
-+++ b/net/nfc/nci/ntf.c
-@@ -166,7 +166,9 @@ static int nci_add_new_protocol(struct nci_dev *ndev,
- 	struct rf_tech_specific_params_nfcf_poll *nfcf_poll;
- 	__u32 protocol;
- 
--	if (rf_protocol == NCI_RF_PROTOCOL_T2T)
-+	if (rf_protocol == NCI_RF_PROTOCOL_T1T)
-+		protocol = NFC_PROTO_JEWEL_MASK;
-+	else if (rf_protocol == NCI_RF_PROTOCOL_T2T)
- 		protocol = NFC_PROTO_MIFARE_MASK;
- 	else if (rf_protocol == NCI_RF_PROTOCOL_ISO_DEP)
- 		if (rf_tech_and_mode == NCI_NFC_A_PASSIVE_POLL_MODE)
+Changes since version 2:
+- More reliable keydown events
+- Documentation fixes
+- Rename registers accurding to A20 user manual
+- Remove some includes, order includes alphabetically
+- Use BIT macro
+- Typo fixes
+
+Changes since version 3:
+- Split the patch on smaller parts
+- More documentation fixes
+- Add clock-names in DT
+- Use devm_clk_get function to get the clocks
+- Removed gpios property from ir's DT
+- Changed compatible from allwinner,sunxi-ir to allwinner,sun7i-a20-ir in DT
+- Use spin_lock_irq instead spin_lock_irqsave in interrupt handler
+- Add myself in the copyright ;)
+- Coding style and indentation fixes
+
+Changes since version 4:
+- Try to fix indentation errors by sending patches with git send-mail
+
+Changes since version 5:
+- More indentation fixes
+- Make patches pass checkpatch with --strict option
+- Replaced magic numbers with defines(patch by Priit Laes)
+- Fixed oops on loading(patch by Hans de Goede)
+
+Changes since version 6:
+- Removed constants from code
+- Better errrors handling on loading
+- Renamed sunxi-ir.c to sunxi-cir.c
+- Changed description of second commit
+- Order entries in dts and dtsi by register address
+- Code style fixes
+
+Changes since version 7:
+- Removed a couple of blank lines in code
+- Delay interrupts init until we are ready to handle them
+- Increased the reported duration of each pulse by one
+- Refactored defines
+
+Alexander Bersenev (3):
+  ARM: sunxi: Add documentation for sunxi consumer infrared devices
+  [media] rc: add sunxi-ir driver
+  ARM: sunxi: Add IR controller support in DT on A20
+
+ .../devicetree/bindings/media/sunxi-ir.txt         |  23 ++
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |   6 +
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |   6 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |  32 +++
+ drivers/media/rc/Kconfig                           |  10 +
+ drivers/media/rc/Makefile                          |   1 +
+ drivers/media/rc/sunxi-cir.c                       | 313 +++++++++++++++++++++
+ 7 files changed, 391 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
+ create mode 100644 drivers/media/rc/sunxi-cir.c
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.3
