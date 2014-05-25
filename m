@@ -1,95 +1,131 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 1/3] dt: Add DT bindings documentation for SUNXI Security
- System
-Date: Sun, 25 May 2014 15:09:31 +0200
-Message-ID: <20140525130931.GI10768@lukather>
-References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com>
- <201405242143.42693.marex@denx.de>
- <5380F85F.7020601@gmail.com>
- <201405242159.30505.marex@denx.de>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] coccinelle: Check for missing NULL terminators in
+ of_device_id tables
+Date: Sun, 25 May 2014 09:13:17 -0500
+Message-ID: <CAL_JsqJyCzNV0xK_uPp4o4F1Jhi8QmTY3KaHfeLcssnTea5H+Q@mail.gmail.com>
+References: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="xQR6quUbZ63TTuTU"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <201405242159.30505.marex@denx.de>
+In-Reply-To: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marex@denx.de>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, rdunlap@infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, LABBE Corentin <clabbe.montjoie@gmail.com>, linux-crypto@vger.kernel.org, galak@codeaurora.org, grant.likely@linaro.org, davem@davemloft.net
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Michal Marek <mmarek@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mitchel Humpherys <mitchelh@codeaurora.org>, Julia Lawall <Julia.Lawall@lip6.fr>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, May 23, 2014 at 6:41 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> Failure to terminate an of_device_id table can lead to confusing
+> failures depending on where the compiler places the array. Add a
+> check to make sure these tables are terminated. Thanks to Mitchel
+> Humpherys for coming up with the initial pattern.
 
---xQR6quUbZ63TTuTU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+I've definitely debugged one of those problems. Do you have any actual
+fixes or there are no errors in the kernel?
 
-On Sat, May 24, 2014 at 09:59:30PM +0200, Marek Vasut wrote:
-> On Saturday, May 24, 2014 at 09:51:59 PM, Tomasz Figa wrote:
-> [...]
-> > >>> Why sun7i-a20 ? Is the crypto unit different in other sunxi chips ?=
- Can
-> > >>> that not be described by DT props ?
-> > >>=20
-> > >> A widely used convention is to define compatible strings after first
-> > >> SoCs on which particular IP blocks appear. It is quite common among =
-IP
-> > >> blocks for which there is no well defined versioning scheme.
-> > >=20
-> > > Well yeah, that's fine. But in this case, "sun7i" is the entire group=
- of
-> > > CPUs manufactured by AW. I find that information redundant, the
-> > > "allwinner,a20- crypto" would suffice. But I wonder if that IP block
-> > > might have appeared even earlier ? Or if it is CPU family specific, t=
-hus
-> > > "allwinner,sun7i-crypto" would be a better string ?
-> >=20
-> > I'm not aware of Allwinner naming schemes too much, so please correct me
-> > if I'm wrong, but if A20 implies sun7i, then "allwinner,a20-crypto"
-> > would be better indeed.
->=20
-> True.
->=20
-> > Whether it was really the first SoC is another thing. Obviously this
-> > needs to be checked, although it isn't really that important. For this
-> > particular naming scheme you need to specify all the SoCs for which
-> > given compatible string can be used for this IP anyway, because there is
-> > usually no other source of information about this available (except
-> > directly comparing two datasheets...).
->=20
-> Better get the DT stuff correctly right from the start. That's why I'm as=
-king=20
-> what chips contains the IP block, so we can guess the right name.
+Rob
 
-The name is fine, please stop this bikeshedding.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---xQR6quUbZ63TTuTU
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTgeuLAAoJEBx+YmzsjxAgAsgP/jOt5x1dVFqyNp8JHXhwwCM/
-+498kRuqZX2bYt5j0+c3kH2FzIA6AeEP9gFGry60I3gbdH1M/Tv3UxE9JLieMhid
-73UVhciaHwndN+i7J7GKGXNlpJa+7tEjAZvMMsgUWvDNUdLaotes/ogihA9s0TqG
-8QcKWVwG7ZeFNtvKOpdiTBncrH4AWmt7/6mD1A1ktk5S3RxbRlDh9VapmlQTVZ6O
-bSC08udgoUGjtD+aJd+Y9CGS7vfw8wpNLhFX4+14L/ciwTFtyAL9CadFzS1VF84Z
-AAjBgcIS0CjbULGC5xLzGXRgmh24dtO1bUhSh2tADG04LwurEf8d7qstPic/7qE6
-hbRK6b96vpAw+L6uvIrUIH/9DCpdlrIeLNoB89AODRGPFX4dSYowhKlQ+SF866CS
-wby1jyLTUepQ87NxSoTgzJEww49gtwKCZw5lEHi/jGo/Tzq01bZG/RpUPQyt+3WR
-fYE81HubHzi6NBtinJfiwNbCBDsq8Ha+GruDnONNaJ5N2jHh1jdn89wKH5//4pnn
-2L7wGz4a5gLEhL9QbZL/Ufyei58Kgkav04U0y6wRMGg3hMs3WopHHvN15gTBGlh6
-WIuuDz1d6cy3IDnqHcsRa+gahFZxwr3J2uNLjlGPYNTYIzVrLyJwWpH0yJUTK23F
-U6CiRpCzMCPq2gVFrVjk
-=oTL/
------END PGP SIGNATURE-----
-
---xQR6quUbZ63TTuTU--
+>
+> Cc: Mitchel Humpherys <mitchelh@codeaurora.org>
+> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+> Cc: Nicolas Palix <nicolas.palix@imag.fr>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> ---
+>  scripts/coccinelle/misc/of_table.cocci | 81 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 81 insertions(+)
+>  create mode 100644 scripts/coccinelle/misc/of_table.cocci
+>
+> diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/misc/of_table.cocci
+> new file mode 100644
+> index 000000000000..da8bfa69fa3e
+> --- /dev/null
+> +++ b/scripts/coccinelle/misc/of_table.cocci
+> @@ -0,0 +1,81 @@
+> +/// Make sure of_device_id tables are NULL terminated
+> +//
+> +// Keywords: of_table
+> +// Confidence: Medium
+> +// Options: --include-headers
+> +
+> +virtual patch
+> +virtual context
+> +virtual org
+> +virtual report
+> +
+> +@bad_of_table exists@
+> +identifier var, arr;
+> +expression E;
+> +@@
+> +... struct of_device_id arr[] = {
+> +       ...,
+> +       {
+> +       ...,
+> +       .var = E,
+> +       ...
+> +       }
+> +};
+> +
+> +@depends on bad_of_table && context@
+> +identifier var, arr;
+> +expression E;
+> +@@
+> + ... struct of_device_id arr[] = {
+> +       ...,
+> +       {
+> +       ...,
+> +*      .var = E,
+> +       ...
+> +       }
+> +};
+> +
+> +@depends on bad_of_table && patch@
+> +identifier var, arr;
+> +expression E;
+> +@@
+> +... struct of_device_id arr[] = {
+> +       ...,
+> +       {
+> +       ...,
+> +       .var = E,
+> +       ...
+> +-      }
+> ++      },
+> ++      { }
+> +};
+> +
+> +@r depends on bad_of_table exists@
+> +position p1;
+> +identifier var, arr;
+> +expression E;
+> +@@
+> +... struct of_device_id arr[] = {
+> +       ...,
+> +       {
+> +       ...,
+> +       .var = E,
+> +       ...
+> +       }
+> +       @p1
+> +};
+> +
+> +@script:python depends on org@
+> +p1 << r.p1;
+> +arr << r.arr;
+> +@@
+> +
+> +cocci.print_main(arr,p1)
+> +
+> +@script:python depends on report@
+> +p1 << r.p1;
+> +arr << r.arr;
+> +@@
+> +
+> +msg = "%s is not NULL terminated at line %s" % (arr, p1[0].line)
+> +coccilib.report.print_report(p1[0],msg)
+> --
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+>
