@@ -1,131 +1,75 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] coccinelle: Check for missing NULL terminators in
- of_device_id tables
-Date: Sun, 25 May 2014 09:13:17 -0500
-Message-ID: <CAL_JsqJyCzNV0xK_uPp4o4F1Jhi8QmTY3KaHfeLcssnTea5H+Q@mail.gmail.com>
-References: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
+From: Marek Vasut <marex@denx.de>
+Subject: Re: [PATCH 3/3] crypto: Add Allwinner Security System crypto accelerator
+Date: Sun, 25 May 2014 16:30:09 +0200
+Message-ID: <201405251630.09753.marex@denx.de>
+References: <1400771396-9686-1-git-send-email-clabbe.montjoie@gmail.com> <201405241400.03456.marex@denx.de> <5381DAEF.20007@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: Text/Plain;
+  charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org>
+In-Reply-To: <5381DAEF.20007@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michal Marek <mmarek@suse.cz>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Mitchel Humpherys <mitchelh@codeaurora.org>, Julia Lawall <Julia.Lawall@lip6.fr>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Corentin LABBE <clabbe.montjoie@gmail.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, maxime.ripard@free-electrons.com, linux@arm.linux.org.uk, herbert@gondor.apana.org.au, davem@davemloft.net, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 23, 2014 at 6:41 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> Failure to terminate an of_device_id table can lead to confusing
-> failures depending on where the compiler places the array. Add a
-> check to make sure these tables are terminated. Thanks to Mitchel
-> Humpherys for coming up with the initial pattern.
+On Sunday, May 25, 2014 at 01:58:39 PM, Corentin LABBE wrote:
 
-I've definitely debugged one of those problems. Do you have any actual
-fixes or there are no errors in the kernel?
+[...]
 
-Rob
+> > This is one IP block and it provides 5 algorithms. Put it under one
+> > config option please.
+> 
+> I want to let the user choose what it want to be used. Someone could want
+> only to accelerate md5 and to not use the PRNG. Lots of other hw crypto
+> driver do the same.
 
->
-> Cc: Mitchel Humpherys <mitchelh@codeaurora.org>
-> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-> Cc: Nicolas Palix <nicolas.palix@imag.fr>
-> Cc: Grant Likely <grant.likely@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> ---
->  scripts/coccinelle/misc/of_table.cocci | 81 ++++++++++++++++++++++++++++++++++
->  1 file changed, 81 insertions(+)
->  create mode 100644 scripts/coccinelle/misc/of_table.cocci
->
-> diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/misc/of_table.cocci
-> new file mode 100644
-> index 000000000000..da8bfa69fa3e
-> --- /dev/null
-> +++ b/scripts/coccinelle/misc/of_table.cocci
-> @@ -0,0 +1,81 @@
-> +/// Make sure of_device_id tables are NULL terminated
-> +//
-> +// Keywords: of_table
-> +// Confidence: Medium
-> +// Options: --include-headers
-> +
-> +virtual patch
-> +virtual context
-> +virtual org
-> +virtual report
-> +
-> +@bad_of_table exists@
-> +identifier var, arr;
-> +expression E;
-> +@@
-> +... struct of_device_id arr[] = {
-> +       ...,
-> +       {
-> +       ...,
-> +       .var = E,
-> +       ...
-> +       }
-> +};
-> +
-> +@depends on bad_of_table && context@
-> +identifier var, arr;
-> +expression E;
-> +@@
-> + ... struct of_device_id arr[] = {
-> +       ...,
-> +       {
-> +       ...,
-> +*      .var = E,
-> +       ...
-> +       }
-> +};
-> +
-> +@depends on bad_of_table && patch@
-> +identifier var, arr;
-> +expression E;
-> +@@
-> +... struct of_device_id arr[] = {
-> +       ...,
-> +       {
-> +       ...,
-> +       .var = E,
-> +       ...
-> +-      }
-> ++      },
-> ++      { }
-> +};
-> +
-> +@r depends on bad_of_table exists@
-> +position p1;
-> +identifier var, arr;
-> +expression E;
-> +@@
-> +... struct of_device_id arr[] = {
-> +       ...,
-> +       {
-> +       ...,
-> +       .var = E,
-> +       ...
-> +       }
-> +       @p1
-> +};
-> +
-> +@script:python depends on org@
-> +p1 << r.p1;
-> +arr << r.arr;
-> +@@
-> +
-> +cocci.print_main(arr,p1)
-> +
-> +@script:python depends on report@
-> +p1 << r.p1;
-> +arr << r.arr;
-> +@@
-> +
-> +msg = "%s is not NULL terminated at line %s" % (arr, p1[0].line)
-> +coccilib.report.print_report(p1[0],msg)
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
->
+I don't find this useful, most users will enable all of them anyway.
+
+> > Also, just shorted this to CONFIG_CRYPTO_SUNXI_SS , the _DEV stuff in the
+> > name is useless.
+> 
+> I think not, most of cryptographic hardware driver begin with CRYPTO_DEV
+> (CRYPTO_DEV_PADLOCK, CRYPTO_DEV_GEODE, CRYPTO_DEV_TALITOS etc...), only
+> S390 does not have a _DEV.
+
+OK. I don't mind either way.
+
+> > [...]
+> > 
+> >> diff --git a/drivers/crypto/sunxi-ss.c b/drivers/crypto/sunxi-ss.c
+> >> new file mode 100644
+> >> index 0000000..bbf57bc
+> >> --- /dev/null
+> >> +++ b/drivers/crypto/sunxi-ss.c
+> >> @@ -0,0 +1,1476 @@
+> >> +/*
+> >> + * sunxi-ss.c - hardware cryptographic accelerator for Allwinner A20
+> >> SoC
+> > 
+> > Why can this not be generic Allwinner-all-chips driver ? Does the IP
+> > block change that dramatically between the chips?
+> 
+> As I said in my introduction email, lots of allwinner chips seems to have
+> the same crypto device. But since I do not own any of those hardware, and
+> in most case does not have a datasheet, I only assume support for A20. I
+> will add this comment in the header of the driver.
+
+Can you ask others to test with other chips? Surely, you can easily prepare some 
+kind of a test for others to verify on their chips.
+
+[...]
+
+> >> +		dev_dbg(ss_ctx->dev, "DEBUG Seed %d %x\n", i, v);
+> >> +	}
+> > 
+> > But this debug instrumentation looks quite useless anyway.
+> 
+> As I said in my introduction mail, I cannot get PRNG to work, so it is the
+> reason of lots of dev_dbg() Anyway, I will remove them.
+
+Then please don't submit non-functional code for inclusion into kernel. Just 
+discard the PRNG part completely until it's operational. Submit just the 
+portions of code that are working please.
+[...]
