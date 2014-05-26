@@ -1,51 +1,78 @@
-From: Ivan Mikhaylov <ivan-JgLE2wv1ufrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] emac: add missing support of 10mbit in emac/rgmii
-Date: Mon, 26 May 2014 22:24:17 +0400
-Message-ID: <1401128657.24099.17.camel@localhost.localdomain>
+From: Ivan Mikhaylov <ivan@ru.ibm.com>
+Subject: [PATCH 2/2] emac: aggregation of v1-2 PLB errors for IER register
+Date: Mon, 26 May 2014 22:34:39 +0400
+Message-ID: <1401129279.24099.23.camel@localhost.localdomain>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Alistair Popple <alistair@popple.id.au>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-In chips of emac/rgmii b'000' for 0/1 channel isn't suitable which
-resulted in non working network interface in this mode.
+Aggreagation of version 1-2 because of version 1 can hit
+PLB errors too. If it's not set so we missing events for PLB bits
+and driver can't process those interrupts.
 
-Signed-off-by: Ivan Mikhaylov <ivan-JgLE2wv1ufrQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Ivan Mikhaylov <ivan@ru.ibm.com>
 
 ---
- drivers/net/ethernet/ibm/emac/rgmii.c | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/net/ethernet/ibm/emac/mal.c |  5 +----
+ drivers/net/ethernet/ibm/emac/mal.h | 20 ++++++++------------
+ 2 files changed, 9 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/net/ethernet/ibm/emac/rgmii.c b/drivers/net/ethernet/ibm/emac/rgmii.c
-index 4fb2f96..a01182c 100644
---- a/drivers/net/ethernet/ibm/emac/rgmii.c
-+++ b/drivers/net/ethernet/ibm/emac/rgmii.c
-@@ -45,6 +45,7 @@
+diff --git a/drivers/net/ethernet/ibm/emac/mal.c b/drivers/net/ethernet/ibm/emac/mal.c
+index 9d75fef..63eb959 100644
+--- a/drivers/net/ethernet/ibm/emac/mal.c
++++ b/drivers/net/ethernet/ibm/emac/mal.c
+@@ -682,10 +682,7 @@ static int mal_probe(struct platform_device *ofdev)
+ 		goto fail6;
  
- /* RGMIIx_SSR */
- #define RGMII_SSR_MASK(idx)	(0x7 << ((idx) * 8))
-+#define RGMII_SSR_10(idx)	(0x1 << ((idx) * 8))
- #define RGMII_SSR_100(idx)	(0x2 << ((idx) * 8))
- #define RGMII_SSR_1000(idx)	(0x4 << ((idx) * 8))
+ 	/* Enable all MAL SERR interrupt sources */
+-	if (mal->version == 2)
+-		set_mal_dcrn(mal, MAL_IER, MAL2_IER_EVENTS);
+-	else
+-		set_mal_dcrn(mal, MAL_IER, MAL1_IER_EVENTS);
++	set_mal_dcrn(mal, MAL_IER, MAL_IER_EVENTS);
  
-@@ -139,6 +140,8 @@ void rgmii_set_speed(struct platform_device *ofdev, int input, int speed)
- 		ssr |= RGMII_SSR_1000(input);
- 	else if (speed == SPEED_100)
- 		ssr |= RGMII_SSR_100(input);
-+	else if (speed == SPEED_10)
-+		ssr |= RGMII_SSR_10(input);
+ 	/* Enable EOB interrupt */
+ 	mal_enable_eob_irq(mal);
+diff --git a/drivers/net/ethernet/ibm/emac/mal.h b/drivers/net/ethernet/ibm/emac/mal.h
+index e431a32..eeade2e 100644
+--- a/drivers/net/ethernet/ibm/emac/mal.h
++++ b/drivers/net/ethernet/ibm/emac/mal.h
+@@ -95,24 +95,20 @@
  
- 	out_be32(&p->ssr, ssr);
  
+ #define MAL_IER			0x02
++/* MAL IER bits */
+ #define   MAL_IER_DE		0x00000010
+ #define   MAL_IER_OTE		0x00000004
+ #define   MAL_IER_OE		0x00000002
+ #define   MAL_IER_PE		0x00000001
+-/* MAL V1 IER bits */
+-#define   MAL1_IER_NWE		0x00000008
+-#define   MAL1_IER_SOC_EVENTS	MAL1_IER_NWE
+-#define   MAL1_IER_EVENTS	(MAL1_IER_SOC_EVENTS | MAL_IER_DE | \
+-				 MAL_IER_OTE | MAL_IER_OE | MAL_IER_PE)
+ 
+-/* MAL V2 IER bits */
+-#define   MAL2_IER_PT		0x00000080
+-#define   MAL2_IER_PRE		0x00000040
+-#define   MAL2_IER_PWE		0x00000020
+-#define   MAL2_IER_SOC_EVENTS	(MAL2_IER_PT | MAL2_IER_PRE | MAL2_IER_PWE)
+-#define   MAL2_IER_EVENTS	(MAL2_IER_SOC_EVENTS | MAL_IER_DE | \
+-				 MAL_IER_OTE | MAL_IER_OE | MAL_IER_PE)
++/* PLB read/write/timeout errors */
++#define   MAL_IER_PTE		0x00000080
++#define   MAL_IER_PRE		0x00000040
++#define   MAL_IER_PWE		0x00000020
+ 
++#define   MAL_IER_SOC_EVENTS	(MAL_IER_PTE | MAL_IER_PRE | MAL_IER_PWE)
++#define   MAL_IER_EVENTS	(MAL_IER_SOC_EVENTS | MAL_IER_DE | \
++				 MAL_IER_OTE | MAL_IER_OE | MAL_IER_PE)
+ 
+ #define MAL_TXCASR		0x04
+ #define MAL_TXCARR		0x05
 -- 
 1.9.3
-
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
