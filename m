@@ -1,37 +1,49 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH] regulator: fixed: use of_property_read_{bool|u32}()
-Date: Mon, 26 May 2014 21:33:34 +0400
-Message-ID: <53837AEE.7030400@cogentembedded.com>
-References: <201405252350.40402.sergei.shtylyov@cogentembedded.com> <20140526151958.GU22111@sirena.org.uk>
+From: HUSAM AL SAYED <Husamalsayed-NQqDYL4TTn4@public.gmane.org>
+Subject: Your Urgent reply.
+Date: Mon, 26 May 2014 21:48:30 +0400
+Message-ID: <CAKFyHypd-mm7NKb_O2+eTTyqcxKZvEkyegnSjeyX8deOXPrZCA__33672.1077016138$1401126527$gmane$org@mail.gmail.com>
+Reply-To: Husamalsayed-NQqDYL4TTn4@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140526151958.GU22111-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Dear Friend,
 
-On 05/26/2014 07:19 PM, Mark Brown wrote:
 
->> Use more compact of_property_read_{bool|u32}() calls instead of the
->> of_{find|get}_property() calls.
+Compliments of the day.This mail May be a surprise to you Because you
+did not give me the permission to do so and Neither do you know me but
+before I tell you about myself I want you to please forgive me for
+sending this mail without your permission I have been in search of
+someone with this last name so when I saw you online, I was pushed to
+contact you and see how best we can assist each other. I am Mr. Husam
+Al Sayed, a Bank Officer here in U.A.E. I believe it is the wish of
+God for me to come across you now. I am having an important business
+discussion I wish to share with you which I  believe will interest
+you, because it is in connection with your last name and you are going
+to benefit from it.
 
-> Applied, thanks.
+One Late peter who was among the death victims in the May 27 2006
+Earthquake disaster in Java, Indonesia that killed over 5,000 people.
+He was in Indonesia on a business trip and that was how he met his
+end. My bank management is yet to know about his death, I knew about
+it because he was my friend and I am his account officer.he did not
+mention any Next of Kin/ Heir when the account was opened, and he was
+not married and no children. Last week my Bank Management requested
+that he should give instructions on what to do about his funds,I know
+this will happen and that is why I have been looking for a means to
+handle the situation,
 
-    Thank you for the quick reply! :-)
+If you are interested send me your private Email Address so that i can
+send you more details of the transaction,
+Thanks for your understanding
 
->  Always CC mailing lists on patches.
+I am waiting for your reply.
 
-    Er, I did CC devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org but (as usual) avoided CCing LKML 
--- that's all the lists scripts/get_maintainer.pl suggested. Do you mean some 
-other list I don't know about?
+Best regards,
 
-WBR, Sergei
-
+Mr. Husam Al Sayed
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
