@@ -1,38 +1,91 @@
-From: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Subject: Re: [PATCH] NFC: dts: st21nfca_i2c: Correct minor typo in
- documentation
-Date: Mon, 26 May 2014 00:48:24 +0200
-Message-ID: <20140525224824.GA12989@zurbaran>
-References: <1400615104-3864-1-git-send-email-christophe-h.ricard@st.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 2/2] ARM: shmobile: r8a7779 dtsi: Update
+ unit-addresses for clocks
+Date: Mon, 26 May 2014 09:44:19 +0900
+Message-ID: <20140526004419.GC31096@verge.net.au>
+References: <1400831180-20409-1-git-send-email-geert+renesas@glider.be>
+ <1400831180-20409-3-git-send-email-geert+renesas@glider.be>
+ <11119685.9RVVTTLT6z@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1400615104-3864-1-git-send-email-christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Christophe Ricard <christophe.ricard-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: linux-nfc-hn68Rpc1hR1g9hUCZPvPmw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, christophe-h.ricard-qxv4g6HH51o@public.gmane.org
+In-Reply-To: <11119685.9RVVTTLT6z@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Christophe,
-
-On Tue, May 20, 2014 at 09:45:04PM +0200, Christophe Ricard wrote:
-> Replaced st,st21nfca-i2c by st,st21nfca_i2c to be concistent
-> with below configuration and driver in drivers/nfc/st21nfca/
+On Fri, May 23, 2014 at 11:36:51AM +0200, Laurent Pinchart wrote:
+> Hi Geert,
 > 
-> Signed-off-by: Christophe Ricard <christophe-h.ricard-qxv4g6HH51o@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/net/nfc/st21nfca.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-Applied to nfc-next, thanks.
+> Thank you for the patch.
+> 
+> On Friday 23 May 2014 09:46:20 Geert Uytterhoeven wrote:
+> >   - Correct the unit-address for the "cpg_clocks" node,
+> >   - Add missing unit-addresses for the "mstp*_clks" nodes,
+> >   - Rename "cpg_clocks" and "mstp*_clks" nodes to the more generic
+> >     "clocks".
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert@linux-m68k.org>
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-Cheers,
-Samuel.
+Thanks, I will queue this up.
 
--- 
-Intel Open Source Technology Centre
-http://oss.intel.com/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> > ---
+> > v2:
+> >   - Spun-off from "ARM: shmobile: r8a7779 dtsi: Correct #address-cells/
+> >     #size-cells for clocks".
+> >   - Removed "0x" prefix from cpg_clocks unit-address,
+> >   - Renamed cpg_clocks and mstp*_clks nodes to the more generic "clocks".
+> > 
+> >  arch/arm/boot/dts/r8a7779.dtsi | 8 ++++----
+> >  1 file changed, 4 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+> > index 395a611e2b5a..61d08f42456c 100644
+> > --- a/arch/arm/boot/dts/r8a7779.dtsi
+> > +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> > @@ -298,7 +298,7 @@
+> >  		};
+> > 
+> >  		/* Special CPG clocks */
+> > -		cpg_clocks: cpg_clocks@0xe6150000 {
+> > +		cpg_clocks: clocks@ffc80000 {
+> >  			compatible = "renesas,r8a7779-cpg-clocks";
+> >  			reg = <0xffc80000 0x30>;
+> >  			clocks = <&extal_clk>;
+> > @@ -342,7 +342,7 @@
+> >  		};
+> > 
+> >  		/* Gate clocks */
+> > -		mstp0_clks: mstp0_clks {
+> > +		mstp0_clks: clocks@ffc80030 {
+> >  			compatible = "renesas,r8a7779-mstp-clocks",
+> >  			             "renesas,cpg-mstp-clocks";
+> >  			reg = <0xffc80030 4>;
+> > @@ -379,7 +379,7 @@
+> >  				"scif1", "scif0", "i2c3", "i2c2", "i2c1",
+> >  				"i2c0";
+> >  		};
+> > -		mstp1_clks: mstp1_clks {
+> > +		mstp1_clks: clocks@ffc80034 {
+> >  			compatible = "renesas,r8a7779-mstp-clocks",
+> >  			             "renesas,cpg-mstp-clocks";
+> >  			reg = <0xffc80034 4>, <0xffc80044 4>;
+> > @@ -408,7 +408,7 @@
+> >  				"ether", "sata",
+> >  				"pcie", "vin3";
+> >  		};
+> > -		mstp3_clks: mstp3_clks {
+> > +		mstp3_clks: clocks@ffc8003c {
+> >  			compatible = "renesas,r8a7779-mstp-clocks",
+> >  			             "renesas,cpg-mstp-clocks";
+> >  			reg = <0xffc8003c 4>;
+> 
+> -- 
+> Regards,
+> 
+> Laurent Pinchart
+> 
