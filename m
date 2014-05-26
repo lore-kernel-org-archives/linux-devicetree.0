@@ -1,107 +1,78 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCHv2 1/3] mmc: host: add slot argument to mmc_of_parse
-Date: Mon, 26 May 2014 16:37:32 +0200
-Message-ID: <CAPDyKFooaEf-SM4_SbX=mUr_QaYz3zqY6C4y-7hv4RuQrEVcgg@mail.gmail.com>
-References: <1401104107-17651-1-git-send-email-jh80.chung@samsung.com>
-	<1401104107-17651-2-git-send-email-jh80.chung@samsung.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v5 0/7] ARM: berlin: add AHCI support
+Date: Mon, 26 May 2014 16:51:41 +0200
+Message-ID: <1401115908-2742-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1401104107-17651-2-git-send-email-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ludovic Desroches <ludovic.desroches@atmel.com>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 May 2014 13:35, Jaehoon Chung <jh80.chung@samsung.com> wrote:
-> From: Ludovic Desroches <ludovic.desroches@atmel.com>
->
-> Some hosts manage several slots. In these case information such as the
-> bus width, chip detect and others are into the slot node. So we have to
-> parse child node. If not NULL, slot node will be used instead of the
-> device node.
->
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+This series adds the support for Berlin SoC AHCI controller. The
+controller allows to use the SATA host interface and, for example, the
+eSATA port on the BG2Q.
 
-Thanks Jaehoon/Ludovic,
+The series adds a PHY driver to control the two SATA ports available,
+and adds a generic compatible to use the existing ahci_platform driver.
 
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Also enable the eSATA interface on the BG2Q DMP.
 
-> ---
-> Changelog V2:
->         - Fix the typo.
->
->  drivers/mmc/core/host.c  |   13 +++++++++----
->  include/linux/mmc/host.h |   10 +++++++++-
->  2 files changed, 18 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index 95cceae..0f677b3 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -298,15 +298,17 @@ static inline void mmc_host_clk_sysfs_init(struct mmc_host *host)
->  #endif
->
->  /**
-> - *     mmc_of_parse() - parse host's device-tree node
-> + *     __mmc_of_parse() - parse host's device-tree node
->   *     @host: host whose node should be parsed.
-> + *     @slot : some device provide several slots so the node to parse
-> + *             is not the host one.
->   *
->   * To keep the rest of the MMC subsystem unaware of whether DT has been
->   * used to to instantiate and configure this host instance or not, we
->   * parse the properties and set respective generic mmc-host flags and
->   * parameters.
->   */
-> -int mmc_of_parse(struct mmc_host *host)
-> +int __mmc_of_parse(struct mmc_host *host, struct device_node *slot)
->  {
->         struct device_node *np;
->         u32 bus_width;
-> @@ -317,7 +319,10 @@ int mmc_of_parse(struct mmc_host *host)
->         if (!host->parent || !host->parent->of_node)
->                 return 0;
->
-> -       np = host->parent->of_node;
-> +       if (slot)
-> +               np = slot;
-> +       else
-> +               np = host->parent->of_node;
->
->         /* "bus-width" is translated to MMC_CAP_*_BIT_DATA flags */
->         if (of_property_read_u32(np, "bus-width", &bus_width) < 0) {
-> @@ -459,7 +464,7 @@ out:
->         return ret;
->  }
->
-> -EXPORT_SYMBOL(mmc_of_parse);
-> +EXPORT_SYMBOL(__mmc_of_parse);
->
->  /**
->   *     mmc_alloc_host - initialise the per-host structure.
-> diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
-> index 7960424..c62af91 100644
-> --- a/include/linux/mmc/host.h
-> +++ b/include/linux/mmc/host.h
-> @@ -372,7 +372,15 @@ struct mmc_host *mmc_alloc_host(int extra, struct device *);
->  int mmc_add_host(struct mmc_host *);
->  void mmc_remove_host(struct mmc_host *);
->  void mmc_free_host(struct mmc_host *);
-> -int mmc_of_parse(struct mmc_host *host);
-> +int __mmc_of_parse(struct mmc_host *host, struct device_node *slot);
-> +/*
-> + * mmc_of_parse - parse host's device-tree node
-> + *     @host: host whose node should be parsed.
-> + */
-> +static inline int mmc_of_parse(struct mmc_host *host)
-> +{
-> +       return __mmc_of_parse(host, NULL);
-> +}
->
->  static inline void *mmc_priv(struct mmc_host *host)
->  {
-> --
-> 1.7.9.5
->
+Changes since v4:
+        - updated PHY driver as tristate
+        - handled the case were no SATA port is enabled
+        - updated the compatible to a generic one
+        - cosmetic fixups
+
+Changes since v3:
+        - moved all PHY operations to the PHY driver
+        - removed PHY sub-nodes
+        - removed the custom Berlin AHCI driver and switched to
+          ahci_platform
+        - added multiple PHYs support to the libahci_platform
+
+Changes since v2:
+        - modeled each PHY as a sub-node
+        - cosmetic fixups
+
+Changes since v1:
+        - added a PHY driver, allowing to enable each port
+          individually and removed the 'force-port-map' property
+        - made the drivers a bit less magic :)
+        - wrote a function to select and configure registers in the
+          AHCI driver
+        - removed BG2 / BG2CD nodes
+
+Antoine T=C3=A9nart (7):
+  phy: add a driver for the Berlin SATA PHY
+  Documentation: bindings: add the Berlin SATA PHY
+  ata: libahci: allow to use multiple PHYs
+  ata: ahci_platform: add a generic AHCI compatible
+  Documentation: bindings: document the sub-nodes AHCI bindings
+  ARM: berlin: add the AHCI node for the BG2Q
+  ARM: berlin: enable the eSATA interface on the BG2Q DMP
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  38 +++-
+ .../devicetree/bindings/phy/berlin-sata-phy.txt    |  14 ++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   8 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  27 +++
+ drivers/ata/ahci.h                                 |   3 +-
+ drivers/ata/ahci_platform.c                        |   2 +
+ drivers/ata/libahci.c                              |   7 +
+ drivers/ata/libahci_platform.c                     | 170 +++++++++++--=
+--
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-sata.c                      | 232 +++++++++++++=
+++++++++
+ 11 files changed, 472 insertions(+), 37 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-sata-p=
+hy.txt
+ create mode 100644 drivers/phy/phy-berlin-sata.c
+
+--=20
+1.9.1
+
