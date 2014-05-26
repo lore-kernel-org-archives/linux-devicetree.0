@@ -1,60 +1,51 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 3/3] net: hisilicon: add hix5hd2 mac driver
-Date: Mon, 26 May 2014 16:51:15 +0200
-Message-ID: <201405261651.15998.arnd@arndb.de>
-References: <1400504227-12047-1-git-send-email-zhangfei.gao@linaro.org> <1400504227-12047-4-git-send-email-zhangfei.gao@linaro.org>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v5 7/7] ARM: berlin: enable the eSATA interface on the BG2Q DMP
+Date: Mon, 26 May 2014 16:51:48 +0200
+Message-ID: <1401115908-2742-8-git-send-email-antoine.tenart@free-electrons.com>
+References: <1401115908-2742-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1400504227-12047-4-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: davem@davemloft.net, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401115908-2742-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 19 May 2014, Zhangfei Gao wrote:
+The BG2Q has an AHCI SATA controller with an eSATA interface. Enable it=
+=2E
+Only enable the first port, the BG2Q DMP does not support the second on=
+e.
 
-I only noticed one real issue with the driver:
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-> +struct hix5hd2_desc {
-> +	__le32 buff_addr;
-> +	__le32 buff_len:11;
-> +	__le32 reserve2:5;
-> +	__le32 data_len:11;
-> +	__le32 reserve1:2;
-> +	__le32 fl:2;
-> +	__le32 descvid:1;
-> +} __aligned(32);
-> +
+diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot=
+/dts/berlin2q-marvell-dmp.dts
+index 2da9c41e29d8..899b4e04fe12 100644
+--- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
++++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
+@@ -26,3 +26,11 @@
+ &uart0 {
+ 	status =3D "okay";
+ };
++
++&sata0 {
++	status =3D "okay";
++};
++
++&sata_phy {
++	status =3D "okay";
++};
+--=20
+1.9.1
 
-You should generall not use bitfields in hardware data structures, as that is
-not endian safe and will prevent running a big-endian kernel on this machine.
-Better convert this to a set of __le32 fields and explicit shifts and masks.
-
-Two smaller things you should think about, I'm not entirely sure about these:
-
-> +static int hix5hd2_rx(struct net_device *dev, int limit)
-> +{
-> +	struct hix5hd2_priv *priv = netdev_priv(dev);
-> +	struct sk_buff *skb;
-> +	struct hix5hd2_desc *desc;
-> +	dma_addr_t dma_addr;
-> +	u32 start, end, num, pos, i, len;
-> +
-> +	/* software read pointer */
-> +	start = dma_cnt(readl_relaxed(priv->base + RX_BQ_RD_ADDR));
-> +	/* logic write pointer */
-> +	end = dma_cnt(readl_relaxed(priv->base + RX_BQ_WR_ADDR));
-
-I think one of these needs to be readl() instead of readl_relaxed(),
-to ensure the data is correctly ordered with regard to the pointer
-access.
-
-> +	if (pos != start)
-> +		writel(dma_byte(pos), priv->base + TX_RQ_RD_ADDR);
-
-While this looks like it could be writel_relaxed().
-
-	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
