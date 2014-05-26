@@ -1,79 +1,42 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Mon, 26 May 2014 14:55:37 +0300
-Message-ID: <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com> <1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com> <20140514100856.5198DC4153D@trevor.secretlab.ca> <E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com> <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com> <20140516105814.3EA3FC403C2@trevor.secretlab.ca> <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com> <20140520055026.E3A98C412DA@trevor.secretlab.ca> <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com> <20140526104824.63F13C42129@trevor.secretlab.ca> <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com> <20140526112348.907B7C421A5@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140526112348.907B7C421A5@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko>
+From: Shaik Ameer Basha <shaik.ameer@samsung.com>
+Subject: [PATCH v2 0/3] Power-domain clk handling
+Date: Mon, 26 May 2014 17:26:21 +0530
+Message-ID: <1401105384-8678-1-git-send-email-shaik.ameer@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, t.figa@samsung.com, tomasz.figa@gmail.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, arunkk.samsung@gmail.com, joshi@samsung.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+This patchset enables the clk handling in power domain for
+working as per the recommended power domain on / off sequence for
+exynos5 SoCs. I have posted an RFC for the same [1] and didnt get any
+review comments / objections. So I am dropping the RFC tag and
+posting the patch along with the required clk and dt support.
 
-On May 26, 2014, at 2:23 PM, Grant Likely wrote:
+[1] https://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg30479.html
 
-> On Mon, 26 May 2014 12:57:32 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->> Hi Grant,
->> 
->> On Mon, May 26, 2014 at 12:48 PM, Grant Likely
->> <grant.likely@secretlab.ca> wrote:
->>> On Tue, 20 May 2014 09:38:49 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
->>>> On Tue, May 20, 2014 at 7:50 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
->>>>>> Why has the overlay system been designed for plugging and unpluging whole
->>>>>> overlays?
->>>>>> That means the kernel has to remember the full stack, causing issues with
->>>>>> e.g. kexec.
->>>>> 
->>>>> Mostly so that drivers don't see any difference in the livetree data
->>>>> structure. It also means that userspace sees a single representation of
->>>>> the hardware at any given time.
->>>> 
->>>> Sorry, I don't follow the argument about the "single representation of the
->>>> hardware".
->>> 
->>> Er, s/of the hardware/of the tree/. Right now the overlay design
->>> modifies the live tree which at the same time modifies the tree
->>> representation in /sys/firmware/devicetree. If the design was changed to
->>> keep the overlay logically separate, then I would think we want to
->>> expose that information to usespace also. In fact, I think we would need
->>> to for usecases like kexec.
->> 
->> OK, so it does modify the real tree, and doesn't keep the actual overlays.
->> 
->> I was under the impression the overlay stack was also kept in memory, to allow
->> reversal, so there was a misunderstanding.
->> 
->> Hence for kexec, the tree in /sys/firmware/devicetree can just be passed
->> to the new kernel, as that's the current representation of the hardware?
-> 
-> Heeheehee. We're back where we started. The original question is whether
-> or not that is a valid approach. If the overlay represents something
-> that can be hot plugged/unplugged, then passing it through to the second
-> kernel would be the wrong thing to do. If it was a permenant addition,
-> then it probably doesn't need to be removed.
-> 
-> We do actually keep the overlay info in memory for the purpose of
-> removal exactly so we can support hot unbinding of devices and drivers
-> that make use of overlays.
-> 
+Rebased on Kukjin Kim's linux-samsung.git, for-next branch
+git://git.kernel.org/pub/scm/linux/kernel/git/kgene/linux-samsung.git:for-next
 
-We can support either method. I am not feeling any wiser about which one should be
-the default TBH, so what about exporting a property and let the platform 
-figure out which is more appropriate?
+Changes since v1:
+Addressed review comments from Tomasz Figa.
+	- http://www.spinics.net/lists/linux-samsung-soc/msg31625.html
+	- http://www.spinics.net/lists/linux-samsung-soc/msg31626.html
 
-> g.
-> 
+Arun Kumar K (2):
+  clk: exynos5420: Add IDs for clocks used in PD mfc
+  ARM: dts: Add clock property for mfc_pd in 5420
 
-Regards
+Prathyush K (1):
+  ARM: EXYNOS: Add support for clock handling in power domain
 
--- Pantelis
+ .../bindings/arm/exynos/power_domain.txt           |   20 +++++++
+ arch/arm/boot/dts/exynos5420.dtsi                  |    3 +
+ arch/arm/mach-exynos/pm_domains.c                  |   59 +++++++++++++++++++-
+ drivers/clk/samsung/clk-exynos5420.c               |    6 +-
+ include/dt-bindings/clock/exynos5420.h             |    2 +
+ 5 files changed, 87 insertions(+), 3 deletions(-)
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
