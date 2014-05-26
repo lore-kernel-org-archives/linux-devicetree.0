@@ -1,90 +1,92 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: rockchip: convert smp bringup to CPU_METHOD_OF_DECLARE
-Date: Mon, 26 May 2014 12:21:46 -0700
-Message-ID: <CAOesGMhvLHryv6HXYq=YpnGJWVyyECLVQ3UXoyE2ugyxYBUfXw@mail.gmail.com>
-References: <1632873.urGeGsUMPH@diego>
-	<1878147.CvhHSZhTas@diego>
-	<20140526181315.GA27093@quad.lixom.net>
-	<77845932.xlUTKoJDWT@phil>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH] of_regulator: use of_property_read_{bool|u32}()
+Date: Tue, 27 May 2014 00:27:19 +0400
+Message-ID: <201405270027.20092.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <77845932.xlUTKoJDWT@phil>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lgirdwood@gmail.com, broonie@kernel.org
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 26, 2014 at 12:20 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> =
-wrote:
-> Am Montag, 26. Mai 2014, 11:13:15 schrieb Olof Johansson:
->> On Thu, Mar 27, 2014 at 01:06:32AM +0100, Heiko St=C3=BCbner wrote:
->> > With the newly introduced CPU_METHOD_OF_DECLARE is not necessary a=
-nymore
->> > to reference the relevant smp_ops in the board file, but instead i=
-t can
->> > simply be set by the enable-method property of the cpu nodes.
->> >
->> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
->>
->> Applied, however:
->> > ---
->> >
->> > changes since v1:
->> >   - add a short description to the enable-method binding
->> >
->> >  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
->> >  arch/arm/boot/dts/rk3066a.dtsi                 | 1 +
->> >  arch/arm/boot/dts/rk3188.dtsi                  | 1 +
->> >  arch/arm/mach-rockchip/core.h                  | 2 --
->> >  arch/arm/mach-rockchip/platsmp.c               | 3 ++-
->> >  arch/arm/mach-rockchip/rockchip.c              | 1 -
->> >  6 files changed, 6 insertions(+), 4 deletions(-)
->> >
->> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt
->> > b/Documentation/devicetree/bindings/arm/cpus.txt index 333f4ae..f5=
-2a9ac
->> > 100644
->> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> > @@ -185,6 +185,8 @@ nodes to be present and contain the properties
->> > described below.>
->> >                         "qcom,gcc-msm8660"
->> >                         "qcom,kpss-acc-v1"
->> >                         "qcom,kpss-acc-v2"
->> >
->> > +                       "rockchip,rk3066-smp" - cpu-core handling =
-of Socs
->> > +                                   from Rockchip starting with rk=
-3066
->>
->> Nobody else has a comment here, so I removed this one.
->>
->> I noticed that the list is unsorted, in particular the new marvell e=
-ntries
->> were appended instead of inserted at the right location, which cause=
-d a
->> merge conflict. Sigh. I'll do a separate commit on top to sort the l=
-ist,
->> since we seem to have the new out-of-order additions in our tree.
->
-> I added the comment after Mark Rutland noted:
->
-> "We should document what what these actually mean, so as to be a hard=
-ware
-> description and not a Linux internals description."
->
-> But I'm fine with it either way :-)
+Use more compact of_property_read_{bool|u32}() calls instead of the
+of_{find|get}_property() calls in of_get_regulation_constraints() where
+possible (note that of_property_read_{bool|u32}() were already used to read
+some properties).
 
-Ah! Well, I suggest a pass through to document all of them then :)
-However, the compatible strings should be documented elsewhere in the
-tree so they should just be possible to reference.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
+---
+The patch is against Mark Brown's 'regulator.git' repo's 'for-next' branch.
 
--Olof
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/regulator/of_regulator.c |   37 ++++++++++++++-----------------------
+ 1 file changed, 14 insertions(+), 23 deletions(-)
+
+Index: regulator/drivers/regulator/of_regulator.c
+===================================================================
+--- regulator.orig/drivers/regulator/of_regulator.c
++++ regulator/drivers/regulator/of_regulator.c
+@@ -19,9 +19,7 @@
+ static void of_get_regulation_constraints(struct device_node *np,
+ 					struct regulator_init_data **init_data)
+ {
+-	const __be32 *min_uV, *max_uV, *uV_offset;
+-	const __be32 *min_uA, *max_uA, *ramp_delay;
+-	struct property *prop;
++	const __be32 *min_uV, *max_uV;
+ 	struct regulation_constraints *constraints = &(*init_data)->constraints;
+ 	int ret;
+ 	u32 pval;
+@@ -42,36 +40,29 @@ static void of_get_regulation_constraint
+ 	if (min_uV && max_uV && constraints->min_uV == constraints->max_uV)
+ 		constraints->apply_uV = true;
+ 
+-	uV_offset = of_get_property(np, "regulator-microvolt-offset", NULL);
+-	if (uV_offset)
+-		constraints->uV_offset = be32_to_cpu(*uV_offset);
+-	min_uA = of_get_property(np, "regulator-min-microamp", NULL);
+-	if (min_uA)
+-		constraints->min_uA = be32_to_cpu(*min_uA);
+-	max_uA = of_get_property(np, "regulator-max-microamp", NULL);
+-	if (max_uA)
+-		constraints->max_uA = be32_to_cpu(*max_uA);
++	if (!of_property_read_u32(np, "regulator-microvolt-offset", &pval))
++		constraints->uV_offset = pval;
++	if (!of_property_read_u32(np, "regulator-min-microamp", &pval))
++		constraints->min_uA = pval;
++	if (!of_property_read_u32(np, "regulator-max-microamp", &pval))
++		constraints->max_uA = pval;
+ 
+ 	/* Current change possible? */
+ 	if (constraints->min_uA != constraints->max_uA)
+ 		constraints->valid_ops_mask |= REGULATOR_CHANGE_CURRENT;
+ 
+-	if (of_find_property(np, "regulator-boot-on", NULL))
+-		constraints->boot_on = true;
+-
+-	if (of_find_property(np, "regulator-always-on", NULL))
+-		constraints->always_on = true;
+-	else /* status change should be possible if not always on. */
++	constraints->boot_on = of_property_read_bool(np, "regulator-boot-on");
++	constraints->always_on = of_property_read_bool(np, "regulator-always-on");
++	if (!constraints->always_on) /* status change should be possible. */
+ 		constraints->valid_ops_mask |= REGULATOR_CHANGE_STATUS;
+ 
+ 	if (of_property_read_bool(np, "regulator-allow-bypass"))
+ 		constraints->valid_ops_mask |= REGULATOR_CHANGE_BYPASS;
+ 
+-	prop = of_find_property(np, "regulator-ramp-delay", NULL);
+-	if (prop && prop->value) {
+-		ramp_delay = prop->value;
+-		if (*ramp_delay)
+-			constraints->ramp_delay = be32_to_cpu(*ramp_delay);
++	ret = of_property_read_u32(np, "regulator-ramp-delay", &pval);
++	if (!ret) {
++		if (pval)
++			constraints->ramp_delay = pval;
+ 		else
+ 			constraints->ramp_disable = true;
+ 	}
