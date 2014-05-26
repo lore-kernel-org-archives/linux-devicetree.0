@@ -1,67 +1,39 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Mon, 26 May 2014 12:23:48 +0100
-Message-ID: <20140526112348.907B7C421A5@trevor.secretlab.ca>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
-	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
-	<20140514100856.5198DC4153D@trevor.secretlab.ca>
-	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
-	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
-	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
-	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
-	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
-	<CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
-	<20140526104824.63F13C42129@trevor.secretlab.ca>
-	<CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv2 0/3] mmc: fixed the mmc_of_parse for dwmmc
+Date: Mon, 26 May 2014 20:35:04 +0900
+Message-ID: <1401104107-17651-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, ludovic.desroches@atmel.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 26 May 2014 12:57:32 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> Hi Grant,
-> 
-> On Mon, May 26, 2014 at 12:48 PM, Grant Likely
-> <grant.likely@secretlab.ca> wrote:
-> > On Tue, 20 May 2014 09:38:49 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
-> >> On Tue, May 20, 2014 at 7:50 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
-> >> >> Why has the overlay system been designed for plugging and unpluging whole
-> >> >> overlays?
-> >> >> That means the kernel has to remember the full stack, causing issues with
-> >> >> e.g. kexec.
-> >> >
-> >> > Mostly so that drivers don't see any difference in the livetree data
-> >> > structure. It also means that userspace sees a single representation of
-> >> > the hardware at any given time.
-> >>
-> >> Sorry, I don't follow the argument about the "single representation of the
-> >> hardware".
-> >
-> > Er, s/of the hardware/of the tree/. Right now the overlay design
-> > modifies the live tree which at the same time modifies the tree
-> > representation in /sys/firmware/devicetree. If the design was changed to
-> > keep the overlay logically separate, then I would think we want to
-> > expose that information to usespace also. In fact, I think we would need
-> > to for usecases like kexec.
-> 
-> OK, so it does modify the real tree, and doesn't keep the actual overlays.
-> 
-> I was under the impression the overlay stack was also kept in memory, to allow
-> reversal, so there was a misunderstanding.
-> 
-> Hence for kexec, the tree in /sys/firmware/devicetree can just be passed
-> to the new kernel, as that's the current representation of the hardware?
+This patch-set is fixed the dw-mmc controller problem.
+dw-mmc controller have the slot, but mmc_of_parse didn't parse the slot sub-node.
+So dw-mmc controller didn't work correctly.
 
-Heeheehee. We're back where we started. The original question is whether
-or not that is a valid approach. If the overlay represents something
-that can be hot plugged/unplugged, then passing it through to the second
-kernel would be the wrong thing to do. If it was a permenant addition,
-then it probably doesn't need to be removed.
+Jaehoon Chung (2):
+  mmc: dw_mmc: use the __mmc_of_parse to parse the slot node
+  ARM: dts: replace the broken-cd property into slot node for dwmmc.
 
-We do actually keep the overlay info in memory for the purpose of
-removal exactly so we can support hot unbinding of devices and drivers
-that make use of overlays.
+Ludovic Desroches (1):
+  mmc: host: add slot argument to mmc_of_parse
 
-g.
+ arch/arm/boot/dts/exynos4412-odroidx.dts      |    2 +-
+ arch/arm/boot/dts/exynos4412-origen.dts       |    2 +-
+ arch/arm/boot/dts/exynos4412-trats2.dts       |    4 ++--
+ arch/arm/boot/dts/exynos5250-arndale.dts      |    2 +-
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi |    4 ++--
+ arch/arm/boot/dts/exynos5250-smdk5250.dts     |    2 +-
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts |    2 +-
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts        |    2 +-
+ arch/arm/boot/dts/socfpga_arria5.dtsi         |    2 +-
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi       |    2 +-
+ arch/arm/boot/dts/socfpga_vt.dts              |    2 +-
+ drivers/mmc/core/host.c                       |   13 +++++++++----
+ drivers/mmc/host/dw_mmc.c                     |   25 ++++++-------------------
+ include/linux/mmc/host.h                      |   10 +++++++++-
+ 14 files changed, 37 insertions(+), 37 deletions(-)
+
+-- 
+1.7.9.5
