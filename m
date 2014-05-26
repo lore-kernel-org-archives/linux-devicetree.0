@@ -1,43 +1,132 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 03/22] clk: sunxi: add "pll6" to sun6i protected clock list
-Date: Mon, 26 May 2014 12:47:30 +0800
-Message-ID: <CAGb2v643UmK6GfuDVfywVUeo_g7FpdZC_7SgeY-UMZ_k_-2N9Q@mail.gmail.com>
-References: <1400831485-28576-1-git-send-email-wens@csie.org>
- <1400831485-28576-4-git-send-email-wens@csie.org> <20140525184808.GP10768@lukather>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v4 1/2] cpufreq / OPP: Allow boost frequency to be looked
+ up from device tree
+Date: Mon, 26 May 2014 11:28:59 +0530
+Message-ID: <CAKohpom02xmubyNMMmH9J59i8KCoAXpZoX+Gj9NP9gQ8B9qB3w@mail.gmail.com>
+References: <1400852262-6290-1-git-send-email-thomas.ab@samsung.com>
+	<1400852262-6290-2-git-send-email-thomas.ab@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140525184808.GP10768@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1400852262-6290-2-git-send-email-thomas.ab@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Thomas Abraham <thomas.ab@samsung.com>
+Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 26, 2014 at 2:48 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, May 23, 2014 at 03:51:06PM +0800, Chen-Yu Tsai wrote:
->> PLL6 is used by some important but undocumented module, most likely
->> memory related, such as mbus or the actual memory controller. As we
->> do not have a driver for that, add pll6 to the list of protected
->> clocks, so that it won't be disabled and leave us with a non-responsive
->> system.
+On 23 May 2014 19:07, Thomas Abraham <thomas.ab@samsung.com> wrote:
+> From: Thomas Abraham <thomas.ab@samsung.com>
 >
-> What issue have you seen?
+> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
+> support for CPU boost mode. This patch adds support for finding available
+> boost frequencies from device tree and marking them as usable in boost mode.
+>
+> Cc: Nishanth Menon <nm@ti.com>
+> Cc: Lukasz Majewski <l.majewski@samsung.com>
+> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
+> ---
+>  drivers/cpufreq/cpufreq_opp.c |   44 +++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>
+> diff --git a/drivers/cpufreq/cpufreq_opp.c b/drivers/cpufreq/cpufreq_opp.c
+> index c0c6f4a..2b3905b 100644
+> --- a/drivers/cpufreq/cpufreq_opp.c
+> +++ b/drivers/cpufreq/cpufreq_opp.c
+> @@ -19,6 +19,7 @@
+>  #include <linux/pm_opp.h>
+>  #include <linux/rcupdate.h>
+>  #include <linux/slab.h>
+> +#include <linux/of.h>
+>
+>  /**
+>   * dev_pm_opp_init_cpufreq_table() - create a cpufreq table for a device
+> @@ -51,6 +52,10 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
+>         struct cpufreq_frequency_table *freq_table = NULL;
+>         int i, max_opps, ret = 0;
+>         unsigned long rate;
+> +#ifdef CONFIG_CPU_FREQ_BOOST_SW
+> +       int j, len;
+> +       u32 *boost_freqs = NULL;
+> +#endif
+>
+>         rcu_read_lock();
+>
+> @@ -82,6 +87,45 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
+>
+>         *table = &freq_table[0];
+>
+> +#ifdef CONFIG_CPU_FREQ_BOOST_SW
+> +       if (of_find_property(dev->of_node, "boost-frequencies", &len)) {
 
-Completely unresponsive after PLL6 is gated (on the A23).
+Maybe:
+if(!of_find_property(...))
+        goto out;
 
-> The system actually works pretty great on the A31.
+To get rid of extra indentation levels below..
 
-Does it work when there aren't any other PLL6 consumers?
-Maybe the boot0 on A31 and A23 setup some DRAM-related modules differently.
+> +               struct cpufreq_frequency_table *ft;
 
-If the A31 works without protecting PLL6, I'll add a separate list
-for the A23.
+Declare at the top with boost_freqs, etc..
+
+> +               if (len == 0 || (len & (sizeof(u32) - 1)) != 0) {
+
+s/len == 0/!len
+
+And use IS_ALIGNED() instead of the right hand side of ||
+
+> +                       dev_err(dev, "%s: invalid boost frequency\n", __func__);
+> +                       ret = -EINVAL;
+> +                       goto out;
+> +               }
+> +
+> +               boost_freqs = kzalloc(len, GFP_KERNEL);
+
+Can we do a devm_kzalloc instead? And why not kmalloc BTW ?
+
+> +               if (!boost_freqs) {
+> +                       dev_warn(dev, "%s: no memory for boost freq table\n",
+
+dev_err ?
+
+> +                                       __func__);
+> +                       ret = -ENOMEM;
+> +                       goto out;
+> +               }
+> +               of_property_read_u32_array(dev->of_node, "boost-frequencies",
+> +                       boost_freqs, len / sizeof(u32));
 
 
-Thanks,
-ChenYu
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Create int count = len / sizeof(u32) instead.. You have used this
+multiple times.
+
+> +               for (j = 0; j < len / sizeof(u32); j++) {
+> +                       ft = *table;
+> +                       for (i = 0; ft->frequency != CPUFREQ_TABLE_END; i++) {
+
+See if new macros can be used here instead. cpufreq_for_each_valid_entry().
+
+> +                               if (boost_freqs[j] == ft->frequency) {
+> +                                       ft->flags |= CPUFREQ_BOOST_FREQ;
+> +                                       break;
+> +                               }
+> +                               ft++;
+> +                       }
+> +
+> +                       if (ft->frequency == CPUFREQ_TABLE_END)
+> +                               pr_err("%s: invalid boost frequency %d\n",
+> +                                       __func__, boost_freqs[j]);
+
+Maybe a pr_debug on the else part as well ? With boost freqs ..
+
+> +               }
+> +       }
+> +
+> +       kfree(boost_freqs);
+> +#endif
+> +
+>  out:
+>         rcu_read_unlock();
+>         if (ret)
+> --
+> 1.7.9.5
+>
