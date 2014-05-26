@@ -1,42 +1,60 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Mon, 26 May 2014 09:28:22 +0200
-Message-ID: <CAMuHMdUrYmoYzcD__HkHMN4UzTpBcGbjTwhuSdNHXa6QXq6dsg@mail.gmail.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [RFC PATCH 00/16] OMAP: GPMC: Restructure OMAP GPMC driver (NAND)
+ : DT binding change proposal
+Date: Mon, 26 May 2014 10:33:52 +0300
+Message-ID: <5382EE60.3000808@ti.com>
+References: <1400671264-10702-1-git-send-email-rogerq@ti.com> <20140521160818.GA1150@arch.cereza> <537DB17A.6060608@ti.com> <CABxcv=nbgGhVN+XYO8s=mYOpoLU9-kWuEqc+FLMaSbWS7BJNyQ@mail.gmail.com> <20140522144600.GA1785@arch.cereza> <537F03C8.3070101@ti.com> <20140523145354.GE2321@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, kishon@ti.com, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140523145354.GE2321@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Javier Martinez Canillas <javier@dowhile0.org>, Brian Norris <computersforpeace@gmail.com>, "Gupta, Pekon" <pekon@ti.com>, Robert Nelson <robertcnelson@gmail.com>, Jingoo Han <jg1.han@samsung.com>, dwmw2@infradead.org, nsekhar@ti.com, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 24, 2014 at 12:06 AM, Sergei Shtylyov
-<sergei.shtylyov@cogentembedded.com> wrote:
-> --- /dev/null
-> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
-> @@ -0,0 +1,60 @@
-> +* Renesas R-Car generation 2 USB PHY
-> +
-> +This file provides information on what the device node for the R-Car generation
-> +2 USB PHY contains.
-> +
-> +Required properties:
-> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
-> +             "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+On 05/23/2014 05:53 PM, Tony Lindgren wrote:
+> * Roger Quadros <rogerq@ti.com> [140523 01:17]:
+>> On 05/22/2014 05:46 PM, Ezequiel Garcia wrote:
+>>> On 22 May 01:51 PM, Javier Martinez Canillas wrote:
+>>>> On Thu, May 22, 2014 at 10:12 AM, Roger Quadros <rogerq@ti.com> wrote:
+>>>>>> On 21 May 02:20 PM, Roger Quadros wrote:
+>>>>>> While I agree that the GPMC driver is a bit messy, I'm not sure it's possible
+>>>>>> to go through such a complete devicetree binding re-design (breaking backwards
+>>>>>> compatibility) now that the binding is already in production.
+>>>>>
+>>>>> Why not? especially if the existing bindings are poorly dones. Is anyone using these
+>>>>> bindings burning the DT into ROM and can't change it when they update the kernel?
+>>>>>
+>>>>
+>>>> While I do agree that your DT bindings are much better than the
+>>>> current ones, there is a policy that DT bindings are an external API
+>>>> and once are released with a kernel are set in stone and can't be
+>>>> changed.
+>>>>
+>>>
+>>> Exactly. The DT binding is considered an ABI. Thus, invariant across kernel
+>>> versions. Users can't be coherced into a DTB update after a kernel update.
+>>>
+>>> That said, I don't really care if you break compatilibity in this case.
+>>> Rather, I'm suggesting that you make sure this change is going to be accepted
+>>> upstream, before doing any more work. The DT maintainers are reluctant to do
+>>> so.
+>>
+>> Appreciate your concern.
+>>
+>> Would be really nice if you can review patches 1-12. They have nothing to do with DT changes.
+>> Thanks.
+> 
+> I'm mostly concerned about keeping things working. I think the
+> only way we can keep things working is to keep support for
+> the old binding around in addition to the new one. That way
+> we can update devices one at a time.
 
-As this is a new driver, I think you should switch to the recommended
-vendor/soc/device ordering, which is also supported by checkpatch (incl.
-wildcard matching!), i.e. "renesas,r8a7790-usb-phy" etc.
+Good to hear that you are not keen on keeping the old bindings forever. I understand
+that we need to keep things working during the transition. I'll think of something to
+maintain backward compatibility while supporting the new binding.
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+cheers,
+-roger
