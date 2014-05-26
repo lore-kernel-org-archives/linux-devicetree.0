@@ -1,81 +1,50 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v4 2/2] Documentation: devicetree: Add boost-frequency
- binding to list boost mode frequency
-Date: Mon, 26 May 2014 11:39:23 +0530
-Message-ID: <CAKohpokB8qg7aZ6tncvU8LSL09EAi+X6a2UnZDA7rA1SymLAQg@mail.gmail.com>
-References: <1400852262-6290-1-git-send-email-thomas.ab@samsung.com>
-	<1400852262-6290-3-git-send-email-thomas.ab@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH] ARM: dts: Add pmu sysreg node to Exynos3250
+Date: Mon, 26 May 2014 15:29:36 +0900
+Message-ID: <1401085776-14212-1-git-send-email-cw00.choi@samsung.com>
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1400852262-6290-3-git-send-email-thomas.ab@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.ab@samsung.com>
-Cc: "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Lukasz Majewski <l.majewski@samsung.com>, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+To: kgene.kim@samsung.com
+Cc: t.figa@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, ben-linux@fluff.org, linux@arm.linux.org.uk, l.krishna@samsung.com, chanho61.park@samsung.com, kyungmin.park@samsung.com, cw00.choi@samsung.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 23 May 2014 19:07, Thomas Abraham <thomas.ab@samsung.com> wrote:
-> From: Thomas Abraham <thomas.ab@samsung.com>
->
-> Add a new optional boost-frequency binding for specifying the frequencies
-> usable in boost mode.
->
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Lukasz Majewski <l.majewski@samsung.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Pawel Moll <pawel.moll@arm.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> Cc: Kumar Gala <galak@codeaurora.org>
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> ---
->  .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   38 ++++++++++++++++++++
->  1 file changed, 38 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
->
-> diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-> new file mode 100644
-> index 0000000..63ed0fc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-> @@ -0,0 +1,38 @@
-> +* Device tree binding for CPU boost frequency (aka over-clocking)
-> +
-> +Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
-> +overclocking) in which the CPU can operate at frequencies which are not
-> +specified by the manufacturer as CPU's operating frequency.
-> +
-> +Optional Properties:
-> +- boost-frequencies: list of frequencies in KHz to be used only in boost mode.
-> +  This list should be a subset of frequencies listed in "operating-points"
-> +  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
-> +  details about "operating-points" property.
-> +
-> +Example:
-> +
-> +       cpus {
-> +               #address-cells = <1>;
-> +               #size-cells = <0>;
-> +               cpu@0 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a9";
-> +                       reg = <0>;
-> +
-> +                       operating-points = <
-> +                               1500000 1350000
-> +                               1400000 1287500
-> +                               1300000 1250000
-> +                               1200000 1187500
-> +                               1100000 1137500
-> +                               1000000 1087500
-> +                       >;
-> +                       boost-frequencies = <1500000 1400000>;
-> +               };
-> +               cpu@1 {
-> +                       device_type = "cpu";
-> +                       compatible = "arm,cortex-a9";
-> +                       reg = <1>;
-> +               };
-> +       };
+This patch add pmusysreg node for Exynos3250 to access PMU (Power Management Unit)
+register in a centralized way using syscon driver.
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+---
+ Documentation/devicetree/bindings/arm/samsung/pmu.txt | 1 +
+ arch/arm/boot/dts/exynos3250.dtsi                     | 5 +++++
+ 2 files changed, 6 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/arm/samsung/pmu.txt b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+index b562634..2a4ab04 100644
+--- a/Documentation/devicetree/bindings/arm/samsung/pmu.txt
++++ b/Documentation/devicetree/bindings/arm/samsung/pmu.txt
+@@ -2,6 +2,7 @@ SAMSUNG Exynos SoC series PMU Registers
+ 
+ Properties:
+  - compatible : should contain two values. First value must be one from following list:
++		   - "samsung,exynos3250-pmu" - for Exynos3250 SoC,
+ 		   - "samsung,exynos4210-pmu" - for Exynos4210 SoC,
+ 		   - "samsung,exynos4212-pmu" - for Exynos4212 SoC,
+ 		   - "samsung,exynos4412-pmu" - for Exynos4412 SoC,
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index ca28eac..3e678fa 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -125,6 +125,11 @@
+ 			reg = <0x10010000 0x400>;
+ 		};
+ 
++		pmu_system_controller: system-controller@10020000 {
++			compatible = "samsung,exynos3250-pmu", "syscon";
++			reg = <0x10020000 0x4000>;
++		};
++
+ 		pd_cam: cam-power-domain@10023C00 {
+ 			compatible = "samsung,exynos4210-pd";
+ 			reg = <0x10023C00 0x20>;
+-- 
+1.8.0
