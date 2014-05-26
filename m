@@ -1,56 +1,53 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Mon, 26 May 2014 10:04:52 +0200
-Message-ID: <CAMuHMdUP37MdiZEYZjZ8Gj_h_wojcm7RvmRKxKP2v9g7WqBb3A@mail.gmail.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
-	<CAMuHMdUrYmoYzcD__HkHMN4UzTpBcGbjTwhuSdNHXa6QXq6dsg@mail.gmail.com>
-	<20140526074801.GC4500@verge.net.au>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Mon, 26 May 2014 10:07:45 +0200
+Message-ID: <5382F651.9010506@redhat.com>
+References: <537DC832.3020006@redhat.com> <CAGb2v64VZac2KvAALrScecN89sRnBQoDrKxKMvkte+3G04NXeA@mail.gmail.com> <537DE1AA.5050606@redhat.com> <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com> <20140523162718.GE22111@sirena.org.uk> <53806F26.6050706@redhat.com> <20140525123452.GS22111@sirena.org.uk> <53824294.1090609@redhat.com> <5382F276.8090305@broadcom.com> <CAGb2v64Siixnds9fXGWfTotjq0zGmeqNa-52FNNOcbxFcCjkCg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140526074801.GC4500@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, kishon@ti.com, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v64Siixnds9fXGWfTotjq0zGmeqNa-52FNNOcbxFcCjkCg@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>
+Cc: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>Sascha Hauer <s.hauer@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Simon, Rob,
+Hi,
 
-On Mon, May 26, 2014 at 9:48 AM, Simon Horman <horms@verge.net.au> wrote:
->> > +Required properties:
->> > +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
->> > +             "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
+On 05/26/2014 09:59 AM, Chen-Yu Tsai wrote:
+> On Mon, May 26, 2014 at 3:51 PM, Arend van Spriel <arend@broadcom.com> wrote:
+>> + Russell
+
+<snip>
+
+>> Hi Hans,
 >>
->> As this is a new driver, I think you should switch to the recommended
->> vendor/soc/device ordering, which is also supported by checkpatch (incl.
->> wildcard matching!), i.e. "renesas,r8a7790-usb-phy" etc.
->
-> A while ago we were asked to consolidate our drivers around a consistent
-> scheme. At the time the <vendor>,<device>-<version> scheme, where version =
+>> I recalled a recent patchset from Russell King. He was working on i.MX6
+>> platform with brcmfmac device and ended reworking sdhci/mmc host controller
+>> code in a series of patches [1]. Patch 34 might be similar to what you are
+>> trying to accomplish.
+> 
+> I believe that is a resend of Olof's patch I mentioned early in this
+> discussion. :)
 
-(after talking around at ELC) It's my understanding this was a silly mistake.
+Ok, assuming that is the case, then it seems to me that we are all moving
+somewhat in the same direction, which is good :)
 
-> SoC for most Renesas parts, was agreed to be acceptable and we have
-> (hopefully) consistently been using that ever since.
+What I would like to propose is to move forward with Olof's patch with
+2 changes made to it:
 
-We did for everything except for clock drivers, sound, and thermal.
+1) Store the clocks / resets / whatever in childnodes of the mmc host node,
+with the childnodes using the addressing scheme described in the patch
+from Sascha Hauer titled: "mmc: Add SDIO function devicetree subnode parsing",
+as this is where they really belong (and in some cases the sdio function driver
+may need access to them too).
 
-> So unless there has been a policy change I would prefer to keep using this
-> scheme (i.e. leave the bindings above as-is). And update checkpatch if that
-> is appropriate.
+2) Make Olof's code only do the powerup if the child node has a compatible of
+"simple-sdio-powerup", to avoid it getting in the way of more complex poweron
+scenarios (which may require a separate pmic driver or some such) later.
 
-Rob, can we have the official policy documented in
-Documentation/devicetree/bindings?
+Regards,
 
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Hans
