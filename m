@@ -1,7 +1,7 @@
 From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/2] regulator: pfuze100: Support SWB enable/disable
-Date: Mon, 26 May 2014 16:45:40 +0800
-Message-ID: <1401093941-12386-2-git-send-email-xobs@kosagi.com>
+Subject: [PATCH 2/2] regulator: pfuze100: Don't allocate an invalid gpio
+Date: Mon, 26 May 2014 16:45:41 +0800
+Message-ID: <1401093941-12386-3-git-send-email-xobs@kosagi.com>
 References: <1401093941-12386-1-git-send-email-xobs@kosagi.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1401093941-12386-1-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
@@ -10,36 +10,27 @@ To: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brow
 Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The SWB regulators have the ability to be turned on and off.  Add
-enable/disable support for these regulators.
+Previously, the PFUZE100 would try to allocate gpio0 io0 because
+config.ena_gpio defaults to 0, which can be a valid GPIO.  To prevent this
+from happening, set this parameter to -EINVAL.
 
 Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 ---
- drivers/regulator/pfuze100-regulator.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/pfuze100-regulator.c | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/drivers/regulator/pfuze100-regulator.c b/drivers/regulator/pfuze100-regulator.c
-index 67e678c..b20304b 100644
+index b20304b..930eb13 100644
 --- a/drivers/regulator/pfuze100-regulator.c
 +++ b/drivers/regulator/pfuze100-regulator.c
-@@ -137,6 +137,8 @@ static struct regulator_ops pfuze100_sw_regulator_ops = {
- };
+@@ -506,6 +506,7 @@ static int pfuze100_regulator_probe(struct i2c_client *client,
+ 		config.init_data = init_data;
+ 		config.driver_data = pfuze_chip;
+ 		config.of_node = match_of_node(i);
++		config.ena_gpio = -EINVAL;
  
- static struct regulator_ops pfuze100_swb_regulator_ops = {
-+	.enable = regulator_enable_regmap,
-+	.disable = regulator_disable_regmap,
- 	.list_voltage = regulator_list_voltage_table,
- 	.map_voltage = regulator_map_voltage_ascend,
- 	.set_voltage_sel = regulator_set_voltage_sel_regmap,
-@@ -189,6 +191,8 @@ static struct regulator_ops pfuze100_swb_regulator_ops = {
- 			.volt_table = voltages,	\
- 			.vsel_reg = (base),	\
- 			.vsel_mask = (mask),	\
-+			.enable_reg = (base),	\
-+			.enable_mask = 0x48,	\
- 		},	\
- 	}
- 
+ 		pfuze_chip->regulators[i] =
+ 			devm_regulator_register(&client->dev, desc, &config);
 -- 
 2.0.0.rc2
 
