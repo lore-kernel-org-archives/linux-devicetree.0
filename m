@@ -1,53 +1,55 @@
 From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] of: Add vendor prefix for Linear Technology
- Corporation
-Date: Mon, 26 May 2014 15:55:13 +0100
-Message-ID: <20140526145513.GN22111@sirena.org.uk>
-References: <1401093496-28474-1-git-send-email-p.zabel@pengutronix.de>
+Subject: Re: [PATCH 1/2] regulator: pfuze100: Support SWB enable/disable
+Date: Mon, 26 May 2014 15:57:39 +0100
+Message-ID: <20140526145739.GO22111@sirena.org.uk>
+References: <1401093941-12386-1-git-send-email-xobs@kosagi.com>
+ <1401093941-12386-2-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="QiPs+vIMjk/XMT1Q"
+	protocol="application/pgp-signature"; boundary="ijVLzUSDbgcKP8+b"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1401093496-28474-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+In-Reply-To: <1401093941-12386-2-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---QiPs+vIMjk/XMT1Q
+--ijVLzUSDbgcKP8+b
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, May 26, 2014 at 10:38:14AM +0200, Philipp Zabel wrote:
-> Add Linear Technology Corporation to the list of device tree vendor prefixes.
+On Mon, May 26, 2014 at 04:45:40PM +0800, Sean Cross wrote:
 
-Applied, thanks.
+> +			.enable_reg = (base),	\
+> +			.enable_mask = 0x48,	\
 
---QiPs+vIMjk/XMT1Q
+I note that this is a two bit field - what do the two bits mean?
+
+--ijVLzUSDbgcKP8+b
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTg1XOAAoJELSic+t+oim9GksP/R6tO7Gr4fZdHHLE3f4+AvG3
-AC0C3hhKAxyDdYnviIu9Kmv0TNW3pjXETRRGRMXY7R2Knz4j5rd3NKoE3tdutxfW
-yFS4+aNHpnFcJ+7ClPGwOXRMSv+MqJu1paHpDIs0UdgaPeOtuhPucL2i0Nt/dloz
-ihMfNQnxqkAgpE9j6+6EOigZ3bM5eknrTjlCXXSack7yxIBTmxzle4g5bYsYDCxl
-DfiK6kPwOzV/irulynTPeNtwrTZex9tuwl0NMXDrkDRR+cSHCE7viPA6E+kljVvx
-R3Zlk2Z1quOcCW+V6zVIaWxd3CDmBJH1Q2OVUX/q0UXqFLcP+Zniz48blWrq1bPT
-noZEHnuRVx+qyCPitu/ZywIC/SgpK4Uv4kD5E8NOCSWqwsyD9eKJBMu/gcigqnmw
-fTc85qZVxIo+gCbsOTVJy40D1cNTs8npU0JXX6x4CPCmRFVFA7h7AxqKZTqhwvAV
-5O2Cho4+CCZ5x46715CB02eO6RCJaFJ3Vg4G51hDaWCOzl0hQLeMs3cnjgZ1ErKg
-tz3TPQ9rvnwYTKl2JPOffDPPxP6/YwhediamWH5L4jq+bnrAMLG5TNxMOE91wKeI
-RPs5OD0zPxUNbQsNzw7sRDGtdTxoSVRkjnLFzYGHv00880of8AQ40wcRm1bUNXpW
-Dd2wgNslmA7vzzbfcR9m
-=OWuI
+iQIcBAEBAgAGBQJTg1ZgAAoJELSic+t+oim9JwwP/1EarbuTjJ65mv8RIuOB4vhC
+MEwgk7KCTJyH6z1rq62s6tupFQ2+0T0HYd88pj6zF7Xql+vITWYEuGtdVB1ciogg
+ldU4CrOU4xvI7LKUleQwaku5cqvQhEHH71pJjWOBlDv1Wc3HGoMa5Vp2V6nSLKWi
+Yo4w7JiV/nYrVDESFTAeVrjLzLqjAwsdpgHpj+3cuVJWAGwqcpJgUzwjJlirTY6m
+fQrAv7LCz9xApGWXe/cR+dj4KF0yeAdOVNjgs6LIAdrpJZBU4yREZkhO5xb7Agjs
+CEu3O3KOcDke+V+fCvKmYuRsmIt8gDSEKCAj+d1FGDiMomDDeROwB8S9kFhEn7Rj
+fh3C8k6V6iIopm7YLlZjJcWFwo3Uo5Lgt+6cem+U5DBT7gKJAlsugGJAwGc2CG5E
+0aINVBsmUD/JnZNlidaVuKJwfQgqMiUrRrX2S9OaDH4JhLmPn3aabqd4OCnxP1Y4
+ovFO+NERH1me4DYDAYshEM57r2ffTDcEzE69+u1FPZ0iYw3n8Li/HfMAyc2fFAGk
+YLe2fX/2/T/0zYRX1RgZnUXLK4PEDPSH/PTXcf9+yNmDIFWu4ddoKLD6fOcbi6xp
+MfsLt7i8Co2+EvFBboFNm7pob6Q9JTQhOXozT6kymI7TUm1srSjzJu0S2vhnY9lx
+LYjqrXALpHKcNFhsVDSG
+=gKEJ
 -----END PGP SIGNATURE-----
 
---QiPs+vIMjk/XMT1Q--
+--ijVLzUSDbgcKP8+b--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
