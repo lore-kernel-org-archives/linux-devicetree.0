@@ -1,47 +1,40 @@
-From: Borislav Petkov <bp@alien8.de>
-Subject: Re: [PATCHv5 3/3] edac: altera: Add EDAC support for Altera SoC
- SDRAM Controller
-Date: Mon, 26 May 2014 11:57:30 +0200
-Message-ID: <20140526095730.GC25732@pd.tnic>
-References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
- <1400169891-29546-4-git-send-email-tthayer@altera.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400169891-29546-4-git-send-email-tthayer@altera.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: tthayer@altera.com
-Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-edac@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, tthayer.linux@gmail.com
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: [PATCH 3/4] ARM: imx53: instanciate cpufreq device
+Date: Mon, 26 May 2014 12:15:07 +0200
+Message-ID: <1401099308-9658-3-git-send-email-l.stach@pengutronix.de>
+References: <1401099308-9658-1-git-send-email-l.stach@pengutronix.de>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1401099308-9658-1-git-send-email-l.stach@pengutronix.de>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Viresh Kumar <viresh.kumar@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Shawn Guo <shawn.guo@freescale.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 15, 2014 at 11:04:51AM -0500, tthayer@altera.com wrote:
-> From: Thor Thayer <tthayer@altera.com>
-> 
-> v2: Use the SDRAM controller registers to calculate memory size
->     instead of the Device Tree. Update To & Cc list. Add maintainer
->     information.
-> 
-> v3: EDAC driver cleanup based on comments from Mailing list.
-> 
-> v4: Panic on DBE. Add macro around inject-error reads to prevent
->     them from being optimized out. Remove of_match_ptr since this
->     will always use Device Tree.
-> 
-> v5: Addition of printk to trigger function to ensure read vars
->     are not optimized out.
+Instanciate the platform device for the i.MX5 specific
+cpufreq driver.
 
-Yeah, you could turn those vX: messages into a real commit message -
-much better than none at all :-)
+Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+---
+ arch/arm/mach-imx/mach-imx53.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
-Other than that, the edac bits look ok. I'll wait out until you guys've
-sorted the devicetree issues so ping me when it is ready to pick up.
-
-Thanks.
-
+diff --git a/arch/arm/mach-imx/mach-imx53.c b/arch/arm/mach-imx/mach-imx53.c
+index 65850908a4b4..ca90967c10b7 100644
+--- a/arch/arm/mach-imx/mach-imx53.c
++++ b/arch/arm/mach-imx/mach-imx53.c
+@@ -26,9 +26,12 @@
+ 
+ static void __init imx53_dt_init(void)
+ {
++	struct platform_device_info devinfo = { .name = "imx5-cpufreq", };
++
+ 	mxc_arch_reset_init_dt();
+ 
+ 	of_platform_populate(NULL, of_default_bus_match_table, NULL, NULL);
++	platform_device_register_full(&devinfo);
+ }
+ 
+ static const char *imx53_dt_board_compat[] __initconst = {
 -- 
-Regards/Gruss,
-    Boris.
+2.0.0.rc2
 
-Sent from a fat crate under my desk. Formatting is fine.
---
