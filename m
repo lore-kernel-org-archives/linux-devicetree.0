@@ -1,36 +1,75 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/4] cpufreq: add i.MX5 cpufreq driver
-Date: Mon, 26 May 2014 21:52:21 +0530
-Message-ID: <CAKohpo=0VoOEz=SmvU+m6rX3beJ_nMpCUCx504Hsw2jRj2_QSg@mail.gmail.com>
-References: <1401099308-9658-1-git-send-email-l.stach@pengutronix.de>
-	<1401099308-9658-2-git-send-email-l.stach@pengutronix.de>
-	<CAKohpoksbFHyX=r0=URMedJNi68c3xAX4OrXzSFqgf1-bCm4+Q@mail.gmail.com>
-	<1401101131.4829.29.camel@weser.hi.pengutronix.de>
-	<CAKohponTUsYLf-8_iSnttwK8oXyJEZVWpF+a=vLC7r_jZ8AzOQ@mail.gmail.com>
-	<1401107748.4829.39.camel@weser.hi.pengutronix.de>
-	<CAKohpo=ncHUmtJOEw4FZG1BWUSuiQK4n+ETEMJWJj9UoPz2cnw@mail.gmail.com>
-	<1401109863.4829.46.camel@weser.hi.pengutronix.de>
-	<CAKohponzJma6yNueMef2Q4k+qT-n7boV0tx0pCqjFmuQWj6TXg@mail.gmail.com>
-	<1401112697.4829.56.camel@weser.hi.pengutronix.de>
-	<CAKohponvWLVfBL06HURnTq4nmdKjROV-bd4pVcbNmsAUYYC+nA@mail.gmail.com>
-	<1401118115.4829.60.camel@weser.hi.pengutronix.de>
-	<CAKohpo=yShVa+5On0cPU68ooQGO8dFXP+amPHf3taP_aYYe1Qg@mail.gmail.com>
-	<1401119853.4829.65.camel@weser.hi.pengutronix.de>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] ARM: debug: qcom: add UART addresses to Kconfig help
+Date: Mon, 26 May 2014 19:17:55 +0200
+Message-ID: <CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
+References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
+	<1400857952-6963-5-git-send-email-gdjakov@mm-sol.com>
+	<CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>
+	<53834578.9090305@mm-sol.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1401119853.4829.65.camel@weser.hi.pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53834578.9090305-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 26 May 2014 21:27, Lucas Stach <l.stach@pengutronix.de> wrote:
-> No, we need the regulator to determine which OPPs are actually useable.
-> If the regulator is only supplying 1.1V we can only scale to 800MHz max,
-> which is the case for some of the industrial i.MX53 versions.
+2014-05-26 15:45 GMT+02:00 Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>:
+> On 23.05.14, 19:39, Matthias Brugger wrote:
+>>
+>> 2014-05-23 17:12 GMT+02:00 Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>:
+>>>
+>>> Add information about the APQ8084 debug UART physical and virtual
+>>> addresses in the DEBUG_QCOM_UARTDM Kconfig help section.
+>>> Requires: https://lkml.org/lkml/2014/4/14/312
+>>>
+>>> Signed-off-by: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>  arch/arm/Kconfig.debug |    1 +
+>>>  1 file changed, 1 insertion(+)
+>>>
+>>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+>>> index 40ee328..e71723d 100644
+>>> --- a/arch/arm/Kconfig.debug
+>>> +++ b/arch/arm/Kconfig.debug
+>>> @@ -376,6 +376,7 @@ choice
+>>>                   their output to the serial port on Qualcomm devices.
+>>>
+>>>                   ARCH      DEBUG_UART_PHYS   DEBUG_UART_BASE
+>>> +                 APQ8084   0xf995e000        0xfa75e000
+>>>                   MSM8X60   0x19c40000        0xf0040000
+>>>                   MSM8960   0x16440000        0xf0040000
+>>>                   MSM8974   0xf991e000        0xfa71e000
+>>
+>>
+>> You don't have any uart defined in your dts. You should add them
+>> before any adding low level debug support.
+>> Otherwise there might be problems in booting a multi-platform kernel.
+>>
+>
+> Thanks for the comment! As the uart depends on clocks, i am adding it to the
+> dts as part of my global clock controller patchset [1].
+> In this patch i am just adding some information to the help section.
+> Do you see any problem with this?
 
-Go and add another binding for this max-volt.. And lets see how others
-respond.
+Are the patches for the clock controller applied already?
+If not, I would consider to add this patch to clock controller series.
 
-You can give a link to this discussion as others might find this very helpful.
+Cheers,
+Matthias
+
+>
+> [1] https://lkml.org/lkml/2014/5/22/422
+>
+> Thanks,
+> Georgi
+
+
+
+-- 
+motzblog.wordpress.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
