@@ -1,80 +1,40 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 09/11] brcmfmac: Fix OOB interrupt not working
- for BCM43362
-Date: Mon, 26 May 2014 09:48:04 +0200
-Message-ID: <1401090486-4414-10-git-send-email-hdegoede@redhat.com>
-References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBW7DROOAKGQEM7LU5ZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1401090486-4414-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [RESEND PATCH 4/5] power: max17040: Add ID for MAX77836 Fuel Gauge
+ block
+Date: Mon, 26 May 2014 09:47:34 +0200
+Message-ID: <1401090455-28726-5-git-send-email-k.kozlowski@samsung.com>
+References: <1401090455-28726-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1401090455-28726-1-git-send-email-k.kozlowski@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-kernel@vger.kernel.org
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Anton Vorontsov <anton@enomsg.org>
 List-Id: devicetree@vger.kernel.org
 
-It has taken me a long long time to get the OOB interrupt working on the
-AP6210 sdio wifi/bt module found on various Allwinner A20 boards. In the
-end I found these magic register pokes in the cubietruck kernel tree:
-https://github.com/cubieboard2/linux-sunxi/commit/7f08ba395617d17e7a711507503d89a50406fe7a
+MAX77836 has the same Fuel Gauge as MAX17040/17048. The max17040 driver
+can be safely re-used. The patch adds MAX77836 ID to array of
+i2c_device_id.
 
-I'm not entirely sure if this specific to the AP6210 module, or if this
-should be done for all BCM43362 sdio devices.
-
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Kyungmin Park <kyungmin.park@samsung.com>
+Cc: Anton Vorontsov <anton@enomsg.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>
+Cc: David Woodhouse <dwmw2@infradead.org>
 ---
- drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c | 18 ++++++++++++++++++
- 1 file changed, 18 insertions(+)
+ drivers/power/max17040_battery.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
-index 0fc707c..2369a0f 100644
---- a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
-@@ -39,7 +39,9 @@
- #include <brcm_hw_ids.h>
- #include <brcmu_utils.h>
- #include <brcmu_wifi.h>
-+#include <chipcommon.h>
- #include <soc.h>
-+#include "chip.h"
- #include "dhd_bus.h"
- #include "dhd_dbg.h"
- #include "sdio_host.h"
-@@ -119,6 +121,7 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
- {
- 	int ret = 0;
- 	u8 data;
-+	u32 addr, gpiocontrol;
- 	unsigned long flags;
+diff --git a/drivers/power/max17040_battery.c b/drivers/power/max17040_battery.c
+index 0fbac861080d..165ffe381803 100644
+--- a/drivers/power/max17040_battery.c
++++ b/drivers/power/max17040_battery.c
+@@ -278,6 +278,7 @@ static SIMPLE_DEV_PM_OPS(max17040_pm_ops, max17040_suspend, max17040_resume);
  
- 	if ((sdiodev->pdata) && (sdiodev->pdata->oob_irq_supported)) {
-@@ -148,6 +151,21 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
- 
- 		sdio_claim_host(sdiodev->func[1]);
- 
-+		if (sdiodev->bus_if->chip == BCM43362_CHIP_ID) {
-+			addr = CORE_CC_REG(SI_ENUM_BASE, gpiocontrol);
-+			gpiocontrol = brcmf_sdiod_regrl(sdiodev, addr, &ret);
-+			gpiocontrol |= 0x2;
-+			brcmf_sdiod_regwl(sdiodev, addr, gpiocontrol, &ret);
-+
-+			/* SPROM_ADDR_HIGH ? perhaps the defines name is off */
-+			brcmf_sdiod_regwb(sdiodev, SBSDIO_SPROM_ADDR_HIGH, 0xf,
-+					  &ret);
-+			brcmf_sdiod_regwb(sdiodev, SBSDIO_CHIP_CTRL_DATA, 0,
-+					  &ret);
-+			brcmf_sdiod_regwb(sdiodev, SBSDIO_CHIP_CTRL_EN, 0x2,
-+					  &ret);
-+		}
-+
- 		/* must configure SDIO_CCCR_IENx to enable irq */
- 		data = brcmf_sdiod_regrb(sdiodev, SDIO_CCCR_IENx, &ret);
- 		data |= 1 << SDIO_FUNC_1 | 1 << SDIO_FUNC_2 | 1;
+ static const struct i2c_device_id max17040_id[] = {
+ 	{ "max17040", 0 },
++	{ "max77836-battery", 0 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, max17040_id);
 -- 
-1.9.3
+1.9.1
