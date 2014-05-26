@@ -1,74 +1,37 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] ARM: debug: qcom: add UART addresses to Kconfig help
-Date: Mon, 26 May 2014 19:17:55 +0200
-Message-ID: <CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
-References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
-	<1400857952-6963-5-git-send-email-gdjakov@mm-sol.com>
-	<CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>
-	<53834578.9090305@mm-sol.com>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] regulator: fixed: use of_property_read_{bool|u32}()
+Date: Mon, 26 May 2014 21:33:34 +0400
+Message-ID: <53837AEE.7030400@cogentembedded.com>
+References: <201405252350.40402.sergei.shtylyov@cogentembedded.com> <20140526151958.GU22111@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53834578.9090305-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140526151958.GU22111-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, davidb-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-05-26 15:45 GMT+02:00 Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>:
-> On 23.05.14, 19:39, Matthias Brugger wrote:
->>
->> 2014-05-23 17:12 GMT+02:00 Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>:
->>>
->>> Add information about the APQ8084 debug UART physical and virtual
->>> addresses in the DEBUG_QCOM_UARTDM Kconfig help section.
->>> Requires: https://lkml.org/lkml/2014/4/14/312
->>>
->>> Signed-off-by: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
->>> ---
->>>  arch/arm/Kconfig.debug |    1 +
->>>  1 file changed, 1 insertion(+)
->>>
->>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
->>> index 40ee328..e71723d 100644
->>> --- a/arch/arm/Kconfig.debug
->>> +++ b/arch/arm/Kconfig.debug
->>> @@ -376,6 +376,7 @@ choice
->>>                   their output to the serial port on Qualcomm devices.
->>>
->>>                   ARCH      DEBUG_UART_PHYS   DEBUG_UART_BASE
->>> +                 APQ8084   0xf995e000        0xfa75e000
->>>                   MSM8X60   0x19c40000        0xf0040000
->>>                   MSM8960   0x16440000        0xf0040000
->>>                   MSM8974   0xf991e000        0xfa71e000
->>
->>
->> You don't have any uart defined in your dts. You should add them
->> before any adding low level debug support.
->> Otherwise there might be problems in booting a multi-platform kernel.
->>
->
-> Thanks for the comment! As the uart depends on clocks, i am adding it to the
-> dts as part of my global clock controller patchset [1].
-> In this patch i am just adding some information to the help section.
-> Do you see any problem with this?
+Hello.
 
-Are the patches for the clock controller applied already?
-If not, I would consider to add this patch to clock controller series.
+On 05/26/2014 07:19 PM, Mark Brown wrote:
 
-Cheers,
-Matthias
+>> Use more compact of_property_read_{bool|u32}() calls instead of the
+>> of_{find|get}_property() calls.
 
->
-> [1] https://lkml.org/lkml/2014/5/22/422
->
-> Thanks,
-> Georgi
+> Applied, thanks.
 
+    Thank you for the quick reply! :-)
 
+>  Always CC mailing lists on patches.
 
--- 
-motzblog.wordpress.com
+    Er, I did CC devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org but (as usual) avoided CCing LKML 
+-- that's all the lists scripts/get_maintainer.pl suggested. Do you mean some 
+other list I don't know about?
+
+WBR, Sergei
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
