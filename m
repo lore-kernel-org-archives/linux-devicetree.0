@@ -1,94 +1,106 @@
-From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Tue, 27 May 2014 00:36:30 +0200
-Message-ID: <20140526223630.GA32691@earth.universe>
-References: <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
- <20140516105814.3EA3FC403C2@trevor.secretlab.ca>
- <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
- <20140520055026.E3A98C412DA@trevor.secretlab.ca>
- <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
- <20140526104824.63F13C42129@trevor.secretlab.ca>
- <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
- <20140526112348.907B7C421A5@trevor.secretlab.ca>
- <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
- <20140526213303.C1C73C40E11@trevor.secretlab.ca>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] ARM: shmobile: r8a7790: link PCI USB devices to USB
+ PHY
+Date: Tue, 27 May 2014 02:46:17 +0400
+Message-ID: <5383C439.1080808@cogentembedded.com>
+References: <201405270217.33057.sergei.shtylyov@cogentembedded.com> <CANqRtoT+xKmK7wkayiD9yCmUqFNKWxpeSgkGTiCqc+THYE0sVw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-	protocol="application/pgp-signature"; boundary="7AUc2qLy4jB3hD7Z"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140526213303.C1C73C40E11-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pet>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoT+xKmK7wkayiD9yCmUqFNKWxpeSgkGTiCqc+THYE0sVw@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---7AUc2qLy4jB3hD7Z
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 05/27/2014 02:36 AM, Magnus Damm wrote:
 
-Hi,
+>> Describe the PCI USB devices that are behind the PCI bridges, adding necessary
+>> links to the USB PHY device.
 
-On Mon, May 26, 2014 at 10:33:03PM +0100, Grant Likely wrote:
-> After thinking about it more, I think it is very likely that removing
-> all the overlays is the correct thing to do in the kexec use-case. When
-> kexec-ing, it makes sense that we'd want the exact same behaviour from
-> the kexec'ed kernel. That means we want the device drivers to do the
-> same thing including loading whatever overlays they depend on.
->=20
-> If the flattened tree was left applied, then the behaviour becomes
-> different.
->=20
-> I say always remove the overlays unless explicitly told not to, but I'm
-> struggling to come up with use cases where keeping them applied is
-> desirable.
+>> Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
 
-I would assume, that I want them applied in most cases. DT describes
-the hardware. If I kexec into a new kernel I change software, not
-hardware.
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Maybe I'm missing the main purpose of the feature. I currently see
-two useful usecases for DT overlays:
+>> ---
+>> This patch is against 'renesas-devel-v3.15-rc7-20140526' tag of Simon Horman's
+>> 'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches posted
+>> before. The patch requires the internal PCI DT support, USB PHY driver, and
+>> USB HCD generic PHY support (also already posted) in order to work.
 
-1. The dtb the kernel is booted with cannot be changed for some
-   reason, but the board has additional hardware attached (e.g.
-   the user added a sensor on the i2c bus)
-2. The hardware is changed on the fly (e.g. the user flashed the
-   FPGA part of a zynq processor), sensors on i2c bus, ...
+>> Changes in version 2:
+>> - renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
+>> - changed the PHY specifier in the PCI#2 node to reflect that channel #1 support
+>>    was dropped;
+>> - resolved rejects, refreshed the patch.
 
-In both cases the kernel should be booted with the additional
-overlay information IMHO. Though for the second case it should
-be possible to remove the "programmed" hardware information
-somehow.
+>>   arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
+>>   1 file changed, 28 insertions(+)
 
--- Sebastian
+>> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+>> ===================================================================
+>> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+>> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+>> @@ -919,6 +919,20 @@
+>>                  interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>>                                   0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>>                                   0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +               usb@0,1 {
+>> +                       reg = <0x800 0 0 0 0>;
+>> +                       device_type = "pci";
+>> +                       phys = <&usbphy 0 0>;
+>> +                       phy-names = "usb";
+>> +               };
+>> +
+>> +               usb@0,2 {
+>> +                       reg = <0x1000 0 0 0 0>;
+>> +                       device_type = "pci";
+>> +                       phys = <&usbphy 0 0>;
+>> +                       phy-names = "usb";
+>> +               };
+>>          };
+>>
+>>          pci1: pci@ee0b0000 {
+>> @@ -955,5 +969,19 @@
+>>                  interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+>>                                   0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+>>                                   0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
+>> +
+>> +               usb@0,1 {
+>> +                       reg = <0x800 0 0 0 0>;
+>> +                       device_type = "pci";
+>> +                       phys = <&usbphy 1 0>;
+>> +                       phy-names = "usb";
+>> +               };
+>> +
+>> +               usb@0,2 {
+>> +                       reg = <0x1000 0 0 0 0>;
+>> +                       device_type = "pci";
+>> +                       phys = <&usbphy 1 0>;
+>> +                       phy-names = "usb";
+>> +               };
+>>          };
+>>   };
 
---7AUc2qLy4jB3hD7Z
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Hi Sergei,
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+> Above I see two hunks of DTS code but my r8a7790 data sheet contains
+> three USB PCI devices. Perhaps my understanding is wrong, or may there
 
-iQIcBAEBCgAGBQJTg8HuAAoJENju1/PIO/qaNmgP/jnomQAKsCJ1AIRJLvOXnMRq
-tQRkJ1pWWW46W3t+dPbmyifRKuT7VL0ylZwSOySoQ/MG/Lw5VhSy4HkYVLc18gfh
-dookRIUMrmoKOmjzG31ykCMU8397lofN1Ry0PKWB1p5LzvuhM4KBvqH5L2DLk7c2
-9kCz8vsenmFwKyjWnO31EGtf1fNrufK2NMQVIooh0dvClqcQVuFXR287t8LWd+ep
-L4Avbfk9KVpeWC7ES7/MsHiwqIjn3EFqzc52vijaQ/J5TOw4ySgH1nFc+wzU7ae3
-vyoRmQ/yPYN7By1NGSqWTy0uMMD/4DR52kP4qsUn8VWGcIWoXfMmRpeZzctyAujS
-MsWkG5ZzdA7POBGD+YTyzvg/JeIsY0+InRjV9bq1bsZmK58y2Go+IOFRQK7n4wwZ
-wCx2yfeziAGy8EM0ZxlAfu9US6pfhVp5qsy6IcKdqHu5YP5CB/btyd0AmZ1+uDw2
-LdHTo4TszXbAUHRkQWML9GQE65n7s5CNXcOxdlLpYtKg++UfAIAoip3qVpGY1coX
-TTuIdlNYDqrL+1/YAa5pRvE5+FndL82WZR9eqBadOuJOO7QdIHUXw0VnKcAmHBsE
-2u9mDqPjKeNLjLeGxutoYRu9u3bRip6QPtjR1iYDgizzPnsSd4JA/0yCmLLAcdPD
-0/8ZCeNCV2m+BzagEEBJ
-=yR8R
------END PGP SIGNATURE-----
+    You probably wanted to say 6 (OHCI and EHCI are 2 different PCI devices).
 
---7AUc2qLy4jB3hD7Z--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> is some other patch available to enable all USB PCI devices included
+> in the SoC?
+
+    This patch doesn't enable USB devices, it just links them to the PHY where 
+it makes sense (for USB channel #1 it doesn't).
+
+> Thanks,
+> / magnus
+
+WBR, Sergei
+
