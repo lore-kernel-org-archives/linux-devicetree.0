@@ -1,78 +1,79 @@
-From: Ivan Mikhaylov <ivan@ru.ibm.com>
-Subject: [PATCH 2/2] emac: aggregation of v1-2 PLB errors for IER register
-Date: Mon, 26 May 2014 22:34:39 +0400
-Message-ID: <1401129279.24099.23.camel@localhost.localdomain>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: rockchip: convert smp bringup to CPU_METHOD_OF_DECLARE
+Date: Mon, 26 May 2014 21:20:15 +0200
+Message-ID: <77845932.xlUTKoJDWT@phil>
+References: <1632873.urGeGsUMPH@diego> <1878147.CvhHSZhTas@diego> <20140526181315.GA27093@quad.lixom.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Alistair Popple <alistair@popple.id.au>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140526181315.GA27093-O5ziIzlqnXUVNXGz7ipsyg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux ARM Kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Aggreagation of version 1-2 because of version 1 can hit
-PLB errors too. If it's not set so we missing events for PLB bits
-and driver can't process those interrupts.
+Am Montag, 26. Mai 2014, 11:13:15 schrieb Olof Johansson:
+> On Thu, Mar 27, 2014 at 01:06:32AM +0100, Heiko St=FCbner wrote:
+> > With the newly introduced CPU_METHOD_OF_DECLARE is not necessary an=
+ymore
+> > to reference the relevant smp_ops in the board file, but instead it=
+ can
+> > simply be set by the enable-method property of the cpu nodes.
+> >=20
+> > Signed-off-by: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+>=20
+> Applied, however:
+> > ---
+> >=20
+> > changes since v1:
+> >   - add a short description to the enable-method binding
+> > =20
+> >  Documentation/devicetree/bindings/arm/cpus.txt | 2 ++
+> >  arch/arm/boot/dts/rk3066a.dtsi                 | 1 +
+> >  arch/arm/boot/dts/rk3188.dtsi                  | 1 +
+> >  arch/arm/mach-rockchip/core.h                  | 2 --
+> >  arch/arm/mach-rockchip/platsmp.c               | 3 ++-
+> >  arch/arm/mach-rockchip/rockchip.c              | 1 -
+> >  6 files changed, 6 insertions(+), 4 deletions(-)
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/arm/cpus.txt
+> > b/Documentation/devicetree/bindings/arm/cpus.txt index 333f4ae..f52=
+a9ac
+> > 100644
+> > --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> > +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> > @@ -185,6 +185,8 @@ nodes to be present and contain the properties
+> > described below.>=20
+> >  			    "qcom,gcc-msm8660"
+> >  			    "qcom,kpss-acc-v1"
+> >  			    "qcom,kpss-acc-v2"
+> >=20
+> > +			    "rockchip,rk3066-smp" - cpu-core handling of Socs
+> > +					from Rockchip starting with rk3066
+>=20
+> Nobody else has a comment here, so I removed this one.
+>=20
+> I noticed that the list is unsorted, in particular the new marvell en=
+tries
+> were appended instead of inserted at the right location, which caused=
+ a
+> merge conflict. Sigh. I'll do a separate commit on top to sort the li=
+st,
+> since we seem to have the new out-of-order additions in our tree.
 
-Signed-off-by: Ivan Mikhaylov <ivan@ru.ibm.com>
+I added the comment after Mark Rutland noted:
 
----
- drivers/net/ethernet/ibm/emac/mal.c |  5 +----
- drivers/net/ethernet/ibm/emac/mal.h | 20 ++++++++------------
- 2 files changed, 9 insertions(+), 16 deletions(-)
+"We should document what what these actually mean, so as to be a hardwa=
+re
+description and not a Linux internals description."
 
-diff --git a/drivers/net/ethernet/ibm/emac/mal.c b/drivers/net/ethernet/ibm/emac/mal.c
-index 9d75fef..63eb959 100644
---- a/drivers/net/ethernet/ibm/emac/mal.c
-+++ b/drivers/net/ethernet/ibm/emac/mal.c
-@@ -682,10 +682,7 @@ static int mal_probe(struct platform_device *ofdev)
- 		goto fail6;
- 
- 	/* Enable all MAL SERR interrupt sources */
--	if (mal->version == 2)
--		set_mal_dcrn(mal, MAL_IER, MAL2_IER_EVENTS);
--	else
--		set_mal_dcrn(mal, MAL_IER, MAL1_IER_EVENTS);
-+	set_mal_dcrn(mal, MAL_IER, MAL_IER_EVENTS);
- 
- 	/* Enable EOB interrupt */
- 	mal_enable_eob_irq(mal);
-diff --git a/drivers/net/ethernet/ibm/emac/mal.h b/drivers/net/ethernet/ibm/emac/mal.h
-index e431a32..eeade2e 100644
---- a/drivers/net/ethernet/ibm/emac/mal.h
-+++ b/drivers/net/ethernet/ibm/emac/mal.h
-@@ -95,24 +95,20 @@
- 
- 
- #define MAL_IER			0x02
-+/* MAL IER bits */
- #define   MAL_IER_DE		0x00000010
- #define   MAL_IER_OTE		0x00000004
- #define   MAL_IER_OE		0x00000002
- #define   MAL_IER_PE		0x00000001
--/* MAL V1 IER bits */
--#define   MAL1_IER_NWE		0x00000008
--#define   MAL1_IER_SOC_EVENTS	MAL1_IER_NWE
--#define   MAL1_IER_EVENTS	(MAL1_IER_SOC_EVENTS | MAL_IER_DE | \
--				 MAL_IER_OTE | MAL_IER_OE | MAL_IER_PE)
- 
--/* MAL V2 IER bits */
--#define   MAL2_IER_PT		0x00000080
--#define   MAL2_IER_PRE		0x00000040
--#define   MAL2_IER_PWE		0x00000020
--#define   MAL2_IER_SOC_EVENTS	(MAL2_IER_PT | MAL2_IER_PRE | MAL2_IER_PWE)
--#define   MAL2_IER_EVENTS	(MAL2_IER_SOC_EVENTS | MAL_IER_DE | \
--				 MAL_IER_OTE | MAL_IER_OE | MAL_IER_PE)
-+/* PLB read/write/timeout errors */
-+#define   MAL_IER_PTE		0x00000080
-+#define   MAL_IER_PRE		0x00000040
-+#define   MAL_IER_PWE		0x00000020
- 
-+#define   MAL_IER_SOC_EVENTS	(MAL_IER_PTE | MAL_IER_PRE | MAL_IER_PWE)
-+#define   MAL_IER_EVENTS	(MAL_IER_SOC_EVENTS | MAL_IER_DE | \
-+				 MAL_IER_OTE | MAL_IER_OE | MAL_IER_PE)
- 
- #define MAL_TXCASR		0x04
- #define MAL_TXCARR		0x05
--- 
-1.9.3
+But I'm fine with it either way :-)
+
+
+Heiko
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
