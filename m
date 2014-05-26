@@ -1,54 +1,76 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/4] cpufreq: add i.MX5 cpufreq driver
-Date: Mon, 26 May 2014 12:45:31 +0200
-Message-ID: <1401101131.4829.29.camel@weser.hi.pengutronix.de>
-References: <1401099308-9658-1-git-send-email-l.stach@pengutronix.de>
-	 <1401099308-9658-2-git-send-email-l.stach@pengutronix.de>
-	 <CAKohpoksbFHyX=r0=URMedJNi68c3xAX4OrXzSFqgf1-bCm4+Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpoksbFHyX=r0=URMedJNi68c3xAX4OrXzSFqgf1-bCm4+Q@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Mon, 26 May 2014 11:48:24 +0100
+Message-ID: <20140526104824.63F13C42129@trevor.secretlab.ca>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
+	<CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 26.05.2014, 16:02 +0530 schrieb Viresh Kumar:
-> On 26 May 2014 15:45, Lucas Stach <l.stach@pengutronix.de> wrote:
-> > SoC specific driver to be able to handle PLL reprogramming
-> > for exact OPP frequencies and additional power saving.
-> >
-> > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> > ---
-> >  .../devicetree/bindings/cpufreq/cpufreq-imx5.txt   |  43 +++
-> >  drivers/cpufreq/Kconfig.arm                        |   8 +
-> >  drivers/cpufreq/Makefile                           |   1 +
-> >  drivers/cpufreq/imx5-cpufreq.c                     | 302 +++++++++++++++++++++
-> >  4 files changed, 354 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-imx5.txt
-> >  create mode 100644 drivers/cpufreq/imx5-cpufreq.c
+On Tue, 20 May 2014 09:38:49 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
+> Hi Grant,
 > 
-> What stops you to use cpufreq-cpu0 driver with a CPU clock
-> driver? Its highly discouraged to add a new driver here if you
-> can reuse it.. Which is more or less confirmed from a broad look..
+> On Tue, May 20, 2014 at 7:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> >> Why has the overlay system been designed for plugging and unpluging whole
+> >> overlays?
+> >> That means the kernel has to remember the full stack, causing issues with
+> >> e.g. kexec.
+> >
+> > Mostly so that drivers don't see any difference in the livetree data
+> > structure. It also means that userspace sees a single representation of
+> > the hardware at any given time.
+> 
+> Sorry, I don't follow the argument about the "single representation of the
+> hardware".
 
-This driver handles the i.MX5 specific clock reparenting to be able to
-reprogramm the PLL. cpufreq-cpu0 can only change a postdivider of the
-PLL, which means we can't reach the exact OPP frequencies and can not
-profit from the additional power savings of a slower running PLL.
+Er, s/of the hardware/of the tree/. Right now the overlay design
+modifies the live tree which at the same time modifies the tree
+representation in /sys/firmware/devicetree. If the design was changed to
+keep the overlay logically separate, then I would think we want to
+expose that information to usespace also. In fact, I think we would need
+to for usecases like kexec.
 
-Also without reprogramming the PLL we could possibly not scale to the
-highest OPPs if the bootloader left the PLL at a slower rate. This is
-the case for many i.MX53 boards, as the CPU regulator normally does
-start up with the voltage required for 800MHz operation. If the
-bootloader decides to not touch the regulator and set the PLL to 800MHz
-the 1GHz and 1.2GHz operating points won't be useable.
+> 
+> >> Why not allowing the addition of removal of subtrees of the full device
+> >> tree?
+> >
+> > Overlays is more than just a subtree. A single overlay can make
+> > manipulations of multiple subtrees that should be handled as logically
+> > atomic.
+> 
+> Sure, it's more complicated due to the atomicity of multiple changes.
+> 
+> >> This is similar to other hotpluggable subsystems (which are not necessarily
+> >> DT-based), like PCI Express. That way the kernel can pass a
+> >> DT-representation of the actual current device tree to a kexec'ed kernel.
+> >
+> > I'm not following you argument. Hardware hotplug systems like PCIe don't
+> > manipulate the firmware data. The kernel detects the new device and
+> > populates the Linux device model directly. Firmware provided data (ACPI
+> > or FDT) isn't involved.
+> 
+> I mean the kernel doesn't remember the exact order in a stack, to reverse
+> operations. E.g. I can add hotplug a PCIe bridge with multiple devices
+> behind it, and unplug a single device later. It's still one subtree, though.
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+The problem comes when one overlay adds a node or configuration that is
+depended on by the second overlay, but there isn't a direct reference by
+the second overlay into the first.
 
+g.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
