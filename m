@@ -1,177 +1,54 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 2/2] ARM: dts: mvebu: split SolidRun CuBox into variants
-Date: Mon, 26 May 2014 23:33:29 +0200
-Message-ID: <1401140009-31505-2-git-send-email-sebastian.hesselbarth@gmail.com>
-References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Mon, 26 May 2014 23:44:41 +0200
+Message-ID: <CAMuHMdWoQd=EJ7ToWMrSq728HL7d7Ht1YmaNUO1EYZBU0eB1FQ@mail.gmail.com>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
+	<CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+	<20140526104824.63F13C42129@trevor.secretlab.ca>
+	<CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
+	<20140526112348.907B7C421A5@trevor.secretlab.ca>
+	<A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
+	<20140526213303.C1C73C40E11@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140526213303.C1C73C40E11-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
-As Mainlining effort for SolidRun CuBox has been carried out on the
-Engineering Sample, the board DTS was reflecting this. Actually,
-SolidRun CuBox comes in three different variants: Engineering Sample (ES),
-production with 1GB RAM (1G), and production with 2GB RAM (2G).
+Hi Grant,
 
-Therefore, we split the current dove-cubox.dts into a common board include
-and one board dts for each of the above variants.
+On Mon, May 26, 2014 at 11:33 PM, Grant Likely
+<grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
+> After thinking about it more, I think it is very likely that removing
+> all the overlays is the correct thing to do in the kexec use-case. When
+> kexec-ing, it makes sense that we'd want the exact same behaviour from
+> the kexec'ed kernel. That means we want the device drivers to do the
+> same thing including loading whatever overlays they depend on.
 
-Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
----
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Russell King <linux@arm.linux.org.uk>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Gregory Clement <gregory.clement@free-electrons.com>
-Cc: devicetree@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
----
- arch/arm/boot/dts/Makefile                         |  4 +++-
- arch/arm/boot/dts/dove-cubox-1g.dts                | 17 ++++++++++++++++
- arch/arm/boot/dts/dove-cubox-2g.dts                | 17 ++++++++++++++++
- arch/arm/boot/dts/dove-cubox-es.dts                | 23 ++++++++++++++++++++++
- .../boot/dts/{dove-cubox.dts => dove-cubox.dtsi}   | 17 ----------------
- 5 files changed, 60 insertions(+), 18 deletions(-)
- create mode 100644 arch/arm/boot/dts/dove-cubox-1g.dts
- create mode 100644 arch/arm/boot/dts/dove-cubox-2g.dts
- create mode 100644 arch/arm/boot/dts/dove-cubox-es.dts
- rename arch/arm/boot/dts/{dove-cubox.dts => dove-cubox.dtsi} (86%)
+Are the device drivers loading the overlays?
+That sounds a bit backwards to me.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 35c146f31e46..40a008539c0c 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -404,7 +404,9 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
- 	armada-xp-matrix.dtb \
- 	armada-xp-openblocks-ax3-4.dtb
- dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
--	dove-cubox.dtb \
-+	dove-cubox-1g.dtb \
-+	dove-cubox-2g.dtb \
-+	dove-cubox-es.dtb \
- 	dove-d2plug.dtb \
- 	dove-d3plug.dtb \
- 	dove-dove-db.dtb
-diff --git a/arch/arm/boot/dts/dove-cubox-1g.dts b/arch/arm/boot/dts/dove-cubox-1g.dts
-new file mode 100644
-index 000000000000..eebd3f7ca7e6
---- /dev/null
-+++ b/arch/arm/boot/dts/dove-cubox-1g.dts
-@@ -0,0 +1,17 @@
-+/dts-v1/;
-+
-+#include "dove-cubox.dtsi"
-+
-+/ {
-+	model = "SolidRun CuBox (1G)";
-+	compatible = "solidrun,cubox-1g", "solidrun,cubox", "marvell,dove";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x40000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8 earlyprintk";
-+	};
-+};
-diff --git a/arch/arm/boot/dts/dove-cubox-2g.dts b/arch/arm/boot/dts/dove-cubox-2g.dts
-new file mode 100644
-index 000000000000..513b6a68eba3
---- /dev/null
-+++ b/arch/arm/boot/dts/dove-cubox-2g.dts
-@@ -0,0 +1,17 @@
-+/dts-v1/;
-+
-+#include "dove-cubox.dtsi"
-+
-+/ {
-+	model = "SolidRun CuBox (2G)";
-+	compatible = "solidrun,cubox-2g", "solidrun,cubox", "marvell,dove";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x80000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8 earlyprintk";
-+	};
-+};
-diff --git a/arch/arm/boot/dts/dove-cubox-es.dts b/arch/arm/boot/dts/dove-cubox-es.dts
-new file mode 100644
-index 000000000000..5fc17ce34c98
---- /dev/null
-+++ b/arch/arm/boot/dts/dove-cubox-es.dts
-@@ -0,0 +1,23 @@
-+/dts-v1/;
-+
-+#include "dove-cubox.dtsi"
-+
-+/ {
-+	model = "SolidRun CuBox (ES)";
-+	compatible = "solidrun,cubox-es", "solidrun,cubox", "marvell,dove";
-+
-+	memory {
-+		device_type = "memory";
-+		reg = <0x00000000 0x40000000>;
-+	};
-+
-+	chosen {
-+		bootargs = "console=ttyS0,115200n8 earlyprintk";
-+	};
-+};
-+
-+&sdio0 {
-+	/* sdio0 card detect is connected to wrong pin on CuBox */
-+	cd-gpios = <&gpio0 12 1>;
-+	pinctrl-0 = <&pmx_sdio0 &pmx_gpio_12>;
-+};
-diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dtsi
-similarity index 86%
-rename from arch/arm/boot/dts/dove-cubox.dts
-rename to arch/arm/boot/dts/dove-cubox.dtsi
-index 7a70f4ca502a..5752d729cc71 100644
---- a/arch/arm/boot/dts/dove-cubox.dts
-+++ b/arch/arm/boot/dts/dove-cubox.dtsi
-@@ -1,20 +1,6 @@
--/dts-v1/;
--
- #include "dove.dtsi"
- 
- / {
--	model = "SolidRun CuBox";
--	compatible = "solidrun,cubox", "marvell,dove";
--
--	memory {
--		device_type = "memory";
--		reg = <0x00000000 0x40000000>;
--	};
--
--	chosen {
--		bootargs = "console=ttyS0,115200n8 earlyprintk";
--	};
--
- 	leds {
- 		compatible = "gpio-leds";
- 		pinctrl-0 = <&pmx_gpio_18>;
-@@ -111,9 +97,6 @@
- 
- &sdio0 {
- 	status = "okay";
--	/* sdio0 card detect is connected to wrong pin on CuBox */
--	cd-gpios = <&gpio0 12 1>;
--	pinctrl-0 = <&pmx_sdio0 &pmx_gpio_12>;
- };
- 
- &spi0 {
--- 
-1.9.1
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
