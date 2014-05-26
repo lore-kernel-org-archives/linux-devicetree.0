@@ -1,80 +1,54 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
-Date: Mon, 26 May 2014 15:41:54 +0200
-Message-ID: <20140526134153.GA2373@ulmo>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v2 4/4] ARM: debug: qcom: add UART addresses to Kconfig
+ help
+Date: Mon, 26 May 2014 16:45:28 +0300
+Message-ID: <53834578.9090305@mm-sol.com>
+References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>	<1400857952-6963-5-git-send-email-gdjakov@mm-sol.com> <CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, s.trumtrar@pengutronix.de, djkurtz@chromium.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, sboyd@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 23.05.14, 19:39, Matthias Brugger wrote:
+> 2014-05-23 17:12 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
+>> Add information about the APQ8084 debug UART physical and virtual
+>> addresses in the DEBUG_QCOM_UARTDM Kconfig help section.
+>> Requires: https://lkml.org/lkml/2014/4/14/312
+>>
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>> ---
+>>  arch/arm/Kconfig.debug |    1 +
+>>  1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+>> index 40ee328..e71723d 100644
+>> --- a/arch/arm/Kconfig.debug
+>> +++ b/arch/arm/Kconfig.debug
+>> @@ -376,6 +376,7 @@ choice
+>>                   their output to the serial port on Qualcomm devices.
+>>
+>>                   ARCH      DEBUG_UART_PHYS   DEBUG_UART_BASE
+>> +                 APQ8084   0xf995e000        0xfa75e000
+>>                   MSM8X60   0x19c40000        0xf0040000
+>>                   MSM8960   0x16440000        0xf0040000
+>>                   MSM8974   0xf991e000        0xfa71e000
+>
+> You don't have any uart defined in your dts. You should add them
+> before any adding low level debug support.
+> Otherwise there might be problems in booting a multi-platform kernel.
+>
 
---qMm9M+Fa2AknHoGS
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for the comment! As the uart depends on clocks, i am adding it to 
+the dts as part of my global clock controller patchset [1].
+In this patch i am just adding some information to the help section.
+Do you see any problem with this?
 
-On Wed, May 21, 2014 at 01:43:05PM +0900, YoungJun Cho wrote:
-> This patch adds DT bindings for s6e3fa0 panel.
-> The bindings describes panel resources, display timings and cpu mode timi=
-ngs.
->=20
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   45 ++++++++++++++=
-++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3f=
-a0.txt
+[1] https://lkml.org/lkml/2014/5/22/422
 
-You're totally confusing me here. Half of this patch series is about
-adding i80 support to Exynos FIMD, and then you go and add what is
-apparently a DSI peripheral driver here that's supposed to be used by
-this new i80 support. Nothing I've been able to dig up indicates that
-i80 or DSI are in anyway related.
-
-Even the Exynos DSI Master bindings[0] say that these two are not at all
-the same thing:
-
-	port node:
-	    - reg: (required) can be 0 for input RGB/I80 port or 1 for
-	      DSI port;
-
-Am I missing something here?
-
-Thierry
-
-[0]: https://www.kernel.org/doc/Documentation/devicetree/bindings/video/exy=
-nos_dsim.txt
-
---qMm9M+Fa2AknHoGS
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTg0ShAAoJEN0jrNd/PrOhq1sQAIYJIGlds6R9NjdR1R6lhrO7
-ly7PjU2ToUtrJxkrCJOOMgg0DieBRWBXF8Q90GKRUQB6JPS4pUwnc9D9A3QwyixO
-f1HMwhHodnxCR94PkbSD5x6+D05Hm6Yu+pepUbVpYvh9MpqbsRcXXUPesOexbWVS
-ekDr9OTgosBtdijYXRYS11wowWoCJ0799SASGl/4v2B3+Hq0MEZQcV5iBfTrG1/A
-PPQ2beC0mSTZgv/N4JSUrtjJ57+Zx5uSabmWEPx/z8r000F7XbfRh1EmzrVdrrhs
-Np2/TsZty7AqJqWrxVnlymWUxjeo9Jzy+t0WjBNo8lSvxTKhFSm+OF1ox55OscNO
-MQ6swV7Eutw16BPJh8FrLTFtpbF7KCKr4WMuS0vzxzrRLDyoKOjKoZ2r7IhDrXqK
-crHvCuslVqCfdZV3NXEUmCztLjmJqPSvPY8pW9iHs0DnJ05s4wnEUwKOpB65u0e+
-wVNTa0xW4sO2cqAlFvfzd6bRZ4UUceQixo27waZBt33G1R+QAHE7Wjl9aZ/0/EmY
-IvfTI1b7NG3M614YfFljB+nGNZle8J5wyl5Jw+HJy6iWPJEhfD9KeQIaoWpq+XwU
-f5kfERzTvawdWOjBCY1dUBCQYcBnubn1q+SDwWIScOKUUmLQJmaOI5u6j8tUjGnO
-KUPU93umAHqeYUIBDG8X
-=h0Co
------END PGP SIGNATURE-----
-
---qMm9M+Fa2AknHoGS--
+Thanks,
+Georgi
