@@ -1,84 +1,85 @@
-From: Tarek Dakhran <t.dakhran@samsung.com>
-Subject: [PATCH v11 1/3] ARM: EXYNOS: Add support for EXYNOS5410 SoC
-Date: Mon, 26 May 2014 07:23:31 +0400
-Message-ID: <1401074613-29227-2-git-send-email-t.dakhran@samsung.com>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>, Tarek Dakhran <t.dakhran@samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 09/22] clk: sunxi: Implement A31 PLL6 as a divs clock for
+ 2x output
+Date: Mon, 26 May 2014 11:47:39 +0800
+Message-ID: <CAGb2v67bLh-r4we6yU4YfBh5LKCA6f7uEy8Gbw7Unna2Y6POaQ@mail.gmail.com>
+References: <1400831485-28576-1-git-send-email-wens@csie.org>
+ <1400831485-28576-10-git-send-email-wens@csie.org> <20140525185624.GR10768@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-Reply-To: <20140525185624.GR10768@lukather>
+Sender: linux-serial-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@free-electrons.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, linux-serial@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>
 List-Id: devicetree@vger.kernel.org
 
-EXYNOS5410 is SoC in Samsung's Exynos5 SoC series.
-Add initial support for this SoC.
+Hi,
 
-Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
----
- arch/arm/mach-exynos/Kconfig  |    5 +++++
- arch/arm/mach-exynos/common.h |   12 ++++++++++--
- 2 files changed, 15 insertions(+), 2 deletions(-)
+On Mon, May 26, 2014 at 2:56 AM, Maxime Ripard
+<maxime.ripard@free-electrons.com> wrote:
+> On Fri, May 23, 2014 at 03:51:12PM +0800, Chen-Yu Tsai wrote:
+>> Some clock modules on the A31 use PLL6x2 as one of their inputs.
+>> This patch changes the PLL6 implementation for A31 to a divs clock,
+>> i.e. clock with multiple outputs that have different dividers.
+>>
+>> This behavior is consistent with previous SoC's by Allwinner.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>> ---
+>>  drivers/clk/sunxi/clk-sunxi.c | 11 ++++++++++-
+>>  1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+>> index 6857c6e..339cabc 100644
+>> --- a/drivers/clk/sunxi/clk-sunxi.c
+>> +++ b/drivers/clk/sunxi/clk-sunxi.c
+>> @@ -496,6 +496,7 @@ static const struct factors_data sun6i_a31_pll6_data __initconst = {
+>>       .enable = 31,
+>>       .table = &sun6i_a31_pll6_config,
+>>       .getter = sun6i_a31_get_pll6_factors,
+>> +     .name = "pll6",
+>>  };
+>>
+>>  static const struct factors_data sun4i_apb1_data __initconst = {
+>> @@ -969,6 +970,14 @@ static const struct divs_data pll6_divs_data __initconst = {
+>>       }
+>>  };
+>>
+>> +static const struct divs_data sun6i_a31_pll6_divs_data __initconst = {
+>> +     .factors = &sun6i_a31_pll6_data,
+>> +     .ndivs = 1,
+>> +     .div = {
+>> +             { .fixed = 2 }, /* P, other */
+>> +     }
+>> +};
+>> +
+>>  /**
+>>   * sunxi_divs_clk_setup() - Setup function for leaf divisors on clocks
+>>   *
+>> @@ -1108,7 +1117,6 @@ static const struct of_device_id clk_factors_match[] __initconst = {
+>>       {.compatible = "allwinner,sun4i-a10-pll1-clk", .data = &sun4i_pll1_data,},
+>>       {.compatible = "allwinner,sun6i-a31-pll1-clk", .data = &sun6i_a31_pll1_data,},
+>>       {.compatible = "allwinner,sun7i-a20-pll4-clk", .data = &sun7i_a20_pll4_data,},
+>> -     {.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_data,},
+>>       {.compatible = "allwinner,sun4i-a10-apb1-clk", .data = &sun4i_apb1_data,},
+>>       {.compatible = "allwinner,sun4i-a10-mod0-clk", .data = &sun4i_mod0_data,},
+>>       {.compatible = "allwinner,sun7i-a20-out-clk", .data = &sun7i_a20_out_data,},
+>> @@ -1128,6 +1136,7 @@ static const struct of_device_id clk_div_match[] __initconst = {
+>>  static const struct of_device_id clk_divs_match[] __initconst = {
+>>       {.compatible = "allwinner,sun4i-a10-pll5-clk", .data = &pll5_divs_data,},
+>>       {.compatible = "allwinner,sun4i-a10-pll6-clk", .data = &pll6_divs_data,},
+>> +     {.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_divs_data,},
+>
+> Can't the PLL6x2 clock just be a fixed-factor-clock? It would make the
+> change trivial, and better fit what it actually is.
 
-diff --git a/arch/arm/mach-exynos/Kconfig b/arch/arm/mach-exynos/Kconfig
-index 15fa610..d58995c9 100644
---- a/arch/arm/mach-exynos/Kconfig
-+++ b/arch/arm/mach-exynos/Kconfig
-@@ -88,6 +88,11 @@ config SOC_EXYNOS5260
- 	default y
- 	depends on ARCH_EXYNOS5
- 
-+config SOC_EXYNOS5410
-+	bool "SAMSUNG EXYNOS5410"
-+	default y
-+	depends on ARCH_EXYNOS5
-+
- config SOC_EXYNOS5420
- 	bool "SAMSUNG EXYNOS5420"
- 	default y
-diff --git a/arch/arm/mach-exynos/common.h b/arch/arm/mach-exynos/common.h
-index 9eb6258..80b90e3 100644
---- a/arch/arm/mach-exynos/common.h
-+++ b/arch/arm/mach-exynos/common.h
-@@ -24,6 +24,7 @@
- #define EXYNOS4_CPU_MASK	0xFFFE0000
- 
- #define EXYNOS5250_SOC_ID	0x43520000
-+#define EXYNOS5410_SOC_ID	0xE5410000
- #define EXYNOS5420_SOC_ID	0xE5420000
- #define EXYNOS5440_SOC_ID	0xE5440000
- #define EXYNOS5800_SOC_ID	0xE5422000
-@@ -42,6 +43,7 @@ IS_SAMSUNG_CPU(exynos4210, EXYNOS4210_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos4212, EXYNOS4212_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos4412, EXYNOS4412_CPU_ID, EXYNOS4_CPU_MASK)
- IS_SAMSUNG_CPU(exynos5250, EXYNOS5250_SOC_ID, EXYNOS5_SOC_MASK)
-+IS_SAMSUNG_CPU(exynos5410, EXYNOS5410_SOC_ID, EXYNOS5_SOC_MASK)
- IS_SAMSUNG_CPU(exynos5420, EXYNOS5420_SOC_ID, EXYNOS5_SOC_MASK)
- IS_SAMSUNG_CPU(exynos5440, EXYNOS5440_SOC_ID, EXYNOS5_SOC_MASK)
- IS_SAMSUNG_CPU(exynos5800, EXYNOS5800_SOC_ID, EXYNOS5_SOC_MASK)
-@@ -80,6 +82,12 @@ IS_SAMSUNG_CPU(exynos5800, EXYNOS5800_SOC_ID, EXYNOS5_SOC_MASK)
- # define soc_is_exynos5250()	0
- #endif
- 
-+#if defined(CONFIG_SOC_EXYNOS5410)
-+# define soc_is_exynos5410()	is_samsung_exynos5410()
-+#else
-+# define soc_is_exynos5410()	0
-+#endif
-+
- #if defined(CONFIG_SOC_EXYNOS5420)
- # define soc_is_exynos5420()	is_samsung_exynos5420()
- #else
-@@ -100,8 +108,8 @@ IS_SAMSUNG_CPU(exynos5800, EXYNOS5800_SOC_ID, EXYNOS5_SOC_MASK)
- 
- #define soc_is_exynos4() (soc_is_exynos4210() || soc_is_exynos4212() || \
- 			  soc_is_exynos4412())
--#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5420() || \
--			  soc_is_exynos5800())
-+#define soc_is_exynos5() (soc_is_exynos5250() || soc_is_exynos5410() || \
-+			  soc_is_exynos5420() || soc_is_exynos5800())
- 
- void mct_init(void __iomem *base, int irq_g0, int irq_l0, int irq_l1);
- 
--- 
-1.7.9.5
+Sounds good. I was worried there might be an extra output. The A23 manual
+lists a SATA PHY output, which I have no idea where it's used.
+
+On the IRC someone (you?) mentioned the A31 doesn't have native SATA.
+I'll rework this using a fixed-factor clock.
+
+
+Thanks
+ChenYu
