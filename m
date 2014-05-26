@@ -1,86 +1,63 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Mon, 26 May 2014 14:08:32 +0300
-Message-ID: <BA47464B-B724-4D41-8D82-1A8880E310E9@konsulko.com>
-References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com> <1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com> <20140514100856.5198DC4153D@trevor.secretlab.ca> <E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com> <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com> <20140516105814.3EA3FC403C2@trevor.secretlab.ca> <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com> <20140520055026.E3A98C412DA@trevor.secretlab.ca> <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com> <20140526104824.63F13C42129@trevor.secretlab.ca> <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete.popov-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Dan Malek <dan.malek@konsulko.>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v11 0/3] Exynos 5410 support
+Date: Mon, 26 May 2014 13:11:19 +0200
+Message-ID: <53832157.2020502@gmail.com>
+References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tarek Dakhran <t.dakhran@samsung.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi,
 
-On May 26, 2014, at 1:57 PM, Geert Uytterhoeven wrote:
-
-> Hi Grant,
+On 26.05.2014 05:23, Tarek Dakhran wrote:
+> The series of patches represent support of Exynos 5410 SoC
 > 
-> On Mon, May 26, 2014 at 12:48 PM, Grant Likely
-> <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->> On Tue, 20 May 2014 09:38:49 +0200, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->>> On Tue, May 20, 2014 at 7:50 AM, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org> wrote:
->>>>> Why has the overlay system been designed for plugging and unpluging whole
->>>>> overlays?
->>>>> That means the kernel has to remember the full stack, causing issues with
->>>>> e.g. kexec.
->>>> 
->>>> Mostly so that drivers don't see any difference in the livetree data
->>>> structure. It also means that userspace sees a single representation of
->>>> the hardware at any given time.
->>> 
->>> Sorry, I don't follow the argument about the "single representation of the
->>> hardware".
->> 
->> Er, s/of the hardware/of the tree/. Right now the overlay design
->> modifies the live tree which at the same time modifies the tree
->> representation in /sys/firmware/devicetree. If the design was changed to
->> keep the overlay logically separate, then I would think we want to
->> expose that information to usespace also. In fact, I think we would need
->> to for usecases like kexec.
+> The Exynos 5410 is the first Samsung SoC based on big.LITTLE architecture
 > 
-> OK, so it does modify the real tree, and doesn't keep the actual overlays.
+> Patches add new platform description, support of clock controller and device
+> tree for Exynos 5410.
 > 
-
-It modifies the actual tree, and it keeps a log of each modification made to the
-tree so that it will be able to revert the changes made.
-
-> I was under the impression the overlay stack was also kept in memory, to allow
-> reversal, so there was a misunderstanding.
+> Has been build on Samsung Linux Kernel
+>   (branch: for-next, commit: 97eae6c Merge branch 'v3.16-next/multiplatform' into for-next)
 > 
-
-Yep.
-
-> Hence for kexec, the tree in /sys/firmware/devicetree can just be passed
-> to the new kernel, as that's the current representation of the hardware?
+> Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig)
+> 		    2) Exynos 5410 reference board (multi_v7_defconfig)
+> 		    3) Odroid-XU board (exynos_defconfig)
+> 		    4) Odroid-XU board (multi_v7_defconfig)
 > 
-
-Exactly.
-
-> Gr{oetje,eeting}s,
+> I hope this is clean and would be applied.
 > 
->                        Geert
+> Tarek.
+> 
+> Tarek Dakhran (3):
+>   ARM: EXYNOS: Add support for EXYNOS5410 SoC
+>   clk: exynos5410: register clocks using common clock framework
+>   ARM: dts: Add initial device tree support for EXYNOS5410
+> 
+>  .../devicetree/bindings/clock/exynos5410-clock.txt |   45 +++++
+>  arch/arm/boot/dts/Makefile                         |    1 +
+>  arch/arm/boot/dts/exynos5410-smdk5410.dts          |   82 ++++++++
+>  arch/arm/boot/dts/exynos5410.dtsi                  |  206 +++++++++++++++++++
+>  arch/arm/mach-exynos/Kconfig                       |    5 +
+>  arch/arm/mach-exynos/common.h                      |   12 +-
+>  drivers/clk/samsung/Makefile                       |    1 +
+>  drivers/clk/samsung/clk-exynos5410.c               |  209 ++++++++++++++++++++
+>  include/dt-bindings/clock/exynos5410.h             |   33 ++++
+>  9 files changed, 592 insertions(+), 2 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+>  create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
+>  create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
+>  create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+>  create mode 100644 include/dt-bindings/clock/exynos5410.h
 > 
 
-Regards
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
--- Pantelis
-
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                -- Linus Torvalds
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
