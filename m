@@ -1,55 +1,80 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 2/4] cpufreq: add i.MX5 cpufreq driver
-Date: Mon, 26 May 2014 19:14:15 +0530
-Message-ID: <CAKohponzJma6yNueMef2Q4k+qT-n7boV0tx0pCqjFmuQWj6TXg@mail.gmail.com>
-References: <1401099308-9658-1-git-send-email-l.stach@pengutronix.de>
-	<1401099308-9658-2-git-send-email-l.stach@pengutronix.de>
-	<CAKohpoksbFHyX=r0=URMedJNi68c3xAX4OrXzSFqgf1-bCm4+Q@mail.gmail.com>
-	<1401101131.4829.29.camel@weser.hi.pengutronix.de>
-	<CAKohponTUsYLf-8_iSnttwK8oXyJEZVWpF+a=vLC7r_jZ8AzOQ@mail.gmail.com>
-	<1401107748.4829.39.camel@weser.hi.pengutronix.de>
-	<CAKohpo=ncHUmtJOEw4FZG1BWUSuiQK4n+ETEMJWJj9UoPz2cnw@mail.gmail.com>
-	<1401109863.4829.46.camel@weser.hi.pengutronix.de>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
+Date: Mon, 26 May 2014 15:41:54 +0200
+Message-ID: <20140526134153.GA2373@ulmo>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1401109863.4829.46.camel@weser.hi.pengutronix.de>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux-samsung-soc@vger.kernel.org, laurent.pinchart@ideasonboard.com, s.trumtrar@pengutronix.de, djkurtz@chromium.org, kyungmin.park@samsung.com, inki.dae@samsung.com, kgene.kim@samsung.com, jy0922.shim@samsung.com, sw0312.kim@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 26 May 2014 18:41, Lucas Stach <l.stach@pengutronix.de> wrote:
 
-Just to mention that I am trying to help you and am not opposing any
-change. We can add this field if its really required and I am just trying
-to understand your problem and if we can solve it with current code.
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> No, setting voltage-tolerance to zero means I don't accept any tolerance
-> at all. Though in practice I have a variable tolerance as I just have a
-> fixed maximum voltage for the chip.
->
-> For example the i.MX53 has a fixed maximum voltage of 1.4V on the cpu
-> rail, so for the slowest OPP the acceptable voltage range is 0.8V to
-> 1.4V, for the fastest OPP the range is 1.3V to 1.4V.
->
-> So if someone connects a fixed 1.3V regulator, I want to still be able
-> to use all OPPs, even though the slowest OPP wants 0.8V ideally. If I
-> were to use a tolerance I would have to set is to some relatively strict
-> value, in order to not exceed the maximum voltage at the highest OPP,
-> but this would mean I could not use the slowest OPP because it's out of
-> the tolerance range.
+On Wed, May 21, 2014 at 01:43:05PM +0900, YoungJun Cho wrote:
+> This patch adds DT bindings for s6e3fa0 panel.
+> The bindings describes panel resources, display timings and cpu mode timi=
+ngs.
+>=20
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   45 ++++++++++++++=
+++++++
+>  1 file changed, 45 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3f=
+a0.txt
 
-I understood the problem now. But I feel there is nothing imx specific here.
-It should be a general concern and I want to know how are people
-working around it currently.
+You're totally confusing me here. Half of this patch series is about
+adding i80 support to Exynos FIMD, and then you go and add what is
+apparently a DSI peripheral driver here that's supposed to be used by
+this new i80 support. Nothing I've been able to dig up indicates that
+i80 or DSI are in anyway related.
 
-IOW can we say that you want tolerance to work only on the positive
-side? But no tolerance on the -ve side ?
+Even the Exynos DSI Master bindings[0] say that these two are not at all
+the same thing:
 
-Also, your example dts says that you do have different voltage levels
-for each frequency but actually the regulator may only support a
-single voltage. i.e. 1.4 volts.
+	port node:
+	    - reg: (required) can be 0 for input RGB/I80 port or 1 for
+	      DSI port;
 
---
-viresh
+Am I missing something here?
+
+Thierry
+
+[0]: https://www.kernel.org/doc/Documentation/devicetree/bindings/video/exy=
+nos_dsim.txt
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTg0ShAAoJEN0jrNd/PrOhq1sQAIYJIGlds6R9NjdR1R6lhrO7
+ly7PjU2ToUtrJxkrCJOOMgg0DieBRWBXF8Q90GKRUQB6JPS4pUwnc9D9A3QwyixO
+f1HMwhHodnxCR94PkbSD5x6+D05Hm6Yu+pepUbVpYvh9MpqbsRcXXUPesOexbWVS
+ekDr9OTgosBtdijYXRYS11wowWoCJ0799SASGl/4v2B3+Hq0MEZQcV5iBfTrG1/A
+PPQ2beC0mSTZgv/N4JSUrtjJ57+Zx5uSabmWEPx/z8r000F7XbfRh1EmzrVdrrhs
+Np2/TsZty7AqJqWrxVnlymWUxjeo9Jzy+t0WjBNo8lSvxTKhFSm+OF1ox55OscNO
+MQ6swV7Eutw16BPJh8FrLTFtpbF7KCKr4WMuS0vzxzrRLDyoKOjKoZ2r7IhDrXqK
+crHvCuslVqCfdZV3NXEUmCztLjmJqPSvPY8pW9iHs0DnJ05s4wnEUwKOpB65u0e+
+wVNTa0xW4sO2cqAlFvfzd6bRZ4UUceQixo27waZBt33G1R+QAHE7Wjl9aZ/0/EmY
+IvfTI1b7NG3M614YfFljB+nGNZle8J5wyl5Jw+HJy6iWPJEhfD9KeQIaoWpq+XwU
+f5kfERzTvawdWOjBCY1dUBCQYcBnubn1q+SDwWIScOKUUmLQJmaOI5u6j8tUjGnO
+KUPU93umAHqeYUIBDG8X
+=h0Co
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
