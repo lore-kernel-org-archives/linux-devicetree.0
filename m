@@ -1,139 +1,91 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
- tree
-Date: Mon, 26 May 2014 16:59:38 +0200
-Message-ID: <538356DA.7090302@redhat.com>
-References: <537E31F7.1030505@gmail.com> <537F1148.3010102@redhat.com> <20140523112239.GB12304@sirena.org.uk> <537F3610.3050104@redhat.com> <20140523162718.GE22111@sirena.org.uk> <53806F26.6050706@redhat.com> <20140525123452.GS22111@sirena.org.uk> <53824294.1090609@redhat.com> <20140526103807.GV22111@sirena.org.uk> <538321AB.4050006@redhat.com> <20140526142225.GF22111@sirena.org.uk>
+From: Sebastian Reichel <sre@ring0.de>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Mon, 26 May 2014 17:09:44 +0200
+Message-ID: <20140526150942.GA26787@earth.universe>
+References: <E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+ <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+ <20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+ <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+ <20140520055026.E3A98C412DA@trevor.secretlab.ca>
+ <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+ <20140526104824.63F13C42129@trevor.secretlab.ca>
+ <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
+ <20140526112348.907B7C421A5@trevor.secretlab.ca>
+ <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140526142225.GF22111@sirena.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@ko>
 List-Id: devicetree@vger.kernel.org
+
+
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
 Hi,
 
-On 05/26/2014 04:22 PM, Mark Brown wrote:
-> On Mon, May 26, 2014 at 01:12:43PM +0200, Hans de Goede wrote:
->> On 05/26/2014 12:38 PM, Mark Brown wrote:
->>> On Sun, May 25, 2014 at 09:20:52PM +0200, Hans de Goede wrote:
-> 
->>> until we've powered up and enumerated.  The only time that there's a
->>> problem and would need to specify exactly what the device is in the DTS
->>> is if we need the custom sequence prior to being able to do that at
->>> which point I don't see much option.
-> 
->> Specified != driver available. Determining whether or not we should power
->> up based purely on there being a compatible string is not going to work, as
->> even when using simple powerup we still need compatible strings for non
->> powerup settings like sdio signal drive strength, oob irq, etc.
-> 
-> If there are compatible strings but not one we've heard of then we're
-> back in the situation where we may as well not bother powering up in the
-> first place since we've no idea what to do with the device once it's
-> powered.  If we fall down a list of compatibles and decide that the
-> only thing we know about the device is that we can power it up (this is
-> distinct from the case where we probe the device) I'd expect the device
-> to be turned off.
+On Mon, May 26, 2014 at 02:55:37PM +0300, Pantelis Antoniou wrote:
+> On May 26, 2014, at 2:23 PM, Grant Likely wrote:
+> > On Mon, 26 May 2014 12:57:32 +0200, Geert Uytterhoeven <geert@linux-m68=
+k.org> wrote:
+> > Heeheehee. We're back where we started. The original question is whether
+> > or not that is a valid approach. If the overlay represents something
+> > that can be hot plugged/unplugged, then passing it through to the second
+> > kernel would be the wrong thing to do. If it was a permenant addition,
+> > then it probably doesn't need to be removed.
+> >=20
+> > We do actually keep the overlay info in memory for the purpose of
+> > removal exactly so we can support hot unbinding of devices and drivers
+> > that make use of overlays.
+>=20
+> We can support either method. I am not feeling any wiser about which one =
+should be
+> the default TBH, so what about exporting a property and let the platform=
+=20
+> figure out which is more appropriate?
 
-We won't know if we have a valid driver until we power on the device,
-and probe it, not all sdio drivers will have compatibles, actually most of
-them won't since sdio is a discoverable bus.
+What about supporting "negative" overlays (so an overlay, that
+removes DT entries)? That way one could reverse apply an overlay.
+All the dependency stuff would basically be the users problem.  The
+kernel only checks if it can apply an overlay (and return some error
+code if it can't). This this code is needed anyway to check the
+input from userspace.
 
-> 
->> So the only way this will work is if we delay powerup until we've a driver
->> available, which may be never if the module is not build, or whatever,
->> and without powerup the user is never going to figure out he is missing
->> a module. Basically adding a driver flag for blacklisting from the simple
->> power up logic means inserting an unnecessary initialization ordering issue,
->> which we really don't need as each ordering dependency is usually one too many.
-> 
-> I'm afraid I'm really not seeing a substantial problem either way here,
-> powering up the device isn't going to help us find a driver for it and
-> the UI around reporting that the device is there without a driver should
-> hopefully be unaffected by its power state.
+As a result the overlay handling would basically have the same
+behaviour as diff and patch :)
 
-How can the UI be unaffected if we cannot tell userspace that there is
-a device there and what its vendor / product ids are ?  We need to power
-up the device before it will respond to probes...
+P.S.: Sorry if this has already been suggested. I have only read
+mails from PATCHv4.
 
-> 
->>> I don't understand why not powering the device up would be a sensible
->>> default or why other OSs would also choose to implement things that way.
-> 
->> Because if we are not 100% sure that our simple power up logic will do the
->> job properly (i.e. in the right order), then the SAFE thing to do is to
->> not power up.
-> 
-> So long as we've got a clear way of saying that we might need to do
-> something special I don't think we should have an issue either way;
-> it's mostly a case of how we specify.
-> 
->> What if a user takes an older distro kernel, where the driver does not
->> set the opt-out flag you're suggesting since at that time it did not
->> have its own power logic, then tries to boot that with a dtb file written
->> for a newer kernel (where the driver does have the opt out flag), and we
->> start powering up things in the wrong order and let the magic smoke out
->> of various components on the board ?
-> 
-> Conversely what if someone fixes a bug in the standard power up sequence
-> in a newer version of the kernel but then tries to run older software?
-> There's plenty of ways things can go wrong with this stuff.
-> 
->> Also note that this is a perfectly standard use of compatibles, compatibles
->> are typically used to indicate which driver should be used, in this case
->> the compatible indicates that the simple powerup driver should be used,
->> where as if another powerup driver should be used another compatbile will
->> be there instead.
-> 
-> We don't typically actually bind multiple compatibles for a single
-> device.  We've got a bunch of options we can choose from but we
-> generally pick the one that matches best and ignore the others.
-> 
->> Where as what you're suggesting is to always pick driver foo, unless
->> driver bar is available and has a special flag saying to not use foo, this
->> is a whole new way to use compatibles really, and not one which I think
->> we want to introduce.
-> 
-> I'm not sure I'm buying the idea that we have a powerup driver that's
-> meaningfully not part of the main device driver.
+-- Sebastian
 
-Well, if we merge some variant of Olof's code, we will have a powerup driver
-that is part of the mmc core, and thus not of the sdio function driver.
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->>> Well, if things aren't going to work either way for these devices
->>> without extra stuff it seems it doesn't much matter but it helps the
->>> simple case to have things default to working.
-> 
->> The simple case still needs a child node describing the needed resources,
->> adding a compatible = "simple-sdio-powerup" to that at the same as creating
->> the child node in the first place really is no extra effort at all.
-> 
-> From where I'm sitting it's more effort since instead of just putting
-> the device in there (and possibly also some other devices that are
-> software compatible) we have to put in another compatible string which
-> is really just a boolean flag to be used in conjunction with the others.
-> That's harder to think about and we clearly don't want to go through the
-> compatible list, decide that we don't know how to handle the device
-> except power it up so go and do that.
-> 
-> If it were done as something like "set boolean property X or
-> powerup-method = Y in the card description" or whatever it'd seem a bit
-> annoying but not a big deal, I think it's the fact that it's getting put
-> into the compatible list that's really concerning me.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Ok, so lets switch it over to a boolean, options for the name I see are:
+iQIcBAEBCgAGBQJTg1k2AAoJENju1/PIO/qauC4P/R59MM9Uon5O924VUUsCLfKQ
+zcICgBs8a6NvaJmo83pQYPIPgwGY9dmkT6i8OSCPPIY6RELsOTh2e0ClEjAGZyzX
+Hw+16jMd7it7dH7EFufC2eOHAZRyqRkOk/oo6JIomboBBg3tBiQHe7JjOddZuZKR
+JAv23xp1RcQwnBsAC8qkum3ELcaHciRhWS1r4kmrDATPAhTWqvUMPlieHGXA89Qx
+HJYxMTXxxdMvdFopmitnVKa7NUI3m/lyF2frWrkgDWx7lZ3iWqii8iJrxlAi2E2k
+BgiFTEq//ZCEHy51PkFtpyNGag7llkzJSupDbudUV/ZZoURVV955qIZluCCusj34
+NlRKacA047DpFohakWsHfQXo4xCIRQPy22byrNEqM/pZs7sFq3b8ZwaUfV8FIJU1
+8QMbujEZ/4MCAAJBkpR9xiAeZXJ5chgcUZJfd9fiM1lQn10M0KOX+KhnpquyWsbs
+o4IT/9YfblBRnfaToBhflf8YsO+K5bgz1B4gyti/TjFQNm4tjG1jmZdFjuDnd+jv
+CnBpUQYxiX1Qtqh8AsjYdqaCEjEWM2mF3cOfnufKuaL+7SqLjS9gPow/0OPx8P9n
+gWJe8YxhkVajXscUMu/Cdn+l2l6XsMc9m7IUM0ZnwYB0RMPE+aD/yLu1QnXRz14e
+YWfgcyJOopecI4o+f5C7
+=KgqV
+-----END PGP SIGNATURE-----
 
-linux,mmc-host-powerup  (opt in to powerup being dealt with by the mmc core, implementation specific)
-simple-powerup		(platform neutral opt in to say just enable all resources and be done with it)
-custom-powerup		(platform neutral opt out version of simple-powerup)
-linux,custom-powerup	(same, but consider this something linux specific)
-
-I think that it may be best to go with one of the 2 linux prefixed options.
-
-Regards,
-
-Hans
+--Dxnq1zWXvFF0Q93v--
