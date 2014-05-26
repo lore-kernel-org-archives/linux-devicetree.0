@@ -1,106 +1,105 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2] ARM: shmobile: r8a7790: link PCI USB devices to USB
- PHY
-Date: Tue, 27 May 2014 02:46:17 +0400
-Message-ID: <5383C439.1080808@cogentembedded.com>
-References: <201405270217.33057.sergei.shtylyov@cogentembedded.com> <CANqRtoT+xKmK7wkayiD9yCmUqFNKWxpeSgkGTiCqc+THYE0sVw@mail.gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Tue, 27 May 2014 01:00:01 +0200
+Message-ID: <20140526230001.GB32691@earth.universe>
+References: <20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+ <CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+ <20140520055026.E3A98C412DA@trevor.secretlab.ca>
+ <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+ <20140526104824.63F13C42129@trevor.secretlab.ca>
+ <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
+ <20140526112348.907B7C421A5@trevor.secretlab.ca>
+ <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
+ <20140526150942.GA26787@earth.universe>
+ <53835A40.8050902@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoT+xKmK7wkayiD9yCmUqFNKWxpeSgkGTiCqc+THYE0sVw@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="xgyAXRrhYN0wYx8y"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53835A40.8050902@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Grant Likely <grant.likely@secretlab.ca>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete
 List-Id: devicetree@vger.kernel.org
 
-Hello.
 
-On 05/27/2014 02:36 AM, Magnus Damm wrote:
+--xgyAXRrhYN0wYx8y
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> Describe the PCI USB devices that are behind the PCI bridges, adding necessary
->> links to the USB PHY device.
+Hi,
 
->> Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
+On Mon, May 26, 2014 at 08:14:08AM -0700, Guenter Roeck wrote:
+> On 05/26/2014 08:09 AM, Sebastian Reichel wrote:
+> >On Mon, May 26, 2014 at 02:55:37PM +0300, Pantelis Antoniou wrote:
+> >>On May 26, 2014, at 2:23 PM, Grant Likely wrote:
+> >>>On Mon, 26 May 2014 12:57:32 +0200, Geert Uytterhoeven <geert@linux-m6=
+8k.org> wrote:
+> >>>Heeheehee. We're back where we started. The original question is wheth=
+er
+> >>>or not that is a valid approach. If the overlay represents something
+> >>>that can be hot plugged/unplugged, then passing it through to the seco=
+nd
+> >>>kernel would be the wrong thing to do. If it was a permenant addition,
+> >>>then it probably doesn't need to be removed.
+> >>>
+> >>>We do actually keep the overlay info in memory for the purpose of
+> >>>removal exactly so we can support hot unbinding of devices and drivers
+> >>>that make use of overlays.
+> >>
+> >>We can support either method. I am not feeling any wiser about which on=
+e should be
+> >>the default TBH, so what about exporting a property and let the platform
+> >>figure out which is more appropriate?
+> >
+> >What about supporting "negative" overlays (so an overlay, that
+> >removes DT entries)? That way one could reverse apply an overlay.
+> >All the dependency stuff would basically be the users problem.  The
+> >kernel only checks if it can apply an overlay (and return some error
+> >code if it can't). This this code is needed anyway to check the
+> >input from userspace.
+> >
+>=20
+> Does that mean that I would need to describe such a negative overlay
+> for each overlay to be able to get it removed ?
+>=20
+> This would introduce an endless source of problems with bad "reverse"
+> overlay descriptions. Sure, that would "be the users problem",
+> but I don't think that would make it better.
 
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+I was thinking about supporting something like "patch --reverse". So
+you can try to undo the overlay by reverse applying it and you can
+do it in arbitrary order.
 
->> ---
->> This patch is against 'renesas-devel-v3.15-rc7-20140526' tag of Simon Horman's
->> 'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches posted
->> before. The patch requires the internal PCI DT support, USB PHY driver, and
->> USB HCD generic PHY support (also already posted) in order to work.
+Note: The dependency check must be done for all overlays coming from
+userspace, so that's not a problem __here__. The reverse method can
+"simply" reverse the overlay patch and apply it like a normal
+overlay from userspace (and thus using the same dependency checks).
 
->> Changes in version 2:
->> - renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
->> - changed the PHY specifier in the PCI#2 node to reflect that channel #1 support
->>    was dropped;
->> - resolved rejects, refreshed the patch.
+-- Sebastian
 
->>   arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
->>   1 file changed, 28 insertions(+)
+--xgyAXRrhYN0wYx8y
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
->> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
->> ===================================================================
->> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
->> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
->> @@ -919,6 +919,20 @@
->>                  interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->>                                   0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->>                                   0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +               usb@0,1 {
->> +                       reg = <0x800 0 0 0 0>;
->> +                       device_type = "pci";
->> +                       phys = <&usbphy 0 0>;
->> +                       phy-names = "usb";
->> +               };
->> +
->> +               usb@0,2 {
->> +                       reg = <0x1000 0 0 0 0>;
->> +                       device_type = "pci";
->> +                       phys = <&usbphy 0 0>;
->> +                       phy-names = "usb";
->> +               };
->>          };
->>
->>          pci1: pci@ee0b0000 {
->> @@ -955,5 +969,19 @@
->>                  interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
->>                                   0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
->>                                   0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
->> +
->> +               usb@0,1 {
->> +                       reg = <0x800 0 0 0 0>;
->> +                       device_type = "pci";
->> +                       phys = <&usbphy 1 0>;
->> +                       phy-names = "usb";
->> +               };
->> +
->> +               usb@0,2 {
->> +                       reg = <0x1000 0 0 0 0>;
->> +                       device_type = "pci";
->> +                       phys = <&usbphy 1 0>;
->> +                       phy-names = "usb";
->> +               };
->>          };
->>   };
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-> Hi Sergei,
+iQIcBAEBCgAGBQJTg8dxAAoJENju1/PIO/qa3AgP/AwzZA2jxOwDsse7y+S/6e16
+M6DRqqVgt+qa/eZgmICWStgfrSiuOnDs5zZmqdpQlh8XVbx0Gop74nVHV8qz3rwR
+npgk316RXv+lF34NRgqIDlYwsFzJoL7sUoyqDnA39dmC89Ac4OWGir5drVRHAM98
+Gsi8hdCF8yheVq6xm8ZBIch2/sa8Hw8IV0IitA64LXZXR1JgwqW+qN9LkrJX+2Jp
+7EUjgwyLzmJotLNfrTvlH9GZpai0nv7LxDDUv/seYz8eSbZS3iv0DVdeaV7c2y2B
+8gHIhfA1GgKUIGm3gvhkMjVD1/hbxB6VCDUdo3P2Ffh8ovIYiR6w6gOvCNZfZeVo
+za/u/GnVAuKkwC3yKfhLWj6NrBKLHhfA71s9wt70yl6m5oJ1GGfk5J0jrX+q+xVf
+OYWuTgcOMWLH+Igvioe5gGouyPCJUlTd8gB+yYTFMBUWQ6AOZ6/GTc9fcArFg8kC
+B3tIr6250BDg5M0Fo3w5KD3FkBTBdSTnlu+sAGdi8yPTaPO7e5ckFx0NCWHE4bqL
+BUzYS7VCmfacwOADiwfEKXhDN0LqKs4ZFNGmxfBvVtev1G1B+zYBhDkzre/IDegC
+0LKPI6f/oDo+QzhWtW7XbQfO5KHDXlpPiDW8ntROsEQ+marwLDjyELTPqzLMD3bE
+dLdVGR6qAMc4gH5qMdkE
+=ywFj
+-----END PGP SIGNATURE-----
 
-> Above I see two hunks of DTS code but my r8a7790 data sheet contains
-> three USB PCI devices. Perhaps my understanding is wrong, or may there
-
-    You probably wanted to say 6 (OHCI and EHCI are 2 different PCI devices).
-
-> is some other patch available to enable all USB PCI devices included
-> in the SoC?
-
-    This patch doesn't enable USB devices, it just links them to the PHY where 
-it makes sense (for USB channel #1 it doesn't).
-
-> Thanks,
-> / magnus
-
-WBR, Sergei
-
+--xgyAXRrhYN0wYx8y--
