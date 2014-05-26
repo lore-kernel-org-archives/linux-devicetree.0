@@ -1,34 +1,39 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: [PATCH v2 1/3] of: Add vendor prefix for Linear Technology Corporation
-Date: Mon, 26 May 2014 10:38:14 +0200
-Message-ID: <1401093496-28474-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, kernel@pengutronix.de, Philipp Zabel <p.zabel@pengutronix.de>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/3] mmc: host: add slot argument to mmc_of_parse
+Date: Mon, 26 May 2014 10:44:16 +0200
+Message-ID: <CAPDyKFrZXd30wXJNsO64-Np129_53D=TVv2yBmBhsOxJa0Sm6g@mail.gmail.com>
+References: <1400840721-11050-1-git-send-email-jh80.chung@samsung.com>
+	<1400840721-11050-2-git-send-email-jh80.chung@samsung.com>
+	<20140526080916.GE12777@ldesroches-Latitude-E6320>
+	<5382FD78.3060402@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5382FD78.3060402@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@gmail.com>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Seungwon Jeon <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Linear Technology Corporation to the list of device tree vendor prefixes.
+On 26 May 2014 10:38, Jaehoon Chung <jh80.chung@gmail.com> wrote:
+> Hi,
+>
+> On 05/26/2014 05:09 PM, Ludovic Desroches wrote:
+>> On Fri, May 23, 2014 at 07:25:19PM +0900, Jaehoon Chung wrote:
+>>> From: Ludovic Desroches <ludovic.desroches@atmel.com>
+>>>
+>>> Some hosts manage several slots. In these case information such as the
+>>> bus width, chi detect and others are into the slot node. So we have to
+>>
+>> /s/chi detect/chip detect
+> Will fix.
+>
+> Tushar have suggested the rename mmc_of_parse_slot() instead of __mmc_of_parse().
+> I'm not sure which name is better. How about?
+>
+> If never mind, i will change to mmc_of_parse_slot(), then send patch-v2.
 
-Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
----
-Changes since v1:
- - Changed vendor prefix to lltc
----
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+I would prefer to keep it as is, but just because that's my taste. :-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 0f01c9b..98e739f 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -65,6 +65,7 @@ lantiq	Lantiq Semiconductor
- lg	LG Corporation
- linux	Linux-specific binding
- lsi	LSI Corp. (LSI Logic)
-+lltc	Linear Technology Corporation
- marvell	Marvell Technology Group Ltd.
- maxim	Maxim Integrated Products
- microchip	Microchip Technology Inc.
--- 
-2.0.0.rc2
+Kind regards
+Ulf Hansson
