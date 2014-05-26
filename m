@@ -1,70 +1,81 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: Re: [PATCH v11 0/3] Exynos 5410 support
-Date: Tue, 27 May 2014 07:08:21 +0900
-Message-ID: <5383BB55.9070606@samsung.com>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com> <53832157.2020502@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v2] ARM: shmobile: r8a7790: link PCI USB devices to USB PHY
+Date: Tue, 27 May 2014 02:17:32 +0400
+Message-ID: <201405270217.33057.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53832157.2020502@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Tarek Dakhran <t.dakhran@samsung.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Romain Naour <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Thomas Abraham <thomas.abraham@linaro.org>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-samsung-soc@vger.kernel.org, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, linux-arm-kernel@lists.infradead.org, Kyungmin Park <kyungmin.park@samsung.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/14 20:11, Tomasz Figa wrote:
-> Hi,
->
-Hi
+Describe the PCI USB devices that are behind the PCI bridges, adding necessary
+links to the USB PHY device.
 
-> On 26.05.2014 05:23, Tarek Dakhran wrote:
->> The series of patches represent support of Exynos 5410 SoC
->>
->> The Exynos 5410 is the first Samsung SoC based on big.LITTLE architecture
->>
->> Patches add new platform description, support of clock controller and device
->> tree for Exynos 5410.
->>
->> Has been build on Samsung Linux Kernel
->>    (branch: for-next, commit: 97eae6c Merge branch 'v3.16-next/multiplatform' into for-next)
->>
->> Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig)
->> 		    2) Exynos 5410 reference board (multi_v7_defconfig)
->> 		    3) Odroid-XU board (exynos_defconfig)
->> 		    4) Odroid-XU board (multi_v7_defconfig)
->>
-Thanks for your test with exynos_defconfig and multi_v7_defconfig.
+Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
 
->> I hope this is clean and would be applied.
->>
->> Tarek.
->>
->> Tarek Dakhran (3):
->>    ARM: EXYNOS: Add support for EXYNOS5410 SoC
->>    clk: exynos5410: register clocks using common clock framework
->>    ARM: dts: Add initial device tree support for EXYNOS5410
->>
->>   .../devicetree/bindings/clock/exynos5410-clock.txt |   45 +++++
->>   arch/arm/boot/dts/Makefile                         |    1 +
->>   arch/arm/boot/dts/exynos5410-smdk5410.dts          |   82 ++++++++
->>   arch/arm/boot/dts/exynos5410.dtsi                  |  206 +++++++++++++++++++
->>   arch/arm/mach-exynos/Kconfig                       |    5 +
->>   arch/arm/mach-exynos/common.h                      |   12 +-
->>   drivers/clk/samsung/Makefile                       |    1 +
->>   drivers/clk/samsung/clk-exynos5410.c               |  209 ++++++++++++++++++++
->>   include/dt-bindings/clock/exynos5410.h             |   33 ++++
->>   9 files changed, 592 insertions(+), 2 deletions(-)
->>   create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-clock.txt
->>   create mode 100644 arch/arm/boot/dts/exynos5410-smdk5410.dts
->>   create mode 100644 arch/arm/boot/dts/exynos5410.dtsi
->>   create mode 100644 drivers/clk/samsung/clk-exynos5410.c
->>   create mode 100644 include/dt-bindings/clock/exynos5410.h
->>
->
-> Reviewed-by: Tomasz Figa<t.figa@samsung.com>
->
-Applied this whole series.
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Thanks,
-Kukjin
+---
+This patch is against 'renesas-devel-v3.15-rc7-20140526' tag of Simon Horman's
+'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches posted
+before. The patch requires the internal PCI DT support, USB PHY driver, and
+USB HCD generic PHY support (also already posted) in order to work.
+
+Changes in version 2:
+- renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
+- changed the PHY specifier in the PCI#2 node to reflect that channel #1 support
+  was dropped;
+- resolved rejects, refreshed the patch.
+
+ arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+
+Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+===================================================================
+--- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
++++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+@@ -919,6 +919,20 @@
+ 		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+ 			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+ 			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
++
++		usb@0,1 {
++			reg = <0x800 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usbphy 0 0>;
++			phy-names = "usb";
++		};
++
++		usb@0,2 {
++			reg = <0x1000 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usbphy 0 0>;
++			phy-names = "usb";
++		};
+ 	};
+ 
+ 	pci1: pci@ee0b0000 {
+@@ -955,5 +969,19 @@
+ 		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+ 			      	 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
+ 			      	 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
++
++		usb@0,1 {
++			reg = <0x800 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usbphy 1 0>;
++			phy-names = "usb";
++		};
++
++		usb@0,2 {
++			reg = <0x1000 0 0 0 0>;
++			device_type = "pci";
++			phys = <&usbphy 1 0>;
++			phy-names = "usb";
++		};
+ 	};
+ };
