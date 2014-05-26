@@ -1,58 +1,54 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 2/4] cpufreq: add i.MX5 cpufreq driver
-Date: Mon, 26 May 2014 15:11:03 +0200
-Message-ID: <1401109863.4829.46.camel@weser.hi.pengutronix.de>
-References: <1401099308-9658-1-git-send-email-l.stach@pengutronix.de>
-	 <1401099308-9658-2-git-send-email-l.stach@pengutronix.de>
-	 <CAKohpoksbFHyX=r0=URMedJNi68c3xAX4OrXzSFqgf1-bCm4+Q@mail.gmail.com>
-	 <1401101131.4829.29.camel@weser.hi.pengutronix.de>
-	 <CAKohponTUsYLf-8_iSnttwK8oXyJEZVWpF+a=vLC7r_jZ8AzOQ@mail.gmail.com>
-	 <1401107748.4829.39.camel@weser.hi.pengutronix.de>
-	 <CAKohpo=ncHUmtJOEw4FZG1BWUSuiQK4n+ETEMJWJj9UoPz2cnw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohpo=ncHUmtJOEw4FZG1BWUSuiQK4n+ETEMJWJj9UoPz2cnw@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: [PATCH 0/3] regulator: merge s2mps11 and s2mpa01 drivers
+Date: Mon, 26 May 2014 15:20:20 +0200
+Message-ID: <1401110423-5647-1-git-send-email-k.kozlowski@samsung.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, linux-kernel@vger.kernel.org
+Cc: linux-samsung-soc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <k.kozlowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, den 26.05.2014, 18:26 +0530 schrieb Viresh Kumar:
-> On 26 May 2014 18:05, Lucas Stach <l.stach@pengutronix.de> wrote:
-[...]
-> 
-> > 2. Usage of a fixed max voltage, rather than a voltage-tolerance. i.MX5
-> > has a fixed maximum voltage, which is valid across all operating points.
-> > I'm really opposed to using a tolerance value, where we instead could
-> > have a well defined range. So for merging imx5-cpufreq into cpufreq-cpu0
-> > this driver really need to handle this case.
-> > Does adding a separate property for this, while keeping the
-> > voltage-tolerance for the existing users, sound like a change you would
-> > accept?
-> 
-> It looks you can just send voltage-tolerance to "zero" and this should work
-> for you.. No need of another field.
-> 
-No, setting voltage-tolerance to zero means I don't accept any tolerance
-at all. Though in practice I have a variable tolerance as I just have a
-fixed maximum voltage for the chip.
+Hi,
 
-For example the i.MX53 has a fixed maximum voltage of 1.4V on the cpu
-rail, so for the slowest OPP the acceptable voltage range is 0.8V to
-1.4V, for the fastest OPP the range is 1.3V to 1.4V.
 
-So if someone connects a fixed 1.3V regulator, I want to still be able
-to use all OPPs, even though the slowest OPP wants 0.8V ideally. If I
-were to use a tolerance I would have to set is to some relatively strict
-value, in order to not exceed the maximum voltage at the highest OPP,
-but this would mean I could not use the slowest OPP because it's out of
-the tolerance range.
+The patchset merges s2mpa01 regulator driver into s2mps11. As a result
+the s2mps11 supports:
+ - S2MPA01
+ - S2MPS11
+ - S2MPS14
 
-Regards,
-Lucas
+These PMIC-s are very similar to each other and they are often used
+along with Samsung's Exynos SoCs. Merging this into one driver has
+two benefits:
+ - less code duplication,
+ - one PMIC driver can be used in common Exynos default config.
+
+
+The patchset was tested on Arndale Octa board with S2MPS11 PMIC. I am
+kindly asking for testing on some board with S2MPA01.
+
+Patches are rebased against current Mark Brown's regulator tree:
+v3.15-rc5-41-g7c603c1c9e33
+
+
+Best regards,
+Krzysztof
+
+
+Krzysztof Kozlowski (3):
+  regulator: s2mps11: Refactor setting ramp delay
+  regulator: s2mps11: Merge S2MPA01 driver
+  regulator: s2mpa01: Remove driver because it was merged into s2mps11
+
+ Documentation/devicetree/bindings/mfd/s2mpa01.txt |  90 ----
+ Documentation/devicetree/bindings/mfd/s2mps11.txt | 106 +++--
+ drivers/regulator/Kconfig                         |  11 +-
+ drivers/regulator/Makefile                        |   1 -
+ drivers/regulator/s2mpa01.c                       | 482 ---------------------
+ drivers/regulator/s2mps11.c                       | 483 +++++++++++++++++-----
+ 6 files changed, 454 insertions(+), 719 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/mfd/s2mpa01.txt
+ delete mode 100644 drivers/regulator/s2mpa01.c
+
 -- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
-
+1.9.1
