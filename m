@@ -1,149 +1,90 @@
-From: Alexander Holler <holler@ahsoftware.de>
-Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
- 'dependencies' which contains a list of referenced phandles
-Date: Tue, 27 May 2014 22:31:08 +0200
-Message-ID: <5384F60C.5020608@ahsoftware.de>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>	<53775334.3030704@gmail.com> <5379FAA5.10404@ahsoftware.de> <20140527200225.F12C4C40B4B@trevor.secretlab.ca>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCHv5 09/10] DTS: ARM: OMAP3-N900: Add SSI support
+Date: Tue, 27 May 2014 13:35:44 -0700
+Message-ID: <20140527203543.GB32336@atomide.com>
+References: <1399739870-13526-1-git-send-email-sre@kernel.org>
+ <1399739870-13526-10-git-send-email-sre@kernel.org>
+ <20140514215503.GM27426@atomide.com>
+ <20140520003538.GD15793@atomide.com>
+ <20140521182513.GA26285@earth.universe>
+ <20140521184319.GL17417@atomide.com>
+ <20140521194527.GM17417@atomide.com>
+ <20140521215055.GA26362@earth.universe>
+ <20140521220807.GB14520@atomide.com>
+ <20140522000558.GC29118@earth.universe>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140527200225.F12C4C40B4B@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140522000558.GC29118-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shubhrajyoti Datta <omaplinuxkernel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Carlos Chinea <cch.devel-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali =?utf-8?B?Um9ow6Fy?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon-uiMcrn6V0Vs@public.gmane.org>, Joni Lapilainen <joni.lapilainen-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 27.05.2014 22:02, schrieb Grant Likely:
-> On Mon, 19 May 2014 14:35:49 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
-
->> What's still questionable about the patches for dtc is if dependencies 
->> to devices and not just drivers should be included in the new property 
->> dependencies too. My current assumption is that all devices belonging to 
->> one and the same driver don't have dependencies between each other. In 
->> other words the order in which devices will be attached to one and the 
->> same driver isn't important. If that assumption is correct it would be 
->> possible to just attach all devices belonging to a driver after the 
->> driver was loaded (also I haven't that done in my patches).
+* Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [140521 17:06]:
+> On Wed, May 21, 2014 at 03:08:07PM -0700, Tony Lindgren wrote:
+> > * Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> [140521 14:51]:
+> > > 
+> > > Feel free to add Tested-by/Acked-By to the hwmod patch.
+> > 
+> > OK thanks for testing.
 > 
-> There aren't really any guarantees here. It is perfectly valid to have
-> two of the same device depending on the other, or even a device with a
-> different driver between the two.
+> You are welcome.
 > 
-> There's always going to be corner cases on the dependency chain. The
-> question is whether or not it is worth trying to solve every concievable
-> order, or if a partway solution is good enough.
+> > I'll apply your dts changes as soon as I have an ack from Paul on
+> > the hwmod changes. Probably best to queue them together to avoid
+> > PM breaking.
+> 
+> Ok. Sounds legit.
 
-Solving dependencies always happens automatically, with or without
-dependencies inbetween devices. I just ignored dependencies between pure
-devices (instead changed them into dependencies between drivers) because
-I'm still not sure how to handle devices at all. Below is a diff ontop
-my dtc-patches to include dependencies between devices too. As said, the
-changes to do so are minimal. Of course, the graphs are a bit more
-complex, because they then include devices too, but that isn't any
-problem for the solving algorithm at all.
+Based on chatting with Paul it seems that we most likely don't have
+bits for sysc_flags for SYSC_HAS_EMUFREE or SYSS_HAS_RESET_STATUS
+either. So applying the updated patch below, and the SSI dts changes
+into omap-for-v3.16/dt-v2.
 
-
-diff --git a/scripts/dtc/dependencies.c b/scripts/dtc/dependencies.c
-index 06f447b..602ec01 100644
---- a/scripts/dtc/dependencies.c
-+++ b/scripts/dtc/dependencies.c
-@@ -66,8 +66,10 @@ static void add_deps(struct node *dt, struct node
-*node, struct property *prop)
- 			continue;
- 		}
-
--		source = find_compatible_not_disabled(node);
--		target = find_compatible_not_disabled(refnode);
-+		//source = find_compatible_not_disabled(node);
-+		//target = find_compatible_not_disabled(refnode);
-+		source = node;
-+		target = refnode;
- 		if (!source || !target || source == target ||
- 				is_parent_of(source, target) ||
- 				is_parent_of(target, source))
-@@ -385,9 +387,9 @@ static int __init add_deps_lnx(struct device_node
-*parent,
-
- 	if (!__of_device_is_available(node))
- 		return 0;
--	if (__of_get_property(node, "compatible", NULL)) {
-+//	if (__of_get_property(node, "compatible", NULL)) {
- 		if (!parent->phandle) {
--			if (__of_get_property(parent, "compatible", NULL))
-+//			if (__of_get_property(parent, "compatible", NULL))
- 				parent->phandle = 1 + order.max_phandle++;
- 		}
- 		if (!node->phandle)
-@@ -425,7 +427,7 @@ static int __init add_deps_lnx(struct device_node
-*parent,
- 		if (unlikely(rc))
- 			return rc;
- 		parent = node; /* change the parent only if node is a driver */
--	}
-+//	}
- 	for_each_child_of_node(node, child) {
- 		rc = add_deps_lnx(parent, child, print_dot);
- 		if (unlikely(rc))
--- 
-1.8.3.2
-
-
-
-To make it easier to see devices in the produced order, here is another
-patch on top:
-
-
-
-@@ -464,6 +467,8 @@ void __init of_init_print_order(const char *name)
-                if (order.order[i]->full_name)
-                        pr_cont(" (%s)", order.order[i]->full_name);
-                prop = get_property(order.order[i], "compatible");
-+               if (!prop)
-+                       pr_cont(" -");
-                for (cp = of_prop_next_string(prop, NULL); cp;
-                     cp = of_prop_next_string(prop, cp))
-                        pr_cont(" %s", cp);
-
-
-
-With that patch one can do e.g. dtc -t |  grep ' - ' to see which device
-nodes are included which don't have a compatible property. For the
-omap3-beagle this produces the following 21 additional entries in the
-init-order:
-
-aholler@laptopahbt ~/Source/aholler/dtc.git $ dts/make_dtb.sh
-dts/omap3-beagle.dts -t | grep ' - '
-init 4 0xe4 pinmux_twl4030_pins
-(/ocp/pinmux@48002030/pinmux_twl4030_pins) - (parent 0x14b)
-init 10 0x107 clocks (/ocp/cm@48004000/clocks) - (parent 0x106)
-init 17 0x101 clocks (/ocp/prm@48306000/clocks) - (parent 0x100)
-init 226 0x143 clocks (/ocp/scrm@48002000/clocks) - (parent 0x142)
-init 237 0xe1 pinmux_hsusb2_pins
-(/ocp/pinmux@48002030/pinmux_hsusb2_pins) - (parent 0x14b)
-init 239 0xe2 pinmux_gpio1_pins (/ocp/pinmux@48002a00/pinmux_gpio1_pins)
-- (parent 0x14d)
-init 251 0xec pinmux_hsusb2_2_pins
-(/ocp/pinmux@480025d8/pinmux_hsusb2_2_pins) - (parent 0x18e)
-init 255 0xf4 chosen (/chosen) - (parent 0xf3)
-init 256 0xf5 aliases (/aliases) - (parent 0xf3)
-init 257 0xf6 memory (/memory) - (parent 0xf3)
-init 258 0xf7 cpus (/cpus) - (parent 0xf3)
-init 269 0x105 clockdomains (/ocp/prm@48306000/clockdomains) - (parent
-0x100)
-init 311 0x131 clockdomains (/ocp/cm@48004000/clockdomains) - (parent 0x106)
-init 333 0x149 clockdomains (/ocp/scrm@48002000/clockdomains) - (parent
-0x142)
-init 335 0x14c pinmux_uart3_pins
-(/ocp/pinmux@48002030/pinmux_uart3_pins) - (parent 0x14b)
-init 343 0x157 codec (/ocp/i2c@48070000/twl@48/audio/codec) - (parent 0xf1)
-init 398 0x18f choosen (/choosen) - (parent 0xf3)
-init 400 0x191 pmu_stat (/leds/pmu_stat) - (parent 0x190)
-init 401 0x192 heartbeat (/leds/heartbeat) - (parent 0x190)
-init 402 0x193 mmc (/leds/mmc) - (parent 0x190)
-init 405 0x196 user (/gpio_keys/user) - (parent 0x195)
-
+I'm keeping your previous ack Sebastian as the the idlemodes did
+not change from the previous version, hopefully that's OK with you.
 
 Regards,
 
-Alexander Holler
+Tony
+
+8< ------------------
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Date: Wed, 21 May 2014 12:31:35 -0700
+Subject: [PATCH] ARM: OMAP2+: Fix ssi hwmod entry to allow idling
+
+The current entry prevents system from idling if
+the hwmod is defined in the .dts file so let's
+change the idlemodes.
+
+Note that we probably don't have SYSC_HAS_EMUFREE
+or SYSS_HAS_RESET_STATUS either. If we do, those
+can be added later on.
+
+Acked-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+
+--- a/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
++++ b/arch/arm/mach-omap2/omap_hwmod_3xxx_data.c
+@@ -3689,12 +3689,9 @@ static struct omap_hwmod_class_sysconfig omap34xx_ssi_sysc = {
+ 	.rev_offs	= 0x0000,
+ 	.sysc_offs	= 0x0010,
+ 	.syss_offs	= 0x0014,
+-	.sysc_flags	= (SYSC_HAS_AUTOIDLE | SYSC_HAS_EMUFREE |
+-			   SYSC_HAS_MIDLEMODE | SYSC_HAS_SIDLEMODE |
+-			   SYSC_HAS_SOFTRESET | SYSS_HAS_RESET_STATUS),
+-	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+-			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
+-			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
++	.sysc_flags	= (SYSC_HAS_AUTOIDLE | SYSC_HAS_MIDLEMODE |
++			   SYSC_HAS_SIDLEMODE | SYSC_HAS_SOFTRESET),
++	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART),
+ 	.sysc_fields	= &omap_hwmod_sysc_type1,
+ };
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
