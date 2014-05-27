@@ -1,125 +1,75 @@
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Tue, 27 May 2014 18:38:16 +0300
-Message-ID: <A3545211-63A4-4ED7-9B98-0715A096F01E@konsulko.com>
-References: <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com> <20140526104824.63F13C42129@trevor.secretlab.ca> <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com> <20140526112348.907B7C421A5@trevor.secretlab.ca> <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com> <20140526213303.C1C73C40E11@trevor.secretlab.ca> <20140526223630.GA32691@earth.universe> <5383D174.8070304@roeck-us.net> <20140527121236.3B818C40A5A@trevor.secretlab.ca> <9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com> <20140527152115.GA30180@roeck-us.net>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140527152115.GA30180@roeck-us.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: Grant Likely <grant.likely@secretlab.ca>, Sebastian Reichel <sre@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@ko>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Tue, 27 May 2014 16:47:48 +0100
+Message-ID: <20140527154748.GX12304@sirena.org.uk>
+References: <20140523162718.GE22111@sirena.org.uk>
+ <53806F26.6050706@redhat.com>
+ <20140525123452.GS22111@sirena.org.uk>
+ <53824294.1090609@redhat.com>
+ <20140526103807.GV22111@sirena.org.uk>
+ <538321AB.4050006@redhat.com>
+ <20140526142225.GF22111@sirena.org.uk>
+ <538356DA.7090302@redhat.com>
+ <CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
+ <53838023.2080807@redhat.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="actP4k1Z62ny7sWM"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53838023.2080807@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Guenter,
 
-On May 27, 2014, at 6:21 PM, Guenter Roeck wrote:
+--actP4k1Z62ny7sWM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Tue, May 27, 2014 at 03:24:35PM +0300, Pantelis Antoniou wrote:
->> Hi Grant,
->> 
->> On May 27, 2014, at 3:12 PM, Grant Likely wrote:
->> 
->>> On Mon, 26 May 2014 16:42:44 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
->>>> On 05/26/2014 03:36 PM, Sebastian Reichel wrote:
->>>>> Hi,
->>>>> 
->>>>> On Mon, May 26, 2014 at 10:33:03PM +0100, Grant Likely wrote:
->>>>>> After thinking about it more, I think it is very likely that removing
->>>>>> all the overlays is the correct thing to do in the kexec use-case. When
->>>>>> kexec-ing, it makes sense that we'd want the exact same behaviour from
->>>>>> the kexec'ed kernel. That means we want the device drivers to do the
->>>>>> same thing including loading whatever overlays they depend on.
->>>>>> 
->>>>>> If the flattened tree was left applied, then the behaviour becomes
->>>>>> different.
->>>>>> 
->>>>>> I say always remove the overlays unless explicitly told not to, but I'm
->>>>>> struggling to come up with use cases where keeping them applied is
->>>>>> desirable.
->>>>> 
->>>>> I would assume, that I want them applied in most cases. DT describes
->>>>> the hardware. If I kexec into a new kernel I change software, not
->>>>> hardware.
->>>>> 
->>>>> Maybe I'm missing the main purpose of the feature. I currently see
->>>>> two useful usecases for DT overlays:
->>>>> 
->>>>> 1. The dtb the kernel is booted with cannot be changed for some
->>>>>   reason, but the board has additional hardware attached (e.g.
->>>>>   the user added a sensor on the i2c bus)
->>>>> 2. The hardware is changed on the fly (e.g. the user flashed the
->>>>>   FPGA part of a zynq processor), sensors on i2c bus, ...
->>>>> 
->>>>> In both cases the kernel should be booted with the additional
->>>>> overlay information IMHO. Though for the second case it should
->>>>> be possible to remove the "programmed" hardware information
->>>>> somehow.
->>>>> 
->>>> 
->>>> 3. Some hot-plug device or card is inserted or removed.
->>>> 
->>>> I would argue that the kernel should _not_ be booted with the overlay in place.
->>>> Otherwise the code handling overlays would have to have special handling
->>>> for the restart case, which is much more complex than just to re-insert
->>>> the overlay when it is determined that the device or card is still there.
->>> 
->>> Exactly.
->>> 
->> 
->> Looks like we are levitating to the 'remove overlays on kexec' approach.
->> Is that correct?
->> 
-> 
-> Let's just assume for a minute that this is not the case, and that loaded
-> overlays are passed on.
-> 
-> This would be an interesting challenge for the overlay manager, as it would
-> have to handle a number of startup conditions. After all, it can not take
-> it as granted that the hardware state did not change after it was stopped
-> in the old kernel, and before it was started in the new kernel.
-> - overlay loaded, but hardware/device no longer present
->  -> unload overlay
-> - overlay loaded, but different hardware present
->  -> unload old overlay, load new one
-> - overlay not loaded, hardware present
->  -> load overlay
-> - overlay loaded and matches hardware
->  -> do nothing
-> 
-> In comparison, its task would be quite straightforward if loaded overlays
-> are not passed on to the new kernel.
-> - If hardware is present, load overlay
-> 
+On Mon, May 26, 2014 at 07:55:47PM +0200, Hans de Goede wrote:
 
-Yeah, exactly. The only case where having the applied overlays present on the 
-kexec-ed kernel is either some kind of virtualization environment, or an fpga
-that takes an awful lot amount of time to re-initializa.
+> 				power-on-seq =3D "gpio_reg_enable", "usleep 1000", "clk_32khz", "usle=
+ep 200";
 
-> Ultimately, I seem to be missing something, as I don't really see the benefit
-> of passing on the loaded overlay(s) to the new kernel. Activation time, maybe,
-> for the most common case (overlay loaded and matches hardware) ?
-> 
-> Concern though is the other cases, with a mismatch between HW and loaded
-> overlays. I am not sure if it is even possible to ensure that there are
-> no race conditions if the devicetree is outdated at system startup. Sure,
-> that is unlikely to happen in 'normal' operating conditions, but that only
-> means that it _will_ happen a few hours after the first customer starts
-> playing with the system.
-> 
+=2E..
 
-I concur. Accidents will happen, and if it's not a tightly controlled system
-breakage is guaranteed.
+> Where power-on-seq would tell the mmc-core exactly how to bring up the sd=
+io
+> device, using standard prefixes so that the mmc-core knows that something=
+ is
+> a clock / gpio / reset / whatever.
 
-> Guenter
+There was some work on such generic power on sequences in DT from=20
+Alexandre Courbot a while ago, search for "Runtime Interpreter Power
+Sequences".  It ground to a halt IIRC mainly because it was never clear
+that this should ever be encoded outside of the driver for a device but
+the binding was pretty good and well reviewed, it's a good place to
+start if there's a desire to do things like this.
 
-Regards
+--actP4k1Z62ny7sWM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--- Pantelis
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJThLOhAAoJELSic+t+oim9is0P/jwSlzOCx98mdu8oxY7dyrFC
+m7jfYHQNL752JER5QptF974/TJ5LaY/FLjb8pJ7o47bCUeE6z/Wd3jfJy4AqnmKD
+rC5xABcYWHqVXf/NdD44htC146o7p+kc3VE068vypRjUaYSkCJ9y29zF+toC3Sre
+XKpp6Oy6icRA6TKElfsBPkCvK8dClCS8t0c+aZOZPC4kh983nJsF946FLaAJOFmA
+PSi8me9J3JruAGjije1L51MKr9AvSlTo/R3zFiX30mQTe2rSRRredvTulUzTzsaj
+V6RcLqolkTbdEBpOonRp5ajFW0rGE6MNqyR028p6eg3YOGTF6k9veP1bAmA27Jcv
+p7rQ4wXJ5DZpvSR/sGGDE3b0Jc+Ks+IKcA6I5OqO3eMKNjqcdIbvv3CdAJ6mhaMr
+FhgWxJQ9W6Nc64pB2Itcf4snX85NBsZAMOL5Tz/bRsiwqPvNrRgvAFXLRQ0P9LMd
+PjXxu6HNArFO2qq163HO/xxRt0jBUqjjZi9R77vrfE/0tZZChxMkcKAmVgvyYCXD
+OFpo0oOr+3hn2tDn/kq2lcC7RD3koRGOYpWfDvgaq3paTspEf+/VPV6clsafrK79
+w8pNrS4WWnZTNRV12SRbt8l5vcvjMP2j+9NyZ8E6ElNDxwmkX4NOPzDtMIrIutFK
+e/Cq4HoU1psCy0ReWZoD
+=1VKm
+-----END PGP SIGNATURE-----
+
+--actP4k1Z62ny7sWM--
