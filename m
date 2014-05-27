@@ -1,66 +1,78 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH v5 5/5] arm: exynos: Add MCPM call-back functions
-Date: Tue, 27 May 2014 20:39:24 +0900
-Message-ID: <002101cf79a0$50fba0f0$f2f2e2d0$@samsung.com>
-References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
- <1399307221-8659-6-git-send-email-a.kesavan@samsung.com>
- <201405271307.56729.arnd@arndb.de>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 0/2] i2c: sunxi: add P2WI controller support
+Date: Tue, 27 May 2014 13:45:31 +0200
+Message-ID: <53847ADB.9080707@free-electrons.com>
+References: <1399715163-11291-1-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <201405271307.56729.arnd@arndb.de>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Arnd Bergmann' <arnd@arndb.de>, 'Abhilash Kesavan' <a.kesavan@samsung.com>
-Cc: nicolas.pitre@linaro.org, Dave.Martin@arm.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, t.figa@samsung.com, abrestic@chromium.org, thomas.ab@samsung.com, inderpal.s@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, will.deacon@arm.com, kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1399715163-11291-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann wrote:
-> 
-> On Monday 05 May 2014, Abhilash Kesavan wrote:
-> > +static const struct mcpm_platform_ops exynos_power_ops = {
-> > +       .power_up               = exynos_power_up,
-> > +       .power_down             = exynos_power_down,
-> > +       .power_down_finish      = exynos_power_down_finish,
-> > +};
-> 
-> 
-> I'm getting a build error in linux-next because there is
-> no .power_down_finish
-> member in mcpm_platform_ops here.
-> 
-Yeah, commit 166aaf39 ("ARM: 8029/1: mcpm: Rename the power_down_finish()
-functions to be less confusing") changed the name to
-wait_for_cpu_powerdown...
+Hello Wolfram,
 
-So need to change it accordingly...
+No news from you regarding this patch series.
 
-diff --git a/arch/arm/mach-exynos/mcpm-exynos.c
-b/arch/arm/mach-exynos/mcpm-exynos.c
-index 1ac618c..34c4e6f 100644
---- a/arch/arm/mach-exynos/mcpm-exynos.c
-+++ b/arch/arm/mach-exynos/mcpm-exynos.c
-@@ -235,7 +235,7 @@ static void exynos_power_down(void)
- 	/* Not dead at this point?  Let our caller cope. */
- }
- 
--static int exynos_power_down_finish(unsigned int cpu, unsigned int cluster)
-+static int exynos_wait_for_powerdown(unsigned int cpu, unsigned int
-cluster)
- {
- 	unsigned int tries = 100;
- 	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
-@@ -261,7 +261,7 @@ static int exynos_power_down_finish(unsigned int cpu,
-unsigned int cluster)
- static const struct mcpm_platform_ops exynos_power_ops = {
- 	.power_up		= exynos_power_up,
- 	.power_down		= exynos_power_down,
--	.power_down_finish	= exynos_power_down_finish,
-+	.wait_for_powerdown	= exynos_wait_for_powerdown,
- };
- 
- static void __init exynos_mcpm_usage_count_init(void)
+Is there anything you want me to fix ?
 
-Thanks,
-Kukjin
+Otherwise It would be great to have this series merged, because the PMIC
+used on Allwinner's A31 boards are connected through this P2WI bus.
+
+Best Regards,
+
+Boris
+
+On 10/05/2014 11:46, Boris BREZILLON wrote:
+> Hello,
+>
+> This series adds support for the P2WI block used by some Allwinner
+> boards to interface with the AXP221 PMIC.
+>
+> Best Regards,
+>
+> Boris
+>
+> Changes since v3:
+> - update the DT bindings doc
+> - fix a comment that was no longer true
+>
+> Changes since v2:
+> - drop the initialization (switch from I2C to P2WI mode) part
+> - print devm_ioremap_resource err code
+>
+> Changes since v1:
+> - implement P2WI initilization
+> - implement P2WI bus frequency configuration
+> - implement address consistency check
+> - fix devm_request_and_ioremap return check
+> - rework the macro definitions
+> - fix typos
+>
+> [1] http://www.spinics.net/lists/linux-i2c/msg15066.html
+> [2] http://comments.gmane.org/gmane.comp.hardware.netbook.arm.sunxi/8947
+> Boris BREZILLON (2):
+>   i2c: sunxi: add P2WI DT bindings documentation
+>   i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface) controller support
+>
+>  .../devicetree/bindings/i2c/i2c-sunxi-p2wi.txt     |  41 +++
+>  drivers/i2c/busses/Kconfig                         |  12 +
+>  drivers/i2c/busses/Makefile                        |   1 +
+>  drivers/i2c/busses/i2c-sun6i-p2wi.c                | 349 +++++++++++++++++++++
+>  4 files changed, 403 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sunxi-p2wi.txt
+>  create mode 100644 drivers/i2c/busses/i2c-sun6i-p2wi.c
+>
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
