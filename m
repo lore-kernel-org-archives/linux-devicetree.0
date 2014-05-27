@@ -1,41 +1,50 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Tue, 27 May 2014 18:29:41 +0900
-Message-ID: <53845B05.80900@renesas.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v6 1/2] clk: shmobile: r8a7779: Add clocks support
+Date: Tue, 27 May 2014 11:31:42 +0200
+Message-ID: <201405271131.42301.arnd@arndb.de>
+References: <1397775951-30992-1-git-send-email-horms+renesas@verge.net.au> <1397775951-30992-2-git-send-email-horms+renesas@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
+In-Reply-To: <1397775951-30992-2-git-send-email-horms+renesas@verge.net.au>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "kishon@ti.com" <kishon@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
+To: linux-arm-kernel@lists.infradead.org
+Cc: Simon Horman <horms+renesas@verge.net.au>, Mike Turquette <mturquette@linaro.org>, devicetree@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-(2014/05/24 7:06), Sergei Shtylyov wrote:
-< snip >
-> +Example (Lager board):
+On Friday 18 April 2014, Simon Horman wrote:
+> diff --git a/drivers/clk/shmobile/clk-r8a7779.c b/drivers/clk/shmobile/clk-r8a7779.c
+> new file mode 100644
+> index 0000000..652ecac
+> --- /dev/null
+> +++ b/drivers/clk/shmobile/clk-r8a7779.c
+> @@ -0,0 +1,180 @@
+> +/*
+> + * r8a7779 Core CPG Clocks
+> + *
+> + * Copyright (C) 2013, 2014 Horms Solutions Ltd.
+> + *
+> + * Contact: Simon Horman <horms@verge.net.au>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; version 2 of the License.
+> + */
 > +
-> +	usb-phy@e6590100 {
-> +		compatible = "renesas,usb-phy-r8a7790";
-> +		reg = <0 0xe6590100 0 0x100>;
-> +		#phy-cells = <2>;
-> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
-> +		clock-names = "usbhs";
+> +#include <linux/clk-provider.h>
+> +#include <linux/clkdev.h>
+> +#include <linux/clk/shmobile.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/of.h>
+> +#include <linux/of_address.h>
+> +#include <linux/spinlock.h>
+> +
+> +#include <dt-bindings/clock/r8a7779-clock.h>
 
-I'm not sure about the clock-names string,
-but the current clock-name of R8A7790_CLK_HSUSB is "hsusb" in r8a7790.dtsi.
-So, before I tested this driver, I changed the "hsusb" to "usbhs".
-Otherwise, the devm_clk_get() in the driver failed.
+This currently causes a build error in Linux-next, since the header file has not
+been merged along with the driver.
 
-< snip >
-> +	for_each_child_of_node(dev->of_node, np) {
-> +  		struct rcar_gen2_phy *phy;
-
-This line has two while spaces at the start of the line.
-
-Best regards,
-Yoshihiro Shimoda
+	Arnd
