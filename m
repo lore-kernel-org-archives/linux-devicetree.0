@@ -1,92 +1,149 @@
-From: Arend van Spriel <arend@broadcom.com>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
- tree
-Date: Tue, 27 May 2014 22:27:43 +0200
-Message-ID: <5384F53F.4020408@broadcom.com>
-References: <20140525123452.GS22111@sirena.org.uk> <53824294.1090609@redhat.com> <20140526103807.GV22111@sirena.org.uk> <538321AB.4050006@redhat.com> <20140526142225.GF22111@sirena.org.uk> <538356DA.7090302@redhat.com> <CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com> <53838023.2080807@redhat.com> <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com> <20140527175326.GZ12304@sirena.org.uk> <20140527185535.GB27420@quad.lixom.net>
+From: Alexander Holler <holler@ahsoftware.de>
+Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
+ 'dependencies' which contains a list of referenced phandles
+Date: Tue, 27 May 2014 22:31:08 +0200
+Message-ID: <5384F60C.5020608@ahsoftware.de>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>	<53775334.3030704@gmail.com> <5379FAA5.10404@ahsoftware.de> <20140527200225.F12C4C40B4B@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140527185535.GB27420@quad.lixom.net>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Olof Johansson <olof@lixom.net>
-Cc: Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140527200225.F12C4C40B4B@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Russell King <linux@arm.linux.org.uk>, Jon Loeliger <jdl@jdl.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/14 20:55, Olof Johansson wrote:
-> On Tue, May 27, 2014 at 06:53:26PM +0100, Mark Brown wrote:
->> On Tue, May 27, 2014 at 03:50:33PM +0200, Ulf Hansson wrote:
->>
->>> To describe the HW in DT, the embedded SDIO card (actually it could be
->>> any type of embedded card) shall be modelled as a child node to the
->>> mmc host in DT. Similar to what you have proposed, but with the
->>> difference that the child node _must_ contain a DT compatible string,
->>> which means a "powerup-driver" can be probed.
->>
->>> Yes, I understand we might need one DT compatible string per board,
->>> but that's because we need to model the hardware - and it differs.
->>
->>> To clarify my view, we do need a "powerup-driver" and the primary
->>> reason is that we must not model "power up sequences" within DT.
->>> Typically I see the "powerup-driver" as a simple platform driver
->>> attached to the platform bus, but I that could of course differ.
->>
->> This then either conflicts with cases where we need to describe the
->> actual contents of the slot with a compatible string or means that the
->> SDIO driver needs to handle powerup sequencing since we should be
->> binding to the first compatible we find.  If the host controller driver
->> and/or subsystem is going to deal with the powering up it's not clear
->> that it specifically needs to be the compatible property that's used
->> to determine the powerup method, it could just be a boolean or a
->> 'power-method = blah' property (where blah is one of a series of strings
->> defining methods).  Alternatively we could have separate nodes for the
->> slot and SDIO device but that feels meh.  What's the hard requirement
->> for it to specifically be a compatible property?
->
-> +1. Just because we have a subnode in a device tree, we don't have to have
-> a driver bind against it. The MMC core code could go down into the subnodes,
-> find a "power-method =<foo>" property and go ahead and parse the rest of it.
-> There's no requirement that we do this through the Linux driver model of
-> probe(), etc.
+Am 27.05.2014 22:02, schrieb Grant Likely:
+> On Mon, 19 May 2014 14:35:49 +0200, Alexander Holler <holler@ahsoftware.de> wrote:
 
-I prefer a power-method property over compatible matching. The fact that 
-the subnode has a compatible string and properties for the device driver 
-should not matter.
+>> What's still questionable about the patches for dtc is if dependencies 
+>> to devices and not just drivers should be included in the new property 
+>> dependencies too. My current assumption is that all devices belonging to 
+>> one and the same driver don't have dependencies between each other. In 
+>> other words the order in which devices will be attached to one and the 
+>> same driver isn't important. If that assumption is correct it would be 
+>> possible to just attach all devices belonging to a driver after the 
+>> driver was loaded (also I haven't that done in my patches).
+> 
+> There aren't really any guarantees here. It is perfectly valid to have
+> two of the same device depending on the other, or even a device with a
+> different driver between the two.
+> 
+> There's always going to be corner cases on the dependency chain. The
+> question is whether or not it is worth trying to solve every concievable
+> order, or if a partway solution is good enough.
 
->>> The slot will be the first level of child node under the mmc host,
->>> then each slot may have a child node which models the embedded card.
->>> But, let's leave that discussion for now. :-)
->>
->> OK, that's the separate node for the slot and device.
->>
->>> Powerup driver's ->probe():
->>> Typically the "powerup driver" will need to register a few callback
->>> functions towards the mmc core. Typically at mmc_of_parse(), those
->>> callbacks will have to be connected to a particular mmc host.
->>
->>> I would like to see three different callbacks, mirroring each of the
->>> mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
->>
->>> The power up sequence, performed by the mmc core:
->>> The mmc_power_up|off functions, will invoke the registered "powerup
->>> driver's" callbacks if they exists for the particular host it operates
->>> on.
->>
->> There's also the need for the SDIO device to be able to get at the
->> resources provided and actively work with them at runtime if it wants to
->> manage things more actively (partial poweroff for low power states or
->> managing clock rates for example).
->
-> Again, I think it gets overly complicated by using a full driver for the
-> power management. Abstracted out into something separate and scalable
-> as number of devices grow? Sure, definitely. As a driver? Not convinced.
+Solving dependencies always happens automatically, with or without
+dependencies inbetween devices. I just ignored dependencies between pure
+devices (instead changed them into dependencies between drivers) because
+I'm still not sure how to handle devices at all. Below is a diff ontop
+my dtc-patches to include dependencies between devices too. As said, the
+changes to do so are minimal. Of course, the graphs are a bit more
+complex, because they then include devices too, but that isn't any
+problem for the solving algorithm at all.
 
-I think somewhere in the thread Hans already indicated the term 'driver' 
-was a misnomer. While monitoring the discussion I was wondering whether 
-this type of power-up sequence handling is specific to mmc/sdio or could 
-it also apply to say spi, i2c, or whatever. In other words, could the 
-power-up sequence code be placed in drivers/of code.
+
+diff --git a/scripts/dtc/dependencies.c b/scripts/dtc/dependencies.c
+index 06f447b..602ec01 100644
+--- a/scripts/dtc/dependencies.c
++++ b/scripts/dtc/dependencies.c
+@@ -66,8 +66,10 @@ static void add_deps(struct node *dt, struct node
+*node, struct property *prop)
+ 			continue;
+ 		}
+
+-		source = find_compatible_not_disabled(node);
+-		target = find_compatible_not_disabled(refnode);
++		//source = find_compatible_not_disabled(node);
++		//target = find_compatible_not_disabled(refnode);
++		source = node;
++		target = refnode;
+ 		if (!source || !target || source == target ||
+ 				is_parent_of(source, target) ||
+ 				is_parent_of(target, source))
+@@ -385,9 +387,9 @@ static int __init add_deps_lnx(struct device_node
+*parent,
+
+ 	if (!__of_device_is_available(node))
+ 		return 0;
+-	if (__of_get_property(node, "compatible", NULL)) {
++//	if (__of_get_property(node, "compatible", NULL)) {
+ 		if (!parent->phandle) {
+-			if (__of_get_property(parent, "compatible", NULL))
++//			if (__of_get_property(parent, "compatible", NULL))
+ 				parent->phandle = 1 + order.max_phandle++;
+ 		}
+ 		if (!node->phandle)
+@@ -425,7 +427,7 @@ static int __init add_deps_lnx(struct device_node
+*parent,
+ 		if (unlikely(rc))
+ 			return rc;
+ 		parent = node; /* change the parent only if node is a driver */
+-	}
++//	}
+ 	for_each_child_of_node(node, child) {
+ 		rc = add_deps_lnx(parent, child, print_dot);
+ 		if (unlikely(rc))
+-- 
+1.8.3.2
+
+
+
+To make it easier to see devices in the produced order, here is another
+patch on top:
+
+
+
+@@ -464,6 +467,8 @@ void __init of_init_print_order(const char *name)
+                if (order.order[i]->full_name)
+                        pr_cont(" (%s)", order.order[i]->full_name);
+                prop = get_property(order.order[i], "compatible");
++               if (!prop)
++                       pr_cont(" -");
+                for (cp = of_prop_next_string(prop, NULL); cp;
+                     cp = of_prop_next_string(prop, cp))
+                        pr_cont(" %s", cp);
+
+
+
+With that patch one can do e.g. dtc -t |  grep ' - ' to see which device
+nodes are included which don't have a compatible property. For the
+omap3-beagle this produces the following 21 additional entries in the
+init-order:
+
+aholler@laptopahbt ~/Source/aholler/dtc.git $ dts/make_dtb.sh
+dts/omap3-beagle.dts -t | grep ' - '
+init 4 0xe4 pinmux_twl4030_pins
+(/ocp/pinmux@48002030/pinmux_twl4030_pins) - (parent 0x14b)
+init 10 0x107 clocks (/ocp/cm@48004000/clocks) - (parent 0x106)
+init 17 0x101 clocks (/ocp/prm@48306000/clocks) - (parent 0x100)
+init 226 0x143 clocks (/ocp/scrm@48002000/clocks) - (parent 0x142)
+init 237 0xe1 pinmux_hsusb2_pins
+(/ocp/pinmux@48002030/pinmux_hsusb2_pins) - (parent 0x14b)
+init 239 0xe2 pinmux_gpio1_pins (/ocp/pinmux@48002a00/pinmux_gpio1_pins)
+- (parent 0x14d)
+init 251 0xec pinmux_hsusb2_2_pins
+(/ocp/pinmux@480025d8/pinmux_hsusb2_2_pins) - (parent 0x18e)
+init 255 0xf4 chosen (/chosen) - (parent 0xf3)
+init 256 0xf5 aliases (/aliases) - (parent 0xf3)
+init 257 0xf6 memory (/memory) - (parent 0xf3)
+init 258 0xf7 cpus (/cpus) - (parent 0xf3)
+init 269 0x105 clockdomains (/ocp/prm@48306000/clockdomains) - (parent
+0x100)
+init 311 0x131 clockdomains (/ocp/cm@48004000/clockdomains) - (parent 0x106)
+init 333 0x149 clockdomains (/ocp/scrm@48002000/clockdomains) - (parent
+0x142)
+init 335 0x14c pinmux_uart3_pins
+(/ocp/pinmux@48002030/pinmux_uart3_pins) - (parent 0x14b)
+init 343 0x157 codec (/ocp/i2c@48070000/twl@48/audio/codec) - (parent 0xf1)
+init 398 0x18f choosen (/choosen) - (parent 0xf3)
+init 400 0x191 pmu_stat (/leds/pmu_stat) - (parent 0x190)
+init 401 0x192 heartbeat (/leds/heartbeat) - (parent 0x190)
+init 402 0x193 mmc (/leds/mmc) - (parent 0x190)
+init 405 0x196 user (/gpio_keys/user) - (parent 0x195)
+
 
 Regards,
-Arend
+
+Alexander Holler
