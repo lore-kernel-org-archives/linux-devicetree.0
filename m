@@ -1,78 +1,42 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: mvebu: split SolidRun CuBox into variants
-Date: Tue, 27 May 2014 19:28:09 +0200
-Message-ID: <5384CB29.1090204@gmail.com>
-References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com> <1401140009-31505-2-git-send-email-sebastian.hesselbarth@gmail.com> <20140527161143.GS8664@titan.lakedaemon.net>
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Subject: [PATCH 0/3] Qualcomm Resource Power Manager driver
+Date: Tue, 27 May 2014 10:28:38 -0700
+Message-ID: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140527161143.GS8664@titan.lakedaemon.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2014 06:11 PM, Jason Cooper wrote:
-> On Mon, May 26, 2014 at 11:33:29PM +0200, Sebastian Hesselbarth wrote:
->> As Mainlining effort for SolidRun CuBox has been carried out on the
->> Engineering Sample, the board DTS was reflecting this. Actually,
->> SolidRun CuBox comes in three different variants: Engineering Sample (ES),
->> production with 1GB RAM (1G), and production with 2GB RAM (2G).
->>
->> Therefore, we split the current dove-cubox.dts into a common board include
->> and one board dts for each of the above variants.
->>
->> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
->> ---
-[...]
->> ---
->>  arch/arm/boot/dts/Makefile                         |  4 +++-
->>  arch/arm/boot/dts/dove-cubox-1g.dts                | 17 ++++++++++++++++
->>  arch/arm/boot/dts/dove-cubox-2g.dts                | 17 ++++++++++++++++
->>  arch/arm/boot/dts/dove-cubox-es.dts                | 23 ++++++++++++++++++++++
->>  .../boot/dts/{dove-cubox.dts => dove-cubox.dtsi}   | 17 ----------------
->>  5 files changed, 60 insertions(+), 18 deletions(-)
->>  create mode 100644 arch/arm/boot/dts/dove-cubox-1g.dts
->>  create mode 100644 arch/arm/boot/dts/dove-cubox-2g.dts
->>  create mode 100644 arch/arm/boot/dts/dove-cubox-es.dts
->>  rename arch/arm/boot/dts/{dove-cubox.dts => dove-cubox.dtsi} (86%)
->>
-[...]
->> diff --git a/arch/arm/boot/dts/dove-cubox-2g.dts b/arch/arm/boot/dts/dove-cubox-2g.dts
->> new file mode 100644
->> index 000000000000..513b6a68eba3
->> --- /dev/null
->> +++ b/arch/arm/boot/dts/dove-cubox-2g.dts
->> @@ -0,0 +1,17 @@
->> +/dts-v1/;
->> +
->> +#include "dove-cubox.dtsi"
->> +
->> +/ {
->> +	model = "SolidRun CuBox (2G)";
->> +	compatible = "solidrun,cubox-2g", "solidrun,cubox", "marvell,dove";
->> +
->> +	memory {
->> +		device_type = "memory";
->> +		reg = <0x00000000 0x80000000>;
-> 
-> Do you anticipate any other differences between the 1G and the 2G?
-> Otherwise, I'm inclined to just have a "solidrun,cubox".  The bootloader
-> should be setting the amount of RAM at boottime anyway.
+This series adds a regulator driver for the Resource Power Manager found in
+Qualcomm 8660, 8960 and 8064 based devices.
 
-Given the minor differences between ES and production, instead of
+The RPM driver exposes resources to its child devices, that can be accessed to
+implement drivers for the regulators, clocks and bus frequency control that's
+owned by the RPM in these devices.
 
-dove-cubox-common.dtsi
-+--> dove-cubox.dts (production)
-+--> dove-cubos-es.dts (engineering sample)
+Bjorn Andersson (3):
+  mfd: devicetree: bindings: Add Qualcomm RPM DT binding
+  mfd: qcom-rpm: Driver for the Qualcomm RPM
+  regulator: qcom-rpm: Regulator driver for the Qualcomm RPM
 
-we could also just have an "overlay" for the ES like
+ Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 283 +++++++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/qcom_rpm.c                             | 554 ++++++++++++++
+ drivers/regulator/Kconfig                          |  12 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/qcom_rpm-regulator.c             | 852 +++++++++++++++++++++
+ include/dt-bindings/mfd/qcom_rpm.h                 | 148 ++++
+ include/linux/mfd/qcom_rpm.h                       |  13 +
+ 9 files changed, 1879 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+ create mode 100644 drivers/mfd/qcom_rpm.c
+ create mode 100644 drivers/regulator/qcom_rpm-regulator.c
+ create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
+ create mode 100644 include/linux/mfd/qcom_rpm.h
 
-dove-cubox.dts (production)
-+--> dove-cubox-es.dts (engineering sample)
-
-It is not used commonly until now, maybe just a matter of taste.
-
-Is there any version you prefer?
-
-Sebastian
+-- 
+1.8.2.2
