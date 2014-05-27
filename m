@@ -1,76 +1,55 @@
-From: Yadwinder Singh Brar <yadi.brar01@gmail.com>
-Subject: Re: [PATCH 1/3] regulator: s2mps11: Refactor setting ramp delay
-Date: Tue, 27 May 2014 11:56:39 +0530
-Message-ID: <CAKew6eV63jkFtpeaHGj4c5fUq0jZYFNzvf_W-fOrtJ5opnadyg@mail.gmail.com>
-References: <1401110423-5647-1-git-send-email-k.kozlowski@samsung.com>
-	<1401110423-5647-2-git-send-email-k.kozlowski@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1401110423-5647-2-git-send-email-k.kozlowski@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree <devicetree@vger.kernel.org>
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2] pinctrl: Enable "power-source" to be extracted from DT files
+Date: Tue, 27 May 2014 09:27:36 +0300
+Message-ID: <1401172056-25743-1-git-send-email-iivanov@mm-sol.com>
+References: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Krzysztof,
+From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
 
+Add "power-source" property to generic options used for DT parsing files.
+This  enables drivers, which use generic pin configurations, to get the
+value passed to this property.
 
-On Mon, May 26, 2014 at 6:50 PM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> Prepare for merging the s2mpa01 regulator driver into s2mps11 by:
-> 1. Adding common id for buck regulators.
-> 2. Splitting shared ramp delay settings to match S2MPA01.
-> 3. Adding a configuration of registers for setting ramp delay for each
->    buck regulator.
->
-> The functionality of the driver should not change as this patch only
-> prepares for supporting S2MPA01 device.
->
-> Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  drivers/regulator/s2mps11.c | 210 ++++++++++++++++++++++++++++++--------------
->  1 file changed, 144 insertions(+), 66 deletions(-)
->
+Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 1 +
+ drivers/pinctrl/pinconf-generic.c                              | 1 +
+ 2 files changed, 2 insertions(+)
 
-[snip]
+diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+index 4414163..fa40a17 100644
+--- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
++++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
+@@ -156,6 +156,7 @@ input-disable		- disable input on pin (no effect on output)
+ input-schmitt-enable	- enable schmitt-trigger mode
+ input-schmitt-disable	- disable schmitt-trigger mode
+ input-debounce		- debounce mode with debound time X
++power-source		- select between different power supplies
+ low-power-enable	- enable low power mode
+ low-power-disable	- disable low power mode
+ output-low		- set the pin to output mode with low level
+diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
+index 3d9a999..c7ead91 100644
+--- a/drivers/pinctrl/pinconf-generic.c
++++ b/drivers/pinctrl/pinconf-generic.c
+@@ -166,6 +166,7 @@ static struct pinconf_generic_dt_params dt_params[] = {
+ 	{ "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
+ 	{ "input-schmitt-disable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 0 },
+ 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
++	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
+ 	{ "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
+ 	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
+ 	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
+--
+1.8.3.2
 
->
-> -               if (ramp_delay > s2mps11->ramp_delay34)
-> -                       s2mps11->ramp_delay34 = ramp_delay;
-> +               if (ramp_delay > s2mps11->ramp_delay3)
-> +                       s2mps11->ramp_delay3 = ramp_delay;
->                 else
-> -                       ramp_delay = s2mps11->ramp_delay34;
-> -
-> -               ramp_shift = S2MPS11_BUCK34_RAMP_SHIFT;
-> -               ramp_reg = S2MPS11_REG_RAMP;
-> +                       ramp_delay = s2mps11->ramp_delay3;
->                 break;
->         case S2MPS11_BUCK4:
-> -               enable_shift = S2MPS11_BUCK4_RAMP_EN_SHIFT;
->                 if (!ramp_delay) {
->                         ramp_enable = 0;
->                         break;
->                 }
->
-> -               if (ramp_delay > s2mps11->ramp_delay34)
-> -                       s2mps11->ramp_delay34 = ramp_delay;
-> +               if (ramp_delay > s2mps11->ramp_delay4)
-> +                       s2mps11->ramp_delay4 = ramp_delay;
->                 else
-> -                       ramp_delay = s2mps11->ramp_delay34;
-> -
-> -               ramp_shift = S2MPS11_BUCK34_RAMP_SHIFT;
-> -               ramp_reg = S2MPS11_REG_RAMP;
-> +                       ramp_delay = s2mps11->ramp_delay4;
-
-Main rationale behind shared value is completely omitted here, in
-other cases also,
-after just giving a NOTE in documentation asking user to make sure to
-pass same value.
-It doesn't seem safe, simply leaving a scope of stability issue (in
-case ramp_delay3 > ramp_delay4).
-
-Regards,
-Yadwinder
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
