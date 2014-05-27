@@ -1,72 +1,146 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 03/11] pinctrl: sunxi: Move setting of mux
- to irq type from unmask to set_type
-Date: Tue, 27 May 2014 10:09:52 +0200
-Message-ID: <20140527080952.GC4730@lukather>
-References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
- <1401090486-4414-4-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 20/22] ARM: sun8i: Add SMP support for the Allwinner A23
+Date: Tue, 27 May 2014 09:09:13 +0100
+Message-ID: <53844829.5050005@arm.com>
+References: <1400831485-28576-1-git-send-email-wens@csie.org>
+ <1400831485-28576-21-git-send-email-wens@csie.org>
+ <20140525192652.GZ10768@lukather>
+ <CAGb2v653DqF38OfbhLRbjM-D=mzm-+HGJYcFoVZQVJBv-hoJ6w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="S1BNGpv0yoYahz37"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBXEQSGOAKGQENKDZVNA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1401090486-4414-4-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGb2v653DqF38OfbhLRbjM-D=mzm-+HGJYcFoVZQVJBv-hoJ6w@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Emilio Lopez <emilio@elopez.com.ar>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Rob Herring <robh+dt@kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Lee Jones <lee.jones@linaro.org>, Luc Verhaegen <libv@skynet.be>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On 26/05/14 04:57, Chen-Yu Tsai wrote:
+> On Mon, May 26, 2014 at 3:26 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+>> On Fri, May 23, 2014 at 03:51:23PM +0800, Chen-Yu Tsai wrote:
+>>> The A23 is a dual Cortex-A7. Add the logic to use the IPs used to
+>>> control the CPU configuration and the CPU power so that we can
+>>> bring up secondary CPUs at boot.
+>>>
+>>> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+>>> ---
+>>>  arch/arm/mach-sunxi/platsmp.c | 69 +++++++++++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 69 insertions(+)
+>>>
+>>> diff --git a/arch/arm/mach-sunxi/platsmp.c b/arch/arm/mach-sunxi/platsmp.c
+>>> index c53077b..688faaf 100644
+>>> --- a/arch/arm/mach-sunxi/platsmp.c
+>>> +++ b/arch/arm/mach-sunxi/platsmp.c
+>>> @@ -121,3 +121,72 @@ struct smp_operations sun6i_smp_ops __initdata = {
+>>>       .smp_boot_secondary     = sun6i_smp_boot_secondary,
+>>>  };
+>>>  CPU_METHOD_OF_DECLARE(sun6i_smp, "allwinner,sun6i-a31", &sun6i_smp_ops);
+>>> +
+>>> +static void __init sun8i_smp_prepare_cpus(unsigned int max_cpus)
+>>> +{
+>>> +     struct device_node *node;
+>>> +
+>>> +     node = of_find_compatible_node(NULL, NULL, "allwinner,sun8i-a23-prcm");
+>>> +     if (!node) {
+>>> +             pr_err("Missing A23 PRCM node in the device tree\n");
+>>> +             return;
+>>> +     }
+>>> +
+>>> +     prcm_membase = of_iomap(node, 0);
+>>> +     if (!prcm_membase) {
+>>> +             pr_err("Couldn't map A23 PRCM registers\n");
+>>> +             return;
+>>> +     }
+>>> +
+>>> +     node = of_find_compatible_node(NULL, NULL,
+>>> +                                    "allwinner,sun8i-a23-cpuconfig");
+>>> +     if (!node) {
+>>> +             pr_err("Missing A23 CPU config node in the device tree\n");
+>>> +             return;
+>>> +     }
+>>> +
+>>> +     cpucfg_membase = of_iomap(node, 0);
+>>> +     if (!cpucfg_membase)
+>>> +             pr_err("Couldn't map A23 CPU config registers\n");
+>>> +
+>>> +}
+>>> +
+>>> +static int sun8i_smp_boot_secondary(unsigned int cpu,
+>>> +                                 struct task_struct *idle)
+>>> +{
+>>> +     u32 reg;
+>>> +
+>>> +     if (!(prcm_membase && cpucfg_membase))
+>>> +             return -EFAULT;
+>>> +
+>>> +     spin_lock(&cpu_lock);
+>>> +
+>>> +     /* Set CPU boot address */
+>>> +     writel(virt_to_phys(secondary_startup),
+>>> +            cpucfg_membase + CPUCFG_PRIVATE0_REG);
+>>> +
+>>> +     /* Assert the CPU core in reset */
+>>> +     writel(0, cpucfg_membase + CPUCFG_CPU_RST_CTRL_REG(cpu));
+>>> +
+>>> +     /* Assert the L1 cache in reset */
+>>> +     reg = readl(cpucfg_membase + CPUCFG_GEN_CTRL_REG);
+>>> +     writel(reg & ~BIT(cpu), cpucfg_membase + CPUCFG_GEN_CTRL_REG);
+>>> +
+>>> +     /* Clear CPU power-off gating */
+>>> +     reg = readl(prcm_membase + PRCM_CPU_PWROFF_REG);
+>>> +     writel(reg & ~BIT(cpu), prcm_membase + PRCM_CPU_PWROFF_REG);
+>>> +     mdelay(1);
+>>> +
+>>> +     /* Deassert the CPU core reset */
+>>> +     writel(3, cpucfg_membase + CPUCFG_CPU_RST_CTRL_REG(cpu));
+>>> +
+>>> +     spin_unlock(&cpu_lock);
+>>> +
+>>> +     return 0;
+>>> +}
+>>> +
+>>> +struct smp_operations sun8i_smp_ops __initdata = {
+>>> +     .smp_prepare_cpus       = sun8i_smp_prepare_cpus,
+>>> +     .smp_boot_secondary     = sun8i_smp_boot_secondary,
+>>> +};
+>>> +CPU_METHOD_OF_DECLARE(sun8i_smp, "allwinner,sun8i-a23", &sun8i_smp_ops);
+>>
+>> You forgot to document the new enable-method.
+> 
+> I will add it.
+> 
+>> Also, is there any plan to hae a working u-boot? I'd much prefer to
+>> use PSCI if possible.
+> 
+> IIRC PSCI needs a secure SRAM block to store its program code.
+> Unfortunately the A23 doesn't have secure SRAM. I think it is
+> missing other security related features as well.
+> 
+> Or could it just live in generic SRAM, and the kernel marks it
+> as reserved or something.
+> 
+> Maybe Marc Zyngier (CCed) can shed some light on this?
 
---S1BNGpv0yoYahz37
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+No secure SRAM is required. You can normal SRAM, or even a normal region
+of RAM that is accessed from secure mode. Not as nice as having proper
+SRAM as on sun7i, but still perfectly functional.
 
-On Mon, May 26, 2014 at 09:47:58AM +0200, Hans de Goede wrote:
-> With level triggered interrupt mask / unmask will get called for each
-> interrupt, doing the somewhat expensive mux setting on each unmask thus is
-> not a good idea. Instead move it to the set_type callback, which is typic=
-ally
-> done only once for each irq.
+Please consider having a proper PSCI implementation instead of always
+adding more code that will effectively lock people out of using the
+virtualization features the core has.
 
-*This* is the bad idea. Nothing prevents you from calling
-gpio_get_value whenever you just got your interrupt, that will change
-the muxing, and never change it back, effectively breaking the
-interrupts.
+Thanks,
 
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---S1BNGpv0yoYahz37
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJThEhQAAoJEBx+YmzsjxAgQTsQAKrsWJdiXydTdHjUYOcljtO2
-otV3vs/0qU2h/ZBUqUMcdlIIZAgLqR9VOeUhfmAuGOQQiJmHWludoHUm/a5Zjm4e
-sMPoBkVTm/UWoE704HxVfs+sOY9VXRtArfCwFWYpLLhMC8LG3Q5buD3hFlRhKK5k
-5gFSVuH+TJJoWbGQ4U94FjsBVOLUDTY71evz0q3NsehgDvi0KROJ/blG54ENlyK+
-n43EBnihRwNXqZCQjykxJbFKa3iFBOThdC4SDo49pwzfxdUafReB18JzkCeBtRCL
-2zBmpnv1f7rIihjn7R28KpbYPegdQlrOB5KICPKemtuvoZmachdFMnNIAgWsBW+K
-36NtOahj88t8/iXd+PmP5Z48ubnQSAm7U0BOQemn/jpYrl49xbK19mb/YBG6WM0O
-u+CN2ASpdObvVcUIfP5etPmie4+bjHQ1QWYTLd7XFIEYMFf0JtS7XLQCokVG4B29
-GhKvOLq9hhbd6NIi0DW5SQJMwPCFqgYKjUlmQR21XSOPh/ckzdi6cmaJ8gOEOkoM
-vzJtUyDq1iS900KsGzqS97/k1iOLmO9qjSpLxv8VOBfltaIx1bXBS+fWk24ViV1p
-T7zJ/6vaITBDNxQm13+QmScQT7QMXZCPYP8ywllV0iimUQtFW6Y0D3YBuVbHJR44
-OP5NihJyxyDI8pP1uxb2
-=Bho2
------END PGP SIGNATURE-----
-
---S1BNGpv0yoYahz37--
+	M.
+-- 
+Jazz is not dead. It just smells funny...
