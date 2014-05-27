@@ -1,209 +1,67 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
- controller
-Date: Tue, 27 May 2014 21:51:17 +0200
-Message-ID: <20140527195117.GC13172@pengutronix.de>
-References: <1400169891-29546-2-git-send-email-tthayer@altera.com>
- <20140516075344.GF949@pengutronix.de>
- <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
- <20140519191206.GH949@pengutronix.de>
- <CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
- <CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
- <20140520144446.GJ949@pengutronix.de>
- <CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
- <20140527071157.GC20695@pengutronix.de>
- <CAF03EBeLcObeajAgQQ4-h529f0ExNLB_RXCWMgktw4-D=K4d5g@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAF03EBeLcObeajAgQQ4-h529f0ExNLB_RXCWMgktw4-D=K4d5g@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer.linux@gmail.com>
-Cc: Alan Tull <delicious.quinoa@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
+ 'dependencies' which contains a list of referenced phandles
+Date: Tue, 27 May 2014 21:02:25 +0100
+Message-ID: <20140527200225.F12C4C40B4B@trevor.secretlab.ca>
+References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
+	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>
+	<53775334.3030704@gmail.com> <5379FAA5.10404@ahsoftware.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5379FAA5.10404-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 01:00:32PM -0500, Thor Thayer wrote:
-> On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
-> <s.trumtrar@pengutronix.de> wrote:
-> > On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
-> >> On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
-> >> <s.trumtrar@pengutronix.de> wrote:
-> >> > Hi!
-> >> >
-> >> > On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
-> >> >> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
-> >> >>
-> >> >> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> >> >> >>> >> new file mode 100644
-> >> >> >>> >> index 0000000..8f8746b
-> >> >> >>> >> --- /dev/null
-> >> >> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> >> >> >>> >> @@ -0,0 +1,11 @@
-> >> >> >>> >> +Altera SOCFPGA SDRAM Controller
-> >> >> >>> >> +
-> >> >> >>> >> +Required properties:
-> >> >> >>> >> +- compatible : "altr,sdr-ctl";
-> >> >> >>> >> +- reg : Should contain 1 register ranges(address and length)
-> >> >> >>> >> +
-> >> >> >>> >> +Example:
-> >> >> >>> >> +     sdrctl@ffc25000 {
-> >> >> >>> >> +             compatible = "altr,sdr-ctl";
-> >> >> >>> >> +             reg = <0xffc25000 0x1000>;
-> >> >> >>> >> +     };
-> >> >> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> >> >> >>> >> index df43702..6ce912e 100644
-> >> >> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
-> >> >> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> >> >> >>> >> @@ -676,6 +676,11 @@
-> >> >> >>> >>                       clocks = <&l4_sp_clk>;
-> >> >> >>> >>               };
-> >> >> >>> >>
-> >> >> >>> >> +             sdrctl@ffc25000 {
-> >> >> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
-> >> >> >>> >                                                    ^^^^^^^^^^
-> >> >> >>> >
-> >> >> >>> > Get rid of that, too, please.
-> >> >> >>>
-> >> >> >>> Hi Steffan,
-> >> >> >>>
-> >> >> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
-> >> >> >>> that has the ECC enable bitfield also includes the DRAM configuration
-> >> >> >>> bitfields that other drivers will want to access (specifically the
-> >> >> >>> FPGA bridge needs this information). Since this register will be
-> >> >> >>> shared between drivers,  syscon seems like the best solution.
-> >> >> >>>
-> >> >> >>
-> >> >> >> Hm, from looking at the documentation of the ctrlcfg I can't really
-> >> >> >> understand which bits you would need for the FPGA brigde and why.
-> >> >>
-> >> >> Hi Steffen,
-> >> >>
-> >> >> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
-> >> >> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
-> >> >> allows an FPGA port to come out of reset (enables that port).  Has no
-> >> >> other effect on SDRAM configuration.
-> >> >>
-> >> >> >> That all sounds like stuff you would want to set for the specific
-> >> >> >> RAM you are dealing with on a specific board.
-> >> >> >> What bridge are you talking about? The SDRAM bridge?
-> >> >>
-> >> >> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
-> >> >> register the only register in the sdr that the bridge driver needs.
-> >> >>
-> >> >
-> >> > So, what I suggested down ...
-> >> >
-> >> >> >>
-> >> >> >> I can see the problem with the ECC enable, though.
-> >> >> >>
-> >> >> >> Regards,
-> >> >> >> Steffen
-> >> >> >>
-> >> >> >
-> >> >> >>> >                 sdrctl@ffc25000 {
-> >> >> >>> >                         compatible = "altr,sdr-ctl";
-> >> >> >>> >                         reg = <0xffc25000 0x1000>;
-> >> >> >>> >                         ranges;
-> >> >> >>> >
-> >> >> >>> >                         edac@ffc2502c {
-> >> >> >>> >                                 compatible = "altr,sdram-edac";
-> >> >> >>> >                                 reg = <0xffc2502c 0x50>;
-> >> >> >>> >                                 interrupts = <0 39 4>;
-> >> >> >>> >                         };
-> >> >> >>> >                 };
-> >> >> >>> >
-> >> >> >>> > Then we can later add:
-> >> >> >>> >
-> >> >> >>> >                         sdr-ports: ports@ffc2507c {
-> >> >> >>> >                                 #reset-cells = <1>;
-> >> >> >>> >                                 compatible = "altr,sdr-ports";
-> >> >> >>> >                                 reg = <0xffc2507c 0x10>;
-> >> >> >>> >                                 clocks = <&ddr_dqs_clk>;
-> >> >> >>> >                                 ...
-> >> >> >>> >                         };
-> >> >>
-> >> >
-> >> > ... here should work. No?! Just a simple driver that registers with the
-> >> > reset-framework. I would add 0x7c to that driver and than that driver could
-> >> > "configure" the port and let it out of reset.
-> >> >
-> >> > I have done the same thing for the other 3 bridges, but am not finished yet.
-> >> > Especially the GPV-stuff needs to at least be able to be added later if not now.
-> >> >
-> >
-> > Hi Thor!
-> >
-> >> I'm not clear on how the EDAC driver will interact with the registers
-> >> allocated to the SDRAM controller. If the group of registers from
-> >> 0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
-> >> controller, how does the EDAC driver cleanly access that single
-> >> register inside this range?
-> >>
-> >
-> > The compatible in the example is wrong. I didn't mean to map the whole address space
-> > to some driver.
-> > I think for the configuration register syscon is the right approach. It is a
-> > bag of bits that don't necessitate an own driver, so syscon is perfect.
-> >
-> > So, let me change my proposal to
-> >
-> >         sdr-ctl: sdram@ffc25000 {
-> >                 compatible = "altr,sdr-ctl", "syscon";
-> >                 reg = <0xffc25000 0x1>;
-> >         };
-> >
-> >         edac: edac@ffc2502c {
-> >                 compatible = "altr,sdram-edac";
-> >                 reg = <0xffc2502c 0x50>;
-> >                 interrupts = <0 39 4>;
-> >                 config = <&sdr-ctl>;
-> >                 ...
-> >         };
-> >
-> >         sdr-ports: ports@ffc2507c {
-> >                 compatible = "altr,sdr-ports";
-> >                 reg = <0xffc2507c 0x10>;
-> >                 clocks = <&ddr_dqs_clk>;
-> >                 ...
-> >         };
-> >
-> > Maybe we can just skip the outer node that combines all the others.
-> > So, if we do it like that, you can still use syscon, but only for the register
-> > that needs it. And the EDAC definitely needs access to the config register, so
-> > all is good.
-> >
-> >> Is the solution that I don't use request_region() (and therefore not
-> >> request exclusive access) when setting up the SDRAM controller?
-> >>
-> >> If you could point me to your drivers for the other bridges that you
-> >> reference, your code may answer my question.
-> >>
-> >
-> > The other bridges don't need access to any SDRAM controller registers and
-> > I haven't even started to implement the GPV-stuff with the lw2hps-bridge :-(
-> >
-> > Regards,
-> > Steffen
-> >
-> > --
-> > Pengutronix e.K.                           |                             |
-> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+On Mon, 19 May 2014 14:35:49 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
+> Am 17.05.2014 14:16, schrieb Tomasz Figa:
 > 
-> Thank you for your help on this, Steffen. It is good to have your
-> insight. I'll implement the changes and resubmit shortly.
+> >> References to phandles of parent or child nodes will not be added to this
+> >> property, because this information is already contained in the blob (in the
+> >> form of the tree itself).
+> >
+> > I wonder if we shouldn't be including them too for consistency related
+> > reasons, so we have all the necessary information in one place.
+> > References to child nodes are great recipes for cycles, though...
+> >
+> > No strong opinion, though, just an idea.
 > 
+> As said, they are already in the tree itself. And they are already 
+> included in the graph (these are the black edges), so they just don't 
+> appear in the property dependencies.
+> 
+> >
+> >>
+> >> No dependencies to disabled nodes will be added.
+> >>
+> >
+> > Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)
+> > decide whether to ignore a dependency to disabled node or not.
+> >
+> > Otherwise, I like the simplicity of compile-time dependency list
+> > creation. Quite a nice work.
+> 
+> Thanks.
+> 
+> What's still questionable about the patches for dtc is if dependencies 
+> to devices and not just drivers should be included in the new property 
+> dependencies too. My current assumption is that all devices belonging to 
+> one and the same driver don't have dependencies between each other. In 
+> other words the order in which devices will be attached to one and the 
+> same driver isn't important. If that assumption is correct it would be 
+> possible to just attach all devices belonging to a driver after the 
+> driver was loaded (also I haven't that done in my patches).
 
-Very good. I'm happy that we could come to a conclusion we are all okay with.
-(Unless someone else shows up and rains on your parade ;-))
+There aren't really any guarantees here. It is perfectly valid to have
+two of the same device depending on the other, or even a device with a
+different driver between the two.
 
-Regards,
-Steffen
+There's always going to be corner cases on the dependency chain. The
+question is whether or not it is worth trying to solve every concievable
+order, or if a partway solution is good enough.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
