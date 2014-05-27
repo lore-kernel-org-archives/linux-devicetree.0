@@ -1,88 +1,37 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] net: hisilicon: add hix5hd2 mac driver
-Date: Tue, 27 May 2014 14:57:27 +0100
-Message-ID: <20140527135727.GC6969@leverpostej>
-References: <1401194667-14445-1-git-send-email-zhangfei.gao@linaro.org>
- <1401194667-14445-3-git-send-email-zhangfei.gao@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
+Date: Tue, 27 May 2014 11:02:31 -0300
+Message-ID: <CAOMZO5BAcZi5dKvitPxqcWnB=J1LY7sDRxiDcxRAjZmSpGZBEA@mail.gmail.com>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+	<20140424175844.GD29593@google.com>
+	<1398421265.4657.25.camel@weser.hi.pengutronix.de>
+	<CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
+	<1398774686.4677.12.camel@weser.hi.pengutronix.de>
+	<1399885183.5016.4.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401194667-14445-3-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1399885183.5016.4.camel@weser.hi.pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhu <r65037@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Tim Harvey <tharvey@gateworks.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sean Cross <xobs@kosagi.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 01:44:27PM +0100, Zhangfei Gao wrote:
-> Add support for the hix5hd2 XGMAC 1Gb ethernet device.
-> The controller requires two queues for tx and two queues for rx.
-> Controller fetch buffer from free queue and then push to used queue.
-> Diver should prepare free queue and free buffer from used queue.
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  drivers/net/ethernet/Kconfig                  |    1 +
->  drivers/net/ethernet/Makefile                 |    1 +
->  drivers/net/ethernet/hisilicon/Kconfig        |   27 +
->  drivers/net/ethernet/hisilicon/Makefile       |    5 +
->  drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 1057 +++++++++++++++++++++++++
->  5 files changed, 1091 insertions(+)
->  create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
->  create mode 100644 drivers/net/ethernet/hisilicon/Makefile
->  create mode 100644 drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+Hi Bjorn,
 
-[...]
+On Mon, May 12, 2014 at 5:59 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
+> Hi Bjorn,
+>
+> just a friendly reminder. It would be nice if you could pull those in.
+>
+> Shawn already pulled the DT change and as it is a binding change this
+> means PCIe on i.MX6 is broken in -next, as long as the remaining patches
+> are missing.
 
-> +struct hix5hd2_desc {
-> +       __le32 buff_addr;
-> +       __le32 cmd;
-> +} __aligned(32);
+We still have imx6q pcie broken in linux-next:
 
-[...]
+imx6q-pcie 1ffc000.pcie: lvds_gate clock select missing or invalid
+imx6q-pcie: probe of 1ffc000.pcie failed with error -2
 
-> +static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
-> +{
-> +       struct hix5hd2_desc *desc;
-> +       struct sk_buff *skb;
-> +       u32 start, end, num, pos, i;
-> +
-> +       /* software write pointer */
-> +       start = dma_cnt(readl_relaxed(priv->base + RX_FQ_WR_ADDR));
-> +       /* logic read pointer */
-> +       end = dma_cnt(readl_relaxed(priv->base + RX_FQ_RD_ADDR));
-> +       num = CIRC_SPACE(start, end, RX_DESC_NUM);
-> +
-> +       for (i = 0, pos = start; i < num; i++) {
-> +               if (priv->rx_skb[pos])
-> +                       break;
-> +               else {
-> +                       skb = netdev_alloc_skb_ip_align(priv->netdev,
-> +                               MAC_MAX_FRAME_SIZE);
-> +                       if (unlikely(skb == NULL))
-> +                               break;
-> +               }
-> +
-> +               desc = priv->rx_fq.desc + pos;
-> +               desc->buff_addr =
-> +                       dma_map_single(priv->dev, skb->data,
-> +                                       MAC_MAX_FRAME_SIZE, DMA_FROM_DEVICE);
 
-buff_addr was declared as an __le32, but here we're pasting values of
-the kernel's native endianness (which might not be little). You will
-need to carefully convert the endianness of this value when dealing with
-it.
-
-> +               if (dma_mapping_error(priv->dev, desc->buff_addr)) {
-> +                       dev_kfree_skb_any(skb);
-> +                       break;
-> +               }
-> +
-> +               priv->rx_skb[pos] = skb;
-> +               desc->cmd = (MAC_MAX_FRAME_SIZE - 1) | DESC_VLD_FREE;
-
-Likewise cmd was described as an __le32 and needs to be converted
-appropriately.
-
-Cheers,
-Mark.
+Could you please apply Lucas' series?
