@@ -1,87 +1,121 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] Documentation: add Device tree bindings for
- Hisilicon hix5hd2 ethernet
-Date: Tue, 27 May 2014 14:34:23 +0100
-Message-ID: <20140527133423.GB6969@leverpostej>
-References: <1401194667-14445-1-git-send-email-zhangfei.gao@linaro.org>
- <1401194667-14445-2-git-send-email-zhangfei.gao@linaro.org>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU enable
+ method
+Date: Tue, 27 May 2014 08:43:22 -0500
+Message-ID: <5384967A.80402@linaro.org>
+References: <1400607830-10989-1-git-send-email-elder@linaro.org> <1400607830-10989-2-git-send-email-elder@linaro.org> <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401194667-14445-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "mporter@linaro.org" <mporter@linaro.org>, "bcm@fixthebug.org" <bcm@fixthebug.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "rjui@broadcom.com" <rjui@broadcom.com>r
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 01:44:26PM +0100, Zhangfei Gao wrote:
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   36 ++++++++++++++++++++
->  1 file changed, 36 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+On 05/27/2014 06:49 AM, Lorenzo Pieralisi wrote:
+> On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
+>> Broadcom mobile SoCs use a ROM-implemented holding pen for
+>> controlled boot of secondary cores.  A special register is
+>> used to communicate to the ROM that a secondary core should
+>> start executing kernel code.  This enable method is currently
+>> used for members of the bcm281xx and bcm21664 SoC families.
+>>
+>> The use of an enable method also allows the SMP operation vector to
+>> be assigned as a result of device tree content for these SoCs.
+>>
+>> Signed-off-by: Alex Elder <elder@linaro.org>
 > 
-> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
-> new file mode 100644
-> index 0000000..5fe3835
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
-> @@ -0,0 +1,36 @@
-> +Hisilicon hix5hd2 gmac controller
+> This is getting out of control, it is absolutely ghastly. I wonder how
+> I can manage to keep cpus.txt updated if anyone with a boot method
+> du jour adds into cpus.txt, and honestly in this specific case it is even
+> hard to understand why.
 
-Just to clarify, is the SoC name "hix5hd2", or is the 'x' a wildcard?
+I concur that it gets out of control to document bindings
+in "cpus.txt" like this.
 
-> +
-> +Required properties:
-> +- compatible: should be "hisilicon,hix5hd2-gmac".
-> +- reg: specifies base physical address(s) and size of the device registers.
-> +  The first region is the MAC register base and size.
-> +  The second region is external interface control register.
+I posted a separate, independent documentation patch, to
+address this issue specifically:
+    devicetree: bindings: separate CPU enable method descriptions
+There I don't even include my new addition but I also
+do a little work to sort out some stuff--for example only
+defining "cpu-release-addr" (or "qcom,saw") in the one place
+where it's relevant.
 
-Single registers? Are these not part of a larger block?
+> Can't it be done with bindings for the relative register address space
+> (regmap ?) and platform code just calls the registers driver to set-up the
+> jump address ? It is platform specific code anyway there is no way you
+> can make this generic.
 
-> +- interrupts: should contain the MAC interrupts
+This is feedback specific to how I implement this enable method.
+I am going to address this in a follow-on message, to distinguish
+it from the broader question of where best to document these
+enable methods.  (I'll be sending that message later today.)
 
-How many, in which order?
+> I really do not see the point in cluttering cpus.txt with this stuff, it
+> is a platform specific hack, and do not belong in generic bindings in my
+> opinion.
 
-> +- #address-cells: must be <1>.
-> +- #size-cells: must be <0>.
-> +- phy-mode: see ethernet.txt [1].
-> +- phy-handle: see ethernet.txt [1].
-> +- mac-address: see ethernet.txt [1].
-> +- clocks: clock phandle and specifier pair.
+Again, I completely agree with this.
 
-Is this the only clock input to the gmac block?
+In order to assign the SMP operations vector for my machine
+via device tree, I need to define an "enable-method" property
+in either the "cpus" node or one of the "cpu" nodes.  I would
+prefer to use a generic method, but the method used here is
+semantically different from the others in existence, and I
+need to document how it works.  The place currently used
+to do that is "cpus.txt".
 
-Is the clock input named in any documentation?
+Please look at the patch I mentioned above.  I'd be glad to
+do it another way; but it is an attempt to address what I
+saw as a problem that I think you are talking about.
 
-Cheers,
-Mark.
+Thanks.
 
-> +
-> +- PHY subnode: inherits from phy binding [2]
-> +
-> +[1] Documentation/devicetree/bindings/net/ethernet.txt
-> +[2] Documentation/devicetree/bindings/net/phy.txt
-> +
-> +Example:
-> +	gmac0: ethernet@f9840000 {
-> +		compatible = "hisilicon,hix5hd2-gmac";
-> +		reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
-> +		interrupts = <0 71 4>;
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		phy-mode = "mii";
-> +		phy-handle = <&phy2>;
-> +		mac-address = [00 00 00 00 00 00];
-> +		clocks = <&clock HIX5HD2_MAC0_CLK>;
-> +
-> +		phy2: ethernet-phy@2 {
-> +			reg = <2>;
-> +		};
-> +	};
-> -- 
-> 1.7.9.5
+					-Alex
+
+
+> Thanks,
+> Lorenzo
 > 
+>> ---
+>>  Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>> index 333f4ae..c6a2411 100644
+>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>> @@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
+>>  			    "qcom,gcc-msm8660"
+>>  			    "qcom,kpss-acc-v1"
+>>  			    "qcom,kpss-acc-v2"
+>> +			    "brcm,bcm11351-cpu-method"
+>>  
+>>  	- cpu-release-addr
+>>  		Usage: required for systems that have an "enable-method"
+>> @@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
+>>  		Value type: <phandle>
+>>  		Definition: Specifies the ACC[2] node associated with this CPU.
+>>  
+>> +	- secondary-boot-reg
+>> +		Usage:
+>> +			Required for systems that have an "enable-method"
+>> +			property value of "brcm,bcm11351-cpu-method".
+>> +		Value type: <u32>
+>> +		Definition:
+>> +			Specifies the physical address of the register used to
+>> +			request the ROM holding pen code release a secondary
+>> +			CPU.  The value written to the register is formed by
+>> +			encoding the target CPU id into the low bits of the
+>> +			physical start address it should jump to.
+>>  
+>>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+>>  
+>> -- 
+>> 1.9.1
+>>
+>>
 > 
+
