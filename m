@@ -1,46 +1,91 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v2 2/9] ARM: shmobile: r8a7790: add dma defines for sys
- and audio dmacs
-Date: Tue, 27 May 2014 10:08:45 +0200
-Message-ID: <CAMuHMdX7YzDq4HT6A3a2jgUQ1DNx=oEA0f1SCfN45uusbwk40g@mail.gmail.com>
-References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>
-	<1397511312-4845-3-git-send-email-ben.dooks@codethink.co.uk>
-	<CAMuHMdUsRSGuGgnAgjKtOWmx3C_PWUxAU=2XTvPE1M9o13S1uA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 02/11] pinctrl: sunxi: add
+ IRQCHIP_SKIP_SET_WAKE flag for pinctrl irq chip
+Date: Tue, 27 May 2014 10:07:46 +0200
+Message-ID: <20140527080746.GB4730@lukather>
+References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
+ <1401090486-4414-3-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUsRSGuGgnAgjKtOWmx3C_PWUxAU=2XTvPE1M9o13S1uA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, magnus.damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="61jdw2sOBCFtR2d/"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBWUQSGOAKGQEYUBKDCA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1401090486-4414-3-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
 
-On Tue, May 13, 2014 at 12:46 PM, Geert Uytterhoeven
-<geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org> wrote:
->> +#define R8A7790_DMA_MSIOF0_TX  (0x81)
->> +#define R8A7790_DMA_MSIOF0_RX  (0x82)
->> +#define R8A7790_DMA_MSIOF1_TX  (0x85)
->> +#define R8A7790_DMA_MSIOF1_RX  (0x86)
->
-> These are the only ones that se different for r8a7791 (0x51 etc.
-> compared to 0x81).
-> Wondering whether someone mixed up decimal and hexadecimal...
+--61jdw2sOBCFtR2d/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Confirmed. They should be 0x51, 0x52, 0x55, 0x56.
+On Mon, May 26, 2014 at 09:47:57AM +0200, Hans de Goede wrote:
+> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>=20
+> The sunxi pinctrl irq chip driver does not support wakeup at the
+> moment. Adding IRQCHIP_SKIP_SET_WAKE lets the irqs work with drivers
+> using wakeup.
+>=20
+> Also add a name to the irq chip.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  drivers/pinctrl/sunxi/pinctrl-sunxi.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>=20
+> diff --git a/drivers/pinctrl/sunxi/pinctrl-sunxi.c b/drivers/pinctrl/sunx=
+i/pinctrl-sunxi.c
+> index db9ccd6..ec60c2e 100644
+> --- a/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> +++ b/drivers/pinctrl/sunxi/pinctrl-sunxi.c
+> @@ -646,6 +646,8 @@ static struct irq_chip sunxi_pinctrl_irq_chip =3D {
+>  	.irq_mask_ack	=3D sunxi_pinctrl_irq_mask_ack,
+>  	.irq_unmask	=3D sunxi_pinctrl_irq_unmask,
+>  	.irq_set_type	=3D sunxi_pinctrl_irq_set_type,
+> +	.name		=3D "sunxi-pio",
+> +	.flags		=3D IRQCHIP_SKIP_SET_WAKE,
 
-Gr{oetje,eeting}s,
+I'd rather see the name set to dev_name() or something like that. This
+will not work that great with multiple pin controller supporting
+interrupts.
 
-                        Geert
+Maxime
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--61jdw2sOBCFtR2d/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJThEfSAAoJEBx+YmzsjxAgemUP/3yI6XcdPZgPYFYTPh0RX0I2
+b7IlgHuWJ2jnYiyk15jZ5n0afd4EJngy646fXE7VqZYpGaQ239llJCIEkwlPe03r
+RaFD3Aft4S4dJd8qlTBk0q+NXEEmlee4aC8fAnxxfMZfZAXA/kNTmMNcqnlF78Oh
+fRtgu4Zj1EYTSx4BNOaSnonSn09hFqWcojtHwHgP7TagJCZkAb4fExHsntGiUnyr
+NQdvUOt7yD2ZrIwAs6USbJNcV+wOBS4JY8t/zN1vT8Dd8Xet6CnbMgLzp95JG5ZL
+xAiJcga2O9u3KRcu1/RkSqp379VSsyYM61u9SrAXhlefrixJVZhLACh6bWATxquW
+2ImCrdw2LpLNnXi/Uecjwf8BlE6pKPB1CNWIbIOXPFldAXUKRo0n7AfO+LKfX/AY
+OAHbv8rtIro6eoK4+NwyYqW27GTWW/gWI4/eB9U0u751OE5h5RQO9lXBjFOxnSWd
+UgWqBpAVJaaTL3Cqaj6hjRrwLqnULYNbukkF4zwcR06o3Nfi5FY45bf+ipRDC3nS
+gl5cfGiXdP4NBH8ojKA6e+/I8Bii9e0XKh/qZf9UesGnY16InwqLL6qjkjEIAstT
+jZwjAnXkofVt3b/AyFgQanVZiKbQqXNgi/XrZIVA528QEu6YdpTxnVqNrQ8Z3KTo
+3aeOeT4KGeEKjb0Yxtkz
+=JPY0
+-----END PGP SIGNATURE-----
+
+--61jdw2sOBCFtR2d/--
