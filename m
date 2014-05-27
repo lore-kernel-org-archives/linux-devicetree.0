@@ -1,63 +1,197 @@
-From: Thor Thayer <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv5 3/3] edac: altera: Add EDAC support for Altera SoC SDRAM Controller
-Date: Tue, 27 May 2014 12:58:15 -0500
-Message-ID: <CAF03EBd+B5F_UOMOcn+pCE4dOL_24KZku4pweGym=Bip+H_-Rg@mail.gmail.com>
+From: Thor Thayer <tthayer.linux@gmail.com>
+Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Tue, 27 May 2014 13:00:32 -0500
+Message-ID: <CAF03EBeLcObeajAgQQ4-h529f0ExNLB_RXCWMgktw4-D=K4d5g@mail.gmail.com>
 References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
-	<1400169891-29546-4-git-send-email-tthayer@altera.com>
-	<20140526095730.GC25732@pd.tnic>
+	<1400169891-29546-2-git-send-email-tthayer@altera.com>
+	<20140516075344.GF949@pengutronix.de>
+	<CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
+	<20140519191206.GH949@pengutronix.de>
+	<CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
+	<CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
+	<20140520144446.GJ949@pengutronix.de>
+	<CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
+	<20140527071157.GC20695@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140526095730.GC25732-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>
-Cc: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140527071157.GC20695@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Alan Tull <delicious.quinoa@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 26, 2014 at 4:57 AM, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org> wrote:
-> On Thu, May 15, 2014 at 11:04:51AM -0500, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
->> From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>
->> v2: Use the SDRAM controller registers to calculate memory size
->>     instead of the Device Tree. Update To & Cc list. Add maintainer
->>     information.
->>
->> v3: EDAC driver cleanup based on comments from Mailing list.
->>
->> v4: Panic on DBE. Add macro around inject-error reads to prevent
->>     them from being optimized out. Remove of_match_ptr since this
->>     will always use Device Tree.
->>
->> v5: Addition of printk to trigger function to ensure read vars
->>     are not optimized out.
+On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
+> On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
+>> On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
+>> <s.trumtrar@pengutronix.de> wrote:
+>> > Hi!
+>> >
+>> > On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
+>> >> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+>> >>
+>> >> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+>> >> >>> >> new file mode 100644
+>> >> >>> >> index 0000000..8f8746b
+>> >> >>> >> --- /dev/null
+>> >> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+>> >> >>> >> @@ -0,0 +1,11 @@
+>> >> >>> >> +Altera SOCFPGA SDRAM Controller
+>> >> >>> >> +
+>> >> >>> >> +Required properties:
+>> >> >>> >> +- compatible : "altr,sdr-ctl";
+>> >> >>> >> +- reg : Should contain 1 register ranges(address and length)
+>> >> >>> >> +
+>> >> >>> >> +Example:
+>> >> >>> >> +     sdrctl@ffc25000 {
+>> >> >>> >> +             compatible = "altr,sdr-ctl";
+>> >> >>> >> +             reg = <0xffc25000 0x1000>;
+>> >> >>> >> +     };
+>> >> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> >> index df43702..6ce912e 100644
+>> >> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> >> @@ -676,6 +676,11 @@
+>> >> >>> >>                       clocks = <&l4_sp_clk>;
+>> >> >>> >>               };
+>> >> >>> >>
+>> >> >>> >> +             sdrctl@ffc25000 {
+>> >> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
+>> >> >>> >                                                    ^^^^^^^^^^
+>> >> >>> >
+>> >> >>> > Get rid of that, too, please.
+>> >> >>>
+>> >> >>> Hi Steffan,
+>> >> >>>
+>> >> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
+>> >> >>> that has the ECC enable bitfield also includes the DRAM configuration
+>> >> >>> bitfields that other drivers will want to access (specifically the
+>> >> >>> FPGA bridge needs this information). Since this register will be
+>> >> >>> shared between drivers,  syscon seems like the best solution.
+>> >> >>>
+>> >> >>
+>> >> >> Hm, from looking at the documentation of the ctrlcfg I can't really
+>> >> >> understand which bits you would need for the FPGA brigde and why.
+>> >>
+>> >> Hi Steffen,
+>> >>
+>> >> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
+>> >> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
+>> >> allows an FPGA port to come out of reset (enables that port).  Has no
+>> >> other effect on SDRAM configuration.
+>> >>
+>> >> >> That all sounds like stuff you would want to set for the specific
+>> >> >> RAM you are dealing with on a specific board.
+>> >> >> What bridge are you talking about? The SDRAM bridge?
+>> >>
+>> >> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
+>> >> register the only register in the sdr that the bridge driver needs.
+>> >>
+>> >
+>> > So, what I suggested down ...
+>> >
+>> >> >>
+>> >> >> I can see the problem with the ECC enable, though.
+>> >> >>
+>> >> >> Regards,
+>> >> >> Steffen
+>> >> >>
+>> >> >
+>> >> >>> >                 sdrctl@ffc25000 {
+>> >> >>> >                         compatible = "altr,sdr-ctl";
+>> >> >>> >                         reg = <0xffc25000 0x1000>;
+>> >> >>> >                         ranges;
+>> >> >>> >
+>> >> >>> >                         edac@ffc2502c {
+>> >> >>> >                                 compatible = "altr,sdram-edac";
+>> >> >>> >                                 reg = <0xffc2502c 0x50>;
+>> >> >>> >                                 interrupts = <0 39 4>;
+>> >> >>> >                         };
+>> >> >>> >                 };
+>> >> >>> >
+>> >> >>> > Then we can later add:
+>> >> >>> >
+>> >> >>> >                         sdr-ports: ports@ffc2507c {
+>> >> >>> >                                 #reset-cells = <1>;
+>> >> >>> >                                 compatible = "altr,sdr-ports";
+>> >> >>> >                                 reg = <0xffc2507c 0x10>;
+>> >> >>> >                                 clocks = <&ddr_dqs_clk>;
+>> >> >>> >                                 ...
+>> >> >>> >                         };
+>> >>
+>> >
+>> > ... here should work. No?! Just a simple driver that registers with the
+>> > reset-framework. I would add 0x7c to that driver and than that driver could
+>> > "configure" the port and let it out of reset.
+>> >
+>> > I have done the same thing for the other 3 bridges, but am not finished yet.
+>> > Especially the GPV-stuff needs to at least be able to be added later if not now.
+>> >
 >
-> Yeah, you could turn those vX: messages into a real commit message -
-> much better than none at all :-)
+> Hi Thor!
 >
-> Other than that, the edac bits look ok. I'll wait out until you guys've
-> sorted the devicetree issues so ping me when it is ready to pick up.
+>> I'm not clear on how the EDAC driver will interact with the registers
+>> allocated to the SDRAM controller. If the group of registers from
+>> 0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
+>> controller, how does the EDAC driver cleanly access that single
+>> register inside this range?
+>>
 >
-> Thanks.
+> The compatible in the example is wrong. I didn't mean to map the whole address space
+> to some driver.
+> I think for the configuration register syscon is the right approach. It is a
+> bag of bits that don't necessitate an own driver, so syscon is perfect.
+>
+> So, let me change my proposal to
+>
+>         sdr-ctl: sdram@ffc25000 {
+>                 compatible = "altr,sdr-ctl", "syscon";
+>                 reg = <0xffc25000 0x1>;
+>         };
+>
+>         edac: edac@ffc2502c {
+>                 compatible = "altr,sdram-edac";
+>                 reg = <0xffc2502c 0x50>;
+>                 interrupts = <0 39 4>;
+>                 config = <&sdr-ctl>;
+>                 ...
+>         };
+>
+>         sdr-ports: ports@ffc2507c {
+>                 compatible = "altr,sdr-ports";
+>                 reg = <0xffc2507c 0x10>;
+>                 clocks = <&ddr_dqs_clk>;
+>                 ...
+>         };
+>
+> Maybe we can just skip the outer node that combines all the others.
+> So, if we do it like that, you can still use syscon, but only for the register
+> that needs it. And the EDAC definitely needs access to the config register, so
+> all is good.
+>
+>> Is the solution that I don't use request_region() (and therefore not
+>> request exclusive access) when setting up the SDRAM controller?
+>>
+>> If you could point me to your drivers for the other bridges that you
+>> reference, your code may answer my question.
+>>
+>
+> The other bridges don't need access to any SDRAM controller registers and
+> I haven't even started to implement the GPV-stuff with the lw2hps-bridge :-(
+>
+> Regards,
+> Steffen
 >
 > --
-> Regards/Gruss,
->     Boris.
->
-> Sent from a fat crate under my desk. Formatting is fine.
-> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Hi Boris,
-
-Sorry about the commit message - I thought I'd fixed it. It will be
-fixed in the next version.
-
-I think Steffen and I have worked out how the devicetree should look.
-I'll submit the changes soon.
+Thank you for your help on this, Steffen. It is good to have your
+insight. I'll implement the changes and resubmit shortly.
 
 Thanks,
 
 Thor
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
