@@ -1,218 +1,152 @@
-Return-Path: <matthias.bgg@gmail.com>
+Return-Path: <kesavan.abhilash@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <cebe44ba-c543-4f4a-9aeb-810156fe8250@BN1AFFO11FD036.protection.gbl>
-References: <1400087579-4250-1-git-send-email-matthias.bgg@gmail.com>
-	<1400087579-4250-3-git-send-email-matthias.bgg@gmail.com>
-	<cebe44ba-c543-4f4a-9aeb-810156fe8250@BN1AFFO11FD036.protection.gbl>
-Date: Wed, 14 May 2014 23:04:46 +0200
-Message-ID: <CABuKBeK-ypwHkKkfwQohSo20qNtJDWby7gQRYwX8Ke8gRjqp1Q@mail.gmail.com>
-Subject: Re: [PATCH v4 2/6] dt-bindings: add mtk-timer bindings
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Content-Type: multipart/alternative; boundary=001a11c16fc6c16f6c04f9628711
-To: =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>
-Cc: Florian Vaussard <florian.vaussard@epfl.ch>, Kumar Gala <galak@codeaurora.org>, mark.rutland@arm.com, thierry.reding@gmail.com, linux-doc@vger.kernel.org, andrew@lunn.ch, tglx@linutronix.de, linux@arm.linux.org.uk, sboyd@codeaurora.org, ijc+devicetree@hellion.org.uk, daniel.lezcano@linaro.org, maxime.ripard@free-electrons.com, rdunlap@infradead.org, olof@lixom.net, robherring2@gmail.com, pawel.moll@arm.com, devicetree@vger.kernel.org, jason@lakedaemon.net, robh+dt@kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, sebastian.hesselbarth@gmail.com, silvio.fricke@gmail.com, linux-arm-kernel@lists.infradead.org, heiko.stuebner@bq.com, jic23@kernel.org, gregory.clement@free-electrons.com, marc.zyngier@arm.com
+In-Reply-To: <002101cf79a0$50fba0f0$f2f2e2d0$@samsung.com>
+References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+	<1399307221-8659-6-git-send-email-a.kesavan@samsung.com>
+	<201405271307.56729.arnd@arndb.de>
+	<002101cf79a0$50fba0f0$f2f2e2d0$@samsung.com>
+Date: Tue, 27 May 2014 19:55:57 +0530
+Message-ID: <CAM4voam6COBcjZQkqkCC-yYB3dOw1UPNTyDgFNZHJyr3tD3VFA@mail.gmail.com>
+Subject: Re: [PATCH v5 5/5] arm: exynos: Add MCPM call-back functions
+From: Abhilash Kesavan <kesavan.abhilash@gmail.com>
+Content-Type: multipart/alternative; boundary=001a11c2bb4c667a9f04fa6279f5
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Nicolas Pitre <nicolas.pitre@linaro.org>, Dave Martin <Dave.Martin@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <t.figa@samsung.com>, Andrew Bresticker <abrestic@chromium.org>, Thomas P Abraham <thomas.ab@samsung.com>, "inderpal.s@samsung.com" <inderpal.s@samsung.com>, "mark.rutland" <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, robh+dt <robh+dt@kernel.org>, Will Deacon <will.deacon@arm.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
---001a11c16fc6c16f6c04f9628711
+--001a11c2bb4c667a9f04fa6279f5
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
 
-El dia 14/05/2014 19:46, "S=C3=B6ren Brinkmann" <soren.brinkmann@xilinx.com=
-> va
-escriure:
->
-> Hi Matthias,
->
-> On Wed, 2014-05-14 at 07:12PM +0200, Matthias Brugger wrote:
-> > Add binding documentation for the General Porpose Timer driver of
-> > the Mediatek SoCs.
+Hi Kukjin and Arnd,
+
+On Tue, May 27, 2014 at 5:09 PM, Kukjin Kim <kgene.kim@samsung.com> wrote:
+
+> Arnd Bergmann wrote:
 > >
-> > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > ---
-> >  .../devicetree/bindings/timer/mediatek,mtk-timer.txt   | 18
-++++++++++++++++++
-> >  1 file changed, 18 insertions(+)
-> >  create mode 100644
-Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+> > On Monday 05 May 2014, Abhilash Kesavan wrote:
+> > > +static const struct mcpm_platform_ops exynos_power_ops = {
+> > > +       .power_up               = exynos_power_up,
+> > > +       .power_down             = exynos_power_down,
+> > > +       .power_down_finish      = exynos_power_down_finish,
+> > > +};
 > >
-> > diff --git
-a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> > new file mode 100644
-> > index 0000000..938adf6
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> > @@ -0,0 +1,18 @@
-> > +Mediatek MT6589, MT6577 and MT6572 Timers
-> > +---------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: Should be "mediatek,mtk6589-timer"
+> >
+> > I'm getting a build error in linux-next because there is
+> > no .power_down_finish
+> > member in mcpm_platform_ops here.
+> >
+> Yeah, commit 166aaf39 ("ARM: 8029/1: mcpm: Rename the power_down_finish()
+> functions to be less confusing") changed the name to
+> wait_for_cpu_powerdown...
 >
-> Don't you want compatible strings for the other supported SOCs too?
+> So need to change it accordingly...
+>
+> diff --git a/arch/arm/mach-exynos/mcpm-exynos.c
+> b/arch/arm/mach-exynos/mcpm-exynos.c
+> index 1ac618c..34c4e6f 100644
+> --- a/arch/arm/mach-exynos/mcpm-exynos.c
+> +++ b/arch/arm/mach-exynos/mcpm-exynos.c
+> @@ -235,7 +235,7 @@ static void exynos_power_down(void)
+>         /* Not dead at this point?  Let our caller cope. */
+>  }
+>
+> -static int exynos_power_down_finish(unsigned int cpu, unsigned int
+> cluster)
+> +static int exynos_wait_for_powerdown(unsigned int cpu, unsigned int
+> cluster)
+>  {
+>         unsigned int tries = 100;
+>         unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
+> @@ -261,7 +261,7 @@ static int exynos_power_down_finish(unsigned int cpu,
+> unsigned int cluster)
+>  static const struct mcpm_platform_ops exynos_power_ops = {
+>         .power_up               = exynos_power_up,
+>         .power_down             = exynos_power_down,
+> -       .power_down_finish      = exynos_power_down_finish,
+> +       .wait_for_powerdown     = exynos_wait_for_powerdown,
+>  };
+>
+>  static void __init exynos_mcpm_usage_count_init(void)
 >
 
-I'm not sure if it makes sense to define the compatible strings for all the
-SoCs that have this timer as it's actually totally the same IP.
+The above change seems fine. Will this be directly applied or do I need to
+send out a patch ?
 
-In other cases e.g. the arm gic, not all compatible strings are defined,
-that's why I use cortex-a15-gic in the dtsi although I'm using a cortex A7
-SoC.
+Regards,
+Abhilash
 
-I would instead say, that the SoC version of the compatible string, mt6589,
-is something arbitrary. So I propose to use the first known SoC which uses
-the timer. That would be AFAIK mt6577.
-
-> > +- reg: Should contain location and length for timers register.
-> > +- clocks: Clocks driving the timer hardware. This list shoud include
-two
-> > +     clocks. The order is system clock and as second clock the RTC
-clock.
->
-> Sorry for being pedantic, but we had so many ugly bindings in our vendor
-> tree. I'm still getting caught up on the clocks. I have the feeling the
-SOC
-> has two clocks (system and rtc) which are used to drive this timer,
-> while the timer probably refers differently to its clock inputs.
-> If this was the case, the names 'rtc' and 'system' clock are SOC specific
-> names/implementation details. From the timer perspective it is probably
-> just important that it receives two clock inputs. Since the timer is
-> described here and not the SOC, these SOC specific names should
-> disappear and be replaced with the names the timer IP uses for its input
-> clocks.
-
-The timer is exactly identically described in the three SoC datasheets. In
-the description the clocks are called system and RTC, so I think we are on
-the safe side here. :)
-
->
-> The clock-names should be listed too, probably as optional properties.
-
-This will lead to a problem, as the clock-names description includes the
-order of the clocks. If we make this property optional, it can be easily
-missunderstood. So I propose to do it the way other drivers in the kernel
-(e.g. arm,sp804) do it and leave the clock-names property as it is.
-
->
-> > +
-> > +Examples:
-> > +
-> > +     timer {
-> > +             compatible =3D "mediatek,mtk6589-timer";
-> > +             reg =3D <0x10008000 0x80>;
-> > +             interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
-> > +             clocks =3D <&system_clk>, <&rtc_clk>;
-> > +             clock-names =3D "system-clk", "rtc-clk";
->
->
->         S=C3=B6ren
-
---001a11c16fc6c16f6c04f9628711
+--001a11c2bb4c667a9f04fa6279f5
 Content-Type: text/html; charset=UTF-8
 Content-Transfer-Encoding: quoted-printable
 
-<p dir=3D"ltr"><br>
-El dia 14/05/2014 19:46, &quot;S=C3=B6ren Brinkmann&quot; &lt;<a href=3D"ma=
-ilto:soren.brinkmann@xilinx.com">soren.brinkmann@xilinx.com</a>&gt; va escr=
-iure:<br>
+<div dir=3D"ltr">Hi Kukjin and Arnd,<div class=3D"gmail_extra"><br><div cla=
+ss=3D"gmail_quote">On Tue, May 27, 2014 at 5:09 PM, Kukjin Kim <span dir=3D=
+"ltr">&lt;<a href=3D"mailto:kgene.kim@samsung.com" target=3D"_blank">kgene.=
+kim@samsung.com</a>&gt;</span> wrote:<br>
+<blockquote class=3D"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1p=
+x #ccc solid;padding-left:1ex"><div class=3D"HOEnZb"><div class=3D"h5">Arnd=
+ Bergmann wrote:<br>
 &gt;<br>
-&gt; Hi Matthias,<br>
+&gt; On Monday 05 May 2014, Abhilash Kesavan wrote:<br>
+&gt; &gt; +static const struct mcpm_platform_ops exynos_power_ops =3D {<br>
+&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 .power_up =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =3D exynos_power_up,<br>
+&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 .power_down =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =C2=A0 =3D exynos_power_down,<br>
+&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 .power_down_finish =C2=A0 =C2=A0 =C2=A0=3D=
+ exynos_power_down_finish,<br>
+&gt; &gt; +};<br>
 &gt;<br>
-&gt; On Wed, 2014-05-14 at 07:12PM +0200, Matthias Brugger wrote:<br>
-&gt; &gt; Add binding documentation for the General Porpose Timer driver of=
+&gt;<br>
+&gt; I&#39;m getting a build error in linux-next because there is<br>
+&gt; no .power_down_finish<br>
+&gt; member in mcpm_platform_ops here.<br>
+&gt;<br>
+</div></div>Yeah, commit 166aaf39 (&quot;ARM: 8029/1: mcpm: Rename the powe=
+r_down_finish()<br>
+functions to be less confusing&quot;) changed the name to<br>
+wait_for_cpu_powerdown...<br>
 <br>
-&gt; &gt; the Mediatek SoCs.<br>
-&gt; &gt;<br>
-&gt; &gt; Signed-off-by: Matthias Brugger &lt;<a href=3D"mailto:matthias.bg=
-g@gmail.com">matthias.bgg@gmail.com</a>&gt;<br>
-&gt; &gt; ---<br>
-&gt; &gt; =C2=A0.../devicetree/bindings/timer/mediatek,mtk-timer.txt =C2=A0=
- | 18 ++++++++++++++++++<br>
-&gt; &gt; =C2=A01 file changed, 18 insertions(+)<br>
-&gt; &gt; =C2=A0create mode 100644 Documentation/devicetree/bindings/timer/=
-mediatek,mtk-timer.txt<br>
-&gt; &gt;<br>
-&gt; &gt; diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk=
--timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt=
+So need to change it accordingly...<br>
 <br>
-&gt; &gt; new file mode 100644<br>
-&gt; &gt; index 0000000..938adf6<br>
-&gt; &gt; --- /dev/null<br>
-&gt; &gt; +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.=
-txt<br>
-&gt; &gt; @@ -0,0 +1,18 @@<br>
-&gt; &gt; +Mediatek MT6589, MT6577 and MT6572 Timers<br>
-&gt; &gt; +---------------------------------------<br>
-&gt; &gt; +<br>
-&gt; &gt; +Required properties:<br>
-&gt; &gt; +- compatible: Should be &quot;mediatek,mtk6589-timer&quot;<br>
-&gt;<br>
-&gt; Don&#39;t you want compatible strings for the other supported SOCs too=
-?<br>
-&gt;</p>
-<p dir=3D"ltr">I&#39;m not sure if it makes sense to define the compatible =
-strings for all the SoCs that have this timer as it&#39;s actually totally =
-the same IP.</p>
-<p dir=3D"ltr">In other cases e.g. the arm gic, not all compatible strings =
-are defined, that&#39;s why I use cortex-a15-gic in the dtsi although I&#39=
-;m using a cortex A7 SoC.</p>
-<p dir=3D"ltr">I would instead say, that the SoC version of the compatible =
-string, mt6589, is something arbitrary. So I propose to use the first known=
- SoC which uses the timer. That would be AFAIK mt6577.</p>
-<p dir=3D"ltr">&gt; &gt; +- reg: Should contain location and length for tim=
-ers register.<br>
-&gt; &gt; +- clocks: Clocks driving the timer hardware. This list shoud inc=
-lude two<br>
-&gt; &gt; + =C2=A0 =C2=A0 clocks. The order is system clock and as second c=
-lock the RTC clock.<br>
-&gt;<br>
-&gt; Sorry for being pedantic, but we had so many ugly bindings in our vend=
-or<br>
-&gt; tree. I&#39;m still getting caught up on the clocks. I have the feelin=
-g the SOC<br>
-&gt; has two clocks (system and rtc) which are used to drive this timer,<br=
->
-&gt; while the timer probably refers differently to its clock inputs.<br>
-&gt; If this was the case, the names &#39;rtc&#39; and &#39;system&#39; clo=
-ck are SOC specific<br>
-&gt; names/implementation details. From the timer perspective it is probabl=
-y<br>
-&gt; just important that it receives two clock inputs. Since the timer is<b=
-r>
-&gt; described here and not the SOC, these SOC specific names should<br>
-&gt; disappear and be replaced with the names the timer IP uses for its inp=
-ut<br>
-&gt; clocks.</p>
-<p dir=3D"ltr">The timer is exactly identically described in the three SoC =
-datasheets. In the description the clocks are called system and RTC, so I t=
-hink we are on the safe side here. :)</p>
-<p dir=3D"ltr">&gt;<br>
-&gt; The clock-names should be listed too, probably as optional properties.=
-</p>
-<p dir=3D"ltr">This will lead to a problem, as the clock-names description =
-includes the order of the clocks. If we make this property optional, it can=
- be easily missunderstood. So I propose to do it the way other drivers in t=
-he kernel (e.g. arm,sp804) do it and leave the clock-names property as it i=
-s.</p>
+diff --git a/arch/arm/mach-exynos/mcpm-exynos.c<br>
+b/arch/arm/mach-exynos/mcpm-exynos.c<br>
+index 1ac618c..34c4e6f 100644<br>
+--- a/arch/arm/mach-exynos/mcpm-exynos.c<br>
++++ b/arch/arm/mach-exynos/mcpm-exynos.c<br>
+@@ -235,7 +235,7 @@ static void exynos_power_down(void)<br>
+<div class=3D"">=C2=A0 =C2=A0 =C2=A0 =C2=A0 /* Not dead at this point? =C2=
+=A0Let our caller cope. */<br>
+=C2=A0}<br>
+<br>
+</div><div class=3D"">-static int exynos_power_down_finish(unsigned int cpu=
+, unsigned int cluster)<br>
+</div>+static int exynos_wait_for_powerdown(unsigned int cpu, unsigned int<=
+br>
+cluster)<br>
+=C2=A0{<br>
+<div class=3D"">=C2=A0 =C2=A0 =C2=A0 =C2=A0 unsigned int tries =3D 100;<br>
+</div><div class=3D"">=C2=A0 =C2=A0 =C2=A0 =C2=A0 unsigned int cpunr =3D cp=
+u + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);<br>
+</div>@@ -261,7 +261,7 @@ static int exynos_power_down_finish(unsigned int =
+cpu,<br>
+unsigned int cluster)<br>
+<div class=3D"">=C2=A0static const struct mcpm_platform_ops exynos_power_op=
+s =3D {<br>
+</div>=C2=A0 =C2=A0 =C2=A0 =C2=A0 .power_up =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=
+=A0 =C2=A0 =C2=A0 =3D exynos_power_up,<br>
+=C2=A0 =C2=A0 =C2=A0 =C2=A0 .power_down =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
+=C2=A0 =3D exynos_power_down,<br>
+- =C2=A0 =C2=A0 =C2=A0 .power_down_finish =C2=A0 =C2=A0 =C2=A0=3D exynos_po=
+wer_down_finish,<br>
++ =C2=A0 =C2=A0 =C2=A0 .wait_for_powerdown =C2=A0 =C2=A0 =3D exynos_wait_fo=
+r_powerdown,<br>
+=C2=A0};<br>
+<br>
+=C2=A0static void __init exynos_mcpm_usage_count_init(void)<br></blockquote=
+><div><br></div><div>The above change seems fine. Will this be directly app=
+lied or do I need to send out a patch ?=C2=A0</div><div><br></div><div>Rega=
+rds,</div>
+<div>Abhilash</div></div><br></div></div>
 
-<p dir=3D"ltr">&gt;<br>
-&gt; &gt; +<br>
-&gt; &gt; +Examples:<br>
-&gt; &gt; +<br>
-&gt; &gt; + =C2=A0 =C2=A0 timer {<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 compatible =3D &quot;=
-mediatek,mtk6589-timer&quot;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 reg =3D &lt;0x1000800=
-0 0x80&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 interrupts =3D &lt;GI=
-C_SPI 113 IRQ_TYPE_LEVEL_LOW&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 clocks =3D &lt;&amp;s=
-ystem_clk&gt;, &lt;&amp;rtc_clk&gt;;<br>
-&gt; &gt; + =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 clock-names =3D &quot=
-;system-clk&quot;, &quot;rtc-clk&quot;;<br>
-&gt;<br>
-&gt;<br>
-&gt; =C2=A0 =C2=A0 =C2=A0 =C2=A0 S=C3=B6ren<br>
-</p>
-
---001a11c16fc6c16f6c04f9628711--
+--001a11c2bb4c667a9f04fa6279f5--
