@@ -1,41 +1,74 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2 0/7] mfd: twl4030-power: Enable off-idle configuration
- when booted with device tree
-Date: Tue, 27 May 2014 10:13:52 -0700
-Message-ID: <20140527171351.GA18063@atomide.com>
-References: <1400031250-29542-1-git-send-email-tony@atomide.com>
- <20140527165234.GF4227@lee--X1>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Compatible string best practices
+Date: Tue, 27 May 2014 10:15:35 -0700
+Message-ID: <6b2f3662-caa1-4a00-a006-1f251f32770f@BN1AFFO11FD054.protection.gbl>
+References: <cc5b8415-4297-49fb-8a2c-bdc4b1b19c2c@BY2FFO11FD033.protection.gbl>
+ <20140523160331.GA6969@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140527165234.GF4227@lee--X1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20140523160331.GA6969@leverpostej>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [140527 09:53]:
-> > Here's an updated set of patches to enable low-power idle modes
-> > for some omap3 boards when booted with device tree.
-> > 
-> > This series when applied on top of the patches in tread                                                                                                       
-> > "[PATCH 00/11] Fixes for omap PM for making omap3 DT only",
-> > or omap-for-v3.16/pm branch.
-> > 
-> > Lee, if these patches look OK to you, please feel free to 
-> > pick them, preferrably to the immutable branch you already
-> > have set up so I can also merge them in to be able to have
-> > things working in my branch properly for PM.
-> 
-> Whoops, nearly forgot about this patchset.
-> 
-> Tony, can you resend it with all your fix-ups please.  The 8< doesn't
-> work well with my patch application 'system'.
+On Fri, 2014-05-23 at 05:03PM +0100, Mark Rutland wrote:
+> On Fri, May 23, 2014 at 04:03:06PM +0100, S=C3=B6ren Brinkmann wrote:
+> > Hi,
+>=20
+> Hi,
+>=20
+> > I have a question regarding how a compatible string should be creat=
+ed.
+> > The simple case is obvious:
+> >  <IP-vendor>,<IP-type/name>-<IP-revision>
+> >=20
+> > But what is the recommended string for a SOC specific implementatio=
+n of
+> > that IP? Let's say for
+> >  <SOC-vendor>,<SOC-name>-<SOC-revision>
+> > how would I assemble a compatible string to identify the SOC-specif=
+ic
+> > implementation of IP?
+> > I think my biggest confusion is which vendor string to use in that =
+case.
+> > But in general I'm curious whether some best practice exists for th=
+ese
+> > cases.
+> >=20
+> > I think what I've seen most is:
+> >  <SOC-vendor>,<SOC-name>-<IP-type>
+> >=20
+> > But one could probably argue whether to rather use IP-vendor, appen=
+ding
+> > all the revision strings, ...
+>=20
+> I would expect that the vendor prefix would be the last entity along =
+the
+> chain which altered the IP in some way. Say foo sells device to bar, =
+who
+> do nothing other than sell it to baz who do some hacks to integrate i=
+t.
+> For that I'd expect something like:
+>=20
+> compatible =3D "baz,soc-device", "foo,device";
+>=20
+> I'm not sure with revisions (they're not always that useful), but I'd
+> expect that to be kept next to the element it represent the revision
+> for:
+>=20
+> "baz,soc-vX-device-vY", "bar,soc-device-vY", "foo,device-vY",
+> "foo,device-vY";
 
-Sure I'll do that. FYI, these kind of patches should apply just
-fine when piped to git-am --scissors.
+Thanks, Mark!
 
-Regards,
+	S=C3=B6ren
 
-Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
