@@ -1,71 +1,41 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [Patch v7 3/7] mfd: ti-keystone-devctrl: add bindings for device
- state control
-Date: Tue, 27 May 2014 10:24:28 +0100
-Message-ID: <20140527092428.GH5875@lee--X1>
-References: <1400859812-5761-1-git-send-email-ivan.khoronzhuk@ti.com>
- <1400859812-5761-4-git-send-email-ivan.khoronzhuk@ti.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
+Date: Tue, 27 May 2014 18:29:41 +0900
+Message-ID: <53845B05.80900@renesas.com>
+References: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1400859812-5761-4-git-send-email-ivan.khoronzhuk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: dbaryshkov@gmail.com, dwmw2@infradead.org, santosh.shilimkar@ti.com, arnd@arndb.de, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, rdunlap@infradead.org, mturquette@linaro.org, linux@arm.linux.org.uk, grygorii.strashko@ti.com, olof@lixom.net, w-kwok2@ti.com, sboyd@codeaurora.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, m-karicheri2@ti.com, sergei.shtylyov@cogentembedded.com
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201405240206.04700.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "kishon@ti.com" <kishon@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-> The Keystone II devices have a set of registers that are used to cont=
-rol
-> the status of its peripherals. This node is intended to allow access =
-to
-> this functionality.
->=20
-> Reviewed-by: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
+Hi,
 
-Acked-by: Lee Jones <lee.jones@linaro.org>
+(2014/05/24 7:06), Sergei Shtylyov wrote:
+< snip >
+> +Example (Lager board):
+> +
+> +	usb-phy@e6590100 {
+> +		compatible = "renesas,usb-phy-r8a7790";
+> +		reg = <0 0xe6590100 0 0x100>;
+> +		#phy-cells = <2>;
+> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
+> +		clock-names = "usbhs";
 
-> ---
->  .../devicetree/bindings/mfd/ti-keystone-devctrl.txt   | 19 +++++++++=
-++++++++++
->  1 file changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/ti-keystone=
--devctrl.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/ti-keystone-devctr=
-l.txt b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
-> new file mode 100644
-> index 0000000..20963c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/ti-keystone-devctrl.txt
-> @@ -0,0 +1,19 @@
-> +* Device tree bindings for Texas Instruments keystone device state c=
-ontrol
-> +
-> +The Keystone II devices have a set of registers that are used to con=
-trol
-> +the status of its peripherals. This node is intended to allow access=
- to
-> +this functionality.
-> +
-> +Required properties:
-> +
-> +- compatible:		"ti,keystone-devctrl", "syscon"
-> +
-> +- reg:			contains offset/length value for device state control
-> +			registers space.
-> +
-> +Example:
-> +
-> +devctrl: device-state-control@0x02620000 {
-> +	compatible =3D "ti,keystone-devctrl", "syscon";
-> +	reg =3D <0x02620000 0x1000>;
-> +};
+I'm not sure about the clock-names string,
+but the current clock-name of R8A7790_CLK_HSUSB is "hsusb" in r8a7790.dtsi.
+So, before I tested this driver, I changed the "hsusb" to "usbhs".
+Otherwise, the devm_clk_get() in the driver failed.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+< snip >
+> +	for_each_child_of_node(dev->of_node, np) {
+> +  		struct rcar_gen2_phy *phy;
+
+This line has two while spaces at the start of the line.
+
+Best regards,
+Yoshihiro Shimoda
