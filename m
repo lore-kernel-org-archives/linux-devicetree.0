@@ -1,52 +1,66 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: handle NULL node in of_get_next_available_child
-Date: Tue, 27 May 2014 12:19:30 +0100
-Message-ID: <20140527111930.696AAC4156C@trevor.secretlab.ca>
-References: <1400874192-29400-1-git-send-email-f.fainelli@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400874192-29400-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v5 5/5] arm: exynos: Add MCPM call-back functions
+Date: Tue, 27 May 2014 20:39:24 +0900
+Message-ID: <002101cf79a0$50fba0f0$f2f2e2d0$@samsung.com>
+References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com>
+ <1399307221-8659-6-git-send-email-a.kesavan@samsung.com>
+ <201405271307.56729.arnd@arndb.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <201405271307.56729.arnd@arndb.de>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Arnd Bergmann' <arnd@arndb.de>, 'Abhilash Kesavan' <a.kesavan@samsung.com>
+Cc: nicolas.pitre@linaro.org, Dave.Martin@arm.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, t.figa@samsung.com, abrestic@chromium.org, thomas.ab@samsung.com, inderpal.s@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, will.deacon@arm.com, kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 23 May 2014 12:43:11 -0700, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Add an early check for the node argument in
-> of_get_next_available_child() to avoid dereferencing a NULL node pointer
-> a few lines after.
+Arnd Bergmann wrote:
 > 
-> CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-
-Is there a bug that exposed this path? I'd like some more justification
-before merging this patch, particularly considering of_get_next_child()
-doesn't check for it either, but you're not modifying that function.
-
-g.
-
-> ---
->  drivers/of/base.c | 3 +++
->  1 file changed, 3 insertions(+)
+> On Monday 05 May 2014, Abhilash Kesavan wrote:
+> > +static const struct mcpm_platform_ops exynos_power_ops = {
+> > +       .power_up               = exynos_power_up,
+> > +       .power_down             = exynos_power_down,
+> > +       .power_down_finish      = exynos_power_down_finish,
+> > +};
 > 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index e67b308819c9..9a71bfac78ae 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -746,6 +746,9 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
->  	struct device_node *next;
->  	unsigned long flags;
->  
-> +	if (!node)
-> +		return NULL;
-> +
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
->  	next = prev ? prev->sibling : node->child;
->  	for (; next; next = next->sibling) {
-> -- 
-> 1.9.1
 > 
+> I'm getting a build error in linux-next because there is
+> no .power_down_finish
+> member in mcpm_platform_ops here.
+> 
+Yeah, commit 166aaf39 ("ARM: 8029/1: mcpm: Rename the power_down_finish()
+functions to be less confusing") changed the name to
+wait_for_cpu_powerdown...
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+So need to change it accordingly...
+
+diff --git a/arch/arm/mach-exynos/mcpm-exynos.c
+b/arch/arm/mach-exynos/mcpm-exynos.c
+index 1ac618c..34c4e6f 100644
+--- a/arch/arm/mach-exynos/mcpm-exynos.c
++++ b/arch/arm/mach-exynos/mcpm-exynos.c
+@@ -235,7 +235,7 @@ static void exynos_power_down(void)
+ 	/* Not dead at this point?  Let our caller cope. */
+ }
+ 
+-static int exynos_power_down_finish(unsigned int cpu, unsigned int cluster)
++static int exynos_wait_for_powerdown(unsigned int cpu, unsigned int
+cluster)
+ {
+ 	unsigned int tries = 100;
+ 	unsigned int cpunr = cpu + (cluster * EXYNOS5420_CPUS_PER_CLUSTER);
+@@ -261,7 +261,7 @@ static int exynos_power_down_finish(unsigned int cpu,
+unsigned int cluster)
+ static const struct mcpm_platform_ops exynos_power_ops = {
+ 	.power_up		= exynos_power_up,
+ 	.power_down		= exynos_power_down,
+-	.power_down_finish	= exynos_power_down_finish,
++	.wait_for_powerdown	= exynos_wait_for_powerdown,
+ };
+ 
+ static void __init exynos_mcpm_usage_count_init(void)
+
+Thanks,
+Kukjin
