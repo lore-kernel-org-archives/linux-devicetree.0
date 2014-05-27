@@ -1,91 +1,84 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
-Date: Tue, 27 May 2014 23:24:49 +0900
-Message-ID: <CAAQKjZOGLPoGbZ7G3+BFd3ydRC2HGmz8JKqFiytdSvxN3T5U_w@mail.gmail.com>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
- <20140526134153.GA2373@ulmo> <538430A4.8020702@samsung.com>
- <20140527075328.GA13081@ulmo>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [GIT PULL] DT changes for v3.16
+Date: Tue, 27 May 2014 16:09:44 +0100
+Message-ID: <CACxGe6uAY48UEF1qY=ATZ3rsm3h=dUpgUA07iuizrciX-j8=fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140527075328.GA13081@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-27 16:53 GMT+09:00 Thierry Reding <thierry.reding@gmail.com>:
-> On Tue, May 27, 2014 at 08:28:52AM +0200, Andrzej Hajda wrote:
->> Hi Thierry,
->>
->> On 05/26/2014 03:41 PM, Thierry Reding wrote:
->> > On Wed, May 21, 2014 at 01:43:05PM +0900, YoungJun Cho wrote:
->> >> This patch adds DT bindings for s6e3fa0 panel.
->> >> The bindings describes panel resources, display timings and cpu mode timings.
->> >>
->> >> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> >> Acked-by: Inki Dae <inki.dae@samsung.com>
->> >> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> >> ---
->> >>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   45 ++++++++++++++++++++
->> >>  1 file changed, 45 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
->> > You're totally confusing me here. Half of this patch series is about
->> > adding i80 support to Exynos FIMD, and then you go and add what is
->> > apparently a DSI peripheral driver here that's supposed to be used by
->> > this new i80 support. Nothing I've been able to dig up indicates that
->> > i80 or DSI are in anyway related.
->>
->> FIMD can produce parallel RGB output or command mode in i80 style output
->> via parallel lines.
->> DSIM can accept parallel RGB stream in this case it produces MIPI DSI
->> video mode signal or it can accept i80 and in this case it translates it
->> to MIPI DSI command mode.
->
-> Then the command mode timings aren't a property of the panel at all.
+Hi Rob,
 
-Then the video mode timings aren't also a property of the panel.
+Here's the stuff I've got queued up. Please pull it into your tree in
+preparation for the merge window. I may have some more patches
+tomorrow from Panto. If so, then I'll send those as a separate pull.
 
-Which interface mipi and display controller should use would be
-decided by lcd panel type: display controller can use i80 interface
-based lcd panel, and also mipi controller can use i80 interface based
-lcd panel.
-In here, the only difference is that lcd panel receives  packets,
-which includes video data or command data, packed with mipi protocol
-via lane lines or receives video data or command data via parallel
-lines.
+g.
 
-And the below is LCD types,
-        RGB interface panel.
-        i80 interface panel.
-        MIPI based RGB interface panel.
-        MIPI based i80 interface panel.
+The following changes since commit eafd370dfe487facfdef499057f4eac9aa0b4bf5:
 
-RGB interface also is called video mode, and i80 interface also is
-called cpu mode. In case of omap SoC, it is also called Smart panel.
-i80 interface is just one of LCD types. So I think this interface
-timings should be handled by frameworks related to mode in same way as
-RGB interface.
+  Merge branch 'dt-bus-name' into for-next (2014-05-13 18:34:35 -0500)
 
-Thanks,
-Inki Dae
+are available in the git repository at:
 
-> They describe what DSIM expects, so that's where they should be defined.
->
-> Thierry
->
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
->
+
+  git://git.secretlab.ca/git/linux tags/dt-for-robh
+
+for you to fetch changes up to 08cf78ed41feaa21017487bad0a5a405c6cede43:
+
+  of_pci_irq: kill useless variable in of_irq_parse_pci() (2014-05-27
+12:13:34 +0100)
+
+----------------------------------------------------------------
+DT queued up for v3.16
+
+Mostly bug fixes, but also some rework to improve path handling and
+device naming
+
+----------------------------------------------------------------
+Grant Likely (6):
+      of: Ensure unique names without sacrificing determinism
+      of: Stop naming platform_device using dcr address
+      lib: add glibc style strchrnul() variant
+      of: Create unlocked version of for_each_child_of_node()
+      of: Make of_find_node_by_path() handle /aliases
+      of: Add a testcase for of_find_node_by_path()
+
+Grygorii Strashko (1):
+      of/irq: do irq resolution in platform_get_irq_byname()
+
+Ian Molton (1):
+      pci/of: Remove dead code
+
+Leif Lindholm (1):
+      of: Handle memory@0 node on PPC32 only
+
+Sergei Shtylyov (1):
+      of_pci_irq: kill useless variable in of_irq_parse_pci()
+
+Thierry Reding (1):
+      of: Use NULL for pointers
+
+Xiubo Li (1):
+      of: fix race between search and remove in of_update_property()
+
+ arch/powerpc/include/asm/dcr-mmio.h         |   4 -
+ arch/powerpc/sysdev/dcr.c                   |   6 +-
+ drivers/base/platform.c                     |   7 +-
+ drivers/of/base.c                           | 115 ++++++++++++++++++++++------
+ drivers/of/fdt.c                            |   4 +-
+ drivers/of/irq.c                            |  22 ++++++
+ drivers/of/of_pci_irq.c                     |   8 +-
+ drivers/of/platform.c                       |  62 +++++----------
+ drivers/of/selftest.c                       |  46 +++++++++++
+ drivers/of/testcase-data/tests-phandle.dtsi |   6 +-
+ include/linux/of_irq.h                      |   5 ++
+ include/linux/string.h                      |   3 +
+ lib/string.c                                |  18 +++++
+ 13 files changed, 222 insertions(+), 84 deletions(-)
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
