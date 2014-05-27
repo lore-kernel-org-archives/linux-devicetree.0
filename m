@@ -1,89 +1,67 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v11 0/3] Exynos 5410 support
-Date: Tue, 27 May 2014 13:44:31 -0700
-Message-ID: <CAGa+x86t-4S_Qf1jvBJApyALOQHgFeZQbxAqc+YQ_5102vmWqg@mail.gmail.com>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
- <7hr43f9mmn.fsf@paris.lan> <7hd2ez9kvr.fsf@paris.lan>
- <CANhyOUcGTbbQLxYWsAZG00ENSDa4pj+MP2i7Rx=PfyqN1CY6WQ@mail.gmail.com>
- <5384F79C.6000204@gmail.com>
+From: Sebastian Reichel <sre@kernel.org>
+Subject: Re: [PATCHv5 09/10] DTS: ARM: OMAP3-N900: Add SSI support
+Date: Tue, 27 May 2014 22:47:31 +0200
+Message-ID: <20140527204730.GA30610@earth.universe>
+References: <1399739870-13526-10-git-send-email-sre@kernel.org>
+ <20140514215503.GM27426@atomide.com>
+ <20140520003538.GD15793@atomide.com>
+ <20140521182513.GA26285@earth.universe>
+ <20140521184319.GL17417@atomide.com>
+ <20140521194527.GM17417@atomide.com>
+ <20140521215055.GA26362@earth.universe>
+ <20140521220807.GB14520@atomide.com>
+ <20140522000558.GC29118@earth.universe>
+ <20140527203543.GB32336@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5384F79C.6000204@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-doc@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Romain Naour <romain.naour@openwide.fr>, Tarek Dakhran <t.dakhran@gmail.com>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Thomas Abraham <thomas.abraham@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Tarek Dakhran <t.dakhran@samsung.com>, Rob Herring <robh+dt@kernel.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Mike Turquette <mturquette@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="UugvWAfsgieZRqgk"
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140527203543.GB32336@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Shubhrajyoti Datta <omaplinuxkernel@gmail.com>, Carlos Chinea <cch.devel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar@gmail.com>, =?utf-8?B?0JjQstCw0LnQu9C+INCU0LjQvNC40YLRgNC+0LI=?= <freemangordon@abv.bg>, Joni Lapilainen <joni.lapilainen@gmail.com>, Aaro Koskinen <aaro.koskinen@iki.fi>, Pavel Machek <pavel@ucw.cz>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 1:37 PM, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> On 27.05.2014 22:17, Tarek Dakhran wrote:
->> Hi,
->>
->> On Tue, May 27, 2014 at 9:44 PM, Kevin Hilman <khilman@linaro.org> wrote:
->>> Kevin Hilman <khilman@linaro.org> writes:
->>>
->>>> Tarek Dakhran <t.dakhran@samsung.com> writes:
->>>>
->>>>> The series of patches represent support of Exynos 5410 SoC
->>>>>
->>>>> The Exynos 5410 is the first Samsung SoC based on big.LITTLE architecture
->>>>>
->>>>> Patches add new platform description, support of clock controller and device
->>>>> tree for Exynos 5410.
->>>>>
->>>>> Has been build on Samsung Linux Kernel
->>>>>   (branch: for-next, commit: 97eae6c Merge branch 'v3.16-next/multiplatform' into for-next)
->>>>>
->>>>> Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig)
->>>>>                  2) Exynos 5410 reference board (multi_v7_defconfig)
->>>>>                  3) Odroid-XU board (exynos_defconfig)
->>>>>                  4) Odroid-XU board (multi_v7_defconfig)
->>>>
->>>> Tested-by: Kevin Hilman <khilman@linaro.org>
->>>>
->>>> FYI, I boot tested this on an odroid-xu (exynos_defconfig and
->>>> multi_v7_defconfig.)
->>>
->>> Oops, I may have spoke to soon.  There seem to be some problems with
->>> multi_v7_defconfig.
->>>
->>> Applying this series directly on the commit mentioned above and testing,
->>> it works just fine using multi_v7_defconfig.
->>
->> Thank you for testing.
->>
->>> However, if I directly test the current contents of the samsung for-next
->>> branch (where this series has been merged) it no longer boots on the
->>> odroid-xu.
->>> A quick diff shows that there are some other changes to
->>> multi_v7_defconfig in the samsung/for-next branch that may be causing
->>> problems here.
->>
->> Yes. Right you are. There is no ARCH_EXYNOS defined in multi_v7_defconfig
->> at current state (branch: for-next commit: ca610da Merge branch
->> 'v3.16-next/dt-samsung-3' into for-next).
->> So booting kernel on 5410 SoC is not possible with multi_v7_defconfig.
->> Please use exynos_defconfig.
->
-> I wonder if this patch isn't maybe the missing part:
->
-> http://thread.gmane.org/gmane.linux.kernel.samsung-soc/32414
->
-> Olof asked Kukjin to separate it from his pull requests, so it can be
-> applied directly to ARM SoC tree to avoid conflicts.
 
-Yup, samsung/for-next + that patch boots fine on the odroid-xu using
-multi_v7_defconfig.
+--UugvWAfsgieZRqgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks,
+On Tue, May 27, 2014 at 01:35:44PM -0700, Tony Lindgren wrote:
+> Based on chatting with Paul it seems that we most likely don't have
+> bits for sysc_flags for SYSC_HAS_EMUFREE or SYSS_HAS_RESET_STATUS
+> either. So applying the updated patch below, and the SSI dts changes
+> into omap-for-v3.16/dt-v2.
+>=20
+> I'm keeping your previous ack Sebastian as the the idlemodes did
+> not change from the previous version, hopefully that's OK with you.
 
-Kevin
+Sure, go for it.
+
+-- Sebastian
+
+--UugvWAfsgieZRqgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJThPniAAoJENju1/PIO/qazuAP/jWUjp10rDZcckjKqggbXNZq
+8BJRYi8skClJDvpUpLq5C+FC2YGsrEXWeiI6+gjk7sVgjgSS4tFMIj94dpSWDfE/
+dp3FXPGDX5Q3CsX5I5zPVXU1TfszkgOF86E2P1RF4+ks1c/5ih7W++R45i4QvCM7
++BeN9vcBrVZy+OkLWpCC5vdJM9lPzk6E4uD0KRxfL/AEgyF7ZyG8tilQVK73/FL6
+GtueirRT7uTox1/oi9+3644x3zRaPTJuo/EeX0pha5DSZx6yUPM1raR2QW0oI/V6
+mdXvwco6viNljS6NPUB/Mm/vMLGx9O9NpVK8Tf8tYZcZ6f482CutTkMQh3iDjH55
+zlZiHfknl+EaFGVJ6yHkeUfUe4kK89uMOCs7oZjkpnnqiqt9J9Sy/4hHgvkHvV44
+EzQ0CnDzt3SUAq9j2nlhGPNOqEUzqiTj/S3mFxnIE5SbpbtmIWY65mpzICnWyBVU
+a1pWeB4ZvIrTzQsoDmRu1SBm+22GClJf+85akgeddn3z8eBFABqC1hwOWnnbXb4o
+934N7E0mnB4mZ63gJJnUFfwY+vV70efDwXqxonAos7SJF6Er5YnnYei1cxRBNuSX
+yCVGnk8OIX9rCvOFS4/oUcIpvLXFVPEoMUIgHXDUxKepUv/hKuyaXYzLRuJ0ZJsf
+8guupD5jsKjqDJ6CqYuf
+=yBWr
+-----END PGP SIGNATURE-----
+
+--UugvWAfsgieZRqgk--
