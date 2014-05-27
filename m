@@ -1,105 +1,131 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 3/3] Documentation: gpio: Add APM X-Gene SoC GPIO
- controller DTS binding
-Date: Tue, 27 May 2014 10:30:14 +0200
-Message-ID: <CACRpkdY9VN8=4FsszzVqezWPOOi7eAk6VXxb577_67VinQtzHw@mail.gmail.com>
-References: <1400263432-922-1-git-send-email-fkan@apm.com>
-	<1400263432-922-4-git-send-email-fkan@apm.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 17/22] mfd: sun6i-prcm: Add support for Allwinner A23 PRCM
+Date: Tue, 27 May 2014 10:30:21 +0200
+Message-ID: <20140527083021.GE4730@lukather>
+References: <1400831485-28576-1-git-send-email-wens@csie.org>
+ <1400831485-28576-18-git-send-email-wens@csie.org>
+ <20140525191434.GX10768@lukather>
+ <CAGb2v66cV_nRpHhrtDUYzncO5wimx+vRBW6BFcU0Kz=bKkNs+g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1400263432-922-4-git-send-email-fkan@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: patches <patches@apm.com>, Alexandre Courbot <gnurou@gmail.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gDGSpKKIBgtShtf+"
+Return-path: <linux-serial-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAGb2v66cV_nRpHhrtDUYzncO5wimx+vRBW6BFcU0Kz=bKkNs+g@mail.gmail.com>
+Sender: linux-serial-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, linux-serial@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 16, 2014 at 8:03 PM, Feng Kan <fkan@apm.com> wrote:
 
-> Documentation for APM X-Gene SoC GPIO controller DTS binding.
->
-> Signed-off-by: Feng Kan <fkan@apm.com>
-(...)
-> ---
->  .../devicetree/bindings/gpio/gpio-xgene.txt        | 57 ++++++++++++++++++++++
->  1 file changed, 57 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
-> new file mode 100644
-> index 0000000..e19eb5f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
-> @@ -0,0 +1,57 @@
-> +APM X-Gene SoC GPIO controller bindings
-> +
-> +This is a gpio controller that is part of the flash controller.
-> +All registers are 32bit and in little endian format.
-> +
-> +Required properties:
-> +- compatible: "apm,xgene-gpio" for X-Gene GPIO controller
-> +- reg: Physical base address and length of the controller's registers
-> +
-> +The gpio controller has multiple banks, each bank will have 16 or less
-> +gpio pins. All cfg field will be little endian and least significant
-> +bit indicate lowest number of gpio.
-> +
-> +Required properties:
-> +- #gpio-cells: Should be two.
-> +       - first cell is the pin number
-> +       - second cell is used to specify optional parameters (unused)
-> +- gpio-controller: Marks the device node as a GPIO controller.
-> +- bank:  This is to specifiy which gpio bank the dts node is describing.
+--gDGSpKKIBgtShtf+
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-A lot of stuff like the separate compatible-string on the sub-banks
-in the example, is undocumented.
+On Mon, May 26, 2014 at 12:36:38PM +0800, Chen-Yu Tsai wrote:
+> On Mon, May 26, 2014 at 3:14 AM, Maxime Ripard
+> <maxime.ripard@free-electrons.com> wrote:
+> > On Fri, May 23, 2014 at 03:51:20PM +0800, Chen-Yu Tsai wrote:
+> >> The Allwinner A23 SoC has a PRCM unit like the previous A31 SoC.
+> >> The differences are the AR100 clock can no longer be modified,
+> >> and the APB0 clock has different divisors.
+> >>
+> >> This patch adds a compatible with a modified subdevice list for
+> >> the A23.
+> >>
+> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> >> ---
+> >>  .../devicetree/bindings/mfd/sun6i-prcm.txt         |  2 +-
+> >>  drivers/mfd/sun6i-prcm.c                           | 30 +++++++++++++=
++++++++++
+> >>  2 files changed, 31 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt b/Do=
+cumentation/devicetree/bindings/mfd/sun6i-prcm.txt
+> >> index 1f5a31f..03c5a55 100644
+> >> --- a/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+> >> +++ b/Documentation/devicetree/bindings/mfd/sun6i-prcm.txt
+> >> @@ -4,7 +4,7 @@ PRCM is an MFD device exposing several Power Managemen=
+t related devices
+> >>  (like clks and reset controllers).
+> >>
+> >>  Required properties:
+> >> - - compatible: "allwinner,sun6i-a31-prcm"
+> >> + - compatible: "allwinner,sun6i-a31-prcm" or "allwinner,sun8i-a23-prc=
+m"
+> >>   - reg: The PRCM registers range
+> >>
+> >>  The prcm node may contain several subdevices definitions:
+> >> diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
+> >> index 718fc4d..c96bb6c 100644
+> >> --- a/drivers/mfd/sun6i-prcm.c
+> >> +++ b/drivers/mfd/sun6i-prcm.c
+> >> @@ -76,16 +76,46 @@ static const struct mfd_cell sun6i_a31_prcm_subdev=
+s[] =3D {
+> >>       },
+> >>  };
+> >>
+> >> +static const struct mfd_cell sun8i_a23_prcm_subdevs[] =3D {
+> >> +     {
+> >> +             .name =3D "sun6i-a31-apb0-clk",
+> >> +             .of_compatible =3D "allwinner,sun8i-a23-apb0-clk",
+> >> +             .num_resources =3D ARRAY_SIZE(sun6i_a31_apb0_clk_res),
+> >> +             .resources =3D sun6i_a31_apb0_clk_res,
+> >> +     },
+> >> +     {
+> >> +             .name =3D "sun6i-a31-apb0-gates-clk",
+> >> +             .of_compatible =3D "allwinner,sun6i-a31-apb0-gates-clk",
+> >> +             .num_resources =3D ARRAY_SIZE(sun6i_a31_apb0_gates_clk_r=
+es),
+> >> +             .resources =3D sun6i_a31_apb0_gates_clk_res,
+> >> +     },
+> >
+> > Did I just have a brainfart, or didn't you just introduced an
+> > sun8i-a23-apb0-gates-clk driver?
+>=20
+> My bad, I missed this one. The one in the DT is correct.
+> It actually works, so I'm a bit confused here.
+> Which one does the driver core actually use?
 
-> +Optional properties:
-> +- ngpio: Specify the number of GPIOs per bank. It is defaulted to 16
-> +        if not specified. Number of gpio can't be greater than 16 or
-> +        0.
+Actually, it will use both, and will match the of_compatible string
+try to match it against the mfd-sub-nodes compatibles. If nothing
+matches, it won't fill the dev.of_node field.
 
-If this is always 16 I don't see why you need the binding at all,
-until there is such a system out there that use < 16 of the gpios.
+>=20
+> > And there's no ar100 and ahb0 clocks ?
+>=20
+> The ahb0 is a fixed-factor (1:1) clock. There are no controls for it.
+> The ar100 clock on the A23 has no controls either, so fixed-factor
+> clock again.
 
-> +- odcfg: This is gpio open drain/normal configuration. It is a 16 bit
-> +        field, setting 1 will mean the pin is set in open drain
-> +        configuration, 0 will mean normal configuration. Default will
-> +        be normal configuration.
+Ack.
 
-NAK: this shall be handled by pin config.
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-> +Example:
-> +       gpio: gpio@1701c000 {
-> +               compatible = "apm,xgene-gpio";
-> +               reg = <0x0 0x1701c000 0x0 0x1000>;
-> +
-> +               banka: gpio-controller@0 {
-> +                       compatible = "apm,xgene-gpio-port";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       ngpios = <16>;
-> +                       bank = <0>;
-> +                       odcfg = <0xffff>;   /* Optional */
-> +               };
-> +               bankb: gpio-controller@1 {
-> +                       compatible = "apm,xgene-gpio-port";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       ngpios = <16>;
-> +                       bank = <1>;
-> +               };
-> +               bankc: gpio-controller@2 {
-> +                       compatible = "apm,xgene-gpio-port";
-> +                       gpio-controller;
-> +                       #gpio-cells = <2>;
-> +                       ngpios = <16>;
-> +                       bank = <2>;
-> +               };
-> +       };
+--gDGSpKKIBgtShtf+
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-And as mentioned before, please create three independent
-GPIOs instead of three subbanks.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-Yours,
-Linus Walleij
+iQIcBAEBAgAGBQJThE0dAAoJEBx+YmzsjxAg38EP/035jkjbn8xrfVMZTORgZYE1
+rU9ATQ7Z6mMqajcZ7Ut+RnKJtBcPnQvG6AtHnj4B/WUn1ho6blt3/5MJ8mEJCslR
+hZv/4ZpQUeRwUh186RIl3A1/AGvsSC0q9mAoXcLMm4gwTk5GcUEc8ojhYwmYFIu1
+Ws67Uf/5eKC58d53XZUPP0h1PyI6EvBzjFPL1XnbVRlD9gEN+gmt4MAWF3ZJMrIv
+OyT+j0YoftiE7/DI9mzTDEeRbenqGFKVeyYbB0rsuuQA7GtENQa5Jj6klJxYbtl+
+lMt2/3QohxB8zue5F3gD+1d9hW9p/Mqqhsc5yAqISw8IrnE1gY2q6tUhqElwe0eR
+7ef7h1avfXeYfiNR3FCgO0jhIWhz9B9kK8zwOgj34Pe0WB4bdBPLy2MOsn5WAz7F
+HLd1goDCmefpFWJyAaaDl8pvv+nogn//ZdsDGXb0CQdhrsWlRxqDs1HcTuJn1Gp5
+qdtnbPsVdaJu7J3aXC8vElimGg+KBF7ckCl0JDe0PW4Psp6ppN+riXWuLDxi/QcP
+E20egYnNxecDn/UpgoU15X5hWSpzgaRjiqYrwKTOMVJrnVEd0+tGYqEUFVKXDNsD
+YXeFB2CQV+LhTcsyZUqXiYIZnFve3aj0XanFVEQnNV+fCqf5XTpZyBykepx2A3/n
+r20ywd4ETfW546zevAOP
+=2LgE
+-----END PGP SIGNATURE-----
+
+--gDGSpKKIBgtShtf+--
