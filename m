@@ -1,197 +1,69 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
-Date: Tue, 27 May 2014 13:00:32 -0500
-Message-ID: <CAF03EBeLcObeajAgQQ4-h529f0ExNLB_RXCWMgktw4-D=K4d5g@mail.gmail.com>
-References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
-	<1400169891-29546-2-git-send-email-tthayer@altera.com>
-	<20140516075344.GF949@pengutronix.de>
-	<CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
-	<20140519191206.GH949@pengutronix.de>
-	<CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
-	<CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
-	<20140520144446.GJ949@pengutronix.de>
-	<CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
-	<20140527071157.GC20695@pengutronix.de>
+From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH] coccinelle: Check for missing NULL terminators in of_device_id
+ tables
+Date: Tue, 27 May 2014 11:02:45 -0700
+Message-ID: <5384D345.4070606@codeaurora.org>
+References: <1400888504-31309-1-git-send-email-sboyd@codeaurora.org> <alpine.DEB.2.02.1405240956220.2012@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140527071157.GC20695@pengutronix.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Alan Tull <delicious.quinoa@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1405240956220.2012-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>, Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
->> On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
->> <s.trumtrar@pengutronix.de> wrote:
->> > Hi!
->> >
->> > On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
->> >> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
->> >>
->> >> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> >> >>> >> new file mode 100644
->> >> >>> >> index 0000000..8f8746b
->> >> >>> >> --- /dev/null
->> >> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> >> >>> >> @@ -0,0 +1,11 @@
->> >> >>> >> +Altera SOCFPGA SDRAM Controller
->> >> >>> >> +
->> >> >>> >> +Required properties:
->> >> >>> >> +- compatible : "altr,sdr-ctl";
->> >> >>> >> +- reg : Should contain 1 register ranges(address and length)
->> >> >>> >> +
->> >> >>> >> +Example:
->> >> >>> >> +     sdrctl@ffc25000 {
->> >> >>> >> +             compatible = "altr,sdr-ctl";
->> >> >>> >> +             reg = <0xffc25000 0x1000>;
->> >> >>> >> +     };
->> >> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> >> >>> >> index df43702..6ce912e 100644
->> >> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
->> >> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> >> >>> >> @@ -676,6 +676,11 @@
->> >> >>> >>                       clocks = <&l4_sp_clk>;
->> >> >>> >>               };
->> >> >>> >>
->> >> >>> >> +             sdrctl@ffc25000 {
->> >> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
->> >> >>> >                                                    ^^^^^^^^^^
->> >> >>> >
->> >> >>> > Get rid of that, too, please.
->> >> >>>
->> >> >>> Hi Steffan,
->> >> >>>
->> >> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
->> >> >>> that has the ECC enable bitfield also includes the DRAM configuration
->> >> >>> bitfields that other drivers will want to access (specifically the
->> >> >>> FPGA bridge needs this information). Since this register will be
->> >> >>> shared between drivers,  syscon seems like the best solution.
->> >> >>>
->> >> >>
->> >> >> Hm, from looking at the documentation of the ctrlcfg I can't really
->> >> >> understand which bits you would need for the FPGA brigde and why.
->> >>
->> >> Hi Steffen,
->> >>
->> >> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
->> >> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
->> >> allows an FPGA port to come out of reset (enables that port).  Has no
->> >> other effect on SDRAM configuration.
->> >>
->> >> >> That all sounds like stuff you would want to set for the specific
->> >> >> RAM you are dealing with on a specific board.
->> >> >> What bridge are you talking about? The SDRAM bridge?
->> >>
->> >> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
->> >> register the only register in the sdr that the bridge driver needs.
->> >>
->> >
->> > So, what I suggested down ...
->> >
->> >> >>
->> >> >> I can see the problem with the ECC enable, though.
->> >> >>
->> >> >> Regards,
->> >> >> Steffen
->> >> >>
->> >> >
->> >> >>> >                 sdrctl@ffc25000 {
->> >> >>> >                         compatible = "altr,sdr-ctl";
->> >> >>> >                         reg = <0xffc25000 0x1000>;
->> >> >>> >                         ranges;
->> >> >>> >
->> >> >>> >                         edac@ffc2502c {
->> >> >>> >                                 compatible = "altr,sdram-edac";
->> >> >>> >                                 reg = <0xffc2502c 0x50>;
->> >> >>> >                                 interrupts = <0 39 4>;
->> >> >>> >                         };
->> >> >>> >                 };
->> >> >>> >
->> >> >>> > Then we can later add:
->> >> >>> >
->> >> >>> >                         sdr-ports: ports@ffc2507c {
->> >> >>> >                                 #reset-cells = <1>;
->> >> >>> >                                 compatible = "altr,sdr-ports";
->> >> >>> >                                 reg = <0xffc2507c 0x10>;
->> >> >>> >                                 clocks = <&ddr_dqs_clk>;
->> >> >>> >                                 ...
->> >> >>> >                         };
->> >>
->> >
->> > ... here should work. No?! Just a simple driver that registers with the
->> > reset-framework. I would add 0x7c to that driver and than that driver could
->> > "configure" the port and let it out of reset.
->> >
->> > I have done the same thing for the other 3 bridges, but am not finished yet.
->> > Especially the GPV-stuff needs to at least be able to be added later if not now.
->> >
+On 05/24/14 00:57, Julia Lawall wrote:
+> On Fri, 23 May 2014, Stephen Boyd wrote:
 >
-> Hi Thor!
+>> +... struct of_device_id arr[] = {
+>> +	...,
+>> +	{
+>> +	...,
+>> +	.var = E,
+>> +	...
+>> +	}
+>> +};
+> You shouldn't need any of the ...s in these rules.
 >
->> I'm not clear on how the EDAC driver will interact with the registers
->> allocated to the SDRAM controller. If the group of registers from
->> 0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
->> controller, how does the EDAC driver cleanly access that single
->> register inside this range?
->>
->
-> The compatible in the example is wrong. I didn't mean to map the whole address space
-> to some driver.
-> I think for the configuration register syscon is the right approach. It is a
-> bag of bits that don't necessitate an own driver, so syscon is perfect.
->
-> So, let me change my proposal to
->
->         sdr-ctl: sdram@ffc25000 {
->                 compatible = "altr,sdr-ctl", "syscon";
->                 reg = <0xffc25000 0x1>;
->         };
->
->         edac: edac@ffc2502c {
->                 compatible = "altr,sdram-edac";
->                 reg = <0xffc2502c 0x50>;
->                 interrupts = <0 39 4>;
->                 config = <&sdr-ctl>;
->                 ...
->         };
->
->         sdr-ports: ports@ffc2507c {
->                 compatible = "altr,sdr-ports";
->                 reg = <0xffc2507c 0x10>;
->                 clocks = <&ddr_dqs_clk>;
->                 ...
->         };
->
-> Maybe we can just skip the outer node that combines all the others.
-> So, if we do it like that, you can still use syscon, but only for the register
-> that needs it. And the EDAC definitely needs access to the config register, so
-> all is good.
->
->> Is the solution that I don't use request_region() (and therefore not
->> request exclusive access) when setting up the SDRAM controller?
->>
->> If you could point me to your drivers for the other bridges that you
->> reference, your code may answer my question.
->>
->
-> The other bridges don't need access to any SDRAM controller registers and
-> I haven't even started to implement the GPV-stuff with the lw2hps-bridge :-(
->
-> Regards,
-> Steffen
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-Thank you for your help on this, Steffen. It is good to have your
-insight. I'll implement the changes and resubmit shortly.
+Hm.. Removing all the ...s in these rules only gives me 3 matches now. I
+used to get 5.
 
-Thanks,
+Before
 
-Thor
+$ COCCI=scripts/coccinelle/misc/of_table.cocci make coccicheck MODE=report
+
+Please check for false positives in the output before submitting a patch.
+When using "patch" mode, carefully review the patch before submitting it.
+
+./sound/soc/pxa/pxa-ssp.c:810:36-37: pxa_ssp_of_ids is not NULL terminated at line 810
+./drivers/mfd/tps65218.c:199:32-33: of_tps65218_match_table is not NULL terminated at line 199
+./drivers/staging/mt29f_spinand/mt29f_spinand.c:926:34-35: spinand_dt is not NULL terminated at line 926
+./drivers/clk/clk-u300.c:1170:1-2: u300_clk_match is not NULL terminated at line 1170
+./drivers/clk/st/clkgen-pll.c:655:1-2: c32_gpu_pll_of_match is not NULL terminated at line 655
+
+
+After
+
+$ COCCI=scripts/coccinelle/misc/of_table.cocci make coccicheck MODE=report
+
+Please check for false positives in the output before submitting a patch.
+When using "patch" mode, carefully review the patch before submitting it.
+
+./sound/soc/pxa/pxa-ssp.c:810:36-37: pxa_ssp_of_ids is not NULL terminated at line 810
+./drivers/mfd/tps65218.c:199:32-33: of_tps65218_match_table is not NULL terminated at line 199
+./drivers/staging/mt29f_spinand/mt29f_spinand.c:926:34-35: spinand_dt is not NULL terminated at line 926
+
+
+Removing most of the ...s seems to work though. I'll send a v2.
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
