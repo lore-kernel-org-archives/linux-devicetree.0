@@ -1,75 +1,140 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
- device tree
-Date: Tue, 27 May 2014 16:47:48 +0100
-Message-ID: <20140527154748.GX12304@sirena.org.uk>
-References: <20140523162718.GE22111@sirena.org.uk>
- <53806F26.6050706@redhat.com>
- <20140525123452.GS22111@sirena.org.uk>
- <53824294.1090609@redhat.com>
- <20140526103807.GV22111@sirena.org.uk>
- <538321AB.4050006@redhat.com>
- <20140526142225.GF22111@sirena.org.uk>
- <538356DA.7090302@redhat.com>
- <CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
- <53838023.2080807@redhat.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: mvebu: split SolidRun CuBox into variants
+Date: Tue, 27 May 2014 12:11:44 -0400
+Message-ID: <20140527161143.GS8664@titan.lakedaemon.net>
+References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
+ <1401140009-31505-2-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="actP4k1Z62ny7sWM"
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53838023.2080807@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>
+In-Reply-To: <1401140009-31505-2-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, May 26, 2014 at 11:33:29PM +0200, Sebastian Hesselbarth wrote:
+> As Mainlining effort for SolidRun CuBox has been carried out on the
+> Engineering Sample, the board DTS was reflecting this. Actually,
+> SolidRun CuBox comes in three different variants: Engineering Sample (ES),
+> production with 1GB RAM (1G), and production with 2GB RAM (2G).
+> 
+> Therefore, we split the current dove-cubox.dts into a common board include
+> and one board dts for each of the above variants.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/arm/boot/dts/Makefile                         |  4 +++-
+>  arch/arm/boot/dts/dove-cubox-1g.dts                | 17 ++++++++++++++++
+>  arch/arm/boot/dts/dove-cubox-2g.dts                | 17 ++++++++++++++++
+>  arch/arm/boot/dts/dove-cubox-es.dts                | 23 ++++++++++++++++++++++
+>  .../boot/dts/{dove-cubox.dts => dove-cubox.dtsi}   | 17 ----------------
+>  5 files changed, 60 insertions(+), 18 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/dove-cubox-1g.dts
+>  create mode 100644 arch/arm/boot/dts/dove-cubox-2g.dts
+>  create mode 100644 arch/arm/boot/dts/dove-cubox-es.dts
+>  rename arch/arm/boot/dts/{dove-cubox.dts => dove-cubox.dtsi} (86%)
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 35c146f31e46..40a008539c0c 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -404,7 +404,9 @@ dtb-$(CONFIG_MACH_ARMADA_XP) += \
+>  	armada-xp-matrix.dtb \
+>  	armada-xp-openblocks-ax3-4.dtb
+>  dtb-$(CONFIG_MACH_DOVE) += dove-cm-a510.dtb \
+> -	dove-cubox.dtb \
+> +	dove-cubox-1g.dtb \
+> +	dove-cubox-2g.dtb \
+> +	dove-cubox-es.dtb \
+>  	dove-d2plug.dtb \
+>  	dove-d3plug.dtb \
+>  	dove-dove-db.dtb
+> diff --git a/arch/arm/boot/dts/dove-cubox-1g.dts b/arch/arm/boot/dts/dove-cubox-1g.dts
+> new file mode 100644
+> index 000000000000..eebd3f7ca7e6
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/dove-cubox-1g.dts
+> @@ -0,0 +1,17 @@
+> +/dts-v1/;
+> +
+> +#include "dove-cubox.dtsi"
+> +
+> +/ {
+> +	model = "SolidRun CuBox (1G)";
+> +	compatible = "solidrun,cubox-1g", "solidrun,cubox", "marvell,dove";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x40000000>;
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/dove-cubox-2g.dts b/arch/arm/boot/dts/dove-cubox-2g.dts
+> new file mode 100644
+> index 000000000000..513b6a68eba3
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/dove-cubox-2g.dts
+> @@ -0,0 +1,17 @@
+> +/dts-v1/;
+> +
+> +#include "dove-cubox.dtsi"
+> +
+> +/ {
+> +	model = "SolidRun CuBox (2G)";
+> +	compatible = "solidrun,cubox-2g", "solidrun,cubox", "marvell,dove";
+> +
+> +	memory {
+> +		device_type = "memory";
+> +		reg = <0x00000000 0x80000000>;
 
---actP4k1Z62ny7sWM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do you anticipate any other differences between the 1G and the 2G?
+Otherwise, I'm inclined to just have a "solidrun,cubox".  The bootloader
+should be setting the amount of RAM at boottime anyway.
 
-On Mon, May 26, 2014 at 07:55:47PM +0200, Hans de Goede wrote:
+> +	};
+> +
+> +	chosen {
+> +		bootargs = "console=ttyS0,115200n8 earlyprintk";
+> +	};
+> +};
+> diff --git a/arch/arm/boot/dts/dove-cubox-es.dts b/arch/arm/boot/dts/dove-cubox-es.dts
+> new file mode 100644
+> index 000000000000..5fc17ce34c98
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/dove-cubox-es.dts
+> @@ -0,0 +1,23 @@
+> +/dts-v1/;
+> +
+> +#include "dove-cubox.dtsi"
+> +
+> +/ {
+> +	model = "SolidRun CuBox (ES)";
 
-> 				power-on-seq =3D "gpio_reg_enable", "usleep 1000", "clk_32khz", "usle=
-ep 200";
+"Engineering Sample" ?
 
-=2E..
+thx,
 
-> Where power-on-seq would tell the mmc-core exactly how to bring up the sd=
-io
-> device, using standard prefixes so that the mmc-core knows that something=
- is
-> a clock / gpio / reset / whatever.
-
-There was some work on such generic power on sequences in DT from=20
-Alexandre Courbot a while ago, search for "Runtime Interpreter Power
-Sequences".  It ground to a halt IIRC mainly because it was never clear
-that this should ever be encoded outside of the driver for a device but
-the binding was pretty good and well reviewed, it's a good place to
-start if there's a desire to do things like this.
-
---actP4k1Z62ny7sWM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJThLOhAAoJELSic+t+oim9is0P/jwSlzOCx98mdu8oxY7dyrFC
-m7jfYHQNL752JER5QptF974/TJ5LaY/FLjb8pJ7o47bCUeE6z/Wd3jfJy4AqnmKD
-rC5xABcYWHqVXf/NdD44htC146o7p+kc3VE068vypRjUaYSkCJ9y29zF+toC3Sre
-XKpp6Oy6icRA6TKElfsBPkCvK8dClCS8t0c+aZOZPC4kh983nJsF946FLaAJOFmA
-PSi8me9J3JruAGjije1L51MKr9AvSlTo/R3zFiX30mQTe2rSRRredvTulUzTzsaj
-V6RcLqolkTbdEBpOonRp5ajFW0rGE6MNqyR028p6eg3YOGTF6k9veP1bAmA27Jcv
-p7rQ4wXJ5DZpvSR/sGGDE3b0Jc+Ks+IKcA6I5OqO3eMKNjqcdIbvv3CdAJ6mhaMr
-FhgWxJQ9W6Nc64pB2Itcf4snX85NBsZAMOL5Tz/bRsiwqPvNrRgvAFXLRQ0P9LMd
-PjXxu6HNArFO2qq163HO/xxRt0jBUqjjZi9R77vrfE/0tZZChxMkcKAmVgvyYCXD
-OFpo0oOr+3hn2tDn/kq2lcC7RD3koRGOYpWfDvgaq3paTspEf+/VPV6clsafrK79
-w8pNrS4WWnZTNRV12SRbt8l5vcvjMP2j+9NyZ8E6ElNDxwmkX4NOPzDtMIrIutFK
-e/Cq4HoU1psCy0ReWZoD
-=1VKm
------END PGP SIGNATURE-----
-
---actP4k1Z62ny7sWM--
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
