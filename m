@@ -1,55 +1,68 @@
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2] pinctrl: Enable "power-source" to be extracted from DT files
-Date: Tue, 27 May 2014 09:27:36 +0300
-Message-ID: <1401172056-25743-1-git-send-email-iivanov@mm-sol.com>
-References: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
+Date: Tue, 27 May 2014 08:28:52 +0200
+Message-ID: <538430A4.8020702@samsung.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
+ <20140526134153.GA2373@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140526134153.GA2373@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>, YoungJun Cho <yj44.cho@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+Hi Thierry,
 
-Add "power-source" property to generic options used for DT parsing files.
-This  enables drivers, which use generic pin configurations, to get the
-value passed to this property.
+On 05/26/2014 03:41 PM, Thierry Reding wrote:
+> On Wed, May 21, 2014 at 01:43:05PM +0900, YoungJun Cho wrote:
+>> This patch adds DT bindings for s6e3fa0 panel.
+>> The bindings describes panel resources, display timings and cpu mode timings.
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   45 ++++++++++++++++++++
+>>  1 file changed, 45 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+> You're totally confusing me here. Half of this patch series is about
+> adding i80 support to Exynos FIMD, and then you go and add what is
+> apparently a DSI peripheral driver here that's supposed to be used by
+> this new i80 support. Nothing I've been able to dig up indicates that
+> i80 or DSI are in anyway related.
 
-Signed-off-by: Ivan T. Ivanov <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
----
- Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt | 1 +
- drivers/pinctrl/pinconf-generic.c                              | 1 +
- 2 files changed, 2 insertions(+)
+FIMD can produce parallel RGB output or command mode in i80 style output
+via parallel lines.
+DSIM can accept parallel RGB stream in this case it produces MIPI DSI
+video mode signal or it can accept i80 and in this case it translates it
+to MIPI DSI command mode.
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-index 4414163..fa40a17 100644
---- a/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-@@ -156,6 +156,7 @@ input-disable		- disable input on pin (no effect on output)
- input-schmitt-enable	- enable schmitt-trigger mode
- input-schmitt-disable	- disable schmitt-trigger mode
- input-debounce		- debounce mode with debound time X
-+power-source		- select between different power supplies
- low-power-enable	- enable low power mode
- low-power-disable	- disable low power mode
- output-low		- set the pin to output mode with low level
-diff --git a/drivers/pinctrl/pinconf-generic.c b/drivers/pinctrl/pinconf-generic.c
-index 3d9a999..c7ead91 100644
---- a/drivers/pinctrl/pinconf-generic.c
-+++ b/drivers/pinctrl/pinconf-generic.c
-@@ -166,6 +166,7 @@ static struct pinconf_generic_dt_params dt_params[] = {
- 	{ "input-schmitt-enable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 1 },
- 	{ "input-schmitt-disable", PIN_CONFIG_INPUT_SCHMITT_ENABLE, 0 },
- 	{ "input-debounce", PIN_CONFIG_INPUT_DEBOUNCE, 0 },
-+	{ "power-source", PIN_CONFIG_POWER_SOURCE, 0 },
- 	{ "low-power-enable", PIN_CONFIG_LOW_POWER_MODE, 1 },
- 	{ "low-power-disable", PIN_CONFIG_LOW_POWER_MODE, 0 },
- 	{ "output-low", PIN_CONFIG_OUTPUT, 0, },
---
-1.8.3.2
+Regards
+Andrzej
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+> Even the Exynos DSI Master bindings[0] say that these two are not at all
+> the same thing:
+>
+> 	port node:
+> 	    - reg: (required) can be 0 for input RGB/I80 port or 1 for
+> 	      DSI port;
+>
+> Am I missing something here?
+
+>
+> Thierry
+>
+> [0]: https://www.kernel.org/doc/Documentation/devicetree/bindings/video/exynos_dsim.txt
