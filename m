@@ -1,83 +1,50 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 03/22] clk: sunxi: add "pll6" to sun6i protected clock
- list
-Date: Tue, 27 May 2014 10:32:01 +0200
-Message-ID: <20140527083201.GF4730@lukather>
-References: <1400831485-28576-1-git-send-email-wens@csie.org>
- <1400831485-28576-4-git-send-email-wens@csie.org>
- <20140525184808.GP10768@lukather>
- <CAGb2v643UmK6GfuDVfywVUeo_g7FpdZC_7SgeY-UMZ_k_-2N9Q@mail.gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH 01/11] pinctrl: sunxi: create irq/pin
+ mapping during init
+Date: Tue, 27 May 2014 16:35:03 +0800
+Message-ID: <CAGb2v66MB79bxhYq=iQy75OZ9KxtjocY+tVxZPN1NoVhPe=edQ@mail.gmail.com>
+References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
+ <1401090486-4414-2-git-send-email-hdegoede@redhat.com> <20140527080257.GA4730@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="E7i4zwmWs5DOuDSH"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v643UmK6GfuDVfywVUeo_g7FpdZC_7SgeY-UMZ_k_-2N9Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, linux-serial@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBTE4SGOAKGQEDIKSJ5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140527080257.GA4730@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 27, 2014 at 4:02 PM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> Hi,
+>
+> On Mon, May 26, 2014 at 09:47:56AM +0200, Hans de Goede wrote:
+>> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>>
+>> The irq/pin mapping is used to lookup the pin to mux to the irq
+>> function when the irq is enabled. It is created when gpio_to_irq
+>> is called. Creating the mapping during init allows us to map the
+>> interrupts directly from the device tree.
+>
+> Can you be a bit more precise on this?
+>
+> What is the issue that this patch fix?
 
---E7i4zwmWs5DOuDSH
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+IIRC, originally the IRQ to pin mapping was created when gpio_to_irq
+was called with a GPIO handle. The mapping in turn is used to mux
+the pin into EINT mode.
 
-On Mon, May 26, 2014 at 12:47:30PM +0800, Chen-Yu Tsai wrote:
-> On Mon, May 26, 2014 at 2:48 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Fri, May 23, 2014 at 03:51:06PM +0800, Chen-Yu Tsai wrote:
-> >> PLL6 is used by some important but undocumented module, most likely
-> >> memory related, such as mbus or the actual memory controller. As we
-> >> do not have a driver for that, add pll6 to the list of protected
-> >> clocks, so that it won't be disabled and leave us with a non-responsive
-> >> system.
-> >
-> > What issue have you seen?
->=20
-> Completely unresponsive after PLL6 is gated (on the A23).
->=20
-> > The system actually works pretty great on the A31.
->=20
-> Does it work when there aren't any other PLL6 consumers?
+If the mapping is created during gpio_to_irq, we can't use the
+interrupts directly, i.e. through the DT with "interrupts = <&pio A 4>".
 
-Yes.
+Instead we'd have to use "gpios = <&pio A B>", then pass the gpio
+through to gpio_to_irq.
 
-> Maybe the boot0 on A31 and A23 setup some DRAM-related modules differentl=
-y.
->=20
-> If the A31 works without protecting PLL6, I'll add a separate list
-> for the A23.
 
-Thanks!
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---E7i4zwmWs5DOuDSH
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJThE2BAAoJEBx+YmzsjxAg+y0P/jrK8t/KVps0omNNRHN/Cqr7
-17LCuGScPMDQXDywyMlysR9Ndb2WvKjmHIDKDfvylgfvAxmARXYLYb8ifDZoaWZd
-w4WiXXvw5YHs/+0GBXlH+/I04TE3/SVJiLtbcHGak0HzmP65SkIhWMKB7dl5zRnq
-bkiKrBQs2NA7ot3BZpp0mcVGy4RIdaUChy//S+Hfi/mWVNBCGzqVJ6dFMhDjpSj7
-fqZ2xiE2k+zryLZM3XEm2Vi2E1GE/gSOb+5dD8K+6HA2miapfmL5afVUfLZZPIRI
-NeENCztft8JzxkhB/BaaBK8Bq1aOZo0Txh4voU40opZFRdwRRZbJGS4coC3IAZQv
-qHRQ4iyou3EchtZi0ggOroGZXAvfZlWdsFst2XWa1MYDANB9LL8nV+PKongmCGft
-SVHxfi9KRcZUFtneoX7TkQGwT6iHU5LAv+2xJTAceGRz76tc9TLlbCEoaunzZobp
-cbEh9mLPfABWTDdHUCN9OlfrhfOiIDN4ve3iBv58y1gFx95ztQDjlDGuc1vhjcsV
-p9iTMIbUiR6DZEMhVjIFC93DbQD4wBYoI/NaxSxwTXP9MA5vzBYM6Ye6Vg4equQ2
-yiCXQkqQ12dTT0Y29JxZ/RJbxCAMGukDclZPvLYOqXji8VQYxo78RuTbnWe3djDe
-/klXg6kVmbbperVCc2nZ
-=eu7F
------END PGP SIGNATURE-----
-
---E7i4zwmWs5DOuDSH--
+ChenYu
