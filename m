@@ -1,29 +1,28 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCHv2 3/3] ARM: dts: replace the broken-cd property into slot
- node for dwmmc.
-Date: Tue, 27 May 2014 12:38:01 +0200
-Message-ID: <CAPDyKFp_aKQNah=GTjXiWOFmjeTj+cNw1f7bj__8W7wj4Q8a_g@mail.gmail.com>
-References: <1401104107-17651-1-git-send-email-jh80.chung@samsung.com>
-	<1401104107-17651-4-git-send-email-jh80.chung@samsung.com>
-	<002f01cf7990$fb20b530$f1621f90$%jun@samsung.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 5/5] arm: exynos: Add MCPM call-back functions
+Date: Tue, 27 May 2014 13:07:56 +0200
+Message-ID: <201405271307.56729.arnd@arndb.de>
+References: <1399307221-8659-1-git-send-email-a.kesavan@samsung.com> <1399307221-8659-6-git-send-email-a.kesavan@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <002f01cf7990$fb20b530$f1621f90$%jun@samsung.com>
+In-Reply-To: <1399307221-8659-6-git-send-email-a.kesavan@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ludovic Desroches <ludovic.desroches@atmel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, cpgs@samsung.com
+To: Abhilash Kesavan <a.kesavan@samsung.com>
+Cc: nicolas.pitre@linaro.org, Dave.Martin@arm.com, lorenzo.pieralisi@arm.com, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, abrestic@chromium.org, thomas.ab@samsung.com, inderpal.s@samsung.com, mark.rutland@arm.com, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org, will.deacon@arm.com, kesavan.abhilash@gmail.com, linux-samsung-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 27 May 2014 11:49, Seungwon Jeon <tgih.jun@samsung.com> wrote:
-> Can this be merged with your another patch, " [PATCH 2/5] mmc: dw_mmc: remove the "supports-highspeed" property."?
+On Monday 05 May 2014, Abhilash Kesavan wrote:
+> +static const struct mcpm_platform_ops exynos_power_ops = {
+> +       .power_up               = exynos_power_up,
+> +       .power_down             = exynos_power_down,
+> +       .power_down_finish      = exynos_power_down_finish,
+> +};
 
-Normally devicetree people don't like us to remove DT bindings.
 
-In principle you need to support them forever once added. Still you
-should update the DTS files to use the new bindings and mark the old
-ones as deprecated in the documentation. I am not sure if this
-approach has changed though!?
+I'm getting a build error in linux-next because there is no .power_down_finish
+member in mcpm_platform_ops here.
 
-Kind regards
-Ulf Hansson
+	Arnd
