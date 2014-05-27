@@ -1,68 +1,60 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 0/7] mfd: twl4030-power: Enable off-idle configuration
- when booted with device tree
-Date: Tue, 27 May 2014 17:52:34 +0100
-Message-ID: <20140527165234.GF4227@lee--X1>
-References: <1400031250-29542-1-git-send-email-tony@atomide.com>
+From: Feng Kan <fkan@apm.com>
+Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
+Date: Tue, 27 May 2014 09:59:02 -0700
+Message-ID: <CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
+References: <1400263432-922-1-git-send-email-fkan@apm.com>
+	<1400263432-922-2-git-send-email-fkan@apm.com>
+	<CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
+	<CAL85gmDjVszNd3TB51BGa+78wEEZmJfBOLNKOpTEvMTGU2VdBA@mail.gmail.com>
+	<CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400031250-29542-1-git-send-email-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, patches <patches@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> Here's an updated set of patches to enable low-power idle modes
-> for some omap3 boards when booted with device tree.
->=20
-> This series when applied on top of the patches in tread              =
-                                                                       =
-                 =20
-> "[PATCH 00/11] Fixes for omap PM for making omap3 DT only",
-> or omap-for-v3.16/pm branch.
->=20
-> Lee, if these patches look OK to you, please feel free to=20
-> pick them, preferrably to the immutable branch you already
-> have set up so I can also merge them in to be able to have
-> things working in my branch properly for PM.
+On Tue, May 27, 2014 at 1:25 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+> On Wed, May 21, 2014 at 1:54 AM, Feng Kan <fkan@apm.com> wrote:
+>
+>> I see each bank as separate gpio chip. It is a simple way to
+>> abstract the banks since they can operate independently.
+>
+> I think they should also be separate devices, and separate nodes
+> in the device tree.
+>
+>> It also
+>> provided me a way to fix the sysfs gpio base number, regardless if
+>> a particular bank node is pulled out.
+>
+> The GPIO sysfs is unpredictable for this and many other
+> reasons and should not be relied upon.
+>
+>> This is also done in similar way
+>> in some other gpio drivers such as the dwapb gpio driver.
+>
+> I think the dwapb has it's registers mingled while your banks
+> seem to be separate chunks.
 
-Whoops, nearly forgot about this patchset.
+Thanks for the comments, I will fix these problems. Just some details
+in terms of the register layout. I will break out the gpio to separate
+device nodes as instructed, I will have to use the reg attribute to offset
+bank registers. Please let me know if it is acceptable.
 
-Tony, can you resend it with all your fix-ups please.  The 8< doesn't
-work well with my patch application 'system'.
+gfc_gpio_fl0              GFC42'h1701c00c
+gfc_gpio_fl0_mux      GFC42'h1701c010
+gfc_gpio_fl1              GFC42'h1701c018
+gfc_gpio_fl1_mux      GFC42'h1701c01c
+gfc_gpio_fl2              GFC42'h1701c024
+gfc_gpio_fl2_mux      GFC42'h1701c028
+gfc_gpio_fl0_od        GFC42'h1701c030
+gfc_gpio_fl1_od        GFC42'h1701c034
+gfc_gpio_fl2_od        GFC42'h1701c038
 
-> Tony Lindgren (7):
->   mfd: twl4030-power: Fix hang on reboot if sleep configuration was
->     loaded earlier
->   mfd: twl4030-power: Fix some defines for SW_EVENTS
->   mfd: twl4030-power: Add generic reset configuration
->   mfd: twl4030-power: Add recommended idle configuration
->   mfd: twl4030-power: Add support for board specific configuration
->   mfd: twl4030power: Add a configuration to turn off oscillator durin=
-g
->     off-idle
->   ARM: dts: Enable twl4030 off-idle configuration for selected omaps
->=20
->  .../devicetree/bindings/mfd/twl4030-power.txt      |  17 +-
->  arch/arm/boot/dts/omap3-beagle-xm.dts              |   6 +
->  arch/arm/boot/dts/omap3-evm-common.dtsi            |   7 +
->  arch/arm/boot/dts/omap3-n900.dts                   |   5 +
->  drivers/mfd/twl4030-power.c                        | 269 +++++++++++=
-++++++++--
->  include/linux/i2c/twl.h                            |   4 +
->  6 files changed, 284 insertions(+), 24 deletions(-)
->=20
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+>
+> Yours,
+> Linus Walleij
