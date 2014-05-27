@@ -1,43 +1,69 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of: handle NULL node in of_get_next_available_child
-Date: Tue, 27 May 2014 21:17:11 +0100
-Message-ID: <20140527201711.553B8C40BD2@trevor.secretlab.ca>
-References: <1400874192-29400-1-git-send-email-f.fainelli@gmail.com>
-	<20140527111930.696AAC4156C@trevor.secretlab.ca>
-	<CAGVrzcYKCGXbOR1FRaOLxjPeaFEq6skgUvG_i4nqGSdJBUZRqQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGVrzcYKCGXbOR1FRaOLxjPeaFEq6skgUvG_i4nqGSdJBUZRqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Tarek Dakhran <t.dakhran@gmail.com>
+Subject: Re: [PATCH v11 0/3] Exynos 5410 support
+Date: Wed, 28 May 2014 00:17:51 +0400
+Message-ID: <CANhyOUcGTbbQLxYWsAZG00ENSDa4pj+MP2i7Rx=PfyqN1CY6WQ@mail.gmail.com>
+References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
+	<7hr43f9mmn.fsf@paris.lan>
+	<7hd2ez9kvr.fsf@paris.lan>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <7hd2ez9kvr.fsf@paris.lan>
+Sender: linux-doc-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Tarek Dakhran <t.dakhran@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infrad>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 May 2014 10:36:10 -0700, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Hi Grant,
-> 
-> 2014-05-27 4:19 GMT-07:00 Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
-> > On Fri, 23 May 2014 12:43:11 -0700, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> Add an early check for the node argument in
-> >> of_get_next_available_child() to avoid dereferencing a NULL node pointer
-> >> a few lines after.
-> >>
-> >> CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >
-> > Is there a bug that exposed this path?
-> 
-> Daniel sent a patch recently [1] which makes us call
-> for_each_available_child_of_node() on a potentially NULL node
-> argument.
+Hi,
 
-And yet in your reply to that patch you argued that the NULL check
-should be in the caller!
+On Tue, May 27, 2014 at 9:44 PM, Kevin Hilman <khilman@linaro.org> wrote:
+> Kevin Hilman <khilman@linaro.org> writes:
+>
+>> Tarek Dakhran <t.dakhran@samsung.com> writes:
+>>
+>>> The series of patches represent support of Exynos 5410 SoC
+>>>
+>>> The Exynos 5410 is the first Samsung SoC based on big.LITTLE architecture
+>>>
+>>> Patches add new platform description, support of clock controller and device
+>>> tree for Exynos 5410.
+>>>
+>>> Has been build on Samsung Linux Kernel
+>>>   (branch: for-next, commit: 97eae6c Merge branch 'v3.16-next/multiplatform' into for-next)
+>>>
+>>> Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig)
+>>>                  2) Exynos 5410 reference board (multi_v7_defconfig)
+>>>                  3) Odroid-XU board (exynos_defconfig)
+>>>                  4) Odroid-XU board (multi_v7_defconfig)
+>>
+>> Tested-by: Kevin Hilman <khilman@linaro.org>
+>>
+>> FYI, I boot tested this on an odroid-xu (exynos_defconfig and
+>> multi_v7_defconfig.)
+>
+> Oops, I may have spoke to soon.  There seem to be some problems with
+> multi_v7_defconfig.
+>
+> Applying this series directly on the commit mentioned above and testing,
+> it works just fine using multi_v7_defconfig.
 
-Anyway, this isn't a big deal. Post a patch fixing both and I'll apply
-it.
+Thank you for testing.
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> However, if I directly test the current contents of the samsung for-next
+> branch (where this series has been merged) it no longer boots on the
+> odroid-xu.
+> A quick diff shows that there are some other changes to
+> multi_v7_defconfig in the samsung/for-next branch that may be causing
+> problems here.
+
+Yes. Right you are. There is no ARCH_EXYNOS defined in multi_v7_defconfig
+at current state (branch: for-next commit: ca610da Merge branch
+'v3.16-next/dt-samsung-3' into for-next).
+So booting kernel on 5410 SoC is not possible with multi_v7_defconfig.
+Please use exynos_defconfig.
+
+>
+> Kevin
+
+Best regards,
+     Tarek
