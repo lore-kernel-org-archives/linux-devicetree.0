@@ -1,56 +1,91 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: Re: [PATCH 01/11] pinctrl: sunxi: create irq/pin
- mapping during init
-Date: Tue, 27 May 2014 22:21:04 +0800
-Message-ID: <CAGb2v65NW61+BV2hR3wn_xRvCyPo+AhcMU7hmFjQxKWj49G=Bw@mail.gmail.com>
-References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
- <1401090486-4414-2-git-send-email-hdegoede@redhat.com> <CACRpkdZpy2aT_kFp01bnrviVB3SOggiNUJB46wbWAY_bqW8=gg@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
+Date: Tue, 27 May 2014 23:24:49 +0900
+Message-ID: <CAAQKjZOGLPoGbZ7G3+BFd3ydRC2HGmz8JKqFiytdSvxN3T5U_w@mail.gmail.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
+ <20140526134153.GA2373@ulmo> <538430A4.8020702@samsung.com>
+ <20140527075328.GA13081@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBZN6SKOAKGQEDQY7W6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CACRpkdZpy2aT_kFp01bnrviVB3SOggiNUJB46wbWAY_bqW8=gg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140527075328.GA13081@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, Andrzej Hajda <a.hajda@samsung.com>, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 10:11 PM, Linus Walleij
-<linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Mon, May 26, 2014 at 9:47 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->
->> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+2014-05-27 16:53 GMT+09:00 Thierry Reding <thierry.reding@gmail.com>:
+> On Tue, May 27, 2014 at 08:28:52AM +0200, Andrzej Hajda wrote:
+>> Hi Thierry,
 >>
->> The irq/pin mapping is used to lookup the pin to mux to the irq
->> function when the irq is enabled. It is created when gpio_to_irq
->> is called. Creating the mapping during init allows us to map the
->> interrupts directly from the device tree.
+>> On 05/26/2014 03:41 PM, Thierry Reding wrote:
+>> > On Wed, May 21, 2014 at 01:43:05PM +0900, YoungJun Cho wrote:
+>> >> This patch adds DT bindings for s6e3fa0 panel.
+>> >> The bindings describes panel resources, display timings and cpu mode timings.
+>> >>
+>> >> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> >> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> >> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> >> ---
+>> >>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   45 ++++++++++++++++++++
+>> >>  1 file changed, 45 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/panel/samsung,s6e3fa0.txt
+>> > You're totally confusing me here. Half of this patch series is about
+>> > adding i80 support to Exynos FIMD, and then you go and add what is
+>> > apparently a DSI peripheral driver here that's supposed to be used by
+>> > this new i80 support. Nothing I've been able to dig up indicates that
+>> > i80 or DSI are in anyway related.
 >>
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> FIMD can produce parallel RGB output or command mode in i80 style output
+>> via parallel lines.
+>> DSIM can accept parallel RGB stream in this case it produces MIPI DSI
+>> video mode signal or it can accept i80 and in this case it translates it
+>> to MIPI DSI command mode.
 >
-> This is exactly correct. Patch applied.
+> Then the command mode timings aren't a property of the panel at all.
 
-Thanks.
+Then the video mode timings aren't also a property of the panel.
 
-> I tried to hack the sunxi driver to even use the gpiolib
-> irqchip helpers but exactly this complex map thing in
-> ->irq_array[] git me stuck. If any of you guys could be so
-> nice to take a stab at this (compare to other commits
-> converting drivers to use gpiolibs irqchip helpers) then
-> I'd be very happy.
+Which interface mipi and display controller should use would be
+decided by lcd panel type: display controller can use i80 interface
+based lcd panel, and also mipi controller can use i80 interface based
+lcd panel.
+In here, the only difference is that lcd panel receives  packets,
+which includes video data or command data, packed with mipi protocol
+via lane lines or receives video data or command data via parallel
+lines.
 
-We still need to rework the whole irqchip stuff for sun6i/sun8i,
-which have 1 parent interrupt per EINT capable pin bank.
+And the below is LCD types,
+        RGB interface panel.
+        i80 interface panel.
+        MIPI based RGB interface panel.
+        MIPI based i80 interface panel.
 
-Earlier discussions with Maxime (on IRC IIRC) suggested moving this
-over to gpiolib irqchip helpers might be more work than using our own
-irqchip implementation, requiring 1 gpiochip per pin group? (not sure)
+RGB interface also is called video mode, and i80 interface also is
+called cpu mode. In case of omap SoC, it is also called Smart panel.
+i80 interface is just one of LCD types. So I think this interface
+timings should be handled by frameworks related to mode in same way as
+RGB interface.
 
+Thanks,
+Inki Dae
 
-ChenYu
+> They describe what DSIM expects, so that's where they should be defined.
+>
+> Thierry
+>
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+>
