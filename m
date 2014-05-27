@@ -1,49 +1,125 @@
-From: "John W. Linville" <linville@tuxdriver.com>
-Subject: Re: [PATCH 00/11] sdio wifi oob irq support for sunxi
-Date: Tue, 27 May 2014 11:26:14 -0400
-Message-ID: <20140527152614.GB5694@tuxdriver.com>
-References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Tue, 27 May 2014 18:38:16 +0300
+Message-ID: <A3545211-63A4-4ED7-9B98-0715A096F01E@konsulko.com>
+References: <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com> <20140526104824.63F13C42129@trevor.secretlab.ca> <CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com> <20140526112348.907B7C421A5@trevor.secretlab.ca> <A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com> <20140526213303.C1C73C40E11@trevor.secretlab.ca> <20140526223630.GA32691@earth.universe> <5383D174.8070304@roeck-us.net> <20140527121236.3B818C40A5A@trevor.secretlab.ca> <9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com> <20140527152115.GA30180@roeck-us.net>
+Mime-Version: 1.0 (Apple Message framework v1085)
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, Arend van Spriel <arend@broadcom.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, linux-wireless@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-sunxi@googlegroups.com
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140527152115.GA30180@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Sebastian Reichel <sre@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@ko>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 26, 2014 at 09:47:55AM +0200, Hans de Goede wrote:
-> Hi All,
-> 
-> Here is a patch series adding support for oob irqs for the ap6210 sdio wifi
-> modules found on various Allwinner A20 boards.
-> 
-> A lot of it is ground work which should be useful for adding oob irq support
-> to other sdio wifi models too.
-> 
-> The first 5 patches are sunxi pinctrl patches and should go upstream through
-> the pinctrl tree.
-> 
-> Patch 6 adds generic support for having per sdio function child nodes in
-> devicetree and should go upstream through the mmc tree.
-> 
-> Patch 7 and 8 add oob irq support to the brcmfmac driver. Patch 9 pokes some
-> magic bits needed to enable the oob irq, this was taken from an android code
-> dump and good do with a good review from someone from Broadcom, Arend ?
+Hi Guenter,
 
-If Arend approves, I'm fine with these going through another appropriate tree.
+On May 27, 2014, at 6:21 PM, Guenter Roeck wrote:
 
-> Patch 10 and 11 add the necessary dts bits to actually enable the sdio irq
-> and should go upstream through Maxime's dt tree.
+> On Tue, May 27, 2014 at 03:24:35PM +0300, Pantelis Antoniou wrote:
+>> Hi Grant,
+>> 
+>> On May 27, 2014, at 3:12 PM, Grant Likely wrote:
+>> 
+>>> On Mon, 26 May 2014 16:42:44 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+>>>> On 05/26/2014 03:36 PM, Sebastian Reichel wrote:
+>>>>> Hi,
+>>>>> 
+>>>>> On Mon, May 26, 2014 at 10:33:03PM +0100, Grant Likely wrote:
+>>>>>> After thinking about it more, I think it is very likely that removing
+>>>>>> all the overlays is the correct thing to do in the kexec use-case. When
+>>>>>> kexec-ing, it makes sense that we'd want the exact same behaviour from
+>>>>>> the kexec'ed kernel. That means we want the device drivers to do the
+>>>>>> same thing including loading whatever overlays they depend on.
+>>>>>> 
+>>>>>> If the flattened tree was left applied, then the behaviour becomes
+>>>>>> different.
+>>>>>> 
+>>>>>> I say always remove the overlays unless explicitly told not to, but I'm
+>>>>>> struggling to come up with use cases where keeping them applied is
+>>>>>> desirable.
+>>>>> 
+>>>>> I would assume, that I want them applied in most cases. DT describes
+>>>>> the hardware. If I kexec into a new kernel I change software, not
+>>>>> hardware.
+>>>>> 
+>>>>> Maybe I'm missing the main purpose of the feature. I currently see
+>>>>> two useful usecases for DT overlays:
+>>>>> 
+>>>>> 1. The dtb the kernel is booted with cannot be changed for some
+>>>>>   reason, but the board has additional hardware attached (e.g.
+>>>>>   the user added a sensor on the i2c bus)
+>>>>> 2. The hardware is changed on the fly (e.g. the user flashed the
+>>>>>   FPGA part of a zynq processor), sensors on i2c bus, ...
+>>>>> 
+>>>>> In both cases the kernel should be booted with the additional
+>>>>> overlay information IMHO. Though for the second case it should
+>>>>> be possible to remove the "programmed" hardware information
+>>>>> somehow.
+>>>>> 
+>>>> 
+>>>> 3. Some hot-plug device or card is inserted or removed.
+>>>> 
+>>>> I would argue that the kernel should _not_ be booted with the overlay in place.
+>>>> Otherwise the code handling overlays would have to have special handling
+>>>> for the restart case, which is much more complex than just to re-insert
+>>>> the overlay when it is determined that the device or card is still there.
+>>> 
+>>> Exactly.
+>>> 
+>> 
+>> Looks like we are levitating to the 'remove overlays on kexec' approach.
+>> Is that correct?
+>> 
 > 
-> Please review / merge.
+> Let's just assume for a minute that this is not the case, and that loaded
+> overlays are passed on.
 > 
-> Thanks & Regards,
+> This would be an interesting challenge for the overlay manager, as it would
+> have to handle a number of startup conditions. After all, it can not take
+> it as granted that the hardware state did not change after it was stopped
+> in the old kernel, and before it was started in the new kernel.
+> - overlay loaded, but hardware/device no longer present
+>  -> unload overlay
+> - overlay loaded, but different hardware present
+>  -> unload old overlay, load new one
+> - overlay not loaded, hardware present
+>  -> load overlay
+> - overlay loaded and matches hardware
+>  -> do nothing
 > 
-> Hans
+> In comparison, its task would be quite straightforward if loaded overlays
+> are not passed on to the new kernel.
+> - If hardware is present, load overlay
 > 
 
--- 
-John W. Linville		Someday the world will need a hero, and you
-linville@tuxdriver.com			might be all we have.  Be ready.
+Yeah, exactly. The only case where having the applied overlays present on the 
+kexec-ed kernel is either some kind of virtualization environment, or an fpga
+that takes an awful lot amount of time to re-initializa.
+
+> Ultimately, I seem to be missing something, as I don't really see the benefit
+> of passing on the loaded overlay(s) to the new kernel. Activation time, maybe,
+> for the most common case (overlay loaded and matches hardware) ?
+> 
+> Concern though is the other cases, with a mismatch between HW and loaded
+> overlays. I am not sure if it is even possible to ensure that there are
+> no race conditions if the devicetree is outdated at system startup. Sure,
+> that is unlikely to happen in 'normal' operating conditions, but that only
+> means that it _will_ happen a few hours after the first customer starts
+> playing with the system.
+> 
+
+I concur. Accidents will happen, and if it's not a tightly controlled system
+breakage is guaranteed.
+
+> Guenter
+
+Regards
+
+-- Pantelis
+
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
