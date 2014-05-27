@@ -1,90 +1,205 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
- device tree
-Date: Tue, 27 May 2014 11:55:35 -0700
-Message-ID: <20140527185535.GB27420@quad.lixom.net>
-References: <20140525123452.GS22111@sirena.org.uk>
- <53824294.1090609@redhat.com>
- <20140526103807.GV22111@sirena.org.uk>
- <538321AB.4050006@redhat.com>
- <20140526142225.GF22111@sirena.org.uk>
- <538356DA.7090302@redhat.com>
- <CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
- <53838023.2080807@redhat.com>
- <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
- <20140527175326.GZ12304@sirena.org.uk>
+From: Alan Tull <delicious.quinoa@gmail.com>
+Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
+Date: Tue, 27 May 2014 14:12:17 -0500
+Message-ID: <CANk1AXTMHuWeaxn_hVi+AH=aXbbSNov=894YmSYfvfvpWM+eSg@mail.gmail.com>
+References: <1400169891-29546-1-git-send-email-tthayer@altera.com>
+	<1400169891-29546-2-git-send-email-tthayer@altera.com>
+	<20140516075344.GF949@pengutronix.de>
+	<CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
+	<20140519191206.GH949@pengutronix.de>
+	<CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
+	<CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
+	<20140520144446.GJ949@pengutronix.de>
+	<CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
+	<20140527071157.GC20695@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140527175326.GZ12304@sirena.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140527071157.GC20695@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: Thor Thayer <tthayer.linux@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 06:53:26PM +0100, Mark Brown wrote:
-> On Tue, May 27, 2014 at 03:50:33PM +0200, Ulf Hansson wrote:
-> 
-> > To describe the HW in DT, the embedded SDIO card (actually it could be
-> > any type of embedded card) shall be modelled as a child node to the
-> > mmc host in DT. Similar to what you have proposed, but with the
-> > difference that the child node _must_ contain a DT compatible string,
-> > which means a "powerup-driver" can be probed.
-> 
-> > Yes, I understand we might need one DT compatible string per board,
-> > but that's because we need to model the hardware - and it differs.
-> 
-> > To clarify my view, we do need a "powerup-driver" and the primary
-> > reason is that we must not model "power up sequences" within DT.
-> > Typically I see the "powerup-driver" as a simple platform driver
-> > attached to the platform bus, but I that could of course differ.
-> 
-> This then either conflicts with cases where we need to describe the
-> actual contents of the slot with a compatible string or means that the
-> SDIO driver needs to handle powerup sequencing since we should be
-> binding to the first compatible we find.  If the host controller driver
-> and/or subsystem is going to deal with the powering up it's not clear
-> that it specifically needs to be the compatible property that's used
-> to determine the powerup method, it could just be a boolean or a
-> 'power-method = blah' property (where blah is one of a series of strings
-> defining methods).  Alternatively we could have separate nodes for the
-> slot and SDIO device but that feels meh.  What's the hard requirement
-> for it to specifically be a compatible property?
+On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
+<s.trumtrar@pengutronix.de> wrote:
+> On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
+>> On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
+>> <s.trumtrar@pengutronix.de> wrote:
+>> > Hi!
+>> >
+>> > On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
+>> >> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+>> >>
+>> >> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+>> >> >>> >> new file mode 100644
+>> >> >>> >> index 0000000..8f8746b
+>> >> >>> >> --- /dev/null
+>> >> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+>> >> >>> >> @@ -0,0 +1,11 @@
+>> >> >>> >> +Altera SOCFPGA SDRAM Controller
+>> >> >>> >> +
+>> >> >>> >> +Required properties:
+>> >> >>> >> +- compatible : "altr,sdr-ctl";
+>> >> >>> >> +- reg : Should contain 1 register ranges(address and length)
+>> >> >>> >> +
+>> >> >>> >> +Example:
+>> >> >>> >> +     sdrctl@ffc25000 {
+>> >> >>> >> +             compatible = "altr,sdr-ctl";
+>> >> >>> >> +             reg = <0xffc25000 0x1000>;
+>> >> >>> >> +     };
+>> >> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> >> index df43702..6ce912e 100644
+>> >> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+>> >> >>> >> @@ -676,6 +676,11 @@
+>> >> >>> >>                       clocks = <&l4_sp_clk>;
+>> >> >>> >>               };
+>> >> >>> >>
+>> >> >>> >> +             sdrctl@ffc25000 {
+>> >> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
+>> >> >>> >                                                    ^^^^^^^^^^
+>> >> >>> >
+>> >> >>> > Get rid of that, too, please.
+>> >> >>>
+>> >> >>> Hi Steffan,
+>> >> >>>
+>> >> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
+>> >> >>> that has the ECC enable bitfield also includes the DRAM configuration
+>> >> >>> bitfields that other drivers will want to access (specifically the
+>> >> >>> FPGA bridge needs this information). Since this register will be
+>> >> >>> shared between drivers,  syscon seems like the best solution.
+>> >> >>>
+>> >> >>
+>> >> >> Hm, from looking at the documentation of the ctrlcfg I can't really
+>> >> >> understand which bits you would need for the FPGA brigde and why.
+>> >>
+>> >> Hi Steffen,
+>> >>
+>> >> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
+>> >> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
+>> >> allows an FPGA port to come out of reset (enables that port).  Has no
+>> >> other effect on SDRAM configuration.
+>> >>
+>> >> >> That all sounds like stuff you would want to set for the specific
+>> >> >> RAM you are dealing with on a specific board.
+>> >> >> What bridge are you talking about? The SDRAM bridge?
+>> >>
+>> >> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
+>> >> register the only register in the sdr that the bridge driver needs.
+>> >>
+>> >
+>> > So, what I suggested down ...
+>> >
+>> >> >>
+>> >> >> I can see the problem with the ECC enable, though.
+>> >> >>
+>> >> >> Regards,
+>> >> >> Steffen
+>> >> >>
+>> >> >
+>> >> >>> >                 sdrctl@ffc25000 {
+>> >> >>> >                         compatible = "altr,sdr-ctl";
+>> >> >>> >                         reg = <0xffc25000 0x1000>;
+>> >> >>> >                         ranges;
+>> >> >>> >
+>> >> >>> >                         edac@ffc2502c {
+>> >> >>> >                                 compatible = "altr,sdram-edac";
+>> >> >>> >                                 reg = <0xffc2502c 0x50>;
+>> >> >>> >                                 interrupts = <0 39 4>;
+>> >> >>> >                         };
+>> >> >>> >                 };
+>> >> >>> >
+>> >> >>> > Then we can later add:
+>> >> >>> >
+>> >> >>> >                         sdr-ports: ports@ffc2507c {
+>> >> >>> >                                 #reset-cells = <1>;
+>> >> >>> >                                 compatible = "altr,sdr-ports";
+>> >> >>> >                                 reg = <0xffc2507c 0x10>;
+>> >> >>> >                                 clocks = <&ddr_dqs_clk>;
+>> >> >>> >                                 ...
+>> >> >>> >                         };
+>> >>
+>> >
+>> > ... here should work. No?! Just a simple driver that registers with the
+>> > reset-framework. I would add 0x7c to that driver and than that driver could
+>> > "configure" the port and let it out of reset.
+>> >
+>> > I have done the same thing for the other 3 bridges, but am not finished yet.
+>> > Especially the GPV-stuff needs to at least be able to be added later if not now.
+>> >
+>
+> Hi Thor!
+>
+>> I'm not clear on how the EDAC driver will interact with the registers
+>> allocated to the SDRAM controller. If the group of registers from
+>> 0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
+>> controller, how does the EDAC driver cleanly access that single
+>> register inside this range?
+>>
+>
+> The compatible in the example is wrong. I didn't mean to map the whole address space
+> to some driver.
+> I think for the configuration register syscon is the right approach. It is a
+> bag of bits that don't necessitate an own driver, so syscon is perfect.
+>
+> So, let me change my proposal to
+>
+>         sdr-ctl: sdram@ffc25000 {
+>                 compatible = "altr,sdr-ctl", "syscon";
+>                 reg = <0xffc25000 0x1>;
+>         };
+>
+>         edac: edac@ffc2502c {
+>                 compatible = "altr,sdram-edac";
+>                 reg = <0xffc2502c 0x50>;
+>                 interrupts = <0 39 4>;
+>                 config = <&sdr-ctl>;
+>                 ...
+>         };
+>
+>         sdr-ports: ports@ffc2507c {
+>                 compatible = "altr,sdr-ports";
+>                 reg = <0xffc2507c 0x10>;
+>                 clocks = <&ddr_dqs_clk>;
+>                 ...
+>         };
+>
+> Maybe we can just skip the outer node that combines all the others.
+> So, if we do it like that, you can still use syscon, but only for the register
+> that needs it. And the EDAC definitely needs access to the config register, so
+> all is good.
+>
+>> Is the solution that I don't use request_region() (and therefore not
+>> request exclusive access) when setting up the SDRAM controller?
+>>
+>> If you could point me to your drivers for the other bridges that you
+>> reference, your code may answer my question.
+>>
+>
+> The other bridges don't need access to any SDRAM controller registers and
+> I haven't even started to implement the GPV-stuff with the lw2hps-bridge :-(
+>
+> Regards,
+> Steffen
+>
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 
-+1. Just because we have a subnode in a device tree, we don't have to have
-a driver bind against it. The MMC core code could go down into the subnodes,
-find a "power-method = <foo>" property and go ahead and parse the rest of it.
-There's no requirement that we do this through the Linux driver model of
-probe(), etc.
+OK now I understand.  For register offset 0x0, that's all stuff set up
+in the bootloader.  We won't be touching that register except for the
+EDAC.  So syscon isn't needed here.
 
-> > The slot will be the first level of child node under the mmc host,
-> > then each slot may have a child node which models the embedded card.
-> > But, let's leave that discussion for now. :-)
-> 
-> OK, that's the separate node for the slot and device.
-> 
-> > Powerup driver's ->probe():
-> > Typically the "powerup driver" will need to register a few callback
-> > functions towards the mmc core. Typically at mmc_of_parse(), those
-> > callbacks will have to be connected to a particular mmc host.
-> 
-> > I would like to see three different callbacks, mirroring each of the
-> > mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
-> 
-> > The power up sequence, performed by the mmc core:
-> > The mmc_power_up|off functions, will invoke the registered "powerup
-> > driver's" callbacks if they exists for the particular host it operates
-> > on.
-> 
-> There's also the need for the SDIO device to be able to get at the
-> resources provided and actively work with them at runtime if it wants to
-> manage things more actively (partial poweroff for low power states or
-> managing clock rates for example).
+Each driver that uses some sdr registers can specify which registers
+it uses in the device tree.  So far we don't have any cases of two
+drivers that share a register.
 
-Again, I think it gets overly complicated by using a full driver for the
-power management. Abstracted out into something separate and scalable
-as number of devices grow? Sure, definitely. As a driver? Not convinced.
+The ECC driver will need two ranges: offset 0x00 and 0x38 through 0x50.
+The fpga bridges just needs offset 0x80.
 
+Thanks for your feedback!
 
--Olof
+Alan
