@@ -1,63 +1,79 @@
-From: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/2] devicetree: Add Cadence WDT devicetree bindings documentation
-Date: Tue, 27 May 2014 15:48:15 +0530
-Message-ID: <1401185895-3677-2-git-send-email-harinik@xilinx.com>
-References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
+From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC V6 2/2] clk: Add handling of clk parent and rate assigned
+ from DT
+Date: Tue, 27 May 2014 15:58:05 +0530
+Message-ID: <538468B5.6090505@linaro.org>
+References: <1400520171-6698-1-git-send-email-s.nawrocki@samsung.com> <1400520171-6698-3-git-send-email-s.nawrocki@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401185895-3677-1-git-send-email-harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1400520171-6698-3-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org
-Cc: michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add cadence-wdt bindings documentation.
+On 05/19/2014 10:52 PM, Sylwester Nawrocki wrote:
+> This patch adds a helper function to configure clock parents and
+> rates as specified in clock-parents, clock-rates DT properties
+> for a consumer device and a call to it before driver is bound to
+> a device.
+> 
+> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Signed-off-by: Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
+[ ... ]
 
-v2:
-No changes
+> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+> index 5b47210..f622733 100644
+> --- a/drivers/base/platform.c
+> +++ b/drivers/base/platform.c
+> @@ -23,6 +23,7 @@
+>  #include <linux/pm_runtime.h>
+>  #include <linux/idr.h>
+>  #include <linux/acpi.h>
+> +#include <linux/clk/clk-conf.h>
+> 
+>  #include "base.h"
+>  #include "power/power.h"
+> @@ -486,6 +487,10 @@ static int platform_drv_probe(struct device *_dev)
+>  	struct platform_device *dev = to_platform_device(_dev);
+>  	int ret;
+> 
+> +	ret = of_clk_set_defaults(_dev->of_node, false);
+> +	if (ret < 0)
+> +		return ret;
+> +
 
----
- .../devicetree/bindings/watchdog/cadence-wdt.txt   |   26 ++++++++++++++++++++
- 1 file changed, 26 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+of_clk_set_defaults() is not getting called when the related driver is
+not registered through platform_driver_register().
 
-diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-new file mode 100644
-index 0000000..1f7a732
---- /dev/null
-+++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-@@ -0,0 +1,26 @@
-+Zynq Watchdog Device Tree Bindings
-+-------------------------------------------
-+
-+Required properties:
-+- compatible		: Should be "xlnx,zynq-wdt-r1p2" or "cdns,wdt-r1p2".
-+- clocks		: Clock phandles (see clock bindings for details).
-+- reg			: Physical base address and size of WDT registers map.
-+- interrupts		: Property with a value describing the interrupt
-+			  number.
-+- interrupt-parent	: Must be core interrupt controller.
-+
-+Optional properties
-+- reset			: Reset interrupt.
-+- timeout-sec		: Watchdog timeout value (in seconds).
-+
-+Example:
-+
-+		wdt@f8005000 {
-+			compatible = "xlnx,zynq-wdt-r1p2";
-+			clocks = <&clkc 45>;
-+			interrupt-parent = <&intc>;
-+			interrupts = <0 9 1>;
-+			reg = <0xf8005000 0x1000>;
-+			reset = <0>;
-+			timeout-sec = <10>;
-+		} ;
+I came across this issue while testing this patch on peach-pit board with
+following dts change. max98090 audio codec driver is registered through
+module_i2c_driver().
+
+* arch/arm/boot/dts/exynos5420-peach-pit.dts
+
+&hsi2c_7 {
+
+	status = "okay";
+
+	max98090: codec@10 {
+		compatible = "maxim,max98090";
+		reg = <0x10>;
+		interrupts = <2 0>;
+		interrupt-parent = <&gpx0>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&max98090_irq>;
++		clocks = <&pmu_system_controller 0>;
++		clock-names = "mclk";
++		clock-parents = <&clock CLK_FIN_PLL>;
++		clock-rates = <24000000>;
+	};
+};
+
 -- 
-1.7.9.5
-
+Tushar Behera
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
