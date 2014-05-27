@@ -1,80 +1,29 @@
-From: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH/RFC V6 2/2] clk: Add handling of clk parent and rate assigned
- from DT
-Date: Tue, 27 May 2014 15:58:05 +0530
-Message-ID: <538468B5.6090505@linaro.org>
-References: <1400520171-6698-1-git-send-email-s.nawrocki@samsung.com> <1400520171-6698-3-git-send-email-s.nawrocki@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCHv2 3/3] ARM: dts: replace the broken-cd property into slot
+ node for dwmmc.
+Date: Tue, 27 May 2014 12:38:01 +0200
+Message-ID: <CAPDyKFp_aKQNah=GTjXiWOFmjeTj+cNw1f7bj__8W7wj4Q8a_g@mail.gmail.com>
+References: <1401104107-17651-1-git-send-email-jh80.chung@samsung.com>
+	<1401104107-17651-4-git-send-email-jh80.chung@samsung.com>
+	<002f01cf7990$fb20b530$f1621f90$%jun@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400520171-6698-3-git-send-email-s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <002f01cf7990$fb20b530$f1621f90$%jun@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Seungwon Jeon <tgih.jun@samsung.com>, Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ludovic Desroches <ludovic.desroches@atmel.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On 05/19/2014 10:52 PM, Sylwester Nawrocki wrote:
-> This patch adds a helper function to configure clock parents and
-> rates as specified in clock-parents, clock-rates DT properties
-> for a consumer device and a call to it before driver is bound to
-> a device.
-> 
-> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+On 27 May 2014 11:49, Seungwon Jeon <tgih.jun@samsung.com> wrote:
+> Can this be merged with your another patch, " [PATCH 2/5] mmc: dw_mmc: remove the "supports-highspeed" property."?
 
-[ ... ]
+Normally devicetree people don't like us to remove DT bindings.
 
-> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-> index 5b47210..f622733 100644
-> --- a/drivers/base/platform.c
-> +++ b/drivers/base/platform.c
-> @@ -23,6 +23,7 @@
->  #include <linux/pm_runtime.h>
->  #include <linux/idr.h>
->  #include <linux/acpi.h>
-> +#include <linux/clk/clk-conf.h>
-> 
->  #include "base.h"
->  #include "power/power.h"
-> @@ -486,6 +487,10 @@ static int platform_drv_probe(struct device *_dev)
->  	struct platform_device *dev = to_platform_device(_dev);
->  	int ret;
-> 
-> +	ret = of_clk_set_defaults(_dev->of_node, false);
-> +	if (ret < 0)
-> +		return ret;
-> +
+In principle you need to support them forever once added. Still you
+should update the DTS files to use the new bindings and mark the old
+ones as deprecated in the documentation. I am not sure if this
+approach has changed though!?
 
-of_clk_set_defaults() is not getting called when the related driver is
-not registered through platform_driver_register().
-
-I came across this issue while testing this patch on peach-pit board with
-following dts change. max98090 audio codec driver is registered through
-module_i2c_driver().
-
-* arch/arm/boot/dts/exynos5420-peach-pit.dts
-
-&hsi2c_7 {
-
-	status = "okay";
-
-	max98090: codec@10 {
-		compatible = "maxim,max98090";
-		reg = <0x10>;
-		interrupts = <2 0>;
-		interrupt-parent = <&gpx0>;
-		pinctrl-names = "default";
-		pinctrl-0 = <&max98090_irq>;
-+		clocks = <&pmu_system_controller 0>;
-+		clock-names = "mclk";
-+		clock-parents = <&clock CLK_FIN_PLL>;
-+		clock-rates = <24000000>;
-	};
-};
-
--- 
-Tushar Behera
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Kind regards
+Ulf Hansson
