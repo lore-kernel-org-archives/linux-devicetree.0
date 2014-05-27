@@ -1,140 +1,57 @@
-From: Yadwinder Singh Brar <yadi.brar01@gmail.com>
-Subject: Re: [PATCH 2/3] regulator: s2mps11: Merge S2MPA01 driver
-Date: Tue, 27 May 2014 14:16:30 +0530
-Message-ID: <CAKew6eX7szcRPSOmW9S4-MVZQCALyFz=bjTuVmoVFmOtA0UJOQ@mail.gmail.com>
-References: <1401110423-5647-1-git-send-email-k.kozlowski@samsung.com>
-	<1401110423-5647-3-git-send-email-k.kozlowski@samsung.com>
-	<CAKew6eXdmif5-A+sb7-HEd3fP739RNy8SbzpCVRJ6uDgkyFvoQ@mail.gmail.com>
-	<1401177400.8073.16.camel@AMDC1943>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 03/11] pinctrl: sunxi: Move setting of mux
+ to irq type from unmask to set_type
+Date: Tue, 27 May 2014 11:01:03 +0200
+Message-ID: <5384544F.6000806@redhat.com>
+References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com> <1401090486-4414-4-git-send-email-hdegoede@redhat.com> <20140527080952.GC4730@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401177400.8073.16.camel@AMDC1943>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Sangbeom Kim <sbkim73@samsung.com>, Lee Jones <lee.jones@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBXFISGOAKGQEFWZSEYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140527080952.GC4730@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 1:26 PM, Krzysztof Kozlowski
-<k.kozlowski@samsung.com> wrote:
-> On wto, 2014-05-27 at 12:00 +0530, Yadwinder Singh Brar wrote:
->> On Mon, May 26, 2014 at 6:50 PM, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->> > Add S2MPA01 support to the s2mps11 regulator driver. This obsoletes the
->> > s2mpa01 regulator driver.
->> >
->> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->>
->> > @@ -216,30 +250,20 @@ static int s2mps11_set_ramp_delay(struct regulator_dev *rdev, int ramp_delay)
->> >                         ramp_delay = s2mps11->ramp_delay16;
->> >                 break;
->> >         case S2MPX_BUCK2:
->> > -               if (!ramp_delay) {
->> > -                       ramp_enable = 0;
->> > -                       break;
->> > -               }
->> > -
->>
->> What if we want to disable ramp_delay from DT ?
->
-> It will work OK because at the beginning of s2mps11_set_ramp_delay():
->         unsigned int ramp_disable = !ramp_delay;
-> This 'ramp_disable' is later used if enable/disable is supported.
->>
+Hi,
 
-Oh! I missed you defined a new variable "ramp_disable",
- since ramp_disable is already a label defined in same function.
-It should be different, i think.
+On 05/27/2014 10:09 AM, Maxime Ripard wrote:
+> On Mon, May 26, 2014 at 09:47:58AM +0200, Hans de Goede wrote:
+>> With level triggered interrupt mask / unmask will get called for each
+>> interrupt, doing the somewhat expensive mux setting on each unmask thus is
+>> not a good idea. Instead move it to the set_type callback, which is typically
+>> done only once for each irq.
+> 
+> *This* is the bad idea. Nothing prevents you from calling
+> gpio_get_value whenever you just got your interrupt, that will change
+> the muxing, and never change it back, effectively breaking the
+> interrupts.
 
->> > -               s2mps11->ramp_delay2 = ramp_delay;
->> > +               if (s2mps11->dev_type == S2MPS11X ||
->> > +                               ramp_delay > s2mps11->ramp_delay2)
->> > +                       s2mps11->ramp_delay2 = ramp_delay;
->> > +               else /* S2MPA01 && ramp_delay <= s2mpa01->ramp_delay24 */
->> > +                       ramp_delay = s2mps11->ramp_delay2;
->>
->> Here ramp_delay = 0(ramp_disable case) is also getting over written,
->> if required to take care of it later.
->
-> The same, it is already stored as 'ramp_disable' local variable.
->
->>
->> >                 break;
->> >         case S2MPX_BUCK3:
->> > -               if (!ramp_delay) {
->> > -                       ramp_enable = 0;
->> > -                       break;
->> > -               }
->>
->> [snip]
->>
->> >
->> > -       if (!ramp_enable)
->> > -               goto ramp_disable;
->> > -
->> > -       /* Ramp delay can be enabled/disabled only for buck[2346] */
->> >         if (ramp_reg->enable_supported) {
->> > +               if (ramp_disable)
->>
->> typo ?    if (!ramp_enable) / if (!ramp_delay) ?
->
-> I think it is good. I changed the 'ramp_enable' into 'ramp_disable'.
->
+Hmm, interesting point, but your assuming 2 things which are both not true:
 
-ok, but very next statement is
-             goto ramp_disable;
+1) That calling gpiod_get_value changes the muxing, which is not true, all
+gpiod_get_value variants end up in drivers/gpio/gpiolib.c _gpiod_get_raw_value()
+which does no such thing
 
-which seems odd and obfuscated me.
+2) That unmask will always get called after the gpio_get_value to restore the mux
+setting for us, which is not guaranteed at all. Before this patch set pinctrl-sunxi.c
+was using handle_simple_irq which does not mask / unmask at all.
 
-> Anyway while reviewing the code I found that I didn't updated the case
-> statements with new BUCKX enum values and the register for
-> enable/disable is hard-coded. I'll fix it.
->>
->> > +                       goto ramp_disable;
->> > +
->>
->>
->> Also TBH, I can't get rationale behind this merge, As i can't see
->> considerable reduction in no of C code lines in comp of added
->> complexity.
->>  Is there considerable advantage in binary stats of single driver as
->> compare to independent drivers?
->
-> Overall more code is removed than added:
-> 6 files changed, 454 insertions(+), 719 deletions(-)
-> but you are right that the code for ramp delay is now more complex. What
-> is worth noting now most of ramp delay settings are moved to an array:
->
-> static const struct s2mpx_ramp_reg s2mps11_ramp_regs[] = {
->         [S2MPX_BUCK1]   = s2mps11_ramp_reg(BUCK16),
->         [S2MPX_BUCK2]   = s2mps11_buck2346_ramp_reg(BUCK2, RAMP, BUCK2),
->         [S2MPX_BUCK3]   = s2mps11_buck2346_ramp_reg(BUCK34, RAMP, BUCK3)
->
-> instead of being hard-coded into the big switch statement like it was
-> before.
->
-> Alternative solution to complex ramp delay setting is to just use
-> original functions: s2mps11_set_ramp_delay and s2mpa01_set_ramp_delay.
->
-> These chips are really similar so having two drivers seems like doubling
-> the effort for maintaining them.
->
+And even with an irq-handler which masks / unmasks, what if the irq wakes up
+a thread and that thread then does the gpio_get_value ?
 
-I think maintaining a complex or a big file(in case we keep original
-functions), itself will be an effort consuming thing and moreover
-binary size of a single driver will also increase considerable as
-compare to independent drivers (if its not case of multiplatform
-kernel).
+Note this is *exactly* what e.g. the mmc gpio card-detect code does, it uses
+a thread to read the gpio for debouncing.
 
-Anyways, i think its matter of preference of all, It will be OK, if
-for others( especially maintainers, Mark ?), its OK.
+Luckily 2. is not a problem, since 1. means that the mux won't get changed at all
+so we don't need to change it back.
 
+Regards,
 
-Best Regards,
-Yadwinder
-
-> Thanks for comments.
->
-> Best regards,
-> Krzysztof
->
+Hans
