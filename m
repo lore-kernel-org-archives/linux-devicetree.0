@@ -1,60 +1,115 @@
-From: Feng Kan <fkan@apm.com>
-Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
-Date: Tue, 27 May 2014 09:59:02 -0700
-Message-ID: <CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
-References: <1400263432-922-1-git-send-email-fkan@apm.com>
-	<1400263432-922-2-git-send-email-fkan@apm.com>
-	<CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
-	<CAL85gmDjVszNd3TB51BGa+78wEEZmJfBOLNKOpTEvMTGU2VdBA@mail.gmail.com>
-	<CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
+From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: mvebu: split SolidRun CuBox into variants
+Date: Tue, 27 May 2014 10:02:30 -0700
+Message-ID: <CAOesGMjGAey+Tjj9iyz2CL+H59ssj12wUP8nT=gehF6qYx_OdA@mail.gmail.com>
+References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
+	<1401140009-31505-2-git-send-email-sebastian.hesselbarth@gmail.com>
+	<20140527161143.GS8664@titan.lakedaemon.net>
+	<5384BDB1.6000107@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, patches <patches@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5384BDB1.6000107-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 1:25 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
-> On Wed, May 21, 2014 at 1:54 AM, Feng Kan <fkan@apm.com> wrote:
+On Tue, May 27, 2014 at 9:30 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 05/27/2014 06:11 PM, Jason Cooper wrote:
+>>
+>> On Mon, May 26, 2014 at 11:33:29PM +0200, Sebastian Hesselbarth wrote:
+>>>
+>>> As Mainlining effort for SolidRun CuBox has been carried out on the
+>>> Engineering Sample, the board DTS was reflecting this. Actually,
+>>> SolidRun CuBox comes in three different variants: Engineering Sample
+>>> (ES),
+>>> production with 1GB RAM (1G), and production with 2GB RAM (2G).
+>>>
+>>> Therefore, we split the current dove-cubox.dts into a common board
+>>> include
+>>> and one board dts for each of the above variants.
+>>>
+>>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+>>> ---
 >
->> I see each bank as separate gpio chip. It is a simple way to
->> abstract the banks since they can operate independently.
+> [...]
 >
-> I think they should also be separate devices, and separate nodes
-> in the device tree.
+>>> diff --git a/arch/arm/boot/dts/dove-cubox-1g.dts
+>>> b/arch/arm/boot/dts/dove-cubox-1g.dts
+>>> new file mode 100644
+>>> index 000000000000..eebd3f7ca7e6
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/dove-cubox-1g.dts
+>>> @@ -0,0 +1,17 @@
+>>> +/dts-v1/;
+>>> +
+>>> +#include "dove-cubox.dtsi"
+>>> +
+>>> +/ {
+>>> +       model = "SolidRun CuBox (1G)";
+>>> +       compatible = "solidrun,cubox-1g", "solidrun,cubox",
+>>> "marvell,dove";
+>>> +
+>>> +       memory {
+>>> +               device_type = "memory";
+>>> +               reg = <0x00000000 0x40000000>;
+>>> +       };
+>>> +
+>>> +       chosen {
+>>> +               bootargs = "console=ttyS0,115200n8 earlyprintk";
+>>> +       };
+>>> +};
+>>> diff --git a/arch/arm/boot/dts/dove-cubox-2g.dts
+>>> b/arch/arm/boot/dts/dove-cubox-2g.dts
+>>> new file mode 100644
+>>> index 000000000000..513b6a68eba3
+>>> --- /dev/null
+>>> +++ b/arch/arm/boot/dts/dove-cubox-2g.dts
+>>> @@ -0,0 +1,17 @@
+>>> +/dts-v1/;
+>>> +
+>>> +#include "dove-cubox.dtsi"
+>>> +
+>>> +/ {
+>>> +       model = "SolidRun CuBox (2G)";
+>>> +       compatible = "solidrun,cubox-2g", "solidrun,cubox",
+>>> "marvell,dove";
+>>> +
+>>> +       memory {
+>>> +               device_type = "memory";
+>>> +               reg = <0x00000000 0x80000000>;
+>>
+>>
+>> Do you anticipate any other differences between the 1G and the 2G?
+>> Otherwise, I'm inclined to just have a "solidrun,cubox".  The bootloader
+>> should be setting the amount of RAM at boottime anyway.
 >
->> It also
->> provided me a way to fix the sysfs gpio base number, regardless if
->> a particular bank node is pulled out.
 >
-> The GPIO sysfs is unpredictable for this and many other
-> reasons and should not be relied upon.
+> No, there is no known difference between 1G and 2G except doubled RAM.
+> I'll squash the two back into a single non-ES dts.
 >
->> This is also done in similar way
->> in some other gpio drivers such as the dwapb gpio driver.
->
-> I think the dwapb has it's registers mingled while your banks
-> seem to be separate chunks.
+> About the board specific compatibles, I am not so sure if we should
+> keep them at all. "solidrun,cubox" for all three variants should be
+> enough. checkpatch is already choking on every unknown compatible it
+> sees and documenting each individual board clearly doesn't scale well.
 
-Thanks for the comments, I will fix these problems. Just some details
-in terms of the register layout. I will break out the gpio to separate
-device nodes as instructed, I will have to use the reg attribute to offset
-bank registers. Please let me know if it is acceptable.
+Yeah, I agree -- but I'd say the scaling problem is with checkpatch.
+It's silly to require every single small board variant to be
+documented, especially in cases where the dts is self-documenting such
+as this. If anything, there should be a script that can be used to
+scrape this info and build the docs from compat+model info.
 
-gfc_gpio_fl0              GFC42'h1701c00c
-gfc_gpio_fl0_mux      GFC42'h1701c010
-gfc_gpio_fl1              GFC42'h1701c018
-gfc_gpio_fl1_mux      GFC42'h1701c01c
-gfc_gpio_fl2              GFC42'h1701c024
-gfc_gpio_fl2_mux      GFC42'h1701c028
-gfc_gpio_fl0_od        GFC42'h1701c030
-gfc_gpio_fl1_od        GFC42'h1701c034
-gfc_gpio_fl2_od        GFC42'h1701c038
+It's not a bad idea to add a more specific compatible. if you think
+you want a separate model string, then you should probably have a
+separate compatible (but keep lower-order ones so that there's no
+difference from the kernel point of view which will just match the
+more generic one).
 
 
-
->
-> Yours,
-> Linus Walleij
+-Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
