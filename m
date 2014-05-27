@@ -1,16 +1,15 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU
- enable method
-Date: Tue, 27 May 2014 12:49:58 +0100
-Message-ID: <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
-References: <1400607830-10989-1-git-send-email-elder@linaro.org>
- <1400607830-10989-2-git-send-email-elder@linaro.org>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v2 4/4] ARM: debug: qcom: add UART addresses to Kconfig
+ help
+Date: Tue, 27 May 2014 15:05:53 +0300
+Message-ID: <53847FA1.60509@mm-sol.com>
+References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>	<1400857952-6963-5-git-send-email-gdjakov@mm-sol.com>	<CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>	<53834578.9090305@mm-sol.com>
+ <CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1400607830-10989-2-git-send-email-elder@linaro.org>
-Content-Disposition: inline
+In-Reply-To: <CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,74 +19,57 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Alex Elder <elder@linaro.org>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "arnd@arndb.de" <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "rjui@broadcom.com" <rjui@broadcom.com>, "bcm@fixthebug.org" <bcm@fixthebug.org>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "mporter@linaro.org" <mporter@linaro.org>, "rvaswani@codeaurora.org" <rvaswani@codeaurora.org>, Pawel Moll <Pawel.Moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "galak@codeaurora.org" <galak@codeaur>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rvaswani@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, davidb@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
-> Broadcom mobile SoCs use a ROM-implemented holding pen for
-> controlled boot of secondary cores.  A special register is
-> used to communicate to the ROM that a secondary core should
-> start executing kernel code.  This enable method is currently
-> used for members of the bcm281xx and bcm21664 SoC families.
+On 05/26/2014 08:17 PM, Matthias Brugger wrote:
+> 2014-05-26 15:45 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
+>> On 23.05.14, 19:39, Matthias Brugger wrote:
+>>>
+>>> 2014-05-23 17:12 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
+>>>>
+>>>> Add information about the APQ8084 debug UART physical and virtual
+>>>> addresses in the DEBUG_QCOM_UARTDM Kconfig help section.
+>>>> Requires: https://lkml.org/lkml/2014/4/14/312
+>>>>
+>>>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>>>> ---
+>>>>  arch/arm/Kconfig.debug |    1 +
+>>>>  1 file changed, 1 insertion(+)
+>>>>
+>>>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+>>>> index 40ee328..e71723d 100644
+>>>> --- a/arch/arm/Kconfig.debug
+>>>> +++ b/arch/arm/Kconfig.debug
+>>>> @@ -376,6 +376,7 @@ choice
+>>>>                   their output to the serial port on Qualcomm devices.
+>>>>
+>>>>                   ARCH      DEBUG_UART_PHYS   DEBUG_UART_BASE
+>>>> +                 APQ8084   0xf995e000        0xfa75e000
+>>>>                   MSM8X60   0x19c40000        0xf0040000
+>>>>                   MSM8960   0x16440000        0xf0040000
+>>>>                   MSM8974   0xf991e000        0xfa71e000
+>>>
+>>>
+>>> You don't have any uart defined in your dts. You should add them
+>>> before any adding low level debug support.
+>>> Otherwise there might be problems in booting a multi-platform kernel.
+>>>
+>>
+>> Thanks for the comment! As the uart depends on clocks, i am adding it to the
+>> dts as part of my global clock controller patchset [1].
+>> In this patch i am just adding some information to the help section.
+>> Do you see any problem with this?
 > 
-> The use of an enable method also allows the SMP operation vector to
-> be assigned as a result of device tree content for these SoCs.
+> Are the patches for the clock controller applied already?
+> If not, I would consider to add this patch to clock controller series.
 > 
-> Signed-off-by: Alex Elder <elder@linaro.org>
 
-This is getting out of control, it is absolutely ghastly. I wonder how
-I can manage to keep cpus.txt updated if anyone with a boot method
-du jour adds into cpus.txt, and honestly in this specific case it is even
-hard to understand why.
-
-Can't it be done with bindings for the relative register address space
-(regmap ?) and platform code just calls the registers driver to set-up the
-jump address ? It is platform specific code anyway there is no way you
-can make this generic.
-
-I really do not see the point in cluttering cpus.txt with this stuff, it
-is a platform specific hack, and do not belong in generic bindings in my
-opinion.
+No, they are not applied yet. The uart dts definition depends on clocks, but the
+DEBUG_LL support does not. And the DEBUG_LL support is already there as it is 
+common with other SoCs. I am sorry, but i don't see dependency between the dts
+definition and this patch. Could you explain please?
 
 Thanks,
-Lorenzo
-
-> ---
->  Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-> index 333f4ae..c6a2411 100644
-> --- a/Documentation/devicetree/bindings/arm/cpus.txt
-> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
-> @@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
->  			    "qcom,gcc-msm8660"
->  			    "qcom,kpss-acc-v1"
->  			    "qcom,kpss-acc-v2"
-> +			    "brcm,bcm11351-cpu-method"
->  
->  	- cpu-release-addr
->  		Usage: required for systems that have an "enable-method"
-> @@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
->  		Value type: <phandle>
->  		Definition: Specifies the ACC[2] node associated with this CPU.
->  
-> +	- secondary-boot-reg
-> +		Usage:
-> +			Required for systems that have an "enable-method"
-> +			property value of "brcm,bcm11351-cpu-method".
-> +		Value type: <u32>
-> +		Definition:
-> +			Specifies the physical address of the register used to
-> +			request the ROM holding pen code release a secondary
-> +			CPU.  The value written to the register is formed by
-> +			encoding the target CPU id into the low bits of the
-> +			physical start address it should jump to.
->  
->  Example 1 (dual-cluster big.LITTLE system 32-bit):
->  
-> -- 
-> 1.9.1
-> 
-> 
+Georgi
