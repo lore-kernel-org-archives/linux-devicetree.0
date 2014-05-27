@@ -1,10 +1,9 @@
 From: Tony Lindgren <tony@atomide.com>
 Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
  for omap3-evm and ldp
-Date: Tue, 27 May 2014 13:59:11 -0700
-Message-ID: <20140527205910.GE32336@atomide.com>
-References: <1398815562-24113-5-git-send-email-tony@atomide.com>
- <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
+Date: Tue, 27 May 2014 14:14:06 -0700
+Message-ID: <20140527211405.GF32336@atomide.com>
+References: <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com>
  <20140430174751.GA12362@atomide.com>
  <20140505183919.GA15463@atomide.com>
  <20140508233628.GJ2198@atomide.com>
@@ -13,56 +12,67 @@ References: <1398815562-24113-5-git-send-email-tony@atomide.com>
  <20140513213205.GB18001@atomide.com>
  <537C9FC6.8020104@ti.com>
  <20140521145053.GG17417@atomide.com>
+ <20140527205910.GE32336@atomide.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140521145053.GG17417@atomide.com>
+In-Reply-To: <20140527205910.GE32336@atomide.com>
 Sender: linux-omap-owner@vger.kernel.org
 To: Tomi Valkeinen <tomi.valkeinen@ti.com>
 Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
-* Tony Lindgren <tony@atomide.com> [140521 07:51]:
-> * Tomi Valkeinen <tomi.valkeinen@ti.com> [140521 05:45]:
-> > On 14/05/14 00:32, Tony Lindgren wrote:
+* Tony Lindgren <tony@atomide.com> [140527 14:00]:
+> * Tony Lindgren <tony@atomide.com> [140521 07:51]:
+> > * Tomi Valkeinen <tomi.valkeinen@ti.com> [140521 05:45]:
+> > > On 14/05/14 00:32, Tony Lindgren wrote:
+> > > 
+> > > > +&dss {
+> > > > +	status = "ok";
+> > > > +	vdds_dsi-supply = <&vpll2>;
+> > > > +	port {
+> > > > +		dpi_out: endpoint {
+> > > > +			remote-endpoint = <&lcd_in>;
+> > > > +			data-lines = <18>;
+> > > > +		};
+> > > > +	};
+> > > > +};
+> > > 
+> > > I just noticed the vdds_dsi-supply there. While the driver currently
+> > > uses that if available, I think it should be removed, and done the same
+> > > way Florian did with his overo patches:
+> > > 
+> > > /* Needed to power the DPI pins */
+> > > &vpll2 {
+> > > 	regulator-always-on;
+> > > };
+> > > 
+> > > That supply is not DSS's supply, but it's used to power up the pins. If
+> > > the pins were used as GPIOs, that power should be enabled.
 > > 
-> > > +&dss {
-> > > +	status = "ok";
-> > > +	vdds_dsi-supply = <&vpll2>;
-> > > +	port {
-> > > +		dpi_out: endpoint {
-> > > +			remote-endpoint = <&lcd_in>;
-> > > +			data-lines = <18>;
-> > > +		};
-> > > +	};
-> > > +};
-> > 
-> > I just noticed the vdds_dsi-supply there. While the driver currently
-> > uses that if available, I think it should be removed, and done the same
-> > way Florian did with his overo patches:
-> > 
-> > /* Needed to power the DPI pins */
-> > &vpll2 {
-> > 	regulator-always-on;
-> > };
-> > 
-> > That supply is not DSS's supply, but it's used to power up the pins. If
-> > the pins were used as GPIOs, that power should be enabled.
+> > OK thanks for catching it.
 > 
-> OK thanks for catching it.
+> In case you did not yet do it, here's this patch updated for you. I'm
+> assuming you'll apply this to your panel dts branch. Let me know when the
+> dependencies are in linux next and I'll test it one more time. The omap
+> changes finally hit linux next as of today, so I'm only doing fixes
+> and minimal changes for now.
 
-In case you did not yet do it, here's this patch updated for you. I'm
-assuming you'll apply this to your panel dts branch. Let me know when the
-dependencies are in linux next and I'll test it one more time. The omap
-changes finally hit linux next as of today, so I'm only doing fixes
-and minimal changes for now.
+Sorry here's the patch one more time with the regulator-always-on added.
+
+FYI, I'm getting this with current linux next:
+
+omapfb omapfb: failed to allocate framebuffer
+omapfb omapfb: failed to allocate fbmem
+omapfb omapfb: failed to setup omapfb
+omapfb: probe of omapfb failed with error -12
 
 Regards,
 
 Tony
 
-8< ----------------------
+8< ---------------------
 From: Tony Lindgren <tony@atomide.com>
 Date: Tue, 27 May 2014 11:31:02 -0700
 Subject: [PATCH] ARM: dts: Add LCD panel sharp ls037v7dw01 support for omap3-evm and ldp
@@ -251,7 +261,7 @@ Signed-off-by: Tony Lindgren <tony@atomide.com>
 -};
 --- /dev/null
 +++ b/arch/arm/boot/dts/omap3-panel-sharp-ls037v7dw01.dtsi
-@@ -0,0 +1,66 @@
+@@ -0,0 +1,72 @@
 +/*
 + * Common file for omap dpi panels with QVGA and reset pins
 + *
@@ -318,3 +328,9 @@ Signed-off-by: Tony Lindgren <tony@atomide.com>
 +		linux,wakeup;
 +	};
 +};
++
++/* Needed to power the DPI pins */
++&vpll2 {
++	regulator-always-on;
++};
++
