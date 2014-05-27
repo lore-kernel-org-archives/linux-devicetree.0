@@ -1,164 +1,106 @@
-From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Tue, 27 May 2014 19:52:57 +0200
-Message-ID: <CAMuHMdXy_qn7jufr3_My4AQ_J_=-wzx6uXH15NiHzsth-ZH2jw@mail.gmail.com>
-References: <CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
-	<20140526104824.63F13C42129@trevor.secretlab.ca>
-	<CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
-	<20140526112348.907B7C421A5@trevor.secretlab.ca>
-	<A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
-	<20140526213303.C1C73C40E11@trevor.secretlab.ca>
-	<20140526223630.GA32691@earth.universe>
-	<5383D174.8070304@roeck-us.net>
-	<20140527121236.3B818C40A5A@trevor.secretlab.ca>
-	<9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com>
-	<20140527152115.GA30180@roeck-us.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Tue, 27 May 2014 18:53:26 +0100
+Message-ID: <20140527175326.GZ12304@sirena.org.uk>
+References: <53806F26.6050706@redhat.com>
+ <20140525123452.GS22111@sirena.org.uk>
+ <53824294.1090609@redhat.com>
+ <20140526103807.GV22111@sirena.org.uk>
+ <538321AB.4050006@redhat.com>
+ <20140526142225.GF22111@sirena.org.uk>
+ <538356DA.7090302@redhat.com>
+ <CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
+ <53838023.2080807@redhat.com>
+ <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140527152115.GA30180-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Cc: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pete Popov <pete>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HRNDPvX8vGqmvZQF"
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi G=C3=BCnther,
 
-On Tue, May 27, 2014 at 5:21 PM, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org> wro=
-te:
-> On Tue, May 27, 2014 at 03:24:35PM +0300, Pantelis Antoniou wrote:
->> On May 27, 2014, at 3:12 PM, Grant Likely wrote:
->> > On Mon, 26 May 2014 16:42:44 -0700, Guenter Roeck <linux@roeck-us.=
-net> wrote:
->> >> On 05/26/2014 03:36 PM, Sebastian Reichel wrote:
->> >>> On Mon, May 26, 2014 at 10:33:03PM +0100, Grant Likely wrote:
->> >>>> After thinking about it more, I think it is very likely that re=
-moving
->> >>>> all the overlays is the correct thing to do in the kexec use-ca=
-se. When
->> >>>> kexec-ing, it makes sense that we'd want the exact same behavio=
-ur from
->> >>>> the kexec'ed kernel. That means we want the device drivers to d=
-o the
->> >>>> same thing including loading whatever overlays they depend on.
->> >>>>
->> >>>> If the flattened tree was left applied, then the behaviour beco=
-mes
->> >>>> different.
->> >>>>
->> >>>> I say always remove the overlays unless explicitly told not to,=
- but I'm
->> >>>> struggling to come up with use cases where keeping them applied=
- is
->> >>>> desirable.
->> >>>
->> >>> I would assume, that I want them applied in most cases. DT descr=
-ibes
->> >>> the hardware. If I kexec into a new kernel I change software, no=
-t
->> >>> hardware.
->> >>>
->> >>> Maybe I'm missing the main purpose of the feature. I currently s=
-ee
->> >>> two useful usecases for DT overlays:
->> >>>
->> >>> 1. The dtb the kernel is booted with cannot be changed for some
->> >>>    reason, but the board has additional hardware attached (e.g.
->> >>>    the user added a sensor on the i2c bus)
->> >>> 2. The hardware is changed on the fly (e.g. the user flashed the
->> >>>    FPGA part of a zynq processor), sensors on i2c bus, ...
->> >>>
->> >>> In both cases the kernel should be booted with the additional
->> >>> overlay information IMHO. Though for the second case it should
->> >>> be possible to remove the "programmed" hardware information
->> >>> somehow.
->> >>>
->> >>
->> >> 3. Some hot-plug device or card is inserted or removed.
->> >>
->> >> I would argue that the kernel should _not_ be booted with the ove=
-rlay in place.
->> >> Otherwise the code handling overlays would have to have special h=
-andling
->> >> for the restart case, which is much more complex than just to re-=
-insert
->> >> the overlay when it is determined that the device or card is stil=
-l there.
->> >
->> > Exactly.
->> >
->>
->> Looks like we are levitating to the 'remove overlays on kexec' appro=
-ach.
->> Is that correct?
->>
->
-> Let's just assume for a minute that this is not the case, and that lo=
-aded
-> overlays are passed on.
->
-> This would be an interesting challenge for the overlay manager, as it=
- would
-> have to handle a number of startup conditions. After all, it can not =
-take
-> it as granted that the hardware state did not change after it was sto=
-pped
-> in the old kernel, and before it was started in the new kernel.
-> - overlay loaded, but hardware/device no longer present
->   -> unload overlay
-> - overlay loaded, but different hardware present
->   -> unload old overlay, load new one
-> - overlay not loaded, hardware present
->   -> load overlay
-> - overlay loaded and matches hardware
->   -> do nothing
->
-> In comparison, its task would be quite straightforward if loaded over=
-lays
-> are not passed on to the new kernel.
-> - If hardware is present, load overlay
->
-> Ultimately, I seem to be missing something, as I don't really see the=
- benefit
-> of passing on the loaded overlay(s) to the new kernel. Activation tim=
-e, maybe,
-> for the most common case (overlay loaded and matches hardware) ?
+--HRNDPvX8vGqmvZQF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-All of the above assume you're using a system with overlays and an over=
-lay
-manager. I.e. you have add-on devices together with an overlay DT.
-One way to handle this is via auto-detection of capes, that identify th=
-emselves,
-so the overlay manager knows which overlay to load.
+On Tue, May 27, 2014 at 03:50:33PM +0200, Ulf Hansson wrote:
 
-I'm trying to look at it in a more generic way: you add hardware which =
-is not
-in the DT, so the DT must be modified (in some way or another) to match=
- the
-hardware.
+> To describe the HW in DT, the embedded SDIO card (actually it could be
+> any type of embedded card) shall be modelled as a child node to the
+> mmc host in DT. Similar to what you have proposed, but with the
+> difference that the child node _must_ contain a DT compatible string,
+> which means a "powerup-driver" can be probed.
 
-If you run kexec, the added hardware is still there. In the absence of =
-a system
-with auto-detection of capes, the newly booted kernel cannot know that
-hardware has been added, compared to a pristine system. If it's in the
-DT passed through kexec, everything will work.
+> Yes, I understand we might need one DT compatible string per board,
+> but that's because we need to model the hardware - and it differs.
 
-Gr{oetje,eeting}s,
+> To clarify my view, we do need a "powerup-driver" and the primary
+> reason is that we must not model "power up sequences" within DT.
+> Typically I see the "powerup-driver" as a simple platform driver
+> attached to the platform bus, but I that could of course differ.
 
-                        Geert
+This then either conflicts with cases where we need to describe the
+actual contents of the slot with a compatible string or means that the
+SDIO driver needs to handle powerup sequencing since we should be
+binding to the first compatible we find.  If the host controller driver
+and/or subsystem is going to deal with the powering up it's not clear
+that it specifically needs to be the compatible property that's used
+to determine the powerup method, it could just be a boolean or a
+'power-method = blah' property (where blah is one of a series of strings
+defining methods).  Alternatively we could have separate nodes for the
+slot and SDIO device but that feels meh.  What's the hard requirement
+for it to specifically be a compatible property?
 
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-=
-m68k.org
+> The slot will be the first level of child node under the mmc host,
+> then each slot may have a child node which models the embedded card.
+> But, let's leave that discussion for now. :-)
 
-In personal conversations with technical people, I call myself a hacker=
-=2E But
-when I'm talking to journalists I just say "programmer" or something li=
-ke that.
-                                -- Linus Torvalds
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+OK, that's the separate node for the slot and device.
+
+> Powerup driver's ->probe():
+> Typically the "powerup driver" will need to register a few callback
+> functions towards the mmc core. Typically at mmc_of_parse(), those
+> callbacks will have to be connected to a particular mmc host.
+
+> I would like to see three different callbacks, mirroring each of the
+> mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
+
+> The power up sequence, performed by the mmc core:
+> The mmc_power_up|off functions, will invoke the registered "powerup
+> driver's" callbacks if they exists for the particular host it operates
+> on.
+
+There's also the need for the SDIO device to be able to get at the
+resources provided and actively work with them at runtime if it wants to
+manage things more actively (partial poweroff for low power states or
+managing clock rates for example).
+
+--HRNDPvX8vGqmvZQF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJThNETAAoJELSic+t+oim98RoP/RXF4ifRgUISRLjjeAkbAvzu
+9h4eIYx8+XqsJg8NSD1oPPUz1IFd21TVB7pLLme+Z4tCU6+rk3RDRoDXegcHO651
+xjxIjUptV73G+5Y7dfKWIa2YjrtWHT9r6fIFgmTp+P75QJFWWf3F+jVH4FUagrhN
+9diMdZUbJdx6M1Tb2Oq02IJRkJb087vUi5QK7Pr8TPoCkBYShBv9rhs/zXpKnwRc
+M+iGqQe2k4IWCR1q8GS0M+P1weBQQO/10cycaGfDvWj4gNFiSGuSwL4mNp75ew7B
+HIDAWgiVQrEas8oy+NbSooNHLK1/bVfyw4tfWvKERDsWGiBLnwi/CsCJzbzrkgEp
+y5xQkut0q1i26vVm+XnRez19TqtsnmPTq+MDPjBjGKdmlyq5qIJo/fMyjWN9/r3v
+rEkGy8rhrx7p9ltUeH7u9rBgawtXix5pGv4RDZOK0PpsTk7mg1QDpoy7I2wi49A9
+nE43u34zivKICNv0MsUCTPXoHLkkpXQwudkxGLGW1kexCXDjJ+b5IWxeD9HDDEk6
+pPOq+S5jM1lVM0fyGhH4Njbx0pk1XGayEYOqEZNbc/7xbKTPN8wLkPxfCuo4mHTi
+TGqBeeClaxL95kZgUnSeQx9b9r7nMlGwTUoydhAdwMRLN7vpAbmb/I3UOyQJi6Pq
+9Ldbv22YoqssNKpH01VR
+=0eXA
+-----END PGP SIGNATURE-----
+
+--HRNDPvX8vGqmvZQF--
