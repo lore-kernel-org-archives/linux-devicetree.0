@@ -1,91 +1,43 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
-Date: Tue, 27 May 2014 21:11:02 +0100
-Message-ID: <20140527201102.BE7F4C40BD2@trevor.secretlab.ca>
-References: <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
-	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
-	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
-	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
-	<CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
-	<20140526104824.63F13C42129@trevor.secretlab.ca>
-	<CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
-	<20140526112348.907B7C421A5@trevor.secretlab.ca>
-	<A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
-	<20140526213303.C1C73C40E11@trevor.secretlab.ca>
-	<20140526223630.GA32691@earth.universe> <5383D174.8070304@roeck-us.net>
-	<20140527121236.3B818C40A5A@trevor.secretlab.ca>
-	<9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] of: handle NULL node in of_get_next_available_child
+Date: Tue, 27 May 2014 21:17:11 +0100
+Message-ID: <20140527201711.553B8C40BD2@trevor.secretlab.ca>
+References: <1400874192-29400-1-git-send-email-f.fainelli@gmail.com>
+	<20140527111930.696AAC4156C@trevor.secretlab.ca>
+	<CAGVrzcYKCGXbOR1FRaOLxjPeaFEq6skgUvG_i4nqGSdJBUZRqQ@mail.gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGVrzcYKCGXbOR1FRaOLxjPeaFEq6skgUvG_i4nqGSdJBUZRqQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 May 2014 15:24:35 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+On Tue, 27 May 2014 10:36:10 -0700, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 > Hi Grant,
 > 
-> On May 27, 2014, at 3:12 PM, Grant Likely wrote:
+> 2014-05-27 4:19 GMT-07:00 Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>:
+> > On Fri, 23 May 2014 12:43:11 -0700, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> Add an early check for the node argument in
+> >> of_get_next_available_child() to avoid dereferencing a NULL node pointer
+> >> a few lines after.
+> >>
+> >> CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> >
+> > Is there a bug that exposed this path?
 > 
-> > On Mon, 26 May 2014 16:42:44 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
-> >> On 05/26/2014 03:36 PM, Sebastian Reichel wrote:
-> >>> Hi,
-> >>> 
-> >>> On Mon, May 26, 2014 at 10:33:03PM +0100, Grant Likely wrote:
-> >>>> After thinking about it more, I think it is very likely that removing
-> >>>> all the overlays is the correct thing to do in the kexec use-case. When
-> >>>> kexec-ing, it makes sense that we'd want the exact same behaviour from
-> >>>> the kexec'ed kernel. That means we want the device drivers to do the
-> >>>> same thing including loading whatever overlays they depend on.
-> >>>> 
-> >>>> If the flattened tree was left applied, then the behaviour becomes
-> >>>> different.
-> >>>> 
-> >>>> I say always remove the overlays unless explicitly told not to, but I'm
-> >>>> struggling to come up with use cases where keeping them applied is
-> >>>> desirable.
-> >>> 
-> >>> I would assume, that I want them applied in most cases. DT describes
-> >>> the hardware. If I kexec into a new kernel I change software, not
-> >>> hardware.
-> >>> 
-> >>> Maybe I'm missing the main purpose of the feature. I currently see
-> >>> two useful usecases for DT overlays:
-> >>> 
-> >>> 1. The dtb the kernel is booted with cannot be changed for some
-> >>>    reason, but the board has additional hardware attached (e.g.
-> >>>    the user added a sensor on the i2c bus)
-> >>> 2. The hardware is changed on the fly (e.g. the user flashed the
-> >>>    FPGA part of a zynq processor), sensors on i2c bus, ...
-> >>> 
-> >>> In both cases the kernel should be booted with the additional
-> >>> overlay information IMHO. Though for the second case it should
-> >>> be possible to remove the "programmed" hardware information
-> >>> somehow.
-> >>> 
-> >> 
-> >> 3. Some hot-plug device or card is inserted or removed.
-> >> 
-> >> I would argue that the kernel should _not_ be booted with the overlay in place.
-> >> Otherwise the code handling overlays would have to have special handling
-> >> for the restart case, which is much more complex than just to re-insert
-> >> the overlay when it is determined that the device or card is still there.
-> > 
-> > Exactly.
-> > 
-> 
-> Looks like we are levitating to the 'remove overlays on kexec' approach.
-> Is that correct?
+> Daniel sent a patch recently [1] which makes us call
+> for_each_available_child_of_node() on a potentially NULL node
+> argument.
 
-Yes. What form that takes is yet to be decided. Kexec traditionally has
-worked by userspace extracting the device tree from /proc/device-tree,
-getting a kernel image into memory, and then doing the kexec call. It
-wouldn't be very friendly to have kexec force all the overlays to be
-removed while the kernel is still running.
+And yet in your reply to that patch you argued that the NULL check
+should be in the caller!
 
-We could solve this by making kexec use the original dtb blob instead of
-the livetree. Otherwise we'd need an interface for userspace to extract
-the original tree, or have the information to unwind the overlays. Not
-exactly simple.
+Anyway, this isn't a big deal. Post a patch fixing both and I'll apply
+it.
 
 g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
