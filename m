@@ -1,8 +1,8 @@
 From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
 Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
  controller
-Date: Tue, 27 May 2014 21:42:28 +0200
-Message-ID: <20140527194228.GB13172@pengutronix.de>
+Date: Tue, 27 May 2014 21:51:17 +0200
+Message-ID: <20140527195117.GC13172@pengutronix.de>
 References: <1400169891-29546-2-git-send-email-tthayer@altera.com>
  <20140516075344.GF949@pengutronix.de>
  <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
@@ -12,18 +12,18 @@ References: <1400169891-29546-2-git-send-email-tthayer@altera.com>
  <20140520144446.GJ949@pengutronix.de>
  <CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
  <20140527071157.GC20695@pengutronix.de>
- <CANk1AXTMHuWeaxn_hVi+AH=aXbbSNov=894YmSYfvfvpWM+eSg@mail.gmail.com>
+ <CAF03EBeLcObeajAgQQ4-h529f0ExNLB_RXCWMgktw4-D=K4d5g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANk1AXTMHuWeaxn_hVi+AH=aXbbSNov=894YmSYfvfvpWM+eSg@mail.gmail.com>
+In-Reply-To: <CAF03EBeLcObeajAgQQ4-h529f0ExNLB_RXCWMgktw4-D=K4d5g@mail.gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Alan Tull <delicious.quinoa@gmail.com>
-Cc: Thor Thayer <tthayer.linux@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
+To: Thor Thayer <tthayer.linux@gmail.com>
+Cc: Alan Tull <delicious.quinoa@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 02:12:17PM -0500, Alan Tull wrote:
+On Tue, May 27, 2014 at 01:00:32PM -0500, Thor Thayer wrote:
 > On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
 > <s.trumtrar@pengutronix.de> wrote:
 > > On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
@@ -192,26 +192,12 @@ On Tue, May 27, 2014 at 02:12:17PM -0500, Alan Tull wrote:
 > > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
 > > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
 > 
-> OK now I understand.  For register offset 0x0, that's all stuff set up
-> in the bootloader.  We won't be touching that register except for the
-> EDAC.  So syscon isn't needed here.
-> 
-> Each driver that uses some sdr registers can specify which registers
-> it uses in the device tree.  So far we don't have any cases of two
-> drivers that share a register.
-> 
-> The ECC driver will need two ranges: offset 0x00 and 0x38 through 0x50.
-> The fpga bridges just needs offset 0x80.
+> Thank you for your help on this, Steffen. It is good to have your
+> insight. I'll implement the changes and resubmit shortly.
 > 
 
-Well, almost ;-)
-Use syscon for 0x0 and reference that in the ECC driver, which only is
-responsible for 0x38 to 0x50. Then flip the two EDAC bits via the syscon-phandle.
-Then a bootloader can probe with the same dts and have a driver match on the
-config-register and one for all the DRAM setup (< 0x38), which we don't need in
-the kernel. On the other hand the EDAC seems unneccessary for the bootloader.
-And this all matches the partitioning of the SDR register space, so I think it
-is also a correct hardware description.
+Very good. I'm happy that we could come to a conclusion we are all okay with.
+(Unless someone else shows up and rains on your parade ;-))
 
 Regards,
 Steffen
