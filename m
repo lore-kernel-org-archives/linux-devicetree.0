@@ -1,74 +1,78 @@
-From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Compatible string best practices
-Date: Tue, 27 May 2014 10:15:35 -0700
-Message-ID: <6b2f3662-caa1-4a00-a006-1f251f32770f@BN1AFFO11FD054.protection.gbl>
-References: <cc5b8415-4297-49fb-8a2c-bdc4b1b19c2c@BY2FFO11FD033.protection.gbl>
- <20140523160331.GA6969@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140523160331.GA6969@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <git-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 2/2] ARM: dts: mvebu: split SolidRun CuBox into variants
+Date: Tue, 27 May 2014 19:28:09 +0200
+Message-ID: <5384CB29.1090204@gmail.com>
+References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com> <1401140009-31505-2-git-send-email-sebastian.hesselbarth@gmail.com> <20140527161143.GS8664@titan.lakedaemon.net>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140527161143.GS8664@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-05-23 at 05:03PM +0100, Mark Rutland wrote:
-> On Fri, May 23, 2014 at 04:03:06PM +0100, S=C3=B6ren Brinkmann wrote:
-> > Hi,
->=20
-> Hi,
->=20
-> > I have a question regarding how a compatible string should be creat=
-ed.
-> > The simple case is obvious:
-> >  <IP-vendor>,<IP-type/name>-<IP-revision>
-> >=20
-> > But what is the recommended string for a SOC specific implementatio=
-n of
-> > that IP? Let's say for
-> >  <SOC-vendor>,<SOC-name>-<SOC-revision>
-> > how would I assemble a compatible string to identify the SOC-specif=
-ic
-> > implementation of IP?
-> > I think my biggest confusion is which vendor string to use in that =
-case.
-> > But in general I'm curious whether some best practice exists for th=
-ese
-> > cases.
-> >=20
-> > I think what I've seen most is:
-> >  <SOC-vendor>,<SOC-name>-<IP-type>
-> >=20
-> > But one could probably argue whether to rather use IP-vendor, appen=
-ding
-> > all the revision strings, ...
->=20
-> I would expect that the vendor prefix would be the last entity along =
-the
-> chain which altered the IP in some way. Say foo sells device to bar, =
-who
-> do nothing other than sell it to baz who do some hacks to integrate i=
-t.
-> For that I'd expect something like:
->=20
-> compatible =3D "baz,soc-device", "foo,device";
->=20
-> I'm not sure with revisions (they're not always that useful), but I'd
-> expect that to be kept next to the element it represent the revision
-> for:
->=20
-> "baz,soc-vX-device-vY", "bar,soc-device-vY", "foo,device-vY",
-> "foo,device-vY";
+On 05/27/2014 06:11 PM, Jason Cooper wrote:
+> On Mon, May 26, 2014 at 11:33:29PM +0200, Sebastian Hesselbarth wrote:
+>> As Mainlining effort for SolidRun CuBox has been carried out on the
+>> Engineering Sample, the board DTS was reflecting this. Actually,
+>> SolidRun CuBox comes in three different variants: Engineering Sample (ES),
+>> production with 1GB RAM (1G), and production with 2GB RAM (2G).
+>>
+>> Therefore, we split the current dove-cubox.dts into a common board include
+>> and one board dts for each of the above variants.
+>>
+>> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+>> ---
+[...]
+>> ---
+>>  arch/arm/boot/dts/Makefile                         |  4 +++-
+>>  arch/arm/boot/dts/dove-cubox-1g.dts                | 17 ++++++++++++++++
+>>  arch/arm/boot/dts/dove-cubox-2g.dts                | 17 ++++++++++++++++
+>>  arch/arm/boot/dts/dove-cubox-es.dts                | 23 ++++++++++++++++++++++
+>>  .../boot/dts/{dove-cubox.dts => dove-cubox.dtsi}   | 17 ----------------
+>>  5 files changed, 60 insertions(+), 18 deletions(-)
+>>  create mode 100644 arch/arm/boot/dts/dove-cubox-1g.dts
+>>  create mode 100644 arch/arm/boot/dts/dove-cubox-2g.dts
+>>  create mode 100644 arch/arm/boot/dts/dove-cubox-es.dts
+>>  rename arch/arm/boot/dts/{dove-cubox.dts => dove-cubox.dtsi} (86%)
+>>
+[...]
+>> diff --git a/arch/arm/boot/dts/dove-cubox-2g.dts b/arch/arm/boot/dts/dove-cubox-2g.dts
+>> new file mode 100644
+>> index 000000000000..513b6a68eba3
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/dove-cubox-2g.dts
+>> @@ -0,0 +1,17 @@
+>> +/dts-v1/;
+>> +
+>> +#include "dove-cubox.dtsi"
+>> +
+>> +/ {
+>> +	model = "SolidRun CuBox (2G)";
+>> +	compatible = "solidrun,cubox-2g", "solidrun,cubox", "marvell,dove";
+>> +
+>> +	memory {
+>> +		device_type = "memory";
+>> +		reg = <0x00000000 0x80000000>;
+> 
+> Do you anticipate any other differences between the 1G and the 2G?
+> Otherwise, I'm inclined to just have a "solidrun,cubox".  The bootloader
+> should be setting the amount of RAM at boottime anyway.
 
-Thanks, Mark!
+Given the minor differences between ES and production, instead of
 
-	S=C3=B6ren
+dove-cubox-common.dtsi
++--> dove-cubox.dts (production)
++--> dove-cubos-es.dts (engineering sample)
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+we could also just have an "overlay" for the ES like
+
+dove-cubox.dts (production)
++--> dove-cubox-es.dts (engineering sample)
+
+It is not used commonly until now, maybe just a matter of taste.
+
+Is there any version you prefer?
+
+Sebastian
