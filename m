@@ -1,67 +1,91 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 1/9] dt: deps: dtc: Automatically add new property
- 'dependencies' which contains a list of referenced phandles
-Date: Tue, 27 May 2014 21:02:25 +0100
-Message-ID: <20140527200225.F12C4C40B4B@trevor.secretlab.ca>
-References: <1399913280-6915-1-git-send-email-holler@ahsoftware.de>
-	<1399913280-6915-2-git-send-email-holler@ahsoftware.de>
-	<53775334.3030704@gmail.com> <5379FAA5.10404@ahsoftware.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5379FAA5.10404-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jon Loeliger <jdl-CYoMK+44s/E@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Tue, 27 May 2014 21:11:02 +0100
+Message-ID: <20140527201102.BE7F4C40BD2@trevor.secretlab.ca>
+References: <CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
+	<CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+	<20140526104824.63F13C42129@trevor.secretlab.ca>
+	<CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
+	<20140526112348.907B7C421A5@trevor.secretlab.ca>
+	<A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
+	<20140526213303.C1C73C40E11@trevor.secretlab.ca>
+	<20140526223630.GA32691@earth.universe> <5383D174.8070304@roeck-us.net>
+	<20140527121236.3B818C40A5A@trevor.secretlab.ca>
+	<9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9CF30A1A-5EB6-401E-A0D5-453CB99B4A83@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Guenter Roeck <linux@roeck-us.net>, Sebastian Reichel <sre@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 19 May 2014 14:35:49 +0200, Alexander Holler <holler-SXC+2es9fhnfWeYVQQPykw@public.gmane.org> wrote:
-> Am 17.05.2014 14:16, schrieb Tomasz Figa:
+On Tue, 27 May 2014 15:24:35 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> Hi Grant,
 > 
-> >> References to phandles of parent or child nodes will not be added to this
-> >> property, because this information is already contained in the blob (in the
-> >> form of the tree itself).
-> >
-> > I wonder if we shouldn't be including them too for consistency related
-> > reasons, so we have all the necessary information in one place.
-> > References to child nodes are great recipes for cycles, though...
-> >
-> > No strong opinion, though, just an idea.
+> On May 27, 2014, at 3:12 PM, Grant Likely wrote:
 > 
-> As said, they are already in the tree itself. And they are already 
-> included in the graph (these are the black edges), so they just don't 
-> appear in the property dependencies.
+> > On Mon, 26 May 2014 16:42:44 -0700, Guenter Roeck <linux@roeck-us.net> wrote:
+> >> On 05/26/2014 03:36 PM, Sebastian Reichel wrote:
+> >>> Hi,
+> >>> 
+> >>> On Mon, May 26, 2014 at 10:33:03PM +0100, Grant Likely wrote:
+> >>>> After thinking about it more, I think it is very likely that removing
+> >>>> all the overlays is the correct thing to do in the kexec use-case. When
+> >>>> kexec-ing, it makes sense that we'd want the exact same behaviour from
+> >>>> the kexec'ed kernel. That means we want the device drivers to do the
+> >>>> same thing including loading whatever overlays they depend on.
+> >>>> 
+> >>>> If the flattened tree was left applied, then the behaviour becomes
+> >>>> different.
+> >>>> 
+> >>>> I say always remove the overlays unless explicitly told not to, but I'm
+> >>>> struggling to come up with use cases where keeping them applied is
+> >>>> desirable.
+> >>> 
+> >>> I would assume, that I want them applied in most cases. DT describes
+> >>> the hardware. If I kexec into a new kernel I change software, not
+> >>> hardware.
+> >>> 
+> >>> Maybe I'm missing the main purpose of the feature. I currently see
+> >>> two useful usecases for DT overlays:
+> >>> 
+> >>> 1. The dtb the kernel is booted with cannot be changed for some
+> >>>    reason, but the board has additional hardware attached (e.g.
+> >>>    the user added a sensor on the i2c bus)
+> >>> 2. The hardware is changed on the fly (e.g. the user flashed the
+> >>>    FPGA part of a zynq processor), sensors on i2c bus, ...
+> >>> 
+> >>> In both cases the kernel should be booted with the additional
+> >>> overlay information IMHO. Though for the second case it should
+> >>> be possible to remove the "programmed" hardware information
+> >>> somehow.
+> >>> 
+> >> 
+> >> 3. Some hot-plug device or card is inserted or removed.
+> >> 
+> >> I would argue that the kernel should _not_ be booted with the overlay in place.
+> >> Otherwise the code handling overlays would have to have special handling
+> >> for the restart case, which is much more complex than just to re-insert
+> >> the overlay when it is determined that the device or card is still there.
+> > 
+> > Exactly.
+> > 
 > 
-> >
-> >>
-> >> No dependencies to disabled nodes will be added.
-> >>
-> >
-> > Same here. IMHO it might be wise to let the parsing entity (e.g. kernel)
-> > decide whether to ignore a dependency to disabled node or not.
-> >
-> > Otherwise, I like the simplicity of compile-time dependency list
-> > creation. Quite a nice work.
-> 
-> Thanks.
-> 
-> What's still questionable about the patches for dtc is if dependencies 
-> to devices and not just drivers should be included in the new property 
-> dependencies too. My current assumption is that all devices belonging to 
-> one and the same driver don't have dependencies between each other. In 
-> other words the order in which devices will be attached to one and the 
-> same driver isn't important. If that assumption is correct it would be 
-> possible to just attach all devices belonging to a driver after the 
-> driver was loaded (also I haven't that done in my patches).
+> Looks like we are levitating to the 'remove overlays on kexec' approach.
+> Is that correct?
 
-There aren't really any guarantees here. It is perfectly valid to have
-two of the same device depending on the other, or even a device with a
-different driver between the two.
+Yes. What form that takes is yet to be decided. Kexec traditionally has
+worked by userspace extracting the device tree from /proc/device-tree,
+getting a kernel image into memory, and then doing the kexec call. It
+wouldn't be very friendly to have kexec force all the overlays to be
+removed while the kernel is still running.
 
-There's always going to be corner cases on the dependency chain. The
-question is whether or not it is worth trying to solve every concievable
-order, or if a partway solution is good enough.
+We could solve this by making kexec use the original dtb blob instead of
+the livetree. Otherwise we'd need an interface for userspace to extract
+the original tree, or have the information to unwind the overlays. Not
+exactly simple.
 
 g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
