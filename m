@@ -1,71 +1,60 @@
 From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of_pci_irq: kill useless variable in of_irq_parse_pci()
-Date: Tue, 27 May 2014 12:13:43 +0100
-Message-ID: <20140527111343.DA92EC4156C@trevor.secretlab.ca>
-References: <201405252250.06937.sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] of: mdio: fix compile warning in
+ of_mdiobus_register_phy()
+Date: Tue, 27 May 2014 12:16:28 +0100
+Message-ID: <20140527111628.A11E1C4156C@trevor.secretlab.ca>
+References: <1400880835-29537-1-git-send-email-cengelma@gmx.at>
+Mime-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <201405252250.06937.sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1400880835-29537-1-git-send-email-cengelma-RbZlAiThDcE@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Christian Engelmayer <cengelma-RbZlAiThDcE@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 25 May 2014 22:50:06 +0400, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> The 'lspec' variable only caused pointless promotions from u8 to u32 on each
-> loop iteration, while it's enough to promote only once, after the loop.
-> 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+On Fri, 23 May 2014 23:33:55 +0200, Christian Engelmayer <cengelma@gmx.=
+at> wrote:
+> Commit de906af1 (net: phy: make of_set_phy_supported work with genphy=
+ driver)
+> removed the last user of variable 'max_speed' in function
+> of_mdiobus_register_phy(), leading to compile warning "unused variabl=
+e
+> =E2=80=98max_speed=E2=80=99 [-Wunused-variable]". Thus remove it.
+>=20
+> Signed-off-by: Christian Engelmayer <cengelma-RbZlAiThDcE@public.gmane.org>
+> ---
+> Compile tested. Applies against branch master in tree
+> git.kernel.org/pub/scm/linux/kernel/git/davem/net-next.git
 
-Applied, thanks.
+Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 g.
 
-> 
 > ---
-> The patch is against Grant Likely's 'linux-2.6.git' repo's 'devicetree/next'
-> branch. The original patch also got rid of the 'lspec_be' variable but it turned
-> out to have been dealt with already in Grant's tree, so here's what remained...
-> 
->  drivers/of/of_pci_irq.c |    6 ++----
->  1 file changed, 2 insertions(+), 4 deletions(-)
-> 
-> Index: linux-2.6/drivers/of/of_pci_irq.c
-> ===================================================================
-> --- linux-2.6.orig/drivers/of/of_pci_irq.c
-> +++ linux-2.6/drivers/of/of_pci_irq.c
-> @@ -18,7 +18,6 @@ int of_irq_parse_pci(const struct pci_de
->  {
->  	struct device_node *dn, *ppnode;
->  	struct pci_dev *ppdev;
-> -	u32 lspec;
->  	__be32 laddr[3];
->  	u8 pin;
+>  drivers/of/of_mdio.c | 1 -
+>  1 file changed, 1 deletion(-)
+>=20
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index b857094..7c6e277 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -46,7 +46,6 @@ static int of_mdiobus_register_phy(struct mii_bus *=
+mdio, struct device_node *chi
+>  	struct phy_device *phy;
+>  	bool is_c45;
 >  	int rc;
-> @@ -45,7 +44,6 @@ int of_irq_parse_pci(const struct pci_de
->  		return -ENODEV;
->  
->  	/* Now we walk up the PCI tree */
-> -	lspec = pin;
->  	for (;;) {
->  		/* Get the pci_dev of our parent */
->  		ppdev = pdev->bus->self;
-> @@ -79,13 +77,13 @@ int of_irq_parse_pci(const struct pci_de
->  		/* We can only get here if we hit a P2P bridge with no node,
->  		 * let's do standard swizzling and try again
->  		 */
-> -		lspec = pci_swizzle_interrupt_pin(pdev, lspec);
-> +		pin = pci_swizzle_interrupt_pin(pdev, pin);
->  		pdev = ppdev;
->  	}
->  
->  	out_irq->np = ppnode;
->  	out_irq->args_count = 1;
-> -	out_irq->args[0] = lspec;
-> +	out_irq->args[0] = pin;
->  	laddr[0] = cpu_to_be32((pdev->bus->number << 16) | (pdev->devfn << 8));
->  	laddr[1] = laddr[2] = cpu_to_be32(0);
->  	return of_irq_parse_raw(laddr, out_irq);
+> -	u32 max_speed =3D 0;
+>  	u32 phy_id;
+> =20
+>  	is_c45 =3D of_device_is_compatible(child,
+> --=20
+> 1.9.1
+>=20
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
