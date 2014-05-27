@@ -1,121 +1,204 @@
-From: Alex Elder <elder@linaro.org>
-Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU enable
- method
-Date: Tue, 27 May 2014 08:43:22 -0500
-Message-ID: <5384967A.80402@linaro.org>
-References: <1400607830-10989-1-git-send-email-elder@linaro.org> <1400607830-10989-2-git-send-email-elder@linaro.org> <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Tue, 27 May 2014 15:50:33 +0200
+Message-ID: <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
+References: <537E31F7.1030505@gmail.com>
+	<537F1148.3010102@redhat.com>
+	<20140523112239.GB12304@sirena.org.uk>
+	<537F3610.3050104@redhat.com>
+	<20140523162718.GE22111@sirena.org.uk>
+	<53806F26.6050706@redhat.com>
+	<20140525123452.GS22111@sirena.org.uk>
+	<53824294.1090609@redhat.com>
+	<20140526103807.GV22111@sirena.org.uk>
+	<538321AB.4050006@redhat.com>
+	<20140526142225.GF22111@sirena.org.uk>
+	<538356DA.7090302@redhat.com>
+	<CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
+	<53838023.2080807@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "mporter@linaro.org" <mporter@linaro.org>, "bcm@fixthebug.org" <bcm@fixthebug.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "rjui@broadcom.com" <rjui@broadcom.com>r
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <53838023.2080807@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/2014 06:49 AM, Lorenzo Pieralisi wrote:
-> On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
->> Broadcom mobile SoCs use a ROM-implemented holding pen for
->> controlled boot of secondary cores.  A special register is
->> used to communicate to the ROM that a secondary core should
->> start executing kernel code.  This enable method is currently
->> used for members of the bcm281xx and bcm21664 SoC families.
+[snip]
+
+>> I am having a bit hard to follow the terminology here. :-) What is a
+>> "powerup driver" and what is a "main device driver" in this context?
 >>
->> The use of an enable method also allows the SMP operation vector to
->> be assigned as a result of device tree content for these SoCs.
+>> I had a slide which I used at a mmc subsystem crash course recently,
+>> please have a look - hopefully this will help us to sort out this.
 >>
->> Signed-off-by: Alex Elder <elder@linaro.org>
-> 
-> This is getting out of control, it is absolutely ghastly. I wonder how
-> I can manage to keep cpus.txt updated if anyone with a boot method
-> du jour adds into cpus.txt, and honestly in this specific case it is even
-> hard to understand why.
+>> https://drive.google.com/file/d/0B2ePGK-iqMupbDQ2S0o5b3Bhek0/edit?usp=sharing
+>
+> Right, the problem is that in the case(s) we're talking about before the sdio
+> device in question can be probed the sdio device may need to have several clk
+> signals enables, reset signal deasserted, etc.
 
-I concur that it gets out of control to document bindings
-in "cpus.txt" like this.
+Yes. That's an important point.
 
-I posted a separate, independent documentation patch, to
-address this issue specifically:
-    devicetree: bindings: separate CPU enable method descriptions
-There I don't even include my new addition but I also
-do a little work to sort out some stuff--for example only
-defining "cpu-release-addr" (or "qcom,saw") in the one place
-where it's relevant.
+>
+> Some piece of code needs to do that, the proposal so far has been to let the
+> mmc-core deal with this, which will likely work fine for 90% of the cases
+> were we need any form of "powerup", but in some more complex case this may need
+> to happen in a specific order / with specific delays, etc. In this case some
+> separate piece of board and/or sdio device specific code would need to take
+> care of this, hence I was talking about a "powerup-driver", which I agree is
+> not the best name. So lets just forget about the power-driver nomenclature
+> completely.
 
-> Can't it be done with bindings for the relative register address space
-> (regmap ?) and platform code just calls the registers driver to set-up the
-> jump address ? It is platform specific code anyway there is no way you
-> can make this generic.
+I have now given this a serious thought, sorry for not doing this
+earlier. Please consider the following ideas and statements. Feel free
+to shoot them down. :-)
 
-This is feedback specific to how I implement this enable method.
-I am going to address this in a follow-on message, to distinguish
-it from the broader question of where best to document these
-enable methods.  (I'll be sending that message later today.)
+DT is supposed to described the hardware. Encoding power up sequences
+within DT, to for example let the mmc core handle this means we are
+touching the concept of open firmware. This is not what DT should be
+used for.
 
-> I really do not see the point in cluttering cpus.txt with this stuff, it
-> is a platform specific hack, and do not belong in generic bindings in my
-> opinion.
+To describe the HW in DT, the embedded SDIO card (actually it could be
+any type of embedded card) shall be modelled as a child node to the
+mmc host in DT. Similar to what you have proposed, but with the
+difference that the child node _must_ contain a DT compatible string,
+which means a "powerup-driver" can be probed.
 
-Again, I completely agree with this.
+Yes, I understand we might need one DT compatible string per board,
+but that's because we need to model the hardware - and it differs.
 
-In order to assign the SMP operations vector for my machine
-via device tree, I need to define an "enable-method" property
-in either the "cpus" node or one of the "cpu" nodes.  I would
-prefer to use a generic method, but the method used here is
-semantically different from the others in existence, and I
-need to document how it works.  The place currently used
-to do that is "cpus.txt".
+To clarify my view, we do need a "powerup-driver" and the primary
+reason is that we must not model "power up sequences" within DT.
+Typically I see the "powerup-driver" as a simple platform driver
+attached to the platform bus, but I that could of course differ.
 
-Please look at the patch I mentioned above.  I'd be glad to
-do it another way; but it is an attempt to address what I
-saw as a problem that I think you are talking about.
+[snip]
 
-Thanks.
-
-					-Alex
-
-
-> Thanks,
-> Lorenzo
-> 
->> ---
->>  Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
->>  1 file changed, 12 insertions(+)
+>>>
+>>> Ok, so lets switch it over to a boolean, options for the name I see are:
+>>>
+>>> linux,mmc-host-powerup  (opt in to powerup being dealt with by the mmc core, implementation specific)
+>>> simple-powerup          (platform neutral opt in to say just enable all resources and be done with it)
+>>> custom-powerup          (platform neutral opt out version of simple-powerup)
+>>> linux,custom-powerup    (same, but consider this something linux specific)
 >>
->> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
->> index 333f4ae..c6a2411 100644
->> --- a/Documentation/devicetree/bindings/arm/cpus.txt
->> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
->> @@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
->>  			    "qcom,gcc-msm8660"
->>  			    "qcom,kpss-acc-v1"
->>  			    "qcom,kpss-acc-v2"
->> +			    "brcm,bcm11351-cpu-method"
->>  
->>  	- cpu-release-addr
->>  		Usage: required for systems that have an "enable-method"
->> @@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
->>  		Value type: <phandle>
->>  		Definition: Specifies the ACC[2] node associated with this CPU.
->>  
->> +	- secondary-boot-reg
->> +		Usage:
->> +			Required for systems that have an "enable-method"
->> +			property value of "brcm,bcm11351-cpu-method".
->> +		Value type: <u32>
->> +		Definition:
->> +			Specifies the physical address of the register used to
->> +			request the ROM holding pen code release a secondary
->> +			CPU.  The value written to the register is formed by
->> +			encoding the target CPU id into the low bits of the
->> +			physical start address it should jump to.
->>  
->>  Example 1 (dual-cluster big.LITTLE system 32-bit):
->>  
->> -- 
->> 1.9.1
->>
->>
-> 
+>> This seems reasonable to me.
+>
+> This being the last option ?
 
+Sorry for the confusion here. As stated above, we need a compatible string.
+
+>
+>> Well, I don't like the "simple-powerup", because I think a simple
+>> powerup sequence is to me already supported by the mmc core, through
+>> the regular host interface (->set_ios()).
+>>
+>> If I understand correctly, this binding is supposed to be configured
+>> per host device and thus also per host device slots?
+>
+> Yes, although I must admit that have not thought about how to deal with
+> slots, I've no experience with the mmc slots concept at all, or is slot
+> just a different name for sdio function ?
+
+Some mmc hosts may support more than one slot. Thus they can operate
+on more than one card.
+
+Currently, there are no support for this in the mmc core. There can
+only be one card per host, but that's due to software limitation of
+the mmc stack.  Following your suggestion; modelling the card as child
+node under the mmc host, can easily be extended to support more than
+one slot.
+
+The slot will be the first level of child node under the mmc host,
+then each slot may have a child node which models the embedded card.
+But, let's leave that discussion for now. :-)
+
+>
+> Thinking more about this, maybe we can solve the problem of people
+> worrying about complex power-on scenarios coming around later, by
+> also encoding the sequence in dt, e.g. something like:
+>
+>                 mmc3: mmc@01c12000 {
+>                         #address-cells = <1>;
+>                         #size-cells = <0>;
+>
+>                         pinctrl-names = "default";
+>                         pinctrl-0 = <&mmc3_pins_a>;
+>                         vmmc-supply = <&reg_vmmc3>;
+>                         bus-width = <4>;
+>                         non-removable;
+>                         status = "okay";
+>
+>                         brcmf: bcrmf@1 {
+>                                 reg = <1>;
+>                                 compatible = "brcm,bcm43xx-fmac";
+>                                 interrupt-parent = <&pio>;
+>                                 interrupts = <10 8>; /* PH10 / EINT10 */
+>                                 interrupt-names = "host-wake";
+>                                 clocks = <&clk_out_a>;
+>                                 clock-names = "clk_32khz";
+>                                 gpios = <&pio 7 24 0>;
+>                                 gpio-names = "gpio_reg_enable";
+>                                 power-on-seq = "gpio_reg_enable", "usleep 1000", "clk_32khz", "usleep 200";
+>                                 status = "okay";
+>                         };
+>                 };
+>
+> Where power-on-seq would tell the mmc-core exactly how to bring up the sdio
+> device, using standard prefixes so that the mmc-core knows that something is
+> a clock / gpio / reset / whatever.
+
+I suppose I already made my point here. I don't think this is not a good idea.
+
+>
+> This should pretty much work for everything, and if something comes around which
+> really needs some custom bit of code to bring it up, the mmc-core powerup stuff
+> can simply be opted-out by leaving out the power-on-seq property.
+>
+> Regards,
+>
+> Hans
+
+Here are some more thoughts of how this should be implemented.
+
+Synchronization point:
+My idea is to let the mmc_of_parse() function act as the
+synchronization point, to make sure we are able to perform a full
+power up of the card - before we actually start initialization of it.
+
+If the mmc host has a child node to model the card, mmc_of_parse()
+needs to verify that a struct device is created for it and that it's
+corresponding "powerup driver" has been probed successfully.
+
+If the mmc_of_parse() returns -EPROBE_DEFER, the mmc host driver will
+return the same error code from it's ->probe(). This provides us with
+the ability of waiting for the "powerup driver" to be probed.
+
+If the mmc_of_parse() returns another error code, due to that the
+"powerup driver" failed to be probed, the mmc host driver's ->probe()
+will return the same error code and consequentially no power up of the
+card will be performed at all.
+
+
+Powerup driver's ->probe():
+Typically the "powerup driver" will need to register a few callback
+functions towards the mmc core. Typically at mmc_of_parse(), those
+callbacks will have to be connected to a particular mmc host.
+
+I would like to see three different callbacks, mirroring each of the
+mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
+
+
+The power up sequence, performed by the mmc core:
+The mmc_power_up|off functions, will invoke the registered "powerup
+driver's" callbacks if they exists for the particular host it operates
+on.
+
+
+Comments are of course welcome! :-)
+
+Kind regards
+Ulf Hansson
