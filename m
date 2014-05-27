@@ -1,75 +1,48 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v2 4/4] ARM: debug: qcom: add UART addresses to Kconfig
- help
-Date: Tue, 27 May 2014 15:05:53 +0300
-Message-ID: <53847FA1.60509@mm-sol.com>
-References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>	<1400857952-6963-5-git-send-email-gdjakov@mm-sol.com>	<CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>	<53834578.9090305@mm-sol.com>
- <CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, rvaswani@codeaurora.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, davidb@codeaurora.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v4 2/8] OF: Introduce DT overlay support.
+Date: Tue, 27 May 2014 13:11:40 +0100
+Message-ID: <20140527121140.1BCE9C40A5A@trevor.secretlab.ca>
+References: <1396615441-29630-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1396615441-29630-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140514100856.5198DC4153D@trevor.secretlab.ca>
+	<E204285C-D6CD-4518-A94F-26BF0570C1B1@konsulko.com>
+	<CAMuHMdUWfQ=2xPhNsS36mT6nv-CfR3_1exZ+5qYgdkjbBntrWg@mail.gmail.com>
+	<20140516105814.3EA3FC403C2@trevor.secretlab.ca>
+	<CAMuHMdWw39n8O0fFWECR6v6GaEJ3aB5S3ront4eDdXwxNO6Fgw@mail.gmail.com>
+	<20140520055026.E3A98C412DA@trevor.secretlab.ca>
+	<CAMuHMdXjWENrq0MW-DU2x7WnaCsWyipN4DO=y0ZTL+3G_fPYGg@mail.gmail.com>
+	<20140526104824.63F13C42129@trevor.secretlab.ca>
+	<CAMuHMdUGdjVKBR5rRzZ274rf7p8XfztNRWEojH1RrZV8c_V1uA@mail.gmail.com>
+	<20140526112348.907B7C421A5@trevor.secretlab.ca>
+	<A6195DFD-0447-4444-AC09-501C43F09924@konsulko.com>
+	<20140526213303.C1C73C40E11@trevor.secretlab.ca>
+	<CAMuHMdWoQd=EJ7ToWMrSq728HL7d7Ht1YmaNUO1EYZBU0eB1FQ@mail.gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWoQd=EJ7ToWMrSq728HL7d7Ht1YmaNUO1EYZBU0eB1FQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek>
 List-Id: devicetree@vger.kernel.org
 
-On 05/26/2014 08:17 PM, Matthias Brugger wrote:
-> 2014-05-26 15:45 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
->> On 23.05.14, 19:39, Matthias Brugger wrote:
->>>
->>> 2014-05-23 17:12 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
->>>>
->>>> Add information about the APQ8084 debug UART physical and virtual
->>>> addresses in the DEBUG_QCOM_UARTDM Kconfig help section.
->>>> Requires: https://lkml.org/lkml/2014/4/14/312
->>>>
->>>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->>>> ---
->>>>  arch/arm/Kconfig.debug |    1 +
->>>>  1 file changed, 1 insertion(+)
->>>>
->>>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
->>>> index 40ee328..e71723d 100644
->>>> --- a/arch/arm/Kconfig.debug
->>>> +++ b/arch/arm/Kconfig.debug
->>>> @@ -376,6 +376,7 @@ choice
->>>>                   their output to the serial port on Qualcomm devices.
->>>>
->>>>                   ARCH      DEBUG_UART_PHYS   DEBUG_UART_BASE
->>>> +                 APQ8084   0xf995e000        0xfa75e000
->>>>                   MSM8X60   0x19c40000        0xf0040000
->>>>                   MSM8960   0x16440000        0xf0040000
->>>>                   MSM8974   0xf991e000        0xfa71e000
->>>
->>>
->>> You don't have any uart defined in your dts. You should add them
->>> before any adding low level debug support.
->>> Otherwise there might be problems in booting a multi-platform kernel.
->>>
->>
->> Thanks for the comment! As the uart depends on clocks, i am adding it to the
->> dts as part of my global clock controller patchset [1].
->> In this patch i am just adding some information to the help section.
->> Do you see any problem with this?
+On Mon, 26 May 2014 23:44:41 +0200, Geert Uytterhoeven <geert@linux-m68k.org> wrote:
+> Hi Grant,
 > 
-> Are the patches for the clock controller applied already?
-> If not, I would consider to add this patch to clock controller series.
+> On Mon, May 26, 2014 at 11:33 PM, Grant Likely
+> <grant.likely@secretlab.ca> wrote:
+> > After thinking about it more, I think it is very likely that removing
+> > all the overlays is the correct thing to do in the kexec use-case. When
+> > kexec-ing, it makes sense that we'd want the exact same behaviour from
+> > the kexec'ed kernel. That means we want the device drivers to do the
+> > same thing including loading whatever overlays they depend on.
 > 
+> Are the device drivers loading the overlays?
+> That sounds a bit backwards to me.
 
-No, they are not applied yet. The uart dts definition depends on clocks, but the
-DEBUG_LL support does not. And the DEBUG_LL support is already there as it is 
-common with other SoCs. I am sorry, but i don't see dependency between the dts
-definition and this patch. Could you explain please?
+In a lot of cases, yes. For example, the beaglebone capebus driver would
+be responsible for identifying and requesting or loading the correct
+overlay to describe the hardware.
 
-Thanks,
-Georgi
+Having userspace provide an arbitrary overlay is only one of the use
+cases.
+
+g.
