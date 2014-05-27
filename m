@@ -1,60 +1,68 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 00/11] sdio wifi oob irq support for sunxi
-Date: Tue, 27 May 2014 18:50:38 +0200
-Message-ID: <5384C25E.70505@broadcom.com>
-References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com> <20140527152614.GB5694@tuxdriver.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 0/7] mfd: twl4030-power: Enable off-idle configuration
+ when booted with device tree
+Date: Tue, 27 May 2014 17:52:34 +0100
+Message-ID: <20140527165234.GF4227@lee--X1>
+References: <1400031250-29542-1-git-send-email-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBCKLZOXH5AIBB44ESOOAKGQE5RR7R5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140527152614.GB5694-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1400031250-29542-1-git-send-email-tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/27/14 17:26, John W. Linville wrote:
-> On Mon, May 26, 2014 at 09:47:55AM +0200, Hans de Goede wrote:
->> Hi All,
->>
->> Here is a patch series adding support for oob irqs for the ap6210 sdio wifi
->> modules found on various Allwinner A20 boards.
->>
->> A lot of it is ground work which should be useful for adding oob irq support
->> to other sdio wifi models too.
->>
->> The first 5 patches are sunxi pinctrl patches and should go upstream through
->> the pinctrl tree.
->>
->> Patch 6 adds generic support for having per sdio function child nodes in
->> devicetree and should go upstream through the mmc tree.
->>
->> Patch 7 and 8 add oob irq support to the brcmfmac driver. Patch 9 pokes some
->> magic bits needed to enable the oob irq, this was taken from an android code
->> dump and good do with a good review from someone from Broadcom, Arend ?
->
-> If Arend approves, I'm fine with these going through another appropriate tree.
+> Here's an updated set of patches to enable low-power idle modes
+> for some omap3 boards when booted with device tree.
+>=20
+> This series when applied on top of the patches in tread              =
+                                                                       =
+                 =20
+> "[PATCH 00/11] Fixes for omap PM for making omap3 DT only",
+> or omap-for-v3.16/pm branch.
+>=20
+> Lee, if these patches look OK to you, please feel free to=20
+> pick them, preferrably to the immutable branch you already
+> have set up so I can also merge them in to be able to have
+> things working in my branch properly for PM.
 
-Not sure in what tree these patches were created (assume some sunxi 
-tree), but if it conflicts with wireless-next I am pretty sure Stephen 
-will find that. I am fine with any tree. Patch 9 indeed has some magic 
-bits that need some clarification, but I will sort that out with Hans.
+Whoops, nearly forgot about this patchset.
 
-Regards,
-Arend
+Tony, can you resend it with all your fix-ups please.  The 8< doesn't
+work well with my patch application 'system'.
 
->> Patch 10 and 11 add the necessary dts bits to actually enable the sdio irq
->> and should go upstream through Maxime's dt tree.
->>
->> Please review / merge.
->>
->> Thanks&  Regards,
->>
->> Hans
->>
->
+> Tony Lindgren (7):
+>   mfd: twl4030-power: Fix hang on reboot if sleep configuration was
+>     loaded earlier
+>   mfd: twl4030-power: Fix some defines for SW_EVENTS
+>   mfd: twl4030-power: Add generic reset configuration
+>   mfd: twl4030-power: Add recommended idle configuration
+>   mfd: twl4030-power: Add support for board specific configuration
+>   mfd: twl4030power: Add a configuration to turn off oscillator durin=
+g
+>     off-idle
+>   ARM: dts: Enable twl4030 off-idle configuration for selected omaps
+>=20
+>  .../devicetree/bindings/mfd/twl4030-power.txt      |  17 +-
+>  arch/arm/boot/dts/omap3-beagle-xm.dts              |   6 +
+>  arch/arm/boot/dts/omap3-evm-common.dtsi            |   7 +
+>  arch/arm/boot/dts/omap3-n900.dts                   |   5 +
+>  drivers/mfd/twl4030-power.c                        | 269 +++++++++++=
+++++++++--
+>  include/linux/i2c/twl.h                            |   4 +
+>  6 files changed, 284 insertions(+), 24 deletions(-)
+>=20
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
