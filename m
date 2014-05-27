@@ -1,37 +1,45 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
-Date: Tue, 27 May 2014 11:02:31 -0300
-Message-ID: <CAOMZO5BAcZi5dKvitPxqcWnB=J1LY7sDRxiDcxRAjZmSpGZBEA@mail.gmail.com>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-	<20140424175844.GD29593@google.com>
-	<1398421265.4657.25.camel@weser.hi.pengutronix.de>
-	<CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
-	<1398774686.4677.12.camel@weser.hi.pengutronix.de>
-	<1399885183.5016.4.camel@weser.hi.pengutronix.de>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 01/11] pinctrl: sunxi: create irq/pin
+ mapping during init
+Date: Tue, 27 May 2014 16:11:09 +0200
+Message-ID: <CACRpkdZpy2aT_kFp01bnrviVB3SOggiNUJB46wbWAY_bqW8=gg@mail.gmail.com>
+References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
+	<1401090486-4414-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1399885183.5016.4.camel@weser.hi.pengutronix.de>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Shawn Guo <shawn.guo@linaro.org>, Richard Zhu <r65037@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Tim Harvey <tharvey@gateworks.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Sean Cross <xobs@kosagi.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-sunxi+bncBDE6RCFOWIARB7VZSKOAKGQEBK4WMFY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1401090486-4414-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
+On Mon, May 26, 2014 at 9:47 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
 
-On Mon, May 12, 2014 at 5:59 AM, Lucas Stach <l.stach@pengutronix.de> wrote:
-> Hi Bjorn,
+> From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 >
-> just a friendly reminder. It would be nice if you could pull those in.
+> The irq/pin mapping is used to lookup the pin to mux to the irq
+> function when the irq is enabled. It is created when gpio_to_irq
+> is called. Creating the mapping during init allows us to map the
+> interrupts directly from the device tree.
 >
-> Shawn already pulled the DT change and as it is a binding change this
-> means PCIe on i.MX6 is broken in -next, as long as the remaining patches
-> are missing.
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 
-We still have imx6q pcie broken in linux-next:
+This is exactly correct. Patch applied.
 
-imx6q-pcie 1ffc000.pcie: lvds_gate clock select missing or invalid
-imx6q-pcie: probe of 1ffc000.pcie failed with error -2
+I tried to hack the sunxi driver to even use the gpiolib
+irqchip helpers but exactly this complex map thing in
+->irq_array[] git me stuck. If any of you guys could be so
+nice to take a stab at this (compare to other commits
+converting drivers to use gpiolibs irqchip helpers) then
+I'd be very happy.
 
-
-Could you please apply Lucas' series?
+Yours,
+Linus Walleij
