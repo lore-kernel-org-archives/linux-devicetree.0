@@ -1,54 +1,64 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 0/3] Qualcomm Resource Power Manager driver
-Date: Wed, 28 May 2014 11:23:02 -0500
-Message-ID: <F773CDFB-2957-49C0-99D3-E9CDCE33C378@codeaurora.org>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/6] DT early console initialization
+Date: Wed, 28 May 2014 11:30:04 -0500
+Message-ID: <CAL_JsqK9nifPWW5jnzYifsMuvRjhD9wTT+YbE0sPM6N4xaj1yA@mail.gmail.com>
+References: <1399587823-17701-1-git-send-email-robherring2@gmail.com>
+	<20140514142644.1C922C4153D@trevor.secretlab.ca>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140514142644.1C922C4153D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, May 14, 2014 at 9:26 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu,  8 May 2014 17:23:37 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> This series adds support for early serial console initialization using
+>> DT. This enables determining the serial port type and address using the
+>> FDT and allows enabling the console before platform specific
+>> initialization runs. I've tested this on arm64. ARM support is dependent
+>> on adding fixmap support.
+>>
+>> Currently, the earlycon is only enabled if "earlycon" is present on the
+>> kernel command line. The FDT needs to have /chosen/stdout-path set to
+>> the path of the serial port.
+>>
+>> This series is dependent on generic earlycon[1], libfdt support[2], and
+>> vmlinux.lds.h clean-ups[3]. The first 2 are in linux-next already. A git
+>> branch is available here:
+>>
+>> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git earlycon-dt
+>
+> Nice. For the whole series:
+>
+> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> I haven't tested it though.
+>>
+>> Rob
+>>
+>> [1] https://lkml.org/lkml/2014/4/18/573
+>> [2] https://lkml.org/lkml/2014/4/22/1202
+>> [3] https://lkml.org/lkml/2014/3/27/285
+>>
+>> Rob Herring (6):
+>>   of: align RESERVEDMEM_OF_DECLARE function callbacks to other callbacks
+>>   of: consolidate linker section OF match table declarations
+>>   serial: earlycon: add DT support
+>>   of/fdt: add FDT address translation support
+>>   of/fdt: add FDT serial scanning for earlycon
+>>   tty/serial: pl011: add DT based earlycon support
 
-On May 27, 2014, at 12:28 PM, Bjorn Andersson <bjorn.andersson@sonymobile.com> wrote:
+Greg, I plan to take this series thru the DT tree for 3.16 unless you
+have any objections. It has dependencies on both the tty-next and the
+DT trees.
 
-> This series adds a regulator driver for the Resource Power Manager found in
-> Qualcomm 8660, 8960 and 8064 based devices.
-> 
-> The RPM driver exposes resources to its child devices, that can be accessed to
-> implement drivers for the regulators, clocks and bus frequency control that's
-> owned by the RPM in these devices.
-
-Rather than adding yet another mfd driver, how about we put this in drivers/soc/qcom as a much better location for the low level rpm code.  Some code already merged in arm-soc for creation of drivers/soc/qcom/
-
-> 
-> Bjorn Andersson (3):
->  mfd: devicetree: bindings: Add Qualcomm RPM DT binding
->  mfd: qcom-rpm: Driver for the Qualcomm RPM
->  regulator: qcom-rpm: Regulator driver for the Qualcomm RPM
-> 
-> Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 283 +++++++
-> drivers/mfd/Kconfig                                |  15 +
-> drivers/mfd/Makefile                               |   1 +
-> drivers/mfd/qcom_rpm.c                             | 554 ++++++++++++++
-> drivers/regulator/Kconfig                          |  12 +
-> drivers/regulator/Makefile                         |   1 +
-> drivers/regulator/qcom_rpm-regulator.c             | 852 +++++++++++++++++++++
-> include/dt-bindings/mfd/qcom_rpm.h                 | 148 ++++
-> include/linux/mfd/qcom_rpm.h                       |  13 +
-> 9 files changed, 1879 insertions(+)
-> create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.txt
-> create mode 100644 drivers/mfd/qcom_rpm.c
-> create mode 100644 drivers/regulator/qcom_rpm-regulator.c
-> create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
-> create mode 100644 include/linux/mfd/qcom_rpm.h
-
-- k
-
--- 
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
