@@ -1,69 +1,157 @@
-From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH 0/6] DT early console initialization
-Date: Wed, 28 May 2014 13:30:01 -0700
-Message-ID: <20140528203001.GA14334@kroah.com>
-References: <1399587823-17701-1-git-send-email-robherring2@gmail.com>
- <20140514142644.1C922C4153D@trevor.secretlab.ca>
- <CAL_JsqK9nifPWW5jnzYifsMuvRjhD9wTT+YbE0sPM6N4xaj1yA@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] ARM: shmobile: r8a7790: link PCI USB devices to USB
+ PHY
+Date: Thu, 29 May 2014 01:51:11 +0400
+Message-ID: <53865A4F.7000007@cogentembedded.com>
+References: <201405270217.33057.sergei.shtylyov@cogentembedded.com>	<CANqRtoT+xKmK7wkayiD9yCmUqFNKWxpeSgkGTiCqc+THYE0sVw@mail.gmail.com>	<5383C439.1080808@cogentembedded.com> <CANqRtoTanAWvEODE99dY-BRU1FOm3V78FM6ePYKtVbK1Ro+79A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqK9nifPWW5jnzYifsMuvRjhD9wTT+YbE0sPM6N4xaj1yA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoTanAWvEODE99dY-BRU1FOm3V78FM6ePYKtVbK1Ro+79A@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 11:30:04AM -0500, Rob Herring wrote:
-> On Wed, May 14, 2014 at 9:26 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Thu,  8 May 2014 17:23:37 -0500, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> >> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>
-> >> This series adds support for early serial console initialization using
-> >> DT. This enables determining the serial port type and address using the
-> >> FDT and allows enabling the console before platform specific
-> >> initialization runs. I've tested this on arm64. ARM support is dependent
-> >> on adding fixmap support.
-> >>
-> >> Currently, the earlycon is only enabled if "earlycon" is present on the
-> >> kernel command line. The FDT needs to have /chosen/stdout-path set to
-> >> the path of the serial port.
-> >>
-> >> This series is dependent on generic earlycon[1], libfdt support[2], and
-> >> vmlinux.lds.h clean-ups[3]. The first 2 are in linux-next already. A git
-> >> branch is available here:
-> >>
-> >> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git earlycon-dt
-> >
-> > Nice. For the whole series:
-> >
-> > Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > I haven't tested it though.
-> >>
-> >> Rob
-> >>
-> >> [1] https://lkml.org/lkml/2014/4/18/573
-> >> [2] https://lkml.org/lkml/2014/4/22/1202
-> >> [3] https://lkml.org/lkml/2014/3/27/285
-> >>
-> >> Rob Herring (6):
-> >>   of: align RESERVEDMEM_OF_DECLARE function callbacks to other callbacks
-> >>   of: consolidate linker section OF match table declarations
-> >>   serial: earlycon: add DT support
-> >>   of/fdt: add FDT address translation support
-> >>   of/fdt: add FDT serial scanning for earlycon
-> >>   tty/serial: pl011: add DT based earlycon support
-> 
-> Greg, I plan to take this series thru the DT tree for 3.16 unless you
-> have any objections. It has dependencies on both the tty-next and the
-> DT trees.
+Hello.
 
-No objection from me at all, feel free to do so.
+On 05/27/2014 04:41 AM, Magnus Damm wrote:
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> Describe the PCI USB devices that are behind the PCI bridges, adding
+>>>> necessary
+>>>> links to the USB PHY device.
+
+>>>> Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
+
+>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+>>>> ---
+>>>> This patch is against 'renesas-devel-v3.15-rc7-20140526' tag of Simon
+>>>> Horman's
+>>>> 'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches
+>>>> posted
+>>>> before. The patch requires the internal PCI DT support, USB PHY driver,
+>>>> and
+>>>> USB HCD generic PHY support (also already posted) in order to work.
+
+>>>> Changes in version 2:
+>>>> - renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
+>>>> - changed the PHY specifier in the PCI#2 node to reflect that channel #1
+>>>> support
+>>>>     was dropped;
+>>>> - resolved rejects, refreshed the patch.
+
+>>>>    arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
+>>>>    1 file changed, 28 insertions(+)
+
+>>>> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+>>>> ===================================================================
+>>>> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+>>>> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+>>>> @@ -919,6 +919,20 @@
+>>>>                   interrupt-map = <0x0000 0 0 1 &gic 0 108
+>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>                                    0x0800 0 0 1 &gic 0 108
+>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>                                    0x1000 0 0 2 &gic 0 108
+>>>> IRQ_TYPE_LEVEL_HIGH>;
+>>>> +
+>>>> +               usb@0,1 {
+>>>> +                       reg = <0x800 0 0 0 0>;
+>>>> +                       device_type = "pci";
+>>>> +                       phys = <&usbphy 0 0>;
+>>>> +                       phy-names = "usb";
+>>>> +               };
+>>>> +
+>>>> +               usb@0,2 {
+>>>> +                       reg = <0x1000 0 0 0 0>;
+>>>> +                       device_type = "pci";
+>>>> +                       phys = <&usbphy 0 0>;
+>>>> +                       phy-names = "usb";
+>>>> +               };
+>>>>           };
+>>>>
+>>>>           pci1: pci@ee0b0000 {
+>>>> @@ -955,5 +969,19 @@
+>>>>                   interrupt-map = <0x0000 0 0 1 &gic 0 113
+>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>                                    0x0800 0 0 1 &gic 0 113
+>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>                                    0x1000 0 0 2 &gic 0 113
+>>>> IRQ_TYPE_LEVEL_HIGH>;
+>>>> +
+>>>> +               usb@0,1 {
+>>>> +                       reg = <0x800 0 0 0 0>;
+>>>> +                       device_type = "pci";
+>>>> +                       phys = <&usbphy 1 0>;
+>>>> +                       phy-names = "usb";
+>>>> +               };
+>>>> +
+>>>> +               usb@0,2 {
+>>>> +                       reg = <0x1000 0 0 0 0>;
+>>>> +                       device_type = "pci";
+>>>> +                       phys = <&usbphy 1 0>;
+>>>> +                       phy-names = "usb";
+>>>> +               };
+>>>>           };
+>>>>    };
+
+>>> Hi Sergei,
+
+>>> Above I see two hunks of DTS code but my r8a7790 data sheet contains
+>>> three USB PCI devices. Perhaps my understanding is wrong, or may there
+
+>>     You probably wanted to say 6 (OHCI and EHCI are 2 different PCI devices).
+
+> Sure. I guess it depends on if you count PCI host controllers or USB
+> host controllers..
+
+    You said "USB PCI devices", so I thought you meant the latter.
+
+>>> is some other patch available to enable all USB PCI devices included
+>>> in the SoC?
+
+>>     This patch doesn't enable USB devices, it just links them to the PHY
+>> where it makes sense (for USB channel #1 it doesn't).
+
+> I know we've discussed this before, and for USB channel #1 you tend to
+> say that the PHY is not necessary for operation. From my side I am not
+> so sure. Over the months I seen several shortcuts and missing pieces
+> so for now just assume this is another rushed attempt. As usual I
+> would like to make sure the dependencies are correctly described in DT
+> before merging anything.
+
+> Like I mentioned earlier there are shared bits in UGCTRL register in
+
+    Did you mean UGCTRL or UGCTRL2 register? My testing didn't prove that the 
+UGCTRL bits (CONNECT and PLLRESET) affect anything but the USBHS controller -- 
+my PHY driver only touches these bits if the PHY selected corresponds to the 
+USBHS itself (which is not supported by DT yet)...
+
+> the PHY. Those may or may not affect USB channel #1. Furthermore, on
+> top of this we have the MSTP bit for the PHY that may or may not be
+> related to USB channel #1.
+
+    There is no MSTP bit for the PHY, there's MSTP bit for USBHS controller of 
+which this PHY is a part.
+
+> My opinion is that if the USB PHY requires the MSTP clock to be
+> enabled when using USB channel #1 _or_ the UGCTRL bits affect the USB
+> Channel #1 then DT needs to point out the relationship between the PHY
+> and the USB Host
+
+    I agree and I can conduct some additional tests only linking the USB 
+channel #1 to the PHY driver, and hence enabling the USBHS clock only for it...
+
+> so Runtime PM can be used in the PHY driver to
+> dynamically manage the clock.
+
+    Er, do you insist on using the runtime PM vs clock API? I'm not yet sure 
+it'll work with a named clock...
+
+> Thanks,
+> / magnus
+
+WBR, Sergei
+
