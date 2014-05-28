@@ -1,205 +1,87 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4] pci-rcar-gen2: add device tree support
-Date: Wed, 28 May 2014 12:45:01 +0900
-Message-ID: <20140528034459.GA26524@verge.net.au>
-References: <201405200110.21914.sergei.shtylyov@cogentembedded.com>
- <20140528030418.GN11907@google.com>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH v11 2/3] clk: exynos5410: register clocks using common
+ clock framework
+Date: Wed, 28 May 2014 13:49:49 +0900
+Message-ID: <01a201cf7a30$41ecca90$c5c65fb0$@samsung.com>
+References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
+ <1401074613-29227-3-git-send-email-t.dakhran@samsung.com>
+ <20140528004116.7816.69646@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140528030418.GN11907@google.com>
+In-reply-to: <20140528004116.7816.69646@quantum>
+Content-language: ko
 Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+To: 'Mike Turquette' <mturquette@linaro.org>, linux-kernel@vger.kernel.org
+Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Rob Landley' <rob@landley.net>, 'Russell King' <linux@arm.linux.org.uk>, 'Ben Dooks' <ben-linux@fluff.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Vyacheslav Tyrtov' <v.tyrtov@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Heiko Stuebner' <heiko@sntech.de>, 'Romain Naour' <romain.naour@openwide.fr>, 'Chander Kashyap' <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Tarek Dakhran' <t.dakhran@gmail.com>, 'Tarek Dakhran' <t.dakhran@samsung.com>, 'Jonghwan Choi' <jhbird.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 09:04:18PM -0600, Bjorn Helgaas wrote:
-> [+cc Arnd]
+Mike Turquette wrote:
 > 
-> On Tue, May 20, 2014 at 01:10:20AM +0400, Sergei Shtylyov wrote:
-> > From: Ben Dooks <ben.dooks@codethink.co.uk>
-> > 
-> > Add device tree probing support to the 'pci-rcar-gen2' driver.
-> > 
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> > [Sergei: numerous fixes/cleanups/additions]
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> I'd like to see an ack from Simon (since it changes pci-rcar-gen2.c) and
-> Arnd (since he pointed out some issues with the devicetree binding).
-
-Acked-by: Simon Horman <horms+renesas@verge.net.au>
-
-> 
-> Bjorn
-> 
+> Quoting Tarek Dakhran (2014-05-25 20:23:32)
+> > The EXYNOS5410 clocks are statically listed and registered
+> > using the Samsung specific common clock helper functions.
+> >
+> > Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
+> > Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
 > > ---
-> > The patch is against the 'next' branch of Bjorn Helgaas' 'pci.git' repo.
-> > 
-> > Changes in version 4:
-> > - added the descriptions for the #{address|size|interrupt}-cells and
-> >   #interrupt-map[-mask] properties to the binding document;
-> > - added the interrupt-related properties to the example;
-> > - refreshed the patch.
-> > 
-> > Changes in version 3:
-> > - added "renesas,pci-r8a7791" to the possible "compatible" property values;
-> > - removed '#ifdef CONFIG_OF' around rcar_pci_of_match[] and hence of_match_ptr()
-> >   invocation too;
-> > - fixed trailing whitespace in the DT parsing code;
-> > - removed the wrong "renessas," prefix from the binding document's file name;
-> > - moved the PCI device sub-nodes from the board example to the SoC example;
-> > - fixed labels in the board example;
-> > - fixed grammar and punctuation in the binding document;
-> > - reworded the changelog, fixed the subject.
-> > 
-> > Changes in version 2:
-> > - merged the binding document from a separate patch;
-> > - moved to the "bus-range" property parsing;
-> > - added example to the binding document.
-> > 
-> >  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt |   66 ++++++++++++++++
-> >  drivers/pci/host/pci-rcar-gen2.c                        |   31 +++++++
-> >  2 files changed, 95 insertions(+), 2 deletions(-)
-> > 
-> > Index: pci/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > ===================================================================
+> >  .../devicetree/bindings/clock/exynos5410-clock.txt |   45 +++++
+> >  drivers/clk/samsung/Makefile                       |    1 +
+> >  drivers/clk/samsung/clk-exynos5410.c               |  209
+> ++++++++++++++++++++
+> >  include/dt-bindings/clock/exynos5410.h             |   33 ++++
+> >  4 files changed, 288 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-
+> clock.txt
+> >  create mode 100644 drivers/clk/samsung/clk-exynos5410.c
+> >  create mode 100644 include/dt-bindings/clock/exynos5410.h
+> >
+> > diff --git a/Documentation/devicetree/bindings/clock/exynos5410-
+> clock.txt b/Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+> > new file mode 100644
+> > index 0000000..aeab635
 > > --- /dev/null
-> > +++ pci/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
-> > @@ -0,0 +1,66 @@
-> > +Renesas AHB to PCI bridge
-> > +-------------------------
+> > +++ b/Documentation/devicetree/bindings/clock/exynos5410-clock.txt
+> > @@ -0,0 +1,45 @@
+> > +* Samsung Exynos5410 Clock Controller
 > > +
-> > +This is the bridge used internally to connect the USB controllers to the
-> > +AHB. There is one bridge instance per USB port connected to the internal
-> > +OHCI and EHCI controllers.
+> > +The Exynos5410 clock controller generates and supplies clock to various
+> > +controllers within the Exynos5410 SoC.
 > > +
-> > +Required properties:
-> > +- compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
-> > +	      "renesas,pci-r8a7791" for the R8A7791 SoC.
-> > +- reg:	A list of physical regions to access the device: the first is
-> > +	the operational registers for the OHCI/EHCI controllers and the
-> > +	second is for the bridge configuration and control registers.
-> > +- interrupts: interrupt for the device.
-> > +- clocks: The reference to the device clock.
-> > +- bus-range: The PCI bus number range; as this is a single bus, the range
-> > +	     should be specified as the same value twice.
-> > +- #address-cells: must be 3.
-> > +- #size-cells: must be 2.
-> > +- #interrupt-cells: must be 1.
-> > +- interrupt-map: standard property used to define the mapping of the PCI
-> > +  interrupts to the GIC interrupts.
-> > +- interrupt-map-mask: standard property that helps to define the interrupt
-> > +  mapping.
+> > +Required Properties:
 > > +
-> > +Example SoC configuration:
+> > +- compatible: should be "samsung,exynos5410-clock"
 > > +
-> > +	pci0: pci@ee090000  {
-> > +		compatible = "renesas,pci-r8a7790";
-> > +		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
-> > +		reg = <0x0 0xee090000 0x0 0xc00>,
-> > +		      <0x0 0xee080000 0x0 0x1100>;
-> > +		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-> > +		status = "disabled";
+> > +- reg: physical base address of the controller and length of memory
+> mapped
+> > +  region.
 > > +
-> > +		bus-range = <0 0>;
-> > +		#address-cells = <3>;
-> > +		#size-cells = <2>;
-> > +		#interrupt-cells = <1>;
-> > +		interrupt-map-mask = <0xff00 0 0 0x7>;
-> > +		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-> > +			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-> > +			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+> > +- #clock-cells: should be 1.
 > > +
-> > +		pci@0,1 {
-> > +			reg = <0x800 0 0 0 0>;
-> > +			device_type = "pci";
-> > +			phys = <&usbphy 0 0>;
-> > +			phy-names = "usb";
-> > +		};
+> > +All available clocks are defined as preprocessor macros in
+> > +dt-bindings/clock/exynos5410.h header and can be used in device
+> > +tree sources.
 > > +
-> > +		pci@0,2 {
-> > +			reg = <0x1000 0 0 0 0>;
-> > +			device_type = "pci";
-> > +			phys = <&usbphy 0 0>;
-> > +			phy-names = "usb";
-> > +		};
-> > +	};
+> > +External clock:
 > > +
-> > +Example board setup:
+> > +There is clock that is generated outside the SoC. It
+> > +is expected that it is defined using standard clock bindings
+> > +with following clock-output-name:
 > > +
-> > +&pci0 {
-> > +	status = "okay";
-> > +	pinctrl-0 = <&usb0_pins>;
-> > +	pinctrl-names = "default";
-> > +};
-> > Index: pci/drivers/pci/host/pci-rcar-gen2.c
-> > ===================================================================
-> > --- pci.orig/drivers/pci/host/pci-rcar-gen2.c
-> > +++ pci/drivers/pci/host/pci-rcar-gen2.c
-> > @@ -98,6 +98,7 @@ struct rcar_pci_priv {
-> >  	struct resource io_res;
-> >  	struct resource mem_res;
-> >  	struct resource *cfg_res;
-> > +	unsigned busnr;
-> >  	int irq;
-> >  	unsigned long window_size;
-> >  };
-> > @@ -312,8 +313,8 @@ static int rcar_pci_setup(int nr, struct
-> >  	pci_add_resource(&sys->resources, &priv->io_res);
-> >  	pci_add_resource(&sys->resources, &priv->mem_res);
-> >  
-> > -	/* Setup bus number based on platform device id */
-> > -	sys->busnr = to_platform_device(priv->dev)->id;
-> > +	/* Setup bus number based on platform device id / of bus-range */
-> > +	sys->busnr = priv->busnr;
-> >  	return 1;
-> >  }
-> >  
-> > @@ -366,6 +367,23 @@ static int rcar_pci_probe(struct platfor
-> >  
-> >  	priv->window_size = SZ_1G;
-> >  
-> > +	if (pdev->dev.of_node) {
-> > +		struct resource busnr;
-> > +		int ret;
-> > +
-> > +		ret = of_pci_parse_bus_range(pdev->dev.of_node, &busnr);
-> > +		if (ret < 0) {
-> > +			dev_err(&pdev->dev, "failed to parse bus-range\n");
-> > +			return ret;
-> > +		}
-> > +
-> > +		priv->busnr = busnr.start;
-> > +		if (busnr.end != busnr.start)
-> > +			dev_warn(&pdev->dev, "only one bus number supported\n");
-> > +	} else {
-> > +		priv->busnr = pdev->id;
-> > +	}
-> > +
-> >  	hw_private[0] = priv;
-> >  	memset(&hw, 0, sizeof(hw));
-> >  	hw.nr_controllers = ARRAY_SIZE(hw_private);
-> > @@ -377,11 +395,20 @@ static int rcar_pci_probe(struct platfor
-> >  	return 0;
-> >  }
-> >  
-> > +static struct of_device_id rcar_pci_of_match[] = {
-> > +	{ .compatible = "renesas,pci-r8a7790", },
-> > +	{ .compatible = "renesas,pci-r8a7791", },
-> > +	{ },
-> > +};
-> > +
-> > +MODULE_DEVICE_TABLE(of, rcar_pci_of_match);
-> > +
-> >  static struct platform_driver rcar_pci_driver = {
-> >  	.driver = {
-> >  		.name = "pci-rcar-gen2",
-> >  		.owner = THIS_MODULE,
-> >  		.suppress_bind_attrs = true,
-> > +		.of_match_table = rcar_pci_of_match,
-> >  	},
-> >  	.probe = rcar_pci_probe,
-> >  };
+> > + - "fin_pll" - PLL input clock from XXTI
 > 
+> Does fin_pll feed into the exynos5410-clock controller? If so, should
+> the example clock-controller node below have a clocks and clock-names
+> property?
+> 
+Well, it is fixed clocks and generated outside of the SoC...so maybe the properties are not required?
+
+BTW, I've applied this series with Tomasz Figa's reviewed tag and sent out to arm-soc today so if any concerns on this, please let me know immediately.
+
+> Otherwise patch looks good.
+> 
+
+Thanks,
+Kukjin
+
