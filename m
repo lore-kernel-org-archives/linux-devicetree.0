@@ -1,99 +1,194 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU
- enable method
-Date: Wed, 28 May 2014 14:34:28 +0100
-Message-ID: <20140528133428.GB29219@e102568-lin.cambridge.arm.com>
-References: <1400607830-10989-1-git-send-email-elder@linaro.org>
- <1400607830-10989-2-git-send-email-elder@linaro.org>
- <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
- <53855867.7050800@linaro.org>
- <20140528103625.GA29219@e102568-lin.cambridge.arm.com>
- <5385D4EE.2040304@linaro.org>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH v4] pci-rcar-gen2: add device tree support
+Date: Wed, 28 May 2014 07:51:54 -0600
+Message-ID: <20140528135154.GQ11907@google.com>
+References: <201405200110.21914.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <5385D4EE.2040304@linaro.org>
 Content-Disposition: inline
+In-Reply-To: <201405200110.21914.sergei.shtylyov@cogentembedded.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Alex Elder <elder@linaro.org>
-Cc: "mporter@linaro.org" <mporter@linaro.org>, "bcm@fixthebug.org" <bcm@fixthebug.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "rjui@broadcom.com" <rjui@broadcom.com>r
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, horms@verge.net.au, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 01:22:06PM +0100, Alex Elder wrote:
-> On 05/28/2014 05:36 AM, Lorenzo Pieralisi wrote:
-> > On Wed, May 28, 2014 at 04:30:47AM +0100, Alex Elder wrote:
-> >> On 05/27/2014 06:49 AM, Lorenzo Pieralisi wrote:
-> >>> On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
-> >>>> Broadcom mobile SoCs use a ROM-implemented holding pen for
-> >>>> controlled boot of secondary cores.  A special register is
-> >>>> used to communicate to the ROM that a secondary core should
-> >>>> start executing kernel code.  This enable method is currently
-> >>>> used for members of the bcm281xx and bcm21664 SoC families.
-> >>>>
-> >>>> The use of an enable method also allows the SMP operation vector to
-> >>>> be assigned as a result of device tree content for these SoCs.
-> >>>>
-> >>>> Signed-off-by: Alex Elder <elder@linaro.org>
-> >>>
-> >>> This is getting out of control, it is absolutely ghastly. I wonder how
-> >>> I can manage to keep cpus.txt updated if anyone with a boot method
-> >>> du jour adds into cpus.txt, and honestly in this specific case it is even
-> >>> hard to understand why.
-> >>
-> >> OK, in this message I'll focus on the particulars of this
-> >> proposed binding.
-> >>
-> >>> Can't it be done with bindings for the relative register address space
-> >>> (regmap ?) and platform code just calls the registers driver to set-up the
-> >>> jump address ? It is platform specific code anyway there is no way you
-> >>> can make this generic.
-> >>
-> >> I want to clarify what you're after here.
-> >>
-> >> My aim is to add SMP support for a class of Broadcom SMP
-> >> machines.  To do so, I'm told I need to use the technique
-> >> of assigning the SMP operations vector as a result of
-> >> identifying an enable method in the DT.
-> >>
-> >> For 32-bit ARM, there are no generic "enable-method" values.
-> >> (I did attempt to create one for "spin-table" but that was
-> >> rejected by Russell King.)  For the machines I'm trying to
-> >> enable, secondary CPUS start out spinning in a ROM-based
-> >> holding pen, and there is no need for a kernel-based one.
-> >>
-> >> However, like a spin-table/holding pen enable method, a
-> >> memory location is required for coordination between the
-> >> boot CPU running kernel code and secondary CPUs running ROM
-> >> code.  My proposal specifies it using a special numeric
-> >> property value named "secondary-boot-reg" in the "cpus"
-> >> node in the DT.
-> >>
-> >> And as I understand it, the issue you have relates to how
-> >> this memory location is specified.
-> > 
-> > The issue I have relates to cluttering cpus.txt with all
-> > sorts of platform specific SMP boot hacks.
+On Tue, May 20, 2014 at 01:10:20AM +0400, Sergei Shtylyov wrote:
+> From: Ben Dooks <ben.dooks@codethink.co.uk>
 > 
-> OK, as I mentioned in my other message, I totally
-> agree with you here.  It's a total (and building)
-> mess.  I discussed this with Mark Rutland at ELC
-> last month and suggested splitting that stuff out
-> of "cpus.txt", which I have now proposed with a
-> patch.
->     https://lkml.org/lkml/2014/5/8/545
+> Add device tree probing support to the 'pci-rcar-gen2' driver.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> [Sergei: numerous fixes/cleanups/additions]
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I think this makes sense, I will review that patchset, and with this
-approach agreed I am ok with adding a platform specific boot method,
-since it is split up "nicely", do not bother adding a specific driver
-to poke a register (it will be fun to see the number of files we have
-to add to /cpu-enable-method though, big fun).
+Applied to pci/host-rcar for v3.16, thanks everybody!
 
-I still think that it is high time we started pushing back on these
-platform hacks and move towards a common interface like PSCI to boot
-(and suspend) ARM processors, there is no reason whatsoever why this
-can't be done on the platforms you are trying to get merged unless I am
-missing something.
-
-Lorenzo
-
+> ---
+> The patch is against the 'next' branch of Bjorn Helgaas' 'pci.git' repo.
+> 
+> Changes in version 4:
+> - added the descriptions for the #{address|size|interrupt}-cells and
+>   #interrupt-map[-mask] properties to the binding document;
+> - added the interrupt-related properties to the example;
+> - refreshed the patch.
+> 
+> Changes in version 3:
+> - added "renesas,pci-r8a7791" to the possible "compatible" property values;
+> - removed '#ifdef CONFIG_OF' around rcar_pci_of_match[] and hence of_match_ptr()
+>   invocation too;
+> - fixed trailing whitespace in the DT parsing code;
+> - removed the wrong "renessas," prefix from the binding document's file name;
+> - moved the PCI device sub-nodes from the board example to the SoC example;
+> - fixed labels in the board example;
+> - fixed grammar and punctuation in the binding document;
+> - reworded the changelog, fixed the subject.
+> 
+> Changes in version 2:
+> - merged the binding document from a separate patch;
+> - moved to the "bus-range" property parsing;
+> - added example to the binding document.
+> 
+>  Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt |   66 ++++++++++++++++
+>  drivers/pci/host/pci-rcar-gen2.c                        |   31 +++++++
+>  2 files changed, 95 insertions(+), 2 deletions(-)
+> 
+> Index: pci/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> ===================================================================
+> --- /dev/null
+> +++ pci/Documentation/devicetree/bindings/pci/pci-rcar-gen2.txt
+> @@ -0,0 +1,66 @@
+> +Renesas AHB to PCI bridge
+> +-------------------------
+> +
+> +This is the bridge used internally to connect the USB controllers to the
+> +AHB. There is one bridge instance per USB port connected to the internal
+> +OHCI and EHCI controllers.
+> +
+> +Required properties:
+> +- compatible: "renesas,pci-r8a7790" for the R8A7790 SoC;
+> +	      "renesas,pci-r8a7791" for the R8A7791 SoC.
+> +- reg:	A list of physical regions to access the device: the first is
+> +	the operational registers for the OHCI/EHCI controllers and the
+> +	second is for the bridge configuration and control registers.
+> +- interrupts: interrupt for the device.
+> +- clocks: The reference to the device clock.
+> +- bus-range: The PCI bus number range; as this is a single bus, the range
+> +	     should be specified as the same value twice.
+> +- #address-cells: must be 3.
+> +- #size-cells: must be 2.
+> +- #interrupt-cells: must be 1.
+> +- interrupt-map: standard property used to define the mapping of the PCI
+> +  interrupts to the GIC interrupts.
+> +- interrupt-map-mask: standard property that helps to define the interrupt
+> +  mapping.
+> +
+> +Example SoC configuration:
+> +
+> +	pci0: pci@ee090000  {
+> +		compatible = "renesas,pci-r8a7790";
+> +		clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
+> +		reg = <0x0 0xee090000 0x0 0xc00>,
+> +		      <0x0 0xee080000 0x0 0x1100>;
+> +		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+> +		status = "disabled";
+> +
+> +		bus-range = <0 0>;
+> +		#address-cells = <3>;
+> +		#size-cells = <2>;
+> +		#interrupt-cells = <1>;
+> +		interrupt-map-mask = <0xff00 0 0 0x7>;
+> +		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+> +			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+> +			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+> +
+> +		pci@0,1 {
+> +			reg = <0x800 0 0 0 0>;
+> +			device_type = "pci";
+> +			phys = <&usbphy 0 0>;
+> +			phy-names = "usb";
+> +		};
+> +
+> +		pci@0,2 {
+> +			reg = <0x1000 0 0 0 0>;
+> +			device_type = "pci";
+> +			phys = <&usbphy 0 0>;
+> +			phy-names = "usb";
+> +		};
+> +	};
+> +
+> +Example board setup:
+> +
+> +&pci0 {
+> +	status = "okay";
+> +	pinctrl-0 = <&usb0_pins>;
+> +	pinctrl-names = "default";
+> +};
+> Index: pci/drivers/pci/host/pci-rcar-gen2.c
+> ===================================================================
+> --- pci.orig/drivers/pci/host/pci-rcar-gen2.c
+> +++ pci/drivers/pci/host/pci-rcar-gen2.c
+> @@ -98,6 +98,7 @@ struct rcar_pci_priv {
+>  	struct resource io_res;
+>  	struct resource mem_res;
+>  	struct resource *cfg_res;
+> +	unsigned busnr;
+>  	int irq;
+>  	unsigned long window_size;
+>  };
+> @@ -312,8 +313,8 @@ static int rcar_pci_setup(int nr, struct
+>  	pci_add_resource(&sys->resources, &priv->io_res);
+>  	pci_add_resource(&sys->resources, &priv->mem_res);
+>  
+> -	/* Setup bus number based on platform device id */
+> -	sys->busnr = to_platform_device(priv->dev)->id;
+> +	/* Setup bus number based on platform device id / of bus-range */
+> +	sys->busnr = priv->busnr;
+>  	return 1;
+>  }
+>  
+> @@ -366,6 +367,23 @@ static int rcar_pci_probe(struct platfor
+>  
+>  	priv->window_size = SZ_1G;
+>  
+> +	if (pdev->dev.of_node) {
+> +		struct resource busnr;
+> +		int ret;
+> +
+> +		ret = of_pci_parse_bus_range(pdev->dev.of_node, &busnr);
+> +		if (ret < 0) {
+> +			dev_err(&pdev->dev, "failed to parse bus-range\n");
+> +			return ret;
+> +		}
+> +
+> +		priv->busnr = busnr.start;
+> +		if (busnr.end != busnr.start)
+> +			dev_warn(&pdev->dev, "only one bus number supported\n");
+> +	} else {
+> +		priv->busnr = pdev->id;
+> +	}
+> +
+>  	hw_private[0] = priv;
+>  	memset(&hw, 0, sizeof(hw));
+>  	hw.nr_controllers = ARRAY_SIZE(hw_private);
+> @@ -377,11 +395,20 @@ static int rcar_pci_probe(struct platfor
+>  	return 0;
+>  }
+>  
+> +static struct of_device_id rcar_pci_of_match[] = {
+> +	{ .compatible = "renesas,pci-r8a7790", },
+> +	{ .compatible = "renesas,pci-r8a7791", },
+> +	{ },
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, rcar_pci_of_match);
+> +
+>  static struct platform_driver rcar_pci_driver = {
+>  	.driver = {
+>  		.name = "pci-rcar-gen2",
+>  		.owner = THIS_MODULE,
+>  		.suppress_bind_attrs = true,
+> +		.of_match_table = rcar_pci_of_match,
+>  	},
+>  	.probe = rcar_pci_probe,
+>  };
