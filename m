@@ -1,227 +1,251 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
-Date: Wed, 28 May 2014 08:44:33 +0200
-Message-ID: <538585D1.9030305@samsung.com>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
- <20140526134153.GA2373@ulmo> <538430A4.8020702@samsung.com>
- <20140527075328.GA13081@ulmo>
- <CAAQKjZOGLPoGbZ7G3+BFd3ydRC2HGmz8JKqFiytdSvxN3T5U_w@mail.gmail.com>
- <20140527202122.GA10609@mithrandir> <53856B0D.6010501@samsung.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM
+ controller
+Date: Wed, 28 May 2014 09:01:33 +0200
+Message-ID: <20140528070133.GD13172@pengutronix.de>
+References: <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
+ <20140519191206.GH949@pengutronix.de>
+ <CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
+ <CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
+ <20140520144446.GJ949@pengutronix.de>
+ <CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
+ <20140527071157.GC20695@pengutronix.de>
+ <CANk1AXTMHuWeaxn_hVi+AH=aXbbSNov=894YmSYfvfvpWM+eSg@mail.gmail.com>
+ <20140527194228.GB13172@pengutronix.de>
+ <CANk1AXRMZrNWr4FR6KYAkN3JwVA1d9qdn00UY3OaYurz6DNvmA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53856B0D.6010501@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de, laurent.pinchart@ideasonboard.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANk1AXRMZrNWr4FR6KYAkN3JwVA1d9qdn00UY3OaYurz6DNvmA@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alan Tull <delicious.quinoa@gmail.com>
+Cc: Thor Thayer <tthayer.linux@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/28/2014 06:50 AM, Inki Dae wrote:
-> On 2014=EB=85=84 05=EC=9B=94 28=EC=9D=BC 05:21, Thierry Reding wrote:
->> On Tue, May 27, 2014 at 11:24:49PM +0900, Inki Dae wrote:
->>> 2014-05-27 16:53 GMT+09:00 Thierry Reding <thierry.reding@gmail.com=
->:
->>>> On Tue, May 27, 2014 at 08:28:52AM +0200, Andrzej Hajda wrote:
->>>>> Hi Thierry,
->>>>>
->>>>> On 05/26/2014 03:41 PM, Thierry Reding wrote:
->>>>>> On Wed, May 21, 2014 at 01:43:05PM +0900, YoungJun Cho wrote:
->>>>>>> This patch adds DT bindings for s6e3fa0 panel.
->>>>>>> The bindings describes panel resources, display timings and cpu=
- mode timings.
->>>>>>>
->>>>>>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->>>>>>> Acked-by: Inki Dae <inki.dae@samsung.com>
->>>>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>>>> ---
->>>>>>>  .../devicetree/bindings/panel/samsung,s6e3fa0.txt  |   45 ++++=
-++++++++++++++++
->>>>>>>  1 file changed, 45 insertions(+)
->>>>>>>  create mode 100644 Documentation/devicetree/bindings/panel/sam=
-sung,s6e3fa0.txt
->>>>>> You're totally confusing me here. Half of this patch series is a=
-bout
->>>>>> adding i80 support to Exynos FIMD, and then you go and add what =
-is
->>>>>> apparently a DSI peripheral driver here that's supposed to be us=
-ed by
->>>>>> this new i80 support. Nothing I've been able to dig up indicates=
- that
->>>>>> i80 or DSI are in anyway related.
->>>>> FIMD can produce parallel RGB output or command mode in i80 style=
- output
->>>>> via parallel lines.
->>>>> DSIM can accept parallel RGB stream in this case it produces MIPI=
- DSI
->>>>> video mode signal or it can accept i80 and in this case it transl=
-ates it
->>>>> to MIPI DSI command mode.
->>>> Then the command mode timings aren't a property of the panel at al=
-l.
->>> Then the video mode timings aren't also a property of the panel.
->>>
->>> Which interface mipi and display controller should use would be
->>> decided by lcd panel type: display controller can use i80 interface
->>> based lcd panel, and also mipi controller can use i80 interface bas=
-ed
->>> lcd panel.
->>> In here, the only difference is that lcd panel receives  packets,
->>> which includes video data or command data, packed with mipi protoco=
-l
->>> via lane lines or receives video data or command data via parallel
->>> lines.
->>>
->>> And the below is LCD types,
->>>         RGB interface panel.
->>>         i80 interface panel.
->>>         MIPI based RGB interface panel.
->>>         MIPI based i80 interface panel.
->>>
->>> RGB interface also is called video mode, and i80 interface also is
->>> called cpu mode. In case of omap SoC, it is also called Smart panel=
-=2E
->>> i80 interface is just one of LCD types. So I think this interface
->>> timings should be handled by frameworks related to mode in same way=
- as
->>> RGB interface.
+On Tue, May 27, 2014 at 03:57:47PM -0500, Alan Tull wrote:
+> On Tue, May 27, 2014 at 2:42 PM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+> > On Tue, May 27, 2014 at 02:12:17PM -0500, Alan Tull wrote:
+> >> On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
+> >> <s.trumtrar@pengutronix.de> wrote:
+> >> > On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
+> >> >> On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
+> >> >> <s.trumtrar@pengutronix.de> wrote:
+> >> >> > Hi!
+> >> >> >
+> >> >> > On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
+> >> >> >> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
+> >> >> >>
+> >> >> >> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >> >> >> >>> >> new file mode 100644
+> >> >> >> >>> >> index 0000000..8f8746b
+> >> >> >> >>> >> --- /dev/null
+> >> >> >> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >> >> >> >>> >> @@ -0,0 +1,11 @@
+> >> >> >> >>> >> +Altera SOCFPGA SDRAM Controller
+> >> >> >> >>> >> +
+> >> >> >> >>> >> +Required properties:
+> >> >> >> >>> >> +- compatible : "altr,sdr-ctl";
+> >> >> >> >>> >> +- reg : Should contain 1 register ranges(address and length)
+> >> >> >> >>> >> +
+> >> >> >> >>> >> +Example:
+> >> >> >> >>> >> +     sdrctl@ffc25000 {
+> >> >> >> >>> >> +             compatible = "altr,sdr-ctl";
+> >> >> >> >>> >> +             reg = <0xffc25000 0x1000>;
+> >> >> >> >>> >> +     };
+> >> >> >> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> >> >> >> >>> >> index df43702..6ce912e 100644
+> >> >> >> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+> >> >> >> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> >> >> >> >>> >> @@ -676,6 +676,11 @@
+> >> >> >> >>> >>                       clocks = <&l4_sp_clk>;
+> >> >> >> >>> >>               };
+> >> >> >> >>> >>
+> >> >> >> >>> >> +             sdrctl@ffc25000 {
+> >> >> >> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
+> >> >> >> >>> >                                                    ^^^^^^^^^^
+> >> >> >> >>> >
+> >> >> >> >>> > Get rid of that, too, please.
+> >> >> >> >>>
+> >> >> >> >>> Hi Steffan,
+> >> >> >> >>>
+> >> >> >> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
+> >> >> >> >>> that has the ECC enable bitfield also includes the DRAM configuration
+> >> >> >> >>> bitfields that other drivers will want to access (specifically the
+> >> >> >> >>> FPGA bridge needs this information). Since this register will be
+> >> >> >> >>> shared between drivers,  syscon seems like the best solution.
+> >> >> >> >>>
+> >> >> >> >>
+> >> >> >> >> Hm, from looking at the documentation of the ctrlcfg I can't really
+> >> >> >> >> understand which bits you would need for the FPGA brigde and why.
+> >> >> >>
+> >> >> >> Hi Steffen,
+> >> >> >>
+> >> >> >> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
+> >> >> >> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
+> >> >> >> allows an FPGA port to come out of reset (enables that port).  Has no
+> >> >> >> other effect on SDRAM configuration.
+> >> >> >>
+> >> >> >> >> That all sounds like stuff you would want to set for the specific
+> >> >> >> >> RAM you are dealing with on a specific board.
+> >> >> >> >> What bridge are you talking about? The SDRAM bridge?
+> >> >> >>
+> >> >> >> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
+> >> >> >> register the only register in the sdr that the bridge driver needs.
+> >> >> >>
+> >> >> >
+> >> >> > So, what I suggested down ...
+> >> >> >
+> >> >> >> >>
+> >> >> >> >> I can see the problem with the ECC enable, though.
+> >> >> >> >>
+> >> >> >> >> Regards,
+> >> >> >> >> Steffen
+> >> >> >> >>
+> >> >> >> >
+> >> >> >> >>> >                 sdrctl@ffc25000 {
+> >> >> >> >>> >                         compatible = "altr,sdr-ctl";
+> >> >> >> >>> >                         reg = <0xffc25000 0x1000>;
+> >> >> >> >>> >                         ranges;
+> >> >> >> >>> >
+> >> >> >> >>> >                         edac@ffc2502c {
+> >> >> >> >>> >                                 compatible = "altr,sdram-edac";
+> >> >> >> >>> >                                 reg = <0xffc2502c 0x50>;
+> >> >> >> >>> >                                 interrupts = <0 39 4>;
+> >> >> >> >>> >                         };
+> >> >> >> >>> >                 };
+> >> >> >> >>> >
+> >> >> >> >>> > Then we can later add:
+> >> >> >> >>> >
+> >> >> >> >>> >                         sdr-ports: ports@ffc2507c {
+> >> >> >> >>> >                                 #reset-cells = <1>;
+> >> >> >> >>> >                                 compatible = "altr,sdr-ports";
+> >> >> >> >>> >                                 reg = <0xffc2507c 0x10>;
+> >> >> >> >>> >                                 clocks = <&ddr_dqs_clk>;
+> >> >> >> >>> >                                 ...
+> >> >> >> >>> >                         };
+> >> >> >>
+> >> >> >
+> >> >> > ... here should work. No?! Just a simple driver that registers with the
+> >> >> > reset-framework. I would add 0x7c to that driver and than that driver could
+> >> >> > "configure" the port and let it out of reset.
+> >> >> >
+> >> >> > I have done the same thing for the other 3 bridges, but am not finished yet.
+> >> >> > Especially the GPV-stuff needs to at least be able to be added later if not now.
+> >> >> >
+> >> >
+> >> > Hi Thor!
+> >> >
+> >> >> I'm not clear on how the EDAC driver will interact with the registers
+> >> >> allocated to the SDRAM controller. If the group of registers from
+> >> >> 0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
+> >> >> controller, how does the EDAC driver cleanly access that single
+> >> >> register inside this range?
+> >> >>
+> >> >
+> >> > The compatible in the example is wrong. I didn't mean to map the whole address space
+> >> > to some driver.
+> >> > I think for the configuration register syscon is the right approach. It is a
+> >> > bag of bits that don't necessitate an own driver, so syscon is perfect.
+> >> >
+> >> > So, let me change my proposal to
+> >> >
+> >> >         sdr-ctl: sdram@ffc25000 {
+> >> >                 compatible = "altr,sdr-ctl", "syscon";
+> >> >                 reg = <0xffc25000 0x1>;
+> >> >         };
+> >> >
+> >> >         edac: edac@ffc2502c {
+> >> >                 compatible = "altr,sdram-edac";
+> >> >                 reg = <0xffc2502c 0x50>;
+> >> >                 interrupts = <0 39 4>;
+> >> >                 config = <&sdr-ctl>;
+> >> >                 ...
+> >> >         };
+> >> >
+> >> >         sdr-ports: ports@ffc2507c {
+> >> >                 compatible = "altr,sdr-ports";
+> >> >                 reg = <0xffc2507c 0x10>;
+> >> >                 clocks = <&ddr_dqs_clk>;
+> >> >                 ...
+> >> >         };
+> >> >
+> >> > Maybe we can just skip the outer node that combines all the others.
+> >> > So, if we do it like that, you can still use syscon, but only for the register
+> >> > that needs it. And the EDAC definitely needs access to the config register, so
+> >> > all is good.
+> >> >
+> >> >> Is the solution that I don't use request_region() (and therefore not
+> >> >> request exclusive access) when setting up the SDRAM controller?
+> >> >>
+> >> >> If you could point me to your drivers for the other bridges that you
+> >> >> reference, your code may answer my question.
+> >> >>
+> >> >
+> >> > The other bridges don't need access to any SDRAM controller registers and
+> >> > I haven't even started to implement the GPV-stuff with the lw2hps-bridge :-(
+> >> >
+> >> > Regards,
+> >> > Steffen
+> >> >
+> >> > --
+> >> > Pengutronix e.K.                           |                             |
+> >> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> >> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> >> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> >>
+> >> OK now I understand.  For register offset 0x0, that's all stuff set up
+> >> in the bootloader.  We won't be touching that register except for the
+> >> EDAC.  So syscon isn't needed here.
+> >>
+> >> Each driver that uses some sdr registers can specify which registers
+> >> it uses in the device tree.  So far we don't have any cases of two
+> >> drivers that share a register.
+> >>
+> >> The ECC driver will need two ranges: offset 0x00 and 0x38 through 0x50.
+> >> The fpga bridges just needs offset 0x80.
+> >>
+> >
+> > Well, almost ;-)
+> > Use syscon for 0x0 and reference that in the ECC driver, which only is
+> > responsible for 0x38 to 0x50. Then flip the two EDAC bits via the syscon-phandle.
+> > Then a bootloader can probe with the same dts and have a driver match on the
+> > config-register and one for all the DRAM setup (< 0x38), which we don't need in
+> > the kernel. On the other hand the EDAC seems unneccessary for the bootloader.
+> > And this all matches the partitioning of the SDR register space, so I think it
+> > is also a correct hardware description.
+> >
+> > Regards,
+> > Steffen
+> >
+> > --
+> > Pengutronix e.K.                           |                             |
+> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> We could do that.  But is syscon a concept the bootloader will know about?
+> 
 
-Some clarification about names.
-I am not an expert in command/cpu mode interface, so feel free to
-correct me.
-Those different terms were quite confusing for me so after some digging
-(for example here [1])
-I have found/ensured  there is a following relation between different n=
-ames:
-MIPI DPI - RGB interface
-MIPI DBI type A - CPU mode m68 style
-MIPI DBI type B - CPU mode i80 style
-MIPI DBI type C - SPI, maybe also other serial interfaces (?)
-MIPI DSI - based on D-PHY-s serial protocol which can work in video or
-command mode.
+Depends on the bootloader. I guess u-boot doesn't, but barebox does.
+Alternative would be to have the bootloader know that it has to look for an
+ECC node when it instead is looking for DRAM timing/width/... setup.
+Sounds wrong to me.
 
-To add more confusion CPU mode is also named MPU mode or sys mode.
+> Actually it is a bit messier than what I originally said:
+>  ECC driver needs two ranges: offset 0x00 and 0x38 through 0x50.
+>  Machine layer needs control of 0x10, 0x14, 0x54, and 0x58 for putting
+> SDRAM into self-refresh.
 
-To avoid confusion in the discussion I propose use i80 only to describe
-DBI type B interface,
-and DSI command mode, DSI video mode to describe DSI modes.
+I didn't get that. Does the ECC driver need access to this "machine layer"?
 
-[1]: http://www.allshore.com/pdf/DA8620.pdf
+Regards,
+Steffen
 
 
->> LCD is a display technology, it has nothing to do with the interface=
-=2E My
->> point is that from Andrzej's description, and in fact from this patc=
-h
->> series in general, the S6E3FA0 panel is a DSI panel. Associating tim=
-ings
->> that are i80 specific to it is therefore wrong.
->>
->> Consider for instance what would happen if somebody were to use the =
-same
->> panel on some other device (connected to a DSI controller). If you
->> specify i80 timings for the panel then the new device won't know wha=
-t to
->> do with them because it expects DSI-related timings.
->>
->> Let me try to summarize the above to make sure we're all on the same
->> page:
->>
->> 	- FIMD is a display controller that can be configured to either
->> 	  send RGB data or i80 data
->> 	- DSIM takes either RGB as input and outputs DSI (video mode) or
->> 	  i80 as input and outputs DSI (command mode)
->>
->> In both cases the panel is connected to DSIM and it takes DSI as inp=
-ut,
->> because it is a DSI panel (it doesn't understand RGB or i80). The pa=
-nel
->> needs to describe the properties of the DSI interface so that DSIM c=
-an
->> be configured appropriately. DSIM in turn works as a bridge or encod=
-er
->> that converts RGB or i80 to DSI (video or command mode). So it makes=
- no
->> sense to describe the i80 timings for the panel because it has nothi=
-ng
->> to do with i80. Instead the DSIM is the hardware that needs to speci=
-fy
->> the i80 timings, so that FIMD can be configured to generate the timi=
-ngs
->> that DSIM needs.
->             CPU interface                     MIPI lane
-> FIMD ----------------------- DSIM --------------------- LCD Panel
->
-> Hmm... reasonable. So your point is that command mode timing should b=
-e
-> placed in fimd device node, not panel device node? And panel device n=
-ode
-> should provide only a property that DSIM driver can set LCD mode
-> properly to i80 or rgb interface mode, and also FIMD driver can set L=
-CD
-> mode to i80 or rgb interface mode.
-
-I have no access to s6e3fa0 datasheet and Exynos datasheet I have acces=
-s to
-is not very verbose on the subject but it seems to be reasonable that
-cs-setup, wr-setup, wr-active and wr-hold are properties only of i80
-interface,
-ie interface between FIMD and DSIM and they have nothing to do with DSI
-command mode panel.
-Those properties should be provided by DSIM to FIMD, I guess they can b=
-e
-even hardcoded
-in DSIM driver, no bindings required. There is still a question how DSI=
-M
-should tell FIMD about them.
-I am not sure about mechanism of passing them from DSIM to FIMD, maybe
-adjusting drm_display_mode
-is a solution, maybe different way of communication should be used (I
-see here again interface_tracker use case [2]).
-
-[2]:
-http://permalink.gmane.org/gmane.linux.drivers.video-input-infrastructu=
-re/77451
-
-On the other side width, height and clock are properties of the panel s=
-o
-they should stay
-with the panel, maybe width and height could be moved from dts to
-driver, I am not sure about frequency.
-
->
-> Is there my missing point?
->
-> And in case of Exynos, now video timing property is also placed in pa=
-nel
-> device node so it needs to move to fimd device node.
-
-No, video timings are properties of panels so they should stay in
-panels, display
-controllers should just ask panels about them.
-
->
-> Andrzej, do you have other opinion? I have looked into dts files for
-> other SoC and In most SoC, it seems that display controller node has
-> video timing property, not panel node. Thierry's pointing seems
-> reasonable to me.
-I guess there could be many reasons: historical, backward compatibility=
-,
-laziness of developers :).
-I agree with Thierry also.
-
-So if everybody agrees there is only one serious issue: how the i80
-properties
-should be passed from DSIM to FIMD, am I right?
-
-Regards
-Andrzej
-
->
-> Thanks,
-> Inki Dae
->
->> Thierry
->>
->
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
