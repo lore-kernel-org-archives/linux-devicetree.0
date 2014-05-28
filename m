@@ -1,104 +1,62 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: RE: [PATCH v11 2/3] clk: exynos5410: register clocks using common clock
- framework
-Date: Wed, 28 May 2014 00:22:40 -0700
-Message-ID: <20140528072240.10062.16890@quantum>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
- <1401074613-29227-3-git-send-email-t.dakhran@samsung.com>
- <20140528004116.7816.69646@quantum>
- <01a201cf7a30$41ecca90$c5c65fb0$@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] pinctrl: Enable "power-source" to be extracted from DT files
+Date: Wed, 28 May 2014 10:15:43 +0200
+Message-ID: <CACRpkdbaWYgku0_n5CqGU8DAFnn-5jEJ64Mfh9fixB4mRPnfwg@mail.gmail.com>
+References: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ@mail.gmail.com>
+	<1401172056-25743-1-git-send-email-iivanov@mm-sol.com>
+	<2480893.UEqfxe8meR@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <01a201cf7a30$41ecca90$c5c65fb0$@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>, linux-kernel@vger.kernel.org
-Cc: 'Rob Herring' <robh+dt@kernel.org>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Rob Landley' <rob@landley.net>, 'Russell King' <linux@arm.linux.org.uk>, 'Ben Dooks' <ben-linux@fluff.org>, 'Tomasz Figa' <t.figa@samsung.com>, 'Vyacheslav Tyrtov' <v.tyrtov@samsung.com>, 'Thomas Abraham' <thomas.abraham@linaro.org>, 'Kyungmin Park' <kyungmin.park@samsung.com>, 'Heiko Stuebner' <heiko@sntech.de>, 'Romain Naour' <romain.naour@openwide.fr>, 'Chander Kashyap' <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, 'Tarek Dakhran' <t.dakhran@gmail.com>, 'Tarek Dakhran' <t.dakhran@samsung.com>, 'Jonghwan Choi' <jhbird.choi@s>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2480893.UEqfxe8meR@phil>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Cc: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, James Hogan <james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org>, Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kukjin Kim (2014-05-27 21:49:49)
-> Mike Turquette wrote:
-> > 
-> > Quoting Tarek Dakhran (2014-05-25 20:23:32)
-> > > The EXYNOS5410 clocks are statically listed and registered
-> > > using the Samsung specific common clock helper functions.
-> > >
-> > > Signed-off-by: Tarek Dakhran <t.dakhran@samsung.com>
-> > > Signed-off-by: Vyacheslav Tyrtov <v.tyrtov@samsung.com>
-> > > ---
-> > >  .../devicetree/bindings/clock/exynos5410-clock.txt |   45 +++++
-> > >  drivers/clk/samsung/Makefile                       |    1 +
-> > >  drivers/clk/samsung/clk-exynos5410.c               |  209
-> > ++++++++++++++++++++
-> > >  include/dt-bindings/clock/exynos5410.h             |   33 ++++
-> > >  4 files changed, 288 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/exynos5410-
-> > clock.txt
-> > >  create mode 100644 drivers/clk/samsung/clk-exynos5410.c
-> > >  create mode 100644 include/dt-bindings/clock/exynos5410.h
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/clock/exynos5410-
-> > clock.txt b/Documentation/devicetree/bindings/clock/exynos5410-clock.txt
-> > > new file mode 100644
-> > > index 0000000..aeab635
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/exynos5410-clock.txt
-> > > @@ -0,0 +1,45 @@
-> > > +* Samsung Exynos5410 Clock Controller
-> > > +
-> > > +The Exynos5410 clock controller generates and supplies clock to various
-> > > +controllers within the Exynos5410 SoC.
-> > > +
-> > > +Required Properties:
-> > > +
-> > > +- compatible: should be "samsung,exynos5410-clock"
-> > > +
-> > > +- reg: physical base address of the controller and length of memory
-> > mapped
-> > > +  region.
-> > > +
-> > > +- #clock-cells: should be 1.
-> > > +
-> > > +All available clocks are defined as preprocessor macros in
-> > > +dt-bindings/clock/exynos5410.h header and can be used in device
-> > > +tree sources.
-> > > +
-> > > +External clock:
-> > > +
-> > > +There is clock that is generated outside the SoC. It
-> > > +is expected that it is defined using standard clock bindings
-> > > +with following clock-output-name:
-> > > +
-> > > + - "fin_pll" - PLL input clock from XXTI
-> > 
-> > Does fin_pll feed into the exynos5410-clock controller? If so, should
-> > the example clock-controller node below have a clocks and clock-names
-> > property?
-> > 
-> Well, it is fixed clocks and generated outside of the SoC...so maybe the properties are not required?
+On Tue, May 27, 2014 at 3:09 PM, Heiko St=C3=BCbner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org> w=
+rote:
+> Am Dienstag, 27. Mai 2014, 09:27:36 schrieb Ivan T. Ivanov:
+>> From: "Ivan T. Ivanov" <iivanov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+>>
+>> Add "power-source" property to generic options used for DT parsing f=
+iles.
+>> This  enables drivers, which use generic pin configurations, to get =
+the
+>> value passed to this property.
+>
+> I think the main problem here is, that pinconf-generic.h defines the =
+power-
+> source as having a "custom format". With DT as a hardware description=
+,
+> implementaton specific values do not work well - instead it should ha=
+ve a
+> regular unit-value.
+>
+> For the power-source I think volts could work well - as this is the m=
+ain use-
+> case for pinctrl I know. The regulator-binding uses microvolts, maybe=
+ it would
+> be good use a similar unit.
+(...)
+>         pcfg_1v8 {
+>                 power-source =3D <1800000>;
+>         };
 
-I guess the fin_pll parts of the binding description are not needed
-then. This isn't a big issue, but I think that someone reading that
-binding (like myself) might conclude that there is some relationship
-between the clock controller and the external clock, which seems not to
-be the case.
+I don't think this is what it's meant for actually. In this case the th=
+ing would
+be modeled as a regulator rather than some pin control option I guess?
 
-> 
-> BTW, I've applied this series with Tomasz Figa's reviewed tag and sent out to arm-soc today so if any concerns on this, please let me know immediately.
+I think it's more like a selector, such as found on old amplifiers,
+input source A, B or C? So it's just some discrete number.
 
-As far as I can tell the fin_pll paragraph can be removed at a later
-date. It isn't part of any real DT binding description such as a
-property or definition. So no need to cause havoc for your existing pull
-request.
+Then we don't know which voltage comes from power source A, B, C.
 
-Regards,
-Mike
-
-> 
-> > Otherwise patch looks good.
-> > 
-> 
-> Thanks,
-> Kukjin
-> 
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
