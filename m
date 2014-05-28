@@ -1,163 +1,77 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
-Date: Wed, 28 May 2014 12:15:40 -0700
-Message-ID: <CAPtuhTi59cJSj-_oa49stWzWUsCykk6NMQLVGHeMjj60TniXXg@mail.gmail.com>
-References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
- <535FBC62.9050902@ti.com> <20140501190015.5739.86963@quantum>
- <53674292.5050008@ti.com> <537A0536.1030506@ti.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 09/10] dts: versatile: add clock tree
+Date: Wed, 28 May 2014 14:30:37 -0500
+Message-ID: <CAL_JsqJZ8jVfCP2EaUrR7eongKqy89iw=iLUnQmVSYhQfdzcRg@mail.gmail.com>
+References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
+	<1400620176-7239-10-git-send-email-robherring2@gmail.com>
+	<CACRpkdaBdNo=Nkoe62j9ZUspWZx7+cuisHT9EHVKR5aEdRWgBg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <537A0536.1030506@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Felipe Balbi <balbi@ti.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACRpkdaBdNo=Nkoe62j9ZUspWZx7+cuisHT9EHVKR5aEdRWgBg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 19, 2014 at 6:20 AM, Tero Kristo <t-kristo@ti.com> wrote:
-> On 05/05/2014 10:49 AM, Tero Kristo wrote:
->>
->> On 05/01/2014 10:00 PM, Mike Turquette wrote:
->>>
->>> Quoting Tero Kristo (2014-04-29 07:51:14)
->>>>
->>>> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
->>>>>
->>>>> We need "tbclk" clock data for the functioning of ehrpwm
->>>>> module. Hence, populating the required clock information
->>>>> in clock dts file.
->>>>>
->>>>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
->>>>
->>>>
->>>> Acked-by: Tero Kristo <t-kristo@ti.com>
->>>
->>>
->>> Looks good to me.
->>>
->>> Tero, just to be clear, are you planning on batching up OMAPish clock
->>> patches and sending a pull request (once they have been reviewed on the
->>> list)?
->>
->>
->> No, I haven't been planning on sending a pull-req, as I believe you
->> still want to ack the TI related clock driver patches yourself also. If
->> you want to change the setup I am of course willing to negotiate the
->> terms. :)
->>
->> -Tero
+On Fri, May 23, 2014 at 8:28 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >
+>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>
+>> The versatile dts is missing any clock data. Add the clocks.
+>>
+>> It is not clear from the documentation where pclk comes from, so for
+>> now it is a dummy clock which is sufficient for things to work.
 >
-> So, based on our discussions, this is now queued for 3.15-rc/clk-dt.
+> AFAICT (from experiments and measurements on some boards, during which
+> I destroyed some boards) that is actually just the 24MHz clock right off.
+>
+>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>
+>> +       core-module@10000000 {
+>> +               compatible = "arm,core-module-versatile";
+>> +               reg = <0x10000000 0x200>;
+>> +
+>> +               osc24M: oscillator@24M {
+>> +                       #clock-cells = <0>;
+>> +                       compatible = "fixed-clock";
+>> +                       clock-frequency = <24000000>;
+>> +               };
+>
+> Please follow the naming convention from the Integrator DTS, I am
+> pretty sure this is a chrystal:
+>
+>         /* 24 MHz chrystal on the core module */
+>         xtal24mhz: xtal24mhz@24M {
+>                 #clock-cells = <0>;
+>                 compatible = "fixed-clock";
+>                 clock-frequency = <24000000>;
+>         };
 
-I don't want to cross threads, so we'll work out the details of the
-for-3.16 stuff in the "Pending clock and hwmod patches" thread.
+I'm not too sure I'm happy about this naming convention (yours or
+mine). Following that node names are generic, it should probably be
+just clk or clock. The unit address is a bit of an abuse as there is
+no reg property, but we do need some way to make it unique. I don't
+see the point of having the frequency in the name twice either.
 
-However, after this next merge window I am happy to move to a pull
-request-based model for OMAP clock patches, since things should slowly
-start to settle down.
+>> +               /* OSC1 on AB, OSC4 on PB */
+>> +               osc1: cm_aux_osc@24M {
+>> +                       #clock-cells = <0>;
+>> +                       compatible = "arm,versatile-cm-auxosc";
+>> +                       clocks = <&osc24M>;
+>> +               };
+>
+> Name xtal, also: why is this inside the core module node?
+> You're explicitly saying it is on the PB (platform baseboard)
+> and *not* on the core module!
 
-Regards,
-Mike
+But it is not a crystal. It is an output of the clock chip. This
+follows what you have for integrator in name and location and it is
+part of the AB core-module.
 
->
->
-> -Tero
->
->>
->>>
->>> Thanks,
->>> Mike
->>>
->>>>
->>>>
->>>>> ---
->>>>> v2->v3
->>>>> - correct bitshifting
->>>>>
->>>>>    arch/arm/boot/dts/am43xx-clocks.dtsi |   48
->>>>> ++++++++++++++++++++++++++++++++++
->>>>>    drivers/clk/ti/clk-43xx.c            |    6 +++++
->>>>>    2 files changed, 54 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>>> b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>>> index 142009c..42d7b1f 100644
->>>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
->>>>> @@ -87,6 +87,54 @@
->>>>>                clock-mult = <1>;
->>>>>                clock-div = <1>;
->>>>>        };
->>>>> +
->>>>> +     ehrpwm0_tbclk: ehrpwm0_tbclk {
->>>>> +             #clock-cells = <0>;
->>>>> +             compatible = "ti,gate-clock";
->>>>> +             clocks = <&dpll_per_m2_ck>;
->>>>> +             ti,bit-shift = <0>;
->>>>> +             reg = <0x0664>;
->>>>> +     };
->>>>> +
->>>>> +     ehrpwm1_tbclk: ehrpwm1_tbclk {
->>>>> +             #clock-cells = <0>;
->>>>> +             compatible = "ti,gate-clock";
->>>>> +             clocks = <&dpll_per_m2_ck>;
->>>>> +             ti,bit-shift = <1>;
->>>>> +             reg = <0x0664>;
->>>>> +     };
->>>>> +
->>>>> +     ehrpwm2_tbclk: ehrpwm2_tbclk {
->>>>> +             #clock-cells = <0>;
->>>>> +             compatible = "ti,gate-clock";
->>>>> +             clocks = <&dpll_per_m2_ck>;
->>>>> +             ti,bit-shift = <2>;
->>>>> +             reg = <0x0664>;
->>>>> +     };
->>>>> +
->>>>> +     ehrpwm3_tbclk: ehrpwm3_tbclk {
->>>>> +             #clock-cells = <0>;
->>>>> +             compatible = "ti,gate-clock";
->>>>> +             clocks = <&dpll_per_m2_ck>;
->>>>> +             ti,bit-shift = <4>;
->>>>> +             reg = <0x0664>;
->>>>> +     };
->>>>> +
->>>>> +     ehrpwm4_tbclk: ehrpwm4_tbclk {
->>>>> +             #clock-cells = <0>;
->>>>> +             compatible = "ti,gate-clock";
->>>>> +             clocks = <&dpll_per_m2_ck>;
->>>>> +             ti,bit-shift = <5>;
->>>>> +             reg = <0x0664>;
->>>>> +     };
->>>>> +
->>>>> +     ehrpwm5_tbclk: ehrpwm5_tbclk {
->>>>> +             #clock-cells = <0>;
->>>>> +             compatible = "ti,gate-clock";
->>>>> +             clocks = <&dpll_per_m2_ck>;
->>>>> +             ti,bit-shift = <6>;
->>>>> +             reg = <0x0664>;
->>>>> +     };
->>>>>    };
->>>>>    &prcm_clocks {
->>>>>        clk_32768_ck: clk_32768_ck {
->>>>> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
->>>>> index 67c8de5..527a43d 100644
->>>>> --- a/drivers/clk/ti/clk-43xx.c
->>>>> +++ b/drivers/clk/ti/clk-43xx.c
->>>>> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
->>>>>        DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
->>>>>        DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
->>>>>        DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
->>>>> +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
->>>>> +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
->>>>> +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
->>>>> +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
->>>>> +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
->>>>> +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
->>>>>        { .node_name = NULL },
->>>>>    };
->>>>>
->>>>>
->>>>
->>
->
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
