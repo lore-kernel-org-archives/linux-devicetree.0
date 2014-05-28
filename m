@@ -1,66 +1,163 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
-Date: Wed, 28 May 2014 14:10:34 -0500
-Message-ID: <CAL_JsqLFQtDkLOYM4_xdRMS_dFpG0eOw1M-4Ktc6puyx+nAvqg@mail.gmail.com>
-References: <1400263432-922-1-git-send-email-fkan@apm.com>
-	<1400263432-922-2-git-send-email-fkan@apm.com>
-	<CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
-	<CAL85gmDjVszNd3TB51BGa+78wEEZmJfBOLNKOpTEvMTGU2VdBA@mail.gmail.com>
-	<CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
-	<CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
-	<CAL85gmCH4pwScDxhTRFvKYgHqdfG+9x5XWoxZyoNDXbsq-=o4w@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCHv3] arm: dts: am43x-clock: add tbclk data for ehrpwm.
+Date: Wed, 28 May 2014 12:15:40 -0700
+Message-ID: <CAPtuhTi59cJSj-_oa49stWzWUsCykk6NMQLVGHeMjj60TniXXg@mail.gmail.com>
+References: <1398780946-31453-1-git-send-email-sourav.poddar@ti.com>
+ <535FBC62.9050902@ti.com> <20140501190015.5739.86963@quantum>
+ <53674292.5050008@ti.com> <537A0536.1030506@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL85gmCH4pwScDxhTRFvKYgHqdfG+9x5XWoxZyoNDXbsq-=o4w@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, patches <patches@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <537A0536.1030506@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Sourav Poddar <sourav.poddar@ti.com>, Tony Lindgren <tony@atomide.com>, devicetree <devicetree@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Felipe Balbi <balbi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 12:01 PM, Feng Kan <fkan@apm.com> wrote:
-> On Tue, May 27, 2014 at 9:59 AM, Feng Kan <fkan@apm.com> wrote:
->> On Tue, May 27, 2014 at 1:25 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->>> On Wed, May 21, 2014 at 1:54 AM, Feng Kan <fkan@apm.com> wrote:
->>>
->>>> I see each bank as separate gpio chip. It is a simple way to
->>>> abstract the banks since they can operate independently.
->>>
->>> I think they should also be separate devices, and separate nodes
->>> in the device tree.
->>>
->>>> It also
->>>> provided me a way to fix the sysfs gpio base number, regardless if
->>>> a particular bank node is pulled out.
->>>
->>> The GPIO sysfs is unpredictable for this and many other
->>> reasons and should not be relied upon.
->>>
->>>> This is also done in similar way
->>>> in some other gpio drivers such as the dwapb gpio driver.
->>>
->>> I think the dwapb has it's registers mingled while your banks
->>> seem to be separate chunks.
+On Mon, May 19, 2014 at 6:20 AM, Tero Kristo <t-kristo@ti.com> wrote:
+> On 05/05/2014 10:49 AM, Tero Kristo wrote:
 >>
->> Thanks for the comments, I will fix these problems. Just some details
->> in terms of the register layout. I will break out the gpio to separate
->> device nodes as instructed, I will have to use the reg attribute to offset
->> bank registers. Please let me know if it is acceptable.
+>> On 05/01/2014 10:00 PM, Mike Turquette wrote:
+>>>
+>>> Quoting Tero Kristo (2014-04-29 07:51:14)
+>>>>
+>>>> On 04/29/2014 05:15 PM, Sourav Poddar wrote:
+>>>>>
+>>>>> We need "tbclk" clock data for the functioning of ehrpwm
+>>>>> module. Hence, populating the required clock information
+>>>>> in clock dts file.
+>>>>>
+>>>>> Signed-off-by: Sourav Poddar <sourav.poddar@ti.com>
+>>>>
+>>>>
+>>>> Acked-by: Tero Kristo <t-kristo@ti.com>
+>>>
+>>>
+>>> Looks good to me.
+>>>
+>>> Tero, just to be clear, are you planning on batching up OMAPish clock
+>>> patches and sending a pull request (once they have been reviewed on the
+>>> list)?
 >>
->> gfc_gpio_fl0              GFC42'h1701c00c
->> gfc_gpio_fl0_mux      GFC42'h1701c010
->> gfc_gpio_fl1              GFC42'h1701c018
->> gfc_gpio_fl1_mux      GFC42'h1701c01c
->> gfc_gpio_fl2              GFC42'h1701c024
->> gfc_gpio_fl2_mux      GFC42'h1701c028
->> gfc_gpio_fl0_od        GFC42'h1701c030
->> gfc_gpio_fl1_od        GFC42'h1701c034
->> gfc_gpio_fl2_od        GFC42'h1701c038
+>>
+>> No, I haven't been planning on sending a pull-req, as I believe you
+>> still want to ack the TI related clock driver patches yourself also. If
+>> you want to change the setup I am of course willing to negotiate the
+>> terms. :)
+>>
+>> -Tero
 >
-> Please kindly give some guidance on this, as you can see the individual
-> gpio bank is interleaved in the address space, it is not likely to break this
-> into multiple device nodes.
+>
+> So, based on our discussions, this is now queued for 3.15-rc/clk-dt.
 
-It should be 1 node.
+I don't want to cross threads, so we'll work out the details of the
+for-3.16 stuff in the "Pending clock and hwmod patches" thread.
 
-Rob
+However, after this next merge window I am happy to move to a pull
+request-based model for OMAP clock patches, since things should slowly
+start to settle down.
+
+Regards,
+Mike
+
+>
+>
+> -Tero
+>
+>>
+>>>
+>>> Thanks,
+>>> Mike
+>>>
+>>>>
+>>>>
+>>>>> ---
+>>>>> v2->v3
+>>>>> - correct bitshifting
+>>>>>
+>>>>>    arch/arm/boot/dts/am43xx-clocks.dtsi |   48
+>>>>> ++++++++++++++++++++++++++++++++++
+>>>>>    drivers/clk/ti/clk-43xx.c            |    6 +++++
+>>>>>    2 files changed, 54 insertions(+)
+>>>>>
+>>>>> diff --git a/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>>>> b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>>>> index 142009c..42d7b1f 100644
+>>>>> --- a/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>>>> +++ b/arch/arm/boot/dts/am43xx-clocks.dtsi
+>>>>> @@ -87,6 +87,54 @@
+>>>>>                clock-mult = <1>;
+>>>>>                clock-div = <1>;
+>>>>>        };
+>>>>> +
+>>>>> +     ehrpwm0_tbclk: ehrpwm0_tbclk {
+>>>>> +             #clock-cells = <0>;
+>>>>> +             compatible = "ti,gate-clock";
+>>>>> +             clocks = <&dpll_per_m2_ck>;
+>>>>> +             ti,bit-shift = <0>;
+>>>>> +             reg = <0x0664>;
+>>>>> +     };
+>>>>> +
+>>>>> +     ehrpwm1_tbclk: ehrpwm1_tbclk {
+>>>>> +             #clock-cells = <0>;
+>>>>> +             compatible = "ti,gate-clock";
+>>>>> +             clocks = <&dpll_per_m2_ck>;
+>>>>> +             ti,bit-shift = <1>;
+>>>>> +             reg = <0x0664>;
+>>>>> +     };
+>>>>> +
+>>>>> +     ehrpwm2_tbclk: ehrpwm2_tbclk {
+>>>>> +             #clock-cells = <0>;
+>>>>> +             compatible = "ti,gate-clock";
+>>>>> +             clocks = <&dpll_per_m2_ck>;
+>>>>> +             ti,bit-shift = <2>;
+>>>>> +             reg = <0x0664>;
+>>>>> +     };
+>>>>> +
+>>>>> +     ehrpwm3_tbclk: ehrpwm3_tbclk {
+>>>>> +             #clock-cells = <0>;
+>>>>> +             compatible = "ti,gate-clock";
+>>>>> +             clocks = <&dpll_per_m2_ck>;
+>>>>> +             ti,bit-shift = <4>;
+>>>>> +             reg = <0x0664>;
+>>>>> +     };
+>>>>> +
+>>>>> +     ehrpwm4_tbclk: ehrpwm4_tbclk {
+>>>>> +             #clock-cells = <0>;
+>>>>> +             compatible = "ti,gate-clock";
+>>>>> +             clocks = <&dpll_per_m2_ck>;
+>>>>> +             ti,bit-shift = <5>;
+>>>>> +             reg = <0x0664>;
+>>>>> +     };
+>>>>> +
+>>>>> +     ehrpwm5_tbclk: ehrpwm5_tbclk {
+>>>>> +             #clock-cells = <0>;
+>>>>> +             compatible = "ti,gate-clock";
+>>>>> +             clocks = <&dpll_per_m2_ck>;
+>>>>> +             ti,bit-shift = <6>;
+>>>>> +             reg = <0x0664>;
+>>>>> +     };
+>>>>>    };
+>>>>>    &prcm_clocks {
+>>>>>        clk_32768_ck: clk_32768_ck {
+>>>>> diff --git a/drivers/clk/ti/clk-43xx.c b/drivers/clk/ti/clk-43xx.c
+>>>>> index 67c8de5..527a43d 100644
+>>>>> --- a/drivers/clk/ti/clk-43xx.c
+>>>>> +++ b/drivers/clk/ti/clk-43xx.c
+>>>>> @@ -105,6 +105,12 @@ static struct ti_dt_clk am43xx_clks[] = {
+>>>>>        DT_CLK(NULL, "func_12m_clk", "func_12m_clk"),
+>>>>>        DT_CLK(NULL, "vtp_clk_div", "vtp_clk_div"),
+>>>>>        DT_CLK(NULL, "usbphy_32khz_clkmux", "usbphy_32khz_clkmux"),
+>>>>> +     DT_CLK("48300200.ehrpwm", "tbclk", "ehrpwm0_tbclk"),
+>>>>> +     DT_CLK("48302200.ehrpwm", "tbclk", "ehrpwm1_tbclk"),
+>>>>> +     DT_CLK("48304200.ehrpwm", "tbclk", "ehrpwm2_tbclk"),
+>>>>> +     DT_CLK("48306200.ehrpwm", "tbclk", "ehrpwm3_tbclk"),
+>>>>> +     DT_CLK("48308200.ehrpwm", "tbclk", "ehrpwm4_tbclk"),
+>>>>> +     DT_CLK("4830a200.ehrpwm", "tbclk", "ehrpwm5_tbclk"),
+>>>>>        { .node_name = NULL },
+>>>>>    };
+>>>>>
+>>>>>
+>>>>
+>>
+>
