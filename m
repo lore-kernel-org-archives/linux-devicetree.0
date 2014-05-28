@@ -1,72 +1,222 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
- tree
-Date: Wed, 28 May 2014 13:47:50 +0200
-Message-ID: <5385CCE6.9070204@gmail.com>
-References: <537E31F7.1030505@gmail.com>	<537F1148.3010102@redhat.com>	<20140523112239.GB12304@sirena.org.uk>	<537F3610.3050104@redhat.com>	<20140523162718.GE22111@sirena.org.uk>	<53806F26.6050706@redhat.com>	<20140525123452.GS22111@sirena.org.uk>	<53824294.1090609@redhat.com>	<20140526103807.GV22111@sirena.org.uk>	<538321AB.4050006@redhat.com>	<20140526142225.GF22111@sirena.org.uk>	<538356DA.7090302@redhat.com>	<CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>	<53838023.2080807@redhat.com> <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com> <5385AF94.90004@redhat.com>
+From: Alex Elder <elder@linaro.org>
+Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU enable
+ method
+Date: Wed, 28 May 2014 07:22:06 -0500
+Message-ID: <5385D4EE.2040304@linaro.org>
+References: <1400607830-10989-1-git-send-email-elder@linaro.org> <1400607830-10989-2-git-send-email-elder@linaro.org> <20140527114958.GC18476@e102568-lin.cambridge.arm.com> <53855867.7050800@linaro.org> <20140528103625.GA29219@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <5385AF94.90004@redhat.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140528103625.GA29219@e102568-lin.cambridge.arm.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "mporter@linaro.org" <mporter@linaro.org>, "bcm@fixthebug.org" <bcm@fixthebug.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "rjui@broadcom.com" <rjui@broadcom.com>r
 List-Id: devicetree@vger.kernel.org
 
-I'm following this discussion continuously, but (un)fortunately I'm on
-vacation right now and don't have much time to work on this, so sorry
-for a very selective reply.
-
-On 28.05.2014 11:42, Hans de Goede wrote:
-> Hi,
-> 
-> On 05/27/2014 03:50 PM, Ulf Hansson wrote:
->> [snip]
+On 05/28/2014 05:36 AM, Lorenzo Pieralisi wrote:
+> On Wed, May 28, 2014 at 04:30:47AM +0100, Alex Elder wrote:
+>> On 05/27/2014 06:49 AM, Lorenzo Pieralisi wrote:
+>>> On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
+>>>> Broadcom mobile SoCs use a ROM-implemented holding pen for
+>>>> controlled boot of secondary cores.  A special register is
+>>>> used to communicate to the ROM that a secondary core should
+>>>> start executing kernel code.  This enable method is currently
+>>>> used for members of the bcm281xx and bcm21664 SoC families.
+>>>>
+>>>> The use of an enable method also allows the SMP operation vector to
+>>>> be assigned as a result of device tree content for these SoCs.
+>>>>
+>>>> Signed-off-by: Alex Elder <elder@linaro.org>
+>>>
+>>> This is getting out of control, it is absolutely ghastly. I wonder how
+>>> I can manage to keep cpus.txt updated if anyone with a boot method
+>>> du jour adds into cpus.txt, and honestly in this specific case it is even
+>>> hard to understand why.
 >>
->> Powerup driver's ->probe():
->> Typically the "powerup driver" will need to register a few callback
->> functions towards the mmc core. Typically at mmc_of_parse(), those
->> callbacks will have to be connected to a particular mmc host.
+>> OK, in this message I'll focus on the particulars of this
+>> proposed binding.
 >>
->> I would like to see three different callbacks, mirroring each of the
->> mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
+>>> Can't it be done with bindings for the relative register address space
+>>> (regmap ?) and platform code just calls the registers driver to set-up the
+>>> jump address ? It is platform specific code anyway there is no way you
+>>> can make this generic.
+>>
+>> I want to clarify what you're after here.
+>>
+>> My aim is to add SMP support for a class of Broadcom SMP
+>> machines.  To do so, I'm told I need to use the technique
+>> of assigning the SMP operations vector as a result of
+>> identifying an enable method in the DT.
+>>
+>> For 32-bit ARM, there are no generic "enable-method" values.
+>> (I did attempt to create one for "spin-table" but that was
+>> rejected by Russell King.)  For the machines I'm trying to
+>> enable, secondary CPUS start out spinning in a ROM-based
+>> holding pen, and there is no need for a kernel-based one.
+>>
+>> However, like a spin-table/holding pen enable method, a
+>> memory location is required for coordination between the
+>> boot CPU running kernel code and secondary CPUs running ROM
+>> code.  My proposal specifies it using a special numeric
+>> property value named "secondary-boot-reg" in the "cpus"
+>> node in the DT.
+>>
+>> And as I understand it, the issue you have relates to how
+>> this memory location is specified.
 > 
-> Hmm, can't we do something with runtime pm here instead? I would be
-> nice if we could use the platform bus for this instead of inventing
-> a new bus for this. Both from not needing to add extra count pov, but
-> also from the pov of having a solution which other subsystems can
-> later easily copy. I can even envision the parts of mmc_of_parse
-> dealing with this being a separate function taking a child node as
-> argument from day one, which can then hopefully later be moved out
-> of the mmc subsys and be used elsewhere too (*).
+> The issue I have relates to cluttering cpus.txt with all
+> sorts of platform specific SMP boot hacks.
 
-This is actually a real use case, because we already have HSIC (USB with
-heavily stripped down physical layer) modems on certain Samsung boards
-and similarly to the kind of SDIO devices being discussed here they
-can't be discovered until a certain power up sequence is done.
-Analogically, the modem chip uses OOB interrupts and certain GPIO lines
-for various purposes and they need to be provided by DT.
+OK, as I mentioned in my other message, I totally
+agree with you here.  It's a total (and building)
+mess.  I discussed this with Mark Rutland at ELC
+last month and suggested splitting that stuff out
+of "cpus.txt", which I have now proposed with a
+patch.
+    https://lkml.org/lkml/2014/5/8/545
 
-Moreover, there are already WLAN chips available that can use HSIC as
-their host interface and I'm not talking here about some exotic
-products, but rather widely recognized products of Broadcom (BCM4335),
-Marvell (88W8797) or Qualcomm Atheros (AR6004).
+>> You suggest regmap.  I'm using a single 32-bit register,
+>> only at very early boot time, and thereafter access to
+>> it is meaningless.  It seems like overkill if it's only
+>> used for this purpose.  I could hide the register values
+>> in the code, but with the exception of that, the code I'm
+>> using is generic (in the context of this class of Broadcom
+>> machine).  I could specify the register differently somehow,
+>> in a different node, or with a different property.
+> 
+> Is that register part of a larger registers block ? What I wanted
+> to say is that you can use a driver "API" (we wish) to write that
+> register, something like eg vexpress does with sysflags:
+> 
+> drivers/mfd/vexpress-sysreg.c
+> 
+> vexpress_flags_set()
+> 
+> instead of grabbing the reg address from a platform specific boot
+> method DT entry.
 
-My conclusion is that I see the discussion here being too much focused
-on MMC, especially considering the fact that the whole problem doesn't
-have anything to do with MMC, which is just used as (one of possible)
-host interface.
+I had this exact thought when I was working on this.  Yes,
+this register *is* part of a register block, "ChipRegs", and
+I wanted to have a separate driver/library/API to manage access
+to registers in that block.  But the block is sort of a dumping
+ground for many unrelated things, and lots of them aren't going
+to be used for normal operation (lots of debug and diagnostic
+functionality, for example).  After some discussion with others
+on my team I made the explicit decision to *not* have any sort
+of API in this case, and just specify the register.  We decided
+that if and when we had a need for multiple users of addresses
+in this range we'd figure out how to do best what was required.
 
-IMHO, all we need here is a way to tell the MMC (or HSIC) core when to
-look for a new device and when not (e.g. power down the host controller
-completely). Anything else, including proper power sequencing is up to
-the platform driver of such non-discoverable device - it's only its host
-interface that is discoverable when enabled. I believe this simplistic
-approach would lead to much less new code added, better reusability of
-code (power sequencing independent of host interface) and no need to
-create overly generic code, which usually turns out to be not generic
-enough.
+> I doubt that register exists on its own, even though I have to say this
+> would force you to write yet another platform specific driver to control
+> a bunch of registers, I do not see any other solution.
 
-Best regards,
-Tomasz
+Yes, exactly, and I was prepared to do that.  But doing a whole
+driver for that one address seemed to make less sense.
+
+> One thing is for certain: I really do not see the point in adding a boot
+> method per-SoC, and I do not want to end up having a cpus.txt file with a
+
+I'd love to see common, "standard" boot methods.  For ARM32
+it seems each one was done separately, and in many cases,
+slightly differently.  The one I saw the most was "spin table,"
+but making that "standard" was deemed unacceptable.
+
+> gazillion entries just because every given platform reinvents the wheel when
+> it comes to booting an SMP system, cpus.txt would become a document that
+> describes platform quirks, not a proper binding anymore.
+
+Agreed.
+
+> At least all platform specific quirks must be moved out of cpus.txt and
+> in platform documentation, I understand it is just a cosmetic change but
+> I want to prevent cpus.txt to become an abomination.
+
+Agreed.
+
+>> The bottom line here is I'm not sure whether I understand
+>> what you're suggesting, or perhaps why what you suggest is
+>> preferable.  I'm very open to suggestions, I just need it
+>> laid out a bit more detail in order to respond directly.
+> 
+> See above.
+
+I really appreciate your responses.  One problem with this
+process is you don't get the benefit of the discussion and
+design process that went on prior to posting this stuff
+publicly.
+
+If you still feel strongly we should have a custom driver
+to manage this "ChipRegs" address space, say so, and I can
+put one together.  If my explanations above mitigate your
+concerns, please say that as well.  Either way I just want
+to make progress toward getting this support upstream.
+
+Thanks a lot.
+
+					-Alex
+
+> 
+> Thanks !
+> Lorenzo
+> 
+>>
+>> Thanks.
+>>
+>> 					-Alex
+>>
+>>> I really do not see the point in cluttering cpus.txt with this stuff, it
+>>> is a platform specific hack, and do not belong in generic bindings in my
+>>> opinion.
+>>>
+>>> Thanks,
+>>> Lorenzo
+>>>
+>>>> ---
+>>>>  Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
+>>>>  1 file changed, 12 insertions(+)
+>>>>
+>>>> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+>>>> index 333f4ae..c6a2411 100644
+>>>> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+>>>> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+>>>> @@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
+>>>>  			    "qcom,gcc-msm8660"
+>>>>  			    "qcom,kpss-acc-v1"
+>>>>  			    "qcom,kpss-acc-v2"
+>>>> +			    "brcm,bcm11351-cpu-method"
+>>>>  
+>>>>  	- cpu-release-addr
+>>>>  		Usage: required for systems that have an "enable-method"
+>>>> @@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
+>>>>  		Value type: <phandle>
+>>>>  		Definition: Specifies the ACC[2] node associated with this CPU.
+>>>>  
+>>>> +	- secondary-boot-reg
+>>>> +		Usage:
+>>>> +			Required for systems that have an "enable-method"
+>>>> +			property value of "brcm,bcm11351-cpu-method".
+>>>> +		Value type: <u32>
+>>>> +		Definition:
+>>>> +			Specifies the physical address of the register used to
+>>>> +			request the ROM holding pen code release a secondary
+>>>> +			CPU.  The value written to the register is formed by
+>>>> +			encoding the target CPU id into the low bits of the
+>>>> +			physical start address it should jump to.
+>>>>  
+>>>>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+>>>>  
+>>>> -- 
+>>>> 1.9.1
+>>>>
+>>>>
+>>>
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+> 
+
