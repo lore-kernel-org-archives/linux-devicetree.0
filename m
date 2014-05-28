@@ -1,66 +1,76 @@
-From: Feng Kan <fkan@apm.com>
-Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
-Date: Wed, 28 May 2014 10:01:21 -0700
-Message-ID: <CAL85gmCH4pwScDxhTRFvKYgHqdfG+9x5XWoxZyoNDXbsq-=o4w@mail.gmail.com>
-References: <1400263432-922-1-git-send-email-fkan@apm.com>
-	<1400263432-922-2-git-send-email-fkan@apm.com>
-	<CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
-	<CAL85gmDjVszNd3TB51BGa+78wEEZmJfBOLNKOpTEvMTGU2VdBA@mail.gmail.com>
-	<CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
-	<CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Alexandre Courbot <gnurou@gmail.com>, patches <patches@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 0/3] Qualcomm Resource Power Manager driver
+Date: Wed, 28 May 2014 12:06:32 -0500
+Message-ID: <8CA95B37-E5EE-46BE-ABFD-64AA3BBF4E96@codeaurora.org>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com> <F773CDFB-2957-49C0-99D3-E9CDCE33C378@codeaurora.org> <CAJAp7Ojb7PvuNYJkPyKx+iehi0bF6rdYvYmfrDz21mebxMN1qg@mail.gmail.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7Ojb7PvuNYJkPyKx+iehi0bF6rdYvYmfrDz21mebxMN1qg@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 9:59 AM, Feng Kan <fkan@apm.com> wrote:
-> On Tue, May 27, 2014 at 1:25 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
->> On Wed, May 21, 2014 at 1:54 AM, Feng Kan <fkan@apm.com> wrote:
->>
->>> I see each bank as separate gpio chip. It is a simple way to
->>> abstract the banks since they can operate independently.
->>
->> I think they should also be separate devices, and separate nodes
->> in the device tree.
->>
->>> It also
->>> provided me a way to fix the sysfs gpio base number, regardless if
->>> a particular bank node is pulled out.
->>
->> The GPIO sysfs is unpredictable for this and many other
->> reasons and should not be relied upon.
->>
->>> This is also done in similar way
->>> in some other gpio drivers such as the dwapb gpio driver.
->>
->> I think the dwapb has it's registers mingled while your banks
->> seem to be separate chunks.
->
-> Thanks for the comments, I will fix these problems. Just some details
-> in terms of the register layout. I will break out the gpio to separate
-> device nodes as instructed, I will have to use the reg attribute to offset
-> bank registers. Please let me know if it is acceptable.
->
-> gfc_gpio_fl0              GFC42'h1701c00c
-> gfc_gpio_fl0_mux      GFC42'h1701c010
-> gfc_gpio_fl1              GFC42'h1701c018
-> gfc_gpio_fl1_mux      GFC42'h1701c01c
-> gfc_gpio_fl2              GFC42'h1701c024
-> gfc_gpio_fl2_mux      GFC42'h1701c028
-> gfc_gpio_fl0_od        GFC42'h1701c030
-> gfc_gpio_fl1_od        GFC42'h1701c034
-> gfc_gpio_fl2_od        GFC42'h1701c038
 
-Please kindly give some guidance on this, as you can see the individual
-gpio bank is interleaved in the address space, it is not likely to break this
-into multiple device nodes.
->
->
->
->>
->> Yours,
->> Linus Walleij
+On May 28, 2014, at 11:59 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
+
+> On Wed, May 28, 2014 at 9:23 AM, Kumar Gala <galak@codeaurora.org> wr=
+ote:
+>>=20
+>> On May 27, 2014, at 12:28 PM, Bjorn Andersson <bjorn.andersson@sonym=
+obile.com> wrote:
+>>=20
+>>> This series adds a regulator driver for the Resource Power Manager =
+found in
+>>> Qualcomm 8660, 8960 and 8064 based devices.
+>>>=20
+>>> The RPM driver exposes resources to its child devices, that can be =
+accessed to
+>>> implement drivers for the regulators, clocks and bus frequency cont=
+rol that's
+>>> owned by the RPM in these devices.
+>>=20
+>> Rather than adding yet another mfd driver, how about we put this in =
+drivers/soc/qcom as a much better location for the low level rpm code. =
+ Some code already merged in arm-soc for creation of drivers/soc/qcom/
+>=20
+> Hi Kumar,
+>=20
+> I do see rpm as somewhat equivalent to a pmic and that was why I
+> followed suite and put it in mfd, but I can of course move it if you
+> prefer.
+>=20
+>=20
+> Lately I've been working on rpm, rpm-smd, smem, smd, smsm, smp2p
+> patches for mainline.
+> It could be argued that smd is a bus and should go in drivers/bus, bu=
+t
+> for the rest I fear that we just created drivers/soc/qcom as another
+> dumping ground for things; a "Qualcomm specific drivers/mfd".
+>=20
+> But maybe that is the purpose of it ;)
+
+It is the purpose so that as we see common patterns between either driv=
+ers/soc/<VENDOR> we can refactor in the future.  However, we need to al=
+l a little time for those patterns to emerge rather than shoe horning i=
+n drivers into places that don=92t make sense.
+
+>=20
+> If I move the rpm driver, are there any conclusion to where I should
+> move the dt binding documentation?
+
+devicetree/bindings/soc/qcom
+include/dt-bindings/soc
+
+>=20
+> Regards,
+> Bjorn
+
+- k
+
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
