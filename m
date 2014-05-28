@@ -1,50 +1,47 @@
-From: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC
- controller
-Date: Wed, 28 May 2014 11:53:34 -0700
-Message-ID: <20140528185334.GA30763@kroah.com>
-References: <1401267437-22489-1-git-send-email-satish.patel@ti.com>
- <1401267437-22489-2-git-send-email-satish.patel@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] gpio: Add APM X-Gene SoC GPIO controller support
+Date: Wed, 28 May 2014 21:10:24 +0200
+Message-ID: <CACRpkdYoebS-SzCPBnssjNMN_-mxd2GoPwiXHfZUL9HwMeGVzw@mail.gmail.com>
+References: <1400263432-922-1-git-send-email-fkan@apm.com>
+	<1400263432-922-2-git-send-email-fkan@apm.com>
+	<CAAVeFu+TOfjfvisinv3oJ9PobdV9HcNJhr+3VYneSJ54uGwiAg@mail.gmail.com>
+	<CAL85gmDjVszNd3TB51BGa+78wEEZmJfBOLNKOpTEvMTGU2VdBA@mail.gmail.com>
+	<CACRpkdaVYXU9GN5OymuP3JRsQO3unkRGb5vZN3Jb2nWSnkh1SQ@mail.gmail.com>
+	<CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1401267437-22489-2-git-send-email-satish.patel-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL85gmCZD90UUZgC0-X4hui2L1V5TuH++o3fA20pRF_ZQEpDQw@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Feng Kan <fkan@apm.com>
+Cc: Alexandre Courbot <gnurou@gmail.com>, patches <patches@apm.com>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
-> SmartCard controller uses this interface to communicate with
-> SmartCard via PHY
-> 
-> Some SmartCard PHY has multiple slots for cards.
-> This inerface also enables controller to communicate
-> with one or more SmartCard connected over phy.
-> 
-> interface structure includes following APIs
-> - set/get config
-> - activate/deactivate smart card
-> - warm reset
-> - register_notify (for card insert/remove/overheat)
-> - unregister_notify
-> 
-> Signed-off-by: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
-> ---
->  Documentation/sc_phy.txt |  171 ++++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/sc_phy.h   |  136 ++++++++++++++++++++++++++++++++++++
->  2 files changed, 307 insertions(+)
->  create mode 100644 Documentation/sc_phy.txt
->  create mode 100644 include/linux/sc_phy.h
+On Tue, May 27, 2014 at 6:59 PM, Feng Kan <fkan@apm.com> wrote:
 
-These are .h files, but where is the "api" functions that use
-these structures defined at?
+> I will break out the gpio to separate
+> device nodes as instructed, I will have to use the reg attribute to offset
+> bank registers. Please let me know if it is acceptable.
 
-confused,
+Yeah sure regs = <a>, <b>, <c> for a single node is OK if that's what
+you mean.
 
-greg k-h
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> gfc_gpio_fl0              GFC42'h1701c00c
+> gfc_gpio_fl0_mux      GFC42'h1701c010
+> gfc_gpio_fl1              GFC42'h1701c018
+> gfc_gpio_fl1_mux      GFC42'h1701c01c
+> gfc_gpio_fl2              GFC42'h1701c024
+> gfc_gpio_fl2_mux      GFC42'h1701c028
+> gfc_gpio_fl0_od        GFC42'h1701c030
+> gfc_gpio_fl1_od        GFC42'h1701c034
+> gfc_gpio_fl2_od        GFC42'h1701c038
+
+Strange syntax in the last line there. GFC42'h uhm.
+
+But that looks a bit mingled actually. However I think you will be
+much happier if you split it into individual devices as I wanted to.
+It will be easier to maintain and simpler code even if the device tree
+may look a bit strange.
+
+Yours,
+Linus Walleij
