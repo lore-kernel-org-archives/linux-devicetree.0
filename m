@@ -1,74 +1,147 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/4] devicetree: bindings: Properly document micrel
- ks8851 SPI chips
-Date: Wed, 28 May 2014 20:49:13 +0100
-Message-ID: <20140528194913.GI5099@sirena.org.uk>
-References: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
- <1400875040-13269-2-git-send-email-sboyd@codeaurora.org>
- <20140524124858.GR22111@sirena.org.uk>
- <5385063F.30407@codeaurora.org>
- <20140528151646.GU20155@pengutronix.de>
- <20140528171219.GD5099@sirena.org.uk>
- <53863CA3.7040000@codeaurora.org>
+From: Dann Frazier <dann.frazier@canonical.com>
+Subject: Re: [PATCH v2] serial: uart: add hw flow control support configuration
+Date: Wed, 28 May 2014 14:04:29 -0600
+Message-ID: <CALdTtnvTtjKv6NQd=NCZATHnKLURKYMfnQaGR7MA=_kafBP=JQ@mail.gmail.com>
+References: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="tSiBuZsJmMXpnp7T"
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53863CA3.7040000@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, "David S . Miller" <davem@davemloft.net>, Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1398971093-17164-1-git-send-email-m-karicheri2@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Santosh Shilimkar <santosh.shilimkar@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, May 1, 2014 at 1:04 PM, Murali Karicheri <m-karicheri2@ti.com> wrote:
+> 8250 uart driver currently supports only software assisted hw flow
+> control. The software assisted hw flow control maintains a hw_stopped
+> flag in the tty structure to stop and start transmission and use modem
+> status interrupt for the event to drive the handshake signals. This is
+> not needed if hw has flow control capabilities. This patch adds a
+> DT attribute for enabling hw flow control for a uart port. Also skip
+> stop and start if this flag is present in flag field of the port
+> structure.
 
---tSiBuZsJmMXpnp7T
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+ubuntu@hwflow:~$ sudo stty -a --file /dev/ttyS0 |tr ' ' '\n' | grep crtscts
+crtscts
+ubuntu@hwflow:~$ ls /proc/device-tree/soc/serial@1c021000/has-hw-flow-control
+/proc/device-tree/soc/serial@1c021000/has-hw-flow-control
+ubuntu@hwflow:~$ python
+Python 2.7.6 (default, Mar 22 2014, 22:58:30)
+[GCC 4.8.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> UPF_HARDWARE_FLOW = 1 << 21
+>>> if 0xB9200000 & UPF_HARDWARE_FLOW:
+...     print "OK"
+...
+OK
 
-On Wed, May 28, 2014 at 12:44:35PM -0700, Stephen Boyd wrote:
-> On 05/28/14 10:12, Mark Brown wrote:
+Hope that's a reasonable test case. Test fails when booted w/o
+has-hw-flow-control attribute.
 
-> > If the supply must always be physically present the bindings should be
-> > specified as it being mandatory and the code written in that fashion; as
-> > an extension Linux will put a dummy in but this is attempting to handle
-> > incorrect DTs.  This means we have functional error handling in cases
-> > where there is something to worry about and simplifies the code using
-> > the regulator.
+Tested-by: dann frazier <dann.frazier@canonical.com>
 
-> Ok, you're saying the opposite of Rob. Should it be required or optional
-> in the DT binding?
-
-I'm saying it should be required.  The implementation accepts it as an
-extension (a recent extension at that).
-
-> Ok. Dave M has already picked up all these patches so I'll send a patch
-> to replace regulator_get_optional() with regulator_get() and fix up the
-> error handling unless I hear otherwise.
-
-Yes, please.  I'm much more worried about the abuse of
-regulator_get_optional() than the binding.
-
---tSiBuZsJmMXpnp7T
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJThj22AAoJELSic+t+oim9YCQP/3X79T9pZF6Mlt7qgfAAzkt5
-1tOJAXcsj11VYtwdVp61JJsmluCnYCK7LrGCoVBiv4wcgraaV0fivPpESjrC0SL6
-jf9JDo2G9QBFafd7uMkrUGmEfd0CEk/CrESX3qD+AWHiQe/cpQwhZGGmP4ArFg22
-PNwRHPnXrPOS1hFxJstcpKZBdG1VwK5EnXuQpTiA36SljLyQz0BUJeK8HOofmAHn
-3aOeUf5OE8Sp1ktAG0VLvBCBwVNhkz0VdFfrEYweWJ0FX2dvBtvM7QppDBY5EHgY
-2L8XYPK6F7+QkEDzZNKmCh+TUfjrdOEUiH9417Ewq8FAf/IK6G6v4xL/pKkeONN6
-3Gs0K+UoBRkMi2fVakiaaFxac+B4zWK290aIIhEFnRsq5x+KXUzrvtbgRwpfIQO5
-EhvsP67SImY5Q2JmeDC2suSQwoG+HKzhtrekwViIX7LEozPSheTiPTzYWd6aMUlQ
-UOUZfpb4FSxo/W9xUvZkVUlGslYuBECyqBDQRyDc9zr2cRiYb22vh/K+qs+OkPYl
-1Jf+4dhenqAgDvHr+JPne78DSW9cNXCA8+Us0SPPckgT11aKexEzH+sFeWNhuxZ0
-Zr2//CD75J7DTxbswucidzNFhE6o6G6xddPlHyKjl4gGau3bU8VyV9X+MMhYYCBi
-gJ3TAaMcWyrE1zuPUtsB
-=lp/p
------END PGP SIGNATURE-----
-
---tSiBuZsJmMXpnp7T--
+>
+> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+>
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Pawel Moll <pawel.moll@arm.com>
+> CC: Mark Rutland <mark.rutland@arm.com>
+> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> CC: Kumar Gala <galak@codeaurora.org>
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> CC: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> CC: Jiri Slaby <jslaby@suse.cz>
+> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> ---
+>  .../devicetree/bindings/serial/of-serial.txt       |    1 +
+>  drivers/tty/serial/8250/8250_core.c                |    6 ++++--
+>  drivers/tty/serial/of_serial.c                     |    4 ++++
+>  drivers/tty/serial/serial_core.c                   |   12 +++++++++---
+>  4 files changed, 18 insertions(+), 5 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/serial/of-serial.txt b/Documentation/devicetree/bindings/serial/of-serial.txt
+> index 1928a3e..7705477 100644
+> --- a/Documentation/devicetree/bindings/serial/of-serial.txt
+> +++ b/Documentation/devicetree/bindings/serial/of-serial.txt
+> @@ -37,6 +37,7 @@ Optional properties:
+>  - auto-flow-control: one way to enable automatic flow control support. The
+>    driver is allowed to detect support for the capability even without this
+>    property.
+> +- has-hw-flow-control: the hardware has flow control capability.
+>
+>  Example:
+>
+> diff --git a/drivers/tty/serial/8250/8250_core.c b/drivers/tty/serial/8250/8250_core.c
+> index 0e1bf88..b69aff2 100644
+> --- a/drivers/tty/serial/8250/8250_core.c
+> +++ b/drivers/tty/serial/8250/8250_core.c
+> @@ -2338,9 +2338,11 @@ serial8250_do_set_termios(struct uart_port *port, struct ktermios *termios,
+>          * the trigger, or the MCR RTS bit is cleared.  In the case where
+>          * the remote UART is not using CTS auto flow control, we must
+>          * have sufficient FIFO entries for the latency of the remote
+> -        * UART to respond.  IOW, at least 32 bytes of FIFO.
+> +        * UART to respond.  IOW, at least 32 bytes of FIFO. Also enable
+> +        * AFE if hw flow control is supported
+>          */
+> -       if (up->capabilities & UART_CAP_AFE && port->fifosize >= 32) {
+> +       if ((up->capabilities & UART_CAP_AFE && (port->fifosize >= 32)) ||
+> +           (port->flags & UPF_HARD_FLOW)) {
+>                 up->mcr &= ~UART_MCR_AFE;
+>                 if (termios->c_cflag & CRTSCTS)
+>                         up->mcr |= UART_MCR_AFE;
+> diff --git a/drivers/tty/serial/of_serial.c b/drivers/tty/serial/of_serial.c
+> index 9924660..77ec6a1 100644
+> --- a/drivers/tty/serial/of_serial.c
+> +++ b/drivers/tty/serial/of_serial.c
+> @@ -182,6 +182,10 @@ static int of_platform_serial_probe(struct platform_device *ofdev)
+>                                           "auto-flow-control"))
+>                         port8250.capabilities |= UART_CAP_AFE;
+>
+> +               if (of_property_read_bool(ofdev->dev.of_node,
+> +                                         "has-hw-flow-control"))
+> +                       port8250.port.flags |= UPF_HARD_FLOW;
+> +
+>                 ret = serial8250_register_8250_port(&port8250);
+>                 break;
+>         }
+> diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+> index b68550d..851707a 100644
+> --- a/drivers/tty/serial/serial_core.c
+> +++ b/drivers/tty/serial/serial_core.c
+> @@ -174,8 +174,12 @@ static int uart_port_startup(struct tty_struct *tty, struct uart_state *state,
+>                         if (tty->termios.c_cflag & CBAUD)
+>                                 uart_set_mctrl(uport, TIOCM_RTS | TIOCM_DTR);
+>                 }
+> -
+> -               if (tty_port_cts_enabled(port)) {
+> +               /*
+> +                * if hw support flow control without software intervention,
+> +                * then skip the below check
+> +                */
+> +               if (tty_port_cts_enabled(port) &&
+> +                   !(uport->flags & UPF_HARD_FLOW)) {
+>                         spin_lock_irq(&uport->lock);
+>                         if (!(uport->ops->get_mctrl(uport) & TIOCM_CTS))
+>                                 tty->hw_stopped = 1;
+> @@ -2772,7 +2776,9 @@ void uart_handle_cts_change(struct uart_port *uport, unsigned int status)
+>
+>         uport->icount.cts++;
+>
+> -       if (tty_port_cts_enabled(port)) {
+> +       /* skip below code if the hw flow control is supported */
+> +       if (tty_port_cts_enabled(port) &&
+> +           !(uport->flags & UPF_HARD_FLOW)) {
+>                 if (tty->hw_stopped) {
+>                         if (status) {
+>                                 tty->hw_stopped = 0;
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+>
+>
