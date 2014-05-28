@@ -1,72 +1,69 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 4/4] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
-Date: Wed, 28 May 2014 20:10:11 +0900
-Message-ID: <1401275411-21947-5-git-send-email-cw00.choi@samsung.com>
-References: <1401275411-21947-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1401275411-21947-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: sbkim73@samsung.com, sameo@linux.intel.com, lee.jones@linaro.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, jonghwa3.lee@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/3] add support for the R-Car H2 and M2 xHCI controllers
+Date: Wed, 28 May 2014 20:22:41 +0900
+Message-ID: <5385C701.6020404@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a little
-difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
+This patch set adds the USB xHCI support for the R-Car H2 and M2 SoCs.
+These SoCs use an xHCI but still need specific initialization, mainly
+to setup the firmware downloading and the specific registers.
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@linaro.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Yadwinder Singh Brar <yadi.brar@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+This patch set is based on the usb-next branch of Greg usb.git tree.
+(commit id = 7027df36e41836b11f01b0d30eee40c55df7d013)
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index d81ba30..f7c9180 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
- 
--* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
-+* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
- 
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
-+- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
-+              or "samsung,s2mpu02-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
- 		  - valid values for n are:
- 			- S2MPS11: 1 to 38
- 			- S2MPS14: 1 to 25
-+			- S2MPU02: 1 to 28
- 		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
- 		  - valid values for n are:
- 			- S2MPS11: 1 to 10
- 			- S2MPS14: 1 to 5
-+			- S2MPU02: 1 to 7
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
- Example:
+This patch also depends on the following patches:
+	http://marc.info/?l=linux-usb&m=140025742005303&w=2
+
+
+However, this driver could not work correctly in the usb-next branch.
+When I connected a usb high speed hub, the xHCI driver output the following
+log.
+
+xhci-hcd ee000000.xhci: ERROR: unexpected command completion code 0x11.
+hub 1-1:1.0: config failed, can't update HCD hub info (err -22)
+
+If I did "git bisect", it said the d8521afe35862f4fbe3ccd6ca37897c0a304edf3
+is the first bad commit. I'm not sure about detail of the commit now. But,
+I would like to submit these patches about R-Car H2/M2 xHCI because
+they could work in the usb-linus branch (commit 7ac3764fcaf) with some
+related patches about the xhci-plat driver.
+
+Changes since v1:
+ - Fix some typos in patch 2.
+ - Remove duplicated #define in patch 2.
+ - Remove usb_phy framework calling in patch 2.
+ - Change prototype of xhci_rcar_start() in patch 2.
+ - Change compatible strings from "renesas,r8a779[01]-xhci" to
+   "renesas,xhci-r8a779[01]" in patch 2 and 3. Because of Renesas SoC
+   maintainer's comment:
+    http://marc.info/?l=linux-sh&m=140109049002958&w=2
+
+ - Rewrite the custom get_unaligned_le32() and add comment about it in patch 2.
+ - Add Acked-by from Geert Uytterhoeven in patch 1 and 3.
+
+Yoshihiro Shimoda (3):
+  usb: host: xhci-plat: add xhci_plat_start()
+  usb: host: xhci-plat: add support for the R-Car H2 and M2 xHCI
+    controllers
+  Documentation: dt-bindings: update xhci-platform DT binding for R-Car
+    H2 and M2
+
+ Documentation/devicetree/bindings/usb/usb-xhci.txt |    3 +-
+ drivers/usb/host/Kconfig                           |    8 +
+ drivers/usb/host/Makefile                          |    3 +
+ drivers/usb/host/xhci-plat.c                       |   25 ++-
+ drivers/usb/host/xhci-rcar.c                       |  180 ++++++++++++++++++++
+ drivers/usb/host/xhci-rcar.h                       |   27 +++
+ 6 files changed, 244 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/usb/host/xhci-rcar.c
+ create mode 100644 drivers/usb/host/xhci-rcar.h
+
 -- 
-1.8.0
-
+1.7.9.5
