@@ -1,38 +1,116 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCHv3 3/4] mmc: dw_mmc: remove the "supports-highspeed" property.
-Date: Wed, 28 May 2014 14:35:50 +0900
-Message-ID: <1401255351-17653-4-git-send-email-jh80.chung@samsung.com>
-References: <1401255351-17653-1-git-send-email-jh80.chung@samsung.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1401255351-17653-1-git-send-email-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: chris@printf.net, ulf.hansson@linaro.org, ludovic.desroches@atmel.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v2 1/2] Documentation: add Device tree bindings for Hisilicon
+ hix5hd2 ethernet
+Date: Wed, 28 May 2014 13:41:40 +0800
+Message-ID: <53857714.3070603@linaro.org>
+References: <1401194667-14445-1-git-send-email-zhangfei.gao@linaro.org> <1401194667-14445-2-git-send-email-zhangfei.gao@linaro.org> <20140527133423.GB6969@leverpostej>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140527133423.GB6969@leverpostej>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Removed the parser for "supports-highspeed".
-It can be parsed with "cap-mmc-highsped" or "cap-sd-highspeed" at
-mmc_of_parse().
+Dear Mark
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
- drivers/mmc/host/dw_mmc.c |    3 ---
- 1 file changed, 3 deletions(-)
+On 05/27/2014 09:34 PM, Mark Rutland wrote:
+> On Tue, May 27, 2014 at 01:44:26PM +0100, Zhangfei Gao wrote:
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>>   .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   36 ++++++++++++++++++++
+>>   1 file changed, 36 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>> new file mode 100644
+>> index 0000000..5fe3835
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+>> @@ -0,0 +1,36 @@
+>> +Hisilicon hix5hd2 gmac controller
+>
+> Just to clarify, is the SoC name "hix5hd2", or is the 'x' a wildcard?
+"hix5hd2" is Soc name, which contains a series of similar chips.
+>
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hix5hd2-gmac".
+>> +- reg: specifies base physical address(s) and size of the device registers.
+>> +  The first region is the MAC register base and size.
+>> +  The second region is external interface control register.
+>
+> Single registers? Are these not part of a larger block?
+It is a single register, outside of the memory region.
+gmac0: reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+gmac1: reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 3285bdd..34b5210 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -2281,9 +2281,6 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
- 			return ERR_PTR(ret);
- 	}
- 
--	if (of_find_property(np, "supports-highspeed", NULL))
--		pdata->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
--
- 	return pdata;
- }
- 
--- 
-1.7.9.5
+The register is controlling interface mode, duplex etc.
+In fact it is rather a bug fix to the silicon, when it is added with 
+intension of not touching the original ip design.
 
+It may be moved to the memory region in the future silicon design.
+However, currently without such register, it can not work.
+
+>
+>> +- interrupts: should contain the MAC interrupts
+>
+> How many, in which order?
+There is only one interrrupt.
+How about:
+- interrupts: interrupt for the device
+
+>
+>> +- #address-cells: must be <1>.
+>> +- #size-cells: must be <0>.
+>> +- phy-mode: see ethernet.txt [1].
+>> +- phy-handle: see ethernet.txt [1].
+>> +- mac-address: see ethernet.txt [1].
+>> +- clocks: clock phandle and specifier pair.
+>
+> Is this the only clock input to the gmac block?
+>
+> Is the clock input named in any documentation?
+
+We have abstract only ONE mac clock input, which is in other patch for 
+drivers/clk/hisilicon/clk-hix5hd2.c
+The clock input name is in include/dt-bindings/clock/hix5hd2-clock.h, 
+described in "Documentation/devicetree/bindings/clock/hix5hd2-clock.txt"
+
+How about:
+- clocks: a pointer to the reference clock for this device.
+
+Or should I mention hix5hd2-clock.h in this binding?
+
+>
+> Cheers,
+> Mark.
+>
+>> +
+>> +- PHY subnode: inherits from phy binding [2]
+>> +
+>> +[1] Documentation/devicetree/bindings/net/ethernet.txt
+>> +[2] Documentation/devicetree/bindings/net/phy.txt
+>> +
+>> +Example:
+>> +	gmac0: ethernet@f9840000 {
+>> +		compatible = "hisilicon,hix5hd2-gmac";
+>> +		reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+>> +		interrupts = <0 71 4>;
+>> +		#address-cells = <1>;
+>> +		#size-cells = <0>;
+>> +		phy-mode = "mii";
+>> +		phy-handle = <&phy2>;
+>> +		mac-address = [00 00 00 00 00 00];
+>> +		clocks = <&clock HIX5HD2_MAC0_CLK>;
+>> +
+>> +		phy2: ethernet-phy@2 {
+>> +			reg = <2>;
+>> +		};
+>> +	};
+>> --
+>> 1.7.9.5
+>>
+>>
