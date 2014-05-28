@@ -1,76 +1,107 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: Re: [PATCH 0/3] Qualcomm Resource Power Manager driver
-Date: Wed, 28 May 2014 12:06:32 -0500
-Message-ID: <8CA95B37-E5EE-46BE-ABFD-64AA3BBF4E96@codeaurora.org>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com> <F773CDFB-2957-49C0-99D3-E9CDCE33C378@codeaurora.org> <CAJAp7Ojb7PvuNYJkPyKx+iehi0bF6rdYvYmfrDz21mebxMN1qg@mail.gmail.com>
-Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v2 1/4] devicetree: bindings: Properly document micrel
+ ks8851 SPI chips
+Date: Wed, 28 May 2014 18:12:19 +0100
+Message-ID: <20140528171219.GD5099@sirena.org.uk>
+References: <1400875040-13269-1-git-send-email-sboyd@codeaurora.org>
+ <1400875040-13269-2-git-send-email-sboyd@codeaurora.org>
+ <20140524124858.GR22111@sirena.org.uk>
+ <5385063F.30407@codeaurora.org>
+ <20140528151646.GU20155@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uxuisgdDHaNETlh8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7Ojb7PvuNYJkPyKx+iehi0bF6rdYvYmfrDz21mebxMN1qg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20140528151646.GU20155@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Stephen Boyd <sboyd@codeaurora.org>, "David S . Miller" <davem@davemloft.net>, Nishanth Menon <nm@ti.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-arm-msm@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
-On May 28, 2014, at 11:59 AM, Bjorn Andersson <bjorn@kryo.se> wrote:
+--uxuisgdDHaNETlh8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> On Wed, May 28, 2014 at 9:23 AM, Kumar Gala <galak@codeaurora.org> wr=
-ote:
->>=20
->> On May 27, 2014, at 12:28 PM, Bjorn Andersson <bjorn.andersson@sonym=
-obile.com> wrote:
->>=20
->>> This series adds a regulator driver for the Resource Power Manager =
-found in
->>> Qualcomm 8660, 8960 and 8064 based devices.
->>>=20
->>> The RPM driver exposes resources to its child devices, that can be =
-accessed to
->>> implement drivers for the regulators, clocks and bus frequency cont=
-rol that's
->>> owned by the RPM in these devices.
->>=20
->> Rather than adding yet another mfd driver, how about we put this in =
-drivers/soc/qcom as a much better location for the low level rpm code. =
- Some code already merged in arm-soc for creation of drivers/soc/qcom/
->=20
-> Hi Kumar,
->=20
-> I do see rpm as somewhat equivalent to a pmic and that was why I
-> followed suite and put it in mfd, but I can of course move it if you
-> prefer.
->=20
->=20
-> Lately I've been working on rpm, rpm-smd, smem, smd, smsm, smp2p
-> patches for mainline.
-> It could be argued that smd is a bus and should go in drivers/bus, bu=
-t
-> for the rest I fear that we just created drivers/soc/qcom as another
-> dumping ground for things; a "Qualcomm specific drivers/mfd".
->=20
-> But maybe that is the purpose of it ;)
+On Wed, May 28, 2014 at 05:16:46PM +0200, Uwe Kleine-K=F6nig wrote:
+> On Tue, May 27, 2014 at 02:40:15PM -0700, Stephen Boyd wrote:
+> > On 05/24/14 05:48, Mark Brown wrote:
 
-It is the purpose so that as we see common patterns between either driv=
-ers/soc/<VENDOR> we can refactor in the future.  However, we need to al=
-l a little time for those patterns to emerge rather than shoe horning i=
-n drivers into places that don=92t make sense.
+> > > So, according to the datasheet I managed to find this device has a
+> > > supply VDD_IO (so normally written vdd-io-supply here), some other
+> > > supplies which are tied to VDD_IO (so can probably be omitted) and a
+> > > supply VDD_A3.3 none of which are optional.  There is an internal
+> > > regulator which can be used to drop a higher voltage VDD_IO down for
+> > > some of the supplies tied to it but that's essentially a noop from
+> > > software as far as I can tell.  None of these supplies are obviously
+> > > optional, though I've not read the datasheet in detail so I may have
+> > > missed something here.
 
->=20
-> If I move the rpm driver, are there any conclusion to where I should
-> move the dt binding documentation?
+> There is a difference between the supply being optional for the hardware
+> to work and the need to specify it in the device tree, isn't it? My
+> expectation is that when it's not specified there is just nothing the
+> the software needs to care for.=20
 
-devicetree/bindings/soc/qcom
-include/dt-bindings/soc
+If the supply must always be physically present the bindings should be
+specified as it being mandatory and the code written in that fashion; as
+an extension Linux will put a dummy in but this is attempting to handle
+incorrect DTs.  This means we have functional error handling in cases
+where there is something to worry about and simplifies the code using
+the regulator.
 
->=20
-> Regards,
-> Bjorn
+regulator_get_optional() should *only* be used if the supply may be
+omitted from the physical design and should generally always be
+accompanied by code which does something substantially different such as
+using an internal regulator or changing the source for a reference
+voltage instead.
 
-- k
+> > > That said it looks like this is intended to be a supply for an extern=
+al
+> > > PHY rather than the device itself, but even so my original question
+> > > about it being able to operate without power still applies.  Looking =
+at
+> > > the code it's certainly not doing any of the handling of a missing
+> > > supply that I would associate with using _optional().
 
---=20
-Employee of Qualcomm Innovation Center, Inc.
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
-ed by The Linux Foundation
+> > I agree, both supplies don't look optional. Unfortunately
+> > efm32gg-dk3750.dts doesn't look to be listing any supply, and this
+> > driver only recently got support for the VDD_A3.3 supply that the omap
+> > board uses (adding Uwe for any comments on efm setup). I presume on
+
+> If I read the schematic correctly there is nothing to regulate on the
+> efm32 dev board. If you want to take a look on the schematic yourself,
+> it's contained in the documentation package available at
+> http://www.silabs.com/products/mcu/lowpower/pages/efm32gg-dk3750.aspx .
+> BDR3201A_A02_sch.pdf, page 3 of 22.
+
+That shows all the supplies connected to fixed voltage regulators
+(including the internal 1.8V LDO); the device tree should represent this
+accurately though the internal 1.8V regulator could be omitted for
+simplicity.  It would be a remarkable device that was able to operate
+without power.
+
+--uxuisgdDHaNETlh8
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJThhjwAAoJELSic+t+oim9UZMP+gIUErotQjc3rwuMwlYzLDNs
+lKkRj1LfCKyl1tzmLxhNwf/cJw2OA1p8/3mLYn8yPx4lamm3iMZzsURDVCE98U0H
+uZVv7pzwweBMfi1qX9zp3DsSUycbGliSkKWG9QdB+TRYQNd92IKYuhWemVmcKzxF
+xTQ36t2xsGC9dpb+9WWapnx2EOg7j4fifECax1c4WJFUsihlntRV/dAHCUWDpE3X
+ppfxkstYJcfnL/xqwNM7GOAvJFKg/fTneCEzuKJ2s/fo/MbdmRHWt4X53it974Y0
+WpmUCR6as6al0ZHshda4qvzhs8ElAdL6C7KUbRW4WvvpVSu6h2bRtvKMm/6fMuSd
+awUIslyqU9ObPY8nh/8I5SuTvYlvy4iO9C5HVlxLtfSB0T26Ei7MaT3PitEe7d2C
+L/Nj19MEkoahWgW2pu7M9yGpw1iUFPI6vxFDqaeA/omb7LF4E34QhB/AwbtNXK9o
+/FqeD+UrsTgXeoh2vnV6S7RvH4tTcyIX4xryr6g3xtjxji0wa3me02G3zvjLYLcp
+MQUF4oCElBrchGU6/urKxtWPLUi2X2PiXBOlJ8PBsbdgO/TGUTPRplHM1BebTADm
+DWgPisiq9DEm/gVPmkwW9L6QLBgVx6SShNNSPz6lbjhWr8oZi7Gzbnh6PwWjAQ7Y
+LciNhsSYfhqHf0gfN/dp
+=TSUP
+-----END PGP SIGNATURE-----
+
+--uxuisgdDHaNETlh8--
