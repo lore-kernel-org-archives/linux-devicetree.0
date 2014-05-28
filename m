@@ -1,194 +1,78 @@
-From: Kumar Gala <galak@codeaurora.org>
-Subject: [PATCH v2] ARM: dts: qcom: Update msm8974/apq8074 device trees
-Date: Wed, 28 May 2014 13:32:56 -0500
-Message-ID: <1401301976-22506-1-git-send-email-galak@codeaurora.org>
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC
+ controller
+Date: Wed, 28 May 2014 11:44:08 -0700
+Message-ID: <20140528184408.GC30031@kroah.com>
+References: <1401267437-22489-1-git-send-email-satish.patel@ti.com>
+ <1401267437-22489-2-git-send-email-satish.patel@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401267437-22489-2-git-send-email-satish.patel@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Satish Patel <satish.patel@ti.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, tony@atomide.com, grant.likely@linaro.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-* Move SoC peripherals into an SoC container node
-* Move serial enabling into board file (qcom-apq8074-dragonboard.dts)
-* Move spi pinctrl into board file
-* Cleanup cpu node to match binding spec, enable-method and compatible
-  should be per cpu, not part of the container
-* Drop interrupts property from l2-cache node as its not part of the
-  binding spec
-* Move timer node out of SoC container
+On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
+> +/**
+> + * struct sc_phy - The basic smart card phy structure
+> + *
+> + * @dev: phy device
+> + * @pdata: pointer to phy's private data structure
+> + * @set_config: called to set phy's configuration
+> + * @get_config: called to get phy's configuration
+> + * @activate_card: perform smart card activation
+> + * @deactivate_card: perform smart card de-activation
+> + * @warm_reset: execute smart card warm reset sequence
+> + * @register_card_activity_cb: register call back to phy device.
+> + * This call back will be called on card insert or remove event
+> + *
+> + * smart card controller uses this interface to communicate with
+> + * smart card via phy.Some smart card phy has multiple slots for
+> + * cards. This inerface also enables controller to communicate with
+> + * one or more smart card connected over phy.
+> + */
+> +struct sc_phy {
+> +	/* phy's device pointer */
+> +	struct device *dev;
 
-Signed-off-by: Kumar Gala <galak@codeaurora.org>
----
-v2:
-* Move timer node out of SoC container
+So this is the "parent", right?  Why not embed a struct device into this
+structure as well, further streaching out the device tree.
 
- arch/arm/boot/dts/qcom-apq8074-dragonboard.dts | 28 ++++++++++++++-
- arch/arm/boot/dts/qcom-msm8974.dtsi            | 49 ++++++++++----------------
- 2 files changed, 45 insertions(+), 32 deletions(-)
+> +
+> +	/* phy's private data */
+> +	void *pdata;
 
-diff --git a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-index 92320c4..b4dfb01 100644
---- a/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-+++ b/arch/arm/boot/dts/qcom-apq8074-dragonboard.dts
-@@ -4,7 +4,11 @@
- 	model = "Qualcomm APQ8074 Dragonboard";
- 	compatible = "qcom,apq8074-dragonboard", "qcom,apq8074";
- 
--	soc: soc {
-+	soc {
-+		serial@f991e000 {
-+			status = "ok";
-+		};
-+
- 		sdhci@f9824900 {
- 			bus-width = <8>;
- 			non-removable;
-@@ -15,5 +19,27 @@
- 			cd-gpios = <&msmgpio 62 0x1>;
- 			bus-width = <4>;
- 		};
-+
-+
-+		pinctrl@fd510000 {
-+			spi8_default: spi8_default {
-+				mosi {
-+					pins = "gpio45";
-+					function = "blsp_spi8";
-+				};
-+				miso {
-+					pins = "gpio46";
-+					function = "blsp_spi8";
-+				};
-+				cs {
-+					pins = "gpio47";
-+					function = "blsp_spi8";
-+				};
-+				clk {
-+					pins = "gpio48";
-+					function = "blsp_spi8";
-+				};
-+			};
-+		};
- 	};
- };
-diff --git a/arch/arm/boot/dts/qcom-msm8974.dtsi b/arch/arm/boot/dts/qcom-msm8974.dtsi
-index c530a33..69dca2a 100644
---- a/arch/arm/boot/dts/qcom-msm8974.dtsi
-+++ b/arch/arm/boot/dts/qcom-msm8974.dtsi
-@@ -13,10 +13,10 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 		interrupts = <1 9 0xf04>;
--		compatible = "qcom,krait";
--		enable-method = "qcom,kpss-acc-v2";
- 
- 		cpu@0 {
-+			compatible = "qcom,krait";
-+			enable-method = "qcom,kpss-acc-v2";
- 			device_type = "cpu";
- 			reg = <0>;
- 			next-level-cache = <&L2>;
-@@ -24,6 +24,8 @@
- 		};
- 
- 		cpu@1 {
-+			compatible = "qcom,krait";
-+			enable-method = "qcom,kpss-acc-v2";
- 			device_type = "cpu";
- 			reg = <1>;
- 			next-level-cache = <&L2>;
-@@ -31,6 +33,8 @@
- 		};
- 
- 		cpu@2 {
-+			compatible = "qcom,krait";
-+			enable-method = "qcom,kpss-acc-v2";
- 			device_type = "cpu";
- 			reg = <2>;
- 			next-level-cache = <&L2>;
-@@ -38,6 +42,8 @@
- 		};
- 
- 		cpu@3 {
-+			compatible = "qcom,krait";
-+			enable-method = "qcom,kpss-acc-v2";
- 			device_type = "cpu";
- 			reg = <3>;
- 			next-level-cache = <&L2>;
-@@ -47,7 +53,6 @@
- 		L2: l2-cache {
- 			compatible = "cache";
- 			cache-level = <2>;
--			interrupts = <0 2 0x4>;
- 			qcom,saw = <&saw_l2>;
- 		};
- 	};
-@@ -57,6 +62,15 @@
- 		interrupts = <1 7 0xf04>;
- 	};
- 
-+	timer {
-+		compatible = "arm,armv7-timer";
-+		interrupts = <1 2 0xf08>,
-+			     <1 3 0xf08>,
-+			     <1 4 0xf08>,
-+			     <1 1 0xf08>;
-+		clock-frequency = <19200000>;
-+	};
-+
- 	soc: soc {
- 		#address-cells = <1>;
- 		#size-cells = <1>;
-@@ -71,15 +85,6 @@
- 			      <0xf9002000 0x1000>;
- 		};
- 
--		timer {
--			compatible = "arm,armv7-timer";
--			interrupts = <1 2 0xf08>,
--				     <1 3 0xf08>,
--				     <1 4 0xf08>,
--				     <1 1 0xf08>;
--			clock-frequency = <19200000>;
--		};
--
- 		timer@f9020000 {
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-@@ -190,6 +195,7 @@
- 			interrupts = <0 108 0x0>;
- 			clocks = <&gcc GCC_BLSP1_UART2_APPS_CLK>, <&gcc GCC_BLSP1_AHB_CLK>;
- 			clock-names = "core", "iface";
-+			status = "disabled";
- 		};
- 
- 		sdhci@f9824900 {
-@@ -229,25 +235,6 @@
- 			interrupt-controller;
- 			#interrupt-cells = <2>;
- 			interrupts = <0 208 0>;
--
--			spi8_default: spi8_default {
--				mosi {
--					pins = "gpio45";
--					function = "blsp_spi8";
--				};
--				miso {
--					pins = "gpio46";
--					function = "blsp_spi8";
--				};
--				cs {
--					pins = "gpio47";
--					function = "blsp_spi8";
--				};
--				clk {
--					pins = "gpio48";
--					function = "blsp_spi8";
--				};
--			};
- 		};
- 	};
- };
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-hosted by The Linux Foundation
+If you do the above, then this pointer is not needed.
+
+
+> +
+> +	/* notify data, passed by interface user as a part of
+> +	 * register_notify API. Data should be passed back when
+> +	 * notification raised to the interface user
+> +	 */
+> +	void *notify_data;
+
+What makes this different from the pdata?
+
+
+> +
+> +	int	(*set_config)(struct sc_phy *phy, u8 slot,
+> +			enum sc_phy_config attr, int value);
+> +	int	(*get_config)(struct sc_phy *phy, u8 slot, enum
+> +			sc_phy_config attr);
+> +	int	(*activate_card)(struct sc_phy *phy, u8 slot);
+> +	int	(*deactivate_card)(struct sc_phy *phy, u8 slot);
+> +	int	(*get_syncatr)(struct sc_phy *phy, u8 slot, u8 len, char *atr);
+> +	int	(*warm_reset)(struct sc_phy *phy, u8 slot);
+> +	int	(*register_notify)(struct sc_phy *phy,
+> +			 struct	notifier_block *nb, void *notify_data);
+> +	int	(*unregister_notify)(struct sc_phy *phy,
+> +			struct	notifier_block *nb);
+> +};
+> +
+> +#endif /* __SC_PHY_H__ */
+> -- 
+> 1.7.9.5
