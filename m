@@ -1,52 +1,50 @@
 From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH] dt: bindings: dwc2: fix required value for the phy-names property
-Date: Wed, 28 May 2014 11:17:41 -0500
-Message-ID: <CAL_JsqKAcV0VEkqgw-ZDcJka2nE3OO2jcBtxRiJW8jr-Rh1qvQ@mail.gmail.com>
-References: <1398359576-14668-1-git-send-email-mporter@linaro.org>
+Subject: Re: [PATCH 1/5] devicetree: bindings: Document micrel vendor prefix
+Date: Wed, 28 May 2014 11:18:56 -0500
+Message-ID: <CAL_JsqK1wkXMkJCag5g72enGcss2Cr1fYjEo--KkgQBDGuqyEQ@mail.gmail.com>
+References: <1400792413-21618-1-git-send-email-sboyd@codeaurora.org>
+	<1400792413-21618-2-git-send-email-sboyd@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398359576-14668-1-git-send-email-mporter@linaro.org>
+In-Reply-To: <1400792413-21618-2-git-send-email-sboyd@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Felipe Balbi <balbi@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Tomasz Figa <t.figa@samsung.com>, Paul Zimmerman <Paul.Zimmerman@synopsys.com>, Devicetree List <devicetree@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Stephen Boyd <sboyd@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Apr 24, 2014 at 12:12 PM, Matt Porter <mporter@linaro.org> wrote:
-> "7408484 usb: gadget: s3c-hsotg: enable generic phy support" introduces
-> generic phy support to the dwc2.txt binding and the s3c-hsotg driver
-> which implements support for the binding. The binding documentation
-> incorrectly states that the phy-names property will be "device". The
-> binding example, driver, and one dts user all implement the phy-names
-> property as requiring "usb2-phy".
+On Thu, May 22, 2014 at 4:00 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> There's one existing use of 'micrel' in the documentation so use
+> 'micrel' instead of the company's ticker symbol 'mcrl'.
 >
-> Fix the dwc2.txt binding documentation to correctly specify "usb2-phy"
-> as the appropriate value for phy-names.
->
-> Reported-by: Tomasz Figa <t.figa@samsung.com>
-> Signed-off-by: Matt Porter <mporter@linaro.org>
+> Cc: <devicetree@vger.kernel.org>
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 
 Applied for 3.16.
 
 Rob
 
 > ---
->  Documentation/devicetree/bindings/usb/dwc2.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 >
-> diff --git a/Documentation/devicetree/bindings/usb/dwc2.txt b/Documentation/devicetree/bindings/usb/dwc2.txt
-> index b8b6871..467ddd1 100644
-> --- a/Documentation/devicetree/bindings/usb/dwc2.txt
-> +++ b/Documentation/devicetree/bindings/usb/dwc2.txt
-> @@ -13,7 +13,7 @@ Refer to clk/clock-bindings.txt for generic clock consumer properties
+> This is mostly here as the first patch to make checkpatch quiet. I expect DT
+> maintainers to pick this one up.
 >
->  Optional properties:
->  - phys: phy provider specifier
-> -- phy-names: shall be "device"
-> +- phy-names: shall be "usb2-phy"
->  Refer to phy/phy-bindings.txt for generic phy consumer properties
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 >
->  Example:
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 1bc2174e1a05..2fe06ad1d248 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -76,6 +76,7 @@ linux Linux-specific binding
+>  lsi    LSI Corp. (LSI Logic)
+>  marvell        Marvell Technology Group Ltd.
+>  maxim  Maxim Integrated Products
+> +micrel Micrel Inc.
+>  microchip      Microchip Technology Inc.
+>  mosaixtech     Mosaix Technologies, Inc.
+>  moxa   Moxa
 > --
-> 1.8.4
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
 >
