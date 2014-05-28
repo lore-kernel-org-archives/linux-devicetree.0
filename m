@@ -1,57 +1,60 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v1] of/irq: do irq resolution in
- platform_get_irq_byname()
-Date: Wed, 28 May 2014 09:39:45 +0100
-Message-ID: <20140528083945.7C86CC4089D@trevor.secretlab.ca>
-References: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com>
-	<20140523080333.66720C4176E@trevor.secretlab.ca>
-	<CAGa+x85mOHtNAj-UHgK2_z8zWAF=qwFcRcUgHTR-byNiX7heHA@mail.gmail.com>
-	<CAL_JsqLm3wfVS+au+JUbhBhxz=LuVpepH6GxabCQhPowhbw77g@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqLm3wfVS+au+JUbhBhxz=LuVpepH6GxabCQhPowhbw77g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v6 1/2] clk: shmobile: r8a7779: Add clocks support
+Date: Wed, 28 May 2014 10:42:05 +0200
+Message-ID: <CAMuHMdVgUXOvi-Msd6qWDBVS_Wfh_5F-F7DUUMD+hhan3ReXTQ@mail.gmail.com>
+References: <1397775951-30992-1-git-send-email-horms+renesas@verge.net.au>
+	<1397775951-30992-2-git-send-email-horms+renesas@verge.net.au>
+	<201405271131.42301.arnd@arndb.de>
+	<20140528010850.GH7374@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140528010850.GH7374@verge.net.au>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 27 May 2014 19:37:00 -0500, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
-> On Tue, May 27, 2014 at 3:23 PM, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Fri, May 23, 2014 at 1:03 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> >> On Tue, 20 May 2014 13:42:02 +0300, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
-> >>> The commit 9ec36cafe43bf835f8f29273597a5b0cbc8267ef
-> >>> "of/irq: do irq resolution in platform_get_irq" from Rob Herring -
-> >>> moves resolving of the interrupt resources in platform_get_irq().
-> >>> But this solution isn't complete because platform_get_irq_byname()
-> >>> need to be modified the same way.
-> >>>
-> >>> Hence, fix it by adding interrupt resolution code at the
-> >>> platform_get_irq_byname() function too.
-> >>>
-> >>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> >>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> >>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-> >>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> >>>
-> >>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> >>
-> >> Applied, Thanks.
-> >
-> > As of next-20150526, the ST u8500 Snowball board has been failing boot
-> > in linux-next, and was bisected down to this patch (commit
-> > ad69674e73a1 in -next).   Full boot failure attached.
-> >
-> > I have not dug any deeper, but can confirm that next-20140526 with
-> > this patch reverted boots again on the snowball board.
-> 
-> There's a patch on the list which fixes it. The problem is stmmac
-> driver was expecting only one error code.
+Hi Simon,
 
-Can you send me a link to this patch? I cannot find it in my inbox.
+On Wed, May 28, 2014 at 3:08 AM, Simon Horman <horms@verge.net.au> wrote:
+>> > +#include <dt-bindings/clock/r8a7779-clock.h>
+>>
+>> This currently causes a build error in Linux-next, since the header file
+>> has not been merged along with the driver.
+>
+> Hi Arnd,
+>
+> I'm a little unsure what combination of Kernel config options you
+> are using to compile this driver in linux-next but I do agree
+> that the header is missing and that would cause the compile to fail.
+> I apologise for that oversight.
+>
+> I believe that a good fix is to add the header, which I already have queued-up
+> in the renesas tree for v3.17. I wonder if Mike would consider taking
+> the following patch for v3.16. Alternatively I would be happy to send
+> it it to arm-soc as a fix for v3.16.
 
-g.
+IIUIC, the only reason the driver source needs the header file is:
+
+#define CPG_NUM_CLOCKS                  (R8A7779_CLK_OUT + 1)
+
+Why not
+
+#define CPG_NUM_CLOCKS                  8
+
+and drop the include?
+
+Or better, use "num_clks" (from of_property_count_strings(np,
+"clock-output-names")), like the other R-Car drivers do.
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
