@@ -1,101 +1,175 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH 03/11] pinctrl: sunxi: Move setting of mux
- to irq type from unmask to set_type
-Date: Wed, 28 May 2014 12:33:51 +0200
-Message-ID: <20140528103351.GQ4730@lukather>
-References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
- <1401090486-4414-4-git-send-email-hdegoede@redhat.com>
- <CACRpkdZcGJTXfcxN_sogm+hYHM56d_VxtuZqth0t-c2mgAJ0vA@mail.gmail.com>
- <20140528093653.GN4730@lukather>
- <5385B1B8.8070803@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU
+ enable method
+Date: Wed, 28 May 2014 11:36:25 +0100
+Message-ID: <20140528103625.GA29219@e102568-lin.cambridge.arm.com>
+References: <1400607830-10989-1-git-send-email-elder@linaro.org>
+ <1400607830-10989-2-git-send-email-elder@linaro.org>
+ <20140527114958.GC18476@e102568-lin.cambridge.arm.com>
+ <53855867.7050800@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="0UhZIN3Sa23/ILEd"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBV7XS2OAKGQEPWIOT3A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53855867.7050800@linaro.org>
 Content-Disposition: inline
-In-Reply-To: <5385B1B8.8070803-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-wireless <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Alex Elder <elder@linaro.org>
+Cc: "mporter@linaro.org" <mporter@linaro.org>, "bcm@fixthebug.org" <bcm@fixthebug.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "sboyd@codeaurora.org" <sboyd@codeaurora.org>, "bcm-kernel-feedback-list@broadcom.com" <bcm-kernel-feedback-list@broadcom.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Mark Rutland <Mark.Rutland@arm.com>, Pawel Moll <Pawel.Moll@arm.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "rjui@broadcom.com" <rjui@broadcom.com>r
 List-Id: devicetree@vger.kernel.org
 
-
---0UhZIN3Sa23/ILEd
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, May 28, 2014 at 11:51:52AM +0200, Hans de Goede wrote:
-> Hi,
->=20
-> On 05/28/2014 11:36 AM, Maxime Ripard wrote:
-> > On Tue, May 27, 2014 at 04:18:29PM +0200, Linus Walleij wrote:
-> >> On Mon, May 26, 2014 at 9:47 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> w=
-rote:
+On Wed, May 28, 2014 at 04:30:47AM +0100, Alex Elder wrote:
+> On 05/27/2014 06:49 AM, Lorenzo Pieralisi wrote:
+> > On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
+> >> Broadcom mobile SoCs use a ROM-implemented holding pen for
+> >> controlled boot of secondary cores.  A special register is
+> >> used to communicate to the ROM that a secondary core should
+> >> start executing kernel code.  This enable method is currently
+> >> used for members of the bcm281xx and bcm21664 SoC families.
 > >>
-> >>> With level triggered interrupt mask / unmask will get called for each
-> >>> interrupt, doing the somewhat expensive mux setting on each unmask th=
-us is
-> >>> not a good idea. Instead move it to the set_type callback, which is t=
-ypically
-> >>> done only once for each irq.
-> >>>
-> >>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> >> The use of an enable method also allows the SMP operation vector to
+> >> be assigned as a result of device tree content for these SoCs.
 > >>
-> >> Yes move it out of mask/unmask but no, not into set_type().
+> >> Signed-off-by: Alex Elder <elder@linaro.org>
+> > 
+> > This is getting out of control, it is absolutely ghastly. I wonder how
+> > I can manage to keep cpus.txt updated if anyone with a boot method
+> > du jour adds into cpus.txt, and honestly in this specific case it is even
+> > hard to understand why.
+> 
+> OK, in this message I'll focus on the particulars of this
+> proposed binding.
+> 
+> > Can't it be done with bindings for the relative register address space
+> > (regmap ?) and platform code just calls the registers driver to set-up the
+> > jump address ? It is platform specific code anyway there is no way you
+> > can make this generic.
+> 
+> I want to clarify what you're after here.
+> 
+> My aim is to add SMP support for a class of Broadcom SMP
+> machines.  To do so, I'm told I need to use the technique
+> of assigning the SMP operations vector as a result of
+> identifying an enable method in the DT.
+> 
+> For 32-bit ARM, there are no generic "enable-method" values.
+> (I did attempt to create one for "spin-table" but that was
+> rejected by Russell King.)  For the machines I'm trying to
+> enable, secondary CPUS start out spinning in a ROM-based
+> holding pen, and there is no need for a kernel-based one.
+> 
+> However, like a spin-table/holding pen enable method, a
+> memory location is required for coordination between the
+> boot CPU running kernel code and secondary CPUs running ROM
+> code.  My proposal specifies it using a special numeric
+> property value named "secondary-boot-reg" in the "cpus"
+> node in the DT.
+> 
+> And as I understand it, the issue you have relates to how
+> this memory location is specified.
+
+The issue I have relates to cluttering cpus.txt with all
+sorts of platform specific SMP boot hacks.
+
+> You suggest regmap.  I'm using a single 32-bit register,
+> only at very early boot time, and thereafter access to
+> it is meaningless.  It seems like overkill if it's only
+> used for this purpose.  I could hide the register values
+> in the code, but with the exception of that, the code I'm
+> using is generic (in the context of this class of Broadcom
+> machine).  I could specify the register differently somehow,
+> in a different node, or with a different property.
+
+Is that register part of a larger registers block ? What I wanted
+to say is that you can use a driver "API" (we wish) to write that
+register, something like eg vexpress does with sysflags:
+
+drivers/mfd/vexpress-sysreg.c
+
+vexpress_flags_set()
+
+instead of grabbing the reg address from a platform specific boot
+method DT entry.
+
+I doubt that register exists on its own, even though I have to say this
+would force you to write yet another platform specific driver to control
+a bunch of registers, I do not see any other solution.
+
+One thing is for certain: I really do not see the point in adding a boot
+method per-SoC, and I do not want to end up having a cpus.txt file with a
+gazillion entries just because every given platform reinvents the wheel when
+it comes to booting an SMP system, cpus.txt would become a document that
+describes platform quirks, not a proper binding anymore.
+
+At least all platform specific quirks must be moved out of cpus.txt and
+in platform documentation, I understand it is just a cosmetic change but
+I want to prevent cpus.txt to become an abomination.
+
+> The bottom line here is I'm not sure whether I understand
+> what you're suggesting, or perhaps why what you suggest is
+> preferable.  I'm very open to suggestions, I just need it
+> laid out a bit more detail in order to respond directly.
+
+See above.
+
+Thanks !
+Lorenzo
+
+> 
+> Thanks.
+> 
+> 					-Alex
+> 
+> > I really do not see the point in cluttering cpus.txt with this stuff, it
+> > is a platform specific hack, and do not belong in generic bindings in my
+> > opinion.
+> > 
+> > Thanks,
+> > Lorenzo
+> > 
+> >> ---
+> >>  Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
+> >>  1 file changed, 12 insertions(+)
 > >>
-> >> Can you not use the irqchip startup()/shutdown() callbacks
-> >> instead?
-> >=20
-> > I think we can use irq_request_resources then
-> > https://lkml.org/lkml/2014/3/12/307
->=20
-> Sounds good, I'll modify the patch to move it here before posting a v2 of
-> this series. Note v2 likely won't happen till this weekend, -ENOTIME.
->=20
-> > We could even merge the gpio_to_irq code into it.
->=20
-> Erm, no we need that as a separate function for the gpio_chip's to_irq
-> callback.
+> >> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+> >> index 333f4ae..c6a2411 100644
+> >> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> >> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> >> @@ -185,6 +185,7 @@ nodes to be present and contain the properties described below.
+> >>  			    "qcom,gcc-msm8660"
+> >>  			    "qcom,kpss-acc-v1"
+> >>  			    "qcom,kpss-acc-v2"
+> >> +			    "brcm,bcm11351-cpu-method"
+> >>  
+> >>  	- cpu-release-addr
+> >>  		Usage: required for systems that have an "enable-method"
+> >> @@ -209,6 +210,17 @@ nodes to be present and contain the properties described below.
+> >>  		Value type: <phandle>
+> >>  		Definition: Specifies the ACC[2] node associated with this CPU.
+> >>  
+> >> +	- secondary-boot-reg
+> >> +		Usage:
+> >> +			Required for systems that have an "enable-method"
+> >> +			property value of "brcm,bcm11351-cpu-method".
+> >> +		Value type: <u32>
+> >> +		Definition:
+> >> +			Specifies the physical address of the register used to
+> >> +			request the ROM holding pen code release a secondary
+> >> +			CPU.  The value written to the register is formed by
+> >> +			encoding the target CPU id into the low bits of the
+> >> +			physical start address it should jump to.
+> >>  
+> >>  Example 1 (dual-cluster big.LITTLE system 32-bit):
+> >>  
+> >> -- 
+> >> 1.9.1
+> >>
+> >>
+> > 
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
-Linus sent a patch stating otherwise a few weeks ago, and was
-suggesting moving it to irq_startup.
-
-https://lkml.org/lkml/2014/5/9/50
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---0UhZIN3Sa23/ILEd
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJThbuPAAoJEBx+YmzsjxAglxgP/0k/zqqXxIaurdLrYu3NWmZI
-SFMbcggtnBu9z8xL4xviBmGOplDfJHMMvodkf8BOkr8n+RyW0HZFB5kKEpguC8LQ
-/v4x3GL1sQMbQx5qWmJTcFkCCrUZOEcwZl8ulKOEzkBqDRn2awOu2bR2KkF75PZt
-LkSxmn+fEkleURuu3RtiXNNcov5rNS0DNFTkgxHP1Z/ZP6ddcknJKtj0YJvdniWJ
-G8hhPS/ssAHXkUAkukmUflxyCETwJQRyKCkXp8QLs0hY/EhRSdaolzoGL7VGTLIq
-i5BgBhqgUz/m1JSLlP3RcGXLj4S50/dPfzSUOHvB1pN32k227Vt+PyjMoVkV5RSF
-v8k3QwmF8QP8CqF519PMIGJHFKV9xsl3VYlyu8O63dm5Kavjh74PpB8umQL59aiA
-gl5Agvcu84GRO+IvujdCe6hdxb2kzV0k0RZVR2iP1QHIYeR3IW29Cj1GliF8Eh4D
-nB1BKHztRrX/xgWixd8C+p5CPx7p7puTfhsbTePTatkPhv1CCL83NBfftsH2x7iY
-wFpsb0Z02jzAxeIt3J4ActH4c/2TmLFMvtB8x8LDfYd64UDM/nGBRhJceskiWOKO
-+rR5Sw3+SeKtBLvQVgAx65DEvMt8k1upZRZtw5cecDDpo7qUZK/AaaFNjs7hyqyD
-9qROitLKhNzKUjaEHneb
-=b4iU
------END PGP SIGNATURE-----
-
---0UhZIN3Sa23/ILEd--
