@@ -1,265 +1,163 @@
-From: Alan Tull <delicious.quinoa@gmail.com>
-Subject: Re: [PATCHv5 1/3] dts: socfpga: Add bindings for Altera SoC SDRAM controller
-Date: Wed, 28 May 2014 09:38:30 -0500
-Message-ID: <CANk1AXRMGu8W1WNGDpcuahhZ9GUfs04iigEcDJFDYfqUR4C2CA@mail.gmail.com>
-References: <CAF03EBfOrBWsGVkwYHQt9Pm858LtkgUThkM6dFjksa93ETo_bw@mail.gmail.com>
-	<20140519191206.GH949@pengutronix.de>
-	<CAF03EBfwFC7bK=j0W3K+no9TK7xe2nF1ZXH9bMBRNzVErB5EjQ@mail.gmail.com>
-	<CANk1AXTdSheUkNtF2fSmtcYaUrd2CnTjBxGitmSy88H4VRVbnw@mail.gmail.com>
-	<20140520144446.GJ949@pengutronix.de>
-	<CAF03EBe+G8EpZSU7vhu4QZ3E-Nq4WnHw7DRM7=EyxHkjzp5cqg@mail.gmail.com>
-	<20140527071157.GC20695@pengutronix.de>
-	<CANk1AXTMHuWeaxn_hVi+AH=aXbbSNov=894YmSYfvfvpWM+eSg@mail.gmail.com>
-	<20140527194228.GB13172@pengutronix.de>
-	<CANk1AXRMZrNWr4FR6KYAkN3JwVA1d9qdn00UY3OaYurz6DNvmA@mail.gmail.com>
-	<20140528070133.GD13172@pengutronix.de>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] Documentation: add Device tree bindings for
+ Hisilicon hix5hd2 ethernet
+Date: Wed, 28 May 2014 15:58:04 +0100
+Message-ID: <20140528145804.GA16088@leverpostej>
+References: <1401194667-14445-1-git-send-email-zhangfei.gao@linaro.org>
+ <1401194667-14445-2-git-send-email-zhangfei.gao@linaro.org>
+ <20140527133423.GB6969@leverpostej>
+ <53857714.3070603@linaro.org>
+ <20140528125354.GA2092@leverpostej>
+ <5385E3CC.9050700@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140528070133.GD13172@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Cc: Thor Thayer <tthayer.linux@gmail.com>, Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org, Alan Tull <atull@altera.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5385E3CC.9050700@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>
+Cc: "davem@davemloft.net" <davem@davemloft.net>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 2:01 AM, Steffen Trumtrar
-<s.trumtrar@pengutronix.de> wrote:
-> On Tue, May 27, 2014 at 03:57:47PM -0500, Alan Tull wrote:
->> On Tue, May 27, 2014 at 2:42 PM, Steffen Trumtrar
->> <s.trumtrar@pengutronix.de> wrote:
->> > On Tue, May 27, 2014 at 02:12:17PM -0500, Alan Tull wrote:
->> >> On Tue, May 27, 2014 at 2:11 AM, Steffen Trumtrar
->> >> <s.trumtrar@pengutronix.de> wrote:
->> >> > On Wed, May 21, 2014 at 10:38:34AM -0500, Thor Thayer wrote:
->> >> >> On Tue, May 20, 2014 at 9:44 AM, Steffen Trumtrar
->> >> >> <s.trumtrar@pengutronix.de> wrote:
->> >> >> > Hi!
->> >> >> >
->> >> >> > On Tue, May 20, 2014 at 09:31:06AM -0500, Alan Tull wrote:
->> >> >> >> On Mon, May 19, 2014 at 2:37 PM, Thor Thayer <tthayer.linux@gmail.com> wrote:
->> >> >> >>
->> >> >> >> >>> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> >> >> >> >>> >> new file mode 100644
->> >> >> >> >>> >> index 0000000..8f8746b
->> >> >> >> >>> >> --- /dev/null
->> >> >> >> >>> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
->> >> >> >> >>> >> @@ -0,0 +1,11 @@
->> >> >> >> >>> >> +Altera SOCFPGA SDRAM Controller
->> >> >> >> >>> >> +
->> >> >> >> >>> >> +Required properties:
->> >> >> >> >>> >> +- compatible : "altr,sdr-ctl";
->> >> >> >> >>> >> +- reg : Should contain 1 register ranges(address and length)
->> >> >> >> >>> >> +
->> >> >> >> >>> >> +Example:
->> >> >> >> >>> >> +     sdrctl@ffc25000 {
->> >> >> >> >>> >> +             compatible = "altr,sdr-ctl";
->> >> >> >> >>> >> +             reg = <0xffc25000 0x1000>;
->> >> >> >> >>> >> +     };
->> >> >> >> >>> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> >> >> >> >>> >> index df43702..6ce912e 100644
->> >> >> >> >>> >> --- a/arch/arm/boot/dts/socfpga.dtsi
->> >> >> >> >>> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> >> >> >> >>> >> @@ -676,6 +676,11 @@
->> >> >> >> >>> >>                       clocks = <&l4_sp_clk>;
->> >> >> >> >>> >>               };
->> >> >> >> >>> >>
->> >> >> >> >>> >> +             sdrctl@ffc25000 {
->> >> >> >> >>> >> +                     compatible = "altr,sdr-ctl", "syscon";
->> >> >> >> >>> >                                                    ^^^^^^^^^^
->> >> >> >> >>> >
->> >> >> >> >>> > Get rid of that, too, please.
->> >> >> >> >>>
->> >> >> >> >>> Hi Steffan,
->> >> >> >> >>>
->> >> >> >> >>> I believe I need to keep the "syscon". The same register (ctrlcfg)
->> >> >> >> >>> that has the ECC enable bitfield also includes the DRAM configuration
->> >> >> >> >>> bitfields that other drivers will want to access (specifically the
->> >> >> >> >>> FPGA bridge needs this information). Since this register will be
->> >> >> >> >>> shared between drivers,  syscon seems like the best solution.
->> >> >> >> >>>
->> >> >> >> >>
->> >> >> >> >> Hm, from looking at the documentation of the ctrlcfg I can't really
->> >> >> >> >> understand which bits you would need for the FPGA brigde and why.
->> >> >> >>
->> >> >> >> Hi Steffen,
->> >> >> >>
->> >> >> >> Offset 0x80 in the sdr-ctl is the "fpgaportrst" register.  14 bits
->> >> >> >> wide, defaults to 0.  When appropriate bits set to 1 in that reg, it
->> >> >> >> allows an FPGA port to come out of reset (enables that port).  Has no
->> >> >> >> other effect on SDRAM configuration.
->> >> >> >>
->> >> >> >> >> That all sounds like stuff you would want to set for the specific
->> >> >> >> >> RAM you are dealing with on a specific board.
->> >> >> >> >> What bridge are you talking about? The SDRAM bridge?
->> >> >> >>
->> >> >> >> Yes, the port allows the FPGA a direct path to the SDRAM.  This one
->> >> >> >> register the only register in the sdr that the bridge driver needs.
->> >> >> >>
->> >> >> >
->> >> >> > So, what I suggested down ...
->> >> >> >
->> >> >> >> >>
->> >> >> >> >> I can see the problem with the ECC enable, though.
->> >> >> >> >>
->> >> >> >> >> Regards,
->> >> >> >> >> Steffen
->> >> >> >> >>
->> >> >> >> >
->> >> >> >> >>> >                 sdrctl@ffc25000 {
->> >> >> >> >>> >                         compatible = "altr,sdr-ctl";
->> >> >> >> >>> >                         reg = <0xffc25000 0x1000>;
->> >> >> >> >>> >                         ranges;
->> >> >> >> >>> >
->> >> >> >> >>> >                         edac@ffc2502c {
->> >> >> >> >>> >                                 compatible = "altr,sdram-edac";
->> >> >> >> >>> >                                 reg = <0xffc2502c 0x50>;
->> >> >> >> >>> >                                 interrupts = <0 39 4>;
->> >> >> >> >>> >                         };
->> >> >> >> >>> >                 };
->> >> >> >> >>> >
->> >> >> >> >>> > Then we can later add:
->> >> >> >> >>> >
->> >> >> >> >>> >                         sdr-ports: ports@ffc2507c {
->> >> >> >> >>> >                                 #reset-cells = <1>;
->> >> >> >> >>> >                                 compatible = "altr,sdr-ports";
->> >> >> >> >>> >                                 reg = <0xffc2507c 0x10>;
->> >> >> >> >>> >                                 clocks = <&ddr_dqs_clk>;
->> >> >> >> >>> >                                 ...
->> >> >> >> >>> >                         };
->> >> >> >>
->> >> >> >
->> >> >> > ... here should work. No?! Just a simple driver that registers with the
->> >> >> > reset-framework. I would add 0x7c to that driver and than that driver could
->> >> >> > "configure" the port and let it out of reset.
->> >> >> >
->> >> >> > I have done the same thing for the other 3 bridges, but am not finished yet.
->> >> >> > Especially the GPV-stuff needs to at least be able to be added later if not now.
->> >> >> >
->> >> >
->> >> > Hi Thor!
->> >> >
->> >> >> I'm not clear on how the EDAC driver will interact with the registers
->> >> >> allocated to the SDRAM controller. If the group of registers from
->> >> >> 0xffc25000 to 0xffc26000 is exclusively allocated to the SDRAM
->> >> >> controller, how does the EDAC driver cleanly access that single
->> >> >> register inside this range?
->> >> >>
->> >> >
->> >> > The compatible in the example is wrong. I didn't mean to map the whole address space
->> >> > to some driver.
->> >> > I think for the configuration register syscon is the right approach. It is a
->> >> > bag of bits that don't necessitate an own driver, so syscon is perfect.
->> >> >
->> >> > So, let me change my proposal to
->> >> >
->> >> >         sdr-ctl: sdram@ffc25000 {
->> >> >                 compatible = "altr,sdr-ctl", "syscon";
->> >> >                 reg = <0xffc25000 0x1>;
->> >> >         };
->> >> >
->> >> >         edac: edac@ffc2502c {
->> >> >                 compatible = "altr,sdram-edac";
->> >> >                 reg = <0xffc2502c 0x50>;
->> >> >                 interrupts = <0 39 4>;
->> >> >                 config = <&sdr-ctl>;
->> >> >                 ...
->> >> >         };
->> >> >
->> >> >         sdr-ports: ports@ffc2507c {
->> >> >                 compatible = "altr,sdr-ports";
->> >> >                 reg = <0xffc2507c 0x10>;
->> >> >                 clocks = <&ddr_dqs_clk>;
->> >> >                 ...
->> >> >         };
->> >> >
->> >> > Maybe we can just skip the outer node that combines all the others.
->> >> > So, if we do it like that, you can still use syscon, but only for the register
->> >> > that needs it. And the EDAC definitely needs access to the config register, so
->> >> > all is good.
->> >> >
->> >> >> Is the solution that I don't use request_region() (and therefore not
->> >> >> request exclusive access) when setting up the SDRAM controller?
->> >> >>
->> >> >> If you could point me to your drivers for the other bridges that you
->> >> >> reference, your code may answer my question.
->> >> >>
->> >> >
->> >> > The other bridges don't need access to any SDRAM controller registers and
->> >> > I haven't even started to implement the GPV-stuff with the lw2hps-bridge :-(
->> >> >
->> >> > Regards,
->> >> > Steffen
->> >> >
->> >> > --
->> >> > Pengutronix e.K.                           |                             |
->> >> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
->> >> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
->> >> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
->> >>
->> >> OK now I understand.  For register offset 0x0, that's all stuff set up
->> >> in the bootloader.  We won't be touching that register except for the
->> >> EDAC.  So syscon isn't needed here.
->> >>
->> >> Each driver that uses some sdr registers can specify which registers
->> >> it uses in the device tree.  So far we don't have any cases of two
->> >> drivers that share a register.
->> >>
->> >> The ECC driver will need two ranges: offset 0x00 and 0x38 through 0x50.
->> >> The fpga bridges just needs offset 0x80.
->> >>
->> >
->> > Well, almost ;-)
->> > Use syscon for 0x0 and reference that in the ECC driver, which only is
->> > responsible for 0x38 to 0x50. Then flip the two EDAC bits via the syscon-phandle.
->> > Then a bootloader can probe with the same dts and have a driver match on the
->> > config-register and one for all the DRAM setup (< 0x38), which we don't need in
->> > the kernel. On the other hand the EDAC seems unneccessary for the bootloader.
->> > And this all matches the partitioning of the SDR register space, so I think it
->> > is also a correct hardware description.
->> >
->> > Regards,
->> > Steffen
->> >
->> > --
->> > Pengutronix e.K.                           |                             |
->> > Industrial Linux Solutions                 | http://www.pengutronix.de/  |
->> > Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
->> > Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
->>
->> We could do that.  But is syscon a concept the bootloader will know about?
->>
->
-> Depends on the bootloader. I guess u-boot doesn't, but barebox does.
+On Wed, May 28, 2014 at 02:25:32PM +0100, zhangfei wrote:
+> 
+> 
+> On 05/28/2014 08:53 PM, Mark Rutland wrote:
+> > On Wed, May 28, 2014 at 06:41:40AM +0100, zhangfei wrote:
+> >> Dear Mark
+> >>
+> >> On 05/27/2014 09:34 PM, Mark Rutland wrote:
+> >>> On Tue, May 27, 2014 at 01:44:26PM +0100, Zhangfei Gao wrote:
+> >>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> >>>> ---
+> >>>>    .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   36 ++++++++++++++++++++
+> >>>>    1 file changed, 36 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..5fe3835
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+> >>>> @@ -0,0 +1,36 @@
+> >>>> +Hisilicon hix5hd2 gmac controller
+> >>>
+> >>> Just to clarify, is the SoC name "hix5hd2", or is the 'x' a wildcard?
+> >> "hix5hd2" is Soc name, which contains a series of similar chips.
+> >
+> > How similar are they?
+> >
+> > It's preferable to have a precise name, even when used as a fallback for
+> > other similar devices.
+> 
+> The soc name "hix5hd2" is provided by hisilicon.
+> In fact, they have considered a lot and discussed long time for this name :)
 
-OK then we will want offset 0 to be 'syscon'.
+Sure, I would not expect hisilicon to rebrand their SoC family due to my
+comments on a mailing list.
 
-> Alternative would be to have the bootloader know that it has to look for an
-> ECC node when it instead is looking for DRAM timing/width/... setup.
-> Sounds wrong to me.
->
->> Actually it is a bit messier than what I originally said:
->>  ECC driver needs two ranges: offset 0x00 and 0x38 through 0x50.
->>  Machine layer needs control of 0x10, 0x14, 0x54, and 0x58 for putting
->> SDRAM into self-refresh.
->
-> I didn't get that. Does the ECC driver need access to this "machine layer"?
+w.r.t. naming in the kernel I could only find an unanswered query [1]
+from Olof Johansson earlier this month, and no rationale for the change.
 
-Nope.  Now that I think about it this machine layer will only need
-access to 0x54, 0x58 and nobody else will need them.
+I tried searching online for "hix5hd2" and didn't find much other than a
+suggestion it's also known as "Hi3716cv200". I assume this means the
+Hi371 range in general, which covers a few variants on the hisilicon
+website [2]. The names there are far more specific than "hix5hd2".
 
-So I agree with your suggestion.  I think that besides offset 0, these
-registers will be not be shared between drivers.
+We've been bitten in the past when generic SoC family names are used in
+DT bindings without also having specific strings. It's usually better to
+choose a particular variant as the base, and have others claim
+compatibility with that (with additional more specific compatible
+strings).
 
-Thanks!
-Alan Tull
+The key issue is how similar the SoC variants are. If they are identical
+w.r.t. this block and the blocks it is attached to, then the compatible
+string you propose is likely to be fine. However, subtle differences in
+integration across variants might cause issues for which we want
+targeted workarounds, or we might be able to make better use of
+particular variants based on information that we cannot probe from the
+HW. For that we need very specific compatible strings, and in general it
+is better to add those and not need them than to need them but not have
+them.
 
->
-> Regards,
-> Steffen
->
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> >
+> >>>
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- compatible: should be "hisilicon,hix5hd2-gmac".
+> >>>> +- reg: specifies base physical address(s) and size of the device registers.
+> >>>> +  The first region is the MAC register base and size.
+> >>>> +  The second region is external interface control register.
+> >>>
+> >>> Single registers? Are these not part of a larger block?
+> >> It is a single register, outside of the memory region.
+> >> gmac0: reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
+> >> gmac1: reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
+> >>
+> >> The register is controlling interface mode, duplex etc.
+> >> In fact it is rather a bug fix to the silicon, when it is added with
+> >> intension of not touching the original ip design.
+> >>
+> >> It may be moved to the memory region in the future silicon design.
+> >> However, currently without such register, it can not work.
+> >
+> > I see. Is it possible that a future revision might have this fixed, such
+> > that the second reg entry would become optional?
+> 
+> We have given this feedback to the silicon team, and they admit this 
+> should be fixed.
+> However, not sure it can be fixed soon since the product pressure.
+> Can we keep this first since it is required currently.
+
+I'm not asking for its removal, I'm just trying to find out if in future
+we might need to support a DTB without the second entry.
+
+> 
+> >
+> >>>
+> >>>> +- interrupts: should contain the MAC interrupts
+> >>>
+> >>> How many, in which order?
+> >> There is only one interrrupt.
+> >> How about:
+> >> - interrupts: interrupt for the device
+> >
+> > The original wording is OK, all you need to do is change the original
+> > wording to get rid of the trailing 's':
+> >
+> > - interrupts: should contain the MAC interrupt
+> OK, thanks
+> 
+> >
+> >>
+> >>>
+> >>>> +- #address-cells: must be <1>.
+> >>>> +- #size-cells: must be <0>.
+> >>>> +- phy-mode: see ethernet.txt [1].
+> >>>> +- phy-handle: see ethernet.txt [1].
+> >>>> +- mac-address: see ethernet.txt [1].
+> >>>> +- clocks: clock phandle and specifier pair.
+> >>>
+> >>> Is this the only clock input to the gmac block?
+> >>>
+> >>> Is the clock input named in any documentation?
+> >>
+> >> We have abstract only ONE mac clock input, which is in other patch for
+> >> drivers/clk/hisilicon/clk-hix5hd2.c
+> >> The clock input name is in include/dt-bindings/clock/hix5hd2-clock.h,
+> >> described in "Documentation/devicetree/bindings/clock/hix5hd2-clock.txt"
+> >
+> > If you have only one physical clock input in the GMAC block, that's
+> > fine. Is there a name for that input line from the POV of the GMAC
+> > block?
+> 
+> There is no name, and since it is only one clock, no name required.
+
+Ok. That's fine then, assuming we don't expect variants with different
+clock input lines wired up.
+
+Cheers,
+Mark.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/255195.html
+[2] http://www.hisilicon.com/products/digital.html
