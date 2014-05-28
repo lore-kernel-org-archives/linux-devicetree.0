@@ -1,29 +1,109 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v2] pinctrl: Enable "power-source" to be extracted from DT files
-Date: Wed, 28 May 2014 10:17:10 +0200
-Message-ID: <CACRpkdYB5=sJZbcLFVMR5C391_HozGFQzNoUj6BRVzH03gBfkA@mail.gmail.com>
-References: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ@mail.gmail.com>
-	<1401172056-25743-1-git-send-email-iivanov@mm-sol.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Wed, 28 May 2014 10:19:11 +0200
+Message-ID: <CAPDyKFqCwSfnbXJffQeMUMLEgZPcqjEMhbTXxi4HKOKqExQ70g@mail.gmail.com>
+References: <53806F26.6050706@redhat.com>
+	<20140525123452.GS22111@sirena.org.uk>
+	<53824294.1090609@redhat.com>
+	<20140526103807.GV22111@sirena.org.uk>
+	<538321AB.4050006@redhat.com>
+	<20140526142225.GF22111@sirena.org.uk>
+	<538356DA.7090302@redhat.com>
+	<CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
+	<53838023.2080807@redhat.com>
+	<CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
+	<20140527175326.GZ12304@sirena.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1401172056-25743-1-git-send-email-iivanov@mm-sol.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>, James Hogan <james.hogan@imgtec.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140527175326.GZ12304@sirena.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 8:27 AM, Ivan T. Ivanov <iivanov@mm-sol.com> wrote:
-
-> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+On 27 May 2014 19:53, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, May 27, 2014 at 03:50:33PM +0200, Ulf Hansson wrote:
 >
-> Add "power-source" property to generic options used for DT parsing files.
-> This  enables drivers, which use generic pin configurations, to get the
-> value passed to this property.
+>> To describe the HW in DT, the embedded SDIO card (actually it could be
+>> any type of embedded card) shall be modelled as a child node to the
+>> mmc host in DT. Similar to what you have proposed, but with the
+>> difference that the child node _must_ contain a DT compatible string,
+>> which means a "powerup-driver" can be probed.
 >
-> Signed-off-by: Ivan T. Ivanov <iivanov@mm-sol.com>
+>> Yes, I understand we might need one DT compatible string per board,
+>> but that's because we need to model the hardware - and it differs.
+>
+>> To clarify my view, we do need a "powerup-driver" and the primary
+>> reason is that we must not model "power up sequences" within DT.
+>> Typically I see the "powerup-driver" as a simple platform driver
+>> attached to the platform bus, but I that could of course differ.
+>
+> This then either conflicts with cases where we need to describe the
+> actual contents of the slot with a compatible string or means that the
+> SDIO driver needs to handle powerup sequencing since we should be
+> binding to the first compatible we find.  If the host controller driver
+> and/or subsystem is going to deal with the powering up it's not clear
+> that it specifically needs to be the compatible property that's used
+> to determine the powerup method, it could just be a boolean or a
+> 'power-method = blah' property (where blah is one of a series of strings
+> defining methods).  Alternatively we could have separate nodes for the
+> slot and SDIO device but that feels meh.  What's the hard requirement
+> for it to specifically be a compatible property?
 
-Patch applied. Cannot think of anything better anyway.
+Since the sdio bus is a discoverable bus, we must leave the "SDIO card
+device id" outside the information of the DT child node. Instead the
+"SDIO card device id" will be fetched once the card has been properly
+powered and initialized. From sdio bus' ->match(), the "SDIO func
+driver id" will be matched with the "SDIO card device id".
 
-Yours,
-Linus Walleij
+What we need to describe in the child node is only what "powerup
+driver" to use (an obviously it's resources). I don't see why there
+should be a conflict in using a compatible property, but I might be
+missing your point.
+
+>
+>> The slot will be the first level of child node under the mmc host,
+>> then each slot may have a child node which models the embedded card.
+>> But, let's leave that discussion for now. :-)
+>
+> OK, that's the separate node for the slot and device.
+>
+>> Powerup driver's ->probe():
+>> Typically the "powerup driver" will need to register a few callback
+>> functions towards the mmc core. Typically at mmc_of_parse(), those
+>> callbacks will have to be connected to a particular mmc host.
+>
+>> I would like to see three different callbacks, mirroring each of the
+>> mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
+>
+>> The power up sequence, performed by the mmc core:
+>> The mmc_power_up|off functions, will invoke the registered "powerup
+>> driver's" callbacks if they exists for the particular host it operates
+>> on.
+>
+> There's also the need for the SDIO device to be able to get at the
+> resources provided and actively work with them at runtime if it wants to
+> manage things more actively (partial poweroff for low power states or
+> managing clock rates for example).
+
+Yes, that's is also a reason to why I thought it would make sense to
+have a "powerup driver". Typically this driver should support runtime
+PM to handle these kind of fine grained power management.
+
+The SDIO func driver will have access (through the struct
+mmc_card|host) to the "powerup driver's" struct device, and can use
+pm_runtime_get|put() for it, to tell the "powerup driver" when it may
+go into power save state.
+
+This kind of fine grained power management is not related directly to
+the SDIO specification, and should not be a part of the mmc core in my
+opinion.
+
+If we don't have a compatible string in the DT child node of the mmc
+host, but just a DT property - is there a way to achieve the above
+anyway?
+
+Kind regards
+Ulf Hansson
