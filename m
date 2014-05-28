@@ -1,124 +1,44 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH 3/3] net: hisilicon: add hix5hd2 mac driver
-Date: Wed, 28 May 2014 13:17:33 +0800
-Message-ID: <5385716D.9010308@linaro.org>
-References: <1400504227-12047-1-git-send-email-zhangfei.gao@linaro.org> <201405261651.15998.arnd@arndb.de> <53840D40.3000600@linaro.org> <201405271525.46356.arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <201405271525.46356.arnd@arndb.de>
-Sender: netdev-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: davem@davemloft.net, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@aculab.com, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv3 0/4] mmc: fixed the mmc_of_parse for dwmmc
+Date: Wed, 28 May 2014 14:35:47 +0900
+Message-ID: <1401255351-17653-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, ludovic.desroches@atmel.com, tgih.jun@samsung.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+This patch-set is fixed the dw-mmc controller problem.
+dw-mmc controller have the slot, but mmc_of_parse didn't parse the slot sub-node.
+So dw-mmc controller didn't work correctly.
 
+Jaehoon Chung (3):
+  mmc: dw_mmc: use the __mmc_of_parse to parse the slot node
+  mmc: dw_mmc: remove the "supports-highspeed" property.
+  ARM: dts: replace the slot property into slot sub-node for dwmmc.
 
-On 05/27/2014 09:25 PM, Arnd Bergmann wrote:
-> On Tuesday 27 May 2014, zhangfei wrote:
->> On 05/26/2014 10:51 PM, Arnd Bergmann wrote:
->>> On Monday 19 May 2014, Zhangfei Gao wrote:
->>>
->>> I only noticed one real issue with the driver:
->>>
->>>> +struct hix5hd2_desc {
->>>> +    __le32 buff_addr;
->>>> +    __le32 buff_len:11;
->>>> +    __le32 reserve2:5;
->>>> +    __le32 data_len:11;
->>>> +    __le32 reserve1:2;
->>>> +    __le32 fl:2;
->>>> +    __le32 descvid:1;
->>>> +} __aligned(32);
->>>> +
->>>
->>> You should generall not use bitfields in hardware data structures, as that is
->>> not endian safe and will prevent running a big-endian kernel on this machine.
->>> Better convert this to a set of __le32 fields and explicit shifts and masks.
->>
->> Got it, will update.
->>
->> More knowledge about big-endian kernel is appreciated, in which case we
->> should consider such kernel.
->> Can we only consider this driver is only running on arm, which is
->> little-endian.
->
-> The main user of big-endian kernels that I know of are network infrastructure
-> people that have a ton of legacy user-space code written in non-portable
-> big-endian style.
->
-> There is no real technical advantage in running one endianess or the other
-> on ARM, so generally everyone uses little-endian because that is what their
-> user space is, except for the few people that have ported over their
-> code from PowerPC or MIPSeb.
->
->>> Two smaller things you should think about, I'm not entirely sure about these:
->>>
->>>> +static int hix5hd2_rx(struct net_device *dev, int limit)
->>>> +{
->>>> +    struct hix5hd2_priv *priv = netdev_priv(dev);
->>>> +    struct sk_buff *skb;
->>>> +    struct hix5hd2_desc *desc;
->>>> +    dma_addr_t dma_addr;
->>>> +    u32 start, end, num, pos, i, len;
->>>> +
->>>> +    /* software read pointer */
->>>> +    start = dma_cnt(readl_relaxed(priv->base + RX_BQ_RD_ADDR));
->>>> +    /* logic write pointer */
->>>> +    end = dma_cnt(readl_relaxed(priv->base + RX_BQ_WR_ADDR));
->>>
->>> I think one of these needs to be readl() instead of readl_relaxed(),
->>> to ensure the data is correctly ordered with regard to the pointer
->>> access.
->> readl_relaxed can ensure the sequence.
->>
->>>
->>>> +    if (pos != start)
->>>> +            writel(dma_byte(pos), priv->base + TX_RQ_RD_ADDR);
->>>
->>> While this looks like it could be writel_relaxed().
->>>
->> En, I think all three cases can use xxx_relaxed.
->> These accesses are just update pointer used by internal logic and get
->> pointer updated by internal logic.
->
-> You always need a barrier between the access to a buffer from the kernel
-> and the register access communicating with the hardware about that
-> buffer:
->
-> For tx:
->
-> 	a) write to DMA descriptor
-> 	b) wmb()
-> 	c) writel_relaxed(register)
->
-> writel() is the short form of b+c. If you omit the __iowmb(), the decriptor
-> access may still be inside of the CPU write buffer (or the cache on coherent
-> systems) by the time the hardware reads the descriptor.
->
-> for rx:
->
-> 	a) readl_relaxed(register)
-> 	b) rmb()
-> 	c) read from descriptor or skb data
->
-> If you leave out the __iormb() here, it's possible that the CPU can prefetch
-> the access to the descriptor while waiting for the register data, and read
-> stale data.
->
-> If your particular machine doesn't need rmb() or wmb() (e.g. for
-> non-SMP ARMv6 or older), the build process should replace them with
-> do{}while(0) them automatically.
+Ludovic Desroches (1):
+  mmc: host: add slot argument to mmc_of_parse
 
-Thanks Arnd,
-Yes, understand, barrier still required.
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |    5 +++--
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |    3 ++-
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |    6 ++++--
+ arch/arm/boot/dts/exynos4412-odroidx.dts           |    4 ++--
+ arch/arm/boot/dts/exynos4412-origen.dts            |    4 ++--
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    6 +++---
+ arch/arm/boot/dts/exynos5250-arndale.dts           |    6 +++---
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   10 +++++-----
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |    6 +++---
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |    6 +++---
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |    4 ++--
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts             |    2 +-
+ arch/arm/boot/dts/socfpga_arria5.dtsi              |    5 +++--
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    5 +++--
+ arch/arm/boot/dts/socfpga_vt.dts                   |    5 +++--
+ drivers/mmc/core/host.c                            |   13 +++++++++----
+ drivers/mmc/host/dw_mmc.c                          |   18 ++++++------------
+ include/linux/mmc/host.h                           |   10 +++++++++-
+ 18 files changed, 66 insertions(+), 52 deletions(-)
 
-What I thought was the dma in this controller keeps running and not need 
-desc to trigger, only update pointer, so no need barrier.
-Even so, desc still need to be sync via barrier, otherwise, desc with 
-stale info may be used.
-
-Will add barrier accordingly.
-
-Thanks
+-- 
+1.7.9.5
