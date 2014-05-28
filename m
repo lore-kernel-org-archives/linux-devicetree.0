@@ -1,33 +1,54 @@
-From: Julius Werner <jwerner@chromium.org>
-Subject: Re: [PATCH 1/2] ARM: dts: Enable USB 3503 hub on exynos5250-snow
-Date: Wed, 28 May 2014 15:37:23 -0700
-Message-ID: <CAODwPW8FpsF6vo5Z8_+YXwchwab=7Ltv0nEvP_=907HK232xCg@mail.gmail.com>
-References: <1399293056-17143-1-git-send-email-gautam.vivek@samsung.com>
-	<536BA9E8.2030306@suse.de>
-	<536BAD05.9070401@samsung.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 1/2] dt-binding: add vendor prefix for SolidRun
+Date: Wed, 28 May 2014 17:50:50 -0500
+Message-ID: <CAL_JsqK-iWc8J6qeZ5LLsS-2-9UP2od6bZwGDUMqpaB7EUEs0A@mail.gmail.com>
+References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <536BAD05.9070401@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Vivek Gautam <gautam.vivek@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, arunkk.samsung@gmail.com
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-We originally tried using this driver on ChromiumOS and never got it
-to work reliably. IIRC the issue was that if the hub had already been
-initialized by firmware, the USB stack might enumerate it before the
-usb3503 driver is probed and then the later reset will silently
-disrupt that connection. (I think I tried to force the 3503 to probe
-earlier as well, and there was some other issue with that although I
-don't recall the details.)
+On Mon, May 26, 2014 at 4:33 PM, Sebastian Hesselbarth
+<sebastian.hesselbarth@gmail.com> wrote:
+> SolidRun is a company from Israel producing small-sized home-media
+> computers like the Marvell Dove based CuBox and Freescale IMX based
+> CuBox-i. Document the missing vendor prefix.
+>
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+> ---
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
 
-This will not be an issue for the Snow and Peach_Pi(t) boards (since
-neither of them shipped with firmware that supports this hub), but it
-will be an issue for Spring and Skate. On ChromiumOS we decided to
-carry a local (and admittedly ugly) patch to pull that reset line from
-the USB PHY driver instead, since that's the only way I could get it
-to work in all cases (see http://crosreview.com/58963).
+Acked-by: Rob Herring <robh@kernel.org>
 
-This doesn't mean I'm against this patch per se, just wanted to point
-out the trade-offs.
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 0f01c9bf19c8..f0c046aff55b 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -102,6 +102,7 @@ sii Seiko Instruments, Inc.
+>  sirf   SiRF Technology, Inc.
+>  smsc   Standard Microsystems Corporation
+>  snps   Synopsys, Inc.
+> +solidrun       SolidRun
+>  spansion       Spansion Inc.
+>  st     STMicroelectronics
+>  ste    ST-Ericsson
+> --
+> 1.9.1
+>
