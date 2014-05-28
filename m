@@ -1,158 +1,112 @@
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v1] of/irq: do irq resolution in platform_get_irq_byname()
-Date: Wed, 28 May 2014 13:07:34 +0300
-Message-ID: <5385B566.2050600@ti.com>
-References: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com> <20140523080333.66720C4176E@trevor.secretlab.ca> <CAGa+x85mOHtNAj-UHgK2_z8zWAF=qwFcRcUgHTR-byNiX7heHA@mail.gmail.com> <CAL_JsqLm3wfVS+au+JUbhBhxz=LuVpepH6GxabCQhPowhbw77g@mail.gmail.com> <20140528071855.GJ4227@lee--X1> <CACRpkdYgkEOjLamYu5uKSgs3iTNJ-w5XkbeygKjRdR-bNdETfg@mail.gmail.com> <CAGb2v64f8Wju6dtVuVN2x=9YVGA-=RXozzhpJZNspKZ05f=jtA@mail.gmail.com> <CACxGe6ts-TcSKk2F0-XSxAxeTxVCiyDHgh-O12v+F2OjHUsPyg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 03/11] pinctrl: sunxi: Move setting of mux
+ to irq type from unmask to set_type
+Date: Wed, 28 May 2014 11:39:06 +0200
+Message-ID: <20140528093906.GO4730@lukather>
+References: <1401090486-4414-1-git-send-email-hdegoede@redhat.com>
+ <1401090486-4414-4-git-send-email-hdegoede@redhat.com>
+ <20140527080952.GC4730@lukather>
+ <5384544F.6000806@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6ts-TcSKk2F0-XSxAxeTxVCiyDHgh-O12v+F2OjHUsPyg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="uWbmMdDzzl2TXAgx"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB5G5S2OAKGQEWOHZ67Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <5384544F.6000806-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
 
-On 05/28/2014 12:03 PM, Grant Likely wrote:
-> On Wed, May 28, 2014 at 9:49 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
->> On Wed, May 28, 2014 at 4:25 PM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>> On Wed, May 28, 2014 at 9:18 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>> On Tue, 27 May 2014, Rob Herring wrote:
->>>>
->>>>> On Tue, May 27, 2014 at 3:23 PM, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>> On Fri, May 23, 2014 at 1:03 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->>>>>>> On Tue, 20 May 2014 13:42:02 +0300, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> wrote:
->>>>>>>> The commit 9ec36cafe43bf835f8f29273597a5b0cbc8267ef
->>>>>>>> "of/irq: do irq resolution in platform_get_irq" from Rob Herring -
->>>>>>>> moves resolving of the interrupt resources in platform_get_irq().
->>>>>>>> But this solution isn't complete because platform_get_irq_byname()
->>>>>>>> need to be modified the same way.
->>>>>>>>
->>>>>>>> Hence, fix it by adding interrupt resolution code at the
->>>>>>>> platform_get_irq_byname() function too.
->>>>>>>>
->>>>>>>> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
->>>>>>>> Cc: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>>>>>> Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>>>>>>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>>>> Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
->>>>>>>>
->>>>>>>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
->>>>>>>
->>>>>>> Applied, Thanks.
->>>>>>
->>>>>> As of next-20150526, the ST u8500 Snowball board has been failing boot
->>>>>> in linux-next, and was bisected down to this patch (commit
->>>>>> ad69674e73a1 in -next).   Full boot failure attached.
->>>>>>
->>>>>> I have not dug any deeper, but can confirm that next-20140526 with
->>>>>> this patch reverted boots again on the snowball board.
->>>>>
->>>>> There's a patch on the list which fixes it. The problem is stmmac
->>>>> driver was expecting only one error code.
->>>>
->>>> Does Snowball even use stmmac?
->>>
->>> No.
->>>
->>> I don't get this...
->>
->> Log says musb is wrestling control over some pins with some other driver:
->>
->> [    1.441497] pinctrl-nomadik soc:pinctrl: pin GPIO256_AF28 already
->> requested by a03e0000.usb_per5; cannot claim for musb-hdrc.0.auto
->> [    1.453369] pinctrl-nomadik soc:pinctrl: pin-256 (musb-hdrc.0.auto)
->> status -22
->> [    1.460571] pinctrl-nomadik soc:pinctrl: could not request pin 256
->> (GPIO256_AF28) from group usb_a_1  on device pinctrl-nomadik
->> [    1.472076] musb-hdrc musb-hdrc.0.auto: Error applying setting,
->> reverse things back
->> [    1.479827] HS USB OTG: no transceiver configured
->> [    1.484558] musb-hdrc musb-hdrc.0.auto: musb_init_controller failed
->> with status -517
->> [    1.492309] platform musb-hdrc.0.auto: Driver musb-hdrc requests
->> probe deferral
->> [    1.500183] pinctrl-nomadik soc:pinctrl: pin GPIO256_AF28 already
->> requested by a03e0000.usb_per5; cannot claim for musb-hdrc.0.auto
->> [    1.512023] pinctrl-nomadik soc:pinctrl: pin-256 (musb-hdrc.0.auto)
->> status -22
->> [    1.519226] pinctrl-nomadik soc:pinctrl: could not request pin 256
->> (GPIO256_AF28) from group usb_a_1  on device pinctrl-nomadik
->> [    1.530731] musb-ux500 musb-hdrc.0.auto: Error applying setting,
->> reverse things back
->> [    1.539184] pinctrl-nomadik soc:pinctrl: pin GPIO256_AF28 already
->> requested by a03e0000.usb_per5; cannot claim for musb-hdrc.1.auto
->> [    1.551025] pinctrl-nomadik soc:pinctrl: pin-256 (musb-hdrc.1.auto)
->> status -22
->> [    1.558258] pinctrl-nomadik soc:pinctrl: could not request pin 256
->> (GPIO256_AF28) from group usb_a_1  on device pinctrl-nomadik
->> [    1.569732] musb-hdrc musb-hdrc.1.auto: Error applying setting,
->> reverse things back
->> [    1.577453] HS USB OTG: no transceiver configured
->>
->> [ .. repeats until the end .. ]
->>
->> I think this is not related to this patch.
->
-> The bisected patch causes platform_get_irq() to always parse the
-> devicetree to obtain the irq instead of using a precalculated value in
-> the platform_device. There are two possible scenarios for this problem
-> that I can think of:
-> 1) Platform_get_irq() is getting called multiple times (which would
-> happen on a deferred probe) but the setup code isn't handling it
-> properly, like trying to request the GPIO more than once
-> 2) the platform_device was preloaded with an irq number that differs
-> from what is determined when parsing the tree. This would happen if a
-> platform_device was created manually.
->
+--uWbmMdDzzl2TXAgx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Could anyone try attached patch? It has to improve situation, but it 
-might not fix all problems (see my previous e-mail).
+On Tue, May 27, 2014 at 11:01:03AM +0200, Hans de Goede wrote:
+> Hi,
+>=20
+> On 05/27/2014 10:09 AM, Maxime Ripard wrote:
+> > On Mon, May 26, 2014 at 09:47:58AM +0200, Hans de Goede wrote:
+> >> With level triggered interrupt mask / unmask will get called for each
+> >> interrupt, doing the somewhat expensive mux setting on each unmask thu=
+s is
+> >> not a good idea. Instead move it to the set_type callback, which is ty=
+pically
+> >> done only once for each irq.
+> >=20
+> > *This* is the bad idea. Nothing prevents you from calling
+> > gpio_get_value whenever you just got your interrupt, that will change
+> > the muxing, and never change it back, effectively breaking the
+> > interrupts.
+>=20
+> Hmm, interesting point, but your assuming 2 things which are both not tru=
+e:
+>=20
+> 1) That calling gpiod_get_value changes the muxing, which is not true, all
+> gpiod_get_value variants end up in drivers/gpio/gpiolib.c _gpiod_get_raw_=
+value()
+> which does no such thing
 
-Regards,
--grygorii
+Somehow I was convinced it was the case, but yeah, it doesn't really
+make much sense, especially since you can get the value of an output,
+without wanting to change it to input.
 
---
- From 4a41912dba648c935982274966426fa430fd5aa4 Mon Sep 17 00:00:00 2001
-From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-Date: Wed, 28 May 2014 12:53:34 +0300
-Subject: [PATCH] mfd: ab8500: fix dt irq mapping
+>=20
+> 2) That unmask will always get called after the gpio_get_value to restore=
+ the mux
+> setting for us, which is not guaranteed at all. Before this patch set pin=
+ctrl-sunxi.c
+> was using handle_simple_irq which does not mask / unmask at all.
+>=20
+> And even with an irq-handler which masks / unmasks, what if the irq wakes=
+ up
+> a thread and that thread then does the gpio_get_value ?
+>=20
+> Note this is *exactly* what e.g. the mmc gpio card-detect code does, it u=
+ses
+> a thread to read the gpio for debouncing.
+>=20
+> Luckily 2. is not a problem, since 1. means that the mux won't get change=
+d at all
+> so we don't need to change it back.
 
-The AD8500 defines itself as interrupt-controller in DT,
-but it doesn't assign DT node to IRQ domain when creates it.
-As result, of_irq_xx() helpers don't work because they can't
-find necessary IRQ domain.
+Ok.
 
-Hence, fix it by assigning AD8500 core device DT node to IRQ
-domain when it's created.
+Maxime
 
-Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
----
-  drivers/mfd/ab8500-core.c |    2 +-
-  1 file changed, 1 insertion(+), 1 deletion(-)
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 
-diff --git a/drivers/mfd/ab8500-core.c b/drivers/mfd/ab8500-core.c
-index a8ee4a3..cf2e6a1 100644
---- a/drivers/mfd/ab8500-core.c
-+++ b/drivers/mfd/ab8500-core.c
-@@ -591,7 +591,7 @@ static int ab8500_irq_init(struct ab8500 *ab8500, 
-struct device_node *np)
-  		num_irqs = AB8500_NR_IRQS;
+--uWbmMdDzzl2TXAgx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-  	/* If ->irq_base is zero this will give a linear mapping */
--	ab8500->domain = irq_domain_add_simple(NULL,
-+	ab8500->domain = irq_domain_add_simple(ab8500->dev->of_node,
-  			num_irqs, 0,
-  			&ab8500_irq_ops, ab8500);
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
--- 
-1.7.9.5
+iQIcBAEBAgAGBQJTha66AAoJEBx+YmzsjxAgUr8QALuQMqsa7xEoyVm956BpvhM9
+94MPksjtcXOgDr0DQtUMTRKsr0dOP2PQhuyKTwLiH9lqtm9LIlc3EO9SSVlYGVGl
+RUvl0XOpaZZgODDzwnc/o41uiA/NQ3Ufc0dINAf+Avai0DTNjIBd42pSA6b95wHz
+qwv2BA7l4ezb8KgGz0vXzZfVF+FxPadW2wWw6GtS3LUpa2YpL2Fqr6GURzigIVpu
+Ji1/5GoeRztoUJ54881EZWXWrVKuQxPPDaTfF1HLqMDhkX2BgeUSyWpwQBsA2ydu
++9N2pEQFQwspARzdzJ03bNWasha7aVBOBAQmZaPqr6+jird1tqPjYqLWbNp1/13a
+G5U1/qn01rT1+GL1wEzI6mUPbU3GMlEnqNKdekvm1KG3xHLRSuUQnt97b/zI5u21
+MxgGbjHrNbqVejjqQRmplyNaRjK1xJvImYQpJIeY0qO6gmn1aYIL/qEa4njhXo92
+GdNkI/tSwUaci2WbYhvojIptDkskYiH8jcc7EfJkFJje9ZlU1KsyoRIyfpdNdwGe
+sV+pNewmagHRPOQWnKtV+arXNN3v0RuSxGKhRDiCVknLGOTkZs6vozmViDZh16xZ
+HejH/fO1bMxsEjzhR0lRJBZIJ0x0hf9IWoro7D9NadsIyliqfu6nn4t42FEo55nB
+8irL58/Z52y/wRD31shr
+=vCef
+-----END PGP SIGNATURE-----
 
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--uWbmMdDzzl2TXAgx--
