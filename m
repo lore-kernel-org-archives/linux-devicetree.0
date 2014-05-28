@@ -1,99 +1,281 @@
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
-Subject: [PATCH] of: return -ENOSYS instead of -EINVAL in stub implementations
-Date: Wed, 28 May 2014 19:20:04 +0100
-Message-ID: <1401301204-12834-1-git-send-email-sudeep.holla@arm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sudeep.holla-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH v3] ARM: qcom: Add initial APQ8064 SoC and IFC6410 board device trees
+Date: Wed, 28 May 2014 13:26:14 -0500
+Message-ID: <1401301574-20102-1-git-send-email-galak@codeaurora.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Brown <davidb@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Add basic APQ8064 SoC include device tree and support for basic booting on
+the IFC6410 board.  Also, keep dtb build list and qcom_dt_match in sorted
+order.
 
-Currently the stub implementation(when !CONFIG_OF) of few of_* helpers
-return -EINVAL. This makes it difficult to distinguish between the
-function not being implemented and the function returning error due to
-invalid parameters.
-
-This patch replaces -EINVAL with -ENOSYS in the stub implementations
-of those of_* helpers.
-
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Signed-off-by: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
 ---
- include/linux/of_address.h | 2 +-
- include/linux/of_iommu.h   | 2 +-
- include/linux/of_irq.h     | 2 +-
- include/linux/of_pci.h     | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+v3:
+* Cleanup cpu node to have compatible & enable-method per node and
+  not in the container
+* Dropped l2-cache interrupt prop as its not part of any binding
+* Cleanup reg whitespace
 
-Hi,
+v2:
+* created a v2.0 apq8064.dtsi to handle differences in Si rev in future
+* changed /include/ to #include
+* added PMU node
+* dropped interrupts from cpus node, not currently part of binding
 
-This was identified on one of the patch review on LKML[1].
-Looking into the of_* helpers revealed few such instances.
+ arch/arm/boot/dts/Makefile                 |   8 +-
+ arch/arm/boot/dts/qcom-apq8064-ifc6410.dts |  16 +++
+ arch/arm/boot/dts/qcom-apq8064-v2.0.dtsi   |   1 +
+ arch/arm/boot/dts/qcom-apq8064.dtsi        | 170 +++++++++++++++++++++++++++++
+ arch/arm/mach-qcom/board.c                 |   3 +-
+ 5 files changed, 194 insertions(+), 4 deletions(-)
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064-v2.0.dtsi
+ create mode 100644 arch/arm/boot/dts/qcom-apq8064.dtsi
 
-Regards,
-Sudeep
-
-[1] https://lkml.org/lkml/2014/5/21/152
-
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 5f6ed6b..d442cda 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -100,7 +100,7 @@ void __iomem *of_iomap(struct device_node *node, int index);
- static inline int of_address_to_resource(struct device_node *dev, int index,
- 					 struct resource *r)
- {
--	return -EINVAL;
-+	return -ENOSYS;
- }
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 35c146f..c58624f 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -291,9 +291,11 @@ dtb-$(CONFIG_ARCH_OMAP2PLUS) += omap2420-h4.dtb \
+ 	dra7-evm.dtb
+ dtb-$(CONFIG_ARCH_ORION5X) += orion5x-lacie-ethernet-disk-mini-v2.dtb
+ dtb-$(CONFIG_ARCH_PRIMA2) += prima2-evb.dtb
+-dtb-$(CONFIG_ARCH_QCOM) += qcom-msm8660-surf.dtb \
+-	qcom-msm8960-cdp.dtb \
+-	qcom-apq8074-dragonboard.dtb
++dtb-$(CONFIG_ARCH_QCOM) += \
++	qcom-apq8064-ifc6410.dtb \
++	qcom-apq8074-dragonboard.dtb \
++	qcom-msm8660-surf.dtb \
++	qcom-msm8960-cdp.dtb
+ dtb-$(CONFIG_ARCH_U8500) += ste-snowball.dtb \
+ 	ste-hrefprev60-stuib.dtb \
+ 	ste-hrefprev60-tvk.dtb \
+diff --git a/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+new file mode 100644
+index 0000000..7c2441d
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-apq8064-ifc6410.dts
+@@ -0,0 +1,16 @@
++#include "qcom-apq8064-v2.0.dtsi"
++
++/ {
++	model = "Qualcomm APQ8064/IFC6410";
++	compatible = "qcom,apq8064-ifc6410", "qcom,apq8064";
++
++	soc {
++		gsbi@16600000 {
++			status = "ok";
++			qcom,mode = <GSBI_PROT_I2C_UART>;
++			serial@16640000 {
++				status = "ok";
++			};
++		};
++	};
++};
+diff --git a/arch/arm/boot/dts/qcom-apq8064-v2.0.dtsi b/arch/arm/boot/dts/qcom-apq8064-v2.0.dtsi
+new file mode 100644
+index 0000000..935c394
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-apq8064-v2.0.dtsi
+@@ -0,0 +1 @@
++#include "qcom-apq8064.dtsi"
+diff --git a/arch/arm/boot/dts/qcom-apq8064.dtsi b/arch/arm/boot/dts/qcom-apq8064.dtsi
+new file mode 100644
+index 0000000..e8a3423
+--- /dev/null
++++ b/arch/arm/boot/dts/qcom-apq8064.dtsi
+@@ -0,0 +1,170 @@
++/dts-v1/;
++
++#include "skeleton.dtsi"
++#include <dt-bindings/clock/qcom,gcc-msm8960.h>
++#include <dt-bindings/soc/qcom,gsbi.h>
++
++/ {
++	model = "Qualcomm APQ8064";
++	compatible = "qcom,apq8064";
++	interrupt-parent = <&intc>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "qcom,krait";
++			enable-method = "qcom,kpss-acc-v1";
++			device_type = "cpu";
++			reg = <0>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			compatible = "qcom,krait";
++			enable-method = "qcom,kpss-acc-v1";
++			device_type = "cpu";
++			reg = <1>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++
++		cpu@2 {
++			compatible = "qcom,krait";
++			enable-method = "qcom,kpss-acc-v1";
++			device_type = "cpu";
++			reg = <2>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc2>;
++			qcom,saw = <&saw2>;
++		};
++
++		cpu@3 {
++			compatible = "qcom,krait";
++			enable-method = "qcom,kpss-acc-v1";
++			device_type = "cpu";
++			reg = <3>;
++			next-level-cache = <&L2>;
++			qcom,acc = <&acc3>;
++			qcom,saw = <&saw3>;
++		};
++
++		L2: l2-cache {
++			compatible = "cache";
++			cache-level = <2>;
++		};
++	};
++
++	cpu-pmu {
++		compatible = "qcom,krait-pmu";
++		interrupts = <1 10 0x304>;
++	};
++
++	soc: soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
++		compatible = "simple-bus";
++
++		intc: interrupt-controller@2000000 {
++			compatible = "qcom,msm-qgic2";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x02000000 0x1000>,
++			      <0x02002000 0x1000>;
++		};
++
++		timer@200a000 {
++			compatible = "qcom,kpss-timer", "qcom,msm-timer";
++			interrupts = <1 1 0x301>,
++				     <1 2 0x301>,
++				     <1 3 0x301>;
++			reg = <0x0200a000 0x100>;
++			clock-frequency = <27000000>,
++					  <32768>;
++			cpu-offset = <0x80000>;
++		};
++
++		acc0: clock-controller@2088000 {
++			compatible = "qcom,kpss-acc-v1";
++			reg = <0x02088000 0x1000>, <0x02008000 0x1000>;
++		};
++
++		acc1: clock-controller@2098000 {
++			compatible = "qcom,kpss-acc-v1";
++			reg = <0x02098000 0x1000>, <0x02008000 0x1000>;
++		};
++
++		acc2: clock-controller@20a8000 {
++			compatible = "qcom,kpss-acc-v1";
++			reg = <0x020a8000 0x1000>, <0x02008000 0x1000>;
++		};
++
++		acc3: clock-controller@20b8000 {
++			compatible = "qcom,kpss-acc-v1";
++			reg = <0x020b8000 0x1000>, <0x02008000 0x1000>;
++		};
++
++		saw0: regulator@2089000 {
++			compatible = "qcom,saw2";
++			reg = <0x02089000 0x1000>, <0x02009000 0x1000>;
++			regulator;
++		};
++
++		saw1: regulator@2099000 {
++			compatible = "qcom,saw2";
++			reg = <0x02099000 0x1000>, <0x02009000 0x1000>;
++			regulator;
++		};
++
++		saw2: regulator@20a9000 {
++			compatible = "qcom,saw2";
++			reg = <0x020a9000 0x1000>, <0x02009000 0x1000>;
++			regulator;
++		};
++
++		saw3: regulator@20b9000 {
++			compatible = "qcom,saw2";
++			reg = <0x020b9000 0x1000>, <0x02009000 0x1000>;
++			regulator;
++		};
++
++		gsbi7: gsbi@16600000 {
++			status = "disabled";
++			compatible = "qcom,gsbi-v1.0.0";
++			reg = <0x16300000 0x100>;
++			clocks = <&gcc GSBI7_H_CLK>;
++			clock-names = "iface";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			serial@16640000 {
++				compatible = "qcom,msm-uartdm-v1.3", "qcom,msm-uartdm";
++				reg = <0x16640000 0x1000>,
++				      <0x16600000 0x1000>;
++				interrupts = <0 158 0x0>;
++				clocks = <&gcc GSBI7_UART_CLK>, <&gcc GSBI7_H_CLK>;
++				clock-names = "core", "iface";
++				status = "disabled";
++			};
++		};
++
++		qcom,ssbi@500000 {
++			compatible = "qcom,ssbi";
++			reg = <0x00500000 0x1000>;
++			qcom,controller-type = "pmic-arbiter";
++		};
++
++		gcc: clock-controller@900000 {
++			compatible = "qcom,gcc-apq8064";
++			reg = <0x00900000 0x4000>;
++			#clock-cells = <1>;
++			#reset-cells = <1>;
++		};
++	};
++};
+diff --git a/arch/arm/mach-qcom/board.c b/arch/arm/mach-qcom/board.c
+index bae617e..350fa8d 100644
+--- a/arch/arm/mach-qcom/board.c
++++ b/arch/arm/mach-qcom/board.c
+@@ -15,9 +15,10 @@
+ #include <asm/mach/arch.h>
  
- static inline void __iomem *of_iomap(struct device_node *device, int index)
-diff --git a/include/linux/of_iommu.h b/include/linux/of_iommu.h
-index 51a560f..a5f257e 100644
---- a/include/linux/of_iommu.h
-+++ b/include/linux/of_iommu.h
-@@ -13,7 +13,7 @@ static inline int of_get_dma_window(struct device_node *dn, const char *prefix,
- 			    int index, unsigned long *busno, dma_addr_t *addr,
- 			    size_t *size)
- {
--	return -EINVAL;
-+	return -ENOSYS;
- }
+ static const char * const qcom_dt_match[] __initconst = {
++	"qcom,apq8064",
++	"qcom,apq8074-dragonboard",
+ 	"qcom,msm8660-surf",
+ 	"qcom,msm8960-cdp",
+-	"qcom,apq8074-dragonboard",
+ 	NULL
+ };
  
- #endif	/* CONFIG_OF_IOMMU */
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 6404253..0c5945c 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -27,7 +27,7 @@ extern int of_irq_parse_oldworld(struct device_node *device, int index,
- static inline int of_irq_parse_oldworld(struct device_node *device, int index,
- 				      struct of_phandle_args *out_irq)
- {
--	return -EINVAL;
-+	return -ENOSYS;
- }
- #endif /* CONFIG_PPC32 && CONFIG_PPC_PMAC */
- 
-diff --git a/include/linux/of_pci.h b/include/linux/of_pci.h
-index 1a1f5ff..15b8307 100644
---- a/include/linux/of_pci.h
-+++ b/include/linux/of_pci.h
-@@ -20,7 +20,7 @@ int of_pci_msi_chip_add(struct msi_chip *chip);
- void of_pci_msi_chip_remove(struct msi_chip *chip);
- struct msi_chip *of_pci_find_msi_chip_by_node(struct device_node *of_node);
- #else
--static inline int of_pci_msi_chip_add(struct msi_chip *chip) { return -EINVAL; }
-+static inline int of_pci_msi_chip_add(struct msi_chip *chip) { return -ENOSYS; }
- static inline void of_pci_msi_chip_remove(struct msi_chip *chip) { }
- static inline struct msi_chip *
- of_pci_find_msi_chip_by_node(struct device_node *of_node) { return NULL; }
 -- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
