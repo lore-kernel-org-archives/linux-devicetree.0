@@ -1,50 +1,54 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH 1/5] devicetree: bindings: Document micrel vendor prefix
-Date: Wed, 28 May 2014 11:18:56 -0500
-Message-ID: <CAL_JsqK1wkXMkJCag5g72enGcss2Cr1fYjEo--KkgQBDGuqyEQ@mail.gmail.com>
-References: <1400792413-21618-1-git-send-email-sboyd@codeaurora.org>
-	<1400792413-21618-2-git-send-email-sboyd@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1400792413-21618-2-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, netdev <netdev@vger.kernel.org>, "David S . Miller" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 0/3] Qualcomm Resource Power Manager driver
+Date: Wed, 28 May 2014 11:23:02 -0500
+Message-ID: <F773CDFB-2957-49C0-99D3-E9CDCE33C378@codeaurora.org>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.2 \(1874\))
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 4:00 PM, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> There's one existing use of 'micrel' in the documentation so use
-> 'micrel' instead of the company's ticker symbol 'mcrl'.
->
-> Cc: <devicetree@vger.kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
 
-Applied for 3.16.
+On May 27, 2014, at 12:28 PM, Bjorn Andersson <bjorn.andersson@sonymobile.com> wrote:
 
-Rob
+> This series adds a regulator driver for the Resource Power Manager found in
+> Qualcomm 8660, 8960 and 8064 based devices.
+> 
+> The RPM driver exposes resources to its child devices, that can be accessed to
+> implement drivers for the regulators, clocks and bus frequency control that's
+> owned by the RPM in these devices.
 
-> ---
->
-> This is mostly here as the first patch to make checkpatch quiet. I expect DT
-> maintainers to pick this one up.
->
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 1bc2174e1a05..2fe06ad1d248 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -76,6 +76,7 @@ linux Linux-specific binding
->  lsi    LSI Corp. (LSI Logic)
->  marvell        Marvell Technology Group Ltd.
->  maxim  Maxim Integrated Products
-> +micrel Micrel Inc.
->  microchip      Microchip Technology Inc.
->  mosaixtech     Mosaix Technologies, Inc.
->  moxa   Moxa
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
->
+Rather than adding yet another mfd driver, how about we put this in drivers/soc/qcom as a much better location for the low level rpm code.  Some code already merged in arm-soc for creation of drivers/soc/qcom/
+
+> 
+> Bjorn Andersson (3):
+>  mfd: devicetree: bindings: Add Qualcomm RPM DT binding
+>  mfd: qcom-rpm: Driver for the Qualcomm RPM
+>  regulator: qcom-rpm: Regulator driver for the Qualcomm RPM
+> 
+> Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 283 +++++++
+> drivers/mfd/Kconfig                                |  15 +
+> drivers/mfd/Makefile                               |   1 +
+> drivers/mfd/qcom_rpm.c                             | 554 ++++++++++++++
+> drivers/regulator/Kconfig                          |  12 +
+> drivers/regulator/Makefile                         |   1 +
+> drivers/regulator/qcom_rpm-regulator.c             | 852 +++++++++++++++++++++
+> include/dt-bindings/mfd/qcom_rpm.h                 | 148 ++++
+> include/linux/mfd/qcom_rpm.h                       |  13 +
+> 9 files changed, 1879 insertions(+)
+> create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+> create mode 100644 drivers/mfd/qcom_rpm.c
+> create mode 100644 drivers/regulator/qcom_rpm-regulator.c
+> create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
+> create mode 100644 include/linux/mfd/qcom_rpm.h
+
+- k
+
+-- 
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
