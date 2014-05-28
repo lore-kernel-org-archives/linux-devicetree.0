@@ -1,91 +1,119 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v2 2/2] net: hisilicon: add hix5hd2 mac driver
-Date: Wed, 28 May 2014 14:09:04 +0800
-Message-ID: <53857D80.50806@linaro.org>
-References: <1401194667-14445-1-git-send-email-zhangfei.gao@linaro.org> <1401194667-14445-3-git-send-email-zhangfei.gao@linaro.org> <20140527135727.GC6969@leverpostej>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH 4/4] ARM: dts: Add LCD panel sharp ls037v7dw01 support
+ for omap3-evm and ldp
+Date: Wed, 28 May 2014 09:31:00 +0300
+Message-ID: <538582A4.7070104@ti.com>
+References: <CAGhQ9Vwa8xXQEo5dNEKAvmaS9DoBjVSthtd8=owk+atVdFuiiA@mail.gmail.com> <20140430174751.GA12362@atomide.com> <20140505183919.GA15463@atomide.com> <20140508233628.GJ2198@atomide.com> <536C7EA7.5000306@ti.com> <20140509153723.GD17814@atomide.com> <20140513213205.GB18001@atomide.com> <537C9FC6.8020104@ti.com> <20140521145053.GG17417@atomide.com> <20140527205910.GE32336@atomide.com> <20140527211405.GF32336@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140527135727.GC6969@leverpostej>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="8q648nsAKHHOlXkUwrQ0HvkPAq3dle5RN"
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140527211405.GF32336@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Joachim Eastwood <manabian@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Florian Vaussard <florian.vaussard@epfl.ch>
 List-Id: devicetree@vger.kernel.org
 
+--8q648nsAKHHOlXkUwrQ0HvkPAq3dle5RN
+Content-Type: multipart/mixed;
+ boundary="------------070109090406040702030004"
+
+This is a multi-part message in MIME format.
+--------------070109090406040702030004
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
+
+On 28/05/14 00:14, Tony Lindgren wrote:
+
+> FYI, I'm getting this with current linux next:
+>=20
+> omapfb omapfb: failed to allocate framebuffer
+> omapfb omapfb: failed to allocate fbmem
+> omapfb omapfb: failed to setup omapfb
+> omapfb: probe of omapfb failed with error -12
+
+You need the attached patch to fix linux-next's dma alloc.
+
+ Tomi
 
 
-On 05/27/2014 09:57 PM, Mark Rutland wrote:
-> On Tue, May 27, 2014 at 01:44:27PM +0100, Zhangfei Gao wrote:
->> Add support for the hix5hd2 XGMAC 1Gb ethernet device.
->> The controller requires two queues for tx and two queues for rx.
->> Controller fetch buffer from free queue and then push to used queue.
->> Diver should prepare free queue and free buffer from used queue.
->>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> ---
->>   drivers/net/ethernet/Kconfig                  |    1 +
->>   drivers/net/ethernet/Makefile                 |    1 +
->>   drivers/net/ethernet/hisilicon/Kconfig        |   27 +
->>   drivers/net/ethernet/hisilicon/Makefile       |    5 +
->>   drivers/net/ethernet/hisilicon/hix5hd2_gmac.c | 1057 +++++++++++++++++++++++++
->>   5 files changed, 1091 insertions(+)
->>   create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
->>   create mode 100644 drivers/net/ethernet/hisilicon/Makefile
->>   create mode 100644 drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
->
-> [...]
->
->> +struct hix5hd2_desc {
->> +       __le32 buff_addr;
->> +       __le32 cmd;
->> +} __aligned(32);
->
-> [...]
->
->> +static void hix5hd2_rx_refill(struct hix5hd2_priv *priv)
->> +{
->> +       struct hix5hd2_desc *desc;
->> +       struct sk_buff *skb;
->> +       u32 start, end, num, pos, i;
->> +
->> +       /* software write pointer */
->> +       start = dma_cnt(readl_relaxed(priv->base + RX_FQ_WR_ADDR));
->> +       /* logic read pointer */
->> +       end = dma_cnt(readl_relaxed(priv->base + RX_FQ_RD_ADDR));
->> +       num = CIRC_SPACE(start, end, RX_DESC_NUM);
->> +
->> +       for (i = 0, pos = start; i < num; i++) {
->> +               if (priv->rx_skb[pos])
->> +                       break;
->> +               else {
->> +                       skb = netdev_alloc_skb_ip_align(priv->netdev,
->> +                               MAC_MAX_FRAME_SIZE);
->> +                       if (unlikely(skb == NULL))
->> +                               break;
->> +               }
->> +
->> +               desc = priv->rx_fq.desc + pos;
->> +               desc->buff_addr =
->> +                       dma_map_single(priv->dev, skb->data,
->> +                                       MAC_MAX_FRAME_SIZE, DMA_FROM_DEVICE);
->
-> buff_addr was declared as an __le32, but here we're pasting values of
-> the kernel's native endianness (which might not be little). You will
-> need to carefully convert the endianness of this value when dealing with
-> it.
->
->> +               if (dma_mapping_error(priv->dev, desc->buff_addr)) {
->> +                       dev_kfree_skb_any(skb);
->> +                       break;
->> +               }
->> +
->> +               priv->rx_skb[pos] = skb;
->> +               desc->cmd = (MAC_MAX_FRAME_SIZE - 1) | DESC_VLD_FREE;
->
-> Likewise cmd was described as an __le32 and needs to be converted
-> appropriately.
->
+--------------070109090406040702030004
+Content-Type: text/x-patch;
+ name="0001-mm-compaction-properly-signal-and-act-upon-lock-and-.patch"
+Content-Transfer-Encoding: quoted-printable
+Content-Disposition: attachment;
+ filename*0="0001-mm-compaction-properly-signal-and-act-upon-lock-and-.pa";
+ filename*1="tch"
 
-Got it, will use le32_to_cpu & cpu_to_le32 for the conversion.
-Thanks for the info.
+=46rom 88275fcdf6e7545e66fe35b822a41c9c017656f2 Mon Sep 17 00:00:00 2001
+From: Vlastimil Babka <vbabka@suse.cz>
+Date: Fri, 23 May 2014 10:18:56 +0200
+Subject: [PATCH]=20
+ mm-compaction-properly-signal-and-act-upon-lock-and-need_sched-contentio=
+n-fix2
+
+Step 1: Change function name and comment between v1 and v2 so that the re=
+turn
+        value signals the opposite thing.
+Step 2: Change the call sites to reflect the opposite return value.
+Step 3: ???
+Step 4: Make a complete fool of yourself.
+
+Signed-off-by: Vlastimil Babka <vbabka@suse.cz>
+---
+ mm/compaction.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/mm/compaction.c b/mm/compaction.c
+index a525cd47a9d5..51750197db11 100644
+--- a/mm/compaction.c
++++ b/mm/compaction.c
+@@ -237,13 +237,13 @@ static inline bool compact_should_abort(struct comp=
+act_control *cc)
+ 	if (need_resched()) {
+ 		if (cc->mode =3D=3D MIGRATE_ASYNC) {
+ 			cc->contended =3D true;
+-			return false;
++			return true;
+ 		}
+=20
+ 		cond_resched();
+ 	}
+=20
+-	return true;
++	return false;
+ }
+=20
+ /* Returns true if the page is within a block suitable for migration to =
+*/
+--=20
+1.9.1
+
+
+--------------070109090406040702030004--
+
+--8q648nsAKHHOlXkUwrQ0HvkPAq3dle5RN
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJThYKnAAoJEPo9qoy8lh717P4P/jlGCuWBM9OWvdvzJRFfUExD
+28tg5yUHTWMHcSQHpavfH7MwIbFAjAWYtJ8EPSoFnOFSDmzhJ08d689B7ELD1i04
+zy5wVof2hspmIzzY+QSuZJk6qtJ0zsBEC3AxNbgxXfDV7t+gTM0P6drzfGneFNvS
+MkawJcW7gsrdUTi6IV8wyKkGM2TFJKsZyOYQ9GdU2wNbVECz+UuE1FqZx+fyKSuN
+zOkJvA57fEjPuwgZBGMZ1QyWGFdWm7YRGAvShDl0jWHPmNKroqUyJk0Q0shIzpXC
+P1wuxkP7R2hbcKp57rvK6Ckb6DYwJY7E6iWaLzZwXESzysgnXvHndit3KGnxwXOJ
+24DuFPLYtK36Em1NSJMohRFdImh/qBAdxIesgszerablNv/c62EihPY/NIn+AcD/
+OMyx9T0rMcMV9qNjjwPMG1Gcz3Wgr61DK5/rHW6jbdCARbvHnNYvDjftiL683GoI
+7AvtXPd5d2JBHPHKIGtkf7tO/JWtsd6yMYe/exb9T/T4yd/Hc2LM31uTh2BdDJIj
+wNMTgmjDl6NeNc1NMCIdELuoxFpOjOEA+w5xWYiJCWhNOdQxy41dEm14xusQGyUB
+OyFJlfqyronCTLQFwmOKOtPHrZUmO1Y46vS8Tt2IrRmXzfyWiLbkeZhXY/xKQTNc
+TtrTpWyY4racgSlriPZa
+=/H6q
+-----END PGP SIGNATURE-----
+
+--8q648nsAKHHOlXkUwrQ0HvkPAq3dle5RN--
