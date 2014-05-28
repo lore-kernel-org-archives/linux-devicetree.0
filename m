@@ -1,45 +1,72 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v2 3/3] Documentation: dt-bindings: update xhci-platform DT
- binding for R-Car H2 and M2
-Date: Wed, 28 May 2014 20:23:26 +0900
-Message-ID: <5385C72E.2050309@renesas.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
+ tree
+Date: Wed, 28 May 2014 13:47:50 +0200
+Message-ID: <5385CCE6.9070204@gmail.com>
+References: <537E31F7.1030505@gmail.com>	<537F1148.3010102@redhat.com>	<20140523112239.GB12304@sirena.org.uk>	<537F3610.3050104@redhat.com>	<20140523162718.GE22111@sirena.org.uk>	<53806F26.6050706@redhat.com>	<20140525123452.GS22111@sirena.org.uk>	<53824294.1090609@redhat.com>	<20140526103807.GV22111@sirena.org.uk>	<538321AB.4050006@redhat.com>	<20140526142225.GF22111@sirena.org.uk>	<538356DA.7090302@redhat.com>	<CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>	<53838023.2080807@redhat.com> <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com> <5385AF94.90004@redhat.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5385AF94.90004@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This commit extends the compatible string list of the xhci-platform
-binding with the new "renesas,xhci-r8a7790" and "renesas,xhci-r8a7791"
-compatible strings. It is used to describe the xHCI controller which
-is available in the R-Car H2 and M2 SoCs.
+I'm following this discussion continuously, but (un)fortunately I'm on
+vacation right now and don't have much time to work on this, so sorry
+for a very selective reply.
 
-Acked-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- Documentation/devicetree/bindings/usb/usb-xhci.txt |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+On 28.05.2014 11:42, Hans de Goede wrote:
+> Hi,
+> 
+> On 05/27/2014 03:50 PM, Ulf Hansson wrote:
+>> [snip]
+>>
+>> Powerup driver's ->probe():
+>> Typically the "powerup driver" will need to register a few callback
+>> functions towards the mmc core. Typically at mmc_of_parse(), those
+>> callbacks will have to be connected to a particular mmc host.
+>>
+>> I would like to see three different callbacks, mirroring each of the
+>> mmc_ios power_mode states MMC_POWER_OFF|UP|ON.
+> 
+> Hmm, can't we do something with runtime pm here instead? I would be
+> nice if we could use the platform bus for this instead of inventing
+> a new bus for this. Both from not needing to add extra count pov, but
+> also from the pov of having a solution which other subsystems can
+> later easily copy. I can even envision the parts of mmc_of_parse
+> dealing with this being a separate function taking a child node as
+> argument from day one, which can then hopefully later be moved out
+> of the mmc subsys and be used elsewhere too (*).
 
-diff --git a/Documentation/devicetree/bindings/usb/usb-xhci.txt b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-index 999be5c..5a79377 100644
---- a/Documentation/devicetree/bindings/usb/usb-xhci.txt
-+++ b/Documentation/devicetree/bindings/usb/usb-xhci.txt
-@@ -2,7 +2,8 @@ USB xHCI controllers
+This is actually a real use case, because we already have HSIC (USB with
+heavily stripped down physical layer) modems on certain Samsung boards
+and similarly to the kind of SDIO devices being discussed here they
+can't be discovered until a certain power up sequence is done.
+Analogically, the modem chip uses OOB interrupts and certain GPIO lines
+for various purposes and they need to be provided by DT.
 
- Required properties:
-   - compatible: should be one of "generic-xhci",
--    "marvell,armada-375-xhci", "marvell,armada-380-xhci" (deprecated:
-+    "marvell,armada-375-xhci", "marvell,armada-380-xhci",
-+    "renesas,xhci-r8a7790", "renesas,xhci-r8a7791" (deprecated:
-     "xhci-platform").
-   - reg: should contain address and length of the standard XHCI
-     register set for the device.
--- 
-1.7.9.5
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Moreover, there are already WLAN chips available that can use HSIC as
+their host interface and I'm not talking here about some exotic
+products, but rather widely recognized products of Broadcom (BCM4335),
+Marvell (88W8797) or Qualcomm Atheros (AR6004).
+
+My conclusion is that I see the discussion here being too much focused
+on MMC, especially considering the fact that the whole problem doesn't
+have anything to do with MMC, which is just used as (one of possible)
+host interface.
+
+IMHO, all we need here is a way to tell the MMC (or HSIC) core when to
+look for a new device and when not (e.g. power down the host controller
+completely). Anything else, including proper power sequencing is up to
+the platform driver of such non-discoverable device - it's only its host
+interface that is discoverable when enabled. I believe this simplistic
+approach would lead to much less new code added, better reusability of
+code (power sequencing independent of host interface) and no need to
+create overly generic code, which usually turns out to be not generic
+enough.
+
+Best regards,
+Tomasz
