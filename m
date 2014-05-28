@@ -1,113 +1,51 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/5] devicetree: bindings: document Broadcom CPU enable
- method
-Date: Wed, 28 May 2014 08:58:13 -0500
-Message-ID: <5385EB75.4090202@linaro.org>
-References: <1400607830-10989-1-git-send-email-elder@linaro.org> <1400607830-10989-2-git-send-email-elder@linaro.org> <20140527114958.GC18476@e102568-lin.cambridge.arm.com> <53855867.7050800@linaro.org> <20140528103625.GA29219@e102568-lin.cambridge.arm.com> <5385D4EE.2040304@linaro.org> <20140528133428.GB29219@e102568-lin.cambridge.arm.com>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Wed, 28 May 2014 10:04:16 -0400
+Message-ID: <5385ECE0.7040703@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>	<5840140.8yGnd4Ycx3@wuerfel>	<CACRpkdZjEVYgq7tKEfmZC0Fu4n=JuUues=pAAtquLahkex=pkA@mail.gmail.com>	<4960549.viM91iY2g2@wuerfel> <CACRpkda5x-fJWTN40ze17woMWuWoVbuhbNu5nkm1sFcdJchRfA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140528133428.GB29219-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+In-Reply-To: <CACRpkda5x-fJWTN40ze17woMWuWoVbuhbNu5nkm1sFcdJchRfA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Cc: "mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org" <bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org>, "linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org" <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org" <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org" <rjui-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>r
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/28/2014 08:34 AM, Lorenzo Pieralisi wrote:
-> On Wed, May 28, 2014 at 01:22:06PM +0100, Alex Elder wrote:
->> On 05/28/2014 05:36 AM, Lorenzo Pieralisi wrote:
->>> On Wed, May 28, 2014 at 04:30:47AM +0100, Alex Elder wrote:
->>>> On 05/27/2014 06:49 AM, Lorenzo Pieralisi wrote:
->>>>> On Tue, May 20, 2014 at 06:43:46PM +0100, Alex Elder wrote:
->>>>>> Broadcom mobile SoCs use a ROM-implemented holding pen for
->>>>>> controlled boot of secondary cores.  A special register is
->>>>>> used to communicate to the ROM that a secondary core should
->>>>>> start executing kernel code.  This enable method is currently
->>>>>> used for members of the bcm281xx and bcm21664 SoC families.
->>>>>>
->>>>>> The use of an enable method also allows the SMP operation vector to
->>>>>> be assigned as a result of device tree content for these SoCs.
->>>>>>
->>>>>> Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->>>>>
->>>>> This is getting out of control, it is absolutely ghastly. I wonder how
->>>>> I can manage to keep cpus.txt updated if anyone with a boot method
->>>>> du jour adds into cpus.txt, and honestly in this specific case it is even
->>>>> hard to understand why.
->>>>
->>>> OK, in this message I'll focus on the particulars of this
->>>> proposed binding.
->>>>
->>>>> Can't it be done with bindings for the relative register address space
->>>>> (regmap ?) and platform code just calls the registers driver to set-up the
->>>>> jump address ? It is platform specific code anyway there is no way you
->>>>> can make this generic.
->>>>
->>>> I want to clarify what you're after here.
->>>>
->>>> My aim is to add SMP support for a class of Broadcom SMP
->>>> machines.  To do so, I'm told I need to use the technique
->>>> of assigning the SMP operations vector as a result of
->>>> identifying an enable method in the DT.
->>>>
->>>> For 32-bit ARM, there are no generic "enable-method" values.
->>>> (I did attempt to create one for "spin-table" but that was
->>>> rejected by Russell King.)  For the machines I'm trying to
->>>> enable, secondary CPUS start out spinning in a ROM-based
->>>> holding pen, and there is no need for a kernel-based one.
->>>>
->>>> However, like a spin-table/holding pen enable method, a
->>>> memory location is required for coordination between the
->>>> boot CPU running kernel code and secondary CPUs running ROM
->>>> code.  My proposal specifies it using a special numeric
->>>> property value named "secondary-boot-reg" in the "cpus"
->>>> node in the DT.
->>>>
->>>> And as I understand it, the issue you have relates to how
->>>> this memory location is specified.
+On Wednesday 28 May 2014 09:32 AM, Linus Walleij wrote:
+> On Wed, May 28, 2014 at 3:29 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> On Wednesday 28 May 2014 10:23:09 Linus Walleij wrote:
+> 
+>>>         model = "ARM Integrator/AP";
+>>>         compatible = "arm,integrator-ap";
+>>> +       dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
 >>>
->>> The issue I have relates to cluttering cpus.txt with all
->>> sorts of platform specific SMP boot hacks.
+>>>         aliases {
+>>>                 arm,timer-primary = &timer2;
+>>>
 >>
->> OK, as I mentioned in my other message, I totally
->> agree with you here.  It's a total (and building)
->> mess.  I discussed this with Mark Rutland at ELC
->> last month and suggested splitting that stuff out
->> of "cpus.txt", which I have now proposed with a
->> patch.
->>     https://lkml.org/lkml/2014/5/8/545
+>> It looks like you accidentally copied the ranges from keystone, even
+>> though that has a 64-bit root bus and you only have 32-bit.
 > 
-> I think this makes sense, I will review that patchset, and with this
-> approach agreed I am ok with adding a platform specific boot method,
-> since it is split up "nicely", do not bother adding a specific driver
-> to poke a register (it will be fun to see the number of files we have
-> to add to /cpu-enable-method though, big fun).
-
-Great!
-
-I used the existing documentation and the code as a guide in
-crafting the text of those descriptions.  Some of them I had
-to speculate though--especially for ARM64 (for which there is
-documentation but nothing in the tree that uses it).  So it
-needs some informed feedback.
-
-> I still think that it is high time we started pushing back on these
-> platform hacks and move towards a common interface like PSCI to boot
-> (and suspend) ARM processors, there is no reason whatsoever why this
-> can't be done on the platforms you are trying to get merged unless I am
-> missing something.
-
-We have no need for anything other than SMP startup at this point
-on this platform.  If the framework were there for me to use I
-would have used it.
-
-Thanks again for working through this with me.
-
-					-Alex
-
-> Lorenzo
+> Nah it was no accident, just good old incompetence ;-)
 > 
+>> I suspect what you want is
+>>
+>>         dma-ranges = <0x80000000 0 0x80000000>;
+>>
+>> to translate dma_addr_t 0x80000000-0xffffffff to phys_addr_t 0x0-0x7fffffff
+>> rather than phys_addr_t 0x800000000-0x87fffffff.
+>
+Interesting. Where does the ROM address space resides on integrator then considering
+address 0 is used for DMA.
+ 
+> Thanks, I'll fix up my patch.
+> 
+Feel free to add my ack after the fixup if you need one.
+
+regards,
+Santosh
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
