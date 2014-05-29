@@ -1,62 +1,73 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [RFC v2 04/10] ARM: vexpress: Extend UART with FIQ support
-Date: Thu, 29 May 2014 08:44:00 -0500
-Message-ID: <CAL_JsqL0pYOEiyo8KfJA1aO_MOmwvn6a4hibZcamm0Jcw4Q6bA@mail.gmail.com>
-References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1400853478-5824-5-git-send-email-daniel.thompson@linaro.org>
- <20140523150452.GX3693@n2100.arm.linux.org.uk>
- <53870C8C.1070108@linaro.org>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC controller
+Date: Thu, 29 May 2014 08:47:31 -0500
+Message-ID: <CAL_Jsq+E7a=wh_yzQyaSEVAwfa34BYZ4DxvLOfJGFVDsf1dZ+A@mail.gmail.com>
+References: <1401267437-22489-1-git-send-email-satish.patel@ti.com>
+	<1401267437-22489-2-git-send-email-satish.patel@ti.com>
+	<20140528185334.GA30763@kroah.com>
+	<5386F0FE.7040003@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53870C8C.1070108@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Linaro Patches <patches@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5386F0FE.7040003-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 5:31 AM, Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
-> On 23/05/14 16:04, Russell King - ARM Linux wrote:
->> On Fri, May 23, 2014 at 02:57:52PM +0100, Daniel Thompson wrote:
->>> @@ -140,7 +140,7 @@
->>>                      v2m_serial0: uart@090000 {
->>>                              compatible = "arm,pl011", "arm,primecell";
->>>                              reg = <0x090000 0x1000>;
->>> -                            interrupts = <5>;
->>> +                            interrupts = <5>, <69>;
->>
->> NAK.  This is obviously a Linux implementation detail - the second
->> number is your "FIQ" number which you've decided will be offset by
->> 64.
-
-+1
-
-> Certainly the offset of 64 is a more or less meaningless magic number
-> that I decided on, however I don't think it originates within Linux. It
-> is both introduced and consumed within the device tree itself.
+On Thu, May 29, 2014 at 3:34 AM, Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org> wrote:
 >
-> I've proposed adding a flag to the gic bindings to mark a FIQ; the GIC
-> calls interrupt 69 (above) <0 5 0x84> (where 0x80 is the flag to request
-> FIQ routing alongside 0x04 which is the trigger type).
+>
+> On 5/29/2014 12:23 AM, Greg KH wrote:
+>>
+>> On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
+>>>
+>>> SmartCard controller uses this interface to communicate with
+>>> SmartCard via PHY
+>>>
+>>> Some SmartCard PHY has multiple slots for cards.
+>>> This inerface also enables controller to communicate
+>>> with one or more SmartCard connected over phy.
+>>>
+>>> interface structure includes following APIs
+>>> - set/get config
+>>> - activate/deactivate smart card
+>>> - warm reset
+>>> - register_notify (for card insert/remove/overheat)
+>>> - unregister_notify
+>>>
+>>> Signed-off-by: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>   Documentation/sc_phy.txt |  171
+>>> ++++++++++++++++++++++++++++++++++++++++++++++
+>>>   include/linux/sc_phy.h   |  136 ++++++++++++++++++++++++++++++++++++
+>>>   2 files changed, 307 insertions(+)
+>>>   create mode 100644 Documentation/sc_phy.txt
+>>>   create mode 100644 include/linux/sc_phy.h
+>>
+>>
+>> These are .h files, but where is the "api" functions that use
+>> these structures defined at?
+>>
+> This is like template/wrappers, smart card phy driver will write API
+> functions. And smartcard controller will call these functions.
+> With proposed approach, smartcard controller can communicate with any smart
+> card phy (TI/NxP) without change in code. Using DT entry smartcard and PHY
+> will gets connected with each other.
+> Refer diagram given @Documentation/sc_phy.txt.
+>
+>
+>> confused,
 
-That would be better than the magic number, but I'm not convinced that
-belongs in the DT either.
+I believe the api Greg is wondering about is the notifier which as I
+commented is not a good design.
 
-Whether the uart uses FIQ is not dependent on this DT setting, but
-based on whether the user wants to use the uart for kdb or not. You
-have enough information already to figure out which interrupt. What's
-missing is whether you have the capability to use FIQ or not. I don't
-recall if you can tell that from the GIC or not.
+There is now a phy subsystem. I don't know if it has what you need,
+but you should look at it to determine if it will work or could be
+extended to work.
 
 Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
