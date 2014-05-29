@@ -1,76 +1,47 @@
-From: Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
-Date: Thu, 29 May 2014 11:43:05 +0200
-Message-ID: <53870129.5010505@monstr.eu>
-References: <1401185895-3677-1-git-send-email-harinik@xilinx.com> <20140529092106.GC24233@leverpostej>
-Reply-To: monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 29 May 2014 11:44:54 +0200
+Message-ID: <CACRpkdap1U19EiULnq11udhY91UnnNu_-5MnLby3idbdjzBj4Q@mail.gmail.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
+	<201405091244.02066.arnd@arndb.de>
+	<CACRpkdb8c=k3Ky=TisNdzycc3owJsNSQmSTu03RR5E0QvE0KZA@mail.gmail.com>
+	<537E7B83.4020900@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="lMOK2oNEsjMuSaeX4mDQc4TLT8TPkNpNn"
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140529092106.GC24233@leverpostej>
+In-Reply-To: <537E7B83.4020900-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Harini Katakam <harinik-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Cc: "wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org" <wim-IQzOog9fTRqzQB+pC5nmwQ@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org" <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, "michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-watchdog-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---lMOK2oNEsjMuSaeX4mDQc4TLT8TPkNpNn
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Fri, May 23, 2014 at 12:34 AM, Sebastian Hesselbarth
+<sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 05/22/2014 09:41 AM, Linus Walleij wrote:
 
-Hi Mark,
+>> So for now I keep to our special driver.
+>
+> +1 for drivers/soc _and_ of_xlate for regmap instead of syscon.
+>
+> driven by Mike Turquette's request to join mach-berlin clock node into a
+> single node, we currently use pinctrl driver (that must be somewhere in
+> Linus inbox) as a crutch to register a regmap for other drivers.
 
->> +static struct of_device_id cdns_wdt_of_match[] =3D {
->> +       { .compatible =3D "xlnx,zynq-wdt-r1p2", },
->> +       { .compatible =3D "cdns,wdt-r1p2", },
->=20
-> If these can currently be handled identically, why not just have
-> "cdns,wdt-r1p2" in the driver and in your dts have:
->=20
-> compatible =3D "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
->=20
-> If we need to distinguish the two for some reason later we can always
-> add the "xlnx,zynq-wdt-r1p2" string to the driver.
+I've merged it actually, I think. Else hit me on any missed patches.
 
-I would prefer to have 2 compatible strings just because
-of that we don't know what is different compare to origin cadence
-version. We have done the same for spi-cadence.c that's why
-it shouldn't be any problem to keep it as is.
-Having zynq compatible property here and using it give us option
-that if another SoC vendor come with new configuration or clean
-cadence one we can simple handle it without changing compatible
-property for us.
+> With a drivers/soc we'd have a good place for those messy, SoC-specific
+> registers to put a driver that hooks up to a single node and takes care
+> of registering e.g. pinctrl and reset the plain-old platform_device
+> way. It will be a little bit like arm/mach-foo before, but maybe we
+> have to admit that on SoCs there will always be some amount of
+> very specific, non-probable, non-describable registers that simply need
+> special treatment.
 
-thanks,
-Michal
+Hmmmm well I want to see that code before I believe it ... but
+I get what you mean.
 
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---lMOK2oNEsjMuSaeX4mDQc4TLT8TPkNpNn
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlOHASkACgkQykllyylKDCG8gwCeL6kJMQbQxry99bkhop6MTcJk
-KbUAn0/EQdJPou+FGxg28m65l3X4Jipb
-=riNy
------END PGP SIGNATURE-----
-
---lMOK2oNEsjMuSaeX4mDQc4TLT8TPkNpNn--
+Yours,
+Linus Walleij
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
