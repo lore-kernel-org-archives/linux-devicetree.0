@@ -1,61 +1,115 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2 16/18] ARM: OMAP: Enable PCI for DRA7
-Date: Thu, 29 May 2014 18:54:07 +0100
-Message-ID: <20140529175407.GB24270@arm.com>
-References: <1401345500-20188-1-git-send-email-kishon@ti.com>
- <1401345500-20188-17-git-send-email-kishon@ti.com>
- <CAL_JsqJifZqs9MpL=n4FRB+Z1OMtkw0sns8Vwec=_boGqRL8-w@mail.gmail.com>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v11 0/3] Exynos 5410 support
+Date: Thu, 29 May 2014 20:00:11 +0200
+Message-ID: <538775AB.3000604@suse.de>
+References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com> <7hr43f9mmn.fsf@paris.lan> <538737CA.4070709@suse.de> <53874862.5080809@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJifZqs9MpL=n4FRB+Z1OMtkw0sns8Vwec=_boGqRL8-w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Tony Lindgren <tony@atomide.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-omap <linux-omap@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53874862.5080809@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>
+Cc: linux-kernel@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 06:52:14PM +0100, Rob Herring wrote:
-> On Thu, May 29, 2014 at 1:38 AM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> > Now that we have added PCIe driver for DRA7 SOCs, enable PCI on
-> > DRA7 SOCs.
-> >
-> > Cc: Tony Lindgren <tony@atomide.com>
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Cc: Pawel Moll <pawel.moll@arm.com>
-> > Cc: Mark Rutland <mark.rutland@arm.com>
-> > Cc: Kumar Gala <galak@codeaurora.org>
-> > Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> > ---
-> >  arch/arm/mach-omap2/Kconfig |    2 ++
-> >  1 file changed, 2 insertions(+)
-> >
-> > diff --git a/arch/arm/mach-omap2/Kconfig b/arch/arm/mach-omap2/Kconfig
-> > index cb31d43..b179e80 100644
-> > --- a/arch/arm/mach-omap2/Kconfig
-> > +++ b/arch/arm/mach-omap2/Kconfig
-> > @@ -75,6 +75,8 @@ config SOC_DRA7XX
-> >         select ARM_GIC
-> >         select HAVE_ARM_ARCH_TIMER
-> >         select IRQ_CROSSBAR
-> > +       select MIGHT_HAVE_PCI
-> 
-> I believe we moved or intend to move this under MULTI_PLATFORM, so you
-> don't need this. Will D. had a patch, but I don't think I saw a final
-> version to merge.
+Hi Tarek,
 
-I posted it earlier this week for somebody in arm-soc to pick up (although I
-don't think they have done yet):
+[shortening the CC list a bit]
 
-  http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/260238.html
+Am 29.05.2014 16:46, schrieb Tarek Dakhran:
+> On 05/29/2014 05:36 PM, Andreas F=E4rber wrote:
+>> Am 27.05.2014 19:06, schrieb Kevin Hilman:
+>>> Tarek Dakhran <t.dakhran@samsung.com> writes:
+>>>
+>>>> Has been tested on: 1) Exynos 5410 reference board (exynos_defconf=
+ig)
+>>>>             2) Exynos 5410 reference board (multi_v7_defconfig)
+>>>>             3) Odroid-XU board (exynos_defconfig)
+>>>>             4) Odroid-XU board (multi_v7_defconfig)
+>>> Tested-by: Kevin Hilman <khilman@linaro.org>
+>>>
+>>> FYI, I boot tested this on an odroid-xu (exynos_defconfig and
+>>> multi_v7_defconfig.)
+>> Could you clarify: Are you using exynos5410-smdk5410.dts with the
+>> ODROID-XU or do you have some upcoming exynos5410-odroidxu.dts based=
+ on
+>> exynos5410.dtsi?
+> We use exynos5410-smdk5410.dts for booting ODROID-XU.
 
-Will
+Thanks a lot for your work!
+
+I've successfully booted for-next on ODROID-XU using that .dts and
+exynos_defconfig plus some systemd and KVM options.
+
+Once I got the following panic:
+
+[    7.579120] Freeing unused kernel memory: 260K (c04f5000 - c0536000)
+[    7.647496] Unhandled fault: asynchronous external abort (0x1211) at
+0x00000000
+[    7.659656] Kernel panic - not syncing: Attempted to kill init!
+exitcode=3D0x00000007
+[    7.659656]
+[    7.667345] CPU: 0 PID: 1 Comm: init Not tainted
+3.15.0-rc4-00074-gca610da #1
+[    7.674465] [<c00218b4>] (unwind_backtrace) from [<c001eaa4>]
+(show_stack+0x10/0x14)
+[    7.682174] [<c001eaa4>] (show_stack) from [<c03a316c>]
+(dump_stack+0x80/0xc0)
+[    7.689371] [<c03a316c>] (dump_stack) from [<c03a0618>]
+(panic+0xa4/0x200)
+[    7.696222] [<c03a0618>] (panic) from [<c002c79c>]
+(complete_and_exit+0x0/0x1c)
+[    7.703503] [<c002c79c>] (complete_and_exit) from [<00000001>] (0x1)
+[    7.709844] ---[ end Kernel panic - not syncing: Attempted to kill
+init! exitcode=3D0x00000007
+[    7.709844]
+
+And I reproducibly get failures for CPUs 1-3, resulting in only one CPU
+in /proc/cpuinfo (compared to 4 on downstream 3.14):
+
+[    0.045778] CPU: Testing write buffer coherency: ok
+[    0.045968] /cpus/cpu@0 missing clock-frequency property
+[    0.045993] /cpus/cpu@1 missing clock-frequency property
+[    0.046016] /cpus/cpu@2 missing clock-frequency property
+[    0.046040] /cpus/cpu@3 missing clock-frequency property
+[    0.046059] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+[    0.046135] Setting up static identity map for 0x403a8920 - 0x403a89=
+78
+[    2.075052] CPU1: failed to come online
+[    4.085095] CPU2: failed to come online
+[    6.095142] CPU3: failed to come online
+[    6.095237] Brought up 1 CPUs
+[    6.095269] SMP: Total of 1 processors activated.
+[    6.095303] CPU: All CPU(s) started in HYP mode.
+[    6.095336] CPU: Virtualization extensions available.
+
+I also notice another apparent device tree issue:
+
+[    7.341814] of_get_named_gpiod_flags: can't parse gpios property of
+node '/soc/mmc@12220000/slot@0[0]'
+[    7.341850] of_get_named_gpiod_flags: can't parse gpios property of
+node '/soc/mmc@12220000/slot@0[0]'
+
+Are any of those known issues and being worked on?
+(The CPU failures affected 5420 Arndale Octa as well iirc.)
+
+Some of the low-hanging fruit like no heartbeat/SD LEDs, no RTC, no
+usb3503 and thus no network I'm already looking into myself. For now I'=
+m
+putting everything into the SMDK .dts, but I guess we'll need to split
+off -odroidxu.dts and -pinctrl.dtsi at some point.
+
+What about graphics? The 5410 is an oddball in using PowerVR rather tha=
+n
+Mali GPU - should a framebuffer on HDMI or DisplayPort work if we add D=
+T
+nodes, or will the GPU require larger code changes?
+
+Cheers,
+Andreas
+
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
