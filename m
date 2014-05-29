@@ -1,56 +1,112 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 06/11] dts: versatile: add pl180 compatible strings
-Date: Thu, 29 May 2014 17:40:16 -0500
-Message-ID: <1401403221-27523-7-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 11/11] clk: versatile: add versatile OSC support
+Date: Thu, 29 May 2014 17:40:21 -0500
+Message-ID: <1401403221-27523-12-git-send-email-robherring2@gmail.com>
 References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1401403221-27523-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-While not needed for probing, add the "arm,pl180" compatible string for
-completeness.
+Versatile platforms share the same OSC programming model as Integrator
+platforms. Add the necessary parameters and init functions for Versatile.
+
+Renaming the file to clk-versatile.c as versatile is used as the family
+name for ARM, Ltd. boards.
 
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
 v2:
-- no change
- arch/arm/boot/dts/versatile-ab.dts | 2 +-
- arch/arm/boot/dts/versatile-pb.dts | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+- Rename clk-integrator.c to clk-versatile.c
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index 5dc3be7..85c7b2b 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -187,7 +187,7 @@
- 				interrupts = <24>;
- 			};
- 			mmc@5000 {
--				compatible = "arm,primecell";
-+				compatible = "arm,pl180", "arm,primecell";
- 				reg = < 0x5000 0x1000>;
- 				interrupts-extended = <&vic 22 &sic 2>;
- 			};
-diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
-index 65f6577..a428541 100644
---- a/arch/arm/boot/dts/versatile-pb.dts
-+++ b/arch/arm/boot/dts/versatile-pb.dts
-@@ -39,7 +39,7 @@
- 				interrupts = <5>;
- 			};
- 			mmc@b000 {
--				compatible = "arm,primecell";
-+				compatible = "arm,pl180", "arm,primecell";
- 				reg = <0xb000 0x1000>;
- 				interrupts-extended = <&vic 23 &sic 2>;
- 			};
+ drivers/clk/versatile/Makefile                     |  3 +-
+ .../{clk-integrator.c => clk-versatile.c}          | 35 ++++++++++++++++++++--
+ 2 files changed, 34 insertions(+), 4 deletions(-)
+ rename drivers/clk/versatile/{clk-integrator.c => clk-versatile.c} (66%)
+
+diff --git a/drivers/clk/versatile/Makefile b/drivers/clk/versatile/Makefile
+index c16ca78..9ee2b37 100644
+--- a/drivers/clk/versatile/Makefile
++++ b/drivers/clk/versatile/Makefile
+@@ -1,6 +1,5 @@
+ # Makefile for Versatile-specific clocks
+-obj-$(CONFIG_ICST)		+= clk-icst.o
+-obj-$(CONFIG_ARCH_INTEGRATOR)	+= clk-integrator.o
++obj-$(CONFIG_ICST)		+= clk-icst.o clk-versatile.o
+ obj-$(CONFIG_INTEGRATOR_IMPD1)	+= clk-impd1.o
+ obj-$(CONFIG_ARCH_REALVIEW)	+= clk-realview.o
+ obj-$(CONFIG_ARCH_VEXPRESS)	+= clk-vexpress.o clk-sp810.o
+diff --git a/drivers/clk/versatile/clk-integrator.c b/drivers/clk/versatile/clk-versatile.c
+similarity index 66%
+rename from drivers/clk/versatile/clk-integrator.c
+rename to drivers/clk/versatile/clk-versatile.c
+index 734c4b8..fe52a79 100644
+--- a/drivers/clk/versatile/clk-integrator.c
++++ b/drivers/clk/versatile/clk-versatile.c
+@@ -17,6 +17,9 @@
+ 
+ #define INTEGRATOR_HDR_LOCK_OFFSET	0x14
+ 
++#define VERSATILE_SYS_OSCCLCD_OFFSET	0x1c
++#define VERSATILE_SYS_LOCK_OFFSET	0x20
++
+ /* Base offset for the core module */
+ static void __iomem *cm_base;
+ 
+@@ -37,11 +40,27 @@ static const struct clk_icst_desc __initdata cm_auxosc_desc = {
+ 	.lock_offset = INTEGRATOR_HDR_LOCK_OFFSET,
+ };
+ 
+-static void __init of_integrator_cm_osc_setup(struct device_node *np)
++static const struct icst_params versatile_auxosc_params = {
++	.vco_max	= ICST307_VCO_MAX,
++	.vco_min	= ICST307_VCO_MIN,
++	.vd_min		= 4 + 8,
++	.vd_max		= 511 + 8,
++	.rd_min		= 1 + 2,
++	.rd_max		= 127 + 2,
++	.s2div		= icst307_s2div,
++	.idx2s		= icst307_idx2s,
++};
++
++static const struct clk_icst_desc versatile_auxosc_desc __initconst = {
++	.params = &versatile_auxosc_params,
++	.vco_offset = VERSATILE_SYS_OSCCLCD_OFFSET,
++	.lock_offset = VERSATILE_SYS_LOCK_OFFSET,
++};
++static void __init cm_osc_setup(struct device_node *np,
++				const struct clk_icst_desc *desc)
+ {
+ 	struct clk *clk = ERR_PTR(-EINVAL);
+ 	const char *clk_name = np->name;
+-	const struct clk_icst_desc *desc = &cm_auxosc_desc;
+ 	const char *parent_name;
+ 
+ 	if (!cm_base) {
+@@ -65,5 +84,17 @@ static void __init of_integrator_cm_osc_setup(struct device_node *np)
+ 	if (!IS_ERR(clk))
+ 		of_clk_add_provider(np, of_clk_src_simple_get, clk);
+ }
++
++static void __init of_integrator_cm_osc_setup(struct device_node *np)
++{
++	cm_osc_setup(np, &cm_auxosc_desc);
++}
+ CLK_OF_DECLARE(integrator_cm_auxosc_clk,
+ 	"arm,integrator-cm-auxosc", of_integrator_cm_osc_setup);
++
++static void __init of_versatile_cm_osc_setup(struct device_node *np)
++{
++	cm_osc_setup(np, &versatile_auxosc_desc);
++}
++CLK_OF_DECLARE(versatile_cm_auxosc_clk,
++	       "arm,versatile-cm-auxosc", of_versatile_cm_osc_setup);
 -- 
 1.9.1
 
