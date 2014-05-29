@@ -1,91 +1,46 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 2/2] devicetree: Add Cadence WDT devicetree bindings
- documentation
-Date: Thu, 29 May 2014 10:12:55 +0100
-Message-ID: <20140529091255.GB24233@leverpostej>
-References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
- <1401185895-3677-2-git-send-email-harinik@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH v2 00/10] Marvell Berlin full clock support
+Date: Thu, 29 May 2014 11:20:03 +0200
+Message-ID: <5386FBC3.1000003@gmail.com>
+References: <1400517811-24668-1-git-send-email-sebastian.hesselbarth@gmail.com> <20140529000713.10062.99196@quantum>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401185895-3677-2-git-send-email-harinik@xilinx.com>
+In-Reply-To: <20140529000713.10062.99196@quantum>
 Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>
-Cc: "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jisheng Zhang <jszhang@marvell.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 11:18:15AM +0100, Harini Katakam wrote:
-> Add cadence-wdt bindings documentation.
+On 05/29/2014 02:07 AM, Mike Turquette wrote:
+> Quoting Sebastian Hesselbarth (2014-05-19 09:43:21)
+>> Mike,
+>>
+>> this is v2 of the Berlin SoC clock driver [1] but with a reworked DT
+>> binding as requested [2]. We decided to not even try to split up the chip
+>> control registers that deal with pinmux, padmux, clock, reset, and evil
+>> stuff we haven't even looked at. Instead we keep a single node that clock
+>> driver will remap early, while proper platform_drivers use a regmap
+>> instead. Although clock and other drivers share the same register range,
+>> they use individual registers exclusively.
+>>
+>> There are some functional fixes in the single clock drivers, I noticed
+>> while retesting each individial driver. There will be more to fixup but
+>> without any drivers actually using the clocks, it is hard to tell what
+>> isn't working now.
+>>
+>> Anyway, the current binding should match what you requested and having
+>> a clock driver for v3.16 will really be a huge benefit for us to work
+>> on more driver support.
+>>
+>> If you are fine with it, please take patches 2-7 and I'll pick up
+>> 1,8-10 in berlin branch.
 > 
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> ---
-> 
-> v2:
-> No changes
-> 
-> ---
->  .../devicetree/bindings/watchdog/cadence-wdt.txt   |   26 ++++++++++++++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> new file mode 100644
-> index 0000000..1f7a732
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> @@ -0,0 +1,26 @@
-> +Zynq Watchdog Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "xlnx,zynq-wdt-r1p2" or "cdns,wdt-r1p2".
+> Patches #2-7 applied to clk-next.
 
-What's the difference? Can "cdns,wdt-r1p2" be a fallback for
-"xlnx,zynq-wdt-r1p2"?
+Thanks Mike, but please drop patch #2
+  ("clk: berlin: add binding include for Berlin SoC clock ids")
+before you push your clk-next branch, it already went through arm-soc.
 
-> +- clocks		: Clock phandles (see clock bindings for details).
-
-Nit: Clocks aren't just phandles.
-
-How many clocks? This implies several, the example shows one.
-
-> +- reg			: Physical base address and size of WDT registers map.
-> +- interrupts		: Property with a value describing the interrupt
-> +			  number.
-
-We know this is a property with a value. Describe what it logically is
-(and optionally, the type is interrupt-sepcifier, though that gets
-fuzzier with the interrupts-extended property).
-
-> +- interrupt-parent	: Must be core interrupt controller.
-> +
-> +Optional properties
-> +- reset			: Reset interrupt.
-
-What does this mean? What type is this?
-
-I have no idea if this is a boolean telling the OS to reset the
-interrupt initially, or an index describing which interrupt is the reset
-interrupt in either the interrupts property or some HW registers.
-
-Cheers,
-Mark.
-
-> +- timeout-sec		: Watchdog timeout value (in seconds).
-> +
-> +Example:
-> +
-> +		wdt@f8005000 {
-> +			compatible = "xlnx,zynq-wdt-r1p2";
-> +			clocks = <&clkc 45>;
-> +			interrupt-parent = <&intc>;
-> +			interrupts = <0 9 1>;
-> +			reg = <0xf8005000 0x1000>;
-> +			reset = <0>;
-> +			timeout-sec = <10>;
-> +		} ;
-> -- 
-> 1.7.9.5
-> 
-> 
+Sorry,
+  Sebastian
