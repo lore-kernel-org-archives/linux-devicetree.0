@@ -1,89 +1,91 @@
-From: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC controller
-Date: Thu, 29 May 2014 14:26:55 +0530
-Message-ID: <5386F657.9040805@ti.com>
-References: <1401267437-22489-1-git-send-email-satish.patel@ti.com> <1401267437-22489-2-git-send-email-satish.patel@ti.com> <20140528184408.GC30031@kroah.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 2/2] devicetree: Add Cadence WDT devicetree bindings
+ documentation
+Date: Thu, 29 May 2014 10:12:55 +0100
+Message-ID: <20140529091255.GB24233@leverpostej>
+References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
+ <1401185895-3677-2-git-send-email-harinik@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140528184408.GC30031-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401185895-3677-2-git-send-email-harinik@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Harini Katakam <harinik@xilinx.com>
+Cc: "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, May 27, 2014 at 11:18:15AM +0100, Harini Katakam wrote:
+> Add cadence-wdt bindings documentation.
+> 
+> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+> ---
+> 
+> v2:
+> No changes
+> 
+> ---
+>  .../devicetree/bindings/watchdog/cadence-wdt.txt   |   26 ++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+> new file mode 100644
+> index 0000000..1f7a732
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
+> @@ -0,0 +1,26 @@
+> +Zynq Watchdog Device Tree Bindings
+> +-------------------------------------------
+> +
+> +Required properties:
+> +- compatible		: Should be "xlnx,zynq-wdt-r1p2" or "cdns,wdt-r1p2".
 
+What's the difference? Can "cdns,wdt-r1p2" be a fallback for
+"xlnx,zynq-wdt-r1p2"?
 
-On 5/29/2014 12:14 AM, Greg KH wrote:
-> On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
->> +/**
->> + * struct sc_phy - The basic smart card phy structure
->> + *
->> + * @dev: phy device
->> + * @pdata: pointer to phy's private data structure
->> + * @set_config: called to set phy's configuration
->> + * @get_config: called to get phy's configuration
->> + * @activate_card: perform smart card activation
->> + * @deactivate_card: perform smart card de-activation
->> + * @warm_reset: execute smart card warm reset sequence
->> + * @register_card_activity_cb: register call back to phy device.
->> + * This call back will be called on card insert or remove event
->> + *
->> + * smart card controller uses this interface to communicate with
->> + * smart card via phy.Some smart card phy has multiple slots for
->> + * cards. This inerface also enables controller to communicate with
->> + * one or more smart card connected over phy.
->> + */
->> +struct sc_phy {
->> +	/* phy's device pointer */
->> +	struct device *dev;
->
-> So this is the "parent", right?  Why not embed a struct device into this
-> structure as well, further streaching out the device tree.
->
-Do you mean to use "dev->p" for pdata ?
-I have kept it outside, to give easeness/pragmatic focal for new phy 
-driver development. Driver can make this pointer null and use above pointer.
->> +
->> +	/* phy's private data */
->> +	void *pdata;
->
-> If you do the above, then this pointer is not needed.
->
->
->> +
->> +	/* notify data, passed by interface user as a part of
->> +	 * register_notify API. Data should be passed back when
->> +	 * notification raised to the interface user
->> +	 */
->> +	void *notify_data;
->
-> What makes this different from the pdata?
-pdata is phy's private data, while notify_data is something phy will 
-send to smart card controller on some event, like card 
-remove/insert/timeout etc..
->
->
->> +
->> +	int	(*set_config)(struct sc_phy *phy, u8 slot,
->> +			enum sc_phy_config attr, int value);
->> +	int	(*get_config)(struct sc_phy *phy, u8 slot, enum
->> +			sc_phy_config attr);
->> +	int	(*activate_card)(struct sc_phy *phy, u8 slot);
->> +	int	(*deactivate_card)(struct sc_phy *phy, u8 slot);
->> +	int	(*get_syncatr)(struct sc_phy *phy, u8 slot, u8 len, char *atr);
->> +	int	(*warm_reset)(struct sc_phy *phy, u8 slot);
->> +	int	(*register_notify)(struct sc_phy *phy,
->> +			 struct	notifier_block *nb, void *notify_data);
->> +	int	(*unregister_notify)(struct sc_phy *phy,
->> +			struct	notifier_block *nb);
->> +};
->> +
->> +#endif /* __SC_PHY_H__ */
->> --
->> 1.7.9.5
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +- clocks		: Clock phandles (see clock bindings for details).
+
+Nit: Clocks aren't just phandles.
+
+How many clocks? This implies several, the example shows one.
+
+> +- reg			: Physical base address and size of WDT registers map.
+> +- interrupts		: Property with a value describing the interrupt
+> +			  number.
+
+We know this is a property with a value. Describe what it logically is
+(and optionally, the type is interrupt-sepcifier, though that gets
+fuzzier with the interrupts-extended property).
+
+> +- interrupt-parent	: Must be core interrupt controller.
+> +
+> +Optional properties
+> +- reset			: Reset interrupt.
+
+What does this mean? What type is this?
+
+I have no idea if this is a boolean telling the OS to reset the
+interrupt initially, or an index describing which interrupt is the reset
+interrupt in either the interrupts property or some HW registers.
+
+Cheers,
+Mark.
+
+> +- timeout-sec		: Watchdog timeout value (in seconds).
+> +
+> +Example:
+> +
+> +		wdt@f8005000 {
+> +			compatible = "xlnx,zynq-wdt-r1p2";
+> +			clocks = <&clkc 45>;
+> +			interrupt-parent = <&intc>;
+> +			interrupts = <0 9 1>;
+> +			reg = <0xf8005000 0x1000>;
+> +			reset = <0>;
+> +			timeout-sec = <10>;
+> +		} ;
+> -- 
+> 1.7.9.5
+> 
+> 
