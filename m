@@ -1,7 +1,7 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 04/11] ARM: integrator: convert to use irqchip_init
-Date: Thu, 29 May 2014 17:40:14 -0500
-Message-ID: <1401403221-27523-5-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 09/11] ARM: timer-sp: allow getting timer1 clock from DT to fallback to legacy clock
+Date: Thu, 29 May 2014 17:40:19 -0500
+Message-ID: <1401403221-27523-10-git-send-email-robherring2@gmail.com>
 References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1401403221-27523-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
@@ -12,95 +12,43 @@ List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-Now that versatile-fpga irqchip has IRQCHIP_DECLARE support, the interrupt
-related initialization can be removed.
+The sp804 clocks may be specified in DT, but the kernel may still be using
+legacy clocks. This is handled if a single clock for sp804 is present,
+but not when 3 clocks are present.
+
+This prevents Versatile platforms from breaking when the DT has clocks
+added.
 
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
 v2:
-- New patch
- arch/arm/mach-integrator/integrator_ap.c | 10 ++--------
- arch/arm/mach-integrator/integrator_cp.c | 10 ++--------
- 2 files changed, 4 insertions(+), 16 deletions(-)
+- New patch necessary to handle DT with 3 clocks in sp804 node and still
+  use the legacy non-DT clocks.
 
-diff --git a/arch/arm/mach-integrator/integrator_ap.c b/arch/arm/mach-integrator/integrator_ap.c
-index dd0cc67..645da16 100644
---- a/arch/arm/mach-integrator/integrator_ap.c
-+++ b/arch/arm/mach-integrator/integrator_ap.c
-@@ -31,7 +31,7 @@
- #include <linux/clockchips.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
--#include <linux/irqchip/versatile-fpga.h>
-+#include <linux/irqchip.h>
- #include <linux/mtd/physmap.h>
- #include <linux/clk.h>
- #include <linux/platform_data/clk-integrator.h>
-@@ -439,15 +439,10 @@ static void __init ap_of_timer_init(void)
- 	integrator_clockevent_init(rate, base, irq);
- }
+ arch/arm/common/timer-sp.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/common/timer-sp.c b/arch/arm/common/timer-sp.c
+index fd6bff0..1921132 100644
+--- a/arch/arm/common/timer-sp.c
++++ b/arch/arm/common/timer-sp.c
+@@ -233,13 +233,13 @@ static void __init sp804_of_init(struct device_node *np)
+ 	if (IS_ERR(clk1))
+ 		clk1 = NULL;
  
--static const struct of_device_id fpga_irq_of_match[] __initconst = {
--	{ .compatible = "arm,versatile-fpga-irq", .data = fpga_irq_of_init, },
--	{ /* Sentinel */ }
--};
--
- static void __init ap_init_irq_of(void)
- {
- 	cm_init();
--	of_irq_init(fpga_irq_of_match);
-+	irqchip_init();
- }
- 
- /* For the Device Tree, add in the UART callbacks as AUXDATA */
-@@ -570,7 +565,6 @@ DT_MACHINE_START(INTEGRATOR_AP_DT, "ARM Integrator/AP (Device Tree)")
- 	.map_io		= ap_map_io,
- 	.init_early	= ap_init_early,
- 	.init_irq	= ap_init_irq_of,
--	.handle_irq	= fpga_handle_irq,
- 	.init_time	= ap_of_timer_init,
- 	.init_machine	= ap_init_of,
- 	.restart	= integrator_restart,
-diff --git a/arch/arm/mach-integrator/integrator_cp.c b/arch/arm/mach-integrator/integrator_cp.c
-index a938242..7ade590 100644
---- a/arch/arm/mach-integrator/integrator_cp.c
-+++ b/arch/arm/mach-integrator/integrator_cp.c
-@@ -20,7 +20,7 @@
- #include <linux/amba/clcd.h>
- #include <linux/amba/mmci.h>
- #include <linux/io.h>
--#include <linux/irqchip/versatile-fpga.h>
-+#include <linux/irqchip.h>
- #include <linux/gfp.h>
- #include <linux/mtd/physmap.h>
- #include <linux/of_irq.h>
-@@ -235,15 +235,10 @@ static void __init intcp_init_early(void)
- 	sched_clock_register(intcp_read_sched_clock, 32, 24000000);
- }
- 
--static const struct of_device_id fpga_irq_of_match[] __initconst = {
--	{ .compatible = "arm,versatile-fpga-irq", .data = fpga_irq_of_init, },
--	{ /* Sentinel */ }
--};
--
- static void __init intcp_init_irq_of(void)
- {
- 	cm_init();
--	of_irq_init(fpga_irq_of_match);
-+	irqchip_init();
- }
- 
- /*
-@@ -340,7 +335,6 @@ DT_MACHINE_START(INTEGRATOR_CP_DT, "ARM Integrator/CP (Device Tree)")
- 	.map_io		= intcp_map_io,
- 	.init_early	= intcp_init_early,
- 	.init_irq	= intcp_init_irq_of,
--	.handle_irq	= fpga_handle_irq,
- 	.init_machine	= intcp_init_of,
- 	.restart	= integrator_restart,
- 	.dt_compat      = intcp_dt_board_compat,
+-	/* Get the 2nd clock if the timer has 2 timer clocks */
++	/* Get the 2nd clock if the timer has 3 timer clocks */
+ 	if (of_count_phandle_with_args(np, "clocks", "#clock-cells") == 3) {
+ 		clk2 = of_clk_get(np, 1);
+ 		if (IS_ERR(clk2)) {
+ 			pr_err("sp804: %s clock not found: %d\n", np->name,
+ 				(int)PTR_ERR(clk2));
+-			goto err;
++			clk2 = NULL;
+ 		}
+ 	} else
+ 		clk2 = clk1;
 -- 
 1.9.1
 
