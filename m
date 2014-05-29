@@ -1,131 +1,56 @@
-From: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Subject: RE: [PATCH v2 03/18] PCI: designware: Configuration space should be
- specified in 'reg'
-Date: Thu, 29 May 2014 15:11:08 +0800
-Message-ID: <2CC2A0A4A178534D93D5159BF3BCB6619B94AD3904@EAPEX1MAIL1.st.com>
-References: <1401345500-20188-1-git-send-email-kishon@ti.com>
- <1401345500-20188-4-git-send-email-kishon@ti.com>
+From: Satish Patel <satish.patel@ti.com>
+Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC controller
+Date: Thu, 29 May 2014 14:04:06 +0530
+Message-ID: <5386F0FE.7040003@ti.com>
+References: <1401267437-22489-1-git-send-email-satish.patel@ti.com> <1401267437-22489-2-git-send-email-satish.patel@ti.com> <20140528185334.GA30763@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="Windows-1252"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1401345500-20188-4-git-send-email-kishon@ti.com>
-Content-Language: en-US
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marex@denx.de>
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140528185334.GA30763@kroah.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, tony@atomide.com, grant.likely@linaro.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Kishon,
 
-> -----Original Message-----
-> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
-> Sent: Thursday, May 29, 2014 12:08 PM
-> To: devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-
-> kernel@lists.infradead.org; linux-omap@vger.kernel.org; linux-
-> pci@vger.kernel.org; linux-kernel@vger.kernel.org
-> Cc: arnd@arndb.de; tony@atomide.com; jg1.han@samsung.com;
-> kishon@ti.com; Jason Gunthorpe; Bjorn Helgaas; Mohit KUMAR DCG; Marek
-> Vasut
-> Subject: [PATCH v2 03/18] PCI: designware: Configuration space should be
-> specified in 'reg'
-> 
-> The configuration address space has so far been specified in *ranges*,
-> however it should be specified in *reg* making it a platform MEM resource.
-> Hence used 'platform_get_resource_*' API to get configuration address
-> space in the designware driver.
-> 
-> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Mohit Kumar <mohit.kumar@st.com>
-> Cc: Jingoo Han <jg1.han@samsung.com>
-> Cc: Marek Vasut <marex@denx.de>
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> ---
->  .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
->  drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
->  2 files changed, 16 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> index d6fae13..8314360 100644
-> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
-> @@ -6,6 +6,7 @@ Required properties:
->  	as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
->  - reg: base addresses and lengths of the pcie controller,
->  	the phy controller, additional register for the phy controller.
-> +	The configuration address space should also be specified here.
->  - interrupts: interrupt values for level interrupt,
->  	pulse interrupt, special interrupt.
->  - clocks: from common clock binding: handle to pci clock.
-> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
-> designware.c
-> index c4e3732..603b386 100644
-> --- a/drivers/pci/host/pcie-designware.c
-> +++ b/drivers/pci/host/pcie-designware.c
-> @@ -20,6 +20,7 @@
->  #include <linux/of_pci.h>
->  #include <linux/pci.h>
->  #include <linux/pci_regs.h>
-> +#include <linux/platform_device.h>
->  #include <linux/types.h>
-> 
->  #include "pcie-designware.h"
-> @@ -392,11 +393,23 @@ static const struct irq_domain_ops
-> msi_domain_ops = {  int __init dw_pcie_host_init(struct pcie_port *pp)  {
->  	struct device_node *np = pp->dev->of_node;
-> +	struct platform_device *pdev = to_platform_device(pp->dev);
->  	struct of_pci_range range;
->  	struct of_pci_range_parser parser;
-> +	struct resource *cfg_res;
->  	u32 val;
->  	int i;
-> 
-> +	cfg_res = platform_get_resource_byname(pdev,
-> IORESOURCE_MEM, "config");
-> +	if (cfg_res) {
-> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
-> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
-> +		pp->cfg0_base = cfg_res->start;
-> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
-> +	} else {
-> +		dev_err(pp->dev, "missing *config* reg space\n");
-> +	}
-> +
->  	if (of_pci_range_parser_init(&parser, np)) {
->  		dev_err(pp->dev, "missing ranges property\n");
->  		return -EINVAL;
-> @@ -429,6 +442,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
->  			of_pci_range_to_resource(&range, np, &pp->cfg);
->  			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
->  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
-> +			pp->cfg0_base = pp->cfg.start;
-> +			pp->cfg1_base = pp->cfg.start + pp-
-> >config.cfg0_size;
 
-- As you are getting cfg address space as MEM resource, so remove above code that
- gets the configuration space from dt range. Also correct dt for pcie cfg space for the platforms
- based on this driver.
+On 5/29/2014 12:23 AM, Greg KH wrote:
+> On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
+>> SmartCard controller uses this interface to communicate with
+>> SmartCard via PHY
+>>
+>> Some SmartCard PHY has multiple slots for cards.
+>> This inerface also enables controller to communicate
+>> with one or more SmartCard connected over phy.
+>>
+>> interface structure includes following APIs
+>> - set/get config
+>> - activate/deactivate smart card
+>> - warm reset
+>> - register_notify (for card insert/remove/overheat)
+>> - unregister_notify
+>>
+>> Signed-off-by: Satish Patel <satish.patel@ti.com>
+>> ---
+>>   Documentation/sc_phy.txt |  171 ++++++++++++++++++++++++++++++++++++++++++++++
+>>   include/linux/sc_phy.h   |  136 ++++++++++++++++++++++++++++++++++++
+>>   2 files changed, 307 insertions(+)
+>>   create mode 100644 Documentation/sc_phy.txt
+>>   create mode 100644 include/linux/sc_phy.h
+>
+> These are .h files, but where is the "api" functions that use
+> these structures defined at?
+>
+This is like template/wrappers, smart card phy driver will write API 
+functions. And smartcard controller will call these functions.
+With proposed approach, smartcard controller can communicate with any 
+smart card phy (TI/NxP) without change in code. Using DT entry smartcard 
+and PHY will gets connected with each other.
+Refer diagram given @Documentation/sc_phy.txt.
 
-Otherwise looks fine to me.
 
-Thanks
-Mohit
-
->  		}
->  	}
-> 
-> @@ -441,8 +456,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
->  		}
->  	}
-> 
-> -	pp->cfg0_base = pp->cfg.start;
-> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
->  	pp->mem_base = pp->mem.start;
-> 
->  	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
-> --
-> 1.7.9.5
-
+> confused,
+>
+> greg k-h
+>
