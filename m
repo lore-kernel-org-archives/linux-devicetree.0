@@ -1,54 +1,50 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
-Date: Thu, 29 May 2014 11:38:27 +0200
-Message-ID: <CACRpkdajvFMwmW=KUE_eb2g9BNA_KPsWJQLp1Vda09qUDUU-9w@mail.gmail.com>
-References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
-	<5057707.jNCXlqf9dH@wuerfel>
-	<CACRpkdZX=UFhMfUn68hA+s2FLGRYy_dmjRng_fHtAQEhah0oRA@mail.gmail.com>
-	<6096979.7R8fyMRDdE@wuerfel>
+From: Harini Katakam <harinikatakamlinux@gmail.com>
+Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
+Date: Thu, 29 May 2014 15:08:41 +0530
+Message-ID: <CAFcVEC+X1NVZHubRWa4qUfEPiugBrp0ewZkjhrcdK1zrht+FXw@mail.gmail.com>
+References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
+	<20140529092106.GC24233@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <6096979.7R8fyMRDdE@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140529092106.GC24233@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 22, 2014 at 10:35 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Thursday 22 May 2014 20:52:38 Linus Walleij wrote:
->> On Thu, May 22, 2014 at 5:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
+Hi Mark,
+
+On Thu, May 29, 2014 at 2:51 PM, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Tue, May 27, 2014 at 11:18:14AM +0100, Harini Katakam wrote:
+>> Add Cadence WDT driver. This is used by Xilinx Zynq.
 >>
->> >> Anyway, I don't think we have any streaming DMA used on these RealView
->> >> boards.
->> >
->> > Yes, I think that is correct. MMCI, SSP and serial could all use
->> > DMA but are not configured to do it.
+>> Signed-off-by: Harini Katakam <harinik@xilinx.com>
+>> ---
 >>
->> PB1176 has no working DMA (borked DMA hardware), the PB11MPCore
->> actually has working DMA but only on UART TX and maybe AACI
->> (haven't tested) no clue about the Cortex boards PBA8 and PBX though.
+>> Sorry for the delay in sending v2.
+>> v2 changes:
+>> - Update IO helpers.
+>> - Use dev_dbg instead of dev_info where possible.
+>> - Use watchdog_init_timeout
+>> - Spinlock for restart register where missing.
+>> - Change order of probe to move reboot notifier register to the end
+>> - Remove unecessary comments
+>> - Do clk_prepare_enabel and clk_disable_unprepare in resume/suspend
+>>   respectively.
+>> - There is an input from dts to decide whether internal reset should be
+>>   enabled or not. When this is enabled, reset happens wutomatically when
+>>   counter reaches zero. In case this is not enabled, a message is disaplayed
+>>   to indicate that the watchdog has timed out. Elaborated this message
+>>   to describe the above.
 >
-> I don't see any DMA data passed to the pl011 driver for PB11MPCore
-> or any other realview board, so even if it works, we don't use it.
+> When is that useful?
+>
 
-No I was more saying it works in theory... and we actually have
-patches to enable it for e.g. memcpy on Versatile and PB11MP
-that I floated at times, Russell also experimented around with it.
+Automatic reset enable is an option. When it's not selected, this is a generic
+way of giving some indication. If some other action is preferred
+instead of reset,
+then that can be added here.
 
-> The AACI driver doesn't seem to support DMA.
-
-Nope, but the hardware does.
-
-> PBA8 and PBX don't need the hack because they don't have a broken
-> l2x0.
-
-True!
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Harini
