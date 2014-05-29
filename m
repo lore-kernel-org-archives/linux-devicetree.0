@@ -1,115 +1,44 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v11 0/3] Exynos 5410 support
-Date: Thu, 29 May 2014 20:00:11 +0200
-Message-ID: <538775AB.3000604@suse.de>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com> <7hr43f9mmn.fsf@paris.lan> <538737CA.4070709@suse.de> <53874862.5080809@samsung.com>
+From: Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>
+Subject: Re: [PATCH 0/3] Qualcomm Resource Power Manager driver
+Date: Thu, 29 May 2014 11:14:00 -0700
+Message-ID: <CAJAp7OjYSPLiJXOfY_v=zC+S-_1ryFw29Du6mcp9nQ3v_cj5Jw@mail.gmail.com>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<F773CDFB-2957-49C0-99D3-E9CDCE33C378@codeaurora.org>
+	<CAJAp7Ojb7PvuNYJkPyKx+iehi0bF6rdYvYmfrDz21mebxMN1qg@mail.gmail.com>
+	<8CA95B37-E5EE-46BE-ABFD-64AA3BBF4E96@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53874862.5080809@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>
-Cc: linux-kernel@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8CA95B37-E5EE-46BE-ABFD-64AA3BBF4E96-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tarek,
+On Wed, May 28, 2014 at 10:06 AM, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wro=
+te:
+> It is the purpose so that as we see common patterns between either dr=
+ivers/soc/<VENDOR> we can refactor in the future.  However, we need to =
+all a little time for those patterns to emerge rather than shoe horning=
+ in drivers into places that don=E2=80=99t make sense.
 
-[shortening the CC list a bit]
+Sounds reasonable, I'll move it for v2.
 
-Am 29.05.2014 16:46, schrieb Tarek Dakhran:
-> On 05/29/2014 05:36 PM, Andreas F=E4rber wrote:
->> Am 27.05.2014 19:06, schrieb Kevin Hilman:
->>> Tarek Dakhran <t.dakhran@samsung.com> writes:
->>>
->>>> Has been tested on: 1) Exynos 5410 reference board (exynos_defconf=
-ig)
->>>>             2) Exynos 5410 reference board (multi_v7_defconfig)
->>>>             3) Odroid-XU board (exynos_defconfig)
->>>>             4) Odroid-XU board (multi_v7_defconfig)
->>> Tested-by: Kevin Hilman <khilman@linaro.org>
->>>
->>> FYI, I boot tested this on an odroid-xu (exynos_defconfig and
->>> multi_v7_defconfig.)
->> Could you clarify: Are you using exynos5410-smdk5410.dts with the
->> ODROID-XU or do you have some upcoming exynos5410-odroidxu.dts based=
- on
->> exynos5410.dtsi?
-> We use exynos5410-smdk5410.dts for booting ODROID-XU.
+>
+>>
+>> If I move the rpm driver, are there any conclusion to where I should
+>> move the dt binding documentation?
+>
+> devicetree/bindings/soc/qcom
+> include/dt-bindings/soc
 
-Thanks a lot for your work!
+Thanks.
 
-I've successfully booted for-next on ODROID-XU using that .dts and
-exynos_defconfig plus some systemd and KVM options.
-
-Once I got the following panic:
-
-[    7.579120] Freeing unused kernel memory: 260K (c04f5000 - c0536000)
-[    7.647496] Unhandled fault: asynchronous external abort (0x1211) at
-0x00000000
-[    7.659656] Kernel panic - not syncing: Attempted to kill init!
-exitcode=3D0x00000007
-[    7.659656]
-[    7.667345] CPU: 0 PID: 1 Comm: init Not tainted
-3.15.0-rc4-00074-gca610da #1
-[    7.674465] [<c00218b4>] (unwind_backtrace) from [<c001eaa4>]
-(show_stack+0x10/0x14)
-[    7.682174] [<c001eaa4>] (show_stack) from [<c03a316c>]
-(dump_stack+0x80/0xc0)
-[    7.689371] [<c03a316c>] (dump_stack) from [<c03a0618>]
-(panic+0xa4/0x200)
-[    7.696222] [<c03a0618>] (panic) from [<c002c79c>]
-(complete_and_exit+0x0/0x1c)
-[    7.703503] [<c002c79c>] (complete_and_exit) from [<00000001>] (0x1)
-[    7.709844] ---[ end Kernel panic - not syncing: Attempted to kill
-init! exitcode=3D0x00000007
-[    7.709844]
-
-And I reproducibly get failures for CPUs 1-3, resulting in only one CPU
-in /proc/cpuinfo (compared to 4 on downstream 3.14):
-
-[    0.045778] CPU: Testing write buffer coherency: ok
-[    0.045968] /cpus/cpu@0 missing clock-frequency property
-[    0.045993] /cpus/cpu@1 missing clock-frequency property
-[    0.046016] /cpus/cpu@2 missing clock-frequency property
-[    0.046040] /cpus/cpu@3 missing clock-frequency property
-[    0.046059] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.046135] Setting up static identity map for 0x403a8920 - 0x403a89=
-78
-[    2.075052] CPU1: failed to come online
-[    4.085095] CPU2: failed to come online
-[    6.095142] CPU3: failed to come online
-[    6.095237] Brought up 1 CPUs
-[    6.095269] SMP: Total of 1 processors activated.
-[    6.095303] CPU: All CPU(s) started in HYP mode.
-[    6.095336] CPU: Virtualization extensions available.
-
-I also notice another apparent device tree issue:
-
-[    7.341814] of_get_named_gpiod_flags: can't parse gpios property of
-node '/soc/mmc@12220000/slot@0[0]'
-[    7.341850] of_get_named_gpiod_flags: can't parse gpios property of
-node '/soc/mmc@12220000/slot@0[0]'
-
-Are any of those known issues and being worked on?
-(The CPU failures affected 5420 Arndale Octa as well iirc.)
-
-Some of the low-hanging fruit like no heartbeat/SD LEDs, no RTC, no
-usb3503 and thus no network I'm already looking into myself. For now I'=
-m
-putting everything into the SMDK .dts, but I guess we'll need to split
-off -odroidxu.dts and -pinctrl.dtsi at some point.
-
-What about graphics? The 5410 is an oddball in using PowerVR rather tha=
+Regards,
+Bjorn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-Mali GPU - should a framebuffer on HDMI or DisplayPort work if we add D=
-T
-nodes, or will the GPU require larger code changes?
-
-Cheers,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
