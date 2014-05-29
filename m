@@ -1,68 +1,65 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 01/10] dt/bindings: add passthru-mask property to versatile-fpga-irq
-Date: Wed, 28 May 2014 20:30:28 -0500
-Message-ID: <CAL_JsqKKgQkerKGSqt=1QYurpKyEyaLuakmPF0jQvD7pNuMKeA@mail.gmail.com>
-References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
-	<1400620176-7239-2-git-send-email-robherring2@gmail.com>
-	<CACRpkdZGevG9YaUPUs98pQidcGz7MxbxjuSxBn=cqaOYGhWegw@mail.gmail.com>
-	<CAL_JsqJYzMvhWng7YUdQbKdFxVwUXZkB-h_kq7yZAOzi1biiPw@mail.gmail.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3 0/2] add support for the R-Car H2 and M2 xHCI controllers
+Date: Thu, 29 May 2014 10:31:57 +0900
+Message-ID: <53868E0D.7060703@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqJYzMvhWng7YUdQbKdFxVwUXZkB-h_kq7yZAOzi1biiPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 23, 2014 at 8:00 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Fri, May 23, 2014 at 7:46 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>
->>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>>
->>> Add a passthru-mask property for setting interrupts which are passed
->>> through directly to a primary controller.
->>>
->>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
->>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
->>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
->>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
->>> ---
->>>  Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt | 3 +++
->>>  1 file changed, 3 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
->>> index c9cf605..956b71d 100644
->>> --- a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
->>> +++ b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
->>> @@ -34,3 +34,6 @@ Optional properties:
->>>  - interrupts: if the FPGA IRQ controller is cascaded, i.e. if its IRQ
->>>    output is simply connected to the input of another IRQ controller,
->>>    then the parent IRQ shall be specified in this property.
->>> +- passthru-mask: a u32 number representing a bit mas determining which of
->>
->> bit mask
->>
->> (speling)
->>
->>> +  the interrupts are directly passed through to the primary interrupt
->>> +  controller.
->>
->> This is very confusing on the Integrators. The FPGA IRQ controller
->> *is* the primary interrupt controller on these.
->
-> Yes. Really, the h/w is not the same and we should have different
-> compatible strings. Unfortunately, it is Integrator that should
-> change.
+This patch set adds the USB xHCI support for the R-Car H2 and M2 SoCs.
+These SoCs use an xHCI but still need specific initialization, mainly
+to setup the firmware downloading and the specific registers.
 
-I don't know what I was thinking... The compatible strings are
-different as Versatile uses arm,versatile-sic, so I can drop this
-passthru-mask.
+This patch set is based on the usb-next branch of Greg usb.git tree.
+(commit id = ff1fcd50bc2459744e6f948310bc18eb7d6e8c72)
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+This patch series has a Gregory CLEMENT's patch. Since the patch needed to
+fix some things, I modified the patch:
+http://marc.info/?l=linux-usb&m=140025742005303&w=2
+http://marc.info/?l=linux-usb&m=140088117126268&w=2
+
+
+Changes since v2:
+ - Fix goto direction in patch 1.
+ - Remove some unnecessary checks in patch 1.
+ - Add MODULE_FIRMWARE() in patch 2.
+ - Add a comment about xhci_rcar_init_quirk() in patch 2.
+
+Changes since v1 (about patch 2 only because patch 1 and 3 ware applied):
+ - Fix some typos in patch 2.
+ - Remove duplicated #define in patch 2.
+ - Remove usb_phy framework calling in patch 2.
+ - Change prototype of xhci_rcar_start() in patch 2.
+ - Change compatible strings from "renesas,r8a779[01]-xhci" to
+   "renesas,xhci-r8a779[01]" in patch 2. Because of Renesas SoC
+   maintainer's comment:
+    http://marc.info/?l=linux-sh&m=140109049002958&w=2
+
+ - Rewrite the custom get_unaligned_le32() and add comment about it in patch 2.
+
+
+Gregory CLEMENT (1):
+  usb: host: xhci-plat: add optional PHY support
+
+Yoshihiro Shimoda (1):
+  usb: host: xhci-plat: add support for the R-Car H2 and M2 xHCI
+    controllers
+
+ drivers/usb/host/Kconfig     |    8 +++
+ drivers/usb/host/Makefile    |    3 +
+ drivers/usb/host/xhci-plat.c |   45 +++++++++++-
+ drivers/usb/host/xhci-rcar.c |  162 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-rcar.h |   27 +++++++
+ drivers/usb/host/xhci.h      |    2 +
+ 6 files changed, 246 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/usb/host/xhci-rcar.c
+ create mode 100644 drivers/usb/host/xhci-rcar.h
+
+-- 
+1.7.9.5
