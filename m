@@ -1,64 +1,140 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] scripts/dtc: pad DTBs to facilitate later modification
-Date: Thu, 29 May 2014 10:20:16 -0700
-Message-ID: <CAGa+x84SkGzC3cPCvnZHJEK2uJion=0fowBNdkydjF1GnLLsTw@mail.gmail.com>
-References: <1400888507-11637-1-git-send-email-khilman@linaro.org>
-	<53875876.2020001@wwwdotorg.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 2/5] clk: bcm281xx: implement prerequisite clocks
+Date: Thu, 29 May 2014 10:47:28 -0700
+Message-ID: <20140529174728.10062.42854@quantum>
+References: <1400590362-11177-1-git-send-email-elder@linaro.org>
+ <1400590362-11177-3-git-send-email-elder@linaro.org>
+ <20140524005358.23136.8918@quantum> <53873577.8000502@linaro.org>
+ <20140529163552.10062.50409@quantum> <5387661E.7060106@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53875876.2020001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, "open list:KERNEL BUILD + fi..." <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5387661E.7060106@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alex Elder <elder@linaro.org>, mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 8:55 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 05/23/2014 05:41 PM, Kevin Hilman wrote:
->> By default, add some padding to the DT blobs to facilitate later
->> patching.
->>
->> An example need for DTB patching is the need to modifiy the command
->> line on platforms where ATAGS are not (or cannot) be used to pass the
->> commandline.  For example, we do not support a big-endian kernel
->> reading ATAGS from a little-endian u-boot, so the only way to pass a
->> command line in the DT.
->>
->> Also, without ATAG support (or if u-boot was built without
->> CONFIG_INITRD_TAG) the only way to pass an initrd is by adding an
->> initrd= option to command line (in the DT).
->>
->> Therefore, to facilitate adding to the DT command line directly in the
->> DTB, add some padding.
->>
->> Cc: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
->> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> Signed-off-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->> ---
->> I kinda pulled 64 bytes out of the air here since it's enough to add
->> some common things to the commandline like debug, earlyprink
->> initrd=<addr>,<size>, etc., but I'm certainlly not opposed to more
->> padding.
->
-> Conceptually,
-> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> But I would expect a pad of something like 4KB to be more future-proof.
-> U-Boot appears to use 4KB on ARM at least:
->
-> ./arch/arm/dts/Makefile:37:DTC_FLAGS += -R 4 -p 0x1000
+Quoting Alex Elder (2014-05-29 09:53:50)
+> On 05/29/2014 11:35 AM, Mike Turquette wrote:
+> > Quoting Alex Elder (2014-05-29 06:26:15)
+> >> On 05/23/2014 07:53 PM, Mike Turquette wrote:
+> >>> The above seems like a lot effort to go to. Why not skip all of this and
+> >>> just implement the prerequisite logic in the .enable & .disable
+> >>> callbacks? E.g. your kona clk .enable callback would look like:
+> >>
+> >> I think the problem is that it means the clock consumers
+> >> would have to know that prerequisite relationship.  And
+> >> that is dependent on the clock tree.  The need for it in
+> >> this case was because the boot loader didn't initialize
+> >> all the clocks that were needed.  If we could count on
+> >> the boot loader setting things up initially we might not
+> >> need to do this.
+> 
+> I think you've convinced me that if the prerequisite is
+> set up at initialization time, the consumers don't need
+> to know about the the clock tree.
+> 
+> >>>
+> >>> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+> >>> index d603c4e..51f35b4 100644
+> >>> --- a/drivers/clk/bcm/clk-kona.c
+> >>> +++ b/drivers/clk/bcm/clk-kona.c
+> >>> @@ -987,6 +987,12 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
+> >>>  {
+> >>>       struct kona_clk *bcm_clk = to_kona_clk(hw);
+> >>>       struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
+> >>> +     int ret;
+> >>> +
+> >>> +     hw->prereq_bus_clk = clk_get(hw->ccu, hw->prereq);
+> >>> +     ret = clk_enable(prereq_bus_clk);
+> >>> +     if (ret)
+> >>> +             return ret;
+> >>>  
+> >>>       return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
+> >>>  }
+> >>> @@ -997,6 +1003,9 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
+> >>>       struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
+> >>>  
+> >>>       (void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
+> >>> +
+> >>> +     clk_disable(hw->prereq_bus_clk);
+> >>> +     clk_put(hw->prereq_bus_clk);
+> >>>  }
+> >>>  
+> >>>  static int kona_peri_clk_is_enabled(struct clk_hw *hw)
+> >>>
+> >>>
+> >>> I guess it might take some trickery to get clk_get to work like that.
+> >>> Let me know if I've completely lost the plot.
+> >>
+> >> I don't think so, but I think there's a lot of stuff
+> >> here to try to understand, and you're trying to extract
+> >> it from the code without the benefit of some background
+> >> of how and why it's done this way.
+> >>
+> >> Hopefully all this verbiage is moving you closer to
+> >> understanding...  I appreciate your patience.
+> > 
+> > Hi Alex,
+> > 
+> > Can you comment on my diff above? I basically tossed up some pseudo-code
+> > to show how clk_enable calls can be nested inside of each other. I'd
+> > like to know if that approach makes sense for your prereq clocks case.
+> 
+> Yes, I should have looked more closely before.
+> 
+> Are you suggesting this prerequisite notion get elevated into the
+> common framework?
 
-Great.  As I mentioned above, I'm certainly not opposed to more
-padding, and agree that it would be more future proof.  I was simply
-being rather conservative in case folks didn't want to see every .dtb
-grow by 4k.
+Nope.
 
-I'll wait a bit to see if there are any other opinions, and the respin
-with 4k padding.
+> Or is "hw" here just representative of the
+> Kona-specific clock structure?
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yup. It's just good old struct clk_hw. There is one instance of this
+struct for every struct clk object.
+
+> 
+> In any case, you're suggesting the prerequisite be handled in the
+> enable path (as opposed to the one-time initialization path),
+> which during the course of this discussion I've been thinking may
+> be the right way to do it.
+
+Right, and don't forget that you have both the prepare path AND the
+enable path. It is common for drivers to call clk_prepare once at probe
+time and then aggressively call clk_enable/clk_disable for fine-grained
+PM. Likewise some drivers always use clk_prepare_enable and
+clk_disable_unprepare.
+
+The point is that you have two callbacks that you might split some of
+this stuff across. Your "initializiation" stuff might go into .prepare()
+and simply enabling the clock might go into .enable().
+
+> 
+> Let me see if I can rework it that way and I'll let you know
+> what I discover as a result.  I hope to have something to
+> talk about later today.
+
+Sounds good.
+
+Regards,
+Mike
+
+> 
+> Thanks a lot Mike.
+> 
+>                                         -Alex
+> 
+> > Note that Linux device drivers that consume leaf clocks do NOT need to
+> > know about the prereq clocks. All of that prereq clock knowledge is
+> > stored in the .enable callback for the leaf clock (see above).
+> > 
+> > Regards,
+> > Mike
+> > 
+> >>
+> >>                                         -Alex
+> >>
+> 
