@@ -1,201 +1,192 @@
 From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
-Date: Thu, 29 May 2014 22:25:59 +0100
-Message-ID: <5387A5E7.5040905@linaro.org>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>	<1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>	<53875E17.6010406@linaro.org> <CAJAp7Ogi8s+_HHUA0zt3dM6ssDHxeQ1xNFvvO7AbSyz9o6n+9w@mail.gmail.com>
+Subject: Re: [PATCH 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
+Date: Thu, 29 May 2014 22:41:00 +0100
+Message-ID: <5387A96C.6080404@linaro.org>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>	<1401211721-19712-3-git-send-email-bjorn.andersson@sonymobile.com>	<53875E2A.7050902@linaro.org> <CAJAp7Ogd5CCsyBhQmaDsy6SAG+YPAPzEJWP0fSKHK1kov3Z6cw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7Ogi8s+_HHUA0zt3dM6ssDHxeQ1xNFvvO7AbSyz9o6n+9w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7Ogd5CCsyBhQmaDsy6SAG+YPAPzEJWP0fSKHK1kov3Z6cw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn@kryo.se>
 Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
 
-On 29/05/14 19:38, Bjorn Andersson wrote:
+On 29/05/14 20:45, Bjorn Andersson wrote:
 > On Thu, May 29, 2014 at 9:19 AM, Srinivas Kandagatla
 > <srinivas.kandagatla@linaro.org> wrote:
->>> +- reg:
->>> +       Usage: required
->>> +       Value type: <prop-encoded-array>
->>> +       Definition: two entries specifying the RPM's message ram an=
-d ipc
->>> register
+>>> +++ b/drivers/mfd/qcom_rpm.c
+>
+>> the line spacing looks bit odd.
+>>
+>
+> I'll fix
+>
+>>> +};
 >>> +
->>> +- reg-names:
->>> +       Usage: required
->>> +       Value type: <string-array>
->>> +       Definition: must contain the following, in order:
->>> +                   "msg_ram"
->>> +                   "ipc"
+>>> +#define RPM_STATUS_REG(rpm, i) ((rpm)->status_regs + (i) * 4)
+>>> +#define RPM_CTRL_REG(rpm, i)   ((rpm)->ctrl_regs + (i) * 4)
+>>> +#define RPM_REQ_REG(rpm, i)    ((rpm)->req_regs + (i) * 4)
 >>
 >>
->> +1 for kumar's comment.
+>> Probably you could make these macros bit more generic by removing the rpm
+>> and let the calling code dereference it.
 >>
->> cant enforce the order here. should fix it in the driver.
 >>
 >
-> Yes I can, this is as decided by the devicetree maintainers. The orde=
-r
-> of e.g. reg and interrupts must be defined.
+> I first open coded them, I then had separate writel/readl wrappers for them and
+> then I settled for this, as I figured it help clarifying the code. I can have
+> another look at it, but I don't think that below will make things clearer.
 >
-Does not make sense. Unless Am missing something obvious.
-Having reg-names/interrupt-names would give driver flexibility to get=20
-the resources by name, as long as the order of reg and reg-names match.
+> #define RPM_IDX_2_OFFSET(i) ((i) * 4)
+>
 
-So the order of reg is really not really necessary. Unless the driver i=
-s=20
-coded to access it via index.
+Yes, just leave it as it is.
+> [...]
+>
+>>
+>>> +static int qcom_rpm_probe(struct platform_device *pdev)
+>>> +{
+>>> +       const struct of_device_id *match;
+>>> +       const struct qcom_rpm *template;
+>>> +       struct resource *res;
+>>> +       struct qcom_rpm *rpm;
+>>> +       u32 fw_version[3];
+>>> +       int irq_wakeup;
+>>> +       int irq_ack;
+>>> +       int irq_err;
+>>> +       int ret;
+>>> +
+>>> +       rpm = devm_kzalloc(&pdev->dev, sizeof(*rpm), GFP_KERNEL);
+>>
+>>
+>> Sorry If I missed somthing obvious, But why not just use the structure from
+>> of_data. Is the global structure going to be used for something else?
+>>
+>> Or make a seperate structure for of_data and not use struct qcom_rpm?
+>>
+>>
+>>
+>
+> Although we will not have more than one rpm in a system and therefore not
+> instatiate this driver multiple times I do not want to run it off the global
+> state.
+>
+I agree.
 
-Hardly 1/2 bindings documents enforce this.
+Why not make a separate data structure for the qcom_of_data?
+
+>>> +       if (!rpm) {
+>>> +               dev_err(&pdev->dev, "Can't allocate qcom_rpm\n");
+>>
+>> message not necessary as kernel will print the alocation failures.
+>>
+>
+> Thanks!
+>
+>>> +               return -ENOMEM;
+>>> +       }
+>
+> [...]
+>
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>
+>> Should't you use the platform_get_resource_byname here?
+>>
+>> missed error case checks too.
+>>
+>
+> This is a fairly commonly used construct, to have the error from
+> platform_get_resource being propagated through devm_ioremap_resource and catch
+> it there. It gives an extra error print in the log, but I find it very clean.
+Sorry I missed that point...
 
 
->>> +=3D SUBDEVICES
->>> +
->>> +The RPM exposes resources to its subnodes. The below bindings spec=
-ify the
->>> set
->>> +of valid subnodes that can operate on these resources.
->>
->>
->> Why should these devices be on sub nodes?
->>
->> Any reason not to implement it like this,
->>
->> rpm: rpm@108000 {
->>          compatible =3D "qcom,rpm-msm8960";
->>
->>          reg =3D <0x108000 0x1000 0x2011008 0x4>;
->>
->>          interrupts =3D <0 19 0>, <0 21 0>, <0 22 0>;
->>          interrupt-names =3D "ack", "err", "wakeup";
->> };
->>
->> pm8921_s1: pm8921-s1 {
->>          compatible =3D "qcom,rpm-pm8921-smps";
->>
->>          regulator-min-microvolt =3D <1225000>;
->>          regulator-max-microvolt =3D <1225000>;
->>          regulator-always-on;
->>
->>          qcom,rpm =3D <&rpm QCOM_RPM_PM8921_S1>;
->>          qcom,switch-mode-frequency =3D <3200000>;
->>          qcom,hpm-threshold =3D <100000>;
->> };
->>
->> This would simplify the driver code too and handle the interface nea=
-tly then
->> depending on device hierarchy.
->> rpm would be a interface library to the clients. Makes the drivers m=
-ore
->> independent, and re-usable if we do this way.
->
-> The subnodes doesn't describe separate pieces of hardware but rather
-> pieces of the rpm, that's why they should live inside the rpm. There
-> will not be any re-use of these drivers outside having a rpm as
-> parent.
->
-> I do have some patches for family b, where I'm moving things around a
-> little bit in the implementation to be able to re-use child-devices
-> where that makes sense (clock implementation is the same for the two)=
-=2E
-> But that is implementation specific and does not affect the dt.
->
-Good point, Am more of thinking of some other SOCs might have similar p=
-mic.
+But my point on platform_get_resource_byname is to remove the dependency 
+on the resource ordering, It is very difficult to catch errors resulting 
+in wrong ordered resources in DT.
 
 >
-> Implementation wise, having the individual subnodes as children in th=
-e
-> device model makes a lot of sense, as the children should be probed
-> when the rpm appears and when the rpm goes away it should bring down
-> all subnodes. If there was any power management it would be the same
-> thing.
-Thats great, you have already thought about it.
+>>> +       rpm->status_regs = devm_ioremap_resource(&pdev->dev, res);
+>>> +       rpm->ctrl_regs = rpm->status_regs + 0x400;
+>>> +       rpm->req_regs = rpm->status_regs + 0x600;
+>>> +       if (IS_ERR(rpm->status_regs))
+>>> +               return PTR_ERR(rpm->status_regs);
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+>>
+>> Dito.
+>>
 >
-> So I think this makes for a cleaner implementation; all I need to do
-> is to call of_platform_populate at the end of the probe and in remove
-> I need to tell the children that they should go away. I do not need t=
-o
-> support any phandle based lookups and separate life cycle management.
+> [...]
 >
-Am ok with either approaches.
+>>
+>>
+>> [ ..
+>>
+>>> +       ret = irq_set_irq_wake(irq_ack, 1);
+>>> +       if (ret)
+>>> +               dev_warn(&pdev->dev, "failed to mark ack irq as
+>>> wakeup\n");
+>>> +
+>>
+>> ..]
+>>
+>> Shouln't these be set as part of the pm suspend call, if the device is
+>> wakeup capable?
+>>
+>>
+>
+> Is there any reason to toggle this?
+>
+> I'm not sure when this interrupt will actually be fired, but I don't see any
+> harm in keeping it wakup enabled at all times.
 
->>
->> [...
->>
->>> +- qcom,force-mode-none:
->>> +       Usage: optional (default if no other qcom,force-mode is spe=
-cified)
->>> +       Value type: <empty>
->>> +       Defintion: indicates that the regulator should not be force=
-d to
->>> any
->>> +                  particular mode
->>> +
->>> +- qcom,force-mode-lpm:
->>> +       Usage: optional
->>> +       Value type: <empty>
->>> +       Definition: indicates that the regulator should be forced t=
-o
->>> operate in
->>> +                   low-power-mode
->>> +
->>> +- qcom,force-mode-auto:
->>> +       Usage: optional (only available for 8960/8064)
->>> +       Value type: <empty>
->>> +       Definition: indicates that the regulator should be automati=
-cally
->>> pick
->>> +                   operating mode
->>> +
->>> +- qcom,force-mode-hpm:
->>> +       Usage: optional (only available for 8960/8064)
->>> +       Value type: <empty>
->>> +       Definition: indicates that the regulator should be forced t=
-o
->>> operate in
->>> +                   high-power-mode
->>> +
->>> +- qcom,force-mode-bypass: (only for 8960/8064)
->>> +       Usage: optional (only available for 8960/8064)
->>> +       Value type: <empty>
->>> +       Definition: indicates that the regulator should be forced t=
-o
->>> operate in
->>> +                   bypass mode
->>> +
->>
->> ...]
->>
->> Probably qcom,force-mode:
->>          Usage: optional.
->>          Value type: <string>
->>
->>          Definition: must be one of:
->>          "none"
->>          "lpm"
->>          "auto"
->>          "hpm"
->>          "bypass"
->>
->> Makes it much simpler, as they seems to be mutually exclusive. simil=
-lar
->> comments apply to other bindings too.
+Typically the wake-up source is driven/enabled by the user. When the 
+system goes to low-power state it would enable the wakeup on the irq. 
+And when there is an interrupt it would wake up the system as part of 
+resuming from low-power state.
+
+Again if you what this interrupt to wakeup the system, I would expect 
+pm_wakeup_event/related calls in the interrupt handler too.
+
 >
-> Please see my answer to Kumar.
+> [...]
 >
-Ok. I don=E2=80=99t have a strong feeling on any of those 3 approaches.
+>>> +++ b/include/linux/mfd/qcom_rpm.h
+>>> @@ -0,0 +1,12 @@
+>>> +#ifndef __QCOM_RPM_H__
+>>> +#define __QCOM_RPM_H__
+>>> +
+>>> +#include <linux/types.h>
+>>> +
+>>> +struct device;
+>>> +struct qcom_rpm;
+>>> +
+>>> +struct qcom_rpm *dev_get_qcom_rpm(struct device *dev);
+>>> +int qcom_rpm_write(struct qcom_rpm *rpm, int resource, u32 *buf, size_t
+>>> count);
+>>
+>>
+>> IMHO, dummy functions for these are required, otherwise you would get a
+>> compilation errors on client drivers.
+>>
+>
+> I didn't expect us to compile the children into a kernel that doesn't have the
+> rpm, as I see them as one entity. An exception would be if we want to add
+> COMPILE_TEST to the children, but that would require an extra change anyways.
+>
+> Thanks for the review!
+>
+NP,
 
 Thanks,
 srini
->
-> Thanks for the comments!
->
+
 > Regards,
 > Bjorn
 >
