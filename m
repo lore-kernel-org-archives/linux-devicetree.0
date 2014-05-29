@@ -1,50 +1,40 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 08/11] dt/bindings: add compatible string for versatile osc clock
-Date: Thu, 29 May 2014 17:40:18 -0500
-Message-ID: <1401403221-27523-9-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 05/11] ARM: versatile: remove init_irq hook for DT boot
+Date: Thu, 29 May 2014 17:40:15 -0500
+Message-ID: <1401403221-27523-6-git-send-email-robherring2@gmail.com>
 References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1401403221-27523-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
+Now that versatile's irqchips are initialized from DT, the init_irq hook
+can be removed.
+
 Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
 v2:
 - no change
+ arch/arm/mach-versatile/versatile_dt.c | 1 -
+ 1 file changed, 1 deletion(-)
 
- Documentation/devicetree/bindings/clock/arm-integrator.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/arm-integrator.txt b/Documentation/devicetree/bindings/clock/arm-integrator.txt
-index 652914b..ecc6952 100644
---- a/Documentation/devicetree/bindings/clock/arm-integrator.txt
-+++ b/Documentation/devicetree/bindings/clock/arm-integrator.txt
-@@ -1,4 +1,4 @@
--Clock bindings for ARM Integrator Core Module clocks
-+Clock bindings for ARM Integrator and Versatile Core Module clocks
- 
- Auxilary Oscillator Clock
- 
-@@ -12,7 +12,7 @@ parent node.
- 
- 
- Required properties:
--- compatible: must be "arm,integrator-cm-auxosc"
-+- compatible: must be "arm,integrator-cm-auxosc" or "arm,versatile-cm-auxosc"
- - #clock-cells: must be <0>
- 
- Optional properties:
+diff --git a/arch/arm/mach-versatile/versatile_dt.c b/arch/arm/mach-versatile/versatile_dt.c
+index 3621b00..9f9bc61 100644
+--- a/arch/arm/mach-versatile/versatile_dt.c
++++ b/arch/arm/mach-versatile/versatile_dt.c
+@@ -44,7 +44,6 @@ static const char *versatile_dt_match[] __initconst = {
+ DT_MACHINE_START(VERSATILE_PB, "ARM-Versatile (Device Tree Support)")
+ 	.map_io		= versatile_map_io,
+ 	.init_early	= versatile_init_early,
+-	.init_irq	= versatile_init_irq,
+ 	.init_machine	= versatile_dt_init,
+ 	.dt_compat	= versatile_dt_match,
+ 	.restart	= versatile_restart,
 -- 
 1.9.1
 
