@@ -1,60 +1,68 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Thu, 29 May 2014 10:24:26 +0900
-Message-ID: <53868C4A.5070003@renesas.com>
-References: <5385C71D.5060509@renesas.com> <20140528202849.GA14248@kroah.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 01/10] dt/bindings: add passthru-mask property to versatile-fpga-irq
+Date: Wed, 28 May 2014 20:30:28 -0500
+Message-ID: <CAL_JsqKKgQkerKGSqt=1QYurpKyEyaLuakmPF0jQvD7pNuMKeA@mail.gmail.com>
+References: <1400620176-7239-1-git-send-email-robherring2@gmail.com>
+	<1400620176-7239-2-git-send-email-robherring2@gmail.com>
+	<CACRpkdZGevG9YaUPUs98pQidcGz7MxbxjuSxBn=cqaOYGhWegw@mail.gmail.com>
+	<CAL_JsqJYzMvhWng7YUdQbKdFxVwUXZkB-h_kq7yZAOzi1biiPw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140528202849.GA14248-U8xfFu+wG4EAvxtiuMwx3w@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
-Cc: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqJYzMvhWng7YUdQbKdFxVwUXZkB-h_kq7yZAOzi1biiPw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-(2014/05/29 5:28), Greg Kroah-Hartman wrote:
-> On Wed, May 28, 2014 at 08:23:09PM +0900, Yoshihiro Shimoda wrote:
->> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
->> some specific initializations related to the firmware downloading and
->> some specific registers. This patch adds the support for this special
->> configuration as an xHCI quirk executed during probe and start.
+On Fri, May 23, 2014 at 8:00 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, May 23, 2014 at 7:46 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Tue, May 20, 2014 at 11:09 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
 >>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  drivers/usb/host/Kconfig     |    8 +++
->>  drivers/usb/host/Makefile    |    3 +
->>  drivers/usb/host/xhci-plat.c |   18 +++++
->>  drivers/usb/host/xhci-rcar.c |  160 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/usb/host/xhci-rcar.h |   27 +++++++
->>  5 files changed, 216 insertions(+)
->>  create mode 100644 drivers/usb/host/xhci-rcar.c
->>  create mode 100644 drivers/usb/host/xhci-rcar.h
-> 
-> This doesn't apply cleanly to my tree, can you please refresh it and
-> resend?
+>>> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>>
+>>> Add a passthru-mask property for setting interrupts which are passed
+>>> through directly to a primary controller.
+>>>
+>>> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt | 3 +++
+>>>  1 file changed, 3 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+>>> index c9cf605..956b71d 100644
+>>> --- a/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+>>> +++ b/Documentation/devicetree/bindings/arm/versatile-fpga-irq.txt
+>>> @@ -34,3 +34,6 @@ Optional properties:
+>>>  - interrupts: if the FPGA IRQ controller is cascaded, i.e. if its IRQ
+>>>    output is simply connected to the input of another IRQ controller,
+>>>    then the parent IRQ shall be specified in this property.
+>>> +- passthru-mask: a u32 number representing a bit mas determining which of
+>>
+>> bit mask
+>>
+>> (speling)
+>>
+>>> +  the interrupts are directly passed through to the primary interrupt
+>>> +  controller.
+>>
+>> This is very confusing on the Integrators. The FPGA IRQ controller
+>> *is* the primary interrupt controller on these.
+>
+> Yes. Really, the h/w is not the same and we should have different
+> compatible strings. Unfortunately, it is Integrator that should
+> change.
 
-Sure. Actually, this patch depends on the folloing additional patch:
-http://marc.info/?l=linux-usb&m=140025742005303&w=2
+I don't know what I was thinking... The compatible strings are
+different as Versatile uses arm,versatile-sic, so I can drop this
+passthru-mask.
 
-And, the additional patch needs to fix some things.
-So, I will fix it and submit these patches.
-
-Best regards,
-Yoshihiro Shimoda
-
-> thanks,
-> 
-> greg k-h
-> 
-
--- 
-Yoshihiro Shimoda
-EC No.
+Rob
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
