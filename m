@@ -1,161 +1,50 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
-Date: Thu, 29 May 2014 11:38:28 -0700
-Message-ID: <CAJAp7Ogi8s+_HHUA0zt3dM6ssDHxeQ1xNFvvO7AbSyz9o6n+9w@mail.gmail.com>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
-	<53875E17.6010406@linaro.org>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH 2/3] mmc: Add APM X-Gene SoC SDHC controller support to
+ Arasan SDHCI driver
+Date: Thu, 29 May 2014 11:45:40 -0700
+Message-ID: <CAPw-ZTmBVFk=k9uhqtW7gBq6V09x6KTe75bo7dQFr3O5wcaMAQ@mail.gmail.com>
+References: <1400398918-1502-1-git-send-email-lho@apm.com>
+	<1400398918-1502-2-git-send-email-lho@apm.com>
+	<1400398918-1502-3-git-send-email-lho@apm.com>
+	<5286335.Al3nIKDAQo@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <53875E17.6010406@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <5286335.Al3nIKDAQo@wuerfel>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, chris@printf.net, Ulf Hansson <ulf.hansson@linaro.org>, michal.simek@xilinx.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-mmc@vger.kernel.org, "patches@apm.com" <patches@apm.com>, Jon Masters <jcm@redhat.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 9:19 AM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->> +- reg:
->> +       Usage: required
->> +       Value type: <prop-encoded-array>
->> +       Definition: two entries specifying the RPM's message ram and ipc
->> register
->> +
->> +- reg-names:
->> +       Usage: required
->> +       Value type: <string-array>
->> +       Definition: must contain the following, in order:
->> +                   "msg_ram"
->> +                   "ipc"
->
->
-> +1 for kumar's comment.
->
-> cant enforce the order here. should fix it in the driver.
->
+Hi Arnd,
 
-Yes I can, this is as decided by the devicetree maintainers. The order
-of e.g. reg and interrupts must be defined.
-
->> += SUBDEVICES
->> +
->> +The RPM exposes resources to its subnodes. The below bindings specify the
->> set
->> +of valid subnodes that can operate on these resources.
+> > +static void sdhci_arasan_writel(struct sdhci_host *host, u32 val, int reg)
+> > +{
+> > +     struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+> > +     struct sdhci_arasan_data *sdhci_arasan = pltfm_host->priv;
+> > +
+> > +     if (reg == SDHCI_DMA_ADDRESS) {
+> > +             if (sdhci_arasan->ahb_ops && sdhci_arasan->ahb_ops->xlat_addr)
+> > +                     sdhci_arasan->ahb_ops->xlat_addr(sdhci_arasan,
+> > +                             sg_dma_address(host->data->sg));
+> > +     }
+> > +     writel(val, host->ioaddr + reg);
+> > +}
+> > +
+> >  static struct sdhci_ops sdhci_arasan_ops = {
+> > +     .write_l = sdhci_arasan_writel,
+> >       .get_max_clock = sdhci_pltfm_clk_get_max_clock,
+> >       .get_timeout_clock = sdhci_arasan_get_timeout_clock,
+> >  };
 >
->
-> Why should these devices be on sub nodes?
->
-> Any reason not to implement it like this,
->
-> rpm: rpm@108000 {
->         compatible = "qcom,rpm-msm8960";
->
->         reg = <0x108000 0x1000 0x2011008 0x4>;
->
->         interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
->         interrupt-names = "ack", "err", "wakeup";
-> };
->
-> pm8921_s1: pm8921-s1 {
->         compatible = "qcom,rpm-pm8921-smps";
->
->         regulator-min-microvolt = <1225000>;
->         regulator-max-microvolt = <1225000>;
->         regulator-always-on;
->
->         qcom,rpm = <&rpm QCOM_RPM_PM8921_S1>;
->         qcom,switch-mode-frequency = <3200000>;
->         qcom,hpm-threshold = <100000>;
-> };
->
-> This would simplify the driver code too and handle the interface neatly then
-> depending on device hierarchy.
-> rpm would be a interface library to the clients. Makes the drivers more
-> independent, and re-usable if we do this way.
-
-The subnodes doesn't describe separate pieces of hardware but rather
-pieces of the rpm, that's why they should live inside the rpm. There
-will not be any re-use of these drivers outside having a rpm as
-parent.
-
-I do have some patches for family b, where I'm moving things around a
-little bit in the implementation to be able to re-use child-devices
-where that makes sense (clock implementation is the same for the two).
-But that is implementation specific and does not affect the dt.
+> This looks like you are doing it at the wrong place. From what I understand,
+> you are using the AHB inbound window as a minimal IOMMU. Why don't you make
+> this a proper IOMMU driver instead and leave the SDHCI driver unchanged?
 
 
-Implementation wise, having the individual subnodes as children in the
-device model makes a lot of sense, as the children should be probed
-when the rpm appears and when the rpm goes away it should bring down
-all subnodes. If there was any power management it would be the same
-thing.
+I looked at the existent iommu driver. It seems like one can install
+an IO MMU. The question that I have is what happen when we enable the
+actual IO mmu? Would this be an issue if both existed as there is only
+one pointer in the bus_type structure?
 
-So I think this makes for a cleaner implementation; all I need to do
-is to call of_platform_populate at the end of the probe and in remove
-I need to tell the children that they should go away. I do not need to
-support any phandle based lookups and separate life cycle management.
-
->
-> [...
->
->> +- qcom,force-mode-none:
->> +       Usage: optional (default if no other qcom,force-mode is specified)
->> +       Value type: <empty>
->> +       Defintion: indicates that the regulator should not be forced to
->> any
->> +                  particular mode
->> +
->> +- qcom,force-mode-lpm:
->> +       Usage: optional
->> +       Value type: <empty>
->> +       Definition: indicates that the regulator should be forced to
->> operate in
->> +                   low-power-mode
->> +
->> +- qcom,force-mode-auto:
->> +       Usage: optional (only available for 8960/8064)
->> +       Value type: <empty>
->> +       Definition: indicates that the regulator should be automatically
->> pick
->> +                   operating mode
->> +
->> +- qcom,force-mode-hpm:
->> +       Usage: optional (only available for 8960/8064)
->> +       Value type: <empty>
->> +       Definition: indicates that the regulator should be forced to
->> operate in
->> +                   high-power-mode
->> +
->> +- qcom,force-mode-bypass: (only for 8960/8064)
->> +       Usage: optional (only available for 8960/8064)
->> +       Value type: <empty>
->> +       Definition: indicates that the regulator should be forced to
->> operate in
->> +                   bypass mode
->> +
->
-> ...]
->
-> Probably qcom,force-mode:
->         Usage: optional.
->         Value type: <string>
->
->         Definition: must be one of:
->         "none"
->         "lpm"
->         "auto"
->         "hpm"
->         "bypass"
->
-> Makes it much simpler, as they seems to be mutually exclusive. simillar
-> comments apply to other bindings too.
-
-Please see my answer to Kumar.
-
-
-Thanks for the comments!
-
-Regards,
-Bjorn
+-Loc
