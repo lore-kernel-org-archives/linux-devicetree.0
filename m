@@ -1,36 +1,49 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v3 3/5] char: ti-usim: Add driver for USIM module on
- AM43xx
-Date: Thu, 29 May 2014 08:53:49 -0700
-Message-ID: <20140529155349.GD32214@kroah.com>
-References: <1401267437-22489-1-git-send-email-satish.patel@ti.com>
- <1401267437-22489-4-git-send-email-satish.patel@ti.com>
- <CAL_JsqKs=a8GRJRmNE-oxU4imHqnb5szv+Km-wv3KuN0d6Bxkg@mail.gmail.com>
- <53870671.6080601@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] scripts/dtc: pad DTBs to facilitate later modification
+Date: Thu, 29 May 2014 09:55:34 -0600
+Message-ID: <53875876.2020001@wwwdotorg.org>
+References: <1400888507-11637-1-git-send-email-khilman@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53870671.6080601@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Satish Patel <satish.patel@ti.com>
-Cc: Rob Herring <robherring2@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-omap <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Landley <rob@landley.net>, Tony Lindgren <tony@atomide.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kbuild-owner@vger.kernel.org>
+In-Reply-To: <1400888507-11637-1-git-send-email-khilman@linaro.org>
+Sender: linux-kbuild-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Arnd Bergmann <arnd@arndb.de>, Olof Johansson <olof@lixom.net>, linaro-kernel@lists.linaro.org, Nicolas Pitre <nico@linaro.org>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Michal Marek <mmarek@suse.cz>, "open list:KERNEL BUILD + fi..." <linux-kbuild@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 03:35:37PM +0530, Satish Patel wrote:
-> >>+enum usim_card_mode {
-> >>+       USIM_CARD_MODE_ASYNC = 0,       /* asynchronous mode */
-> >>+       USIM_CARD_MODE_SYNC_TYPE1,      /* synchronous mode: Type 1 */
-> >>+       USIM_CARD_MODE_SYNC_TYPE2,      /* synchronous mode: Type 2 */
-> >>+       USIM_CARD_MODE_SYNC_OTHER,      /* Any other synchronous type */
-> >>+};
-> >>+struct usim_data {
-> >>+       int slot;
-> >>+       int rxexplen;
-> >>+       int txlen;
-> >>+       unsigned char apdu[256];
-> >>+};
+On 05/23/2014 05:41 PM, Kevin Hilman wrote:
+> By default, add some padding to the DT blobs to facilitate later
+> patching.
+> 
+> An example need for DTB patching is the need to modifiy the command
+> line on platforms where ATAGS are not (or cannot) be used to pass the
+> commandline.  For example, we do not support a big-endian kernel
+> reading ATAGS from a little-endian u-boot, so the only way to pass a
+> command line in the DT.
+> 
+> Also, without ATAG support (or if u-boot was built without
+> CONFIG_INITRD_TAG) the only way to pass an initrd is by adding an
+> initrd= option to command line (in the DT).
+> 
+> Therefore, to facilitate adding to the DT command line directly in the
+> DTB, add some padding.
+> 
+> Cc: Nicolas Pitre <nico@linaro.org>
+> Cc: Stephen Warren <swarren@wwwdotorg.org>
+> Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+> Signed-off-by: Kevin Hilman <khilman@linaro.org>
+> ---
+> I kinda pulled 64 bytes out of the air here since it's enough to add
+> some common things to the commandline like debug, earlyprink
+> initrd=<addr>,<size>, etc., but I'm certainlly not opposed to more
+> padding.
 
-You need to use the proper variable types for a structure that is going
-to cross the user/kernel boundry in an ioctl :(
+Conceptually,
+Acked-by: Stephen Warren <swarren@nvidia.com>
 
+But I would expect a pad of something like 4KB to be more future-proof.
+U-Boot appears to use 4KB on ARM at least:
+
+./arch/arm/dts/Makefile:37:DTC_FLAGS += -R 4 -p 0x1000
