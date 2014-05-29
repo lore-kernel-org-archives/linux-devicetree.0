@@ -1,96 +1,54 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 2/2] devicetree: Add Cadence WDT devicetree bindings
- documentation
-Date: Thu, 29 May 2014 11:37:04 +0200
-Message-ID: <5386FFC0.5010200@monstr.eu>
-References: <1401185895-3677-1-git-send-email-harinik@xilinx.com> <1401185895-3677-2-git-send-email-harinik@xilinx.com>
-Reply-To: monstr@monstr.eu
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] ARM: realview: basic device tree implementation
+Date: Thu, 29 May 2014 11:38:27 +0200
+Message-ID: <CACRpkdajvFMwmW=KUE_eb2g9BNA_KPsWJQLp1Vda09qUDUU-9w@mail.gmail.com>
+References: <1399586896-16906-1-git-send-email-linus.walleij@linaro.org>
+	<5057707.jNCXlqf9dH@wuerfel>
+	<CACRpkdZX=UFhMfUn68hA+s2FLGRYy_dmjRng_fHtAQEhah0oRA@mail.gmail.com>
+	<6096979.7R8fyMRDdE@wuerfel>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="PnX8Orn5469vrsjviSUghxMTc5eAUr0GK"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1401185895-3677-2-git-send-email-harinik@xilinx.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Harini Katakam <harinik@xilinx.com>, wim@iguana.be, grant.likely@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net
-Cc: michals@xilinx.com, linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6096979.7R8fyMRDdE@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---PnX8Orn5469vrsjviSUghxMTc5eAUr0GK
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, May 22, 2014 at 10:35 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+> On Thursday 22 May 2014 20:52:38 Linus Walleij wrote:
+>> On Thu, May 22, 2014 at 5:49 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
+>> > On Thursday 22 May 2014 15:45:03 Catalin Marinas wrote:
+>>
+>> >> Anyway, I don't think we have any streaming DMA used on these RealView
+>> >> boards.
+>> >
+>> > Yes, I think that is correct. MMCI, SSP and serial could all use
+>> > DMA but are not configured to do it.
+>>
+>> PB1176 has no working DMA (borked DMA hardware), the PB11MPCore
+>> actually has working DMA but only on UART TX and maybe AACI
+>> (haven't tested) no clue about the Cortex boards PBA8 and PBX though.
+>
+> I don't see any DMA data passed to the pl011 driver for PB11MPCore
+> or any other realview board, so even if it works, we don't use it.
 
-On 05/27/2014 12:18 PM, Harini Katakam wrote:
-> Add cadence-wdt bindings documentation.
->=20
-> Signed-off-by: Harini Katakam <harinik@xilinx.com>
-> ---
->=20
-> v2:
-> No changes
->=20
-> ---
->  .../devicetree/bindings/watchdog/cadence-wdt.txt   |   26 ++++++++++++=
-++++++++
->  1 file changed, 26 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/watchdog/cadence-=
-wdt.txt
->=20
-> diff --git a/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt=
- b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> new file mode 100644
-> index 0000000..1f7a732
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/watchdog/cadence-wdt.txt
-> @@ -0,0 +1,26 @@
-> +Zynq Watchdog Device Tree Bindings
-> +-------------------------------------------
-> +
-> +Required properties:
-> +- compatible		: Should be "xlnx,zynq-wdt-r1p2" or "cdns,wdt-r1p2".
-> +- clocks		: Clock phandles (see clock bindings for details).
-> +- reg			: Physical base address and size of WDT registers map.
-> +- interrupts		: Property with a value describing the interrupt
-> +			  number.
-> +- interrupt-parent	: Must be core interrupt controller.
-> +
-> +Optional properties
-> +- reset			: Reset interrupt.
-> +- timeout-sec		: Watchdog timeout value (in seconds).
-> +
-> +Example:
-> +
-> +		wdt@f8005000 {
+No I was more saying it works in theory... and we actually have
+patches to enable it for e.g. memcpy on Versatile and PB11MP
+that I floated at times, Russell also experimented around with it.
 
-please use watchdog@ here
-which is listed in ePAPR
+> The AACI driver doesn't seem to support DMA.
 
-Thanks,
-Michal
+Nope, but the hardware does.
 
+> PBA8 and PBX don't need the hack because they don't have a broken
+> l2x0.
 
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+True!
 
-
-
---PnX8Orn5469vrsjviSUghxMTc5eAUr0GK
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlOG/8EACgkQykllyylKDCExnACgiVjdAdys9+fbE9SQUhslfe76
-0MMAnR/tUN9Ut18sdiwnTGAQthXSAOLG
-=h6mK
------END PGP SIGNATURE-----
-
---PnX8Orn5469vrsjviSUghxMTc5eAUr0GK--
+Yours,
+Linus Walleij
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
