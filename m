@@ -1,126 +1,117 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v2 1/2] Documentation: add Device tree bindings for Hisilicon
- hix5hd2 ethernet
-Date: Thu, 29 May 2014 19:52:56 +0800
-Message-ID: <53871F98.8070603@linaro.org>
-References: <1401194667-14445-1-git-send-email-zhangfei.gao@linaro.org> <1401194667-14445-2-git-send-email-zhangfei.gao@linaro.org> <20140527133423.GB6969@leverpostej> <53857714.3070603@linaro.org> <20140528125354.GA2092@leverpostej> <5385E3CC.9050700@linaro.org> <20140528145804.GA16088@leverpostej>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should
+ be specified in 'reg'
+Date: Thu, 29 May 2014 18:46:31 +0530
+Message-ID: <5387332F.7050404@ti.com>
+References: <1401345500-20188-1-git-send-email-kishon@ti.com> <1401345500-20188-4-git-send-email-kishon@ti.com> <2CC2A0A4A178534D93D5159BF3BCB6619B94AD3904@EAPEX1MAIL1.st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140528145804.GA16088@leverpostej>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "davem@davemloft.net" <davem@davemloft.net>, "arnd@arndb.de" <arnd@arndb.de>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "sergei.shtylyov@cogentembedded.com" <sergei.shtylyov@cogentembedded.com>, "David.Laight@ACULAB.COM" <David.Laight@ACULAB.COM>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB6619B94AD3904@EAPEX1MAIL1.st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 05/28/2014 10:58 PM, Mark Rutland wrote:
-> On Wed, May 28, 2014 at 02:25:32PM +0100, zhangfei wrote:
+On Thursday 29 May 2014 12:41 PM, Mohit KUMAR DCG wrote:
+> Hello Kishon,
+> 
+>> -----Original Message-----
+>> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
+>> Sent: Thursday, May 29, 2014 12:08 PM
+>> To: devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; linux-omap@vger.kernel.org; linux-
+>> pci@vger.kernel.org; linux-kernel@vger.kernel.org
+>> Cc: arnd@arndb.de; tony@atomide.com; jg1.han@samsung.com;
+>> kishon@ti.com; Jason Gunthorpe; Bjorn Helgaas; Mohit KUMAR DCG; Marek
+>> Vasut
+>> Subject: [PATCH v2 03/18] PCI: designware: Configuration space should be
+>> specified in 'reg'
 >>
+>> The configuration address space has so far been specified in *ranges*,
+>> however it should be specified in *reg* making it a platform MEM resource.
+>> Hence used 'platform_get_resource_*' API to get configuration address
+>> space in the designware driver.
 >>
->> On 05/28/2014 08:53 PM, Mark Rutland wrote:
->>> On Wed, May 28, 2014 at 06:41:40AM +0100, zhangfei wrote:
->>>> Dear Mark
->>>>
->>>> On 05/27/2014 09:34 PM, Mark Rutland wrote:
->>>>> On Tue, May 27, 2014 at 01:44:26PM +0100, Zhangfei Gao wrote:
->>>>>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->>>>>> ---
->>>>>>     .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   36 ++++++++++++++++++++
->>>>>>     1 file changed, 36 insertions(+)
->>>>>>     create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..5fe3835
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
->>>>>> @@ -0,0 +1,36 @@
->>>>>> +Hisilicon hix5hd2 gmac controller
->>>>>
->>>>> Just to clarify, is the SoC name "hix5hd2", or is the 'x' a wildcard?
->>>> "hix5hd2" is Soc name, which contains a series of similar chips.
->>>
->>> How similar are they?
->>>
->>> It's preferable to have a precise name, even when used as a fallback for
->>> other similar devices.
+>> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Mohit Kumar <mohit.kumar@st.com>
+>> Cc: Jingoo Han <jg1.han@samsung.com>
+>> Cc: Marek Vasut <marex@denx.de>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+>>  drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+>>  2 files changed, 16 insertions(+), 2 deletions(-)
 >>
->> The soc name "hix5hd2" is provided by hisilicon.
->> In fact, they have considered a lot and discussed long time for this name :)
->
-> Sure, I would not expect hisilicon to rebrand their SoC family due to my
-> comments on a mailing list.
->
-> w.r.t. naming in the kernel I could only find an unanswered query [1]
-> from Olof Johansson earlier this month, and no rationale for the change.
->
-> I tried searching online for "hix5hd2" and didn't find much other than a
-> suggestion it's also known as "Hi3716cv200". I assume this means the
-> Hi371 range in general, which covers a few variants on the hisilicon
-> website [2]. The names there are far more specific than "hix5hd2".
->
-> We've been bitten in the past when generic SoC family names are used in
-> DT bindings without also having specific strings. It's usually better to
-> choose a particular variant as the base, and have others claim
-> compatibility with that (with additional more specific compatible
-> strings).
->
-> The key issue is how similar the SoC variants are. If they are identical
-> w.r.t. this block and the blocks it is attached to, then the compatible
-> string you propose is likely to be fine. However, subtle differences in
-> integration across variants might cause issues for which we want
-> targeted workarounds, or we might be able to make better use of
-> particular variants based on information that we cannot probe from the
-> HW. For that we need very specific compatible strings, and in general it
-> is better to add those and not need them than to need them but not have
-> them.
-
-Currently hix5hd2 is series of hi3716c v200, hi3719c v100, hi3718c v100.
-They are same soc, except minus pin assembles different.
-
-However, not all hi37x is in this series, for example hi3716c v100 is a 
-different soc.
-
-In the future hi3719m, hi3718m may also plan to add to hix5hd2 series.
-The difference will be different cpu core number, different gpu core number.
-Also use different ethernet controller.
-
-
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible: should be "hisilicon,hix5hd2-gmac".
->>>>>> +- reg: specifies base physical address(s) and size of the device registers.
->>>>>> +  The first region is the MAC register base and size.
->>>>>> +  The second region is external interface control register.
->>>>>
->>>>> Single registers? Are these not part of a larger block?
->>>> It is a single register, outside of the memory region.
->>>> gmac0: reg = <0xf9840000 0x1000>,<0xf984300c 0x4>;
->>>> gmac1: reg = <0xf9841000 0x1000>,<0xf9843010 0x4>;
->>>>
->>>> The register is controlling interface mode, duplex etc.
->>>> In fact it is rather a bug fix to the silicon, when it is added with
->>>> intension of not touching the original ip design.
->>>>
->>>> It may be moved to the memory region in the future silicon design.
->>>> However, currently without such register, it can not work.
->>>
->>> I see. Is it possible that a future revision might have this fixed, such
->>> that the second reg entry would become optional?
+>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> index d6fae13..8314360 100644
+>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> @@ -6,6 +6,7 @@ Required properties:
+>>  	as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
+>>  - reg: base addresses and lengths of the pcie controller,
+>>  	the phy controller, additional register for the phy controller.
+>> +	The configuration address space should also be specified here.
+>>  - interrupts: interrupt values for level interrupt,
+>>  	pulse interrupt, special interrupt.
+>>  - clocks: from common clock binding: handle to pci clock.
+>> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
+>> designware.c
+>> index c4e3732..603b386 100644
+>> --- a/drivers/pci/host/pcie-designware.c
+>> +++ b/drivers/pci/host/pcie-designware.c
+>> @@ -20,6 +20,7 @@
+>>  #include <linux/of_pci.h>
+>>  #include <linux/pci.h>
+>>  #include <linux/pci_regs.h>
+>> +#include <linux/platform_device.h>
+>>  #include <linux/types.h>
 >>
->> We have given this feedback to the silicon team, and they admit this
->> should be fixed.
->> However, not sure it can be fixed soon since the product pressure.
->> Can we keep this first since it is required currently.
->
-> I'm not asking for its removal, I'm just trying to find out if in future
-> we might need to support a DTB without the second entry.
->
+>>  #include "pcie-designware.h"
+>> @@ -392,11 +393,23 @@ static const struct irq_domain_ops
+>> msi_domain_ops = {  int __init dw_pcie_host_init(struct pcie_port *pp)  {
+>>  	struct device_node *np = pp->dev->of_node;
+>> +	struct platform_device *pdev = to_platform_device(pp->dev);
+>>  	struct of_pci_range range;
+>>  	struct of_pci_range_parser parser;
+>> +	struct resource *cfg_res;
+>>  	u32 val;
+>>  	int i;
+>>
+>> +	cfg_res = platform_get_resource_byname(pdev,
+>> IORESOURCE_MEM, "config");
+>> +	if (cfg_res) {
+>> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+>> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+>> +		pp->cfg0_base = cfg_res->start;
+>> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+>> +	} else {
+>> +		dev_err(pp->dev, "missing *config* reg space\n");
+>> +	}
+>> +
+>>  	if (of_pci_range_parser_init(&parser, np)) {
+>>  		dev_err(pp->dev, "missing ranges property\n");
+>>  		return -EINVAL;
+>> @@ -429,6 +442,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>>  			of_pci_range_to_resource(&range, np, &pp->cfg);
+>>  			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+>>  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+>> +			pp->cfg0_base = pp->cfg.start;
+>> +			pp->cfg1_base = pp->cfg.start + pp-
+>>> config.cfg0_size;
+> 
+> - As you are getting cfg address space as MEM resource, so remove above code that
+>  gets the configuration space from dt range. Also correct dt for pcie cfg space for the platforms
+>  based on this driver.
 
-Double confirmed with silicon guy, the fix can not be added in this chip.
-As the product is stable now, and it is too expensive to make new version.
+Ok. Will send that as a separate patch converting all platforms to use MEM
+resource.
 
 Thanks
+Kishon
