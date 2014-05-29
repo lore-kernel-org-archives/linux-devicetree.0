@@ -1,63 +1,135 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 00/10] Marvell Berlin full clock support
-Date: Thu, 29 May 2014 09:30:47 -0700
-Message-ID: <20140529163047.10062.93368@quantum>
-References: <1400517811-24668-1-git-send-email-sebastian.hesselbarth@gmail.com>
- <20140529000713.10062.99196@quantum> <5386FBC3.1000003@gmail.com>
+From: Murali Karicheri <m-karicheri2-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should
+ be specified in 'reg'
+Date: Thu, 29 May 2014 12:32:22 -0400
+Message-ID: <53876116.90504@ti.com>
+References: <1401345500-20188-1-git-send-email-kishon@ti.com> <1401345500-20188-4-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5386FBC3.1000003@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Jisheng Zhang <jszhang@marvell.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401345500-20188-4-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "ABRAHAM, KISHON VIJAY" <kishon-l0cyMroinI0@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arnd-r2nGTMty4D4@public.gmane.org" <arnd-r2nGTMty4D4@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sebastian Hesselbarth (2014-05-29 02:20:03)
-> On 05/29/2014 02:07 AM, Mike Turquette wrote:
-> > Quoting Sebastian Hesselbarth (2014-05-19 09:43:21)
-> >> Mike,
-> >>
-> >> this is v2 of the Berlin SoC clock driver [1] but with a reworked DT
-> >> binding as requested [2]. We decided to not even try to split up the chip
-> >> control registers that deal with pinmux, padmux, clock, reset, and evil
-> >> stuff we haven't even looked at. Instead we keep a single node that clock
-> >> driver will remap early, while proper platform_drivers use a regmap
-> >> instead. Although clock and other drivers share the same register range,
-> >> they use individual registers exclusively.
-> >>
-> >> There are some functional fixes in the single clock drivers, I noticed
-> >> while retesting each individial driver. There will be more to fixup but
-> >> without any drivers actually using the clocks, it is hard to tell what
-> >> isn't working now.
-> >>
-> >> Anyway, the current binding should match what you requested and having
-> >> a clock driver for v3.16 will really be a huge benefit for us to work
-> >> on more driver support.
-> >>
-> >> If you are fine with it, please take patches 2-7 and I'll pick up
-> >> 1,8-10 in berlin branch.
-> > 
-> > Patches #2-7 applied to clk-next.
-> 
-> Thanks Mike, but please drop patch #2
->   ("clk: berlin: add binding include for Berlin SoC clock ids")
-> before you push your clk-next branch, it already went through arm-soc.
+On 5/29/2014 2:38 AM, ABRAHAM, KISHON VIJAY wrote:
+> The configuration address space has so far been specified in *ranges*,
+> however it should be specified in *reg* making it a platform MEM resource.
+> Hence used 'platform_get_resource_*' API to get configuration address
+> space in the designware driver.
+>
+> Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+>   .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+>   drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+>   2 files changed, 16 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index d6fae13..8314360 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -6,6 +6,7 @@ Required properties:
+>   	as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
+>   - reg: base addresses and lengths of the pcie controller,
+>   	the phy controller, additional register for the phy controller.
+> +	The configuration address space should also be specified here.
+Kishon,
 
-Thanks for the heads-up. I've dropped the patch.
+I am working on the Keystone PCI driver for which v1 is already posted. 
+Want to clarify
+following.
+1. Original text for reg states "base addresses and lengths of the pcie 
+controller,
+         the phy controller, additional register for the phy controller" 
+and you added
+         "The configuration address space should also be specified here"
 
-Regards,
-Mike
+    and the code below added resource name "config"
 
-> 
-> Sorry,
->   Sebastian
+Does PCI designware follow some convention? Does it mean after applying 
+this patch
+config name is mandatory or optional? Below code you are not returning 
+error. Can you
+or author of PCI designware clarify what is expected to be present as 
+mandatory and
+what is optional.
+
+Does config refers to RC's config space or EP's config space or both? 
+The code below divide
+the size by 2. So it appears to be RC's + EP's config space. Please clarify.
+
+>   - interrupts: interrupt values for level interrupt,
+>   	pulse interrupt, special interrupt.
+>   - clocks: from common clock binding: handle to pci clock.
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> index c4e3732..603b386 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -20,6 +20,7 @@
+>   #include <linux/of_pci.h>
+>   #include <linux/pci.h>
+>   #include <linux/pci_regs.h>
+> +#include <linux/platform_device.h>
+>   #include <linux/types.h>
+>   
+>   #include "pcie-designware.h"
+> @@ -392,11 +393,23 @@ static const struct irq_domain_ops msi_domain_ops = {
+>   int __init dw_pcie_host_init(struct pcie_port *pp)
+>   {
+>   	struct device_node *np = pp->dev->of_node;
+> +	struct platform_device *pdev = to_platform_device(pp->dev);
+>   	struct of_pci_range range;
+>   	struct of_pci_range_parser parser;
+> +	struct resource *cfg_res;
+>   	u32 val;
+>   	int i;
+>   
+> +	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> +	if (cfg_res) {
+> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+> +		pp->cfg0_base = cfg_res->start;
+> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+> +	} else {
+> +		dev_err(pp->dev, "missing *config* reg space\n");
+This should return error -EINVAL.
+
+> +	}
+> +
+>   	if (of_pci_range_parser_init(&parser, np)) {
+>   		dev_err(pp->dev, "missing ranges property\n");
+>   		return -EINVAL;
+> @@ -429,6 +442,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>   			of_pci_range_to_resource(&range, np, &pp->cfg);
+>   			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+>   			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+> +			pp->cfg0_base = pp->cfg.start;
+> +			pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>   		}
+>   	}
+>   
+> @@ -441,8 +456,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>   		}
+>   	}
+>   
+> -	pp->cfg0_base = pp->cfg.start;
+> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>   	pp->mem_base = pp->mem.start;
+>   
+>   	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+BTW, Please also review my Keystone series so that we could discuss this 
+topic in that context
+as well.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
