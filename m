@@ -1,123 +1,186 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v5 1/2] cpufreq / OPP: Allow boost frequency to be looked
- up from device tree
-Date: Thu, 29 May 2014 15:51:36 -0500
-Message-ID: <53879DD8.1060906@ti.com>
-References: <1401374319-4480-1-git-send-email-thomas.ab@samsung.com> <1401374319-4480-2-git-send-email-thomas.ab@samsung.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH 3/3] regulator: qcom-rpm: Regulator driver for the
+ Qualcomm RPM
+Date: Thu, 29 May 2014 14:03:40 -0700
+Message-ID: <CAJAp7OgY-99jRqvBOPbkj=Nrt7vW=0Ae+Xvf3J7JrDS1eoigWw@mail.gmail.com>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<1401211721-19712-4-git-send-email-bjorn.andersson@sonymobile.com>
+	<20140528165529.GC5099@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1401374319-4480-2-git-send-email-thomas.ab@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Thomas Abraham <thomas.ab@samsung.com>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140528165529.GC5099@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2014 09:38 AM, Thomas Abraham wrote:
-> From: Thomas Abraham <thomas.ab@samsung.com>
-> 
-> Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
-> support for CPU boost mode. This patch adds support for finding available
-> boost frequencies from device tree and marking them as usable in boost mode.
-> 
-> Cc: Nishanth Menon <nm@ti.com>
-> Cc: Lukasz Majewski <l.majewski@samsung.com>
-> Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-> ---
->  drivers/cpufreq/cpufreq_opp.c |   45 +++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/drivers/cpufreq/cpufreq_opp.c b/drivers/cpufreq/cpufreq_opp.c
-> index c0c6f4a..05fb115 100644
-> --- a/drivers/cpufreq/cpufreq_opp.c
-> +++ b/drivers/cpufreq/cpufreq_opp.c
-> @@ -19,6 +19,7 @@
->  #include <linux/pm_opp.h>
->  #include <linux/rcupdate.h>
->  #include <linux/slab.h>
-> +#include <linux/of.h>
->  
->  /**
->   * dev_pm_opp_init_cpufreq_table() - create a cpufreq table for a device
-> @@ -51,6 +52,11 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->  	struct cpufreq_frequency_table *freq_table = NULL;
->  	int i, max_opps, ret = 0;
->  	unsigned long rate;
-> +#ifdef CONFIG_CPU_FREQ_BOOST_SW
-> +	struct cpufreq_frequency_table *ft;
-> +	int len, count;
-> +	u32 *boost_freqs = NULL;
-> +#endif
->  
->  	rcu_read_lock();
->  
-> @@ -82,6 +88,45 @@ int dev_pm_opp_init_cpufreq_table(struct device *dev,
->  
->  	*table = &freq_table[0];
->  
-> +#ifdef CONFIG_CPU_FREQ_BOOST_SW
-> +	if (!of_find_property(dev->of_node, "boost-frequencies", &len))
-> +		goto out;
-> +
-> +	if (!len || !IS_ALIGNED(len, sizeof(u32))) {
-> +		dev_err(dev, "%s: invalid boost frequency\n", __func__);
-> +		ret = -EINVAL;
-> +		goto out;
-> +	}
-> +
-> +	boost_freqs = kmalloc(len, GFP_KERNEL);
-> +	if (!boost_freqs) {
-> +		dev_err(dev, "%s: no memory for boost freq table\n", __func__);
-> +		ret = -ENOMEM;
-> +		goto out;
-> +	}
-> +
-> +	count = len / sizeof(u32);
-> +	of_property_read_u32_array(dev->of_node, "boost-frequencies",
-> +			boost_freqs, count);
-> +
-> +	for (i = 0; i < count; i++) {
-> +		cpufreq_for_each_valid_entry(ft, *table) {
-> +			if (boost_freqs[i] == ft->frequency) {
-> +				ft->flags |= CPUFREQ_BOOST_FREQ;
-> +				pr_debug("%s: marked %d as boost frequency\n",
-> +					__func__, boost_freqs[i]);
-> +				break;
-> +			}
-> +		}
-> +
-> +		if (ft->frequency == CPUFREQ_TABLE_END)
-> +			dev_err(dev, "%s: invalid boost frequency %d\n",
-> +				__func__, boost_freqs[i]);
-> +	}
-> +
-> +	kfree(boost_freqs);
-> +#endif
-> +
->  out:
->  	rcu_read_unlock();
->  	if (ret)
-> 
-I suggest the following checkpatch --strict warnings should be fixed.
+On Wed, May 28, 2014 at 9:55 AM, Mark Brown <broonie@kernel.org> wrote:
+> On Tue, May 27, 2014 at 10:28:41AM -0700, Bjorn Andersson wrote:
+>
+>> +static int rpm_reg_set_voltage(struct regulator_dev *rdev,
+>> +                            int min_uV, int max_uV,
+>> +                            unsigned *selector)
+>> +{
+>> +     struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
+>> +     const struct rpm_reg_parts *parts = vreg->parts;
+>> +     const struct request_member *req;
+>> +     int ret = 0;
+>> +     int sel;
+>> +     int val;
+>> +     int uV;
+>> +
+>> +     dev_dbg(vreg->dev, "set_voltage(%d, %d)\n", min_uV, max_uV);
+>> +
+>> +     if (parts->uV.mask == 0 && parts->mV.mask == 0)
+>> +             return -EINVAL;
+>> +
+>> +     /*
+>> +      * Snap to the voltage to a supported level.
+>> +      */
+>
+> What is "snapping" a voltage?
+>
 
-@@ -0,0 +1,10 @@
-+CHECK: Alignment should match open parenthesis
-+#65: FILE: drivers/cpufreq/cpufreq_opp.c:110:
-++      of_property_read_u32_array(dev->of_node, "boost-frequencies",
-++                      boost_freqs, count);
-+CHECK: Alignment should match open parenthesis
-+#72: FILE: drivers/cpufreq/cpufreq_opp.c:117:
-++                              pr_debug("%s: marked %d as boost
-frequency\n",
-++                                      __func__, boost_freqs[i]);
-+If any of these errors are false positives, please report
-+them to the maintainer, see CHECKPATCH in MAINTAINERS.
+I pass the requested voltage to the RPM, but it's only allowed to have valid
+values, so I need to "clamp"/"snap"/"round" the voltage to a valid number.
 
-Otherwise,
-For the entire series:
-Acked-by: Nishanth Menon <nm@ti.com>
+>> +     sel = regulator_map_voltage_linear_range(rdev, min_uV, max_uV);
+>
+> Don't open code mapping the voltage, just implement set_voltage_sel().
+>
 
--- 
+I used ot open code this part, but changed it to
+regulator_map_voltage_linear_range once I had implemented list_voltages. But as
+you say I should be able to replace the first half of my set_voltage with
+set_voltage_sel; and then do the transition from sel to requested voltage and
+send that over.
+
+[...]
+
+>> +     mutex_lock(&vreg->lock);
+>> +     if (parts->uV.mask)
+>> +             req = &parts->uV;
+>> +     else if (parts->mV.mask)
+>> +             req = &parts->mV;
+>> +     else
+>> +             req = &parts->enable_state;
+>
+> Just implement separate operations for the regulators with different
+> register definitions.  It's going to simplify the code.
+>
+
+Currently I can use e.g. ldo_ops for all the different ldos, if I split this I
+need to split the ops as well. So it will for sure be more code, but I will
+give it a spin and see how it looks like.
+
+>> +static int rpm_reg_set_mode(struct regulator_dev *rdev, unsigned int mode)
+>> +{
+>> +     struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
+>> +     const struct rpm_reg_parts *parts = vreg->parts;
+>> +     int max_mA = parts->ip.mask >> parts->ip.shift;
+>> +     int load_mA;
+>> +     int ret;
+>> +
+>> +     if (mode == REGULATOR_MODE_IDLE)
+>> +             load_mA = vreg->idle_uA / 1000;
+>> +     else
+>> +             load_mA = vreg->normal_uA / 1000;
+>> +
+>> +     if (load_mA > max_mA)
+>> +             load_mA = max_mA;
+>> +
+>> +     mutex_lock(&vreg->lock);
+>> +     ret = rpm_reg_write(vreg, &parts->ip, load_mA);
+>> +     if (!ret)
+>> +             vreg->mode = mode;
+>> +     mutex_unlock(&vreg->lock);
+>
+> I'm not entirely sure what this is intended to do.  It looks like it's
+> doing something to do with current limits but it's a set_mode().  Some
+> documentation might help.  It should also be implementing only specific
+> modes and rejecting unsupported modes, if we do the same operation to
+> the device for two different modes that seems wrong.
+>
+
+The hardware in this case is a "pmic" shared by all cpus in the system, so when
+we set the voltage, state or load of a regulator we merely case a vote. For
+voltage and state this is not an issue, but for load the value that's
+interesting for the "pmic" is the sum of the votes; i.e. the sum of the loads
+from all systems on a single regulator.
+
+What the code does here is to follow the hack found at codeaurora, that upon
+get_optimum_mode we guess that the client will call get_optimum_mode followed
+my set_mode. We keep the track of what load was last requested and use that in
+our vote.
+
+
+One alternative might be to use "force-mode" to actually set the mode of the
+regulator, but I will need to run that by the Qualcomm guys to get an answer if
+that would work (as it's not used by codeaurora).
+
+>> +static unsigned int rpm_reg_get_optimum_mode(struct regulator_dev *rdev,
+>> +                                          int input_uV,
+>> +                                          int output_uV,
+>> +                                          int load_uA)
+>> +{
+>> +     struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
+>> +
+>> +     load_uA += vreg->load_bias_uA;
+>> +
+>> +     if (load_uA < vreg->hpm_threshold_uA) {
+>> +             vreg->idle_uA = load_uA;
+>> +             return REGULATOR_MODE_IDLE;
+>> +     } else {
+>> +             vreg->normal_uA = load_uA;
+>> +             return REGULATOR_MODE_NORMAL;
+>> +     }
+>> +}
+>
+> This looks very broken - why are we storing anything here?  What is the
+> stored value supposed to do?
+>
+
+See above.
+
+>> +     if (vreg->parts->ip.mask) {
+>> +             initdata->constraints.valid_ops_mask |= REGULATOR_CHANGE_DRMS;
+>> +             initdata->constraints.valid_ops_mask |= REGULATOR_CHANGE_MODE;
+>> +             initdata->constraints.valid_modes_mask |= REGULATOR_MODE_NORMAL;
+>> +             initdata->constraints.valid_modes_mask |= REGULATOR_MODE_IDLE;
+>
+> No, this is just plain broken.  Constraints are set by the *board*, you
+> don't know if these settings are safe on any given board.
+>
+
+I can see that these are coming from board files, but I didn't find any example
+of how these are supposed to be set when using DT only.
+
+What's happening here is that given what compatible you use, different "parts"
+will be selected and based on that this code will or will not be executed;
+hence this is defined by what compatible you're using.
+
+But this is of course not obvious, so unless I've missed something I can clean
+this up slightly and make the connection to compatible more obvious. Okay?
+
+>> +static int __init rpm_reg_init(void)
+>> +{
+>> +     return platform_driver_register(&rpm_reg_driver);
+>> +}
+>> +arch_initcall(rpm_reg_init);
+>> +
+>> +static void __exit rpm_reg_exit(void)
+>> +{
+>> +     platform_driver_unregister(&rpm_reg_driver);
+>> +}
+>> +module_exit(rpm_reg_exit)
+>
+> module_platform_driver() or if you must bodge the init order at least
+> use subsys_initcall() like everyone else.
+
+Okay
+
+Thanks for the review!
+
 Regards,
-Nishanth Menon
+Bjorn
