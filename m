@@ -1,82 +1,48 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 4/4] ARM: debug: qcom: add UART addresses to Kconfig help
-Date: Thu, 29 May 2014 17:26:58 +0200
-Message-ID: <CABuKBeLHOKK+DsVPBGPDmeSqceSTMGZeOd74-Jp4Z9vUWDZ_yQ@mail.gmail.com>
-References: <1400857952-6963-1-git-send-email-gdjakov@mm-sol.com>
-	<1400857952-6963-5-git-send-email-gdjakov@mm-sol.com>
-	<CABuKBe+B_Ga-w4aA4dApDTa26rCuhetRTJku27Madm+fHtDcLA@mail.gmail.com>
-	<53834578.9090305@mm-sol.com>
-	<CABuKBeJXqSi=6XY5Fg7mg_daQ4D8ornS-kn7NDPktCtro7yNNw@mail.gmail.com>
-	<53847FA1.60509@mm-sol.com>
+From: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>
+Subject: Re: [Patch v2 4/4] tty: serial: msm: Remove direct access to GSBI
+Date: Thu, 29 May 2014 08:43:42 -0700
+Message-ID: <20140529154342.GA28679@kroah.com>
+References: <1398357082-5102-1-git-send-email-agross@codeaurora.org>
+ <1398357082-5102-5-git-send-email-agross@codeaurora.org>
+ <A56B810D-869A-4E4F-BC29-C9B0F6CDCE79@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <53847FA1.60509@mm-sol.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Georgi Djakov <gdjakov@mm-sol.com>
-Cc: Russell King <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, sboyd@codeaurora.org, rvaswani@codeaurora.org, davidb@codeaurora.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <A56B810D-869A-4E4F-BC29-C9B0F6CDCE79-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-27 14:05 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
-> On 05/26/2014 08:17 PM, Matthias Brugger wrote:
->> 2014-05-26 15:45 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
->>> On 23.05.14, 19:39, Matthias Brugger wrote:
->>>>
->>>> 2014-05-23 17:12 GMT+02:00 Georgi Djakov <gdjakov@mm-sol.com>:
->>>>>
->>>>> Add information about the APQ8084 debug UART physical and virtual
->>>>> addresses in the DEBUG_QCOM_UARTDM Kconfig help section.
->>>>> Requires: https://lkml.org/lkml/2014/4/14/312
->>>>>
->>>>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->>>>> ---
->>>>>  arch/arm/Kconfig.debug |    1 +
->>>>>  1 file changed, 1 insertion(+)
->>>>>
->>>>> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
->>>>> index 40ee328..e71723d 100644
->>>>> --- a/arch/arm/Kconfig.debug
->>>>> +++ b/arch/arm/Kconfig.debug
->>>>> @@ -376,6 +376,7 @@ choice
->>>>>                   their output to the serial port on Qualcomm devices.
->>>>>
->>>>>                   ARCH      DEBUG_UART_PHYS   DEBUG_UART_BASE
->>>>> +                 APQ8084   0xf995e000        0xfa75e000
->>>>>                   MSM8X60   0x19c40000        0xf0040000
->>>>>                   MSM8960   0x16440000        0xf0040000
->>>>>                   MSM8974   0xf991e000        0xfa71e000
->>>>
->>>>
->>>> You don't have any uart defined in your dts. You should add them
->>>> before any adding low level debug support.
->>>> Otherwise there might be problems in booting a multi-platform kernel.
->>>>
->>>
->>> Thanks for the comment! As the uart depends on clocks, i am adding it to the
->>> dts as part of my global clock controller patchset [1].
->>> In this patch i am just adding some information to the help section.
->>> Do you see any problem with this?
->>
->> Are the patches for the clock controller applied already?
->> If not, I would consider to add this patch to clock controller series.
->>
->
-> No, they are not applied yet. The uart dts definition depends on clocks, but the
-> DEBUG_LL support does not. And the DEBUG_LL support is already there as it is
-> common with other SoCs. I am sorry, but i don't see dependency between the dts
-> definition and this patch. Could you explain please?
+On Thu, May 29, 2014 at 10:14:35AM -0500, Kumar Gala wrote:
+> 
+> On Apr 24, 2014, at 11:31 AM, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+> 
+> > This patch removes direct access of the GSBI registers.  GSBI configuration
+> > should be done through the GSBI driver directly.
+> > 
+> > Signed-off-by: Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > ---
+> > drivers/tty/serial/msm_serial.c |   48 ++-------------------------------------
+> > drivers/tty/serial/msm_serial.h |    5 ----
+> > 2 files changed, 2 insertions(+), 51 deletions(-)
+> 
+> Greg,
+> 
+> Any update on pulling this is for next?
 
-IMHO the dependancy is that DEBUG_LL uses the uart device, and this is
-added when you add the dts.
-AFAIK there can arise problems with multi-platform kernels if the uart
-is not present.
+I thought this was going through someone else's tree, sorry.  And, there
+seemd to be a second set of patches for this, which I don't have
+anywhere :(
 
->
-> Thanks,
-> Georgi
->
+If you want me to take all of these, or just this one, Andy, can you
+please resend?
 
+thanks,
 
-
--- 
-motzblog.wordpress.com
+greg k-h
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
