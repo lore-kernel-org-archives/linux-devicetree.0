@@ -1,64 +1,63 @@
 From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 03/11] irqchip: versatile-fpga: add support for arm,versatile-sic
-Date: Thu, 29 May 2014 17:40:13 -0500
-Message-ID: <1401403221-27523-4-git-send-email-robherring2@gmail.com>
-References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
+Subject: [PATCH v2 00/11] ARM: Versatile irq and clock DT support
+Date: Thu, 29 May 2014 17:40:10 -0500
+Message-ID: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401403221-27523-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-The secondary controller on ARM Versatile AB and PB is similar to
-other ARM platforms, but has a pass-thru register to connect some
-interrupts directly to interrupt inputs on the primary interrupt
-controller. The PIC_ENABLES register needs to be configured for
-proper operation when the matching node is arm,versatile-sic. Add the
-the necessary IRQCHIP_DECLARE as well.
+This series is some preparation work to fully convert Versatile platform
+to DT. This converts the IRQ initialization to DT based init and adds
+clocks to the Versatile DT. This doesn't actually enable using common
+clock framework, but that is only a matter of removing the old clock
+code and enabling the appropriate Kconfig options. This will be done
+when Versatile can be completely converted over to DT boot. I have that
+working in my tree, but full DT conversion is also dependent on DT PCI
+support.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-v2:
-- Rework to use the compatible string for pass-thru register setup.
+For v2, the all users (i.e. Integrator) of irq-versatile-fpga are 
+converted over to use IRQCHIP_DECLARE. The pass-thru feature setup is 
+using the compatible string instead of adding a new property.
 
- drivers/irqchip/irq-versatile-fpga.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+I've tested Versatile and Integrator under QEMU and Linus Walleij has 
+tested an earlier version on Versatile AB h/w.
 
-diff --git a/drivers/irqchip/irq-versatile-fpga.c b/drivers/irqchip/irq-versatile-fpga.c
-index 8e0bb56..90bf131 100644
---- a/drivers/irqchip/irq-versatile-fpga.c
-+++ b/drivers/irqchip/irq-versatile-fpga.c
-@@ -28,6 +28,8 @@
- #define FIQ_ENABLE_SET		0x28
- #define FIQ_ENABLE_CLEAR	0x2C
- 
-+#define PIC_ENABLES             0x20	/* set interrupt pass through bits */
-+
- /**
-  * struct fpga_irq_data - irq data container for the FPGA IRQ controller
-  * @base: memory offset in virtual memory
-@@ -213,7 +215,15 @@ int __init fpga_irq_of_init(struct device_node *node,
- 	writel(clear_mask, base + IRQ_ENABLE_CLEAR);
- 	writel(clear_mask, base + FIQ_ENABLE_CLEAR);
- 
-+	/*
-+	 * On Versatile AB/PB, some secondary interrupts have a direct
-+	 * pass-thru to the primary controller which need to be enabled.
-+	 */
-+	if (of_device_is_compatible(node, "arm,versatile-sic"))
-+		writel(0xffd00000, base + PIC_ENABLES);
-+
- 	return 0;
- }
- IRQCHIP_DECLARE(arm_fpga, "arm,versatile-fpga-irq", fpga_irq_of_init);
-+IRQCHIP_DECLARE(arm_fpga_sic, "arm,versatile-sic", fpga_irq_of_init);
- #endif
+Linus, This could use testing again on Versatile.
+
+Rob
+
+Rob Herring (11):
+  dts: versatile: add missing irq controller properties
+  irqchip: versatile-fpga: Add IRQCHIP_DECLARE support
+  irqchip: versatile-fpga: add support for arm,versatile-sic
+  ARM: integrator: convert to use irqchip_init
+  ARM: versatile: remove init_irq hook for DT boot
+  dts: versatile: add pl180 compatible strings
+  dt/bindings: arm-boards: add binding for Versatile core module
+  dt/bindings: add compatible string for versatile osc clock
+  ARM: timer-sp: allow getting timer1 clock from DT to fallback to
+    legacy clock
+  dts: versatile: add clock tree
+  clk: versatile: add versatile OSC support
+
+ Documentation/devicetree/bindings/arm/arm-boards   |  6 ++
+ .../devicetree/bindings/clock/arm-integrator.txt   |  4 +-
+ arch/arm/boot/dts/versatile-ab.dts                 | 81 +++++++++++++++++++++-
+ arch/arm/boot/dts/versatile-pb.dts                 | 12 +++-
+ arch/arm/common/timer-sp.c                         |  4 +-
+ arch/arm/mach-integrator/integrator_ap.c           | 10 +--
+ arch/arm/mach-integrator/integrator_cp.c           | 10 +--
+ arch/arm/mach-versatile/versatile_dt.c             |  1 -
+ drivers/clk/versatile/Makefile                     |  3 +-
+ .../{clk-integrator.c => clk-versatile.c}          | 35 +++++++++-
+ drivers/irqchip/irq-versatile-fpga.c               | 17 ++++-
+ 11 files changed, 155 insertions(+), 28 deletions(-)
+ rename drivers/clk/versatile/{clk-integrator.c => clk-versatile.c} (66%)
+
 -- 
 1.9.1
 
