@@ -1,48 +1,50 @@
-From: Linus Walleij <linus.walleij@linaro.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
 Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Thu, 29 May 2014 16:01:27 +0200
-Message-ID: <CACRpkdaD6ZLFu7-tOeDRvKCAC6X6_W84Vsqs1o-xUzUZOjyvFQ@mail.gmail.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
-	<5840140.8yGnd4Ycx3@wuerfel>
-	<CACRpkdZjEVYgq7tKEfmZC0Fu4n=JuUues=pAAtquLahkex=pkA@mail.gmail.com>
-	<4960549.viM91iY2g2@wuerfel>
-	<CACRpkda5x-fJWTN40ze17woMWuWoVbuhbNu5nkm1sFcdJchRfA@mail.gmail.com>
-	<5385ECE0.7040703@ti.com>
+Date: Thu, 29 May 2014 10:08:10 -0400
+Message-ID: <53873F4A.9030303@ti.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>	<5840140.8yGnd4Ycx3@wuerfel>	<CACRpkdZjEVYgq7tKEfmZC0Fu4n=JuUues=pAAtquLahkex=pkA@mail.gmail.com>	<4960549.viM91iY2g2@wuerfel>	<CACRpkda5x-fJWTN40ze17woMWuWoVbuhbNu5nkm1sFcdJchRfA@mail.gmail.com>	<5385ECE0.7040703@ti.com> <CACRpkdaD6ZLFu7-tOeDRvKCAC6X6_W84Vsqs1o-xUzUZOjyvFQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5385ECE0.7040703@ti.com>
+In-Reply-To: <CACRpkdaD6ZLFu7-tOeDRvKCAC6X6_W84Vsqs1o-xUzUZOjyvFQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+To: Linus Walleij <linus.walleij@linaro.org>
 Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 4:04 PM, Santosh Shilimkar
-<santosh.shilimkar@ti.com> wrote:
-> On Wednesday 28 May 2014 09:32 AM, Linus Walleij wrote:
-
->>> I suspect what you want is
+On Thursday 29 May 2014 10:01 AM, Linus Walleij wrote:
+> On Wed, May 28, 2014 at 4:04 PM, Santosh Shilimkar
+> <santosh.shilimkar@ti.com> wrote:
+>> On Wednesday 28 May 2014 09:32 AM, Linus Walleij wrote:
+> 
+>>>> I suspect what you want is
+>>>>
+>>>>         dma-ranges = <0x80000000 0 0x80000000>;
+>>>>
+>>>> to translate dma_addr_t 0x80000000-0xffffffff to phys_addr_t 0x0-0x7fffffff
+>>>> rather than phys_addr_t 0x800000000-0x87fffffff.
 >>>
->>>         dma-ranges = <0x80000000 0 0x80000000>;
->>>
->>> to translate dma_addr_t 0x80000000-0xffffffff to phys_addr_t 0x0-0x7fffffff
->>> rather than phys_addr_t 0x800000000-0x87fffffff.
->>
-> Interesting. Where does the ROM address space resides on integrator then considering
-> address 0 is used for DMA.
+>> Interesting. Where does the ROM address space resides on integrator then considering
+>> address 0 is used for DMA.
+> 
+> The ROM is at physical address 0x20000000, don't ask me
+> why :-)
+> 
+> The RAM is typically at 0x00000000-0x0fffffff, on up to four parallell
+> tiles, i.e. up to four completely independent CPUs are booted off the
+> same ROM and using a set of shared peripherals.
+> 
+The reason I asked the question because most of the ARM SOC I came across
+aren't using the RAM phys address 0 and thought was because of boot architecture
+with ROM occupying that address with reset vector starting at address 0.
 
-The ROM is at physical address 0x20000000, don't ask me
-why :-)
+That was one of the main reason we had description on max_*pfn on ARM w.r.t
+to other acrhes.
 
-The RAM is typically at 0x00000000-0x0fffffff, on up to four parallell
-tiles, i.e. up to four completely independent CPUs are booted off the
-same ROM and using a set of shared peripherals.
+Will corner ARM guys to understand bit more about it in some conference ;-)
 
->> Thanks, I'll fix up my patch.
->>
-> Feel free to add my ack after the fixup if you need one.
+Thanks for clarification.
 
-Thanks!
-
-Yours,
-Linus Walleij
+Regards,
+Santosh
