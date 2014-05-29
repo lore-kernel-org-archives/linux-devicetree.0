@@ -1,69 +1,71 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
- binding
-Date: Thu, 29 May 2014 17:54:37 +0100
-Message-ID: <20140529165437.GM1954@lee--X1>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
- <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
+Date: Thu, 29 May 2014 18:09:45 +0100
+Message-ID: <538769D9.1090305@linaro.org>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com> <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com> <53875E17.6010406@linaro.org> <7FA6C80D-8076-4E41-AF55-11BBA2FD9AB0@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
+In-Reply-To: <7FA6C80D-8076-4E41-AF55-11BBA2FD9AB0@codeaurora.org>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> Add binding for the Qualcomm Resource Power Manager (RPM) found in 86=
-60, 8960
-> and 8064 based devices. The binding currently describes the rpm itsel=
-f and the
-> regulator subnodes.
->=20
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-> ---
->  Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 284 +++++++++++=
-++++++++++
->  include/dt-bindings/mfd/qcom_rpm.h                 | 142 +++++++++++
->  2 files changed, 426 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.tx=
-t
->  create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
 
-[...]
 
-> diff --git a/include/dt-bindings/mfd/qcom_rpm.h b/include/dt-bindings=
-/mfd/qcom_rpm.h
-> new file mode 100644
-> index 0000000..277e789
-> --- /dev/null
-> +++ b/include/dt-bindings/mfd/qcom_rpm.h
-> @@ -0,0 +1,142 @@
-> +/*
-> + * This header provides constants for the Qualcomm RPM bindings.
-> + */
+On 29/05/14 17:30, Kumar Gala wrote:
+>
+> On May 29, 2014, at 11:19 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
+>
+>>> += SUBDEVICES
+>>> +
+>>> +The RPM exposes resources to its subnodes. The below bindings specify the set
+>>> +of valid subnodes that can operate on these resources.
+>>
+>> Why should these devices be on sub nodes?
+>>
+>> Any reason not to implement it like this,
+>>
+>> rpm: rpm@108000 {
+>> 	compatible = "qcom,rpm-msm8960";
+>> 	reg = <0x108000 0x1000 0x2011008 0x4>;
+>>
+>> 	interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
+>> 	interrupt-names = "ack", "err", "wakeup";
+>> };
+>>
+>> pm8921_s1: pm8921-s1 {
+>> 	compatible = "qcom,rpm-pm8921-smps";
+>> 	
+>> 	regulator-min-microvolt = <1225000>;
+>> 	regulator-max-microvolt = <1225000>;
+>> 	regulator-always-on;
+>>
+>> 	qcom,rpm = <&rpm QCOM_RPM_PM8921_S1>;
+>> 	qcom,switch-mode-frequency = <3200000>;
+>> 	qcom,hpm-threshold = <100000>;
+>> };
+>>
+>> This would simplify the driver code too and handle the interface neatly then depending on device hierarchy.
+>> rpm would be a interface library to the clients. Makes the drivers more independent, and re-usable if we do this way.
+>>
+>> ??
+>
+> One reason to go with sub nodes is it creates a proper driver ordering dependency as I assume rpm driver will end up calling of_platform_populate for the sub nodes at the point that the RPM driver is ready.  We could do this with deferred probe but doing it explicitly is better in my opinion as it limits the amount of time between when RPM is ready vs when the children can start doing things
+>
 
-Proper header please.
+I agree, there might be a win. But Am not sure to what extent this win 
+is a win to rpm driver, as a side effect this brings other 
+responsibilities to the rpm driver like adding sub-device power 
+management awareness, device life cycle management to the rpm driver.
 
-> +#ifndef _DT_BINDINGS_MFD_QCOM_RPM_H
-> +#define _DT_BINDINGS_MFD_QCOM_RPM_H
-> +
-> +#define QCOM_RPM_APPS_FABRIC_ARB		1
-> +#define QCOM_RPM_APPS_FABRIC_CLK		2
-> +#define QCOM_RPM_APPS_FABRIC_HALT		3
+Only thing which made me think of this approach is the number of sub 
+nodes it would end up with and passing ID using reg property.
 
-[...]
+Thanks,
+srini
 
-> +#define QCOM_RPM_SYS_FABRIC_MODE		131
-> +#define QCOM_RPM_USB_OTG_SWITCH		132
-> +#define QCOM_RPM_VDDMIN_GPIO			133
-
-Are you sure you don't want these in 0xXY format?
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+> - k
+>
