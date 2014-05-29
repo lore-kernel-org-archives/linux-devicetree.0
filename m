@@ -1,55 +1,62 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v11 0/3] Exynos 5410 support
-Date: Thu, 29 May 2014 15:36:10 +0200
-Message-ID: <538737CA.4070709@suse.de>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com> <7hr43f9mmn.fsf@paris.lan>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC v2 04/10] ARM: vexpress: Extend UART with FIQ support
+Date: Thu, 29 May 2014 08:44:00 -0500
+Message-ID: <CAL_JsqL0pYOEiyo8KfJA1aO_MOmwvn6a4hibZcamm0Jcw4Q6bA@mail.gmail.com>
+References: <1400083125-1464-1-git-send-email-daniel.thompson@linaro.org>
+ <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
+ <1400853478-5824-5-git-send-email-daniel.thompson@linaro.org>
+ <20140523150452.GX3693@n2100.arm.linux.org.uk>
+ <53870C8C.1070108@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7hr43f9mmn.fsf@paris.lan>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>, Tarek Dakhran <t.dakhran@samsung.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, Kukjin Kim <kgene.kim@samsung.com>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Vyacheslav Tyrtov <v.tyrtov@samsung.com>, Thomas Abraham <thomas.abraham@linaro.org>, Kyungmin Park <kyungmin.park@samsung.com>, Heiko Stuebner <heiko@sntech.de>, Romain Naour <romain.naour@openwide.fr>, Chander Kashyap <chander.kashyap@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53870C8C.1070108@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Linaro Patches <patches@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tarek and Kevin,
-
-Am 27.05.2014 19:06, schrieb Kevin Hilman:
-> Tarek Dakhran <t.dakhran@samsung.com> writes:
->=20
->> The series of patches represent support of Exynos 5410 SoC
+On Thu, May 29, 2014 at 5:31 AM, Daniel Thompson
+<daniel.thompson@linaro.org> wrote:
+> On 23/05/14 16:04, Russell King - ARM Linux wrote:
+>> On Fri, May 23, 2014 at 02:57:52PM +0100, Daniel Thompson wrote:
+>>> @@ -140,7 +140,7 @@
+>>>                      v2m_serial0: uart@090000 {
+>>>                              compatible = "arm,pl011", "arm,primecell";
+>>>                              reg = <0x090000 0x1000>;
+>>> -                            interrupts = <5>;
+>>> +                            interrupts = <5>, <69>;
 >>
->> The Exynos 5410 is the first Samsung SoC based on big.LITTLE archite=
-cture
->>
->> Patches add new platform description, support of clock controller an=
-d device
->> tree for Exynos 5410.
->>
->> Has been build on Samsung Linux Kernel
->>   (branch: for-next, commit: 97eae6c Merge branch 'v3.16-next/multip=
-latform' into for-next)
->>
->> Has been tested on: 1) Exynos 5410 reference board (exynos_defconfig=
-)
->> 		    2) Exynos 5410 reference board (multi_v7_defconfig)
->> 		    3) Odroid-XU board (exynos_defconfig)
->> 		    4) Odroid-XU board (multi_v7_defconfig)
->=20
-> Tested-by: Kevin Hilman <khilman@linaro.org>
->=20
-> FYI, I boot tested this on an odroid-xu (exynos_defconfig and
-> multi_v7_defconfig.)
+>> NAK.  This is obviously a Linux implementation detail - the second
+>> number is your "FIQ" number which you've decided will be offset by
+>> 64.
 
-Could you clarify: Are you using exynos5410-smdk5410.dts with the
-ODROID-XU or do you have some upcoming exynos5410-odroidxu.dts based on
-exynos5410.dtsi?
++1
 
-Thanks,
-Andreas
+> Certainly the offset of 64 is a more or less meaningless magic number
+> that I decided on, however I don't think it originates within Linux. It
+> is both introduced and consumed within the device tree itself.
+>
+> I've proposed adding a flag to the gic bindings to mark a FIQ; the GIC
+> calls interrupt 69 (above) <0 5 0x84> (where 0x80 is the flag to request
+> FIQ routing alongside 0x04 which is the trigger type).
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+That would be better than the magic number, but I'm not convinced that
+belongs in the DT either.
+
+Whether the uart uses FIQ is not dependent on this DT setting, but
+based on whether the user wants to use the uart for kdb or not. You
+have enough information already to figure out which interrupt. What's
+missing is whether you have the capability to use FIQ or not. I don't
+recall if you can tell that from the GIC or not.
+
+Rob
