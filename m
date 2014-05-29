@@ -1,52 +1,56 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
-Date: Thu, 29 May 2014 12:05:10 -0700
-Message-ID: <CAJAp7OgiGQMi16_UgB3KmMZAhw7m7+rUSqnk0UrAimoD8+09oQ@mail.gmail.com>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
-	<20140529165437.GM1954@lee--X1>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Thu, 29 May 2014 21:24:07 +0200
+Message-ID: <4755790.VgRQTHz3K1@wuerfel>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <CACRpkdaD6ZLFu7-tOeDRvKCAC6X6_W84Vsqs1o-xUzUZOjyvFQ@mail.gmail.com> <53873F4A.9030303@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140529165437.GM1954@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53873F4A.9030303-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 9:54 AM, Lee Jones <lee.jones@linaro.org> wrote:
->> diff --git a/include/dt-bindings/mfd/qcom_rpm.h b/include/dt-bindings/mfd/qcom_rpm.h
->> new file mode 100644
->> index 0000000..277e789
->> --- /dev/null
->> +++ b/include/dt-bindings/mfd/qcom_rpm.h
->> @@ -0,0 +1,142 @@
->> +/*
->> + * This header provides constants for the Qualcomm RPM bindings.
->> + */
->
-> Proper header please.
+On Thursday 29 May 2014 10:08:10 Santosh Shilimkar wrote:
+> On Thursday 29 May 2014 10:01 AM, Linus Walleij wrote:
+> > On Wed, May 28, 2014 at 4:04 PM, Santosh Shilimkar
+> > <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+> >> On Wednesday 28 May 2014 09:32 AM, Linus Walleij wrote:
+> > 
+> >>>> I suspect what you want is
+> >>>>
+> >>>>         dma-ranges = <0x80000000 0 0x80000000>;
+> >>>>
+> >>>> to translate dma_addr_t 0x80000000-0xffffffff to phys_addr_t 0x0-0x7fffffff
+> >>>> rather than phys_addr_t 0x800000000-0x87fffffff.
+> >>>
+> >> Interesting. Where does the ROM address space resides on integrator then considering
+> >> address 0 is used for DMA.
+> > 
+> > The ROM is at physical address 0x20000000, don't ask me
+> > why 
+> > 
+> > The RAM is typically at 0x00000000-0x0fffffff, on up to four parallell
+> > tiles, i.e. up to four completely independent CPUs are booted off the
+> > same ROM and using a set of shared peripherals.
+> > 
+> The reason I asked the question because most of the ARM SOC I came across
+> aren't using the RAM phys address 0 and thought was because of boot architecture
+> with ROM occupying that address with reset vector starting at address 0.
+> 
+> That was one of the main reason we had description on max_*pfn on ARM w.r.t
+> to other acrhes.
+> 
+> Will corner ARM guys to understand bit more about it in some conference 
 
-Will do.
+If this is anything like the versatile express, the reason it works is probably
+because there is another microcontroller in the system that does the bootstrap
+and is able to load code into RAM before turning on the main CPU.
 
->
->> +#ifndef _DT_BINDINGS_MFD_QCOM_RPM_H
->> +#define _DT_BINDINGS_MFD_QCOM_RPM_H
->> +
->> +#define QCOM_RPM_APPS_FABRIC_ARB             1
->> +#define QCOM_RPM_APPS_FABRIC_CLK             2
->> +#define QCOM_RPM_APPS_FABRIC_HALT            3
->
-> [...]
->
->> +#define QCOM_RPM_SYS_FABRIC_MODE             131
->> +#define QCOM_RPM_USB_OTG_SWITCH              132
->> +#define QCOM_RPM_VDDMIN_GPIO                 133
->
-> Are you sure you don't want these in 0xXY format?
-
-This is just a list of virtual identifiers, so unless you object to
-much I'll leave them in base 10.
-
-Thanks,
-Bjorn
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
