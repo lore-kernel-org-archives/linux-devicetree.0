@@ -1,42 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 1/2] usb: host: xhci-plat: add optional PHY support
-Date: Thu, 29 May 2014 21:17:42 +0400
-Message-ID: <53876BB6.3040304@cogentembedded.com>
-References: <53868E18.7090805@renesas.com>
+From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] scripts/dtc: pad DTBs to facilitate later modification
+Date: Thu, 29 May 2014 10:20:16 -0700
+Message-ID: <CAGa+x84SkGzC3cPCvnZHJEK2uJion=0fowBNdkydjF1GnLLsTw@mail.gmail.com>
+References: <1400888507-11637-1-git-send-email-khilman@linaro.org>
+	<53875876.2020001@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53868E18.7090805@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53875876.2020001-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org" <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, "open list:KERNEL BUILD + fi..." <linux-kbuild-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Thu, May 29, 2014 at 8:55 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+> On 05/23/2014 05:41 PM, Kevin Hilman wrote:
+>> By default, add some padding to the DT blobs to facilitate later
+>> patching.
+>>
+>> An example need for DTB patching is the need to modifiy the command
+>> line on platforms where ATAGS are not (or cannot) be used to pass the
+>> commandline.  For example, we do not support a big-endian kernel
+>> reading ATAGS from a little-endian u-boot, so the only way to pass a
+>> command line in the DT.
+>>
+>> Also, without ATAG support (or if u-boot was built without
+>> CONFIG_INITRD_TAG) the only way to pass an initrd is by adding an
+>> initrd= option to command line (in the DT).
+>>
+>> Therefore, to facilitate adding to the DT command line directly in the
+>> DTB, add some padding.
+>>
+>> Cc: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+>> Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> Signed-off-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> ---
+>> I kinda pulled 64 bytes out of the air here since it's enough to add
+>> some common things to the commandline like debug, earlyprink
+>> initrd=<addr>,<size>, etc., but I'm certainlly not opposed to more
+>> padding.
+>
+> Conceptually,
+> Acked-by: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>
+> But I would expect a pad of something like 4KB to be more future-proof.
+> U-Boot appears to use 4KB on ARM at least:
+>
+> ./arch/arm/dts/Makefile:37:DTC_FLAGS += -R 4 -p 0x1000
 
-On 05/29/2014 05:32 AM, Yoshihiro Shimoda wrote:
+Great.  As I mentioned above, I'm certainly not opposed to more
+padding, and agree that it would be more future proof.  I was simply
+being rather conservative in case folks didn't want to see every .dtb
+grow by 4k.
 
-> From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+I'll wait a bit to see if there are any other opinions, and the respin
+with 4k padding.
 
-> This commit extends the xhci-plat so that it can optionally be passed
-> a reference to a PHY through the Device Tree. It will be useful for
-> the Armada 375 SoCs. If no PHY is provided then the behavior of the
-> driver is unchanged.
-
-> As for the clock, to achieve this, it adds a 'struct phy *' member in
-> xhci_hcd. While only used for now in xhci-plat, here again, it might
-> be used by other drivers in the future.
-
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> ---
->   drivers/usb/host/xhci-plat.c |   27 ++++++++++++++++++++++++++-
->   drivers/usb/host/xhci.h      |    2 ++
->   2 files changed, 28 insertions(+), 1 deletion(-)
-
-    I've already posted a patch adding generic PHY support to all USB HCDs 
-about 1.5 months ago, which should make this patch unneeded.
-
-WBR, Sergei
-
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
