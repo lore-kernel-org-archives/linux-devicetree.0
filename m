@@ -1,577 +1,2981 @@
-From: Josh Wu <josh.wu@atmel.com>
-Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA
- Controller driver
-Date: Thu, 29 May 2014 18:04:10 +0800
-Message-ID: <5387061A.50306@atmel.com>
-References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com>
+From: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v3 3/5] char: ti-usim: Add driver for USIM module on AM43xx
+Date: Thu, 29 May 2014 15:35:37 +0530
+Message-ID: <53870671.6080601@ti.com>
+References: <1401267437-22489-1-git-send-email-satish.patel@ti.com>	<1401267437-22489-4-git-send-email-satish.patel@ti.com> <CAL_JsqKs=a8GRJRmNE-oxU4imHqnb5szv+Km-wv3KuN0d6Bxkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Ludovic Desroches <ludovic.desroches@atmel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: vinod.koul@intel.com, plagnioj@jcrosoft.com, dan.j.williams@intel.com, nicolas.ferre@atmel.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKs=a8GRJRmNE-oxU4imHqnb5szv+Km-wv3KuN0d6Bxkg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Ludovic
 
-Check the comments in below:
 
-On 5/27/2014 4:35 PM, Ludovic Desroches wrote:
-> Introduction of a new atmel DMA controller known as xdmac.
+On 5/28/2014 11:26 PM, Rob Herring wrote:
+> On Wed, May 28, 2014 at 3:57 AM, Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org> wrote:
+>> TI-USIM driver is a platform driver that provides a character
+>> driver interface to user applications.
+>>
+>> It allows user applications to call IOCTL's to
+>> perform smart card operations.
 >
-> Signed-off-by: Ludovic Desroches <ludovic.desroches@atmel.com>
-> ---
+> What's the usecase? For cellular, isn't the SC typically attached to the modem?
+This for ePOS -Point of Sale domain. Where we swipe out pin based 
+EMV(Europay/Master/Visa) smartcard. EMVCo defines specification for this.
 >
-> Hi,
+>>
+>> Driver currently supports
+>> - Cold & Warm Reset
+>> - T=0 & T=1 protocol
+>> - clock stop mode
+>> - smart card clock configuration
+>> - Tx/Rx application data units (APDU) to smart card
+>> - Interface to PHY using DT & phy interface
+>>
+>> Validation is done with ACOS3 smart cards
+>>
+>> Signed-off-by: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/ti-usim/ti-usim.txt        |   32 +
+>>   drivers/char/Kconfig                               |    7 +
+>>   drivers/char/Makefile                              |    1 +
+>>   drivers/char/ti-usim-hw.h                          |  864 ++++++++
+>>   drivers/char/ti-usim.c                             | 2213 ++++++++++++++++++++
 >
-> All comments are welcomed to improve this driver!
+> Perhaps drivers/char/smartcard or drivers/smartcard would be a better
+> location. This should be designed assuming we get more than 1
+> SmartCard controller. Perhaps there already is one in the kernel.
+One which present inside kernel is USB based smartcard, which 
+communicates over USB serial line.
+This is independent smartcard which is integrated in SoC itsself. I 
+thought of creating new directory as you have suggested, but with 
+internal review I went with using existing path.
 >
-> Thanks
+>>   include/linux/ti-usim.h                            |  111 +
+>>   6 files changed, 3228 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/ti-usim/ti-usim.txt
+>>   create mode 100644 drivers/char/ti-usim-hw.h
+>>   create mode 100644 drivers/char/ti-usim.c
+>>   create mode 100644 include/linux/ti-usim.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/ti-usim/ti-usim.txt b/Documentation/devicetree/bindings/ti-usim/ti-usim.txt
+>> new file mode 100644
+>> index 0000000..4e599e2
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/ti-usim/ti-usim.txt
+>> @@ -0,0 +1,32 @@
+>> +ti-usim: USIM - Smart Card Controller
+>> +
+>> +Required Properties:
+>> +- compatible: Should be "ti,usim"
 >
->   .../devicetree/bindings/dma/atmel-xdma.txt         |   44 +
->   drivers/dma/Kconfig                                |    7 +
->   drivers/dma/Makefile                               |    1 +
->   drivers/dma/at_xdmac.c                             | 1053 ++++++++++++++++++++
->   drivers/dma/at_xdmac.h                             |  257 +++++
->   include/dt-bindings/dma/at91.h                     |   46 +
->   6 files changed, 1408 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/dma/atmel-xdma.txt
->   create mode 100644 drivers/dma/at_xdmac.c
->   create mode 100644 drivers/dma/at_xdmac.h
-[snip]
+> This should be more specific like "ti,am43xx-usim".
+IP can be introduced to future SoCs by TI.
 >
-> +
-> +static int __init at_xdmac_probe(struct platform_device *pdev)
-> +{
-> +	struct resource *res;
-> +	struct at_xdmac	*atxdmac;
-> +	int irq, size, nr_channels, i, ret;
-> +	void __iomem	*base;
-> +	u32 reg;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -EINVAL;
-> +
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0)
-> +		return irq;
-> +
-> +	base = devm_ioremap_resource(&pdev->dev, res);
-> +	if (IS_ERR(base))
-> +		return PTR_ERR(base);
-> +
-> +	/*
-> +	 * Read number of xdmac channels, read helper function can't be used
-> +	 * since atxdmac is not yet allocated and we need to know the number
-> +	 * of channels to do the allocation.
-> +	 */
-> +	reg = __raw_readl(base + AT_XDMAC_GTYPE);
+>> +- reg: Specifies base physical address and size of the USIM registers
+>> +- interrupts:  Interrupt number for the USIM controller
+>> +- ti,hwmods: Name of the hwmod associated to the USIM controller
+>> +
+>> +- clocks        : list of clock specifiers, corresponding to entries in  the
+>> +                  clock-names property
+>
+> How many clocks and what is their use and order?
+Depends on IP integration inside SoC. In am43xx, we have 2 options to 
+use - 26Mhz/40Mhz
+>
+>> +- clock-names   : should contain "opt_fck" and "opt_fck32" entries, matching
+>> +                  entries in the clocks property
+>> +
+>> +Optional properties:
+>> +- pinctrl-0: Should specify pin control group used for this controller.
+>> +- pinctrl-names: Should contain only one value - "default", for more details
+>> +                 please refer to pinctrl-bindings.txt
+>> +- phy : Should specify <smart card phy> reference connected to controller
+>> +- phy-slots : No of slots to which controller will communicate
+>> +
+>> +Example:
+>> +
+>> +usim0: usim@48034000 {
+>> +              compatible = "ti,usim";
+>> +              reg = <0x48034000 0x1000>;
+>> +              interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
+>> +              ti,hwmods = "usim0";
+>> +              clocks = <&usim0_opt_fck>, <&usim0_opt_fck32>,
+>> +                     <&dpll_per_m2_div4_ck>;
+>> +              clock-names = "opt_fck", "opt_fck32", "fck";
+>> +              status = "disabled";
+>> +       };
+>> diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+>> index 6e9f74a..c7c5fae 100644
+>> --- a/drivers/char/Kconfig
+>> +++ b/drivers/char/Kconfig
+>> @@ -600,5 +600,12 @@ config TILE_SROM
+>>            device appear much like a simple EEPROM, and knows
+>>            how to partition a single ROM for multiple purposes.
+>>
+>> +config TI_USIM
+>> +       tristate "Character device access to TI's USIM module on AM43X"
+>> +       depends on SOC_AM43XX
+>
+> || COMPILE_TEST
+Built against "v3.15-rc7"
+>
+>> +       help
+>> +       This device creates a character device interface that enables
+>> +       user applications to exchange data with TI's USIM module.
+>> +
+>>   endmenu
+>>
+>> diff --git a/drivers/char/Makefile b/drivers/char/Makefile
+>> index a324f93..f7ee777 100644
+>> --- a/drivers/char/Makefile
+>> +++ b/drivers/char/Makefile
+>> @@ -61,3 +61,4 @@ obj-$(CONFIG_JS_RTC)          += js-rtc.o
+>>   js-rtc-y = rtc.o
+>>
+>>   obj-$(CONFIG_TILE_SROM)                += tile-srom.o
+>> +obj-$(CONFIG_TI_USIM)          += ti-usim.o
+>> diff --git a/drivers/char/ti-usim-hw.h b/drivers/char/ti-usim-hw.h
+>> new file mode 100644
+>> index 0000000..1d3dd6e
+>> --- /dev/null
+>> +++ b/drivers/char/ti-usim-hw.h
+>> @@ -0,0 +1,864 @@
+>> +/*
+>> + * ti-usim-hw.h - Header file for USIM smart card interface
+>
+> This can go into the .c file.
+>
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#ifndef __TI_USIM_HW_H__
+>> +#define __TI_USIM_HW_H__
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/ioctl.h>
+>> +#include <linux/sc_phy.h>
+>> +#include <linux/ti-usim.h>
+>> +
+>> +
+>> +#define USIM_MAX_SLOTS 0x2
+>> +
+>> +/* WWT Work Wait Time */
+>> +#define USIM_EMV_WI      (10)
+>> +#define USIM_EMV_WWT     ((960 * USIM_EMV_WI) + (480))
+>> +/* CGT Character Guard Time */
+>> +#define USIM_EMV_CGT     (12)
+>> +
+>> +#define USIM_ATR_TIMEOUT_EMV   (20160)
+>> +#define USIM_EMV_ATR_EARLY_TO  (370)
+>> +#define USIM_EMV_ATR_MUTE_TO   (42000)
+>> +
+>> +#define USIM_MAX_RX_FIFO_SIZE    (260)
+>> +#define USIM_MAX_TX_FIFO_SIZE    (260)
+>> +#define USIM_MAX_PARITY_RETRIES  (7)
+>> +
+>> +#define USIM_IRQ_NATR           (0x00000001)
+>> +#define USIM_IRQ_WT            (0x00000002)
+>> +#define USIM_IRQ_RXFULL                (0x00000004)
+>> +#define USIM_IRQ_TX            (0x00000008)
+>> +#define USIM_IRQ_RX            (0x00000010)
+>> +#define USIM_IRQ_CD            (0x00000020)
+>> +#define USIM_IRQ_EOB           (0x00000040)
+>> +#define USIM_IRQ_TOC           (0x00000080)
+>> +#define USIM_IRQ_TOB           (0x00000100)
+>> +#define USIM_IRQ_RESENT                (0x00000200)
+>> +#define USIM_IRQ_TS_ERR                (0x00000400)
+>> +#define USIM_IRQ_EMV_ATR_LENGTH_TIME_OUT       (0x00000800)
+>> +#define USIM_IRQ_STOP          (0x00001000)
+>> +#define USIM_IRQ_PAR_ERR_LEVEL_REACHED (0x00002000)
+>> +#define USIM_IRQ_FRAME_ERR     (0x00004000)
+>> +#define USIM_IRQ_RXDMA_RDY     (0x00008000)
+>> +#define USIM_IRQ_ATR_START     (0x00010000)
+>> +#define USIM_IRQ_ACT_DONE      (0x00020000)
+>> +#define USIM_IRQ_DEACT_DONE    (0x00040000)
+>> +#define USIM_IRQ_TX_BLOCK_DONE (0x00080000)
+>> +#define USIM_IRQ_TX_BLOCK_REQ  (0x00100000)
+>> +
+>> +#define USIM_CONFSCLKMODE_LEGACY       0x0
+>> +#define USIM_CONFSCLKMODE_HF           0x1
+>> +
+>> +/*
+>> + * Different operating modes supported in USIM.
+>> + * Programming USIM to a different mode from current mode would
+>> + * endup in state machine state change within the IPs FSM
+>> + */
+>> +enum usim_mode {
+>> +       USIM_MODE_LEGACY = 0x0,
+>> +       USIM_MODE_FREEZE = 0x1,
+>> +       USIM_MODE_TXRX   = 0x2,
+>> +       USIM_MODE_ATR    = 0x3,
+>> +       USIM_MODE_ACT    = 0x4,
+>> +       USIM_MODE_DEACT  = 0x5,
+>> +       USIM_MODE_IDLE   = 0x6,
+>> +};
+>> +
+>> +/*
+>> + * structure to store slot specific information
+>> + */
+>> +struct usim_slotcontext {
+>> +       char atr[USIM_MAX_ATRLENGTH];
+>> +       char rxbuf[USIM_MAX_APDU_LENGTH];
+>> +       bool emv;
+>> +       enum usim_mode state;
+>> +       int event;
+>> +       int protocol;
+>> +       enum usim_card_voltage supply;
+>> +       int rx_explen;
+>> +       int rx_counter;
+>> +       int atr_length;
+>> +       enum usim_smartcard_clock clock;
+>> +       enum usim_card_mode card_mode;
+>> +};
+>> +
+>> +struct usim {
+>> +       struct device *dev;
+>> +
+>> +       /* to protect interrput handling */
+>> +       spinlock_t      lock;
+>> +       int irq;
+>> +       void __iomem            *base;
+>> +       int slot;
+>> +       int max_slots;
+>> +       int phy_present;
+>> +       int txdone;
+>> +       int rxdone;
+>> +       int atrdone;
+>> +       int user_pid;
+>> +       int enable;
+>> +       struct sc_phy *phy;
+>> +       struct usim_slotcontext *slot_ctx;
+>> +
+>> +       struct clk      *opt_fclk;
+>> +       struct clk      *opt_fclk32;
+>> +       struct clk      *usim_dbclk;
+>> +       struct clk      *clkdiv32k_ick;
+>> +       struct clk      *usim0_fck;
+>> +       struct clk      *dpll_core_m4_ck;
+>> +
+>> +#ifdef CONFIG_DEBUG_FS
+>> +       struct dentry   *debugfs_root;
+>> +#endif
+>> +};
+>> +
+>> +/*
+>> + * Register Definitions: Taken from auto generated file
+>> + */
+>> +#define USIM_REVISION                    (0x0U)
+>
+> Parenthesis and U are generally not needed throughout.
+To avoid mistake, usually I preferred to used file generated by design team.
+>
+>> +#define USIM_IDENT                       (0x4U)
+>> +#define USIM_SYSCONFIG                   (0x10U)
+>> +#define USIM_SYSSTATUS                   (0x14U)
+>> +#define USIM_IRQSTATUS                   (0x18U)
+>> +#define USIM_IRQENABLE                   (0x1cU)
+>> +#define USIM_WAKEUPEN                    (0x20U)
+>> +#define USIM_CMD                         (0x24U)
+>> +#define USIM_STAT                        (0x28U)
+>> +#define USIM_CONF1                       (0x2cU)
+>> +#define USIM_CONF2                       (0x30U)
+>> +#define USIM_CONF3                       (0x34U)
+>> +#define USIM_DRX                         (0x38U)
+>> +#define USIM_DTX                         (0x3cU)
+>> +#define USIM_FIFOS                       (0x40U)
+>> +#define USIM_CGT                         (0x44U)
+>> +#define USIM_CWT                         (0x48U)
+>> +#define USIM_BWT                         (0x4cU)
+>> +#define USIM_DEBUG                       (0x50U)
+>> +#define USIM_CONF_SAM1_DIV               (0x54U)
+>> +#define USIM_CONF4                       (0x58U)
+>> +#define USIM_ATR_CLK_PRD_NBS             (0x5cU)
+>> +#define USIM_CONF_ETU_DIV                (0x60U)
+>> +#define USIM_CONF5                       (0x64U)
+>> +#define USIM_TC_GUARD_TIME_ADD           (0x68U)
+>> +#define USIM_RXFIFO_LEVEL                (0x6cU)
+>> +#define USIM_RXFIFO_BYTECNT              (0x70U)
+>> +#define USIM_WWT                         (0x74U)
+>> +#define USIM_CONF6                       (0x78U)
+>> +#define USIM_IO_DIRECT                   (0x7cU)
+>> +#define USIM_TX_BLOCK                    (0x84U)
+>> +
+>> +/*
+>> + * Field Definition Macros
+>> + */
+>> +#define USIM_REVISION_REV_SHIFT                       (0U)
+>> +#define USIM_REVISION_REV_MASK                        (0x000000ffU)
+>> +
+>> +#define USIM_REVISION_RESERVED_24_SHIFT               (8U)
+>> +#define USIM_REVISION_RESERVED_24_MASK                (0xffffff00U)
+>> +
+>> +#define USIM_IDENT_VC_SHIFT                           (0U)
+>> +#define USIM_IDENT_VC_MASK                            (0x0000ffffU)
+>> +
+>> +#define USIM_IDENT_RESERVED_16_31_SHIFT               (16U)
+>> +#define USIM_IDENT_RESERVED_16_31_MASK                (0xffff0000U)
+>> +
+>> +#define USIM_SYSCONFIG_AUTOIDLE_SHIFT                 (0U)
+>> +#define USIM_SYSCONFIG_AUTOIDLE_MASK                  (0x00000001U)
+>> +#define USIM_SYSCONFIG_AUTOIDLE_AUTOIDLE_VALUE_1       (1U)
+>> +#define USIM_SYSCONFIG_AUTOIDLE_AUTOIDLE_VALUE_0       (0U)
+>> +
+>> +#define USIM_SYSCONFIG_SOFTRESET_SHIFT                (1U)
+>> +#define USIM_SYSCONFIG_SOFTRESET_MASK                 (0x00000002U)
+>> +#define USIM_SYSCONFIG_SOFTRESET_SOFTRESET_VALUE_1     (1U)
+>> +#define USIM_SYSCONFIG_SOFTRESET_SOFTRESET_VALUE_0     (0U)
+>> +
+>> +#define USIM_SYSCONFIG_ENAWAKEUP_SHIFT                (2U)
+>> +#define USIM_SYSCONFIG_ENAWAKEUP_MASK                 (0x00000004U)
+>> +#define USIM_SYSCONFIG_ENAWAKEUP_ENAWAKEUP_VALUE_1     (1U)
+>> +#define USIM_SYSCONFIG_ENAWAKEUP_ENAWAKEUP_VALUE_0     (0U)
+>> +
+>> +#define USIM_SYSCONFIG_IDLEMODE_SHIFT                 (3U)
+>> +#define USIM_SYSCONFIG_IDLEMODE_MASK                  (0x00000018U)
+>> +#define USIM_SYSCONFIG_IDLEMODE_IDLEMODE_VALUE_3       (3U)
+>> +#define USIM_SYSCONFIG_IDLEMODE_IDLEMODE_VALUE_2       (2U)
+>> +#define USIM_SYSCONFIG_IDLEMODE_IDLEMODE_VALUE_1       (1U)
+>> +#define USIM_SYSCONFIG_IDLEMODE_IDLEMODE_VALUE_0       (0U)
+>> +
+>> +#define USIM_SYSCONFIG_EMUFREE_SHIFT                  (5U)
+>> +#define USIM_SYSCONFIG_EMUFREE_MASK                   (0x00000020U)
+>> +#define USIM_SYSCONFIG_EMUFREE_EMUFREE_VALUE_0         (0U)
+>> +#define USIM_SYSCONFIG_EMUFREE_EMUFREE_VALUE_1         (1U)
+>> +
+>> +#define USIM_SYSCONFIG_RESERVED_6_7_SHIFT             (6U)
+>> +#define USIM_SYSCONFIG_RESERVED_6_7_MASK              (0x000000c0U)
+>> +
+>> +#define USIM_SYSCONFIG_CLOCKACTIVITY_SHIFT            (8U)
+>> +#define USIM_SYSCONFIG_CLOCKACTIVITY_MASK             (0x00000300U)
+>> +
+>> +#define USIM_SYSCONFIG_RESERVED_22_SHIFT              (10U)
+>> +#define USIM_SYSCONFIG_RESERVED_22_MASK               (0xfffffc00U)
+>> +
+>> +#define USIM_SYSSTATUS_RESETDONE_SHIFT                (0U)
+>> +#define USIM_SYSSTATUS_RESETDONE_MASK                 (0x00000001U)
+>> +#define USIM_SYSSTATUS_RESETDONE_RESETDONE_VALUE_1     (1U)
+>> +#define USIM_SYSSTATUS_RESETDONE_RESETDONE_VALUE_0     (0U)
+>> +
+>> +#define USIM_SYSSTATUS_RESERVED_31_SHIFT              (1U)
+>> +#define USIM_SYSSTATUS_RESERVED_31_MASK               (0xfffffffeU)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_NATR_SHIFT                (0U)
+>> +#define USIM_IRQSTATUS_USIM_NATR_MASK                 (0x00000001U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_WT_SHIFT                  (1U)
+>> +#define USIM_IRQSTATUS_USIM_WT_MASK                   (0x00000002U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_RXFULL_SHIFT              (2U)
+>> +#define USIM_IRQSTATUS_USIM_RXFULL_MASK               (0x00000004U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_TX_SHIFT                  (3U)
+>> +#define USIM_IRQSTATUS_USIM_TX_MASK                   (0x00000008U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_RX_SHIFT                  (4U)
+>> +#define USIM_IRQSTATUS_USIM_RX_MASK                   (0x00000010U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_CD_SHIFT                  (5U)
+>> +#define USIM_IRQSTATUS_USIM_CD_MASK                   (0x00000020U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_EOB_SHIFT                 (6U)
+>> +#define USIM_IRQSTATUS_USIM_EOB_MASK                  (0x00000040U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_TOC_SHIFT                 (7U)
+>> +#define USIM_IRQSTATUS_USIM_TOC_MASK                  (0x00000080U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_TOB_SHIFT                 (8U)
+>> +#define USIM_IRQSTATUS_USIM_TOB_MASK                  (0x00000100U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_RESENT_SHIFT              (9U)
+>> +#define USIM_IRQSTATUS_USIM_RESENT_MASK               (0x00000200U)
+>> +
+>> +#define USIM_IRQSTATUS_TS_ERROR_SHIFT                 (10U)
+>> +#define USIM_IRQSTATUS_TS_ERROR_MASK                  (0x00000400U)
+>> +
+>> +#define USIM_IRQSTATUS_IT_EMV_ATR_LENGTH_TIME_OUT_SHIFT  (11U)
+>> +#define USIM_IRQSTATUS_IT_EMV_ATR_LENGTH_TIME_OUT_MASK   (0x00000800U)
+>> +
+>> +#define USIM_IRQSTATUS_RESERVED_SHIFT                    (21U)
+>> +#define USIM_IRQSTATUS_RESERVED_MASK                     (0xffe00000U)
+>> +
+>> +#define USIM_IRQSTATUS_USIM_STOP_CLK_SHIFT               (12U)
+>> +#define USIM_IRQSTATUS_USIM_STOP_CLK_MASK                (0x00001000U)
+>> +
+>> +#define USIM_IRQSTATUS_PAR_ERR_LEVEL_REACHED_SHIFT       (13U)
+>> +#define USIM_IRQSTATUS_PAR_ERR_LEVEL_REACHED_MASK        (0x00002000U)
+>> +
+>> +#define USIM_IRQSTATUS_FRAME_ERR_SHIFT            (14U)
+>> +#define USIM_IRQSTATUS_FRAME_ERR_MASK             (0x00004000U)
+>> +
+>> +#define USIM_IRQSTATUS_RXDMA_RDY_SHIFT            (15U)
+>> +#define USIM_IRQSTATUS_RXDMA_RDY_MASK             (0x00008000U)
+>> +
+>> +#define USIM_IRQSTATUS_ATR_START_SHIFT            (16U)
+>> +#define USIM_IRQSTATUS_ATR_START_MASK             (0x00010000U)
+>> +
+>> +#define USIM_IRQSTATUS_ACT_DONE_SHIFT             (17U)
+>> +#define USIM_IRQSTATUS_ACT_DONE_MASK              (0x00020000U)
+>> +
+>> +#define USIM_IRQSTATUS_DEACT_DONE_SHIFT           (18U)
+>> +#define USIM_IRQSTATUS_DEACT_DONE_MASK            (0x00040000U)
+>> +
+>> +#define USIM_IRQSTATUS_TX_BLOCK_DONE_SHIFT        (19U)
+>> +#define USIM_IRQSTATUS_TX_BLOCK_DONE_MASK         (0x00080000U)
+>> +
+>> +#define USIM_IRQSTATUS_TX_BLOCK_REQ_SHIFT         (20U)
+>> +#define USIM_IRQSTATUS_TX_BLOCK_REQ_MASK          (0x00100000U)
+>> +
+>> +#define USIM_IRQENABLE_RESERVED_SHIFT             (21U)
+>> +#define USIM_IRQENABLE_RESERVED_MASK              (0xffe00000U)
+>> +
+>> +#define USIM_IRQENABLE_EMV_ATR_LENGTH_TIME_OUT_EN_SHIFT    (11U)
+>> +#define USIM_IRQENABLE_EMV_ATR_LENGTH_TIME_OUT_EN_MASK     (0x00000800U)
+>> +
+>> +#define USIM_IRQENABLE_TS_ERR_EN_SHIFT         (10U)
+>> +#define USIM_IRQENABLE_TS_ERR_EN_MASK          (0x00000400U)
+>> +
+>> +#define USIM_IRQENABLE_RESENT_EN_SHIFT         (9U)
+>> +#define USIM_IRQENABLE_RESENT_EN_MASK          (0x00000200U)
+>> +
+>> +#define USIM_IRQENABLE_TOB_EN_SHIFT            (8U)
+>> +#define USIM_IRQENABLE_TOB_EN_MASK             (0x00000100U)
+>> +
+>> +#define USIM_IRQENABLE_TOC_EN_SHIFT            (7U)
+>> +#define USIM_IRQENABLE_TOC_EN_MASK             (0x00000080U)
+>> +
+>> +#define USIM_IRQENABLE_EOB_EN_SHIFT            (6U)
+>> +#define USIM_IRQENABLE_EOB_EN_MASK             (0x00000040U)
+>> +
+>> +#define USIM_IRQENABLE_CD_EN_SHIFT             (5U)
+>> +#define USIM_IRQENABLE_CD_EN_MASK              (0x00000020U)
+>> +
+>> +#define USIM_IRQENABLE_RX_EN_SHIFT             (4U)
+>> +#define USIM_IRQENABLE_RX_EN_MASK              (0x00000010U)
+>> +
+>> +#define USIM_IRQENABLE_TX_EN_SHIFT             (3U)
+>> +#define USIM_IRQENABLE_TX_EN_MASK              (0x00000008U)
+>> +
+>> +#define USIM_IRQENABLE_RXFULL_EN_SHIFT         (2U)
+>> +#define USIM_IRQENABLE_RXFULL_EN_MASK          (0x00000004U)
+>> +
+>> +#define USIM_IRQENABLE_WT_EN_SHIFT             (1U)
+>> +#define USIM_IRQENABLE_WT_EN_MASK              (0x00000002U)
+>> +
+>> +#define USIM_IRQENABLE_NATR_EN_SHIFT           (0U)
+>> +#define USIM_IRQENABLE_NATR_EN_MASK            (0x00000001U)
+>> +
+>> +#define USIM_IRQENABLE_STOP_CLK_SHIFT          (12U)
+>> +#define USIM_IRQENABLE_STOP_CLK_MASK           (0x00001000U)
+>> +
+>> +#define USIM_IRQENABLE_PAR_ERR_LEVEL_REACHED_EN_SHIFT      (13U)
+>> +#define USIM_IRQENABLE_PAR_ERR_LEVEL_REACHED_EN_MASK       (0x00002000U)
+>> +
+>> +#define USIM_IRQENABLE_FRAME_ERR_EN_SHIFT           (14U)
+>> +#define USIM_IRQENABLE_FRAME_ERR_EN_MASK            (0x00004000U)
+>> +
+>> +#define USIM_IRQENABLE_RXDMA_RDY_EN_SHIFT           (15U)
+>> +#define USIM_IRQENABLE_RXDMA_RDY_EN_MASK            (0x00008000U)
+>> +
+>> +#define USIM_IRQENABLE_ATR_START_EN_SHIFT           (16U)
+>> +#define USIM_IRQENABLE_ATR_START_EN_MASK            (0x00010000U)
+>> +
+>> +#define USIM_IRQENABLE_ACT_DONE_EN_SHIFT            (17U)
+>> +#define USIM_IRQENABLE_ACT_DONE_EN_MASK             (0x00020000U)
+>> +
+>> +#define USIM_IRQENABLE_DEACT_DONE_EN_SHIFT          (18U)
+>> +#define USIM_IRQENABLE_DEACT_DONE_EN_MASK           (0x00040000U)
+>> +
+>> +#define USIM_IRQENABLE_TX_BLOCK_DONE_EN_SHIFT       (19U)
+>> +#define USIM_IRQENABLE_TX_BLOCK_DONE_EN_MASK        (0x00080000U)
+>> +
+>> +#define USIM_IRQENABLE_TX_BLOCK_REQ_EN_SHIFT        (20U)
+>> +#define USIM_IRQENABLE_TX_BLOCK_REQ_EN_MASK         (0x00100000U)
+>> +
+>> +#define USIM_WAKEUPEN_STOP_CLK_SHIFT                (12U)
+>> +#define USIM_WAKEUPEN_STOP_CLK_MASK                 (0x00001000U)
+>
+> Can't you have common defines for IRQSTATUS, IRQENABLE and WAKEUPEN?
+> They seem to all be the same bit positions. And you already have IRQ
+> bit defines above.
+>
+> [lots more register defines...]
+>
+All three register's definition/usage are different. It make ease while 
+handling interrupt and checking the status.
+>> +
+>> +#define USIM_TX_BLOCK_RESERVED_SHIFT              (16U)
+>> +#define USIM_TX_BLOCK_RESERVED_MASK               (0xffff0000U)
+>
+> In general, trim these defines down to what you actually use. Single
+> bit fields rarely need both a shift and mask.
+Again, used file generated by Tool to avoid minor mistakes.
+>
+>> +
+>> +#endif /* __TI_USIM_HW_H__ */
+>> diff --git a/drivers/char/ti-usim.c b/drivers/char/ti-usim.c
+>> new file mode 100644
+>> index 0000000..ffabf87
+>> --- /dev/null
+>> +++ b/drivers/char/ti-usim.c
+>> @@ -0,0 +1,2213 @@
+>> +/*
+>> + * usim.c - USIM driver for Smart Card module
+>> + *
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +#include <linux/module.h>
+>> +#include <linux/kernel.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/spinlock.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/pm_runtime.h>
+>> +#include <linux/io.h>
+>> +#include <linux/fs.h>
+>> +#include <linux/of.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/miscdevice.h>
+>> +#include <linux/uaccess.h>
+>> +#include <linux/ctype.h>
+>> +#include <linux/wait.h>
+>> +#include <linux/sched.h>
+>> +#include <linux/debugfs.h>
+>> +#include <linux/notifier.h>
+>> +#include <linux/clk.h>
+>> +#include <linux/delay.h>
+>> +/* for send_sig_info */
+>> +#include <linux/rcupdate.h>
+>> +#include <asm/siginfo.h>
+>> +
+>> +#include "ti-usim-hw.h"
+>> +
+>> +#define USIM_WRITEREG(base, offset, field, value)  \
+>> +                       usim_writereg(base+offset, offset##_##field##_MASK, \
+>> +                               offset##_##field##_SHIFT, value)
+>> +
+>> +#define USIM_READREG(base, offset, field)  \
+>> +       usim_readreg(base+offset, offset##_##field##_MASK, \
+>> +                       offset##_##field##_SHIFT)
+>> +
+>> +#define USIM_SETFIELD(reg, offset, field, value)  \
+>> +       usim_setfield(reg, offset##_##field##_MASK, \
+>> +                       offset##_##field##_SHIFT, value)
+>
+> Get rid of this.
+Any specific reason ?
+It gives flexibility to seperate reg vs bit field name.
+ex.
+USIM_READREG(usim->base, USIM_STAT, ATRRX_AFTER_TIMEOUT);
+looks better than
+usim_readreg(usim->base, 
+USIM_STAT_ATRRX_AFTER_TIMEOUT_MASK,USIM_STAT_ATRRX_AFTER_TIMEOUT_SHIFT)
 
-readl_relaxed() is better.
+- USIM_SETFIELD similarly allows to set multiple bit one by one and then 
+single write updates all the bits.
 
-> +	nr_channels = AT_XDMAC_NB_CH(reg);
-> +	if (nr_channels > AT_XDMAC_MAX_CHAN) {
-> +		dev_err(&pdev->dev, "invalid number of channels (%u)\n",
-> +			nr_channels);
-> +		return -EINVAL;
-> +	}
-> +
-> +	size = sizeof(*atxdmac);
-> +	size += nr_channels * sizeof(struct at_xdmac_chan);
-> +	atxdmac = devm_kzalloc(&pdev->dev, size, GFP_KERNEL);
-> +	if (!atxdmac) {
-> +		dev_err(&pdev->dev, "can't allocate at_xdmac structure\n");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	atxdmac->regs = base;
-> +
-> +	ret = devm_request_irq(&pdev->dev, irq, at_xdmac_interrupt, 0,
-> +			       "at_xdmac", atxdmac);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "can't request irq\n");
-> +		return ret;
-> +	}
-> +
-> +	atxdmac->clk = devm_clk_get(&pdev->dev, "dma_clk");
-> +	if (IS_ERR(atxdmac->clk)) {
-> +		dev_err(&pdev->dev, "can't get dma_clk\n");
-> +		return PTR_ERR(atxdmac->clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(atxdmac->clk);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "can't prepare or enable clock\n");
-> +		return ret;
-> +	}
-> +
-> +	atxdmac->at_xdmac_desc_pool =
-> +		dmam_pool_create(dev_name(&pdev->dev), &pdev->dev,
-> +				sizeof(struct at_xdmac_desc), 4, 0);
-> +	if (!atxdmac->at_xdmac_desc_pool) {
-> +		dev_err(&pdev->dev, "no memory for descriptors dma pool\n");
-> +		ret = -ENOMEM;
-> +		goto err_clk_disable;
-> +	}
-> +
-> +	dma_cap_set(DMA_CYCLIC, atxdmac->dma.cap_mask);
-> +	dma_cap_set(DMA_MEMCPY, atxdmac->dma.cap_mask);
-> +	dma_cap_set(DMA_SLAVE, atxdmac->dma.cap_mask);
-> +	atxdmac->dma.dev				= &pdev->dev;
-> +	atxdmac->dma.device_alloc_chan_resources	= at_xdmac_alloc_chan_resources;
-> +	atxdmac->dma.device_free_chan_resources		= at_xdmac_free_chan_resources;
-> +	atxdmac->dma.device_tx_status			= at_xdmac_tx_status;
-> +	atxdmac->dma.device_issue_pending		= at_xdmac_issue_pending;
-> +	atxdmac->dma.device_prep_dma_cyclic		= at_xdmac_prep_dma_cyclic;
-> +	atxdmac->dma.device_prep_dma_memcpy		= at_xdmac_prep_dma_memcpy;
-> +	atxdmac->dma.device_prep_slave_sg		= at_xdmac_prep_slave_sg;
-> +	atxdmac->dma.device_control			= at_xdmac_control;
-> +	atxdmac->dma.chancnt				= nr_channels;
-> +
-> +	/* Disable all chans and interrupts. */
-> +	at_xdmac_off(atxdmac);
-> +
-> +	/* Init channels. */
-> +	INIT_LIST_HEAD(&atxdmac->dma.channels);
-> +	for (i = 0; i < nr_channels; i++) {
-> +		struct at_xdmac_chan *atchan = &atxdmac->chan[i];
-> +
-> +		atchan->chan.device = &atxdmac->dma;
-> +		list_add_tail(&atchan->chan.device_node,
-> +			      &atxdmac->dma.channels);
-> +
-> +		atchan->ch_regs = at_xdmac_chan_reg_base(atxdmac, i);
-> +		atchan->mask = 1 << i;
-> +
-> +		spin_lock_init(&atchan->lock);
-> +		INIT_LIST_HEAD(&atchan->xfers_list);
-> +		INIT_LIST_HEAD(&atchan->free_descs_list);
-> +		tasklet_init(&atchan->tasklet, at_xdmac_tasklet,
-> +			     (unsigned long)atchan);
-> +
-> +		/* Clear pending interrupts. */
-> +		while (at_xdmac_chan_read(atchan, AT_XDMAC_CIS))
-> +			cpu_relax();
-> +	}
-> +	platform_set_drvdata(pdev, atxdmac);
-> +
-> +	ret = dma_async_device_register(&atxdmac->dma);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to register DMA engine device\n");
-> +		goto err_clk_disable;
-> +	}
-> +
-> +	ret = of_dma_controller_register(pdev->dev.of_node,
-> +					 at_xdmac_xlate, atxdmac);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "could not register of dma controller\n");
-> +		goto err_dma_unregister;
-> +	}
-> +
-> +	dev_info(&pdev->dev, "%d channels, mapped at 0x%p\n",
-> +		 nr_channels, atxdmac->regs);
-> +
-> +	return 0;
-> +
-> +err_dma_unregister:
-> +	dma_async_device_unregister(&atxdmac->dma);
-> +err_clk_disable:
-> +	clk_disable_unprepare(atxdmac->clk);
-> +	return ret;
-> +}
-> +
-> +static int at_xdmac_remove(struct platform_device *pdev)
-> +{
-> +	struct at_xdmac	*atxdmac = (struct at_xdmac *)platform_get_drvdata(pdev);
-> +	int		i;
-> +
-> +	at_xdmac_off(atxdmac);
-> +	of_dma_controller_free(pdev->dev.of_node);
-> +	dma_async_device_unregister(&atxdmac->dma);
-> +	clk_disable_unprepare(atxdmac->clk);
-> +
-> +	for (i = 0; i < atxdmac->dma.chancnt; i++) {
-> +		struct at_xdmac_chan *atchan = &atxdmac->chan[i];
-> +
-> +		tasklet_kill(&atchan->tasklet);
-> +		at_xdmac_free_chan_resources(&atchan->chan);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct of_device_id atmel_xdmac_dt_ids[] = {
-> +	{
-> +		.compatible = "atmel,sama5d4-dma",
-> +	}, {
-> +		/* sentinel */
-> +	}
-> +};
-> +MODULE_DEVICE_TABLE(of, atmel_xdmac_dt_ids);
-> +
-> +static struct platform_driver at_xdmac_driver = {
-> +	.probe		= at_xdmac_probe,
+Gives more readability for code.
+>
+>> +
+>> +/* calculation of max ATR waiting time
+>> + * 372 is default FI value, so etu for 1Mhz SC clock cycle would be
+>> + * etu = FI/f sec = 372/1Mhz = 372 micro second
+>> + * Max ATR waiting is - USIM_ATR_TIMEOUT_EMV etu
+>> + */
+>> +#define MAX_ATR_WAITTIME_US (372 * USIM_ATR_TIMEOUT_EMV)
+>> +
+>> +/*
+>> + * phy states
+>> + */
+>> +enum usim_phy_state {
+>> +       USIM_PHY_NOT_PRESENT = 0x0,
+>> +       USIM_PHY_PRESENT,
+>> +       USIM_PHY_NOT_ATTACHED,
+>> +};
+>> +
+>> +static struct miscdevice usim_dev;
+>> +
+>> +static DECLARE_WAIT_QUEUE_HEAD(rx_wait);
+>> +static DECLARE_WAIT_QUEUE_HEAD(tx_wait);
+>> +static DECLARE_WAIT_QUEUE_HEAD(atr_wait);
+>> +
+>> +static int usim_set_smartcardclock(struct usim *usim, u32 clock);
+>> +static int usim_deactivate_card(struct usim *usim);
+>> +
+>> +static void usim_writereg(void __iomem *base, u32 mask, u32 shift, u32 value)
+>> +{
+>> +       u32 v = readl(base);
+>> +
+>> +       v &= ~mask;
+>> +       v |= (value << shift) & mask;
+>> +       writel(v, base);
+>> +       v = readl(base);
+>> +       return;
+>> +}
+>> +
+>> +static u32 usim_readreg(void __iomem *base, u32 mask, u32 shift)
+>> +{
+>> +       u32 v = readl(base);
+>> +
+>> +       v &= mask;
+>> +       v = (v >> shift);
+>> +       return v;
+>> +}
+>> +
+>> +static u32 usim_setfield(u32 reg, u32 mask, u32 shift, u32 value)
+>> +{
+>> +       reg &= ~mask;
+>> +       reg |= (value << shift) & mask;
+>> +       return reg;
+>> +}
+>
+> Use readl/writel directly. If we wanted drivers written with accessors
+> like these, then there would be common ones to use.
+>
+>> +
+>> +
+>> +static inline void usim_irq_enable(void __iomem *base, u32 irqs)
+>> +{
+>> +       u32 v = readl(base + USIM_IRQENABLE);
+>> +
+>> +       v |= irqs;
+>> +       writel(v, base + USIM_IRQENABLE);
+>> +}
+>> +
+>> +static inline void usim_irq_disable(void __iomem *base, u32 irqs)
+>> +{
+>> +       u32 v = readl(base + USIM_IRQENABLE);
+>> +
+>> +       v &= ~irqs;
+>> +       writel(v, base + USIM_IRQENABLE);
+>
+> I assume these are called with appropriate locking?
+yes, using locks inside irq handling.
+>
+>> +}
+>> +
+>> +static inline void usim_irq_get(void __iomem *base, u32 *irqs)
+>> +{
+>> +       *irqs = readl(base + USIM_IRQENABLE);
+>> +}
+>> +
+>> +static inline u32 usim_irqstatus(void __iomem *base)
+>> +{
+>> +       return readl(base + USIM_IRQSTATUS);
+>> +}
+>> +
+>> +static inline void usim_irqstatus_clear(void __iomem *base, u32 irqs)
+>> +{
+>> +       writel(irqs, base + USIM_IRQSTATUS);
+>> +}
+>
+> Use readl/writel directly.
+>
+>> +
+>> +static inline struct usim *dev_to_usim(struct device *dev)
+>> +{
+>> +       return dev_get_drvdata(dev);
+>> +}
+>> +
+>> +static int usim_send_signal(struct usim *usim, int event)
+>> +{
+>
+> Using signals is not a typical driver interface.
+>
+There is a use case for this. We need to send immediate signal to 
+application for card insert/remove. So used this approach after internal 
+discussion.
 
-This line can be removed. Otherwise you will get section mismatch warning.
-
-> +	.remove		= at_xdmac_remove,
-> +	.driver = {
-> +		.name		= "at_xdmac",
-> +		.of_match_table	= of_match_ptr(atmel_xdmac_dt_ids),
-> +	}
-> +};
-> +
-> +static int __init at_xdmac_init(void)
-> +{
-> +	return platform_driver_probe(&at_xdmac_driver, at_xdmac_probe);
-> +}
-> +subsys_initcall(at_xdmac_init);
-> +
-> +MODULE_DESCRIPTION("Atmel Extended DMA Controller driver");
-> +MODULE_AUTHOR("Ludovic Desroches <ludovic.desroches@atmel.com>");
-> +MODULE_LICENSE("GPL");
-> diff --git a/drivers/dma/at_xdmac.h b/drivers/dma/at_xdmac.h
-> new file mode 100644
-> index 0000000..79e5ad8
-> --- /dev/null
-> +++ b/drivers/dma/at_xdmac.h
-> @@ -0,0 +1,257 @@
-> +#ifndef __AT_XDMAC_H__
-> +#define __AT_XDMAC_H__
-> +
-> +#include <linux/clk.h>
-> +#include <linux/dmaengine.h>
-> +#include <linux/dmapool.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/irq.h>
-> +#include <linux/list.h>
-> +#include <linux/module.h>
-> +#include <linux/of_dma.h>
-> +#include <linux/platform_device.h>
-> +
-> +#include "dmaengine.h"
-> +
-> +/* Global registers */
-> +#define AT_XDMAC_GTYPE		0x00	/* Global Type Register */
-> +#define		AT_XDMAC_NB_CH(i)	(((i) & 0x1F) + 1)		/* Number of Channels Minus One */
-> +#define		AT_XDMAC_FIFO_SZ(i)	(((i) >> 5) & 0x7FF)		/* Number of Bytes */
-> +#define		AT_XDMAC_NB_REQ(i)	((((i) >> 16) & 0x3F) + 1)	/* Number of Peripheral Requests Minus One */
-> +#define AT_XDMAC_GCFG		0x04	/* Global Configuration Register */
-> +#define AT_XDMAC_GWAC		0x08	/* Global Weighted Arbiter Configuration Register */
-> +#define AT_XDMAC_GIE		0x0C	/* Global Interrupt Enable Register */
-> +#define AT_XDMAC_GID		0x10	/* Global Interrupt Disable Register */
-> +#define AT_XDMAC_GIM		0x14	/* Global Interrupt Mask Register */
-> +#define AT_XDMAC_GIS		0x18	/* Global Interrupt Status Register */
-> +#define AT_XDMAC_GE		0x1C	/* Global Channel Enable Register */
-> +#define AT_XDMAC_GD		0x20	/* Global Channel Disable Register */
-> +#define AT_XDMAC_GS		0x24	/* Global Channel Status Register */
-> +#define AT_XDMAC_GRS		0x28	/* Global Channel Read Suspend Register */
-> +#define AT_XDMAC_GWS		0x2C	/* Global Write Suspend Register */
-> +#define AT_XDMAC_GRWS		0x30	/* Global Channel Read Write Suspend Register */
-> +#define AT_XDMAC_GRWR		0x34	/* Global Channel Read Write Resume Register */
-> +#define AT_XDMAC_GSWR		0x38	/* Global Channel Software Request Register */
-> +#define AT_XDMAC_GSWS		0x3C	/* Global channel Software Request Status Register */
-> +#define AT_XDMAC_GSWF		0x40	/* Global Channel Software Flush Request Register */
-> +#define AT_XDMAC_VERSION	0xFFC	/* XDMAC Version Register */
-> +
-> +/* Channel relative registers offsets */
-> +#define AT_XDMAC_CIE		0x00	/* Channel Interrupt Enable Register */
-> +#define		AT_XDMAC_CIE_BIE	(0x1 << 0)	/* End of Block Interrupt Enable Bit */
-> +#define		AT_XDMAC_CIE_LIE	(0x1 << 1)	/* End of Linked List Interrupt Enable Bit */
-> +#define		AT_XDMAC_CIE_DIE	(0x1 << 2)	/* End of Disable Interrupt Enable Bit */
-> +#define		AT_XDMAC_CIE_FIE	(0x1 << 3)	/* End of Flush Interrupt Enable Bit */
-> +#define		AT_XDMAC_CIE_RBEIE	(0x1 << 4)	/* Read Bus Error Interrupt Enable Bit */
-> +#define		AT_XDMAC_CIE_WBEIE	(0x1 << 5)	/* Write Bus Error Interrupt Enable Bit */
-> +#define		AT_XDMAC_CIE_ROIE	(0x1 << 6)	/* Request Overflow Interrupt Enable Bit */
-> +#define AT_XDMAC_CID		0x04	/* Channel Interrupt Disable Register */
-> +#define		AT_XDMAC_CID_BID	(0x1 << 0)	/* End of Block Interrupt Disable Bit */
-> +#define		AT_XDMAC_CID_LID	(0x1 << 1)	/* End of Linked List Interrupt Disable Bit */
-> +#define		AT_XDMAC_CID_DID	(0x1 << 2)	/* End of Disable Interrupt Disable Bit */
-> +#define		AT_XDMAC_CID_FID	(0x1 << 3)	/* End of Flush Interrupt Disable Bit */
-> +#define		AT_XDMAC_CID_RBEID	(0x1 << 4)	/* Read Bus Error Interrupt Disable Bit */
-> +#define		AT_XDMAC_CID_WBEID	(0x1 << 5)	/* Write Bus Error Interrupt Disable Bit */
-> +#define		AT_XDMAC_CID_ROID	(0x1 << 6)	/* Request Overflow Interrupt Disable Bit */
-> +#define AT_XDMAC_CIM		0x08	/* Channel Interrupt Mask Register */
-> +#define		AT_XDMAC_CIM_BIM	(0x1 << 0)	/* End of Block Interrupt Mask Bit */
-> +#define		AT_XDMAC_CIM_LIM	(0x1 << 1)	/* End of Linked List Interrupt Mask Bit */
-> +#define		AT_XDMAC_CIM_DIM	(0x1 << 2)	/* End of Disable Interrupt Mask Bit */
-> +#define		AT_XDMAC_CIM_FIM	(0x1 << 3)	/* End of Flush Interrupt Mask Bit */
-> +#define		AT_XDMAC_CIM_RBEIM	(0x1 << 4)	/* Read Bus Error Interrupt Mask Bit */
-> +#define		AT_XDMAC_CIM_WBEIM	(0x1 << 5)	/* Write Bus Error Interrupt Mask Bit */
-> +#define		AT_XDMAC_CIM_ROIM	(0x1 << 6)	/* Request Overflow Interrupt Mask Bit */
-> +#define AT_XDMAC_CIS		0x0C	/* Channel Interrupt Status Register */
-> +#define		AT_XDMAC_CIS_BIS	(0x1 << 0)	/* End of Block Interrupt Status Bit */
-> +#define		AT_XDMAC_CIS_LIS	(0x1 << 1)	/* End of Linked List Interrupt Status Bit */
-> +#define		AT_XDMAC_CIS_DIS	(0x1 << 2)	/* End of Disable Interrupt Status Bit */
-> +#define		AT_XDMAC_CIS_FIS	(0x1 << 3)	/* End of Flush Interrupt Status Bit */
-> +#define		AT_XDMAC_CIS_RBEIS	(0x1 << 4)	/* Read Bus Error Interrupt Status Bit */
-> +#define		AT_XDMAC_CIS_WBEIS	(0x1 << 5)	/* Write Bus Error Interrupt Status Bit */
-> +#define		AT_XDMAC_CIS_ROIS	(0x1 << 6)	/* Request Overflow Interrupt Status Bit */
-> +#define AT_XDMAC_CSA		0x10	/* Channel Source Address Register */
-> +#define AT_XDMAC_CDA		0x14	/* Channel Destination Address Register */
-> +#define AT_XDMAC_CNDA		0x18	/* Channel Next Descriptor Address Register */
-> +#define		AT_XDMAC_CNDA_NDAIF(i)	((i) & 0x1)			/* Channel x Next Descriptor Interface */
-> +#define		AT_XDMAC_CNDA_NDA(i)	((i) & 0xfffffffc)		/* Channel x Next Descriptor Address */
-> +#define AT_XDMAC_CNDC		0x1C	/* Channel Next Descriptor Control Register */
-> +#define		AT_XDMAC_CNDC_NDE		(0x1 << 0)		/* Channel x Next Descriptor Enable */
-> +#define		AT_XDMAC_CNDC_NDSUP		(0x1 << 1)		/* Channel x Next Descriptor Source Update */
-> +#define		AT_XDMAC_CNDC_NDDUP		(0x1 << 2)		/* Channel x Next Descriptor Destination Update */
-> +#define		AT_XDMAC_CNDC_NDVIEW_NDV0	(0x0 << 3)		/* Channel x Next Descriptor View 0 */
-> +#define		AT_XDMAC_CNDC_NDVIEW_NDV1	(0x1 << 3)		/* Channel x Next Descriptor View 1 */
-> +#define		AT_XDMAC_CNDC_NDVIEW_NDV2	(0x2 << 3)		/* Channel x Next Descriptor View 2 */
-> +#define		AT_XDMAC_CNDC_NDVIEW_NDV3	(0x3 << 3)		/* Channel x Next Descriptor View 3 */
-> +#define AT_XDMAC_CUBC		0x20	/* Channel Microblock Control Register */
-> +#define AT_XDMAC_CBC		0x24	/* Channel Block Control Register */
-> +#define AT_XDMAC_CC		0x28	/* Channel Configuration Register */
-> +#define		AT_XDMAC_CC_TYPE	(0x1 << 0)	/* Channel Transfer Type */
-> +#define			AT_XDMAC_CC_TYPE_MEM_TRAN	(0x0 << 0)	/* Memory to Memory Transfer */
-> +#define			AT_XDMAC_CC_TYPE_PER_TRAN	(0x1 << 0)	/* Peripheral to Memory or Memory to Peripheral Transfer */
-> +#define		AT_XDMAC_CC_MBSIZE_MASK	(0x3 << 1)
-> +#define			AT_XDMAC_CC_MBSIZE_SINGLE	(0x0 << 1)
-> +#define			AT_XDMAC_CC_MBSIZE_FOUR		(0x1 << 1)
-> +#define			AT_XDMAC_CC_MBSIZE_EIGHT	(0x2 << 1)
-> +#define			AT_XDMAC_CC_MBSIZE_SIXTEEN	(0x3 << 1)
-> +#define		AT_XDMAC_CC_DSYNC	(0x1 << 4)	/* Channel Synchronization */
-> +#define			AT_XDMAC_CC_DSYNC_PER2MEM	(0x0 << 4)
-> +#define			AT_XDMAC_CC_DSYNC_MEM2PER	(0x1 << 4)
-> +#define		AT_XDMAC_CC_PROT	(0x1 << 5)	/* Channel Protection */
-> +#define			AT_XDMAC_CC_PROT_SEC		(0x0 << 5)
-> +#define			AT_XDMAC_CC_PROT_UNSEC		(0x1 << 5)
-> +#define		AT_XDMAC_CC_SWREQ	(0x1 << 6)	/* Channel Software Request Trigger */
-> +#define			AT_XDMAC_CC_SWREQ_HWR_CONNECTED	(0x0 << 6)
-> +#define			AT_XDMAC_CC_SWREQ_SWR_CONNECTED	(0x1 << 6)
-> +#define		AT_XDMAC_CC_MEMSET	(0x1 << 7)	/* Channel Fill Block of memory */
-> +#define			AT_XDMAC_CC_MEMSET_NORMAL_MODE	(0x0 << 7)
-> +#define			AT_XDMAC_CC_MEMSET_HW_MODE	(0x1 << 7)
-> +#define		AT_XDMAC_CC_CSIZE_MASK	(0x7 << 8)	/* Channel Chunk Size */
-> +#define			AT_XDMAC_CC_CSIZE_CHK_1		(0x0 << 8)
-> +#define			AT_XDMAC_CC_CSIZE_CHK_2		(0x1 << 8)
-> +#define			AT_XDMAC_CC_CSIZE_CHK_4		(0x2 << 8)
-> +#define			AT_XDMAC_CC_CSIZE_CHK_8		(0x3 << 8)
-> +#define			AT_XDMAC_CC_CSIZE_CHK_16	(0x4 << 8)
-> +#define		AT_XDMAC_CC_DWIDTH(i)	((i) << 11)	/* Channel Data Width */
-> +#define			AT_XDMAC_CC_DWIDTH_BYTE		0x0
-> +#define			AT_XDMAC_CC_DWIDTH_HALFWORD	0x1
-> +#define			AT_XDMAC_CC_DWIDTH_WORD		0x2
-> +#define			AT_XDMAC_CC_DWIDTH_DWORD	0x3
-> +#define		AT_XDMAC_CC_SIF(i)	((0x1 & (i)) << 13)	/* Channel Source Interface Identifier */
-> +#define		AT_XDMAC_CC_DIF(i)	((0x1 & (i)) << 14)	/* Channel Destination Interface Identifier */
-> +#define		AT_XDMAC_CC_SAM_MASK	(0x3 << 16)	/* Channel Source Addressing Mode */
-> +#define			AT_XDMAC_CC_SAM_FIXED_AM	(0x0 << 16)
-> +#define			AT_XDMAC_CC_SAM_INCREMENTED_AM	(0x1 << 16)
-> +#define			AT_XDMAC_CC_SAM_UBS_AM		(0x2 << 16)
-> +#define			AT_XDMAC_CC_SAM_UBS_DS_AM	(0x3 << 16)
-> +#define		AT_XDMAC_CC_DAM_MASK	(0x3 << 18)	/* Channel Source Addressing Mode */
-> +#define			AT_XDMAC_CC_DAM_FIXED_AM	(0x0 << 18)
-> +#define			AT_XDMAC_CC_DAM_INCREMENTED_AM	(0x1 << 18)
-> +#define			AT_XDMAC_CC_DAM_UBS_AM		(0x2 << 18)
-> +#define			AT_XDMAC_CC_DAM_UBS_DS_AM	(0x3 << 18)
-> +#define		AT_XDMAC_CC_INITD	(0x1 << 21)	/* Channel Initialization Terminated (read only) */
-> +#define			AT_XDMAC_CC_INITD_TERMINATED	(0x0 << 21)
-> +#define			AT_XDMAC_CC_INITD_IN_PROGRESS	(0x1 << 21)
-> +#define		AT_XDMAC_CC_RDIP	(0x1 << 22)	/* Read in Progress (read only) */
-> +#define			AT_XDMAC_CC_RDIP_DONE		(0x0 << 22)
-> +#define			AT_XDMAC_CC_RDIP_IN_PROGRESS	(0x1 << 22)
-> +#define		AT_XDMAC_CC_WDIP	(0x1 << 23)	/* Write in Progress (read only) */
-> +#define			AT_XDMAC_CC_WDIP_DONE		(0x0 << 23)
-> +#define			AT_XDMAC_CC_WDIP_IN_PROGRESS	(0x1 << 23)
-> +#define		AT_XDMAC_CC_PERID(i)	(0x7f & (h) << 24)	/* Channel Peripheral Identifier */
-> +#define AT_XDMAC_CDS_MSP	0x2C	/* Channel Data Stride Memory Set Pattern */
-> +#define AT_XDMAC_CSUS		0x30	/* Channel Source Microblock Stride */
-> +#define AT_XDMAC_CDUS		0x34	/* Channel Destination Microblock Stride */
-> +
-> +#define AT_XDMAC_CHAN_REG_BASE	0x50	/* Channel registers base address */
-> +
-> +/* Microblock control members */
-> +#define AT_XDMAC_MBR_UBC_UBLEN_MAX	0xFFFFFFUL	/* Maximum Microblock Length */
-> +#define AT_XDMAC_MBR_UBC_NDE		(0x1 << 24)	/* Next Descriptor Enable */
-> +#define AT_XDMAC_MBR_UBC_NSEN		(0x1 << 25)	/* Next Descriptor Source Update */
-> +#define AT_XDMAC_MBR_UBC_NDEN		(0x1 << 26)	/* Next Descriptor Destination Update */
-> +#define AT_XDMAC_MBR_UBC_NDV0		(0x0 << 27)	/* Next Descriptor View 0 */
-> +#define AT_XDMAC_MBR_UBC_NDV1		(0x1 << 27)	/* Next Descriptor View 1 */
-> +#define AT_XDMAC_MBR_UBC_NDV2		(0x2 << 27)	/* Next Descriptor View 2 */
-> +#define AT_XDMAC_MBR_UBC_NDV3		(0x3 << 27)	/* Next Descriptor View 3 */
-> +
-> +#define AT_XDMAC_MAX_CHAN	0x20
-> +
-> +enum atc_status {
-> +	AT_XDMAC_CHAN_IS_CYCLIC = 0,
-> +};
-> +
-> +/* ----- Channels ----- */
-> +struct at_xdmac_chan {
-> +	struct dma_chan	chan;
-> +	void __iomem	*ch_regs;
-> +	u32		mask;		/* Channel Mask */
-> +	u32		cfg;		/* Channel Configuration Register */
-> +	u8		perid;		/* Peripheral ID */
-> +	u8		dwidth;		/* Data Width */
-> +	u8		csize;		/* Chunk Size */
-> +	u8		mbsize;		/* Memory Burst Size */
-> +	u8		perif;		/* Peripheral Interface */
-> +	u8		memif;		/* Memory Interface */
-> +	unsigned long	status;
-> +	struct tasklet_struct	tasklet;
-> +	struct dma_slave_config	dma_sconfig;
-> +
-> +	spinlock_t		lock;
-> +
-> +	struct list_head	xfers_list;
-> +	struct list_head	free_descs_list;
-> +};
-> +
-> +
-> +/* ----- Controller ----- */
-> +struct at_xdmac {
-> +	struct dma_device	dma;
-> +	void __iomem		*regs;
-> +	struct clk		*clk;
-> +	struct dma_pool		*at_xdmac_desc_pool;
-> +	struct at_xdmac_chan	chan[0];
-> +};
-> +
-> +
-> +/* ----- Descriptors ----- */
-> +
-> +/* Linked List Descriptor */
-> +struct at_xdmac_lld {
-> +	dma_addr_t	mbr_nda;	/* Next Descriptor Member */
-> +	u32		mbr_ubc;	/* Microblock Control Member */
-> +	dma_addr_t	mbr_sa;		/* Source Address Member */
-> +	dma_addr_t	mbr_da;		/* Destination Address Member */
-> +	u32		mbr_cfg;	/* Configuration Register */
-> +};
-> +
-> +
-> +struct at_xdmac_desc {
-> +	struct at_xdmac_lld		lld;
-> +	enum dma_transfer_direction	direction;
-> +	struct dma_async_tx_descriptor	tx_dma_desc;
-> +	struct list_head		desc_node;
-> +	/* Following members are only used by the first descriptor */
-> +	bool				active_xfer;
-> +	unsigned int			xfer_size;
-> +	struct list_head		descs_list;
-> +	struct list_head		xfer_node;
-> +};
-> +
-> +static inline void __iomem *at_xdmac_chan_reg_base(struct at_xdmac *atxdmac, unsigned int chan_nb)
-> +{
-> +	return (void __iomem *)(atxdmac->regs + (AT_XDMAC_CHAN_REG_BASE + chan_nb * 0x40));
-> +}
-> +
-> +#define at_xdmac_read(atxdmac, reg) __raw_readl((atxdmac)->regs + (reg))
-> +#define at_xdmac_write(atxdmac, reg, value) \
-> +	__raw_writel((value), (atxdmac)->regs + (reg))
-> +
-> +#define at_xdmac_chan_read(atchan, reg) __raw_readl((atchan)->ch_regs + (reg))
-> +#define at_xdmac_chan_write(atchan, reg, value) __raw_writel((value), (atchan)->ch_regs + (reg))
-
-It's better to use readl_relaxed/writel_relaxed for the register access.
-The xxx_relaxed() can be optimized, such like put to different CPU to 
-execute parallely,  If you don't want that happen, you can use writel() 
-instead, not __raw_writel().
-
-Best Regards,
-Josh Wu
-
-> +
-> +static inline struct at_xdmac_chan *to_at_xdmac_chan(struct dma_chan *dchan)
-> +{
-> +	return container_of(dchan, struct at_xdmac_chan, chan);
-> +}
-> +
-> +static struct device *chan2dev(struct dma_chan *chan)
-> +{
-> +	return &chan->dev->device;
-> +}
-> +
-> +static inline struct at_xdmac *to_at_xdmac(struct dma_device *ddev)
-> +{
-> +	return container_of(ddev, struct at_xdmac, dma);
-> +}
-> +
-> +static inline struct at_xdmac_desc *txd_to_at_desc(struct dma_async_tx_descriptor *txd)
-> +{
-> +	return container_of(txd, struct at_xdmac_desc, tx_dma_desc);
-> +}
-> +
-> +static inline int at_xdmac_chan_is_cyclic(struct at_xdmac_chan *atchan)
-> +{
-> +	return test_bit(AT_XDMAC_CHAN_IS_CYCLIC, &atchan->status);
-> +}
-> +
-> +#endif /* __AT_XDMAC_H__ */
-> diff --git a/include/dt-bindings/dma/at91.h b/include/dt-bindings/dma/at91.h
-> index e835037..bef5b68 100644
-> --- a/include/dt-bindings/dma/at91.h
-> +++ b/include/dt-bindings/dma/at91.h
-> @@ -9,6 +9,8 @@
->   #ifndef __DT_BINDINGS_AT91_DMA_H__
->   #define __DT_BINDINGS_AT91_DMA_H__
->   
-> +/* ---------- HDMAC ---------- */
-> +
->   /*
->    * Source and/or destination peripheral ID
->    */
-> @@ -24,4 +26,48 @@
->   #define AT91_DMA_CFG_FIFOCFG_ALAP	(0x1 << AT91_DMA_CFG_FIFOCFG_OFFSET)	/* largest defined AHB burst */
->   #define AT91_DMA_CFG_FIFOCFG_ASAP	(0x2 << AT91_DMA_CFG_FIFOCFG_OFFSET)	/* single AHB access */
->   
-> +
-> +/* ---------- XDMAC ---------- */
-> +#define AT91_XDMAC_DT_MEM_IF_MASK	(0x1)
-> +#define AT91_XDMAC_DT_MEM_IF_OFFSET	(16)
-> +#define AT91_XDMAC_DT_MEM_IF(mem_if)	(((mem_if) & AT91_XDMAC_DT_MEM_IF_MASK) \
-> +					<< AT91_XDMAC_DT_MEM_IF_OFFSET)
-> +#define AT91_XDMAC_DT_GET_MEM_IF(cfg)	(((cfg) >> AT91_XDMAC_DT_MEM_IF_OFFSET) \
-> +					& AT91_XDMAC_DT_MEM_IF_MASK)
-> +
-> +#define AT91_XDMAC_DT_PER_IF_MASK	(0x1)
-> +#define AT91_XDMAC_DT_PER_IF_OFFSET	(0)
-> +#define AT91_XDMAC_DT_PER_IF(per_if)	(((per_if) & AT91_XDMAC_DT_PER_IF_MASK) \
-> +					<< AT91_XDMAC_DT_PER_IF_OFFSET)
-> +#define AT91_XDMAC_DT_GET_PER_IF(cfg)	(((cfg) >> AT91_XDMAC_DT_PER_IF_OFFSET) \
-> +					& AT91_XDMAC_DT_PER_IF_MASK)
-> +
-> +#define AT91_XDMAC_DT_PERID_MASK	(0x7f)
-> +#define AT91_XDMAC_DT_PERID_OFFSET	(24)
-> +#define AT91_XDMAC_DT_PERID(perid)	(((perid) & AT91_XDMAC_DT_PERID_MASK) \
-> +					<< AT91_XDMAC_DT_PERID_OFFSET)
-> +#define AT91_XDMAC_DT_GET_PERID(cfg)	(((cfg) >> AT91_XDMAC_DT_PERID_OFFSET) \
-> +					& AT91_XDMAC_DT_PERID_MASK)
-> +
-> +#define AT91_XDMAC_DT_DWIDTH_MASK	(0x3)
-> +#define AT91_XDMAC_DT_DWIDTH_OFFSET	(11)
-> +#define AT91_XDMAC_DT_DWIDTH(dwidth)	(((dwidth) & AT91_XDMAC_DT_DWIDTH_MASK) \
-> +					<< AT91_XDMAC_DT_DWIDTH_OFFSET)
-> +#define AT91_XDMAC_DT_GET_DWIDTH(cfg)	(((cfg) >> AT91_XDMAC_DT_DWIDTH_OFFSET) \
-> +					& AT91_XDMAC_DT_DWIDTH_MASK)
-> +
-> +#define AT91_XDMAC_DT_CSIZE_MASK	(0x7)
-> +#define AT91_XDMAC_DT_CSIZE_OFFSET	(8)
-> +#define AT91_XDMAC_DT_CSIZE(csize)	(((csize) & AT91_XDMAC_DT_CSIZE_MASK)  \
-> +					<< AT91_XDMAC_DT_CSIZE_OFFSET)
-> +#define AT91_XDMAC_DT_GET_CSIZE(cfg)	(((cfg) >> AT91_XDMAC_DT_CSIZE_OFFSET) \
-> +					& AT91_XDMAC_DT_CSIZE_MASK)
-> +
-> +#define AT91_XDMAC_DT_MBSIZE_MASK	(0x3)
-> +#define AT91_XDMAC_DT_MBSIZE_OFFSET	(1)
-> +#define AT91_XDMAC_DT_MBSIZE(mbsize)	(((mbsize) & AT91_XDMAC_DT_MBSIZE_MASK) \
-> +					<< AT91_XDMAC_DT_MBSIZE_OFFSET)
-> +#define AT91_XDMAC_DT_GET_MBSIZE(cfg)	(((cfg) >> AT91_XDMAC_DT_MBSIZE_OFFSET) \
-> +					& AT91_XDMAC_DT_MBSIZE_MASK)
-> +
->   #endif /* __DT_BINDINGS_AT91_DMA_H__ */
+>> +       struct siginfo info;
+>> +       struct task_struct *tid;
+>> +       int ret = 0;
+>> +       int pid = usim->user_pid;
+>> +
+>> +       if (pid == 0)
+>> +               return -EINVAL;
+>> +       info.si_signo = USIM_SIGID;
+>> +       info.si_code = SI_QUEUE;
+>> +
+>> +       info.si_int = event;
+>> +       rcu_read_lock();
+>> +
+>> +       /* find task structure associated with this pid */
+>> +       tid = pid_task(find_vpid(pid), PIDTYPE_PID);
+>> +       if (tid == NULL) {
+>> +               dev_err(usim->dev, "usim-err:no such pid :%d\n", pid);
+>> +               rcu_read_unlock();
+>> +               return -ENODEV;
+>> +       }
+>> +
+>> +       rcu_read_unlock();
+>> +
+>> +       /* send the signal */
+>> +       ret = send_sig_info(USIM_SIGID, &info, tid);
+>> +       if (ret < 0) {
+>> +               dev_err(usim->dev, "error sending signal:%d\n", ret);
+>> +               return ret;
+>> +       }
+>> +       return 0;
+>> +}
+>> +
+>> +static void usim_getrx(struct usim *usim)
+>> +{
+>> +       u32 rxlen = 0;
+>> +       u32 cnt = 0;
+>> +
+>> +       /* Check if FIFO contains some data */
+>> +       rxlen = USIM_READREG(usim->base, USIM_RXFIFO_LEVEL,
+>> +                                       USIM_RXFIFO_LEVEL);
+>
+> More register accessors?
+>
+>> +
+>> +       usim->slot_ctx[usim->slot].rx_counter += rxlen;
+>> +       if (rxlen > 0) {
+>> +               for (cnt = 0; cnt < rxlen; cnt++) {
+>> +                       usim->slot_ctx[usim->slot].rxbuf[cnt] =
+>> +                               USIM_READREG(usim->base, USIM_DRX, USIMDRX);
+>> +               }
+>> +       }
+>> +}
+>> +
+>> +static void usim_irq_atrhandler(struct usim *usim, u32 reg)
+>> +{
+>> +       u32 event = 0;
+>> +       u32 val = 0;
+>> +       u32 cnt = 0;
+>> +       u32 rxval = 0;
+>> +       if (usim->atrdone)
+>> +               return;
+>> +       do {
+>> +               /* WWT would be used to identify end of ATR */
+>> +               if (reg & (USIM_IRQ_WT | USIM_IRQ_EMV_ATR_LENGTH_TIME_OUT)) {
+>> +                       event |= USIM_EVENT_TIMEOUT;
+>> +                       val = USIM_READREG(usim->base, USIM_STAT,
+>> +                                               ATRRX_AFTER_TIMEOUT);
+>> +                       if (val) {
+>> +                               /* do not store rx character if it comes after
+>> +                                * ATR timeout
+>> +                                */
+>> +                               dev_dbg(usim->dev, "Error: Rx after ATR Timeout");
+>> +                               break;
+>> +                       }
+>> +               }
+>> +               if (reg & USIM_IRQ_TS_ERR) {
+>> +                       event |= USIM_EVENT_ERR_FRAME;
+>> +                       break;
+>> +               }
+>> +
+>> +               /* check the rx fifo and store available bytes in atrbuf */
+>> +               val = USIM_READREG(usim->base, USIM_RXFIFO_LEVEL,
+>> +                                               USIM_RXFIFO_LEVEL);
+>> +               cnt = usim->slot_ctx[usim->slot].atr_length;
+>> +
+>> +               while (val > 0) {
+>> +                       if (cnt < USIM_MAX_ATRLENGTH) {
+>> +                               rxval = readl(usim->base + USIM_DRX);
+>> +                               usim->slot_ctx[usim->slot].atr[cnt++] = rxval &
+>> +                                                       USIM_DRX_USIMDRX_MASK;
+>> +                               /* check of parity */
+>> +                               if (!(rxval & USIM_DRX_STATRXPAR_MASK)) {
+>> +                                       dev_dbg(usim->dev,
+>> +                                               "Error : incorrect parity:%0x"
+>> +                                               , rxval);
+>> +                                       event |= USIM_EVENT_ERR_PARITY;
+>> +                               }
+>> +                       }
+>> +                       val--;
+>> +               }
+>> +
+>> +               usim->slot_ctx[usim->slot].atr_length = cnt;
+>> +       } while (0);
+>
+> It would be nicer to see these written w/o all these while (0) loops.
+>
+>> +
+>> +       if (event != 0) {
+>> +               USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_IDLE);
+>> +               usim->slot_ctx[usim->slot].state = USIM_MODE_IDLE;
+>> +               usim->slot_ctx[usim->slot].event = event;
+>> +               usim->atrdone = 1;
+>> +       }
+>> +
+>> +       if (usim->atrdone)
+>> +               wake_up(&atr_wait);
+>> +
+>> +       return;
+>> +}
+>> +
+>> +static void usim_irq_txhandler(struct usim *usim, u32 reg)
+>> +{
+>> +       u32 protocol    = 0;
+>
+> This does not need to be initialized.
+>
+>> +       u32 event       = 0;
+>> +
+>> +       if (usim->txdone)
+>> +               return;
+>> +
+>> +       protocol = usim->slot_ctx[usim->slot].protocol;
+>> +       do {
+>> +               if (reg & USIM_IRQ_FRAME_ERR) {
+>> +                       event |= USIM_EVENT_ERR_FRAME;
+>> +                       break;
+>> +               }
+>> +               if (!protocol && (reg & USIM_IRQ_RESENT)) {
+>> +                       event |= USIM_EVENT_ERR_TXRETRY;
+>> +                       break;
+>> +               }
+>> +               if (reg & USIM_IRQ_TX_BLOCK_REQ) {
+>> +                       /* TODO : As per EMV max tx block will be of 256 bytes
+>> +                        * and USIM controller has sufficient place for this.
+>> +                        * Need to implement this case when it is practially
+>> +                        * required
+>> +                        */
+>> +                       dev_dbg(usim->dev, "Error: TX_BLOCK_REQ - Not Implemented");
+>> +               }
+>> +               if (reg & USIM_IRQ_TX_BLOCK_DONE) {
+>> +                       usim_irq_disable(usim->base, USIM_IRQ_TX_BLOCK_REQ
+>> +                                               | USIM_IRQ_TX_BLOCK_DONE
+>> +                                               | USIM_IRQ_TX);
+>> +                       usim->txdone = 1;
+>> +                       usim_irq_enable(usim->base, USIM_IRQ_RX | USIM_IRQ_EOB
+>> +                                               | USIM_IRQ_RXDMA_RDY);
+>> +                       break;
+>> +               }
+>> +       } while (0);
+>> +
+>> +       if (event != 0) {
+>> +               USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_IDLE);
+>> +               usim->slot_ctx[usim->slot].state = USIM_MODE_IDLE;
+>> +               usim->slot_ctx[usim->slot].event = event;
+>> +               usim->txdone = 1;
+>> +               usim->rxdone = 1;
+>> +       }
+>> +       if (usim->txdone)
+>> +               wake_up(&tx_wait);
+>> +       return;
+>> +}
+>> +
+>> +static void usim_irq_rxhandler(struct usim *usim, u32 reg)
+>> +{
+>> +       u32 event = 0;
+>> +       u32 val = 0;
+>> +
+>> +       u32 protocol = usim->slot_ctx[usim->slot].protocol;
+>> +
+>> +       /* if tx not done then do not check of any rx */
+>> +       if (usim->rxdone || !usim->txdone)
+>> +               return;
+>> +
+>> +       /* For T=0 protocol */
+>> +       if (protocol == 0) {
+>> +               do {
+>> +                       /* ignore interrupts if expected bytes recevied */
+>> +                       if (usim->slot_ctx[usim->slot].rx_counter >=
+>> +                                       usim->slot_ctx[usim->slot].rx_explen) {
+>> +                               dev_dbg(usim->dev, "All bytes recvd,ignore this timeout\n");
+>> +                               usim->rxdone = 1;
+>> +                               break;
+>
+> How about using "else if" instead of all these breaks. Can't you have
+> multiple interrupt bits set?
+handling interrput in order of priority.
+ex. if all expected rx bytes are received then need to ignore other 
+timeout interrupts. Useful while doing EMV validation.
+>
+>> +                       }
+>> +
+>> +                       if (reg & USIM_IRQ_WT) {
+>> +                               dev_dbg(usim->dev, "Expected bytes not recvd counter = %d\n",
+>> +                                       usim->slot_ctx[usim->slot].rx_counter);
+>> +                               usim_getrx(usim);
+>> +                               event |= USIM_EVENT_TIMEOUT;
+>> +                               break;
+>> +                       }
+>> +
+>> +                       if (reg & USIM_IRQ_PAR_ERR_LEVEL_REACHED) {
+>> +                               dev_err(usim->dev,
+>> +                                       "Rx parity level reached:%x\n"
+>> +                                       , reg);
+>> +                               usim_getrx(usim);
+>> +                               event |= USIM_EVENT_ERR_PARITY;
+>> +                               break;
+>> +                       }
+>> +
+>> +                       if (reg & (USIM_IRQ_RX | USIM_IRQ_RXDMA_RDY)) {
+>> +                               /* Read number of bytes present in the FIFO */
+>> +                               usim_getrx(usim);
+>> +                               usim->rxdone = 1;
+>> +                               break;
+>> +                       }
+>> +               } while (0);
+>> +       } else {
+>> +               /* T=1 protocol */
+>> +               do {
+>> +                       if (reg & (USIM_IRQ_TOB | USIM_IRQ_TOC)) {
+>> +                               usim_getrx(usim);
+>> +                               event |= USIM_EVENT_TIMEOUT;
+>> +                               break;
+>> +                       }
+>> +                       if (reg & USIM_IRQ_EOB) {
+>> +                               usim_getrx(usim);
+>> +                               usim->rxdone = 1;
+>> +                               val = USIM_READREG(usim->base, USIM_STAT,
+>> +                                                               STATLRC);
+>> +                               if (val != 0)
+>> +                                       event |= USIM_EVENT_ERR_LRC;
+>> +                               break;
+>> +                       }
+>> +               } while (0);
+>> +       }
+>> +
+>> +       if (event != 0 || usim->rxdone == 1) {
+>> +               USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_IDLE);
+>> +               usim->slot_ctx[usim->slot].state = USIM_MODE_IDLE;
+>> +               usim->slot_ctx[usim->slot].event = event;
+>> +               usim->rxdone = 1;
+>> +       }
+>> +
+>> +       if (usim->rxdone)
+>> +               wake_up(&rx_wait);
+>> +
+>> +       return;
+>> +}
+>> +
+>> +static irqreturn_t usim_interrupt(int irq, void *_usim)
+>> +{
+>> +       u32 reg = 0;
+>> +       u32 state = 0;
+>> +       struct usim *usim = (struct usim *)_usim;
+>> +
+>> +       state = usim->slot_ctx[usim->slot].state;
+>> +
+>> +       spin_lock(&usim->lock);
+>> +
+>> +       reg = readl(usim->base + USIM_IRQSTATUS);
+>> +
+>> +       if (state == USIM_MODE_ATR)
+>> +               usim_irq_atrhandler(usim, reg);
+>> +
+>> +       if (state == USIM_MODE_TXRX) {
+>> +               usim_irq_txhandler(usim, reg);
+>> +               usim_irq_rxhandler(usim, reg);
+>> +       }
+>> +
+>> +       if (reg & USIM_IRQSTATUS_USIM_NATR_MASK)
+>> +               dev_dbg(usim->dev, "NO ATR\n");
+>> +
+>> +       if (reg & USIM_IRQSTATUS_USIM_CD_MASK)
+>> +               dev_dbg(usim->dev, "CARD Insert/Removed\n");
+>> +
+>> +       if (reg & USIM_IRQSTATUS_USIM_STOP_CLK_MASK)
+>> +               dev_dbg(usim->dev, "SIM CLK STOPPED\n");
+>> +
+>> +       if (reg & USIM_IRQSTATUS_ACT_DONE_MASK)
+>> +               dev_dbg(usim->dev, "Activation Sequence completed\n");
+>> +
+>> +       if (reg & USIM_IRQSTATUS_DEACT_DONE_MASK)
+>> +               dev_dbg(usim->dev, "Deactivation Sequence complteted\n");
+>> +
+>> +       /* Clear the interrupt by writing the corresponding bit
+>> +        * in IRQ_STATUS register
+>> +        */
+>> +       usim_irqstatus_clear(usim->base, reg);
+>> +
+>> +       spin_unlock(&usim->lock);
+>> +
+>> +       return IRQ_HANDLED;
+>> +}
+>> +
+>> +static int usim_configure(struct usim *usim)
+>> +{
+>> +       int reg = 0;
+>> +       int count = 3;
+>> +
+>> +       /* perform softreset of IP */
+>> +       USIM_WRITEREG(usim->base, USIM_SYSCONFIG, SOFTRESET, 1);
+>> +
+>> +       /* wait until reset get completed */
+>> +       while (count > 0) {
+>> +               reg = USIM_READREG(usim->base, USIM_SYSCONFIG, SOFTRESET);
+>> +               if (reg == 0x0)
+>> +                       break;
+>> +               mdelay(10);
+>
+> Does this really need to be a delay loop rather than a sleep? If not,
+> use msleep and time_after or time_before.
+As for POS application, opening device is high priority, so used delay.
+This will be used to do soft reset of IP,every time application opens 
+device.
+>
+>> +               count--;
+>> +       }
+>> +       if (reg != 0x0)
+>> +               return -EIO;
+>> +
+>> +       /* activate phy */
+>> +       if (usim->phy_present)
+>> +               usim->phy->set_config(usim->phy, usim->slot, SC_PHY_MODE,
+>> +                               SC_PHY_ACTIVE);
+>> +
+>> +       /* Disable Auto Idle and set NO IDLE config */
+>> +       reg = readl(usim->base + USIM_SYSCONFIG);
+>> +       reg = USIM_SETFIELD(reg, USIM_SYSCONFIG, AUTOIDLE, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_SYSCONFIG, IDLEMODE, 1);
+>> +       writel(reg, usim->base + USIM_SYSCONFIG);
+>> +
+>> +       if (usim->phy_present) {
+>> +               USIM_WRITEREG(usim->base, USIM_STAT, STATNOCARD, 1);
+>> +               USIM_WRITEREG(usim->base, USIM_CONF1, BYPASS_HW_AUTO, 0);
+>> +       } else {
+>> +               USIM_WRITEREG(usim->base, USIM_STAT, STATNOCARD, 0);
+>> +               USIM_WRITEREG(usim->base, USIM_CONF1, BYPASS_HW_AUTO, 1);
+>> +       }
+>> +
+>> +       /* Set default card type as EMV, Force SIO to low level */
+>> +       reg = readl(usim->base + USIM_CONF1);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF1, EMV_CONF, 1);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF1, CONFSIOLOW, 1);
+>> +       writel(reg, usim->base + USIM_CONF1);
+>> +
+>> +       /* Set parity level to 1, auto resent to 2 on parity error,  */
+>> +       reg = readl(usim->base + USIM_CONF2);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, NACKING_EN, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CARD_POLARITY, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFEDC, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFPROTOCOL, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, ATR_ASYN_BYPASS, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFSCLKDIV, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFSCLKMODE, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, PAR_ERR_LEVEL, 1);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFRESENT, 2);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, PUT_ERR_IN_FIFO, 1);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFLRCCHECK, 2);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFSCLKDIV, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFCHKPAR, 1);
+>> +
+>> +       if (usim->phy_present) {
+>> +               reg = USIM_SETFIELD(reg, USIM_CONF2, HW_DEACTIV_EN, 0);
+>> +               reg = USIM_SETFIELD(reg, USIM_CONF2, DEBOUNCE_EN, 0);
+>> +       } else {
+>> +               reg = USIM_SETFIELD(reg, USIM_CONF2, HW_DEACTIV_EN, 1);
+>> +       }
+>> +
+>> +       writel(reg, usim->base + USIM_CONF2);
+>> +
+>> +       /* Reset Tx FIFO Pointer */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 0);
+>> +
+>> +       /* Reset Rx FIFO Pointer */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 0);
+>> +
+>> +       /* Configure FIFO settings */
+>> +       /* Set Tx and Rx trigger to 1 byte */
+>> +       reg = readl(usim->base + USIM_FIFOS);
+>> +       reg = USIM_SETFIELD(reg, USIM_FIFOS, FIFO_TX_TRIGGER, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_FIFOS, FIFO_RX_TRIGGER, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_FIFOS, RXDMA_TYPE, 0x3);
+>> +       reg = USIM_SETFIELD(reg, USIM_FIFOS, DMA_MODE, 0x0);
+>> +       writel(reg, usim->base + USIM_FIFOS);
+>> +
+>> +       /* Enable FIFO access */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFO_ENABLE, 1);
+>> +
+>> +       /* Use HW mode for ETU calculation and set FI = 372 and DI = 1 */
+>> +       reg = readl(usim->base + USIM_CONF5);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF5, FI, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF5, DI, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF5, SOFT_NHARD_FIDI_PROG, 0);
+>> +       writel(reg, usim->base + USIM_CONF5);
+>> +
+>> +       /* Configure CONF6 settings */
+>> +       reg = readl(usim->base + USIM_CONF6);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, VCC_BYPASS, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, RST_BYPASS, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, SCLK0_BYPASS, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, RST_POLARITY, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, ATR_TIMER_BYPASS, 1);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, MODE, USIM_CONF6_MODE_FREEZE);
+>> +       writel(reg, usim->base + USIM_CONF6);
+>> +
+>> +       /* Clear all bits in IO_DIRECT register */
+>> +       writel(0, usim->base + USIM_IO_DIRECT);
+>> +
+>> +       /* Disable legacy bypass mode */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF1, CONFBYPASS, 0);
+>> +
+>> +       /* Enable required interrupts */
+>> +       reg = readl(usim->base + USIM_IRQENABLE);
+>> +       writel(reg, usim->base + USIM_IRQENABLE);
+>> +
+>> +       /* Toggling ATR length to ensure 'USIM_STAT_ATRRX_AFTER_TIMEOUT'
+>> +        * gets disable
+>> +        */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMEOUT, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMEOUT,
+>> +                     USIM_ATR_TIMEOUT_EMV);
+>> +
+>> +       /* Set STOP_RX_TIMEOUT */
+>> +       /* Set STOP_RESEND_FAILURE */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, STOP_RX_TIMEOUT, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, STOP_RESEND_FAILURE, 1);
+>> +
+>> +       /* set smartcard clock */
+>> +       usim_set_smartcardclock(usim, usim->slot_ctx[usim->slot].clock);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_set_voltage(struct usim *usim, u32 voltage)
+>> +{
+>> +       int ret = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +       /*
+>> +        * voltage = 0 for 5V,
+>> +        * voltage = 1 for 3V,
+>> +        * voltage = 2 for 1.8V,
+>> +        */
+>> +       if (voltage > 3)
+>> +               return -EINVAL;
+>> +       if (usim->phy_present) {
+>> +               ret = phy->set_config(phy, usim->slot,
+>> +                               SC_PHY_CARD_SUPPLY_VOLTAGE, voltage);
+>> +       }
+>> +       usim->slot_ctx[usim->slot].supply = voltage;
+>> +       return ret;
+>> +}
+>> +
+>> +static int usim_set_smartcardclock(struct usim *usim, u32 clock)
+>> +{
+>> +       int clkdiv;
+>> +       int clkmode;
+>> +       int reg = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       switch (clock) {
+>> +       case USIM_SMARTCART_CLOCK_3_3MHZ:
+>> +               clkmode = USIM_CONFSCLKMODE_HF;
+>> +               clkdiv  = 3;
+>> +               break;
+>> +
+>> +       case USIM_SMARTCART_CLOCK_4MHZ:
+>> +               clkmode = USIM_CONFSCLKMODE_HF;
+>> +               clkdiv  = 2;
+>> +               break;
+>> +
+>> +       case USIM_SMARTCART_CLOCK_5MHZ:
+>> +               clkmode = USIM_CONFSCLKMODE_LEGACY;
+>> +               clkdiv  = 3;
+>> +               break;
+>> +
+>> +       case USIM_SMARTCART_CLOCK_6_6MHZ:
+>> +               clkmode = USIM_CONFSCLKMODE_LEGACY;
+>> +               clkdiv  = 2;
+>> +               break;
+>> +
+>> +       case USIM_SMARTCART_CLOCK_10MHZ:
+>> +               clkmode = USIM_CONFSCLKMODE_LEGACY;
+>> +               clkdiv  = 1;
+>> +               break;
+>> +
+>> +       case USIM_SMARTCART_CLOCK_20MHZ:
+>> +               clkmode = USIM_CONFSCLKMODE_LEGACY;
+>> +               clkdiv  = 0;
+>> +               break;
+>> +
+>> +       default:
+>> +               dev_err(usim->dev, "Unsupported Clock configuration for smartcard\n");
+>> +               return -EINVAL;
+>> +               break;
+>> +       }
+>> +
+>> +       /* Set default card type as EMV, Force SIO to low level */
+>> +       reg = readl(usim->base + USIM_CONF2);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFSCLKMODE, clkmode);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF2, CONFSCLKDIV, clkdiv);
+>> +       writel(reg, usim->base + USIM_CONF2);
+>> +
+>> +       /* setting phy division to zero, as USIM samples smartcard clk line and
+>> +        * put the data in USIM fifo. Phy supply the clock to smartcard wihtout
+>> +        * furhter division
+>> +        */
+>> +       if (usim->phy_present)
+>> +               phy->set_config(phy, usim->slot, SC_PHY_CLKDIV, 0);
+>> +
+>> +       usim->slot_ctx[usim->slot].clock = clock;
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_set_etu(struct usim *usim, u32 fi, u32 di)
+>> +{
+>> +       USIM_WRITEREG(usim->base, USIM_CONF5, SOFT_NHARD_FIDI_PROG, 0);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF5, FI, fi);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF5, DI, di);
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_set_rxparitycount(struct usim *usim, u32 rxcount)
+>> +{
+>> +       if (rxcount > USIM_MAX_PARITY_RETRIES)
+>> +               return -EINVAL;
+>> +
+>> +       /* Program fields required for RX retry in USIM IP */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, PAR_ERR_LEVEL, rxcount);
+>> +
+>> +       /* Enable rx parity check */
+>> +       if (rxcount > 0) {
+>> +               USIM_WRITEREG(usim->base, USIM_CONF2, CONFCHKPAR, 1);
+>> +               usim_irq_enable(usim->base, USIM_IRQ_PAR_ERR_LEVEL_REACHED);
+>> +       } else {
+>> +               usim_irq_disable(usim->base, USIM_IRQ_PAR_ERR_LEVEL_REACHED);
+>> +       }
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_set_txretrycount(struct usim *usim, u32 txcount)
+>> +{
+>> +       if (txcount > USIM_MAX_PARITY_RETRIES)
+>> +               return -EINVAL;
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, CONFRESENT, txcount);
+>> +       if (txcount > 0)
+>> +               usim_irq_enable(usim->base, USIM_IRQ_RESENT);
+>> +       else
+>> +               usim_irq_disable(usim->base, USIM_IRQ_RESENT);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_set_c4(struct usim *usim, int state)
+>> +{
+>> +       int ret = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +       if (usim->phy_present)
+>> +               ret = phy->set_config(phy, usim->slot, SC_PHY_PIN_C4, state);
+>> +       else
+>> +                USIM_WRITEREG(usim->base, USIM_IO_DIRECT, C4, state);
+>> +       return ret;
+>> +}
+>> +
+>> +static int usim_set_c8(struct usim *usim, int state)
+>> +{
+>> +       int ret = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       if (usim->phy_present)
+>> +               ret = phy->set_config(phy, usim->slot, SC_PHY_PIN_C8, state);
+>> +       return ret;
+>> +}
+>> +static int usim_get_version(struct usim *usim)
+>> +{
+>> +       int version = 0x0;
+>> +
+>> +       /* last 16 bytes represents controller version
+>> +        * and first 16 bytes represents phy version (if connected)
+>> +        */
+>> +       version = USIM_READREG(usim->base, USIM_REVISION, REV);
+>> +       if (usim->phy_present)
+>> +               version |= ((usim->phy->get_config(usim->phy, 0,
+>> +                                       SC_PHY_VERSION)) << 0x10);
+>> +       return version;
+>> +}
+>> +static int usim_init_emvusercard(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CONF1, EMV_CONF, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, DMA_MODE, 0);
+>> +
+>> +       usim_set_etu(usim, 0, 0);
+>> +
+>> +       if (usim_set_txretrycount(usim, 5) != 0)
+>> +               return -EINVAL;
+>> +
+>> +       if (usim_set_rxparitycount(usim, 5) != 0)
+>> +               return -EINVAL;
+>> +
+>> +       usim_set_c4(usim, 0);
+>> +       usim_set_c8(usim, 0);
+>> +
+>> +       if (usim->phy_present) {
+>> +               /* Set early ATR and mute ATR in case of phy */
+>> +               ret = phy->set_config(phy, usim->slot, SC_PHY_ATR_EARLY_TIME,
+>> +                               USIM_EMV_ATR_EARLY_TO);
+>> +               if (ret != 0)
+>> +                       return ret;
+>> +
+>> +               ret = phy->set_config(phy, usim->slot, SC_PHY_ATR_MUTE_TIME,
+>> +                               USIM_EMV_ATR_MUTE_TO);
+>> +               if (ret != 0)
+>> +                       return ret;
+>> +
+>> +               /* enable user slot */
+>> +               ret = phy->set_config(phy, usim->slot, SC_PHY_IO, 1);
+>> +               if (ret != 0)
+>> +                       return ret;
+>> +       }
+>> +       /* set cwt,wwt,cgt */
+>> +       USIM_WRITEREG(usim->base, USIM_WWT, WWT, USIM_EMV_WWT);
+>> +       USIM_WRITEREG(usim->base, USIM_CWT, CWT, USIM_EMV_WWT - 22);
+>> +       USIM_WRITEREG(usim->base, USIM_CGT, CGT, USIM_EMV_CGT);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_warmreset(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       /* reset ATR wait flag */
+>> +       usim->atrdone = 0;
+>> +
+>> +       usim->slot_ctx[usim->slot].atr_length = 0;
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_IDLE);
+>> +       usim->slot_ctx[usim->slot].state = USIM_MODE_IDLE;
+>> +
+>> +       /* reset FIFO pointer */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 0);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 0);
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CMD, STOP_EMV_ATR_LENGTH_TIMER, 0x1);
+>> +       USIM_WRITEREG(usim->base, USIM_CMD, STOP_EMV_ATR_LENGTH_TIMER, 0x0);
+>> +
+>> +       /* Do store bytes with parity error in Rx FIFO */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, PUT_ERR_IN_FIFO, 0x1);
+>> +
+>> +       usim_irq_disable(usim->base, (USIM_IRQ_TX | USIM_IRQ_EOB));
+>> +
+>> +       usim->slot_ctx[usim->slot].state = USIM_MODE_ATR;
+>> +
+>> +       /* warm reset the card */
+>> +       if (usim->phy_present) {
+>> +               ret = phy->warm_reset(phy, usim->slot);
+>> +               if (ret != 0)
+>> +                       return ret;
+>> +       } else {
+>> +               /* warm reset using USIM */
+>> +               USIM_WRITEREG(usim->base, USIM_CMD, CMD_WARM_RST, 0x1);
+>> +       }
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_ATR);
+>> +
+>> +       return 0;
+>> +}
+>> +static int usim_set_cardmode(struct usim *usim, int slot, int card_mode)
+>> +{
+>> +       int val = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       if (card_mode !=  usim->slot_ctx[slot].card_mode) {
+>> +               /* deactivate current card before changing the
+>> +                * mode of smart card
+>> +                */
+>> +               usim_deactivate_card(usim);
+>> +       } else {
+>> +               dev_dbg(usim->dev, "mode is same as previous, no action!!");
+>> +               return 0;
+>> +       }
+>> +
+>> +       /* set card mode */
+>> +       switch (card_mode) {
+>> +       case USIM_CARD_MODE_ASYNC:
+>> +               val = SC_PHY_ASYNC;
+>> +               break;
+>> +
+>> +       case USIM_CARD_MODE_SYNC_TYPE1:
+>> +               val = SC_PHY_SYNC_TYPE1;
+>> +               break;
+>> +
+>> +       case USIM_CARD_MODE_SYNC_TYPE2:
+>> +               val = SC_PHY_SYNC_TYPE2;
+>> +               break;
+>> +
+>> +       case USIM_CARD_MODE_SYNC_OTHER:
+>> +               val = SC_PHY_SYNC;
+>> +               break;
+>> +
+>> +       default:
+>> +               dev_err(usim->dev, "Invalid card mode");
+>> +               return -EINVAL;
+>> +               break;
+>> +       }
+>> +       if (usim->phy_present == USIM_PHY_PRESENT)
+>> +               phy->set_config(usim->phy, slot, SC_PHY_CARD_MODE, val);
+>> +       usim->slot_ctx[slot].card_mode = card_mode;
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_activate_synccard(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       int reg = 0;
+>
+> These don't need to be initialized and can be 1 line.
+Agree
+>
+>> +       struct sc_phy *phy = usim->phy;
+>> +       if (usim->phy_present != USIM_PHY_PRESENT) {
+>> +               dev_err(usim->dev, "Sync card w/o phy is not supported");
+>> +               return -EPERM;
+>> +       }
+>> +
+>> +       /* Enable legacy bypass mode */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF1, CONFBYPASS, 1);
+>> +
+>> +       /* set all lines to state L */
+>> +       writel(0x0, usim->base + USIM_IO_DIRECT);
+>> +
+>> +       /* configure h/w control mode for select slot */
+>> +       reg = readl(usim->base + USIM_CONF6);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, SCLK0_BYPASS, 1);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, ATR_TIMER_BYPASS, 1);
+>> +       /* lets put i/o line in SW ctrl */
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, IO_BYPASS, 0x3);
+>> +       writel(reg, usim->base + USIM_CONF6);
+>> +
+>> +       /* activate the card */
+>> +       ret = phy->activate_card(phy, usim->slot);
+>> +       return ret;
+>> +}
+>> +
+>> +static int usim_activate_card(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       int reg = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +       int mode = usim->slot_ctx[usim->slot].card_mode;
+>> +
+>> +       usim->atrdone = 0;
+>> +       usim->slot_ctx[usim->slot].atr_length = 0;
+>> +
+>> +       /* set card mode */
+>> +       usim_set_cardmode(usim, usim->slot, mode);
+>> +
+>> +       if (usim->slot_ctx[usim->slot].card_mode != USIM_CARD_MODE_ASYNC) {
+>> +               /* synchronous card activation */
+>> +               ret = usim_activate_synccard(usim);
+>> +               return ret;
+>> +       }
+>> +
+>> +       if (usim->slot_ctx[usim->slot].emv)
+>> +               usim_init_emvusercard(usim);
+>> +
+>> +       /* disable legacy bypass mode */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF1, CONFBYPASS, 0);
+>> +
+>> +       /* configure h/w control mode for select slot */
+>> +       reg = readl(usim->base + USIM_CONF6);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, SCLK0_BYPASS, 0);
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, ATR_TIMER_BYPASS, 0);
+>> +       /* lets put i/o line in h/w ctrl */
+>> +       reg = USIM_SETFIELD(reg, USIM_CONF6, IO_BYPASS, 0x2);
+>> +       writel(reg, usim->base + USIM_CONF6);
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CONF1, EMV_CONF, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_IDLE);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 0);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 0);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFO_RX_TRIGGER, 0x103);
+>> +
+>> +       /* RXDMA_TYPE = 0x1 - USIM_RXFIFO_BYTECNT value is ignored */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, RXDMA_TYPE, 0x1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFO_ENABLE, 0x1);
+>> +
+>> +       /* Do store bytes with parity error in Rx FIFO */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, PUT_ERR_IN_FIFO, 0x1);
+>> +       usim_irq_disable(usim->base, (USIM_IRQ_TX | USIM_IRQ_EOB));
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CMD, STOP_EMV_ATR_LENGTH_TIMER, 0x1);
+>> +       USIM_WRITEREG(usim->base, USIM_CMD, STOP_EMV_ATR_LENGTH_TIMER, 0x0);
+>> +
+>> +       /*
+>> +        * Toggling ATR length to ensure 'USIM_STAT_ATRRX_AFTER_TIMEOUT'
+>> +        * gets disable. EMVCo Test case ref#1703_21/22
+>> +        */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMEOUT, 0x1);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMEOUT,
+>> +                     USIM_ATR_TIMEOUT_EMV);
+>> +       USIM_WRITEREG(usim->base, USIM_CMD, MODULE_CLK_EN, 0x1);
+>> +
+>> +       usim->slot_ctx[usim->slot].state = USIM_MODE_ATR;
+>> +
+>> +       /* set smartcard clock */
+>> +       usim_set_smartcardclock(usim, usim->slot_ctx[usim->slot].clock);
+>> +
+>> +       /* Activate card */
+>> +       if (usim->phy_present) {
+>> +               usim_irq_disable(usim->base, USIM_IRQ_TX|USIM_IRQ_ATR_START);
+>> +               usim_irq_enable(usim->base, 0xFFFFFFF7);
+>> +               usim_irq_disable(usim->base, USIM_IRQ_NATR);
+>> +               usim_irq_enable(usim->base, USIM_IRQ_EMV_ATR_LENGTH_TIME_OUT);
+>> +               usim_irq_disable(usim->base, USIM_IRQ_TX|USIM_IRQ_ATR_START);
+>> +
+>> +               /* do no bypass ATR length timer, also do not
+>> +                * disturb the bypass setting of other param
+>> +                */
+>> +               USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMER_BYPASS, 0x1);
+>> +
+>> +               usim_irqstatus_clear(usim->base, usim_irqstatus(usim->base));
+>> +
+>> +               ret = phy->activate_card(phy, usim->slot);
+>> +               if (ret != 0)
+>> +                       return ret;
+>> +       } else {
+>> +               /* Activate using USIM */
+>> +               USIM_WRITEREG(usim->base, USIM_CMD, CMDSTOP, 0x0);
+>> +               USIM_WRITEREG(usim->base, USIM_CMD, CMDSTOP, 0x1);
+>> +       }
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_ATR);
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_deactivate_card(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       int cnt = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       /* clear atr buffer */
+>> +       for (cnt = 0; cnt < USIM_MAX_ATRLENGTH; cnt++)
+>> +               usim->slot_ctx[usim->slot].atr[cnt] = 0x0;
+>> +       usim->slot_ctx[usim->slot].atr_length = 0x0;
+>> +
+>> +       /* Use USIM IP for deactivation if there is no phy */
+>> +       if (usim->phy_present == USIM_PHY_PRESENT) {
+>> +               ret = phy->deactivate_card(phy, usim->slot);
+>> +               if (ret != 0)
+>> +                       return ret;
+>> +       } else {
+>> +               USIM_WRITEREG(usim->base, USIM_CMD, CMDSTART, 0x0);
+>> +               USIM_WRITEREG(usim->base, USIM_CMD, CMDSTOP, 1);
+>> +       }
+>> +
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_IDLE);
+>> +       USIM_WRITEREG(usim->base, USIM_TX_BLOCK, BLOCK_LENGTH, 0);
+>> +
+>> +       /* Toggling ATR length to ensure 'USIM_STAT_ATRRX_AFTER_TIMEOUT'
+>> +        * gets disable TC Ref: 1703_21/22
+>> +        */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMEOUT, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_CONF6, ATR_TIMEOUT,
+>> +                     USIM_ATR_TIMEOUT_EMV);
+>> +
+>> +       /* stop ATR length timeout */
+>> +       USIM_WRITEREG(usim->base, USIM_CMD, STOP_EMV_ATR_LENGTH_TIMER, 1);
+>> +       usim->slot_ctx[usim->slot].state = USIM_MODE_DEACT;
+>> +       usim->atrdone = 0;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static void usim_set_protocol(struct usim *usim, int protocol)
+>> +{
+>> +       u32 irq;
+>> +
+>> +       /* As per spec, mask all interrupts before switching
+>> +        * from one protocol to other.
+>> +        */
+>> +       usim_irq_get(usim->base, &irq);
+>> +
+>> +       /* disable all interrupts */
+>> +       usim_irq_disable(usim->base, 0xFFFFFFFF);
+>> +
+>> +       /* 0 for T=0 and 1 for T=1 protocol */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, CONFPROTOCOL, protocol);
+>> +       usim->slot_ctx[usim->slot].protocol = protocol;
+>> +
+>> +       /* read and clear status */
+>> +       usim_irqstatus_clear(usim->base, usim_irqstatus(usim->base));
+>> +
+>> +       /* now renable interrupts */
+>> +       usim_irq_enable(usim->base, irq);
+>> +       return;
+>> +}
+>> +
+>> +static int usim_get_cardpinlevel(struct usim *usim, int pin, int *level)
+>> +{
+>> +       struct sc_phy *phy = usim->phy;
+>> +       int param = 0;
+>> +
+>> +       if (usim->slot_ctx[usim->slot].card_mode == USIM_CARD_MODE_ASYNC) {
+>> +               dev_err(usim->dev, "Operation not permitted for async mode");
+>> +               return -EPERM;
+>> +       }
+>> +       if (pin == USIM_PARAM_CARD_PIN_IO) {
+>> +               /* For Rx, RNW:1, OEN:1 */
+>> +               USIM_WRITEREG(usim->base, USIM_IO_DIRECT, RNW0, 1);
+>> +               USIM_WRITEREG(usim->base, USIM_IO_DIRECT, SIOEN0, 1);
+>> +               *level = USIM_READREG(usim->base, USIM_IO_DIRECT, SIORX0);
+>> +               return 0;
+>> +       }
+>> +
+>> +       if (usim->phy_present == USIM_PHY_PRESENT) {
+>> +               switch (pin) {
+>> +               case USIM_PARAM_CARD_PIN_VCC:
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_RST:
+>> +                       param = SC_PHY_PIN_RST;
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_CLK:
+>> +                       param = SC_PHY_PIN_CLK;
+>> +                       break;
+>> +
+>> +               default:
+>> +                       dev_err(usim->dev, "Invalid pin");
+>> +                       return -EINVAL;
+>> +               }
+>> +               *level = phy->get_config(phy, usim->slot, param);
+>> +               return  0;
+>> +       } else {
+>> +               switch (pin) {
+>> +               case USIM_PARAM_CARD_PIN_VCC:
+>> +                       *level = USIM_READREG(usim->base,
+>> +                                       USIM_IO_DIRECT, SVCC);
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_RST:
+>> +                       *level = USIM_READREG(usim->base,
+>> +                                       USIM_IO_DIRECT, RST);
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_CLK:
+>> +                       *level = USIM_READREG(usim->base,
+>> +                                       USIM_IO_DIRECT, SCLK0);
+>> +                       break;
+>> +
+>> +               default:
+>> +                       dev_err(usim->dev, "Invalid pin");
+>> +                       return -EINVAL;
+>> +               }
+>> +       }
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_set_cardpinlevel(struct usim *usim, int pin, int level)
+>> +{
+>> +       int ret = 0;
+>> +       int param = 0;
+>> +       int value = level > 0 ? 1 : 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       if (usim->slot_ctx[usim->slot].card_mode == USIM_CARD_MODE_ASYNC) {
+>> +               dev_err(usim->dev, "Operation not permitted for async mode");
+>> +               return -EPERM;
+>> +       }
+>> +       if (pin == USIM_PARAM_CARD_PIN_IO) {
+>> +               /* For Tx: RNW=0; OEN=Tx */
+>> +               /* Tx line will be followed by OEN line, so setting OEN bit*/
+>> +               USIM_WRITEREG(usim->base, USIM_IO_DIRECT, RNW0, 0);
+>> +               USIM_WRITEREG(usim->base, USIM_IO_DIRECT, SIOEN0, value);
+>> +               return 0;
+>> +       }
+>> +
+>> +       if (usim->phy_present == USIM_PHY_PRESENT) {
+>> +               switch (pin) {
+>> +               case USIM_PARAM_CARD_PIN_VCC:
+>> +                       /* will be set by activation or deactivation */
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_RST:
+>> +                       param = SC_PHY_PIN_RST;
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_CLK:
+>> +                       param = SC_PHY_PIN_CLK;
+>> +                       break;
+>> +
+>> +               default:
+>> +                       dev_err(usim->dev, "Invalid pin");
+>> +                       return -EINVAL;
+>> +               }
+>
+>
+> Make this switch a helper function. Same code exists above.
+>
+will do
+>> +               ret = phy->set_config(phy, usim->slot, param, value);
+>> +               return  ret;
+>> +       } else {
+>> +               switch (pin) {
+>> +               case USIM_PARAM_CARD_PIN_VCC:
+>> +                       USIM_WRITEREG(usim->base,
+>> +                                     USIM_IO_DIRECT, SVCC, value);
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_RST:
+>> +                       USIM_WRITEREG(usim->base,
+>> +                                     USIM_IO_DIRECT, RST, value);
+>> +                       break;
+>> +
+>> +               case USIM_PARAM_CARD_PIN_CLK:
+>> +                       USIM_WRITEREG(usim->base,
+>> +                                     USIM_IO_DIRECT, SCLK0, value);
+>> +                       break;
+>> +
+>> +               default:
+>> +                       dev_err(usim->dev, "Invalid pin");
+>> +                       return -EINVAL;
+>> +               }
+>
+> Probably something similar can be done here. Perhaps you should have
+> default phy ops which is built-in. Then you can always just call
+> phy->set_config.
+>
+Actually, there are mutliple combination possible.
+- Smartcard controller without PHY, Where smart card slot will be 
+directly connected to controller
+- Smartcard controller with phy, where smart card slot will be connected 
+to phy and communication happens using phy.
+That is why I have used case for PHY and W/O PHY
+>
+>> +       }
+>> +       return 0;
+>> +}
+>> +static void usim_configure_rx_pio(struct usim *usim)
+>> +{
+>> +       /* Reset RX FIFO pointers */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFORX_RESET, 0);
+>> +
+>> +       /* read and clear any pending interrupt status */
+>> +       usim_irqstatus_clear(usim->base, usim_irqstatus(usim->base));
+>> +
+>> +       /* Enable WWT underflow interupt,
+>> +        * RX FIFO full interrupt,
+>> +        * BWT, CWT and parity error level interrupts.
+>> +        */
+>> +       usim_irq_enable(usim->base, USIM_IRQ_WT | USIM_IRQ_RXFULL |
+>> +                               USIM_IRQ_TOB |
+>> +                               USIM_IRQ_TOC |
+>> +                               USIM_IRQ_PAR_ERR_LEVEL_REACHED);
+>> +
+>> +       /* Lets disable key RX interrupts. We will enable them later
+>> +        * when we want to start RX
+>> +        */
+>> +       usim_irq_disable(usim->base, USIM_IRQ_RX |
+>> +                       USIM_IRQ_RXDMA_RDY | USIM_IRQ_EOB);
+>> +
+>> +       /* We will use only RX FIFO threshold in RX */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, RXDMA_TYPE, 0x1);
+>> +
+>> +       if (usim->slot_ctx[usim->slot].protocol == 0) {
+>> +               /* Set Rx FIFO Threshold to expected recv length
+>> +                * Subtract 1 from length as HW adds 1 to the trigger
+>> +                */
+>> +               USIM_WRITEREG(usim->base, USIM_FIFOS, FIFO_RX_TRIGGER,
+>> +                             usim->slot_ctx[usim->slot].rx_explen - 1);
+>> +       } else {
+>> +               /* T=1 protocol */
+>> +               /* for T1 we should not use parity error level interrupt */
+>> +               usim_irq_disable(usim->base, USIM_IRQ_PAR_ERR_LEVEL_REACHED);
+>> +
+>> +               /* set RX FIFO threshold to MAX_RX_FIFO size.
+>> +                * We will rely on End-Of-Block interrupt to
+>> +                * terminate reception in T1
+>> +                */
+>> +               USIM_WRITEREG(usim->base, USIM_FIFOS, FIFO_RX_TRIGGER,
+>> +                             USIM_MAX_RX_FIFO_SIZE - 1);
+>> +       }
+>> +       return;
+>> +}
+>> +
+>> +static void usim_configure_tx_pio(struct usim *usim)
+>> +{
+>> +       /* Make sure TX is stopped first by programming
+>> +        * TX_BLOCK to zero and disabling TX_BLOCK_DONE
+>> +        * and USIM_IRQ_TX_BLOCK_REQ interrupts
+>> +        */
+>> +       USIM_WRITEREG(usim->base, USIM_TX_BLOCK, BLOCK_LENGTH, 0);
+>> +       usim_irq_disable(usim->base, USIM_IRQ_TX_BLOCK_DONE |
+>> +                                                       USIM_IRQ_TX_BLOCK_REQ);
+>> +
+>> +       /* We will use Tx Block length feature so clear TX_EN bit */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, TX_EN, 0);
+>> +       /* We will not use USIM_TX interrupt for transmit operation */
+>> +       usim_irq_disable(usim->base, USIM_IRQ_TX);
+>> +       /* Reset TX FIFO pointers */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 1);
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, FIFOTX_RESET, 0);
+>> +
+>> +       /* Ensure PIO mode is programmed */
+>> +       USIM_WRITEREG(usim->base, USIM_FIFOS, DMA_MODE, 0);
+>> +}
+>> +
+>> +static int usim_send_data(struct usim *usim, char *txbuf, int len)
+>> +{
+>> +       u32 val;
+>> +       int i;
+>> +       int ret = 0;
+>> +
+>> +       usim->txdone = 0;
+>> +       usim->rxdone = 0;
+>> +
+>> +       if (len == 0) {
+>> +               dev_dbg(usim->dev, "Error: Invalid Tx length:%d", len);
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       usim->slot_ctx[usim->slot].event = 0;
+>> +
+>> +       /* Configure Tx PIO mode patams */
+>> +       usim_configure_tx_pio(usim);
+>> +
+>> +       /* Tx FIFO must be empty after reset */
+>> +       val = USIM_READREG(usim->base, USIM_FIFOS, FIFOTX_EMPTY);
+>> +       if (val == 0) {
+>> +               dev_dbg(usim->dev, "Error: Tx FIFO is not empty");
+>> +               return -EFAULT;
+>> +       }
+>> +
+>> +       /* write data in Tx FIFO */
+>> +       for (i = 0; i < len; i++) {
+>> +               USIM_WRITEREG(usim->base, USIM_DTX, DTX, txbuf[i]);
+>> +               dev_dbg(usim->dev, "txbyte %d = %x\n", i, txbuf[i]);
+>> +       }
+>> +
+>> +       /* Finally re-enable TX_BLOCK_xxx interrupts and clear RX interrupts */
+>> +       usim_irq_enable(usim->base, USIM_IRQ_TX_BLOCK_DONE |
+>> +                                               USIM_IRQ_TX_BLOCK_REQ);
+>> +
+>> +       /* For T=0, stop re-tranmission after resend failure */
+>> +       if (usim->slot_ctx[usim->slot].protocol == 0) {
+>> +               USIM_WRITEREG(usim->base, USIM_CONF2, STOP_RESEND_FAILURE, 0);
+>> +               USIM_WRITEREG(usim->base, USIM_CONF2, STOP_RESEND_FAILURE, 1);
+>> +       }
+>> +
+>> +       /* Do not store bytes with parity error in Rx FIFO */
+>> +       USIM_WRITEREG(usim->base, USIM_CONF2, PUT_ERR_IN_FIFO, 0);
+>> +
+>> +       usim_irq_enable(usim->base, USIM_IRQ_TOC);
+>> +
+>> +       if (usim->phy_present)
+>> +               USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_TXRX);
+>> +       else
+>> +               USIM_WRITEREG(usim->base, USIM_CONF6, MODE, USIM_MODE_LEGACY);
+>> +
+>> +       usim->slot_ctx[usim->slot].state = USIM_MODE_TXRX;
+>> +
+>> +       /* Configure Rx settings before performing a Tx
+>> +        * As soon as we are done with Tx, card will send
+>> +        * data, which we should be ready to capture
+>> +        */
+>> +       usim_configure_rx_pio(usim);
+>> +       /* Start TX operation - program TX_BLOCK register to length
+>> +        * of the TX buffer to start the TX operation.
+>> +        */
+>> +       USIM_WRITEREG(usim->base, USIM_TX_BLOCK, BLOCK_LENGTH, len);
+>> +
+>> +       /* We need to block the caller here */
+>> +       ret = wait_event_interruptible(tx_wait, (usim->txdone == 1));
+>> +       dev_dbg(usim->dev, "Tx WAIT OVER\n");
+>> +       if (usim->slot_ctx[usim->slot].event == USIM_EVENT_TIMEOUT)
+>> +               usim_send_signal(usim, USIM_EVENT_TIMEOUT);
+>> +
+>> +       return ret;
+>> +}
+>> +
+>> +static int usim_set_config(struct usim *usim, struct usim_config *param)
+>> +{
+>> +       u32 ret = 0;
+>> +       dev_dbg(usim->dev, "param:%d, value:%d\n", param->attr, param->value);
+>> +
+>> +       switch (param->attr) {
+>> +       case USIM_PARAM_CWT:
+>> +               USIM_WRITEREG(usim->base, USIM_CWT, CWT, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_WWT:
+>> +               USIM_WRITEREG(usim->base, USIM_WWT, WWT, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CGT:
+>> +               USIM_WRITEREG(usim->base, USIM_CGT, CGT, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_BWT:
+>> +               USIM_WRITEREG(usim->base, USIM_BWT, BWT, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_EDCTYPE:
+>> +               /* 0 = LRC check, 1 = CRC check */
+>> +               USIM_WRITEREG(usim->base, USIM_CONF2, CONFEDC, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_LRCCHECK:
+>> +               /* 0 = No LRC check, 1 = LRC check */
+>> +               USIM_WRITEREG(usim->base, USIM_CONF2, CONFLRCCHECK,
+>> +                             param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_C4:
+>> +               usim_set_c4(usim, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_C8:
+>> +               usim_set_c8(usim, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_PROTOCOL:
+>> +               /* 0 for T=0 and 1 for T=1 */
+>> +               usim_set_protocol(usim, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_VOLTAGE:
+>> +               ret = usim_set_voltage(usim, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_EMV:
+>> +               USIM_WRITEREG(usim->base, USIM_CONF1, EMV_CONF, param->value);
+>> +               if (param->value)
+>> +                       usim->slot_ctx[usim->slot].emv = true;
+>> +               else
+>> +                       usim->slot_ctx[usim->slot].emv = false;
+>> +               break;
+>> +
+>> +       case USIM_PARAM_FI:
+>> +               USIM_WRITEREG(usim->base, USIM_CONF5, SOFT_NHARD_FIDI_PROG, 0);
+>> +               USIM_WRITEREG(usim->base, USIM_CONF5, FI, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_DI:
+>> +               USIM_WRITEREG(usim->base, USIM_CONF5, SOFT_NHARD_FIDI_PROG, 0);
+>> +               USIM_WRITEREG(usim->base, USIM_CONF5, DI, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CODING_CONV:
+>> +               USIM_WRITEREG(usim->base, USIM_STAT, CONFCODCONV, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CLOCK_STOP:
+>> +               USIM_WRITEREG(usim->base, USIM_CMD, CMD_CLOCK_STOP,
+>> +                             param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_SMARTCARD_CLOCK:
+>> +               ret = usim_set_smartcardclock(usim, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_SMARTCARD_MODE:
+>> +               ret = usim_set_cardmode(usim, usim->slot, param->value);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CARD_PIN_VCC:
+>> +       case USIM_PARAM_CARD_PIN_RST:
+>> +       case USIM_PARAM_CARD_PIN_CLK:
+>> +       case USIM_PARAM_CARD_PIN_IO:
+>> +               ret = usim_set_cardpinlevel(usim, param->attr, param->value);
+>> +               break;
+>> +
+>> +       default:
+>> +               ret = -EINVAL;
+>> +               break;
+>> +       }
+>> +       return ret;
+>> +}
+>> +static void usim_get_syncatr(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       struct sc_phy *phy = usim->phy;
+>> +
+>> +       /* Max ATR bytes for sync card is 4 */
+>> +       usim->slot_ctx[usim->slot].atr_length = 0x4;
+>> +       if (usim->phy_present != USIM_PHY_PRESENT) {
+>> +               dev_err(usim->dev, "Sync card w/o phy is not supported");
+>> +               return;
+>> +       }
+>> +       /* get sync ATR */
+>> +       if (phy->get_syncatr == NULL)
+>> +               return;
+>> +       ret = phy->get_syncatr(phy,
+>> +                       usim->slot,
+>> +                       usim->slot_ctx[usim->slot].atr_length,
+>> +                       usim->slot_ctx[usim->slot].atr);
+>> +       return;
+>> +}
+>> +
+>> +static int usim_get_config(struct usim *usim, struct usim_config *param)
+>> +{
+>> +       u32 ret = 0;
+>> +       dev_dbg(usim->dev, "param:%d, value:%d\n", param->attr, param->value);
+>> +
+>> +       switch (param->attr) {
+>> +       case USIM_PARAM_CWT:
+>> +               param->value = USIM_READREG(usim->base, USIM_CWT, CWT);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_WWT:
+>> +               param->value = USIM_READREG(usim->base, USIM_WWT, WWT);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CGT:
+>> +               param->value = USIM_READREG(usim->base, USIM_CGT, CGT);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_BWT:
+>> +               param->value = USIM_READREG(usim->base, USIM_BWT, BWT);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_EDCTYPE:
+>> +               param->value = USIM_READREG(usim->base, USIM_CONF2, CONFEDC);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_LRCCHECK:
+>> +               param->value = USIM_READREG(usim->base, USIM_CONF2,
+>> +                               CONFLRCCHECK);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_PROTOCOL:
+>> +               /* 0 for T=0 and 1 for T=1 */
+>> +               param->value = USIM_READREG(usim->base, USIM_CONF2,
+>> +                               CONFPROTOCOL);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_VOLTAGE:
+>> +               param->value = usim->slot_ctx[usim->slot].supply;
+>> +               break;
+>> +
+>> +       case USIM_PARAM_EMV:
+>> +               param->value = USIM_READREG(usim->base, USIM_CONF1, EMV_CONF);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_FI:
+>> +               param->value = USIM_READREG(usim->base, USIM_CONF5, FI);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_DI:
+>> +               param->value = USIM_READREG(usim->base, USIM_CONF5, DI);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CODING_CONV:
+>> +               param->value = USIM_READREG(usim->base, USIM_STAT, CONFCODCONV);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CLOCK_STOP:
+>> +               param->value = USIM_READREG(usim->base, USIM_CMD,
+>> +                                           CMD_CLOCK_STOP);
+>> +               break;
+>> +
+>> +       case USIM_PARAM_SMARTCARD_CLOCK:
+>> +               param->value = usim->slot_ctx[usim->slot].clock;
+>> +               break;
+>> +
+>> +       case USIM_PARAM_SMARTCARD_MODE:
+>> +               param->value = usim->slot_ctx[usim->slot].card_mode;
+>> +               break;
+>> +
+>> +       case USIM_PARAM_CARD_PIN_VCC:
+>> +       case USIM_PARAM_CARD_PIN_RST:
+>> +       case USIM_PARAM_CARD_PIN_CLK:
+>> +       case USIM_PARAM_CARD_PIN_IO:
+>> +               ret = usim_get_cardpinlevel(usim, param->attr, &param->value);
+>> +               break;
+>> +       default:
+>> +               ret = -EINVAL;
+>> +               break;
+>> +       }
+>> +       return ret;
+>> +}
+>> +
+>> +static long usim_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+>> +{
+>> +       struct usim *usim = file->private_data;
+>> +       struct usim_data data;
+>> +       struct usim_config param;
+>> +
+>> +       int ret         = 0;
+>> +       int cnt         = 0;
+>> +       int version     = 0;
+>> +       int u_pid       = 0;
+>> +       int present     = 0;
+>> +       unsigned long atr_timeout = 0;
+>> +
+>> +       if (usim->phy_present == USIM_PHY_NOT_ATTACHED)
+>> +               return -ENXIO;
+>> +
+>> +       switch (cmd) {
+>> +       case USIM_IOCTL_GET_PROVIDER_VERSION:
+>> +               dev_dbg(usim->dev, "IOCTL: GET PROVIDER VERSION\n");
+>> +               version = usim_get_version(usim);
+>> +               ret = copy_to_user((unsigned int *)arg, &version,
+>> +                               sizeof(unsigned int));
+>> +               if (ret != 0)
+>> +                       ret = -EFAULT;
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_ACTIVATE_CARD:
+>> +               dev_dbg(usim->dev, "IOCTL: ACTIVATE CARD\n");
+>> +               if (usim->phy_present) {
+>> +                       present = usim->phy->get_config(usim->phy, usim->slot,
+>> +                                                       SC_PHY_CARD_PRESENCE);
+>> +                       if (present)
+>> +                               ret = usim_activate_card(usim);
+>> +                       else
+>> +                               ret = -EFAULT;
+>> +               }
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_DEACTIVATE_CARD:
+>> +               dev_dbg(usim->dev, "IOCTL: DEACTIVATE CARD\n");
+>> +               ret = usim_deactivate_card(usim);
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_WARM_RESET:
+>> +               dev_dbg(usim->dev, "IOCTL: WARM RESET\n");
+>> +               ret = usim_warmreset(usim);
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_GET_ATR:
+>> +               dev_dbg(usim->dev, "IOCTL: GET ATR\n");
+>> +               /* waiting for max ATR response timeout */
+>> +               atr_timeout = usecs_to_jiffies(MAX_ATR_WAITTIME_US);
+>> +               dev_dbg(usim->dev,
+>> +                       "GET_ATR:atr timeout, us:%d, jiffies:%ld",
+>> +                       MAX_ATR_WAITTIME_US, atr_timeout);
+>> +               wait_event_timeout(atr_wait, (usim->atrdone == 1), atr_timeout);
+>> +               if (usim->slot_ctx[usim->slot].card_mode !=
+>> +                               USIM_CARD_MODE_ASYNC) {
+>> +                       usim_get_syncatr(usim);
+>> +               }
+>> +               ret = copy_to_user((char __user *)arg,
+>> +                                       usim->slot_ctx[usim->slot].atr,
+>> +                                       usim->slot_ctx[usim->slot].atr_length);
+>> +               if (ret != 0)
+>> +                       ret = -EFAULT;
+>> +               else
+>> +                       ret = usim->slot_ctx[usim->slot].atr_length;
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_SEND_DATA:
+>> +               dev_dbg(usim->dev, "IOCTL: SEND DATA\n");
+>> +               ret = copy_from_user(&data, (struct usim_data *)arg,
+>> +                                               sizeof(struct usim_data));
+>> +               if (ret != 0)
+>> +                       return -EFAULT;
+>> +
+>> +               usim->slot = data.slot;
+>> +               usim->slot_ctx[usim->slot].rx_explen = data.rxexplen;
+>> +               usim->slot_ctx[usim->slot].rx_counter = 0;
+>> +               for (cnt = 0; cnt < data.txlen; cnt++)
+>> +                       dev_dbg(usim->dev, "apdu[%d] = %x\n", cnt,
+>> +                               data.apdu[cnt]);
+>> +               ret = usim_send_data(usim, &data.apdu[0], data.txlen);
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_SET_CONFIG:
+>> +               dev_dbg(usim->dev, "IOCTL: SET CONFIG\n");
+>> +               ret = copy_from_user(&param, (struct usim_config *)arg,
+>> +                               sizeof(struct usim_config));
+>> +               if (ret != 0)
+>> +                       return -EFAULT;
+>> +
+>> +               usim_set_config(usim, &param);
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_GET_CONFIG:
+>> +               dev_dbg(usim->dev, "IOCTL: GET CONFIG\n");
+>> +               ret = copy_from_user(&param, (struct usim_config *)arg,
+>> +                               sizeof(struct usim_config));
+>> +               if (ret != 0)
+>> +                       return -EFAULT;
+>> +
+>> +               usim_get_config(usim, &param);
+>> +               ret = copy_to_user((struct usim_config *)arg, &param,
+>> +                               sizeof(struct usim_config));
+>> +               if (ret != 0)
+>> +                       ret = -EFAULT;
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_GET_CARD_PRESENCE:
+>> +               dev_dbg(usim->dev, "IOCTL: CARD PRESENCE\n");
+>> +               if (usim->phy_present) {
+>> +                       present = usim->phy->get_config(usim->phy, usim->slot,
+>> +                                       SC_PHY_CARD_PRESENCE);
+>> +                       ret = copy_to_user((unsigned int *)arg, &present,
+>> +                                       sizeof(unsigned int));
+>> +                       if (ret != 0)
+>> +                               ret = -EFAULT;
+>> +               }
+>> +               break;
+>> +
+>> +       case USIM_IOCTL_REGISTER_PID:
+>> +               dev_dbg(usim->dev, "IOCTL: USIM_IOCTL_REGISTER_PID");
+>> +               ret = copy_from_user(&u_pid, (int *)arg, sizeof(int));
+>> +               if (ret != 0)
+>> +                       return -EFAULT;
+>> +               usim->user_pid = u_pid;
+>> +               break;
+>> +       }
+>> +       return ret;
+>> +}
+>> +
+>> +static ssize_t usim_read(struct file *file, char *user_buf,
+>> +               size_t count, loff_t *ppos)
+>> +{
+>> +       struct usim *usim = file->private_data;
+>> +       if (usim->phy_present == USIM_PHY_NOT_ATTACHED)
+>> +               return -ENXIO;
+>> +
+>> +       wait_event_interruptible(rx_wait, (usim->rxdone == 1));
+>> +       dev_dbg(usim->dev, "RX WAIT over\n");
+>> +
+>> +       /* check for timeout and send signal if any */
+>> +       if (usim->slot_ctx[usim->slot].event == USIM_EVENT_TIMEOUT)
+>> +               usim_send_signal(usim, USIM_EVENT_TIMEOUT);
+>> +
+>> +       if (copy_to_user(user_buf, usim->slot_ctx[usim->slot].rxbuf,
+>> +                        usim->slot_ctx[usim->slot].rx_counter)) {
+>> +               dev_err(usim->dev, "Copy failed\n");
+>> +               return -EFAULT;
+>> +       }
+>> +       *ppos = usim->slot_ctx[usim->slot].rx_counter;
+>> +       dev_dbg(usim->dev, "Card response returning %d bytes\n",
+>> +               usim->slot_ctx[usim->slot].rx_counter);
+>> +
+>> +       return usim->slot_ctx[usim->slot].rx_counter;
+>> +}
+>> +
+>> +#ifdef CONFIG_DEBUG_FS
+>> +
+>> +#define DUMP_REG(r) seq_printf(s, "%-25s: %08x\n", #r, readl(usim->base + r));
+>> +
+>> +static int usim_regdump_show(struct seq_file *s, void *unused)
+>> +{
+>
+> devmem2 will not work for this purpose?
+This is to give complete register dump using sysfs. It helped me a lot 
+while doing IP validation against EMV compliance. Easy to share reg dump 
+to various team (IP design team, customer etc.)
+>
+>> +       struct usim     *usim = s->private;
+>> +
+>> +       seq_puts(s, "USIM Register Dump\n");
+>> +
+>> +       DUMP_REG(USIM_REVISION);
+>> +       DUMP_REG(USIM_IDENT);
+>> +       DUMP_REG(USIM_SYSCONFIG);
+>> +       DUMP_REG(USIM_SYSSTATUS);
+>> +       DUMP_REG(USIM_IRQSTATUS);
+>> +       DUMP_REG(USIM_IRQENABLE);
+>> +       DUMP_REG(USIM_WAKEUPEN);
+>> +       DUMP_REG(USIM_CMD);
+>> +       DUMP_REG(USIM_STAT);
+>> +       DUMP_REG(USIM_CONF1);
+>> +       DUMP_REG(USIM_CONF2);
+>> +       DUMP_REG(USIM_CONF3);
+>> +       DUMP_REG(USIM_DRX);
+>> +       DUMP_REG(USIM_DTX);
+>> +       DUMP_REG(USIM_FIFOS);
+>> +       DUMP_REG(USIM_CGT);
+>> +       DUMP_REG(USIM_BWT);
+>> +       DUMP_REG(USIM_DEBUG);
+>> +       DUMP_REG(USIM_CONF_SAM1_DIV);
+>> +       DUMP_REG(USIM_CONF4);
+>> +       DUMP_REG(USIM_ATR_CLK_PRD_NBS);
+>> +       DUMP_REG(USIM_CONF_ETU_DIV);
+>> +       DUMP_REG(USIM_CONF5);
+>> +       DUMP_REG(USIM_TC_GUARD_TIME_ADD);
+>> +       DUMP_REG(USIM_RXFIFO_LEVEL);
+>> +       DUMP_REG(USIM_RXFIFO_BYTECNT);
+>> +       DUMP_REG(USIM_WWT);
+>> +       DUMP_REG(USIM_CONF6);
+>> +       DUMP_REG(USIM_IO_DIRECT);
+>> +       DUMP_REG(USIM_TX_BLOCK);
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_regdump_open(struct inode *inode, struct file *file)
+>> +{
+>> +       return single_open(file, usim_regdump_show, inode->i_private);
+>> +}
+>> +
+>> +static const struct file_operations usim_regdump_fops = {
+>> +       .open           = usim_regdump_open,
+>> +       .read           = seq_read,
+>> +       .llseek         = seq_lseek,
+>> +       .release        = single_release,
+>> +};
+>> +
+>> +static int usim_init_debugfs(struct usim *usim)
+>> +{
+>> +       int ret;
+>> +       struct dentry   *root;
+>> +       struct dentry   *file;
+>> +
+>> +       root = debugfs_create_dir("usim", NULL);
+>> +       if (!root) {
+>> +               ret = -ENOMEM;
+>> +               goto err0;
+>> +       }
+>> +
+>> +       file = debugfs_create_file("regdump", S_IRUGO, root, usim,
+>> +                                                       &usim_regdump_fops);
+>> +       if (!file) {
+>> +               ret = -ENOMEM;
+>> +               goto err1;
+>> +       }
+>> +
+>> +       usim->debugfs_root = root;
+>> +
+>> +       return 0;
+>> +err1:
+>> +       debugfs_remove_recursive(root);
+>> +err0:
+>> +       return ret;
+>> +}
+>> +#endif
+>> +
+>> +static int usim_pm_init(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +
+>> +       usim->usim0_fck  = clk_get(usim->dev, "usim0_fck");
+>> +       if (IS_ERR(usim->usim0_fck)) {
+>> +               ret = PTR_ERR(usim->usim0_fck);
+>> +               dev_err(usim->dev, "usim0_fck failed error:%d\n", ret);
+>> +               return -1;
+>> +       }
+>> +       usim->dpll_core_m4_ck  = clk_get(usim->dev, "dpll_core_m4_ck");
+>> +       if (IS_ERR(usim->dpll_core_m4_ck)) {
+>> +               ret = PTR_ERR(usim->dpll_core_m4_ck);
+>> +               dev_err(usim->dev, "dpll_core_m4_ck failed error:%d\n", ret);
+>> +               return -1;
+>> +       }
+>> +       ret = clk_set_parent(usim->usim0_fck, usim->dpll_core_m4_ck);
+>> +       if (ret != 0)
+>> +               dev_dbg(usim->dev, "clk set  parent failed: %d\n", ret);
+>> +
+>> +       usim->usim_dbclk  = clk_get(usim->dev, "usim_dbck");
+>> +       if (IS_ERR(usim->usim_dbclk)) {
+>> +               ret = PTR_ERR(usim->usim_dbclk);
+>> +               dev_err(usim->dev, "usim_dbck failed error:%d\n", ret);
+>> +               return -1;
+>> +       }
+>> +
+>> +       usim->clkdiv32k_ick  = clk_get(usim->dev, "clkdiv32k_ick");
+>> +       if (IS_ERR(usim->usim_dbclk)) {
+>> +               ret = PTR_ERR(usim->clkdiv32k_ick);
+>> +               dev_err(usim->dev, "clkdiv32k_ick failed error:%d\n", ret);
+>> +               return -1;
+>> +       }
+>> +
+>> +       ret = clk_set_parent(usim->usim_dbclk, usim->clkdiv32k_ick);
+>> +       if (ret != 0)
+>> +               dev_dbg(usim->dev, "usim_dbclk set parent failed: %d\n", ret);
+>> +
+>> +       usim->opt_fclk = devm_clk_get(usim->dev, "opt_fck");
+>> +       if (IS_ERR(usim->opt_fclk)) {
+>> +               ret = PTR_ERR(usim->opt_fclk);
+>> +               dev_err(usim->dev, "unable to get fck\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       usim->opt_fclk32 = devm_clk_get(usim->dev, "opt_fck32");
+>> +       if (IS_ERR(usim->opt_fclk32)) {
+>> +               ret = PTR_ERR(usim->opt_fclk32);
+>> +               dev_err(usim->dev, "unable to get dbclk\n");
+>> +               return ret;
+>> +       }
+>> +
+>> +       return 0;
+>> +}
+>> +static int usim_enable(struct usim *usim)
+>> +{
+>> +       int ret = 0;
+>> +       if (usim->enable == 1)
+>> +               return 0;
+>> +
+>> +       /* enable the clk */
+>> +       pm_runtime_get_sync(usim->dev);
+>> +       clk_enable(usim->opt_fclk32);
+>> +       clk_enable(usim->opt_fclk);
+>> +
+>> +       /* usim init */
+>> +       ret = usim_configure(usim);
+>> +       if (ret)
+>> +               return -EIO;
+>> +
+>> +       usim->enable = 1;
+>> +       return 0;
+>> +}
+>> +
+>> +static void usim_disable(struct usim *usim)
+>> +{
+>> +       int cnt = 0;
+>> +
+>> +       if (usim->enable == 0)
+>> +               return;
+>> +
+>> +       /* reset USIM state for deactivation */
+>> +       for (cnt = 0; cnt < usim->max_slots; cnt++) {
+>> +               usim->slot = cnt;
+>> +               usim_deactivate_card(usim);
+>> +       }
+>> +
+>> +       /* reset default slot and clock */
+>> +       usim->slot = 0;
+>> +       usim->slot_ctx[usim->slot].clock = USIM_SMARTCART_CLOCK_5MHZ;
+>> +
+>> +       /* shutdown phy */
+>> +       if (usim->phy_present == USIM_PHY_PRESENT)
+>> +               usim->phy->set_config(usim->phy, usim->slot, SC_PHY_MODE,
+>> +                               SC_PHY_SHUTDOWN);
+>> +       /* disable clk */
+>> +       clk_disable(usim->opt_fclk32);
+>> +       clk_disable(usim->opt_fclk);
+>> +       pm_runtime_put_sync_autosuspend(usim->dev);
+>> +       usim->enable = 0;
+>> +       return;
+>> +}
+>> +
+>> +static int usim_open(struct inode *inode, struct file *file)
+>> +{
+>> +       int ret = 0;
+>> +       struct usim *usim = (struct usim *)dev_get_drvdata(usim_dev.parent);
+>> +
+>> +       if (usim->phy_present == USIM_PHY_NOT_ATTACHED)
+>> +               return -ENXIO;
+>> +
+>> +       file->private_data = usim;
+>> +       ret = usim_enable(usim);
+>> +       if (ret)
+>> +               return  -ENXIO;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_release(struct inode *inode, struct file *file)
+>> +{
+>> +       struct usim *usim = (struct usim *)dev_get_drvdata(usim_dev.parent);
+>> +
+>> +       usim_disable(usim);
+>> +       usim->user_pid = 0;
+>> +       return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_PM
+>> +static int usim_suspend(struct device *dev)
+>> +{
+>> +       /* struct usim *usim = dev_to_usim(dev); */
+>> +       struct usim *usim = dev_to_usim(dev);
+>> +       if (usim->atrdone == 1) {
+>> +               dev_dbg(usim->dev, "card is active state, aborting suspend");
+>> +               return -EBUSY;
+>> +       }
+>> +       usim_disable(usim);
+>> +       return 0;
+>> +}
+>> +
+>> +static int usim_resume(struct device *dev)
+>> +{
+>> +       /* struct usim *usim = dev_to_usim(dev); */
+>> +       struct usim *usim = dev_to_usim(dev);
+>> +       usim_enable(usim);
+>> +       return 0;
+>> +}
+>> +
+>> +static const struct dev_pm_ops usim_pm_ops = {
+>> +       .suspend = usim_suspend,
+>> +       .resume = usim_resume,
+>> +};
+>> +
+>> +#define USIM_PM_OPS (&usim_pm_ops)
+>> +#else
+>> +#define USIM_PM_OPS NULL
+>> +#endif
+>> +
+>> +static int usim_notify(struct notifier_block *self, unsigned long action, void
+>> +               *data)
+>> +{
+>> +       struct usim *usim = (struct usim *)data;
+>> +       int event = action & SC_PHY_NOTIFICATION_ACTION_MASK;
+>> +       int slot = (action & SC_PHY_NOTIFICATION_SLOT_MASK) >>
+>> +               SC_PHY_NOTIFICATION_SLOT_SHIFT;
+>> +       int t_slot = 0;
+>> +
+>> +       dev_dbg(usim->dev, "%s:action:%ld", __func__, action);
+>> +       /* if phy is removed using rmmod or by some other mech..
+>> +          * then put phy state in unknown, at this point usim also required to
+>> +          * gets removed from the system, if it is inserted as module and
+>> +          * dependent on phy
+>> +          */
+>
+> Why would the phy be removed? A better mechanism than signals and
+> notifiers is needed here.
+PHY is indepent entiry and can be build & inserted as module. So 
+handling the detachment senario over here.
+>
+>
+>> +       if (action == SC_PHY_REMOVED)
+>> +               usim->phy_present = USIM_PHY_NOT_ATTACHED;
+>> +
+>> +       if (event & SC_PHY_CARD_INSERTED)
+>> +               usim_send_signal(usim, USIM_EVENT_CARD_INSERT);
+>> +
+>> +       if (action & SC_PHY_CARD_REMOVED) {
+>> +               usim_send_signal(usim, USIM_EVENT_CARD_REMOVE);
+>> +               dev_dbg(usim->dev, "slot is:%d", slot);
+>> +                /* de-activate USIM & PHY state machine for the slot */
+>> +               t_slot = usim->slot;
+>> +               usim->slot = slot;
+>> +               usim_deactivate_card(usim);
+>> +               usim->slot = t_slot;
+>> +       }
+>> +
+>> +       if (action & SC_PHY_CARD_OVERHEAT)
+>> +               usim_send_signal(usim, USIM_EVENT_CARD_OVERHEAT);
+>> +
+>> +       if (action & SC_PHY_CARD_ATR_TIMEOUT)
+>> +               usim_send_signal(usim, USIM_EVENT_TIMEOUT);
+>> +
+>> +       if (action & SC_PHY_CARD_SYNC_ACT_COMPLETE) {
+>> +               usim->atrdone = 1;
+>> +               wake_up(&atr_wait);
+>> +       }
+>> +       return NOTIFY_OK;
+>> +}
+>> +
+>> +static struct notifier_block usim_nb = {
+>> +                .notifier_call =       usim_notify,
+>> +};
+>> +
+>> +static const struct file_operations usim_fops = {
+>> +       .owner          = THIS_MODULE,
+>> +       .read           = usim_read,
+>> +       .open           = usim_open,
+>> +       .unlocked_ioctl = usim_ioctl,
+>> +       .release        = usim_release,
+>> +};
+>> +
+>> +static int usim_probe(struct platform_device *pdev)
+>> +{
+>> +       struct device_node *node                = pdev->dev.of_node;
+>> +       struct device *dev                      = &pdev->dev;
+>> +
+>> +       struct usim *usim                       = NULL;
+>> +       struct device_node *phy_node            = NULL;
+>> +       struct resource *res                    = NULL;
+>> +       void __iomem    *base                   = NULL;
+>> +       const __be32 *parp                      = NULL;
+>> +       struct i2c_client *phy_i2c              = NULL;
+>> +
+>> +       int ret         = 0;
+>> +       int version     = 0;
+>> +       int cnt         = 0;
+>> +       u32 prop        = 0;
+>> +       int lenp        = 0;
+>
+> Remove unnecessary initialization.
+>
+>> +
+>> +       if (!node) {
+>> +               dev_err(dev, "device node not found\n");
+>> +               return -EINVAL;
+>> +       }
+>> +
+>> +       usim = devm_kzalloc(dev, sizeof(*usim), GFP_KERNEL);
+>> +       if (!usim) {
+>> +               dev_err(dev, "not enough memory\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       usim->irq = platform_get_irq(pdev, 0);
+>> +       if (usim->irq < 0) {
+>> +               dev_err(dev, "missing IRQ resource\n");
+>> +               ret = -EINVAL;
+>> +               goto usim_err_ret;
+>> +       }
+>> +
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       if (!res) {
+>> +               dev_err(dev, "missing memory base resource\n");
+>> +               ret = -EINVAL;
+>
+> ENODEV is probably more appropriate.
+OK
+>
+>> +               goto usim_err_ret;
+>> +       }
+>> +
+>> +       base = devm_ioremap_nocache(dev, res->start, resource_size(res));
+>
+> devm_ioremap_resource
+OK
+>
+>> +       if (!base) {
+>> +               dev_err(dev, "ioremap failed\n");
+>> +               ret = -ENOMEM;
+>> +               goto usim_err_ret;
+>> +       }
+>> +
+>> +       usim->dev = &pdev->dev;
+>> +       usim->base = base;
+>> +       usim->max_slots = 1;
+>> +       usim->phy_present = USIM_PHY_NOT_PRESENT;
+>> +       usim->enable = 0;
+>> +
+>> +       /* default slot will be zero : user card */
+>> +       usim->slot = 0;
+>> +
+>> +       ret = devm_request_irq(dev, usim->irq, usim_interrupt, 0,
+>> +                       "usim", usim);
+>> +       if (ret) {
+>> +               dev_err(dev, "fail request IRQ #%d --> %d\n", usim->irq, ret);
+>> +               goto usim_err_ret;
+>> +               return ret;
+>> +       }
+>> +
+>> +       /*
+>> +        * Populate all the child nodes here...
+>> +        */
+>> +       ret = of_platform_populate(node, NULL, NULL, &pdev->dev);
+>> +
+>> +       /* get phy details */
+>> +       parp = of_get_property(node, "phy", &lenp);
+>> +       if (parp == NULL || lenp != (sizeof(void *))) {
+>> +               dev_dbg(usim->dev, "parp is null!,no phy");
+>> +       } else {
+>> +               /* get phy node */
+>> +               phy_node = of_find_node_by_phandle(be32_to_cpup(parp));
+>> +               if (phy_node == NULL) {
+>> +                       dev_err(usim->dev, "\n phy node is null");
+>> +                       ret = -EPROBE_DEFER;
+>> +                       goto usim_err_ret;
+>> +               }
+>> +               phy_i2c = of_find_i2c_device_by_node(phy_node);
+>> +               if (phy_i2c == NULL) {
+>> +                       dev_err(usim->dev, "\n phy i2c is null");
+>> +                       ret = -EPROBE_DEFER;
+>> +                       goto usim_err_ret;
+>> +               }
+>> +               /* get phy interface */
+>> +               usim->phy = (struct sc_phy *)i2c_get_clientdata(phy_i2c);
+>> +               if (usim->phy == NULL) {
+>> +                       dev_err(usim->dev, "phy data is null");
+>> +                       ret = -EPROBE_DEFER;
+>> +                       goto usim_err_ret;
+>> +               }
+>> +               usim->phy_present = USIM_PHY_PRESENT;
+>> +
+>> +               ret = of_property_read_u32(node, "phy-slots", &prop);
+>> +               /* if phy-slot is not declared then assume one phy slot */
+>> +               usim->max_slots = prop > 0 ? prop : 1;
+>> +       }
+>> +
+>> +       dev_dbg(usim->dev, "usim max slot:%d", usim->max_slots);
+>> +       /* initialize slot context*/
+>> +       if (usim->max_slots > USIM_MAX_SLOTS) {
+>> +               ret = -EINVAL;
+>> +               goto usim_err_ret;
+>> +       }
+>> +
+>> +       usim->slot_ctx = kmalloc(usim->max_slots *
+>> +                                sizeof(struct usim_slotcontext), GFP_KERNEL);
+>> +       if (!usim->slot_ctx)
+>> +               return -ENOMEM;
+>> +
+>> +       for (cnt = 0; cnt < usim->max_slots; cnt++) {
+>> +               /* default protocol */
+>> +               usim->slot_ctx[cnt].protocol = 0;
+>> +               usim->slot_ctx[cnt].emv = true;
+>> +               usim_set_cardmode(usim, cnt, USIM_CARD_MODE_ASYNC);
+>> +       }
+>> +
+>> +       dev_set_drvdata(dev, usim);
+>> +       ret = usim_pm_init(usim);
+>> +       if (ret)
+>> +               goto usim_err_ret;
+>> +
+>> +       /* enable the clock */
+>> +       pm_runtime_enable(usim->dev);
+>> +       pm_runtime_set_active(usim->dev);
+>> +       spin_lock_init(&usim->lock);
+>> +
+>> +       usim_dev.minor = MISC_DYNAMIC_MINOR;
+>> +       usim_dev.name = "usim";
+>> +       usim_dev.fops = &usim_fops;
+>> +       usim_dev.parent = &(pdev->dev);
+>> +
+>> +       ret = misc_register(&usim_dev);
+>> +       if (ret) {
+>> +               pr_err("unable to register a misc device\n");
+>> +               goto usim_err_reg;
+>> +       }
+>> +#ifdef CONFIG_DEBUG_FS
+>> +       ret = usim_init_debugfs(usim);
+>> +       if (ret) {
+>> +               dev_err(dev, "Debugfs init failed\n");
+>> +               goto usim_err_reg;
+>> +       }
+>> +#endif
+>> +       /* set default ICC clock : 5Mhz */
+>> +       usim->slot_ctx[usim->slot].clock = USIM_SMARTCART_CLOCK_5MHZ;
+>> +
+>> +       /* get the clock & do usim configuration */
+>> +       usim_enable(usim);
+>> +       if (ret)
+>> +               goto usim_err_reg;
+>> +       dev_info(usim->dev, "usim driver initialized\n");
+>> +
+>> +       /* register notifier */
+>> +       if (usim->phy_present)
+>> +               usim->phy->register_notify(usim->phy, &usim_nb, (void *)usim);
+>> +
+>> +       /* get usim version */
+>> +       version = usim_get_version(usim);
+>> +       dev_info(usim->dev, "version is:%0x", version);
+>> +
+>> +       usim_disable(usim);
+>> +       return 0;
+>> +
+>> +usim_err_reg:
+>> +       pm_runtime_set_suspended(usim->dev);
+>> +       pm_runtime_disable(usim->dev);
+>> +       misc_deregister(&usim_dev);
+>> +
+>> +usim_err_ret:
+>> +       if (usim)
+>> +               kfree(usim->slot_ctx);
+>> +       return ret;
+>> +}
+>> +
+>> +static int usim_remove(struct platform_device *pdev)
+>> +{
+>> +       struct device   *dev = &pdev->dev;
+>> +       struct usim     *usim = dev_to_usim(dev);
+>> +
+>> +       usim_disable(usim);
+>> +       /* unregister notifier, applicable only when phy present and phy state
+>> +        * is not unknown i.e. - phy has not been removed using rmmod */
+>> +       if (usim->phy_present == USIM_PHY_PRESENT)
+>> +               usim->phy->unregister_notify(usim->phy, &usim_nb);
+>> +
+>> +#ifdef CONFIG_DEBUG_FS
+>> +       debugfs_remove_recursive(usim->debugfs_root);
+>> +#endif
+>> +       if (!IS_ERR(usim->usim_dbclk))
+>> +               clk_put(usim->usim_dbclk);
+>> +       if (!IS_ERR(usim->clkdiv32k_ick))
+>> +               clk_put(usim->clkdiv32k_ick);
+>> +       if (!IS_ERR(usim->usim0_fck))
+>> +               clk_put(usim->usim0_fck);
+>> +       if (!IS_ERR(usim->dpll_core_m4_ck))
+>> +               clk_put(usim->dpll_core_m4_ck);
+>> +
+>> +       if (!IS_ERR(usim->opt_fclk))
+>> +               devm_clk_put(usim->dev, usim->opt_fclk);
+>> +       if (!IS_ERR(usim->opt_fclk32))
+>> +               devm_clk_put(usim->dev, usim->opt_fclk32);
+>> +       /* disable pm runtime */
+>> +       pm_runtime_set_suspended(usim->dev);
+>> +       pm_runtime_disable(usim->dev);
+>> +
+>> +       kfree(usim->slot_ctx);
+>> +       misc_deregister(&usim_dev);
+>> +       return 0;
+>> +}
+>> +
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id usim_id_table[] = {
+>> +       { .compatible = "ti,usim" },
+>> +       {},
+>> +};
+>> +MODULE_DEVICE_TABLE(of, usim_id_table);
+>> +#endif
+>> +
+>> +static struct platform_driver usim_driver = {
+>> +       .driver = {
+>> +               .name = "usim",
+>> +               .owner  = THIS_MODULE,
+>> +               .pm     = USIM_PM_OPS,
+>> +               .of_match_table = of_match_ptr(usim_id_table),
+>> +       },
+>> +       .probe = usim_probe,
+>> +       .remove = usim_remove,
+>> +};
+>> +
+>> +static int __init usim_init(void)
+>> +{
+>> +       return platform_driver_register(&usim_driver);
+>> +}
+>> +
+>> +static void __exit usim_exit(void)
+>> +{
+>> +       platform_driver_unregister(&usim_driver);
+>> +}
+>> +
+>> +late_initcall(usim_init);
+>> +module_exit(usim_exit);
+>> +
+>> +MODULE_AUTHOR("Maulik Mankad <maulik-l0cyMroinI0@public.gmane.org>");
+>> +MODULE_DESCRIPTION("USIM Driver");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/include/linux/ti-usim.h b/include/linux/ti-usim.h
+>> new file mode 100644
+>> index 0000000..e9794df
+>> --- /dev/null
+>> +++ b/include/linux/ti-usim.h
+>
+> Isn't this a uapi header?
+>
+>> @@ -0,0 +1,111 @@
+>> +/*
+>> + * ti-usim.h - Header file for USIM SmartCard interface
+>> + *
+>> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation version 2.
+>> + *
+>> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
+>> + * kind, whether express or implied; without even the implied warranty
+>> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#ifndef __TI_USIM_H__
+>> +#define __TI_USIM_H__
+>> +
+>> +#include <linux/types.h>
+>> +#include <linux/ioctl.h>
+>> +
+>> +#define USIM_IOCTL 0xFE
+>> +
+>> +enum usim_param {
+>> +       USIM_PARAM_CWT = 0,
+>> +       USIM_PARAM_WWT,
+>> +       USIM_PARAM_CGT,
+>> +       USIM_PARAM_BWT,
+>> +       USIM_PARAM_EDCTYPE,
+>> +       USIM_PARAM_LRCCHECK,
+>> +       USIM_PARAM_C4,
+>> +       USIM_PARAM_C8,
+>> +       USIM_PARAM_PROTOCOL,
+>> +       USIM_PARAM_VOLTAGE,
+>> +       USIM_PARAM_EMV,
+>> +       USIM_PARAM_FI,
+>> +       USIM_PARAM_DI,
+>> +       USIM_PARAM_CODING_CONV,
+>> +       USIM_PARAM_CLOCK_STOP,
+>> +       USIM_PARAM_SMARTCARD_CLOCK,
+>> +       USIM_PARAM_SMARTCARD_MODE,
+>> +       USIM_PARAM_CARD_PIN_VCC,
+>> +       USIM_PARAM_CARD_PIN_RST,
+>> +       USIM_PARAM_CARD_PIN_CLK,
+>> +       USIM_PARAM_CARD_PIN_IO,
+>> +       USIM_PARAM_CARD_PIN_C4,
+>> +       USIM_PARAM_CARD_PIN_C8,
+>> +};
+>> +
+>> +enum usim_card_mode {
+>> +       USIM_CARD_MODE_ASYNC = 0,       /* asynchronous mode */
+>> +       USIM_CARD_MODE_SYNC_TYPE1,      /* synchronous mode: Type 1 */
+>> +       USIM_CARD_MODE_SYNC_TYPE2,      /* synchronous mode: Type 2 */
+>> +       USIM_CARD_MODE_SYNC_OTHER,      /* Any other synchronous type */
+>> +};
+>> +struct usim_data {
+>> +       int slot;
+>> +       int rxexplen;
+>> +       int txlen;
+>> +       unsigned char apdu[256];
+>> +};
+>> +
+>> +struct usim_config {
+>> +       enum usim_param attr;
+>
+> Probably not a good idea to have an undefined size element in a user
+> ABI struct...
+>
+Undefined ? I couldn't get your point. Could you explain bit more.
+>> +       unsigned int value;
+>> +};
+>> +
+>> +#define USIM_SIGID     51
+>> +
+>> +#define USIM_IOCTL_GET_PROVIDER_VERSION        _IOR(USIM_IOCTL, 0, int)
+>> +#define        USIM_IOCTL_ACTIVATE_CARD        _IO(USIM_IOCTL, 1)
+>> +#define        USIM_IOCTL_DEACTIVATE_CARD      _IO(USIM_IOCTL, 2)
+>> +#define USIM_IOCTL_WARM_RESET          _IO(USIM_IOCTL, 3)
+>> +#define USIM_IOCTL_GET_ATR             _IOR(USIM_IOCTL, 4, char *)
+>> +#define USIM_IOCTL_SEND_DATA           _IOW(USIM_IOCTL, 5, struct usim_data)
+>> +#define USIM_IOCTL_SET_CONFIG          _IOW(USIM_IOCTL, 6, struct usim_config)
+>> +#define USIM_IOCTL_GET_CONFIG          _IOW(USIM_IOCTL, 7, struct usim_config)
+>> +#define USIM_IOCTL_GET_CARD_PRESENCE   _IOR(USIM_IOCTL, 8, int)
+>> +#define USIM_IOCTL_REGISTER_PID                _IOW(USIM_IOCTL, 9, int)
+>> +
+>> +#define USIM_MAX_ATRLENGTH     0xFF
+>> +#define USIM_MAX_APDU_LENGTH   0xFE
+>> +
+>> +enum usim_smartcard_clock {
+>> +       USIM_SMARTCART_CLOCK_3_3MHZ     = 0x1,
+>> +       USIM_SMARTCART_CLOCK_4MHZ       = 0x2,
+>> +       USIM_SMARTCART_CLOCK_5MHZ       = 0x3,
+>> +       USIM_SMARTCART_CLOCK_6_6MHZ     = 0x4,
+>> +       USIM_SMARTCART_CLOCK_10MHZ      = 0x5,
+>> +       USIM_SMARTCART_CLOCK_20MHZ      = 0x6,
+>> +};
+>> +
+>> +enum usim_event {
+>> +       USIM_EVENT_CARD_INSERT  = 0x1,
+>> +       USIM_EVENT_CARD_REMOVE  = 0x2,
+>> +       USIM_EVENT_TIMEOUT      = 0x4,
+>> +       USIM_EVENT_ERR_TXRETRY  = 0x8,
+>> +       USIM_EVENT_ERR_LRC      = 0x10,
+>> +       USIM_EVENT_ERR_PARITY   = 0x20,
+>> +       USIM_EVENT_ERR_FRAME    = 0x40,
+>> +       USIM_EVENT_PHYERR       = 0x80,
+>> +       USIM_EVENT_CARD_OVERHEAT = 0x100,
+>> +};
+>> +
+>> +enum usim_card_voltage {
+>> +       USIM_CARD_5V = 0,
+>> +       USIM_CARD_3V,
+>> +       USIM_CARD_1_8V
+>> +};
+>> +
+>> +#endif /* __TI_USIM_H__ */
+>> --
+>> 1.7.9.5
+>>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
