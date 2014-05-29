@@ -1,115 +1,69 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] clk: bcm281xx: implement prerequisite clocks
-Date: Thu, 29 May 2014 11:53:50 -0500
-Message-ID: <5387661E.7060106@linaro.org>
-References: <1400590362-11177-1-git-send-email-elder@linaro.org> <1400590362-11177-3-git-send-email-elder@linaro.org> <20140524005358.23136.8918@quantum> <53873577.8000502@linaro.org> <20140529163552.10062.50409@quantum>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Thu, 29 May 2014 17:54:37 +0100
+Message-ID: <20140529165437.GM1954@lee--X1>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
+ <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140529163552.10062.50409@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 05/29/2014 11:35 AM, Mike Turquette wrote:
-> Quoting Alex Elder (2014-05-29 06:26:15)
->> On 05/23/2014 07:53 PM, Mike Turquette wrote:
->>> The above seems like a lot effort to go to. Why not skip all of this and
->>> just implement the prerequisite logic in the .enable & .disable
->>> callbacks? E.g. your kona clk .enable callback would look like:
->>
->> I think the problem is that it means the clock consumers
->> would have to know that prerequisite relationship.  And
->> that is dependent on the clock tree.  The need for it in
->> this case was because the boot loader didn't initialize
->> all the clocks that were needed.  If we could count on
->> the boot loader setting things up initially we might not
->> need to do this.
+> Add binding for the Qualcomm Resource Power Manager (RPM) found in 86=
+60, 8960
+> and 8064 based devices. The binding currently describes the rpm itsel=
+f and the
+> regulator subnodes.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 284 +++++++++++=
+++++++++++
+>  include/dt-bindings/mfd/qcom_rpm.h                 | 142 +++++++++++
+>  2 files changed, 426 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.tx=
+t
+>  create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
 
-I think you've convinced me that if the prerequisite is
-set up at initialization time, the consumers don't need
-to know about the the clock tree.
+[...]
 
->>>
->>> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
->>> index d603c4e..51f35b4 100644
->>> --- a/drivers/clk/bcm/clk-kona.c
->>> +++ b/drivers/clk/bcm/clk-kona.c
->>> @@ -987,6 +987,12 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
->>>  {
->>>       struct kona_clk *bcm_clk = to_kona_clk(hw);
->>>       struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
->>> +     int ret;
->>> +
->>> +     hw->prereq_bus_clk = clk_get(hw->ccu, hw->prereq);
->>> +     ret = clk_enable(prereq_bus_clk);
->>> +     if (ret)
->>> +             return ret;
->>>  
->>>       return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
->>>  }
->>> @@ -997,6 +1003,9 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
->>>       struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
->>>  
->>>       (void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
->>> +
->>> +     clk_disable(hw->prereq_bus_clk);
->>> +     clk_put(hw->prereq_bus_clk);
->>>  }
->>>  
->>>  static int kona_peri_clk_is_enabled(struct clk_hw *hw)
->>>
->>>
->>> I guess it might take some trickery to get clk_get to work like that.
->>> Let me know if I've completely lost the plot.
->>
->> I don't think so, but I think there's a lot of stuff
->> here to try to understand, and you're trying to extract
->> it from the code without the benefit of some background
->> of how and why it's done this way.
->>
->> Hopefully all this verbiage is moving you closer to
->> understanding...  I appreciate your patience.
-> 
-> Hi Alex,
-> 
-> Can you comment on my diff above? I basically tossed up some pseudo-code
-> to show how clk_enable calls can be nested inside of each other. I'd
-> like to know if that approach makes sense for your prereq clocks case.
+> diff --git a/include/dt-bindings/mfd/qcom_rpm.h b/include/dt-bindings=
+/mfd/qcom_rpm.h
+> new file mode 100644
+> index 0000000..277e789
+> --- /dev/null
+> +++ b/include/dt-bindings/mfd/qcom_rpm.h
+> @@ -0,0 +1,142 @@
+> +/*
+> + * This header provides constants for the Qualcomm RPM bindings.
+> + */
 
-Yes, I should have looked more closely before.
+Proper header please.
 
-Are you suggesting this prerequisite notion get elevated into the
-common framework?  Or is "hw" here just representative of the
-Kona-specific clock structure?
+> +#ifndef _DT_BINDINGS_MFD_QCOM_RPM_H
+> +#define _DT_BINDINGS_MFD_QCOM_RPM_H
+> +
+> +#define QCOM_RPM_APPS_FABRIC_ARB		1
+> +#define QCOM_RPM_APPS_FABRIC_CLK		2
+> +#define QCOM_RPM_APPS_FABRIC_HALT		3
 
-In any case, you're suggesting the prerequisite be handled in the
-enable path (as opposed to the one-time initialization path),
-which during the course of this discussion I've been thinking may
-be the right way to do it.
+[...]
 
-Let me see if I can rework it that way and I'll let you know
-what I discover as a result.  I hope to have something to
-talk about later today.
+> +#define QCOM_RPM_SYS_FABRIC_MODE		131
+> +#define QCOM_RPM_USB_OTG_SWITCH		132
+> +#define QCOM_RPM_VDDMIN_GPIO			133
 
-Thanks a lot Mike.
+Are you sure you don't want these in 0xXY format?
 
-					-Alex
-
-> Note that Linux device drivers that consume leaf clocks do NOT need to
-> know about the prereq clocks. All of that prereq clock knowledge is
-> stored in the .enable callback for the leaf clock (see above).
-> 
-> Regards,
-> Mike
-> 
->>
->>                                         -Alex
->>
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
