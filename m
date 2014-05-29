@@ -1,61 +1,57 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
-Date: Thu, 29 May 2014 16:04:49 -0400
-Message-ID: <538792E1.3020500@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <CACRpkdaD6ZLFu7-tOeDRvKCAC6X6_W84Vsqs1o-xUzUZOjyvFQ@mail.gmail.com> <53873F4A.9030303@ti.com> <4755790.VgRQTHz3K1@wuerfel>
+From: Stefan Kristiansson <stefan.kristiansson@saunalahti.fi>
+Subject: Re: [PATCH v4] openrisc: irq: use irqchip framework
+Date: Thu, 29 May 2014 23:28:08 +0300
+Message-ID: <20140529202806.GA9387@chokladfabriken.org>
+References: <1401136302-27654-1-git-send-email-stefan.kristiansson@saunalahti.fi>
+	<CAMuHMdUUqaRP2M0hPh5k0nPp1a_t0W98Vc_4zAQMjGYZZOPd8w@mail.gmail.com>
+	<53843508.7060007@southpole.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4755790.VgRQTHz3K1@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
+Return-path: <linux-bounces@lists.openrisc.net>
+Content-Disposition: inline
+In-Reply-To: <53843508.7060007@southpole.se>
+List-Unsubscribe: <http://lists.openrisc.net/options/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=unsubscribe>
+List-Archive: <http://lists.openrisc.net/pipermail/linux>
+List-Post: <mailto:linux@lists.openrisc.net>
+List-Help: <mailto:linux-request@lists.openrisc.net?subject=help>
+List-Subscribe: <http://lists.openrisc.net/listinfo/linux>,
+	<mailto:linux-request@lists.openrisc.net?subject=subscribe>
+Sender: linux-bounces@lists.openrisc.net
+Errors-To: linux-bounces@lists.openrisc.net
+To: Jonas Bonn <jonas@southpole.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux <linux@lists.openrisc.net>, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 29 May 2014 03:24 PM, Arnd Bergmann wrote:
-> On Thursday 29 May 2014 10:08:10 Santosh Shilimkar wrote:
->> On Thursday 29 May 2014 10:01 AM, Linus Walleij wrote:
->>> On Wed, May 28, 2014 at 4:04 PM, Santosh Shilimkar
->>> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
->>>> On Wednesday 28 May 2014 09:32 AM, Linus Walleij wrote:
->>>
->>>>>> I suspect what you want is
->>>>>>
->>>>>>         dma-ranges = <0x80000000 0 0x80000000>;
->>>>>>
->>>>>> to translate dma_addr_t 0x80000000-0xffffffff to phys_addr_t 0x0-0x7fffffff
->>>>>> rather than phys_addr_t 0x800000000-0x87fffffff.
->>>>>
->>>> Interesting. Where does the ROM address space resides on integrator then considering
->>>> address 0 is used for DMA.
->>>
->>> The ROM is at physical address 0x20000000, don't ask me
->>> why 
->>>
->>> The RAM is typically at 0x00000000-0x0fffffff, on up to four parallell
->>> tiles, i.e. up to four completely independent CPUs are booted off the
->>> same ROM and using a set of shared peripherals.
->>>
->> The reason I asked the question because most of the ARM SOC I came across
->> aren't using the RAM phys address 0 and thought was because of boot architecture
->> with ROM occupying that address with reset vector starting at address 0.
->>
->> That was one of the main reason we had description on max_*pfn on ARM w.r.t
->> to other acrhes.
->>
->> Will corner ARM guys to understand bit more about it in some conference 
+On Tue, May 27, 2014 at 08:47:36AM +0200, Jonas Bonn wrote:
+> On 05/26/2014 10:52 PM, Geert Uytterhoeven wrote:
+> > CC devicetree for the bindings
+> > 
+> > On Mon, May 26, 2014 at 10:31 PM, Stefan Kristiansson
+> > <stefan.kristiansson@saunalahti.fi> wrote:
+> >> +++ b/Documentation/devicetree/bindings/interrupt-controller/opencores,or1k-pic.txt
+> >> @@ -0,0 +1,23 @@
+> >> +OpenRISC 1000 Programmable Interrupt Controller
+> >> +
+> >> +Required properties:
+> >> +
+> >> +- compatible : should be "opencores,or1k-pic-level" for variants with
+> >> +  level triggered interrupt lines, "opencores,or1k-pic-edge" for variants with
+> >> +  edge triggered interrupt lines or "opencores,or1200-pic" for machines
+> >> +  with the non-spec compliant or1200 type implementation.
+> >> +
+> >> +  "opencores,or1k-pic" is also provided as an alias to "opencores,or1200-pic",
+> >> +  but this is only for backwards compatibility.
 > 
-> If this is anything like the versatile express, the reason it works is probably
-> because there is another microcontroller in the system that does the bootstrap
-> and is able to load code into RAM before turning on the main CPU.
+> I still think this identifier needs to be versioned.  Use the same
+> version number as we have on the cpu identifier since the OR1200 PIC
+> hasn't changed since then; i.e. opencores,or1200-pic-rtlsvnXYZ.
 > 
-That make sense now. Thanks for those extra bits.
 
-Regards,
-Santosh
+I can change that if you *really* insist on it...
+But I don't understand the purpose of the versioning here,
+there will never be any other or1200-pic version than the one that currently
+exists, so IMO "or1200" should be enough versioning information.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Stefan
