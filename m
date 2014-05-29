@@ -1,71 +1,42 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
-Date: Thu, 29 May 2014 18:09:45 +0100
-Message-ID: <538769D9.1090305@linaro.org>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com> <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com> <53875E17.6010406@linaro.org> <7FA6C80D-8076-4E41-AF55-11BBA2FD9AB0@codeaurora.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v3 1/2] usb: host: xhci-plat: add optional PHY support
+Date: Thu, 29 May 2014 21:17:42 +0400
+Message-ID: <53876BB6.3040304@cogentembedded.com>
+References: <53868E18.7090805@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <7FA6C80D-8076-4E41-AF55-11BBA2FD9AB0@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <53868E18.7090805@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
+On 05/29/2014 05:32 AM, Yoshihiro Shimoda wrote:
 
-On 29/05/14 17:30, Kumar Gala wrote:
->
-> On May 29, 2014, at 11:19 AM, Srinivas Kandagatla <srinivas.kandagatla@linaro.org> wrote:
->
->>> += SUBDEVICES
->>> +
->>> +The RPM exposes resources to its subnodes. The below bindings specify the set
->>> +of valid subnodes that can operate on these resources.
->>
->> Why should these devices be on sub nodes?
->>
->> Any reason not to implement it like this,
->>
->> rpm: rpm@108000 {
->> 	compatible = "qcom,rpm-msm8960";
->> 	reg = <0x108000 0x1000 0x2011008 0x4>;
->>
->> 	interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
->> 	interrupt-names = "ack", "err", "wakeup";
->> };
->>
->> pm8921_s1: pm8921-s1 {
->> 	compatible = "qcom,rpm-pm8921-smps";
->> 	
->> 	regulator-min-microvolt = <1225000>;
->> 	regulator-max-microvolt = <1225000>;
->> 	regulator-always-on;
->>
->> 	qcom,rpm = <&rpm QCOM_RPM_PM8921_S1>;
->> 	qcom,switch-mode-frequency = <3200000>;
->> 	qcom,hpm-threshold = <100000>;
->> };
->>
->> This would simplify the driver code too and handle the interface neatly then depending on device hierarchy.
->> rpm would be a interface library to the clients. Makes the drivers more independent, and re-usable if we do this way.
->>
->> ??
->
-> One reason to go with sub nodes is it creates a proper driver ordering dependency as I assume rpm driver will end up calling of_platform_populate for the sub nodes at the point that the RPM driver is ready.  We could do this with deferred probe but doing it explicitly is better in my opinion as it limits the amount of time between when RPM is ready vs when the children can start doing things
->
+> From: Gregory CLEMENT <gregory.clement@free-electrons.com>
 
-I agree, there might be a win. But Am not sure to what extent this win 
-is a win to rpm driver, as a side effect this brings other 
-responsibilities to the rpm driver like adding sub-device power 
-management awareness, device life cycle management to the rpm driver.
+> This commit extends the xhci-plat so that it can optionally be passed
+> a reference to a PHY through the Device Tree. It will be useful for
+> the Armada 375 SoCs. If no PHY is provided then the behavior of the
+> driver is unchanged.
 
-Only thing which made me think of this approach is the number of sub 
-nodes it would end up with and passing ID using reg property.
+> As for the clock, to achieve this, it adds a 'struct phy *' member in
+> xhci_hcd. While only used for now in xhci-plat, here again, it might
+> be used by other drivers in the future.
 
-Thanks,
-srini
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> ---
+>   drivers/usb/host/xhci-plat.c |   27 ++++++++++++++++++++++++++-
+>   drivers/usb/host/xhci.h      |    2 ++
+>   2 files changed, 28 insertions(+), 1 deletion(-)
 
-> - k
->
+    I've already posted a patch adding generic PHY support to all USB HCDs 
+about 1.5 months ago, which should make this patch unneeded.
+
+WBR, Sergei
+
