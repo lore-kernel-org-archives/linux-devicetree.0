@@ -1,138 +1,87 @@
-From: Satish Patel <satish.patel@ti.com>
-Subject: Re: [PATCH v3 2/5] misc: tda8026: Add NXP TDA8026 PHY driver
-Date: Thu, 29 May 2014 14:07:59 +0530
-Message-ID: <5386F1E7.3030700@ti.com>
-References: <1401267437-22489-1-git-send-email-satish.patel@ti.com> <1401267437-22489-3-git-send-email-satish.patel@ti.com> <20140528184450.GD30031@kroah.com>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
+Date: Thu, 29 May 2014 10:55:29 +0200
+Message-ID: <1401353729.25628.13.camel@AMDC1943>
+References: <1401275411-21947-5-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140528184450.GD30031@kroah.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, tony@atomide.com, grant.likely@linaro.org, robh+dt@kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1401275411-21947-5-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>
+Cc: sbkim73@samsung.com, sameo@linux.intel.com, lee.jones@linaro.org, broonie@kernel.org, lgirdwood@gmail.com, linux-kernel@vger.kernel.org, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, jonghwa3.lee@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On =C5=9Bro, 2014-05-28 at 20:10 +0900, Chanwoo Choi wrote:
+> This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a l=
+ittle
+> difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
+>=20
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Pawel Moll <pawel.moll@arm.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> Cc: Kumar Gala <galak@codeaurora.org>
+> Cc: Randy Dunlap <rdunlap@infradead.org>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Cc: Mark Brown <broonie@linaro.org>
+> Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> Cc: Yadwinder Singh Brar <yadi.brar@samsung.com>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> Cc: Sachin Kamat <sachin.kamat@linaro.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+>=20
+> ---
+> Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
 
+Although I'm not a DT maintainer but this looks fine to me, so:
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-On 5/29/2014 12:14 AM, Greg KH wrote:
-> On Wed, May 28, 2014 at 02:27:14PM +0530, Satish Patel wrote:
->> TDA8026 is a SmartCard PHY from NXP.
->>
->> The PHY interfaces with the main processor over the
->> I2C interface and acts as a slave device.
->>
->> The driver also exposes the phy interface
->> (defined@include/linux/sc_phy.h) for SmartCard controller.
->> Controller uses this interface to communicate with smart card
->> inserted to the phy's slot.
->>
->> Note: gpio irq is not validated as I do not have device with that.
->> I have validated interrupt with dedicated interrupt line on my device.
->>
->> Signed-off-by: Satish Patel <satish.patel@ti.com>
->> ---
->>   Documentation/devicetree/bindings/misc/tda8026.txt |   19 +
->>   drivers/misc/Kconfig                               |    7 +
->>   drivers/misc/Makefile                              |    1 +
->>   drivers/misc/tda8026.c                             | 1258 ++++++++++++++++++++
->>   4 files changed, 1285 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/misc/tda8026.txt
->>   create mode 100644 drivers/misc/tda8026.c
->>
->> diff --git a/Documentation/devicetree/bindings/misc/tda8026.txt b/Documentation/devicetree/bindings/misc/tda8026.txt
->> new file mode 100644
->> index 0000000..f115c9c
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/tda8026.txt
->> @@ -0,0 +1,19 @@
->> +TDA8026 smart card slot interface
->> +
->> +This is an i2c based smart card interface device forming the electrical
->> +interface between a microcontroller and smart cards. This device supports
->> +asynchronous cards (micro controller-based IC cards) as well as synchronous
->> +cards (mainly memory cards)
->> +
->> +Required properties:
->> +- compatible: "nxp,tda8026"
->> +- shutdown-gpio = GPIO pin mapping for SDWNN pin
->> +- reg = i2c interface address
->> +
->> +
->> +Example:
->> +tda8026: tda8026@48 {
->> +		 compatible = "nxp,tda8026";
->> +		 reg = <0x48>;
->> +		 shutdown-gpio = <&gpio5 19 GPIO_ACTIVE_HIGH>;/* Bank5, pin19 */
->> +	 };
->> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
->> index 8baff0e..80b21d7 100644
->> --- a/drivers/misc/Kconfig
->> +++ b/drivers/misc/Kconfig
->> @@ -515,6 +515,13 @@ config SRAM
->>   	  the genalloc API. It is supposed to be used for small on-chip SRAM
->>   	  areas found on many SoCs.
->>
->> +config NXP_TDA8026_PHY
->> +        tristate "NXP PHY Driver for Smart Card PHY"
->> +        depends on I2C=y
->> +        help
->> +          If you say yes here you get support for the TDA8026 Smart card PHY
->> +	  with I2C interface.
->> +
->>   source "drivers/misc/c2port/Kconfig"
->>   source "drivers/misc/eeprom/Kconfig"
->>   source "drivers/misc/cb710/Kconfig"
->> diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
->> index 7eb4b69..f262c0b 100644
->> --- a/drivers/misc/Makefile
->> +++ b/drivers/misc/Makefile
->> @@ -55,3 +55,4 @@ obj-$(CONFIG_SRAM)		+= sram.o
->>   obj-y				+= mic/
->>   obj-$(CONFIG_GENWQE)		+= genwqe/
->>   obj-$(CONFIG_ECHO)		+= echo/
->> +obj-$(CONFIG_NXP_TDA8026_PHY)	+= tda8026.o
->> diff --git a/drivers/misc/tda8026.c b/drivers/misc/tda8026.c
->> new file mode 100644
->> index 0000000..38df33e
->> --- /dev/null
->> +++ b/drivers/misc/tda8026.c
->> @@ -0,0 +1,1258 @@
->> +/*
->> + * tda8026.c - TDA8026 PHY driver for NXP Smart card PHY
->> + *
->> + *
->> + * Copyright (C) 2013 Texas Instruments Incorporated - http://www.ti.com/
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation version 2.
->> + *
->> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any
->> + * kind, whether express or implied; without even the implied warranty
->> + * of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +
->> +#include <linux/module.h>
->> +#include <linux/moduleparam.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/init.h>
->> +#include <linux/slab.h>
->> +#include <linux/gpio.h>
->> +#include <linux/i2c.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/notifier.h>
->> +#include <linux/sc_phy.h>
->> +#include <linux/of_gpio.h>
->> +#include <linux/of_device.h>
->> +#include <linux/delay.h>
->
-> I think you just broke the build if this driver is enabled now right?
->
-> Not good :(
-Before sending, I have applied these patches to "v3.15-rc7" and build 
-with both the option ti-usim & tda8026 as module, as well as part of 
-kernel. Any specific tree you would like me to rebase these patches against.
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
+mentation/devicetree/bindings/mfd/s2mps11.txt
+> index d81ba30..f7c9180 100644
+> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+> @@ -1,5 +1,5 @@
+> =20
+> -* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
+> +* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
+> =20
+>  The Samsung S2MPS11 is a multi-function device which includes voltag=
+e and
+>  current regulators, RTC, charger controller and other sub-blocks. It=
+ is
+> @@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interf=
+ace. Each sub-block is
+>  addressed by the host system using different I2C slave addresses.
+> =20
+>  Required properties:
+> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-p=
+mic".
+> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-p=
+mic"
+> +              or "samsung,s2mpu02-pmic".
+>  - reg: Specifies the I2C slave address of the pmic block. It should =
+be 0x66.
+> =20
+>  Optional properties:
+> @@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
+>  		  - valid values for n are:
+>  			- S2MPS11: 1 to 38
+>  			- S2MPS14: 1 to 25
+> +			- S2MPU02: 1 to 28
+>  		  - Example: LDO1, LD02, LDO28
+>  	- BUCKn
+>  		  - valid values for n are:
+>  			- S2MPS11: 1 to 10
+>  			- S2MPS14: 1 to 5
+> +			- S2MPU02: 1 to 7
+>  		  - Example: BUCK1, BUCK2, BUCK9
+> =20
+>  Example:
 
->
