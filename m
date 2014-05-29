@@ -1,87 +1,113 @@
-From: Bjorn Andersson <bjorn@kryo.se>
-Subject: Re: [PATCH 2/3] mfd: qcom-rpm: Driver for the Qualcomm RPM
-Date: Thu, 29 May 2014 15:11:35 -0700
-Message-ID: <CAJAp7Ogo1uQXG5Fwa9AFEiS+K=7i+UJTQABmjPCW3ba-EYr04Q@mail.gmail.com>
-References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1401211721-19712-3-git-send-email-bjorn.andersson@sonymobile.com>
-	<53875E2A.7050902@linaro.org>
-	<CAJAp7Ogd5CCsyBhQmaDsy6SAG+YPAPzEJWP0fSKHK1kov3Z6cw@mail.gmail.com>
-	<5387A96C.6080404@linaro.org>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
+Date: Thu, 29 May 2014 15:32:21 -0700
+Message-ID: <5387B575.2040803@gmail.com>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com> <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com> <09409B75-BBE3-47A6-8B4A-4E3DD29F81CD@codeaurora.org> <CAJAp7OgvChWSWgj6XRhqFC6i+T26PUCTLg5Ff722-oXDCgVuww@mail.gmail.com>
+Reply-To: frowand.list@gmail.com
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <5387A96C.6080404@linaro.org>
+In-Reply-To: <CAJAp7OgvChWSWgj6XRhqFC6i+T26PUCTLg5Ff722-oXDCgVuww@mail.gmail.com>
 Sender: linux-arm-msm-owner@vger.kernel.org
-To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Kumar Gala <galak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 2:41 PM, Srinivas Kandagatla
-<srinivas.kandagatla@linaro.org> wrote:
->> Although we will not have more than one rpm in a system and therefore not
->> instatiate this driver multiple times I do not want to run it off the
->> global
->> state.
+On 5/29/2014 11:24 AM, Bjorn Andersson wrote:
+> On Wed, May 28, 2014 at 9:34 AM, Kumar Gala <galak@codeaurora.org> wr=
+ote:
 >>
-> I agree.
->
-> Why not make a separate data structure for the qcom_of_data?
->
-
-That might make sense, definitely worth a spin.
-
->>> Should't you use the platform_get_resource_byname here?
-[...]
-> But my point on platform_get_resource_byname is to remove the dependency on
-> the resource ordering, It is very difficult to catch errors resulting in
-> wrong ordered resources in DT.
->
-
-Sorry, forgot to answer the first part of your question.
-
-The order in dt must be fixed, hence there isn't really any reason to
-use the byname; as long as it doesn't add any context or such here. We
-had a long long discussion with the dt guys about this a few months
-back.
-
->>>> +       ret = irq_set_irq_wake(irq_ack, 1);
->>>> +       if (ret)
->>>> +               dev_warn(&pdev->dev, "failed to mark ack irq as
->>>> wakeup\n");
->>>> +
->>>
->>>
->>> ..]
->>>
->>> Shouln't these be set as part of the pm suspend call, if the device is
->>> wakeup capable?
->>>
->>>
+>> On May 27, 2014, at 12:28 PM, Bjorn Andersson <bjorn.andersson@sonym=
+obile.com> wrote:
 >>
->> Is there any reason to toggle this?
+>>> Add binding for the Qualcomm Resource Power Manager (RPM) found in =
+8660, 8960
+>>> and 8064 based devices. The binding currently describes the rpm its=
+elf and the
+>>> regulator subnodes.
+>>>
+>>> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+>>> ---
+>>> Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 284 ++++++++++=
++++++++++++
+>>> include/dt-bindings/mfd/qcom_rpm.h                 | 142 ++++++++++=
++
+>>> 2 files changed, 426 insertions(+)
+>>> create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.t=
+xt
+>>> create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/mfd/qcom,rpm.txt b/D=
+ocumentation/devicetree/bindings/mfd/qcom,rpm.txt
+>>> new file mode 100644
+>>> index 0000000..3908a5d
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+
+< snip >
+
+>>> +
+>>> +- qcom,force-mode-none:
+>>> +     Usage: optional (default if no other qcom,force-mode is speci=
+fied)
+>>> +     Value type: <empty>
+>>> +     Defintion: indicates that the regulator should not be forced =
+to any
+>>> +                particular mode
+>>> +
+>>> +- qcom,force-mode-lpm:
+>>> +     Usage: optional
+>>> +     Value type: <empty>
+>>> +     Definition: indicates that the regulator should be forced to =
+operate in
+>>> +                 low-power-mode
+>>> +
+>>> +- qcom,force-mode-auto:
+>>> +     Usage: optional (only available for 8960/8064)
+>>> +     Value type: <empty>
+>>> +     Definition: indicates that the regulator should be automatica=
+lly pick
+>>> +                 operating mode
+>>> +
+>>> +- qcom,force-mode-hpm:
+>>> +     Usage: optional (only available for 8960/8064)
+>>> +     Value type: <empty>
+>>> +     Definition: indicates that the regulator should be forced to =
+operate in
+>>> +                 high-power-mode
+>>> +
+>>> +- qcom,force-mode-bypass: (only for 8960/8064)
+>>> +     Usage: optional (only available for 8960/8064)
+>>> +     Value type: <empty>
+>>> +     Definition: indicates that the regulator should be forced to =
+operate in
+>>> +                 bypass mode
+>>> +
 >>
->> I'm not sure when this interrupt will actually be fired, but I don't see
->> any
->> harm in keeping it wakup enabled at all times.
->
->
-> Typically the wake-up source is driven/enabled by the user. When the system
-> goes to low-power state it would enable the wakeup on the irq. And when
-> there is an interrupt it would wake up the system as part of resuming from
-> low-power state.
->
+>> Is force-mode really an enum?  Or can we really have multiple force-=
+mode=E2=80=99s set?
+>>
+>=20
+> Force mode is an enum, you can only set one of these.
+>=20
+> Looking around you can find three ways of doing this:
+> 1) Make it an int and provide defines in a dt-bindings header file
+> 2) Make it a string and list the possible values
+> 3) Make it a set of boolean properties
+>=20
+> I just spent some time in the pinctrl struff that implements 3), I
+> like the feel of it and I like how the dts ended up looking like.
+>=20
+> But if there's a strong opinion regarding this I could change it.
 
-But the RPM is the user; the ack irq is used to acknowledge requests
-or to notify the Linux system about some event. If these happens when
-the system is asleep it's always expected (in current implementation
-at least) to wake up the system; hence I mark it as a wake irq.
+The problem with separate properties is that there is not a way to
+detect the error of specifying multiple conflicting force-modes
+at compile time.
 
-> Again if you what this interrupt to wakeup the system, I would expect
-> pm_wakeup_event/related calls in the interrupt handler too.
->
+It also means you can not override the default force-mode from one
+=2Edts/.dtsi in another .dts/.dtsi.
 
-There is no power management here. I'll have to look into what value
-this would add. I have to get back to you on this.
+< snip >
 
-Regards,
-Bjorn
+-Frank
