@@ -1,186 +1,109 @@
-From: Bjorn Andersson <bjorn@kryo.se>
+From: Mark Brown <broonie@kernel.org>
 Subject: Re: [PATCH 3/3] regulator: qcom-rpm: Regulator driver for the
  Qualcomm RPM
-Date: Thu, 29 May 2014 14:03:40 -0700
-Message-ID: <CAJAp7OgY-99jRqvBOPbkj=Nrt7vW=0Ae+Xvf3J7JrDS1eoigWw@mail.gmail.com>
+Date: Thu, 29 May 2014 22:18:15 +0100
+Message-ID: <20140529211815.GP5099@sirena.org.uk>
 References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<1401211721-19712-4-git-send-email-bjorn.andersson@sonymobile.com>
-	<20140528165529.GC5099@sirena.org.uk>
+ <1401211721-19712-4-git-send-email-bjorn.andersson@sonymobile.com>
+ <20140528165529.GC5099@sirena.org.uk>
+ <CAJAp7OgY-99jRqvBOPbkj=Nrt7vW=0Ae+Xvf3J7JrDS1eoigWw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140528165529.GC5099@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="RtGa12sjXv8gVUZO"
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAJAp7OgY-99jRqvBOPbkj=Nrt7vW=0Ae+Xvf3J7JrDS1eoigWw@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
 Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 9:55 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Tue, May 27, 2014 at 10:28:41AM -0700, Bjorn Andersson wrote:
->
->> +static int rpm_reg_set_voltage(struct regulator_dev *rdev,
->> +                            int min_uV, int max_uV,
->> +                            unsigned *selector)
->> +{
->> +     struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
->> +     const struct rpm_reg_parts *parts = vreg->parts;
->> +     const struct request_member *req;
->> +     int ret = 0;
->> +     int sel;
->> +     int val;
->> +     int uV;
->> +
->> +     dev_dbg(vreg->dev, "set_voltage(%d, %d)\n", min_uV, max_uV);
->> +
->> +     if (parts->uV.mask == 0 && parts->mV.mask == 0)
->> +             return -EINVAL;
->> +
->> +     /*
->> +      * Snap to the voltage to a supported level.
->> +      */
->
-> What is "snapping" a voltage?
->
 
-I pass the requested voltage to the RPM, but it's only allowed to have valid
-values, so I need to "clamp"/"snap"/"round" the voltage to a valid number.
+--RtGa12sjXv8gVUZO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
->> +     sel = regulator_map_voltage_linear_range(rdev, min_uV, max_uV);
->
-> Don't open code mapping the voltage, just implement set_voltage_sel().
->
+On Thu, May 29, 2014 at 02:03:40PM -0700, Bjorn Andersson wrote:
 
-I used ot open code this part, but changed it to
-regulator_map_voltage_linear_range once I had implemented list_voltages. But as
-you say I should be able to replace the first half of my set_voltage with
-set_voltage_sel; and then do the transition from sel to requested voltage and
-send that over.
+Please fix your mailer to word wrap at less than 80 columns so quoted
+text is legible.
 
-[...]
+> The hardware in this case is a "pmic" shared by all cpus in the system, so when
+> we set the voltage, state or load of a regulator we merely case a vote. For
+> voltage and state this is not an issue, but for load the value that's
+> interesting for the "pmic" is the sum of the votes; i.e. the sum of the loads
+> from all systems on a single regulator.
 
->> +     mutex_lock(&vreg->lock);
->> +     if (parts->uV.mask)
->> +             req = &parts->uV;
->> +     else if (parts->mV.mask)
->> +             req = &parts->mV;
->> +     else
->> +             req = &parts->enable_state;
->
-> Just implement separate operations for the regulators with different
-> register definitions.  It's going to simplify the code.
->
+> What the code does here is to follow the hack found at codeaurora, that upon
+> get_optimum_mode we guess that the client will call get_optimum_mode followed
+> my set_mode. We keep the track of what load was last requested and use that in
+> our vote.
 
-Currently I can use e.g. ldo_ops for all the different ldos, if I split this I
-need to split the ops as well. So it will for sure be more code, but I will
-give it a spin and see how it looks like.
+No, this is awful and there's no way in hell that stuff like this should
+be implemented in a driver since there's clearly nothing at all hardware
+specific about it.  The load tracking needs to be implemented in the
+framework if it's going to be implemented, and passing it up through the
+chain is obviously going to need some conversion and accounting for
+hardware conversion losses which doesn't seem to be happening here.
 
->> +static int rpm_reg_set_mode(struct regulator_dev *rdev, unsigned int mode)
->> +{
->> +     struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
->> +     const struct rpm_reg_parts *parts = vreg->parts;
->> +     int max_mA = parts->ip.mask >> parts->ip.shift;
->> +     int load_mA;
->> +     int ret;
->> +
->> +     if (mode == REGULATOR_MODE_IDLE)
->> +             load_mA = vreg->idle_uA / 1000;
->> +     else
->> +             load_mA = vreg->normal_uA / 1000;
->> +
->> +     if (load_mA > max_mA)
->> +             load_mA = max_mA;
->> +
->> +     mutex_lock(&vreg->lock);
->> +     ret = rpm_reg_write(vreg, &parts->ip, load_mA);
->> +     if (!ret)
->> +             vreg->mode = mode;
->> +     mutex_unlock(&vreg->lock);
->
-> I'm not entirely sure what this is intended to do.  It looks like it's
-> doing something to do with current limits but it's a set_mode().  Some
-> documentation might help.  It should also be implementing only specific
-> modes and rejecting unsupported modes, if we do the same operation to
-> the device for two different modes that seems wrong.
->
+I'm still unclear on what the summed current is going to be used for,
+though...
 
-The hardware in this case is a "pmic" shared by all cpus in the system, so when
-we set the voltage, state or load of a regulator we merely case a vote. For
-voltage and state this is not an issue, but for load the value that's
-interesting for the "pmic" is the sum of the votes; i.e. the sum of the loads
-from all systems on a single regulator.
+> >> +     if (vreg->parts->ip.mask) {
+> >> +             initdata->constraints.valid_ops_mask |= REGULATOR_CHANGE_DRMS;
+> >> +             initdata->constraints.valid_ops_mask |= REGULATOR_CHANGE_MODE;
+> >> +             initdata->constraints.valid_modes_mask |= REGULATOR_MODE_NORMAL;
+> >> +             initdata->constraints.valid_modes_mask |= REGULATOR_MODE_IDLE;
 
-What the code does here is to follow the hack found at codeaurora, that upon
-get_optimum_mode we guess that the client will call get_optimum_mode followed
-my set_mode. We keep the track of what load was last requested and use that in
-our vote.
+> > No, this is just plain broken.  Constraints are set by the *board*, you
+> > don't know if these settings are safe on any given board.
 
+> I can see that these are coming from board files, but I didn't find any example
+> of how these are supposed to be set when using DT only.
 
-One alternative might be to use "force-mode" to actually set the mode of the
-regulator, but I will need to run that by the Qualcomm guys to get an answer if
-that would work (as it's not used by codeaurora).
+> What's happening here is that given what compatible you use, different "parts"
+> will be selected and based on that this code will or will not be executed;
+> hence this is defined by what compatible you're using.
 
->> +static unsigned int rpm_reg_get_optimum_mode(struct regulator_dev *rdev,
->> +                                          int input_uV,
->> +                                          int output_uV,
->> +                                          int load_uA)
->> +{
->> +     struct qcom_rpm_reg *vreg = rdev_get_drvdata(rdev);
->> +
->> +     load_uA += vreg->load_bias_uA;
->> +
->> +     if (load_uA < vreg->hpm_threshold_uA) {
->> +             vreg->idle_uA = load_uA;
->> +             return REGULATOR_MODE_IDLE;
->> +     } else {
->> +             vreg->normal_uA = load_uA;
->> +             return REGULATOR_MODE_NORMAL;
->> +     }
->> +}
->
-> This looks very broken - why are we storing anything here?  What is the
-> stored value supposed to do?
->
+> But this is of course not obvious, so unless I've missed something I can clean
+> this up slightly and make the connection to compatible more obvious. Okay?
 
-See above.
+No, it's still just plain broken.  You've no idea if the settings you're
+providing work or not on a given system (or set of drivers for that
+matter) - mode configuration really is a part of the system integration
+not an unchanging part of the PMIC.  This code appears to assume that
+every client driver (plus passives) is going to accurately supply load
+information which just isn't realistic except in very controlled cases
+for a specific system.
 
->> +     if (vreg->parts->ip.mask) {
->> +             initdata->constraints.valid_ops_mask |= REGULATOR_CHANGE_DRMS;
->> +             initdata->constraints.valid_ops_mask |= REGULATOR_CHANGE_MODE;
->> +             initdata->constraints.valid_modes_mask |= REGULATOR_MODE_NORMAL;
->> +             initdata->constraints.valid_modes_mask |= REGULATOR_MODE_IDLE;
->
-> No, this is just plain broken.  Constraints are set by the *board*, you
-> don't know if these settings are safe on any given board.
->
+The reason it's not supported in DT at the minute is that the definition
+of modes is not at all clear in a generic fashion, plus of course the
+fact that we have no users in mainline for dynamic mode setting.  Most
+PMICs these days are smart enough to do this autonomously anyway so it's
+not clear that this is something that it's worth spending time on.
 
-I can see that these are coming from board files, but I didn't find any example
-of how these are supposed to be set when using DT only.
+Please look for the prior threads on this.
 
-What's happening here is that given what compatible you use, different "parts"
-will be selected and based on that this code will or will not be executed;
-hence this is defined by what compatible you're using.
+--RtGa12sjXv8gVUZO
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-But this is of course not obvious, so unless I've missed something I can clean
-this up slightly and make the connection to compatible more obvious. Okay?
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
 
->> +static int __init rpm_reg_init(void)
->> +{
->> +     return platform_driver_register(&rpm_reg_driver);
->> +}
->> +arch_initcall(rpm_reg_init);
->> +
->> +static void __exit rpm_reg_exit(void)
->> +{
->> +     platform_driver_unregister(&rpm_reg_driver);
->> +}
->> +module_exit(rpm_reg_exit)
->
-> module_platform_driver() or if you must bodge the init order at least
-> use subsys_initcall() like everyone else.
+iQIcBAEBAgAGBQJTh6QUAAoJELSic+t+oim91QsP/A7+Rd2o0/RgjtqZ/kaC7tzb
+cttNOdcvYwhIz3q+8X45Pz4AooMlp20RSwfWZoHs0doGSuoBCGWZXNZ0EpPKD2Tj
+cZSBYNLqc33RXlTkX7EqbTXAArn6Ouwu0nUPqydAKcaHT0lTFwAxEM2UzaCRTOty
+TJomy2kuP5JsV2qHMeTSdnbpRPFjp4ElFgztt4qxaMQcqeJmbavS7X+PnYrxThDI
+SUdQdC6HZhWgldMyss0DYkWgBHhdrorl1yUutqMSWpt6+b/Sg8TBMbpqbZCIVgct
+pG6ZFRqju5Ex36r9Kn+zWJcur+zPTH4siF/mMWl5y1i6jYWQuu0oYVTl8ggO6AQY
+7QTgjn0oueTTUXB+f+CqheFdriD3bnMdii8oMnOjUOn3qSwZmYvgsqNrneDAEPVy
+vy4L6yoUa+sop8q2I2ssroJmlwEHNEFSQ7cvEeMZKiDfnukHunsYevljX0mF8FAy
+BdGL2rDc+2PmUOkqnk29ymY5u1qny2Lk7Kwdjsbnq8RgP21y+83fdXYyAHalMitN
+IvnQi5XrsyL0Rl1aR6ig6YCXBl1Uj8Af9Z4wFRlUn7ianj1/qutZZKbeY6FAJ3DX
+vNo4DOEC7d358htHXewXUx6N5ttliqVzBVU/p4yACvRiYigPlFkSRAvjOpfrAi6T
+dhT8IeVzRDbIjJu6bzZv
+=93kF
+-----END PGP SIGNATURE-----
 
-Okay
-
-Thanks for the review!
-
-Regards,
-Bjorn
+--RtGa12sjXv8gVUZO--
