@@ -1,29 +1,40 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4] pci-rcar-gen2: add device tree support
-Date: Thu, 29 May 2014 09:10:51 +0900
-Message-ID: <20140529001050.GC22705@verge.net.au>
-References: <201405200110.21914.sergei.shtylyov@cogentembedded.com>
- <20140528135154.GQ11907@google.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: Re: [PATCH v2 2/3] usb: host: xhci-plat: add support for the R-Car
+ H2 and M2 xHCI controllers
+Date: Thu, 29 May 2014 10:24:04 +0900
+Message-ID: <53868C34.9000309@renesas.com>
+References: <5385C71D.5060509@renesas.com> <20140528202607.GA7537@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140528135154.GQ11907@google.com>
+In-Reply-To: <20140528202607.GA7537@kroah.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-pci@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "mathias.nyman@intel.com" <mathias.nyman@intel.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 07:51:54AM -0600, Bjorn Helgaas wrote:
-> On Tue, May 20, 2014 at 01:10:20AM +0400, Sergei Shtylyov wrote:
-> > From: Ben Dooks <ben.dooks@codethink.co.uk>
-> > 
-> > Add device tree probing support to the 'pci-rcar-gen2' driver.
-> > 
-> > Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> > [Sergei: numerous fixes/cleanups/additions]
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> Applied to pci/host-rcar for v3.16, thanks everybody!
+Hi,
 
-Thanks Bjorn.
+(2014/05/29 5:26), Greg Kroah-Hartman wrote:
+> On Wed, May 28, 2014 at 08:23:09PM +0900, Yoshihiro Shimoda wrote:
+< snip >
+>> +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem"
+> 
+> Shouldn't you also add a:
+> 	MODULE_FIRMWARE(FIRMWARE_NAME);
+> line to this file so that the automatic tools can pick it up properly?
+
+Thank you for the point! I will add it.
+
+Best regards,
+Yoshihiro Shimoda
+
+> thanks,
+> 
+> greg k-h
+> 
+
+-- 
+Yoshihiro Shimoda
+EC No.
