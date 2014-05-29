@@ -1,56 +1,396 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 2/2] arm: shmobile: r8a7790: add USB3.0 node to r8a7790.dtsi
-Date: Thu, 29 May 2014 20:08:30 +0400
-Message-ID: <53875B7E.5010104@cogentembedded.com>
-References: <53871338.8050606@renesas.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH 1/3] mfd: devicetree: bindings: Add Qualcomm RPM DT binding
+Date: Thu, 29 May 2014 17:19:35 +0100
+Message-ID: <53875E17.6010406@linaro.org>
+References: <1401211721-19712-1-git-send-email-bjorn.andersson@sonymobile.com> <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53871338.8050606@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1401211721-19712-2-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hi Bjorn,
 
-On 05/29/2014 03:00 PM, Yoshihiro Shimoda wrote:
-
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+On 27/05/14 18:28, Bjorn Andersson wrote:
+> Add binding for the Qualcomm Resource Power Manager (RPM) found in 8660, 8960
+> and 8064 based devices. The binding currently describes the rpm itself and the
+> regulator subnodes.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
 > ---
->   arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
->   1 file changed, 10 insertions(+)
-
-> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> index e06c486..e6b04f2 100644
-> --- a/arch/arm/boot/dts/r8a7790.dtsi
-> +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -902,4 +902,14 @@
->   		#size-cells = <0>;
->   		status = "disabled";
->   	};
+>   Documentation/devicetree/bindings/mfd/qcom,rpm.txt | 284 +++++++++++++++++++++
+>   include/dt-bindings/mfd/qcom_rpm.h                 | 142 +++++++++++
+>   2 files changed, 426 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+>   create mode 100644 include/dt-bindings/mfd/qcom_rpm.h
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/qcom,rpm.txt b/Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+> new file mode 100644
+> index 0000000..3908a5d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/qcom,rpm.txt
+> @@ -0,0 +1,284 @@
+> +Qualcomm Resource Power Manager (RPM)
 > +
-> +	xhci: xhci@ee000000 {
+> +This driver is used to interface with the Resource Power Manager (RPM) found in
+> +various Qualcomm platforms. The RPM allows each component in the system to vote
+> +for state of the system resources, such as clocks, regulators and bus
+> +frequencies.
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-apq8064"
+> +		    "qcom,rpm-msm8660"
+> +		    "qcom,rpm-msm8960"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: two entries specifying the RPM's message ram and ipc register
+> +
+> +- reg-names:
+> +	Usage: required
+> +	Value type: <string-array>
+> +	Definition: must contain the following, in order:
+> +		    "msg_ram"
+> +		    "ipc"
 
-    The node name should be "usb@ee000000", according to section 2.2.2 of the 
-ePAPR standard [1]:
++1 for kumar's comment.
 
-> +		compatible = "renesas,xhci-r8a7790";
-> +		reg = <0 0xee000000 0 0xc00>;
-> +		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp3_clks R8A7790_CLK_SSUSB>;
-> +		phys = <&usbphy 1 1>;
+cant enforce the order here. should fix it in the driver.
 
-    This part is dependent on the generic PHY support in the USB HCD in order 
-to work.
+> +
+> +- interrupts:
+> +	Usage: required
+> +	Value type: <prop-encoded-array>
+> +	Definition: three entries specifying the RPM's:
+> +		    1. acknowledgement interrupt
+> +		    2. error interrupt
+> +		    3. wakeup interrupt
+> +
+> +- interrupt-names:
+> +	Usage: required
+> +	Value type: <string-array>
+> +	Definition: must be the three strings "ack", "err" and "wakeup", in order
+> +
+> +- #address-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 1
+> +
+> +- #size-cells:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: must be 0
+> +
+> +
+> += SUBDEVICES
+> +
+> +The RPM exposes resources to its subnodes. The below bindings specify the set
+> +of valid subnodes that can operate on these resources.
 
-> +		phy-names = "usb";
-> +		status = "disabled";
+Why should these devices be on sub nodes?
+
+Any reason not to implement it like this,
+
+rpm: rpm@108000 {
+	compatible = "qcom,rpm-msm8960";
+	reg = <0x108000 0x1000 0x2011008 0x4>;
+
+	interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
+	interrupt-names = "ack", "err", "wakeup";
+};
+
+pm8921_s1: pm8921-s1 {
+	compatible = "qcom,rpm-pm8921-smps";
+	
+	regulator-min-microvolt = <1225000>;
+	regulator-max-microvolt = <1225000>;
+	regulator-always-on;
+
+	qcom,rpm = <&rpm QCOM_RPM_PM8921_S1>;
+	qcom,switch-mode-frequency = <3200000>;
+	qcom,hpm-threshold = <100000>;
+};
+
+This would simplify the driver code too and handle the interface neatly 
+then depending on device hierarchy.
+rpm would be a interface library to the clients. Makes the drivers more 
+independent, and re-usable if we do this way.
+
+??
+
+
+> +
+> +== Switch-mode Power Supply regulator
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-smps"
+> +		    "qcom,rpm-pm8901-ftsmps"
+> +		    "qcom,rpm-pm8921-smps"
+> +		    "qcom,rpm-pm8921-ftsmps"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom_rpm.h>
+> +
+> +- qcom,switch-mode-frequency:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Frequency (Hz) of the switch-mode power supply;
+> +		    must be one of:
+> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
+> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
+> +		    1480000, 1370000, 1280000, 1200000
+> +
+> +- qcom,hpm-threshold:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: indicates the breaking point at which the regulator should
+> +	            switch to high power mode
+> +
+> +- qcom,load-bias:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: specifies a base load on the specific regulator
+> +
+> +- qcom,boot-load:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: specifies the configured load on boot for the specific
+> +	            regulator
+> +
+
+[...
+> +- qcom,force-mode-none:
+> +	Usage: optional (default if no other qcom,force-mode is specified)
+> +	Value type: <empty>
+> +	Defintion: indicates that the regulator should not be forced to any
+> +	           particular mode
+> +
+> +- qcom,force-mode-lpm:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be forced to operate in
+> +	            low-power-mode
+> +
+> +- qcom,force-mode-auto:
+> +	Usage: optional (only available for 8960/8064)
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be automatically pick
+> +	            operating mode
+> +
+> +- qcom,force-mode-hpm:
+> +	Usage: optional (only available for 8960/8064)
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be forced to operate in
+> +	            high-power-mode
+> +
+> +- qcom,force-mode-bypass: (only for 8960/8064)
+> +	Usage: optional (only available for 8960/8064)
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be forced to operate in
+> +	            bypass mode
+> +
+...]
+
+Probably qcom,force-mode:
+	Usage: optional.
+	Value type: <string>
+	Definition: must be one of:
+	"none"
+	"lpm"
+	"auto"
+	"hpm"
+	"bypass"
+
+Makes it much simpler, as they seems to be mutually exclusive. simillar 
+comments apply to other bindings too.
+
+
+[...
+> +- qcom,power-mode-hysteretic:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: indicates that the power supply should operate in hysteretic
+> +		    mode (defaults to qcom,power-mode-pwm if not specified)
+> +
+> +- qcom,power-mode-pwm:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: indicates that the power supply should operate in pwm mode
+> +
+...]
+
+Probably qcom,power-mode:
+	Usage: optional.
+	Value type: <string>
+	Definition: must be one of:
+	"pwm"
+	"hysteretic"
+
+
+Makes it much simpler, as they seems to be mutually exclusive. simillar 
+comments apply to other bindings too.
+
+
+
+
+Thanks,
+srini
+> +Standard regulator bindings are used inside switch mode power supply subnodes.
+> +Check Documentation/devicetree/bindings/regulator/regulator.txt for more
+> +details.
+> +
+> +== Low-dropout regulator
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-pldo"
+> +		    "qcom,rpm-pm8058-nldo"
+> +		    "qcom,rpm-pm8901-pldo"
+> +		    "qcom,rpm-pm8901-nldo"
+> +		    "qcom,rpm-pm8921-pldo"
+> +		    "qcom,rpm-pm8921-nldo"
+> +		    "qcom,rpm-pm8921-nldo1200"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom_rpm.h>
+> +
+> +- qcom,hpm-threshold:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: indicates the breaking point at which the regulator should
+> +	            switch to high power mode
+> +
+> +- qcom,load-bias:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: specifies a base load on the specific regulator
+> +
+> +- qcom,boot-load:
+> +	Usage: optional
+> +	Value type: <u32>
+> +	Definition: specifies the configured load on boot for the specific
+> +	            regulator
+> +
+> +- qcom,force-mode-none:
+> +	Usage: optional (default if no other qcom,force-mode is specified)
+> +	Value type: <empty>
+> +	Defintion: indicates that the regulator should not be forced to any
+> +	           particular mode
+> +
+> +- qcom,force-mode-lpm:
+> +	Usage: optional
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be forced to operate in
+> +	            low-power-mode
+> +
+> +- qcom,force-mode-auto:
+> +	Usage: optional (only available for 8960/8064)
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be automatically pick
+> +	            operating mode
+> +
+> +- qcom,force-mode-hpm:
+> +	Usage: optional (only available for 8960/8064)
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be forced to operate in
+> +	            high-power-mode
+> +
+> +- qcom,force-mode-bypass: (only for 8960/8064)
+> +	Usage: optional (only available for 8960/8064)
+> +	Value type: <empty>
+> +	Definition: indicates that the regulator should be forced to operate in
+> +	            bypass mode
+> +
+> +Standard regulator bindings are used inside switch low-dropout regulator
+> +subnodes.  Check Documentation/devicetree/bindings/regulator/regulator.txt for
+> +more details.
+> +
+> +== Negative Charge Pump
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-ncp"
+> +		    "qcom,rpm-pm8921-ncp"
+> +		    "qcom,rpm-pm8921-nldo1200"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom_rpm.h>
+> +
+> +- qcom,switch-mode-frequency:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: Frequency (Hz) of the swith mode power supply;
+> +		    must be one of:
+> +		    19200000, 9600000, 6400000, 4800000, 3840000, 3200000,
+> +		    2740000, 2400000, 2130000, 1920000, 1750000, 1600000,
+> +		    1480000, 1370000, 1280000, 1200000
+> +
+> +Standard regulator bindings are used inside negative charge pump regulator
+> +subnodes.  Check Documentation/devicetree/bindings/regulator/regulator.txt for
+> +more details.
+> +
+> +== Switch
+> +
+> +- compatible:
+> +	Usage: required
+> +	Value type: <string>
+> +	Definition: must be one of:
+> +		    "qcom,rpm-pm8058-switch"
+> +		    "qcom,rpm-pm8901-switch"
+> +		    "qcom,rpm-pm8921-switch"
+> +
+> +- reg:
+> +	Usage: required
+> +	Value type: <u32>
+> +	Definition: resource as defined in <dt-bindings/mfd/qcom_rpm.h>
+> +
+> +
+> += EXAMPLE
+> +
+> +	#include <dt-bindings/mfd/qcom_rpm.h>
+> +
+> +	rpm@108000 {
+> +		compatible = "qcom,rpm-msm8960";
+> +		reg = <0x108000 0x1000 0x2011008 0x4>;
+> +
+> +		interrupts = <0 19 0>, <0 21 0>, <0 22 0>;
+> +		interrupt-names = "ack", "err", "wakeup";
+> +
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		pm8921_s1: pm8921-s1 {
+> +			compatible = "qcom,rpm-pm8921-smps";
+> +			reg = <QCOM_RPM_PM8921_S1>;
+> +
+> +			regulator-min-microvolt = <1225000>;
+> +			regulator-max-microvolt = <1225000>;
+> +			regulator-always-on;
+> +
+> +			qcom,switch-mode-frequency = <3200000>;
+> +			qcom,hpm-threshold = <100000>;
+> +		};
 > +	};
->   };
 
-[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
-
-WBR, Sergei
-
+...
