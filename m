@@ -1,73 +1,116 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC controller
-Date: Thu, 29 May 2014 08:47:31 -0500
-Message-ID: <CAL_Jsq+E7a=wh_yzQyaSEVAwfa34BYZ4DxvLOfJGFVDsf1dZ+A@mail.gmail.com>
-References: <1401267437-22489-1-git-send-email-satish.patel@ti.com>
-	<1401267437-22489-2-git-send-email-satish.patel@ti.com>
-	<20140528185334.GA30763@kroah.com>
-	<5386F0FE.7040003@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5386F0FE.7040003-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
-Cc: Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-omap <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH v5 0/9] Introducing (yet again) Device Tree Overlays
+Date: Thu, 29 May 2014 14:56:29 +0100
+Message-ID: <20140529135629.DEAA7C40A85@trevor.secretlab.ca>
+References: <1401281193-27146-1-git-send-email-pantelis.antoniou@konsulko.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401281193-27146-1-git-send-email-pantelis.antoniou@konsulko.com>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>Pante
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 3:34 AM, Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org> wrote:
->
->
-> On 5/29/2014 12:23 AM, Greg KH wrote:
->>
->> On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
->>>
->>> SmartCard controller uses this interface to communicate with
->>> SmartCard via PHY
->>>
->>> Some SmartCard PHY has multiple slots for cards.
->>> This inerface also enables controller to communicate
->>> with one or more SmartCard connected over phy.
->>>
->>> interface structure includes following APIs
->>> - set/get config
->>> - activate/deactivate smart card
->>> - warm reset
->>> - register_notify (for card insert/remove/overheat)
->>> - unregister_notify
->>>
->>> Signed-off-by: Satish Patel <satish.patel-l0cyMroinI0@public.gmane.org>
->>> ---
->>>   Documentation/sc_phy.txt |  171
->>> ++++++++++++++++++++++++++++++++++++++++++++++
->>>   include/linux/sc_phy.h   |  136 ++++++++++++++++++++++++++++++++++++
->>>   2 files changed, 307 insertions(+)
->>>   create mode 100644 Documentation/sc_phy.txt
->>>   create mode 100644 include/linux/sc_phy.h
->>
->>
->> These are .h files, but where is the "api" functions that use
->> these structures defined at?
->>
-> This is like template/wrappers, smart card phy driver will write API
-> functions. And smartcard controller will call these functions.
-> With proposed approach, smartcard controller can communicate with any smart
-> card phy (TI/NxP) without change in code. Using DT entry smartcard and PHY
-> will gets connected with each other.
-> Refer diagram given @Documentation/sc_phy.txt.
->
->
->> confused,
+On Wed, 28 May 2014 15:46:24 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> The following patchset introduces Device Tree overlays, a method
+> of dynamically altering the kernel's live Device Tree, along with
+> a generic interface to use it in a board agnostic manner.
+> 
+> It is against linux-next as of today 28/5/2014
+> "134a9c91121b1081bcf737045a11b0510c5c9dfb - Add linux-next specific files for 20140528"
+> 
+> It relies on the following previously submitted patches/patchsets:
+> 
+> * OF: Add [__]of_find_node_by_full_name
+> * OF: Utility helper functions for dynamic nodes
 
-I believe the api Greg is wondering about is the notifier which as I
-commented is not a good design.
+In the next version, can you include the patches you depend on that
+aren't already in my tree?
 
-There is now a phy subsystem. I don't know if it has what you need,
-but you should look at it to determine if it will work or could be
-extended to work.
+> To compile overlays you need the DTC compiler patch
+> 
+> * "dtc: Dynamic symbols & fixup support (v2)"
+> 
+> Changes since V4:
+> * New API of_overlay_create/destroy being able to support stacked
+> overlays correctly.
+> * Removed use of notifiers internally.
+> * Removed own-grown bus handler notifiers; using already in-place DT
+> notification infrastructure.
+> * Split SPI notifier patch to one patch of generic changes and one
+> for DT overlay notifier.
+> * Removed unused overlay depth feature.
+> * Updated documentation.
+> * Moved configfs based interface to using the new API.
+> * Added overlay removal stacking tests.
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Good changes. This version is considerably better than the past one.
+I've still got comments, but I'm a lot more comfortable with the
+approach.
+
+> Changes since V3:
+> * Added overlay self-tests.
+> * Fix bug in of_init_overlay_info (wrong sizeof)
+> * Platform bus handler handles parent_pdev == NULL
+> * of_resolve fixes according to comments by robh
+>   + changed if (foo == NULL) to if (!foo)
+>   + changed if (foo != NULL) to if (foo)
+>   + drivers/of/Kconfig added dep on OF && !SPARC
+>   + convert to using be32_to_cpup
+>   + u32 -> __be32 when modifying property values
+>   + cosmetic fixes
+> 
+> Changes since V2:
+> * Use of a configfs board agnostic overlay method
+> * Use of per bus handlers instead of hardcoded behaviour
+> * Optional target-path overlay target, which allows one to use standard
+> DTBs without resolution options.
+> 
+> Changes since V1:
+> 
+> * Removal of any bits related to a specific board (beaglebone).
+> * Introduced a platform agnostic interface using /proc/device-tree-overlay
+> * Various bug fixes related to i2c device handling have been squashed in.
+> 
+> Pantelis Antoniou (9):
+>   OF: Introduce Device Tree resolve support.
+>   OF: Introduce DT overlay support.
+>   OF: DT-Overlay configfs interface
+>   OF: platform: Add OF notifier handler
+>   of: i2c: Export single device registration method
+>   OF: i2c: Add OF notifier handler
+>   of: spi: Export single device registration method and accessors
+>   OF: spi: Add OF notifier handler
+>   OF: selftest: Add overlay self-test support.
+> 
+>  Documentation/devicetree/bindings/selftest.txt     |   14 +
+>  .../devicetree/dynamic-resolution-notes.txt        |   25 +
+>  Documentation/devicetree/overlay-notes.txt         |  160 ++++
+>  drivers/base/platform.c                            |   69 +-
+>  drivers/i2c/i2c-core.c                             |  165 +++-
+>  drivers/of/Kconfig                                 |   20 +
+>  drivers/of/Makefile                                |    3 +
+>  drivers/of/configfs.c                              |  251 +++++
+>  drivers/of/overlay.c                               | 1001 ++++++++++++++++++++
+>  drivers/of/resolver.c                              |  378 ++++++++
+>  drivers/of/selftest.c                              |  481 ++++++++++
+>  drivers/of/testcase-data/testcases.dtsi            |    1 +
+>  drivers/of/testcase-data/tests-overlay.dtsi        |  180 ++++
+>  drivers/spi/spi.c                                  |  323 +++++--
+>  include/linux/i2c.h                                |   10 +
+>  include/linux/of.h                                 |  167 ++++
+>  16 files changed, 3094 insertions(+), 154 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/selftest.txt
+>  create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+>  create mode 100644 Documentation/devicetree/overlay-notes.txt
+>  create mode 100644 drivers/of/configfs.c
+>  create mode 100644 drivers/of/overlay.c
+>  create mode 100644 drivers/of/resolver.c
+>  create mode 100644 drivers/of/testcase-data/tests-overlay.dtsi
+> 
+> -- 
+> 1.7.12
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
