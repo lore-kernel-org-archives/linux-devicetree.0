@@ -1,116 +1,112 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 11/11] clk: versatile: add versatile OSC support
-Date: Thu, 29 May 2014 17:40:21 -0500
-Message-ID: <1401403221-27523-12-git-send-email-robherring2@gmail.com>
-References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401403221-27523-1-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [RFC PATCH 3/3] clk: tegra: Implement Tegra124 shared/cbus clks
+Date: Thu, 29 May 2014 18:22:45 -0500
+Message-ID: <5387C145.8050609@ti.com>
+References: <1399990023-30318-1-git-send-email-pdeschrijver@nvidia.com> <1399990023-30318-4-git-send-email-pdeschrijver@nvidia.com> <53725FED.7050303@wwwdotorg.org> <20140514142739.GA8612@ulmo> <20140514193518.19795.64334@quantum> <20140526130725.GA1594@ulmo>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140526130725.GA1594@ulmo>
+Sender: linux-pm-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Prashant Gaikwad <pgaikwad@nvidia.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Arnd Bergmann <arnd@arndb.de>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On 05/26/2014 08:07 AM, Thierry Reding wrote:
+> On Wed, May 14, 2014 at 12:35:18PM -0700, Mike Turquette wrote:
+>> Quoting Thierry Reding (2014-05-14 07:27:40)
+> [...]
+>>> As for shared clocks I'm only aware of one use-case, namely EMC scaling.
+>>> Using clocks for that doesn't seem like the best option to me. While it
+>>> can probably fix the immediate issue of choosing an appropriate
+>>> frequency for the EMC clock it isn't a complete solution for the problem
+>>> that we're trying to solve. From what I understand EMC scaling is one
+>>> part of ensuring quality of service. The current implementations of that
+>>> seems to abuse clocks (essentially one X.emc clock per X clock) to
+>>> signal the amount of memory bandwidth required by any given device. But
+>>> there are other parts to the puzzle. Latency allowance is one. The value
+>>> programmed to the latency allowance registers for example depends on the
+>>> EMC frequency.
+>>>
+>>> Has anyone ever looked into using a different framework to model all of
+>>> these requirements? PM QoS looks like it might fit, but if none of the
+>>> existing frameworks have what we need, perhaps something new can be
+>>> created.
+>>
+>> It has been discussed. Using a QoS throughput constraint could help
+>> scale frequency. But this deserves a wider discussion and starts to
+>> stray into both PM QoS territory and also into "should we have a DVFS
+>> framework" territory.
+> 
+> I've looked into this for a bit and it doesn't look like PM QoS is going
+> to be a good match after all. One of the issues I found was that PM QoS
+> deals with individual devices and there's no builtin way to collect the
+> requests from multiple devices to produce a global constraint. So if we
+> want to add something like that either the API would need to be extended
+> or it would need to be tacked on using the notifier mechanism and some
+> way of tracking (and filtering) the individual devices.
+> 
+> Looking at devfreq it seems to be the DVFS framework that you mentioned,
+> but from what I can tell it suffers from mostly the same problems. The
+> governor applies some frequency scaling policy to a single device and
+> does not allow multiple devices to register constraints against a single
+> (global) constraint so that the result can be accumulated.
+> 
+> For Tegra EMC scaling what we need is something more along the lines of
+> this: we have a resource (external memory) that is shared by multiple
+> devices in the system. Each of those devices requires a certain amount
+> of that resource (memory bandwidth). The resource driver will need to
+> accumulate all requests for the resource and apply the resulting
+> constraint so that all requests can be satisfied.
+> 
+> One solution I could imagine to make this work with PM QoS would be to
+> add the concept of a pm_qos_group to manage a set of pm_qos_requests,
+> but that will require a bunch of extra checks to make sure that requests
+> are of the correct type and so on. In other words it would still be
+> tacked on.
 
-Versatile platforms share the same OSC programming model as Integrator
-platforms. Add the necessary parameters and init functions for Versatile.
+just a minor note from previous experience: We(at TI) had attempted in
+our product kernel[1] to use QoS constraint for certain SoCs for
+rather unspectacular results.
 
-Renaming the file to clk-versatile.c as versatile is used as the family
-name for ARM, Ltd. boards.
+Our use case was similar: devices -> L3(core bus)->memory. We had the
+following intent:
+a) wanted to scale L3 based on QoS requests coming in from various
+device drivers. intent was to scale either to 133MHz or 266MHz (two
+OPPs we supported on our devices) based on performance needs -> So we
+asked drivers to report QoS requirements using an standard function -
+except drivers cannot always report it satisfactorily - example bursty
+transfer devices - ended up with consolidated requests > total
+bandwidth possible on the bus -> (and never in practise hitting the
+lower frequency).
+b) timing closure issues on certain devices such as USB - which can
+only function based on async bridge closure requirements on the core
+bus etc.. these would require bus to be at higher frequency - QoS
+model was "misused" in such requirements.
+b.1) a variation: interdependent constraints -> if MPU is > freq X,
+timing closure required L3 to be at 266MHz. again - it is not a QoS
+requirement perse, just a dependency requirement that cannot easily be
+addressed doing a pure QoS like framework solution.
 
-Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
----
-v2:
-- Rename clk-integrator.c to clk-versatile.c
+Even though EMC does sound like (a) - I suspect you might want to be
+100% sure that you dont have variations of (b) in the SoC as well and
+betting completely on QoS approach might not actually work in practice.
 
- drivers/clk/versatile/Makefile                     |  3 +-
- .../{clk-integrator.c => clk-versatile.c}          | 35 ++++++++++++++++++++--
- 2 files changed, 34 insertions(+), 4 deletions(-)
- rename drivers/clk/versatile/{clk-integrator.c => clk-versatile.c} (66%)
+> 
+> Adding the linux-pm mailing list for more visibility. Perhaps somebody
+For folks new on the discussion: complete thread:
+http://thread.gmane.org/gmane.linux.drivers.devicetree/73967
 
-diff --git a/drivers/clk/versatile/Makefile b/drivers/clk/versatile/Makefile
-index c16ca78..9ee2b37 100644
---- a/drivers/clk/versatile/Makefile
-+++ b/drivers/clk/versatile/Makefile
-@@ -1,6 +1,5 @@
- # Makefile for Versatile-specific clocks
--obj-$(CONFIG_ICST)		+= clk-icst.o
--obj-$(CONFIG_ARCH_INTEGRATOR)	+= clk-integrator.o
-+obj-$(CONFIG_ICST)		+= clk-icst.o clk-versatile.o
- obj-$(CONFIG_INTEGRATOR_IMPD1)	+= clk-impd1.o
- obj-$(CONFIG_ARCH_REALVIEW)	+= clk-realview.o
- obj-$(CONFIG_ARCH_VEXPRESS)	+= clk-vexpress.o clk-sp810.o
-diff --git a/drivers/clk/versatile/clk-integrator.c b/drivers/clk/versatile/clk-versatile.c
-similarity index 66%
-rename from drivers/clk/versatile/clk-integrator.c
-rename to drivers/clk/versatile/clk-versatile.c
-index 734c4b8..fe52a79 100644
---- a/drivers/clk/versatile/clk-integrator.c
-+++ b/drivers/clk/versatile/clk-versatile.c
-@@ -17,6 +17,9 @@
- 
- #define INTEGRATOR_HDR_LOCK_OFFSET	0x14
- 
-+#define VERSATILE_SYS_OSCCLCD_OFFSET	0x1c
-+#define VERSATILE_SYS_LOCK_OFFSET	0x20
-+
- /* Base offset for the core module */
- static void __iomem *cm_base;
- 
-@@ -37,11 +40,27 @@ static const struct clk_icst_desc __initdata cm_auxosc_desc = {
- 	.lock_offset = INTEGRATOR_HDR_LOCK_OFFSET,
- };
- 
--static void __init of_integrator_cm_osc_setup(struct device_node *np)
-+static const struct icst_params versatile_auxosc_params = {
-+	.vco_max	= ICST307_VCO_MAX,
-+	.vco_min	= ICST307_VCO_MIN,
-+	.vd_min		= 4 + 8,
-+	.vd_max		= 511 + 8,
-+	.rd_min		= 1 + 2,
-+	.rd_max		= 127 + 2,
-+	.s2div		= icst307_s2div,
-+	.idx2s		= icst307_idx2s,
-+};
-+
-+static const struct clk_icst_desc versatile_auxosc_desc __initconst = {
-+	.params = &versatile_auxosc_params,
-+	.vco_offset = VERSATILE_SYS_OSCCLCD_OFFSET,
-+	.lock_offset = VERSATILE_SYS_LOCK_OFFSET,
-+};
-+static void __init cm_osc_setup(struct device_node *np,
-+				const struct clk_icst_desc *desc)
- {
- 	struct clk *clk = ERR_PTR(-EINVAL);
- 	const char *clk_name = np->name;
--	const struct clk_icst_desc *desc = &cm_auxosc_desc;
- 	const char *parent_name;
- 
- 	if (!cm_base) {
-@@ -65,5 +84,17 @@ static void __init of_integrator_cm_osc_setup(struct device_node *np)
- 	if (!IS_ERR(clk))
- 		of_clk_add_provider(np, of_clk_src_simple_get, clk);
- }
-+
-+static void __init of_integrator_cm_osc_setup(struct device_node *np)
-+{
-+	cm_osc_setup(np, &cm_auxosc_desc);
-+}
- CLK_OF_DECLARE(integrator_cm_auxosc_clk,
- 	"arm,integrator-cm-auxosc", of_integrator_cm_osc_setup);
-+
-+static void __init of_versatile_cm_osc_setup(struct device_node *np)
-+{
-+	cm_osc_setup(np, &versatile_auxosc_desc);
-+}
-+CLK_OF_DECLARE(versatile_cm_auxosc_clk,
-+	       "arm,versatile-cm-auxosc", of_versatile_cm_osc_setup);
+> has some ideas on how to extend any of the existing frameworks to make
+> it work for Tegra's EMC scaling (or how to implement the requirements of
+> Tegra's EMC scaling within the existing frameworks).
+> 
+
+
+[1]
+https://android.googlesource.com/kernel/omap.git/+/android-omap-panda-3.0/arch/arm/plat-omap/omap-pm-helper.c
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Nishanth Menon
