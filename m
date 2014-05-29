@@ -1,116 +1,48 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v5 0/9] Introducing (yet again) Device Tree Overlays
-Date: Thu, 29 May 2014 14:56:29 +0100
-Message-ID: <20140529135629.DEAA7C40A85@trevor.secretlab.ca>
-References: <1401281193-27146-1-git-send-email-pantelis.antoniou@konsulko.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v3 4/7] of: configure the platform device dma parameters
+Date: Thu, 29 May 2014 16:01:27 +0200
+Message-ID: <CACRpkdaD6ZLFu7-tOeDRvKCAC6X6_W84Vsqs1o-xUzUZOjyvFQ@mail.gmail.com>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+	<5840140.8yGnd4Ycx3@wuerfel>
+	<CACRpkdZjEVYgq7tKEfmZC0Fu4n=JuUues=pAAtquLahkex=pkA@mail.gmail.com>
+	<4960549.viM91iY2g2@wuerfel>
+	<CACRpkda5x-fJWTN40ze17woMWuWoVbuhbNu5nkm1sFcdJchRfA@mail.gmail.com>
+	<5385ECE0.7040703@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401281193-27146-1-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <5385ECE0.7040703@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>Pante
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 28 May 2014 15:46:24 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
-> The following patchset introduces Device Tree overlays, a method
-> of dynamically altering the kernel's live Device Tree, along with
-> a generic interface to use it in a board agnostic manner.
-> 
-> It is against linux-next as of today 28/5/2014
-> "134a9c91121b1081bcf737045a11b0510c5c9dfb - Add linux-next specific files for 20140528"
-> 
-> It relies on the following previously submitted patches/patchsets:
-> 
-> * OF: Add [__]of_find_node_by_full_name
-> * OF: Utility helper functions for dynamic nodes
+On Wed, May 28, 2014 at 4:04 PM, Santosh Shilimkar
+<santosh.shilimkar@ti.com> wrote:
+> On Wednesday 28 May 2014 09:32 AM, Linus Walleij wrote:
 
-In the next version, can you include the patches you depend on that
-aren't already in my tree?
+>>> I suspect what you want is
+>>>
+>>>         dma-ranges = <0x80000000 0 0x80000000>;
+>>>
+>>> to translate dma_addr_t 0x80000000-0xffffffff to phys_addr_t 0x0-0x7fffffff
+>>> rather than phys_addr_t 0x800000000-0x87fffffff.
+>>
+> Interesting. Where does the ROM address space resides on integrator then considering
+> address 0 is used for DMA.
 
-> To compile overlays you need the DTC compiler patch
-> 
-> * "dtc: Dynamic symbols & fixup support (v2)"
-> 
-> Changes since V4:
-> * New API of_overlay_create/destroy being able to support stacked
-> overlays correctly.
-> * Removed use of notifiers internally.
-> * Removed own-grown bus handler notifiers; using already in-place DT
-> notification infrastructure.
-> * Split SPI notifier patch to one patch of generic changes and one
-> for DT overlay notifier.
-> * Removed unused overlay depth feature.
-> * Updated documentation.
-> * Moved configfs based interface to using the new API.
-> * Added overlay removal stacking tests.
+The ROM is at physical address 0x20000000, don't ask me
+why :-)
 
-Good changes. This version is considerably better than the past one.
-I've still got comments, but I'm a lot more comfortable with the
-approach.
+The RAM is typically at 0x00000000-0x0fffffff, on up to four parallell
+tiles, i.e. up to four completely independent CPUs are booted off the
+same ROM and using a set of shared peripherals.
 
-> Changes since V3:
-> * Added overlay self-tests.
-> * Fix bug in of_init_overlay_info (wrong sizeof)
-> * Platform bus handler handles parent_pdev == NULL
-> * of_resolve fixes according to comments by robh
->   + changed if (foo == NULL) to if (!foo)
->   + changed if (foo != NULL) to if (foo)
->   + drivers/of/Kconfig added dep on OF && !SPARC
->   + convert to using be32_to_cpup
->   + u32 -> __be32 when modifying property values
->   + cosmetic fixes
-> 
-> Changes since V2:
-> * Use of a configfs board agnostic overlay method
-> * Use of per bus handlers instead of hardcoded behaviour
-> * Optional target-path overlay target, which allows one to use standard
-> DTBs without resolution options.
-> 
-> Changes since V1:
-> 
-> * Removal of any bits related to a specific board (beaglebone).
-> * Introduced a platform agnostic interface using /proc/device-tree-overlay
-> * Various bug fixes related to i2c device handling have been squashed in.
-> 
-> Pantelis Antoniou (9):
->   OF: Introduce Device Tree resolve support.
->   OF: Introduce DT overlay support.
->   OF: DT-Overlay configfs interface
->   OF: platform: Add OF notifier handler
->   of: i2c: Export single device registration method
->   OF: i2c: Add OF notifier handler
->   of: spi: Export single device registration method and accessors
->   OF: spi: Add OF notifier handler
->   OF: selftest: Add overlay self-test support.
-> 
->  Documentation/devicetree/bindings/selftest.txt     |   14 +
->  .../devicetree/dynamic-resolution-notes.txt        |   25 +
->  Documentation/devicetree/overlay-notes.txt         |  160 ++++
->  drivers/base/platform.c                            |   69 +-
->  drivers/i2c/i2c-core.c                             |  165 +++-
->  drivers/of/Kconfig                                 |   20 +
->  drivers/of/Makefile                                |    3 +
->  drivers/of/configfs.c                              |  251 +++++
->  drivers/of/overlay.c                               | 1001 ++++++++++++++++++++
->  drivers/of/resolver.c                              |  378 ++++++++
->  drivers/of/selftest.c                              |  481 ++++++++++
->  drivers/of/testcase-data/testcases.dtsi            |    1 +
->  drivers/of/testcase-data/tests-overlay.dtsi        |  180 ++++
->  drivers/spi/spi.c                                  |  323 +++++--
->  include/linux/i2c.h                                |   10 +
->  include/linux/of.h                                 |  167 ++++
->  16 files changed, 3094 insertions(+), 154 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/selftest.txt
->  create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
->  create mode 100644 Documentation/devicetree/overlay-notes.txt
->  create mode 100644 drivers/of/configfs.c
->  create mode 100644 drivers/of/overlay.c
->  create mode 100644 drivers/of/resolver.c
->  create mode 100644 drivers/of/testcase-data/tests-overlay.dtsi
-> 
-> -- 
-> 1.7.12
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
+>> Thanks, I'll fix up my patch.
+>>
+> Feel free to add my ack after the fixup if you need one.
+
+Thanks!
+
+Yours,
+Linus Walleij
