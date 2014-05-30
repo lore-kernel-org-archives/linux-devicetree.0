@@ -1,56 +1,150 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 0/3] Exynos 5410 support
-Date: Fri, 30 May 2014 07:10:58 +0200
-Message-ID: <538812E2.6070807@gmail.com>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com> <7hr43f9mmn.fsf@paris.lan> <538737CA.4070709@suse.de> <53874862.5080809@samsung.com> <538775AB.3000604@suse.de>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should
+ be specified in 'reg'
+Date: Fri, 30 May 2014 11:00:01 +0530
+Message-ID: <53881759.2070905@ti.com>
+References: <1401345500-20188-1-git-send-email-kishon@ti.com> <1401345500-20188-4-git-send-email-kishon@ti.com> <53876116.90504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538775AB.3000604-l3A5Bk7waGM@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Tarek Dakhran <t.dakhran-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53876116.90504@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andreas,
+Hi,
 
-On 29.05.2014 20:00, Andreas F=E4rber wrote:
+On Thursday 29 May 2014 10:02 PM, Murali Karicheri wrote:
+> On 5/29/2014 2:38 AM, ABRAHAM, KISHON VIJAY wrote:
+>> The configuration address space has so far been specified in *ranges*,
+>> however it should be specified in *reg* making it a platform MEM resource.
+>> Hence used 'platform_get_resource_*' API to get configuration address
+>> space in the designware driver.
+>>
+>> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>> Cc: Mohit Kumar <mohit.kumar@st.com>
+>> Cc: Jingoo Han <jg1.han@samsung.com>
+>> Cc: Marek Vasut <marex@denx.de>
+>> Cc: Arnd Bergmann <arnd@arndb.de>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+>>   drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+>>   2 files changed, 16 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> index d6fae13..8314360 100644
+>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> @@ -6,6 +6,7 @@ Required properties:
+>>       as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
+>>   - reg: base addresses and lengths of the pcie controller,
+>>       the phy controller, additional register for the phy controller.
+>> +    The configuration address space should also be specified here.
+> Kishon,
+> 
+> I am working on the Keystone PCI driver for which v1 is already posted. Want to
+> clarify
+> following.
+> 1. Original text for reg states "base addresses and lengths of the pcie
+> controller,
+>         the phy controller, additional register for the phy controller" and you
+> added
+>         "The configuration address space should also be specified here"
+> 
+>    and the code below added resource name "config"
+> 
+> Does PCI designware follow some convention? Does it mean after applying this patch
+> config name is mandatory or optional? Below code you are not returning error.
+> Can you
+> or author of PCI designware clarify what is expected to be present as mandatory
+> and
+> what is optional.
 
-[snip]
+>From whatever I could make out from the comments for my previous version,
+'config' is mandatory for all new platforms adding support for PCIe DW. However
+since there already exists platforms that use 'ranges', I'm not returning
+error. Once all the platforms that use DW is modified to use 'reg', will return
+error.
+> 
+> Does config refers to RC's config space or EP's config space or both? The code
+> below divide
 
-> Some of the low-hanging fruit like no heartbeat/SD LEDs, no RTC, no
-> usb3503 and thus no network I'm already looking into myself. For now =
-I'm
-> putting everything into the SMDK .dts, but I guess we'll need to spli=
-t
-> off -odroidxu.dts and -pinctrl.dtsi at some point.
+In the case of DRA7, it's the space from where you read the configuration space
+contents of the EP (we have separate address space for the configuration space
+of RC denoted by *rc_dbics* in this patch series). But there are other
+platforms where RC does not have a separate configuration address space.
+> the size by 2. So it appears to be RC's + EP's config space. Please clarify.
 
-Odroid XU needs its own dts for sure. I think you can make a copy of
-SMDK dts and name it -odroidxu straightaway and work further with it.
+No. divide by 2 is for cfg1 and cfg1 is used by PCIe bridges.
+> 
+>>   - interrupts: interrupt values for level interrupt,
+>>       pulse interrupt, special interrupt.
+>>   - clocks: from common clock binding: handle to pci clock.
+>> diff --git a/drivers/pci/host/pcie-designware.c
+>> b/drivers/pci/host/pcie-designware.c
+>> index c4e3732..603b386 100644
+>> --- a/drivers/pci/host/pcie-designware.c
+>> +++ b/drivers/pci/host/pcie-designware.c
+>> @@ -20,6 +20,7 @@
+>>   #include <linux/of_pci.h>
+>>   #include <linux/pci.h>
+>>   #include <linux/pci_regs.h>
+>> +#include <linux/platform_device.h>
+>>   #include <linux/types.h>
+>>     #include "pcie-designware.h"
+>> @@ -392,11 +393,23 @@ static const struct irq_domain_ops msi_domain_ops = {
+>>   int __init dw_pcie_host_init(struct pcie_port *pp)
+>>   {
+>>       struct device_node *np = pp->dev->of_node;
+>> +    struct platform_device *pdev = to_platform_device(pp->dev);
+>>       struct of_pci_range range;
+>>       struct of_pci_range_parser parser;
+>> +    struct resource *cfg_res;
+>>       u32 val;
+>>       int i;
+>>   +    cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+>> +    if (cfg_res) {
+>> +        pp->config.cfg0_size = resource_size(cfg_res)/2;
+>> +        pp->config.cfg1_size = resource_size(cfg_res)/2;
+>> +        pp->cfg0_base = cfg_res->start;
+>> +        pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+>> +    } else {
+>> +        dev_err(pp->dev, "missing *config* reg space\n");
+> This should return error -EINVAL.
 
-exynos5410-pinctrl.dtsi is used for generic SoC-wide pinctrl
-definitions, such as pin banks and pin groups. There should be no
-board-specific things defined in it. Instead respective board dts shoul=
-d
-have them.
+ah.. it'll break for other platforms. It should be part of a different patch
+once we convert all users to 8reg*.
+> 
+>> +    }
+>> +
+>>       if (of_pci_range_parser_init(&parser, np)) {
+>>           dev_err(pp->dev, "missing ranges property\n");
+>>           return -EINVAL;
+>> @@ -429,6 +442,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>>               of_pci_range_to_resource(&range, np, &pp->cfg);
+>>               pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+>>               pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+>> +            pp->cfg0_base = pp->cfg.start;
+>> +            pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>>           }
+>>       }
+>>   @@ -441,8 +456,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>>           }
+>>       }
+>>   -    pp->cfg0_base = pp->cfg.start;
+>> -    pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>>       pp->mem_base = pp->mem.start;
+>>         pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> BTW, Please also review my Keystone series so that we could discuss this topic
+> in that context
+> as well.
 
->=20
-> What about graphics? The 5410 is an oddball in using PowerVR rather t=
-han
-> Mali GPU - should a framebuffer on HDMI or DisplayPort work if we add=
- DT
-> nodes, or will the GPU require larger code changes?
+sure..
 
-The 3D GPU is completely independent from display controllers, which ar=
-e
-standard Samsung IP blocks, so you should be able to get unaccelerated
-output using VP+Mixer+HDMI or FIMD+DP using existing drivers.
-
-Best regards,
-Tomasz
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Cheers
+Kishon
