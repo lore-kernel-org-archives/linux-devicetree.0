@@ -1,305 +1,144 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v4] usb: host: xhci-plat: add support for the R-Car H2 and
- M2 xHCI controllers
-Date: Fri, 30 May 2014 22:53:09 +0900
-Message-ID: <53888D45.5000202@renesas.com>
+From: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] dmaengine: add device tree binding documentation
+ for the nbpfaxi driver
+Date: Fri, 30 May 2014 15:57:23 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1405301554580.14311@axis700.grange>
+References: <Pine.LNX.4.64.1405101757070.30489@axis700.grange>
+ <Pine.LNX.4.64.1405101809380.30489@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <Pine.LNX.4.64.1405101809380.30489-0199iw4Nj15frtckUFj5Ag@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Shevchenko, Andriy" <andriy.shevchenko-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Phil Edworthy <phil.edworthy-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The R-Car H2 and M2 SoCs come with an xHCI controller that requires
-some specific initializations related to the firmware downloading and
-some specific registers. This patch adds the support for this special
-configuration as an xHCI quirk executed during probe and start.
+Grant, Rob,
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
----
- drivers/usb/host/Kconfig     |    8 +++
- drivers/usb/host/Makefile    |    3 +
- drivers/usb/host/xhci-plat.c |   19 ++++++
- drivers/usb/host/xhci-rcar.c |  148 ++++++++++++++++++++++++++++++++++++++++++
- drivers/usb/host/xhci-rcar.h |   27 ++++++++
- 5 files changed, 205 insertions(+)
- create mode 100644 drivers/usb/host/xhci-rcar.c
- create mode 100644 drivers/usb/host/xhci-rcar.h
+Could you, guys, have a look at this, please? No new bindings are added, 
+so, it should be a matter of 5 minutes looking over the patch. Would be a 
+pity if because of these 5 minutes a new driver gets delayed until the new 
+kernel version.
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 61b7817..537d9e1 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
- 	  Say 'Y' to enable the support for the xHCI host controller
- 	  found in Marvell Armada 375/38x ARM SOCs.
+Thanks
+Guennadi
 
-+config USB_XHCI_RCAR
-+	tristate "xHCI support for Renesas R-Car SoCs"
-+	select USB_XHCI_PLATFORM
-+	depends on ARCH_SHMOBILE || COMPILE_TEST
-+	---help---
-+	  Say 'Y' to enable the support for the xHCI host controller
-+	  found in Renesas R-Car ARM SoCs.
-+
- endif # USB_XHCI_HCD
+On Sat, 10 May 2014, Guennadi Liakhovetski wrote:
 
- config USB_EHCI_HCD
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index af89a90..144c038 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -22,6 +22,9 @@ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
- ifneq ($(CONFIG_USB_XHCI_MVEBU), )
- 	xhci-hcd-y		+= xhci-mvebu.o
- endif
-+ifneq ($(CONFIG_USB_XHCI_RCAR), )
-+	xhci-hcd-y		+= xhci-rcar.o
-+endif
- endif
-
- obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 29d8adb..b6f2b6b 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -20,6 +20,7 @@
-
- #include "xhci.h"
- #include "xhci-mvebu.h"
-+#include "xhci-rcar.h"
-
- static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- {
-@@ -34,11 +35,27 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- /* called during probe() after chip reset completes */
- static int xhci_plat_setup(struct usb_hcd *hcd)
- {
-+	struct device_node *of_node = hcd->self.controller->of_node;
-+	int ret;
-+
-+	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
-+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791")) {
-+		ret = xhci_rcar_init_quirk(hcd);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	return xhci_gen_setup(hcd, xhci_plat_quirks);
- }
-
- static int xhci_plat_start(struct usb_hcd *hcd)
- {
-+	struct device_node *of_node = hcd->self.controller->of_node;
-+
-+	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
-+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791"))
-+		xhci_rcar_start(hcd);
-+
- 	return xhci_run(hcd);
- }
-
-@@ -270,6 +287,8 @@ static const struct of_device_id usb_xhci_of_match[] = {
- 	{ .compatible = "xhci-platform" },
- 	{ .compatible = "marvell,armada-375-xhci"},
- 	{ .compatible = "marvell,armada-380-xhci"},
-+	{ .compatible = "renesas,xhci-r8a7790"},
-+	{ .compatible = "renesas,xhci-r8a7791"},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
-diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
-new file mode 100644
-index 0000000..d94cb72
---- /dev/null
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -0,0 +1,148 @@
-+/*
-+ * xHCI host controller driver for R-Car SoCs
-+ *
-+ * Copyright (C) 2014 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/firmware.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb/phy.h>
-+
-+#include "xhci.h"
-+#include "xhci-rcar.h"
-+
-+#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem"
-+MODULE_FIRMWARE(FIRMWARE_NAME);
-+
-+/*** Register Offset ***/
-+#define RCAR_USB3_INT_ENA	0x224	/* Interrupt Enable */
-+#define RCAR_USB3_DL_CTRL	0x250	/* FW Download Control & Status */
-+#define RCAR_USB3_FW_DATA0	0x258	/* FW Data0 */
-+
-+#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
-+#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */
-+#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */
-+#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */
-+#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
-+#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */
-+
-+/*** Register Settings ***/
-+/* Interrupt Enable */
-+#define RCAR_USB3_INT_XHC_ENA	0x00000001
-+#define RCAR_USB3_INT_PME_ENA	0x00000002
-+#define RCAR_USB3_INT_HSE_ENA	0x00000004
-+#define RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \
-+				RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA)
-+
-+/* FW Download Control & Status */
-+#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
-+#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010
-+#define RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100
-+
-+/* LCLK Select */
-+#define RCAR_USB3_LCLK_ENA_VAL	0x01030001
-+
-+/* USB3.0 Configuration */
-+#define RCAR_USB3_CONF1_VAL	0x00030204
-+#define RCAR_USB3_CONF2_VAL	0x00030300
-+#define RCAR_USB3_CONF3_VAL	0x13802007
-+
-+/* USB3.0 Polarity */
-+#define RCAR_USB3_RX_POL_VAL	0x00020000
-+#define RCAR_USB3_TX_POL_VAL	0x00000010
-+
-+void xhci_rcar_start(struct usb_hcd *hcd)
-+{
-+	u32 temp;
-+
-+	if (hcd->regs != NULL) {
-+		/* Interrupt Enable */
-+		temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
-+		temp |= RCAR_USB3_INT_ENA_VAL;
-+		writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
-+		/* LCLK Select */
-+		writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
-+		/* USB3.0 Configuration */
-+		writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
-+		writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
-+		writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
-+		/* USB3.0 Polarity */
-+		writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
-+		writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
-+	}
-+}
-+
-+static int xhci_rcar_download_firmware(struct device *dev, void __iomem *regs)
-+{
-+	const struct firmware *fw;
-+	int retval, index, j, time;
-+	int timeout = 10000;
-+	u32 data, val, temp;
-+
-+	/* request R-Car USB3.0 firmware */
-+	retval = request_firmware(&fw, FIRMWARE_NAME, dev);
-+	if (retval)
-+		return retval;
-+
-+	/* download R-Car USB3.0 firmware */
-+	temp = readl(regs + RCAR_USB3_DL_CTRL);
-+	temp |= RCAR_USB3_DL_CTRL_ENABLE;
-+	writel(temp, regs + RCAR_USB3_DL_CTRL);
-+
-+	for (index = 0; index < fw->size; index += 4) {
-+		/* to avoid reading beyond the end of the buffer */
-+		for (data = 0, j = 3; j >= 0; j--) {
-+			if ((j + index) < fw->size)
-+				data |= fw->data[index + j] << (8 * j);
-+		}
-+		writel(data, regs + RCAR_USB3_FW_DATA0);
-+		temp = readl(regs + RCAR_USB3_DL_CTRL);
-+		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0;
-+		writel(temp, regs + RCAR_USB3_DL_CTRL);
-+
-+		for (time = 0; time < timeout; time++) {
-+			val = readl(regs + RCAR_USB3_DL_CTRL);
-+			if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0)
-+				break;
-+			udelay(1);
-+		}
-+		if (time == timeout) {
-+			retval = -ETIMEDOUT;
-+			break;
-+		}
-+	}
-+
-+	temp = readl(regs + RCAR_USB3_DL_CTRL);
-+	temp &= ~RCAR_USB3_DL_CTRL_ENABLE;
-+	writel(temp, regs + RCAR_USB3_DL_CTRL);
-+
-+	for (time = 0; time < timeout; time++) {
-+		val = readl(regs + RCAR_USB3_DL_CTRL);
-+		if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
-+			retval = 0;
-+			break;
-+		}
-+		udelay(1);
-+	}
-+	if (time == timeout)
-+		retval = -ETIMEDOUT;
-+
-+	release_firmware(fw);
-+
-+	return retval;
-+}
-+
-+/* This function needs to initialize a "phy" of usb before */
-+int xhci_rcar_init_quirk(struct usb_hcd *hcd)
-+{
-+	/* If hcd->regs is NULL, we don't just call the following function */
-+	if (!hcd->regs)
-+		return 0;
-+
-+	return xhci_rcar_download_firmware(hcd->self.controller, hcd->regs);
-+}
-diff --git a/drivers/usb/host/xhci-rcar.h b/drivers/usb/host/xhci-rcar.h
-new file mode 100644
-index 0000000..5850125
---- /dev/null
-+++ b/drivers/usb/host/xhci-rcar.h
-@@ -0,0 +1,27 @@
-+/*
-+ * drivers/usb/host/xhci-rcar.h
-+ *
-+ * Copyright (C) 2014 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+#ifndef _XHCI_RCAR_H
-+#define _XHCI_RCAR_H
-+
-+#if IS_ENABLED(CONFIG_USB_XHCI_RCAR)
-+void xhci_rcar_start(struct usb_hcd *hcd);
-+int xhci_rcar_init_quirk(struct usb_hcd *hcd);
-+#else
-+static inline void xhci_rcar_start(struct usb_hcd *hcd)
-+{
-+}
-+
-+static inline int xhci_rcar_init_quirk(struct usb_hcd *hcd)
-+{
-+	return 0;
-+}
-+#endif
-+#endif /* _XHCI_RCAR_H */
--- 
-1.7.9.5
+> The nbpfaxi dmaengine driver doesn't define any new bindings, it only
+> uses standard dmaengine bindings and defines 3 flags for the 3rd parameter
+> of the "dmas" property.
+> 
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> 
+> v3: split out from v2, no changes otherwise
+> 
+>  Documentation/devicetree/bindings/dma/nbpfaxi.txt | 61 +++++++++++++++++++++++
+>  include/dt-bindings/dma/nbpfaxi.h                 | 20 ++++++++
+>  2 files changed, 81 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/dma/nbpfaxi.txt
+>  create mode 100644 include/dt-bindings/dma/nbpfaxi.h
+> 
+> diff --git a/Documentation/devicetree/bindings/dma/nbpfaxi.txt b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+> new file mode 100644
+> index 0000000..d5e2522
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/dma/nbpfaxi.txt
+> @@ -0,0 +1,61 @@
+> +* Renesas "Type-AXI" NBPFAXI* DMA controllers
+> +
+> +* DMA controller
+> +
+> +Required properties
+> +
+> +- compatible:	must be one of
+> +		"renesas,nbpfaxi64dmac1b4"
+> +		"renesas,nbpfaxi64dmac1b8"
+> +		"renesas,nbpfaxi64dmac1b16"
+> +		"renesas,nbpfaxi64dmac4b4"
+> +		"renesas,nbpfaxi64dmac4b8"
+> +		"renesas,nbpfaxi64dmac4b16"
+> +		"renesas,nbpfaxi64dmac8b4"
+> +		"renesas,nbpfaxi64dmac8b8"
+> +		"renesas,nbpfaxi64dmac8b16"
+> +- #dma-cells:	must be 2: the first integer is a terminal number, to which this
+> +		slave is connected, the second one is flags. Flags is a bitmask
+> +		with the following bits defined:
+> +
+> +#define NBPF_SLAVE_RQ_HIGH	1
+> +#define NBPF_SLAVE_RQ_LOW	2
+> +#define NBPF_SLAVE_RQ_LEVEL	4
+> +
+> +Optional properties:
+> +
+> +You can use dma-channels and dma-requests as described in dma.txt, although they
+> +won't be used, this information is derived from the compatibility string.
+> +
+> +Example:
+> +
+> +	dma: dma-controller@48000000 {
+> +		compatible = "renesas,nbpfaxi64dmac8b4";
+> +		reg = <0x48000000 0x400>;
+> +		interrupts = <0 12 0x4
+> +			      0 13 0x4
+> +			      0 14 0x4
+> +			      0 15 0x4
+> +			      0 16 0x4
+> +			      0 17 0x4
+> +			      0 18 0x4
+> +			      0 19 0x4>;
+> +		#dma-cells = <2>;
+> +		dma-channels = <8>;
+> +		dma-requests = <8>;
+> +	};
+> +
+> +* DMA client
+> +
+> +Required properties:
+> +
+> +dmas and dma-names are required, as described in dma.txt.
+> +
+> +Example:
+> +
+> +#include <dt-bindings/dma/nbpfaxi.h>
+> +
+> +...
+> +		dmas = <&dma 0 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)
+> +			&dma 1 (NBPF_SLAVE_RQ_HIGH | NBPF_SLAVE_RQ_LEVEL)>;
+> +		dma-names = "rx", "tx";
+> diff --git a/include/dt-bindings/dma/nbpfaxi.h b/include/dt-bindings/dma/nbpfaxi.h
+> new file mode 100644
+> index 0000000..c1a5b9e
+> --- /dev/null
+> +++ b/include/dt-bindings/dma/nbpfaxi.h
+> @@ -0,0 +1,20 @@
+> +/*
+> + * Copyright (C) 2013-2014 Renesas Electronics Europe Ltd.
+> + * Author: Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of version 2 of the GNU General Public License as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef DT_BINDINGS_NBPFAXI_H
+> +#define DT_BINDINGS_NBPFAXI_H
+> +
+> +/**
+> + * Use "#dma-cells = <2>;" with the second integer defining slave DMA flags:
+> + */
+> +#define NBPF_SLAVE_RQ_HIGH	1
+> +#define NBPF_SLAVE_RQ_LOW	2
+> +#define NBPF_SLAVE_RQ_LEVEL	4
+> +
+> +#endif
+> -- 
+> 2.0.0.rc0
+> 
+> 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
