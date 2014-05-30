@@ -1,54 +1,60 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v3 1/2] usb: host: xhci-plat: add optional PHY support
-Date: Fri, 30 May 2014 22:48:20 +0900
-Message-ID: <53888C24.4070203@renesas.com>
-References: <53868E18.7090805@renesas.com> <53876BB6.3040304@cogentembedded.com>
+Subject: [PATCH v4] add support for the R-Car H2 and M2 xHCI controllers
+Date: Fri, 30 May 2014 22:53:00 +0900
+Message-ID: <53888D3C.5020003@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53876BB6.3040304@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+To: "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
 Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+This patch adds the USB xHCI support for the R-Car H2 and M2 SoCs.
+These SoCs use an xHCI but still need specific initialization, mainly
+to setup the firmware downloading and the specific registers.
 
-(2014/05/30 2:17), Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 05/29/2014 05:32 AM, Yoshihiro Shimoda wrote:
-> 
->> From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> 
->> This commit extends the xhci-plat so that it can optionally be passed
->> a reference to a PHY through the Device Tree. It will be useful for
->> the Armada 375 SoCs. If no PHY is provided then the behavior of the
->> driver is unchanged.
-> 
->> As for the clock, to achieve this, it adds a 'struct phy *' member in
->> xhci_hcd. While only used for now in xhci-plat, here again, it might
->> be used by other drivers in the future.
-> 
->> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> ---
->>   drivers/usb/host/xhci-plat.c |   27 ++++++++++++++++++++++++++-
->>   drivers/usb/host/xhci.h      |    2 ++
->>   2 files changed, 28 insertions(+), 1 deletion(-)
-> 
->     I've already posted a patch adding generic PHY support to all USB HCDs 
-> about 1.5 months ago, which should make this patch unneeded.
+This patch set is based on the usb-next branch of Greg usb.git tree.
+(commit id = 70d2f61fc7559df3d5be32a9d01efdb9ee1b11d8)
 
-Thank you for the point. So, I will not use this patch.
-And, I could clean up xhci-rcar patch! (ioremap is not needed)
+Changes since v3:
+ - Remove a general phy driver calling in xhci-plat.c
+ - Change xhci_rcar_init_quirk() calling into xhci_plat_setup(). Because of
+   usb_add_hcd() will call a generic phy driver calling.
+ - Modify xhci_rcar_init_quirk()
 
-Best regards,
-Yoshihiro Shimoda
+Changes since v2:
+ - Fix goto direction in patch 1.
+ - Remove some unnecessary checks in patch 1.
+ - Add MODULE_FIRMWARE() in patch 2.
+ - Add a comment about xhci_rcar_init_quirk() in patch 2.
 
-> WBR, Sergei
-> 
+Changes since v1 (about patch 2 only because patch 1 and 3 ware applied):
+ - Fix some typos in patch 2.
+ - Remove duplicated #define in patch 2.
+ - Remove usb_phy framework calling in patch 2.
+ - Change prototype of xhci_rcar_start() in patch 2.
+ - Change compatible strings from "renesas,r8a779[01]-xhci" to
+   "renesas,xhci-r8a779[01]" in patch 2. Because of Renesas SoC
+   maintainer's comment:
+    http://marc.info/?l=linux-sh&m=140109049002958&w=2
+
+ - Rewrite the custom get_unaligned_le32() and add comment about it in patch 2.
+
+
+Yoshihiro Shimoda (1):
+  usb: host: xhci-plat: add support for the R-Car H2 and M2 xHCI
+    controllers
+
+ drivers/usb/host/Kconfig     |    8 +++
+ drivers/usb/host/Makefile    |    3 +
+ drivers/usb/host/xhci-plat.c |   19 ++++++
+ drivers/usb/host/xhci-rcar.c |  148 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-rcar.h |   27 ++++++++
+ 5 files changed, 205 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-rcar.c
+ create mode 100644 drivers/usb/host/xhci-rcar.h
 
 -- 
-Yoshihiro Shimoda
+1.7.9.5
