@@ -1,140 +1,114 @@
-From: "Karicheri, Muralidharan" <m-karicheri2@ti.com>
-Subject: RE: [PATCH v2 03/18] PCI: designware: Configuration space should be
- specified in 'reg'
-Date: Fri, 30 May 2014 14:15:13 +0000
-Message-ID: <3E54258959B69E4282D79E01AB1F32B70477D2A4@DFLE11.ent.ti.com>
-References: <1401345500-20188-1-git-send-email-kishon@ti.com>
- <1401345500-20188-4-git-send-email-kishon@ti.com> <53876116.90504@ti.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH v2] pinctrl: Enable "power-source" to be extracted from DT files
+Date: Fri, 30 May 2014 16:31:34 +0200
+Message-ID: <1687581.SB5xYE3yEq@phil>
+References: <CACRpkdZyLxMTSygRP6pD-mxghQ_D6tQ821tvn8GYw0Rnh9hZoQ@mail.gmail.com> <CACRpkdYR9cZOnG2r3Kh027LNKgsDJqxL0J9Gryu+JHXacTNHbQ@mail.gmail.com> <1401435691.13544.3.camel@iivanov-dev>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53876116.90504@ti.com>
-Content-Language: en-US
-Sender: linux-pci-owner@vger.kernel.org
-To: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Marek Vasut <marex@denx.de>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401435691.13544.3.camel@iivanov-dev>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, James Hogan <james.hogan@imgtec.com>, Stephen Warren <swarren@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
->-----Original Message-----
->From: Murali Karicheri [mailto:m-karicheri2@ti.com]
->Sent: Thursday, May 29, 2014 12:32 PM
->To: ABRAHAM, KISHON VIJAY
->Cc: devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-
->kernel@lists.infradead.org; linux-omap@vger.kernel.org; linux-pci@vger.kernel.org; linux-
->kernel@vger.kernel.org; arnd@arndb.de; tony@atomide.com; jg1.han@samsung.com;
->Jason Gunthorpe; Bjorn Helgaas; Mohit Kumar; Marek Vasut
->Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should be specified
->in 'reg'
->
->On 5/29/2014 2:38 AM, ABRAHAM, KISHON VIJAY wrote:
->> The configuration address space has so far been specified in *ranges*,
->> however it should be specified in *reg* making it a platform MEM resource.
->> Hence used 'platform_get_resource_*' API to get configuration address
->> space in the designware driver.
->>
->> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
->> Cc: Bjorn Helgaas <bhelgaas@google.com>
->> Cc: Mohit Kumar <mohit.kumar@st.com>
->> Cc: Jingoo Han <jg1.han@samsung.com>
->> Cc: Marek Vasut <marex@denx.de>
->> Cc: Arnd Bergmann <arnd@arndb.de>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>   .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
->>   drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
->>   2 files changed, 16 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> index d6fae13..8314360 100644
->> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
->> @@ -6,6 +6,7 @@ Required properties:
->>   	as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
->>   - reg: base addresses and lengths of the pcie controller,
->>   	the phy controller, additional register for the phy controller.
->> +	The configuration address space should also be specified here.
->Kishon,
->
->I am working on the Keystone PCI driver for which v1 is already posted.
->Want to clarify
->following.
->1. Original text for reg states "base addresses and lengths of the pcie controller,
->         the phy controller, additional register for the phy controller"
->and you added
->         "The configuration address space should also be specified here"
->
->    and the code below added resource name "config"
->
->Does PCI designware follow some convention? Does it mean after applying this patch
->config name is mandatory or optional? Below code you are not returning error. Can you or
->author of PCI designware clarify what is expected to be present as mandatory and what is
->optional.
->
->Does config refers to RC's config space or EP's config space or both?
->The code below divide
->the size by 2. So it appears to be RC's + EP's config space. Please clarify.
->
->>   - interrupts: interrupt values for level interrupt,
->>   	pulse interrupt, special interrupt.
->>   - clocks: from common clock binding: handle to pci clock.
->> diff --git a/drivers/pci/host/pcie-designware.c
->> b/drivers/pci/host/pcie-designware.c
->> index c4e3732..603b386 100644
->> --- a/drivers/pci/host/pcie-designware.c
->> +++ b/drivers/pci/host/pcie-designware.c
->> @@ -20,6 +20,7 @@
->>   #include <linux/of_pci.h>
->>   #include <linux/pci.h>
->>   #include <linux/pci_regs.h>
->> +#include <linux/platform_device.h>
->>   #include <linux/types.h>
->>
->>   #include "pcie-designware.h"
->> @@ -392,11 +393,23 @@ static const struct irq_domain_ops msi_domain_ops = {
->>   int __init dw_pcie_host_init(struct pcie_port *pp)
->>   {
->>   	struct device_node *np = pp->dev->of_node;
->> +	struct platform_device *pdev = to_platform_device(pp->dev);
->>   	struct of_pci_range range;
->>   	struct of_pci_range_parser parser;
->> +	struct resource *cfg_res;
->>   	u32 val;
->>   	int i;
->>
->> +	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
->> +	if (cfg_res) {
->> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
->> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
->> +		pp->cfg0_base = cfg_res->start;
->> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
->> +	} else {
->> +		dev_err(pp->dev, "missing *config* reg space\n");
->This should return error -EINVAL.
->
->> +	}
->> +
->>   	if (of_pci_range_parser_init(&parser, np)) {
->>   		dev_err(pp->dev, "missing ranges property\n");
->>   		return -EINVAL;
->> @@ -429,6 +442,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
->>   			of_pci_range_to_resource(&range, np, &pp->cfg);
->>   			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
->>   			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
->> +			pp->cfg0_base = pp->cfg.start;
->> +			pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
->>   		}
->>   	}
->>
->> @@ -441,8 +456,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
->>   		}
->>   	}
->>
->> -	pp->cfg0_base = pp->cfg.start;
->> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
->>   	pp->mem_base = pp->mem.start;
->>
->>   	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
->BTW, Please also review my Keystone series so that we could discuss this topic in that
->context as well.
+Am Freitag, 30. Mai 2014, 10:41:31 schrieb Ivan T. Ivanov:
+> On Wed, 2014-05-28 at 10:48 +0200, Linus Walleij wrote:
+> > On Wed, May 28, 2014 at 10:36 AM, Heiko St=FCbner <heiko@sntech.de>=
+ wrote:
+> > > Am Mittwoch, 28. Mai 2014, 10:15:43 schrieb Linus Walleij:
+> > >> On Tue, May 27, 2014 at 3:09 PM, Heiko St=FCbner <heiko@sntech.d=
+e> wrote:
+> > >> > Am Dienstag, 27. Mai 2014, 09:27:36 schrieb Ivan T. Ivanov:
+> > >> >> From: "Ivan T. Ivanov" <iivanov@mm-sol.com>
+> > >> >>=20
+> > >> >> Add "power-source" property to generic options used for DT pa=
+rsing
+> > >> >> files.
+> > >> >> This  enables drivers, which use generic pin configurations, =
+to get
+> > >> >> the
+> > >> >> value passed to this property.
+> > >> >=20
+> > >> > I think the main problem here is, that pinconf-generic.h defin=
+es the
+> > >> > power-
+> > >> > source as having a "custom format". With DT as a hardware
+> > >> > description,
+> > >> > implementaton specific values do not work well - instead it sh=
+ould
+> > >> > have a
+> > >> > regular unit-value.
+> > >> >=20
+> > >> > For the power-source I think volts could work well - as this i=
+s the
+> > >> > main
+> > >> > use- case for pinctrl I know. The regulator-binding uses micro=
+volts,
+> > >> > maybe it would be good use a similar unit.
+> > >>=20
+> > >> (...)
+> > >>=20
+> > >> >         pcfg_1v8 {
+> > >> >        =20
+> > >> >                 power-source =3D <1800000>;
+> > >> >        =20
+> > >> >         };
+> > >>=20
+> > >> I don't think this is what it's meant for actually. In this case=
+ the
+> > >> thing
+> > >> would be modeled as a regulator rather than some pin control opt=
+ion I
+> > >> guess?
+> > >>=20
+> > >> I think it's more like a selector, such as found on old amplifie=
+rs,
+> > >> input source A, B or C? So it's just some discrete number.
+> > >=20
+> > > as I said, you know this better than me ;-)
+> > >=20
+> > > I was thinking more of these io-voltages, where one can select be=
+tween
+> > > say 1.8 and 3.3V for the pins.
+> > >=20
+> > > I have this somewhere on my todo list for the rockchips too.
+> > >=20
+> > > So essentially the pinctrl driver [as it is a pin-group specific
+> > > setting]
+> > > should just export regulators for these voltage settings, without
+> > > touching the pinconfig itself, right?
+> >=20
+> > Hm hm hm.
+> >=20
+> > I am a bit in the blue actually.
+> >=20
+> > I think we need to have a discussion with Mark Brown on how to
+> > handle this.
+> >=20
+> > We have previously had the case of MMC/SD level-shifters, where
+> > a certain setting gives a certain level of signals out, and another
+> > setting
+> > gives another level. Like two discrete levels.
+> >=20
+> > So we modeled that as a regulator provider inside the pin control
+> > driver eventually, see sh-pfc/pfc-sh73a0.c
+> >=20
+> > But this is different: it is the power of the pin itself.
+> >=20
+> > I can think of a "padring regulator" hooking in as part of the pin =
+state
+> > but have no clear idea on how to actually do that. We need some
+> > coding I think.
+>=20
+> In my case this is just a switch, which can select from different pow=
+er
+> sources and these sources are external from the chip. So I can't know
+> a priory what the levels are and hard code them inside the driver.
+
+Yep, that is exactly what Linus described as use-case too ... I was sim=
+ply=20
+thinking in the wrong direction :-)
+
+Heiko
