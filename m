@@ -1,128 +1,120 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 11/11] clk: versatile: add versatile OSC support
-Date: Fri, 30 May 2014 16:03:26 -0700
-Message-ID: <20140530230326.10062.15472@quantum>
-References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
- <1401403221-27523-12-git-send-email-robherring2@gmail.com>
+From: "Liviu Dudau" <liviu@dudau.co.uk>
+Subject: Re: [PATCH] of: treat PCI config space as IORESOURCE_MEM type
+Date: Sat, 31 May 2014 00:11:23 +0100
+Message-ID: <20140530230830.GG1677@bart.dudau.co.uk>
+References: <1401379426-9701-1-git-send-email-galak@codeaurora.org>
+ <CAL_JsqLPFDwtd-QYDqCwx1JVj1Aa8=nof-e0P6R9CZra+fXHfw@mail.gmail.com>
+ <47B1E3D0-4336-4529-80B0-172F4ACA5C97@codeaurora.org>
+ <20140530005602.GE1677@bart.dudau.co.uk>
+ <CAErSpo7qEhJyUAu58R8g6+AEhRGo_+Vv0EMgkK+3ZQOU9+jmhg@mail.gmail.com>
+ <20140530014116.GF1677@bart.dudau.co.uk>
+ <F22EE9D6-8F58-4AF0-9684-71B7A3BFF868@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401403221-27523-12-git-send-email-robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <F22EE9D6-8F58-4AF0-9684-71B7A3BFF868@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2014-05-29 15:40:21)
-> From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+On Fri, May 30, 2014 at 03:45:05PM -0500, Kumar Gala wrote:
 > 
-> Versatile platforms share the same OSC programming model as Integrator
-> platforms. Add the necessary parameters and init functions for Versatile.
+> On May 29, 2014, at 8:41 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
 > 
-> Renaming the file to clk-versatile.c as versatile is used as the family
-> name for ARM, Ltd. boards.
+> > On Thu, May 29, 2014 at 07:29:31PM -0600, Bjorn Helgaas wrote:
+> >> On Thu, May 29, 2014 at 6:56 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
+> >>> On Thu, May 29, 2014 at 03:51:28PM -0500, Kumar Gala wrote:
+> >>>> 
+> >>>> On May 29, 2014, at 3:44 PM, Rob Herring <robherring2@gmail.com> wrote:
+> >>>> 
+> >>>>> On Thu, May 29, 2014 at 11:03 AM, Kumar Gala <galak@codeaurora.org> wrote:
+> >>>>>> If we have a PCI config space specified in something like a ranges
+> >>>>>> property we should treat it as memory type resource.
+> >>>>> 
+> >>>>> Config space should not be in ranges[1]. We have some cases that are,
+> >>>>> but we don't want new ones.
+> >>>> 
+> >>>> For the cases we have I agree, however an ECAM based cfg seems completely legit.
+> >>>> 
+> >>>>>> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> >>>>>> ---
+> >>>>>> drivers/of/address.c | 3 +++
+> >>>>>> 1 file changed, 3 insertions(+)
+> >>>>>> 
+> >>>>>> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> >>>>>> index cb4242a..4e7ee59 100644
+> >>>>>> --- a/drivers/of/address.c
+> >>>>>> +++ b/drivers/of/address.c
+> >>>>>> @@ -122,6 +122,9 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+> >>>>>>       u32 w = be32_to_cpup(addr);
+> >>>>>> 
+> >>>>>>       switch((w >> 24) & 0x03) {
+> >>>>>> +       case 0x00: /* cfg space */
+> >>>>>> +               flags |= IORESOURCE_MEM;
+> >>>>>> +               break;
+> >>>>> 
+> >>>>> How would you then distinguish actual memory ranges?
+> >>>> 
+> >>>> One assumes you are still looking at pci_space as part of of_pci_range
+> >>> 
+> >>> That doesn't happen when you start scanning the bus. The existing code will
+> >>> use the IORESOURCE_MEM for allocating memory space for devices, which is
+> >>> not what you want. Did you test your patch on any PCI system? I'm pretty
+> >>> sure that with my patch series that tries to make a generic framework for
+> >>> host controllers this will fail.
+> >>> 
+> >>> We really need a IORESOURCE_CFG flag for this space.
+> >> 
+> >> Maybe, but I'm not convinced yet.  The existing IORESOURCE_TYPE_BITS
+> >> types are for things that are mutually exclusive address spaces.  I
+> >> think this discussion is about ECAM, where the CPU side is definitely
+> >> in the same address space (IORESOURCE_MEM) as RAM, APICs, host bridge
+> >> apertures, device MMIO, etc.  The ECAM area must appear in the
+> >> iomem_resource tree so we avoid it when allocating other areas.
+> > 
+> > Agree, I'm only concerned that if this ECAM config space gets added to
+> > the list of pci_host_bridge windows it will be indistinguishable from
+> > IORESOURCE_MEM resources and pci_create_root_bus() will add it to the
+> > bus and allow devices present on that bus to be assigned addresses from
+> > that range. Which might not be what one wants for certain BARs.
+> > 
+> > I've had an aborted attempt to parse ECAM ranges in one version of my
+> > series (granted, I was trying to hack the IORESOURCE_TYPE_BITS as well)
+> > and things got horribly wrong quickly. I could give this patch a go with
+> > my series tomorrow when I'm in the office and report back.
 > 
-> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Acked-by: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> We need to fix the parsing code to be smarter about this case.
 
-So it's OK to rename the file and add the new stuff in one commit? I
-thought there were some guidelines about doing renames separately...
+Wow, what a sweeping statement! Did you not understand that the issue is not
+the parsing code but the way the rest of the core code uses an IORESOURCE_MEM
+once you have parsed it into a resource structure and added it to the list
+of pci_host_bridge_windows?
 
-Regards,
-Mike
+Best regards,
+Liviu
 
-> ---
-> v2:
-> - Rename clk-integrator.c to clk-versatile.c
 > 
->  drivers/clk/versatile/Makefile                     |  3 +-
->  .../{clk-integrator.c => clk-versatile.c}          | 35 ++++++++++++++++++++--
->  2 files changed, 34 insertions(+), 4 deletions(-)
->  rename drivers/clk/versatile/{clk-integrator.c => clk-versatile.c} (66%)
-> 
-> diff --git a/drivers/clk/versatile/Makefile b/drivers/clk/versatile/Makefile
-> index c16ca78..9ee2b37 100644
-> --- a/drivers/clk/versatile/Makefile
-> +++ b/drivers/clk/versatile/Makefile
-> @@ -1,6 +1,5 @@
->  # Makefile for Versatile-specific clocks
-> -obj-$(CONFIG_ICST)             += clk-icst.o
-> -obj-$(CONFIG_ARCH_INTEGRATOR)  += clk-integrator.o
-> +obj-$(CONFIG_ICST)             += clk-icst.o clk-versatile.o
->  obj-$(CONFIG_INTEGRATOR_IMPD1) += clk-impd1.o
->  obj-$(CONFIG_ARCH_REALVIEW)    += clk-realview.o
->  obj-$(CONFIG_ARCH_VEXPRESS)    += clk-vexpress.o clk-sp810.o
-> diff --git a/drivers/clk/versatile/clk-integrator.c b/drivers/clk/versatile/clk-versatile.c
-> similarity index 66%
-> rename from drivers/clk/versatile/clk-integrator.c
-> rename to drivers/clk/versatile/clk-versatile.c
-> index 734c4b8..fe52a79 100644
-> --- a/drivers/clk/versatile/clk-integrator.c
-> +++ b/drivers/clk/versatile/clk-versatile.c
-> @@ -17,6 +17,9 @@
->  
->  #define INTEGRATOR_HDR_LOCK_OFFSET     0x14
->  
-> +#define VERSATILE_SYS_OSCCLCD_OFFSET   0x1c
-> +#define VERSATILE_SYS_LOCK_OFFSET      0x20
-> +
->  /* Base offset for the core module */
->  static void __iomem *cm_base;
->  
-> @@ -37,11 +40,27 @@ static const struct clk_icst_desc __initdata cm_auxosc_desc = {
->         .lock_offset = INTEGRATOR_HDR_LOCK_OFFSET,
->  };
->  
-> -static void __init of_integrator_cm_osc_setup(struct device_node *np)
-> +static const struct icst_params versatile_auxosc_params = {
-> +       .vco_max        = ICST307_VCO_MAX,
-> +       .vco_min        = ICST307_VCO_MIN,
-> +       .vd_min         = 4 + 8,
-> +       .vd_max         = 511 + 8,
-> +       .rd_min         = 1 + 2,
-> +       .rd_max         = 127 + 2,
-> +       .s2div          = icst307_s2div,
-> +       .idx2s          = icst307_idx2s,
-> +};
-> +
-> +static const struct clk_icst_desc versatile_auxosc_desc __initconst = {
-> +       .params = &versatile_auxosc_params,
-> +       .vco_offset = VERSATILE_SYS_OSCCLCD_OFFSET,
-> +       .lock_offset = VERSATILE_SYS_LOCK_OFFSET,
-> +};
-> +static void __init cm_osc_setup(struct device_node *np,
-> +                               const struct clk_icst_desc *desc)
->  {
->         struct clk *clk = ERR_PTR(-EINVAL);
->         const char *clk_name = np->name;
-> -       const struct clk_icst_desc *desc = &cm_auxosc_desc;
->         const char *parent_name;
->  
->         if (!cm_base) {
-> @@ -65,5 +84,17 @@ static void __init of_integrator_cm_osc_setup(struct device_node *np)
->         if (!IS_ERR(clk))
->                 of_clk_add_provider(np, of_clk_src_simple_get, clk);
->  }
-> +
-> +static void __init of_integrator_cm_osc_setup(struct device_node *np)
-> +{
-> +       cm_osc_setup(np, &cm_auxosc_desc);
-> +}
->  CLK_OF_DECLARE(integrator_cm_auxosc_clk,
->         "arm,integrator-cm-auxosc", of_integrator_cm_osc_setup);
-> +
-> +static void __init of_versatile_cm_osc_setup(struct device_node *np)
-> +{
-> +       cm_osc_setup(np, &versatile_auxosc_desc);
-> +}
-> +CLK_OF_DECLARE(versatile_cm_auxosc_clk,
-> +              "arm,versatile-cm-auxosc", of_versatile_cm_osc_setup);
+> - k
 > -- 
-> 1.9.1
+> Employee of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+
+-- 
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
+
+ One small step
+   for me ...
