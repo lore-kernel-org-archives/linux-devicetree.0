@@ -1,30 +1,81 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 00/11] ARM: Versatile irq and clock DT support
-Date: Fri, 30 May 2014 07:17:27 -0500
-Message-ID: <CAL_JsqLfoFvr8Tz1GqfA5PU1tP4zEtO21VuQObfRKmeLLJMK2g@mail.gmail.com>
-References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
-	<CACRpkdZhtAG7ThDvzTi6UBrF=ALd3huHquWQ+t-aaSBZOAfy6g@mail.gmail.com>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [PATCHv3 3/4] mmc: dw_mmc: remove the "supports-highspeed"
+ property.
+Date: Fri, 30 May 2014 21:51:56 +0900
+Message-ID: <001a01cf7c05$f02a2bd0$d07e8370$%jun@samsung.com>
+References: <1401255351-17653-1-git-send-email-jh80.chung@samsung.com>
+ <1401255351-17653-4-git-send-email-jh80.chung@samsung.com>
+ <CAPDyKFpTTYHtkKjFmbPi6P_xfdfd8Fv8qfpKZMfpQBppRNZLwg@mail.gmail.com>
+ <53883D69.4010701@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACRpkdZhtAG7ThDvzTi6UBrF=ALd3huHquWQ+t-aaSBZOAfy6g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53883D69.4010701@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Ulf Hansson' <ulf.hansson@linaro.org>
+Cc: 'linux-mmc' <linux-mmc@vger.kernel.org>, 'Chris Ball' <chris@printf.net>, 'Ludovic Desroches' <ludovic.desroches@atmel.com>, devicetree@vger.kernel.org, 'linux-samsung-soc' <linux-samsung-soc@vger.kernel.org>, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 30, 2014 at 4:41 AM, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, May 30, 2014 at 12:40 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
->> Linus, This could use testing again on Versatile.
->
-> OK I should probably test on Versatile *and* the Integrators since
-> these are also affected. Do you have a branch I can pull?
+On Fri, May 30, 2014, Jaehoon Chung wrote:
+> Hi, Ulf.
+> 
+> On 05/30/2014 05:01 PM, Ulf Hansson wrote:
+> > On 28 May 2014 07:35, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> >> Removed the parser for "supports-highspeed".
+> >> It can be parsed with "cap-mmc-highsped" or "cap-sd-highspeed" at
+> >> mmc_of_parse().
+> >>
+> >> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> >> ---
+> >>  drivers/mmc/host/dw_mmc.c |    3 ---
+> >>  1 file changed, 3 deletions(-)
+> >>
+> >> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> >> index 3285bdd..34b5210 100644
+> >> --- a/drivers/mmc/host/dw_mmc.c
+> >> +++ b/drivers/mmc/host/dw_mmc.c
+> >> @@ -2281,9 +2281,6 @@ static struct dw_mci_board *dw_mci_parse_dt(struct dw_mci *host)
+> >>                         return ERR_PTR(ret);
+> >>         }
+> >>
+> >> -       if (of_find_property(np, "supports-highspeed", NULL))
+> >> -               pdata->caps |= MMC_CAP_SD_HIGHSPEED | MMC_CAP_MMC_HIGHSPEED;
+> >> -
+> >
+> > According to DT guys, normally we shouldn't remove DT bindings. Thus,
+> > you need to keep this, unless you can get some of the DT guys to ack
+> > it.
+> As you mentioned, this patch didn't need, right?
+> 
+> >
+> > Though, you still want to move the DTs to use common mmc bindings. And
+> > you could mark the documentation of the above binding as deprecated.
+> I added the comment for deprecated into dw-mmc dt-binding doc file.
+> "[PATCHv3,4/4] ARM: dts: replace the slot property into slot sub-node for dwmmc."
+> 
+> I think this patch can be discarded. then everything is ok.!? :)
+Once decided to turn common mmc bindings instead of driver-specific,
+host driver shall not need old one.
+I think we can remove it.
 
-git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git versatile-v2
+Thanks,
+Seungwon Jeon
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> If i'm wrong, let me know, plz.
+> 
+> Thank you for sharing the information.
+> 
+> Best Regards,
+> Jaehoon Chung
+> >
+> > Kind regards
+> > Ulf Hansson
+> >
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
