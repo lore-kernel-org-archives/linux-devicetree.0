@@ -1,104 +1,174 @@
-From: "Liviu Dudau" <liviu@dudau.co.uk>
-Subject: Re: [PATCH] of: treat PCI config space as IORESOURCE_MEM type
-Date: Fri, 30 May 2014 02:41:17 +0100
-Message-ID: <20140530014116.GF1677@bart.dudau.co.uk>
-References: <1401379426-9701-1-git-send-email-galak@codeaurora.org>
- <CAL_JsqLPFDwtd-QYDqCwx1JVj1Aa8=nof-e0P6R9CZra+fXHfw@mail.gmail.com>
- <47B1E3D0-4336-4529-80B0-172F4ACA5C97@codeaurora.org>
- <20140530005602.GE1677@bart.dudau.co.uk>
- <CAErSpo7qEhJyUAu58R8g6+AEhRGo_+Vv0EMgkK+3ZQOU9+jmhg@mail.gmail.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
+Date: Fri, 30 May 2014 12:08:18 +0900
+Message-ID: <5387F622.2070309@samsung.com>
+References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
+ <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
+ <20140526134153.GA2373@ulmo> <538430A4.8020702@samsung.com>
+ <20140527075328.GA13081@ulmo>
+ <CAAQKjZOGLPoGbZ7G3+BFd3ydRC2HGmz8JKqFiytdSvxN3T5U_w@mail.gmail.com>
+ <20140527202122.GA10609@mithrandir> <53856B0D.6010501@samsung.com>
+ <538585D1.9030305@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAErSpo7qEhJyUAu58R8g6+AEhRGo_+Vv0EMgkK+3ZQOU9+jmhg@mail.gmail.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Kumar Gala <galak@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <538585D1.9030305@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Thu, May 29, 2014 at 07:29:31PM -0600, Bjorn Helgaas wrote:
-> On Thu, May 29, 2014 at 6:56 PM, Liviu Dudau <liviu@dudau.co.uk> wrote:
-> > On Thu, May 29, 2014 at 03:51:28PM -0500, Kumar Gala wrote:
-> >>
-> >> On May 29, 2014, at 3:44 PM, Rob Herring <robherring2@gmail.com> wrote:
-> >>
-> >> > On Thu, May 29, 2014 at 11:03 AM, Kumar Gala <galak@codeaurora.org> wrote:
-> >> >> If we have a PCI config space specified in something like a ranges
-> >> >> property we should treat it as memory type resource.
-> >> >
-> >> > Config space should not be in ranges[1]. We have some cases that are,
-> >> > but we don't want new ones.
-> >>
-> >> For the cases we have I agree, however an ECAM based cfg seems completely legit.
-> >>
-> >> >> Signed-off-by: Kumar Gala <galak@codeaurora.org>
-> >> >> ---
-> >> >> drivers/of/address.c | 3 +++
-> >> >> 1 file changed, 3 insertions(+)
-> >> >>
-> >> >> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> >> >> index cb4242a..4e7ee59 100644
-> >> >> --- a/drivers/of/address.c
-> >> >> +++ b/drivers/of/address.c
-> >> >> @@ -122,6 +122,9 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
-> >> >>        u32 w = be32_to_cpup(addr);
-> >> >>
-> >> >>        switch((w >> 24) & 0x03) {
-> >> >> +       case 0x00: /* cfg space */
-> >> >> +               flags |= IORESOURCE_MEM;
-> >> >> +               break;
-> >> >
-> >> > How would you then distinguish actual memory ranges?
-> >>
-> >> One assumes you are still looking at pci_space as part of of_pci_range
-> >
-> > That doesn't happen when you start scanning the bus. The existing code will
-> > use the IORESOURCE_MEM for allocating memory space for devices, which is
-> > not what you want. Did you test your patch on any PCI system? I'm pretty
-> > sure that with my patch series that tries to make a generic framework for
-> > host controllers this will fail.
-> >
-> > We really need a IORESOURCE_CFG flag for this space.
-> 
-> Maybe, but I'm not convinced yet.  The existing IORESOURCE_TYPE_BITS
-> types are for things that are mutually exclusive address spaces.  I
-> think this discussion is about ECAM, where the CPU side is definitely
-> in the same address space (IORESOURCE_MEM) as RAM, APICs, host bridge
-> apertures, device MMIO, etc.  The ECAM area must appear in the
-> iomem_resource tree so we avoid it when allocating other areas.
-
-Agree, I'm only concerned that if this ECAM config space gets added to
-the list of pci_host_bridge windows it will be indistinguishable from
-IORESOURCE_MEM resources and pci_create_root_bus() will add it to the
-bus and allow devices present on that bus to be assigned addresses from
-that range. Which might not be what one wants for certain BARs.
-
-I've had an aborted attempt to parse ECAM ranges in one version of my
-series (granted, I was trying to hack the IORESOURCE_TYPE_BITS as well)
-and things got horribly wrong quickly. I could give this patch a go with
-my series tomorrow when I'm in the office and report back.
-
-Best regards,
-Liviu
-
-> 
-> >> > [1] http://www.spinics.net/lists/linux-pci/msg30585.html
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
-> 
-
--- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
-
- One small step
-   for me ...
+SGkgQUxMLAoKT24gMDUvMjgvMjAxNCAwMzo0NCBQTSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBP
+biAwNS8yOC8yMDE0IDA2OjUwIEFNLCBJbmtpIERhZSB3cm90ZToKPj4gT24gMjAxNOuFhCAwNeyb
+lCAyOOydvCAwNToyMSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+PiBPbiBUdWUsIE1heSAyNywg
+MjAxNCBhdCAxMToyNDo0OVBNICswOTAwLCBJbmtpIERhZSB3cm90ZToKPj4+PiAyMDE0LTA1LTI3
+IDE2OjUzIEdNVCswOTowMCBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29t
+PjoKPj4+Pj4gT24gVHVlLCBNYXkgMjcsIDIwMTQgYXQgMDg6Mjg6NTJBTSArMDIwMCwgQW5kcnpl
+aiBIYWpkYSB3cm90ZToKPj4+Pj4+IEhpIFRoaWVycnksCj4+Pj4+Pgo+Pj4+Pj4gT24gMDUvMjYv
+MjAxNCAwMzo0MSBQTSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+Pj4+Pj4gT24gV2VkLCBNYXkg
+MjEsIDIwMTQgYXQgMDE6NDM6MDVQTSArMDkwMCwgWW91bmdKdW4gQ2hvIHdyb3RlOgo+Pj4+Pj4+
+PiBUaGlzIHBhdGNoIGFkZHMgRFQgYmluZGluZ3MgZm9yIHM2ZTNmYTAgcGFuZWwuCj4+Pj4+Pj4+
+IFRoZSBiaW5kaW5ncyBkZXNjcmliZXMgcGFuZWwgcmVzb3VyY2VzLCBkaXNwbGF5IHRpbWluZ3Mg
+YW5kIGNwdSBtb2RlIHRpbWluZ3MuCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFlv
+dW5nSnVuIENobyA8eWo0NC5jaG9Ac2Ftc3VuZy5jb20+Cj4+Pj4+Pj4+IEFja2VkLWJ5OiBJbmtp
+IERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+Cj4+Pj4+Pj4+IEFja2VkLWJ5OiBLeXVuZ21pbiBQ
+YXJrIDxreXVuZ21pbi5wYXJrQHNhbXN1bmcuY29tPgo+Pj4+Pj4+PiAtLS0KPj4+Pj4+Pj4gICAu
+Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9zYW1zdW5nLHM2ZTNmYTAudHh0ICB8ICAgNDUg
+KysrKysrKysrKysrKysrKysrKysKPj4+Pj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0
+aW9ucygrKQo+Pj4+Pj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvcGFuZWwvc2Ftc3VuZyxzNmUzZmEwLnR4dAo+Pj4+Pj4+IFlvdSdyZSB0
+b3RhbGx5IGNvbmZ1c2luZyBtZSBoZXJlLiBIYWxmIG9mIHRoaXMgcGF0Y2ggc2VyaWVzIGlzIGFi
+b3V0Cj4+Pj4+Pj4gYWRkaW5nIGk4MCBzdXBwb3J0IHRvIEV4eW5vcyBGSU1ELCBhbmQgdGhlbiB5
+b3UgZ28gYW5kIGFkZCB3aGF0IGlzCj4+Pj4+Pj4gYXBwYXJlbnRseSBhIERTSSBwZXJpcGhlcmFs
+IGRyaXZlciBoZXJlIHRoYXQncyBzdXBwb3NlZCB0byBiZSB1c2VkIGJ5Cj4+Pj4+Pj4gdGhpcyBu
+ZXcgaTgwIHN1cHBvcnQuIE5vdGhpbmcgSSd2ZSBiZWVuIGFibGUgdG8gZGlnIHVwIGluZGljYXRl
+cyB0aGF0Cj4+Pj4+Pj4gaTgwIG9yIERTSSBhcmUgaW4gYW55d2F5IHJlbGF0ZWQuCj4+Pj4+PiBG
+SU1EIGNhbiBwcm9kdWNlIHBhcmFsbGVsIFJHQiBvdXRwdXQgb3IgY29tbWFuZCBtb2RlIGluIGk4
+MCBzdHlsZSBvdXRwdXQKPj4+Pj4+IHZpYSBwYXJhbGxlbCBsaW5lcy4KPj4+Pj4+IERTSU0gY2Fu
+IGFjY2VwdCBwYXJhbGxlbCBSR0Igc3RyZWFtIGluIHRoaXMgY2FzZSBpdCBwcm9kdWNlcyBNSVBJ
+IERTSQo+Pj4+Pj4gdmlkZW8gbW9kZSBzaWduYWwgb3IgaXQgY2FuIGFjY2VwdCBpODAgYW5kIGlu
+IHRoaXMgY2FzZSBpdCB0cmFuc2xhdGVzIGl0Cj4+Pj4+PiB0byBNSVBJIERTSSBjb21tYW5kIG1v
+ZGUuCj4+Pj4+IFRoZW4gdGhlIGNvbW1hbmQgbW9kZSB0aW1pbmdzIGFyZW4ndCBhIHByb3BlcnR5
+IG9mIHRoZSBwYW5lbCBhdCBhbGwuCj4+Pj4gVGhlbiB0aGUgdmlkZW8gbW9kZSB0aW1pbmdzIGFy
+ZW4ndCBhbHNvIGEgcHJvcGVydHkgb2YgdGhlIHBhbmVsLgo+Pj4+Cj4+Pj4gV2hpY2ggaW50ZXJm
+YWNlIG1pcGkgYW5kIGRpc3BsYXkgY29udHJvbGxlciBzaG91bGQgdXNlIHdvdWxkIGJlCj4+Pj4g
+ZGVjaWRlZCBieSBsY2QgcGFuZWwgdHlwZTogZGlzcGxheSBjb250cm9sbGVyIGNhbiB1c2UgaTgw
+IGludGVyZmFjZQo+Pj4+IGJhc2VkIGxjZCBwYW5lbCwgYW5kIGFsc28gbWlwaSBjb250cm9sbGVy
+IGNhbiB1c2UgaTgwIGludGVyZmFjZSBiYXNlZAo+Pj4+IGxjZCBwYW5lbC4KPj4+PiBJbiBoZXJl
+LCB0aGUgb25seSBkaWZmZXJlbmNlIGlzIHRoYXQgbGNkIHBhbmVsIHJlY2VpdmVzICBwYWNrZXRz
+LAo+Pj4+IHdoaWNoIGluY2x1ZGVzIHZpZGVvIGRhdGEgb3IgY29tbWFuZCBkYXRhLCBwYWNrZWQg
+d2l0aCBtaXBpIHByb3RvY29sCj4+Pj4gdmlhIGxhbmUgbGluZXMgb3IgcmVjZWl2ZXMgdmlkZW8g
+ZGF0YSBvciBjb21tYW5kIGRhdGEgdmlhIHBhcmFsbGVsCj4+Pj4gbGluZXMuCj4+Pj4KPj4+PiBB
+bmQgdGhlIGJlbG93IGlzIExDRCB0eXBlcywKPj4+PiAgICAgICAgICBSR0IgaW50ZXJmYWNlIHBh
+bmVsLgo+Pj4+ICAgICAgICAgIGk4MCBpbnRlcmZhY2UgcGFuZWwuCj4+Pj4gICAgICAgICAgTUlQ
+SSBiYXNlZCBSR0IgaW50ZXJmYWNlIHBhbmVsLgo+Pj4+ICAgICAgICAgIE1JUEkgYmFzZWQgaTgw
+IGludGVyZmFjZSBwYW5lbC4KPj4+Pgo+Pj4+IFJHQiBpbnRlcmZhY2UgYWxzbyBpcyBjYWxsZWQg
+dmlkZW8gbW9kZSwgYW5kIGk4MCBpbnRlcmZhY2UgYWxzbyBpcwo+Pj4+IGNhbGxlZCBjcHUgbW9k
+ZS4gSW4gY2FzZSBvZiBvbWFwIFNvQywgaXQgaXMgYWxzbyBjYWxsZWQgU21hcnQgcGFuZWwuCj4+
+Pj4gaTgwIGludGVyZmFjZSBpcyBqdXN0IG9uZSBvZiBMQ0QgdHlwZXMuIFNvIEkgdGhpbmsgdGhp
+cyBpbnRlcmZhY2UKPj4+PiB0aW1pbmdzIHNob3VsZCBiZSBoYW5kbGVkIGJ5IGZyYW1ld29ya3Mg
+cmVsYXRlZCB0byBtb2RlIGluIHNhbWUgd2F5IGFzCj4+Pj4gUkdCIGludGVyZmFjZS4KPgo+IFNv
+bWUgY2xhcmlmaWNhdGlvbiBhYm91dCBuYW1lcy4KPiBJIGFtIG5vdCBhbiBleHBlcnQgaW4gY29t
+bWFuZC9jcHUgbW9kZSBpbnRlcmZhY2UsIHNvIGZlZWwgZnJlZSB0bwo+IGNvcnJlY3QgbWUuCj4g
+VGhvc2UgZGlmZmVyZW50IHRlcm1zIHdlcmUgcXVpdGUgY29uZnVzaW5nIGZvciBtZSBzbyBhZnRl
+ciBzb21lIGRpZ2dpbmcKPiAoZm9yIGV4YW1wbGUgaGVyZSBbMV0pCj4gSSBoYXZlIGZvdW5kL2Vu
+c3VyZWQgIHRoZXJlIGlzIGEgZm9sbG93aW5nIHJlbGF0aW9uIGJldHdlZW4gZGlmZmVyZW50IG5h
+bWVzOgo+IE1JUEkgRFBJIC0gUkdCIGludGVyZmFjZQo+IE1JUEkgREJJIHR5cGUgQSAtIENQVSBt
+b2RlIG02OCBzdHlsZQo+IE1JUEkgREJJIHR5cGUgQiAtIENQVSBtb2RlIGk4MCBzdHlsZQo+IE1J
+UEkgREJJIHR5cGUgQyAtIFNQSSwgbWF5YmUgYWxzbyBvdGhlciBzZXJpYWwgaW50ZXJmYWNlcyAo
+PykKPiBNSVBJIERTSSAtIGJhc2VkIG9uIEQtUEhZLXMgc2VyaWFsIHByb3RvY29sIHdoaWNoIGNh
+biB3b3JrIGluIHZpZGVvIG9yCj4gY29tbWFuZCBtb2RlLgo+Cj4gVG8gYWRkIG1vcmUgY29uZnVz
+aW9uIENQVSBtb2RlIGlzIGFsc28gbmFtZWQgTVBVIG1vZGUgb3Igc3lzIG1vZGUuCj4KPiBUbyBh
+dm9pZCBjb25mdXNpb24gaW4gdGhlIGRpc2N1c3Npb24gSSBwcm9wb3NlIHVzZSBpODAgb25seSB0
+byBkZXNjcmliZQo+IERCSSB0eXBlIEIgaW50ZXJmYWNlLAo+IGFuZCBEU0kgY29tbWFuZCBtb2Rl
+LCBEU0kgdmlkZW8gbW9kZSB0byBkZXNjcmliZSBEU0kgbW9kZXMuCj4KPiBbMV06IGh0dHA6Ly93
+d3cuYWxsc2hvcmUuY29tL3BkZi9EQTg2MjAucGRmCj4KPgo+Pj4gTENEIGlzIGEgZGlzcGxheSB0
+ZWNobm9sb2d5LCBpdCBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRoZSBpbnRlcmZhY2UuIE15Cj4+
+PiBwb2ludCBpcyB0aGF0IGZyb20gQW5kcnplaidzIGRlc2NyaXB0aW9uLCBhbmQgaW4gZmFjdCBm
+cm9tIHRoaXMgcGF0Y2gKPj4+IHNlcmllcyBpbiBnZW5lcmFsLCB0aGUgUzZFM0ZBMCBwYW5lbCBp
+cyBhIERTSSBwYW5lbC4gQXNzb2NpYXRpbmcgdGltaW5ncwo+Pj4gdGhhdCBhcmUgaTgwIHNwZWNp
+ZmljIHRvIGl0IGlzIHRoZXJlZm9yZSB3cm9uZy4KPj4+Cj4+PiBDb25zaWRlciBmb3IgaW5zdGFu
+Y2Ugd2hhdCB3b3VsZCBoYXBwZW4gaWYgc29tZWJvZHkgd2VyZSB0byB1c2UgdGhlIHNhbWUKPj4+
+IHBhbmVsIG9uIHNvbWUgb3RoZXIgZGV2aWNlIChjb25uZWN0ZWQgdG8gYSBEU0kgY29udHJvbGxl
+cikuIElmIHlvdQo+Pj4gc3BlY2lmeSBpODAgdGltaW5ncyBmb3IgdGhlIHBhbmVsIHRoZW4gdGhl
+IG5ldyBkZXZpY2Ugd29uJ3Qga25vdyB3aGF0IHRvCj4+PiBkbyB3aXRoIHRoZW0gYmVjYXVzZSBp
+dCBleHBlY3RzIERTSS1yZWxhdGVkIHRpbWluZ3MuCj4+Pgo+Pj4gTGV0IG1lIHRyeSB0byBzdW1t
+YXJpemUgdGhlIGFib3ZlIHRvIG1ha2Ugc3VyZSB3ZSdyZSBhbGwgb24gdGhlIHNhbWUKPj4+IHBh
+Z2U6Cj4+Pgo+Pj4gCS0gRklNRCBpcyBhIGRpc3BsYXkgY29udHJvbGxlciB0aGF0IGNhbiBiZSBj
+b25maWd1cmVkIHRvIGVpdGhlcgo+Pj4gCSAgc2VuZCBSR0IgZGF0YSBvciBpODAgZGF0YQo+Pj4g
+CS0gRFNJTSB0YWtlcyBlaXRoZXIgUkdCIGFzIGlucHV0IGFuZCBvdXRwdXRzIERTSSAodmlkZW8g
+bW9kZSkgb3IKPj4+IAkgIGk4MCBhcyBpbnB1dCBhbmQgb3V0cHV0cyBEU0kgKGNvbW1hbmQgbW9k
+ZSkKPj4+Cj4+PiBJbiBib3RoIGNhc2VzIHRoZSBwYW5lbCBpcyBjb25uZWN0ZWQgdG8gRFNJTSBh
+bmQgaXQgdGFrZXMgRFNJIGFzIGlucHV0LAo+Pj4gYmVjYXVzZSBpdCBpcyBhIERTSSBwYW5lbCAo
+aXQgZG9lc24ndCB1bmRlcnN0YW5kIFJHQiBvciBpODApLiBUaGUgcGFuZWwKPj4+IG5lZWRzIHRv
+IGRlc2NyaWJlIHRoZSBwcm9wZXJ0aWVzIG9mIHRoZSBEU0kgaW50ZXJmYWNlIHNvIHRoYXQgRFNJ
+TSBjYW4KPj4+IGJlIGNvbmZpZ3VyZWQgYXBwcm9wcmlhdGVseS4gRFNJTSBpbiB0dXJuIHdvcmtz
+IGFzIGEgYnJpZGdlIG9yIGVuY29kZXIKPj4+IHRoYXQgY29udmVydHMgUkdCIG9yIGk4MCB0byBE
+U0kgKHZpZGVvIG9yIGNvbW1hbmQgbW9kZSkuIFNvIGl0IG1ha2VzIG5vCj4+PiBzZW5zZSB0byBk
+ZXNjcmliZSB0aGUgaTgwIHRpbWluZ3MgZm9yIHRoZSBwYW5lbCBiZWNhdXNlIGl0IGhhcyBub3Ro
+aW5nCj4+PiB0byBkbyB3aXRoIGk4MC4gSW5zdGVhZCB0aGUgRFNJTSBpcyB0aGUgaGFyZHdhcmUg
+dGhhdCBuZWVkcyB0byBzcGVjaWZ5Cj4+PiB0aGUgaTgwIHRpbWluZ3MsIHNvIHRoYXQgRklNRCBj
+YW4gYmUgY29uZmlndXJlZCB0byBnZW5lcmF0ZSB0aGUgdGltaW5ncwo+Pj4gdGhhdCBEU0lNIG5l
+ZWRzLgo+PiAgICAgICAgICAgICAgQ1BVIGludGVyZmFjZSAgICAgICAgICAgICAgICAgICAgIE1J
+UEkgbGFuZQo+PiBGSU1EIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIERTSU0gLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tIExDRCBQYW5lbAo+Pgo+PiBIbW0uLi4gcmVhc29uYWJsZS4gU28geW91ciBwb2lu
+dCBpcyB0aGF0IGNvbW1hbmQgbW9kZSB0aW1pbmcgc2hvdWxkIGJlCj4+IHBsYWNlZCBpbiBmaW1k
+IGRldmljZSBub2RlLCBub3QgcGFuZWwgZGV2aWNlIG5vZGU/IEFuZCBwYW5lbCBkZXZpY2Ugbm9k
+ZQo+PiBzaG91bGQgcHJvdmlkZSBvbmx5IGEgcHJvcGVydHkgdGhhdCBEU0lNIGRyaXZlciBjYW4g
+c2V0IExDRCBtb2RlCj4+IHByb3Blcmx5IHRvIGk4MCBvciByZ2IgaW50ZXJmYWNlIG1vZGUsIGFu
+ZCBhbHNvIEZJTUQgZHJpdmVyIGNhbiBzZXQgTENECj4+IG1vZGUgdG8gaTgwIG9yIHJnYiBpbnRl
+cmZhY2UgbW9kZS4KPgo+IEkgaGF2ZSBubyBhY2Nlc3MgdG8gczZlM2ZhMCBkYXRhc2hlZXQgYW5k
+IEV4eW5vcyBkYXRhc2hlZXQgSSBoYXZlIGFjY2VzcyB0bwo+IGlzIG5vdCB2ZXJ5IHZlcmJvc2Ug
+b24gdGhlIHN1YmplY3QgYnV0IGl0IHNlZW1zIHRvIGJlIHJlYXNvbmFibGUgdGhhdAo+IGNzLXNl
+dHVwLCB3ci1zZXR1cCwgd3ItYWN0aXZlIGFuZCB3ci1ob2xkIGFyZSBwcm9wZXJ0aWVzIG9ubHkg
+b2YgaTgwCj4gaW50ZXJmYWNlLAo+IGllIGludGVyZmFjZSBiZXR3ZWVuIEZJTUQgYW5kIERTSU0g
+YW5kIHRoZXkgaGF2ZSBub3RoaW5nIHRvIGRvIHdpdGggRFNJCj4gY29tbWFuZCBtb2RlIHBhbmVs
+Lgo+IFRob3NlIHByb3BlcnRpZXMgc2hvdWxkIGJlIHByb3ZpZGVkIGJ5IERTSU0gdG8gRklNRCwg
+SSBndWVzcyB0aGV5IGNhbiBiZQo+IGV2ZW4gaGFyZGNvZGVkCj4gaW4gRFNJTSBkcml2ZXIsIG5v
+IGJpbmRpbmdzIHJlcXVpcmVkLiBUaGVyZSBpcyBzdGlsbCBhIHF1ZXN0aW9uIGhvdyBEU0lNCj4g
+c2hvdWxkIHRlbGwgRklNRCBhYm91dCB0aGVtLgo+IEkgYW0gbm90IHN1cmUgYWJvdXQgbWVjaGFu
+aXNtIG9mIHBhc3NpbmcgdGhlbSBmcm9tIERTSU0gdG8gRklNRCwgbWF5YmUKPiBhZGp1c3Rpbmcg
+ZHJtX2Rpc3BsYXlfbW9kZQo+IGlzIGEgc29sdXRpb24sIG1heWJlIGRpZmZlcmVudCB3YXkgb2Yg
+Y29tbXVuaWNhdGlvbiBzaG91bGQgYmUgdXNlZCAoSQo+IHNlZSBoZXJlIGFnYWluIGludGVyZmFj
+ZV90cmFja2VyIHVzZSBjYXNlIFsyXSkuCj4KPiBbMl06Cj4gaHR0cDovL3Blcm1hbGluay5nbWFu
+ZS5vcmcvZ21hbmUubGludXguZHJpdmVycy52aWRlby1pbnB1dC1pbmZyYXN0cnVjdHVyZS83NzQ1
+MQo+Cj4gT24gdGhlIG90aGVyIHNpZGUgd2lkdGgsIGhlaWdodCBhbmQgY2xvY2sgYXJlIHByb3Bl
+cnRpZXMgb2YgdGhlIHBhbmVsIHNvCj4gdGhleSBzaG91bGQgc3RheQo+IHdpdGggdGhlIHBhbmVs
+LCBtYXliZSB3aWR0aCBhbmQgaGVpZ2h0IGNvdWxkIGJlIG1vdmVkIGZyb20gZHRzIHRvCj4gZHJp
+dmVyLCBJIGFtIG5vdCBzdXJlIGFib3V0IGZyZXF1ZW5jeS4KPgo+Pgo+PiBJcyB0aGVyZSBteSBt
+aXNzaW5nIHBvaW50Pwo+Pgo+PiBBbmQgaW4gY2FzZSBvZiBFeHlub3MsIG5vdyB2aWRlbyB0aW1p
+bmcgcHJvcGVydHkgaXMgYWxzbyBwbGFjZWQgaW4gcGFuZWwKPj4gZGV2aWNlIG5vZGUgc28gaXQg
+bmVlZHMgdG8gbW92ZSB0byBmaW1kIGRldmljZSBub2RlLgo+Cj4gTm8sIHZpZGVvIHRpbWluZ3Mg
+YXJlIHByb3BlcnRpZXMgb2YgcGFuZWxzIHNvIHRoZXkgc2hvdWxkIHN0YXkgaW4KPiBwYW5lbHMs
+IGRpc3BsYXkKPiBjb250cm9sbGVycyBzaG91bGQganVzdCBhc2sgcGFuZWxzIGFib3V0IHRoZW0u
+Cj4KPj4KPj4gQW5kcnplaiwgZG8geW91IGhhdmUgb3RoZXIgb3Bpbmlvbj8gSSBoYXZlIGxvb2tl
+ZCBpbnRvIGR0cyBmaWxlcyBmb3IKPj4gb3RoZXIgU29DIGFuZCBJbiBtb3N0IFNvQywgaXQgc2Vl
+bXMgdGhhdCBkaXNwbGF5IGNvbnRyb2xsZXIgbm9kZSBoYXMKPj4gdmlkZW8gdGltaW5nIHByb3Bl
+cnR5LCBub3QgcGFuZWwgbm9kZS4gVGhpZXJyeSdzIHBvaW50aW5nIHNlZW1zCj4+IHJlYXNvbmFi
+bGUgdG8gbWUuCj4gSSBndWVzcyB0aGVyZSBjb3VsZCBiZSBtYW55IHJlYXNvbnM6IGhpc3Rvcmlj
+YWwsIGJhY2t3YXJkIGNvbXBhdGliaWxpdHksCj4gbGF6aW5lc3Mgb2YgZGV2ZWxvcGVycyA6KS4K
+PiBJIGFncmVlIHdpdGggVGhpZXJyeSBhbHNvLgo+Cj4gU28gaWYgZXZlcnlib2R5IGFncmVlcyB0
+aGVyZSBpcyBvbmx5IG9uZSBzZXJpb3VzIGlzc3VlOiBob3cgdGhlIGk4MAo+IHByb3BlcnRpZXMK
+PiBzaG91bGQgYmUgcGFzc2VkIGZyb20gRFNJTSB0byBGSU1ELCBhbSBJIHJpZ2h0PwoKUmlnaHQs
+IHRoaXMgaXNzdWUgd2FzIGRpZmZpY3VsdCBmb3IgbWUuClNvIGluIG15IGZpcnN0IFJGQyB2MSwg
+SSBwbGFjZWQgdGhlbSBpbiBGSU1EIGR0c1sxXS4KSSBkaWRuJ3QgdGhpbmsgb2YgdGhhdChwbGFj
+ZWQgdGhlbSBpbiBEU0lNKSwgbW92ZWQgdGhlbSB0byBwYW5lbC4KClsxXSA6IGh0dHA6Ly93d3cu
+c3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzU3OTYwLmh0bWwKCkFuZCBkbyB5b3UgdGhp
+bmsgdGhhdCBpdCBpcyBhbHNvIHJlcXVpcmVkIHRvIHJlbmFtZSBjbWRtb2RlIHRvIGk4MG1vZGU/
+CgpUaGFuayB5b3UuCkJlc3QgcmVnYXJkcyBZSgoKPgo+IFJlZ2FyZHMKPiBBbmRyemVqCj4KPj4K
+Pj4gVGhhbmtzLAo+PiBJbmtpIERhZQo+Pgo+Pj4gVGhpZXJyeQo+Pj4KPj4KPgo+IF9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxp
+bmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMu
+ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCj4KCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
+c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
