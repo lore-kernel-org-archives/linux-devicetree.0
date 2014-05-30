@@ -1,163 +1,74 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/5] clk: bcm281xx: implement prerequisite clocks
-Date: Thu, 29 May 2014 22:20:15 -0500
-Message-ID: <5387F8EF.3030607@linaro.org>
-References: <1400590362-11177-1-git-send-email-elder@linaro.org> <1400590362-11177-3-git-send-email-elder@linaro.org> <20140524005358.23136.8918@quantum>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH v11 0/3] Exynos 5410 support
+Date: Fri, 30 May 2014 09:11:21 +0530
+Message-ID: <CAC5m3Bz53QO5tTTvk7qnBQtwtjMvSgYZ15prAvnLjdogQRsfMQ@mail.gmail.com>
+References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
+	<7hr43f9mmn.fsf@paris.lan>
+	<538737CA.4070709@suse.de>
+	<53874862.5080809@samsung.com>
+	<538775AB.3000604@suse.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140524005358.23136.8918@quantum>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <538775AB.3000604@suse.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
+Cc: Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>, linux-kernel@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, Tarek Dakhran <t.dakhran@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 05/23/2014 07:53 PM, Mike Turquette wrote:
-> Quoting Alex Elder (2014-05-20 05:52:39)
->> @@ -743,11 +746,16 @@ struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
->>         clk = clk_register(NULL, &bcm_clk->hw);
->>         if (IS_ERR(clk)) {
->>                 pr_err("%s: error registering clock %s (%ld)\n", __func__,
->> -                       init_data->name, PTR_ERR(clk));
->> +                       name, PTR_ERR(clk));
->>                 goto out_teardown;
->>         }
->>         BUG_ON(!clk);
->>  
->> +       /*  Make it so we can look the clock up using clk_find() */
-> 
-> s/clk_find/clk_get/ ?
-> 
->> +       bcm_clk->cl.con_id = name;
->> +       bcm_clk->cl.clk = clk;
->> +       clkdev_add(&bcm_clk->cl);
-> 
-> This is not so nice. I'll explain more below.
+On Thu, May 29, 2014 at 11:30 PM, Andreas F=C3=A4rber <afaerber@suse.de=
+> wrote:
+> Hi Tarek,
+>
+>
+> And I reproducibly get failures for CPUs 1-3, resulting in only one C=
+PU
+> in /proc/cpuinfo (compared to 4 on downstream 3.14):
+>
+> [    0.045778] CPU: Testing write buffer coherency: ok
+> [    0.045968] /cpus/cpu@0 missing clock-frequency property
+> [    0.045993] /cpus/cpu@1 missing clock-frequency property
+> [    0.046016] /cpus/cpu@2 missing clock-frequency property
+> [    0.046040] /cpus/cpu@3 missing clock-frequency property
+> [    0.046059] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
+> [    0.046135] Setting up static identity map for 0x403a8920 - 0x403a=
+8978
+> [    2.075052] CPU1: failed to come online
+> [    4.085095] CPU2: failed to come online
+> [    6.095142] CPU3: failed to come online
+> [    6.095237] Brought up 1 CPUs
+> [    6.095269] SMP: Total of 1 processors activated.
+> [    6.095303] CPU: All CPU(s) started in HYP mode.
+> [    6.095336] CPU: Virtualization extensions available.
+>
+> I also notice another apparent device tree issue:
+>
+> [    7.341814] of_get_named_gpiod_flags: can't parse gpios property o=
+f
+> node '/soc/mmc@12220000/slot@0[0]'
+> [    7.341850] of_get_named_gpiod_flags: can't parse gpios property o=
+f
+> node '/soc/mmc@12220000/slot@0[0]'
+>
+> Are any of those known issues and being worked on?
+> (The CPU failures affected 5420 Arndale Octa as well iirc.)
+>
 
-OK, despite what I said before, I do need this, or
-something like it, so I can look up clocks by name.
-(Continued below.)
+Can you check after applying following two patches for Arndale-Octa
+([1],[2])? In other words, a patch similar to [2] might be required
+for this board too if it is booting under secure mode.
 
-> 
->> +
->>         return clk;
->>  out_teardown:
->>         bcm_clk_teardown(bcm_clk);
->> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
->> index d8a7f38..fd070d6 100644
->> --- a/drivers/clk/bcm/clk-kona.c
->> +++ b/drivers/clk/bcm/clk-kona.c
->> @@ -1195,6 +1195,48 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
->>         return true;
->>  }
->>  
->> +static bool __kona_clk_init(struct kona_clk *bcm_clk);
->> +static bool __kona_prereq_init(struct kona_clk *bcm_clk)
->> +{
->> +       struct clk *clk;
->> +       struct clk_hw *hw;
->> +       struct kona_clk *prereq;
->> +
->> +       BUG_ON(clk_is_initialized(bcm_clk));
->> +
->> +       if (!bcm_clk->p.prereq)
->> +               return true;
->> +
->> +       clk = clk_get(NULL, bcm_clk->p.prereq);
-> 
-> The clkdev global namespace is getting polluted with all of these new
-> prereq clocks. If there was an associated struct device *dev with them
-> then it wouldn't be a problem, but you might get collisions with other
-> clock drivers that also use NULL for the device.
+[1] http://www.spinics.net/lists/linux-samsung-soc/msg31776.html
 
-Yes I recognize this.  Ideally a CCU would have a device struct
-associated with it that I could use, because the name of a clock
-is unique within that context.  But I have no such device available.
-(Please correct me if I'm wrong.  I don't want to make one up, and
-I would like to use it if it exists.)
+[PATCH v2 Resend 1/2] ARM: EXYNOS: Update secondary boot addr for secur=
+e mode
 
-> It would be a lot nicer for the clocks that require a prereq clock to
-> just use clk_get(dev, "well_known_name"); in the same way that drivers
-> use it, without considering it a special case.
+[2] http://www.spinics.net/lists/linux-samsung-soc/msg31777.html
 
-I can do something like that if I can get a meaningful device
-structure.  Do you have any suggestions?
+[PATCH v2 Resend 2/2] ARM: dts: Add secure firmware support for Arndale=
+-octa
 
-Other than this issue, I've implemented all of the previous
-initialization routines using ->prepare() instead, and it
-works fine.  I'm going to send an updated series out tomorrow.
-I want to look it over again after a good night's sleep...
-
-					-Alex
-
->> +       if (IS_ERR(clk)) {
->> +               pr_err("%s: unable to get prereq clock %s for %s\n",
->> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
->> +               return false;
->> +       }
->> +       hw = __clk_get_hw(clk);
->> +       if (!hw) {
->> +               pr_err("%s: null hw pointer for clock %s\n", __func__,
->> +                       bcm_clk->init_data.name);
->> +               return false;
->> +       }
->> +       prereq = to_kona_clk(hw);
->> +       if (prereq->ccu != bcm_clk->ccu) {
->> +               pr_err("%s: prereq clock %s CCU different for clock %s\n",
->> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
->> +               return false;
->> +       }
->> +
->> +       /* Initialize the prerequisite clock first */
->> +       if (!__kona_clk_init(prereq)) {
->> +               pr_err("%s: failed to init prereq %s for clock %s\n",
->> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
->> +               return false;
->> +       }
->> +       bcm_clk->p.prereq_clk = clk;
-> 
-> The above seems like a lot effort to go to. Why not skip all of this and
-> just implement the prerequisite logic in the .enable & .disable
-> callbacks? E.g. your kona clk .enable callback would look like:
-> 
-> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
-> index d603c4e..51f35b4 100644
-> --- a/drivers/clk/bcm/clk-kona.c
-> +++ b/drivers/clk/bcm/clk-kona.c
-> @@ -987,6 +987,12 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
->  {
->  	struct kona_clk *bcm_clk = to_kona_clk(hw);
->  	struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
-> +	int ret;
-> +
-> +	hw->prereq_bus_clk = clk_get(hw->ccu, hw->prereq);
-> +	ret = clk_enable(prereq_bus_clk);
-> +	if (ret)
-> +		return ret;
->  
->  	return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
->  }
-> @@ -997,6 +1003,9 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
->  	struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
->  
->  	(void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
-> +
-> +	clk_disable(hw->prereq_bus_clk);
-> +	clk_put(hw->prereq_bus_clk);
->  }
->  
->  static int kona_peri_clk_is_enabled(struct clk_hw *hw)
-> 
-> 
-> I guess it might take some trickery to get clk_get to work like that.
-> Let me know if I've completely lost the plot.
-> 
-> Regards,
-> Mike
-> 
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Tushar Behera
