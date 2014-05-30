@@ -1,77 +1,94 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv2 3/3] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
-Date: Fri, 30 May 2014 09:25:10 +0900
-Message-ID: <1401409510-28238-4-git-send-email-cw00.choi@samsung.com>
-References: <1401409510-28238-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1401409510-28238-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Yadwinder Singh Brar <yadi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: "Liviu Dudau" <liviu@dudau.co.uk>
+Subject: Re: [PATCH] of: treat PCI config space as IORESOURCE_MEM type
+Date: Fri, 30 May 2014 01:56:03 +0100
+Message-ID: <20140530005602.GE1677@bart.dudau.co.uk>
+References: <1401379426-9701-1-git-send-email-galak@codeaurora.org>
+ <CAL_JsqLPFDwtd-QYDqCwx1JVj1Aa8=nof-e0P6R9CZra+fXHfw@mail.gmail.com>
+ <47B1E3D0-4336-4529-80B0-172F4ACA5C97@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <47B1E3D0-4336-4529-80B0-172F4ACA5C97@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a little
-difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
+On Thu, May 29, 2014 at 03:51:28PM -0500, Kumar Gala wrote:
+> 
+> On May 29, 2014, at 3:44 PM, Rob Herring <robherring2@gmail.com> wrote:
+> 
+> > On Thu, May 29, 2014 at 11:03 AM, Kumar Gala <galak@codeaurora.org> wrote:
+> >> If we have a PCI config space specified in something like a ranges
+> >> property we should treat it as memory type resource.
+> > 
+> > Config space should not be in ranges[1]. We have some cases that are,
+> > but we don't want new ones.
+> 
+> For the cases we have I agree, however an ECAM based cfg seems completely legit.
+> 
+> >> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> >> ---
+> >> drivers/of/address.c | 3 +++
+> >> 1 file changed, 3 insertions(+)
+> >> 
+> >> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> >> index cb4242a..4e7ee59 100644
+> >> --- a/drivers/of/address.c
+> >> +++ b/drivers/of/address.c
+> >> @@ -122,6 +122,9 @@ static unsigned int of_bus_pci_get_flags(const __be32 *addr)
+> >>        u32 w = be32_to_cpup(addr);
+> >> 
+> >>        switch((w >> 24) & 0x03) {
+> >> +       case 0x00: /* cfg space */
+> >> +               flags |= IORESOURCE_MEM;
+> >> +               break;
+> > 
+> > How would you then distinguish actual memory ranges?
+> 
+> One assumes you are still looking at pci_space as part of of_pci_range
 
-Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Yadwinder Singh Brar <yadi.brar-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Sachin Kamat <sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
- Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+That doesn't happen when you start scanning the bus. The existing code will
+use the IORESOURCE_MEM for allocating memory space for devices, which is
+not what you want. Did you test your patch on any PCI system? I'm pretty
+sure that with my patch series that tries to make a generic framework for
+host controllers this will fail.
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index d81ba30..f7c9180 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
- 
--* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
-+* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
- 
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
-+- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
-+              or "samsung,s2mpu02-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
- 		  - valid values for n are:
- 			- S2MPS11: 1 to 38
- 			- S2MPS14: 1 to 25
-+			- S2MPU02: 1 to 28
- 		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
- 		  - valid values for n are:
- 			- S2MPS11: 1 to 10
- 			- S2MPS14: 1 to 5
-+			- S2MPU02: 1 to 7
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
- Example:
+We really need a IORESOURCE_CFG flag for this space.
+
+Best regards,
+Liviu
+
+> 
+> > 
+> > Rob
+> > 
+> > [1] http://www.spinics.net/lists/linux-pci/msg30585.html
+> > --
+> > To unsubscribe from this list: send the line "unsubscribe linux-arm-msm" in
+> > the body of a message to majordomo@vger.kernel.org
+> > More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> -- 
+> Employee of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+> 
+
 -- 
-1.8.0
+-------------------
+   .oooO
+   (   )
+    \ (  Oooo.
+     \_) (   )
+          ) /
+         (_/
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ One small step
+   for me ...
