@@ -1,143 +1,120 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH 3/3] clk: tegra: Implement Tegra124 shared/cbus clks
-Date: Thu, 29 May 2014 21:47:49 -0700
-Message-ID: <20140530044749.10062.16436@quantum>
-References: <1399990023-30318-1-git-send-email-pdeschrijver@nvidia.com>
- <1399990023-30318-4-git-send-email-pdeschrijver@nvidia.com>
- <53725FED.7050303@wwwdotorg.org> <20140514142739.GA8612@ulmo>
- <20140514193518.19795.64334@quantum> <20140526130725.GA1594@ulmo>
- <5387C145.8050609@ti.com>
+From: Satish Patel <satish.patel@ti.com>
+Subject: Re: [PATCH v3 1/5] sc_phy:SmartCard(SC) PHY interface to SC controller
+Date: Fri, 30 May 2014 10:35:45 +0530
+Message-ID: <538811A9.1080800@ti.com>
+References: <1401267437-22489-1-git-send-email-satish.patel@ti.com> <1401267437-22489-2-git-send-email-satish.patel@ti.com> <20140528184408.GC30031@kroah.com> <5386F657.9040805@ti.com> <20140529155122.GA32214@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5387C145.8050609-l0cyMroinI0@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Prashant Gaikwad <pgaikwad-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140529155122.GA32214@kroah.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, rob@landley.net, tony@atomide.com, grant.likely@linaro.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Nishanth Menon (2014-05-29 16:22:45)
-> On 05/26/2014 08:07 AM, Thierry Reding wrote:
-> > On Wed, May 14, 2014 at 12:35:18PM -0700, Mike Turquette wrote:
-> >> Quoting Thierry Reding (2014-05-14 07:27:40)
-> > [...]
-> >>> As for shared clocks I'm only aware of one use-case, namely EMC scaling.
-> >>> Using clocks for that doesn't seem like the best option to me. While it
-> >>> can probably fix the immediate issue of choosing an appropriate
-> >>> frequency for the EMC clock it isn't a complete solution for the problem
-> >>> that we're trying to solve. From what I understand EMC scaling is one
-> >>> part of ensuring quality of service. The current implementations of that
-> >>> seems to abuse clocks (essentially one X.emc clock per X clock) to
-> >>> signal the amount of memory bandwidth required by any given device. But
-> >>> there are other parts to the puzzle. Latency allowance is one. The value
-> >>> programmed to the latency allowance registers for example depends on the
-> >>> EMC frequency.
-> >>>
-> >>> Has anyone ever looked into using a different framework to model all of
-> >>> these requirements? PM QoS looks like it might fit, but if none of the
-> >>> existing frameworks have what we need, perhaps something new can be
-> >>> created.
-> >>
-> >> It has been discussed. Using a QoS throughput constraint could help
-> >> scale frequency. But this deserves a wider discussion and starts to
-> >> stray into both PM QoS territory and also into "should we have a DVFS
-> >> framework" territory.
-> > 
-> > I've looked into this for a bit and it doesn't look like PM QoS is going
-> > to be a good match after all. One of the issues I found was that PM QoS
-> > deals with individual devices and there's no builtin way to collect the
-> > requests from multiple devices to produce a global constraint. So if we
-> > want to add something like that either the API would need to be extended
-> > or it would need to be tacked on using the notifier mechanism and some
-> > way of tracking (and filtering) the individual devices.
-> > 
-> > Looking at devfreq it seems to be the DVFS framework that you mentioned,
-> > but from what I can tell it suffers from mostly the same problems. The
-> > governor applies some frequency scaling policy to a single device and
-> > does not allow multiple devices to register constraints against a single
-> > (global) constraint so that the result can be accumulated.
-> > 
-> > For Tegra EMC scaling what we need is something more along the lines of
-> > this: we have a resource (external memory) that is shared by multiple
-> > devices in the system. Each of those devices requires a certain amount
-> > of that resource (memory bandwidth). The resource driver will need to
-> > accumulate all requests for the resource and apply the resulting
-> > constraint so that all requests can be satisfied.
-> > 
-> > One solution I could imagine to make this work with PM QoS would be to
-> > add the concept of a pm_qos_group to manage a set of pm_qos_requests,
-> > but that will require a bunch of extra checks to make sure that requests
-> > are of the correct type and so on. In other words it would still be
-> > tacked on.
-> 
-> just a minor note from previous experience: We(at TI) had attempted in
-> our product kernel[1] to use QoS constraint for certain SoCs for
-> rather unspectacular results.
-> 
-> Our use case was similar: devices -> L3(core bus)->memory. We had the
-> following intent:
-> a) wanted to scale L3 based on QoS requests coming in from various
-> device drivers. intent was to scale either to 133MHz or 266MHz (two
-> OPPs we supported on our devices) based on performance needs -> So we
-> asked drivers to report QoS requirements using an standard function -
-> except drivers cannot always report it satisfactorily - example bursty
-> transfer devices - ended up with consolidated requests > total
-> bandwidth possible on the bus -> (and never in practise hitting the
-> lower frequency).
 
-My opinion on why L3 QoS failed on OMAP is that we only used it for
-DVFS. The voltage domain corresponding to the L3 interconnect had only
-two OPPs, which meant that drivers submitting their constraints only had
-two options: slow vs fast in the best case, or non-functional vs
-functional in the worst case (some IPs simply did not work at the lower
-OPP).
 
-But the big failure in my opinion was that we did not use any of the
-traffic-shaping or priority handling features of the L3 NoC. OMAP4 used
-the Arteris NoC[1] which has plenty of capabilities for setting
-initiator priorities and bandwidth-throttling on a point-to-point basis,
-which is exactly that QoS is for. If these had been exposed a bit more
-in software then I imagine some of the constraints that always resulted
-in running at the fast OPP might have instead resulted in running at the
-slow OPP, but with a fine-grained mixture of varying bandwidth
-allocations and access priorities.
+On 5/29/2014 9:21 PM, Greg KH wrote:
+> On Thu, May 29, 2014 at 02:26:55PM +0530, Satish Patel wrote:
+>>
+>>
+>> On 5/29/2014 12:14 AM, Greg KH wrote:
+>>> On Wed, May 28, 2014 at 02:27:13PM +0530, Satish Patel wrote:
+>>>> +/**
+>>>> + * struct sc_phy - The basic smart card phy structure
+>>>> + *
+>>>> + * @dev: phy device
+>>>> + * @pdata: pointer to phy's private data structure
+>>>> + * @set_config: called to set phy's configuration
+>>>> + * @get_config: called to get phy's configuration
+>>>> + * @activate_card: perform smart card activation
+>>>> + * @deactivate_card: perform smart card de-activation
+>>>> + * @warm_reset: execute smart card warm reset sequence
+>>>> + * @register_card_activity_cb: register call back to phy device.
+>>>> + * This call back will be called on card insert or remove event
+>>>> + *
+>>>> + * smart card controller uses this interface to communicate with
+>>>> + * smart card via phy.Some smart card phy has multiple slots for
+>>>> + * cards. This inerface also enables controller to communicate with
+>>>> + * one or more smart card connected over phy.
+>>>> + */
+>>>> +struct sc_phy {
+>>>> +	/* phy's device pointer */
+>>>> +	struct device *dev;
+>>>
+>>> So this is the "parent", right?  Why not embed a struct device into this
+>>> structure as well, further streaching out the device tree.
+>>>
+>> Do you mean to use "dev->p" for pdata ?
+>
+> No, use the device itself.
+>
+>> I have kept it outside, to give easeness/pragmatic focal for new phy driver
+>> development. Driver can make this pointer null and use above pointer.
+>
+> Ick, no, that's not how the driver model works.  Each device in the
+> system needs a struct device, don't try to "chain" off of an existing
+> device like this.  Make it a "real" one.
+>
+>>>> +
+>>>> +	/* phy's private data */
+>>>> +	void *pdata;
+>>>
+>>> If you do the above, then this pointer is not needed.
+>>>
+>>>
+>>>> +
+>>>> +	/* notify data, passed by interface user as a part of
+>>>> +	 * register_notify API. Data should be passed back when
+>>>> +	 * notification raised to the interface user
+>>>> +	 */
+>>>> +	void *notify_data;
+>>>
+>>> What makes this different from the pdata?
+>> pdata is phy's private data, while notify_data is something phy will send to
+>> smart card controller on some event, like card remove/insert/timeout etc..
+>
+> That doesn't make much sense to me, why not just put that in the notify
+> function callback itself?
+>
+Little correction over here..
+Here is brief flow
+USIM(Smart Card Controller) register notification callback to smarcard phy.
 
-All of the hardware in the world doesn't do any good if we don't have
-software that uses it. Anyways, just my $0.02.
+usim->phy->register_notify(<phy handle>, <callback fn>, <notify_data>);
+notify_data : pass back when callback function will be called by PHY
 
-Regards,
-Mike
 
-[1] http://www.arteris.com/OMAP4_QoS_security_NoC
+Smartcard PHY -> USIM
+blocking_notifier_call_chain(<notifier>, action, <notify_data>);
 
-> b) timing closure issues on certain devices such as USB - which can
-> only function based on async bridge closure requirements on the core
-> bus etc.. these would require bus to be at higher frequency - QoS
-> model was "misused" in such requirements.
-> b.1) a variation: interdependent constraints -> if MPU is > freq X,
-> timing closure required L3 to be at 266MHz. again - it is not a QoS
-> requirement perse, just a dependency requirement that cannot easily be
-> addressed doing a pure QoS like framework solution.
-> 
-> Even though EMC does sound like (a) - I suspect you might want to be
-> 100% sure that you dont have variations of (b) in the SoC as well and
-> betting completely on QoS approach might not actually work in practice.
-> 
-> > 
-> > Adding the linux-pm mailing list for more visibility. Perhaps somebody
-> For folks new on the discussion: complete thread:
-> http://thread.gmane.org/gmane.linux.drivers.devicetree/73967
-> 
-> > has some ideas on how to extend any of the existing frameworks to make
-> > it work for Tegra's EMC scaling (or how to implement the requirements of
-> > Tegra's EMC scaling within the existing frameworks).
-> > 
-> 
-> 
-> [1]
-> https://android.googlesource.com/kernel/omap.git/+/android-omap-panda-3.0/arch/arm/plat-omap/omap-pm-helper.c
-> 
-> -- 
-> Regards,
-> Nishanth Menon
+action : card insert/remove/overheat etc..
+notify data: USIM data passing back (supplied at the time of cb 
+registration)
+
+
+> Please either use the existing phy layer of the kernel, or make a "real"
+> subsystem here, don't try to put a tiny shim on top of an existing
+> struct device for this driver, that's not how subsystems in Linux are
+> done.
+Why I am not using exiting PHY framework ?
+
+We will be more than happy to adapt generic phy if it
+includes/add support for smart card requirements like
+
+1) Some smart card phy (TDA8026-NxP) has multiple slots for smart
+cards. This interface enables controller to communicate with specific
+smart card inserted to the specific phy's slot.
+2) Warm reset to smart card inserted to phy slot.
+3) Bit banging of smart card pins to support vendor specific memory
+cards.
+4) Notification of card insert/remove/overheat etc.
+5) synchronous and asynchronous modes for smart card transaction
+
+
+>
+> thanks,
+>
+> greg k-h
+>
