@@ -1,174 +1,163 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [PATCH v2 13/18] ARM: dts: s6e3fa0: add DT bindings
-Date: Fri, 30 May 2014 12:08:18 +0900
-Message-ID: <5387F622.2070309@samsung.com>
-References: <1400647390-26590-1-git-send-email-yj44.cho@samsung.com>
- <1400647390-26590-14-git-send-email-yj44.cho@samsung.com>
- <20140526134153.GA2373@ulmo> <538430A4.8020702@samsung.com>
- <20140527075328.GA13081@ulmo>
- <CAAQKjZOGLPoGbZ7G3+BFd3ydRC2HGmz8JKqFiytdSvxN3T5U_w@mail.gmail.com>
- <20140527202122.GA10609@mithrandir> <53856B0D.6010501@samsung.com>
- <538585D1.9030305@samsung.com>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 2/5] clk: bcm281xx: implement prerequisite clocks
+Date: Thu, 29 May 2014 22:20:15 -0500
+Message-ID: <5387F8EF.3030607@linaro.org>
+References: <1400590362-11177-1-git-send-email-elder@linaro.org> <1400590362-11177-3-git-send-email-elder@linaro.org> <20140524005358.23136.8918@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <538585D1.9030305@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Andrzej Hajda <a.hajda@samsung.com>, Inki Dae <inki.dae@samsung.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, robh+dt@kernel.org, laurent.pinchart@ideasonboard.com, galak@codeaurora.org, kgene.kim@samsung.com, s.trumtrar@pengutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140524005358.23136.8918@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQUxMLAoKT24gMDUvMjgvMjAxNCAwMzo0NCBQTSwgQW5kcnplaiBIYWpkYSB3cm90ZToKPiBP
-biAwNS8yOC8yMDE0IDA2OjUwIEFNLCBJbmtpIERhZSB3cm90ZToKPj4gT24gMjAxNOuFhCAwNeyb
-lCAyOOydvCAwNToyMSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+PiBPbiBUdWUsIE1heSAyNywg
-MjAxNCBhdCAxMToyNDo0OVBNICswOTAwLCBJbmtpIERhZSB3cm90ZToKPj4+PiAyMDE0LTA1LTI3
-IDE2OjUzIEdNVCswOTowMCBUaGllcnJ5IFJlZGluZyA8dGhpZXJyeS5yZWRpbmdAZ21haWwuY29t
-PjoKPj4+Pj4gT24gVHVlLCBNYXkgMjcsIDIwMTQgYXQgMDg6Mjg6NTJBTSArMDIwMCwgQW5kcnpl
-aiBIYWpkYSB3cm90ZToKPj4+Pj4+IEhpIFRoaWVycnksCj4+Pj4+Pgo+Pj4+Pj4gT24gMDUvMjYv
-MjAxNCAwMzo0MSBQTSwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4+Pj4+Pj4gT24gV2VkLCBNYXkg
-MjEsIDIwMTQgYXQgMDE6NDM6MDVQTSArMDkwMCwgWW91bmdKdW4gQ2hvIHdyb3RlOgo+Pj4+Pj4+
-PiBUaGlzIHBhdGNoIGFkZHMgRFQgYmluZGluZ3MgZm9yIHM2ZTNmYTAgcGFuZWwuCj4+Pj4+Pj4+
-IFRoZSBiaW5kaW5ncyBkZXNjcmliZXMgcGFuZWwgcmVzb3VyY2VzLCBkaXNwbGF5IHRpbWluZ3Mg
-YW5kIGNwdSBtb2RlIHRpbWluZ3MuCj4+Pj4+Pj4+Cj4+Pj4+Pj4+IFNpZ25lZC1vZmYtYnk6IFlv
-dW5nSnVuIENobyA8eWo0NC5jaG9Ac2Ftc3VuZy5jb20+Cj4+Pj4+Pj4+IEFja2VkLWJ5OiBJbmtp
-IERhZSA8aW5raS5kYWVAc2Ftc3VuZy5jb20+Cj4+Pj4+Pj4+IEFja2VkLWJ5OiBLeXVuZ21pbiBQ
-YXJrIDxreXVuZ21pbi5wYXJrQHNhbXN1bmcuY29tPgo+Pj4+Pj4+PiAtLS0KPj4+Pj4+Pj4gICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9wYW5lbC9zYW1zdW5nLHM2ZTNmYTAudHh0ICB8ICAgNDUg
-KysrKysrKysrKysrKysrKysrKysKPj4+Pj4+Pj4gICAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0
-aW9ucygrKQo+Pj4+Pj4+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvcGFuZWwvc2Ftc3VuZyxzNmUzZmEwLnR4dAo+Pj4+Pj4+IFlvdSdyZSB0
-b3RhbGx5IGNvbmZ1c2luZyBtZSBoZXJlLiBIYWxmIG9mIHRoaXMgcGF0Y2ggc2VyaWVzIGlzIGFi
-b3V0Cj4+Pj4+Pj4gYWRkaW5nIGk4MCBzdXBwb3J0IHRvIEV4eW5vcyBGSU1ELCBhbmQgdGhlbiB5
-b3UgZ28gYW5kIGFkZCB3aGF0IGlzCj4+Pj4+Pj4gYXBwYXJlbnRseSBhIERTSSBwZXJpcGhlcmFs
-IGRyaXZlciBoZXJlIHRoYXQncyBzdXBwb3NlZCB0byBiZSB1c2VkIGJ5Cj4+Pj4+Pj4gdGhpcyBu
-ZXcgaTgwIHN1cHBvcnQuIE5vdGhpbmcgSSd2ZSBiZWVuIGFibGUgdG8gZGlnIHVwIGluZGljYXRl
-cyB0aGF0Cj4+Pj4+Pj4gaTgwIG9yIERTSSBhcmUgaW4gYW55d2F5IHJlbGF0ZWQuCj4+Pj4+PiBG
-SU1EIGNhbiBwcm9kdWNlIHBhcmFsbGVsIFJHQiBvdXRwdXQgb3IgY29tbWFuZCBtb2RlIGluIGk4
-MCBzdHlsZSBvdXRwdXQKPj4+Pj4+IHZpYSBwYXJhbGxlbCBsaW5lcy4KPj4+Pj4+IERTSU0gY2Fu
-IGFjY2VwdCBwYXJhbGxlbCBSR0Igc3RyZWFtIGluIHRoaXMgY2FzZSBpdCBwcm9kdWNlcyBNSVBJ
-IERTSQo+Pj4+Pj4gdmlkZW8gbW9kZSBzaWduYWwgb3IgaXQgY2FuIGFjY2VwdCBpODAgYW5kIGlu
-IHRoaXMgY2FzZSBpdCB0cmFuc2xhdGVzIGl0Cj4+Pj4+PiB0byBNSVBJIERTSSBjb21tYW5kIG1v
-ZGUuCj4+Pj4+IFRoZW4gdGhlIGNvbW1hbmQgbW9kZSB0aW1pbmdzIGFyZW4ndCBhIHByb3BlcnR5
-IG9mIHRoZSBwYW5lbCBhdCBhbGwuCj4+Pj4gVGhlbiB0aGUgdmlkZW8gbW9kZSB0aW1pbmdzIGFy
-ZW4ndCBhbHNvIGEgcHJvcGVydHkgb2YgdGhlIHBhbmVsLgo+Pj4+Cj4+Pj4gV2hpY2ggaW50ZXJm
-YWNlIG1pcGkgYW5kIGRpc3BsYXkgY29udHJvbGxlciBzaG91bGQgdXNlIHdvdWxkIGJlCj4+Pj4g
-ZGVjaWRlZCBieSBsY2QgcGFuZWwgdHlwZTogZGlzcGxheSBjb250cm9sbGVyIGNhbiB1c2UgaTgw
-IGludGVyZmFjZQo+Pj4+IGJhc2VkIGxjZCBwYW5lbCwgYW5kIGFsc28gbWlwaSBjb250cm9sbGVy
-IGNhbiB1c2UgaTgwIGludGVyZmFjZSBiYXNlZAo+Pj4+IGxjZCBwYW5lbC4KPj4+PiBJbiBoZXJl
-LCB0aGUgb25seSBkaWZmZXJlbmNlIGlzIHRoYXQgbGNkIHBhbmVsIHJlY2VpdmVzICBwYWNrZXRz
-LAo+Pj4+IHdoaWNoIGluY2x1ZGVzIHZpZGVvIGRhdGEgb3IgY29tbWFuZCBkYXRhLCBwYWNrZWQg
-d2l0aCBtaXBpIHByb3RvY29sCj4+Pj4gdmlhIGxhbmUgbGluZXMgb3IgcmVjZWl2ZXMgdmlkZW8g
-ZGF0YSBvciBjb21tYW5kIGRhdGEgdmlhIHBhcmFsbGVsCj4+Pj4gbGluZXMuCj4+Pj4KPj4+PiBB
-bmQgdGhlIGJlbG93IGlzIExDRCB0eXBlcywKPj4+PiAgICAgICAgICBSR0IgaW50ZXJmYWNlIHBh
-bmVsLgo+Pj4+ICAgICAgICAgIGk4MCBpbnRlcmZhY2UgcGFuZWwuCj4+Pj4gICAgICAgICAgTUlQ
-SSBiYXNlZCBSR0IgaW50ZXJmYWNlIHBhbmVsLgo+Pj4+ICAgICAgICAgIE1JUEkgYmFzZWQgaTgw
-IGludGVyZmFjZSBwYW5lbC4KPj4+Pgo+Pj4+IFJHQiBpbnRlcmZhY2UgYWxzbyBpcyBjYWxsZWQg
-dmlkZW8gbW9kZSwgYW5kIGk4MCBpbnRlcmZhY2UgYWxzbyBpcwo+Pj4+IGNhbGxlZCBjcHUgbW9k
-ZS4gSW4gY2FzZSBvZiBvbWFwIFNvQywgaXQgaXMgYWxzbyBjYWxsZWQgU21hcnQgcGFuZWwuCj4+
-Pj4gaTgwIGludGVyZmFjZSBpcyBqdXN0IG9uZSBvZiBMQ0QgdHlwZXMuIFNvIEkgdGhpbmsgdGhp
-cyBpbnRlcmZhY2UKPj4+PiB0aW1pbmdzIHNob3VsZCBiZSBoYW5kbGVkIGJ5IGZyYW1ld29ya3Mg
-cmVsYXRlZCB0byBtb2RlIGluIHNhbWUgd2F5IGFzCj4+Pj4gUkdCIGludGVyZmFjZS4KPgo+IFNv
-bWUgY2xhcmlmaWNhdGlvbiBhYm91dCBuYW1lcy4KPiBJIGFtIG5vdCBhbiBleHBlcnQgaW4gY29t
-bWFuZC9jcHUgbW9kZSBpbnRlcmZhY2UsIHNvIGZlZWwgZnJlZSB0bwo+IGNvcnJlY3QgbWUuCj4g
-VGhvc2UgZGlmZmVyZW50IHRlcm1zIHdlcmUgcXVpdGUgY29uZnVzaW5nIGZvciBtZSBzbyBhZnRl
-ciBzb21lIGRpZ2dpbmcKPiAoZm9yIGV4YW1wbGUgaGVyZSBbMV0pCj4gSSBoYXZlIGZvdW5kL2Vu
-c3VyZWQgIHRoZXJlIGlzIGEgZm9sbG93aW5nIHJlbGF0aW9uIGJldHdlZW4gZGlmZmVyZW50IG5h
-bWVzOgo+IE1JUEkgRFBJIC0gUkdCIGludGVyZmFjZQo+IE1JUEkgREJJIHR5cGUgQSAtIENQVSBt
-b2RlIG02OCBzdHlsZQo+IE1JUEkgREJJIHR5cGUgQiAtIENQVSBtb2RlIGk4MCBzdHlsZQo+IE1J
-UEkgREJJIHR5cGUgQyAtIFNQSSwgbWF5YmUgYWxzbyBvdGhlciBzZXJpYWwgaW50ZXJmYWNlcyAo
-PykKPiBNSVBJIERTSSAtIGJhc2VkIG9uIEQtUEhZLXMgc2VyaWFsIHByb3RvY29sIHdoaWNoIGNh
-biB3b3JrIGluIHZpZGVvIG9yCj4gY29tbWFuZCBtb2RlLgo+Cj4gVG8gYWRkIG1vcmUgY29uZnVz
-aW9uIENQVSBtb2RlIGlzIGFsc28gbmFtZWQgTVBVIG1vZGUgb3Igc3lzIG1vZGUuCj4KPiBUbyBh
-dm9pZCBjb25mdXNpb24gaW4gdGhlIGRpc2N1c3Npb24gSSBwcm9wb3NlIHVzZSBpODAgb25seSB0
-byBkZXNjcmliZQo+IERCSSB0eXBlIEIgaW50ZXJmYWNlLAo+IGFuZCBEU0kgY29tbWFuZCBtb2Rl
-LCBEU0kgdmlkZW8gbW9kZSB0byBkZXNjcmliZSBEU0kgbW9kZXMuCj4KPiBbMV06IGh0dHA6Ly93
-d3cuYWxsc2hvcmUuY29tL3BkZi9EQTg2MjAucGRmCj4KPgo+Pj4gTENEIGlzIGEgZGlzcGxheSB0
-ZWNobm9sb2d5LCBpdCBoYXMgbm90aGluZyB0byBkbyB3aXRoIHRoZSBpbnRlcmZhY2UuIE15Cj4+
-PiBwb2ludCBpcyB0aGF0IGZyb20gQW5kcnplaidzIGRlc2NyaXB0aW9uLCBhbmQgaW4gZmFjdCBm
-cm9tIHRoaXMgcGF0Y2gKPj4+IHNlcmllcyBpbiBnZW5lcmFsLCB0aGUgUzZFM0ZBMCBwYW5lbCBp
-cyBhIERTSSBwYW5lbC4gQXNzb2NpYXRpbmcgdGltaW5ncwo+Pj4gdGhhdCBhcmUgaTgwIHNwZWNp
-ZmljIHRvIGl0IGlzIHRoZXJlZm9yZSB3cm9uZy4KPj4+Cj4+PiBDb25zaWRlciBmb3IgaW5zdGFu
-Y2Ugd2hhdCB3b3VsZCBoYXBwZW4gaWYgc29tZWJvZHkgd2VyZSB0byB1c2UgdGhlIHNhbWUKPj4+
-IHBhbmVsIG9uIHNvbWUgb3RoZXIgZGV2aWNlIChjb25uZWN0ZWQgdG8gYSBEU0kgY29udHJvbGxl
-cikuIElmIHlvdQo+Pj4gc3BlY2lmeSBpODAgdGltaW5ncyBmb3IgdGhlIHBhbmVsIHRoZW4gdGhl
-IG5ldyBkZXZpY2Ugd29uJ3Qga25vdyB3aGF0IHRvCj4+PiBkbyB3aXRoIHRoZW0gYmVjYXVzZSBp
-dCBleHBlY3RzIERTSS1yZWxhdGVkIHRpbWluZ3MuCj4+Pgo+Pj4gTGV0IG1lIHRyeSB0byBzdW1t
-YXJpemUgdGhlIGFib3ZlIHRvIG1ha2Ugc3VyZSB3ZSdyZSBhbGwgb24gdGhlIHNhbWUKPj4+IHBh
-Z2U6Cj4+Pgo+Pj4gCS0gRklNRCBpcyBhIGRpc3BsYXkgY29udHJvbGxlciB0aGF0IGNhbiBiZSBj
-b25maWd1cmVkIHRvIGVpdGhlcgo+Pj4gCSAgc2VuZCBSR0IgZGF0YSBvciBpODAgZGF0YQo+Pj4g
-CS0gRFNJTSB0YWtlcyBlaXRoZXIgUkdCIGFzIGlucHV0IGFuZCBvdXRwdXRzIERTSSAodmlkZW8g
-bW9kZSkgb3IKPj4+IAkgIGk4MCBhcyBpbnB1dCBhbmQgb3V0cHV0cyBEU0kgKGNvbW1hbmQgbW9k
-ZSkKPj4+Cj4+PiBJbiBib3RoIGNhc2VzIHRoZSBwYW5lbCBpcyBjb25uZWN0ZWQgdG8gRFNJTSBh
-bmQgaXQgdGFrZXMgRFNJIGFzIGlucHV0LAo+Pj4gYmVjYXVzZSBpdCBpcyBhIERTSSBwYW5lbCAo
-aXQgZG9lc24ndCB1bmRlcnN0YW5kIFJHQiBvciBpODApLiBUaGUgcGFuZWwKPj4+IG5lZWRzIHRv
-IGRlc2NyaWJlIHRoZSBwcm9wZXJ0aWVzIG9mIHRoZSBEU0kgaW50ZXJmYWNlIHNvIHRoYXQgRFNJ
-TSBjYW4KPj4+IGJlIGNvbmZpZ3VyZWQgYXBwcm9wcmlhdGVseS4gRFNJTSBpbiB0dXJuIHdvcmtz
-IGFzIGEgYnJpZGdlIG9yIGVuY29kZXIKPj4+IHRoYXQgY29udmVydHMgUkdCIG9yIGk4MCB0byBE
-U0kgKHZpZGVvIG9yIGNvbW1hbmQgbW9kZSkuIFNvIGl0IG1ha2VzIG5vCj4+PiBzZW5zZSB0byBk
-ZXNjcmliZSB0aGUgaTgwIHRpbWluZ3MgZm9yIHRoZSBwYW5lbCBiZWNhdXNlIGl0IGhhcyBub3Ro
-aW5nCj4+PiB0byBkbyB3aXRoIGk4MC4gSW5zdGVhZCB0aGUgRFNJTSBpcyB0aGUgaGFyZHdhcmUg
-dGhhdCBuZWVkcyB0byBzcGVjaWZ5Cj4+PiB0aGUgaTgwIHRpbWluZ3MsIHNvIHRoYXQgRklNRCBj
-YW4gYmUgY29uZmlndXJlZCB0byBnZW5lcmF0ZSB0aGUgdGltaW5ncwo+Pj4gdGhhdCBEU0lNIG5l
-ZWRzLgo+PiAgICAgICAgICAgICAgQ1BVIGludGVyZmFjZSAgICAgICAgICAgICAgICAgICAgIE1J
-UEkgbGFuZQo+PiBGSU1EIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tIERTSU0gLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tIExDRCBQYW5lbAo+Pgo+PiBIbW0uLi4gcmVhc29uYWJsZS4gU28geW91ciBwb2lu
-dCBpcyB0aGF0IGNvbW1hbmQgbW9kZSB0aW1pbmcgc2hvdWxkIGJlCj4+IHBsYWNlZCBpbiBmaW1k
-IGRldmljZSBub2RlLCBub3QgcGFuZWwgZGV2aWNlIG5vZGU/IEFuZCBwYW5lbCBkZXZpY2Ugbm9k
-ZQo+PiBzaG91bGQgcHJvdmlkZSBvbmx5IGEgcHJvcGVydHkgdGhhdCBEU0lNIGRyaXZlciBjYW4g
-c2V0IExDRCBtb2RlCj4+IHByb3Blcmx5IHRvIGk4MCBvciByZ2IgaW50ZXJmYWNlIG1vZGUsIGFu
-ZCBhbHNvIEZJTUQgZHJpdmVyIGNhbiBzZXQgTENECj4+IG1vZGUgdG8gaTgwIG9yIHJnYiBpbnRl
-cmZhY2UgbW9kZS4KPgo+IEkgaGF2ZSBubyBhY2Nlc3MgdG8gczZlM2ZhMCBkYXRhc2hlZXQgYW5k
-IEV4eW5vcyBkYXRhc2hlZXQgSSBoYXZlIGFjY2VzcyB0bwo+IGlzIG5vdCB2ZXJ5IHZlcmJvc2Ug
-b24gdGhlIHN1YmplY3QgYnV0IGl0IHNlZW1zIHRvIGJlIHJlYXNvbmFibGUgdGhhdAo+IGNzLXNl
-dHVwLCB3ci1zZXR1cCwgd3ItYWN0aXZlIGFuZCB3ci1ob2xkIGFyZSBwcm9wZXJ0aWVzIG9ubHkg
-b2YgaTgwCj4gaW50ZXJmYWNlLAo+IGllIGludGVyZmFjZSBiZXR3ZWVuIEZJTUQgYW5kIERTSU0g
-YW5kIHRoZXkgaGF2ZSBub3RoaW5nIHRvIGRvIHdpdGggRFNJCj4gY29tbWFuZCBtb2RlIHBhbmVs
-Lgo+IFRob3NlIHByb3BlcnRpZXMgc2hvdWxkIGJlIHByb3ZpZGVkIGJ5IERTSU0gdG8gRklNRCwg
-SSBndWVzcyB0aGV5IGNhbiBiZQo+IGV2ZW4gaGFyZGNvZGVkCj4gaW4gRFNJTSBkcml2ZXIsIG5v
-IGJpbmRpbmdzIHJlcXVpcmVkLiBUaGVyZSBpcyBzdGlsbCBhIHF1ZXN0aW9uIGhvdyBEU0lNCj4g
-c2hvdWxkIHRlbGwgRklNRCBhYm91dCB0aGVtLgo+IEkgYW0gbm90IHN1cmUgYWJvdXQgbWVjaGFu
-aXNtIG9mIHBhc3NpbmcgdGhlbSBmcm9tIERTSU0gdG8gRklNRCwgbWF5YmUKPiBhZGp1c3Rpbmcg
-ZHJtX2Rpc3BsYXlfbW9kZQo+IGlzIGEgc29sdXRpb24sIG1heWJlIGRpZmZlcmVudCB3YXkgb2Yg
-Y29tbXVuaWNhdGlvbiBzaG91bGQgYmUgdXNlZCAoSQo+IHNlZSBoZXJlIGFnYWluIGludGVyZmFj
-ZV90cmFja2VyIHVzZSBjYXNlIFsyXSkuCj4KPiBbMl06Cj4gaHR0cDovL3Blcm1hbGluay5nbWFu
-ZS5vcmcvZ21hbmUubGludXguZHJpdmVycy52aWRlby1pbnB1dC1pbmZyYXN0cnVjdHVyZS83NzQ1
-MQo+Cj4gT24gdGhlIG90aGVyIHNpZGUgd2lkdGgsIGhlaWdodCBhbmQgY2xvY2sgYXJlIHByb3Bl
-cnRpZXMgb2YgdGhlIHBhbmVsIHNvCj4gdGhleSBzaG91bGQgc3RheQo+IHdpdGggdGhlIHBhbmVs
-LCBtYXliZSB3aWR0aCBhbmQgaGVpZ2h0IGNvdWxkIGJlIG1vdmVkIGZyb20gZHRzIHRvCj4gZHJp
-dmVyLCBJIGFtIG5vdCBzdXJlIGFib3V0IGZyZXF1ZW5jeS4KPgo+Pgo+PiBJcyB0aGVyZSBteSBt
-aXNzaW5nIHBvaW50Pwo+Pgo+PiBBbmQgaW4gY2FzZSBvZiBFeHlub3MsIG5vdyB2aWRlbyB0aW1p
-bmcgcHJvcGVydHkgaXMgYWxzbyBwbGFjZWQgaW4gcGFuZWwKPj4gZGV2aWNlIG5vZGUgc28gaXQg
-bmVlZHMgdG8gbW92ZSB0byBmaW1kIGRldmljZSBub2RlLgo+Cj4gTm8sIHZpZGVvIHRpbWluZ3Mg
-YXJlIHByb3BlcnRpZXMgb2YgcGFuZWxzIHNvIHRoZXkgc2hvdWxkIHN0YXkgaW4KPiBwYW5lbHMs
-IGRpc3BsYXkKPiBjb250cm9sbGVycyBzaG91bGQganVzdCBhc2sgcGFuZWxzIGFib3V0IHRoZW0u
-Cj4KPj4KPj4gQW5kcnplaiwgZG8geW91IGhhdmUgb3RoZXIgb3Bpbmlvbj8gSSBoYXZlIGxvb2tl
-ZCBpbnRvIGR0cyBmaWxlcyBmb3IKPj4gb3RoZXIgU29DIGFuZCBJbiBtb3N0IFNvQywgaXQgc2Vl
-bXMgdGhhdCBkaXNwbGF5IGNvbnRyb2xsZXIgbm9kZSBoYXMKPj4gdmlkZW8gdGltaW5nIHByb3Bl
-cnR5LCBub3QgcGFuZWwgbm9kZS4gVGhpZXJyeSdzIHBvaW50aW5nIHNlZW1zCj4+IHJlYXNvbmFi
-bGUgdG8gbWUuCj4gSSBndWVzcyB0aGVyZSBjb3VsZCBiZSBtYW55IHJlYXNvbnM6IGhpc3Rvcmlj
-YWwsIGJhY2t3YXJkIGNvbXBhdGliaWxpdHksCj4gbGF6aW5lc3Mgb2YgZGV2ZWxvcGVycyA6KS4K
-PiBJIGFncmVlIHdpdGggVGhpZXJyeSBhbHNvLgo+Cj4gU28gaWYgZXZlcnlib2R5IGFncmVlcyB0
-aGVyZSBpcyBvbmx5IG9uZSBzZXJpb3VzIGlzc3VlOiBob3cgdGhlIGk4MAo+IHByb3BlcnRpZXMK
-PiBzaG91bGQgYmUgcGFzc2VkIGZyb20gRFNJTSB0byBGSU1ELCBhbSBJIHJpZ2h0PwoKUmlnaHQs
-IHRoaXMgaXNzdWUgd2FzIGRpZmZpY3VsdCBmb3IgbWUuClNvIGluIG15IGZpcnN0IFJGQyB2MSwg
-SSBwbGFjZWQgdGhlbSBpbiBGSU1EIGR0c1sxXS4KSSBkaWRuJ3QgdGhpbmsgb2YgdGhhdChwbGFj
-ZWQgdGhlbSBpbiBEU0lNKSwgbW92ZWQgdGhlbSB0byBwYW5lbC4KClsxXSA6IGh0dHA6Ly93d3cu
-c3Bpbmljcy5uZXQvbGlzdHMvZHJpLWRldmVsL21zZzU3OTYwLmh0bWwKCkFuZCBkbyB5b3UgdGhp
-bmsgdGhhdCBpdCBpcyBhbHNvIHJlcXVpcmVkIHRvIHJlbmFtZSBjbWRtb2RlIHRvIGk4MG1vZGU/
-CgpUaGFuayB5b3UuCkJlc3QgcmVnYXJkcyBZSgoKPgo+IFJlZ2FyZHMKPiBBbmRyemVqCj4KPj4K
-Pj4gVGhhbmtzLAo+PiBJbmtpIERhZQo+Pgo+Pj4gVGhpZXJyeQo+Pj4KPj4KPgo+IF9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4gZHJpLWRldmVsIG1haWxp
-bmcgbGlzdAo+IGRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKPiBodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCj4KCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+On 05/23/2014 07:53 PM, Mike Turquette wrote:
+> Quoting Alex Elder (2014-05-20 05:52:39)
+>> @@ -743,11 +746,16 @@ struct clk *kona_clk_setup(struct kona_clk *bcm_clk)
+>>         clk = clk_register(NULL, &bcm_clk->hw);
+>>         if (IS_ERR(clk)) {
+>>                 pr_err("%s: error registering clock %s (%ld)\n", __func__,
+>> -                       init_data->name, PTR_ERR(clk));
+>> +                       name, PTR_ERR(clk));
+>>                 goto out_teardown;
+>>         }
+>>         BUG_ON(!clk);
+>>  
+>> +       /*  Make it so we can look the clock up using clk_find() */
+> 
+> s/clk_find/clk_get/ ?
+> 
+>> +       bcm_clk->cl.con_id = name;
+>> +       bcm_clk->cl.clk = clk;
+>> +       clkdev_add(&bcm_clk->cl);
+> 
+> This is not so nice. I'll explain more below.
+
+OK, despite what I said before, I do need this, or
+something like it, so I can look up clocks by name.
+(Continued below.)
+
+> 
+>> +
+>>         return clk;
+>>  out_teardown:
+>>         bcm_clk_teardown(bcm_clk);
+>> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+>> index d8a7f38..fd070d6 100644
+>> --- a/drivers/clk/bcm/clk-kona.c
+>> +++ b/drivers/clk/bcm/clk-kona.c
+>> @@ -1195,6 +1195,48 @@ static bool __peri_clk_init(struct kona_clk *bcm_clk)
+>>         return true;
+>>  }
+>>  
+>> +static bool __kona_clk_init(struct kona_clk *bcm_clk);
+>> +static bool __kona_prereq_init(struct kona_clk *bcm_clk)
+>> +{
+>> +       struct clk *clk;
+>> +       struct clk_hw *hw;
+>> +       struct kona_clk *prereq;
+>> +
+>> +       BUG_ON(clk_is_initialized(bcm_clk));
+>> +
+>> +       if (!bcm_clk->p.prereq)
+>> +               return true;
+>> +
+>> +       clk = clk_get(NULL, bcm_clk->p.prereq);
+> 
+> The clkdev global namespace is getting polluted with all of these new
+> prereq clocks. If there was an associated struct device *dev with them
+> then it wouldn't be a problem, but you might get collisions with other
+> clock drivers that also use NULL for the device.
+
+Yes I recognize this.  Ideally a CCU would have a device struct
+associated with it that I could use, because the name of a clock
+is unique within that context.  But I have no such device available.
+(Please correct me if I'm wrong.  I don't want to make one up, and
+I would like to use it if it exists.)
+
+> It would be a lot nicer for the clocks that require a prereq clock to
+> just use clk_get(dev, "well_known_name"); in the same way that drivers
+> use it, without considering it a special case.
+
+I can do something like that if I can get a meaningful device
+structure.  Do you have any suggestions?
+
+Other than this issue, I've implemented all of the previous
+initialization routines using ->prepare() instead, and it
+works fine.  I'm going to send an updated series out tomorrow.
+I want to look it over again after a good night's sleep...
+
+					-Alex
+
+>> +       if (IS_ERR(clk)) {
+>> +               pr_err("%s: unable to get prereq clock %s for %s\n",
+>> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
+>> +               return false;
+>> +       }
+>> +       hw = __clk_get_hw(clk);
+>> +       if (!hw) {
+>> +               pr_err("%s: null hw pointer for clock %s\n", __func__,
+>> +                       bcm_clk->init_data.name);
+>> +               return false;
+>> +       }
+>> +       prereq = to_kona_clk(hw);
+>> +       if (prereq->ccu != bcm_clk->ccu) {
+>> +               pr_err("%s: prereq clock %s CCU different for clock %s\n",
+>> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
+>> +               return false;
+>> +       }
+>> +
+>> +       /* Initialize the prerequisite clock first */
+>> +       if (!__kona_clk_init(prereq)) {
+>> +               pr_err("%s: failed to init prereq %s for clock %s\n",
+>> +                       __func__, bcm_clk->p.prereq, bcm_clk->init_data.name);
+>> +               return false;
+>> +       }
+>> +       bcm_clk->p.prereq_clk = clk;
+> 
+> The above seems like a lot effort to go to. Why not skip all of this and
+> just implement the prerequisite logic in the .enable & .disable
+> callbacks? E.g. your kona clk .enable callback would look like:
+> 
+> diff --git a/drivers/clk/bcm/clk-kona.c b/drivers/clk/bcm/clk-kona.c
+> index d603c4e..51f35b4 100644
+> --- a/drivers/clk/bcm/clk-kona.c
+> +++ b/drivers/clk/bcm/clk-kona.c
+> @@ -987,6 +987,12 @@ static int kona_peri_clk_enable(struct clk_hw *hw)
+>  {
+>  	struct kona_clk *bcm_clk = to_kona_clk(hw);
+>  	struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
+> +	int ret;
+> +
+> +	hw->prereq_bus_clk = clk_get(hw->ccu, hw->prereq);
+> +	ret = clk_enable(prereq_bus_clk);
+> +	if (ret)
+> +		return ret;
+>  
+>  	return clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, true);
+>  }
+> @@ -997,6 +1003,9 @@ static void kona_peri_clk_disable(struct clk_hw *hw)
+>  	struct bcm_clk_gate *gate = &bcm_clk->u.peri->gate;
+>  
+>  	(void)clk_gate(bcm_clk->ccu, bcm_clk->init_data.name, gate, false);
+> +
+> +	clk_disable(hw->prereq_bus_clk);
+> +	clk_put(hw->prereq_bus_clk);
+>  }
+>  
+>  static int kona_peri_clk_is_enabled(struct clk_hw *hw)
+> 
+> 
+> I guess it might take some trickery to get clk_get to work like that.
+> Let me know if I've completely lost the plot.
+> 
+> Regards,
+> Mike
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
