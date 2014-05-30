@@ -1,78 +1,37 @@
-From: Thomas Abraham <thomas.ab@samsung.com>
-Subject: [PATCH v6 2/2] Documentation: devicetree: Add boost-frequency binding to list boost mode frequency
-Date: Fri, 30 May 2014 14:31:17 +0530
-Message-ID: <1401440477-4328-3-git-send-email-thomas.ab@samsung.com>
-References: <1401440477-4328-1-git-send-email-thomas.ab@samsung.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1401440477-4328-1-git-send-email-thomas.ab@samsung.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, nm@ti.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v3 0/2] add hix5hd2 mac driver
+Date: Fri, 30 May 2014 17:02:06 +0800
+Message-ID: <1401440528-7804-1-git-send-email-zhangfei.gao@linaro.org>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thomas Abraham <thomas.ab@samsung.com>
+v3:
+Remove .ndo_get_stats as mentioned by Tobias
+Add __le32 conversion pointed by Mark
 
-Add a new optional boost-frequency binding for specifying the frequencies
-usable in boost mode.
+v2:
+Update binding accoring to Sergei comments
+Update descriptor as Arnd's suggestion
 
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Thomas Abraham <thomas.ab@samsung.com>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Acked-by: Nishanth Menon <nm@ti.com>
-Acked-by: Lukasz Majewski <l.majewski@samsung.com>
----
- .../devicetree/bindings/cpufreq/cpufreq-boost.txt  |   38 ++++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
+Zhangfei Gao (2):
+  Documentation: add Device tree bindings for Hisilicon hix5hd2
+    ethernet
+  net: hisilicon: add hix5hd2 mac driver
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-new file mode 100644
-index 0000000..63ed0fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-boost.txt
-@@ -0,0 +1,38 @@
-+* Device tree binding for CPU boost frequency (aka over-clocking)
-+
-+Certain CPU's can be operated in optional 'boost' mode (or sometimes referred as
-+overclocking) in which the CPU can operate at frequencies which are not
-+specified by the manufacturer as CPU's operating frequency.
-+
-+Optional Properties:
-+- boost-frequencies: list of frequencies in KHz to be used only in boost mode.
-+  This list should be a subset of frequencies listed in "operating-points"
-+  property. Refer to Documentation/devicetree/bindings/power/opp.txt for
-+  details about "operating-points" property.
-+
-+Example:
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+
-+			operating-points = <
-+				1500000 1350000
-+				1400000 1287500
-+				1300000 1250000
-+				1200000 1187500
-+				1100000 1137500
-+				1000000 1087500
-+			>;
-+			boost-frequencies = <1500000 1400000>;
-+		};
-+		cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <1>;
-+		};
-+	};
+ .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   36 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/hisilicon/Kconfig             |   27 +
+ drivers/net/ethernet/hisilicon/Makefile            |    5 +
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 1066 ++++++++++++++++++++
+ 6 files changed, 1136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+ create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
+ create mode 100644 drivers/net/ethernet/hisilicon/Makefile
+ create mode 100644 drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+
 -- 
 1.7.9.5
-
