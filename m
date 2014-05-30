@@ -1,47 +1,92 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v6 5/6] dt-bindings: add documentation for Mediatek SoC
-Date: Fri, 30 May 2014 18:56:03 +0200
-Message-ID: <1401468964-5307-6-git-send-email-matthias.bgg@gmail.com>
-References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>
+From: Bjorn Helgaas <bhelgaas@google.com>
+Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
+Date: Fri, 30 May 2014 11:30:53 -0600
+Message-ID: <20140530173053.GF4607@google.com>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+ <20140424175844.GD29593@google.com>
+ <1398421265.4657.25.camel@weser.hi.pengutronix.de>
+ <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
+ <1398774686.4677.12.camel@weser.hi.pengutronix.de>
+ <1399885183.5016.4.camel@weser.hi.pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: mark.rutland@arm.com, andrew@lunn.ch, linux-doc@vger.kernel.org, gregory.clement@free-electrons.com, thierry.reding@gmail.com, heiko.stuebner@bq.com, linux@arm.linux.org.uk, arnd@arndb.de, daniel.lezcano@linaro.org, linux-arm-kernel@lists.infradead.org, florian.vaussard@epfl.ch, sebastian.hesselbarth@gmail.com, devicetree@vger.kernel.org, jason@lakedaemon.net, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, marc.zyngier@arm.com, robh+dt@kernel.org, matthias.bgg@gmail.com, tglx@linutronix.de, soren.brinkmann@xilinx.com, rdunlap@infradead.org, sboyd@codeaurora.org, silvio.fricke@gmail.com, galak@codeaurora.org, olof@lixom.net, maxime.ripard@free-electrons.com, jic23@kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399885183.5016.4.camel@weser.hi.pengutronix.de>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Shawn Guo <shawn.guo@linaro.org>, Richard Zhu <r65037@freescale.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Tim Harvey <tharvey@gateworks.com>, Jingoo Han <jg1.han@samsung.com>, Rob Herring <robh+dt@kernel.org>, linux-samsung-soc@vger.kernel.org, kernel@pengutronix.de, Mark Rutland <mark.rutland@arm.com>, Sean Cross <xobs@kosagi.com>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This adds a DT binding documentation for the MT6589 SoC from Mediatek.
+On Mon, May 12, 2014 at 10:59:43AM +0200, Lucas Stach wrote:
+> Hi Bjorn,
+> 
+> just a friendly reminder. It would be nice if you could pull those in.
+> 
+> Shawn already pulled the DT change and as it is a binding change this
+> means PCIe on i.MX6 is broken in -next, as long as the remaining patches
+> are missing.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
----
- .../devicetree/bindings/arm/mediatek-mt65xx.txt    |    8 ++++++++
- 1 file changed, 8 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
+I applied these to pci/host-imx6 for v3.16.
 
-diff --git a/Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt b/Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
-new file mode 100644
-index 0000000..d6ac71f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/mediatek-mt65xx.txt
-@@ -0,0 +1,8 @@
-+Mediatek MT6589 Platforms Device Tree Bindings
-+
-+Boards with a SoC of the Mediatek MT6589 shall have the following property:
-+
-+Required root node property:
-+
-+compatible: must contain "mediatek,mt6589"
-+
--- 
-1.7.9.5
+Sorry I didn't do this sooner; I get a lot of email and it's easy to
+overlook things.  I mostly work from patchwork
+(http://patchwork.ozlabs.org/project/linux-pci/list/?order=date), and I had
+dropped this series from there because there was enough discussion that I
+expected a re-post, so it wasn't on my radar screen anymore.
+
+Bjorn
+
+> Am Dienstag, den 29.04.2014, 14:31 +0200 schrieb Lucas Stach:
+> > Hi Bjorn,
+> > 
+> > Am Freitag, den 25.04.2014, 08:39 -0600 schrieb Bjorn Helgaas:
+> > [...]
+> > > >> >   PCI: designware: split Exynos and i.MX bindings
+> > > >> >   ARM: dts: imx6: update pcie to bring in line with new binding
+> > > >> >   PCI: imx6: use new clock names
+> > > >> >   PCI: imx6: drop old irq mapping
+> > > >> >   PCI: imx6: rip out optional (and unused) irqs
+> > > >> >   PCI: designware: make MSI isr shared irq aware
+> > > >> >   PCI: imx6: add support for MSI
+> > > >>
+> > > >> What's the status of all these?  I would normally apply patches 4-8 of this
+> > > >> series through my tree, given the appropriate acks, but I haven't seen
+> > > >> those yet.  And I'm not sure what dependencies there are between the
+> > > >> non-PCI patches and the PCI ones.
+> > > >>
+> > > > It's a complete binding change, so applying one part without the other
+> > > > is going to horribly break things.
+> > > >
+> > > > So I would at least want to see an ack for the binding change on the
+> > > > i.MX side from Shawn and Richard. This will need some follow on patches,
+> > > > as some boards adding PCIe using the old binding have cropped up in
+> > > > linux-next, but I can do the patches on short notice if everyone agrees
+> > > > to merge this patchset.
+> > > >
+> > > > The designware part is pretty simple and doesn't change anything for
+> > > > other users than i.MX. Though I would like to see an ack from Jingoo for
+> > > > those.
+> > > >
+> > > > I have some more stuff in the pipes regarding multiple MSI irqs, that
+> > > > depend on this series and also the Keystone people are waiting for this
+> > > > to be applied in order to consolidate the clock handling of the
+> > > > designware core driver, so it would be nice to get this moving again.
+> > > 
+> > > OK, just poke me again when you're ready for me to do something with these.
+> > > 
+> > 
+> > As both Richard and Jingoo gave their ack for the respective patches I
+> > think this is good to go in and I would expect all the PCI patches to go
+> > through your tree for 3.16.
+> > 
+> > Shawn, if you are not okay with this change, please speak up now.
+> > Otherwise please pick the dts change for 3.16. I'll go over linux-next
+> > and prepare the patches to fix up the boards there.
+> > 
+> 
+> 
+> -- 
+> Pengutronix e.K.             | Lucas Stach                 |
+> Industrial Linux Solutions   | http://www.pengutronix.de/  |
+> 
