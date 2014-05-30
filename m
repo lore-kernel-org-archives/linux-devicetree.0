@@ -1,54 +1,44 @@
-From: Hans de Goede <hdegoede@redhat.com>
-Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in device
- tree
-Date: Fri, 30 May 2014 10:17:05 +0200
-Message-ID: <53883E81.3060109@redhat.com>
-References: <53824294.1090609@redhat.com> <20140526103807.GV22111@sirena.org.uk> <538321AB.4050006@redhat.com> <20140526142225.GF22111@sirena.org.uk> <538356DA.7090302@redhat.com> <CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com> <53838023.2080807@redhat.com> <CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com> <5385AF94.90004@redhat.com> <5385CCE6.9070204@gmail.com> <20140528164326.GB5099@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140528164326.GB5099@sirena.org.uk>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
+From: Thomas Abraham <thomas.ab@samsung.com>
+Subject: [PATCH v6 0/2] cpufreq: opp: Add device tree based lookup of boost mode frequency
+Date: Fri, 30 May 2014 14:31:15 +0530
+Message-ID: <1401440477-4328-1-git-send-email-thomas.ab@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: rjw@rjwysocki.net, linux-samsung-soc@vger.kernel.org, kgene.kim@samsung.com, t.figa@samsung.com, l.majewski@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, nm@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Changes since v5:
+- Fixes for checkpatch warnings with --strict option as suggested by
+  Nishanth Menon.
 
-On 05/28/2014 06:43 PM, Mark Brown wrote:
-> On Wed, May 28, 2014 at 01:47:50PM +0200, Tomasz Figa wrote:
+Changes since v4:
+- Code improvements suggested by Viresh Kumar.
 
-<snip>
+Changes since v3:
+- Minor changes as suggested in the last version.
 
->> IMHO, all we need here is a way to tell the MMC (or HSIC) core when to
->> look for a new device and when not (e.g. power down the host controller
->> completely). Anything else, including proper power sequencing is up to
->> the platform driver of such non-discoverable device - it's only its host
->> interface that is discoverable when enabled. I believe this simplistic
->> approach would lead to much less new code added, better reusability of
->> code (power sequencing independent of host interface) and no need to
->> create overly generic code, which usually turns out to be not generic
->> enough.
-> 
-> We then have the problem of working out where that platform driver comes
-> from, for many of these buses the device can be completely described as
-> just a device on the parent bus with some resources connected.
+Changes since v2:
+- Reworked based on the "PM / OPP: move cpufreq specific helpers out of OPP 
+  layer" patch series posted by Nishanth Menon.
 
-Right, I think what we should do is focus on the DT description for this
-first and then worry about the implementation later.
+Changes since v1:
+- Boost mode frequencies are specfied as a set of frequencies instead of
+  specifying them as OPPs. Thanks to Nishanth, Lukasz and Rob for the
+  feedback.
 
-I believe that at the DT level this all should be represented as a child-node
-under the host controller. Following that reasoning it makes perfect sense
-to just focus on mmc for now, while keeping in mind that it would be nice if
-what comes out of this will be re-usable.
+This series has been acked by authors and maintainers of the code
+portions changed in this series. The new DT binding introduced in this
+patch needs an ack from device tree binding maintainers as well.
 
-I've done a detailed, updated proposal for the mmc case (with admittedly
-some implementation comments in there) in my last mail, but unfortunately
-I've seen little response to that. Can people please reply to my
-proposal where we've 2 levels of child nodes, one per mmc slot, and then the
-slot nodes has card / sdio-func child nodes, see my last mail.
+Commit 6f19efc0 ("cpufreq: Add boost frequency support in core") adds
+support for CPU boost mode for CPUfreq drivers. To use the new boost
+mode, CPUfreq drivers have to specify the boost mode frequency and
+voltage within the CPUfreq driver, which is the case for Exynos4x12
+CPUfreq driver.
 
-Regards,
-
-Hans
+But for CPUfreq drivers which obtain the OPPs from cpus node, this
+patch series adds support to specify boost mode frequencies in the
+cpu device tree node. This requirement came up when Lukasz pointed
+out the regression caused by the Exynos CPUfreq driver consolidation
+patches.
