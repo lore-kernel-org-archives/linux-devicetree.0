@@ -1,665 +1,319 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHi v3] iio: add support of the max1027
-Date: Fri, 30 May 2014 17:29:40 +0100
-Message-ID: <d50d68d1-81fa-4af0-8edb-5ae4dae28865@email.android.com>
-References: <1401398520-8625-1-git-send-email-tremyfr@yahoo.fr>
-Mime-Version: 1.0
-Content-Type: text/plain;
- charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v6 1/6] clocksource: Add support for the Mediatek SoCs
+Date: Fri, 30 May 2014 18:55:59 +0200
+Message-ID: <1401468964-5307-2-git-send-email-matthias.bgg@gmail.com>
+References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401398520-8625-1-git-send-email-tremyfr-Qt13gs6zZMY@public.gmane.org>
+In-Reply-To: <1401468964-5307-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko.stuebner-K3U4GQvHnyU@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+This patch adds a clock source and clock event for the timer found
+on the Mediatek SoCs.
 
+The Mediatek General Purpose Timer block provides five 32 bit timers and
+one 64 bit timer.
 
-On May 29, 2014 10:22:00 PM GMT+01:00, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org> wrote:
->This driver add partial support of the
->maxim 1027/1029/1031. Differential mode is not
->supported.
->
->It was tested on armadeus apf27 board.
->
->Signed-off-by: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
+Two 32 bit timers are used by this driver:
+TIMER1: clock events supporting periodic and oneshot events
+TIMER2: clock source configured as a free running counter
 
-One last thing from me.
->---
-> .../devicetree/bindings/iio/adc/max1027-adc.txt    |   22 +
-> drivers/iio/adc/Kconfig                            |    9 +
-> drivers/iio/adc/Makefile                           |    1 +
->drivers/iio/adc/max1027.c                          |  518
->++++++++++++++++++++
-> 4 files changed, 550 insertions(+), 0 deletions(-)
->create mode 100644
->Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-> create mode 100644 drivers/iio/adc/max1027.c
->
->Changelog:
->v3: (thanks Hartmut Knaack, Lars-Peter Clausen and Jonathan Cameron for
->the feedback)
->- move to drivers/iio/adc (was in staging)
->- clean binding doc
->- drop empty update_scan_mode callback
->- add a lock around single channel read code
->- remove useless wrappers around spi_write and spi_read
->- fix available scan mask (a bit was missing)
->- remove useless header
->- some others little cleanp
->
->v2: (thanks Hartmut Knaack and Jonathan Cameron for the feedback)
->- really use devm_* 
->- use demux magic
->- use spi_read and spi_write (instead of spi_sync)
->- use define for register (instead of hardcoded value)
->
->diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
->b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
->new file mode 100644
->index 0000000..a8770cc
->--- /dev/null
->+++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
->@@ -0,0 +1,22 @@
->+* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
->+
->+Required properties:
->+  - compatible: Should be "maxim,max1027" or "maxim,max1029" or
->"maxim,max1031"
->+  - reg: SPI chip select number for the device
->+  - interrupt-parent: phandle to the parent interrupt controller
->+  see:
->Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->+  - interrupts: IRQ line for the ADC
->+  see:
->Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
->+
->+Recommended properties:
->+- spi-max-frequency: Definition as per
->+                     Documentation/devicetree/bindings/spi/spi-bus.txt
->+
->+Example:
->+adc@0 {
->+	compatible = "maxim,max1027";
->+	reg = <0>;
->+	interrupt-parent = <&gpio5>;
->+	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
->+	spi-max-frequency = <1000000>;
->+};
->diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
->index 24c28e3..517f886 100644
->--- a/drivers/iio/adc/Kconfig
->+++ b/drivers/iio/adc/Kconfig
->@@ -119,6 +119,15 @@ config LP8788_ADC
-> 	help
-> 	  Say yes here to build support for TI LP8788 ADC.
-> 
->+config MAX1027
->+	tristate "Maxim max1027 ADC driver"
->+	depends on SPI
->+	select IIO_BUFFER
->+	select IIO_TRIGGERED_BUFFER
->+	help
->+	  Say yes here to build support for Maxim SPI ADC models
->+	  max1027, max1029 and max1031.
->+
-> config MAX1363
-> 	tristate "Maxim max1363 ADC driver"
-> 	depends on I2C
->diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
->index ab346d8..daac784 100644
->--- a/drivers/iio/adc/Makefile
->+++ b/drivers/iio/adc/Makefile
->@@ -14,6 +14,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
-> obj-$(CONFIG_AT91_ADC) += at91_adc.o
-> obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
-> obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
->+obj-$(CONFIG_MAX1027) += max1027.o
-> obj-$(CONFIG_MAX1363) += max1363.o
-> obj-$(CONFIG_MCP320X) += mcp320x.o
-> obj-$(CONFIG_MCP3422) += mcp3422.o
->diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
->new file mode 100644
->index 0000000..6323510
->--- /dev/null
->+++ b/drivers/iio/adc/max1027.c
->@@ -0,0 +1,518 @@
->+ /*
->+  * iio/adc/max1027.c
->+  * Copyright (C) 2014 Philippe Reynes
->+  *
->+  * based on linux/drivers/iio/ad7923.c
->+  * Copyright 2011 Analog Devices Inc (from AD7923 Driver)
->+  * Copyright 2012 CS Systemes d'Information
->+  *
->+  * This program is free software; you can redistribute it and/or
->modify
->+  * it under the terms of the GNU General Public License version 2 as
->+  * published by the Free Software Foundation.
->+  *
->+  * max1027.c
->+  *
->+  * Partial support for max1027 and similar chips.
->+  */
->+
->+#include <linux/kernel.h>
->+#include <linux/module.h>
->+#include <linux/spi/spi.h>
->+#include <linux/delay.h>
->+
->+#include <linux/iio/iio.h>
->+#include <linux/iio/buffer.h>
->+#include <linux/iio/trigger.h>
->+#include <linux/iio/trigger_consumer.h>
->+#include <linux/iio/triggered_buffer.h>
->+
->+#define MAX1027_CONV_REG  0x80
->+#define MAX1027_SETUP_REG 0x40
->+#define MAX1027_AVG_REG   0x20
->+#define MAX1027_RST_REG   0x10
->+
->+/* conversion register */
->+#define MAX1027_TEMP      0x01
->+#define MAX1027_SCAN_0_N  (0x00 << 1)
->+#define MAX1027_SCAN_N_M  (0x01 << 1)
->+#define MAX1027_SCAN_N    (0x02 << 1)
->+#define MAX1027_NOSCAN    (0x03 << 1)
->+#define MAX1027_CHAN(n)   ((n) << 3)
->+
->+/* setup register */
->+#define MAX1027_UNIPOLAR  0x02
->+#define MAX1027_BIPOLAR   0x03
->+#define MAX1027_REF_MODE0 (0x00 << 2)
->+#define MAX1027_REF_MODE1 (0x01 << 2)
->+#define MAX1027_REF_MODE2 (0x02 << 2)
->+#define MAX1027_REF_MODE3 (0x03 << 2)
->+#define MAX1027_CKS_MODE0 (0x00 << 4)
->+#define MAX1027_CKS_MODE1 (0x01 << 4)
->+#define MAX1027_CKS_MODE2 (0x02 << 4)
->+#define MAX1027_CKS_MODE3 (0x03 << 4)
->+
->+/* averaging register */
->+#define MAX1027_NSCAN_4   0x00
->+#define MAX1027_NSCAN_8   0x01
->+#define MAX1027_NSCAN_12  0x02
->+#define MAX1027_NSCAN_16  0x03
->+#define MAX1027_NAVG_4    (0x00 << 2)
->+#define MAX1027_NAVG_8    (0x01 << 2)
->+#define MAX1027_NAVG_16   (0x02 << 2)
->+#define MAX1027_NAVG_32   (0x03 << 2)
->+#define MAX1027_AVG_EN    (0x01 << 4)
->+
->+enum max1027_id {
->+	max1027,
->+	max1029,
->+	max1031,
->+};
->+
->+static const struct spi_device_id max1027_id[] = {
->+	{"max1027", max1027},
->+	{"max1029", max1029},
->+	{"max1031", max1031},
->+	{}
->+};
->+MODULE_DEVICE_TABLE(spi, max1027_id);
->+
->+#ifdef CONFIG_OF
->+static const struct of_device_id max1027_adc_dt_ids[] = {
->+	{ .compatible = "maxim,max1027" },
->+	{ .compatible = "maxim,max1029" },
->+	{ .compatible = "maxim,max1031" },
->+	{},
->+};
->+MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
->+#endif
->+
->+#define MAX1027_V_CHAN(index)						\
->+	{								\
->+		.type = IIO_VOLTAGE,					\
->+		.indexed = 1,						\
->+		.channel = index,					\
->+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
->+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
->+		.scan_index = index+1,					\
->+		.scan_type = {						\
->+			.sign = 'u',					\
->+			.realbits = 10,					\
->+			.storagebits = 16,				\
->+			.shift = 2,					\
->+			.endianness = IIO_BE,				\
->+		},							\
->+	}
->+
->+#define MAX1027_T_CHAN(index)						\
->+	{								\
->+		.type = IIO_TEMP,					\
->+		.channel = index,					\
->+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
->+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
->+		.scan_index = index,					\
->+		.scan_type = {						\
->+			.sign = 'u',					\
->+			.realbits = 12,					\
->+			.storagebits = 16,				\
->+			.endianness = IIO_BE,				\
->+		},							\
->+	}
->+
->+static const struct iio_chan_spec max1027_channels[] = {
->+	MAX1027_T_CHAN(0),
->+	MAX1027_V_CHAN(0),
->+	MAX1027_V_CHAN(1),
->+	MAX1027_V_CHAN(2),
->+	MAX1027_V_CHAN(3),
->+	MAX1027_V_CHAN(4),
->+	MAX1027_V_CHAN(5),
->+	MAX1027_V_CHAN(6),
->+	MAX1027_V_CHAN(7)
->+};
->+
->+static const struct iio_chan_spec max1029_channels[] = {
->+	MAX1027_T_CHAN(0),
->+	MAX1027_V_CHAN(0),
->+	MAX1027_V_CHAN(1),
->+	MAX1027_V_CHAN(2),
->+	MAX1027_V_CHAN(3),
->+	MAX1027_V_CHAN(4),
->+	MAX1027_V_CHAN(5),
->+	MAX1027_V_CHAN(6),
->+	MAX1027_V_CHAN(7),
->+	MAX1027_V_CHAN(8),
->+	MAX1027_V_CHAN(9),
->+	MAX1027_V_CHAN(10),
->+	MAX1027_V_CHAN(11)
->+};
->+
->+static const struct iio_chan_spec max1031_channels[] = {
->+	MAX1027_T_CHAN(0),
->+	MAX1027_V_CHAN(0),
->+	MAX1027_V_CHAN(1),
->+	MAX1027_V_CHAN(2),
->+	MAX1027_V_CHAN(3),
->+	MAX1027_V_CHAN(4),
->+	MAX1027_V_CHAN(5),
->+	MAX1027_V_CHAN(6),
->+	MAX1027_V_CHAN(7),
->+	MAX1027_V_CHAN(8),
->+	MAX1027_V_CHAN(9),
->+	MAX1027_V_CHAN(10),
->+	MAX1027_V_CHAN(11),
->+	MAX1027_V_CHAN(12),
->+	MAX1027_V_CHAN(13),
->+	MAX1027_V_CHAN(14),
->+	MAX1027_V_CHAN(15)
->+};
->+
->+static unsigned long max1027_available_scan_masks[] = {
->+	0x000001ff,
->+	0x00000000,
->+};
->+
->+static unsigned long max1029_available_scan_masks[] = {
->+	0x00001fff,
->+	0x00000000,
->+};
->+
->+static unsigned long max1031_available_scan_masks[] = {
->+	0x0001ffff,
->+	0x00000000,
->+};
->+
->+struct max1027_chip_info {
->+	const struct iio_chan_spec *channels;
->+	unsigned int num_channels;
->+	unsigned long *available_scan_masks;
->+};
->+
->+static const struct max1027_chip_info max1027_chip_info_tbl[] = {
->+	[max1027] = {
->+		.channels = max1027_channels,
->+		.num_channels = ARRAY_SIZE(max1027_channels),
->+		.available_scan_masks = max1027_available_scan_masks,
->+	},
->+	[max1029] = {
->+		.channels = max1029_channels,
->+		.num_channels = ARRAY_SIZE(max1029_channels),
->+		.available_scan_masks = max1029_available_scan_masks,
->+	},
->+	[max1031] = {
->+		.channels = max1031_channels,
->+		.num_channels = ARRAY_SIZE(max1031_channels),
->+		.available_scan_masks = max1031_available_scan_masks,
->+	},
->+};
->+
->+struct max1027_state {
->+	struct max1027_chip_info	*info;
->+	struct spi_device		*spi;
->+	struct iio_trigger		*trig;
->+	u16				*buffer;
->+	struct mutex			lock;
->+};
->+
->+static int max1027_read_single_value(struct iio_dev *indio_dev,
->+				     struct iio_chan_spec const *chan,
->+				     int *val)
->+{
->+	int ret;
->+	unsigned char reg;
->+	struct max1027_state *st = iio_priv(indio_dev);
->+
->+	if (iio_buffer_enabled(indio_dev)) {
->+		dev_warn(&indio_dev->dev, "trigger mode already enabled");
->+		return -EIO;
->+	}
->+
->+	/* Start acquisition on conversion register write */
->+	reg = MAX1027_SETUP_REG | MAX1027_REF_MODE2 | MAX1027_CKS_MODE2;
->+	ret = spi_write(st->spi, (void *)&reg, 1);
->+	if (ret < 0) {
->+		dev_err(&indio_dev->dev,
->+			"Failed to configure setup register\n");
->+		return ret;
->+	}
->+
->+	/* Configure conversion register with the requested chan */
->+	reg = MAX1027_CONV_REG | MAX1027_CHAN(chan->channel)
->+		| MAX1027_NOSCAN | !!(chan->type == IIO_TEMP);
->+	ret = spi_write(st->spi, (void *)&reg, 1);
->+	if (ret < 0) {
->+		dev_err(&indio_dev->dev,
->+			"Failed to configure conversion register\n");
->+		return ret;
->+	}
->+
->+	/*
->+	 * For an unknown reason, when we use the mode "10" (write
->+	 * conversion register), the it doesn't occur every time.
->+	 * So we just wait 1 ms.
->+	 */
->+	mdelay(1);
->+
->+	/* Read result */
->+	ret = spi_read(st->spi, st->buffer, (chan->type == IIO_TEMP) ? 4 :
->2);
->+	if (ret < 0)
->+		return ret;
->+
->+	*val = be16_to_cpu(st->buffer[0]);
->+
->+	return IIO_VAL_INT;
->+}
->+
->+static int max1027_read_raw(struct iio_dev *indio_dev,
->+			    struct iio_chan_spec const *chan,
->+			    int *val, int *val2, long mask)
->+{
->+	int ret = 0;
->+	struct max1027_state *st = iio_priv(indio_dev);
->+
->+	mutex_lock(&st->lock);
->+
->+	switch (mask) {
->+	case IIO_CHAN_INFO_RAW:
->+		ret = max1027_read_single_value(indio_dev, chan, val);
->+		break;
->+	case IIO_CHAN_INFO_SCALE:
->+		switch (chan->type) {
->+		case IIO_TEMP:
->+			*val = 1;
->+			*val2 = 8;
->+			ret = IIO_VAL_FRACTIONAL;
->+			break;
->+		case IIO_VOLTAGE:
->+			*val = 2500;
->+			*val2 = 10;
->+			ret = IIO_VAL_FRACTIONAL_LOG2;
->+			break;
->+		default:
->+			ret = -EINVAL;
->+			break;
->+		};
->+		break;
->+	default:
->+		ret = -EINVAL;
->+		break;
->+	};
->+
->+	mutex_unlock(&st->lock);
->+
->+	return ret;
->+}
->+
->+static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
->+				  unsigned reg, unsigned writeval,
->+				  unsigned *readval)
->+{
->+	unsigned char val;
->+	struct max1027_state *st = iio_priv(indio_dev);
->+
->+	if (readval != NULL)
->+		return -EINVAL;
->+
->+	val = (unsigned char)writeval;
->+	return spi_write(st->spi, (void *)&val, 1);
->+}
->+
->+static int max1027_set_trigger_state(struct iio_trigger *trig, bool
->state)
->+{
->+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
->+	struct max1027_state *st = iio_priv(indio_dev);
->+	unsigned char reg;
->+	int ret;
->+
->+	if (state) {
->+		/* Start acquisition on cnvst */
->+		reg = MAX1027_SETUP_REG | MAX1027_CKS_MODE0 | MAX1027_REF_MODE2;
->+		ret = spi_write(st->spi, (void *)&reg, 1);
->+		if (ret < 0)
->+			return ret;
->+
->+		/* Scan from 0 to max */
->+		reg = MAX1027_CONV_REG | MAX1027_CHAN(0)
->+			| MAX1027_SCAN_N_M | MAX1027_TEMP;
->+		ret = spi_write(st->spi, (void *)&reg, 1);
->+		if (ret < 0)
->+			return ret;
->+	} else {
->+		/* Start acquisition on conversion register write */
->+		reg = MAX1027_SETUP_REG | MAX1027_CKS_MODE2 | MAX1027_REF_MODE2;
->+		ret = spi_write(st->spi, (void *)&reg, 1);
->+		if (ret < 0)
->+			return ret;
->+	}
->+
->+	return 0;
->+}
->+
+The General Purpose Timer block can be run with two clocks. A 13 MHz system
+clock and the RTC clock running at 32 KHz. This implementation uses the system
+clock with no clock source divider.
 
-This is a very common case so we have a generic function for it so use that...
+The interrupts are shared between the different timers and have to be read back
+from a register. We just enable one interrupt for the clock event. The clock
+event timer is used by all cores.
 
-iio_trigger_generic_data_poll
-Note that the private data is the trigger structure rather than the iio_Dev
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/clocksource/Kconfig     |    4 +
+ drivers/clocksource/Makefile    |    1 +
+ drivers/clocksource/mtk_timer.c |  242 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 247 insertions(+)
+ create mode 100644 drivers/clocksource/mtk_timer.c
 
-Also if this only works of the buffer is enabled you need to enforce that using the relevant call backs... Validate_device and validate_trigger. Probably start by only letting the device and trigger bind. 
-
-One day we will work out a clean way of falling back to polled reads if using any other trigger!
-
->+static irqreturn_t max1027_interrupt_handler(int irq, void *private)
->+{
->+	struct iio_dev *indio_dev = (struct iio_dev *)private;
->+
->+	pr_debug("%s(irq=%d, private=0x%p)\n", __func__, irq, private);
->+
->+	if (iio_buffer_enabled(indio_dev))
->+		iio_trigger_poll(indio_dev->trig, iio_get_time_ns());
->+
->+	return IRQ_HANDLED;
->+}
->+
->+static irqreturn_t max1027_trigger_handler(int irq, void *private)
->+{
->+	struct iio_poll_func *pf = (struct iio_poll_func *)private;
->+	struct iio_dev *indio_dev = pf->indio_dev;
->+	struct max1027_state *st = iio_priv(indio_dev);
->+
->+	pr_debug("%s(irq=%d, private=0x%p)\n", __func__, irq, private);
->+
->+	/* fill buffer with all channel */
->+	spi_read(st->spi, st->buffer, indio_dev->masklength * 2);
->+
->+	iio_push_to_buffers_with_timestamp(indio_dev, st->buffer,
->+					   iio_get_time_ns());
->+
->+	iio_trigger_notify_done(indio_dev->trig);
->+
->+	return IRQ_HANDLED;
->+}
->+
->+static const struct iio_trigger_ops max1027_trigger_ops = {
->+	.owner = THIS_MODULE,
->+	.set_trigger_state = &max1027_set_trigger_state,
->+};
->+
->+static const struct iio_info max1027_info = {
->+	.driver_module = THIS_MODULE,
->+	.read_raw = &max1027_read_raw,
->+	.debugfs_reg_access = &max1027_debugfs_reg_access,
->+};
->+
->+static int max1027_probe(struct spi_device *spi)
->+{
->+	int err;
->+	unsigned char reg;
->+	struct iio_dev *indio_dev;
->+	struct max1027_state *st;
->+
->+	pr_debug("%s: probe(spi = 0x%p)\n", __func__, spi);
->+
->+	/* allocate iio device */
->+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
->+	if (indio_dev == NULL) {
->+		pr_err("can't allocate iio device\n");
->+		return -ENOMEM;
->+	}
->+
->+	spi_set_drvdata(spi, indio_dev);
->+
->+	st = iio_priv(indio_dev);
->+	st->spi = spi;
->+	st->buffer = NULL;
->+	st->info = (struct max1027_chip_info *)
->+		&max1027_chip_info_tbl[spi_get_device_id(spi)->driver_data];
->+
->+	mutex_init(&st->lock);
->+
->+	/* request irq */
->+	err = devm_request_threaded_irq(&spi->dev, spi->irq,
->+					max1027_interrupt_handler,
->+					NULL,
->+					IRQF_TRIGGER_FALLING,
->+					spi->dev.driver->name, indio_dev);
->+	if (err < 0) {
->+		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
->+		return err;
->+	}
->+
->+	indio_dev->name = spi_get_device_id(spi)->name;
->+	indio_dev->dev.parent = &spi->dev;
->+	indio_dev->info = &max1027_info;
->+	indio_dev->modes = INDIO_DIRECT_MODE;
->+	indio_dev->channels = st->info->channels;
->+	indio_dev->num_channels = st->info->num_channels;
->+	indio_dev->available_scan_masks = st->info->available_scan_masks;
->+
->+	/* Allocate buffer (data) */
->+	st->buffer = devm_kmalloc(&indio_dev->dev,
->+				  indio_dev->num_channels * 2,
->+				  GFP_KERNEL);
->+	if (st->buffer == NULL) {
->+		dev_err(&indio_dev->dev, "Can't allocate bufffer\n");
->+		return -ENOMEM;
->+	}
->+
->+	/* Allocate buffer */
->+	err = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
->+					 &max1027_trigger_handler, NULL);
->+	if (err < 0) {
->+		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
->+		return err;
->+	}
->+
->+	/* Allocate trigger */
->+	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
->+							indio_dev->name);
->+	if (st->trig == NULL) {
->+		err = -ENOMEM;
->+		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
->+		goto fail_trigger_alloc;
->+	}
->+
->+	/* configure and register trigger */
->+	st->trig->ops = &max1027_trigger_ops;
->+	st->trig->dev.parent = &spi->dev;
->+	iio_trigger_set_drvdata(st->trig, indio_dev);
->+	iio_trigger_register(st->trig);
->+
->+	/* Disable averaging */
->+	reg = MAX1027_AVG_REG;
->+	err = spi_write(st->spi, (void *)&reg, 1);
->+	if (err < 0) {
->+		dev_err(&indio_dev->dev, "Failed to configure averaging
->register\n");
->+		goto fail_dev_register;
->+	}
->+
->+	/* Register the device */
->+	err = iio_device_register(indio_dev);
->+	if (err < 0) {
->+		dev_err(&indio_dev->dev, "Failed to register iio device\n");
->+		goto fail_dev_register;
->+	}
->+
->+	return 0;
->+
->+fail_dev_register:
->+fail_trigger_alloc:
->+	iio_triggered_buffer_cleanup(indio_dev);
->+
->+	return err;
->+}
->+
->+static int max1027_remove(struct spi_device *spi)
->+{
->+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
->+
->+	pr_debug("%s: remove(spi = 0x%p)\n", __func__, spi);
->+
->+	iio_device_unregister(indio_dev);
->+	iio_triggered_buffer_cleanup(indio_dev);
->+
->+	return 0;
->+}
->+
->+static struct spi_driver max1027_driver = {
->+	.driver = {
->+		.name	= "max1027",
->+		.owner	= THIS_MODULE,
->+	},
->+	.probe		= max1027_probe,
->+	.remove		= max1027_remove,
->+	.id_table	= max1027_id,
->+};
->+module_spi_driver(max1027_driver);
->+
->+MODULE_AUTHOR("Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>");
->+MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
->+MODULE_LICENSE("GPL v2");
-
+diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
+index 96918e1..1f73740 100644
+--- a/drivers/clocksource/Kconfig
++++ b/drivers/clocksource/Kconfig
+@@ -144,6 +144,10 @@ config VF_PIT_TIMER
+ config SYS_SUPPORTS_SH_CMT
+         bool
+ 
++config MTK_TIMER
++	select CLKSRC_MMIO
++	bool
++
+ config SYS_SUPPORTS_SH_MTU2
+         bool
+ 
+diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
+index 98cb6c5..619d302 100644
+--- a/drivers/clocksource/Makefile
++++ b/drivers/clocksource/Makefile
+@@ -33,6 +33,7 @@ obj-$(CONFIG_CLKSRC_EXYNOS_MCT)	+= exynos_mct.o
+ obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+= samsung_pwm_timer.o
+ obj-$(CONFIG_VF_PIT_TIMER)	+= vf_pit_timer.o
+ obj-$(CONFIG_CLKSRC_QCOM)	+= qcom-timer.o
++obj-$(CONFIG_MTK_TIMER)		+= mtk_timer.o
+ 
+ obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
+ obj-$(CONFIG_ARM_GLOBAL_TIMER)		+= arm_global_timer.o
+diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+new file mode 100644
+index 0000000..8e8b94a
+--- /dev/null
++++ b/drivers/clocksource/mtk_timer.c
+@@ -0,0 +1,242 @@
++/*
++ * Mediatek SoCs General-Purpose Timer handling.
++ *
++ * Copyright (C) 2014 Matthias Brugger
++ *
++ * Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/clk.h>
++#include <linux/clockchips.h>
++#include <linux/interrupt.h>
++#include <linux/irq.h>
++#include <linux/irqreturn.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/slab.h>
++
++#define GPT_IRQ_EN_REG		0x00
++#define GPT_IRQ_ENABLE(val)	BIT(val-1)
++#define GPT_IRQ_ACK_REG		0x08
++#define GPT_IRQ_ACK(val)	BIT(val-1)
++
++#define TIMER_CTRL_REG(val)	(0x10 * val)
++#define TIMER_CTRL_OP(val)	(((val) & 0x3) << 4)
++#define TIMER_CTRL_OP_ONESHOT	(0)
++#define TIMER_CTRL_OP_REPEAT	(1)
++#define TIMER_CTRL_OP_FREERUN	(3)
++#define TIMER_CTRL_CLEAR	(2)
++#define TIMER_CTRL_ENABLE	(1)
++#define TIMER_CTRL_DISABLE	(0)
++
++#define TIMER_CLK_REG(val)	(0x04 + (0x10 * val))
++#define TIMER_CLK_SRC(val)	(((val) & 0x1) << 4)
++#define TIMER_CLK_SRC_SYS13M	(0)
++#define TIMER_CLK_SRC_RTC32K	(1)
++#define TIMER_CLK_DIV1		(0x0)
++#define TIMER_CLK_DIV2		(0x1)
++
++#define TIMER_CNT_REG(val)	(0x08 + (0x10 * val))
++#define TIMER_CMP_REG(val)	(0x0C + (0x10 * val))
++
++#define GPT_CLK_EVT	1
++#define GPT_CLK_SRC	2
++
++struct mtk_clock_event_device {
++	void __iomem *gpt_base;
++	u32 ticks_per_jiffy;
++	struct clock_event_device dev;
++};
++
++static inline struct mtk_clock_event_device *to_mtk_clk(
++				struct clock_event_device *c)
++{
++	return container_of(c, struct mtk_clock_event_device, dev);
++}
++
++static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
++{
++	u32 val = readl(evt->gpt_base + TIMER_CTRL_REG(timer));
++	writel(val & ~TIMER_CTRL_ENABLE, evt->gpt_base +
++			TIMER_CTRL_REG(timer));
++}
++
++static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
++				unsigned long delay, u8 timer)
++{
++	writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
++}
++
++static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
++		bool periodic, u8 timer)
++{
++	u32 val;
++
++	/* Acknowledge interrupt */
++	writel(GPT_IRQ_ACK(timer), evt->gpt_base + GPT_IRQ_ACK_REG);
++
++	val = readl(evt->gpt_base + TIMER_CTRL_REG(timer));
++
++	/* Clear 2 bit timer operation mode field */
++	val &= ~TIMER_CTRL_OP(0x3);
++
++	if (periodic)
++		val |= TIMER_CTRL_OP(TIMER_CTRL_OP_REPEAT);
++	else
++		val |= TIMER_CTRL_OP(TIMER_CTRL_OP_ONESHOT);
++
++	writel(val | TIMER_CTRL_ENABLE | TIMER_CTRL_CLEAR,
++	       evt->gpt_base + TIMER_CTRL_REG(timer));
++}
++
++static void mtk_clkevt_mode(enum clock_event_mode mode,
++				struct clock_event_device *clk)
++{
++	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
++
++	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
++
++	switch (mode) {
++	case CLOCK_EVT_MODE_PERIODIC:
++		mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
++		mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
++		break;
++	case CLOCK_EVT_MODE_ONESHOT:
++		mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
++		break;
++	case CLOCK_EVT_MODE_UNUSED:
++	case CLOCK_EVT_MODE_SHUTDOWN:
++	default:
++		/* No more interrupts will occur as source is disabled */
++		break;
++	}
++}
++
++static int mtk_clkevt_next_event(unsigned long event,
++				   struct clock_event_device *clk)
++{
++	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
++
++	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
++	mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
++	mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
++
++	return 0;
++}
++
++static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
++{
++	struct mtk_clock_event_device *evt = dev_id;
++
++	/* Acknowledge timer0 irq */
++	writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
++	evt->dev.event_handler(&evt->dev);
++
++	return IRQ_HANDLED;
++}
++
++static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
++{
++	/* Disable all interrupts */
++	writel(0x0, evt->gpt_base + GPT_IRQ_EN_REG);
++	/* Acknowledge all interrupts */
++	writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
++}
++
++static void
++mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
++{
++	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
++		evt->gpt_base + TIMER_CTRL_REG(timer));
++
++	writel(TIMER_CLK_SRC(TIMER_CLK_SRC_SYS13M) | TIMER_CLK_DIV1,
++			evt->gpt_base + TIMER_CLK_REG(timer));
++
++	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
++
++	writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
++			evt->gpt_base + TIMER_CTRL_REG(timer));
++}
++
++static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
++{
++	u32 val;
++
++	val = readl(evt->gpt_base + GPT_IRQ_EN_REG);
++	writel(val | GPT_IRQ_ENABLE(timer),
++			evt->gpt_base + GPT_IRQ_EN_REG);
++}
++
++static void __init mtk_timer_init(struct device_node *node)
++{
++	struct mtk_clock_event_device *evt;
++	struct resource res;
++	unsigned long rate = 0;
++	struct clk *clk;
++	int ret;
++
++	evt = kzalloc(sizeof(*evt), GFP_KERNEL);
++	if (!evt)
++		panic("Can't allocate mtk clock event driver struct");
++
++	evt->dev.name = "mtk_tick";
++	evt->dev.rating = 300;
++	evt->dev.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
++	evt->dev.set_mode = mtk_clkevt_mode;
++	evt->dev.set_next_event = mtk_clkevt_next_event;
++	evt->dev.cpumask = cpu_possible_mask;
++
++	if (of_address_to_resource(node, 0, &res))
++		panic("Failed to parse resource\n");
++
++	if (!request_mem_region(res.start, resource_size(&res), "mtk-timer"))
++		panic("Registers are a busy IO resource");
++
++	evt->gpt_base = ioremap(res.start, resource_size(&res));
++	if (!evt->gpt_base)
++		panic("Can't map registers");
++
++	evt->dev.irq = irq_of_parse_and_map(node, 0);
++	if (evt->dev.irq <= 0)
++		panic("Can't parse IRQ");
++
++	clk = of_clk_get(node, 0);
++	if (IS_ERR(clk))
++		panic("Can't get timer clock");
++
++	clk_prepare_enable(clk);
++	rate = clk_get_rate(clk);
++
++	ret = request_irq(evt->dev.irq, mtk_timer_interrupt,
++			IRQF_TIMER | IRQF_IRQPOLL, "mtk_timer", evt);
++	if (ret)
++		pr_warn("failed to setup irq %d\n", evt->dev.irq);
++
++	evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
++
++	mtk_timer_global_reset(evt);
++
++	/* Configure clock source */
++	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
++	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
++			node->name, rate, 300, 32, clocksource_mmio_readl_up);
++
++	/* Configure clock event */
++	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
++	mtk_timer_enable_irq(evt, GPT_CLK_EVT);
++
++	clockevents_config_and_register(&evt->dev, rate, 0x3,
++					0xffffffff);
++}
++CLOCKSOURCE_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_timer_init);
 -- 
-Sent from my Android phone with K-9 Mail. Please excuse my brevity.
+1.7.9.5
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
