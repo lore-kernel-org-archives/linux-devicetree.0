@@ -1,93 +1,115 @@
-From: Tarek Dakhran <t.dakhran@gmail.com>
-Subject: Re: [PATCH v11 0/3] Exynos 5410 support
-Date: Fri, 30 May 2014 23:15:46 +0400
-Message-ID: <CANhyOUf0coACaziesgSXsL3Vy-sypxS_Eo=Cb-2OEAaBodep=w@mail.gmail.com>
-References: <1401074613-29227-1-git-send-email-t.dakhran@samsung.com>
-	<7hr43f9mmn.fsf@paris.lan>
-	<538737CA.4070709@suse.de>
-	<53874862.5080809@samsung.com>
-	<538775AB.3000604@suse.de>
-	<CAC5m3Bz53QO5tTTvk7qnBQtwtjMvSgYZ15prAvnLjdogQRsfMQ@mail.gmail.com>
-	<CAK9yfHwatFrQ9ssjJXi=eR3mz95xWQeRJ4-vkteR_Npksa3+tg@mail.gmail.com>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
+Date: Fri, 30 May 2014 22:29:13 +0300
+Message-ID: <87tx87rrp2.fsf@nvidia.com>
+References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
+	<CAL_JsqKumG1PSFoVfeGpLLG+MjXFeF4aUjun=vv1BJpaxk0Byg@mail.gmail.com>
+	<4545972.cM7IP1qTXQ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAK9yfHwatFrQ9ssjJXi=eR3mz95xWQeRJ4-vkteR_Npksa3+tg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <sachin.kamat@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Tarek Dakhran <t.dakhran@gmail.com>
-Cc: Tushar Behera <trblinux@gmail.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Tarek Dakhran <t.dakhran@samsung.com>, Kevin Hilman <khilman@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <4545972.cM7IP1qTXQ@wuerfel>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
 
-On Fri, May 30, 2014 at 10:16 PM, Sachin Kamat <sachin.kamat@linaro.org=
-> wrote:
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+
+>> > +Multiple-master IOMMU:
+>> > +----------------------
+>> > +
+>> > +       iommu {
+>> > +               /* the specifier represents the ID of the master */
+>> > +               #address-cells = <1>;
+>> > +               #size-cells = <0>;
+>> > +       };
+>> > +
+>> > +       master {
+>> > +               /* device has master ID 42 in the IOMMU */
+>> > +               iommus = <&/iommu 42>;
+>> > +       };
+>> 
+>> Presumably the ID would be the streamID on ARM's SMMU. How would a
+>> master with 8 streamIDs be described? This is what Calxeda midway has
+>> for SATA and I would expect that to be somewhat common. Either you
+>> need some ID masking or you'll have lots of duplication when you have
+>> windows.
 >
+> I don't understand the problem. If you have stream IDs 0 through 7,
+> you would have
 >
-> On Friday, 30 May 2014, Tushar Behera <trblinux@gmail.com> wrote:
->>
->> On Thu, May 29, 2014 at 11:30 PM, Andreas F=C3=A4rber <afaerber@suse=
-=2Ede> wrote:
->> > Hi Tarek,
->> >
->> >
->> > And I reproducibly get failures for CPUs 1-3, resulting in only on=
-e CPU
->> > in /proc/cpuinfo (compared to 4 on downstream 3.14):
->> >
->> > [    0.045778] CPU: Testing write buffer coherency: ok
->> > [    0.045968] /cpus/cpu@0 missing clock-frequency property
->> > [    0.045993] /cpus/cpu@1 missing clock-frequency property
->> > [    0.046016] /cpus/cpu@2 missing clock-frequency property
->> > [    0.046040] /cpus/cpu@3 missing clock-frequency property
->> > [    0.046059] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
->> > [    0.046135] Setting up static identity map for 0x403a8920 -
->> > 0x403a8978
->> > [    2.075052] CPU1: failed to come online
->> > [    4.085095] CPU2: failed to come online
->> > [    6.095142] CPU3: failed to come online
->> > [    6.095237] Brought up 1 CPUs
->> > [    6.095269] SMP: Total of 1 processors activated.
->> > [    6.095303] CPU: All CPU(s) started in HYP mode.
->> > [    6.095336] CPU: Virtualization extensions available.
->> >
->> > I also notice another apparent device tree issue:
->> >
->> > [    7.341814] of_get_named_gpiod_flags: can't parse gpios propert=
-y of
->> > node '/soc/mmc@12220000/slot@0[0]'
->> > [    7.341850] of_get_named_gpiod_flags: can't parse gpios propert=
-y of
->> > node '/soc/mmc@12220000/slot@0[0]'
->> >
->> > Are any of those known issues and being worked on?
->> > (The CPU failures affected 5420 Arndale Octa as well iirc.)
->> >
-
-[snip]
-
->>
->> [1] http://www.spinics.net/lists/linux-samsung-soc/msg31776.html
->>
->> [PATCH v2 Resend 1/2] ARM: EXYNOS: Update secondary boot addr for se=
-cure
->> mode
->>
->> [2] http://www.spinics.net/lists/linux-samsung-soc/msg31777.html
->>
->> [PATCH v2 Resend 2/2] ARM: dts: Add secure firmware support for
->> Arndale-octa
->>
->>
->> Kukjin,
+> 	master@a {
+> 		...
+> 		iommus = <&smmu 0>;
+> 	};
 >
-> Can you please apply the above patches?
+> 	master@b {
+> 		...
+> 		iommus = <&smmu 1;
+> 	};
 >
+> 	...
+>
+> 	master@12 {
+> 		...
+> 		iommus = <&smmu 7;
+> 	};
+>
+> and you don't need a window at all. Why would you need a mask of
+> some sort?
 
-Patches [1], [2] tested on ODROID-XU, SMDK5410 and Arndale Octa boards.
+IIUC the original problem, "a master with 8 streamIDs" means something
+like below, where some devices have multiple IDs but some have a
+single. A sinle #address-cells cannot afford those 2 masters at once.
 
-Tested-by: Tarek Dakhran <t.dakhran@samsung.com>
+       iommu {
+               /* the specifier represents the ID of the master */
+               #address-cells = <1>;
+               #size-cells = <0>;
+       };
 
-Best regards,
-     Tarek
+ 	master@a {
+ 		...
+ 		iommus = <&smmu 1 2 3>; # 3 IDs
+ 	};
+
+ 	master@b {
+ 		...
+ 		iommus = <&smmu 4>;     # 1 ID
+ 	};
+
+Tegra,SMMU has a similar problem and we have used a fixed size bitmap(64
+bit) to afford 64 stream IDs so that a single device can hold multiple
+IDs. If we apply the same bitmap to the above exmaple:
+
+       iommu {
+               /* the specifier represents the ID of the master */
+               #address-cells = <1>;
+               #size-cells = <0>;
+       };
+
+ 	master@a {
+ 		...
+ 		iommus = <&smmu (BIT(1) | BIT(2) | BIT(3))>; # IDs 1 2 3
+ 	};
+
+ 	master@b {
+ 		...
+ 		iommus = <&smmu BIT(4)>;     # ID 4
+ 	};
+
+The disadvantage of this is that this limits the max number of streamIDs
+to support. If # of streamID is increased later more than 64, this
+format cannot cover any more. You have to predict the max # of streamIDs
+in advance if steamID is statically assigned.
