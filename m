@@ -1,43 +1,119 @@
-MIME-Version: 1.0
-In-Reply-To: <1401301204-12834-1-git-send-email-sudeep.holla@arm.com>
-References: <1401301204-12834-1-git-send-email-sudeep.holla@arm.com>
-Date: Wed, 28 May 2014 13:45:32 -0500
-Message-ID: <CAL_JsqLvseiwokJTAUZc=5SSz5RjEk8ouoWHoHphe6h0hr-eeg@mail.gmail.com>
-Subject: Re: [PATCH] of: return -ENOSYS instead of -EINVAL in stub implementations
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-List-ID: <devicetree@vger.kernel.org>
+From: "Handrigan, Paul" <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] ASoC: Add support for CS4265 CODEC
+Date: Sat, 31 May 2014 22:08:24 +0000
+Message-ID: <0FB99937-124F-489E-B4A5-15BA0E91CA1B@cirrus.com>
+References: <1400872614-21666-1-git-send-email-Paul.Handrigan@cirrus.com>
+ <1400872614-21666-2-git-send-email-Paul.Handrigan@cirrus.com>,<20140523203945.GN22111@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140523203945.GN22111-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Content-Language: en-US
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Austin, Brian" <Brian.Austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "pawel.moll-5wv7dgnIgG8@public.gmane.org" <pawel.moll-5wv7dgnIgG8@public.gmane.org>, "mark.rutland-5wv7dgnIgG8@public.gmane.org" <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Id: devicetree@vger.kernel.org
 
-On Wed, May 28, 2014 at 1:20 PM, Sudeep Holla <sudeep.holla@arm.com> wrote:
-> From: Sudeep Holla <sudeep.holla@arm.com>
->
-> Currently the stub implementation(when !CONFIG_OF) of few of_* helpers
-> return -EINVAL. This makes it difficult to distinguish between the
-> function not being implemented and the function returning error due to
-> invalid parameters.
->
-> This patch replaces -EINVAL with -ENOSYS in the stub implementations
-> of those of_* helpers.
->
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
-> ---
->  include/linux/of_address.h | 2 +-
->  include/linux/of_iommu.h   | 2 +-
->  include/linux/of_irq.h     | 2 +-
->  include/linux/of_pci.h     | 2 +-
->  4 files changed, 4 insertions(+), 4 deletions(-)
->
-> Hi,
->
-> This was identified on one of the patch review on LKML[1].
-> Looking into the of_* helpers revealed few such instances.
 
-I don't see the problem. In the !OF case, of_node_get will always be NULL, so the return code does not matter because the whole if statement is dead code.
 
-I'm not wholesale changing return codes unless there is a real problem.
+> On May 23, 2014, at 3:40 PM, "Mark Brown" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+> 
+>> On Fri, May 23, 2014 at 02:16:54PM -0500, Paul Handrigan wrote:
+>> This patch adds support for the Cirrus Logic Stereo I2C CODEC
+> 
+> This all looks pretty clean and nice, I have got a few comments below
+> but they're all pretty small things.
+> 
+>> +    SOC_SINGLE("De-emp 44.1kHz", CS4265_DAC_CTL, 1,
+>> +                1, 0),
+>> +    SOC_SINGLE("DAC INV", CS4265_DAC_CTL2, 5,
+>> +                1, 0),
+>> +    SOC_SINGLE("DAC Zero Cross", CS4265_DAC_CTL2, 6,
+>> +                1, 0),
+>> +    SOC_SINGLE("DAC Soft Ramp", CS4265_DAC_CTL2, 7,
+>> +                1, 0),
+> 
+> All boolean controls should have Switch at the end of the name.
+> 
+>> +    SOC_SINGLE("ADC HPF Disable", CS4265_ADC_CTL, 1,
+>> +                1, 0),
+> 
+> Invert this one and call it ADC HPF Switch (similarly for other disable
+> controls).
+> 
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(clk_map_table); i++) {
+>> +        if (clk_map_table[i].rate == rate &&
+>> +            clk_map_table[i].mclk == mclk)
+>> +            return i;
+> 
+> Indent the second line of the if condition with the (.
+> 
+>> +static int cs4265_set_sysclk(struct snd_soc_dai *codec_dai, int clk_id,
+>> +            unsigned int freq, int dir)
+>> +{
+>> +    struct snd_soc_codec *codec = codec_dai->codec;
+>> +    struct cs4265_private *cs4265 = snd_soc_codec_get_drvdata(codec);
+>> +    int i;
+>> +
+>> +    for (i = 0; i < ARRAY_SIZE(clk_map_table); i++) {
+>> +        if (clk_map_table[i].mclk == freq) {
+> 
+> It's better to check that clk_id is 0 here, just in case you think of
+> another clock to control in future (perhaps with a new device that can
+> share the same driver even if it's not possible for this one).
+> 
+>> +    {
+>> +        .name = "cs4265-spdif",
+>> +        .playback = {
+>> +            .stream_name = "SPDIF Playback",
+>> +            .channels_min = 1,
+>> +            .channels_max = 2,
+>> +            .rates = CS4265_SPDIF_RATES,
+>> +            .formats = CS4265_FORMATS,
+>> +        },
+>> +        .ops = &cs4265_ops,
+>> +    },
+> 
+> You should have separate operations for the DAC and S/PDIF DAIs and only
+> mute the relevant interfaces.  If you can't mute the DAC DAIs
+> independently just don't provide an operation and let the user control
+> it as they like.  This avoids problems if more than one stream is
+> running at once.
 
-Rob
+I am going to remove the S/PDIF DAI.  Since it is TX only.
+> 
+>> +static int cs4265_probe(struct snd_soc_codec *codec)
+>> +{
+>> +    return 0;
+>> +}
+> 
+> Remove empty operations.
+> 
+>> +    } else {
+>> +        pdata = devm_kzalloc(&i2c_client->dev,
+>> +                     sizeof(struct cs4265_platform_data),
+>> +                GFP_KERNEL);
+>> +        if (!pdata) {
+>> +            dev_err(&i2c_client->dev, "could not allocate pdata\n");
+>> +            return -ENOMEM;
+>> +        }
+>> +        pdata->reset_gpio = of_get_named_gpio(i2c_client->dev.of_node,
+>> +                        "reset-gpio", 0);
+>> +        cs4265->pdata = *pdata;
+>> +    }
+> 
+> Can you convert this to use the new gpiod_ APIs and directly request by
+> name?  There's also the -gpios thing I mentioned for the binding.
+> 
+>> +    ret =  snd_soc_register_codec(&i2c_client->dev,
+>> +            &soc_codec_dev_cs4265, cs4265_dai,
+>> +            ARRAY_SIZE(cs4265_dai));
+>> +    return ret;
+> 
+> devm_
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
