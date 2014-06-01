@@ -1,53 +1,51 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] of_regulator: use of_property_read_{bool|u32}()
-Date: Sun, 1 Jun 2014 11:56:47 +0100
-Message-ID: <20140601105647.GD5099@sirena.org.uk>
-References: <201405270027.20092.sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] spi: dw-mmio: add oftree support
+Date: Sun, 1 Jun 2014 11:59:48 +0100
+Message-ID: <20140601105948.GE5099@sirena.org.uk>
+References: <1400838828-30998-1-git-send-email-s.trumtrar@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="2mUf73N0HmzM2Naa"
+	protocol="application/pgp-signature"; boundary="PtV1LuJoEDsm7sfb"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201405270027.20092.sergei.shtylyov@cogentembedded.com>
+In-Reply-To: <1400838828-30998-1-git-send-email-s.trumtrar@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
 
---2mUf73N0HmzM2Naa
+--PtV1LuJoEDsm7sfb
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, May 27, 2014 at 12:27:19AM +0400, Sergei Shtylyov wrote:
-> Use more compact of_property_read_{bool|u32}() calls instead of the
-> of_{find|get}_property() calls in of_get_regulation_constraints() where
-> possible (note that of_property_read_{bool|u32}() were already used to read
-> some properties).
+On Fri, May 23, 2014 at 11:53:48AM +0200, Steffen Trumtrar wrote:
+> Allow probing the dw-mmio from devicetree.
 
-Applied, thanks.  Please use subject lines matching the style for the
-subsystem.
+This doesn't apply against current code, can you please check and
+resend.  Please also try to avoid making up terms like "oftree" - OF or
+DT are perfectly fine.
 
---2mUf73N0HmzM2Naa
+--PtV1LuJoEDsm7sfb
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTiwbsAAoJELSic+t+oim9XL8P+gMJLlRSzir+b0aQrnVeg/eQ
-AcU6yH8vK9phKYWuFIXEU1RUmrRTEAkJ83p2LDgOMTYRFmKQm+5akHO82/fDHSIL
-675UZOxyG1mjQhidcKxHZ3cQho/tK/ABshVbF5IgkrV9V2i0uSiOH7KPNg5dETf8
-cdEiY1KH8SOcq4iwyq8AwJXSJ8jqS/paWqkgdZgXBpP+iQI5R118q/Ra2aA0EcCs
-ghLltK/wW0bueIHiQHAImFXlGxnlvTWwv7ch8U4F4FoqtS1qSFjZ4QQIH1QkURyZ
-2vBccC25aQToIH7kMHqO4T/4KqXrILR5NhHtuTPt3TxHfMCVtguTrn4A26nQJkfC
-dtM6Pwg979o9BFKJ/JQjTSYqFONf13Gi0ixxRey/niJ2pw8dtOY5hREZN3+UdjQi
-/ZyOmsYFMvJwjTHB9aNVpeYWSH5LvGa/h1TPQuv8G9GnvoZwhVH3qgk1Pls1z5Nc
-eKEn+SqL1w1WmJDv3gNrVNxWgs1WDvWv551KhYgVgCFWooWSsQelJTotY4fPm2vB
-YwXOu7x4MDdoTbxybQK7gSt2QuwfM4bH7ynnzMIi7mVbUr1iDG2+3IEK/QcX/Uk9
-l3JJlQVAYORv57tnE1YPc/hOsvC5Vac7C7UVBKjX7W6Mpc0qZSuRMnzLwEtRNoWz
-F/PBD3CclA+lJUZhgw3R
-=fxr1
+iQIcBAEBAgAGBQJTiwegAAoJELSic+t+oim9CrQQAJJta+RKmLRys10dn8jRERbk
+XCfEjIHeKs45C8YzbalbVFIIEnIgN+eq6LQ2FrZxYgXt6AtSXCcje9Juc1y08J17
+Q03XaLZg092zaO26THZiM+DnXUrcP8xcX6KXMnCJ+ztySlggJZvPdIOBNmbMjIRM
+/MTFEOCHX+2zcanb+dMM0p2TWRpQdFyKziP0MVcHFXq2KZ05DekFwdw8/soTuxAX
+M6dM84Z2QlzalWqhNcxR7m7QwNf4TXAx/LaMXZmDTen2/okfOQpRFant425o6jcJ
+B9bk+MW6XWvOTEwfGecuEv9A8NHesJBS/SPdmX9Mo2mCoRevzuJfi6YGIEAXDOYu
+K2lfTFv8K/eNHiN3Mt7J3nT55JMV/50t34AwuzPJ3MUfpv0BiDgcjCJVwHm7+tYl
+ujcF8O/An2BssFHqztcaJjBN5PIpH5XYz7stK5g672/C0dMl33tMAbDuwTwreXtD
+6n267R3gJmYDLJS+BQmfkjqbjmv+RZ0SzvE6TNLiTE00U2eu4TPMfisJva/+Qex2
+YLd11Lr3LUQL80sCsL4UeLN32oVUfO36x5o0ZklnV+c0rOhpArYvi8xS92QW3/cR
+CUwjvgv/OS8BPDmelDJCo4OvnndjAbPNtfpUzKOwys6YyDUFTLqWDShTtyKVxq7Y
+Zknfdt0OljpfIw+a3zTy
+=zo+x
 -----END PGP SIGNATURE-----
 
---2mUf73N0HmzM2Naa--
+--PtV1LuJoEDsm7sfb--
