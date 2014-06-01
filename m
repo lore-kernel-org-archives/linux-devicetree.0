@@ -1,28 +1,44 @@
-From: Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH trivial] of: dma: Grammar s/requests/request/, s/used
- required/required/
-Date: Sun, 1 Jun 2014 23:10:43 +0530
-Message-ID: <20140601174043.GT21128@intel.com>
-References: <1400834075-21278-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1400834075-21278-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: Jiri Kosina <trivial-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] power: ab8500_fg.c:  Cleaning up uninitialized variables
+Date: Sun,  1 Jun 2014 22:03:23 +0200
+Message-ID: <1401653003-10670-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 23, 2014 at 10:34:35AM +0200, Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+In this case the wrong variable is used, which has never been initialized.
+This will lead to a serious error.
 
-Applied, thanks
+This was largely found by using a static code analysis program called cppcheck.
 
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+---
+ drivers/power/ab8500_fg.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/power/ab8500_fg.c b/drivers/power/ab8500_fg.c
+index 3cb4178..019e33f 100644
+--- a/drivers/power/ab8500_fg.c
++++ b/drivers/power/ab8500_fg.c
+@@ -2969,7 +2969,7 @@ static struct device_attribute ab8505_fg_sysfs_psy_attrs[] = {
+ 
+ static int ab8500_fg_sysfs_psy_create_attrs(struct device *dev)
+ {
+-	unsigned int i, j;
++	unsigned int j;
+ 	struct power_supply *psy = dev_get_drvdata(dev);
+ 	struct ab8500_fg *di;
+ 
+@@ -2986,7 +2986,7 @@ static int ab8500_fg_sysfs_psy_create_attrs(struct device *dev)
+ sysfs_psy_create_attrs_failed_ab8505:
+ 	dev_err(dev, "Failed creating sysfs psy attrs for ab8505.\n");
+ 	while (j--)
+-		device_remove_file(dev, &ab8505_fg_sysfs_psy_attrs[i]);
++		device_remove_file(dev, &ab8505_fg_sysfs_psy_attrs[j]);
+ 
+ 	return -EIO;
+ }
 -- 
-~Vinod
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.10.4
