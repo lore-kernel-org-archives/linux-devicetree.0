@@ -1,57 +1,38 @@
-From: "Liviu Dudau" <liviu@dudau.co.uk>
-Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM
- resources.
-Date: Sun, 1 Jun 2014 12:26:50 +0100
-Message-ID: <20140601112648.GI1677@bart.dudau.co.uk>
-References: <20140530233034.GH1677@bart.dudau.co.uk>
- <1401496601-31983-1-git-send-email-Liviu.Dudau@arm.com>
- <1401496601-31983-2-git-send-email-Liviu.Dudau@arm.com>
- <4756033.LkcFQN0chs@wuerfel>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4756033.LkcFQN0chs@wuerfel>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] thermal: ti-soc-thermal: ti-bandgap.c:  Cleaning up memory leak
+Date: Sun,  1 Jun 2014 13:33:51 +0200
+Message-ID: <1401622431-13554-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, May 31, 2014 at 08:41:04PM +0200, Arnd Bergmann wrote:
-> On Saturday 31 May 2014 01:36:40 Liviu Dudau wrote:
-> > We would like to be able to describe PCIe ECAM resources as
-> > IORESOURCE_MEM blocks while distinguish them from standard
-> > memory resources. Add an IORESOURCE_BIT entry for this case.
-> > 
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> 
-> I still don't see any value in this at all. What is the advantage
-> of doing this opposed to just having a standardized 'reg' property
-> for a particular compatible string?
+There is a risk for memory leak in when something unexpected happens
+and the function returns.
 
-Oh, I agree. This patch was trying to provide an improved solution
-to the original patch just in case someone considers this a worthwhile
-exercise.
+This was largely found by using a static code analysis program called cppcheck.
 
-Best regards,
-Liviu
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+---
+ drivers/thermal/ti-soc-thermal/ti-bandgap.c |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> 	Arnd
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+index 3ab12ee..8401d2e 100644
+--- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
++++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+@@ -1155,8 +1155,9 @@ static struct ti_bandgap *ti_bandgap_build(struct platform_device *pdev)
+ 	/* register shadow for context save and restore */
+ 	bgp->regval = devm_kzalloc(&pdev->dev, sizeof(*bgp->regval) *
+ 				   bgp->conf->sensor_count, GFP_KERNEL);
+-	if (!bgp) {
++	if (!bgp->regval) {
+ 		dev_err(&pdev->dev, "Unable to allocate mem for driver ref\n");
++		devm_kfree(&pdev->dev, bgp);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
 -- 
--------------------
-   .oooO
-   (   )
-    \ (  Oooo.
-     \_) (   )
-          ) /
-         (_/
+1.7.10.4
 
- One small step
-   for me ...
