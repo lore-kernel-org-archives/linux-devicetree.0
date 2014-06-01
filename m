@@ -1,44 +1,53 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] power: ab8500_fg.c:  Cleaning up uninitialized variables
-Date: Sun,  1 Jun 2014 22:03:23 +0200
-Message-ID: <1401653003-10670-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH 1/2] i2c: rcar: add compatibles for additional SoC
+Date: Sun, 1 Jun 2014 22:24:55 +0200
+Message-ID: <20140601202455.GC3853@katana>
+References: <1401193052-8582-1-git-send-email-wsa@the-dreams.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="7qSK/uQB79J36Y4o"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401193052-8582-1-git-send-email-wsa@the-dreams.de>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-i2c@vger.kernel.org
+Cc: linux-sh@vger.kernel.org, Magnus Damm <magnus.damm@gmail.com>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In this case the wrong variable is used, which has never been initialized.
-This will lead to a serious error.
 
-This was largely found by using a static code analysis program called cppcheck.
+--7qSK/uQB79J36Y4o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
----
- drivers/power/ab8500_fg.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Tue, May 27, 2014 at 02:17:31PM +0200, Wolfram Sang wrote:
+> From: Wolfram Sang <wsa@sang-engineering.com>
+>=20
+> Signed-off-by: Wolfram Sang <wsa@sang-engineering.com>
 
-diff --git a/drivers/power/ab8500_fg.c b/drivers/power/ab8500_fg.c
-index 3cb4178..019e33f 100644
---- a/drivers/power/ab8500_fg.c
-+++ b/drivers/power/ab8500_fg.c
-@@ -2969,7 +2969,7 @@ static struct device_attribute ab8505_fg_sysfs_psy_attrs[] = {
- 
- static int ab8500_fg_sysfs_psy_create_attrs(struct device *dev)
- {
--	unsigned int i, j;
-+	unsigned int j;
- 	struct power_supply *psy = dev_get_drvdata(dev);
- 	struct ab8500_fg *di;
- 
-@@ -2986,7 +2986,7 @@ static int ab8500_fg_sysfs_psy_create_attrs(struct device *dev)
- sysfs_psy_create_attrs_failed_ab8505:
- 	dev_err(dev, "Failed creating sysfs psy attrs for ab8505.\n");
- 	while (j--)
--		device_remove_file(dev, &ab8505_fg_sysfs_psy_attrs[i]);
-+		device_remove_file(dev, &ab8505_fg_sysfs_psy_attrs[j]);
- 
- 	return -EIO;
- }
--- 
-1.7.10.4
+Both applied to for-next.
+
+
+--7qSK/uQB79J36Y4o
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTi4wXAAoJEBQN5MwUoCm2Ri0P/3QtOvubPJbD4n9ZAmeLGtUQ
+zomMbjjUBq7XUYYTIC7G2xajn6+VnRCUOpHaTAlSpuXkeLasWRnOSvSNcKLUFo3/
+Akx1+K9flP0AnLe8SI01PWzR4Sem6fBTBdWyjHYBbFJACaKxlhM/bXvOw/7zkfAd
+44EjwugOA6igr4KQZ//fOUNDFj0nUDHWKuOrGzEZej4ETC4TxQLFETsBKD8QwhGC
+RmwXD6gf5yUY5BAiSguKZY39Zlf/sAt/ZYAmOFpFI8TxMlRa6J7GN093Hc0iIooB
+mvwbsO45KbPOQwHGigvkzWjIQWjpnOosf08p/yKwlHORoI3ULwmpRppXkP6zOIYA
+iPQjjV2clh5TB07FjwGK7XGBkvu1/UrjsKGIa4bZMylaCycO2WaqvGDUDofxAP82
+6+117cfT8q/xGoZypZTI1UrR4v0WTE6VLtGx6d8T6+PfjQOSB6wxkZEjTpd+8U7H
+B9msjvLPofB/v6KtCLvInff6BheKY+LZvo38u5yYHoQYFXZiIHwAINhdEr4Tf9Tf
++k5DMJNf3ziTg7vmfehIS1eM1unFrSu8nbIlr7ktqUXUSMV+iQng+gVGEqImB3o9
+ZMFP26MTk8FOJjl/h47UnCepkAVwHvr63PpP8SHK06Vkb1j1XPmiHM+0VsThgs3/
+UH5o+i9C8U8QjvDkXf7N
+=ET+9
+-----END PGP SIGNATURE-----
+
+--7qSK/uQB79J36Y4o--
