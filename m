@@ -1,61 +1,53 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Sun, 1 Jun 2014 10:55:46 +0100
-Message-ID: <20140601095546.GA8625@arm.com>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
- <4545972.cM7IP1qTXQ@wuerfel>
- <87tx87rrp2.fsf@nvidia.com>
- <4462924.8iRbdkOPp7@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] of_regulator: use of_property_read_{bool|u32}()
+Date: Sun, 1 Jun 2014 11:56:47 +0100
+Message-ID: <20140601105647.GD5099@sirena.org.uk>
+References: <201405270027.20092.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="2mUf73N0HmzM2Naa"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4462924.8iRbdkOPp7@wuerfel>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+In-Reply-To: <201405270027.20092.sergei.shtylyov@cogentembedded.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: lgirdwood@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 30, 2014 at 08:54:37PM +0100, Arnd Bergmann wrote:
-> On Friday 30 May 2014 22:29:13 Hiroshi Doyu wrote:
-> > Tegra,SMMU has a similar problem and we have used a fixed size bitmap(64
-> > bit) to afford 64 stream IDs so that a single device can hold multiple
-> > IDs. If we apply the same bitmap to the above exmaple:
-> > 
-> >        iommu {
-> >                /* the specifier represents the ID of the master */
-> >                #address-cells = <1>;
-> >                #size-cells = <0>;
-> >        };
-> > 
-> >         master@a {
-> >                 ...
-> >                 iommus = <&smmu (BIT(1) | BIT(2) | BIT(3))>; # IDs 1 2 3
-> >         };
-> > 
-> >         master@b {
-> >                 ...
-> >                 iommus = <&smmu BIT(4)>;     # ID 4
-> >         };
-> > 
-> > The disadvantage of this is that this limits the max number of streamIDs
-> > to support. If # of streamID is increased later more than 64, this
-> > format cannot cover any more. You have to predict the max # of streamIDs
-> > in advance if steamID is statically assigned.
-> > 
-> 
-> Well, the iommu specific binding could allow a variable #address-cells.
-> That way, you just need to know the number of stream IDs for that instance
-> of the iommu.
 
-In general, though, the SMMU will be able to support a large number of
-stream IDs (say a 16-bit space). The restriction we're interested in here is
-how many different stream IDs can be emitted by a single master device
-coming into the SMMU. *That* is a property of the master, not the SMMU.
+--2mUf73N0HmzM2Naa
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-In the current arm,smmu binding I have a #stream-id-cells property in each
-master. I can then feed that straight into of_parse_phandle_with_args to
-enumerate the IDs for that master. The problem with that is we're
-artificially restricted by MAX_PHANDLE_ARGS.
+On Tue, May 27, 2014 at 12:27:19AM +0400, Sergei Shtylyov wrote:
+> Use more compact of_property_read_{bool|u32}() calls instead of the
+> of_{find|get}_property() calls in of_get_regulation_constraints() where
+> possible (note that of_property_read_{bool|u32}() were already used to read
+> some properties).
 
-Will
+Applied, thanks.  Please use subject lines matching the style for the
+subsystem.
+
+--2mUf73N0HmzM2Naa
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTiwbsAAoJELSic+t+oim9XL8P+gMJLlRSzir+b0aQrnVeg/eQ
+AcU6yH8vK9phKYWuFIXEU1RUmrRTEAkJ83p2LDgOMTYRFmKQm+5akHO82/fDHSIL
+675UZOxyG1mjQhidcKxHZ3cQho/tK/ABshVbF5IgkrV9V2i0uSiOH7KPNg5dETf8
+cdEiY1KH8SOcq4iwyq8AwJXSJ8jqS/paWqkgdZgXBpP+iQI5R118q/Ra2aA0EcCs
+ghLltK/wW0bueIHiQHAImFXlGxnlvTWwv7ch8U4F4FoqtS1qSFjZ4QQIH1QkURyZ
+2vBccC25aQToIH7kMHqO4T/4KqXrILR5NhHtuTPt3TxHfMCVtguTrn4A26nQJkfC
+dtM6Pwg979o9BFKJ/JQjTSYqFONf13Gi0ixxRey/niJ2pw8dtOY5hREZN3+UdjQi
+/ZyOmsYFMvJwjTHB9aNVpeYWSH5LvGa/h1TPQuv8G9GnvoZwhVH3qgk1Pls1z5Nc
+eKEn+SqL1w1WmJDv3gNrVNxWgs1WDvWv551KhYgVgCFWooWSsQelJTotY4fPm2vB
+YwXOu7x4MDdoTbxybQK7gSt2QuwfM4bH7ynnzMIi7mVbUr1iDG2+3IEK/QcX/Uk9
+l3JJlQVAYORv57tnE1YPc/hOsvC5Vac7C7UVBKjX7W6Mpc0qZSuRMnzLwEtRNoWz
+F/PBD3CclA+lJUZhgw3R
+=fxr1
+-----END PGP SIGNATURE-----
+
+--2mUf73N0HmzM2Naa--
