@@ -1,63 +1,70 @@
-From: Ben Dooks <ben.dooks@codethink.co.uk>
-Subject: Re: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for
- QSPI
-Date: Mon, 02 Jun 2014 14:58:34 +0100
-Message-ID: <538C830A.9090400@codethink.co.uk>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v1] of/irq: do irq resolution in platform_get_irq_byname()
+Date: Mon, 02 Jun 2014 07:48:59 -0700
+Message-ID: <7h7g4zz7s4.fsf@paris.lan>
+References: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com>
+	<20140523080333.66720C4176E@trevor.secretlab.ca>
+	<CAGa+x85mOHtNAj-UHgK2_z8zWAF=qwFcRcUgHTR-byNiX7heHA@mail.gmail.com>
+	<CAL_JsqLm3wfVS+au+JUbhBhxz=LuVpepH6GxabCQhPowhbw77g@mail.gmail.com>
+	<20140528071855.GJ4227@lee--X1>
+	<CACRpkdYgkEOjLamYu5uKSgs3iTNJ-w5XkbeygKjRdR-bNdETfg@mail.gmail.com>
+	<CAGb2v64f8Wju6dtVuVN2x=9YVGA-=RXozzhpJZNspKZ05f=jtA@mail.gmail.com>
+	<CACxGe6ts-TcSKk2F0-XSxAxeTxVCiyDHgh-O12v+F2OjHUsPyg@mail.gmail.com>
+	<5385B566.2050600@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
-Cc: Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5385B566.2050600-l0cyMroinI0@public.gmane.org> (Grygorii Strashko's message of "Wed,
+	28 May 2014 13:07:34 +0300")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02/06/14 14:42, Geert Uytterhoeven wrote:
-> This patch series enables DMA support for QSPI on r8a7791/koelsch
-> reference.  It's independent from the series "ARM: shmobile: koelsch
-> legacy: Enable DMA for QSPI", but it depends on the SHDMA work for r8a7790
-> by Ben Dooks (cfr. "[PATCH v2 0/9] Updates Renesas OF-DMA code").
-> 
-> Changes Compared to previous submission ("[PATCH/RFC 0/7] ARM: shmobile:
-> r8a7791: Add preliminary DMA support"):
->   - "[6/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF" was dropped,
->   - 2/7 was added,
->   - 7/7 was changed (see changelog in individual patch).
-> 
-> This was tested on r8a7791/koelsch.
-> 
-> Performance figures for reading from a QSPI FLASH driven at 24.375 MHz are:
->   - Single:  1.1 Mbps PIO, 23 Mbps DMA
->   - Dual  : 12.7 Mbps PIO, 48 Mbps DMA
->   - Quad  : 13   Mbps PIO, 70 Mbps DMA
-> 
-> Thanks for your comments!
-> 
->   [1/7] DMA: shdma: Add r8a7791 support
->   [2/7] DMA: shdma: Spelling s/controll/control/
->   [3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
->   [4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions for bindings
->   [5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
->   [6/7] ARM: shmobile: koelsch dts: Enable sysdma0 and sysdma1
->   [7/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
-> 
->  Documentation/devicetree/bindings/dma/shdma.txt |   7 +-
->  arch/arm/boot/dts/r8a7791-koelsch.dts           |   8 ++
->  arch/arm/boot/dts/r8a7791.dtsi                  |  79 ++++++++++++++++-
->  drivers/dma/sh/shdmac.c                         |   1 +
->  include/dt-bindings/dma/r8a7791-dma.h           | 111 ++++++++++++++++++++++++
->  5 files changed, 201 insertions(+), 5 deletions(-)
->  create mode 100644 include/dt-bindings/dma/r8a7791-dma.h
-> 
-> Gr{oetje,eeting}s,
+Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> writes:
 
-Hi, thanks for testing against the current DMA series, I will try
-and get a new series out for you in the next few days with the
-changes to use 1 parameter phandles instead of 2 parameter ones.
+> Hi All,
+>
+> On 05/28/2014 12:03 PM, Grant Likely wrote:
 
+[...]
 
--- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
+>> The bisected patch causes platform_get_irq() to always parse the
+>> devicetree to obtain the irq instead of using a precalculated value in
+>> the platform_device. There are two possible scenarios for this problem
+>> that I can think of:
+>> 1) Platform_get_irq() is getting called multiple times (which would
+>> happen on a deferred probe) but the setup code isn't handling it
+>> properly, like trying to request the GPIO more than once
+>> 2) the platform_device was preloaded with an irq number that differs
+>> from what is determined when parsing the tree. This would happen if a
+>> platform_device was created manually.
+>>
+>
+> Could anyone try attached patch? It has to improve situation, but it
+> might not fix all problems (see my previous e-mail).
+
+I can confirm it makes the STE Snowball boot again on top of next-20150602.
+
+> From 4a41912dba648c935982274966426fa430fd5aa4 Mon Sep 17 00:00:00 2001
+> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Date: Wed, 28 May 2014 12:53:34 +0300
+> Subject: [PATCH] mfd: ab8500: fix dt irq mapping
+>
+> The AD8500 defines itself as interrupt-controller in DT,
+> but it doesn't assign DT node to IRQ domain when creates it.
+> As result, of_irq_xx() helpers don't work because they can't
+> find necessary IRQ domain.
+>
+> Hence, fix it by assigning AD8500 core device DT node to IRQ
+> domain when it's created.
+>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+
+Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+Kevin
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
