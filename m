@@ -1,75 +1,50 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 2/2] clk: clps711x: Add DT bindings documentation
-Date: Mon, 2 Jun 2014 11:42:22 +0100
-Message-ID: <20140602104222.GA13573@leverpostej>
-References: <1401616522-13505-1-git-send-email-shc_work@mail.ru>
- <20140602085651.GA12397@leverpostej>
- <1401701568.132789498@f354.i.mail.ru>
+Subject: Re: [PATCH 2/5] Documentation: bindings: document the Marvell Berlin
+ enable-method
+Date: Mon, 2 Jun 2014 11:44:05 +0100
+Message-ID: <20140602104405.GB13573@leverpostej>
+References: <1401700866-24804-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1401700866-24804-3-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1401701568.132789498-34VbNj3NXoBsdVUOrk1QfQ@public.gmane.org>
+In-Reply-To: <1401700866-24804-3-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Cc: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Antoine =?utf-8?Q?T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 02, 2014 at 10:32:48AM +0100, Alexander Shiyan wrote:
-> Mon, 2 Jun 2014 09:56:51 +0100 =D0=BE=D1=82 Mark Rutland <mark.rutlan=
-d@arm.com>:
-> > On Sun, Jun 01, 2014 at 10:55:22AM +0100, Alexander Shiyan wrote:
-> > > This patch adds DT binding documentation for the Cirrus Logic
-> > > CLPS711X-based CPUs clock subsystem.
-> > >=20
-> > > Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-> > > ---
-> > >  .../devicetree/bindings/clock/clps711x-clock.txt      | 19 +++++=
-++++++++++++++
-> > >  1 file changed, 19 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/clock/clps7=
-11x-clock.txt
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/clock/clps711x-clo=
-ck.txt b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
-> > > new file mode 100644
-> > > index 0000000..0fdf3c9
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
-> > > @@ -0,0 +1,19 @@
-> > > +* Clock bindings for the Cirrus Logic CLPS711X CPUs
-> > > +
-> > > +Required properties:
-> > > +- compatible  : Shall contain "cirrus,clps711x-clk".
-> > > +- reg         : Address of the internal register set.
-> > > +- cpufreq     : Factory set default frequency in HZ.
-> >=20
-> > Huh? Why is this called "cpufreq" what is this the frequency of,
-> > exactly?
-> >=20
-> > Is this an input or an output?
+On Mon, Jun 02, 2014 at 10:21:03AM +0100, Antoine T=C3=A9nart wrote:
+> The SMP support for Marvell Berlin SoCs introduce a new enable-method=
+=2E
+> Document it.
 >=20
-> Modern CLPS711X CPUs support PLL reprogramming, while for older proce=
-ssors,
-> this procedure is not possible and the CPU clock is set to a fixed va=
-lue. Thus if the
-> value of the PLL multiplier is not correct (missing), we use a fixed =
-CPU frequency
-> of the processor, described in DT, which allows us to use the driver =
-for the new and
-> old versions of this CPU.
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
+>
+> ---
+>  Documentation/devicetree/bindings/arm/cpus.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documen=
+tation/devicetree/bindings/arm/cpus.txt
+> index 333f4aea3029..50ec9ae6de28 100644
+> --- a/Documentation/devicetree/bindings/arm/cpus.txt
+> +++ b/Documentation/devicetree/bindings/arm/cpus.txt
+> @@ -185,6 +185,7 @@ nodes to be present and contain the properties de=
+scribed below.
+>  			    "qcom,gcc-msm8660"
+>  			    "qcom,kpss-acc-v1"
+>  			    "qcom,kpss-acc-v2"
+> +			    "marvell,berlin-smp"
 
-Ok. So this is the frequency of a (non-programmable) PLL which feeds th=
-e
-clock IP block?
+And what does this mean?
 
-Or is this internal to the IP block?
-
-Typically we'd use "clock-frequency" as the name for such an input, or
-just model it as a normal clock input and feed it a fixed-rate-clock fo=
-r
-the non-programmable case.
+The existing bindings are ambiguous enough. It would be nice to have a
+proper document describing the method, as Alex Elder is trying to sort
+out for the existing bindings.
 
 Cheers,
 Mark.
