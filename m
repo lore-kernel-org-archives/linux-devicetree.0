@@ -1,46 +1,37 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: tegra: initial support for apalis t30
-Date: Mon, 02 Jun 2014 14:33:38 -0600
-Message-ID: <538CDFA2.5020704@wwwdotorg.org>
-References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com> <b470c9c8631a6ef021d140192eb07006de3cfd93.1401665237.git.marcel@ziswiler.com> <538CA5C3.5050709@wwwdotorg.org> <538CDC08.7020106@ziswiler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538CDC08.7020106-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH v2 3/4] ARM: dts: qcom: Add APQ8084 Global Clock Controller DT node
+Date: Mon, 2 Jun 2014 15:41:24 -0500
+Message-ID: <DDE79254-2F56-47AC-A689-5A0E8E131126@codeaurora.org>
+References: <1401551134-28485-1-git-send-email-gdjakov@mm-sol.com> <1401551134-28485-4-git-send-email-gdjakov@mm-sol.com>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.2\))
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1401551134-28485-4-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: Mike Turquette <mturquette@linaro.org>, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2014 02:18 PM, Marcel Ziswiler wrote:
-> On 06/02/2014 06:26 PM, Stephen Warren wrote:
 
->>> +    pwmleds {
->>> +        compatible = "pwm-leds";
->>> +
->>> +        pwm3 {
->>> +            label = "PWM3";
->>> +            pwms = <&pwm 1 19600>;
->>> +            max-brightness = <255>;
->>> +        };
->>> +        pwm2 {
->>> +            label = "PWM2";
->>> +            pwms = <&pwm 2 19600>;
->>> +            max-brightness = <255>;
->>> +        };
->>> +        pwm1 {
->>> +            label = "PWM1";
->>> +            pwms = <&pwm 3 19600>;
->>> +            max-brightness = <255>;
->>> +        };
->>
->> Nit: Why not sort those nodes in numerical order?
-> 
-> Sure, the only question is ordering based on what. I choose the actual
-> Tegra PWM instance while you propose to use our Apalis instance
-> numbering which in this particular case turns out to be the opposite but
-> makes us even more happy to comply.
+On May 31, 2014, at 10:45 AM, Georgi Djakov <gdjakov@mm-sol.com> wrote:
 
-Sorting by reg value, or if there is no reg value then alphanumerically,
-is what I've tried to (remember to) require for the Tegra DTs.
+> This patch adds the necessary node to probe the global clock
+> controller on APQ8084 platforms.
+>=20
+> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+> ---
+> arch/arm/boot/dts/qcom-apq8084.dtsi |   10 ++++++++++
+> 1 file changed, 10 insertions(+)
+
+Can you split the 2 DT patches into their own patchset since they will =
+go via the qcom/arm-soc tree and not Mike=92s clk tree.
+
+thanks
+
+- k
+
+--=20
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
