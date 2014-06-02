@@ -1,32 +1,68 @@
-From: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and
- dma-coherent
-Date: Mon, 2 Jun 2014 09:24:50 -0400
-Message-ID: <538C7B22.2020107@ti.com>
-References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com> <20140602063702.GB7834@dragon>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
+Date: Mon, 2 Jun 2014 15:28:49 +0200
+Message-ID: <a0938c62-2b96-447b-b8fb-a9b936b6ba00@BY2FFO11FD049.protection.gbl>
+References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
+ <20140529092106.GC24233@leverpostej> <53870129.5010505@monstr.eu>
+ <20140529131940.GG24233@leverpostej> <538C18CC.6040105@monstr.eu>
+ <20140602131704.GE13573@leverpostej>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140602063702.GB7834@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@freescale.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Strashko, Grygorii" <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140602131704.GE13573@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Michal Simek <monstr@monstr.eu>
+Cc: Harini Katakam <harinik@xilinx.com>, "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Monday 02 June 2014 02:37 AM, Shawn Guo wrote:
-> On Thu, Apr 24, 2014 at 11:30:00AM -0400, Santosh Shilimkar wrote:
->> Here is an updated v3 of the series. Series introduces support for setting up
->> dma parameters based on device tree properties like 'dma-ranges' and
->> 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
->> series can be found here [3], [2] and [1].
+On 06/02/2014 03:17 PM, Mark Rutland wrote:
+> On Mon, Jun 02, 2014 at 07:25:16AM +0100, Michal Simek wrote:
+>> On 05/29/2014 03:19 PM, Mark Rutland wrote:
+>>> On Thu, May 29, 2014 at 10:43:05AM +0100, Michal Simek wrote:
+>>>> Hi Mark,
+>>>>
+>>>>>> +static struct of_device_id cdns_wdt_of_match[] = {
+>>>>>> +       { .compatible = "xlnx,zynq-wdt-r1p2", },
+>>>>>> +       { .compatible = "cdns,wdt-r1p2", },
+>>>>>
+>>>>> If these can currently be handled identically, why not just have
+>>>>> "cdns,wdt-r1p2" in the driver and in your dts have:
+>>>>>
+>>>>> compatible = "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
+>>>>>
+>>>>> If we need to distinguish the two for some reason later we can always
+>>>>> add the "xlnx,zynq-wdt-r1p2" string to the driver.
+>>>>
+>>>> I would prefer to have 2 compatible strings just because
+>>>> of that we don't know what is different compare to origin cadence
+>>>> version. We have done the same for spi-cadence.c that's why
+>>>> it shouldn't be any problem to keep it as is.
+>>>> Having zynq compatible property here and using it give us option
+>>>> that if another SoC vendor come with new configuration or clean
+>>>> cadence one we can simple handle it without changing compatible
+>>>> property for us.
+>>>
+>>> Sure, we can have two documented strings. But as I mention for the
+>>> moment the driver only needs to support the one string so long as a
+>>> given dts has both. Then we can later distinguish the zynq variant (or
+>>> any other) as necessary.
+>>
+>> ok then. Let's use just "xlnx,zynq-wdt-r1p2" compatible string here
+>> and remove "cdns,wdt-r1p2"
 > 
-> Are these two generic device tree properties documented somewhere under
-> Documentation/devicetree/bindings?
+> That if anything seems backwards -- the driver should jsut take the most
+> general string for now: "cdns,wdt-r1p2", while the dtb will have both:
 > 
-These bindings have been already in use before this series. But looks like
-they have not been documented. I will do a patch to add description for those
-couple of parameters.
+> compatible = "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
+> 
+> The driver can later disintguish "xlnx,zynq-wdt-r1p2" specially if
+> necessary.
 
-Regards,
-Santosh
+ah. Ok I see your point now. No problem to do it in this way.
+
+Thanks,
+Michal
+
+
+
