@@ -1,45 +1,83 @@
-From: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH v3 14/15] ARM: dts: exynos5420: add mipi-phy node
-Date: Mon, 02 Jun 2014 14:22:50 +0900
-Message-ID: <1401686571-22148-15-git-send-email-yj44.cho@samsung.com>
-References: <1401686571-22148-1-git-send-email-yj44.cho@samsung.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1401686571-22148-1-git-send-email-yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: airlied-cv59FeDIM0c@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, jy0922.shim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+From: Michal Simek <monstr@monstr.eu>
+Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
+Date: Mon, 02 Jun 2014 08:25:16 +0200
+Message-ID: <538C18CC.6040105@monstr.eu>
+References: <1401185895-3677-1-git-send-email-harinik@xilinx.com> <20140529092106.GC24233@leverpostej> <53870129.5010505@monstr.eu> <20140529131940.GG24233@leverpostej>
+Reply-To: monstr@monstr.eu
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140529131940.GG24233@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Harini Katakam <harinik@xilinx.com>, "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds mipi-phy node for MIPI DSI device.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: YoungJun Cho <yj44.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Inki Dae <inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos5420.dtsi |    6 ++++++
- 1 file changed, 6 insertions(+)
+On 05/29/2014 03:19 PM, Mark Rutland wrote:
+> On Thu, May 29, 2014 at 10:43:05AM +0100, Michal Simek wrote:
+>> Hi Mark,
+>>
+>>>> +static struct of_device_id cdns_wdt_of_match[] =3D {
+>>>> +       { .compatible =3D "xlnx,zynq-wdt-r1p2", },
+>>>> +       { .compatible =3D "cdns,wdt-r1p2", },
+>>>
+>>> If these can currently be handled identically, why not just have
+>>> "cdns,wdt-r1p2" in the driver and in your dts have:
+>>>
+>>> compatible =3D "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
+>>>
+>>> If we need to distinguish the two for some reason later we can always=
 
-diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-index c3a9a66..6fde5fd 100644
---- a/arch/arm/boot/dts/exynos5420.dtsi
-+++ b/arch/arm/boot/dts/exynos5420.dtsi
-@@ -472,6 +472,12 @@
- 		phy-names = "dp";
- 	};
- 
-+	mipi_phy: video-phy@10040714 {
-+		compatible = "samsung,s5pv210-mipi-video-phy";
-+		reg = <0x10040714 12>;
-+		#phy-cells = <1>;
-+	};
-+
- 	fimd@14400000 {
- 		samsung,power-domain = <&disp_pd>;
- 		clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
--- 
-1.7.9.5
+>>> add the "xlnx,zynq-wdt-r1p2" string to the driver.
+>>
+>> I would prefer to have 2 compatible strings just because
+>> of that we don't know what is different compare to origin cadence
+>> version. We have done the same for spi-cadence.c that's why
+>> it shouldn't be any problem to keep it as is.
+>> Having zynq compatible property here and using it give us option
+>> that if another SoC vendor come with new configuration or clean
+>> cadence one we can simple handle it without changing compatible
+>> property for us.
+>=20
+> Sure, we can have two documented strings. But as I mention for the
+> moment the driver only needs to support the one string so long as a
+> given dts has both. Then we can later distinguish the zynq variant (or
+> any other) as necessary.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ok then. Let's use just "xlnx,zynq-wdt-r1p2" compatible string here
+and remove "cdns,wdt-r1p2"
+
+Thanks,
+Michal
+
+--=20
+Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
+w: www.monstr.eu p: +42-0-721842854
+Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
+Maintainer of Linux kernel - Xilinx Zynq ARM architecture
+Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
+
+
+
+--BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.10 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iEYEARECAAYFAlOMGMwACgkQykllyylKDCGpTgCeI7dlKUifRZbCVGPXZJ905Fb2
+qfUAn0ReQS9Wp7Gz9Gfl9Mg/T3JbdEma
+=pVbY
+-----END PGP SIGNATURE-----
+
+--BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp--
