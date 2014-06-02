@@ -1,56 +1,36 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for QSPI
-Date: Mon,  2 Jun 2014 15:42:04 +0200
-Message-ID: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 2/7] DMA: shdma: Spelling s/controll/control/
+Date: Mon,  2 Jun 2014 15:42:06 +0200
+Message-ID: <1401716531-29794-3-git-send-email-geert+renesas@glider.be>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-sh-owner@vger.kernel.org
 To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-This patch series enables DMA support for QSPI on r8a7791/koelsch
-reference.  It's independent from the series "ARM: shmobile: koelsch
-legacy: Enable DMA for QSPI", but it depends on the SHDMA work for r8a7790
-by Ben Dooks (cfr. "[PATCH v2 0/9] Updates Renesas OF-DMA code").
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+---
+v2:
+  - New
 
-Changes Compared to previous submission ("[PATCH/RFC 0/7] ARM: shmobile:
-r8a7791: Add preliminary DMA support"):
-  - "[6/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF" was dropped,
-  - 2/7 was added,
-  - 7/7 was changed (see changelog in individual patch).
+ Documentation/devicetree/bindings/dma/shdma.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-This was tested on r8a7791/koelsch.
+diff --git a/Documentation/devicetree/bindings/dma/shdma.txt b/Documentation/devicetree/bindings/dma/shdma.txt
+index d26b7065ae94..2b61cab0525c 100644
+--- a/Documentation/devicetree/bindings/dma/shdma.txt
++++ b/Documentation/devicetree/bindings/dma/shdma.txt
+@@ -73,7 +73,7 @@ Example:
+ 	};
+ 
+ For r8a7790 and newer implementations, the information for the channel
+-controll register is found in the dma phandle and #dma-cells is set to 2.
++control register is found in the dma phandle and #dma-cells is set to 2.
+ 
+ 	dma0: dma-mux@0 {
+ 		compatible = "renesas,shdma-mux";
+-- 
+1.9.1
 
-Performance figures for reading from a QSPI FLASH driven at 24.375 MHz are:
-  - Single:  1.1 Mbps PIO, 23 Mbps DMA
-  - Dual  : 12.7 Mbps PIO, 48 Mbps DMA
-  - Quad  : 13   Mbps PIO, 70 Mbps DMA
-
-Thanks for your comments!
-
-  [1/7] DMA: shdma: Add r8a7791 support
-  [2/7] DMA: shdma: Spelling s/controll/control/
-  [3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
-  [4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions for bindings
-  [5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
-  [6/7] ARM: shmobile: koelsch dts: Enable sysdma0 and sysdma1
-  [7/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
-
- Documentation/devicetree/bindings/dma/shdma.txt |   7 +-
- arch/arm/boot/dts/r8a7791-koelsch.dts           |   8 ++
- arch/arm/boot/dts/r8a7791.dtsi                  |  79 ++++++++++++++++-
- drivers/dma/sh/shdmac.c                         |   1 +
- include/dt-bindings/dma/r8a7791-dma.h           | 111 ++++++++++++++++++++++++
- 5 files changed, 201 insertions(+), 5 deletions(-)
- create mode 100644 include/dt-bindings/dma/r8a7791-dma.h
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
