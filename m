@@ -1,22 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM resources.
-Date: Mon, 02 Jun 2014 22:44:19 +0200
-Message-ID: <5976198.MmsV3dNjlq@wuerfel>
-References: <20140530233034.GH1677@bart.dudau.co.uk> <4495090.ktpdXEyibD@wuerfel> <95C66A63-9671-4AD5-9804-6647A305DB99@codeaurora.org>
+From: Georgi Djakov <gdjakov@mm-sol.com>
+Subject: Re: [PATCH v2 3/4] ARM: dts: qcom: Add APQ8084 Global Clock Controller
+ DT node
+Date: Mon, 02 Jun 2014 23:49:47 +0300
+Message-ID: <538CE36B.8030708@mm-sol.com>
+References: <1401551134-28485-1-git-send-email-gdjakov@mm-sol.com> <1401551134-28485-4-git-send-email-gdjakov@mm-sol.com> <DDE79254-2F56-47AC-A689-5A0E8E131126@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <95C66A63-9671-4AD5-9804-6647A305DB99@codeaurora.org>
-Sender: linux-pci-owner@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <DDE79254-2F56-47AC-A689-5A0E8E131126@codeaurora.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
 To: Kumar Gala <galak@codeaurora.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Mike Turquette <mturquette@linaro.org>, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 02 June 2014 15:43:02 Kumar Gala wrote:
-> Its imx6 and exynos, havent looked to see if dw-pcie is handling
-> the parsing or not for them.
+On 02.06.14, 23:41, Kumar Gala wrote:
+>=20
+> On May 31, 2014, at 10:45 AM, Georgi Djakov <gdjakov@mm-sol.com> wrot=
+e:
+>=20
+>> This patch adds the necessary node to probe the global clock
+>> controller on APQ8084 platforms.
+>>
+>> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
+>> ---
+>> arch/arm/boot/dts/qcom-apq8084.dtsi |   10 ++++++++++
+>> 1 file changed, 10 insertions(+)
+>=20
+> Can you split the 2 DT patches into their own patchset since they wil=
+l go via the qcom/arm-soc tree and not Mike=E2=80=99s clk tree.
+>=20
+> thanks
+>=20
 
-Ok, so they are both dw-pcie variants.
-
-	Arnd 
+Sure! Thanks!
