@@ -1,82 +1,42 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3 2/2] net: hisilicon: add hix5hd2 mac driver
-Date: Mon, 02 Jun 2014 16:11:31 -0700 (PDT)
-Message-ID: <20140602.161131.783479189097234753.davem@davemloft.net>
-References: <1401440528-7804-1-git-send-email-zhangfei.gao@linaro.org>
-	<1401440528-7804-3-git-send-email-zhangfei.gao@linaro.org>
+From: dwalker@fifo99.com
+Subject: Re: [PATCH] tty: serial: msm_serial.c:  Cleaning up uninitialized
+ variables
+Date: Mon, 2 Jun 2014 23:15:10 +0000
+Message-ID: <20140602231509.GA26069@fifo99.com>
+References: <1401629904-19492-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1401440528-7804-3-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: zhangfei.gao@linaro.org
-Cc: arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401629904-19492-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Cc: David Brown <davidb@codeaurora.org>, Bryan Huntsman <bryanh@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, linux-serial@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Fri, 30 May 2014 17:02:08 +0800
+On Sun, Jun 01, 2014 at 03:38:24PM +0200, Rickard Strandqvist wrote:
+> There is a risk that the variable will be used without being initialized.
+> 
+> This was largely found by using a static code analysis program called cppcheck.
+> 
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+> ---
+>  drivers/tty/serial/msm_serial.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/tty/serial/msm_serial.c b/drivers/tty/serial/msm_serial.c
+> index 053b98e..c67f5c5 100644
+> --- a/drivers/tty/serial/msm_serial.c
+> +++ b/drivers/tty/serial/msm_serial.c
+> @@ -962,7 +962,7 @@ static int __init msm_console_setup(struct console *co, char *options)
+>  {
+>  	struct uart_port *port;
+>  	struct msm_port *msm_port;
+> -	int baud, flow, bits, parity;
+> +	int baud = 0, flow, bits, parity;
+>  
 
-> +			skb = netdev_alloc_skb_ip_align(priv->netdev,
-> +				MAC_MAX_FRAME_SIZE);
+It looks valid .. We might want to just set it to 115200 which is what your change eventually does later in
+the code.
 
-When a function call, declaration, or definition spans multiple lines,
-you must start the arguments on the second and subsequent lines exactly
-at the first column after the openning parenthesis.
-
-Please therefore reindent this properly.
-
-> +		addr = dma_map_single(priv->dev, skb->data,
-> +					MAC_MAX_FRAME_SIZE, DMA_FROM_DEVICE);
-
-Likewise.
-
-> +		desc->cmd = cpu_to_le32(DESC_VLD_FREE |
-> +			(MAC_MAX_FRAME_SIZE - 1) << DESC_BUFF_LEN_OFF);
-
-Likewise.
-
-> +	desc->cmd = cpu_to_le32(DESC_VLD_BUSY | DESC_FL_FULL |
-> +			(skb->len & DESC_DATA_MASK) << DESC_DATA_LEN_OFF |
-> +			(skb->len & DESC_DATA_MASK) << DESC_BUFF_LEN_OFF);
-
-Likewise.
-
-> +	priv->phy = of_phy_connect(dev, priv->phy_node,
-> +		&hix5hd2_adjust_link, 0, priv->phy_mode);
-
-Likewise.
-
-> +static int hix5hd2_mdio_wait_ready(struct mii_bus *bus)
-> +{
-> +	struct hix5hd2_priv *priv = bus->priv;
-> +	void __iomem *base = priv->base;
-> +	int i, timeout = 10000;
-> +
-> +	for (i = 0; readl_relaxed(base + MDIO_SINGLE_CMD) & MDIO_START; i++) {
-> +		if (i == timeout)
-> +			return -ETIMEDOUT;
-> +		udelay(1);
-> +	}
-> +
-> +	return 0;
-> +}
-
-10,000 udelay(1)'s is a long time, consider changing to usleep() or
-similar.
-
-> +			dma_free_coherent(priv->dev, priv->pool[i].size,
-> +					priv->pool[i].desc,
-> +					priv->pool[i].phys_addr);
-
-Indentation.
-
-> +		virt_addr = dma_alloc_coherent(dev, size, &phys_addr,
-> +				GFP_KERNEL);
-
-Likewise.
-
-> +		netdev_warn(ndev, "using random MAC address %pM\n",
-> +			 ndev->dev_addr);
-
-Likewise.
+Daniel
