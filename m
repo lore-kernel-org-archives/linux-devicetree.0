@@ -1,33 +1,63 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM
- resources.
-Date: Mon, 02 Jun 2014 16:09:45 +0100
-Message-ID: <20140602150945.964D4C40381@trevor.secretlab.ca>
-References: <20140530233034.GH1677@bart.dudau.co.uk>
-	<1401496601-31983-1-git-send-email-Liviu.Dudau@arm.com>
-	<1401496601-31983-2-git-send-email-Liviu.Dudau@arm.com>
-	<4756033.LkcFQN0chs@wuerfel>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <4756033.LkcFQN0chs@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2] of: handle NULL node in next_child iterators
+Date: Mon, 02 Jun 2014 16:14:20 +0100
+Message-ID: <20140602151420.68628C40476@trevor.secretlab.ca>
+References: <1401298742-23235-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401298742-23235-1-git-send-email-f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 31 May 2014 20:41:04 +0200, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Saturday 31 May 2014 01:36:40 Liviu Dudau wrote:
-> > We would like to be able to describe PCIe ECAM resources as
-> > IORESOURCE_MEM blocks while distinguish them from standard
-> > memory resources. Add an IORESOURCE_BIT entry for this case.
-> > 
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+On Wed, 28 May 2014 10:39:02 -0700, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Add an early check for the node argument in __of_get_next_child and
+> of_get_next_available_child() to avoid dereferencing a NULL node pointer
+> a few lines after.
 > 
-> I still don't see any value in this at all. What is the advantage
-> of doing this opposed to just having a standardized 'reg' property
-> for a particular compatible string?
+> CC: Daniel Mack <zonque-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-I'm inclined to agree. It doesn't seem appropriate to put config space
-in ranges, and the host controller binding is responsible for
-identifying how config space is memory mapped.
+Applied, thanks.
 
-g.
+g
+
+> ---
+> Changes in v2:
+> - also fix __of_get_next_child against NULL node argument
+> 
+>  drivers/of/base.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+> 
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index e67b308819c9..567e6e1b7921 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -700,6 +700,9 @@ static struct device_node *__of_get_next_child(const struct device_node *node,
+>  {
+>  	struct device_node *next;
+>  
+> +	if (!node)
+> +		return NULL;
+> +
+>  	next = prev ? prev->sibling : node->child;
+>  	for (; next; next = next->sibling)
+>  		if (of_node_get(next))
+> @@ -746,6 +749,9 @@ struct device_node *of_get_next_available_child(const struct device_node *node,
+>  	struct device_node *next;
+>  	unsigned long flags;
+>  
+> +	if (!node)
+> +		return NULL;
+> +
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  	next = prev ? prev->sibling : node->child;
+>  	for (; next; next = next->sibling) {
+> -- 
+> 1.9.1
+> 
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
