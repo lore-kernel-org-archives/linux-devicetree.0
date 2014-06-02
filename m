@@ -1,142 +1,71 @@
-From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv5 2/4] mailbox: Introduce framework for mailbox
-Date: Mon, 2 Jun 2014 18:04:02 -0400
-Message-ID: <20140602220402.GU32082@beef>
-References: <1400134105-3847-1-git-send-email-jaswinder.singh@linaro.org>
- <1400134260-3962-1-git-send-email-jaswinder.singh@linaro.org>
- <7978295.UBGxYvcnvH@wuerfel>
- <CAJe_Zhe_VFTpPW0sKBsqit347MR7QmEDvzvQTyh1DWr3v991tg@mail.gmail.com>
- <20140529154348.GH32082@beef>
- <CABb+yY2PiGpqy2uevCFexAKeS4aZxJxZHEDJTRN1SW6VVjBzGQ@mail.gmail.com>
- <20140602151454.GK32082@beef>
- <CABb+yY3ZYqtT+R0PwZDtpW0O0SsbxTyiYmXaseZHoj4Nr6UBPQ@mail.gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm: tegra: enable igb, stmpe, i2c chardev, spidev,
+ lm95245, pwm leds
+Date: Mon, 2 Jun 2014 23:16:27 +0100
+Message-ID: <20140602221627.GP31751@sirena.org.uk>
+References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com>
+ <39a8704a4c8170d6b0620a1e5e44042eae6d8810.1401665237.git.marcel@ziswiler.com>
+ <538CA24B.1010602@wwwdotorg.org>
+ <538CA635.4050502@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kOdvwer/5gjFgNo6"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CABb+yY3ZYqtT+R0PwZDtpW0O0SsbxTyiYmXaseZHoj4Nr6UBPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <538CA635.4050502-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-[Adding devicetree list]
 
-On Mon, Jun 02, 2014 at 10:41:44PM +0530, Jassi Brar wrote:
-> On Mon, Jun 2, 2014 at 8:44 PM, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > On Fri, May 30, 2014 at 11:01:55AM +0530, Jassi Brar wrote:
-> >
-> >>  Being more specific to your platform, I think you need some server
-> >> code (mailbox's client) that every driver (like clock, pmu, pinmux
-> >> etc) registers with to send messages to remote and receive commands
-> >> from remote ... perhaps by registering some filter to sort out
-> >> messages for each driver.
-> >
-> > Right, and here's where you hit on the problem. This server you mention
-> > is not a piece of hardware, it would be a software construct. As such, it
-> > doesn't fit into the DT binding as it exists. It's probably best to
-> > illustrate in DT syntax.
-> >
-> > If I were to represent the hardware relationship in the DT binding now
-> > it would look like this:
-> >
-> > ---
-> > cpm: mailbox@deadbeef {
-> >         compatible = "brcm,bcm-cpm-mailbox";
-> >         reg = <...>;
-> >         #mbox-cells <1>;
-> >         interrupts = <...>;
-> > };
-> >
-> > /* clock complex */
-> > ccu {
-> >         compatible = "brcm,bcm-foo-ccu";
-> >         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
-> >         mbox-names = "system";
-> >         /* leaving out other mailboxes for brevity */
-> >         #clock-cells <1>;
-> >         clock-output-names = "bar",
-> >                              "baz";
-> > };
-> >
-> > pmu {
-> >         compatible = "brcm,bcm-foo-pmu"
-> >         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
-> >         mbox-names = "system";
-> > };
-> >
-> > pinmux {
-> >         compatible = "brcm,bcm-foo-pinctrl";
-> >         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
-> >         mbox-names = "system";
-> > };
-> > ---
-> Yeah, I too don't think its a good idea.
-> 
-> 
-> > What we would need to do is completely ignore this information in each
-> > of the of the client drivers associated with the clock, pmu, and pinmux
-> > devices. This IPC server would need to be instantiated and get the
-> > mailbox information from some source. mbox_request_channel() only works
-> > when the client has an of_node with the mbox-names property present.
-> > Let's say we follow this model and represent it in DT:
-> >
-> > --
-> > cpm: mailbox@deadbeef {
-> >         compatible = "brcm,bcm-cpm-mailbox";
-> >         reg = <...>;
-> >         #mbox-cells <1>;
-> >         interrupts = <...>;
-> > };
-> >
-> > cpm_ipc {
-> >         compatible = "brcm,bcm-cpm-ipc";
-> >         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
-> >         mbox-names = "system";
-> >         /* leaving out other mailboxes for brevity */
-> > };
-> > ---
-> >
-> > This would allow an ipc driver to exclusively own this system channel,
-> > but now we've invented a binding that doesn't reflect the hardware at
-> > all. It's describing software so I don't believe the DT maintainers will
-> > allow this type of construct.
-> >
-> Must the server node specify MMIO and an IRQ, to be acceptable? Like ...
+--kOdvwer/5gjFgNo6
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-My bad, that was a cut and paste typo..I intended to remove those
-properties as you do below.
+On Mon, Jun 02, 2014 at 06:28:37PM +0200, Marcel Ziswiler wrote:
+> On 06/02/2014 06:11 PM, Stephen Warren wrote:
 
-> 
-> cpm_ipc : cpm@deadbeef {
->          compatible = "brcm,bcm-cpm-ipc";
->        /*  reg = <0xdeadbeef 0x100>; */
->        /*  interrupts = <0 123 4>;  */
->          mbox = <&cpm CPM_SYSTEM_CHANNEL>;
->          mbox-names = "system";
-> };
+> >>+CONFIG_SPI_SPIDEV=y
 
-Correct, this should have been:
+> >Is this useful with DT? I thought that unlike I2C_CHARDEV, spidev needed
+> >dummy devices to exist in DT for spidev to work? If so, there's not much
+> >point adding the option to defconfig, since people can add it when they
+> >put the dummy devices into DT.
 
-cpm_ipc {
-	compatible = "brcm,bcm-cpm-ipc";
-	mbox = <&cpm CPM_SYSTEM_CHANNEL>;
-	mbox-names = "system";
-};
+> Yes, the Apalis T30 DT I sent actually contains two of them which we call
+> generic Apalis SPI1 and SPI2 out-of-the-box configured for exactly that.
+> Without the config enabled though it probably does not make much sense to
+> include it in the DT so I would consider removing it again.
 
-> cpm_ipc already specifies a hardware resource (mbox) that its driver
-> needs, I think that should be enough reason. If it were some purely
-> soft property for the driver like
->       mode = "poll";  //or "irq"
-> then the node wouldn't be justified because that is the job of a
-> build-time config or run-time module option.
+Your DT is broken if it's got a "spidev" node in it, you should be
+describing the hardware not the Linux implementation of the software.
+It would be really nice if we had a good way of handling this but we
+don't yet.
 
-Hrm, this is where I'd like to hear from the DT maintainers since we
-have to live with this generic binding. If they are ok with us creating
-bindings for a virtual device that exists only to match with our ipc
-driver then it will work. I'm not aware of other similar examples though.
+--kOdvwer/5gjFgNo6
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
--Matt
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTjPe4AAoJELSic+t+oim9KWcQAJWlBDlz9bvmVX06mKnKprj0
+r3TntvSqpPTauZhXWC9pSNtBIuF9+GTAB0NgdP69nhoUbZU3+bdrUc8/0kzX+kDF
+lfpdqumhze9+m0N0ioJm9mT49EM+Sl1QOkMMWrq7WL7UfunZRXq98NMzL370TYGJ
++FzIeUiwbVojbVa0nxD+fK1VKuJEQt92/IFfQpfvhkaZFrTWkxIzc2IE4DG+mCk4
+uqmbqLAMHI96xZ5YL1NHAQh/Bq6OCkYzBS1perYb9KYON0dF57oc8KGebln2ZxH1
+KY6O5tnHjpJjUa+OU58etASimysTveDbNuaqyFNO6tSx/ZvD2oV11ygvuLSQHyUD
+8FQv6kDHUWaxs2vOgvaXNugcKcsdnMaU7Q/UhmFGg0pz60Fb8VdbKu9EEinYn/vh
+IpA5J52oXIsGum8vuuCWxhQDeQvqrjoQuoC5nw5dWzUuqwKa/Oeg/0ygX30wmbMZ
+IX0Q7/13GuZke6pnJ20ET+P+OHT9Dcl5kF62ycSIC1NYXJzy5K9ESh99928GiNmw
+FlHyHq9pDHdwSAIQIPG8nMq1MRlPOvxxB8C1zx9yakpX9NnUu138rI5IA4gPs0zt
+RA7CZOSn8hKkmYj8bhQJhr/MbR2AMlyWy9kxk7cWK6tVz6F9kgeaMAiSHM0/PVrK
+2cHOUTMpP0LqVudoeyGG
+=YuF8
+-----END PGP SIGNATURE-----
+
+--kOdvwer/5gjFgNo6--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
