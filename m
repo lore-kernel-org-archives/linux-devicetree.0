@@ -1,152 +1,72 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v2 11/11] clk: versatile: add versatile OSC support
-Date: Mon, 02 Jun 2014 14:08:19 -0700
-Message-ID: <20140602210819.10062.61603@quantum>
-References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
- <1401403221-27523-12-git-send-email-robherring2@gmail.com>
- <20140530230326.10062.15472@quantum>
- <CAL_Jsq+KQa9ZKCfiy479JOg8qYx8AOmFQKuvQp3fKmWBoURpaQ@mail.gmail.com>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH] thermal: ti-soc-thermal: ti-bandgap.c: Cleaning up memory leak
+Date: Mon, 2 Jun 2014 23:13:36 +0200
+Message-ID: <CAFo99gbVBgQWaJtzT_RT-M4yqxfua162qxCKVmazJY7th2KY0w@mail.gmail.com>
+References: <1401622431-13554-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<20140602170800.GA5198@developer>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+KQa9ZKCfiy479JOg8qYx8AOmFQKuvQp3fKmWBoURpaQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140602170800.GA5198@developer>
+Sender: linux-pm-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Zhang Rui <rui.zhang@intel.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2014-05-30 19:38:44)
-> On Fri, May 30, 2014 at 6:03 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> > Quoting Rob Herring (2014-05-29 15:40:21)
-> >> From: Rob Herring <robh@kernel.org>
-> >>
-> >> Versatile platforms share the same OSC programming model as Integrator
-> >> platforms. Add the necessary parameters and init functions for Versatile.
-> >>
-> >> Renaming the file to clk-versatile.c as versatile is used as the family
-> >> name for ARM, Ltd. boards.
-> >>
-> >> Signed-off-by: Rob Herring <robh@kernel.org>
-> >> Cc: Mike Turquette <mturquette@linaro.org>
-> >> Acked-by: Arnd Bergmann <arnd@arndb.de>
-> >
-> > So it's OK to rename the file and add the new stuff in one commit? I
-> > thought there were some guidelines about doing renames separately...
-> 
-> You don't want to move of a chunk of code and change it along the way
-> because you can't see the real changes, but a file rename does not
-> affect the diff here (other than the Makefile change).
+Hi
 
-Sounds good. Let me know if you want me to take this into clk-next after
--rc1 drops. Otherwise:
+Okay, then I make a new patch with only the if() part of the code.
 
-Acked-by: Mike Turquette <mturquette@linaro.org>
 
-Regards,
-Mike
+Best regards
+Rickard Strandqvist
 
-> 
-> Rob
-> 
-> >
-> > Regards,
-> > Mike
-> >
-> >> ---
-> >> v2:
-> >> - Rename clk-integrator.c to clk-versatile.c
-> >>
-> >>  drivers/clk/versatile/Makefile                     |  3 +-
-> >>  .../{clk-integrator.c => clk-versatile.c}          | 35 ++++++++++++++++++++--
-> >>  2 files changed, 34 insertions(+), 4 deletions(-)
-> >>  rename drivers/clk/versatile/{clk-integrator.c => clk-versatile.c} (66%)
-> >>
-> >> diff --git a/drivers/clk/versatile/Makefile b/drivers/clk/versatile/Makefile
-> >> index c16ca78..9ee2b37 100644
-> >> --- a/drivers/clk/versatile/Makefile
-> >> +++ b/drivers/clk/versatile/Makefile
-> >> @@ -1,6 +1,5 @@
-> >>  # Makefile for Versatile-specific clocks
-> >> -obj-$(CONFIG_ICST)             += clk-icst.o
-> >> -obj-$(CONFIG_ARCH_INTEGRATOR)  += clk-integrator.o
-> >> +obj-$(CONFIG_ICST)             += clk-icst.o clk-versatile.o
-> >>  obj-$(CONFIG_INTEGRATOR_IMPD1) += clk-impd1.o
-> >>  obj-$(CONFIG_ARCH_REALVIEW)    += clk-realview.o
-> >>  obj-$(CONFIG_ARCH_VEXPRESS)    += clk-vexpress.o clk-sp810.o
-> >> diff --git a/drivers/clk/versatile/clk-integrator.c b/drivers/clk/versatile/clk-versatile.c
-> >> similarity index 66%
-> >> rename from drivers/clk/versatile/clk-integrator.c
-> >> rename to drivers/clk/versatile/clk-versatile.c
-> >> index 734c4b8..fe52a79 100644
-> >> --- a/drivers/clk/versatile/clk-integrator.c
-> >> +++ b/drivers/clk/versatile/clk-versatile.c
-> >> @@ -17,6 +17,9 @@
-> >>
-> >>  #define INTEGRATOR_HDR_LOCK_OFFSET     0x14
-> >>
-> >> +#define VERSATILE_SYS_OSCCLCD_OFFSET   0x1c
-> >> +#define VERSATILE_SYS_LOCK_OFFSET      0x20
-> >> +
-> >>  /* Base offset for the core module */
-> >>  static void __iomem *cm_base;
-> >>
-> >> @@ -37,11 +40,27 @@ static const struct clk_icst_desc __initdata cm_auxosc_desc = {
-> >>         .lock_offset = INTEGRATOR_HDR_LOCK_OFFSET,
-> >>  };
-> >>
-> >> -static void __init of_integrator_cm_osc_setup(struct device_node *np)
-> >> +static const struct icst_params versatile_auxosc_params = {
-> >> +       .vco_max        = ICST307_VCO_MAX,
-> >> +       .vco_min        = ICST307_VCO_MIN,
-> >> +       .vd_min         = 4 + 8,
-> >> +       .vd_max         = 511 + 8,
-> >> +       .rd_min         = 1 + 2,
-> >> +       .rd_max         = 127 + 2,
-> >> +       .s2div          = icst307_s2div,
-> >> +       .idx2s          = icst307_idx2s,
-> >> +};
-> >> +
-> >> +static const struct clk_icst_desc versatile_auxosc_desc __initconst = {
-> >> +       .params = &versatile_auxosc_params,
-> >> +       .vco_offset = VERSATILE_SYS_OSCCLCD_OFFSET,
-> >> +       .lock_offset = VERSATILE_SYS_LOCK_OFFSET,
-> >> +};
-> >> +static void __init cm_osc_setup(struct device_node *np,
-> >> +                               const struct clk_icst_desc *desc)
-> >>  {
-> >>         struct clk *clk = ERR_PTR(-EINVAL);
-> >>         const char *clk_name = np->name;
-> >> -       const struct clk_icst_desc *desc = &cm_auxosc_desc;
-> >>         const char *parent_name;
-> >>
-> >>         if (!cm_base) {
-> >> @@ -65,5 +84,17 @@ static void __init of_integrator_cm_osc_setup(struct device_node *np)
-> >>         if (!IS_ERR(clk))
-> >>                 of_clk_add_provider(np, of_clk_src_simple_get, clk);
-> >>  }
-> >> +
-> >> +static void __init of_integrator_cm_osc_setup(struct device_node *np)
-> >> +{
-> >> +       cm_osc_setup(np, &cm_auxosc_desc);
-> >> +}
-> >>  CLK_OF_DECLARE(integrator_cm_auxosc_clk,
-> >>         "arm,integrator-cm-auxosc", of_integrator_cm_osc_setup);
-> >> +
-> >> +static void __init of_versatile_cm_osc_setup(struct device_node *np)
-> >> +{
-> >> +       cm_osc_setup(np, &versatile_auxosc_desc);
-> >> +}
-> >> +CLK_OF_DECLARE(versatile_cm_auxosc_clk,
-> >> +              "arm,versatile-cm-auxosc", of_versatile_cm_osc_setup);
-> >> --
-> >> 1.9.1
-> >>
+
+2014-06-02 19:08 GMT+02:00 Eduardo Valentin <edubezval@gmail.com>:
+> On Sun, Jun 01, 2014 at 01:33:51PM +0200, Rickard Strandqvist wrote:
+>> There is a risk for memory leak in when something unexpected happens
+>> and the function returns.
+>
+> I don't think there is a risk of memory leak, but wrong address access,
+> in this case.
+>
+>>
+>> This was largely found by using a static code analysis program called cppcheck.
+>>
+>> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+>> ---
+>>  drivers/thermal/ti-soc-thermal/ti-bandgap.c |    3 ++-
+>>  1 file changed, 2 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+>> index 3ab12ee..8401d2e 100644
+>> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+>> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
+>> @@ -1155,8 +1155,9 @@ static struct ti_bandgap *ti_bandgap_build(struct platform_device *pdev)
+>>       /* register shadow for context save and restore */
+>>       bgp->regval = devm_kzalloc(&pdev->dev, sizeof(*bgp->regval) *
+>>                                  bgp->conf->sensor_count, GFP_KERNEL);
+>> -     if (!bgp) {
+>> +     if (!bgp->regval) {
+>
+> I agree with this fix.
+>
+>>               dev_err(&pdev->dev, "Unable to allocate mem for driver ref\n");
+>> +             devm_kfree(&pdev->dev, bgp);
+>
+> But I think this is unnecessary, as it has been managed allocated.
+>
+> Cheers,
+>
+> Eduardo
+>
+>>               return ERR_PTR(-ENOMEM);
+>>       }
+>>
+>> --
+>> 1.7.10.4
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
