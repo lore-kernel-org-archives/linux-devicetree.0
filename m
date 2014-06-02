@@ -1,112 +1,56 @@
-From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 18/18] [RFC] spi: rspi: Add DT support to DMA setup
-Date: Mon,  2 Jun 2014 15:38:20 +0200
-Message-ID: <1401716301-29612-19-git-send-email-geert+renesas@glider.be>
-References: <1401716301-29612-1-git-send-email-geert+renesas@glider.be>
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401716301-29612-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for QSPI
+Date: Mon,  2 Jun 2014 15:42:04 +0200
+Message-ID: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
----
-The format of the DMA specifiers depends on the DT bindings for SHDMA,
-which are still under development.
----
- Documentation/devicetree/bindings/spi/spi-rspi.txt |  6 ++++
- drivers/spi/spi-rspi.c                             | 37 ++++++++++++++--------
- 2 files changed, 29 insertions(+), 14 deletions(-)
+This patch series enables DMA support for QSPI on r8a7791/koelsch
+reference.  It's independent from the series "ARM: shmobile: koelsch
+legacy: Enable DMA for QSPI", but it depends on the SHDMA work for r8a7790
+by Ben Dooks (cfr. "[PATCH v2 0/9] Updates Renesas OF-DMA code").
 
-diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-index d57d82a74054..a274073bd41d 100644
---- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
-@@ -30,6 +30,9 @@ Required properties:
- 
- Optional properties:
- - clocks           : Must contain a reference to the functional clock.
-+- dmas             : Must contain a list of two references to DMA specifiers,
-+		     one for transmission, and one for reception.
-+- dma-names        : Must contain a list of two DMA names, "tx" and "rx".
- 
- Pinctrl properties might be needed, too.  See
- Documentation/devicetree/bindings/pinctrl/renesas,*.
-@@ -58,4 +61,7 @@ Examples:
- 		num-cs = <1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-+		dmas = <&dma0 R8A7791_DMA_QSPI_TX CHCR_TX_8BIT>,
-+		       <&dma0 R8A7791_DMA_QSPI_RX CHCR_RX_8BIT>;
-+		dma-names = "tx", "rx";
- 	};
-diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
-index 10112745bb17..16de9ad60d74 100644
---- a/drivers/spi/spi-rspi.c
-+++ b/drivers/spi/spi-rspi.c
-@@ -874,10 +874,11 @@ static struct dma_chan *rspi_request_dma_chan(struct device *dev,
- 	dma_cap_zero(mask);
- 	dma_cap_set(DMA_SLAVE, mask);
- 
--	chan = dma_request_channel(mask, shdma_chan_filter,
--				   (void *)(unsigned long)id);
-+	chan = dma_request_slave_channel_compat(mask, shdma_chan_filter,
-+				(void *)(unsigned long)id, dev,
-+				dir == DMA_MEM_TO_DEV ? "tx" : "rx");
- 	if (!chan) {
--		dev_warn(dev, "dma_request_channel failed\n");
-+		dev_warn(dev, "dma_request_slave_channel_compat failed\n");
- 		return NULL;
- 	}
- 
-@@ -903,22 +904,30 @@ static int rspi_request_dma(struct device *dev, struct spi_master *master,
- 			    const struct resource *res)
- {
- 	const struct rspi_plat_data *rspi_pd = dev_get_platdata(dev);
-+	unsigned int dma_tx_id, dma_rx_id;
-+
-+	if (dev->of_node) {
-+		/* In the OF case we will get the slave IDs from the DT */
-+		dma_tx_id = 0;
-+		dma_rx_id = 0;
-+	} else if (rspi_pd && rspi_pd->dma_tx_id && rspi_pd->dma_rx_id) {
-+		dma_tx_id = rspi_pd->dma_tx_id;
-+		dma_rx_id = rspi_pd->dma_rx_id;
-+	} else {
-+		/* The driver assumes no error. */
-+		return 0;
-+	}
- 
--	if (!rspi_pd || !rspi_pd->dma_rx_id || !rspi_pd->dma_tx_id)
--		return 0;	/* The driver assumes no error. */
--
--	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM,
--					       rspi_pd->dma_rx_id,
-+	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV, dma_tx_id,
- 					       res->start + RSPI_SPDR);
--	if (!master->dma_rx)
-+	if (!master->dma_tx)
- 		return -ENODEV;
- 
--	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV,
--					       rspi_pd->dma_tx_id,
-+	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM, dma_rx_id,
- 					       res->start + RSPI_SPDR);
--	if (!master->dma_tx) {
--		dma_release_channel(master->dma_rx);
--		master->dma_rx = NULL;
-+	if (!master->dma_rx) {
-+		dma_release_channel(master->dma_tx);
-+		master->dma_tx = NULL;
- 		return -ENODEV;
- 	}
- 
--- 
-1.9.1
+Changes Compared to previous submission ("[PATCH/RFC 0/7] ARM: shmobile:
+r8a7791: Add preliminary DMA support"):
+  - "[6/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF" was dropped,
+  - 2/7 was added,
+  - 7/7 was changed (see changelog in individual patch).
+
+This was tested on r8a7791/koelsch.
+
+Performance figures for reading from a QSPI FLASH driven at 24.375 MHz are:
+  - Single:  1.1 Mbps PIO, 23 Mbps DMA
+  - Dual  : 12.7 Mbps PIO, 48 Mbps DMA
+  - Quad  : 13   Mbps PIO, 70 Mbps DMA
+
+Thanks for your comments!
+
+  [1/7] DMA: shdma: Add r8a7791 support
+  [2/7] DMA: shdma: Spelling s/controll/control/
+  [3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
+  [4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions for bindings
+  [5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
+  [6/7] ARM: shmobile: koelsch dts: Enable sysdma0 and sysdma1
+  [7/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
+
+ Documentation/devicetree/bindings/dma/shdma.txt |   7 +-
+ arch/arm/boot/dts/r8a7791-koelsch.dts           |   8 ++
+ arch/arm/boot/dts/r8a7791.dtsi                  |  79 ++++++++++++++++-
+ drivers/dma/sh/shdmac.c                         |   1 +
+ include/dt-bindings/dma/r8a7791-dma.h           | 111 ++++++++++++++++++++++++
+ 5 files changed, 201 insertions(+), 5 deletions(-)
+ create mode 100644 include/dt-bindings/dma/r8a7791-dma.h
+
+Gr{oetje,eeting}s,
+
+						Geert
 
 --
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
