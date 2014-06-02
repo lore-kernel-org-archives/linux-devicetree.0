@@ -1,36 +1,49 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM resources.
-Date: Mon, 02 Jun 2014 21:15:46 +0200
-Message-ID: <4495090.ktpdXEyibD@wuerfel>
-References: <20140530233034.GH1677@bart.dudau.co.uk> <20140602162306.4AB0FC40476@trevor.secretlab.ca> <2F6515B1-48FE-4ED6-908E-CC1CAD7AF403@codeaurora.org>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v2 2/4] clk: qcom: Add APQ8084 Global Clock Controller
+ support
+Date: Mon, 2 Jun 2014 12:36:03 -0700
+Message-ID: <20140602193603.GM20486@codeaurora.org>
+References: <1401551134-28485-1-git-send-email-gdjakov@mm-sol.com>
+ <1401551134-28485-3-git-send-email-gdjakov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2F6515B1-48FE-4ED6-908E-CC1CAD7AF403@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Grant Likely <grant.likely@linaro.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401551134-28485-3-git-send-email-gdjakov@mm-sol.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Georgi Djakov <gdjakov@mm-sol.com>
+Cc: mturquette@linaro.org, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Monday 02 June 2014 13:09:08 Kumar Gala wrote:
-> > However, what do we do with the 2 cases that exist in upstream that
-> >> are using ranges for cfg space?
-> >=20
-> > Ignore them in the core code? Make the specific host controller han=
-dle
-> > them I would think.
->=20
-> I just meant, should we =E2=80=98break=E2=80=99 their DTs and move th=
-em from using ranges to reg?
+On 05/31, Georgi Djakov wrote:
+> +
+> +static const struct qcom_reset_map gcc_apq8084_resets[] = {
 
-dw-pcie is used on a lot of systems, I think we should make the common
-part of that driver always handle config space in a common way, and
-move out the part that parses the ranges property into the individual
-soc-specific glue drivers that want to keep optional backwards compatib=
-ility
-with existing dtbs.
+> +	[GCC_VENUS0_BCR] = { 0x1020 },
 
-Which one is the other driver?
+> +	[GCC_VPU_BCR] = { 0x1400 },
 
-	Arnd
+> +	[GCC_MDSS_BCR] = { 0x2300 },
+> +	[GCC_AVSYNC_BCR] = { 0x2400 },
+> +	[GCC_OXILI_BCR] = { 0x4020 },
+> +	[GCC_OXILICX_BCR] = { 0x4030 },
+> +	[GCC_OCMEMCX_BCR] = { 0x4050 },
+
+These aren't in global clock control (looks like mmcc).
+
+> +#define GCC_VENUS0_BCR			56
+
+> +#define GCC_VPU_BCR			76
+
+
+> +#define GCC_MDSS_BCR			93
+> +#define GCC_AVSYNC_BCR			94
+> +#define GCC_OXILI_BCR			95
+> +#define GCC_OXILICX_BCR			96
+> +#define GCC_OCMEMCX_BCR			97
+
+Ditto
+
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
