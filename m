@@ -1,36 +1,152 @@
-From: Georgi Djakov <gdjakov@mm-sol.com>
-Subject: Re: [PATCH v2 3/4] ARM: dts: qcom: Add APQ8084 Global Clock Controller
- DT node
-Date: Mon, 02 Jun 2014 23:49:47 +0300
-Message-ID: <538CE36B.8030708@mm-sol.com>
-References: <1401551134-28485-1-git-send-email-gdjakov@mm-sol.com> <1401551134-28485-4-git-send-email-gdjakov@mm-sol.com> <DDE79254-2F56-47AC-A689-5A0E8E131126@codeaurora.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v2 11/11] clk: versatile: add versatile OSC support
+Date: Mon, 02 Jun 2014 14:08:19 -0700
+Message-ID: <20140602210819.10062.61603@quantum>
+References: <1401403221-27523-1-git-send-email-robherring2@gmail.com>
+ <1401403221-27523-12-git-send-email-robherring2@gmail.com>
+ <20140530230326.10062.15472@quantum>
+ <CAL_Jsq+KQa9ZKCfiy479JOg8qYx8AOmFQKuvQp3fKmWBoURpaQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <DDE79254-2F56-47AC-A689-5A0E8E131126@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Mike Turquette <mturquette@linaro.org>, linux@arm.linux.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, sboyd@codeaurora.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_Jsq+KQa9ZKCfiy479JOg8qYx8AOmFQKuvQp3fKmWBoURpaQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, "arm@kernel.org" <arm@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 02.06.14, 23:41, Kumar Gala wrote:
->=20
-> On May 31, 2014, at 10:45 AM, Georgi Djakov <gdjakov@mm-sol.com> wrot=
-e:
->=20
->> This patch adds the necessary node to probe the global clock
->> controller on APQ8084 platforms.
->>
->> Signed-off-by: Georgi Djakov <gdjakov@mm-sol.com>
->> ---
->> arch/arm/boot/dts/qcom-apq8084.dtsi |   10 ++++++++++
->> 1 file changed, 10 insertions(+)
->=20
-> Can you split the 2 DT patches into their own patchset since they wil=
-l go via the qcom/arm-soc tree and not Mike=E2=80=99s clk tree.
->=20
-> thanks
->=20
+Quoting Rob Herring (2014-05-30 19:38:44)
+> On Fri, May 30, 2014 at 6:03 PM, Mike Turquette <mturquette@linaro.org> wrote:
+> > Quoting Rob Herring (2014-05-29 15:40:21)
+> >> From: Rob Herring <robh@kernel.org>
+> >>
+> >> Versatile platforms share the same OSC programming model as Integrator
+> >> platforms. Add the necessary parameters and init functions for Versatile.
+> >>
+> >> Renaming the file to clk-versatile.c as versatile is used as the family
+> >> name for ARM, Ltd. boards.
+> >>
+> >> Signed-off-by: Rob Herring <robh@kernel.org>
+> >> Cc: Mike Turquette <mturquette@linaro.org>
+> >> Acked-by: Arnd Bergmann <arnd@arndb.de>
+> >
+> > So it's OK to rename the file and add the new stuff in one commit? I
+> > thought there were some guidelines about doing renames separately...
+> 
+> You don't want to move of a chunk of code and change it along the way
+> because you can't see the real changes, but a file rename does not
+> affect the diff here (other than the Makefile change).
 
-Sure! Thanks!
+Sounds good. Let me know if you want me to take this into clk-next after
+-rc1 drops. Otherwise:
+
+Acked-by: Mike Turquette <mturquette@linaro.org>
+
+Regards,
+Mike
+
+> 
+> Rob
+> 
+> >
+> > Regards,
+> > Mike
+> >
+> >> ---
+> >> v2:
+> >> - Rename clk-integrator.c to clk-versatile.c
+> >>
+> >>  drivers/clk/versatile/Makefile                     |  3 +-
+> >>  .../{clk-integrator.c => clk-versatile.c}          | 35 ++++++++++++++++++++--
+> >>  2 files changed, 34 insertions(+), 4 deletions(-)
+> >>  rename drivers/clk/versatile/{clk-integrator.c => clk-versatile.c} (66%)
+> >>
+> >> diff --git a/drivers/clk/versatile/Makefile b/drivers/clk/versatile/Makefile
+> >> index c16ca78..9ee2b37 100644
+> >> --- a/drivers/clk/versatile/Makefile
+> >> +++ b/drivers/clk/versatile/Makefile
+> >> @@ -1,6 +1,5 @@
+> >>  # Makefile for Versatile-specific clocks
+> >> -obj-$(CONFIG_ICST)             += clk-icst.o
+> >> -obj-$(CONFIG_ARCH_INTEGRATOR)  += clk-integrator.o
+> >> +obj-$(CONFIG_ICST)             += clk-icst.o clk-versatile.o
+> >>  obj-$(CONFIG_INTEGRATOR_IMPD1) += clk-impd1.o
+> >>  obj-$(CONFIG_ARCH_REALVIEW)    += clk-realview.o
+> >>  obj-$(CONFIG_ARCH_VEXPRESS)    += clk-vexpress.o clk-sp810.o
+> >> diff --git a/drivers/clk/versatile/clk-integrator.c b/drivers/clk/versatile/clk-versatile.c
+> >> similarity index 66%
+> >> rename from drivers/clk/versatile/clk-integrator.c
+> >> rename to drivers/clk/versatile/clk-versatile.c
+> >> index 734c4b8..fe52a79 100644
+> >> --- a/drivers/clk/versatile/clk-integrator.c
+> >> +++ b/drivers/clk/versatile/clk-versatile.c
+> >> @@ -17,6 +17,9 @@
+> >>
+> >>  #define INTEGRATOR_HDR_LOCK_OFFSET     0x14
+> >>
+> >> +#define VERSATILE_SYS_OSCCLCD_OFFSET   0x1c
+> >> +#define VERSATILE_SYS_LOCK_OFFSET      0x20
+> >> +
+> >>  /* Base offset for the core module */
+> >>  static void __iomem *cm_base;
+> >>
+> >> @@ -37,11 +40,27 @@ static const struct clk_icst_desc __initdata cm_auxosc_desc = {
+> >>         .lock_offset = INTEGRATOR_HDR_LOCK_OFFSET,
+> >>  };
+> >>
+> >> -static void __init of_integrator_cm_osc_setup(struct device_node *np)
+> >> +static const struct icst_params versatile_auxosc_params = {
+> >> +       .vco_max        = ICST307_VCO_MAX,
+> >> +       .vco_min        = ICST307_VCO_MIN,
+> >> +       .vd_min         = 4 + 8,
+> >> +       .vd_max         = 511 + 8,
+> >> +       .rd_min         = 1 + 2,
+> >> +       .rd_max         = 127 + 2,
+> >> +       .s2div          = icst307_s2div,
+> >> +       .idx2s          = icst307_idx2s,
+> >> +};
+> >> +
+> >> +static const struct clk_icst_desc versatile_auxosc_desc __initconst = {
+> >> +       .params = &versatile_auxosc_params,
+> >> +       .vco_offset = VERSATILE_SYS_OSCCLCD_OFFSET,
+> >> +       .lock_offset = VERSATILE_SYS_LOCK_OFFSET,
+> >> +};
+> >> +static void __init cm_osc_setup(struct device_node *np,
+> >> +                               const struct clk_icst_desc *desc)
+> >>  {
+> >>         struct clk *clk = ERR_PTR(-EINVAL);
+> >>         const char *clk_name = np->name;
+> >> -       const struct clk_icst_desc *desc = &cm_auxosc_desc;
+> >>         const char *parent_name;
+> >>
+> >>         if (!cm_base) {
+> >> @@ -65,5 +84,17 @@ static void __init of_integrator_cm_osc_setup(struct device_node *np)
+> >>         if (!IS_ERR(clk))
+> >>                 of_clk_add_provider(np, of_clk_src_simple_get, clk);
+> >>  }
+> >> +
+> >> +static void __init of_integrator_cm_osc_setup(struct device_node *np)
+> >> +{
+> >> +       cm_osc_setup(np, &cm_auxosc_desc);
+> >> +}
+> >>  CLK_OF_DECLARE(integrator_cm_auxosc_clk,
+> >>         "arm,integrator-cm-auxosc", of_integrator_cm_osc_setup);
+> >> +
+> >> +static void __init of_versatile_cm_osc_setup(struct device_node *np)
+> >> +{
+> >> +       cm_osc_setup(np, &versatile_auxosc_desc);
+> >> +}
+> >> +CLK_OF_DECLARE(versatile_cm_auxosc_clk,
+> >> +              "arm,versatile-cm-auxosc", of_versatile_cm_osc_setup);
+> >> --
+> >> 1.9.1
+> >>
