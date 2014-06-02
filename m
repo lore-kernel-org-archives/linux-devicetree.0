@@ -1,149 +1,51 @@
-From: Guido =?iso-8859-1?Q?Mart=EDnez?= <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-Subject: Re: [RFC/PATCH 1/3] drivers: input: keyboard: adp5589: add DT support
-Date: Mon, 2 Jun 2014 12:36:45 -0300
-Message-ID: <20140602153645.GA26073@fox>
-References: <1399467644-27222-1-git-send-email-guido@vanguardiasur.com.ar>
- <1399467644-27222-2-git-send-email-guido@vanguardiasur.com.ar>
- <20140518204009.GB13276@core.coreip.homeip.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+From: Kumar Gala <galak@codeaurora.org>
+Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM resources.
+Date: Mon, 2 Jun 2014 10:40:30 -0500
+Message-ID: <390B3F94-C058-47D6-82CE-0393E60014FF@codeaurora.org>
+References: <20140530233034.GH1677@bart.dudau.co.uk> <1401496601-31983-1-git-send-email-Liviu.Dudau@arm.com> <1401496601-31983-2-git-send-email-Liviu.Dudau@arm.com> <4756033.LkcFQN0chs@wuerfel> <20140602150945.964D4C40381@trevor.secretlab.ca>
+Mime-Version: 1.0 (Mac OS X Mail 7.3 \(1878.2\))
+Content-Type: text/plain; charset=windows-1252
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140518204009.GB13276-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ezequiel =?iso-8859-1?Q?Garc=EDa?= <ezequiel-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <20140602150945.964D4C40381@trevor.secretlab.ca>
+Sender: linux-pci-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dmitry, sorry for the terribly late reply.
 
-On Sun, May 18, 2014 at 01:40:09PM -0700, Dmitry Torokhov wrote:
-> Hi Guido,
+On Jun 2, 2014, at 10:09 AM, Grant Likely <grant.likely@linaro.org> wro=
+te:
+
+> On Sat, 31 May 2014 20:41:04 +0200, Arnd Bergmann <arnd@arndb.de> wro=
+te:
+>> On Saturday 31 May 2014 01:36:40 Liviu Dudau wrote:
+>>> We would like to be able to describe PCIe ECAM resources as
+>>> IORESOURCE_MEM blocks while distinguish them from standard
+>>> memory resources. Add an IORESOURCE_BIT entry for this case.
+>>>=20
+>>> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+>>=20
+>> I still don't see any value in this at all. What is the advantage
+>> of doing this opposed to just having a standardized 'reg' property
+>> for a particular compatible string?
 >=20
-> On Wed, May 07, 2014 at 10:00:42AM -0300, Guido Mart=EDnez wrote:
-> > Add DT support for the Analog ADP5589 matrix keypad decoding functi=
-ons.
-> >=20
-> > Signed-off-by: Guido Mart=EDnez <guido-30ULvvUtt6G51wMPkGsGjgyUoB5FGQPZ@public.gmane.org>
-> > ---
-> >  drivers/input/keyboard/adp5589-keys.c | 207 ++++++++++++++++++++++=
-+++++++++++-
-> >  1 file changed, 206 insertions(+), 1 deletion(-)
-> >=20
-> > diff --git a/drivers/input/keyboard/adp5589-keys.c b/drivers/input/=
-keyboard/adp5589-keys.c
-> > index 6329549..2b232c0 100644
-> > --- a/drivers/input/keyboard/adp5589-keys.c
-> > +++ b/drivers/input/keyboard/adp5589-keys.c
-> > @@ -18,7 +18,10 @@
-> >  #include <linux/i2c.h>
-> >  #include <linux/gpio.h>
-> >  #include <linux/slab.h>
-> > +#include <linux/of.h>
-> > +#include <linux/err.h>
-> > =20
-> > +#include <linux/input/matrix_keypad.h>
-> >  #include <linux/input/adp5589.h>
-> > =20
-> >  /* ADP5589/ADP5585 Common Registers */
-> > @@ -246,6 +249,14 @@ struct adp5589_kpad {
-> >  #endif
-> >  };
-> > =20
-> > +static struct of_device_id adp5589_of_match[] =3D {
-> > +	{
-> > +		.compatible =3D "adi,adp5589",
-> > +		.data =3D (void *)ADP5589
-> > +	},
-> > +	{ },
-> > +};
-> > +
-> >  /*
-> >   *  ADP5589 / ADP5585 derivative / variant handling
-> >   */
-> > @@ -858,6 +869,188 @@ static void adp5589_report_switch_state(struc=
-t adp5589_kpad *kpad)
-> >  	input_sync(kpad->input);
-> >  }
-> > =20
-> > +#ifdef CONFIG_OF
-> > +static int adp5589_key(int row, int col)
-> > +{
-> > +	return col + row * 11;
-> > +}
-> > +
-> > +static int adp5589_dt_read_keymap(struct device *dev,
-> > +				  struct adp5589_kpad_platform_data *pdata,
-> > +				  const struct device_node *node)
-> > +{
-> > +	int i;
-> > +	const u32 *dt_keymap;
-> > +	unsigned short *keymap;
-> > +	int keymap_len;
-> > +
-> > +	dt_keymap =3D of_get_property(node, "linux,keymap", &keymap_len);
-> > +	if (!dt_keymap) {
-> > +		dev_err(dev, "missing dt keymap\n");
-> > +		return -ENODEV;
-> > +	}
-> > +
-> > +	if (keymap_len % sizeof(u32)) {
-> > +		dev_err(dev, "malformed keymap (len=3D%i)\n", keymap_len);
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	keymap_len /=3D sizeof(u32);
-> > +
-> > +	keymap =3D devm_kzalloc(dev, ADP5589_KEYMAPSIZE * sizeof(u32),
-> > +			      GFP_KERNEL);
-> > +	if (!keymap)
-> > +		return -ENOMEM;
-> > +
-> > +	for (i =3D 0; i < keymap_len; i++) {
-> > +		u32 val;
-> > +		u16 key;
-> > +		u8 row, col;
-> > +
-> > +		val =3D be32_to_cpup(&dt_keymap[i]);
-> > +
-> > +		row =3D KEY_ROW(val);
-> > +		col =3D KEY_COL(val);
-> > +		key =3D KEY_VAL(val);
-> > +
-> > +		if (row > ADP5589_MAX_ROW_NUM) {
-> > +			dev_err(dev, "invalid row number (%i)\n", row);
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		if (col > ADP5589_MAX_COL_NUM) {
-> > +			dev_err(dev, "invalid column number (%i)\n", col);
-> > +			return -EINVAL;
-> > +		}
-> > +
-> > +		pdata->keypad_en_mask |=3D ADP_ROW(row);
-> > +		pdata->keypad_en_mask |=3D ADP_COL(col);
-> > +
-> > +		keymap[adp5589_key(row, col)] =3D key;
-> > +	}
-> > +
-> > +	pdata->keymap =3D keymap;
-> > +	pdata->keymapsize =3D ADP5589_KEYMAPSIZE;
+> I'm inclined to agree. It doesn't seem appropriate to put config spac=
+e
+> in ranges, and the host controller binding is responsible for
+> identifying how config space is memory mapped.
 >=20
-> I was wondering if we could also move non-DT variant to matrix-keypad
-> infrastructure and use matrix_keypad_build_keymap and friends to hand=
-le
-> this uniformly.
+> g.
 
-Seems like a good idea, I'll look into it.
+I don=92t agree when it comes to ECAM, but we can drop this for now unt=
+il someone really does that.
 
-Thanks for reviewing this!
+However, what do we do with the 2 cases that exist in upstream that are=
+ using ranges for cfg space?
+
+- k
 
 --=20
-Guido Mart=EDnez, VanguardiaSur
-www.vanguardiasur.com.ar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Employee of Qualcomm Innovation Center, Inc.
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, host=
+ed by The Linux Foundation
