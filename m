@@ -1,64 +1,28 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM
- resources.
-Date: Mon, 02 Jun 2014 17:23:06 +0100
-Message-ID: <20140602162306.4AB0FC40476@trevor.secretlab.ca>
-References: <20140530233034.GH1677@bart.dudau.co.uk>
-	<1401496601-31983-1-git-send-email-Liviu.Dudau@arm.com>
-	<1401496601-31983-2-git-send-email-Liviu.Dudau@arm.com>
-	<4756033.LkcFQN0chs@wuerfel>
-	<20140602150945.964D4C40381@trevor.secretlab.ca>
-	<390B3F94-C058-47D6-82CE-0393E60014FF@codeaurora.org>
+From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 1/3] arm: multi_v7: enable igb, stmpe, spidev, lm95245,
+ pwm leds
+Date: Mon, 02 Jun 2014 18:24:17 +0200
+Message-ID: <538CA531.2090006@ziswiler.com>
+References: <cc612cd3f24f01cfc8fd3e81b1027ff94862e8b4.1401700579.git.marcel@ziswiler.com> <538C9F83.1010800@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <390B3F94-C058-47D6-82CE-0393E60014FF@codeaurora.org>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <538C9F83.1010800-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2 Jun 2014 10:40:30 -0500, Kumar Gala <galak@codeaurora.org> wr=
-ote:
->=20
-> On Jun 2, 2014, at 10:09 AM, Grant Likely <grant.likely@linaro.org> w=
-rote:
->=20
-> > On Sat, 31 May 2014 20:41:04 +0200, Arnd Bergmann <arnd@arndb.de> w=
-rote:
-> >> On Saturday 31 May 2014 01:36:40 Liviu Dudau wrote:
-> >>> We would like to be able to describe PCIe ECAM resources as
-> >>> IORESOURCE_MEM blocks while distinguish them from standard
-> >>> memory resources. Add an IORESOURCE_BIT entry for this case.
-> >>>=20
-> >>> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> >>=20
-> >> I still don't see any value in this at all. What is the advantage
-> >> of doing this opposed to just having a standardized 'reg' property
-> >> for a particular compatible string?
-> >=20
-> > I'm inclined to agree. It doesn't seem appropriate to put config sp=
-ace
-> > in ranges, and the host controller binding is responsible for
-> > identifying how config space is memory mapped.
-> >=20
-> > g.
->=20
-> I don=E2=80=99t agree when it comes to ECAM, but we can drop this for=
- now
-> until someone really does that.
+On 06/02/2014 06:00 PM, Stephen Warren wrote:
+>> BTW: How about TEGRA_EMC_SCALING_ENABLE
+>
+> I thought a patch was sent to remove that. Perhaps the patch was only
+> sent to tegra_defconfig.
+>
+>> ... MTD_M25P80 which depends on MTD_SPI_NOR
+>
+> I've seen patches to fix that too.
 
-Okay, humor me then. What would a ranges property look like for ECAM? D=
-o
-you have an example? I believe there would need to be a separate entry
-for each and every PCI device on the bus to get the config spaces to be
-contiguous.
-
-> However, what do we do with the 2 cases that exist in upstream that
-> are using ranges for cfg space?
-
-Ignore them in the core code? Make the specific host controller handle
-them I would think.
-
-g.
+Yes, you are right. I have seen patches as well but none of them made it 
+yet I guess.
