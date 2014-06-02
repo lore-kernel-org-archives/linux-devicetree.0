@@ -1,140 +1,724 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Mon, 2 Jun 2014 11:41:04 +0100
-Message-ID: <20140602104104.GD3855@e103592.cambridge.arm.com>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
-	<4545972.cM7IP1qTXQ@wuerfel>
-	<CAL_Jsq+tkFNpjSEZboT+o69B_Z3a8e-ZVKaYDmLwtkyYoPy6VQ@mail.gmail.com>
-	<5288123.eXagyPAxNq@wuerfel>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHi v3] iio: add support of the max1027
+Date: Mon, 02 Jun 2014 11:43:33 +0100
+Message-ID: <538C5555.2090000@kernel.org>
+References: <1401398520-8625-1-git-send-email-tremyfr@yahoo.fr> <d50d68d1-81fa-4af0-8edb-5ae4dae28865@email.android.com> <538A4DB6.1010107@yahoo.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <5288123.eXagyPAxNq@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <538A4DB6.1010107-Qt13gs6zZMY@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: trem <tremyfr-Qt13gs6zZMY@public.gmane.org>
+Cc: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 30, 2014 at 09:49:59PM +0200, Arnd Bergmann wrote:
-> On Friday 30 May 2014 14:31:55 Rob Herring wrote:
-> > On Fri, May 30, 2014 at 2:06 PM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> > > On Friday 30 May 2014 08:16:05 Rob Herring wrote:
-> > >> On Fri, May 23, 2014 at 3:33 PM, Thierry Reding
-> > >> <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> > >> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > >> > +IOMMU master node:
-> > >> > +==================
-> > >> > +
-> > >> > +Devices that access memory through an IOMMU are called masters. A device can
-> > >> > +have multiple master interfaces (to one or more IOMMU devices).
-> > >> > +
-> > >> > +Required properties:
-> > >> > +--------------------
-> > >> > +- iommus: A list of phandle and IOMMU specifier pairs that describe the IOMMU
-> > >> > +  master interfaces of the device. One entry in the list describes one master
-> > >> > +  interface of the device.
-> > >> > +
-> > >> > +When an "iommus" property is specified in a device tree node, the IOMMU will
-> > >> > +be used for address translation. If a "dma-ranges" property exists in the
-> > >> > +device's parent node it will be ignored. An exception to this rule is if the
-> > >> > +referenced IOMMU is disabled, in which case the "dma-ranges" property of the
-> > >> > +parent shall take effect.
-> > >>
-> > >> Just thinking out loud, could you have dma-ranges in the iommu node
-> > >> for the case when the iommu is enabled rather than putting the DMA
-> > >> window information into the iommus property?
-> > >>
-> > >> This would probably mean that you need both #iommu-cells and #address-cells.
-> > >
-> > > The reason for doing like this was that you may need a different window
-> > > for each device, while there can only be one dma-ranges property in
-> > > an iommu node.
-> > 
-> > My suggestion was that you also put the IDs in the dma-ranges as the
-> > first cell much as ranges for PCI encodes other information in the
-> > first cell. Then you can have an entry for each ID. The downside is
-> > another special case like PCI.
-> > 
-> > The argument for using #address-cells and #size-cells seems to be to
-> > align with how ranges work. If that's the route we want to go, then I
-> > say we should not stop there and actually use dma-ranges as well.
-> > Otherwise, I don't see the advantage over #iommu-cells.
-> 
-> I can see how dma-ranges in bus nodes work, it just doesn't seem to
-> have any reasonable meaning in the iommu node itself.
+On 31/05/14 22:46, trem wrote:
+> Hi Jonathan,
+>
+>
+> On 30/05/14 18:29, Jonathan Cameron wrote:
+>>
+>>
+>> On May 29, 2014 10:22:00 PM GMT+01:00, Philippe Reynes<tremyfr-Qt13gs6zZMY@public.gmane.org>  wrote:
+>>> This driver add partial support of the
+>>> maxim 1027/1029/1031. Differential mode is not
+>>> supported.
+>>>
+>>> It was tested on armadeus apf27 board.
+>>>
+>>> Signed-off-by: Philippe Reynes<tremyfr-Qt13gs6zZMY@public.gmane.org>
+>>
+>> One last thing from me.
+>>> ---
+>>> .../devicetree/bindings/iio/adc/max1027-adc.txt    |   22 +
+>>> drivers/iio/adc/Kconfig                            |    9 +
+>>> drivers/iio/adc/Makefile                           |    1 +
+>>> drivers/iio/adc/max1027.c                          |  518
+>>> ++++++++++++++++++++
+>>> 4 files changed, 550 insertions(+), 0 deletions(-)
+>>> create mode 100644
+>>> Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+>>> create mode 100644 drivers/iio/adc/max1027.c
+>>>
+>>> Changelog:
+>>> v3: (thanks Hartmut Knaack, Lars-Peter Clausen and Jonathan Cameron for
+>>> the feedback)
+>>> - move to drivers/iio/adc (was in staging)
+>>> - clean binding doc
+>>> - drop empty update_scan_mode callback
+>>> - add a lock around single channel read code
+>>> - remove useless wrappers around spi_write and spi_read
+>>> - fix available scan mask (a bit was missing)
+>>> - remove useless header
+>>> - some others little cleanp
+>>>
+>>> v2: (thanks Hartmut Knaack and Jonathan Cameron for the feedback)
+>>> - really use devm_*
+>>> - use demux magic
+>>> - use spi_read and spi_write (instead of spi_sync)
+>>> - use define for register (instead of hardcoded value)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+>>> b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+>>> new file mode 100644
+>>> index 0000000..a8770cc
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+>>> @@ -0,0 +1,22 @@
+>>> +* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
+>>> +
+>>> +Required properties:
+>>> +  - compatible: Should be "maxim,max1027" or "maxim,max1029" or
+>>> "maxim,max1031"
+>>> +  - reg: SPI chip select number for the device
+>>> +  - interrupt-parent: phandle to the parent interrupt controller
+>>> +  see:
+>>> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>> +  - interrupts: IRQ line for the ADC
+>>> +  see:
+>>> Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+>>> +
+>>> +Recommended properties:
+>>> +- spi-max-frequency: Definition as per
+>>> +                     Documentation/devicetree/bindings/spi/spi-bus.txt
+>>> +
+>>> +Example:
+>>> +adc@0 {
+>>> +    compatible = "maxim,max1027";
+>>> +    reg =<0>;
+>>> +    interrupt-parent =<&gpio5>;
+>>> +    interrupts =<15 IRQ_TYPE_EDGE_RISING>;
+>>> +    spi-max-frequency =<1000000>;
+>>> +};
+>>> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+>>> index 24c28e3..517f886 100644
+>>> --- a/drivers/iio/adc/Kconfig
+>>> +++ b/drivers/iio/adc/Kconfig
+>>> @@ -119,6 +119,15 @@ config LP8788_ADC
+>>>     help
+>>>       Say yes here to build support for TI LP8788 ADC.
+>>>
+>>> +config MAX1027
+>>> +    tristate "Maxim max1027 ADC driver"
+>>> +    depends on SPI
+>>> +    select IIO_BUFFER
+>>> +    select IIO_TRIGGERED_BUFFER
+>>> +    help
+>>> +      Say yes here to build support for Maxim SPI ADC models
+>>> +      max1027, max1029 and max1031.
+>>> +
+>>> config MAX1363
+>>>     tristate "Maxim max1363 ADC driver"
+>>>     depends on I2C
+>>> diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+>>> index ab346d8..daac784 100644
+>>> --- a/drivers/iio/adc/Makefile
+>>> +++ b/drivers/iio/adc/Makefile
+>>> @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
+>>> obj-$(CONFIG_AT91_ADC) += at91_adc.o
+>>> obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>>> obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>>> +obj-$(CONFIG_MAX1027) += max1027.o
+>>> obj-$(CONFIG_MAX1363) += max1363.o
+>>> obj-$(CONFIG_MCP320X) += mcp320x.o
+>>> obj-$(CONFIG_MCP3422) += mcp3422.o
+>>> diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
+>>> new file mode 100644
+>>> index 0000000..6323510
+>>> --- /dev/null
+>>> +++ b/drivers/iio/adc/max1027.c
+>>> @@ -0,0 +1,518 @@
+>>> + /*
+>>> +  * iio/adc/max1027.c
+>>> +  * Copyright (C) 2014 Philippe Reynes
+>>> +  *
+>>> +  * based on linux/drivers/iio/ad7923.c
+>>> +  * Copyright 2011 Analog Devices Inc (from AD7923 Driver)
+>>> +  * Copyright 2012 CS Systemes d'Information
+>>> +  *
+>>> +  * This program is free software; you can redistribute it and/or
+>>> modify
+>>> +  * it under the terms of the GNU General Public License version 2 as
+>>> +  * published by the Free Software Foundation.
+>>> +  *
+>>> +  * max1027.c
+>>> +  *
+>>> +  * Partial support for max1027 and similar chips.
+>>> +  */
+>>> +
+>>> +#include<linux/kernel.h>
+>>> +#include<linux/module.h>
+>>> +#include<linux/spi/spi.h>
+>>> +#include<linux/delay.h>
+>>> +
+>>> +#include<linux/iio/iio.h>
+>>> +#include<linux/iio/buffer.h>
+>>> +#include<linux/iio/trigger.h>
+>>> +#include<linux/iio/trigger_consumer.h>
+>>> +#include<linux/iio/triggered_buffer.h>
+>>> +
+>>> +#define MAX1027_CONV_REG  0x80
+>>> +#define MAX1027_SETUP_REG 0x40
+>>> +#define MAX1027_AVG_REG   0x20
+>>> +#define MAX1027_RST_REG   0x10
+>>> +
+>>> +/* conversion register */
+>>> +#define MAX1027_TEMP      0x01
+>>> +#define MAX1027_SCAN_0_N  (0x00<<  1)
+>>> +#define MAX1027_SCAN_N_M  (0x01<<  1)
+>>> +#define MAX1027_SCAN_N    (0x02<<  1)
+>>> +#define MAX1027_NOSCAN    (0x03<<  1)
+>>> +#define MAX1027_CHAN(n)   ((n)<<  3)
+>>> +
+>>> +/* setup register */
+>>> +#define MAX1027_UNIPOLAR  0x02
+>>> +#define MAX1027_BIPOLAR   0x03
+>>> +#define MAX1027_REF_MODE0 (0x00<<  2)
+>>> +#define MAX1027_REF_MODE1 (0x01<<  2)
+>>> +#define MAX1027_REF_MODE2 (0x02<<  2)
+>>> +#define MAX1027_REF_MODE3 (0x03<<  2)
+>>> +#define MAX1027_CKS_MODE0 (0x00<<  4)
+>>> +#define MAX1027_CKS_MODE1 (0x01<<  4)
+>>> +#define MAX1027_CKS_MODE2 (0x02<<  4)
+>>> +#define MAX1027_CKS_MODE3 (0x03<<  4)
+>>> +
+>>> +/* averaging register */
+>>> +#define MAX1027_NSCAN_4   0x00
+>>> +#define MAX1027_NSCAN_8   0x01
+>>> +#define MAX1027_NSCAN_12  0x02
+>>> +#define MAX1027_NSCAN_16  0x03
+>>> +#define MAX1027_NAVG_4    (0x00<<  2)
+>>> +#define MAX1027_NAVG_8    (0x01<<  2)
+>>> +#define MAX1027_NAVG_16   (0x02<<  2)
+>>> +#define MAX1027_NAVG_32   (0x03<<  2)
+>>> +#define MAX1027_AVG_EN    (0x01<<  4)
+>>> +
+>>> +enum max1027_id {
+>>> +    max1027,
+>>> +    max1029,
+>>> +    max1031,
+>>> +};
+>>> +
+>>> +static const struct spi_device_id max1027_id[] = {
+>>> +    {"max1027", max1027},
+>>> +    {"max1029", max1029},
+>>> +    {"max1031", max1031},
+>>> +    {}
+>>> +};
+>>> +MODULE_DEVICE_TABLE(spi, max1027_id);
+>>> +
+>>> +#ifdef CONFIG_OF
+>>> +static const struct of_device_id max1027_adc_dt_ids[] = {
+>>> +    { .compatible = "maxim,max1027" },
+>>> +    { .compatible = "maxim,max1029" },
+>>> +    { .compatible = "maxim,max1031" },
+>>> +    {},
+>>> +};
+>>> +MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
+>>> +#endif
+>>> +
+>>> +#define MAX1027_V_CHAN(index)                        \
+>>> +    {                                \
+>>> +        .type = IIO_VOLTAGE,                    \
+>>> +        .indexed = 1,                        \
+>>> +        .channel = index,                    \
+>>> +        .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),        \
+>>> +        .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),    \
+>>> +        .scan_index = index+1,                    \
+>>> +        .scan_type = {                        \
+>>> +            .sign = 'u',                    \
+>>> +            .realbits = 10,                    \
+>>> +            .storagebits = 16,                \
+>>> +            .shift = 2,                    \
+>>> +            .endianness = IIO_BE,                \
+>>> +        },                            \
+>>> +    }
+>>> +
+>>> +#define MAX1027_T_CHAN(index)                        \
+>>> +    {                                \
+>>> +        .type = IIO_TEMP,                    \
+>>> +        .channel = index,                    \
+>>> +        .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),        \
+>>> +        .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),    \
+>>> +        .scan_index = index,                    \
+>>> +        .scan_type = {                        \
+>>> +            .sign = 'u',                    \
+>>> +            .realbits = 12,                    \
+>>> +            .storagebits = 16,                \
+>>> +            .endianness = IIO_BE,                \
+>>> +        },                            \
+>>> +    }
+>>> +
+>>> +static const struct iio_chan_spec max1027_channels[] = {
+>>> +    MAX1027_T_CHAN(0),
+>>> +    MAX1027_V_CHAN(0),
+>>> +    MAX1027_V_CHAN(1),
+>>> +    MAX1027_V_CHAN(2),
+>>> +    MAX1027_V_CHAN(3),
+>>> +    MAX1027_V_CHAN(4),
+>>> +    MAX1027_V_CHAN(5),
+>>> +    MAX1027_V_CHAN(6),
+>>> +    MAX1027_V_CHAN(7)
+>>> +};
+>>> +
+>>> +static const struct iio_chan_spec max1029_channels[] = {
+>>> +    MAX1027_T_CHAN(0),
+>>> +    MAX1027_V_CHAN(0),
+>>> +    MAX1027_V_CHAN(1),
+>>> +    MAX1027_V_CHAN(2),
+>>> +    MAX1027_V_CHAN(3),
+>>> +    MAX1027_V_CHAN(4),
+>>> +    MAX1027_V_CHAN(5),
+>>> +    MAX1027_V_CHAN(6),
+>>> +    MAX1027_V_CHAN(7),
+>>> +    MAX1027_V_CHAN(8),
+>>> +    MAX1027_V_CHAN(9),
+>>> +    MAX1027_V_CHAN(10),
+>>> +    MAX1027_V_CHAN(11)
+>>> +};
+>>> +
+>>> +static const struct iio_chan_spec max1031_channels[] = {
+>>> +    MAX1027_T_CHAN(0),
+>>> +    MAX1027_V_CHAN(0),
+>>> +    MAX1027_V_CHAN(1),
+>>> +    MAX1027_V_CHAN(2),
+>>> +    MAX1027_V_CHAN(3),
+>>> +    MAX1027_V_CHAN(4),
+>>> +    MAX1027_V_CHAN(5),
+>>> +    MAX1027_V_CHAN(6),
+>>> +    MAX1027_V_CHAN(7),
+>>> +    MAX1027_V_CHAN(8),
+>>> +    MAX1027_V_CHAN(9),
+>>> +    MAX1027_V_CHAN(10),
+>>> +    MAX1027_V_CHAN(11),
+>>> +    MAX1027_V_CHAN(12),
+>>> +    MAX1027_V_CHAN(13),
+>>> +    MAX1027_V_CHAN(14),
+>>> +    MAX1027_V_CHAN(15)
+>>> +};
+>>> +
+>>> +static unsigned long max1027_available_scan_masks[] = {
+>>> +    0x000001ff,
+>>> +    0x00000000,
+>>> +};
+>>> +
+>>> +static unsigned long max1029_available_scan_masks[] = {
+>>> +    0x00001fff,
+>>> +    0x00000000,
+>>> +};
+>>> +
+>>> +static unsigned long max1031_available_scan_masks[] = {
+>>> +    0x0001ffff,
+>>> +    0x00000000,
+>>> +};
+>>> +
+>>> +struct max1027_chip_info {
+>>> +    const struct iio_chan_spec *channels;
+>>> +    unsigned int num_channels;
+>>> +    unsigned long *available_scan_masks;
+>>> +};
+>>> +
+>>> +static const struct max1027_chip_info max1027_chip_info_tbl[] = {
+>>> +    [max1027] = {
+>>> +        .channels = max1027_channels,
+>>> +        .num_channels = ARRAY_SIZE(max1027_channels),
+>>> +        .available_scan_masks = max1027_available_scan_masks,
+>>> +    },
+>>> +    [max1029] = {
+>>> +        .channels = max1029_channels,
+>>> +        .num_channels = ARRAY_SIZE(max1029_channels),
+>>> +        .available_scan_masks = max1029_available_scan_masks,
+>>> +    },
+>>> +    [max1031] = {
+>>> +        .channels = max1031_channels,
+>>> +        .num_channels = ARRAY_SIZE(max1031_channels),
+>>> +        .available_scan_masks = max1031_available_scan_masks,
+>>> +    },
+>>> +};
+>>> +
+>>> +struct max1027_state {
+>>> +    struct max1027_chip_info    *info;
+>>> +    struct spi_device        *spi;
+>>> +    struct iio_trigger        *trig;
+>>> +    u16                *buffer;
+>>> +    struct mutex            lock;
+>>> +};
+>>> +
+>>> +static int max1027_read_single_value(struct iio_dev *indio_dev,
+>>> +                     struct iio_chan_spec const *chan,
+>>> +                     int *val)
+>>> +{
+>>> +    int ret;
+>>> +    unsigned char reg;
+>>> +    struct max1027_state *st = iio_priv(indio_dev);
+>>> +
+>>> +    if (iio_buffer_enabled(indio_dev)) {
+>>> +        dev_warn(&indio_dev->dev, "trigger mode already enabled");
+>>> +        return -EIO;
+>>> +    }
+>>> +
+>>> +    /* Start acquisition on conversion register write */
+>>> +    reg = MAX1027_SETUP_REG | MAX1027_REF_MODE2 | MAX1027_CKS_MODE2;
+>>> +    ret = spi_write(st->spi, (void *)&reg, 1);
+>>> +    if (ret<  0) {
+>>> +        dev_err(&indio_dev->dev,
+>>> +            "Failed to configure setup register\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    /* Configure conversion register with the requested chan */
+>>> +    reg = MAX1027_CONV_REG | MAX1027_CHAN(chan->channel)
+>>> +        | MAX1027_NOSCAN | !!(chan->type == IIO_TEMP);
+>>> +    ret = spi_write(st->spi, (void *)&reg, 1);
+>>> +    if (ret<  0) {
+>>> +        dev_err(&indio_dev->dev,
+>>> +            "Failed to configure conversion register\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    /*
+>>> +     * For an unknown reason, when we use the mode "10" (write
+>>> +     * conversion register), the it doesn't occur every time.
+>>> +     * So we just wait 1 ms.
+>>> +     */
+>>> +    mdelay(1);
+>>> +
+>>> +    /* Read result */
+>>> +    ret = spi_read(st->spi, st->buffer, (chan->type == IIO_TEMP) ? 4 :
+>>> 2);
+>>> +    if (ret<  0)
+>>> +        return ret;
+>>> +
+>>> +    *val = be16_to_cpu(st->buffer[0]);
+>>> +
+>>> +    return IIO_VAL_INT;
+>>> +}
+>>> +
+>>> +static int max1027_read_raw(struct iio_dev *indio_dev,
+>>> +                struct iio_chan_spec const *chan,
+>>> +                int *val, int *val2, long mask)
+>>> +{
+>>> +    int ret = 0;
+>>> +    struct max1027_state *st = iio_priv(indio_dev);
+>>> +
+>>> +    mutex_lock(&st->lock);
+>>> +
+>>> +    switch (mask) {
+>>> +    case IIO_CHAN_INFO_RAW:
+>>> +        ret = max1027_read_single_value(indio_dev, chan, val);
+>>> +        break;
+>>> +    case IIO_CHAN_INFO_SCALE:
+>>> +        switch (chan->type) {
+>>> +        case IIO_TEMP:
+>>> +            *val = 1;
+>>> +            *val2 = 8;
+>>> +            ret = IIO_VAL_FRACTIONAL;
+>>> +            break;
+>>> +        case IIO_VOLTAGE:
+>>> +            *val = 2500;
+>>> +            *val2 = 10;
+>>> +            ret = IIO_VAL_FRACTIONAL_LOG2;
+>>> +            break;
+>>> +        default:
+>>> +            ret = -EINVAL;
+>>> +            break;
+>>> +        };
+>>> +        break;
+>>> +    default:
+>>> +        ret = -EINVAL;
+>>> +        break;
+>>> +    };
+>>> +
+>>> +    mutex_unlock(&st->lock);
+>>> +
+>>> +    return ret;
+>>> +}
+>>> +
+>>> +static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
+>>> +                  unsigned reg, unsigned writeval,
+>>> +                  unsigned *readval)
+>>> +{
+>>> +    unsigned char val;
+>>> +    struct max1027_state *st = iio_priv(indio_dev);
+>>> +
+>>> +    if (readval != NULL)
+>>> +        return -EINVAL;
+>>> +
+>>> +    val = (unsigned char)writeval;
+>>> +    return spi_write(st->spi, (void *)&val, 1);
+>>> +}
+>>> +
+>>> +static int max1027_set_trigger_state(struct iio_trigger *trig, bool
+>>> state)
+>>> +{
+>>> +    struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
+>>> +    struct max1027_state *st = iio_priv(indio_dev);
+>>> +    unsigned char reg;
+>>> +    int ret;
+>>> +
+>>> +    if (state) {
+>>> +        /* Start acquisition on cnvst */
+>>> +        reg = MAX1027_SETUP_REG | MAX1027_CKS_MODE0 | MAX1027_REF_MODE2;
+>>> +        ret = spi_write(st->spi, (void *)&reg, 1);
+>>> +        if (ret<  0)
+>>> +            return ret;
+>>> +
+>>> +        /* Scan from 0 to max */
+>>> +        reg = MAX1027_CONV_REG | MAX1027_CHAN(0)
+>>> +            | MAX1027_SCAN_N_M | MAX1027_TEMP;
+>>> +        ret = spi_write(st->spi, (void *)&reg, 1);
+>>> +        if (ret<  0)
+>>> +            return ret;
+>>> +    } else {
+>>> +        /* Start acquisition on conversion register write */
+>>> +        reg = MAX1027_SETUP_REG | MAX1027_CKS_MODE2 | MAX1027_REF_MODE2;
+>>> +        ret = spi_write(st->spi, (void *)&reg, 1);
+>>> +        if (ret<  0)
+>>> +            return ret;
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>
+>> This is a very common case so we have a generic function for it so use that...
+>>
+>> iio_trigger_generic_data_poll
+>> Note that the private data is the trigger structure rather than the iio_Dev
+>
+> I've done a v4 with iio_trigger_generic_data_rdy_poll.
+>
+>> Also if this only works of the buffer is enabled you need to enforce that using the relevant call backs... Validate_device and validate_trigger. Probably start by only letting the device and trigger bind.
+>
+> I'm sorry, I don't see what should be done in those callback (IRQ is always enabled).
+> May you help/explain me what is expected in those callback please .
+>
+Sure.
 
-dma-ranges defines a static mapping for mastering through the bus node.
+In general in IIO any trigger can be used with any device.  Thus in theory
+at least one can use your dataready trigger to trigger another device entirely.
+Obviously this typically doesn't work if buffered capture is disabled
+(i.e. only the non max1027 device is in set to use the trigger).
 
-The whole point of an IOMMU is that it maps dynamically, so I agree:
-I'm unclear on what dma-ranges should mean in the IOMMU node itself
-(if anything).
+It's also the case that triggering the max1027 with say a userspace trigger
+won't currently work.  (it is perfectly acceptable that this doesn't work btw!)
 
-> 
-> > > I don't understand the problem. If you have stream IDs 0 through 7,
-> > > you would have
-> > >
-> > >         master@a {
-> > >                 ...
-> > >                 iommus = <&smmu 0>;
-> > >         };
-> > >
-> > >         master@b {
-> > >                 ...
-> > >                 iommus = <&smmu 1;
-> > >         };
-> > >
-> > >         ...
-> > >
-> > >         master@12 {
-> > >                 ...
-> > >                 iommus = <&smmu 7;
-> > >         };
-> > >
-> > > and you don't need a window at all. Why would you need a mask of
-> > > some sort?
-> > 
-> > 1 master with 7 IDs like this:
-> > 
-> >          master@a {
-> >                  ...
-> >                  iommus = <&smmu 0> <&smmu 1> <&smmu 2> <&smmu 3>
-> > <&smmu 4> <&smmu 5> <&smmu 6> <&smmu 7>;
-> >          };
-> > 
-> > If there was any sort of window, then it is almost certainly the same
-> > window for each ID.
+As such you need to limit which triggers can be used for buffered capture on this
+device and also which devices can use the trigger.  This is what the two
+callbacks mentioned are for.
 
-Do we have real examples of using a window *and* an ID?  I thought the
-windowed-IOMMU concept was partly a way of encoding the ID in some
-real address bits on the bus.  If you're doing that, it seems less likely
-that there is a true "ID" as such (though it is possible).
+In struct iio_dev we have validate trigger.  This validates whether the current
+trigger may be used to drive buffered capture on the iio device.  This callback
+is called during any trigger registration.  This one should simply check that
+the provided trigger is the one associated with the provided struct iio_dev
+(e.g. as done in drivers/iio/imu/inv_mpu6050/inv_mpu_core.c)
 
-> Ok, I see. In that case you'd probably want to have #address-cells = <1>
-> and #size-cells = <1> and give a range of IDs like
-> 
-> 	iommus = <&smmu 0 8>;
-> 
-> Do you think that ranges can have a meaningful definition with the ARM
-> SMMU stream IDs?
+In struct iio_trig we have a callback to validate what the trigger can drive
+(e.g. requirements such that the trigger will not lock up).  Some devices
+have a separate reset of the dataready interrupt (in which case the reset
+is done in the try_reenable callback and doesn't actually require that the buffer
+is enabled - thus the data ready trigger may be used as a fixed frequency
+trigger - odd it may be, but it can done!).  Others simply require that
+the data registers are read as is the case here.  In this case it is fiddly to
+allow the trigger to drive buffered capture on other devices so mostly
+we don't bother and just have a validate_buffer callback for the trigger.
+This restricts which buffers can be driven by the trigger in question.
+It's normally much the same as the validate_trigger one above.
 
-In the strictest sense, no.
+In summary if you supply both functions and have them verify you have a matched
+pair of trigger and buffer from the same max1027 then you avoid some complexity
+and ensure all cases that just work do indeed just work.
 
-But for a large set of sane configurations, this probably works.
+Note that we really should do an audit of existing drivers as I suspect
+some don't set these callbacks that should.  Working around them as stated
+above is almost always possible, but can be really fiddly.
 
-Small sets of randomly-assigned IDs can just be enumerated one by one.
+J
+> For now, I send a v4 without those callback.
+>
+>> One day we will work out a clean way of falling back to polled reads if using any other trigger!
+>>
+>>> +static irqreturn_t max1027_interrupt_handler(int irq, void *private)
+>>> +{
+>>> +    struct iio_dev *indio_dev = (struct iio_dev *)private;
+>>> +
+>>> +    pr_debug("%s(irq=%d, private=0x%p)\n", __func__, irq, private);
+>>> +
+>>> +    if (iio_buffer_enabled(indio_dev))
+>>> +        iio_trigger_poll(indio_dev->trig, iio_get_time_ns());
+>>> +
+>>> +    return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static irqreturn_t max1027_trigger_handler(int irq, void *private)
+>>> +{
+>>> +    struct iio_poll_func *pf = (struct iio_poll_func *)private;
+>>> +    struct iio_dev *indio_dev = pf->indio_dev;
+>>> +    struct max1027_state *st = iio_priv(indio_dev);
+>>> +
+>>> +    pr_debug("%s(irq=%d, private=0x%p)\n", __func__, irq, private);
+>>> +
+>>> +    /* fill buffer with all channel */
+>>> +    spi_read(st->spi, st->buffer, indio_dev->masklength * 2);
+>>> +
+>>> +    iio_push_to_buffers_with_timestamp(indio_dev, st->buffer,
+>>> +                       iio_get_time_ns());
+>>> +
+>>> +    iio_trigger_notify_done(indio_dev->trig);
+>>> +
+>>> +    return IRQ_HANDLED;
+>>> +}
+>>> +
+>>> +static const struct iio_trigger_ops max1027_trigger_ops = {
+>>> +    .owner = THIS_MODULE,
+>>> +    .set_trigger_state =&max1027_set_trigger_state,
+>>> +};
+>>> +
+>>> +static const struct iio_info max1027_info = {
+>>> +    .driver_module = THIS_MODULE,
+>>> +    .read_raw =&max1027_read_raw,
+>>> +    .debugfs_reg_access =&max1027_debugfs_reg_access,
+>>> +};
+>>> +
+>>> +static int max1027_probe(struct spi_device *spi)
+>>> +{
+>>> +    int err;
+>>> +    unsigned char reg;
+>>> +    struct iio_dev *indio_dev;
+>>> +    struct max1027_state *st;
+>>> +
+>>> +    pr_debug("%s: probe(spi = 0x%p)\n", __func__, spi);
+>>> +
+>>> +    /* allocate iio device */
+>>> +    indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
+>>> +    if (indio_dev == NULL) {
+>>> +        pr_err("can't allocate iio device\n");
+>>> +        return -ENOMEM;
+>>> +    }
+>>> +
+>>> +    spi_set_drvdata(spi, indio_dev);
+>>> +
+>>> +    st = iio_priv(indio_dev);
+>>> +    st->spi = spi;
+>>> +    st->buffer = NULL;
+>>> +    st->info = (struct max1027_chip_info *)
+>>> +        &max1027_chip_info_tbl[spi_get_device_id(spi)->driver_data];
+>>> +
+>>> +    mutex_init(&st->lock);
+>>> +
+>>> +    /* request irq */
+>>> +    err = devm_request_threaded_irq(&spi->dev, spi->irq,
+>>> +                    max1027_interrupt_handler,
+>>> +                    NULL,
+>>> +                    IRQF_TRIGGER_FALLING,
+>>> +                    spi->dev.driver->name, indio_dev);
+>>> +    if (err<  0) {
+>>> +        dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
+>>> +        return err;
+>>> +    }
+>>> +
+>>> +    indio_dev->name = spi_get_device_id(spi)->name;
+>>> +    indio_dev->dev.parent =&spi->dev;
+>>> +    indio_dev->info =&max1027_info;
+>>> +    indio_dev->modes = INDIO_DIRECT_MODE;
+>>> +    indio_dev->channels = st->info->channels;
+>>> +    indio_dev->num_channels = st->info->num_channels;
+>>> +    indio_dev->available_scan_masks = st->info->available_scan_masks;
+>>> +
+>>> +    /* Allocate buffer (data) */
+>>> +    st->buffer = devm_kmalloc(&indio_dev->dev,
+>>> +                  indio_dev->num_channels * 2,
+>>> +                  GFP_KERNEL);
+>>> +    if (st->buffer == NULL) {
+>>> +        dev_err(&indio_dev->dev, "Can't allocate bufffer\n");
+>>> +        return -ENOMEM;
+>>> +    }
+>>> +
+>>> +    /* Allocate buffer */
+>>> +    err = iio_triggered_buffer_setup(indio_dev,&iio_pollfunc_store_time,
+>>> +                    &max1027_trigger_handler, NULL);
+>>> +    if (err<  0) {
+>>> +        dev_err(&indio_dev->dev, "Failed to setup buffer\n");
+>>> +        return err;
+>>> +    }
+>>> +
+>>> +    /* Allocate trigger */
+>>> +    st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
+>>> +                            indio_dev->name);
+>>> +    if (st->trig == NULL) {
+>>> +        err = -ENOMEM;
+>>> +        dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
+>>> +        goto fail_trigger_alloc;
+>>> +    }
+>>> +
+>>> +    /* configure and register trigger */
+>>> +    st->trig->ops =&max1027_trigger_ops;
+>>> +    st->trig->dev.parent =&spi->dev;
+>>> +    iio_trigger_set_drvdata(st->trig, indio_dev);
+>>> +    iio_trigger_register(st->trig);
+>>> +
+>>> +    /* Disable averaging */
+>>> +    reg = MAX1027_AVG_REG;
+>>> +    err = spi_write(st->spi, (void *)&reg, 1);
+>>> +    if (err<  0) {
+>>> +        dev_err(&indio_dev->dev, "Failed to configure averaging
+>>> register\n");
+>>> +        goto fail_dev_register;
+>>> +    }
+>>> +
+>>> +    /* Register the device */
+>>> +    err = iio_device_register(indio_dev);
+>>> +    if (err<  0) {
+>>> +        dev_err(&indio_dev->dev, "Failed to register iio device\n");
+>>> +        goto fail_dev_register;
+>>> +    }
+>>> +
+>>> +    return 0;
+>>> +
+>>> +fail_dev_register:
+>>> +fail_trigger_alloc:
+>>> +    iio_triggered_buffer_cleanup(indio_dev);
+>>> +
+>>> +    return err;
+>>> +}
+>>> +
+>>> +static int max1027_remove(struct spi_device *spi)
+>>> +{
+>>> +    struct iio_dev *indio_dev = spi_get_drvdata(spi);
+>>> +
+>>> +    pr_debug("%s: remove(spi = 0x%p)\n", __func__, spi);
+>>> +
+>>> +    iio_device_unregister(indio_dev);
+>>> +    iio_triggered_buffer_cleanup(indio_dev);
+>>> +
+>>> +    return 0;
+>>> +}
+>>> +
+>>> +static struct spi_driver max1027_driver = {
+>>> +    .driver = {
+>>> +        .name    = "max1027",
+>>> +        .owner    = THIS_MODULE,
+>>> +    },
+>>> +    .probe        = max1027_probe,
+>>> +    .remove        = max1027_remove,
+>>> +    .id_table    = max1027_id,
+>>> +};
+>>> +module_spi_driver(max1027_driver);
+>>> +
+>>> +MODULE_AUTHOR("Philippe Reynes<tremyfr-Qt13gs6zZMY@public.gmane.org>");
+>>> +MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
+>>> +MODULE_LICENSE("GPL v2");
+>>
+>
+> Regards,
+> Philippe
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-iio" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-We wouldn't be able to describe folding and bit shuffling, but we
-probably don't want to encourage that anyway.
-
-Cheers
----Dave
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
