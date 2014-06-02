@@ -1,50 +1,63 @@
-From: Dinh Nguyen <dinh.linux@gmail.com>
-Subject: Re: [PATCHv3 4/4] ARM: dts: replace the slot property into slot sub-node
- for dwmmc.
-Date: Mon, 02 Jun 2014 08:08:48 -0500
-Message-ID: <538C7760.2070909@gmail.com>
-References: <1401255351-17653-1-git-send-email-jh80.chung@samsung.com> <1401255351-17653-5-git-send-email-jh80.chung@samsung.com> <001d01cf7c06$420dea90$c629bfb0$%jun@samsung.com> <1834387.xgX8NLRvfH@phil>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
+Date: Mon, 2 Jun 2014 14:17:04 +0100
+Message-ID: <20140602131704.GE13573@leverpostej>
+References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
+ <20140529092106.GC24233@leverpostej>
+ <53870129.5010505@monstr.eu>
+ <20140529131940.GG24233@leverpostej>
+ <538C18CC.6040105@monstr.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1834387.xgX8NLRvfH@phil>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>
-Cc: 'Jaehoon Chung' <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, ludovic.desroches@atmel.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dinguyen@altera.com, cpgs@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <538C18CC.6040105@monstr.eu>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Michal Simek <monstr@monstr.eu>
+Cc: Harini Katakam <harinik@xilinx.com>, "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 02, 2014 at 07:25:16AM +0100, Michal Simek wrote:
+> On 05/29/2014 03:19 PM, Mark Rutland wrote:
+> > On Thu, May 29, 2014 at 10:43:05AM +0100, Michal Simek wrote:
+> >> Hi Mark,
+> >>
+> >>>> +static struct of_device_id cdns_wdt_of_match[] = {
+> >>>> +       { .compatible = "xlnx,zynq-wdt-r1p2", },
+> >>>> +       { .compatible = "cdns,wdt-r1p2", },
+> >>>
+> >>> If these can currently be handled identically, why not just have
+> >>> "cdns,wdt-r1p2" in the driver and in your dts have:
+> >>>
+> >>> compatible = "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
+> >>>
+> >>> If we need to distinguish the two for some reason later we can always
+> >>> add the "xlnx,zynq-wdt-r1p2" string to the driver.
+> >>
+> >> I would prefer to have 2 compatible strings just because
+> >> of that we don't know what is different compare to origin cadence
+> >> version. We have done the same for spi-cadence.c that's why
+> >> it shouldn't be any problem to keep it as is.
+> >> Having zynq compatible property here and using it give us option
+> >> that if another SoC vendor come with new configuration or clean
+> >> cadence one we can simple handle it without changing compatible
+> >> property for us.
+> > 
+> > Sure, we can have two documented strings. But as I mention for the
+> > moment the driver only needs to support the one string so long as a
+> > given dts has both. Then we can later distinguish the zynq variant (or
+> > any other) as necessary.
+> 
+> ok then. Let's use just "xlnx,zynq-wdt-r1p2" compatible string here
+> and remove "cdns,wdt-r1p2"
 
+That if anything seems backwards -- the driver should jsut take the most
+general string for now: "cdns,wdt-r1p2", while the dtb will have both:
 
-On 05/30/2014 01:15 PM, Heiko St=FCbner wrote:
-> Am Freitag, 30. Mai 2014, 21:54:13 schrieb Seungwon Jeon:
->> + Dinh Nguyen <dinguyen@altera.com>
->> + Heiko Stuebner <heiko@sntech.de>
->>
->> On Wed, May 28, 2014, Jaehoon Chung wrote:
->>> dw-mmc controller can support the multiple slot.
->>> So each slot's property can be difference.
->>> And "support-highspeed" property in dw-mmc is deprecated.
->>> "support-highspeed" property can be replaced to "cap-sd/mmc-highspe=
-ed".
->>>
->>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->>
->> Looks good to me.
->>
->> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
->
-> the rockchip part also looks ok to me
->
-> Acked-by: Heiko Stuebner <heiko@sntech.de>
->
->
->>
+compatible = "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
 
-=46or the socfpga parts:
+The driver can later disintguish "xlnx,zynq-wdt-r1p2" specially if
+necessary.
 
-Acked-by: Dinh Nguyen <dinguyen@altera.com>
-
-Thanks,
-Dinh
+Cheers,
+Mark.
