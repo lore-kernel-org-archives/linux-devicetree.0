@@ -1,131 +1,80 @@
-From: Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Mon, 2 Jun 2014 12:44:51 +0100
-Message-ID: <20140602114450.GF3855@e103592.cambridge.arm.com>
-References: <1400877395-4235-1-git-send-email-thierry.reding@gmail.com>
-	<20140530112226.GA3949@e103592.cambridge.arm.com>
-	<4830064.JvgTAs8Xty@wuerfel>
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzJdIGNsazogY2xwczcxMXg6IEFkZCBEVCBiaW5kaW5n?=
+ =?UTF-8?B?cyBkb2N1bWVudGF0aW9u?=
+Date: Mon, 02 Jun 2014 15:53:34 +0400
+Message-ID: <1401710013.506040115@f183.i.mail.ru>
+References: <1401616522-13505-1-git-send-email-shc_work@mail.ru>
+ <1401701568.132789498@f354.i.mail.ru>
+ <20140602104222.GA13573@leverpostej>
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4830064.JvgTAs8Xty@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140602104222.GA13573@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>
+Cc: =?UTF-8?B?T2xvZiBKb2hhbnNzb24=?= <olof@lixom.net>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree@vger.kernel.org>, =?UTF-8?B?TWlrZSBUdXJxdWV0dGU=?= <mturquette@linaro.org>, =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd@arndb.de>, =?UTF-8?B?bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn?= <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 30, 2014 at 09:01:19PM +0200, Arnd Bergmann wrote:
-> On Friday 30 May 2014 12:22:32 Dave Martin wrote:
-> > > +
-> > > +Examples:
-> > > +=========
-> > > +
-> > > +Single-master IOMMU:
-> > > +--------------------
-> > > +
-> > > +	iommu {
-> > > +		#address-cells = <0>;
-> > > +		#size-cells = <0>;
-> > > +	};
-> > > +
-> > > +	master {
-> > > +		iommus = <&/iommu>;
-> > > +	};
-> > > +
-> > > +Multiple-master IOMMU with fixed associations:
-> > > +----------------------------------------------
-> > > +
-> > > +	/* multiple-master IOMMU */
-> > > +	iommu {
-> > > +		/*
-> > > +		 * Masters are statically associated with this IOMMU and
-> > > +		 * address translation is always enabled.
-> > > +		 */
-> > > +		#address-cells = <0>;
-> > > +		#size-cells = <0>;
-> > 
-> > In this example, can different translations be set up for the different
-> > masters?
-> > 
-> > With no cells available to contain any sort of ID, it looks like this
-> > is not possible.
-> 
-> Correct, this example is for an IOMMU that does not use IDs but has a
-> shared address space for all devices.
-> 
-> > > +Multiple-master IOMMU with configurable DMA window:
-> > > +---------------------------------------------------
-> > > +
-> > > +	/ {
-> > > +		#address-cells = <1>;
-> > > +		#size-cells = <1>;
-> > > +
-> > > +		iommu {
-> > > +			/* master ID, address of DMA window */
-> > > +			#address-cells = <2>;
-> > > +			#size-cells = <2>;
-> > > +		};
-> > > +
-> > > +		master {
-> > > +			/* master ID 42, 4 GiB DMA window starting at 0 */
-> > > +			iommus = <&/iommu  42 0  0x1 0x0>;
-> > 
-> > I'm still concerned that in order to deal with future cases we will have
-> > to invent multiple ways to parse the "iommus" property.  For example, if
-> > we have a PCEe RC mastering through an IOMMU, it will pass a huge set
-> > of possible master IDs to the IOMMU, not just noe or two.
-> > 
-> > Do you have a solution in mind for that which doesn't break backwards
-> > compatibility?
-> 
-> I think we can treat PCI as a special case here and have an interface
-> that gets used by the PCI core code to talk to the IOMMU core code
-> when setting up a the dma_map_ops for a PCI function. As long as the
-> IOMMU driver understands what PCI is, we don't have to describe the
-> mapping in detail.
-
-PCI is only an example, but I admit it's likely to be the most important
-example of a peripheral using a huge ID space.
-
-There may still be integration-specific parameters which would need to
-be fed in via DT regarding how IDs coming out of the RC map onto the
-IOMMU and GIC.
-
-> 
-> > One option is to include an extra cell to the IOMMUs property
-> > that indicates how to parse it.  For now, only a single value would
-> > be defined.  For example:
-> > 
-> > 	iommus = <&/iommu IOMMU_SIMPLE 42>;
-> > 
-> > Then maybe later
-> > 
-> > 	iommus = <&/iommu IOMMU_RANGE 0x10000 0x10000>;
-> > 
-> > (I'm not suggesting what IOMMU_RANGE might mean.)
-> > 
-> 
-> This can really be left up to the specific IOMMU driver itself.
-> We can have drivers that support both #address-cells=<1>
-> and #address-cells=<2> and behave differently based on that.
-> I don't see a reason to define that across IOMMU implementations.
-
-There's a risk we have to come up with multiple solutions to the same
-problem there -- i.e., one solution per IOMMU implementation and then
-another solution for the GIC.
-
-Ideally that would be avoided, but the number of times this problem
-would need to be solved is probably not that large.
-
-Cheers
----Dave
+TW9uLCAyIEp1biAyMDE0IDExOjQyOjIyICswMTAwINC+0YIgTWFyayBSdXRsYW5kIDxtYXJrLnJ1
+dGxhbmRAYXJtLmNvbT46Cj4gT24gTW9uLCBKdW4gMDIsIDIwMTQgYXQgMTA6MzI6NDhBTSArMDEw
+MCwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+IE1vbiwgMiBKdW4gMjAxNCAwOTo1Njo1MSAr
+MDEwMCDQvtGCIE1hcmsgUnV0bGFuZCA8bWFyay5ydXRsYW5kQGFybS5jb20+Ogo+ID4gPiBPbiBT
+dW4sIEp1biAwMSwgMjAxNCBhdCAxMDo1NToyMkFNICswMTAwLCBBbGV4YW5kZXIgU2hpeWFuIHdy
+b3RlOgo+ID4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBEVCBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9y
+IHRoZSBDaXJydXMgTG9naWMKPiA+ID4gPiBDTFBTNzExWC1iYXNlZCBDUFVzIGNsb2NrIHN1YnN5
+c3RlbS4KPiA+ID4gPiAKPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgU2hpeWFuIDxz
+aGNfd29ya0BtYWlsLnJ1Pgo+ID4gPiA+IC0tLQo+ID4gPiA+ICAuLi4vZGV2aWNldHJlZS9iaW5k
+aW5ncy9jbG9jay9jbHBzNzExeC1jbG9jay50eHQgICAgICB8IDE5ICsrKysrKysrKysrKysrKysr
+KysKPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKPiA+ID4gPiAgY3Jl
+YXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9j
+bHBzNzExeC1jbG9jay50eHQKPiA+ID4gPiAKPiA+ID4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NscHM3MTF4LWNsb2NrLnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9jbG9jay9jbHBzNzExeC1jbG9jay50eHQKPiA+
+ID4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4gPiA+IGluZGV4IDAwMDAwMDAuLjBmZGYzYzkK
+PiA+ID4gPiAtLS0gL2Rldi9udWxsCj4gPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2Nsb2NrL2NscHM3MTF4LWNsb2NrLnR4dAo+ID4gPiA+IEBAIC0wLDAgKzEs
+MTkgQEAKPiA+ID4gPiArKiBDbG9jayBiaW5kaW5ncyBmb3IgdGhlIENpcnJ1cyBMb2dpYyBDTFBT
+NzExWCBDUFVzCj4gPiA+ID4gKwo+ID4gPiA+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ID4gPiA+
+ICstIGNvbXBhdGlibGUgIDogU2hhbGwgY29udGFpbiAiY2lycnVzLGNscHM3MTF4LWNsayIuCj4g
+PiA+ID4gKy0gcmVnICAgICAgICAgOiBBZGRyZXNzIG9mIHRoZSBpbnRlcm5hbCByZWdpc3RlciBz
+ZXQuCj4gPiA+ID4gKy0gY3B1ZnJlcSAgICAgOiBGYWN0b3J5IHNldCBkZWZhdWx0IGZyZXF1ZW5j
+eSBpbiBIWi4KPiA+ID4gCj4gPiA+IEh1aD8gV2h5IGlzIHRoaXMgY2FsbGVkICJjcHVmcmVxIiB3
+aGF0IGlzIHRoaXMgdGhlIGZyZXF1ZW5jeSBvZiwKPiA+ID4gZXhhY3RseT8KPiA+ID4gCj4gPiA+
+IElzIHRoaXMgYW4gaW5wdXQgb3IgYW4gb3V0cHV0Pwo+ID4gCj4gPiBNb2Rlcm4gQ0xQUzcxMVgg
+Q1BVcyBzdXBwb3J0IFBMTCByZXByb2dyYW1taW5nLCB3aGlsZSBmb3Igb2xkZXIgcHJvY2Vzc29y
+cywKPiA+IHRoaXMgcHJvY2VkdXJlIGlzIG5vdCBwb3NzaWJsZSBhbmQgdGhlIENQVSBjbG9jayBp
+cyBzZXQgdG8gYSBmaXhlZCB2YWx1ZS4gVGh1cyBpZiB0aGUKPiA+IHZhbHVlIG9mIHRoZSBQTEwg
+bXVsdGlwbGllciBpcyBub3QgY29ycmVjdCAobWlzc2luZyksIHdlIHVzZSBhIGZpeGVkIENQVSBm
+cmVxdWVuY3kKPiA+IG9mIHRoZSBwcm9jZXNzb3IsIGRlc2NyaWJlZCBpbiBEVCwgd2hpY2ggYWxs
+b3dzIHVzIHRvIHVzZSB0aGUgZHJpdmVyIGZvciB0aGUgbmV3IGFuZAo+ID4gb2xkIHZlcnNpb25z
+IG9mIHRoaXMgQ1BVLgo+IAo+IE9rLiBTbyB0aGlzIGlzIHRoZSBmcmVxdWVuY3kgb2YgYSAobm9u
+LXByb2dyYW1tYWJsZSkgUExMIHdoaWNoIGZlZWRzIHRoZQo+IGNsb2NrIElQIGJsb2NrPwo+IAo+
+IE9yIGlzIHRoaXMgaW50ZXJuYWwgdG8gdGhlIElQIGJsb2NrPwoKVG8gYmUgcHJlY2lzZSwgaXQg
+aXMgdGhlIGZyZXF1ZW5jeSBhdCB0aGUgQ1BVIHN0YXJ0dXAuIEFmdGVyIHN0YXJ0aW5nIHRoZSBi
+b290bG9hZGVyIGNhbgpjaGFuZ2UgdGhlIHZhbHVlIG9mIFBMTCAob2YgY291cnNlLCBpZiB0aGlz
+IGlzIHN1cHBvcnRlZCkgYW5kIHByb2Nlc3NvciBzcGVlZCB3aWxsCmNoYW5nZWQuIEZvciBDUFVz
+IHRoYXQgZG8gbm90IHN1cHBvcnQgY2hhbmdpbmcgdGhlIFBMTCwgdGhpcyB2YWx1ZSBpcyB0aGUg
+b25seSBvbmUKcG9zc2libGUuCgo+IFR5cGljYWxseSB3ZSdkIHVzZSAiY2xvY2stZnJlcXVlbmN5
+IiBhcyB0aGUgbmFtZSBmb3Igc3VjaCBhbiBpbnB1dCwgb3IKPiBqdXN0IG1vZGVsIGl0IGFzIGEg
+bm9ybWFsIGNsb2NrIGlucHV0IGFuZCBmZWVkIGl0IGEgZml4ZWQtcmF0ZS1jbG9jayBmb3IKPiB0
+aGUgbm9uLXByb2dyYW1tYWJsZSBjYXNlLgoKSSB3b3VsZCBwcmVmZXIgdG8gdXNlIHRoZSBuYW1l
+ICJzdGFydHVwLWZyZXF1ZW5jeSIgb3Igc28uCgoiY2xvY2stZnJlcXVlbmN5IiBtZWFucyB0aGF0
+IHdlIHVzZSB0aGlzIGZyZXF1ZW5jeSBleGFjdGx5LCBidXQgaXQncyBub3QgYXMKaWYgdGhlIFBM
+TCBoYXMgdG8gYmUgcmVwcm9ncmFtbWVkIGJ5IHRoZSBib290bG9hZGVyLgoKVGhlIHVzZSBvZiAi
+Zml4ZWQtcmF0ZS1jbG9jayIgaGVyZSBmb3IgbWUgaXMgbm90IGNvcnJlY3QsIGJlY2F1c2UgdGhl
+IHJlYWwgZ2VuZXJhdG9yCnVzZWQgYnkgdGhlIHByb2Nlc3NvciAob2xkIGFuZCBuZXcpLCB1c2Vz
+IHRoZSBmcmVxdWVuY3kgMy42ODY0TSBhbmQgc2ltcGx5IG11bHRpcGx5Cml0IGJ5IHRoZSBQTEwg
+dmFsdWUuCgotLS0KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMu
+aW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2xpbnV4LWFybS1rZXJuZWwK
