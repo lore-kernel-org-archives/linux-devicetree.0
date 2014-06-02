@@ -1,83 +1,26 @@
-From: Michal Simek <monstr@monstr.eu>
-Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
-Date: Mon, 02 Jun 2014 08:25:16 +0200
-Message-ID: <538C18CC.6040105@monstr.eu>
-References: <1401185895-3677-1-git-send-email-harinik@xilinx.com> <20140529092106.GC24233@leverpostej> <53870129.5010505@monstr.eu> <20140529131940.GG24233@leverpostej>
-Reply-To: monstr@monstr.eu
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH v3 0/7] of: setup dma parameters using dma-ranges and
+ dma-coherent
+Date: Mon, 2 Jun 2014 14:37:04 +0800
+Message-ID: <20140602063702.GB7834@dragon>
+References: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp"
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140529131940.GG24233@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Harini Katakam <harinik@xilinx.com>, "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "michals@xilinx.com" <michals@xilinx.com>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1398353407-2345-1-git-send-email-santosh.shilimkar@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 24, 2014 at 11:30:00AM -0400, Santosh Shilimkar wrote:
+> Here is an updated v3 of the series. Series introduces support for setting up
+> dma parameters based on device tree properties like 'dma-ranges' and
+> 'dma-coherent' and also update to ARM 32 bit port. Earlier version of the
+> series can be found here [3], [2] and [1].
 
-On 05/29/2014 03:19 PM, Mark Rutland wrote:
-> On Thu, May 29, 2014 at 10:43:05AM +0100, Michal Simek wrote:
->> Hi Mark,
->>
->>>> +static struct of_device_id cdns_wdt_of_match[] =3D {
->>>> +       { .compatible =3D "xlnx,zynq-wdt-r1p2", },
->>>> +       { .compatible =3D "cdns,wdt-r1p2", },
->>>
->>> If these can currently be handled identically, why not just have
->>> "cdns,wdt-r1p2" in the driver and in your dts have:
->>>
->>> compatible =3D "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
->>>
->>> If we need to distinguish the two for some reason later we can always=
+Are these two generic device tree properties documented somewhere under
+Documentation/devicetree/bindings?
 
->>> add the "xlnx,zynq-wdt-r1p2" string to the driver.
->>
->> I would prefer to have 2 compatible strings just because
->> of that we don't know what is different compare to origin cadence
->> version. We have done the same for spi-cadence.c that's why
->> it shouldn't be any problem to keep it as is.
->> Having zynq compatible property here and using it give us option
->> that if another SoC vendor come with new configuration or clean
->> cadence one we can simple handle it without changing compatible
->> property for us.
->=20
-> Sure, we can have two documented strings. But as I mention for the
-> moment the driver only needs to support the one string so long as a
-> given dts has both. Then we can later distinguish the zynq variant (or
-> any other) as necessary.
-
-ok then. Let's use just "xlnx,zynq-wdt-r1p2" compatible string here
-and remove "cdns,wdt-r1p2"
-
-Thanks,
-Michal
-
---=20
-Michal Simek, Ing. (M.Eng), OpenPGP -> KeyID: FE3D1F91
-w: www.monstr.eu p: +42-0-721842854
-Maintainer of Linux kernel - Microblaze cpu - http://www.monstr.eu/fdt/
-Maintainer of Linux kernel - Xilinx Zynq ARM architecture
-Microblaze U-BOOT custodian and responsible for u-boot arm zynq platform
-
-
-
---BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.10 (GNU/Linux)
-Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
-
-iEYEARECAAYFAlOMGMwACgkQykllyylKDCGpTgCeI7dlKUifRZbCVGPXZJ905Fb2
-qfUAn0ReQS9Wp7Gz9Gfl9Mg/T3JbdEma
-=pVbY
------END PGP SIGNATURE-----
-
---BiKsBpnhxs5kiiEJnDCpQBMnWbjuGLFVp--
+Shawn
