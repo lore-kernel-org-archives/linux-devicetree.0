@@ -1,50 +1,55 @@
-From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzJdIGNsazogY2xwczcxMXg6IEFkZCBEVCBiaW5kaW5n?=
- =?UTF-8?B?cyBkb2N1bWVudGF0aW9u?=
-Date: Mon, 02 Jun 2014 13:32:48 +0400
-Message-ID: <1401701568.132789498@f354.i.mail.ru>
-References: <1401616522-13505-1-git-send-email-shc_work@mail.ru>
- <20140602085651.GA12397@leverpostej>
-Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH 1/5] ARM: berlin: add SMP support
+Date: Mon, 2 Jun 2014 11:35:03 +0200
+Message-ID: <20140602093503.GA24919@kwain>
+References: <1401700866-24804-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1401700866-24804-2-git-send-email-antoine.tenart@free-electrons.com>
+ <20140602092913.GA933@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140602085651.GA12397@leverpostej>
+Content-Disposition: inline
+In-Reply-To: <20140602092913.GA933-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: =?UTF-8?B?T2xvZiBKb2hhbnNzb24=?= <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, =?UTF-8?B?ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc=?= <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, =?UTF-8?B?TWlrZSBUdXJxdWV0dGU=?= <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?B?QXJuZCBCZXJnbWFubg==?= <arnd-r2nGTMty4D4@public.gmane.org>, =?UTF-8?B?bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn?= <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-TW9uLCAyIEp1biAyMDE0IDA5OjU2OjUxICswMTAwINC+0YIgTWFyayBSdXRsYW5kIDxtYXJrLnJ1
-dGxhbmRAYXJtLmNvbT46Cj4gT24gU3VuLCBKdW4gMDEsIDIwMTQgYXQgMTA6NTU6MjJBTSArMDEw
-MCwgQWxleGFuZGVyIFNoaXlhbiB3cm90ZToKPiA+IFRoaXMgcGF0Y2ggYWRkcyBEVCBiaW5kaW5n
-IGRvY3VtZW50YXRpb24gZm9yIHRoZSBDaXJydXMgTG9naWMKPiA+IENMUFM3MTFYLWJhc2VkIENQ
-VXMgY2xvY2sgc3Vic3lzdGVtLgo+ID4gCj4gPiBTaWduZWQtb2ZmLWJ5OiBBbGV4YW5kZXIgU2hp
-eWFuIDxzaGNfd29ya0BtYWlsLnJ1Pgo+ID4gLS0tCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGlu
-Z3MvY2xvY2svY2xwczcxMXgtY2xvY2sudHh0ICAgICAgfCAxOSArKysrKysrKysrKysrKysrKysr
-Cj4gPiAgMSBmaWxlIGNoYW5nZWQsIDE5IGluc2VydGlvbnMoKykKPiA+ICBjcmVhdGUgbW9kZSAx
-MDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2NscHM3MTF4LWNs
-b2NrLnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Nsb2NrL2NscHM3MTF4LWNsb2NrLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9jbG9jay9jbHBzNzExeC1jbG9jay50eHQKPiA+IG5ldyBmaWxlIG1vZGUgMTAw
-NjQ0Cj4gPiBpbmRleCAwMDAwMDAwLi4wZmRmM2M5Cj4gPiAtLS0gL2Rldi9udWxsCj4gPiArKysg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svY2xwczcxMXgtY2xvY2su
-dHh0Cj4gPiBAQCAtMCwwICsxLDE5IEBACj4gPiArKiBDbG9jayBiaW5kaW5ncyBmb3IgdGhlIENp
-cnJ1cyBMb2dpYyBDTFBTNzExWCBDUFVzCj4gPiArCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoK
-PiA+ICstIGNvbXBhdGlibGUgIDogU2hhbGwgY29udGFpbiAiY2lycnVzLGNscHM3MTF4LWNsayIu
-Cj4gPiArLSByZWcgICAgICAgICA6IEFkZHJlc3Mgb2YgdGhlIGludGVybmFsIHJlZ2lzdGVyIHNl
-dC4KPiA+ICstIGNwdWZyZXEgICAgIDogRmFjdG9yeSBzZXQgZGVmYXVsdCBmcmVxdWVuY3kgaW4g
-SFouCj4gCj4gSHVoPyBXaHkgaXMgdGhpcyBjYWxsZWQgImNwdWZyZXEiIHdoYXQgaXMgdGhpcyB0
-aGUgZnJlcXVlbmN5IG9mLAo+IGV4YWN0bHk/Cj4gCj4gSXMgdGhpcyBhbiBpbnB1dCBvciBhbiBv
-dXRwdXQ/CgpNb2Rlcm4gQ0xQUzcxMVggQ1BVcyBzdXBwb3J0IFBMTCByZXByb2dyYW1taW5nLCB3
-aGlsZSBmb3Igb2xkZXIgcHJvY2Vzc29ycywKdGhpcyBwcm9jZWR1cmUgaXMgbm90IHBvc3NpYmxl
-IGFuZCB0aGUgQ1BVIGNsb2NrIGlzIHNldCB0byBhIGZpeGVkIHZhbHVlLiBUaHVzIGlmIHRoZQp2
-YWx1ZSBvZiB0aGUgUExMIG11bHRpcGxpZXIgaXMgbm90IGNvcnJlY3QgKG1pc3NpbmcpLCB3ZSB1
-c2UgYSBmaXhlZCBDUFUgZnJlcXVlbmN5Cm9mIHRoZSBwcm9jZXNzb3IsIGRlc2NyaWJlZCBpbiBE
-VCwgd2hpY2ggYWxsb3dzIHVzIHRvIHVzZSB0aGUgZHJpdmVyIGZvciB0aGUgbmV3IGFuZApvbGQg
-dmVyc2lvbnMgb2YgdGhpcyBDUFUuCgotLS0KCg==
+On Mon, Jun 02, 2014 at 10:29:13AM +0100, Russell King - ARM Linux wrot=
+e:
+> On Mon, Jun 02, 2014 at 11:21:02AM +0200, Antoine T=E9nart wrote:
+> > diff --git a/arch/arm/mach-berlin/Kconfig b/arch/arm/mach-berlin/Kc=
+onfig
+> > index d3c5f14dc142..e3733692f67a 100644
+> > --- a/arch/arm/mach-berlin/Kconfig
+> > +++ b/arch/arm/mach-berlin/Kconfig
+> > @@ -4,6 +4,7 @@ config ARCH_BERLIN
+> >  	select GENERIC_IRQ_CHIP
+> >  	select DW_APB_ICTL
+> >  	select DW_APB_TIMER_OF
+> > +	select SMP
+>=20
+> Please don't add selects of symbols which aren't absolutely necessary=
+=2E
+>=20
+> Since this has been merged without SMP support and presumably works w=
+ithout
+> SMP support, it would appear that SMP support is not mandatory for th=
+e
+> platform to work.
+
+It can work without SMP, I'll remove this.
+
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
