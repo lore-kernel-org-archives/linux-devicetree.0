@@ -1,39 +1,75 @@
-From: Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>
-Subject: Re: [PATCH 1/3] arm: multi_v7: enable igb, stmpe, spidev, lm95245,
- pwm leds
-Date: Mon, 2 Jun 2014 10:01:36 -0700
-Message-ID: <CAOesGMg6aBpH18VO6XF1HxbXsJy92QadT3MVT2vOY41s=oCRrw@mail.gmail.com>
-References: <cc612cd3f24f01cfc8fd3e81b1027ff94862e8b4.1401700579.git.marcel@ziswiler.com>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH v3 1/6] i2c: s3c2410: Handle i2c sys_cfg register in i2c
+ driver
+Date: Mon, 2 Jun 2014 19:14:28 +0200
+Message-ID: <20140602171428.GK2654@katana>
+References: <1399706287-13919-1-git-send-email-y@samsung.com>
+ <1399706419-13976-1-git-send-email-pankaj.dubey@samsung.com>
+ <1399706419-13976-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <cc612cd3f24f01cfc8fd3e81b1027ff94862e8b4.1401700579.git.marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, stefan-XLVq0VzYD2Y@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="8kI7hWEHMS8Z+7/0"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1399706419-13976-2-git-send-email-pankaj.dubey@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pankaj Dubey <pankaj.dubey@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kgene.kim@samsung.com, t.figa@samsung.com, arnd@arndb.de, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Russell King <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 2, 2014 at 2:43 AM, Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org> wrote:
-> The NVIDIA Tegra 3 based Apalis T30 module contains an Intel i210 resp.
-> i211 gigabit Ethernet controller, an STMPE811 ADC/touch controller,
-> SPI bus and PWM LEDs generically accessible from user space and an
-> LM95245 temperature sensor chip. The later four can also be found on
-> the Colibri T30 module.
->
-> While at it move the NEON entry down to its proper place to have it all
-> nicely ordered again.
->
-> Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-> ---
-> BTW: How about TEGRA_EMC_SCALING_ENABLE, MACH_UX500_DT, OMAP_USB3 and
-> MMC_SUNXI which I haven't found any mentioning anywhere, MTD_M25P80
-> which depends on MTD_SPI_NOR or DOVE_THERMAL which depends on the
-> legacy ARCH_DOVE (besides USE_OF of course) being not much of multi
-> compatible?
 
-Can you resend towards the end of the merge window, please? We should
-make a pass and update anything new that has been merged for 3.16
-around then.
+--8kI7hWEHMS8Z+7/0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sat, May 10, 2014 at 04:20:14PM +0900, Pankaj Dubey wrote:
+> Let's handle i2c interrupt re-configuration in i2c driver. This will
+> help us in removing some soc specific checks from machine files.
+> Since only Exynos5250, and Exynos5420 need to do this, added syscon
+> based phandle to i2c device nodes of respective SoC DT files.
+> Also handle saving and restoring of SYS_I2C_CFG register during
+> suspend and resume of i2c driver. This will help in removing soc
+> specific check from mach-exynos/pm.c.
+>=20
+> CC: Rob Herring <robh+dt@kernel.org>
+> CC: Randy Dunlap <rdunlap@infradead.org>
+> CC: Wolfram Sang <wsa@the-dreams.de>
+> CC: Russell King <linux@arm.linux.org.uk>
+> CC: devicetree@vger.kernel.org
+> CC: linux-doc@vger.kernel.org
+> CC: linux-i2c@vger.kernel.org
+> Signed-off-by: Pankaj Dubey <pankaj.dubey@samsung.com>
+
+Shall this go via i2c-tree? Looks to me like it should go with the rest
+of the series? Patch is mostly okay (only reviewed the code, not the
+bindings), one nit:
+
+> +	regmap_update_bits(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, BIT(id), val);
+
+Hardcode the '0' and drop using 'val'?
 
 
--Olof
+--8kI7hWEHMS8Z+7/0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTjLD0AAoJEBQN5MwUoCm2HgcP/A9XZJFA630XxvImjYAFPtk6
+3vql4HguDLoCdDlv+kR7IhGt3SKtMwFeOZDvmOFhX7HMdvBsfhd1b/1suarQtCSZ
+6AHCLmlH77i5LoeaflqLGWmzpxl0I/Frg28dk1aNBWk0fot2IlRzo4XFlqmCV4MT
+DoUbAd9yNZySqAmyFm21y4p8+EJm6aW8eU7e1XbBCgWBlEtQVQlSUFG1/AY1MwOW
+HNoV2f5AlpV3ZeaCDxWFy2H7/5QzZSIW/VseyYL/sAgRtYgdT4SIy/5cNBg+UvUs
+cWH6Hzogu0tew87R1TZi6cSlq4pTZ4ZzhlHfvxzusqnsv6OZD7XKrxbePzQlyI0+
+eNSDeBTqEiuRyw+LjaAMvx8k98TaJXF0MxEyrmtLpH/xrIr8vtfyNIk2TAoZhQmp
+HvhHd5QwgahiHtd3MInQZ44+IUfQJX2E+bwWDLw4DhRpoLIAfIR+1cd+GG9yL0eR
+PKPwsakTasrMCSp12zf5ewdhJgsDSZ5TBqQuaYev3Ff1k+YeQ6TEDIzpS27wtnPv
+oBAVc0F+eyqulHAKjpWlmJOdizeVcF9qBERWeSf+Ca7voRQbUNF2knJph7fXpaW8
+nKi9mP/jaLxI1a79YBQ1d2EoM8ZmDZe2cfOQY34DMyuyLMBs5/9VOfYsuocETMqD
+CRanmYag61F7JjFdQzDP
+=KCHP
+-----END PGP SIGNATURE-----
+
+--8kI7hWEHMS8Z+7/0--
