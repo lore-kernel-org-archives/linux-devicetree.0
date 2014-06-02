@@ -1,72 +1,82 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm: tegra: enable igb, stmpe, i2c chardev, spidev,
- lm95245, pwm leds
-Date: Mon, 2 Jun 2014 23:16:27 +0100
-Message-ID: <20140602221627.GP31751@sirena.org.uk>
-References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com>
- <39a8704a4c8170d6b0620a1e5e44042eae6d8810.1401665237.git.marcel@ziswiler.com>
- <538CA24B.1010602@wwwdotorg.org>
- <538CA635.4050502@ziswiler.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 2/2] net: hisilicon: add hix5hd2 mac driver
+Date: Mon, 02 Jun 2014 16:11:31 -0700 (PDT)
+Message-ID: <20140602.161131.783479189097234753.davem@davemloft.net>
+References: <1401440528-7804-1-git-send-email-zhangfei.gao@linaro.org>
+	<1401440528-7804-3-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kOdvwer/5gjFgNo6"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <538CA635.4050502-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1401440528-7804-3-git-send-email-zhangfei.gao@linaro.org>
+Sender: netdev-owner@vger.kernel.org
+To: zhangfei.gao@linaro.org
+Cc: arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Date: Fri, 30 May 2014 17:02:08 +0800
 
---kOdvwer/5gjFgNo6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+> +			skb = netdev_alloc_skb_ip_align(priv->netdev,
+> +				MAC_MAX_FRAME_SIZE);
 
-On Mon, Jun 02, 2014 at 06:28:37PM +0200, Marcel Ziswiler wrote:
-> On 06/02/2014 06:11 PM, Stephen Warren wrote:
+When a function call, declaration, or definition spans multiple lines,
+you must start the arguments on the second and subsequent lines exactly
+at the first column after the openning parenthesis.
 
-> >>+CONFIG_SPI_SPIDEV=y
+Please therefore reindent this properly.
 
-> >Is this useful with DT? I thought that unlike I2C_CHARDEV, spidev needed
-> >dummy devices to exist in DT for spidev to work? If so, there's not much
-> >point adding the option to defconfig, since people can add it when they
-> >put the dummy devices into DT.
+> +		addr = dma_map_single(priv->dev, skb->data,
+> +					MAC_MAX_FRAME_SIZE, DMA_FROM_DEVICE);
 
-> Yes, the Apalis T30 DT I sent actually contains two of them which we call
-> generic Apalis SPI1 and SPI2 out-of-the-box configured for exactly that.
-> Without the config enabled though it probably does not make much sense to
-> include it in the DT so I would consider removing it again.
+Likewise.
 
-Your DT is broken if it's got a "spidev" node in it, you should be
-describing the hardware not the Linux implementation of the software.
-It would be really nice if we had a good way of handling this but we
-don't yet.
+> +		desc->cmd = cpu_to_le32(DESC_VLD_FREE |
+> +			(MAC_MAX_FRAME_SIZE - 1) << DESC_BUFF_LEN_OFF);
 
---kOdvwer/5gjFgNo6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Likewise.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+> +	desc->cmd = cpu_to_le32(DESC_VLD_BUSY | DESC_FL_FULL |
+> +			(skb->len & DESC_DATA_MASK) << DESC_DATA_LEN_OFF |
+> +			(skb->len & DESC_DATA_MASK) << DESC_BUFF_LEN_OFF);
 
-iQIcBAEBAgAGBQJTjPe4AAoJELSic+t+oim9KWcQAJWlBDlz9bvmVX06mKnKprj0
-r3TntvSqpPTauZhXWC9pSNtBIuF9+GTAB0NgdP69nhoUbZU3+bdrUc8/0kzX+kDF
-lfpdqumhze9+m0N0ioJm9mT49EM+Sl1QOkMMWrq7WL7UfunZRXq98NMzL370TYGJ
-+FzIeUiwbVojbVa0nxD+fK1VKuJEQt92/IFfQpfvhkaZFrTWkxIzc2IE4DG+mCk4
-uqmbqLAMHI96xZ5YL1NHAQh/Bq6OCkYzBS1perYb9KYON0dF57oc8KGebln2ZxH1
-KY6O5tnHjpJjUa+OU58etASimysTveDbNuaqyFNO6tSx/ZvD2oV11ygvuLSQHyUD
-8FQv6kDHUWaxs2vOgvaXNugcKcsdnMaU7Q/UhmFGg0pz60Fb8VdbKu9EEinYn/vh
-IpA5J52oXIsGum8vuuCWxhQDeQvqrjoQuoC5nw5dWzUuqwKa/Oeg/0ygX30wmbMZ
-IX0Q7/13GuZke6pnJ20ET+P+OHT9Dcl5kF62ycSIC1NYXJzy5K9ESh99928GiNmw
-FlHyHq9pDHdwSAIQIPG8nMq1MRlPOvxxB8C1zx9yakpX9NnUu138rI5IA4gPs0zt
-RA7CZOSn8hKkmYj8bhQJhr/MbR2AMlyWy9kxk7cWK6tVz6F9kgeaMAiSHM0/PVrK
-2cHOUTMpP0LqVudoeyGG
-=YuF8
------END PGP SIGNATURE-----
+Likewise.
 
---kOdvwer/5gjFgNo6--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	priv->phy = of_phy_connect(dev, priv->phy_node,
+> +		&hix5hd2_adjust_link, 0, priv->phy_mode);
+
+Likewise.
+
+> +static int hix5hd2_mdio_wait_ready(struct mii_bus *bus)
+> +{
+> +	struct hix5hd2_priv *priv = bus->priv;
+> +	void __iomem *base = priv->base;
+> +	int i, timeout = 10000;
+> +
+> +	for (i = 0; readl_relaxed(base + MDIO_SINGLE_CMD) & MDIO_START; i++) {
+> +		if (i == timeout)
+> +			return -ETIMEDOUT;
+> +		udelay(1);
+> +	}
+> +
+> +	return 0;
+> +}
+
+10,000 udelay(1)'s is a long time, consider changing to usleep() or
+similar.
+
+> +			dma_free_coherent(priv->dev, priv->pool[i].size,
+> +					priv->pool[i].desc,
+> +					priv->pool[i].phys_addr);
+
+Indentation.
+
+> +		virt_addr = dma_alloc_coherent(dev, size, &phys_addr,
+> +				GFP_KERNEL);
+
+Likewise.
+
+> +		netdev_warn(ndev, "using random MAC address %pM\n",
+> +			 ndev->dev_addr);
+
+Likewise.
