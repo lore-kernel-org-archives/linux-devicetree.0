@@ -1,52 +1,48 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH 3/3] arm: tegra: initial support for apalis t30
-Date: Mon, 02 Jun 2014 10:33:13 -0600
-Message-ID: <538CA749.3010106@wwwdotorg.org>
-References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com> <b470c9c8631a6ef021d140192eb07006de3cfd93.1401665237.git.marcel@ziswiler.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
+ v3.16
+Date: Mon, 2 Jun 2014 09:38:41 -0700
+Message-ID: <20140602163841.GC11004@atomide.com>
+References: <1401214140-9828-1-git-send-email-tony@atomide.com>
+ <20140528071313.GH4227@lee--X1>
+ <20140528180607.GB4707@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <b470c9c8631a6ef021d140192eb07006de3cfd93.1401665237.git.marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140528180607.GB4707@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/01/2014 05:37 PM, Marcel Ziswiler wrote:
-> This patch adds the device tree to support Toradex Apalis T30, a
-> computer on module which can be used on different carrier boards.
+* Tony Lindgren <tony@atomide.com> [140528 11:11]:
+> * Lee Jones <lee.jones@linaro.org> [140528 00:14]:
+> > Thanks Tony, here's the pull-request:
+> > 
+> > The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
+> > 
+> >   Linux 3.14 (2014-03-30 20:40:15 -0700)
+> > 
+> > are available in the git repository at:
+> > 
+> >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-omap-v3.16-1
+> > 
+> > for you to fetch changes up to 43fef47f94a1ae46fb2720dada32fa3b5547bee2:
+> > 
+> >   mfd: twl4030-power: Add a configuration to turn off oscillator during off-idle (2014-05-28 08:06:18 +0100)
+> > 
+> > ----------------------------------------------------------------
+> > Second immutable branch between MFD and OMAP due for the v3.16 merge window.
 > 
-> The module consists of a Tegra 3 SoC, two PMICs, 1 or 2 GB of DDR3L
-> RAM, eMMC, an LM95245 temperature sensor chip, an i210 resp. i211
-> gigabit Ethernet controller, an STMPE811 ADC/touch controller as well
-> as two MCP2515 CAN controllers. Furthermore, there is an SGTL5000 audio
-> codec which is not yet supported. Anything that is not self contained
-> on the module is disabled by default.
-> 
-> The device tree for the Evaluation Board includes the modules device
-> tree and enables the supported peripherals of the carrier board (the
-> Evaluation Board supports almost all of them).
-> 
-> While at it also add the device tree binding documentation for Apalis
-> T30 as well as the previously missing one for the recently added
-> Colibri T30.
+> Thanks a lot, this will make it easier for me to chase down potential
+> PM related regressions ;) I'm merging this for testing only into the
+> linux-omap master branch, no need for me to include it into any
+> of my upstream heading branches.
 
-> diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
+Lee, I'm not seeing this in linux next, did you maybe forget to merge
+it into the MFD tree?
 
-> +	/* SPI1: Apalis SPI1 */
-> +	spi@7000d400 {
-> +		status = "okay";
-> +		spi-max-frequency = <25000000>;
-> +		spidev0: spidev@1 {
-> +			compatible = "spidev";
-> +			reg = <1>;
-> +			spi-max-frequency = <25000000>;
-> +		};
-> +	};
+Regards,
 
-I vaguely recall people speaking out against including "spidev" devices
-in DT because they don't represent actual HW, but rather a way to
-request that the SPI bus be exposed to user-space, which is a pure SW
-issue. Wouldn't it be better if the spidev interface worked like
-I2C_CHARDEV, where fake devices weren't actually required?
+Tony
