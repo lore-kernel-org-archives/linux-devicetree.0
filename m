@@ -1,7 +1,7 @@
 From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH v2 3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
-Date: Mon,  2 Jun 2014 15:42:07 +0200
-Message-ID: <1401716531-29794-4-git-send-email-geert+renesas@glider.be>
+Subject: [PATCH v2 7/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
+Date: Mon,  2 Jun 2014 15:42:11 +0200
+Message-ID: <1401716531-29794-8-git-send-email-geert+renesas@glider.be>
 References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
 Return-path: <linux-sh-owner@vger.kernel.org>
 In-Reply-To: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
@@ -10,44 +10,31 @@ To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
 Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
 List-Id: devicetree@vger.kernel.org
 
-Add clocks for the SYS-DMAC0 and SYS-DMAC1 hardware blocks.
-
-Cfr. the r8a7790 version by Ben Dooks.
+Add a DMA property to the QSPI node
 
 Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
 ---
 v2:
-  - No changes
+  - QSPI needs to use 8-bit accesses for DMA, not 32-bit,
+  - Reorder: TX first, RX second.
 
- arch/arm/boot/dts/r8a7791.dtsi | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/r8a7791.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index 8d7ffaeff6e0..e5c35d784ec8 100644
+index 37685ef32ea0..6c285ffc46cb 100644
 --- a/arch/arm/boot/dts/r8a7791.dtsi
 +++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -743,16 +743,19 @@
- 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
- 			reg = <0 0xe6150138 0 4>, <0 0xe6150040 0 4>;
- 			clocks = <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>, <&mp_clk>,
--				 <&mp_clk>, <&mp_clk>, <&mp_clk>;
-+				 <&mp_clk>, <&mp_clk>, <&mp_clk>,
-+				 <&zs_clk>, <&zs_clk>;
- 			#clock-cells = <1>;
- 			renesas,clock-indices = <
- 				R8A7791_CLK_SCIFA2 R8A7791_CLK_SCIFA1 R8A7791_CLK_SCIFA0
- 				R8A7791_CLK_MSIOF2 R8A7791_CLK_SCIFB0 R8A7791_CLK_SCIFB1
- 				R8A7791_CLK_MSIOF1 R8A7791_CLK_SCIFB2
-+				R8A7791_CLK_SYS_DMAC1 R8A7791_CLK_SYS_DMAC0
- 			>;
- 			clock-output-names =
- 				"scifa2", "scifa1", "scifa0", "msiof2", "scifb0",
--				"scifb1", "msiof1", "scifb2";
-+				"scifb1", "msiof1", "scifb2",
-+				"sys-dmac1", "sys-dmac0";
- 		};
- 		mstp3_clks: mstp3_clks@e615013c {
- 			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-clocks";
+@@ -917,6 +917,9 @@
+ 		reg = <0 0xe6b10000 0 0x2c>;
+ 		interrupts = <0 184 IRQ_TYPE_LEVEL_HIGH>;
+ 		clocks = <&mstp9_clks R8A7791_CLK_QSPI_MOD>;
++		dmas = <&dma0 R8A7791_DMA_QSPI_TX CHCR_TX_8BIT>,
++		       <&dma0 R8A7791_DMA_QSPI_RX CHCR_RX_8BIT>;
++		dma-names = "tx", "rx";
+ 		num-cs = <1>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
 -- 
 1.9.1
 
