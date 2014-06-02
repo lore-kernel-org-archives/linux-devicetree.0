@@ -1,67 +1,50 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] spi/pxa2xx-pci: Add common clock framework support
- in PCI glue layer
-Date: Mon, 2 Jun 2014 13:46:38 +0100
-Message-ID: <20140602124638.GD31751@sirena.org.uk>
-References: <1401738379-4107-1-git-send-email-chiau.ee.chew@intel.com>
- <1401738379-4107-2-git-send-email-chiau.ee.chew@intel.com>
+From: Dinh Nguyen <dinh.linux@gmail.com>
+Subject: Re: [PATCHv3 4/4] ARM: dts: replace the slot property into slot sub-node
+ for dwmmc.
+Date: Mon, 02 Jun 2014 08:08:48 -0500
+Message-ID: <538C7760.2070909@gmail.com>
+References: <1401255351-17653-1-git-send-email-jh80.chung@samsung.com> <1401255351-17653-5-git-send-email-jh80.chung@samsung.com> <001d01cf7c06$420dea90$c629bfb0$%jun@samsung.com> <1834387.xgX8NLRvfH@phil>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="BRE3mIcgqKzpedwo"
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1401738379-4107-2-git-send-email-chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chew Chiau Ee <chiau.ee.chew-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
-Cc: Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Darren Hart <dvhart-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1834387.xgX8NLRvfH@phil>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko@sntech.de>, Seungwon Jeon <tgih.jun@samsung.com>
+Cc: 'Jaehoon Chung' <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, ludovic.desroches@atmel.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, dinguyen@altera.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
 
---BRE3mIcgqKzpedwo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 
-On Tue, Jun 03, 2014 at 03:46:18AM +0800, Chew Chiau Ee wrote:
+On 05/30/2014 01:15 PM, Heiko St=FCbner wrote:
+> Am Freitag, 30. Mai 2014, 21:54:13 schrieb Seungwon Jeon:
+>> + Dinh Nguyen <dinguyen@altera.com>
+>> + Heiko Stuebner <heiko@sntech.de>
+>>
+>> On Wed, May 28, 2014, Jaehoon Chung wrote:
+>>> dw-mmc controller can support the multiple slot.
+>>> So each slot's property can be difference.
+>>> And "support-highspeed" property in dw-mmc is deprecated.
+>>> "support-highspeed" property can be replaced to "cap-sd/mmc-highspe=
+ed".
+>>>
+>>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+>>
+>> Looks good to me.
+>>
+>> Acked-by: Seungwon Jeon <tgih.jun@samsung.com>
+>
+> the rockchip part also looks ok to me
+>
+> Acked-by: Heiko Stuebner <heiko@sntech.de>
+>
+>
+>>
 
-> ---
->  drivers/spi/spi-pxa2xx-pci.c |   20 ++++++++++++++++++++
->  1 files changed, 20 insertions(+), 0 deletions(-)
+=46or the socfpga parts:
 
-> +	clk = clk_register_fixed_rate(&dev->dev, "spi_pxa2xx_clk", NULL,
-> +					CLK_IS_ROOT, c->max_clk_rate);
-> +	 if (IS_ERR(clk))
-> +		return PTR_ERR(clk);
+Acked-by: Dinh Nguyen <dinguyen@altera.com>
 
-This is pretty much fine code wise but I'd expect to see some Kconfig
-updates adding dependencies on the clock API - clk_register_fixed_rate()
-is only provided if the fixed rate driver is present.  I'm also not
-seeing any changes to unregister the fixed rate clock as the device is
-removed.
-
---BRE3mIcgqKzpedwo
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTjHIrAAoJELSic+t+oim9/7EP/1Pbt4XAJ5TpW6TYrXPk+sMS
-NZftP4t9eQPYSH46P8RRpqilmZ2dFOQZwKoDgmAFVt/tKJx34Vdmr5ZUE0FVn+TV
-ud/YKjTN6fvDd38ESKstpKpYE8Qg/oAWosoLsAWGRj+2smU1k6ezQVLM69Q1D3y5
-2gP0QR3XQw7MGYZ9k1BXVCjvTZbSdyHCqVJ8/hvjpJ2MZAfSqmvIeiHFF2weCnea
-ty9jis54P5HqCjnL76UpnruiJKZNB7+ZmfajuHCBJxfgiOGqYlsfIihH1I6aunYo
-t6l66UUdQjamjEsBlyWkFRBS6HgjIuOiCAb7QUGzFyK/yhAsWe5zgM59eCNSjBiH
-NgChnAml7Phl2gPisMg0Rl5CfzB4fA1zd3aq9FsZ+7FL3GsReJAlQCOWYNGe5LBK
-nmd47AcgIndDTgeNPGQImraspBSxnYs4dC1UgBY2s3OLvvhZV+E3sNWmtIkPvYvE
-huKeIh9Ey8RqJjFR+TVn2K+EEfJm20QSQeD5et2SLKxMQ/suSUKdFvgoB+sB2JKX
-reGSMxsQc97iWA4r2VlOljWsYe0nze+umBvgpT0dTug+yzHdpsMHUhWEEwoGQ6sL
-YVYvmpuK7jvYuZfzX12w4Oct3zk2dMziECg0Tz5/gBWSagUBL3MWYm7PZR8JLo+X
-ZWhJtknrJDlTIYDdMEX0
-=/dfd
------END PGP SIGNATURE-----
-
---BRE3mIcgqKzpedwo--
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks,
+Dinh
