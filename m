@@ -1,68 +1,112 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH v2 1/2] watchdog: Add Cadence WDT driver
-Date: Mon, 2 Jun 2014 15:28:49 +0200
-Message-ID: <a0938c62-2b96-447b-b8fb-a9b936b6ba00@BY2FFO11FD049.protection.gbl>
-References: <1401185895-3677-1-git-send-email-harinik@xilinx.com>
- <20140529092106.GC24233@leverpostej> <53870129.5010505@monstr.eu>
- <20140529131940.GG24233@leverpostej> <538C18CC.6040105@monstr.eu>
- <20140602131704.GE13573@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140602131704.GE13573@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Michal Simek <monstr@monstr.eu>
-Cc: Harini Katakam <harinik@xilinx.com>, "wim@iguana.be" <wim@iguana.be>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "rob@landley.net" <rob@landley.net>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 18/18] [RFC] spi: rspi: Add DT support to DMA setup
+Date: Mon,  2 Jun 2014 15:38:20 +0200
+Message-ID: <1401716301-29612-19-git-send-email-geert+renesas@glider.be>
+References: <1401716301-29612-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401716301-29612-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/02/2014 03:17 PM, Mark Rutland wrote:
-> On Mon, Jun 02, 2014 at 07:25:16AM +0100, Michal Simek wrote:
->> On 05/29/2014 03:19 PM, Mark Rutland wrote:
->>> On Thu, May 29, 2014 at 10:43:05AM +0100, Michal Simek wrote:
->>>> Hi Mark,
->>>>
->>>>>> +static struct of_device_id cdns_wdt_of_match[] = {
->>>>>> +       { .compatible = "xlnx,zynq-wdt-r1p2", },
->>>>>> +       { .compatible = "cdns,wdt-r1p2", },
->>>>>
->>>>> If these can currently be handled identically, why not just have
->>>>> "cdns,wdt-r1p2" in the driver and in your dts have:
->>>>>
->>>>> compatible = "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
->>>>>
->>>>> If we need to distinguish the two for some reason later we can always
->>>>> add the "xlnx,zynq-wdt-r1p2" string to the driver.
->>>>
->>>> I would prefer to have 2 compatible strings just because
->>>> of that we don't know what is different compare to origin cadence
->>>> version. We have done the same for spi-cadence.c that's why
->>>> it shouldn't be any problem to keep it as is.
->>>> Having zynq compatible property here and using it give us option
->>>> that if another SoC vendor come with new configuration or clean
->>>> cadence one we can simple handle it without changing compatible
->>>> property for us.
->>>
->>> Sure, we can have two documented strings. But as I mention for the
->>> moment the driver only needs to support the one string so long as a
->>> given dts has both. Then we can later distinguish the zynq variant (or
->>> any other) as necessary.
->>
->> ok then. Let's use just "xlnx,zynq-wdt-r1p2" compatible string here
->> and remove "cdns,wdt-r1p2"
-> 
-> That if anything seems backwards -- the driver should jsut take the most
-> general string for now: "cdns,wdt-r1p2", while the dtb will have both:
-> 
-> compatible = "xlnx,zynq-wdt-r1p2", "cdns,wdt-r1p2";
-> 
-> The driver can later disintguish "xlnx,zynq-wdt-r1p2" specially if
-> necessary.
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+---
+The format of the DMA specifiers depends on the DT bindings for SHDMA,
+which are still under development.
+---
+ Documentation/devicetree/bindings/spi/spi-rspi.txt |  6 ++++
+ drivers/spi/spi-rspi.c                             | 37 ++++++++++++++--------
+ 2 files changed, 29 insertions(+), 14 deletions(-)
 
-ah. Ok I see your point now. No problem to do it in this way.
+diff --git a/Documentation/devicetree/bindings/spi/spi-rspi.txt b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+index d57d82a74054..a274073bd41d 100644
+--- a/Documentation/devicetree/bindings/spi/spi-rspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-rspi.txt
+@@ -30,6 +30,9 @@ Required properties:
+ 
+ Optional properties:
+ - clocks           : Must contain a reference to the functional clock.
++- dmas             : Must contain a list of two references to DMA specifiers,
++		     one for transmission, and one for reception.
++- dma-names        : Must contain a list of two DMA names, "tx" and "rx".
+ 
+ Pinctrl properties might be needed, too.  See
+ Documentation/devicetree/bindings/pinctrl/renesas,*.
+@@ -58,4 +61,7 @@ Examples:
+ 		num-cs = <1>;
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
++		dmas = <&dma0 R8A7791_DMA_QSPI_TX CHCR_TX_8BIT>,
++		       <&dma0 R8A7791_DMA_QSPI_RX CHCR_RX_8BIT>;
++		dma-names = "tx", "rx";
+ 	};
+diff --git a/drivers/spi/spi-rspi.c b/drivers/spi/spi-rspi.c
+index 10112745bb17..16de9ad60d74 100644
+--- a/drivers/spi/spi-rspi.c
++++ b/drivers/spi/spi-rspi.c
+@@ -874,10 +874,11 @@ static struct dma_chan *rspi_request_dma_chan(struct device *dev,
+ 	dma_cap_zero(mask);
+ 	dma_cap_set(DMA_SLAVE, mask);
+ 
+-	chan = dma_request_channel(mask, shdma_chan_filter,
+-				   (void *)(unsigned long)id);
++	chan = dma_request_slave_channel_compat(mask, shdma_chan_filter,
++				(void *)(unsigned long)id, dev,
++				dir == DMA_MEM_TO_DEV ? "tx" : "rx");
+ 	if (!chan) {
+-		dev_warn(dev, "dma_request_channel failed\n");
++		dev_warn(dev, "dma_request_slave_channel_compat failed\n");
+ 		return NULL;
+ 	}
+ 
+@@ -903,22 +904,30 @@ static int rspi_request_dma(struct device *dev, struct spi_master *master,
+ 			    const struct resource *res)
+ {
+ 	const struct rspi_plat_data *rspi_pd = dev_get_platdata(dev);
++	unsigned int dma_tx_id, dma_rx_id;
++
++	if (dev->of_node) {
++		/* In the OF case we will get the slave IDs from the DT */
++		dma_tx_id = 0;
++		dma_rx_id = 0;
++	} else if (rspi_pd && rspi_pd->dma_tx_id && rspi_pd->dma_rx_id) {
++		dma_tx_id = rspi_pd->dma_tx_id;
++		dma_rx_id = rspi_pd->dma_rx_id;
++	} else {
++		/* The driver assumes no error. */
++		return 0;
++	}
+ 
+-	if (!rspi_pd || !rspi_pd->dma_rx_id || !rspi_pd->dma_tx_id)
+-		return 0;	/* The driver assumes no error. */
+-
+-	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM,
+-					       rspi_pd->dma_rx_id,
++	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV, dma_tx_id,
+ 					       res->start + RSPI_SPDR);
+-	if (!master->dma_rx)
++	if (!master->dma_tx)
+ 		return -ENODEV;
+ 
+-	master->dma_tx = rspi_request_dma_chan(dev, DMA_MEM_TO_DEV,
+-					       rspi_pd->dma_tx_id,
++	master->dma_rx = rspi_request_dma_chan(dev, DMA_DEV_TO_MEM, dma_rx_id,
+ 					       res->start + RSPI_SPDR);
+-	if (!master->dma_tx) {
+-		dma_release_channel(master->dma_rx);
+-		master->dma_rx = NULL;
++	if (!master->dma_rx) {
++		dma_release_channel(master->dma_tx);
++		master->dma_tx = NULL;
+ 		return -ENODEV;
+ 	}
+ 
+-- 
+1.9.1
 
-Thanks,
-Michal
-
-
-
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
