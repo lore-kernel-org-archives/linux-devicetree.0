@@ -1,45 +1,70 @@
-From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm: tegra: enable igb, stmpe, i2c chardev, spidev,
- lm95245, pwm leds
-Date: Tue, 03 Jun 2014 08:02:37 +0200
-Message-ID: <538D64FD.2010909@ziswiler.com>
-References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com> <39a8704a4c8170d6b0620a1e5e44042eae6d8810.1401665237.git.marcel@ziswiler.com> <538CA24B.1010602@wwwdotorg.org> <538CA635.4050502@ziswiler.com> <20140602221627.GP31751@sirena.org.uk>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: Re: [PATCH 1/5] ARM: berlin: add SMP support
+Date: Tue, 3 Jun 2014 14:19:13 +0800
+Message-ID: <20140603141913.710a1f7e@xhacker>
+References: <1401700866-24804-1-git-send-email-antoine.tenart@free-electrons.com>
+	<1401700866-24804-2-git-send-email-antoine.tenart@free-electrons.com>
+	<20140602094715.GG28090@lunn.ch>
+	<20140602100048.GA12162@kwain>
+	<20140602100332.GH28090@lunn.ch>
+	<20140602102750.GB13681@kwain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140602221627.GP31751-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140602102750.GB13681@kwain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart@free-electrons.com>
+Cc: Andrew Lunn <andrew@lunn.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "thomas.petazzoni@free-electrons.com" <thomas.petazzoni@free-electrons.com>, Jimmy Xu <zmxu@marvell.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alexandre.belloni@free-electrons.com" <alexandre.belloni@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2014 12:16 AM, Mark Brown wrote:
-> On Mon, Jun 02, 2014 at 06:28:37PM +0200, Marcel Ziswiler wrote:
->> On 06/02/2014 06:11 PM, Stephen Warren wrote:
->
->>>> +CONFIG_SPI_SPIDEV=y
->
->>> Is this useful with DT? I thought that unlike I2C_CHARDEV, spidev needed
->>> dummy devices to exist in DT for spidev to work? If so, there's not much
->>> point adding the option to defconfig, since people can add it when they
->>> put the dummy devices into DT.
->
->> Yes, the Apalis T30 DT I sent actually contains two of them which we call
->> generic Apalis SPI1 and SPI2 out-of-the-box configured for exactly that.
->> Without the config enabled though it probably does not make much sense to
->> include it in the DT so I would consider removing it again.
->
-> Your DT is broken if it's got a "spidev" node in it, you should be
-> describing the hardware not the Linux implementation of the software.
-> It would be really nice if we had a good way of handling this but we
-> don't yet.
+Hi Andrew, Antoine,=20
 
-I strongly disagree, it almost perfectly describes the hardware. Unlike 
-on I2c where modelling a bus is enough to allow generic user space 
-access unfortunately on SPI this is not enough as it requires a specific 
-chip-select as well. This is exactly what spidev does and maps to our 
-hardware perfectly which has one dedicated chip-select per SPI bus on a 
-dedicated header which allows our customers out-of-the-box spidev user 
-space access to almost any SPI device connected to those buses just like 
-with i2c-devs on I2C buses.
+On Mon, 2 Jun 2014 03:27:50 -0700
+Antoine T=C3=A9nart <antoine.tenart@free-electrons.com> wrote:
+
+> On Mon, Jun 02, 2014 at 12:03:32PM +0200, Andrew Lunn wrote:
+> > On Mon, Jun 02, 2014 at 12:00:48PM +0200, Antoine T=C3=A9nart wrote=
+:
+> > > Hi Andrew,
+> > >=20
+> > > On Mon, Jun 02, 2014 at 11:47:15AM +0200, Andrew Lunn wrote:
+> > > > On Mon, Jun 02, 2014 at 11:21:02AM +0200, Antoine T=C3=A9nart w=
+rote:
+> > > > > +
+> > > > > +static inline void berlin_reset_cpu(unsigned int cpu)
+> > > > > +{
+> > > > > +	u32 val;
+> > > > > +
+> > > > > +	val =3D readl(cpu_ctrl + CPU_RESET);
+> > > > > +	val |=3D BIT(cpu_logical_map(cpu));
+> > > > > +	writel(val, cpu_ctrl + CPU_RESET);
+> > > > > +}
+> > > >=20
+> > > > Is this performing a reset on the CPU, or is it taking it out o=
+f
+> > > > reset?
+> > > >=20
+> > > > If you are going to implement CPU hotplug at some point, you ar=
+e going
+> > > > to want to be able to put the CPU into reset, i.e. power it off=
+, and
+> > > > take it out of reset, i.e. power it on and getting it running. =
+So it
+> > > > might help if we get these function names clear now.
+> > >=20
+> > > It is performing a reset on the CPU. berlin_perform_reset_cpu() t=
+hen?
+> >=20
+> > What happens if the CPU is powered off? Will a reset power it on?  =
+Or
+> > are you assuming the boot loader has powered it on?
+>=20
+> I actually don't have information about this. For now let's assume th=
+e
+> boot loader has powered on the CPUs.
+>=20
+
+We don't support independently power off cpu on BG2 and BG2Q in linux k=
+ernel.
+So we can assume that bootloader has powered on the CPUs
