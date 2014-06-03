@@ -1,75 +1,52 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 1/2] arm: shmobile: r8a7791: add USB3.0 clocks to
- device tree
-Date: Tue, 03 Jun 2014 19:59:17 +0200
-Message-ID: <3639732.t6IJBqd63T@avalon>
-References: <538D71C1.3010900@renesas.com>
+From: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+Subject: Re: [PATCH v2] coccinelle: Check for missing NULL terminators in
+ of_device_id tables
+Date: Tue, 3 Jun 2014 20:14:19 +0200 (CEST)
+Message-ID: <alpine.DEB.2.02.1406032013150.2009@localhost6.localdomain6>
+References: <1401213858-31950-1-git-send-email-sboyd@codeaurora.org> <alpine.DEB.2.02.1406031208380.2036@localhost6.localdomain6> <538E09C1.30200@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <538D71C1.3010900@renesas.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, "galak@codeaurora.org" <galak@codeaurora.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <538E09C1.30200-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>, Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>, Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+On Tue, 3 Jun 2014, Stephen Boyd wrote:
 
-Thank you for the patch.
-
-On Tuesday 03 June 2014 15:57:05 Yoshihiro Shimoda wrote:
-> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-Apart for the parent clock that I can't verify due to lack of documentation,
-
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-
-> ---
->  arch/arm/boot/dts/r8a7791.dtsi |    6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> On 06/03/14 03:15, Julia Lawall wrote:
+> > Failure to terminate an of_device_id table can lead to confusing
+> > failures depending on where the compiler places the array. Add a
+> > check to make sure these tables are terminated. Thanks to Mitchel
+> > Humpherys for coming up with the pattern initially.
+> >
+> > Cc: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Cc: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
+> > Cc: Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>
+> > Cc: Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>
+> > Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> > Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > Signed-off-by: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
+> >
+> > ---
+> >
+> > v3: Removed unneeded rule bad_of_table.  Placed * in context rule on the 
+> > closing brace; putting it on the field caused all fields to be marked.
+> >
 > 
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index ede8b7f..c2b5b38 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -784,15 +784,15 @@
->  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
-clocks";
->  			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
->  			clocks = <&cp_clk>, <&sd2_clk>, <&sd1_clk>, <&cpg_clocks
-> R8A7791_CLK_SD0>, -				 <&mmc0_clk>, <&hp_clk>, <&hp_clk>, 
-<&rclk_clk>;
-> +				 <&mmc0_clk>, <&hp_clk>, <&hp_clk>, <&mp_clk>, <&rclk_clk>;
->  			#clock-cells = <1>;
->  			renesas,clock-indices = <
->  				R8A7791_CLK_TPU0 R8A7791_CLK_SDHI2 R8A7791_CLK_SDHI1 
-R8A7791_CLK_SDHI0
-> -				R8A7791_CLK_MMCIF0 R8A7791_CLK_IIC0 R8A7791_CLK_IIC1 
-R8A7791_CLK_CMT1
-> +				R8A7791_CLK_MMCIF0 R8A7791_CLK_IIC0 R8A7791_CLK_IIC1 
-R8A7791_CLK_SSUSB
-> R8A7791_CLK_CMT1
->  			>;
 > 
->  			clock-output-names =
->  				"tpu0", "sdhi2", "sdhi1", "sdhi0",
-> -				"mmcif0", "i2c7", "i2c8", "cmt1";
-> +				"mmcif0", "i2c7", "i2c8", "ssusb", "cmt1";
->  		};
->  		mstp5_clks: mstp5_clks@e6150144 {
->  			compatible = "renesas,r8a7791-mstp-clocks", "renesas,cpg-mstp-
-clocks";
+> These seem like only minor changes. Why was my authorship removed?
 
--- 
-Regards,
+Probably because I don't know how to provide a new vesion of the patch 
+properly.  What should I have done?  There were quite a lot of 
+modifications.  It seemed easier to just send a complete new version.
 
-Laurent Pinchart
+julia
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
