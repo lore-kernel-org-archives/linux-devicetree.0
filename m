@@ -1,107 +1,97 @@
-From: Julia Lawall <julia.lawall@lip6.fr>
-Subject: Re: [PATCH v2] coccinelle: Check for missing NULL terminators in
- of_device_id tables
-Date: Tue, 3 Jun 2014 12:15:18 +0200 (CEST)
-Message-ID: <alpine.DEB.2.02.1406031208380.2036@localhost6.localdomain6>
-References: <1401213858-31950-1-git-send-email-sboyd@codeaurora.org>
+From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v1] of/irq: do irq resolution in platform_get_irq_byname()
+Date: Tue, 3 Jun 2014 14:12:31 +0300
+Message-ID: <538DAD9F.1030008@ti.com>
+References: <1400582523-22684-1-git-send-email-grygorii.strashko@ti.com>	<20140523080333.66720C4176E@trevor.secretlab.ca>	<CAGa+x85mOHtNAj-UHgK2_z8zWAF=qwFcRcUgHTR-byNiX7heHA@mail.gmail.com>	<CAL_JsqLm3wfVS+au+JUbhBhxz=LuVpepH6GxabCQhPowhbw77g@mail.gmail.com>	<20140528071855.GJ4227@lee--X1>	<CACRpkdYgkEOjLamYu5uKSgs3iTNJ-w5XkbeygKjRdR-bNdETfg@mail.gmail.com>	<CAGb2v64f8Wju6dtVuVN2x=9YVGA-=RXozzhpJZNspKZ05f=jtA@mail.gmail.com>	<CACxGe6ts-TcSKk2F0-XSxAxeTxVCiyDHgh-O12v+F2OjHUsPyg@mail.gmail.com>	<5385B566.2050600@ti.com> <7h7g4zz7s4.fsf@paris.lan> <20140603092050.F0FD0C40D3B@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401213858-31950-1-git-send-email-sboyd@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@codeaurora.org>
-Cc: Michal Marek <mmarek@suse.cz>, linux-kernel@vger.kernel.org, Mitchel Humpherys <mitchelh@codeaurora.org>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140603092050.F0FD0C40D3B-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Failure to terminate an of_device_id table can lead to confusing
-failures depending on where the compiler places the array. Add a
-check to make sure these tables are terminated. Thanks to Mitchel
-Humpherys for coming up with the pattern initially.
+Hi,
 
-Cc: Mitchel Humpherys <mitchelh@codeaurora.org>
-Cc: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: Gilles Muller <Gilles.Muller@lip6.fr>
-Cc: Nicolas Palix <nicolas.palix@imag.fr>
-Cc: Grant Likely <grant.likely@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-Acked-by: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+On 06/03/2014 12:20 PM, Grant Likely wrote:
+> On Mon, 02 Jun 2014 07:48:59 -0700, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org> writes:
+>>
+>>> Hi All,
+>>>
+>>> On 05/28/2014 12:03 PM, Grant Likely wrote:
+>>
+>> [...]
+>>
+>>>> The bisected patch causes platform_get_irq() to always parse the
+>>>> devicetree to obtain the irq instead of using a precalculated value in
+>>>> the platform_device. There are two possible scenarios for this problem
+>>>> that I can think of:
+>>>> 1) Platform_get_irq() is getting called multiple times (which would
+>>>> happen on a deferred probe) but the setup code isn't handling it
+>>>> properly, like trying to request the GPIO more than once
+>>>> 2) the platform_device was preloaded with an irq number that differs
+>>>> from what is determined when parsing the tree. This would happen if a
+>>>> platform_device was created manually.
+>>>>
+>>>
+>>> Could anyone try attached patch? It has to improve situation, but it
+>>> might not fix all problems (see my previous e-mail).
+>>
+>> I can confirm it makes the STE Snowball boot again on top of next-20150602.
+>>
+>>>  From 4a41912dba648c935982274966426fa430fd5aa4 Mon Sep 17 00:00:00 2001
+>>> From: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>>> Date: Wed, 28 May 2014 12:53:34 +0300
+>>> Subject: [PATCH] mfd: ab8500: fix dt irq mapping
+>>>
+>>> The AD8500 defines itself as interrupt-controller in DT,
+>>> but it doesn't assign DT node to IRQ domain when creates it.
+>>> As result, of_irq_xx() helpers don't work because they can't
+>>> find necessary IRQ domain.
+>>>
+>>> Hence, fix it by assigning AD8500 core device DT node to IRQ
+>>> domain when it's created.
+>>>
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>>
+>> Tested-by: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
----
+Thanks for testing it.
 
-v3: Removed unneeded rule bad_of_table.  Placed * in context rule on the 
-closing brace; putting it on the field caused all fields to be marked.
+> 
+> So is that it, or were there other problems? If it is then you can add
 
- scripts/coccinelle/misc/of_table.cocci |   62 +++++++++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+This is minimal solution and some sub-devices of ab8500 MFD may still 
+not work.
 
-diff --git a/scripts/coccinelle/misc/of_table.cocci b/scripts/coccinelle/misc/of_table.cocci
-new file mode 100644
-index 0000000..3c93404
---- /dev/null
-+++ b/scripts/coccinelle/misc/of_table.cocci
-@@ -0,0 +1,62 @@
-+/// Make sure of_device_id tables are NULL terminated
-+//
-+// Keywords: of_table
-+// Confidence: Medium
-+// Options: --include-headers
-+
-+virtual patch
-+virtual context
-+virtual org
-+virtual report
-+
-+@depends on context@
-+identifier var, arr;
-+expression E;
-+@@
-+struct of_device_id arr[] = {
-+	...,
-+	{
-+	.var = E,
-+*	}
-+};
-+
-+@depends on patch@
-+identifier var, arr;
-+expression E;
-+@@
-+struct of_device_id arr[] = {
-+	...,
-+	{
-+	.var = E,
-+-	}
-++	},
-++	{ }
-+};
-+
-+@r depends on org || report@
-+position p1;
-+identifier var, arr;
-+expression E;
-+@@
-+struct of_device_id arr[] = {
-+	...,
-+	{
-+	.var = E,
-+	}
-+	@p1
-+};
-+
-+@script:python depends on org@
-+p1 << r.p1;
-+arr << r.arr;
-+@@
-+
-+cocci.print_main(arr,p1)
-+
-+@script:python depends on report@
-+p1 << r.p1;
-+arr << r.arr;
-+@@
-+
-+msg = "%s is not NULL terminated at line %s" % (arr, p1[0].line)
-+coccilib.report.print_report(p1[0],msg)
+For example, ab8500-debugfs may not work (ste-dbx5x0.dtsi):
+	ab8500-debugfs {
+		compatible = "stericsson,ab8500-debug";
+	};
+
+ and its DT definition may need to be updated to explicitly define IRQs,
+smth like this:
+	ab8500-debugfs {
+		compatible = "stericsson,ab8500-debug";
+		interrupts = <0 IRQ_TYPE_LEVEL_HIGH
+			      111 IRQ_TYPE_LEVEL_HIGH>;
+		interrupt-names = "IRQ_FIRST", "IRQ_LAST";
+	};
+
+> my acked-by when applying.
+> 
+> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> 
+
+I've reposted this patch already:
+ https://lkml.org/lkml/2014/6/2/379
+
+Regards,
+-grygorii
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
