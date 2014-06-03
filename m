@@ -1,81 +1,171 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: berlin: add SMP support
-Date: Tue, 3 Jun 2014 15:18:26 +0800
-Message-ID: <20140603151826.100a7fd5@xhacker>
-References: <1401700866-24804-1-git-send-email-antoine.tenart@free-electrons.com>
-	<1401700866-24804-2-git-send-email-antoine.tenart@free-electrons.com>
-	<20140603143113.0b2aeb74@xhacker>
-	<20140603071017.GA15966@kwain>
+From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt: bindings: mmc: Document the
+ practice of using subnodes for slots
+Date: Tue, 3 Jun 2014 09:27:26 +0200
+Message-ID: <CAPDyKFpd27DADju-keJAgXupr_yz0-s4i2VN8n5boAKdYx3EOA@mail.gmail.com>
+References: <1401563014-13856-1-git-send-email-hdegoede@redhat.com>
+	<1401563014-13856-2-git-send-email-hdegoede@redhat.com>
+	<CAOesGMisqtPWKY6N5ch36c0VyBP1Pu725cehBU+2gYtKXQs=hQ@mail.gmail.com>
+	<538AF124.9040106@redhat.com>
+	<CAPDyKFon5J6aUTzSmqGn_pkxgud26=+KBW0pkim-adMmWG_xXg@mail.gmail.com>
+	<538C3812.9060705@samsung.com>
+	<CAPDyKFp1KcQaOAqKBA7xrq85mVoNFecqO8QLT3EBzST6Giv-Sw@mail.gmail.com>
+	<538D29CF.9070102@samsung.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140603071017.GA15966@kwain>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sunxi+bncBDF57NG2XIHRBX7RWWOAKGQEDFTKZWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <538D29CF.9070102-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 3 June 2014 03:50, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> +Suegnwon Jeon
+>
+> On 06/02/2014 05:48 PM, Ulf Hansson wrote:
+>> On 2 June 2014 10:38, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> On 06/02/2014 05:29 PM, Ulf Hansson wrote:
+>>>> On 1 June 2014 11:23, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>> Hi,
+>>>>>
+>>>>>
+>>>>> On 05/31/2014 10:13 PM, Olof Johansson wrote:
+>>>>>>
+>>>>>> On Sat, May 31, 2014 at 12:03 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>> wrote:
+>>>>>>>
+>>>>>>> The following existing MMC host controller bindings use slot subnodes:
+>>>>>>>
+>>>>>>> Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+>>>>>>>
+>>>>>>> This commit documents this practice in the standard mmc bindings
+>>>>>>> documentation.
+>>>>>>>
+>>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>>
+>>>>>>
+>>>>>> There are today only two drivers that use this kind of binding, dw_mmc
+>>>>>> and the at91 one.
+>>>>>
+>>>>>
+>>>>> Correct.
+>>>>>
+>>>>>
+>>>>>> Neither seems to actually ever have been used with
+>>>>>> more than one slot. I doubt anyone building an exynos-based system
+>>>>>> will ever do a multi-slot solution, and it seems that the at91 driver
+>>>>>> doesn't actually handle more than one slot.
+>>>>>>
+>>>>>> I'm personally not that excited about complicating the bindings by
+>>>>>> opening up for this -- I would rather work towards removing the
+>>>>>> concept of slots if it's one of those things that are going to remain
+>>>>>> unused. We have actually been talking about reworking the dw_mmc
+>>>>>> binding to remove the slot concept (and simplify the driver by doing
+>>>>>> so).
+>>>>>
+>>>>>
+>>>>> I'm fine with removing the slot subnode, I added it because of it being
+>>>>> brought up in the powerup sequence discussion. I explicitly asked there
+>>>>> if adding such a subnode level was seen as desirable but nobody
+>>>>> answered :|
+>>>>>
+>>>>> Anyways, either way works for me. I can do a v3 dropping the slot subnode
+>>>>> level again. I would really like to move forward with a decision on how-to
+>>>>> represent non probable info for sdio devices in device nodes. So do you
+>>>>> have any other remarks other then that the slot subnode should be dropped ?
+>>>>> And if not can you please review and ack (*) v3 of this patch-set once
+>>>>> I've send it?
+>>>>>
+>>>>> Chris Ball and Ulf Hansson, what is your take on this, are you willing to
+>>>>> take this patch set? And do you want it with or without the slot subnodes ?
+>>>>
+>>>> I certainly appreciate you working actively on this Hans, I will look
+>>>> into the patchset as soon as I can.
+>>>>
+>>>> I share Olof's view about the slot nodes, we must not add DT bindings
+>>>> that isn't really needed.
+>>>>
+>>>> Regarding the slot subnodes; Jaehoon Chung recently posted a patchset
+>>>> for adding the parsing of it, intended for dwmmc. I withdraw my ack
+>>>> for it, and let's try to go in the other direction instead.
+>>>>
+>>>> [PATCHv3 0/4] mmc: fixed the mmc_of_parse for dwmmc.
+>>>>
+>>>> Thus I suggest we should clean-up host drivers to support only one
+>>>> card per host, and entirely skip the slot concept.
+>>>
+>>> Well, almost platform is used the only one card per host, although some controller is supported the slot concept.
+>>> But we don't know that controller should be used the multi slot per host, in future.
+>>> So I think we can't skip the slot concept.
+>>
+>> The mmc core only supports one card per host.
+>
+> Right, mmc core supports one card per host, but host controller can be supported the multiple slot, right?
+> Of course, it should be handled at host controller, not core.
 
-On Tue, 3 Jun 2014 00:10:17 -0700
-Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+The core needs to be involved as well. How will the core otherwise be
+able to tell which card to switch to (which also involves sending
+actual CMDs to the card), when sending requests.
 
-> Hi Jisheng,
->=20
-> On Tue, Jun 03, 2014 at 02:31:13PM +0800, Jisheng Zhang wrote:
-> > On Mon, 2 Jun 2014 02:21:02 -0700
-> > Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> > > +
-> > > +extern void berlin_secondary_startup(void);
-> > > +extern u32 boot_inst;
-> > > +
-> > > +static void __iomem *cpu_ctrl;
-> > > +
-> > > +static inline void berlin_reset_cpu(unsigned int cpu)
-> > > +{
-> > > +	u32 val;
-> > > +
-> > > +	val =3D readl(cpu_ctrl + CPU_RESET);
-> > > +	val |=3D BIT(cpu_logical_map(cpu));
-> > > +	writel(val, cpu_ctrl + CPU_RESET);
-> >=20
-> > "writel(BIT(cpu_logical_map(cpu)), cpu_ctrl + CPU_RESET)" is enough=
-=2E
-> > we don't need to read and modify, because we writing 0 has no any e=
-ffect.
->=20
-> The reset bit is automatically cleared but I dumped the register valu=
-e
-> and it wasn't 0x0, that's why I preferred to read first and only set =
-the
-> reset bit.
->=20
-> > > +
-> > > +	/*
-> > > +	 * Write the first instruction the CPU will execute after being
-> > > reseted
-> > > +	 * in the reset exception register.
-> > > +	 */
-> > > +	writel(boot_inst, vectors_base + RESET_VECT);
-> >=20
-> > Is it better to let bootloader/firmware handle this writing. Then, =
-we can
-> > also remove the tricky boot_inst in headsmp.S.
->=20
-> We thought about it, and since it can be difficult to update the
-> bootloader for some boards, like BG2 based ones, we preferred to incl=
-ude
-> this here.
->=20
-> Thanks!
->=20
-> Antoine
->=20
+I would be surprised if SOCs/boards ever want to use this kind of
+configuration - simply because of the bad impact on performance and
+latency. Until we have a valid case, I just want us to continue to
+ignore this option.
 
+Kind regards
+Ulf Hansson
 
-Got your points. Thanks very much
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>> Adding DT bindings for something that seems unlikely to be supported
+>> in future, seems like a bad idea. It's better to add it when/if
+>> needed.
+> If some SoC use the multiple slot for dw-mmc controller, we can't prevent to use the multiple slot.
+> So i'm not sure that host controller's subnode didn't need to support.
+> Right. this is bad idea, i also hope that it will not use the multiple slot at dw-mmc in future.
+>
+> To Seungwon,
+>
+> how about this?
+>
+> Best Regards,
+> Jaehoon Chung
+>>
+>> Kind regards
+>> Uffe
+>>
+>>>
+>>> Best Regards,
+>>> Jaehoon Chung
+>>>
+>>>>
+>>>> Kind regards
+>>>> Uffe
+>>>>
+>>>>>
+>>>>> Thanks & Regards,
+>>>>>
+>>>>> Hans
+>>>>>
+>>>>>
+>>>>> *) Assuming you don't find any issues
+>>>>
+>>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>> .
+>>
+>
