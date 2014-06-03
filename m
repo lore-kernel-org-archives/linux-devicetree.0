@@ -1,76 +1,155 @@
-From: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH] i2c: pca954x: Fix reset GPIO property name
-Date: Tue, 3 Jun 2014 10:38:53 +0900
-Message-ID: <538D272D.5050406@nvidia.com>
-References: <1401754973-13274-1-git-send-email-laurent.pinchart@ideasonboard.com>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt: bindings: mmc: Document the
+ practice of using subnodes for slots
+Date: Tue, 03 Jun 2014 10:50:07 +0900
+Message-ID: <538D29CF.9070102@samsung.com>
+References: <1401563014-13856-1-git-send-email-hdegoede@redhat.com>
+ <1401563014-13856-2-git-send-email-hdegoede@redhat.com>
+ <CAOesGMisqtPWKY6N5ch36c0VyBP1Pu725cehBU+2gYtKXQs=hQ@mail.gmail.com>
+ <538AF124.9040106@redhat.com>
+ <CAPDyKFon5J6aUTzSmqGn_pkxgud26=+KBW0pkim-adMmWG_xXg@mail.gmail.com>
+ <538C3812.9060705@samsung.com>
+ <CAPDyKFp1KcQaOAqKBA7xrq85mVoNFecqO8QLT3EBzST6Giv-Sw@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401754973-13274-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDQ7HQ4ZVQOBBXWTWSOAKGQESH4HFGQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-reply-to: <CAPDyKFp1KcQaOAqKBA7xrq85mVoNFecqO8QLT3EBzST6Giv-Sw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2014 09:22 AM, Laurent Pinchart wrote:
-> The DT bindings for the pca954x document that the reset GPIO is
-> specified through the "reset-gpios" property. However, the driver
-> erroneously uses a property name of "reset-gpio".
->
-> The GPIO DT bindings documentation mentions that
->
-> "GPIO properties should be named "[<name>-]gpios". The exact meaning of
-> each gpios property must be documented in the device tree binding for
-> each device."
->
-> The correct reset GPIO property name is thus "reset-gpios". Fix the
-> driver accordingly.
++Suegnwon Jeon
 
-The plural form should be preferred indeed.
+On 06/02/2014 05:48 PM, Ulf Hansson wrote:
+> On 2 June 2014 10:38, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> On 06/02/2014 05:29 PM, Ulf Hansson wrote:
+>>> On 1 June 2014 11:23, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>> Hi,
+>>>>
+>>>>
+>>>> On 05/31/2014 10:13 PM, Olof Johansson wrote:
+>>>>>
+>>>>> On Sat, May 31, 2014 at 12:03 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>> wrote:
+>>>>>>
+>>>>>> The following existing MMC host controller bindings use slot subnodes:
+>>>>>>
+>>>>>> Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+>>>>>> Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>>>> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>>>>>> Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+>>>>>> Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+>>>>>> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+>>>>>>
+>>>>>> This commit documents this practice in the standard mmc bindings
+>>>>>> documentation.
+>>>>>>
+>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>
+>>>>>
+>>>>> There are today only two drivers that use this kind of binding, dw_mmc
+>>>>> and the at91 one.
+>>>>
+>>>>
+>>>> Correct.
+>>>>
+>>>>
+>>>>> Neither seems to actually ever have been used with
+>>>>> more than one slot. I doubt anyone building an exynos-based system
+>>>>> will ever do a multi-slot solution, and it seems that the at91 driver
+>>>>> doesn't actually handle more than one slot.
+>>>>>
+>>>>> I'm personally not that excited about complicating the bindings by
+>>>>> opening up for this -- I would rather work towards removing the
+>>>>> concept of slots if it's one of those things that are going to remain
+>>>>> unused. We have actually been talking about reworking the dw_mmc
+>>>>> binding to remove the slot concept (and simplify the driver by doing
+>>>>> so).
+>>>>
+>>>>
+>>>> I'm fine with removing the slot subnode, I added it because of it being
+>>>> brought up in the powerup sequence discussion. I explicitly asked there
+>>>> if adding such a subnode level was seen as desirable but nobody
+>>>> answered :|
+>>>>
+>>>> Anyways, either way works for me. I can do a v3 dropping the slot subnode
+>>>> level again. I would really like to move forward with a decision on how-to
+>>>> represent non probable info for sdio devices in device nodes. So do you
+>>>> have any other remarks other then that the slot subnode should be dropped ?
+>>>> And if not can you please review and ack (*) v3 of this patch-set once
+>>>> I've send it?
+>>>>
+>>>> Chris Ball and Ulf Hansson, what is your take on this, are you willing to
+>>>> take this patch set? And do you want it with or without the slot subnodes ?
+>>>
+>>> I certainly appreciate you working actively on this Hans, I will look
+>>> into the patchset as soon as I can.
+>>>
+>>> I share Olof's view about the slot nodes, we must not add DT bindings
+>>> that isn't really needed.
+>>>
+>>> Regarding the slot subnodes; Jaehoon Chung recently posted a patchset
+>>> for adding the parsing of it, intended for dwmmc. I withdraw my ack
+>>> for it, and let's try to go in the other direction instead.
+>>>
+>>> [PATCHv3 0/4] mmc: fixed the mmc_of_parse for dwmmc.
+>>>
+>>> Thus I suggest we should clean-up host drivers to support only one
+>>> card per host, and entirely skip the slot concept.
+>>
+>> Well, almost platform is used the only one card per host, although some controller is supported the slot concept.
+>> But we don't know that controller should be used the multi slot per host, in future.
+>> So I think we can't skip the slot concept.
+> 
+> The mmc core only supports one card per host.
 
->
-> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> ---
->   drivers/i2c/muxes/i2c-mux-pca954x.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> While commit dd34c37aa3e81715a1ed8da61fa438072428e188
->
-> Author: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> Date:   Wed Apr 23 17:28:09 2014 +0200
->
->      gpio: of: Allow -gpio suffix for property names
->
->      Many bindings use the -gpio suffix in property names. Support this in
->      addition to the -gpios suffix when requesting GPIOs using the new
->      descriptor-based API.
->
-> adds support for the singular form of the property, the GPIO DT bindings
-> document the plural form only. I've thus decided to fix the driver instead of
-> the bindings, even though it could be argued that the singular form makes more
-> sense in this case. I've CC'ed the people involved with the above commit for
-> comments on that, and have no issue fixing the bindings instead of the driver
-> if the singular form is preferred.
->
-> diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> index 550bd36..73491ca 100644
-> --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> @@ -205,7 +205,7 @@ static int pca954x_probe(struct i2c_client *client,
->   		int gpio;
->
->   		/* Get the mux out of reset if a reset GPIO is specified. */
-> -		gpio = of_get_named_gpio_flags(np, "reset-gpio", 0, &flags);
-> +		gpio = of_get_named_gpio_flags(np, "reset-gpios", 0, &flags);
+Right, mmc core supports one card per host, but host controller can be supported the multiple slot, right?
+Of course, it should be handled at host controller, not core.
+> 
+> Adding DT bindings for something that seems unlikely to be supported
+> in future, seems like a bad idea. It's better to add it when/if
+> needed.
+If some SoC use the multiple slot for dw-mmc controller, we can't prevent to use the multiple slot.
+So i'm not sure that host controller's subnode didn't need to support.
+Right. this is bad idea, i also hope that it will not use the multiple slot at dw-mmc in future.
 
-Won't this break DT compatibility for potential users of this driver? (I 
-cannot find any in mainline though)
+To Seungwon,
 
-Considering that this GPIO is only acquired and set once and for all 
-during probe (a very simple use-case), how about switching this to the 
-gpiod interface instead? That way, you can take advantage of Thierry's 
-patch and the plural form will work while also maintaining the singular 
-form for backward compatibility.
+how about this?
 
-Alex.
+Best Regards,
+Jaehoon Chung
+> 
+> Kind regards
+> Uffe
+> 
+>>
+>> Best Regards,
+>> Jaehoon Chung
+>>
+>>>
+>>> Kind regards
+>>> Uffe
+>>>
+>>>>
+>>>> Thanks & Regards,
+>>>>
+>>>> Hans
+>>>>
+>>>>
+>>>> *) Assuming you don't find any issues
+>>>
+>>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> .
+> 
