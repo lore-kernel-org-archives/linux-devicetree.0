@@ -1,80 +1,52 @@
-From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-Subject: Re: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for
- QSPI
-Date: Tue, 03 Jun 2014 13:36:33 +0900
-Message-ID: <538D50D1.7010900@renesas.com>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH v3 2/2] net: hisilicon: add hix5hd2 mac driver
+Date: Tue, 03 Jun 2014 13:38:30 +0800
+Message-ID: <538D5F56.1030106@linaro.org>
+References: <1401440528-7804-1-git-send-email-zhangfei.gao@linaro.org>	<1401440528-7804-3-git-send-email-zhangfei.gao@linaro.org> <20140602.161131.783479189097234753.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>
-Cc: Magnus Damm <magnus.damm@gmail.com>, khiem.nguyen.xt@renesas.com, Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140602.161131.783479189097234753.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
 
-Thanks for the patches.
 
-I think this patch series should be divided into 2 parts,
-one for DMA in general and one for DMA supporting QSPI.
+On 06/03/2014 07:11 AM, David Miller wrote:
+> From: Zhangfei Gao <zhangfei.gao@linaro.org>
+> Date: Fri, 30 May 2014 17:02:08 +0800
+>
+>> +			skb = netdev_alloc_skb_ip_align(priv->netdev,
+>> +				MAC_MAX_FRAME_SIZE);
+>
+> When a function call, declaration, or definition spans multiple lines,
+> you must start the arguments on the second and subsequent lines exactly
+> at the first column after the openning parenthesis.
+>
+> Please therefore reindent this properly.
+Got it, not know this rule, will update accordingly.
 
-How do you think about it ?
+>> +static int hix5hd2_mdio_wait_ready(struct mii_bus *bus)
+>> +{
+>> +	struct hix5hd2_priv *priv = bus->priv;
+>> +	void __iomem *base = priv->base;
+>> +	int i, timeout = 10000;
+>> +
+>> +	for (i = 0; readl_relaxed(base + MDIO_SINGLE_CMD) & MDIO_START; i++) {
+>> +		if (i == timeout)
+>> +			return -ETIMEDOUT;
+>> +		udelay(1);
+>> +	}
+>> +
+>> +	return 0;
+>> +}
+>
+> 10,000 udelay(1)'s is a long time, consider changing to usleep() or
+> similar.
+>
+Will use usleep_range(10, 20) instead.
 
-Best regards,
-KHIEM Nguyen
-
-On 6/2/2014 10:42 PM, Geert Uytterhoeven wrote:
-> This patch series enables DMA support for QSPI on r8a7791/koelsch
-> reference.  It's independent from the series "ARM: shmobile: koelsch
-> legacy: Enable DMA for QSPI", but it depends on the SHDMA work for r8a7790
-> by Ben Dooks (cfr. "[PATCH v2 0/9] Updates Renesas OF-DMA code").
->
-> Changes Compared to previous submission ("[PATCH/RFC 0/7] ARM: shmobile:
-> r8a7791: Add preliminary DMA support"):
->    - "[6/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF" was dropped,
->    - 2/7 was added,
->    - 7/7 was changed (see changelog in individual patch).
->
-> This was tested on r8a7791/koelsch.
->
-> Performance figures for reading from a QSPI FLASH driven at 24.375 MHz are:
->    - Single:  1.1 Mbps PIO, 23 Mbps DMA
->    - Dual  : 12.7 Mbps PIO, 48 Mbps DMA
->    - Quad  : 13   Mbps PIO, 70 Mbps DMA
->
-> Thanks for your comments!
->
->    [1/7] DMA: shdma: Add r8a7791 support
->    [2/7] DMA: shdma: Spelling s/controll/control/
->    [3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
->    [4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions for bindings
->    [5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
->    [6/7] ARM: shmobile: koelsch dts: Enable sysdma0 and sysdma1
->    [7/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
->
->   Documentation/devicetree/bindings/dma/shdma.txt |   7 +-
->   arch/arm/boot/dts/r8a7791-koelsch.dts           |   8 ++
->   arch/arm/boot/dts/r8a7791.dtsi                  |  79 ++++++++++++++++-
->   drivers/dma/sh/shdmac.c                         |   1 +
->   include/dt-bindings/dma/r8a7791-dma.h           | 111 ++++++++++++++++++++++++
->   5 files changed, 201 insertions(+), 5 deletions(-)
->   create mode 100644 include/dt-bindings/dma/r8a7791-dma.h
->
-> Gr{oetje,eeting}s,
->
-> 						Geert
->
-> --
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
->
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
-> 							    -- Linus Torvalds
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
+Thanks
