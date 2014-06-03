@@ -1,113 +1,65 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v6 0/6] arm: Add basic support for Mediatek Cortex-A7 SoCs
-Date: Tue, 3 Jun 2014 15:15:41 +0200
-Message-ID: <CABuKBeL92ToWq0H2ydydgobShx=UnMjbdVsKKiaR43dJp7bYBw@mail.gmail.com>
-References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>
- <538DC422.2010702@linaro.org>
+From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
+Date: Tue, 03 Jun 2014 15:22:47 +0200
+Message-ID: <1401801767.5422.4.camel@weser.hi.pengutronix.de>
+References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
+	 <20140424175844.GD29593@google.com>
+	 <1398421265.4657.25.camel@weser.hi.pengutronix.de>
+	 <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
+	 <1398774686.4677.12.camel@weser.hi.pengutronix.de>
+	 <1399885183.5016.4.camel@weser.hi.pengutronix.de>
+	 <20140530173053.GF4607@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <538DC422.2010702@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory CLEMENT <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, =?UTF-8?Q?S=C3=B6ren_Brinkmann?= <soren.brinkmann@xilinx.com>, Randy
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140530173053.GF4607-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Cc: Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-MjAxNC0wNi0wMyAxNDo0OCBHTVQrMDI6MDAgRGFuaWVsIExlemNhbm8gPGRhbmllbC5sZXpjYW5v
-QGxpbmFyby5vcmc+Ogo+IE9uIDA1LzMwLzIwMTQgMDY6NTUgUE0sIE1hdHRoaWFzIEJydWdnZXIg
-d3JvdGU6Cj4+Cj4+IFNpeHRoIHJvdW5kIGZvciB0aGUgTWVkaWF0ZWsgYmFzaWMgc3VwcG9ydCBw
-YXRjaGVzLgo+Pgo+PiBJIGVuY2Fwc3VsYXRlZCB0aGUgc2V0dXAgb2YgdGhlIHRpbWVyIGFuZCB0
-aGUgaW50ZXJydXB0IGluIHNlcGVyYXRlCj4+IGZ1bmN0aW9ucy4KPj4gQXBhcnQgSSBmaXhlZCB0
-aGUgY29tcGF0aWJpbHkgc3RyaW5nIHRvIGJlIGNvbnNpc3RlbiB0aHJvdWdob3V0IHRoZQo+PiB3
-aG9sZSBzeXN0ZW0gKGZyb20gbWVkaWF0ZWssbXRrNjU3NyB0byBtZWRpYXRlayxtdDY1NzcpIGFu
-ZCBhZGRlZAo+PiB0aGUgYWRkcmVzcyB0byB0aGUgYmluZGluZ3MgZG9jdW1lbnRhdGlvbi4KPgo+
-Cj4KPiBIaSwKPgo+IHRocm91Z2ggd2hpY2ggdHJlZSBzaG91bGQgdGhpcyBwYXRjaHNldCB0byBi
-ZSBtZXJnZWQgPwoKSWYgeW91IGxpa2UsIHlvdSBjYW4gcGljayB0aGUgdHdvIGNsb2Nrc291cmNl
-IHBhdGNoZXMgZm9yIHlvdXIKY2xvY2tzb3VyY2UgdHJlZSBvciB3ZSBjYW4gbWVyZ2UgdGhlIHdo
-b2xlIHNlcmllcyB0byBhcm0tc29jLgoKQ2hlZXJzLApNYXR0aGlhcwoKPgo+IFRoYW5rcwo+Cj4g
-ICAtLSBEYW5pZWwKPgo+Cj4+IC0tLQo+PiBUaGlzIHBhdGNoIHNldCBhZGRzIGJhc2ljIHN1cHBv
-cnQgZm9yIHRoZSBNZWRpYXRlayBDb3J0ZXgtQTcgU29Dcy4KPj4gU3VwcG9ydCBpcyBxdWl0ZSBi
-YXNpYywgYXMgdGhlIG9ubHkgY29tcG9uZW50IHdvcmtpbmcgdXAgdG8gbm93IGFyZSB0aGUKPj4g
-dGltZXJzLgo+Pgo+PiBUaGUgcGF0Y2ggc2VyaWVzIGlzIGJ1aWxkIGFnYWluc3QgdG9ydmFsZHMv
-bWFzdGVyIHRyZWUuCj4+Cj4+IFNpZ25lZC1vZmYtYnk6IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRo
-aWFzLmJnZ0BnbWFpbC5jb20+Cj4+Cj4+IENoYW5nZXMgZm9yIHY2Ogo+PiAtIGZpeCBjb21wYXRp
-YmxlIHN0cmluZyBvZiB0aGUgdGltZXIKPj4gLSBlbmNhcHN1bGF0ZSB0aW1lciBzZXR1cCBpbiBm
-dW5jdGlvbgo+PiAtIGFkZCBtb3JlIGluZm9ybWF0aW9uIHRvIHRoZSB0aW1lciBjb21taXQgbWVz
-c2FnZQo+PiAtIGFkZCBhZGRyZXNzIGluIHRpbWVyIERUUyBiaW5kaW5ncyBkb2N1bWVudGF0aW9u
-Cj4+Cj4+Cj4+IENoYW5nZXMgZm9yIHY1Ogo+PiAxLiBDbG9ja3NvdXJjZSB0aW1lcgo+PiAtIENo
-YW5nZSB0aGUgY29tcGF0aWJsZSBzdHJpbmcgdG8gbXQ2NTc3Cj4+Cj4+IDIuIFRpbWVyIERUIGJp
-bmRpbmdzCj4+IC0gQ2hhbmdlIGNvbXBhdGlibGUgc3RyaW5nIHRvIG10NjU3Nwo+Pgo+Pgo+PiBD
-aGFuZ2VzIGZvciB2NDoKPj4gMS4gQ2xvY2tzb3VyY2UgdGltZXIKPj4gLSB1c2UgY3B1X3Bvc3Np
-YmxlX21hc2sKPj4KPj4gMi4gVGltZXIgRFQgYmluZGluZ3MKPj4gLSBEZWxldGUgY29tbWVudHMg
-YWJvdXQgdGhlIGZyZXF1ZW5jeSBvZiB0aGUgY2xvY2tzCj4+IC0gQWRkIGNsb2NrLW5hbWVzIGZv
-ciB0aGUgaW5wdXQgY2xvY2tzCj4+Cj4+IDMuIEJhc2ljIFNvQyBzdXBwb3J0Cj4+IC0gYWRkIGNs
-b2NrLW5hbWVzIGZvciB0aGUgdGltZXIKPj4gLSByZW5hbWUgdGhlIGxhYmVsIG9mIHRoZSBjbG9j
-a3Mgbm9kZXMKPj4KPj4KPj4gQ2hhbmdlcyBmb3IgdjM6Cj4+IDEuIENsb2Nrc291cmNlIHRpbWVy
-Cj4+IC0gU2V0IGNwdV9tYXNrX2FsbCBhbmQgaXJxIGluIGNsb2NrX2V2ZW50X2RldmljZQo+PiAt
-IFVzZSBkZXZpY2UgcHJpdmF0ZSBzdHJ1Y3R1cmUgZm9yIGRyaXZlciBzcGVjaWZpYyB2YWx1ZXMK
-Pj4KPj4gMi4gVGltZXIgRFQgYmluZGluZ3MKPj4gLSBEZWZpbmUgb3JkZXIgb2YgdGhlIGNsb2Nr
-IHBoYW5kbGVzCj4+IC0gRml4IHR5cG9zCj4+Cj4+IDMuIEJhc2ljIFNvQyBzdXBwb3J0Cj4+IC0g
-RFRTOiBzZXQgZ2ljIHRvIGExNS1naWMKPj4gLSBEVFM6IG9yZGVyIGJ5IHBoeXNpY2FsIGFkZHJl
-c3MKPj4gLSBSZW1vdmUgY2FsbCB0byBkdF9pbml0IGZ1bmN0aW9uCj4+Cj4+Cj4+IENoYW5nZXMg
-Zm9yIHYyOgo+PiAxLiBDbG9ja3NvdXJjZSB0aW1lcgo+PiAtIERlbGV0ZSB1bnVzZWQgcGFydHMg
-Zm9yIHNjaGVkX2Nsb2NrX3NvdXJjZQo+PiAtIFVzZSBpcnFfcmVxdWVzdCBpbnN0ZWFkIG9mIHNl
-dHVwX2lycQo+PiAtIFJlbW92ZSB1bnVzZWQgU01QIHBhcnRzCj4+IC0gRml4IHNvbWUgc3R5bGUg
-aXNzdWVzCj4+IC0gdXNlIG9mX2FkZHJlc3NfdG8gcmVzb3VyY2UgYW5kIHJlcXVlc3RfbWVtX3Jl
-Z2lvbgo+PiAtIGRlbGV0ZSB1c2Ugb2YgbmFtZWQgY2xvY2sKPj4gLSBzZWxlY3QgQ0xLU1JDX01N
-SU8gaW4gZHJpdmVyIEtjb25maWcKPj4KPj4gMi4gRFQgYmluZGluZ3MKPj4gLSBkZWxldGUgbmFt
-ZWQgY2xvY2sgYmluZGluZ3MKPj4KPj4gMy4gQmFzaWMgU29DIHN1cHBvcnQKPj4gLSBDbGVhbi11
-cCBLY29uZmlnCj4+IC0gQWRkIGRvY3VtZW50YXRpb24gb2YgdGhlIFNvQyBjb21wYXRpYmxlIHBy
-b3BlcnR5Cj4+IC0gRFRTOiByZW5hbWUgU29DIGZpbGUgdG8gbXQ2NTg5LmR0cwo+PiAtIERUUzog
-RGVsZXRlIG5vdCBwcmVzZW50IGNhY2hlIGNvbnRyb2xsZXIKPj4gLSBEVFM6IEFkZCBtaXNzaW5n
-IEdJQ3YyIHByb3BlcnRpZXMKPj4gLSBEVFM6IENoYW5nZSBjbG9jayBuYW1lcwo+PiAtIERUUzog
-QWRkIEFxdWFyaXM1IGJvYXJkCj4+Cj4+IDQuIEFkZCBlYXJseXByaW50awo+PiAtIHBhdGNoIGRy
-b3BlZCB1bnRpbCBzZXJpYWwgZHJpdmVyIGlzIGF2YWlsYWJsZQo+Pgo+PiA1LiBBZGQgc3VwcG9y
-dCBmb3IgQXF1YXJpczUgbW9iaWxlIHBob25lCj4+Cj4+Cj4+Cj4+IE1hdHRoaWFzIEJydWdnZXIg
-KDYpOgo+PiAgICBjbG9ja3NvdXJjZTogQWRkIHN1cHBvcnQgZm9yIHRoZSBNZWRpYXRlayBTb0Nz
-Cj4+ICAgIGR0LWJpbmRpbmdzOiBhZGQgbXRrLXRpbWVyIGJpbmRpbmdzCj4+ICAgIHZlbmRvci1w
-cmVmaXhlczogYWRkIHByZWZpeCBmb3IgTWVkaWFrdGVrIEluYy4KPj4gICAgYXJtOiBhZGQgYmFz
-aWMgc3VwcG9ydCBmb3IgTWVkaWF0ZWsgTVQ2NTg5IGJvYXJkcwo+PiAgICBkdC1iaW5kaW5nczog
-YWRkIGRvY3VtZW50YXRpb24gZm9yIE1lZGlhdGVrIFNvQwo+PiAgICBhcm06IG1lZGlhdGVrOiBh
-ZGQgZHRzIGZvciBBcXVhcmlzNSBtb2JpbGUgcGhvbmUKPj4KPj4gICAuLi4vZGV2aWNldHJlZS9i
-aW5kaW5ncy9hcm0vbWVkaWF0ZWstbXQ2NXh4LnR4dCAgICB8ICAgIDggKwo+PiAgIC4uLi9iaW5k
-aW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0ICAgICAgICAgIHwgICAxOCArKwo+PiAg
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3ZlbmRvci1wcmVmaXhlcy50eHQgICAgICAgIHwgICAg
-MSArCj4+ICAgYXJjaC9hcm0vS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgfCAgICAyICsKPj4gICBhcmNoL2FybS9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICB8ICAgIDEgKwo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL210NjU4OS1hcXVhcmlz
-NS5kdHMgICAgICAgICAgICAgIHwgICAyNSArKwo+PiAgIGFyY2gvYXJtL2Jvb3QvZHRzL210NjU4
-OS5kdHNpICAgICAgICAgICAgICAgICAgICAgIHwgICA5NCArKysrKysrKwo+PiAgIGFyY2gvYXJt
-L21hY2gtbWVkaWF0ZWsvS2NvbmZpZyAgICAgICAgICAgICAgICAgICAgIHwgICAgNiArCj4+ICAg
-YXJjaC9hcm0vbWFjaC1tZWRpYXRlay9NYWtlZmlsZSAgICAgICAgICAgICAgICAgICAgfCAgICAx
-ICsKPj4gICBhcmNoL2FybS9tYWNoLW1lZGlhdGVrL21lZGlhdGVrLmMgICAgICAgICAgICAgICAg
-ICB8ICAgMjcgKysrCj4+ICAgZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmlnICAgICAgICAgICAg
-ICAgICAgICAgICAgfCAgICA0ICsKPj4gICBkcml2ZXJzL2Nsb2Nrc291cmNlL01ha2VmaWxlICAg
-ICAgICAgICAgICAgICAgICAgICB8ICAgIDEgKwo+PiAgIGRyaXZlcnMvY2xvY2tzb3VyY2UvbXRr
-X3RpbWVyLmMgICAgICAgICAgICAgICAgICAgIHwgIDI0Mgo+PiArKysrKysrKysrKysrKysrKysr
-Kwo+PiAgIDEzIGZpbGVzIGNoYW5nZWQsIDQzMCBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1v
-ZGUgMTAwNjQ0Cj4+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vbWVkaWF0
-ZWstbXQ2NXh4LnR4dAo+PiAgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+PiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dAo+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9ib290L2R0cy9tdDY1ODktYXF1YXJpczUuZHRzCj4+ICAg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL210NjU4OS5kdHNpCj4+ICAgY3Jl
-YXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL21hY2gtbWVkaWF0ZWsvS2NvbmZpZwo+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBhcmNoL2FybS9tYWNoLW1lZGlhdGVrL01ha2VmaWxlCj4+ICAgY3JlYXRl
-IG1vZGUgMTAwNjQ0IGFyY2gvYXJtL21hY2gtbWVkaWF0ZWsvbWVkaWF0ZWsuYwo+PiAgIGNyZWF0
-ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2Nsb2Nrc291cmNlL210a190aW1lci5jCj4+Cj4KPgo+IC0t
-Cj4gIDxodHRwOi8vd3d3LmxpbmFyby5vcmcvPiBMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBz
-b2Z0d2FyZSBmb3IgQVJNIFNvQ3MKPgo+IEZvbGxvdyBMaW5hcm86ICA8aHR0cDovL3d3dy5mYWNl
-Ym9vay5jb20vcGFnZXMvTGluYXJvPiBGYWNlYm9vayB8Cj4gPGh0dHA6Ly90d2l0dGVyLmNvbS8j
-IS9saW5hcm9vcmc+IFR3aXR0ZXIgfAo+IDxodHRwOi8vd3d3LmxpbmFyby5vcmcvbGluYXJvLWJs
-b2cvPiBCbG9nCj4KCgoKLS0gCm1vdHpibG9nLndvcmRwcmVzcy5jb20KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGlu
-ZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMu
-aW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hello Bjorn,
+
+Am Freitag, den 30.05.2014, 11:30 -0600 schrieb Bjorn Helgaas:
+> On Mon, May 12, 2014 at 10:59:43AM +0200, Lucas Stach wrote:
+> > Hi Bjorn,
+> > 
+> > just a friendly reminder. It would be nice if you could pull those in.
+> > 
+> > Shawn already pulled the DT change and as it is a binding change this
+> > means PCIe on i.MX6 is broken in -next, as long as the remaining patches
+> > are missing.
+> 
+> I applied these to pci/host-imx6 for v3.16.
+> 
+> Sorry I didn't do this sooner; I get a lot of email and it's easy to
+> overlook things.  I mostly work from patchwork
+> (http://patchwork.ozlabs.org/project/linux-pci/list/?order=date), and I had
+> dropped this series from there because there was enough discussion that I
+> expected a re-post, so it wasn't on my radar screen anymore.
+> 
+> Bjorn
+> 
+> > Am Dienstag, den 29.04.2014, 14:31 +0200 schrieb Lucas Stach:
+> > > Hi Bjorn,
+> > > 
+> > > Am Freitag, den 25.04.2014, 08:39 -0600 schrieb Bjorn Helgaas:
+> > > [...]
+> > > > >> >   PCI: designware: split Exynos and i.MX bindings
+
+It seems you missed this one patch. This isn't too urgent, as it is just
+the doc update, but it should still go into 3.16 along with the other
+changes. I would have expected that is ok for this to go through your
+tree.
+
+Regards,
+Lucas
+-- 
+Pengutronix e.K.             | Lucas Stach                 |
+Industrial Linux Solutions   | http://www.pengutronix.de/  |
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
