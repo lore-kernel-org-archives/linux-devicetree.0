@@ -1,110 +1,59 @@
-From: Luis Henriques <luis.henriques@canonical.com>
-Subject: [PATCH 3.11 088/138] mips: dts: Fix missing device_type="memory" property in memory nodes
-Date: Tue,  3 Jun 2014 12:38:54 +0100
-Message-ID: <1401795584-22664-89-git-send-email-luis.henriques@canonical.com>
-References: <1401795584-22664-1-git-send-email-luis.henriques@canonical.com>
-Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <1401795584-22664-1-git-send-email-luis.henriques@canonical.com>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@lists.ubuntu.com
-Cc: Leif Lindholm <leif.lindholm@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Luis Henriques <luis.henriques@canonical.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: pca954x: Use the descriptor-based GPIO API
+Date: Tue, 3 Jun 2014 14:21:58 +0200
+Message-ID: <20140603122158.GD2713@katana>
+References: <1401754973-13274-1-git-send-email-laurent.pinchart@ideasonboard.com>
+ <1401794126-22244-1-git-send-email-laurent.pinchart@ideasonboard.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hoZxPH4CaxYzWscb"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1401794126-22244-1-git-send-email-laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
+Cc: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-3.11.10.11 -stable review patch.  If anyone has any objections, please let me know.
 
-------------------
+--hoZxPH4CaxYzWscb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-From: Leif Lindholm <leif.lindholm@linaro.org>
+On Tue, Jun 03, 2014 at 01:15:26PM +0200, Laurent Pinchart wrote:
+> The ID-based GPIO API pushes handling of GPIO polarity to drivers.
+> Simplify the driver by switching to the descriptor-based GPIO API.
+>=20
+> This also fixes a mismatch between the pca954x DT bindings that document
+> a "reset-gpios" property and the driver that requests a "reset-gpio"
+> property.
+>=20
+> Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
 
-commit dfc44f8030653b345fc6fb337558c3a07536823f upstream.
+Applied to for-next, thanks!
 
-A few platforms lack a 'device_type = "memory"' for their memory
-nodes, relying on an old ppc quirk in order to discover its memory.
-Add the missing data so that all parsing code can find memory nodes
-correctly.
 
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: linux-mips@linux-mips.org
-Cc: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: John Crispin <blogic@openwrt.org>
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
----
- arch/mips/lantiq/dts/easy50712.dts    | 1 +
- arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
- arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
- arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
- arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
- 5 files changed, 5 insertions(+)
+--hoZxPH4CaxYzWscb
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
-index fac1f5b178eb..143b8a37b5e4 100644
---- a/arch/mips/lantiq/dts/easy50712.dts
-+++ b/arch/mips/lantiq/dts/easy50712.dts
-@@ -8,6 +8,7 @@
- 	};
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
-index 35eb874ab7f1..709f58132f5c 100644
---- a/arch/mips/ralink/dts/mt7620a_eval.dts
-+++ b/arch/mips/ralink/dts/mt7620a_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink MT7620A evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/ralink/dts/rt2880_eval.dts
-index 322d7002595b..0a685db093d4 100644
---- a/arch/mips/ralink/dts/rt2880_eval.dts
-+++ b/arch/mips/ralink/dts/rt2880_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink RT2880 evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x8000000 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/ralink/dts/rt3052_eval.dts
-index 0ac73ea28198..ec9e9a035541 100644
---- a/arch/mips/ralink/dts/rt3052_eval.dts
-+++ b/arch/mips/ralink/dts/rt3052_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink RT3052 evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
-index 2fa6b330bf4f..e8df21a5d10d 100644
---- a/arch/mips/ralink/dts/rt3883_eval.dts
-+++ b/arch/mips/ralink/dts/rt3883_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink RT3883 evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
--- 
-1.9.1
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTjb3mAAoJEBQN5MwUoCm2qgsP/i8qXTZJnKm7KcbpV8tUMx5z
+2KfXjr8TsrsaP+lD8aYwljpMC8dgI6dzXw+ZDRlHak4cS7Q0QDV4oDggVBx2GRsi
+p9bQ97kg7jCc6FO/rrcS9x52NRP+KCG7NLu/+zPcI8fjJykkPbLpu1Nptc5Jg9Uc
+3AD4K55dd0ALRySRDEhR5h+S3KVLjPlbt7r3dweKoRRykht8QRcdaq+bWTdQG2Vj
+1CAOM/yaHX3YOpZ7FOvGTcg9hiWP+wHqYnwdsE5711lHESRPTaV+pUUxKMkrnKEd
+2Jt8xnimNzHoAtfmIKHqRauBNP2rvPuXNZINAHHnHxE9aqLi4/aCMgvpiDIY7gtD
+ZX+nUz8egKE+1rlJDQ5t74l/RQxaXEITSog0yCIoAOxY5JtqOkN9BnDyLSo13YPp
+ybeuK/ymzGkwvJbtL0x6BLOIoIs/gXsdipr+6HnP7O5XL/EUTy7Ef09BwlVW0c8r
+WTlwLsk60NV/ibcI9ztqqxwfmFOKrUE0DoemAJVPsnnYQJFj6lSL+aKNOlw/wk5T
+NCL3LBb6XBCRBidp9417CgIJxFFZBsTVqABQAy/0OYHDH4FgLMk1iNdtXTx/SrrM
+soKgGxyViieQRjt/4W9ZFaaq8uPzTXTAtl2FdiAMxpGmToXkMcEzi/b7YLsc48Dd
+b/5sQBFK2pIVqS6/dlkk
+=RTgB
+-----END PGP SIGNATURE-----
+
+--hoZxPH4CaxYzWscb--
