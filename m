@@ -1,41 +1,112 @@
 From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 1/4] MAINTAINERS: Add entry for APM X-Gene SoC EDAC driver
-Date: Mon,  2 Jun 2014 20:14:17 -0600
-Message-ID: <1401761660-11515-2-git-send-email-lho@apm.com>
+Subject: [PATCH v3 2/4] Documentation: Add documentation for the APM X-Gene SoC EDAC DTS binding
+Date: Mon,  2 Jun 2014 20:14:18 -0600
+Message-ID: <1401761660-11515-3-git-send-email-lho@apm.com>
 References: <1401761660-11515-1-git-send-email-lho@apm.com>
+ <1401761660-11515-2-git-send-email-lho@apm.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401761660-11515-1-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
+In-Reply-To: <1401761660-11515-2-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
+Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a MAINTAINERS entry for APM X-Gene SoC EDAC driver.
+This patch adds documentation for the APM X-Gene SoC EDAC DTS binding.
 
+Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
 ---
- MAINTAINERS |    8 ++++++++
- 1 files changed, 8 insertions(+), 0 deletions(-)
+ .../devicetree/bindings/edac/apm-xgene-edac.txt    |   81 ++++++++++++++++++++
+ 1 files changed, 81 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index e67ea24..ecef44c 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3321,6 +3321,14 @@ W:	bluesmoke.sourceforge.net
- S:	Maintained
- F:	drivers/edac/sb_edac.c
- 
-+EDAC-XGENE
-+APPLIED MICRO (APM) X-GENE SOC EDAC
-+M:     Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-+M:     Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-+S:     Supported
-+F:     drivers/edac/xgene_edac.c
-+F:     Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+diff --git a/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+new file mode 100644
+index 0000000..fc3dbbc
+--- /dev/null
++++ b/Documentation/devicetree/bindings/edac/apm-xgene-edac.txt
+@@ -0,0 +1,81 @@
++* APM X-Gene EDAC nodes
 +
- EDIROL UA-101/UA-1000 DRIVER
- M:	Clemens Ladisch <clemens-P6GI/4k7KOmELgA04lAiVw@public.gmane.org>
- L:	alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org (moderated for non-subscribers)
++EDAC nodes are defined to describe on-chip error detection and correction.
++There are four types of EDAC:
++
++  memory controller	- Memory controller
++  PMD (L1/L2)		- Processor module unit (PMD) L1/L2 cache
++  L3			- CPU L3 cache
++  SoC			- SoC IP such as SATA, Ethernet, and etc
++
++The following section describes the memory controller DT node binding.
++
++Required properties:
++- compatible		: Shall be "apm,xgene-edac-mc".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the CSW resource.
++			  Third resource shall be the MCB-A resource.
++			  Fourth resource shall be the MCB-B resource.
++			  Fifth resource shall be the MCU resource.
++- interrupts            : Interrupt-specifier for MCU error IRQ(s).
++
++The following section describes the L1/L2 DT node binding.
++
++- compatible		: Shall be "apm,xgene-edac-pmd".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the PMD resource.
++			  Third resource shall be the PMD efuse resource.
++- interrupts            : Interrupt-specifier for PMD error IRQ(s).
++
++The following section describes the L3 DT node binding.
++
++- compatible		: Shall be "apm,xgene-edac-l3".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the L3 resource.
++- interrupts            : Interrupt-specifier for L3 error IRQ(s).
++
++The following section describes the SOC DT node binding.
++
++- compatible		: Shall be "apm,xgene-edac-soc"".
++- reg			: First resource shall be the PCP resource.
++			  Second resource shall be the SOC resource.
++- interrupts		: nterrupt-specifier for SoC error IRQ(s).
++
++Example:
++	edacmc0: edacmc0@7e800000 {
++		compatible = "apm,xgene-edac-mc";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7e200000 0x0 0x1000>,
++		      <0x0 0x7e700000 0x0 0x1000>,
++		      <0x0 0x7e720000 0x0 0x1000>,
++		      <0x0 0x7e800000 0x0 0x1000>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>;
++	};
++
++	edacl3: edacl3@7e600000 {
++		compatible = "apm,xgene-edac-l3";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7e600000 0x0 0x1000>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>;
++	};
++
++	edacpmd0: edacpmd0@7c000000 {
++		compatible = "apm,xgene-edac-pmd";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7c000000 0x0 0x200000>,
++		      <0x0 0x1054a000 0x0 0x10>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>;
++	};
++
++	edacsoc: edacsoc@7e930000 {
++		compatible = "apm,xgene-edac-soc";
++		reg = <0x0 0x78800000 0x0 0x1000>,
++		      <0x0 0x7e930000 0x0 0x1000>;
++		interrupts = <0x0 0x20 0x4>,
++			     <0x0 0x21 0x4>,
++			     <0x0 0x27 0x4>;
++	};
++
 -- 
 1.5.5
 
