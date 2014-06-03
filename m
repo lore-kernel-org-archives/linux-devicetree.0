@@ -1,46 +1,61 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH 2/2] ARM: dts: berlin: enable i2c0 and i2c2
-Date: Tue,  3 Jun 2014 09:33:10 +0200
-Message-ID: <1401780790-17830-3-git-send-email-antoine.tenart@free-electrons.com>
-References: <1401780790-17830-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: [PATCH 00/14] irqchip: crossbar: driver fixes
+Date: Tue, 3 Jun 2014 13:12:52 +0530
+Message-ID: <1401781386-4982-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401780790-17830-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, tglx@linutronix.de, linux@arm.linux.org.uk, r.sricharan@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Enable the I2C0 and I2C2 for the Marvell Berlin BG2G DMP. I2C1 and I2C3
-are also working on this board, but no devices seemed to be there.
+This series does some cleanup and provides support for
+hardwired IRQ and crossbar definitions.
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2q-marvell-dmp.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
+131, 132, 133 are direct wired to hardware blocks bypassing
+crossbar. This quirky implementation is *NOT* supposed to be the
+expectation of crossbar hardware usage. This series adds support
+to represent such hard-wired irqs through DT and avoid generic
+allocation/programming of crossbar in the driver.
 
-diff --git a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts b/arch/arm/boot=
-/dts/berlin2q-marvell-dmp.dts
-index 995150f93795..a357ce02a64e 100644
---- a/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-+++ b/arch/arm/boot/dts/berlin2q-marvell-dmp.dts
-@@ -34,6 +34,14 @@
- 	status =3D "okay";
- };
-=20
-+&i2c0 {
-+	status =3D "okay";
-+};
-+
-+&i2c2 {
-+	status =3D "okay";
-+};
-+
- &uart0 {
- 	status =3D "okay";
- };
---=20
-1.9.1
+This way of supporting hard-wired irqs was a result of
+the below discussions.
+http://www.spinics.net/lists/arm-kernel/msg329946.html
+
+Based on linux-next next-20140602 tag + Tony's omap-for-v3.16/crossbar branch.
+
+The patches are available here
+ git@github.com:Sricharanti/sricharan.git crossbar_updates
+
+Nishanth Menon (11):
+  irqchip: crossbar: remove IS_ERR_VALUE check
+  irqchip: crossbar: fix sparse warnings
+  irqchip: crossbar: fix checkpatch warning
+  irqchip: crossbar: fix kerneldoc warning
+  irqchip: crossbar: fix memory leak incase of invalid entry
+  irqchip: crossbar: return proper error value
+  irqchip: crossbar: change the goto naming
+  irqchip: crossbar: introduce ti,max-crossbar-sources to identify
+    valid crossbar mapping
+  irqchip: crossbar: introduce centralized check for crossbar write
+  Documentation: dt: OMAP: crossbar: add description for interrupt
+    consumer
+  irqchip: crossbar allow for quirky hardware with direct hardwiring of
+    GIC
+
+Rajendra Nayak (1):
+  irqchip: crossbar: DRA7: Fix unused crossbar list
+
+Sricharan R (2):
+  irqchip: crossbar: set cb pointer to null in case of error
+  irqchip: crossbar: Add kerneldoc for crossbar_domain_unmap callback
+
+ .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++++
+ drivers/irqchip/irq-crossbar.c                     |  127 +++++++++++++++-----
+ 2 files changed, 125 insertions(+), 29 deletions(-)
+
+-- 
+1.7.9.5
+
