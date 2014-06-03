@@ -1,90 +1,107 @@
-From: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-Subject: Re: [PATCH] i2c: pca954x: Fix reset GPIO property name
-Date: Tue, 03 Jun 2014 12:51:01 +0200
-Message-ID: <6244450.7XtcE2yoMk@avalon>
-References: <1401754973-13274-1-git-send-email-laurent.pinchart@ideasonboard.com> <538D272D.5050406@nvidia.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Tue, 3 Jun 2014 12:57:52 +0200
+Message-ID: <CAPDyKFo_xHSKzoeKJb5sh+O3cMGsnqx_yVivpw8Tk72whPHGLQ@mail.gmail.com>
+References: <53824294.1090609@redhat.com>
+	<20140526103807.GV22111@sirena.org.uk>
+	<538321AB.4050006@redhat.com>
+	<20140526142225.GF22111@sirena.org.uk>
+	<538356DA.7090302@redhat.com>
+	<CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
+	<53838023.2080807@redhat.com>
+	<CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
+	<20140527175326.GZ12304@sirena.org.uk>
+	<CAPDyKFqCwSfnbXJffQeMUMLEgZPcqjEMhbTXxi4HKOKqExQ70g@mail.gmail.com>
+	<20140528110351.GI12304@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538D272D.5050406-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexandre Courbot <acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140528110351.GI12304@sirena.org.uk>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Hans de Goede <hdegoede@redhat.com>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Alexandre,
+On 28 May 2014 13:03, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, May 28, 2014 at 10:19:11AM +0200, Ulf Hansson wrote:
+>> On 27 May 2014 19:53, Mark Brown <broonie@kernel.org> wrote:
+>
+>> > This then either conflicts with cases where we need to describe the
+>> > actual contents of the slot with a compatible string or means that the
+>> > SDIO driver needs to handle powerup sequencing since we should be
+>> > binding to the first compatible we find.  If the host controller driver
+>> > and/or subsystem is going to deal with the powering up it's not clear
+>> > that it specifically needs to be the compatible property that's used
+>> > to determine the powerup method, it could just be a boolean or a
+>> > 'power-method = blah' property (where blah is one of a series of strings
+>> > defining methods).  Alternatively we could have separate nodes for the
+>> > slot and SDIO device but that feels meh.  What's the hard requirement
+>> > for it to specifically be a compatible property?
+>
+>> Since the sdio bus is a discoverable bus, we must leave the "SDIO card
+>> device id" outside the information of the DT child node. Instead the
+>> "SDIO card device id" will be fetched once the card has been properly
+>> powered and initialized. From sdio bus' ->match(), the "SDIO func
+>> driver id" will be matched with the "SDIO card device id".
+>
+>> What we need to describe in the child node is only what "powerup
+>> driver" to use (an obviously it's resources). I don't see why there
+>> should be a conflict in using a compatible property, but I might be
+>> missing your point.
+>
+> I wouldn't assume that the SDIO bus will always be accurately
+> discoverable - hardware engineers can always repurpose things for other
+> purposes.
 
-On Tuesday 03 June 2014 10:38:53 Alexandre Courbot wrote:
-> On 06/03/2014 09:22 AM, Laurent Pinchart wrote:
-> > The DT bindings for the pca954x document that the reset GPIO is
-> > specified through the "reset-gpios" property. However, the driver
-> > erroneously uses a property name of "reset-gpio".
-> > 
-> > The GPIO DT bindings documentation mentions that
-> > 
-> > "GPIO properties should be named "[<name>-]gpios". The exact meaning of
-> > each gpios property must be documented in the device tree binding for
-> > each device."
-> > 
-> > The correct reset GPIO property name is thus "reset-gpios". Fix the
-> > driver accordingly.
-> 
-> The plural form should be preferred indeed.
-> 
-> > Signed-off-by: Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>
-> > ---
-> > 
-> >   drivers/i2c/muxes/i2c-mux-pca954x.c | 2 +-
-> >   1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > While commit dd34c37aa3e81715a1ed8da61fa438072428e188
-> > 
-> > Author: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > Date:   Wed Apr 23 17:28:09 2014 +0200
-> > 
-> >      gpio: of: Allow -gpio suffix for property names
-> >      
-> >      Many bindings use the -gpio suffix in property names. Support this in
-> >      addition to the -gpios suffix when requesting GPIOs using the new
-> >      descriptor-based API.
-> > 
-> > adds support for the singular form of the property, the GPIO DT bindings
-> > document the plural form only. I've thus decided to fix the driver instead
-> > of the bindings, even though it could be argued that the singular form
-> > makes more sense in this case. I've CC'ed the people involved with the
-> > above commit for comments on that, and have no issue fixing the bindings
-> > instead of the driver if the singular form is preferred.
-> > 
-> > diff --git a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > b/drivers/i2c/muxes/i2c-mux-pca954x.c index 550bd36..73491ca 100644
-> > --- a/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > +++ b/drivers/i2c/muxes/i2c-mux-pca954x.c
-> > @@ -205,7 +205,7 @@ static int pca954x_probe(struct i2c_client *client,
-> > 
-> >   		int gpio;
-> >   		
-> >   		/* Get the mux out of reset if a reset GPIO is specified. */
-> > 
-> > -		gpio = of_get_named_gpio_flags(np, "reset-gpio", 0, &flags);
-> > +		gpio = of_get_named_gpio_flags(np, "reset-gpios", 0, &flags);
-> 
-> Won't this break DT compatibility for potential users of this driver? (I
-> cannot find any in mainline though)
+Right! Though I think we should be able to handle most if these issues
+through the mmc quirks.
 
-Only if those users don't conform to the DT bindings documentation that 
-mandates the plural form, and are thus broken already ;-)
+>
+>> > There's also the need for the SDIO device to be able to get at the
+>> > resources provided and actively work with them at runtime if it wants to
+>> > manage things more actively (partial poweroff for low power states or
+>> > managing clock rates for example).
+>
+>> Yes, that's is also a reason to why I thought it would make sense to
+>> have a "powerup driver". Typically this driver should support runtime
+>> PM to handle these kind of fine grained power management.
+>
+> No, runtime PM isn't really fine grained - I'm talking about things
+> like starting and stopping individual resources or configuring them.
 
-> Considering that this GPIO is only acquired and set once and for all
-> during probe (a very simple use-case), how about switching this to the
-> gpiod interface instead? That way, you can take advantage of Thierry's
-> patch and the plural form will work while also maintaining the singular
-> form for backward compatibility.
+Are you saying that you have several levels of quiescent mode of your
+external chip?
 
-Regardless of the singular vs. plural debate I think that's a good idea. I'll 
-thus rework this patch.
+>
+>> The SDIO func driver will have access (through the struct
+>> mmc_card|host) to the "powerup driver's" struct device, and can use
+>> pm_runtime_get|put() for it, to tell the "powerup driver" when it may
+>> go into power save state.
+>
+>> This kind of fine grained power management is not related directly to
+>> the SDIO specification, and should not be a part of the mmc core in my
+>> opinion.
+>
+>> If we don't have a compatible string in the DT child node of the mmc
+>> host, but just a DT property - is there a way to achieve the above
+>> anyway?
+>
+> I don't see any relationship between having compatible strings and the
+> ability to achieve things like that to be honest.  Having compatible
+> strings has no real impact on what we can implement, the power driver
+> you're talking about can easily be library code or a feature of part of
+> the code that already exists - so long as we know what hardware is there
+> it's up to us how we interpret that.
 
--- 
-Regards,
+Agree.
 
-Laurent Pinchart
+I am a bit puzzled of how such library should look like, but I suppose
+we need to be able to go to different power states through it.
+Typically the library may be invoked both from the mmc core to do
+power up/off and from the sdio func driver to handle power save.
+
+Does it make sense to you as well?
+
+Kind regards
+Ulf Hansson
