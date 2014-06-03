@@ -1,103 +1,46 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH 14/14] irqchip: crossbar allow for quirky hardware with direct hardwiring of GIC
-Date: Tue, 3 Jun 2014 13:13:06 +0530
-Message-ID: <1401781386-4982-15-git-send-email-r.sricharan@ti.com>
-References: <1401781386-4982-1-git-send-email-r.sricharan@ti.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel
+ definitions for bindings
+Date: Tue, 3 Jun 2014 09:53:17 +0200
+Message-ID: <CAMuHMdWkPy8eydh4BntXdtf5ZJKP4yG26QovLUjvGUYYv3dStw@mail.gmail.com>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+	<1401716531-29794-5-git-send-email-geert+renesas@glider.be>
+	<538C818B.5060703@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1401781386-4982-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, tglx@linutronix.de, linux@arm.linux.org.uk, r.sricharan@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <538C818B.5060703@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Nishanth Menon <nm@ti.com>
+Hi Ben,
 
-On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10, 131,
-132, 133 are direct wired to hardware blocks bypassing crossbar.
-This quirky implementation is *NOT* supposed to be the expectation
-of crossbar hardware usage. However, these are already marked in our
-description of the hardware with SKIP and RESERVED where appropriate.
+On Mon, Jun 2, 2014 at 3:52 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>> +// FIXME
+>> +#define CHCR_RX_8BIT SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_8BIT)
+>> +#define CHCR_TX_8BIT SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_8BIT)
+>> +#define CHCR_RX_16BIT        SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_16BIT)
+>> +#define CHCR_TX_16BIT        SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_16BIT)
+>> +#define CHCR_RX_32BIT        SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
+>> +#define CHCR_TX_32BIT        SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
+>> +#define CHCR_RX_256BIT       SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
+>> +#define CHCR_TX_256BIT       SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
+>
+> I am pretty sure for round-2 we can remove these in favour of a
+> table in the driver. The only device that has a non-standard setting
+> is the SDHI and that will support 32bit and 256bit transfers.
 
-Unfortunately, we need to be able to refer to these hardwired IRQs.
-So, to request these, crossbar driver can use the existing information
-from it's table that these SKIP/RESERVED maps are direct wired sources
-and generic allocation/programming of crossbar should be avoided.
+Thanks, I'm eagerly awaiting your next version...
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
----
- .../devicetree/bindings/arm/omap/crossbar.txt      |   12 ++++++++++--
- drivers/irqchip/irq-crossbar.c                     |   20 ++++++++++++++++++--
- 2 files changed, 28 insertions(+), 4 deletions(-)
+Gr{oetje,eeting}s,
 
-diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-index 816d11b..7476d9b 100644
---- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-+++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
-@@ -35,8 +35,10 @@ Documentation/devicetree/bindings/arm/gic.txt for further details.
- 
- An interrupt consumer on an SoC using crossbar will use:
- 	interrupts = <GIC_SPI request_number interrupt_level>
--request number shall be between 0 to that described by
--"ti,max-crossbar-sources"
-+When the request number is between 0 to that described by
-+"ti,max-crossbar-sources", it is assumed to be a crossbar mapping. If the
-+request_number is greater than "ti,max-crossbar-sources", then it is mapped as a
-+quirky hardware mapping direct to GIC.
- 
- Example:
- 	device_x@0x4a023000 {
-@@ -44,3 +46,9 @@ Example:
- 		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
- 		...
- 	};
-+
-+	device_y@0x4a033000 {
-+		/* Direct mapped GIC SPI 1 used */
-+		interrupts = <GIC_SPI 401 IRQ_TYPE_LEVEL_HIGH>;
-+		...
-+	};
-diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-index 745ad0a..2b61bbb 100644
---- a/drivers/irqchip/irq-crossbar.c
-+++ b/drivers/irqchip/irq-crossbar.c
-@@ -98,8 +98,13 @@ static inline int allocate_free_irq(int cb_no)
- 
- static inline bool needs_crossbar_write(irq_hw_number_t hw)
- {
--	if (hw > GIC_IRQ_START)
--		return true;
-+	int cb_no;
-+
-+	if (hw > GIC_IRQ_START) {
-+		cb_no = cb->irq_map[hw - GIC_IRQ_START];
-+		if (cb_no != IRQ_RESERVED && cb_no != IRQ_SKIP)
-+			return true;
-+	}
- 
- 	return false;
- }
-@@ -139,8 +144,19 @@ static int crossbar_domain_xlate(struct irq_domain *d,
- {
- 	int ret;
- 	int req_num = intspec[1];
-+	int direct_map_num;
- 
- 	if (req_num >= cb->max_crossbar_sources) {
-+		direct_map_num = req_num - cb->max_crossbar_sources;
-+		if (direct_map_num < cb->int_max) {
-+			ret = cb->irq_map[direct_map_num];
-+			if (ret == IRQ_RESERVED || ret == IRQ_SKIP) {
-+				/* We use the interrupt num as h/w irq num */
-+				ret = direct_map_num;
-+				goto found;
-+			}
-+		}
-+
- 		pr_err("%s: requested crossbar number %d > max %d\n",
- 		       __func__, req_num, cb->max_crossbar_sources);
- 		return -EINVAL;
--- 
-1.7.9.5
+                        Geert
 
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
