@@ -1,50 +1,68 @@
-From: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2] coccinelle: Check for missing NULL terminators in
- of_device_id tables
-Date: Tue, 03 Jun 2014 10:45:37 -0700
-Message-ID: <538E09C1.30200@codeaurora.org>
-References: <1401213858-31950-1-git-send-email-sboyd@codeaurora.org> <alpine.DEB.2.02.1406031208380.2036@localhost6.localdomain6>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/2] arm: shmobile: r8a7790: add USB3.0 clocks to device tree
+Date: Tue, 03 Jun 2014 19:56:03 +0200
+Message-ID: <5502651.vXk1fvVtBJ@avalon>
+References: <538D711B.1060402@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.DEB.2.02.1406031208380.2036-bi+AKbBUZKagILUCTcTcHdKyNwTtLsGr@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
-Cc: Michal Marek <mmarek-AlSwsSmVLrQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>, Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <538D711B.1060402@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/14 03:15, Julia Lawall wrote:
-> Failure to terminate an of_device_id table can lead to confusing
-> failures depending on where the compiler places the array. Add a
-> check to make sure these tables are terminated. Thanks to Mitchel
-> Humpherys for coming up with the pattern initially.
->
-> Cc: Mitchel Humpherys <mitchelh-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Julia Lawall <Julia.Lawall-L2FTfq7BK8M@public.gmane.org>
-> Cc: Gilles Muller <Gilles.Muller-L2FTfq7BK8M@public.gmane.org>
-> Cc: Nicolas Palix <nicolas.palix-wMUr/XMoy4A@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Julia Lawall <julia.lawall-L2FTfq7BK8M@public.gmane.org>
->
+Hi Shimoda-san,
+
+Thank you for the patch.
+
+On Tuesday 03 June 2014 15:54:19 Yoshihiro Shimoda wrote:
+> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+
+Apart for the parent clock that I can't verify due to lack of documentation,
+
+Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+
 > ---
->
-> v3: Removed unneeded rule bad_of_table.  Placed * in context rule on the 
-> closing brace; putting it on the field caused all fields to be marked.
->
-
-
-These seem like only minor changes. Why was my authorship removed?
+>  arch/arm/boot/dts/r8a7790.dtsi |    6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
+> index cd8b7cc..e06c486 100644
+> --- a/arch/arm/boot/dts/r8a7790.dtsi
+> +++ b/arch/arm/boot/dts/r8a7790.dtsi
+> @@ -780,17 +780,17 @@
+>  			reg = <0 0xe615013c 0 4>, <0 0xe6150048 0 4>;
+>  			clocks = <&hp_clk>, <&cp_clk>, <&mmc1_clk>, <&sd3_clk>,
+>  				 <&sd2_clk>, <&cpg_clocks R8A7790_CLK_SD1>, <&cpg_clocks
+> R8A7790_CLK_SD0>, <&mmc0_clk>, -				 <&hp_clk>, <&hp_clk>, 
+<&rclk_clk>;
+> +				 <&hp_clk>, <&hp_clk>, <&mp_clk>, <&rclk_clk>;
+>  			#clock-cells = <1>;
+>  			renesas,clock-indices = <
+>  				R8A7790_CLK_IIC2 R8A7790_CLK_TPU0 R8A7790_CLK_MMCIF1 
+R8A7790_CLK_SDHI3
+>  				R8A7790_CLK_SDHI2 R8A7790_CLK_SDHI1 R8A7790_CLK_SDHI0
+> R8A7790_CLK_MMCIF0 -				R8A7790_CLK_IIC0 R8A7790_CLK_IIC1 
+R8A7790_CLK_CMT1
+> +				R8A7790_CLK_IIC0 R8A7790_CLK_IIC1 R8A7790_CLK_SSUSB 
+R8A7790_CLK_CMT1
+> 
+>  			>;
+> 
+>  			clock-output-names =
+>  				"iic2", "tpu0", "mmcif1", "sdhi3",
+>  				"sdhi2", "sdhi1", "sdhi0", "mmcif0",
+> -				"iic0", "iic1", "cmt1";
+> +				"iic0", "iic1", "ssusb", "cmt1";
+>  		};
+>  		mstp5_clks: mstp5_clks@e6150144 {
+>  			compatible = "renesas,r8a7790-mstp-clocks", "renesas,cpg-mstp-
+clocks";
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
