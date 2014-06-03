@@ -1,287 +1,124 @@
-From: David Riley <davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCHv2] arm64: Add atomic pool for non-coherent and CMA allocaitons.
-Date: Mon, 2 Jun 2014 17:23:52 -0700
-Message-ID: <CAASgrz2jpQTJcXrYhzm-NBkucfKumvOZkY7HZZ6GwHR+Eo5OVA@mail.gmail.com>
-References: <1401739432-5358-1-git-send-email-lauraa@codeaurora.org>
+From: Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt: bindings: mmc: Document the
+ practice of using subnodes for slots
+Date: Tue, 03 Jun 2014 10:13:26 +0900
+Message-ID: <538D2136.5030008@samsung.com>
+References: <1401563014-13856-1-git-send-email-hdegoede@redhat.com>
+ <1401563014-13856-2-git-send-email-hdegoede@redhat.com>
+ <CAOesGMisqtPWKY6N5ch36c0VyBP1Pu725cehBU+2gYtKXQs=hQ@mail.gmail.com>
+ <538AF124.9040106@redhat.com>
+ <CAPDyKFon5J6aUTzSmqGn_pkxgud26=+KBW0pkim-adMmWG_xXg@mail.gmail.com>
+ <538C3812.9060705@samsung.com> <538C39CA.4020301@samsung.com>
+ <CAPDyKFodJc6bT=TPSLxWkXXE6t9mE0rv9Y3vp2iBW9N_NEw77g@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401739432-5358-1-git-send-email-lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Ritesh Harjani <ritesh.harjani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBDQ7HQ4ZVQOBBOOCWSOAKGQEYDO4U4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-reply-to: <CAPDyKFodJc6bT=TPSLxWkXXE6t9mE0rv9Y3vp2iBW9N_NEw77g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Seungwon Jeon <tgih.jun-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch addresses the issues I had previously run into.
++ Seungwon Jeon
 
-Dave
-
-On Mon, Jun 2, 2014 at 1:03 PM, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
-> Neither CMA nor noncoherent allocations support atomic allocations.
-> Add a dedicated atomic pool to support this.
->
-> Change-Id: I46c8fdffe5e0687403d42b37643137c8cf344259
-> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> ---
->
-> v2: Various bug fixes pointed out by David and Ritesh (CMA dependency, swapping
-> coherent, noncoherent). I'm still not sure how to address the devicetree
-> suggestion by Will [1][2]. I added the devicetree mailing list this time around
-> to get more input on this.
->
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/249180.html
-> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/249528.html
->
-> ---
->  arch/arm64/mm/dma-mapping.c | 192 +++++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 190 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm64/mm/dma-mapping.c b/arch/arm64/mm/dma-mapping.c
-> index c851eb4..792d43c 100644
-> --- a/arch/arm64/mm/dma-mapping.c
-> +++ b/arch/arm64/mm/dma-mapping.c
-> @@ -41,6 +41,110 @@ static pgprot_t __get_dma_pgprot(struct dma_attrs *attrs, pgprot_t prot,
->         return prot;
->  }
->
-> +#define DEFAULT_DMA_COHERENT_POOL_SIZE  SZ_256K
-> +
-> +struct dma_pool {
-> +       size_t size;
-> +       spinlock_t lock;
-> +       void *coherent_vaddr;
-> +       void *noncoherent_vaddr;
-> +       unsigned long *bitmap;
-> +       unsigned long nr_pages;
-> +       struct page **pages;
-> +};
-> +
-> +static struct dma_pool atomic_pool = {
-> +       .size = DEFAULT_DMA_COHERENT_POOL_SIZE,
-> +};
-> +
-> +static int __init early_coherent_pool(char *p)
-> +{
-> +       atomic_pool.size = memparse(p, &p);
-> +       return 0;
-> +}
-> +early_param("coherent_pool", early_coherent_pool);
-> +
-> +static void *__alloc_from_pool(size_t size, struct page **ret_page,
-> +                                       bool coherent)
-> +{
-> +       struct dma_pool *pool = &atomic_pool;
-> +       unsigned int count = PAGE_ALIGN(size) >> PAGE_SHIFT;
-> +       unsigned int pageno;
-> +       unsigned long flags;
-> +       void *ptr = NULL;
-> +       unsigned long align_mask;
-> +       void *pool_start = coherent ? pool->coherent_vaddr :
-> +                                     pool->noncoherent_vaddr;
-> +
-> +       if (!pool->coherent_vaddr || !pool->noncoherent_vaddr) {
-> +               WARN(1, "Atomic pool not initialised!\n");
-> +               return NULL;
-> +       }
-> +
-> +       /*
-> +        * Align the region allocation - allocations from pool are rather
-> +        * small, so align them to their order in pages, minimum is a page
-> +        * size. This helps reduce fragmentation of the DMA space.
-> +        */
-> +       align_mask = (1 << get_order(size)) - 1;
-> +
-> +       spin_lock_irqsave(&pool->lock, flags);
-> +       pageno = bitmap_find_next_zero_area(pool->bitmap, pool->nr_pages,
-> +                                           0, count, align_mask);
-> +       if (pageno < pool->nr_pages) {
-> +               bitmap_set(pool->bitmap, pageno, count);
-> +               ptr = pool_start + PAGE_SIZE * pageno;
-> +               *ret_page = pool->pages[pageno];
-> +       } else {
-> +               pr_err_once("ERROR: %u KiB atomic DMA coherent pool is too small!\n"
-> +                           "Please increase it with coherent_pool= kernel parameter!\n",
-> +                               (unsigned)pool->size / 1024);
-> +       }
-> +       spin_unlock_irqrestore(&pool->lock, flags);
-> +
-> +       return ptr;
-> +}
-> +
-> +static bool __in_atomic_pool(void *start, size_t size, void *pool_start)
-> +{
-> +       struct dma_pool *pool = &atomic_pool;
-> +       void *end = start + size;
-> +       void *pool_end = pool_start + pool->size;
-> +
-> +       if (start < pool_start || start >= pool_end)
-> +               return false;
-> +
-> +       if (end <= pool_end)
-> +               return true;
-> +
-> +       WARN(1, "Wrong coherent size(%p-%p) from atomic pool(%p-%p)\n",
-> +               start, end - 1, pool_start, pool_end - 1);
-> +
-> +       return false;
-> +}
-> +
-> +static int __free_from_pool(void *start, size_t size, bool coherent)
-> +{
-> +       struct dma_pool *pool = &atomic_pool;
-> +       unsigned long pageno, count;
-> +       unsigned long flags;
-> +       void *pool_start = coherent ? pool->coherent_vaddr :
-> +                                     pool->noncoherent_vaddr;
-> +
-> +       if (!__in_atomic_pool(start, size, pool_start))
-> +               return 0;
-> +
-> +       pageno = (start - pool_start) >> PAGE_SHIFT;
-> +       count = size >> PAGE_SHIFT;
-> +
-> +       spin_lock_irqsave(&pool->lock, flags);
-> +       bitmap_clear(pool->bitmap, pageno, count);
-> +       spin_unlock_irqrestore(&pool->lock, flags);
-> +
-> +       return 1;
-> +}
-> +
-> +
->  static void *__dma_alloc_coherent(struct device *dev, size_t size,
->                                   dma_addr_t *dma_handle, gfp_t flags,
->                                   struct dma_attrs *attrs)
-> @@ -53,7 +157,16 @@ static void *__dma_alloc_coherent(struct device *dev, size_t size,
->         if (IS_ENABLED(CONFIG_ZONE_DMA) &&
->             dev->coherent_dma_mask <= DMA_BIT_MASK(32))
->                 flags |= GFP_DMA;
-> -       if (IS_ENABLED(CONFIG_DMA_CMA)) {
-> +
-> +       if (!(flags & __GFP_WAIT)) {
-> +               struct page *page = NULL;
-> +               void *addr = __alloc_from_pool(size, &page, true);
-> +
-> +               if (addr)
-> +                       *dma_handle = phys_to_dma(dev, page_to_phys(page));
-> +
-> +               return addr;
-> +       } else if (IS_ENABLED(CONFIG_DMA_CMA)) {
->                 struct page *page;
->
->                 size = PAGE_ALIGN(size);
-> @@ -78,7 +191,9 @@ static void __dma_free_coherent(struct device *dev, size_t size,
->                 return;
->         }
->
-> -       if (IS_ENABLED(CONFIG_DMA_CMA)) {
-> +       if (__free_from_pool(vaddr, size, true)) {
-> +               return;
-> +       } else if (IS_ENABLED(CONFIG_DMA_CMA)) {
->                 phys_addr_t paddr = dma_to_phys(dev, dma_handle);
->
->                 dma_release_from_contiguous(dev,
-> @@ -100,9 +215,21 @@ static void *__dma_alloc_noncoherent(struct device *dev, size_t size,
->         size = PAGE_ALIGN(size);
->         order = get_order(size);
->
-> +       if (!(flags & __GFP_WAIT)) {
-> +               struct page *page = NULL;
-> +               void *addr = __alloc_from_pool(size, &page, false);
-> +
-> +               if (addr)
-> +                       *dma_handle = phys_to_dma(dev, page_to_phys(page));
-> +
-> +               return addr;
-> +
-> +       }
-> +
->         ptr = __dma_alloc_coherent(dev, size, dma_handle, flags, attrs);
->         if (!ptr)
->                 goto no_mem;
-> +
->         map = kmalloc(sizeof(struct page *) << order, flags & ~GFP_DMA);
->         if (!map)
->                 goto no_map;
-> @@ -135,6 +262,8 @@ static void __dma_free_noncoherent(struct device *dev, size_t size,
->  {
->         void *swiotlb_addr = phys_to_virt(dma_to_phys(dev, dma_handle));
->
-> +       if (__free_from_pool(vaddr, size, false))
-> +               return;
->         vunmap(vaddr);
->         __dma_free_coherent(dev, size, swiotlb_addr, dma_handle, attrs);
->  }
-> @@ -332,6 +461,65 @@ static struct notifier_block amba_bus_nb = {
->
->  extern int swiotlb_late_init_with_default_size(size_t default_size);
->
-> +static int __init atomic_pool_init(void)
-> +{
-> +       struct dma_pool *pool = &atomic_pool;
-> +       pgprot_t prot = pgprot_writecombine(pgprot_default);
-> +       unsigned long nr_pages = pool->size >> PAGE_SHIFT;
-> +       unsigned long *bitmap;
-> +       struct page *page;
-> +       struct page **pages;
-> +       int bitmap_size = BITS_TO_LONGS(nr_pages) * sizeof(long);
-> +
-> +       bitmap = kzalloc(bitmap_size, GFP_KERNEL);
-> +       if (!bitmap)
-> +               goto no_bitmap;
-> +
-> +       pages = kzalloc(nr_pages * sizeof(struct page *), GFP_KERNEL);
-> +       if (!pages)
-> +               goto no_pages;
-> +
-> +       if (IS_ENABLED(CONFIG_CMA))
-> +               page = dma_alloc_from_contiguous(NULL, nr_pages,
-> +                                       get_order(pool->size));
-> +       else
-> +               page = alloc_pages(GFP_KERNEL, get_order(pool->size));
-> +
-> +
-> +       if (page) {
-> +               int i;
-> +               void *addr = page_address(page);
-> +
-> +               memset(addr, 0, pool->size);
-> +               __dma_flush_range(addr, addr + pool->size);
-> +
-> +               for (i = 0; i < nr_pages; i++)
-> +                       pages[i] = page + i;
-> +
-> +               spin_lock_init(&pool->lock);
-> +               pool->pages = pages;
-> +               pool->noncoherent_vaddr = vmap(pages, nr_pages, VM_MAP, prot);
-> +               if (pool->noncoherent_vaddr == NULL)
-> +                       goto out;
-> +               pool->coherent_vaddr = addr;
-> +               pool->bitmap = bitmap;
-> +               pool->nr_pages = nr_pages;
-> +               pr_info("DMA: preallocated %u KiB pool for atomic allocations\n",
-> +                       (unsigned)pool->size / 1024);
-> +               return 0;
-> +       }
-> +
-> +out:
-> +       kfree(pages);
-> +no_pages:
-> +       kfree(bitmap);
-> +no_bitmap:
-> +       pr_err("DMA: failed to allocate %u KiB pool for atomic coherent allocation\n",
-> +               (unsigned)pool->size / 1024);
-> +       return -ENOMEM;
-> +}
-> +postcore_initcall(atomic_pool_init);
-> +
->  static int __init swiotlb_late_init(void)
->  {
->         size_t swiotlb_size = min(SZ_64M, MAX_ORDER_NR_PAGES << PAGE_SHIFT);
+On 06/02/2014 05:52 PM, Ulf Hansson wrote:
+> On 2 June 2014 10:46, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> On 06/02/2014 05:38 PM, Jaehoon Chung wrote:
+>>> On 06/02/2014 05:29 PM, Ulf Hansson wrote:
+>>>> On 1 June 2014 11:23, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+>>>>> Hi,
+>>>>>
+>>>>>
+>>>>> On 05/31/2014 10:13 PM, Olof Johansson wrote:
+>>>>>>
+>>>>>> On Sat, May 31, 2014 at 12:03 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>> wrote:
+>>>>>>>
+>>>>>>> The following existing MMC host controller bindings use slot subnodes:
+>>>>>>>
+>>>>>>> Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+>>>>>>> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+>>>>>>>
+>>>>>>> This commit documents this practice in the standard mmc bindings
+>>>>>>> documentation.
+>>>>>>>
+>>>>>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>>>>>
+>>>>>>
+>>>>>> There are today only two drivers that use this kind of binding, dw_mmc
+>>>>>> and the at91 one.
+>>>>>
+>>>>>
+>>>>> Correct.
+>>>>>
+>>>>>
+>>>>>> Neither seems to actually ever have been used with
+>>>>>> more than one slot. I doubt anyone building an exynos-based system
+>>>>>> will ever do a multi-slot solution, and it seems that the at91 driver
+>>>>>> doesn't actually handle more than one slot.
+>>>>>>
+>>>>>> I'm personally not that excited about complicating the bindings by
+>>>>>> opening up for this -- I would rather work towards removing the
+>>>>>> concept of slots if it's one of those things that are going to remain
+>>>>>> unused. We have actually been talking about reworking the dw_mmc
+>>>>>> binding to remove the slot concept (and simplify the driver by doing
+>>>>>> so).
+>>>>>
+>>>>>
+>>>>> I'm fine with removing the slot subnode, I added it because of it being
+>>>>> brought up in the powerup sequence discussion. I explicitly asked there
+>>>>> if adding such a subnode level was seen as desirable but nobody
+>>>>> answered :|
+>>>>>
+>>>>> Anyways, either way works for me. I can do a v3 dropping the slot subnode
+>>>>> level again. I would really like to move forward with a decision on how-to
+>>>>> represent non probable info for sdio devices in device nodes. So do you
+>>>>> have any other remarks other then that the slot subnode should be dropped ?
+>>>>> And if not can you please review and ack (*) v3 of this patch-set once
+>>>>> I've send it?
+>>>>>
+>>>>> Chris Ball and Ulf Hansson, what is your take on this, are you willing to
+>>>>> take this patch set? And do you want it with or without the slot subnodes ?
+>>>>
+>>>> I certainly appreciate you working actively on this Hans, I will look
+>>>> into the patchset as soon as I can.
+>>>>
+>>>> I share Olof's view about the slot nodes, we must not add DT bindings
+>>>> that isn't really needed.
+>>>>
+>>>> Regarding the slot subnodes; Jaehoon Chung recently posted a patchset
+>>>> for adding the parsing of it, intended for dwmmc. I withdraw my ack
+>>>> for it, and let's try to go in the other direction instead.
+>>>>
+>>>> [PATCHv3 0/4] mmc: fixed the mmc_of_parse for dwmmc.
+>>>>
+>>>> Thus I suggest we should clean-up host drivers to support only one
+>>>> card per host, and entirely skip the slot concept.
+>>>
+>>> Well, almost platform is used the only one card per host, although some controller is supported the slot concept.
+>>> But we don't know that controller should be used the multi slot per host, in future.
+>>> So I think we can't skip the slot concept.
+>> If we need to change the dw-mmc controller, let me know, plz.
+>> I want to fix this problem before release the 3.16.
+>> Actually, i think it can remove the subnode, if ensure not to use multi-slot at dwmmc.
+> 
+> That seems like the best approach. Please try to remove the subnodes
+> and make use of mmc_of_parse, as is.
+> 
+> Kind regards
+> Uffe
 > --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
