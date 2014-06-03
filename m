@@ -1,41 +1,38 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 2/2] arm: shmobile: r8a7791: add USB3.0 node to r8a7791.dtsi
-Date: Tue, 3 Jun 2014 15:57:16 +0900
-Message-ID: <538D71CC.1090306@renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for QSPI
+Date: Tue, 3 Jun 2014 09:05:42 +0200
+Message-ID: <CAMuHMdVnmsjf29X4KF0co+WwUh9i0DQe6hE0hNFMCv-+GeHP_w@mail.gmail.com>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+	<538D50D1.7010900@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <538D50D1.7010900@renesas.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This node depends on a generic phy driver of usb.
+On Tue, Jun 3, 2014 at 6:36 AM, Khiem Nguyen
+<khiem.nguyen.xt@renesas.com> wrote:
+> I think this patch series should be divided into 2 parts,
+> one for DMA in general and one for DMA supporting QSPI.
+>
+> How do you think about it ?
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm/boot/dts/r8a7791.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+I don't think it's worth splitting off just the last patch into a separate
+series.
 
-diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-index c2b5b38..5d6f4d6 100644
---- a/arch/arm/boot/dts/r8a7791.dtsi
-+++ b/arch/arm/boot/dts/r8a7791.dtsi
-@@ -906,4 +906,14 @@
- 		#size-cells = <0>;
- 		status = "disabled";
- 	};
-+
-+	xhci: usb@ee000000 {
-+		compatible = "renesas,xhci-r8a7791";
-+		reg = <0 0xee000000 0 0xc00>;
-+		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7791_CLK_SSUSB>;
-+		phys = <&usbphy 1 1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
- };
--- 
-1.7.9.5
+This is a series, not a single patch. The applyer can always drop some
+patches.
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
