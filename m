@@ -1,43 +1,70 @@
-From: Jisheng Zhang <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: berlin: add SMP support
-Date: Tue, 3 Jun 2014 16:02:39 +0800
-Message-ID: <20140603160239.38defafe@xhacker>
-References: <1401700866-24804-1-git-send-email-antoine.tenart@free-electrons.com>
-	<1401700866-24804-2-git-send-email-antoine.tenart@free-electrons.com>
-	<20140602094715.GG28090@lunn.ch>
-	<20140602100048.GA12162@kwain>
-	<20140602100332.GH28090@lunn.ch>
-	<20140602102750.GB13681@kwain>
-	<20140603141913.710a1f7e@xhacker>
-	<20140603075011.GA22742@lunn.ch>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
+ v3.16
+Date: Tue, 3 Jun 2014 09:06:32 +0100
+Message-ID: <20140603080632.GC3060@lee--X1>
+References: <1401214140-9828-1-git-send-email-tony@atomide.com>
+ <20140528071313.GH4227@lee--X1>
+ <20140528180607.GB4707@atomide.com>
+ <20140602163841.GC11004@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="US-ASCII"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140603075011.GA22742-g2DYL2Zd6BY@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Cc: Antoine =?UTF-8?B?VMOpbmFydA==?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jimmy Xu <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140602163841.GC11004@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+On Mon, 02 Jun 2014, Tony Lindgren wrote:
+> * Tony Lindgren <tony@atomide.com> [140528 11:11]:
+> > * Lee Jones <lee.jones@linaro.org> [140528 00:14]:
+> > > Thanks Tony, here's the pull-request:
+> > >=20
+> > > The following changes since commit 455c6fdbd219161bd09b1165f11699=
+d6d73de11c:
+> > >=20
+> > >   Linux 3.14 (2014-03-30 20:40:15 -0700)
+> > >=20
+> > > are available in the git repository at:
+> > >=20
+> > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/=
+mfd-omap-v3.16-1
+> > >=20
+> > > for you to fetch changes up to 43fef47f94a1ae46fb2720dada32fa3b55=
+47bee2:
+> > >=20
+> > >   mfd: twl4030-power: Add a configuration to turn off oscillator =
+during off-idle (2014-05-28 08:06:18 +0100)
+> > >=20
+> > > ----------------------------------------------------------------
+> > > Second immutable branch between MFD and OMAP due for the v3.16 me=
+rge window.
+> >=20
+> > Thanks a lot, this will make it easier for me to chase down potenti=
+al
+> > PM related regressions ;) I'm merging this for testing only into th=
+e
+> > linux-omap master branch, no need for me to include it into any
+> > of my upstream heading branches.
+>=20
+> Lee, I'm not seeing this in linux next, did you maybe forget to merge
+> it into the MFD tree?
 
-On Tue, 3 Jun 2014 00:50:11 -0700
-Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org> wrote:
+I didn't forget, but I didn't do it either. :)
 
-> > We don't support independently power off cpu on BG2 and BG2Q in linux
-> > kernel. So we can assume that bootloader has powered on the CPUs
-> 
-> Can i assume from your answer that the hardware does actually support
-> independent power off/on of CPUs? It could be added sometime in the
-> future.
-> 
+I have re-merged all of the IBs this morning, so should be in -next
+by tomorrow.
 
-The BG2 and BG2Q HW doesn't support independent power off/on CPUs.
-
-Sorry for confusion,
-Jisheng
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
