@@ -1,75 +1,70 @@
-From: Pacman du34 <pacmandu34-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: FATAL ERROR: Unable to parse input tree
-Date: Tue, 3 Jun 2014 15:25:25 +0200
-Message-ID: <CAPH+8+iDZ3+bx5zU6aoGDH_tiKCPAf07QGymSRp0oB1W+_1=1Q@mail.gmail.com>
-References: <CAPH+8+gzCmV=tZOhq3DhYfWo6Pngcj+9XW3gNgCTV+qq5HnJ_Q@mail.gmail.com>
-	<20140603130241.GC1310@leverpostej>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: RFC: representing sdio devices oob interrupt, clks, etc. in
+ device tree
+Date: Tue, 3 Jun 2014 15:28:09 +0200
+Message-ID: <CAPDyKFqi0-Fa0rZAvCO0GukNTrMy9R1io8bLYr_KEceRRFb+-Q@mail.gmail.com>
+References: <537E31F7.1030505@gmail.com>
+	<537F1148.3010102@redhat.com>
+	<20140523112239.GB12304@sirena.org.uk>
+	<537F3610.3050104@redhat.com>
+	<20140523162718.GE22111@sirena.org.uk>
+	<53806F26.6050706@redhat.com>
+	<20140525123452.GS22111@sirena.org.uk>
+	<53824294.1090609@redhat.com>
+	<20140526103807.GV22111@sirena.org.uk>
+	<538321AB.4050006@redhat.com>
+	<20140526142225.GF22111@sirena.org.uk>
+	<538356DA.7090302@redhat.com>
+	<CAPDyKFqgvaPhMH3PFh7+6u+Am6pWYhxBFdvUZFfekUfpFJxdKw@mail.gmail.com>
+	<53838023.2080807@redhat.com>
+	<CAPDyKFpg_2RQabM044C1hsNTcuxdVVOvw0ZONVRdysk=eom8UA@mail.gmail.com>
+	<5385AF94.90004@redhat.com>
+	<CAPDyKFpd1mPi1pqTxx=uNG+MsprCngZN-WFnNQrB_1+WuA0faA@mail.gmail.com>
+	<538DAC58.90001@redhat.com>
+	<CAPDyKFr67c0NfL6+_0mejz2rSjwCLXhhGVqXpicerM1ZwRMNmg@mail.gmail.com>
+	<538DC873.8000809@redhat.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140603130241.GC1310@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <538DC873.8000809@redhat.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>
+Cc: Mark Brown <broonie@kernel.org>, Tomasz Figa <tomasz.figa@gmail.com>, Chen-Yu Tsai <wens@csie.org>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Maxime Ripard <maxime.ripard@free-electrons.com>, linux-mmc <linux-mmc@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Fabio Estevam <festevam@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Jyri Sarha <jsarha@ti.com>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-06-03 15:02 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Tue, Jun 03, 2014 at 01:53:24PM +0100, Pacman du34 wrote:
->> Hello all,
->>
->> I am working on a new Linux port to a new architecture and I would like
->> to add a dts file to describe my system.
->>
->> So first of all I wrote the following dts test file :
->>
->> / {
->>     compatible = "manufacturer,cpu";
->> };
->>
->> I've read that this is the minimum structure required for a device tree
->> on the wiki.
->>
->> But when I try compiling it with dtc (the first line is the command
->> line) I get this error message :
->>
->> dtc -I dts -O dtb -o my_file.dtb myfile.dts
->>
->> Error: myfile.dts:1.1-2 syntax error
->> FATAL ERROR: Unable to parse input tree
->
-> You're missing the DTS version. Try:
->
-> /dts-v1/;
-> / {
->         comaptible = "manufacturer,device";
-> };
->
-> Cheers,
-> Mark.
->
->>
->> I tried both the dtc version of Linux source code (1.2.0-g37c0b6a0) and
->> dtc version installed with "apt-get install device-tree-compiler" (1.3.0).
->>
->> I searched on Google but I have not found relevant information for my issue.
->>
->> I really do not understand what the problem here and I am totally stuck.
->> Any help will be appreciated.
->>
->> Thanks a lot in advance.
->>
->> Best regards.
+[snip]
 
-That works, thank you very much,
+>>
+>> Why do we need to put the sdio functions devices in DT?
+>
+> To define sdio function specific non probable info, such as oob irqs,
+> also see the "mmc: Add SDIO function devicetree subnode parsing" patch-set
+> of which I send v3 this morning.
 
-I take this opportunity to ask another question... As I have to
-specify the DTS version, are there other versions, and if yes, what
-are their differences ? I mean, if there are other versions, why to
-choose the vesion 2 instead of 3 or 1 ?
+Yes, of course - makes sense.
 
-Thanks again for your very quick answer.
+[snip]
 
-Best regards.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>>> I see these important things that follow if we decide to use runtime
+>>>> PM to trigger the power up/off sequence.
+>>>> 1) In cases of !CONFIG_PM_RUNTIME, it means the "powerup driver" once
+>>>> probed, will keep it's resources enabled forever.
+>>>
+>>> Ack.
+>>
+>> So, the consequence is that for CONFIG_PM_SLEEP systems not using
+>> CONFIG_PM_RUNTIME - we don't have a good solution.
+>>
+>> Is that acceptable?
+>
+> IMHO yes, if people want maximum power savings they should use
+> CONFIG_PM_RUNTIME. And since this is all for yet to be added
+> systems / configs I would expect CONFIG_PM_RUNTIME to be supported
+> there just fine.
+
+That's a valid point, but on the other hand, "old" systems could
+benefit from this "feature" as well, were runtime PM might not be that
+interesting.
+
+Kind regards
+Uffe
