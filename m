@@ -1,31 +1,30 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v4 0/2] add hix5hd2 mac driver
-Date: Mon, 02 Jun 2014 23:39:37 -0700 (PDT)
-Message-ID: <20140602.233937.182448049174382056.davem@davemloft.net>
-References: <1401774577-16683-1-git-send-email-zhangfei.gao@linaro.org>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v2 0/2] arm: shmobile: add USB 3.0 DT for r8a7790
+Date: Tue, 3 Jun 2014 15:54:08 +0900
+Message-ID: <538D7110.3090201@renesas.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1401774577-16683-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: netdev-owner@vger.kernel.org
-To: zhangfei.gao@linaro.org
-Cc: arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Date: Tue,  3 Jun 2014 13:49:35 +0800
+This patch series is based on the renesas-devel-v3.15-rc7-20140530
+in renesas.git.
 
-> v4:
-> Update indent
-> Use usleep_range instead of udelay
-> 
-> v3:
-> Remove .ndo_get_stats as mentioned by Tobias
-> Add __le32 conversion pointed by Mark
-> 
-> v2:
-> Update binding accoring to Sergei comments
-> Update descriptor as Arnd's suggestion
+Changes from v1:
+ - Change node name to "usb@ee000000" in patch 2.
+ - Add comment in the change log of patch 2 about a generic phy.
 
-Series applied, thanks.
+Yoshihiro Shimoda (2):
+  arm: shmobile: r8a7790: add USB3.0 clocks to device tree
+  arm: shmobile: r8a7790: add USB3.0 node to r8a7790.dtsi
+
+ arch/arm/boot/dts/r8a7790.dtsi |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
+-- 
+1.7.9.5
+
