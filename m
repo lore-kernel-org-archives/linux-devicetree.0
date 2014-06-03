@@ -1,22 +1,32 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH 00/14] irqchip: crossbar: driver fixes
-Date: Tue, 3 Jun 2014 20:28:57 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1406032026440.3319@nanos>
-References: <1401781386-4982-1-git-send-email-r.sricharan@ti.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1401781386-4982-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-omap@vger.kernel.org, LAK <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Tony Lindgren <tony@atomide.com>, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>
+From: Loc Ho <lho@apm.com>
+Subject: [PATCH v2 0/3] mmc: Add APM X-Gene SoC SDHC controller support to Arasan SDHCI driver
+Date: Tue,  3 Jun 2014 15:13:02 -0600
+Message-ID: <1401829985-5212-1-git-send-email-lho@apm.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: chris@printf.net, ulf.hansson@linaro.org, michal.simek@xilinx.com
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 3 Jun 2014, Sricharan R wrote:
+This patch adds support for the APM X-Gene SoC SDHC controller to Arasan
+SDHCI driver.
 
-Please Cc all maintainers on such changes plus the relevant
-mailinglist. See MAINTAINERS.
+v2:
+* Update binding documentation
+* Change compatible string from "xgene,arasan" to "apm,arasan"
 
-Thanks,
+Signed-off-by: Loc Ho <lho@apm.com>
+---
+Loc Ho (3):
+  Documentation: Update Arasan SDHC documentation for the APM X-Gene
+    SoC SDHC DTS binding
+  mmc: Add APM X-Gene SoC SDHC controller support to Arasan SDHCI
+    driver
+  arm64: Add APM X-Gene SoC SDHC controller DTS entry
 
-	tglx
+ .../devicetree/bindings/mmc/arasan,sdhci.txt       |   16 ++-
+ arch/arm64/boot/dts/apm-storm.dtsi                 |    8 ++
+ drivers/mmc/host/Kconfig                           |    4 +-
+ drivers/mmc/host/sdhci-of-arasan.c                 |  126 ++++++++++++++++++--
+ 4 files changed, 140 insertions(+), 14 deletions(-)
+
