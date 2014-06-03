@@ -1,52 +1,41 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH v3 2/2] net: hisilicon: add hix5hd2 mac driver
-Date: Tue, 03 Jun 2014 13:38:30 +0800
-Message-ID: <538D5F56.1030106@linaro.org>
-References: <1401440528-7804-1-git-send-email-zhangfei.gao@linaro.org>	<1401440528-7804-3-git-send-email-zhangfei.gao@linaro.org> <20140602.161131.783479189097234753.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+From: Zhangfei Gao <zhangfei.gao@linaro.org>
+Subject: [PATCH v4 0/2] add hix5hd2 mac driver
+Date: Tue,  3 Jun 2014 13:49:35 +0800
+Message-ID: <1401774577-16683-1-git-send-email-zhangfei.gao@linaro.org>
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140602.161131.783479189097234753.davem@davemloft.net>
 Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
+To: davem@davemloft.net, arnd@arndb.de, f.fainelli@gmail.com, sergei.shtylyov@cogentembedded.com, mark.rutland@arm.com, David.Laight@ACULAB.COM, eric.dumazet@gmail.com, haifeng.yan@linaro.org, jchxue@gmail.com
+Cc: linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+v4:
+Update indent
+Use usleep_range instead of udelay
 
+v3:
+Remove .ndo_get_stats as mentioned by Tobias
+Add __le32 conversion pointed by Mark
 
-On 06/03/2014 07:11 AM, David Miller wrote:
-> From: Zhangfei Gao <zhangfei.gao@linaro.org>
-> Date: Fri, 30 May 2014 17:02:08 +0800
->
->> +			skb = netdev_alloc_skb_ip_align(priv->netdev,
->> +				MAC_MAX_FRAME_SIZE);
->
-> When a function call, declaration, or definition spans multiple lines,
-> you must start the arguments on the second and subsequent lines exactly
-> at the first column after the openning parenthesis.
->
-> Please therefore reindent this properly.
-Got it, not know this rule, will update accordingly.
+v2:
+Update binding accoring to Sergei comments
+Update descriptor as Arnd's suggestion
 
->> +static int hix5hd2_mdio_wait_ready(struct mii_bus *bus)
->> +{
->> +	struct hix5hd2_priv *priv = bus->priv;
->> +	void __iomem *base = priv->base;
->> +	int i, timeout = 10000;
->> +
->> +	for (i = 0; readl_relaxed(base + MDIO_SINGLE_CMD) & MDIO_START; i++) {
->> +		if (i == timeout)
->> +			return -ETIMEDOUT;
->> +		udelay(1);
->> +	}
->> +
->> +	return 0;
->> +}
->
-> 10,000 udelay(1)'s is a long time, consider changing to usleep() or
-> similar.
->
-Will use usleep_range(10, 20) instead.
+Zhangfei Gao (2):
+  Documentation: add Device tree bindings for Hisilicon hix5hd2
+    ethernet
+  net: hisilicon: add hix5hd2 mac driver
 
-Thanks
+ .../bindings/net/hisilicon-hix5hd2-gmac.txt        |   36 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/hisilicon/Kconfig             |   27 +
+ drivers/net/ethernet/hisilicon/Makefile            |    5 +
+ drivers/net/ethernet/hisilicon/hix5hd2_gmac.c      | 1066 ++++++++++++++++++++
+ 6 files changed, 1136 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/hisilicon-hix5hd2-gmac.txt
+ create mode 100644 drivers/net/ethernet/hisilicon/Kconfig
+ create mode 100644 drivers/net/ethernet/hisilicon/Makefile
+ create mode 100644 drivers/net/ethernet/hisilicon/hix5hd2_gmac.c
+
+-- 
+1.7.9.5
