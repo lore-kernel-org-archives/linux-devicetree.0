@@ -1,31 +1,69 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] pinctrl: pinctrl-abx500.c: Cleaning up uninitialized variables
-Date: Tue, 3 Jun 2014 13:26:02 +0200
-Message-ID: <CACRpkdYsfM4YeMVHksE6if+SyFFUkFNtJHeBOnci8jwSY-49Jg@mail.gmail.com>
-References: <1401627240-16524-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401627240-16524-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM
+ resources.
+Date: Tue, 03 Jun 2014 12:38:25 +0100
+Message-ID: <20140603113826.015B4C41596@trevor.secretlab.ca>
+References: <20140530233034.GH1677@bart.dudau.co.uk>
+	<2F6515B1-48FE-4ED6-908E-CC1CAD7AF403@codeaurora.org>
+	<20140603084459.EC01BC4096E@trevor.secretlab.ca>
+	<5535126.fgWbMeOQVO@wuerfel>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <5535126.fgWbMeOQVO@wuerfel>
+Sender: linux-pci-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Kumar Gala <galak@codeaurora.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 1, 2014 at 2:54 PM, Rickard Strandqvist
-<rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org> wrote:
+On Tue, 03 Jun 2014 11:21:10 +0200, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Tuesday 03 June 2014 09:44:59 Grant Likely wrote:
+> > > The reason I think allow an ECAM makes sense in ranges is because it allows for a direct IO read/write to CFG space (w/o any mapping) similar to what one would do for MEM space or IO.
+> > 
+> > I don't think that's right. PCI addresses are defined as follows:
+> > phys.hi cell: npt000ss bbbbbbbb dddddfff rrrrrrrr
+> > phys.mid cell: hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh
+> > phys.low cell: llllllll llllllll llllllll llllllll
+> > 
+> > where 'ddddd' is the device number (0-31) and 'fff' is the function number (0-7)
+> > 
+> > Going up by one device number or even function number does not result in
+> > contiguious address values:
+> > 
+> > device 0: 0x00000000 00000000 00000000
+> > device 1: 0x00000800 00000000 00000000
+> > device 2: 0x00001000 00000000 00000000
+> > device 3: 0x00001800 00000000 00000000
+> > ...
+> > device 30:0x0000f000 00000000 00000000
+> > device 31:0x0000f800 00000000 00000000
+> > 
+> > a simple ranges doesn't work transparently because each of those config
+> > ranges needs to be mapped to a 4k block. I think ranges would need to
+> > look like this:
+> > 
+> > ranges = <0x00000000 0 0  0x0ff00000  0x1000>,
+> >          <0x00000800 0 0  0x0ff01000  0x1000>,
+> >          <0x00001800 0 0  0x0ff02000  0x1000>,
+> >          ...
+> >          <0x0000f000 0 0  0x0ff1e000  0x1000>,
+> >          <0x0000f800 0 0  0x0ff1f000  0x1000>;
+> > 
+> > (I just hacked the above up; I make no claims to it's accuracy for
+> > actual address values)
+> > 
+> > But I don't even thing the semantics work there because the address is
+> > encoded in the phys.hi cell, not the phys.low cell. Incrementing by one
+> > does not behaves as most bus addresses work. To actually work properly
+> > we would have needed a way to define a stride of 64bits when
+> > incrementing config space addresses in a ranges mapping.
+> 
+> Thanks for clearing that up. I always suspected it was roughly this
+> way, but never managed to think it through completely before getting
+> distracted by something else.
+> 
+> I wonder if the OF definition matches CAM though, if not ECAM, as
+> CAM is also limited to 256 byte config space per function.
 
-> There is a risk that the variable will be used without being initialized.
->
-> This was largely found by using a static code analysis program called cppcheck.
->
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+It's the same problem for 256 byte entries. The address values don't
+increment nicely and there is a big block of remapping needed.
 
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Yours,
-Linus Walleij
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+g.
