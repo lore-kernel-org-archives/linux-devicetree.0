@@ -1,7 +1,7 @@
 From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v2 2/2] arm: shmobile: r8a7790: add USB3.0 node to r8a7790.dtsi
-Date: Tue, 3 Jun 2014 15:54:28 +0900
-Message-ID: <538D7124.60709@renesas.com>
+Subject: [PATCH v2 0/2] arm: shmobile: add USB 3.0 DT for r8a7791
+Date: Tue, 3 Jun 2014 15:56:55 +0900
+Message-ID: <538D71B7.603@renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
@@ -11,32 +11,19 @@ To: Simon Horman <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, Rob 
 Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This node depends on a generic phy driver of usb.
+This patch series is based on the renesas-devel-v3.15-rc7-20140530
+in renesas.git.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- arch/arm/boot/dts/r8a7790.dtsi |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+Changes from v1:
+ - Change node name to "usb@ee000000" in patch 2.
+ - Add comment in the change log of patch 2 about a generic phy.
 
-diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-index e06c486..985c253 100644
---- a/arch/arm/boot/dts/r8a7790.dtsi
-+++ b/arch/arm/boot/dts/r8a7790.dtsi
-@@ -902,4 +902,14 @@
- 		#size-cells = <0>;
- 		status = "disabled";
- 	};
-+
-+	xhci: usb@ee000000 {
-+		compatible = "renesas,xhci-r8a7790";
-+		reg = <0 0xee000000 0 0xc00>;
-+		interrupts = <0 101 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks = <&mstp3_clks R8A7790_CLK_SSUSB>;
-+		phys = <&usbphy 1 1>;
-+		phy-names = "usb";
-+		status = "disabled";
-+	};
- };
+Yoshihiro Shimoda (2):
+  arm: shmobile: r8a7791: add USB3.0 clocks to device tree
+  arm: shmobile: r8a7791: add USB3.0 node to r8a7791.dtsi
+
+ arch/arm/boot/dts/r8a7791.dtsi |   16 +++++++++++++---
+ 1 file changed, 13 insertions(+), 3 deletions(-)
+
 -- 
 1.7.9.5
-
