@@ -1,70 +1,33 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
- v3.16
-Date: Tue, 3 Jun 2014 09:06:32 +0100
-Message-ID: <20140603080632.GC3060@lee--X1>
-References: <1401214140-9828-1-git-send-email-tony@atomide.com>
- <20140528071313.GH4227@lee--X1>
- <20140528180607.GB4707@atomide.com>
- <20140602163841.GC11004@atomide.com>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: berlin: enable i2c0 and i2c2
+Date: Tue, 3 Jun 2014 10:05:22 +0200
+Message-ID: <20140603080522.GB22742@lunn.ch>
+References: <1401780790-17830-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1401780790-17830-3-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140602163841.GC11004@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1401780790-17830-3-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 02 Jun 2014, Tony Lindgren wrote:
-> * Tony Lindgren <tony@atomide.com> [140528 11:11]:
-> > * Lee Jones <lee.jones@linaro.org> [140528 00:14]:
-> > > Thanks Tony, here's the pull-request:
-> > >=20
-> > > The following changes since commit 455c6fdbd219161bd09b1165f11699=
-d6d73de11c:
-> > >=20
-> > >   Linux 3.14 (2014-03-30 20:40:15 -0700)
-> > >=20
-> > > are available in the git repository at:
-> > >=20
-> > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/=
-mfd-omap-v3.16-1
-> > >=20
-> > > for you to fetch changes up to 43fef47f94a1ae46fb2720dada32fa3b55=
-47bee2:
-> > >=20
-> > >   mfd: twl4030-power: Add a configuration to turn off oscillator =
-during off-idle (2014-05-28 08:06:18 +0100)
-> > >=20
-> > > ----------------------------------------------------------------
-> > > Second immutable branch between MFD and OMAP due for the v3.16 me=
-rge window.
-> >=20
-> > Thanks a lot, this will make it easier for me to chase down potenti=
-al
-> > PM related regressions ;) I'm merging this for testing only into th=
-e
-> > linux-omap master branch, no need for me to include it into any
-> > of my upstream heading branches.
->=20
-> Lee, I'm not seeing this in linux next, did you maybe forget to merge
-> it into the MFD tree?
+On Tue, Jun 03, 2014 at 09:33:10AM +0200, Antoine T=E9nart wrote:
+> Enable the I2C0 and I2C2 for the Marvell Berlin BG2G DMP. I2C1 and I2=
+C3
+> are also working on this board, but no devices seemed to be there.
 
-I didn't forget, but I didn't do it either. :)
+Hi Antoine
 
-I have re-merged all of the IBs this morning, so should be in -next
-by tomorrow.
+Does this mean that IC0 and I2C2 have devices on them? Could you also
+add nodes for the devices?
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+    Andrew
 --
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
 n
-the body of a message to majordomo@vger.kernel.org
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
