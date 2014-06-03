@@ -1,69 +1,110 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 1/2] pci: Add IORESOURCE_BIT entry for PCIe ECAM
- resources.
-Date: Tue, 03 Jun 2014 12:38:25 +0100
-Message-ID: <20140603113826.015B4C41596@trevor.secretlab.ca>
-References: <20140530233034.GH1677@bart.dudau.co.uk>
-	<2F6515B1-48FE-4ED6-908E-CC1CAD7AF403@codeaurora.org>
-	<20140603084459.EC01BC4096E@trevor.secretlab.ca>
-	<5535126.fgWbMeOQVO@wuerfel>
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <5535126.fgWbMeOQVO@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kumar Gala <galak@codeaurora.org>, Liviu Dudau <Liviu.Dudau@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robherring2@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kishon Vijay Abraham I <kishon@ti.com>
+From: Luis Henriques <luis.henriques@canonical.com>
+Subject: [PATCH 3.11 088/138] mips: dts: Fix missing device_type="memory" property in memory nodes
+Date: Tue,  3 Jun 2014 12:38:54 +0100
+Message-ID: <1401795584-22664-89-git-send-email-luis.henriques@canonical.com>
+References: <1401795584-22664-1-git-send-email-luis.henriques@canonical.com>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <1401795584-22664-1-git-send-email-luis.henriques@canonical.com>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org, kernel-team@lists.ubuntu.com
+Cc: Leif Lindholm <leif.lindholm@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Luis Henriques <luis.henriques@canonical.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Jun 2014 11:21:10 +0200, Arnd Bergmann <arnd@arndb.de> wrote:
-> On Tuesday 03 June 2014 09:44:59 Grant Likely wrote:
-> > > The reason I think allow an ECAM makes sense in ranges is because it allows for a direct IO read/write to CFG space (w/o any mapping) similar to what one would do for MEM space or IO.
-> > 
-> > I don't think that's right. PCI addresses are defined as follows:
-> > phys.hi cell: npt000ss bbbbbbbb dddddfff rrrrrrrr
-> > phys.mid cell: hhhhhhhh hhhhhhhh hhhhhhhh hhhhhhhh
-> > phys.low cell: llllllll llllllll llllllll llllllll
-> > 
-> > where 'ddddd' is the device number (0-31) and 'fff' is the function number (0-7)
-> > 
-> > Going up by one device number or even function number does not result in
-> > contiguious address values:
-> > 
-> > device 0: 0x00000000 00000000 00000000
-> > device 1: 0x00000800 00000000 00000000
-> > device 2: 0x00001000 00000000 00000000
-> > device 3: 0x00001800 00000000 00000000
-> > ...
-> > device 30:0x0000f000 00000000 00000000
-> > device 31:0x0000f800 00000000 00000000
-> > 
-> > a simple ranges doesn't work transparently because each of those config
-> > ranges needs to be mapped to a 4k block. I think ranges would need to
-> > look like this:
-> > 
-> > ranges = <0x00000000 0 0  0x0ff00000  0x1000>,
-> >          <0x00000800 0 0  0x0ff01000  0x1000>,
-> >          <0x00001800 0 0  0x0ff02000  0x1000>,
-> >          ...
-> >          <0x0000f000 0 0  0x0ff1e000  0x1000>,
-> >          <0x0000f800 0 0  0x0ff1f000  0x1000>;
-> > 
-> > (I just hacked the above up; I make no claims to it's accuracy for
-> > actual address values)
-> > 
-> > But I don't even thing the semantics work there because the address is
-> > encoded in the phys.hi cell, not the phys.low cell. Incrementing by one
-> > does not behaves as most bus addresses work. To actually work properly
-> > we would have needed a way to define a stride of 64bits when
-> > incrementing config space addresses in a ranges mapping.
-> 
-> Thanks for clearing that up. I always suspected it was roughly this
-> way, but never managed to think it through completely before getting
-> distracted by something else.
-> 
-> I wonder if the OF definition matches CAM though, if not ECAM, as
-> CAM is also limited to 256 byte config space per function.
+3.11.10.11 -stable review patch.  If anyone has any objections, please let me know.
 
-It's the same problem for 256 byte entries. The address values don't
-increment nicely and there is a big block of remapping needed.
+------------------
 
-g.
+From: Leif Lindholm <leif.lindholm@linaro.org>
+
+commit dfc44f8030653b345fc6fb337558c3a07536823f upstream.
+
+A few platforms lack a 'device_type = "memory"' for their memory
+nodes, relying on an old ppc quirk in order to discover its memory.
+Add the missing data so that all parsing code can find memory nodes
+correctly.
+
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: John Crispin <blogic@openwrt.org>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Luis Henriques <luis.henriques@canonical.com>
+---
+ arch/mips/lantiq/dts/easy50712.dts    | 1 +
+ arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
+ arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
+index fac1f5b178eb..143b8a37b5e4 100644
+--- a/arch/mips/lantiq/dts/easy50712.dts
++++ b/arch/mips/lantiq/dts/easy50712.dts
+@@ -8,6 +8,7 @@
+ 	};
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
+index 35eb874ab7f1..709f58132f5c 100644
+--- a/arch/mips/ralink/dts/mt7620a_eval.dts
++++ b/arch/mips/ralink/dts/mt7620a_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink MT7620A evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/ralink/dts/rt2880_eval.dts
+index 322d7002595b..0a685db093d4 100644
+--- a/arch/mips/ralink/dts/rt2880_eval.dts
++++ b/arch/mips/ralink/dts/rt2880_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT2880 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x8000000 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/ralink/dts/rt3052_eval.dts
+index 0ac73ea28198..ec9e9a035541 100644
+--- a/arch/mips/ralink/dts/rt3052_eval.dts
++++ b/arch/mips/ralink/dts/rt3052_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3052 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
+index 2fa6b330bf4f..e8df21a5d10d 100644
+--- a/arch/mips/ralink/dts/rt3883_eval.dts
++++ b/arch/mips/ralink/dts/rt3883_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3883 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+-- 
+1.9.1
