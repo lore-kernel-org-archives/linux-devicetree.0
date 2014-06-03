@@ -1,132 +1,76 @@
-From: Pacman du34 <pacmandu34-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: FATAL ERROR: Unable to parse input tree
-Date: Tue, 3 Jun 2014 17:04:58 +0200
-Message-ID: <CAPH+8+i6rKy68mgQD+viKiCk9ktfbydHsnDatjZprWrub1TBiQ@mail.gmail.com>
-References: <CAPH+8+gzCmV=tZOhq3DhYfWo6Pngcj+9XW3gNgCTV+qq5HnJ_Q@mail.gmail.com>
-	<20140603130241.GC1310@leverpostej>
-	<CAPH+8+iDZ3+bx5zU6aoGDH_tiKCPAf07QGymSRp0oB1W+_1=1Q@mail.gmail.com>
-	<20140603133501.GD1310@leverpostej>
-	<CAPH+8+giheV1kcuOAHvUWuDGRL4e2wRO95KJRxA9-o=TRVZ5FQ@mail.gmail.com>
-	<20140603145129.GA13492@leverpostej>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v3] of/irq: provide more wrappers for !CONFIG_OF
+Date: Tue, 3 Jun 2014 10:40:34 -0500
+Message-ID: <CAL_JsqJpP2sEkPC4DUFWTNutjFhUBiKZfNVSpiKHFPfsJzTf6w@mail.gmail.com>
+References: <16771871.sfJG2itVJN@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140603145129.GA13492@leverpostej>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <16771871.sfJG2itVJN@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Ok I understand.
-
-I am new in the Linux's world, so it's a little bit complicated for
-me, for now !
-
-Thank you very much for your attention.
-
-I'll keep searching and looking through what other architectures do,
-like you said. And I come back if I need some more help.
-
-Thanks again, your help has been very useful.
-
-Best regards.
-
-2014-06-03 16:51 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
-> On Tue, Jun 03, 2014 at 03:35:39PM +0100, Pacman du34 wrote:
->> 2014-06-03 15:35 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
->> > On Tue, Jun 03, 2014 at 02:25:25PM +0100, Pacman du34 wrote:
->> >> 2014-06-03 15:02 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
->> >> > On Tue, Jun 03, 2014 at 01:53:24PM +0100, Pacman du34 wrote:
->> >> >> Hello all,
->> >> >>
->> >> >> I am working on a new Linux port to a new architecture and I would like
->> >> >> to add a dts file to describe my system.
->> >> >>
->> >> >> So first of all I wrote the following dts test file :
->> >> >>
->> >> >> / {
->> >> >>     compatible = "manufacturer,cpu";
->> >> >> };
->> >> >>
->> >> >> I've read that this is the minimum structure required for a device tree
->> >> >> on the wiki.
->> >> >>
->> >> >> But when I try compiling it with dtc (the first line is the command
->> >> >> line) I get this error message :
->> >> >>
->> >> >> dtc -I dts -O dtb -o my_file.dtb myfile.dts
->> >> >>
->> >> >> Error: myfile.dts:1.1-2 syntax error
->> >> >> FATAL ERROR: Unable to parse input tree
->> >> >
->> >> > You're missing the DTS version. Try:
->> >> >
->> >> > /dts-v1/;
->> >> > / {
->> >> >         comaptible = "manufacturer,device";
->> >> > };
->> >> >
->> >> > Cheers,
->> >> > Mark.
->> >> >
->> >> >>
->> >> >> I tried both the dtc version of Linux source code (1.2.0-g37c0b6a0) and
->> >> >> dtc version installed with "apt-get install device-tree-compiler" (1.3.0).
->> >> >>
->> >> >> I searched on Google but I have not found relevant information for my issue.
->> >> >>
->> >> >> I really do not understand what the problem here and I am totally stuck.
->> >> >> Any help will be appreciated.
->> >> >>
->> >> >> Thanks a lot in advance.
->> >> >>
->> >> >> Best regards.
->> >>
->> >> That works, thank you very much,
->> >>
->> >> I take this opportunity to ask another question... As I have to
->> >> specify the DTS version, are there other versions, and if yes, what
->> >> are their differences ? I mean, if there are other versions, why to
->> >> choose the vesion 2 instead of 3 or 1 ?
->> >
->> > There was a v0 a while back according to ePAPR, but it's obsolete,
->> > incompatible and no-one uses it anymore (dtc doesn't support it as far
->> > as I can tell). The flag is to tell v1 apart from v0.
->> >
->> > There is not currently a v2 or later. Perhaps there might be in future,
->> > so it's worth keeping the flag around, but at present there's
->> > effectively only v1.
->> >
->> > Cheers,
->> > Mark.
->>
->> Ok thank you very much again for your quick answer.
->>
->> So I'll keep using v1 flag.
->>
->> At the beginning of the porting, I was using a kernel version which
->> does not support Device Tree, I only had a C file to initialize the
->> drivers for my board. And I'm trying to understand how to add the
->> support of Device Tree to the kernel. Because now I have a dtb file,
->> but no message appears during the boot, showing that the kernel knows
->> it must read this file and use the matching device drivers.
->>
->> I have seen that some manufacturers use "config USE_OF", in the
->> Kconfig file, to give the option to add device tree support when
->> compiling the kernel. So I added the same option, but I don't know how
->> to confirm that the kernel is now using device tree.
->>
->> Will it appear some messages, during boot, that indicate the kernel is
->> really using it ?
+On Tue, Jun 3, 2014 at 9:47 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> The pci-rcar driver is enabled for compile tests, and this has
+> now shown that the driver cannot build without CONFIG_OF,
+> following the inclusion of f8f2fe7355fb "PCI: rcar: Use new OF
+> interrupt mapping when possible":
 >
-> That would all be up to your architecture code. I'm afraid I can't
-> really help with debugging architectural bringup.
+> drivers/built-in.o: In function `rcar_pci_map_irq':
+> :(.text+0x1cc7c): undefined reference to `of_irq_parse_and_map_pci'
+> pci/host/pcie-rcar.c: In function 'pci_dma_range_parser_init':
+> pci/host/pcie-rcar.c:875:2: error: implicit declaration of function 'of_n_addr_cells' [-Werror=implicit-function-declaration]
 >
-> I can only recommend that you look through what other architectures do
-> as part of their boot sequence, and do something along those lines.
+> As pointed out by Ben Dooks and Geert Uytterhoeven, this is actually
+> supposed to build fine, which we can achieve if we make the
+> declaration of of_irq_parse_and_map_pci conditional on CONFIG_OF
+> and provide an empty inline function otherwise, as we do for
+> a lot of other of interfaces.
 >
-> Cheers,
-> Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> This lets us build the rcar_pci driver again without CONFIG_OF
+> for build testing. All platforms using this driver select OF,
+> so this doesn't change anything for the users.
+>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Cc: devicetree@vger.kernel.org
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: Magnus Damm <damm@opensource.se>
+> Cc: Geert Uytterhoeven <geert@linux-m68k.org>
+> Cc: Ben Dooks <ben.dooks@codethink.co.uk>
+> Cc: linux-pci@vger.kernel.org
+> Cc: linux-sh@vger.kernel.org
+> ----
+>
+> This replaces "[PATCH v2] of/irq: provide int of_irq_parse_and_map_pci
+> wrapper", since now the same driver requires additional interfaces.
+> We still want to be able to build the driver with CONFIG_OF disabled,
+> but now we need three functions instead of just one.
+>
+> Rob, Grant, can you apply this as a bug fix, or provide comments?
+>
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 196b34c..7c29e6c 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -511,6 +511,9 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+>         return NULL;
+>  }
+>
+> +static inline int of_n_addr_cells(struct device_node *np) { return 0; }
+> +static inline int of_n_size_cells(struct device_node *np) { return 0; }
+
+I'm fine with the rest, but I think these should always be used within
+some higher level function.
+
+I can't seem to find where this is used by rcar. BTW, why does rcar
+pci DT support fail to have any ranges property?
+
+Looking at one use in mvebu pci only confirms my position. An
+of_for_each_ranges helper would be useful in that case.
+
+Rob
