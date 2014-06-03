@@ -1,64 +1,74 @@
-From: Lucas Stach <l.stach-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: Re: [PATCH 0/8] i.MX6 PCIe binding change and MSI support
-Date: Tue, 03 Jun 2014 15:22:47 +0200
-Message-ID: <1401801767.5422.4.camel@weser.hi.pengutronix.de>
-References: <1396025579-14344-1-git-send-email-l.stach@pengutronix.de>
-	 <20140424175844.GD29593@google.com>
-	 <1398421265.4657.25.camel@weser.hi.pengutronix.de>
-	 <CAErSpo7Boi8d+apAUC3TmmE33LuRMYJ6J+TEPLRbeyZyU3O8RQ@mail.gmail.com>
-	 <1398774686.4677.12.camel@weser.hi.pengutronix.de>
-	 <1399885183.5016.4.camel@weser.hi.pengutronix.de>
-	 <20140530173053.GF4607@google.com>
+From: Pacman du34 <pacmandu34-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: FATAL ERROR: Unable to parse input tree
+Date: Tue, 3 Jun 2014 15:25:25 +0200
+Message-ID: <CAPH+8+iDZ3+bx5zU6aoGDH_tiKCPAf07QGymSRp0oB1W+_1=1Q@mail.gmail.com>
+References: <CAPH+8+gzCmV=tZOhq3DhYfWo6Pngcj+9XW3gNgCTV+qq5HnJ_Q@mail.gmail.com>
+	<20140603130241.GC1310@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140530173053.GF4607-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140603130241.GC1310@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
-Cc: Richard Zhu <r65037-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tim Harvey <tharvey-UMMOYl/HMS+akBO8gow8eQ@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, linux-arm <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn,
+2014-06-03 15:02 GMT+02:00 Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>:
+> On Tue, Jun 03, 2014 at 01:53:24PM +0100, Pacman du34 wrote:
+>> Hello all,
+>>
+>> I am working on a new Linux port to a new architecture and I would like
+>> to add a dts file to describe my system.
+>>
+>> So first of all I wrote the following dts test file :
+>>
+>> / {
+>>     compatible = "manufacturer,cpu";
+>> };
+>>
+>> I've read that this is the minimum structure required for a device tree
+>> on the wiki.
+>>
+>> But when I try compiling it with dtc (the first line is the command
+>> line) I get this error message :
+>>
+>> dtc -I dts -O dtb -o my_file.dtb myfile.dts
+>>
+>> Error: myfile.dts:1.1-2 syntax error
+>> FATAL ERROR: Unable to parse input tree
+>
+> You're missing the DTS version. Try:
+>
+> /dts-v1/;
+> / {
+>         comaptible = "manufacturer,device";
+> };
+>
+> Cheers,
+> Mark.
+>
+>>
+>> I tried both the dtc version of Linux source code (1.2.0-g37c0b6a0) and
+>> dtc version installed with "apt-get install device-tree-compiler" (1.3.0).
+>>
+>> I searched on Google but I have not found relevant information for my issue.
+>>
+>> I really do not understand what the problem here and I am totally stuck.
+>> Any help will be appreciated.
+>>
+>> Thanks a lot in advance.
+>>
+>> Best regards.
 
-Am Freitag, den 30.05.2014, 11:30 -0600 schrieb Bjorn Helgaas:
-> On Mon, May 12, 2014 at 10:59:43AM +0200, Lucas Stach wrote:
-> > Hi Bjorn,
-> > 
-> > just a friendly reminder. It would be nice if you could pull those in.
-> > 
-> > Shawn already pulled the DT change and as it is a binding change this
-> > means PCIe on i.MX6 is broken in -next, as long as the remaining patches
-> > are missing.
-> 
-> I applied these to pci/host-imx6 for v3.16.
-> 
-> Sorry I didn't do this sooner; I get a lot of email and it's easy to
-> overlook things.  I mostly work from patchwork
-> (http://patchwork.ozlabs.org/project/linux-pci/list/?order=date), and I had
-> dropped this series from there because there was enough discussion that I
-> expected a re-post, so it wasn't on my radar screen anymore.
-> 
-> Bjorn
-> 
-> > Am Dienstag, den 29.04.2014, 14:31 +0200 schrieb Lucas Stach:
-> > > Hi Bjorn,
-> > > 
-> > > Am Freitag, den 25.04.2014, 08:39 -0600 schrieb Bjorn Helgaas:
-> > > [...]
-> > > > >> >   PCI: designware: split Exynos and i.MX bindings
+That works, thank you very much,
 
-It seems you missed this one patch. This isn't too urgent, as it is just
-the doc update, but it should still go into 3.16 along with the other
-changes. I would have expected that is ok for this to go through your
-tree.
+I take this opportunity to ask another question... As I have to
+specify the DTS version, are there other versions, and if yes, what
+are their differences ? I mean, if there are other versions, why to
+choose the vesion 2 instead of 3 or 1 ?
 
-Regards,
-Lucas
--- 
-Pengutronix e.K.             | Lucas Stach                 |
-Industrial Linux Solutions   | http://www.pengutronix.de/  |
+Thanks again for your very quick answer.
 
+Best regards.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
