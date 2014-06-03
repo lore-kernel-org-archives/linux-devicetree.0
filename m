@@ -1,54 +1,33 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] of/base: Replace alias if it already exists
-Date: Tue, 03 Jun 2014 23:54:41 +0100
-Message-ID: <20140603225441.0FA79C4154B@trevor.secretlab.ca>
-References: <1401624083-30796-1-git-send-email-ivo.g.dimitrov.75@gmail.com>
-	<20140602145959.7E669C426F6@trevor.secretlab.ca>
-	<538CA125.7090906@gmail.com>
-	<20140603085325.490A1C4096E@trevor.secretlab.ca>
-	<538D9C42.9040707@gmail.com> <538E0144.1050700@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538E0144.1050700-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for
+ QSPI
+Date: Wed, 4 Jun 2014 08:29:06 +0900
+Message-ID: <20140603232906.GC19407@verge.net.au>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+ <538D50D1.7010900@renesas.com>
+ <CAMuHMdVnmsjf29X4KF0co+WwUh9i0DQe6hE0hNFMCv-+GeHP_w@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMuHMdVnmsjf29X4KF0co+WwUh9i0DQe6hE0hNFMCv-+GeHP_w@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Khiem Nguyen <khiem.nguyen.xt@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 03 Jun 2014 20:09:24 +0300, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+On Tue, Jun 03, 2014 at 09:05:42AM +0200, Geert Uytterhoeven wrote:
+> On Tue, Jun 3, 2014 at 6:36 AM, Khiem Nguyen
+> <khiem.nguyen.xt@renesas.com> wrote:
+> > I think this patch series should be divided into 2 parts,
+> > one for DMA in general and one for DMA supporting QSPI.
+> >
+> > How do you think about it ?
 > 
+> I don't think it's worth splitting off just the last patch into a separate
+> series.
 > 
-> On  3.06.2014 12:58, Ivaylo Dimitrov wrote:
-> >
-> >
-> > On  3.06.2014 11:53, Grant Likely wrote:
-> >
-> [...] Can you try putting the following into your board dts file
-> >> and see if it works?
-> >>
-> >> aliases {
-> >>     i2c0;        /* Deactivate the old alias by making it blank */
-> >>     i2c1 = &i2c1;
-> >>     i2c2 = &i2c2;
-> >>     i2c3 = &i2c3;
-> >>     i2c4 = &i2c4;
-> >>     i2c5 = &i2c5;
-> >> };
-> >>
-> >> g.
-> >>
-> >
-> > Will do, as soon as I get back home.
-> >
-> > Thanks,
-> > Ivo
-> 
-> Seems to fix the problem (tested it with qemu), will send a proper patch.
+> This is a series, not a single patch. The applyer can always drop some
+> patches.
 
-Great, I'm glad it worked.
-
-g.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+FWIW, that seems reasonable to me.
