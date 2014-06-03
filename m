@@ -1,138 +1,80 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH v3 4/4] arm64: Add APM X-Gene SoC EDAC DTS entries
-Date: Mon,  2 Jun 2014 20:14:20 -0600
-Message-ID: <1401761660-11515-5-git-send-email-lho@apm.com>
-References: <1401761660-11515-1-git-send-email-lho@apm.com>
- <1401761660-11515-2-git-send-email-lho@apm.com>
- <1401761660-11515-3-git-send-email-lho@apm.com>
- <1401761660-11515-4-git-send-email-lho@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401761660-11515-4-git-send-email-lho-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
+Subject: Re: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for
+ QSPI
+Date: Tue, 03 Jun 2014 13:36:33 +0900
+Message-ID: <538D50D1.7010900@renesas.com>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>
+Cc: Magnus Damm <magnus.damm@gmail.com>, khiem.nguyen.xt@renesas.com, Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds APM X-Gene SoC EDAC DTS entries.
+Hi Geert,
 
-Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Signed-off-by: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
----
- arch/arm64/boot/dts/apm-storm.dtsi |   97 ++++++++++++++++++++++++++++++++++++
- 1 files changed, 97 insertions(+), 0 deletions(-)
+Thanks for the patches.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 93f4b2d..6042a99 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -269,6 +269,103 @@
- 			interrupts = <0x0 0x4c 0x4>;
- 		};
- 
-+		edacmc0: edacmc0@7e800000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e800000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc1: edacmc1@7e840000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e840000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc2: edacmc2@7e880000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e880000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacmc3: edacmc3@7e8c0000 {
-+			compatible = "apm,xgene-edac-mc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e200000 0x0 0x1000>,
-+			      <0x0 0x7e700000 0x0 0x1000>,
-+			      <0x0 0x7e720000 0x0 0x1000>,
-+			      <0x0 0x7e8c0000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd0: edacpmd0@7c000000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c000000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd1: edacpmd1@7c200000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c200000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd2: edacpmd2@7c400000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c400000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacpmd3: edacpmd3@7c600000 {
-+			compatible = "apm,xgene-edac-pmd";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7c600000 0x0 0x200000>,
-+			      <0x0 0x1054a000 0x0 0x10>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacl3: edacl3@7e600000 {
-+			compatible = "apm,xgene-edac-l3";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e600000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>;
-+		};
-+
-+		edacsoc: edacsoc@7e930000 {
-+			compatible = "apm,xgene-edac-soc";
-+			reg = <0x0 0x78800000 0x0 0x1000>,
-+			      <0x0 0x7e930000 0x0 0x1000>;
-+			interrupts = <0x0 0x20 0x4>,
-+				     <0x0 0x21 0x4>,
-+				     <0x0 0x27 0x4>;
-+		};
-+
- 		phy1: phy@1f21a000 {
- 			compatible = "apm,xgene-phy";
- 			reg = <0x0 0x1f21a000 0x0 0x100>;
--- 
-1.5.5
+I think this patch series should be divided into 2 parts,
+one for DMA in general and one for DMA supporting QSPI.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+How do you think about it ?
+
+Best regards,
+KHIEM Nguyen
+
+On 6/2/2014 10:42 PM, Geert Uytterhoeven wrote:
+> This patch series enables DMA support for QSPI on r8a7791/koelsch
+> reference.  It's independent from the series "ARM: shmobile: koelsch
+> legacy: Enable DMA for QSPI", but it depends on the SHDMA work for r8a7790
+> by Ben Dooks (cfr. "[PATCH v2 0/9] Updates Renesas OF-DMA code").
+>
+> Changes Compared to previous submission ("[PATCH/RFC 0/7] ARM: shmobile:
+> r8a7791: Add preliminary DMA support"):
+>    - "[6/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF" was dropped,
+>    - 2/7 was added,
+>    - 7/7 was changed (see changelog in individual patch).
+>
+> This was tested on r8a7791/koelsch.
+>
+> Performance figures for reading from a QSPI FLASH driven at 24.375 MHz are:
+>    - Single:  1.1 Mbps PIO, 23 Mbps DMA
+>    - Dual  : 12.7 Mbps PIO, 48 Mbps DMA
+>    - Quad  : 13   Mbps PIO, 70 Mbps DMA
+>
+> Thanks for your comments!
+>
+>    [1/7] DMA: shdma: Add r8a7791 support
+>    [2/7] DMA: shdma: Spelling s/controll/control/
+>    [3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
+>    [4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions for bindings
+>    [5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
+>    [6/7] ARM: shmobile: koelsch dts: Enable sysdma0 and sysdma1
+>    [7/7] ARM: shmobile: r8a7791 dtsi: Enable DMA for QSPI
+>
+>   Documentation/devicetree/bindings/dma/shdma.txt |   7 +-
+>   arch/arm/boot/dts/r8a7791-koelsch.dts           |   8 ++
+>   arch/arm/boot/dts/r8a7791.dtsi                  |  79 ++++++++++++++++-
+>   drivers/dma/sh/shdmac.c                         |   1 +
+>   include/dt-bindings/dma/r8a7791-dma.h           | 111 ++++++++++++++++++++++++
+>   5 files changed, 201 insertions(+), 5 deletions(-)
+>   create mode 100644 include/dt-bindings/dma/r8a7791-dma.h
+>
+> Gr{oetje,eeting}s,
+>
+> 						Geert
+>
+> --
+> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+>
+> In personal conversations with technical people, I call myself a hacker. But
+> when I'm talking to journalists I just say "programmer" or something like that.
+> 							    -- Linus Torvalds
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
