@@ -1,7 +1,7 @@
 From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 09/21] apbps2: use devm_irq_of_parse_and_map()
-Date: Wed,  4 Jun 2014 15:13:09 +0400
-Message-ID: <1401880402-30091-10-git-send-email-nyushchenko@dev.rtsoft.ru>
+Subject: [PATCH 16/21] bq24190_charger: use devm_irq_of_parse_and_map()
+Date: Wed,  4 Jun 2014 15:13:16 +0400
+Message-ID: <1401880402-30091-17-git-send-email-nyushchenko@dev.rtsoft.ru>
 References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
@@ -18,25 +18,21 @@ issues.
 
 Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 ---
- drivers/input/serio/apbps2.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ drivers/power/bq24190_charger.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/input/serio/apbps2.c b/drivers/input/serio/apbps2.c
-index 17e01a8..e8d0b8e 100644
---- a/drivers/input/serio/apbps2.c
-+++ b/drivers/input/serio/apbps2.c
-@@ -155,7 +155,11 @@ static int apbps2_of_probe(struct platform_device *ofdev)
- 	iowrite32be(0, &priv->regs->ctrl);
+diff --git a/drivers/power/bq24190_charger.c b/drivers/power/bq24190_charger.c
+index ad3ff8f..7ba8c03 100644
+--- a/drivers/power/bq24190_charger.c
++++ b/drivers/power/bq24190_charger.c
+@@ -1315,7 +1315,7 @@ out:
+ #ifdef CONFIG_OF
+ static int bq24190_setup_dt(struct bq24190_dev_info *bdi)
+ {
+-	bdi->irq = irq_of_parse_and_map(bdi->dev->of_node, 0);
++	bdi->irq = devm_irq_of_parse_and_map(bdi->dev, bdi->dev->of_node, 0);
+ 	if (bdi->irq <= 0)
+ 		return -1;
  
- 	/* IRQ */
--	irq = irq_of_parse_and_map(ofdev->dev.of_node, 0);
-+	irq = devm_irq_of_parse_and_map(&ofdev->dev, ofdev->dev.of_node, 0);
-+	if (irq <= 0) {
-+		dev_err(&ofdev->dev, "unable to locate IRQ\n");
-+		return irq ? irq  : -EINVAL;
-+	}
- 	err = devm_request_irq(&ofdev->dev, irq, apbps2_isr,
- 				IRQF_SHARED, "apbps2", priv);
- 	if (err) {
 -- 
 1.7.10.4
