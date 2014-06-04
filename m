@@ -1,102 +1,269 @@
-From: Mika Westerberg <mika.westerberg@linux.intel.com>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Wed, 4 Jun 2014 15:51:41 +0300
-Message-ID: <20140604125141.GB5214@lahna.fi.intel.com>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <5769487.6cMQUCkisu@vostro.rjw.lan>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/6] mfd: twl4030-power: Add generic reset configuration
+Date: Wed, 4 Jun 2014 15:02:21 +0200
+Message-ID: <CABuKBe+hd+nzWdUPK+LvGZoVy_8aHW3QgyXS+D0JZ2AOEyy5Ng@mail.gmail.com>
+References: <1401214140-9828-1-git-send-email-tony@atomide.com>
+	<1401214140-9828-4-git-send-email-tony@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5769487.6cMQUCkisu@vostro.rjw.lan>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, wsa@the-dreams.de, grant.likely@linaro.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1401214140-9828-4-git-send-email-tony@atomide.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: lee.jones@linaro.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Robert Nelson <robertcnelson@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 04, 2014 at 02:37:42PM +0200, Rafael J. Wysocki wrote:
-> On Wednesday, June 04, 2014 01:09:56 PM Lee Jones wrote:
-> > Currently this is a helper function for the I2C subsystem to aid the
-> > matching of non-standard compatible strings and devices which use DT
-> > and/or ACPI, but do not supply any nodes (see: [1] Method 4).  However,
-> > it has been made more generic as it can be used to only make one call
-> > for drivers which support any mixture of OF, ACPI and/or I2C matching.
-> > 
-> > The initial aim is for of_match_device() to be replaced by this call
-> > in all I2C device drivers.
-> > 
-> > [1] Documentation/i2c/instantiating-devices
-> > 
-> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> 
-> Mika, can you please have a look at this, please?
+2014-05-27 20:08 GMT+02:00 Tony Lindgren <tony@atomide.com>:
+> The twl4030 PMIC needs to be configured properly for things like
+> warm reset and deeper idle states so the PMIC manages the regulators
+> properly based on the hardware triggers from the SoC. Earlier
+> we have configured twl4030 using platform data, but we want to
+> do it for device tree based booting also.
+>
+> In some cases configuring twl4030 is needed for things to work.
+> For example, when rebooting an OMAP3530 at 125 MHz, it hangs.
+> With this patch, TWL4030 will be reset when a warm reset occures,
+> and OMAP3530 does not hang on reboot.
+>
+> Let's add device tree support and configure things for warm reset
+> as the default when compatible = "ti,twl4030-power". More
+> complicated configurations can be added to the driver based on
+> other compatible flags.
+>
+> Note we now also make the pdata const like it should be.
+> This allows use it for match->data with the device tree
+> related functions.
+>
+> Based on earlier patch by Matthias Brugger <matthias.bgg@gmail.com>
+> and Lesly A M <leslyam@ti.com>.
+>
+> Cc: Matthias Brugger <matthias.bgg@gmail.com>
+> Cc: Robert Nelson <robertcnelson@gmail.com>
+> Cc: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Cc: Samuel Ortiz <sameo@linux.intel.com>
+> Cc: Lee Jones <lee.jones@linaro.org>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> ---
+>  .../devicetree/bindings/mfd/twl4030-power.txt      |   7 +-
+>  drivers/mfd/twl4030-power.c                        | 109 ++++++++++++++++++---
+>  include/linux/i2c/twl.h                            |   3 +
+>  3 files changed, 105 insertions(+), 14 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/twl4030-power.txt b/Documentation/devicetree/bindings/mfd/twl4030-power.txt
+> index 8e15ec3..b906116 100644
+> --- a/Documentation/devicetree/bindings/mfd/twl4030-power.txt
+> +++ b/Documentation/devicetree/bindings/mfd/twl4030-power.txt
+> @@ -5,7 +5,12 @@ to control the power resources, including power scripts. For now, the
+>  binding only supports the complete shutdown of the system after poweroff.
+>
+>  Required properties:
+> -- compatible : must be "ti,twl4030-power"
+> +- compatible : must be one of the following
+> +       "ti,twl4030-power"
+> +       "ti,twl4030-power-reset"
+> +
+> +The use of ti,twl4030-power-reset is recommended at least on
+> +3530 that needs a special configuration for warm reset to work.
+>
+>  Optional properties:
+>  - ti,use_poweroff: With this flag, the chip will initiates an ACTIVE-to-OFF or
+> diff --git a/drivers/mfd/twl4030-power.c b/drivers/mfd/twl4030-power.c
+> index 0b037dc..cb5b0cb 100644
+> --- a/drivers/mfd/twl4030-power.c
+> +++ b/drivers/mfd/twl4030-power.c
+> @@ -29,6 +29,7 @@
+>  #include <linux/i2c/twl.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>
+>  #include <asm/mach-types.h>
+>
+> @@ -128,6 +129,40 @@ static u8 res_config_addrs[] = {
+>         [RES_MAIN_REF]  = 0x94,
+>  };
+>
+> +/*
+> + * Usable values for .remap_sleep and .remap_off
+> + * Based on table "5.3.3 Resource Operating modes"
+> + */
+> +enum {
+> +       TWL_REMAP_OFF = 0,
+> +       TWL_REMAP_SLEEP = 8,
+> +       TWL_REMAP_ACTIVE = 9,
 
-I don't see any fundamental problems with this wrt. ACPI.
+Do we really need remap active?
+As far as I can see it's not used anywhere.
 
-That said, I find it kind of weird to have generic function that then
-has knowledge of how different buses do their matching.
+> +};
+> +
+> +/*
+> + * Macros to configure the PM register states for various resources.
+> + * Note that we can make MSG_SINGULAR etc private to this driver once
+> + * omap3 has been made DT only.
+> + */
+> +#define TWL_DFLT_DELAY         2       /* typically 2 32 KiHz cycles */
+> +#define TWL_RESOURCE_SET(res, state)                                   \
+> +       { MSG_SINGULAR(DEV_GRP_NULL, (res), (state)), TWL_DFLT_DELAY }
+> +#define TWL_RESOURCE_ON(res)   TWL_RESOURCE_SET(res, RES_STATE_ACTIVE)
+> +#define TWL_RESOURCE_OFF(res)  TWL_RESOURCE_SET(res, RES_STATE_OFF)
+> +#define TWL_RESOURCE_RESET(res)        TWL_RESOURCE_SET(res, RES_STATE_WRST)
+> +/*
+> + * It seems that type1 and type2 is just the resource init order
+> + * number for the type1 and type2 group.
+> + */
+> +#define TWL_RESOURCE_GROUP_RESET(group, type1, type2)                  \
+> +       { MSG_BROADCAST(DEV_GRP_NULL, (group), (type1), (type2),        \
+> +               RES_STATE_WRST), TWL_DFLT_DELAY }
+> +#define TWL_REMAP_SLEEP(res, devgrp, typ, typ2)                                \
+> +       { .resource = (res), .devgroup = (devgrp),                      \
+> +         .type = (typ), .type2 = (typ2),                               \
+> +         .remap_off = TWL_REMAP_OFF,                                   \
+> +         .remap_sleep = TWL_REMAP_SLEEP, }
+> +
+>  static int twl4030_write_script_byte(u8 address, u8 byte)
+>  {
+>         int err;
+> @@ -502,7 +537,8 @@ int twl4030_remove_script(u8 flags)
+>         return err;
+>  }
+>
+> -static int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
+> +static int
+> +twl4030_power_configure_scripts(const struct twl4030_power_data *pdata)
+>  {
+>         int err;
+>         int i;
+> @@ -518,7 +554,8 @@ static int twl4030_power_configure_scripts(struct twl4030_power_data *pdata)
+>         return 0;
+>  }
+>
+> -static int twl4030_power_configure_resources(struct twl4030_power_data *pdata)
+> +static int
+> +twl4030_power_configure_resources(const struct twl4030_power_data *pdata)
+>  {
+>         struct twl4030_resconfig *resconfig = pdata->resource_config;
+>         int err;
+> @@ -550,7 +587,7 @@ void twl4030_power_off(void)
+>                 pr_err("TWL4030 Unable to power off\n");
+>  }
+>
+> -static bool twl4030_power_use_poweroff(struct twl4030_power_data *pdata,
+> +static bool twl4030_power_use_poweroff(const struct twl4030_power_data *pdata,
+>                                         struct device_node *node)
+>  {
+>         if (pdata && pdata->use_poweroff)
+> @@ -562,10 +599,60 @@ static bool twl4030_power_use_poweroff(struct twl4030_power_data *pdata,
+>         return false;
+>  }
+>
+> +#ifdef CONFIG_OF
+> +
+> +/* Generic warm reset configuration for omap3 */
+> +
+> +static struct twl4030_ins omap3_wrst_seq[] = {
+> +       TWL_RESOURCE_OFF(RES_NRES_PWRON),
+> +       TWL_RESOURCE_OFF(RES_RESET),
+> +       TWL_RESOURCE_RESET(RES_MAIN_REF),
+> +       TWL_RESOURCE_GROUP_RESET(RES_GRP_ALL, RES_TYPE_R0, RES_TYPE2_R2),
+> +       TWL_RESOURCE_RESET(RES_VUSB_3V1),
+> +       TWL_RESOURCE_GROUP_RESET(RES_GRP_ALL, RES_TYPE_R0, RES_TYPE2_R1),
+> +       TWL_RESOURCE_GROUP_RESET(RES_GRP_RC, RES_TYPE_ALL, RES_TYPE2_R0),
+> +       TWL_RESOURCE_ON(RES_RESET),
+> +       TWL_RESOURCE_ON(RES_NRES_PWRON),
+> +};
+> +
+> +static struct twl4030_script omap3_wrst_script = {
+> +       .script = omap3_wrst_seq,
+> +       .size   = ARRAY_SIZE(omap3_wrst_seq),
+> +       .flags  = TWL4030_WRST_SCRIPT,
+> +};
+> +
+> +static struct twl4030_script *omap3_reset_scripts[] = {
+> +       &omap3_wrst_script,
+> +};
+> +
+> +static struct twl4030_resconfig omap3_rconfig[] = {
+> +       TWL_REMAP_SLEEP(RES_HFCLKOUT, DEV_GRP_P3, -1, -1),
+> +       TWL_REMAP_SLEEP(RES_VDD1, DEV_GRP_P1, -1, -1),
+> +       TWL_REMAP_SLEEP(RES_VDD2, DEV_GRP_P1, -1, -1),
+> +       { 0, 0 },
+> +};
+> +
+> +static struct twl4030_power_data omap3_reset = {
+> +       .scripts                = omap3_reset_scripts,
+> +       .num                    = ARRAY_SIZE(omap3_reset_scripts),
+> +       .resource_config        = omap3_rconfig,
+> +};
+> +
+> +static struct of_device_id twl4030_power_of_match[] = {
+> +       {
+> +               .compatible = "ti,twl4030-power-reset",
+> +               .data = &omap3_reset,
+> +       },
+> +       { },
+> +};
+> +MODULE_DEVICE_TABLE(of, twl4030_power_of_match);
+> +#endif /* CONFIG_OF */
+> +
+>  static int twl4030_power_probe(struct platform_device *pdev)
+>  {
+> -       struct twl4030_power_data *pdata = dev_get_platdata(&pdev->dev);
+> +       const struct twl4030_power_data *pdata = dev_get_platdata(&pdev->dev);
+>         struct device_node *node = pdev->dev.of_node;
+> +       const struct of_device_id *match;
+>         int err = 0;
+>         int err2 = 0;
+>         u8 val;
+> @@ -586,8 +673,12 @@ static int twl4030_power_probe(struct platform_device *pdev)
+>                 return err;
+>         }
+>
+> +       match = of_match_device(of_match_ptr(twl4030_power_of_match),
+> +                               &pdev->dev);
+> +       if (match && match->data)
+> +               pdata = match->data;
+> +
+>         if (pdata) {
+> -               /* TODO: convert to device tree */
+>                 err = twl4030_power_configure_scripts(pdata);
+>                 if (err) {
+>                         pr_err("TWL4030 failed to load scripts\n");
+> @@ -637,14 +728,6 @@ static int twl4030_power_remove(struct platform_device *pdev)
+>         return 0;
+>  }
+>
+> -#ifdef CONFIG_OF
+> -static const struct of_device_id twl4030_power_of_match[] = {
+> -       {.compatible = "ti,twl4030-power", },
+> -       { },
+> -};
+> -MODULE_DEVICE_TABLE(of, twl4030_power_of_match);
+> -#endif
+> -
+>  static struct platform_driver twl4030_power_driver = {
+>         .driver = {
+>                 .name   = "twl4030_power",
+> diff --git a/include/linux/i2c/twl.h b/include/linux/i2c/twl.h
+> index ade1c06..5fe0313 100644
+> --- a/include/linux/i2c/twl.h
+> +++ b/include/linux/i2c/twl.h
+> @@ -486,7 +486,10 @@ static inline int twl6030_mmc_card_detect(struct device *dev, int slot)
+>  #define RES_GRP_ALL            0x7     /* All resource groups */
+>
+>  #define RES_TYPE2_R0           0x0
+> +#define RES_TYPE2_R1           0x1
+> +#define RES_TYPE2_R2           0x2
+>
+> +#define RES_TYPE_R0            0x0
+>  #define RES_TYPE_ALL           0x7
+>
+>  /* Resource states */
+> --
+> 1.8.1.1
+>
 
-I would rather see something like firmware_device_match(dev) that goes
-and matches from DT/ACPI and leave bus specific match to happen internal
-to that bus.
 
-> 
-> 
-> > ---
-> >  include/linux/match.h | 40 ++++++++++++++++++++++++++++++++++++++++
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 include/linux/match.h
-> > 
-> > diff --git a/include/linux/match.h b/include/linux/match.h
-> > new file mode 100644
-> > index 0000000..20a08e2
-> > --- /dev/null
-> > +++ b/include/linux/match.h
-> > @@ -0,0 +1,40 @@
-> > +#include <linux/of.h>
-> > +#include <linux/acpi.h>
-> > +#include <linux/i2c.h>
-> > +
-> > +static void *device_match(struct device *dev)
-> > +{
-> > +	struct device_driver *driver = dev->driver;
-> > +
-> > +	if (!driver)
-> > +		return NULL;
-> > +
-> > +	/* Attempt an OF style match */
-> > +	if (IS_ENABLED(CONFIG_OF)) {
-> > +		const struct of_device_id *of_match =
-> > +			i2c_of_match_device(driver->of_match_table, dev);
-> > +		if (of_match)
-> > +			return (void *)of_match;
-> > +	}
-> > +
-> > +	/* Then ACPI style match */
-> > +	if (IS_ENABLED(CONFIG_ACPI)) {
-> > +		const struct acpi_device_id *acpi_match	=
-> > +			acpi_match_device(driver->acpi_match_table, dev);
-> > +		if (acpi_match)
-> > +			return (void *)acpi_match;
-> > +	}
-> > +
-> > +	/* Finally an I2C match */
-> > +	if (IS_ENABLED(CONFIG_I2C)) {
-> > +		struct i2c_client *client = i2c_verify_client(dev);
-> > +		struct i2c_driver *i2c_drv = to_i2c_driver(driver);
-> > +		struct i2c_device_id *i2c_match;
-> > +
-> > +		i2c_match = i2c_match_id(i2c_drv->id_table, client);
-> > +		if (i2c_match)
-> > +			return (void *)i2c_match;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
-> > 
-> 
-> -- 
-> I speak only for myself.
-> Rafael J. Wysocki, Intel Open Source Technology Center.
+
+-- 
+motzblog.wordpress.com
