@@ -1,66 +1,56 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v2 1/7] DMA: shdma: Add r8a7791 support
-Date: Wed, 4 Jun 2014 13:39:17 +0200
-Message-ID: <CAMuHMdXUt912Gkavn8ibw2yej7WGeULZTqG1wmmgLz1PDReJWg@mail.gmail.com>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
-	<1401716531-29794-2-git-send-email-geert+renesas@glider.be>
-	<2461508.0gZiIUPGHB@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <2461508.0gZiIUPGHB@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
+From: nyushchenko@dev.rtsoft.ru
+Subject: [PATCH 21/21] at91sam9_wdt: use devm_irq_of_parse_and_map()
+Date: Wed,  4 Jun 2014 15:13:21 +0400
+Message-ID: <1401880402-30091-22-git-send-email-nyushchenko@dev.rtsoft.ru>
+References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru, Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 4, 2014 at 1:29 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
-> On Monday 02 June 2014 15:42:05 Geert Uytterhoeven wrote:
->
-> Missing commit message ?
+From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 
-I didn't have anything more to say than the one-liner ;-)
+This avoids leak of IRQ mapping on error paths, and makes it possible
+to use devm_request_irq() without facing unmap-while-handler-installed
+issues.
 
->> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
->> ---
->> v2:
->>   - No changes
->>
->>  Documentation/devicetree/bindings/dma/shdma.txt | 5 +++--
->>  drivers/dma/sh/shdmac.c                         | 1 +
->>  2 files changed, 4 insertions(+), 2 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/dma/shdma.txt
->> b/Documentation/devicetree/bindings/dma/shdma.txt index
->> 86d5c509594b..d26b7065ae94 100644
->> --- a/Documentation/devicetree/bindings/dma/shdma.txt
->> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
->> @@ -24,8 +24,9 @@ Optional properties (currently unused):
->>  Required properties:
->>  - compatible:        should be of the form "renesas,shdma-<soc>", where <soc>
->> should be replaced with the desired SoC model, e.g.
->> -             "renesas,shdma-r8a73a4" for the system DMAC on r8a73a4 SoC
->> -             "renesas,shdma-r8a7790" for the DMAC on the R8A7790.
->> +             "renesas,shdma-r8a73a4" for the system DMAC on r8a73a4 SoC,
->> +             "renesas,shdma-r8a7790" for the DMAC on the R8A7790,
->> +             "renesas,shdma-r8a7791" for the DMAC on the R8A7791.
->
-> I would just remove the commas and full stop to avoid modifying unrelated
-> lines in future patches.
->
-> The R8A7791 has several DMACs (LBSC, SYS, RT, Audio, 2D, USBHS). It would thus
-> make sense to explicitly state which DMACs the bindings cover.
+Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+---
+ drivers/watchdog/at91sam9_wdt.c |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-Good point. That also applies to the r8a7790.
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
+index 489729b..11ebe54 100644
+--- a/drivers/watchdog/at91sam9_wdt.c
++++ b/drivers/watchdog/at91sam9_wdt.c
+@@ -207,9 +207,9 @@ static int at91_wdt_init(struct platform_device *pdev, struct at91wdt *wdt)
+ 			 "min heartbeat and max heartbeat might be too close for the system to handle it correctly\n");
+ 
+ 	if ((tmp & AT91_WDT_WDFIEN) && wdt->irq) {
+-		err = request_irq(wdt->irq, wdt_interrupt,
+-				  IRQF_SHARED | IRQF_IRQPOLL,
+-				  pdev->name, wdt);
++		err = devm_request_irq(dev, wdt->irq, wdt_interrupt,
++				       IRQF_SHARED | IRQF_IRQPOLL,
++				       pdev->name, wdt);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -270,9 +270,11 @@ static int of_at91wdt_init(struct device_node *np, struct at91wdt *wdt)
+ 	const char *tmp;
+ 
+ 	/* Get the interrupts property */
+-	wdt->irq = irq_of_parse_and_map(np, 0);
+-	if (!wdt->irq)
++	wdt->irq = devm_irq_of_parse_and_map(wdt->wdd.parent, np, 0);
++	if (wdt->irq <= 0) {
+ 		dev_warn(wdt->wdd.parent, "failed to get IRQ from DT\n");
++		wdt->irq = NO_IRQ;
++	}
+ 
+ 	if (!of_property_read_u32_index(np, "atmel,max-heartbeat-sec", 0,
+ 					&max)) {
+-- 
+1.7.10.4
