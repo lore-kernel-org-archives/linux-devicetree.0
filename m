@@ -1,122 +1,213 @@
-From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 13/21] net/can: use devm_irq_of_parse_and_map() where appropriate
-Date: Wed,  4 Jun 2014 15:13:13 +0400
-Message-ID: <1401880402-30091-14-git-send-email-nyushchenko@dev.rtsoft.ru>
+From: nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org
+Subject: [PATCH 20/21] usb: use devm_irq_of_parse_and_map() where appropriate
+Date: Wed,  4 Jun 2014 15:13:20 +0400
+Message-ID: <1401880402-30091-21-git-send-email-nyushchenko@dev.rtsoft.ru>
 References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru, Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lugovskoy-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org, Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+From: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
 
 This avoids leak of IRQ mapping on error paths, and makes it possible
 to use devm_request_irq() without facing unmap-while-handler-installed
 issues.
 
-Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+Signed-off-by: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
 ---
- drivers/net/can/grcan.c                    |   11 ++++-------
- drivers/net/can/mscan/mpc5xxx_can.c        |   11 ++++-------
- drivers/net/can/sja1000/sja1000_platform.c |    2 +-
- 3 files changed, 9 insertions(+), 15 deletions(-)
+ drivers/usb/gadget/gr_udc.c       |   17 +++++++++++------
+ drivers/usb/host/ehci-grlib.c     |   11 ++++-------
+ drivers/usb/host/ehci-orion.c     |    3 ++-
+ drivers/usb/host/ehci-ppc-of.c    |   11 ++++-------
+ drivers/usb/host/ehci-xilinx-of.c |    8 ++++----
+ drivers/usb/host/ohci-ppc-of.c    |    7 ++-----
+ 6 files changed, 27 insertions(+), 30 deletions(-)
 
-diff --git a/drivers/net/can/grcan.c b/drivers/net/can/grcan.c
-index 3fd9fd9..695932f 100644
---- a/drivers/net/can/grcan.c
-+++ b/drivers/net/can/grcan.c
-@@ -1687,10 +1687,10 @@ static int grcan_probe(struct platform_device *ofdev)
- 		goto exit_error;
+diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+index f984ee7..0a3e586 100644
+--- a/drivers/usb/gadget/gr_udc.c
++++ b/drivers/usb/gadget/gr_udc.c
+@@ -2108,19 +2108,24 @@ static int gr_probe(struct platform_device *ofdev)
+ 	if (IS_ERR(regs))
+ 		return PTR_ERR(regs);
+ 
+-	dev->irq = irq_of_parse_and_map(dev->dev->of_node, 0);
+-	if (!dev->irq) {
++	dev->irq = devm_irq_of_parse_and_map(dev->dev, dev->dev->of_node, 0);
++	if (dev->irq <= 0) {
+ 		dev_err(dev->dev, "No irq found\n");
+ 		return -ENODEV;
  	}
  
--	irq = irq_of_parse_and_map(np, GRCAN_IRQIX_IRQ);
--	if (!irq) {
-+	irq = devm_irq_of_parse_and_map(&ofdev->dev, np, GRCAN_IRQIX_IRQ);
+ 	/* Some core configurations has separate irqs for IN and OUT events */
+-	dev->irqi = irq_of_parse_and_map(dev->dev->of_node, 1);
++	dev->irqi = devm_irq_of_parse_and_map(dev->dev, dev->dev->of_node, 1);
++	if (dev->irqi < 0) {
++		dev_err(dev->dev, "could not locate irq\n");
++		return dev->irqi;
++	}
+ 	if (dev->irqi) {
+-		dev->irqo = irq_of_parse_and_map(dev->dev->of_node, 2);
+-		if (!dev->irqo) {
++		dev->irqo = devm_irq_of_parse_and_map(dev->dev,
++				dev->dev->of_node, 2);
++		if (dev->irqo <= 0) {
+ 			dev_err(dev->dev, "Found irqi but not irqo\n");
+-			return -ENODEV;
++			return dev->irqo ? dev->irqo : -ENODEV;
+ 		}
+ 	}
+ 
+diff --git a/drivers/usb/host/ehci-grlib.c b/drivers/usb/host/ehci-grlib.c
+index 495b6fb..666c03e 100644
+--- a/drivers/usb/host/ehci-grlib.c
++++ b/drivers/usb/host/ehci-grlib.c
+@@ -111,11 +111,11 @@ static int ehci_hcd_grlib_probe(struct platform_device *op)
+ 	hcd->rsrc_start = res.start;
+ 	hcd->rsrc_len = resource_size(&res);
+ 
+-	irq = irq_of_parse_and_map(dn, 0);
+-	if (irq == NO_IRQ) {
+-		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
++	irq = devm_irq_of_parse_and_map(&op->dev, dn, 0);
 +	if (irq <= 0) {
- 		dev_err(&ofdev->dev, "no irq found\n");
--		err = -ENODEV;
-+		err = irq ? irq : -ENODEV;
- 		goto exit_error;
++		dev_err(&op->dev, "%s: devm_irq_of_parse_and_map failed\n",
+ 			__FILE__);
+-		rv = -EBUSY;
++		rv = irq ? irq : -EINVAL;
+ 		goto err_irq;
  	}
  
-@@ -1698,12 +1698,10 @@ static int grcan_probe(struct platform_device *ofdev)
- 
- 	err = grcan_setup_netdev(ofdev, base, irq, ambafreq, txbug);
- 	if (err)
--		goto exit_dispose_irq;
-+		goto exit_error;
- 
+@@ -145,7 +145,6 @@ static int ehci_hcd_grlib_probe(struct platform_device *op)
  	return 0;
  
--exit_dispose_irq:
+ err_ioremap:
 -	irq_dispose_mapping(irq);
- exit_error:
- 	dev_err(&ofdev->dev,
- 		"%s socket CAN driver initialization failed with error %d\n",
-@@ -1718,7 +1716,6 @@ static int grcan_remove(struct platform_device *ofdev)
+ err_irq:
+ 	usb_put_hcd(hcd);
  
- 	unregister_candev(dev); /* Will in turn call grcan_close */
+@@ -161,8 +160,6 @@ static int ehci_hcd_grlib_remove(struct platform_device *op)
  
--	irq_dispose_mapping(dev->irq);
- 	netif_napi_del(&priv->napi);
- 	free_candev(dev);
+ 	usb_remove_hcd(hcd);
  
-diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
-index 4472529..b59ef67 100644
---- a/drivers/net/can/mscan/mpc5xxx_can.c
-+++ b/drivers/net/can/mscan/mpc5xxx_can.c
-@@ -306,16 +306,16 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
- 		return err;
- 	}
- 
--	irq = irq_of_parse_and_map(np, 0);
--	if (!irq) {
-+	irq = devm_irq_of_parse_and_map(&ofdev->dev, np, 0);
-+	if (irq <= 0) {
- 		dev_err(&ofdev->dev, "no irq found\n");
--		err = -ENODEV;
-+		err = irq ? irq : -ENODEV;
- 		goto exit_unmap_mem;
- 	}
- 
- 	dev = alloc_mscandev();
- 	if (!dev)
--		goto exit_dispose_irq;
-+		goto exit_unmap_mem;
- 	platform_set_drvdata(ofdev, dev);
- 	SET_NETDEV_DEV(dev, &ofdev->dev);
- 
-@@ -348,8 +348,6 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
- 
- exit_free_mscan:
- 	free_candev(dev);
--exit_dispose_irq:
--	irq_dispose_mapping(irq);
- exit_unmap_mem:
- 	iounmap(base);
- 
-@@ -370,7 +368,6 @@ static int mpc5xxx_can_remove(struct platform_device *ofdev)
- 	if (data && data->put_clock)
- 		data->put_clock(ofdev);
- 	iounmap(priv->reg_base);
--	irq_dispose_mapping(dev->irq);
- 	free_candev(dev);
+-	irq_dispose_mapping(hcd->irq);
+-
+ 	usb_put_hcd(hcd);
  
  	return 0;
-diff --git a/drivers/net/can/sja1000/sja1000_platform.c b/drivers/net/can/sja1000/sja1000_platform.c
-index 95a844a..36c8525 100644
---- a/drivers/net/can/sja1000/sja1000_platform.c
-+++ b/drivers/net/can/sja1000/sja1000_platform.c
-@@ -184,7 +184,7 @@ static int sp_probe(struct platform_device *pdev)
- 		return -ENOMEM;
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index 30d35e5..c88177b 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -155,7 +155,8 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+ 	pr_debug("Initializing Orion-SoC USB Host Controller\n");
  
- 	if (of)
--		irq = irq_of_parse_and_map(of, 0);
-+		irq = devm_irq_of_parse_and_map(&pdev->dev, of, 0);
+ 	if (pdev->dev.of_node)
+-		irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
++		irq = devm_irq_of_parse_and_map(&pdev->dev,
++				pdev->dev.of_node, 0);
  	else
- 		res_irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ 		irq = platform_get_irq(pdev, 0);
+ 	if (irq <= 0) {
+diff --git a/drivers/usb/host/ehci-ppc-of.c b/drivers/usb/host/ehci-ppc-of.c
+index 5479247..cc64210 100644
+--- a/drivers/usb/host/ehci-ppc-of.c
++++ b/drivers/usb/host/ehci-ppc-of.c
+@@ -117,11 +117,11 @@ static int ehci_hcd_ppc_of_probe(struct platform_device *op)
+ 	hcd->rsrc_start = res.start;
+ 	hcd->rsrc_len = resource_size(&res);
  
+-	irq = irq_of_parse_and_map(dn, 0);
+-	if (irq == NO_IRQ) {
+-		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
++	irq = devm_irq_of_parse_and_map(&op->dev, dn, 0);
++	if (irq <= 0) {
++		dev_err(&op->dev, "%s: devm_irq_of_parse_and_map failed\n",
+ 			__FILE__);
+-		rv = -EBUSY;
++		rv = irq ? irq : -EINVAL;
+ 		goto err_irq;
+ 	}
+ 
+@@ -174,7 +174,6 @@ static int ehci_hcd_ppc_of_probe(struct platform_device *op)
+ 	return 0;
+ 
+ err_ioremap:
+-	irq_dispose_mapping(irq);
+ err_irq:
+ 	usb_put_hcd(hcd);
+ 
+@@ -194,8 +193,6 @@ static int ehci_hcd_ppc_of_remove(struct platform_device *op)
+ 
+ 	usb_remove_hcd(hcd);
+ 
+-	irq_dispose_mapping(hcd->irq);
+-
+ 	/* use request_mem_region to test if the ohci driver is loaded.  if so
+ 	 * ensure the ohci core is operational.
+ 	 */
+diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+index fe57710..6c6f8c7 100644
+--- a/drivers/usb/host/ehci-xilinx-of.c
++++ b/drivers/usb/host/ehci-xilinx-of.c
+@@ -153,11 +153,11 @@ static int ehci_hcd_xilinx_of_probe(struct platform_device *op)
+ 	hcd->rsrc_start = res.start;
+ 	hcd->rsrc_len = resource_size(&res);
+ 
+-	irq = irq_of_parse_and_map(dn, 0);
+-	if (!irq) {
+-		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
++	irq = devm_irq_of_parse_and_map(&op->dev, dn, 0);
++	if (irq <= 0) {
++		dev_err(&op->dev, "%s: devm_irq_of_parse_and_map failed\n",
+ 			__FILE__);
+-		rv = -EBUSY;
++		rv = irq ? irq : -EINVAL;
+ 		goto err_irq;
+ 	}
+ 
+diff --git a/drivers/usb/host/ohci-ppc-of.c b/drivers/usb/host/ohci-ppc-of.c
+index 965e3e9..fcdd23a 100644
+--- a/drivers/usb/host/ohci-ppc-of.c
++++ b/drivers/usb/host/ohci-ppc-of.c
+@@ -121,11 +121,11 @@ static int ohci_hcd_ppc_of_probe(struct platform_device *op)
+ 		goto err_rmr;
+ 	}
+ 
+-	irq = irq_of_parse_and_map(dn, 0);
++	irq = devm_irq_of_parse_and_map(*op->dev, dn, 0);
+ 	if (irq == NO_IRQ) {
+ 		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
+ 			__FILE__);
+-		rv = -EBUSY;
++		rv = irq ? irq : -EINVAL;
+ 		goto err_rmr;
+ 	}
+ 
+@@ -170,7 +170,6 @@ static int ohci_hcd_ppc_of_probe(struct platform_device *op)
+ 			pr_debug("%s: cannot get ehci offset from fdt\n", __FILE__);
+ 	}
+ 
+-	irq_dispose_mapping(irq);
+ err_rmr:
+  	usb_put_hcd(hcd);
+ 
+@@ -185,8 +184,6 @@ static int ohci_hcd_ppc_of_remove(struct platform_device *op)
+ 
+ 	usb_remove_hcd(hcd);
+ 
+-	irq_dispose_mapping(hcd->irq);
+-
+ 	usb_put_hcd(hcd);
+ 
+ 	return 0;
 -- 
 1.7.10.4
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
