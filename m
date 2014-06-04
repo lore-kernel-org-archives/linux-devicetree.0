@@ -1,7 +1,7 @@
 From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 10/21] media: use devm_irq_of_parse_and_map() where appropriate
-Date: Wed,  4 Jun 2014 15:13:10 +0400
-Message-ID: <1401880402-30091-11-git-send-email-nyushchenko@dev.rtsoft.ru>
+Subject: [PATCH 17/21] rtc-mpc5121: use devm_irq_of_parse_and_map()
+Date: Wed,  4 Jun 2014 15:13:17 +0400
+Message-ID: <1401880402-30091-18-git-send-email-nyushchenko@dev.rtsoft.ru>
 References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
@@ -18,146 +18,86 @@ issues.
 
 Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 ---
- drivers/media/platform/exynos4-is/fimc-is.c |   14 ++++++--------
- drivers/media/platform/fsl-viu.c            |   25 +++++++++----------------
- 2 files changed, 15 insertions(+), 24 deletions(-)
+ drivers/rtc/rtc-mpc5121.c |   38 ++++++++++++++++++++------------------
+ 1 file changed, 20 insertions(+), 18 deletions(-)
 
-diff --git a/drivers/media/platform/exynos4-is/fimc-is.c b/drivers/media/platform/exynos4-is/fimc-is.c
-index 128b73b..b90b9c1 100644
---- a/drivers/media/platform/exynos4-is/fimc-is.c
-+++ b/drivers/media/platform/exynos4-is/fimc-is.c
-@@ -810,10 +810,10 @@ static int fimc_is_probe(struct platform_device *pdev)
- 	if (!is->pmu_regs)
- 		return -ENOMEM;
+diff --git a/drivers/rtc/rtc-mpc5121.c b/drivers/rtc/rtc-mpc5121.c
+index dc4f142..c62e5eb 100644
+--- a/drivers/rtc/rtc-mpc5121.c
++++ b/drivers/rtc/rtc-mpc5121.c
+@@ -328,22 +328,34 @@ static int mpc5121_rtc_probe(struct platform_device *op)
  
--	is->irq = irq_of_parse_and_map(dev->of_node, 0);
--	if (is->irq < 0) {
-+	is->irq = devm_irq_of_parse_and_map(dev, dev->of_node, 0);
-+	if (is->irq <= 0) {
- 		dev_err(dev, "no irq found\n");
--		return is->irq;
-+		return is->irq ? is->irq : -EINVAL;
+ 	platform_set_drvdata(op, rtc);
+ 
+-	rtc->irq = irq_of_parse_and_map(op->dev.of_node, 1);
+-	err = request_irq(rtc->irq, mpc5121_rtc_handler, 0,
++	rtc->irq = devm_irq_of_parse_and_map(&op->dev, op->dev.of_node, 1);
++	if (rtc->irq <= 0) {
++		dev_err(&op->dev, "%s: could not locate irq\n", __func__);
++		err = rtc->irq ? rtc->irq : -EINVAL;
++		goto out;
++	}
++	err = devm_request_irq(&op->dev, rtc->irq, mpc5121_rtc_handler, 0,
+ 						"mpc5121-rtc", &op->dev);
+ 	if (err) {
+ 		dev_err(&op->dev, "%s: could not request irq: %i\n",
+ 							__func__, rtc->irq);
+-		goto out_dispose;
++		goto out;
  	}
  
- 	ret = fimc_is_get_clocks(is);
-@@ -822,7 +822,8 @@ static int fimc_is_probe(struct platform_device *pdev)
- 
- 	platform_set_drvdata(pdev, is);
- 
--	ret = request_irq(is->irq, fimc_is_irq_handler, 0, dev_name(dev), is);
-+	ret = devm_request_irq(dev, is->irq, fimc_is_irq_handler, 0,
-+			dev_name(dev), is);
- 	if (ret < 0) {
- 		dev_err(dev, "irq request failed\n");
- 		goto err_clk;
-@@ -832,7 +833,7 @@ static int fimc_is_probe(struct platform_device *pdev)
- 	if (!pm_runtime_enabled(dev)) {
- 		ret = fimc_is_runtime_resume(dev);
- 		if (ret < 0)
--			goto err_irq;
-+			goto err_clk;
+-	rtc->irq_periodic = irq_of_parse_and_map(op->dev.of_node, 0);
+-	err = request_irq(rtc->irq_periodic, mpc5121_rtc_handler_upd,
++	rtc->irq_periodic = devm_irq_of_parse_and_map(&op->dev,
++				op->dev.of_node, 0);
++	if (rtc->irq_periodic <= 0) {
++		dev_err(&op->dev, "%s: could not locate irq\n", __func__);
++		err = rtc->irq_periodic ? rtc->irq_periodic : -EINVAL;
++		goto out;
++	}
++	err = devm_request_irq(&op->dev, rtc->irq_periodic,
++				mpc5121_rtc_handler_upd,
+ 				0, "mpc5121-rtc_upd", &op->dev);
+ 	if (err) {
+ 		dev_err(&op->dev, "%s: could not request irq: %i\n",
+ 						__func__, rtc->irq_periodic);
+-		goto out_dispose2;
++		goto out;
  	}
  
- 	ret = pm_runtime_get_sync(dev);
-@@ -874,8 +875,6 @@ err_vb:
- err_pm:
- 	if (!pm_runtime_enabled(dev))
- 		fimc_is_runtime_suspend(dev);
--err_irq:
--	free_irq(is->irq, is);
- err_clk:
- 	fimc_is_put_clocks(is);
- 	return ret;
-@@ -929,7 +928,6 @@ static int fimc_is_remove(struct platform_device *pdev)
- 	pm_runtime_set_suspended(dev);
- 	if (!pm_runtime_status_suspended(dev))
- 		fimc_is_runtime_suspend(dev);
--	free_irq(is->irq, is);
- 	fimc_is_unregister_subdevs(is);
- 	vb2_dma_contig_cleanup_ctx(is->alloc_ctx);
- 	fimc_is_put_clocks(is);
-diff --git a/drivers/media/platform/fsl-viu.c b/drivers/media/platform/fsl-viu.c
-index dbf0ce3..ca9c04f 100644
---- a/drivers/media/platform/fsl-viu.c
-+++ b/drivers/media/platform/fsl-viu.c
-@@ -1495,34 +1495,31 @@ static int viu_of_probe(struct platform_device *op)
- 		return -ENODEV;
+ 	if (of_device_is_compatible(op->dev.of_node, "fsl,mpc5121-rtc")) {
+@@ -364,19 +376,13 @@ static int mpc5121_rtc_probe(struct platform_device *op)
+ 
+ 	if (IS_ERR(rtc->rtc)) {
+ 		err = PTR_ERR(rtc->rtc);
+-		goto out_free_irq;
++		goto out;
  	}
+ 	rtc->rtc->uie_unsupported = 1;
  
--	viu_irq = irq_of_parse_and_map(op->dev.of_node, 0);
--	if (viu_irq == NO_IRQ) {
-+	viu_irq = devm_irq_of_parse_and_map(&op->dev, op->dev.of_node, 0);
-+	if (viu_irq <= 0) {
- 		dev_err(&op->dev, "Error while mapping the irq\n");
--		return -EINVAL;
-+		return viu_irq ? viu_irq : -EINVAL;
- 	}
+ 	return 0;
  
- 	/* request mem region */
- 	if (!devm_request_mem_region(&op->dev, r.start,
- 				     sizeof(struct viu_reg), DRV_NAME)) {
- 		dev_err(&op->dev, "Error while requesting mem region\n");
--		ret = -EBUSY;
--		goto err;
-+		return -EBUSY;
- 	}
+-out_free_irq:
+-	free_irq(rtc->irq_periodic, &op->dev);
+-out_dispose2:
+-	irq_dispose_mapping(rtc->irq_periodic);
+-	free_irq(rtc->irq, &op->dev);
+-out_dispose:
+-	irq_dispose_mapping(rtc->irq);
++out:
+ 	iounmap(rtc->regs);
  
- 	/* remap registers */
- 	viu_regs = devm_ioremap(&op->dev, r.start, sizeof(struct viu_reg));
- 	if (!viu_regs) {
- 		dev_err(&op->dev, "Can't map register set\n");
--		ret = -ENOMEM;
--		goto err;
-+		return -ENOMEM;
- 	}
+ 	return err;
+@@ -392,10 +398,6 @@ static int mpc5121_rtc_remove(struct platform_device *op)
+ 	out_8(&regs->int_enable, in_8(&regs->int_enable) & ~0x1);
  
- 	/* Prepare our private structure */
- 	viu_dev = devm_kzalloc(&op->dev, sizeof(struct viu_dev), GFP_ATOMIC);
- 	if (!viu_dev) {
- 		dev_err(&op->dev, "Can't allocate private structure\n");
--		ret = -ENOMEM;
--		goto err;
-+		return -ENOMEM;
- 	}
+ 	iounmap(rtc->regs);
+-	free_irq(rtc->irq, &op->dev);
+-	free_irq(rtc->irq_periodic, &op->dev);
+-	irq_dispose_mapping(rtc->irq);
+-	irq_dispose_mapping(rtc->irq_periodic);
  
- 	viu_dev->vr = viu_regs;
-@@ -1538,7 +1535,7 @@ static int viu_of_probe(struct platform_device *op)
- 	ret = v4l2_device_register(viu_dev->dev, &viu_dev->v4l2_dev);
- 	if (ret < 0) {
- 		dev_err(&op->dev, "v4l2_device_register() failed: %d\n", ret);
--		goto err;
-+		return ret;
- 	}
- 
- 	ad = i2c_get_adapter(0);
-@@ -1597,7 +1594,8 @@ static int viu_of_probe(struct platform_device *op)
- 	viu_reset(viu_dev->vr);
- 
- 	/* install interrupt handler */
--	if (request_irq(viu_dev->irq, viu_intr, 0, "viu", (void *)viu_dev)) {
-+	if (devm_request_irq(&op->dev, viu_dev->irq, viu_intr, 0, "viu",
-+				(void *)viu_dev)) {
- 		dev_err(&op->dev, "Request VIU IRQ failed.\n");
- 		ret = -ENODEV;
- 		goto err_irq;
-@@ -1616,8 +1614,6 @@ err_vdev:
- 	mutex_unlock(&viu_dev->lock);
- 	i2c_put_adapter(ad);
- 	v4l2_device_unregister(&viu_dev->v4l2_dev);
--err:
--	irq_dispose_mapping(viu_irq);
- 	return ret;
+ 	return 0;
  }
- 
-@@ -1629,9 +1625,6 @@ static int viu_of_remove(struct platform_device *op)
- 					      struct v4l2_subdev, list);
- 	struct i2c_client *client = v4l2_get_subdevdata(sdev);
- 
--	free_irq(dev->irq, (void *)dev);
--	irq_dispose_mapping(dev->irq);
--
- 	clk_disable_unprepare(dev->clk);
- 
- 	video_unregister_device(dev->vdev);
 -- 
 1.7.10.4
