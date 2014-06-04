@@ -1,16 +1,15 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/2] ARM: dts: berlin: enable i2c0 and i2c2
-Date: Wed, 4 Jun 2014 19:03:40 +0200
-Message-ID: <20140604170340.GI6892@lunn.ch>
-References: <1401780790-17830-1-git-send-email-antoine.tenart@free-electrons.com>
- <1401780790-17830-3-git-send-email-antoine.tenart@free-electrons.com>
- <20140603080522.GB22742@lunn.ch> <20140604164841.GA12859@kwain>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 3/7] i2c: Add the ability to match device to compatible
+ string without an of_node
+Date: Wed, 4 Jun 2014 12:29:29 -0500
+Message-ID: <CAL_JsqJOEipHyjD2NCjQd1BvLumnM3PkVDqUjrMNfXCOmXcNAA@mail.gmail.com>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-4-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140604164841.GA12859@kwain>
+In-Reply-To: <1401883796-17841-4-git-send-email-lee.jones@linaro.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,36 +19,103 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Cc: thomas.petazzoni@free-electrons.com, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, zmxu@marvell.com, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+To: Lee Jones <lee.jones@linaro.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 04, 2014 at 06:48:41PM +0200, Antoine T=E9nart wrote:
-> Hi Andrew,
-> =
+On Wed, Jun 4, 2014 at 7:09 AM, Lee Jones <lee.jones@linaro.org> wrote:
+> A great deal of I2C devices are currently matched via DT node name, and
+> as such the compatible naming convention of '<vendor>,<device>' has gone
+> somewhat awry - some nodes don't supply one, some supply an arbitrary
+> string and others the correct device name with an arbitrary vendor prefix.
+>
+> In an effort to correct this problem we have to supply a mechanism to
+> match a device by compatible string AND by simple device name.  This
+> function strips off the '<vendor>,' part of a supplied compatible string
+> and attempts to match without it.
+>
+> The plan is to remove this function once all of the compatible strings
+> for each device have been brought into line.
 
-> On Tue, Jun 03, 2014 at 10:05:22AM +0200, Andrew Lunn wrote:
-> > On Tue, Jun 03, 2014 at 09:33:10AM +0200, Antoine T=E9nart wrote:
-> > > Enable the I2C0 and I2C2 for the Marvell Berlin BG2G DMP. I2C1 and I2=
-C3
-> > > are also working on this board, but no devices seemed to be there.
-> > =
+Then should you add a warning for cases needing to be fixed?
 
-> > Does this mean that IC0 and I2C2 have devices on them? Could you also
-> > add nodes for the devices?
-> =
+Rob
 
-> No devices I can add for now. I you prefer we can drop this patch, keep
-> the other one and enable i2c nodes for the BG2Q DMP when they will be
-> needed.
-
-Hi Antoine
-
-I was just wondering how you tested it, without having any devices?
-Is it that the devices on the bus don't have mainline drivers?
-
-I don't see a reason not to commit both. At least it allows i2c-detect
-to work and see what is on the bus, even if we cannot drive them.
-
-Thanks
-	Andrew
+>
+> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+> ---
+>  drivers/i2c/i2c-core.c | 25 +++++++++++++++++++++++++
+>  include/linux/i2c.h    | 10 ++++++++++
+>  2 files changed, 35 insertions(+)
+>
+> diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> index d3802dc..7dcd5c3 100644
+> --- a/drivers/i2c/i2c-core.c
+> +++ b/drivers/i2c/i2c-core.c
+> @@ -1090,6 +1090,31 @@ struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node)
+>         return i2c_verify_adapter(dev);
+>  }
+>  EXPORT_SYMBOL(of_find_i2c_adapter_by_node);
+> +
+> +const struct of_device_id
+> +*i2c_of_match_device_strip_vendor(const struct of_device_id *matches,
+> +                                 struct device *dev)
+> +{
+> +       const struct i2c_client *client = i2c_verify_client(dev);
+> +       const char *name;
+> +
+> +       if (!(client && matches))
+> +               return NULL;
+> +
+> +       for (; matches->compatible[0]; matches++) {
+> +               name = strchr(matches->compatible, ',');
+> +               if (!name)
+> +                       name = matches->compatible;
+> +               else
+> +                       name++;
+> +
+> +               if (!strncmp(client->name, name, strlen(client->name)))
+> +                       return matches;
+> +       }
+> +
+> +       return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(i2c_of_match_device_strip_vendor);
+>  #else
+>  static void of_i2c_register_devices(struct i2c_adapter *adap) { }
+>  #endif /* CONFIG_OF */
+> diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> index b556e0a..f7ec75b 100644
+> --- a/include/linux/i2c.h
+> +++ b/include/linux/i2c.h
+> @@ -564,6 +564,9 @@ extern struct i2c_client *of_find_i2c_device_by_node(struct device_node *node);
+>  /* must call put_device() when done with returned i2c_adapter device */
+>  extern struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node);
+>
+> +extern const struct of_device_id
+> +*i2c_of_match_device_strip_vendor(const struct of_device_id *matches,
+> +                                 struct device *dev);
+>  #else
+>
+>  static inline struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
+> @@ -575,6 +578,13 @@ static inline struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node
+>  {
+>         return NULL;
+>  }
+> +
+> +const struct of_device_id
+> +*i2c_of_match_device_strip_vendor(const struct of_device_id *matches,
+> +                                 struct device *dev)
+> +{
+> +       return NULL;
+> +}
+>  #endif /* CONFIG_OF */
+>
+>  #endif /* _LINUX_I2C_H */
+> --
+> 1.8.3.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
