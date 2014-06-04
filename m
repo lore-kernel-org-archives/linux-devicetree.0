@@ -1,69 +1,71 @@
-From: Mikko Perttunen <mperttunen@nvidia.com>
-Subject: [PATCH 2/9] ARM: tegra: Add SATA controller to Tegra124 device tree
-Date: Wed, 4 Jun 2014 14:32:32 +0300
-Message-ID: <1401881559-18469-3-git-send-email-mperttunen@nvidia.com>
-References: <1401881559-18469-1-git-send-email-mperttunen@nvidia.com>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [PATCH v3 13/15] ARM: dts: exynos5: add system register support
+Date: Wed, 4 Jun 2014 17:20:21 +0530
+Message-ID: <CAFp+6iFpSHWwH68BSNzetrTdxt2wpZC3y3WfQ+nuRDBeask_MA@mail.gmail.com>
+References: <1401686571-22148-1-git-send-email-yj44.cho@samsung.com>
+	<1401686571-22148-14-git-send-email-yj44.cho@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401881559-18469-1-git-send-email-mperttunen@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: swarren@wwwdotorg.org, thierry.reding@gmail.com, tj@kernel.org, pdeschrijver@nvidia.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Mikko Perttunen <mperttunen@nvidia.com>, linux-ide@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1401686571-22148-14-git-send-email-yj44.cho@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, inki.dae@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, sw0312.kim@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-This adds the integrated AHCI-compliant Serial ATA controller present
-in Tegra124 systems-on-chip to the Tegra124 device tree.
+On Mon, Jun 2, 2014 at 10:52 AM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+> This patch adds sysreg device node, and sysreg property
+> to fimd device node which is required to use I80 interface.
 
-Signed-off-by: Mikko Perttunen <mperttunen@nvidia.com>
-Cc: devicetree@vger.kernel.org
----
- arch/arm/boot/dts/tegra124.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Same here. The system register nodes have been added to exynos5250 and
+exynos5420 by the patch:
+dfbbdbf ARM: dts: Add sysreg sytem controller node to exynos5250 and exynos5420
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 90f11ea..e647f30 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -787,6 +787,30 @@
- 		status = "disabled";
- 	};
- 
-+	sata@0,70020000 {
-+		compatible = "nvidia,tegra124-ahci";
-+
-+		reg = <0x0 0x70027000 0x0 0x2000>, /* AHCI */
-+			<0x0 0x70020000 0x0 0x7000>; /* SATA */
-+
-+		interrupts = <0 23 IRQ_TYPE_LEVEL_HIGH>;
-+
-+		clocks = <&tegra_car TEGRA124_CLK_SATA>,
-+			<&tegra_car TEGRA124_CLK_SATA_OOB>,
-+			<&tegra_car TEGRA124_CLK_CML1>,
-+			<&tegra_car TEGRA124_CLK_PLL_E>;
-+
-+		resets = <&tegra_car 124>,
-+			<&tegra_car 123>,
-+			<&tegra_car 129>;
-+		reset-names = "sata", "sata-oob", "sata-cold";
-+
-+		phys = <&padctl TEGRA_XUSB_PADCTL_SATA>;
-+		phy-names = "sata-phy";
-+
-+		status = "disabled";
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+May be, you may want to move those two nodes to this common file (exynos5.dtsi).
+
+>
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos5.dtsi |    6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+> index 79d0608..95ee496 100644
+> --- a/arch/arm/boot/dts/exynos5.dtsi
+> +++ b/arch/arm/boot/dts/exynos5.dtsi
+> @@ -81,12 +81,18 @@
+>                 status = "disabled";
+>         };
+>
+> +       sys_reg: syscon@10050000 {
+> +               compatible = "samsung,exynos5-sysreg", "syscon";
+> +               reg = <0x10050000 0x500>;
+> +       };
+> +
+>         fimd@14400000 {
+>                 compatible = "samsung,exynos5250-fimd";
+>                 interrupt-parent = <&combiner>;
+>                 reg = <0x14400000 0x40000>;
+>                 interrupt-names = "fifo", "vsync", "lcd_sys";
+>                 interrupts = <18 4>, <18 5>, <18 6>;
+> +               samsung,sysreg = <&sys_reg>;
+>                 status = "disabled";
+>         };
+>
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.8.1.5
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
