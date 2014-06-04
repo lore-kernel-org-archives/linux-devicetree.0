@@ -1,194 +1,139 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Thu, 05 Jun 2014 01:54:47 +0400
-Message-ID: <538F95A7.8010409@cogentembedded.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <538F05BC.7000800@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <538F05BC.7000800@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH 3/3] ARM: dts: Use the cros-ec-keyboard fragment in exynos5250-snow
+Date: Wed,  4 Jun 2014 15:20:20 -0700
+Message-ID: <1401920421-25729-3-git-send-email-dianders@chromium.org>
+References: <1401920421-25729-1-git-send-email-dianders@chromium.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401920421-25729-1-git-send-email-dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org
+Cc: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+---
+ arch/arm/boot/dts/exynos5250-snow.dts | 93 ++---------------------------------
+ 1 file changed, 3 insertions(+), 90 deletions(-)
 
-On 06/04/2014 03:40 PM, Kishon Vijay Abraham I wrote:
+diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+index 079fdf9..7bd2df1 100644
+--- a/arch/arm/boot/dts/exynos5250-snow.dts
++++ b/arch/arm/boot/dts/exynos5250-snow.dts
+@@ -137,7 +137,7 @@
+ 				sbs,poll-retry-count = <1>;
+ 			};
+ 
+-			ec: embedded-controller {
++			cros_ec: embedded-controller {
+ 				compatible = "google,cros-ec-i2c";
+ 				reg = <0x1e>;
+ 				interrupts = <6 0>;
+@@ -145,95 +145,6 @@
+ 				pinctrl-names = "default";
+ 				pinctrl-0 = <&ec_irq>;
+ 				wakeup-source;
+-
+-				keyboard-controller {
+-				        compatible = "google,cros-ec-keyb";
+-				        keypad,num-rows = <8>;
+-				        keypad,num-columns = <13>;
+-				        google,needs-ghost-filter;
+-					linux,keymap = <0x0001007d	/* L_META */
+-							0x0002003b	/* F1 */
+-							0x00030030	/* B */
+-							0x00040044	/* F10 */
+-							0x00060031	/* N */
+-							0x0008000d	/* = */
+-							0x000a0064	/* R_ALT */
+-
+-							0x01010001	/* ESC */
+-							0x0102003e	/* F4 */
+-							0x01030022	/* G */
+-							0x01040041	/* F7 */
+-							0x01060023	/* H */
+-							0x01080028	/* ' */
+-							0x01090043	/* F9 */
+-							0x010b000e	/* BKSPACE */
+-
+-							0x0200001d	/* L_CTRL */
+-							0x0201000f	/* TAB */
+-							0x0202003d	/* F3 */
+-							0x02030014	/* T */
+-							0x02040040	/* F6 */
+-							0x0205001b	/* ] */
+-							0x02060015	/* Y */
+-							0x02070056	/* 102ND */
+-							0x0208001a	/* [ */
+-							0x02090042	/* F8 */
+-
+-							0x03010029	/* GRAVE */
+-							0x0302003c	/* F2 */
+-							0x03030006	/* 5 */
+-							0x0304003f	/* F5 */
+-							0x03060007	/* 6 */
+-							0x0308000c	/* - */
+-							0x030b002b	/* \ */
+-
+-							0x04000061	/* R_CTRL */
+-							0x0401001e	/* A */
+-							0x04020020	/* D */
+-							0x04030021	/* F */
+-							0x0404001f	/* S */
+-							0x04050025	/* K */
+-							0x04060024	/* J */
+-							0x04080027	/* ; */
+-							0x04090026	/* L */
+-							0x040a002b	/* \ */
+-							0x040b001c	/* ENTER */
+-
+-							0x0501002c	/* Z */
+-							0x0502002e	/* C */
+-							0x0503002f	/* V */
+-							0x0504002d	/* X */
+-							0x05050033	/* , */
+-							0x05060032	/* M */
+-							0x0507002a	/* L_SHIFT */
+-							0x05080035	/* / */
+-							0x05090034	/* . */
+-							0x050B0039	/* SPACE */
+-
+-							0x06010002	/* 1 */
+-							0x06020004	/* 3 */
+-							0x06030005	/* 4 */
+-							0x06040003	/* 2 */
+-							0x06050009	/* 8 */
+-							0x06060008	/* 7 */
+-							0x0608000b	/* 0 */
+-							0x0609000a	/* 9 */
+-							0x060a0038	/* L_ALT */
+-							0x060b006c	/* DOWN */
+-							0x060c006a	/* RIGHT */
+-
+-							0x07010010	/* Q */
+-							0x07020012	/* E */
+-							0x07030013	/* R */
+-							0x07040011	/* W */
+-							0x07050017	/* I */
+-							0x07060016	/* U */
+-							0x07070036	/* R_SHIFT */
+-							0x07080019	/* P */
+-							0x07090018	/* O */
+-							0x070b0067	/* UP */
+-							0x070c0069>;	/* LEFT */
+-				};
+ 			};
+ 
+ 			power-regulator {
+@@ -431,3 +342,5 @@
+ 		};
+ 	};
+ };
++
++#include "cros-ec-keyboard.dtsi"
+-- 
+2.0.0.526.g5318336
 
->> This PHY, though formally being a part of Renesas USBHS controller, contains the
->> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls them
->> channels) to the different USB controllers: channel 0 can be connected to either
->> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
->> or xHCI controllers.
-
->> This is a new driver for this USB PHY currently already supported under drivers/
->> usb/phy/. The reason for writing the new driver was the requirement that the
->> multiplexing of USB channels to the controller be dynamic, depending on what
->> USB drivers are loaded,  rather than static as provided by the old driver.
->> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
->> ideally. The new driver only supports device tree probing for now.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-[...]
-
->> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
->> ===================================================================
->> --- /dev/null
->> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
->> @@ -0,0 +1,60 @@
->> +* Renesas R-Car generation 2 USB PHY
->> +
->> +This file provides information on what the device node for the R-Car generation
->> +2 USB PHY contains.
->> +
->> +Required properties:
->> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790 SoC.
->> +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
->> +- reg: offset and length of the register block.
->> +- #phy-cells: see phy-bindings.txt in the same directory, must be 2.
->> +- clocks: clock phandle and specifier pair.
->> +- clock-names: string, clock input name, must be "usbhs".
->> +
->> +The phandle's first argument in the PHY specifier identifies the USB channel,
->> +the second one is the USB controller selector and depends on the first:
->> +
->> ++-----------+---------------+---------------+
->> +|\ Selector |               |               |
->> ++ --------- +       0       |       1       |
->> +| Channel  \|               |               |
->> ++-----------+---------------+---------------+
->> +| 0         | PCI EHCI/OHCI | HS-USB        |
->> +| 1         | PCI EHCI/OHCI | xHCI          |
->> ++-----------+---------------+---------------+
->> +
->> +The USB PHY device tree node should be the subnodes corresponding to the USB
->> +channels and the controllers connected to them. These subnodes must contain the
->> +following properties:
->> +- renesas,phy-select: the first cell identifies the USB channel, the second cell
->> +  is the USB controller selector; see the table above for the values.
->> +- renesas,ugctrl2-masks: the first cell is the UGCTRL2 mask corresponding to
->> +  the USB channel, the second cell is the UGCTRL2 value corresponding to the
->> +  USB controller selected for that channel.
->> +
->> +Example (Lager board):
->> +
->> +	usb-phy@e6590100 {
->> +		compatible = "renesas,usb-phy-r8a7790";
->> +		reg = <0 0xe6590100 0 0x100>;
->> +		#phy-cells = <2>;
->> +		clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
->> +		clock-names = "usbhs";
->> +
->> +		usb-phy@0,0 {
->> +			renesas,phy-select = <0 0>;
->> +			renesas,ugctrl2-masks = <0x00000030 0x00000010>;
->> +		};
->> +		usb-phy@0,1 {
->> +			renesas,phy-select = <0 1>;
->> +			renesas,ugctrl2-masks = <0x00000030 0x00000030>;
->> +		};
->> +		usb-phy@1,0 {
->> +			renesas,phy-select = <1 0>;
->> +			renesas,ugctrl2-masks = <0x80000000 0x00000000>;
->> +		};
->> +		usb-phy@1,1 {
->> +			renesas,phy-select = <1 1>;
->> +			renesas,ugctrl2-masks = <0x80000000 0x80000000>;
->> +		};
->> +	};
-
-> IIUC, channel 0 can be configured for either EHCI/OHCI or HS-USB but can't be
-> used for both.  And channel 1 can be configured for either PCI EHCI/OHCI or
-> xHCI. right?
-
-    Yes. However that depends on the driver load order: if e.g. xHCI driver is 
-loaded later than PCI USB drivers,
-it will override the channel routing.
-
-> So ideally only two sub-nodes should be created for channel '0' and channel
-> '1'.
-
-    Hm, but I need to perform a special PHY power up sequence for the USBHS 
-PHY itself (corresponding to channel #0, selector #1).
-
-> You can configure a channel to a particular mode by passing the mode in
-> PHY specifier
-
-    I already have "#phy-cells" prop equal to 2.
-
-> (The channel should be configured to a particualr mode in xlate).
-
-    I have even considered using the of_xlate() method at first but then 
-abandoned that idea for the phy_init() method...
-
-> Btw I'm not sure if it is recommended to pass register mask values from dt.
-
-    Neither am I. I did that because you requested the device tree 
-representation for each of the sub-PHYs under that part of the driver which 
-initialized the register masks, so that I thought that you wanted those masks 
-to be represented in the device tree as well...
-
-[...]
->> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->> ===================================================================
->> --- /dev/null
->> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->> @@ -0,0 +1,288 @@
-[...]
->> +#define USBHS_LPSTS			0x02
->> +#define USBHS_UGCTRL			0x80
->> +#define USBHS_UGCTRL2			0x84
->> +#define USBHS_UGSTS			0x88
->> +
->> +/* Low Power Status register (LPSTS) */
->> +#define USBHS_LPSTS_SUSPM		0x4000
->> +
->> +/* USB General control register (UGCTRL) */
->> +#define USBHS_UGCTRL_CONNECT		0x00000004
->> +#define USBHS_UGCTRL_PLLRESET		0x00000001
->> +
->> +/* USB General control register 2 (UGCTRL2) */
->> +#define USBHS_UGCTRL2_USB2SEL		0x80000000
->> +#define USBHS_UGCTRL2_USB2SEL_PCI	0x00000000
->> +#define USBHS_UGCTRL2_USB2SEL_USB30	0x80000000
->> +#define USBHS_UGCTRL2_USB0SEL		0x00000030
->> +#define USBHS_UGCTRL2_USB0SEL_PCI	0x00000010
->> +#define USBHS_UGCTRL2_USB0SEL_HS_USB	0x00000030
->> +
->> +/* USB General status register (UGSTS) */
->> +#define USBHS_UGSTS_LOCK		0x00000300
->> +
->> +#define	NUM_USB_CHANNELS	2
->> +
->> +struct rcar_gen2_phy {
->> +	struct phy *phy;
->> +	struct rcar_gen2_phy_driver *drv;
->> +	u32 select_mask;
->> +	u32 select_value;
->> +};
->> +
->> +struct rcar_gen2_phy_driver {
->> +	void __iomem *base;
->> +	struct clk *clk;
->> +	spinlock_t lock;
->> +	struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
-
-> This can be created dynamically based on the number of sub-nodes. In this case
-
-    Hm, that sounds to me like another complication of the driver with no 
-apparent win...
-
-> it'll be only rcar_gen2_phy phys[2], one for each channel.
-> By this we need not hard code NUM_USB_CHANNELS.
-
-    I don't quite understand what's up with hard-coding it -- this constant is 
-dictated by the UGCTRL2 register layout anyway.
-
-> Thanks
-> Kishon
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
