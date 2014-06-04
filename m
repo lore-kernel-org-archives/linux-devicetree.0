@@ -1,43 +1,62 @@
-From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 12/21] mpc5121_nfc: use devm_irq_of_parse_and_map()
-Date: Wed,  4 Jun 2014 15:13:12 +0400
-Message-ID: <1401880402-30091-13-git-send-email-nyushchenko@dev.rtsoft.ru>
-References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru, Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+From: Vivek Gautam <gautam.vivek@samsung.com>
+Subject: Re: [PATCH v3 03/15] ARM: dts: sysreg: add exynos5 compatible to DT bindings
+Date: Wed, 4 Jun 2014 17:14:52 +0530
+Message-ID: <CAFp+6iESdBDh+Ji20Z4Y_W=6y+xGwJ_abxBc-abAK4RfBF6otQ@mail.gmail.com>
+References: <1401686571-22148-1-git-send-email-yj44.cho@samsung.com>
+	<1401686571-22148-4-git-send-email-yj44.cho@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1401686571-22148-4-git-send-email-yj44.cho@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: YoungJun Cho <yj44.cho@samsung.com>
+Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, inki.dae@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, sw0312.kim@samsung.com, a.hajda@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+Hi,
 
-This avoids leak of IRQ mapping on error paths, and makes it possible
-to use devm_request_irq() without facing unmap-while-handler-installed
-issues.
 
-Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
----
- drivers/mtd/nand/mpc5121_nfc.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+On Mon, Jun 2, 2014 at 10:52 AM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+> This patch adds relevant to exynos5 compatible for exynos5 SoCs.
 
-diff --git a/drivers/mtd/nand/mpc5121_nfc.c b/drivers/mtd/nand/mpc5121_nfc.c
-index e78841a..b710168 100644
---- a/drivers/mtd/nand/mpc5121_nfc.c
-+++ b/drivers/mtd/nand/mpc5121_nfc.c
-@@ -669,10 +669,10 @@ static int mpc5121_nfc_probe(struct platform_device *op)
- 		return retval;
- 	}
- 
--	prv->irq = irq_of_parse_and_map(dn, 0);
--	if (prv->irq == NO_IRQ) {
-+	prv->irq = devm_irq_of_parse_and_map(dev, dn, 0);
-+	if (prv->irq <= 0) {
- 		dev_err(dev, "Error mapping IRQ!\n");
--		return -EINVAL;
-+		return prv->irq ? prv->irq : -EINVAL;
- 	}
- 
- 	retval = of_address_to_resource(dn, 0, &res);
+This change is not required. Please check the latest 'for-next' branch
+of linux-samsung tree.
+Recently a patch "dfbbdbf ARM: dts: Add sysreg sytem controller node
+to exynos5250 and exynos5420"
+has already updated this binding information.
+
+>
+> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+> Acked-by: Inki Dae <inki.dae@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+> ---
+>  .../devicetree/bindings/arm/samsung/sysreg.txt     |    1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> index 0ab3251..fd71581 100644
+> --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
+> @@ -3,6 +3,7 @@ SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
+>  Properties:
+>   - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
+>     For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
+> +   For Exynos5 SoC series it should be "samsung,exynos5-sysreg", "syscon";
+>   - reg : offset and length of the register set.
+>
+>  Example:
+> --
+> 1.7.9.5
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+
+
 -- 
-1.7.10.4
+Best Regards
+Vivek Gautam
+Samsung R&D Institute, Bangalore
+India
