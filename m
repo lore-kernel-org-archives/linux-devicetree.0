@@ -1,59 +1,103 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH RESEND 00/12] Add Flexgen Clock support
-Date: Wed,  4 Jun 2014 16:31:48 +0200
-Message-ID: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Subject: [PATCH RESEND 02/12] clk: st: Adds Flexgen clock binding
+Date: Wed,  4 Jun 2014 16:31:50 +0200
+Message-ID: <1401892320-18211-3-git-send-email-gabriel.fernandez@linaro.org>
+References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
 To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The goal of this series is to add Flexgen clock support to ST SoCs.
+A Flexgen structure is composed by:
+- a clock cross bar (represented by a mux element)
+- a pre and final dividers (represented by a divider and gate elements)
 
-A Flexgen clock is composed by:
-  - a clock cross bar (represented by a mux element)
-  - a pre and final dividers (represented by a divider and gate elements)
-
-Tested on B2020 board.
-
-Gabriel Fernandez (12):
-  clk: st: Update ST clock binding documentation
-  clk: st: Adds Flexgen clock binding
-  drivers: clk: st: STiH407: Support for Flexgen Clocks
-  drivers: clk: st: STiH407: Support for A9 MUX Clocks
-  drivers: clk: st: STiH407: Support for clockgenA0
-  drivers: clk: st: Add polarity bit indication
-  drivers: clk: st: Add quadfs reset handling
-  drivers: clk: st: STiH407: Support for clockgenC0
-  drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
-  drivers: clk: st: STiH407: Support for clockgenA9
-  drivers: clk: st: Update frequency tables for fs660c32 and fs432c65
-  drivers: clk: st: Use round to closest divider flag
-
- .../devicetree/bindings/clock/st/st,clkgen-mux.txt |   2 +-
- .../devicetree/bindings/clock/st/st,clkgen-pll.txt |   5 +-
- .../devicetree/bindings/clock/st/st,clkgen.txt     |  25 +-
- .../devicetree/bindings/clock/st/st,flexgen.txt    |  48 +++
- .../devicetree/bindings/clock/st/st,quadfs.txt     |   3 +
- drivers/clk/st/Makefile                            |   2 +-
- drivers/clk/st/clk-flexgen.c                       | 332 +++++++++++++++++++++
- drivers/clk/st/clkgen-fsyn.c                       | 175 ++++++++++-
- drivers/clk/st/clkgen-mux.c                        |  12 +-
- drivers/clk/st/clkgen-pll.c                        |  64 ++++
- 10 files changed, 647 insertions(+), 21 deletions(-)
+Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+---
+ .../devicetree/bindings/clock/st/st,clkgen.txt     |  5 +++
+ .../devicetree/bindings/clock/st/st,flexgen.txt    | 48 ++++++++++++++++++++++
+ 2 files changed, 53 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
- create mode 100644 drivers/clk/st/clk-flexgen.c
 
+diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+index 55506c2..afb65e6 100644
+--- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
++++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+@@ -32,6 +32,10 @@ address is common of all subnode.
+ 		vcc_node {
+ 			...
+ 		};
++
++		flexgen_node {
++			...
++		};
+ 		...
+ 	};
+ 
+@@ -45,6 +49,7 @@ Each subnode should use the binding discribe in [2]..[7]
+ [5] Documentation/devicetree/bindings/clock/st,clkgen-prediv.txt
+ [6] Documentation/devicetree/bindings/clock/st,vcc.txt
+ [7] Documentation/devicetree/bindings/clock/st,quadfs.txt
++[8] Documentation/devicetree/bindings/clock/st,flexgen.txt
+ 
+ 
+ Required properties:
+diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+new file mode 100644
+index 0000000..ce908dd
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+@@ -0,0 +1,48 @@
++Binding for a type of flexgen structure found on certain
++STMicroelectronics consumer electronics SoC devices
++
++This structure includes:
++- a clock cross bar (represented by a mux element)
++- a pre and final dividers (represented by a divider and gate elements)
++
++This binding uses the common clock binding[1].
++
++[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
++
++Required properties:
++- compatible : shall be:
++  "st,flexgen"
++
++- #clock-cells : from common clock binding; shall be set to 1.
++
++- clocks : from common clock binding
++
++- clock-output-names : From common clock binding. The block has 4
++                       clock outputs but not all of them in a specific instance
++                       have to be used in the SoC. If a clock name is left as
++                       an empty string then no clock will be created for the
++                       output associated with that string index. If fewer than
++                       4 strings are provided then no clocks will be created
++                       for the remaining outputs.
++
++Example:
++
++	clockgenD2@x9106000 {
++		compatible = "st,clkgen-c32";
++		reg = <0x9106000 0x1000>;
++
++		CLK_S_D2_FLEXGEN: CLK_S_D2_FLEXGEN {
++			compatible = "st,flexgen";
++
++			#clock-cells = <1>;
++			clocks = <&CLK_S_D2_QUADFS 0>,
++				 <&CLK_S_D2_QUADFS 1>,
++				 <&CLK_S_D2_QUADFS 2>,
++				 <&CLK_S_D2_QUADFS 3>;
++
++			clock-output-names = "CLK_PIX_MAIN_DISP",
++					     "CLK_PIX_PIP",
++					     "CLK_PIX_GDP1",
++					     "CLK_PIX_GDP2";
++		};
++	};
 -- 
 1.9.1
+
