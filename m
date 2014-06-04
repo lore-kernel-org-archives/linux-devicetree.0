@@ -1,7 +1,7 @@
 From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 18/21] spi: use devm_irq_of_parse_and_map() where appropriate
-Date: Wed,  4 Jun 2014 15:13:18 +0400
-Message-ID: <1401880402-30091-19-git-send-email-nyushchenko@dev.rtsoft.ru>
+Subject: [PATCH 07/21] gpio: use devm_irq_of_parse_and_map() where appropriate
+Date: Wed,  4 Jun 2014 15:13:07 +0400
+Message-ID: <1401880402-30091-8-git-send-email-nyushchenko@dev.rtsoft.ru>
 References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
@@ -18,70 +18,40 @@ issues.
 
 Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 ---
- drivers/spi/spi-bcm2835.c     |    2 +-
- drivers/spi/spi-mpc512x-psc.c |    9 ++++++++-
- drivers/spi/spi.c             |    8 +++++++-
- 3 files changed, 16 insertions(+), 3 deletions(-)
+ drivers/gpio/gpio-adnp.c     |    4 ++--
+ drivers/gpio/gpio-mcp23s08.c |    5 ++++-
+ 2 files changed, 6 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/spi/spi-bcm2835.c b/drivers/spi/spi-bcm2835.c
-index 6916745..93c0aec 100644
---- a/drivers/spi/spi-bcm2835.c
-+++ b/drivers/spi/spi-bcm2835.c
-@@ -337,7 +337,7 @@ static int bcm2835_spi_probe(struct platform_device *pdev)
- 		goto out_master_put;
- 	}
+diff --git a/drivers/gpio/gpio-adnp.c b/drivers/gpio/gpio-adnp.c
+index b2239d6..c10e224 100644
+--- a/drivers/gpio/gpio-adnp.c
++++ b/drivers/gpio/gpio-adnp.c
+@@ -546,8 +546,8 @@ static int adnp_i2c_probe(struct i2c_client *client,
+ 	if (err < 0)
+ 		return err;
  
--	bs->irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
-+	bs->irq = devm_irq_of_parse_and_map(&pdev->dev, pdev->dev.of_node, 0);
- 	if (bs->irq <= 0) {
- 		dev_err(&pdev->dev, "could not get IRQ: %d\n", bs->irq);
- 		err = bs->irq ? bs->irq : -ENODEV;
-diff --git a/drivers/spi/spi-mpc512x-psc.c b/drivers/spi/spi-mpc512x-psc.c
-index 577d23a..8256317 100644
---- a/drivers/spi/spi-mpc512x-psc.c
-+++ b/drivers/spi/spi-mpc512x-psc.c
-@@ -571,6 +571,7 @@ static int mpc512x_psc_spi_of_probe(struct platform_device *op)
- {
- 	const u32 *regaddr_p;
- 	u64 regaddr64, size64;
-+	int irq;
+-	client->irq = irq_of_parse_and_map(np, 0);
+-	if (!client->irq)
++	client->irq = devm_irq_of_parse_and_map(&client->dev, np, 0);
++	if (client->irq <= 0)
+ 		return -EPROBE_DEFER;
  
- 	regaddr_p = of_get_address(op->dev.of_node, 0, &size64, NULL);
- 	if (!regaddr_p) {
-@@ -579,8 +580,14 @@ static int mpc512x_psc_spi_of_probe(struct platform_device *op)
- 	}
- 	regaddr64 = of_translate_address(op->dev.of_node, regaddr_p);
- 
-+	irq = devm_irq_of_parse_and_map(&op->dev, op->dev.of_node, 0);
-+	if (irq <= 0) {
-+		dev_err(&op->dev, "could not locate irq\n");
-+		return irq ? irq : -EINVAL;
-+	}
-+
- 	return mpc512x_psc_spi_do_probe(&op->dev, (u32) regaddr64, (u32) size64,
--				irq_of_parse_and_map(op->dev.of_node, 0));
-+				irq);
- }
- 
- static int mpc512x_psc_spi_of_remove(struct platform_device *op)
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 939edf4..0baf00e 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1306,7 +1306,13 @@ static void of_register_spi_devices(struct spi_master *master)
- 		spi->max_speed_hz = value;
- 
- 		/* IRQ */
--		spi->irq = irq_of_parse_and_map(nc, 0);
-+		spi->irq = devm_irq_of_parse_and_map(&master->dev, nc, 0);
-+		if (spi->irq < 0) {
-+			dev_err(&master->dev, "could not locate irq for %s (%d)\n",
-+					nc->full_name, spi->irq);
-+			spi_dev_put(spi);
-+			continue;
-+		}
- 
- 		/* Store a pointer to the node in the device structure */
- 		of_node_get(nc);
+ 	adnp = devm_kzalloc(&client->dev, sizeof(*adnp), GFP_KERNEL);
+diff --git a/drivers/gpio/gpio-mcp23s08.c b/drivers/gpio/gpio-mcp23s08.c
+index 3d53fd6..b6f4217 100644
+--- a/drivers/gpio/gpio-mcp23s08.c
++++ b/drivers/gpio/gpio-mcp23s08.c
+@@ -779,7 +779,10 @@ static int mcp230xx_probe(struct i2c_client *client,
+ 	if (match || !pdata) {
+ 		base = -1;
+ 		pullups = 0;
+-		client->irq = irq_of_parse_and_map(client->dev.of_node, 0);
++		client->irq = devm_irq_of_parse_and_map(&client->dev,
++				client->dev.of_node, 0);
++		if (client->irq < 0)
++			return client->irq;
+ 	} else {
+ 		if (!gpio_is_valid(pdata->base)) {
+ 			dev_dbg(&client->dev, "invalid platform data\n");
 -- 
 1.7.10.4
