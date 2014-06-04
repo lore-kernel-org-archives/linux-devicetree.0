@@ -1,51 +1,54 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 2/7] DMA: shdma: Spelling s/controll/control/
-Date: Wed, 04 Jun 2014 13:25:20 +0200
-Message-ID: <5393917.echhd9vGYd@avalon>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <1401716531-29794-3-git-send-email-geert+renesas@glider.be>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v6 1/6] clocksource: Add support for the Mediatek SoCs
+Date: Wed, 04 Jun 2014 13:25:36 +0200
+Message-ID: <538F0230.7090800@free-electrons.com>
+References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>	<1401468964-5307-2-git-send-email-matthias.bgg@gmail.com>
+ <CAL_JsqKCTZjh7o2zf_WsVi=iAR1ivTPQpvpNJ6W87jPXakMnZg@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1401716531-29794-3-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAL_JsqKCTZjh7o2zf_WsVi=iAR1ivTPQpvpNJ6W87jPXakMnZg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Soren Brinkmann <soren>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hi Rob,
 
-Thank you for the patch.
+On 04/06/2014 13:18, Rob Herring wrote:
 
-On Monday 02 June 2014 15:42:06 Geert Uytterhoeven wrote:
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+[...]
 
-Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+>> +
+>> +       if (of_address_to_resource(node, 0, &res))
+>> +               panic("Failed to parse resource\n");
+> 
+> panics are a bit pointless at this stage since your console is
+> typically not up yet. Warning and continuing on with boot gives you a
+> better shot at actually seeing the message.
+> 
+>> +
+>> +       if (!request_mem_region(res.start, resource_size(&res), "mtk-timer"))
+>> +               panic("Registers are a busy IO resource");
+>> +
+>> +       evt->gpt_base = ioremap(res.start, resource_size(&res));
+> 
+> of_iomap instead of these 3 calls.
 
-> ---
-> v2:
->   - New
-> 
->  Documentation/devicetree/bindings/dma/shdma.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/shdma.txt
-> b/Documentation/devicetree/bindings/dma/shdma.txt index
-> d26b7065ae94..2b61cab0525c 100644
-> --- a/Documentation/devicetree/bindings/dma/shdma.txt
-> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
-> @@ -73,7 +73,7 @@ Example:
->  	};
-> 
->  For r8a7790 and newer implementations, the information for the channel
-> -controll register is found in the dma phandle and #dma-cells is set to 2.
-> +control register is found in the dma phandle and #dma-cells is set to 2.
-> 
->  	dma0: dma-mux@0 {
->  		compatible = "renesas,shdma-mux";
+Actually of_iomap doesn't request_mem_region, that's why for
+mvebu we are trying now to replace of_iomap by request_mem_region/ioremap.
 
 -- 
-Regards,
-
-Laurent Pinchart
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
