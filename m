@@ -1,37 +1,66 @@
-From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH 2/3] arm: tegra: enable igb, stmpe, i2c chardev, spidev,
- lm95245, pwm leds
-Date: Wed, 04 Jun 2014 08:20:59 +0200
-Message-ID: <538EBACB.70100@ziswiler.com>
-References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com> <39a8704a4c8170d6b0620a1e5e44042eae6d8810.1401665237.git.marcel@ziswiler.com> <538CA24B.1010602@wwwdotorg.org> <538CA635.4050502@ziswiler.com> <20140602221627.GP31751@sirena.org.uk> <538D64FD.2010909@ziswiler.com> <20140603094537.GQ31751@sirena.org.uk>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH v5 0/1] add support for the R-Car H2 and M2 xHCI controllers
+Date: Wed, 4 Jun 2014 17:22:29 +0900
+Message-ID: <538ED745.5080106@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140603094537.GQ31751-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/03/2014 11:45 AM, Mark Brown wrote:
-> When you say "generic user space access" you are describing a specific
-> detail of how this device happens to be controlled with your software.
+This patch adds the USB xHCI support for the R-Car H2 and M2 SoCs.
+These SoCs use an xHCI but still need specific initialization, mainly
+to setup the firmware downloading and the specific registers.
 
-No, not at all. In fact I did not even specify neither the exact type of 
-device apart from it being a SPI device nor any property of the software 
-apart from the generic user space access thereof implemented in the 
-Linux kernel. I really don't see any difference to i2c chardev which is 
-already enabled in multi_v7_defconfig.
+This patch set is based on the usb-next branch of Greg usb.git tree.
+(commit id = 4a95b1fce97756d0333f8232eb7ed6974e93b054)
 
-> This is not a description of your hardware, it is a description of how
-> it is controlled with your current software.
+Changes since v4:
+ - Rebase the latest usb-next branch
 
-Sorry, but I really don't know what you are referring to. It's a pure 
-hardware description of some pins being the SPI bus namely MISO/MOSI and 
-the clock plus an accompanying chip-select pin.
+Changes since v3:
+ - Remove a general phy driver calling in xhci-plat.c
+ - Change xhci_rcar_init_quirk() calling into xhci_plat_setup(). Because of
+   usb_add_hcd() will call a generic phy driver calling.
+ - Modify xhci_rcar_init_quirk()
 
-I fear for some reason or another you have some affinity against spidev 
-which strikes me odd. Admittedly it is not perfect but it is the only 
-generic SPI user space access currently implemented in the Linux kernel 
-and so far did its job perfectly for many of our customers.
+Changes since v2:
+ - Fix goto direction in patch 1.
+ - Remove some unnecessary checks in patch 1.
+ - Add MODULE_FIRMWARE() in patch 2.
+ - Add a comment about xhci_rcar_init_quirk() in patch 2.
+
+Changes since v1 (about patch 2 only because patch 1 and 3 ware applied):
+ - Fix some typos in patch 2.
+ - Remove duplicated #define in patch 2.
+ - Remove usb_phy framework calling in patch 2.
+ - Change prototype of xhci_rcar_start() in patch 2.
+ - Change compatible strings from "renesas,r8a779[01]-xhci" to
+   "renesas,xhci-r8a779[01]" in patch 2. Because of Renesas SoC
+   maintainer's comment:
+    http://marc.info/?l=linux-sh&m=140109049002958&w=2
+
+ - Rewrite the custom get_unaligned_le32() and add comment about it in patch 2.
+
+Yoshihiro Shimoda (1):
+  usb: host: xhci-plat: add support for the R-Car H2 and M2 xHCI
+    controllers
+
+ drivers/usb/host/Kconfig     |    8 +++
+ drivers/usb/host/Makefile    |    3 +
+ drivers/usb/host/xhci-plat.c |   19 ++++++
+ drivers/usb/host/xhci-rcar.c |  148 ++++++++++++++++++++++++++++++++++++++++++
+ drivers/usb/host/xhci-rcar.h |   27 ++++++++
+ 5 files changed, 205 insertions(+)
+ create mode 100644 drivers/usb/host/xhci-rcar.c
+ create mode 100644 drivers/usb/host/xhci-rcar.h
+
+-- 
+1.7.9.5
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
