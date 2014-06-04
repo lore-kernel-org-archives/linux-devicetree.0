@@ -1,49 +1,40 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v6 3/6] vendor-prefixes: add prefix for Mediaktek Inc.
-Date: Wed, 4 Jun 2014 06:06:47 -0500
-Message-ID: <CAL_JsqLpr70p96Cw0t54PjYdJrQA_O21q6=5LKd1J3nuhE8R+g@mail.gmail.com>
-References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>
- <1401468964-5307-4-git-send-email-matthias.bgg@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401468964-5307-4-git-send-email-matthias.bgg@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Soren
+From: nyushchenko@dev.rtsoft.ru
+Subject: [PATCH 03/21] exynos5440-cpufreq: use devm_irq_of_parse_and_map()
+Date: Wed,  4 Jun 2014 15:13:03 +0400
+Message-ID: <1401880402-30091-4-git-send-email-nyushchenko@dev.rtsoft.ru>
+References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru, Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, May 30, 2014 at 11:56 AM, Matthias Brugger
-<matthias.bgg@gmail.com> wrote:
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 
-Acked-by: Rob Herring <robh@kernel.org>
+This avoids leak of IRQ mapping on error paths, and makes it possible
+to use devm_request_irq() without facing unmap-while-handler-installed
+issues.
 
-> ---
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index abc3080..73f9e4c 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -75,6 +75,7 @@ linux Linux-specific binding
->  lsi    LSI Corp. (LSI Logic)
->  marvell        Marvell Technology Group Ltd.
->  maxim  Maxim Integrated Products
-> +mediatek       MediaTek Inc.
->  microchip      Microchip Technology Inc.
->  mosaixtech     Mosaix Technologies, Inc.
->  moxa   Moxa
-> --
-> 1.7.9.5
->
+Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+---
+ drivers/cpufreq/exynos5440-cpufreq.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/cpufreq/exynos5440-cpufreq.c b/drivers/cpufreq/exynos5440-cpufreq.c
+index a6b8214..a0b7121 100644
+--- a/drivers/cpufreq/exynos5440-cpufreq.c
++++ b/drivers/cpufreq/exynos5440-cpufreq.c
+@@ -353,8 +353,8 @@ static int exynos_cpufreq_probe(struct platform_device *pdev)
+ 		goto err_put_node;
+ 	}
+ 
+-	dvfs_info->irq = irq_of_parse_and_map(np, 0);
+-	if (!dvfs_info->irq) {
++	dvfs_info->irq = devm_irq_of_parse_and_map(dvfs_info->dev, np, 0);
++	if (dvfs_info->irq <= 0) {
+ 		dev_err(dvfs_info->dev, "No cpufreq irq found\n");
+ 		ret = -ENODEV;
+ 		goto err_put_node;
+-- 
+1.7.10.4
