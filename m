@@ -1,42 +1,66 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH v2 3/9] ARM: shmobile: r8a7790: add dmac0 dmac1 nodes
-Date: Wed, 04 Jun 2014 17:04:45 +0100
-Message-ID: <538F439D.1000001@codethink.co.uk>
-References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>	<1397511312-4845-4-git-send-email-ben.dooks@codethink.co.uk> <CAMuHMdUNAFJEFWYe5cpKaZqoZFhRA1s0YBntT5ZVJaieSj8ovQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAMuHMdUNAFJEFWYe5cpKaZqoZFhRA1s0YBntT5ZVJaieSj8ovQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: linux-kernel-81qHHgoATdFT9dQujB1mzip2UmYkHbXO@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, magnus.damm-yzvPICuk2ACczHhG9Qg4qA@public.gmane.org, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: [PATCH v2 00/10] Add SDHCI support for STMicroelectronics SoCs
+Date: Wed,  4 Jun 2014 17:07:24 +0100
+Message-ID: <1401898054-686-1-git-send-email-peter.griffin@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: peter.griffin@linaro.org, chris@printf.net, ulf.hansson@linaro.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
+Cc: linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/05/14 13:00, Geert Uytterhoeven wrote:
-> Hi Ben,
-> 
-> On Mon, Apr 14, 2014 at 11:35 PM, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org> wrote:
->> --- a/arch/arm/boot/dts/r8a7790.dtsi
->> +++ b/arch/arm/boot/dts/r8a7790.dtsi
->> @@ -86,6 +88,76 @@
->>                 };
->>         };
->>
->> +       dma0: dma-mux@0 {
->> +               compatible = "renesas,shdma-mux";
->> +               #dma-cells = <2>;
->> +               dma-channels = <20>;
-> 
-> Shouldn't this be 30, i.e. the sum of the properties in the child nodes?
+This series adds a SDHCI platform driver for ST SoCs, along with
+the additional device tree bindings and configuration to enable
+the controller to work properly.
 
-Thanks, fixed.
+Initially it supports the stih416 and stih415 SoCs, and has
+been tested on a stih416-b2020 board.
 
+regards,
+
+Peter.
+
+Changes since v1
+- Whitespace cleanups
+- Use readl_relaxed io accessor
+- Add update to MAINTAINERS
+- Remove reset controller code from platform driver
+- Remove #ifdef around sleep ops
+- Use sdhci_pltfm_clk_get_max_clock lib function
+- Pass bus-width etc through board device tree node
+- Remove unncessary header
+- Remove / change some debug messages
+- Remove final break from switch case
+
+Peter Griffin (10):
+  mmc: sdhci-st: Intial support for ST SDHCI controller
+  mmc: sdhci-st: ST Microelectronics SDHCI binding documentation.
+  ARM: STi: DT: Add sdhci pins for stih416
+  ARM: STi: DT: Add sdhci controller for stih416
+  ARM: STi: DT: Add sdhci pin configuration for stih415
+  ARM: STi: DT: Add sdhci controller for stih415
+  ARM: STi: DT: Enable mmc0 for both stih415 and stih416 SoCs
+  ARM: STi: DT: Enable second sdhci controller for stih416 b2020 boards.
+  ARM: update multi_v7_defconfig for STI
+  MAINTAINERS: Add sdhci-st file to ARCH/STI architecture
+
+ Documentation/devicetree/bindings/mmc/sdhci-st.txt |  33 ++++
+ MAINTAINERS                                        |   1 +
+ arch/arm/boot/dts/stih415-pinctrl.dtsi             |  21 +++
+ arch/arm/boot/dts/stih415.dtsi                     |  12 ++
+ arch/arm/boot/dts/stih416-b2020-revE.dts           |   6 +
+ arch/arm/boot/dts/stih416-b2020.dts                |   8 +
+ arch/arm/boot/dts/stih416-pinctrl.dtsi             |  39 ++++
+ arch/arm/boot/dts/stih416.dtsi                     |  24 +++
+ arch/arm/boot/dts/stih41x-b2020.dtsi               |   4 +
+ arch/arm/boot/dts/stih41x-b2020x.dtsi              |   4 +
+ arch/arm/configs/multi_v7_defconfig                |   1 +
+ drivers/mmc/host/Kconfig                           |  12 ++
+ drivers/mmc/host/Makefile                          |   1 +
+ drivers/mmc/host/sdhci-st.c                        | 201 +++++++++++++++++++++
+ 14 files changed, 367 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-st.txt
+ create mode 100644 drivers/mmc/host/sdhci-st.c
 
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
