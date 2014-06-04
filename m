@@ -1,147 +1,159 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH 1/3] ARM: dts: Create a cros-ec-keyboard fragment
-Date: Wed,  4 Jun 2014 15:20:18 -0700
-Message-ID: <1401920421-25729-1-git-send-email-dianders@chromium.org>
+From: Loc Ho <lho@apm.com>
+Subject: Re: [PATCH v2 2/3] mmc: Add APM X-Gene SoC SDHC controller support to
+ Arasan SDHCI driver
+Date: Wed, 4 Jun 2014 16:15:14 -0700
+Message-ID: <CAPw-ZT=-_VkuUFN3RMrmOazPdOynmGHN86pP7ue5psOuDtjskg@mail.gmail.com>
+References: <1401829985-5212-1-git-send-email-lho@apm.com>
+	<1401829985-5212-2-git-send-email-lho@apm.com>
+	<1401829985-5212-3-git-send-email-lho@apm.com>
+	<9432f705-fd6a-44a6-8e04-c0455f0a551c@BN1AFFO11FD054.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, olof@lixom.net
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, Doug Anderson <dianders@chromium.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, galak@codeaurora.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <9432f705-fd6a-44a6-8e04-c0455f0a551c@BN1AFFO11FD054.protection.gbl>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: "chris@printf.net" <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Jon Masters <jcm@redhat.com>, "patches@apm.com" <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-All ChromeOS ARM devices that have the standard "CrOS EC" have the
-same keyboard mapping.  It's silly to include this same definition
-everywhere.  Let's create a "dtsi" fragment that we can include from
-many different boards.
+Hi,
 
-This fragment is based on what's currently in tegra124-venice2.dts
+>>  #define SDHCI_ARASAN_CLK_CTRL_OFFSET 0x2c
+>> @@ -34,6 +36,19 @@
+>>   */
+>>  struct sdhci_arasan_data {
+>>       struct clk      *clk_ahb;
+>> +     struct platform_device *pdev;
+>> +     void __iomem    *ahb_aim_csr;
+>> +     const struct sdhci_arasan_ahb_ops *ahb_ops;
+>> +};
+>> +
+>> +/**
+>> + * struct sdhci_arasan_ahb_ops
+>> + * @init_ahb Initialize translation bus
+>> + * @xlat_addr        Set up an 64-bit addressing translation
+>
+> This definitely breaking kernel-doc format. Please fix.
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
- arch/arm/boot/dts/cros-ec-keyboard.dtsi | 105 ++++++++++++++++++++++++++++++++
- 1 file changed, 105 insertions(+)
- create mode 100644 arch/arm/boot/dts/cros-ec-keyboard.dtsi
+I will add the missing ":".
 
-diff --git a/arch/arm/boot/dts/cros-ec-keyboard.dtsi b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-new file mode 100644
-index 0000000..9c7fb0a
---- /dev/null
-+++ b/arch/arm/boot/dts/cros-ec-keyboard.dtsi
-@@ -0,0 +1,105 @@
-+/*
-+ * Keyboard dts fragment for devices that use cros-ec-keyboard
-+ *
-+ * Copyright (c) 2014 Google, Inc
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+#include <dt-bindings/input/input.h>
-+
-+&cros_ec {
-+	keyboard-controller {
-+		compatible = "google,cros-ec-keyb";
-+		keypad,num-rows = <8>;
-+		keypad,num-columns = <13>;
-+		google,needs-ghost-filter;
-+
-+		linux,keymap = <
-+			MATRIX_KEY(0x00, 0x01, KEY_LEFTMETA)
-+			MATRIX_KEY(0x00, 0x02, KEY_F1)
-+			MATRIX_KEY(0x00, 0x03, KEY_B)
-+			MATRIX_KEY(0x00, 0x04, KEY_F10)
-+			MATRIX_KEY(0x00, 0x06, KEY_N)
-+			MATRIX_KEY(0x00, 0x08, KEY_EQUAL)
-+			MATRIX_KEY(0x00, 0x0a, KEY_RIGHTALT)
-+
-+			MATRIX_KEY(0x01, 0x01, KEY_ESC)
-+			MATRIX_KEY(0x01, 0x02, KEY_F4)
-+			MATRIX_KEY(0x01, 0x03, KEY_G)
-+			MATRIX_KEY(0x01, 0x04, KEY_F7)
-+			MATRIX_KEY(0x01, 0x06, KEY_H)
-+			MATRIX_KEY(0x01, 0x08, KEY_APOSTROPHE)
-+			MATRIX_KEY(0x01, 0x09, KEY_F9)
-+			MATRIX_KEY(0x01, 0x0b, KEY_BACKSPACE)
-+
-+			MATRIX_KEY(0x02, 0x00, KEY_LEFTCTRL)
-+			MATRIX_KEY(0x02, 0x01, KEY_TAB)
-+			MATRIX_KEY(0x02, 0x02, KEY_F3)
-+			MATRIX_KEY(0x02, 0x03, KEY_T)
-+			MATRIX_KEY(0x02, 0x04, KEY_F6)
-+			MATRIX_KEY(0x02, 0x05, KEY_RIGHTBRACE)
-+			MATRIX_KEY(0x02, 0x06, KEY_Y)
-+			MATRIX_KEY(0x02, 0x07, KEY_102ND)
-+			MATRIX_KEY(0x02, 0x08, KEY_LEFTBRACE)
-+			MATRIX_KEY(0x02, 0x09, KEY_F8)
-+
-+			MATRIX_KEY(0x03, 0x01, KEY_GRAVE)
-+			MATRIX_KEY(0x03, 0x02, KEY_F2)
-+			MATRIX_KEY(0x03, 0x03, KEY_5)
-+			MATRIX_KEY(0x03, 0x04, KEY_F5)
-+			MATRIX_KEY(0x03, 0x06, KEY_6)
-+			MATRIX_KEY(0x03, 0x08, KEY_MINUS)
-+			MATRIX_KEY(0x03, 0x0b, KEY_BACKSLASH)
-+
-+			MATRIX_KEY(0x04, 0x00, KEY_RIGHTCTRL)
-+			MATRIX_KEY(0x04, 0x01, KEY_A)
-+			MATRIX_KEY(0x04, 0x02, KEY_D)
-+			MATRIX_KEY(0x04, 0x03, KEY_F)
-+			MATRIX_KEY(0x04, 0x04, KEY_S)
-+			MATRIX_KEY(0x04, 0x05, KEY_K)
-+			MATRIX_KEY(0x04, 0x06, KEY_J)
-+			MATRIX_KEY(0x04, 0x08, KEY_SEMICOLON)
-+			MATRIX_KEY(0x04, 0x09, KEY_L)
-+			MATRIX_KEY(0x04, 0x0a, KEY_BACKSLASH)
-+			MATRIX_KEY(0x04, 0x0b, KEY_ENTER)
-+
-+			MATRIX_KEY(0x05, 0x01, KEY_Z)
-+			MATRIX_KEY(0x05, 0x02, KEY_C)
-+			MATRIX_KEY(0x05, 0x03, KEY_V)
-+			MATRIX_KEY(0x05, 0x04, KEY_X)
-+			MATRIX_KEY(0x05, 0x05, KEY_COMMA)
-+			MATRIX_KEY(0x05, 0x06, KEY_M)
-+			MATRIX_KEY(0x05, 0x07, KEY_LEFTSHIFT)
-+			MATRIX_KEY(0x05, 0x08, KEY_SLASH)
-+			MATRIX_KEY(0x05, 0x09, KEY_DOT)
-+			MATRIX_KEY(0x05, 0x0b, KEY_SPACE)
-+
-+			MATRIX_KEY(0x06, 0x01, KEY_1)
-+			MATRIX_KEY(0x06, 0x02, KEY_3)
-+			MATRIX_KEY(0x06, 0x03, KEY_4)
-+			MATRIX_KEY(0x06, 0x04, KEY_2)
-+			MATRIX_KEY(0x06, 0x05, KEY_8)
-+			MATRIX_KEY(0x06, 0x06, KEY_7)
-+			MATRIX_KEY(0x06, 0x08, KEY_0)
-+			MATRIX_KEY(0x06, 0x09, KEY_9)
-+			MATRIX_KEY(0x06, 0x0a, KEY_LEFTALT)
-+			MATRIX_KEY(0x06, 0x0b, KEY_DOWN)
-+			MATRIX_KEY(0x06, 0x0c, KEY_RIGHT)
-+
-+			MATRIX_KEY(0x07, 0x01, KEY_Q)
-+			MATRIX_KEY(0x07, 0x02, KEY_E)
-+			MATRIX_KEY(0x07, 0x03, KEY_R)
-+			MATRIX_KEY(0x07, 0x04, KEY_W)
-+			MATRIX_KEY(0x07, 0x05, KEY_I)
-+			MATRIX_KEY(0x07, 0x06, KEY_U)
-+			MATRIX_KEY(0x07, 0x07, KEY_RIGHTSHIFT)
-+			MATRIX_KEY(0x07, 0x08, KEY_P)
-+			MATRIX_KEY(0x07, 0x09, KEY_O)
-+			MATRIX_KEY(0x07, 0x0b, KEY_UP)
-+			MATRIX_KEY(0x07, 0x0c, KEY_LEFT)
-+		>;
-+	};
-+};
--- 
-2.0.0.526.g5318336
+>> +                     sdhci_arasan->ahb_ops->xlat_addr(sdhci_arasan,
+>> +                             sg_dma_address(host->data->sg));
+>> +     }
+>> +     writel(val, host->ioaddr + reg);
+>> +}
+>
+> The same code was submitted in v1 and Arnd commented it but you are still keeping
+> it here. Why?
+
+I responded back to Arnd. If I move this code to IO MMU, what do I do
+when we enable the actual IO MMU? The structure for the bus type only
+has one IO MMU pointer. We would need to IO MMU pointer and not sure
+how the IO MMU framework would handle this.
+
+>
+>> +
+>>  static struct sdhci_ops sdhci_arasan_ops = {
+>> +     .write_l = sdhci_arasan_writel,
+>>       .get_max_clock = sdhci_pltfm_clk_get_max_clock,
+>>       .get_timeout_clock = sdhci_arasan_get_timeout_clock,
+>>  };
+>> @@ -121,13 +150,83 @@ static int sdhci_arasan_resume(struct device *dev)
+>>  static SIMPLE_DEV_PM_OPS(sdhci_arasan_dev_pm_ops, sdhci_arasan_suspend,
+>>                        sdhci_arasan_resume);
+>>
+>> +static int sdhci_arasan_xgene_init_ahb(struct sdhci_arasan_data *data)
+>> +{
+>> +     #define AIM_SIZE_CTL_OFFSET     0x00000004
+>> +     #define  AIM_EN_N_WR(src)       (((u32) (src) << 31) & 0x80000000)
+>> +     #define  ARSB_WR(src)           (((u32) (src) << 24) & 0x0f000000)
+>> +     #define  AWSB_WR(src)           (((u32) (src) << 20) & 0x00f00000)
+>> +     #define  AIM_MASK_N_WR(src)     (((u32) (src)) & 0x000fffff)
+>
+> Remove that one more space between #define and name.
+> I am not fan of having these defines just here - move them to the top.
+>
+> Also these macros are used just here at one location.
+> Isn't it better just to define that BITS you want to setup instead of
+> these macros which are hardly to read?
+
+The only field that is single bit is AIM_EN_N_WR. All others are
+multiple bit fields. Either I write them in the code or use these
+defines. Would it be better if I just write them in the code?
+
+>> +static void sdhci_arasn_xgene_xlat_addr(struct sdhci_arasan_data *data,
+>> +                                    u64 dma_addr)
+>> +{
+>> +     #define AIM_AXI_HI_OFFSET       0x0000000c
+>> +     #define  AIM_AXI_ADDRESS_HI_N_WR(src) \
+>> +                                     (((u32) (src) << 20) & 0xfff00000)
+>
+> ditto with indentation.
+> 20 should be shift
+> 0xfff00000 is mask.
+>
+> Also you should take this opportunity and add function description
+> in kernel doc to be exactly clear what this function is doing.
+
+The function is pretty small, simply and don't believe it needs
+function description.
+
+>
+>> +
+>> +     if (!data->ahb_aim_csr)
+>> +             return;
+>> +
+>> +     writel(AIM_AXI_ADDRESS_HI_N_WR(dma_addr >> 32),
+>> +             data->ahb_aim_csr + AIM_AXI_HI_OFFSET);
+>> +}
+>> +
+>> +static const struct sdhci_arasan_ahb_ops xgene_ahb_ops = {
+>> +     .init_ahb = sdhci_arasan_xgene_init_ahb,
+>> +     .xlat_addr = sdhci_arasn_xgene_xlat_addr,
+>> +};
+>> +
+>> +static const struct of_device_id sdhci_arasan_of_match[] = {
+>> +     { .compatible = "arasan,sdhci-8.9a" },
+>> +     { .compatible = "apm,arasan,sdhci-8.9a", .data = &xgene_ahb_ops },
+>> +     { }
+>> +};
+>> +MODULE_DEVICE_TABLE(of, sdhci_arasan_of_match);
+>> +
+>>  static int sdhci_arasan_probe(struct platform_device *pdev)
+>>  {
+>>       int ret;
+>> -     struct clk *clk_xin;
+>> +     struct clk *clk_xin = NULL;
+>>       struct sdhci_host *host;
+>>       struct sdhci_pltfm_host *pltfm_host;
+>>       struct sdhci_arasan_data *sdhci_arasan;
+>> +     const struct of_device_id *of_id =
+>> +                     of_match_device(sdhci_arasan_of_match, &pdev->dev);
+>> +     struct resource *res;
+>>
+>>       sdhci_arasan = devm_kzalloc(&pdev->dev, sizeof(*sdhci_arasan),
+>>                       GFP_KERNEL);
+>> @@ -136,8 +235,9 @@ static int sdhci_arasan_probe(struct platform_device *pdev)
+>>
+>>       sdhci_arasan->clk_ahb = devm_clk_get(&pdev->dev, "clk_ahb");
+>>       if (IS_ERR(sdhci_arasan->clk_ahb)) {
+>> -             dev_err(&pdev->dev, "clk_ahb clock not found.\n");
+>> -             return PTR_ERR(sdhci_arasan->clk_ahb);
+>> +             /* Clock is optional */
+>> +             sdhci_arasan->clk_ahb = NULL;
+>> +             goto skip_clk;
+>
+> Clocks are optional for your SoC but they are necessary for Zynq.
+> You can't just skip clocks for zynq because if DT is wrong clocks won't be enabled
+> and even checked.
+> Does it mean that there are no clocks for this IP?
+
+The clock for X-Gene is enabled by the time Linux boot. As the clock
+in programmed in the SDHC register, it knows the clock frequency.
+
+> Or do you miss clock driver?
+
+The clock will be configured by the FW and left out intentionally as
+this will also support ACPI boot.
+
+-Loc
