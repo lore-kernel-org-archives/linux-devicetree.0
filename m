@@ -1,54 +1,73 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: Re: [PATCH v6 1/6] clocksource: Add support for the Mediatek SoCs
-Date: Wed, 04 Jun 2014 13:25:36 +0200
-Message-ID: <538F0230.7090800@free-electrons.com>
-References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>	<1401468964-5307-2-git-send-email-matthias.bgg@gmail.com>
- <CAL_JsqKCTZjh7o2zf_WsVi=iAR1ivTPQpvpNJ6W87jPXakMnZg@mail.gmail.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v2 1/7] DMA: shdma: Add r8a7791 support
+Date: Wed, 04 Jun 2014 13:29:53 +0200
+Message-ID: <2461508.0gZiIUPGHB@avalon>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <1401716531-29794-2-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqKCTZjh7o2zf_WsVi=iAR1ivTPQpvpNJ6W87jPXakMnZg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thomas Gleixner <tglx@linutronix.de>, Soren Brinkmann <soren>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1401716531-29794-2-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Geert,
 
-On 04/06/2014 13:18, Rob Herring wrote:
+Thank you for the patch.
 
-[...]
+On Monday 02 June 2014 15:42:05 Geert Uytterhoeven wrote:
 
->> +
->> +       if (of_address_to_resource(node, 0, &res))
->> +               panic("Failed to parse resource\n");
+Missing commit message ?
+
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+> v2:
+>   - No changes
 > 
-> panics are a bit pointless at this stage since your console is
-> typically not up yet. Warning and continuing on with boot gives you a
-> better shot at actually seeing the message.
+>  Documentation/devicetree/bindings/dma/shdma.txt | 5 +++--
+>  drivers/dma/sh/shdmac.c                         | 1 +
+>  2 files changed, 4 insertions(+), 2 deletions(-)
 > 
->> +
->> +       if (!request_mem_region(res.start, resource_size(&res), "mtk-timer"))
->> +               panic("Registers are a busy IO resource");
->> +
->> +       evt->gpt_base = ioremap(res.start, resource_size(&res));
-> 
-> of_iomap instead of these 3 calls.
+> diff --git a/Documentation/devicetree/bindings/dma/shdma.txt
+> b/Documentation/devicetree/bindings/dma/shdma.txt index
+> 86d5c509594b..d26b7065ae94 100644
+> --- a/Documentation/devicetree/bindings/dma/shdma.txt
+> +++ b/Documentation/devicetree/bindings/dma/shdma.txt
+> @@ -24,8 +24,9 @@ Optional properties (currently unused):
+>  Required properties:
+>  - compatible:	should be of the form "renesas,shdma-<soc>", where <soc>
+> should be replaced with the desired SoC model, e.g.
+> -		"renesas,shdma-r8a73a4" for the system DMAC on r8a73a4 SoC
+> -		"renesas,shdma-r8a7790" for the DMAC on the R8A7790.
+> +		"renesas,shdma-r8a73a4" for the system DMAC on r8a73a4 SoC,
+> +		"renesas,shdma-r8a7790" for the DMAC on the R8A7790,
+> +		"renesas,shdma-r8a7791" for the DMAC on the R8A7791.
 
-Actually of_iomap doesn't request_mem_region, that's why for
-mvebu we are trying now to replace of_iomap by request_mem_region/ioremap.
+I would just remove the commas and full stop to avoid modifying unrelated 
+lines in future patches.
+
+The R8A7791 has several DMACs (LBSC, SYS, RT, Audio, 2D, USBHS). It would thus 
+make sense to explicitly state which DMACs the bindings cover.
+
+>  Example:
+>  	dmac: dma-multiplexer@0 {
+> diff --git a/drivers/dma/sh/shdmac.c b/drivers/dma/sh/shdmac.c
+> index 91b3f744d7b2..cdbc68e72ca1 100644
+> --- a/drivers/dma/sh/shdmac.c
+> +++ b/drivers/dma/sh/shdmac.c
+> @@ -691,6 +691,7 @@ static const struct shdma_ops sh_dmae_shdma_ops = {
+>  static const struct of_device_id sh_dmae_of_match[] = {
+>  	{ .compatible = "renesas,shdma-r8a73a4", .data = r8a73a4_shdma_devid },
+>  	{ .compatible = "renesas,shdma-r8a7790", .data = &shdma_arm_info },
+> +	{ .compatible = "renesas,shdma-r8a7791", .data = &shdma_arm_info },
+>  	{}
+>  };
+>  MODULE_DEVICE_TABLE(of, sh_dmae_of_match);
 
 -- 
-Gregory Clement, Free Electrons
-Kernel, drivers, real-time and embedded Linux
-development, consulting, training and support.
-http://free-electrons.com
+Regards,
+
+Laurent Pinchart
+
