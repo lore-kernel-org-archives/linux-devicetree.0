@@ -1,116 +1,140 @@
-From: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
-Date: Wed, 4 Jun 2014 10:51:59 -0700
-Message-ID: <CAEUnVG7bbcPjRcGxn_GAJ7rKJy4g_5veEsRnU2yCDVWFY3ncUQ@mail.gmail.com>
-References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com>
- <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com>
- <20140521205538.GA6237@mithrandir> <CAEUnVG7tDjw_6wHc=FN0KsOKsSS1u8H8SzYdxt9VCwUsARRTeQ@mail.gmail.com>
- <20140522094958.GA11585@ulmo> <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ@mail.gmail.com>
- <537E39D9.2000304@wwwdotorg.org> <CAEUnVG4UettOj0xDy+f6qEhUbhNs=u-wgyCf_Prsd2JpnmFfLw@mail.gmail.com>
- <CAEUnVG42Fmn4QOu-jObpoyViscmfKn35oDmb=WR8t=X7YVSB=Q@mail.gmail.com>
- <537F9BEB.5020102@wwwdotorg.org> <CAEUnVG63BCgpGuo+qcYkvpnVSSguBy9xwSC_AoZqCt1RgBqm7w@mail.gmail.com>
- <CAEUnVG52fJhd9213fdydoUW11N0yZ31T2MZ2BPmd5Q2xkZ8XeQ@mail.gmail.com> <538F5848.1050803@wwwdotorg.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/7] i2c: Add the ability to match device to compatible
+ string without an of_node
+Date: Wed, 4 Jun 2014 18:55:52 +0100
+Message-ID: <20140604175552.GB19550@lee--X1>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-4-git-send-email-lee.jones@linaro.org>
+ <CAL_JsqJOEipHyjD2NCjQd1BvLumnM3PkVDqUjrMNfXCOmXcNAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <538F5848.1050803-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqJOEipHyjD2NCjQd1BvLumnM3PkVDqUjrMNfXCOmXcNAA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org" <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 4, 2014 at 10:32 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 05/30/2014 07:45 PM, Dylan Reid wrote:
->> On Fri, May 23, 2014 at 1:34 PM, Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->>> On Fri, May 23, 2014 at 12:05 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> On 05/22/2014 09:55 PM, Dylan Reid wrote:
->>>> ...
->>>>>>>>>>>> On Tue, May 20, 2014 at 2:55 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
->>>> ...
->>>>>>>>>>>>> Now I have the same results as Thierry; speaker-test looks like it
->>>>>>>>>>>>> should be working, yet I don't hear any audio from the monitor. I know
->>>>>>>>>>>>> the monitor works, since I've used it extensively for testing GeForce
->>>>>>>>>>>>> GPU HDMI audio.
->>>> ...
->>>>> Took all day, but I did get to try this.
->>>>>
->>>>> on U-Boot commit d7782d0, flashed with Stephen's u-boot flasher from github.
->>>>>
->>>>> And kernel at 81d0207 - ARM: tegra: enable HD-Audio controller in defconfig
->>>>> plus the addition of the hda node "okay"  to the jetson-tk1 DT.
->>>>>
->>>>> I can hear the jetson's audio on the TV.  This is currently a sample
->>>>> size of one TV, I'll set up the Quantum Data tomorrow and check that
->>>>> it works there as well.
->>>>
->>>> I tried that same U-Boot commit (with a few device-mode USB patches on
->>>> top that shouldn't affect anything since I didn't use USB device mode)
->>>> and have the same results.
->>>>
->>>> My monitor is a Dell U2410 with sound bar.
->>
->> I found one of these.  I also didn't hear any audio.  In fact I
->> couldn't get audio out of most monitors, TV sets worked fine.
->>
->> hdmi.c couldn't configure audio for the pixel clock generated for the
->> monitor.  Luckily I found a patch in our downstream tree that fixes
->> it.
->>
->> video: tegra: Calculate HDMI audio CTS/N/AVAL values -- 7/25/11 author
->> swarren =)
->>
->> Thanks for fixing this for me!
->>
->> I can send this up unless you'd rather send it yourself.
->>
->> I appended the patch moved to the new location of hdmi.c:
->
-> That wouldn't apply for me since all the TABs were spaces in the email.
-> I tracked down the original and manually ported it over. You can find it
-> in my github if you're interested:
->
-> git://github.com/swarren/linux-tegra.git tegra_dev
->
-> That patch does make things a bit better, but there are still some issues.
->
-> When my (Venice2) system boots, the login screen is displayed at native
-> LCD resolution, and my HDMI monitor displays a 1920x1200 chunk from the
-> top-left of the LCD. At this point, I can play 44.1KHz audio without
-> issue. 48KHz doesn't work due to hdmi->audio_freq not being updated, as
-> I mentioned in my previous mail.
+On Wed, 04 Jun 2014, Rob Herring wrote:
 
-Do you have a good idea how to convey this information from the audio
-driver over to HDMI?
-Downstream I see we have a hideous if CONFIG_TEGRA_DC in patch_hdmi.
+> On Wed, Jun 4, 2014 at 7:09 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrot=
+e:
+> > A great deal of I2C devices are currently matched via DT node name,=
+ and
+> > as such the compatible naming convention of '<vendor>,<device>' has=
+ gone
+> > somewhat awry - some nodes don't supply one, some supply an arbitra=
+ry
+> > string and others the correct device name with an arbitrary vendor =
+prefix.
+> >
+> > In an effort to correct this problem we have to supply a mechanism =
+to
+> > match a device by compatible string AND by simple device name.  Thi=
+s
+> > function strips off the '<vendor>,' part of a supplied compatible s=
+tring
+> > and attempts to match without it.
+> >
+> > The plan is to remove this function once all of the compatible stri=
+ngs
+> > for each device have been brought into line.
+>=20
+> Then should you add a warning for cases needing to be fixed?
 
->
-> However, once I log in, the window manager changes the HDMI output to
-> 1024x768@75Hz right-of the LCD panel. I have no idea why it does this,
-> but still... Without the audio ACR value calculation patch, the HDMI
-> video output fine at this point. However, with the patch, the monitor
-> won't sync to the signal; it keeps entering/leaving power-save mode.
->
-> I suspect this is simply because without the patch, I see the following
-> error when setting up HDMI for the login screen:
->
-> tegra-hdmi 54280000.hdmi: cannot set audio to 44100 at 154000000 pclk
->
-> ... and when that happens, tegra_output_hdmi_enable() sets hdmi->dvi =
-> true, which disables a whole bunch of code. However, with the patch
-> applied, the audio setup doesn't fail, so all that infoframe/... code
-> runs now, and I suppose there are some issues with it.
->
-> Are you able to look into this, or do you need me to investigate further?
+I was just going to go and fix them all, but I could do that as well?
 
-I'm travelling for the rest of the week, but I can set aside time to
-look at it on Monday.  If you make any more progress before then let
-me know.
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/i2c/i2c-core.c | 25 +++++++++++++++++++++++++
+> >  include/linux/i2c.h    | 10 ++++++++++
+> >  2 files changed, 35 insertions(+)
+> >
+> > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> > index d3802dc..7dcd5c3 100644
+> > --- a/drivers/i2c/i2c-core.c
+> > +++ b/drivers/i2c/i2c-core.c
+> > @@ -1090,6 +1090,31 @@ struct i2c_adapter *of_find_i2c_adapter_by_n=
+ode(struct device_node *node)
+> >         return i2c_verify_adapter(dev);
+> >  }
+> >  EXPORT_SYMBOL(of_find_i2c_adapter_by_node);
+> > +
+> > +const struct of_device_id
+> > +*i2c_of_match_device_strip_vendor(const struct of_device_id *match=
+es,
+> > +                                 struct device *dev)
+> > +{
+> > +       const struct i2c_client *client =3D i2c_verify_client(dev);
+> > +       const char *name;
+> > +
+> > +       if (!(client && matches))
+> > +               return NULL;
+> > +
+> > +       for (; matches->compatible[0]; matches++) {
+> > +               name =3D strchr(matches->compatible, ',');
+> > +               if (!name)
+> > +                       name =3D matches->compatible;
+> > +               else
+> > +                       name++;
+> > +
+> > +               if (!strncmp(client->name, name, strlen(client->nam=
+e)))
+> > +                       return matches;
+> > +       }
+> > +
+> > +       return NULL;
+> > +}
+> > +EXPORT_SYMBOL_GPL(i2c_of_match_device_strip_vendor);
+> >  #else
+> >  static void of_i2c_register_devices(struct i2c_adapter *adap) { }
+> >  #endif /* CONFIG_OF */
+> > diff --git a/include/linux/i2c.h b/include/linux/i2c.h
+> > index b556e0a..f7ec75b 100644
+> > --- a/include/linux/i2c.h
+> > +++ b/include/linux/i2c.h
+> > @@ -564,6 +564,9 @@ extern struct i2c_client *of_find_i2c_device_by=
+_node(struct device_node *node);
+> >  /* must call put_device() when done with returned i2c_adapter devi=
+ce */
+> >  extern struct i2c_adapter *of_find_i2c_adapter_by_node(struct devi=
+ce_node *node);
+> >
+> > +extern const struct of_device_id
+> > +*i2c_of_match_device_strip_vendor(const struct of_device_id *match=
+es,
+> > +                                 struct device *dev);
+> >  #else
+> >
+> >  static inline struct i2c_client *of_find_i2c_device_by_node(struct=
+ device_node *node)
+> > @@ -575,6 +578,13 @@ static inline struct i2c_adapter *of_find_i2c_=
+adapter_by_node(struct device_node
+> >  {
+> >         return NULL;
+> >  }
+> > +
+> > +const struct of_device_id
+> > +*i2c_of_match_device_strip_vendor(const struct of_device_id *match=
+es,
+> > +                                 struct device *dev)
+> > +{
+> > +       return NULL;
+> > +}
+> >  #endif /* CONFIG_OF */
+> >
+> >  #endif /* _LINUX_I2C_H */
+> >
 
-Thanks for spending the time looking at this.
-
-Dylan
-
->
-> I also couldn't persuade xrandr to switch back to a sane resolution on
-> the HDMI port to see if that resolved the issue. I suppose that's
-> probably unrelated to the audio code.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
