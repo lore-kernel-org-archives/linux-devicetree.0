@@ -1,37 +1,27 @@
-From: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH] powerpc/mpc85xx: fix fsl/p2041-post.dtsi clockgen mux2
-Date: Wed,  4 Jun 2014 17:34:01 +0200
-Message-ID: <1401896041-22734-1-git-send-email-valentin.longchamp@keymile.com>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
+ device tree
+Date: Wed, 4 Jun 2014 16:41:16 +0100
+Message-ID: <20140604154116.GN10126@arm.com>
+References: <1395836346-9350-1-git-send-email-vkale@apm.com>
+ <CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linux PowerPC Kernel <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, Scott Wood <scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Linux device trees <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
+To: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The mux2 node is missing the clock-output-names field that is required
-by the clk-ppc-corenet driver.
+On Wed, Jun 04, 2014 at 11:05:54AM +0100, Vinayak Kale wrote:
+> Can you please merge this one?
 
-Signed-off-by: Valentin Longchamp <valentin.longchamp-SkAbAL50j+5BDgjK7y7TUQ@public.gmane.org>
----
+I was hoping for an ack/nak from the DT guys before merging it.
 
- arch/powerpc/boot/dts/fsl/p2041si-post.dtsi | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-index e2987a3..45ce43c 100644
---- a/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-+++ b/arch/powerpc/boot/dts/fsl/p2041si-post.dtsi
-@@ -358,6 +358,7 @@
- 			compatible = "fsl,qoriq-core-mux-1.0";
- 			clocks = <&pll0 0>, <&pll0 1>, <&pll1 0>, <&pll1 1>;
- 			clock-names = "pll0", "pll0-div2", "pll1", "pll1-div2";
-+			clock-output-names = "cmux2";
- 		};
- 
- 		mux3: mux3@60 {
 -- 
-1.8.0.1
-
+Catalin
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
