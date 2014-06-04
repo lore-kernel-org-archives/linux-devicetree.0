@@ -1,58 +1,32 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3.14 111/228] arm: dts: Fix missing device_type="memory" for
- ste-ccu8540
-Date: Wed,  4 Jun 2014 16:22:20 -0700
-Message-ID: <20140604232351.618108720@linuxfoundation.org>
-References: <20140604232347.966798903@linuxfoundation.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 3/7] ARM: shmobile: r8a7791 dtsi: add SYS-DMAC clocks
+Date: Thu, 5 Jun 2014 08:29:02 +0900
+Message-ID: <20140604232901.GA25614@verge.net.au>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be>
+ <1401716531-29794-4-git-send-email-geert+renesas@glider.be>
+ <1507846.mqylbqQs2V@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140604232347.966798903@linuxfoundation.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-kernel@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Leif Lindholm <leif.lindholm@linaro.org>, stable@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1507846.mqylbqQs2V@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-3.14-stable review patch.  If anyone has any objections, please let me know.
+On Wed, Jun 04, 2014 at 01:24:57PM +0200, Laurent Pinchart wrote:
+> Hi Geert,
+> 
+> Thank you for the patch.
+> 
+> On Monday 02 June 2014 15:42:07 Geert Uytterhoeven wrote:
+> > Add clocks for the SYS-DMAC0 and SYS-DMAC1 hardware blocks.
+> > 
+> > Cfr. the r8a7790 version by Ben Dooks.
+> > 
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Acked-by: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 
-------------------
-
-From: Leif Lindholm <leif.lindholm@linaro.org>
-
-commit bfaed5abad998bfc88a66e6e71c7b08dcf82f04e upstream.
-
-The current .dts for ste-ccu8540 lacks a 'device_type = "memory"' for
-its memory node, relying on an old ppc quirk in order to discover its
-memory. Fix the data so that all parsing code can handle it correctly.
-
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-
----
- arch/arm/boot/dts/ste-ccu8540.dts |    1 +
- 1 file changed, 1 insertion(+)
-
---- a/arch/arm/boot/dts/ste-ccu8540.dts
-+++ b/arch/arm/boot/dts/ste-ccu8540.dts
-@@ -18,6 +18,7 @@
- 	compatible = "st-ericsson,ccu8540", "st-ericsson,u8540";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x20000000 0x1f000000>, <0xc0000000 0x3f000000>;
- 	};
+Thanks, I have queued this up.
