@@ -1,41 +1,58 @@
-From: Khiem Nguyen <khiem.nguyen.xt@renesas.com>
-Subject: Re: [PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA for
- QSPI
-Date: Wed, 04 Jun 2014 09:18:27 +0900
-Message-ID: <538E65D3.7080909@renesas.com>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <538D50D1.7010900@renesas.com> <CAMuHMdVnmsjf29X4KF0co+WwUh9i0DQe6hE0hNFMCv-+GeHP_w@mail.gmail.com> <20140603232906.GC19407@verge.net.au>
+From: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCHv2] arm64: Add atomic pool for non-coherent and CMA allocaitons.
+Date: Tue, 03 Jun 2014 17:30:18 -0700
+Message-ID: <538E689A.3050109@codeaurora.org>
+References: <1401739432-5358-1-git-send-email-lauraa@codeaurora.org> <20140603132842.GI23149@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140603232906.GC19407@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: khiem.nguyen.xt@renesas.com, Geert Uytterhoeven <geert+renesas@glider.be>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140603132842.GI23149-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Riley <davidriley-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Ritesh Harjani <ritesh.harjani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert, Simon,
-
-On 6/4/2014 8:29 AM, Simon Horman wrote:
-> On Tue, Jun 03, 2014 at 09:05:42AM +0200, Geert Uytterhoeven wrote:
->> On Tue, Jun 3, 2014 at 6:36 AM, Khiem Nguyen
->> <khiem.nguyen.xt@renesas.com> wrote:
->>> I think this patch series should be divided into 2 parts,
->>> one for DMA in general and one for DMA supporting QSPI.
->>>
->>> How do you think about it ?
->> I don't think it's worth splitting off just the last patch into a separate
->> series.
+On 6/3/2014 6:28 AM, Will Deacon wrote:
+> Hi Laura,
+> 
+> On Mon, Jun 02, 2014 at 09:03:52PM +0100, Laura Abbott wrote:
+>> Neither CMA nor noncoherent allocations support atomic allocations.
+>> Add a dedicated atomic pool to support this.
 >>
->> This is a series, not a single patch. The applyer can always drop some
->> patches.
-> FWIW, that seems reasonable to me.
+>> Change-Id: I46c8fdffe5e0687403d42b37643137c8cf344259
+>> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> ---
+>>
+>> v2: Various bug fixes pointed out by David and Ritesh (CMA dependency, swapping
+>> coherent, noncoherent). I'm still not sure how to address the devicetree
+>> suggestion by Will [1][2]. I added the devicetree mailing list this time around
+>> to get more input on this.
+>>
+>> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/249180.html
+>> [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-April/249528.html
+> 
+> Perhaps that can be done later then, since from what you're saying, we need
+> the command-line option either way? Have you looked at how this fits in with
+> the iommu-helper work from Ritesh? We could put the parameter parsing in
+> there too.
+> 
 
-Thanks for your explanation.
+This doesn't seem to overlap with Ritesh's work. The atomic mapping is still
+handled in the arm specific code so I assume it would be handled in the arm64
+specific code as well. Another question might be is if it would be useful to
+make the atomic code common somehow between arm and arm64.
 
-I got it.
-Sorry for the noise.
+> Will
+> 
 
-Best regards,
-KHIEM Nguyen
+Thanks,
+Laura
 
+-- 
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
