@@ -1,103 +1,89 @@
 From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Subject: [PATCH RESEND 02/12] clk: st: Adds Flexgen clock binding
-Date: Wed,  4 Jun 2014 16:31:50 +0200
-Message-ID: <1401892320-18211-3-git-send-email-gabriel.fernandez@linaro.org>
-References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: [PATCH 4/4] ARM: STi: DT: STiH407: 407 DT Entry for clockgenA9
+Date: Wed,  4 Jun 2014 16:32:52 +0200
+Message-ID: <1401892372-18279-5-git-send-email-gabriel.fernandez@linaro.org>
+References: <1401892372-18279-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401892372-18279-1-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice Chotard <patrice.chotard@st.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, olof@lixom.net
+Cc: linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Olivier Bideau <olivier.bideau@st.com>
 List-Id: devicetree@vger.kernel.org
 
-A Flexgen structure is composed by:
-- a clock cross bar (represented by a mux element)
-- a pre and final dividers (represented by a divider and gate elements)
+Patch adds DT entries for clockgen A9
 
 Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
 ---
- .../devicetree/bindings/clock/st/st,clkgen.txt     |  5 +++
- .../devicetree/bindings/clock/st/st,flexgen.txt    | 48 ++++++++++++++++++++++
- 2 files changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+ arch/arm/boot/dts/stih407-clock.dtsi | 55 ++++++++++++++++++++++++++++++++++--
+ 1 file changed, 52 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-index 55506c2..afb65e6 100644
---- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-+++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
-@@ -32,6 +32,10 @@ address is common of all subnode.
- 		vcc_node {
- 			...
+diff --git a/arch/arm/boot/dts/stih407-clock.dtsi b/arch/arm/boot/dts/stih407-clock.dtsi
+index 6e59011..b4318e1 100644
+--- a/arch/arm/boot/dts/stih407-clock.dtsi
++++ b/arch/arm/boot/dts/stih407-clock.dtsi
+@@ -24,10 +24,59 @@
+ 		/*
+ 		 * ARM Peripheral clock for timers
+ 		 */
+-		arm_periph_clk: arm-periph-clk {
++		arm_periph_clk: clk-m-a9-periphs {
+ 			#clock-cells = <0>;
+-			compatible = "fixed-clock";
+-			clock-frequency = <600000000>;
++			compatible = "fixed-factor-clock";
++
++			clocks = <&clk_m_a9>;
++			clock-div = <2>;
++			clock-mult = <1>;
++		};
++
++		/*
++		 * A9 PLL.
++		 */
++		clockgen-a9@92b0000 {
++			compatible = "st,clkgen-c32";
++			reg = <0x92b0000 0xffff>;
++
++			clockgen_a9_pll: clockgen-a9-pll {
++				#clock-cells = <1>;
++				compatible = "st,stih407-plls-c32-a9", "st,clkgen-plls-c32";
++
++				clocks = <&clk_sysin>;
++
++				clock-output-names = "clockgen-a9-pll-odf";
++			};
++		};
++
++		/*
++		 * ARM CPU related clocks.
++		 */
++		clk_m_a9: clk-m-a9@92b0000 {
++			#clock-cells = <0>;
++			compatible = "st,stih407-clkgen-a9-mux", "st,clkgen-mux";
++			reg = <0x92b0000 0x10000>;
++
++			clocks = <&clockgen_a9_pll 0>,
++				 <&clockgen_a9_pll 0>,
++				 <&clk_s_c0_flexgen 13>,
++				 <&clk_m_a9_ext2f_div2>;
++		};
++
++		/*
++		 * ARM Peripheral clock for timers
++		 */
++		clk_m_a9_ext2f_div2: clk-m-a9-ext2f-div2s {
++			#clock-cells = <0>;
++			compatible = "fixed-factor-clock";
++
++			clocks = <&clk_s_c0_flexgen 13>;
++
++			clock-output-names = "clk-m-a9-ext2f-div2";
++
++			clock-div = <2>;
++			clock-mult = <1>;
  		};
-+
-+		flexgen_node {
-+			...
-+		};
- 		...
- 	};
  
-@@ -45,6 +49,7 @@ Each subnode should use the binding discribe in [2]..[7]
- [5] Documentation/devicetree/bindings/clock/st,clkgen-prediv.txt
- [6] Documentation/devicetree/bindings/clock/st,vcc.txt
- [7] Documentation/devicetree/bindings/clock/st,quadfs.txt
-+[8] Documentation/devicetree/bindings/clock/st,flexgen.txt
- 
- 
- Required properties:
-diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-new file mode 100644
-index 0000000..ce908dd
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
-@@ -0,0 +1,48 @@
-+Binding for a type of flexgen structure found on certain
-+STMicroelectronics consumer electronics SoC devices
-+
-+This structure includes:
-+- a clock cross bar (represented by a mux element)
-+- a pre and final dividers (represented by a divider and gate elements)
-+
-+This binding uses the common clock binding[1].
-+
-+[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Required properties:
-+- compatible : shall be:
-+  "st,flexgen"
-+
-+- #clock-cells : from common clock binding; shall be set to 1.
-+
-+- clocks : from common clock binding
-+
-+- clock-output-names : From common clock binding. The block has 4
-+                       clock outputs but not all of them in a specific instance
-+                       have to be used in the SoC. If a clock name is left as
-+                       an empty string then no clock will be created for the
-+                       output associated with that string index. If fewer than
-+                       4 strings are provided then no clocks will be created
-+                       for the remaining outputs.
-+
-+Example:
-+
-+	clockgenD2@x9106000 {
-+		compatible = "st,clkgen-c32";
-+		reg = <0x9106000 0x1000>;
-+
-+		CLK_S_D2_FLEXGEN: CLK_S_D2_FLEXGEN {
-+			compatible = "st,flexgen";
-+
-+			#clock-cells = <1>;
-+			clocks = <&CLK_S_D2_QUADFS 0>,
-+				 <&CLK_S_D2_QUADFS 1>,
-+				 <&CLK_S_D2_QUADFS 2>,
-+				 <&CLK_S_D2_QUADFS 3>;
-+
-+			clock-output-names = "CLK_PIX_MAIN_DISP",
-+					     "CLK_PIX_PIP",
-+					     "CLK_PIX_GDP1",
-+					     "CLK_PIX_GDP2";
-+		};
-+	};
+ 		/*
 -- 
 1.9.1
-
