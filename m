@@ -1,62 +1,44 @@
-From: Vivek Gautam <gautam.vivek@samsung.com>
-Subject: Re: [PATCH v3 03/15] ARM: dts: sysreg: add exynos5 compatible to DT bindings
-Date: Wed, 4 Jun 2014 17:14:52 +0530
-Message-ID: <CAFp+6iESdBDh+Ji20Z4Y_W=6y+xGwJ_abxBc-abAK4RfBF6otQ@mail.gmail.com>
-References: <1401686571-22148-1-git-send-email-yj44.cho@samsung.com>
-	<1401686571-22148-4-git-send-email-yj44.cho@samsung.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v2 4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions
+ for bindings
+Date: Wed, 04 Jun 2014 12:45:19 +0100
+Message-ID: <538F06CF.5090406@codethink.co.uk>
+References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <538C818B.5060703@codethink.co.uk> <CAMuHMdWkPy8eydh4BntXdtf5ZJKP4yG26QovLUjvGUYYv3dStw@mail.gmail.com> <3770565.HiyLmu1184@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1401686571-22148-4-git-send-email-yj44.cho@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: YoungJun Cho <yj44.cho@samsung.com>
-Cc: airlied@linux.ie, dri-devel@lists.freedesktop.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, robh+dt <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kyungmin Park <kyungmin.park@samsung.com>, inki.dae@samsung.com, Kukjin Kim <kgene.kim@samsung.com>, Joonyoung Shim <jy0922.shim@samsung.com>, sw0312.kim@samsung.com, a.hajda@samsung.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <3770565.HiyLmu1184@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 04/06/14 12:30, Laurent Pinchart wrote:
+> On Tuesday 03 June 2014 09:53:17 Geert Uytterhoeven wrote:
+>> On Mon, Jun 2, 2014 at 3:52 PM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>>>> +// FIXME
+>>>> +#define CHCR_RX_8BIT SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_8BIT)
+>>>> +#define CHCR_TX_8BIT SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_8BIT)
+>>>> +#define CHCR_RX_16BIT        SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_16BIT)
+>>>> +#define CHCR_TX_16BIT        SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_16BIT)
+>>>> +#define CHCR_RX_32BIT        SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
+>>>> +#define CHCR_TX_32BIT        SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
+>>>> +#define CHCR_RX_256BIT       SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
+>>>> +#define CHCR_TX_256BIT       SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
+>>>
+>>> I am pretty sure for round-2 we can remove these in favour of a
+>>> table in the driver. The only device that has a non-standard setting
+>>> is the SDHI and that will support 32bit and 256bit transfers.
+>>
+>> Thanks, I'm eagerly awaiting your next version...
+> 
+> Speaking of that, Ben, do you have a git tree with your latest patches ?
 
-
-On Mon, Jun 2, 2014 at 10:52 AM, YoungJun Cho <yj44.cho@samsung.com> wrote:
-> This patch adds relevant to exynos5 compatible for exynos5 SoCs.
-
-This change is not required. Please check the latest 'for-next' branch
-of linux-samsung tree.
-Recently a patch "dfbbdbf ARM: dts: Add sysreg sytem controller node
-to exynos5250 and exynos5420"
-has already updated this binding information.
-
->
-> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
-> Acked-by: Inki Dae <inki.dae@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-> ---
->  .../devicetree/bindings/arm/samsung/sysreg.txt     |    1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> index 0ab3251..fd71581 100644
-> --- a/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> +++ b/Documentation/devicetree/bindings/arm/samsung/sysreg.txt
-> @@ -3,6 +3,7 @@ SAMSUNG S5P/Exynos SoC series System Registers (SYSREG)
->  Properties:
->   - compatible : should contain "samsung,<chip name>-sysreg", "syscon";
->     For Exynos4 SoC series it should be "samsung,exynos4-sysreg", "syscon";
-> +   For Exynos5 SoC series it should be "samsung,exynos5-sysreg", "syscon";
->   - reg : offset and length of the register set.
->
->  Example:
-> --
-> 1.7.9.5
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
+Not yet, as currently working on sorting out the soc_camera before
+moving back to the DMA. I have a plan, just not had the time to sort
+it out.
 
 -- 
-Best Regards
-Vivek Gautam
-Samsung R&D Institute, Bangalore
-India
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
