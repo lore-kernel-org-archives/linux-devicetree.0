@@ -1,12 +1,12 @@
 From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: [PATCH 3.14 004/228] mips: dts: Fix missing device_type="memory" property in memory nodes
-Date: Wed,  4 Jun 2014 16:20:33 -0700
-Message-ID: <20140604232348.220747739@linuxfoundation.org>
-References: <20140604232347.966798903@linuxfoundation.org>
+Subject: [PATCH 3.10 003/103] mips: dts: Fix missing device_type="memory" property in memory nodes
+Date: Wed,  4 Jun 2014 16:24:26 -0700
+Message-ID: <20140604232546.940791093@linuxfoundation.org>
+References: <20140604232546.704156131@linuxfoundation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-mips-bounce@linux-mips.org>
-In-Reply-To: <20140604232347.966798903@linuxfoundation.org>
+In-Reply-To: <20140604232546.704156131@linuxfoundation.org>
 Sender: linux-mips-bounce@linux-mips.org
 Errors-to: linux-mips-bounce@linux-mips.org
 List-help: <mailto:ecartis@linux-mips.org?Subject=help>
@@ -20,7 +20,7 @@ To: linux-kernel@vger.kernel.org
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, stable@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, John Crispin <blogic@openwrt.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-3.14-stable review patch.  If anyone has any objections, please let me know.
+3.10-stable review patch.  If anyone has any objections, please let me know.
 
 ------------------
 
