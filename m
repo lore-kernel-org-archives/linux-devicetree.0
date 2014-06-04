@@ -1,136 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
-Date: Wed, 04 Jun 2014 14:25:33 +0200
-Message-ID: <2440127.sDc7m91LPu@avalon>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <1401716531-29794-6-git-send-email-geert+renesas@glider.be>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/7] ACPICA: Only include ACPI asm files if ACPI is
+ enabled
+Date: Wed, 4 Jun 2014 13:51:37 +0100
+Message-ID: <20140604125137.GA18171@lee--X1>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-2-git-send-email-lee.jones@linaro.org>
+ <3061297.feg5DGUjIt@vostro.rjw.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1401716531-29794-6-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <3061297.feg5DGUjIt-sKB8Sp2ER+y1GS7QM15AGw@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Lv Zheng <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+On Wed, 04 Jun 2014, Rafael J. Wysocki wrote:
 
-Thank you for the patch.
+> On Wednesday, June 04, 2014 01:09:50 PM Lee Jones wrote:
+> > Any drivers which support ACPI and Device Tree probing need to incl=
+ude
+> > both respective header files.  Without this patch, if a driver is b=
+eing
+> > used on a platform which does not support ACPI and subsequently doe=
+s not
+> > have the config option enabled, but includes linux/acpi.h the build
+> > breaks with:
+> >=20
+> >   In file included from ../include/acpi/platform/acenv.h:150:0,
+> >                    from ../include/acpi/acpi.h:56,
+> >                    from ../include/linux/match.h:2,
+> >                    from ../drivers/i2c/i2c-core.c:43:
+> >   ../include/acpi/platform/aclinux.h:73:23:
+> >    fatal error: asm/acenv.h: No such file or directory
+> >    #include <asm/acenv.h>
+> >                        ^
+>=20
+> Which kernel does this happen with?
 
-On Monday 02 June 2014 15:42:09 Geert Uytterhoeven wrote:
-> Add nodes for the SYS-DMA controllers, SYS-DMAC0 and SYS-DMAC1. These
-> both share the same device sources, so are wrapped in the shdma-mux
-> node to allow both to be used.
-> 
-> Cfr. the r8a7790 version by Ben Dooks.
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> ---
-> v2:
->   - No changes
-> 
->  arch/arm/boot/dts/r8a7791.dtsi | 69 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 69 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7791.dtsi b/arch/arm/boot/dts/r8a7791.dtsi
-> index e5c35d784ec8..37685ef32ea0 100644
-> --- a/arch/arm/boot/dts/r8a7791.dtsi
-> +++ b/arch/arm/boot/dts/r8a7791.dtsi
-> @@ -11,6 +11,7 @@
->   */
-> 
->  #include <dt-bindings/clock/r8a7791-clock.h>
-> +#include <dt-bindings/dma/r8a7791-dma.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include <dt-bindings/interrupt-controller/irq.h>
-> 
-> @@ -55,6 +56,74 @@
->  		};
->  	};
-> 
-> +	dma0: dma-mux@0 {
-> +		compatible = "renesas,shdma-mux";
-> +		#dma-cells = <2>;
-> +		dma-channels = <30>;
-> +		dma-requests = <256>;
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		sysdma0: dma-controller@e6700020 {
-> +			compatible = "renesas,shdma-r8a7791";
-> +			reg = <0 0xe6700020 0 0xffc0>;
+a0a962d (tag: refs/tags/next-20140602, refs/remotes/next/master)
+  Add linux-next specific files for 20140602
 
-Even though the registered defined in the datasheet start at 0xe6700020, the 
-documentation clearly states that "The base address of registers for the 
-lower-numbered channels  (0 to 14) is H'E670 0000". I'm also wondering where 
-the size comes from, if you want to span the 0xe6700000 to 0xe670ffff range, 
-the size should be 0xffe0, not 0xffc0.
+> > Cc: Lv Zheng <lv.zheng-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > Cc: Rafael J. Wysocki <rafael.j.wysocki-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>
+> > Cc: linux-acpi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> > Cc: devel-E0kO6a4B6psdnm+yROfE0A@public.gmane.org
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  include/acpi/platform/aclinux.h | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/include/acpi/platform/aclinux.h b/include/acpi/platfor=
+m/aclinux.h
+> > index cd1f052..fdf7663 100644
+> > --- a/include/acpi/platform/aclinux.h
+> > +++ b/include/acpi/platform/aclinux.h
+> > @@ -70,9 +70,10 @@
+> >  #ifdef EXPORT_ACPI_INTERFACES
+> >  #include <linux/export.h>
+> >  #endif
+> > -#include <asm/acenv.h>
+> > =20
+> > -#ifndef CONFIG_ACPI
+> > +#ifdef CONFIG_ACPI
+> > +#include <asm/acenv.h>
+> > +#else
+> > =20
+> >  /* External globals for __KERNEL__, stubs is needed */
+> > =20
+> >=20
+>=20
 
-Interrupts and clocks look fine to me.
-
-> +			clocks = <&mstp2_clks R8A7791_CLK_SYS_DMAC0>;
-> +			dma-channels = <15>;
-> +			interrupts =	<0 197 IRQ_TYPE_LEVEL_HIGH>, /* error */
-> +					<0 200 IRQ_TYPE_LEVEL_HIGH>, /* ch0 */
-> +					<0 201 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 202 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 203 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 204 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 205 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 206 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 207 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 208 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 209 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 210 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 211 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 212 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 213 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 214 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "error",
-> +					"ch0", "ch1", "ch2", "ch3",
-> +					"ch4", "ch5", "ch6", "ch7",
-> +					"ch8", "ch9", "ch10", "ch11",
-> +					"ch12", "ch13", "ch14";
-> +			status = "disabled";
-> +		};
-> +
-> +		sysdma1: dma-controller@e6720020 {
-> +			compatible = "renesas,shdma-r8a7791";
-> +			reg = <0 0xe6720020 0 0xffc0>;
-> +			clocks = <&mstp2_clks R8A7791_CLK_SYS_DMAC1>;
-> +			dma-channels = <15>;
-> +			interrupts =  <0 220 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 216 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 217 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 218 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 219 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 308 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 309 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 310 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 311 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 312 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 313 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 314 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 315 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 316 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 317 IRQ_TYPE_LEVEL_HIGH>,
-> +					<0 318 IRQ_TYPE_LEVEL_HIGH>;
-> +			interrupt-names = "error",
-> +					"ch0", "ch1", "ch2", "ch3",
-> +					"ch4", "ch5", "ch6", "ch7",
-> +					"ch8", "ch9", "ch10", "ch11",
-> +					"ch12", "ch13", "ch14";
-> +			status = "disabled";
-> +		};
-> +	};
-> +
->  	gic: interrupt-controller@f1001000 {
->  		compatible = "arm,cortex-a15-gic";
->  		#interrupt-cells = <3>;
-
--- 
-Regards,
-
-Laurent Pinchart
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
