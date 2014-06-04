@@ -1,111 +1,61 @@
-From: Vinayak Kale <vkale@apm.com>
-Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
- device tree
-Date: Wed, 4 Jun 2014 15:35:54 +0530
-Message-ID: <CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw@mail.gmail.com>
-References: <1395836346-9350-1-git-send-email-vkale@apm.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v3] of/irq: provide more wrappers for !CONFIG_OF
+Date: Wed, 04 Jun 2014 12:17:41 +0200
+Message-ID: <27348137.JzbR0JR6FS@wuerfel>
+References: <16771871.sfJG2itVJN@wuerfel> <CAL_JsqJpP2sEkPC4DUFWTNutjFhUBiKZfNVSpiKHFPfsJzTf6w@mail.gmail.com> <538EEDB7.8050600@codethink.co.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1395836346-9350-1-git-send-email-vkale@apm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org
-Cc: Catalin Marinas <Catalin.Marinas@arm.com>, patches <patches@apm.com>, Vinayak Kale <vkale@apm.com>, Will Deacon <will.deacon@arm.com>, "jcm@redhat.com" <jcm@redhat.com>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <538EEDB7.8050600@codethink.co.uk>
+Sender: linux-pci-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Rob Herring <robherring2@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Lucas Stach <l.stach@pengutronix.de>, Bjorn Helgaas <bhelgaas@google.com>, Magnus Damm <damm@opensource.se>, Geert Uytterhoeven <geert@linux-m68k.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Catalin / Will,
+On Wednesday 04 June 2014 10:58:15 Ben Dooks wrote:
+> On 03/06/14 16:40, Rob Herring wrote:
+> > On Tue, Jun 3, 2014 at 9:47 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> >> This replaces "[PATCH v2] of/irq: provide int of_irq_parse_and_map_pci
+> >> wrapper", since now the same driver requires additional interfaces.
+> >> We still want to be able to build the driver with CONFIG_OF disabled,
+> >> but now we need three functions instead of just one.
+> >>
+> >> Rob, Grant, can you apply this as a bug fix, or provide comments?
+> >>
+> >> diff --git a/include/linux/of.h b/include/linux/of.h
+> >> index 196b34c..7c29e6c 100644
+> >> --- a/include/linux/of.h
+> >> +++ b/include/linux/of.h
+> >> @@ -511,6 +511,9 @@ static inline struct device_node *of_get_cpu_node(int cpu,
+> >>         return NULL;
+> >>  }
+> >>
+> >> +static inline int of_n_addr_cells(struct device_node *np) { return 0; }
+> >> +static inline int of_n_size_cells(struct device_node *np) { return 0; }
+> > 
+> > I'm fine with the rest, but I think these should always be used within
+> > some higher level function.
+> > 
+> > I can't seem to find where this is used by rcar. BTW, why does rcar
+> > pci DT support fail to have any ranges property?
+> 
+> I think the driver provides all the necessary PCI information
+> internally as it started off as a platform-driver.
 
-Can you please merge this one?
+Actually it gets the memory resource from the 'reg' property instead
+of parsing the 'ranges' property, which of course is not compliant
+with the generic PCI binding.
 
-Thanks
--Vinayak
+It also sets up an I/O resource that is located at the same location
+as the memory resource, which is just a bug but might be used to
+work around problems of the PCI core when no I/O resource is present.
 
-On Wed, Mar 26, 2014 at 5:49 PM, Vinayak Kale <vkale@apm.com> wrote:
-> APM X-Gene Storm SoC supports 4 serial ports. This patch adds device nodes
-> for serial ports 1 to 3 (a device node for serial port 0 is already present
-> in the dts file).
-> This patch also sets the compatible property of serial nodes to "ns16550a".
->
-> Signed-off-by: Vinayak Kale <vkale@apm.com>
-> ---
->  arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
->  arch/arm64/boot/dts/apm-storm.dtsi  | 36 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 39 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-> index 1247ca1..6541962 100644
-> --- a/arch/arm64/boot/dts/apm-mustang.dts
-> +++ b/arch/arm64/boot/dts/apm-mustang.dts
-> @@ -24,3 +24,7 @@
->                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
->         };
->  };
-> +
-> +&serial0 {
-> +       status = "ok";
-> +};
-> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-> index d37d736..2277b5c 100644
-> --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
-> @@ -179,13 +179,47 @@
->                 };
->
->                 serial0: serial@1c020000 {
-> +                       status = "disabled";
->                         device_type = "serial";
-> -                       compatible = "ns16550";
-> +                       compatible = "ns16550a";
->                         reg = <0 0x1c020000 0x0 0x1000>;
->                         reg-shift = <2>;
->                         clock-frequency = <10000000>; /* Updated by bootloader */
->                         interrupt-parent = <&gic>;
->                         interrupts = <0x0 0x4c 0x4>;
->                 };
-> +
-> +               serial1: serial@1c021000 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1c021000 0x0 0x1000>;
-> +                       reg-shift = <2>;
-> +                       clock-frequency = <10000000>; /* Updated by bootloader */
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0x0 0x4d 0x4>;
-> +               };
-> +
-> +               serial2: serial@1c022000 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1c022000 0x0 0x1000>;
-> +                       reg-shift = <2>;
-> +                       clock-frequency = <10000000>; /* Updated by bootloader */
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0x0 0x4e 0x4>;
-> +               };
-> +
-> +               serial3: serial@1c023000 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1c023000 0x0 0x1000>;
-> +                       reg-shift = <2>;
-> +                       clock-frequency = <10000000>; /* Updated by bootloader */
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0x0 0x4f 0x4>;
-> +               };
->         };
->  };
-> --
-> 1.8.2.1
->
+I think that should be fixed.
+
+I also see that the ranges parser in the pcie-rcar driver still gets
+I/O space wrong, we should probably move that to a common range
+parser once the arm64 pci implementation is in place and we can
+share more of the common helpers.
+
+	Arnd
