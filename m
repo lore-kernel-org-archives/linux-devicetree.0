@@ -1,66 +1,25 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH 2/2] ARM: dts: berlin: enable i2c0 and i2c2
-Date: Wed, 4 Jun 2014 19:37:01 +0200
-Message-ID: <20140604173701.GC12859@kwain>
-References: <1401780790-17830-1-git-send-email-antoine.tenart@free-electrons.com>
- <1401780790-17830-3-git-send-email-antoine.tenart@free-electrons.com>
- <20140603080522.GB22742@lunn.ch> <20140604164841.GA12859@kwain>
- <20140604170340.GI6892@lunn.ch>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: Add Tegra124 HDA support
+Date: Wed, 04 Jun 2014 11:13:31 -0600
+Message-ID: <538F53BB.7060903@wwwdotorg.org>
+References: <CAEUnVG7+=1ko8NL1Z3ovSpGveUADUidy4sBhU_dTUe1zbe-bMA@mail.gmail.com> <537BCF39.6050909@wwwdotorg.org> <CAEUnVG7CRWx5Y3RsgPzrHgYRGAx=bS4WY=w1xBUw0Ukt0DTdUQ@mail.gmail.com> <20140521205538.GA6237@mithrandir> <CAEUnVG7tDjw_6wHc=FN0KsOKsSS1u8H8SzYdxt9VCwUsARRTeQ@mail.gmail.com> <20140522094958.GA11585@ulmo> <CAEUnVG5pNMzDoXGso+UiAWPpD0hNPhBPyGr8KfV587AuU70QPQ@mail.gmail.com> <537E39D9.2000304@wwwdotorg.org> <CAEUnVG4UettOj0xDy+f6qEhUbhNs=u-wgyCf_Prsd2JpnmFfLw@mail.gmail.com> <CAEUnVG42Fmn4QOu-jObpoyViscmfKn35oDmb=WR8t=X7YVSB=Q@mail.gmail.com> <537F9BEB.5020102@wwwdotorg.org> <CAEUnVG63BCgpGuo+qcYkvpnVSSguBy9xwSC_AoZqCt1RgBqm7w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20140604170340.GI6892@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, sebastian.hesselbarth@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAEUnVG63BCgpGuo+qcYkvpnVSSguBy9xwSC_AoZqCt1RgBqm7w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dylan Reid <dgreid-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 04, 2014 at 07:03:40PM +0200, Andrew Lunn wrote:
-> On Wed, Jun 04, 2014 at 06:48:41PM +0200, Antoine T=E9nart wrote:
-> > =
+On 05/23/2014 02:34 PM, Dylan Reid wrote:
+...
+> I also ran the HDMI audio compliance test suite.  It failed the ACR
+> (clock regeneration packet) test and the audio packet timing jitter
+> test, I could see that upsetting some monitors.  It looks like ACR
+> packets are generated for 44.1 even when playing 48k.
 
-> > On Tue, Jun 03, 2014 at 10:05:22AM +0200, Andrew Lunn wrote:
-> > > On Tue, Jun 03, 2014 at 09:33:10AM +0200, Antoine T=E9nart wrote:
-> > > > Enable the I2C0 and I2C2 for the Marvell Berlin BG2G DMP. I2C1 and =
-I2C3
-> > > > are also working on this board, but no devices seemed to be there.
-> > > =
-
-> > > Does this mean that IC0 and I2C2 have devices on them? Could you also
-> > > add nodes for the devices?
-> > =
-
-> > No devices I can add for now. I you prefer we can drop this patch, keep
-> > the other one and enable i2c nodes for the BG2Q DMP when they will be
-> > needed.
-> =
-
-> I was just wondering how you tested it, without having any devices?
-
-I tested with the i2ctools. I could see one device on each bus at the
-address it should be. I also tested the pin muxing configurations.
-
-I don't have lots of information on these I2C buses, at least my test
-results match what I know.
-
-> Is it that the devices on the bus don't have mainline drivers?
-
-Not with I2C support.
-
-Antoine
-
--- =
-
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+That's because the only thing that sets hdmi->audio_freq is
+tegra_hdmi_probe(). There needs to be a callback from the sound/HDA
+driver to the display driver telling it what audio frequency is in use.
