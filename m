@@ -1,28 +1,77 @@
-From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
- device tree
-Date: Wed, 4 Jun 2014 16:41:16 +0100
-Message-ID: <20140604154116.GN10126@arm.com>
-References: <1395836346-9350-1-git-send-email-vkale@apm.com>
- <CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw@mail.gmail.com>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [PATCH v2 8/9] DMA: shdma: initial of common code
+Date: Wed, 04 Jun 2014 16:54:26 +0100
+Message-ID: <538F4132.4030204@codethink.co.uk>
+References: <1397511312-4845-1-git-send-email-ben.dooks@codethink.co.uk>	<1397511312-4845-9-git-send-email-ben.dooks@codethink.co.uk>	<4431489.B0PGdfS6ct@wuerfel>	<534D01EB.3080702@codethink.co.uk> <CAMuHMdU-FEnAjjcACaFt_-5i4EFDnj=uqrM_ew+nz7n9+ndbSQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdU-FEnAjjcACaFt_-5i4EFDnj=uqrM_ew+nz7n9+ndbSQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, linux-kernel@lists.codethink.co.uk, dmaengine@vger.kernel.org, Vinod Koul <vinod.koul@intel.com>, Dan Williams <dan.j.williams@intel.com>, Linux-sh list <linux-sh@vger.kernel.org>, magnus.damm@opensource.se, Simon Horman <horms@verge.net.au>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 04, 2014 at 11:05:54AM +0100, Vinayak Kale wrote:
-> Can you please merge this one?
+On 21/05/14 21:14, Geert Uytterhoeven wrote:
+> Hi Ben,
+> 
+> On Tue, Apr 15, 2014 at 11:54 AM, Ben Dooks <ben.dooks@codethink.co.uk> wrote:
+>>>>   static struct dma_chan *shdma_of_xlate(struct of_phandle_args
+>>>> *dma_spec,
+>>>>                                        struct of_dma *ofdma)
+>>>>   {
+>>>> +       struct platform_device *pdev = ofdma->of_dma_data;
+>>>>         u32 id = dma_spec->args[0];
+>>>>         dma_cap_mask_t mask;
+>>>>         struct dma_chan *chan;
+>>>>
+>>>> -       if (dma_spec->args_count != 1)
+>>>> +       if (dma_spec->args_count == 2) {
+>>>> +               struct shdma_of_state *state =
+>>>> platform_get_drvdata(pdev);
+>>>> +               struct shdma_of_client *client;
+>>>> +
+>>>> +               client = shdma_of_find_client(state, id);
+>>>> +               if (!client) {
+>>>> +                       client = devm_kzalloc(&pdev->dev,
+>>>> sizeof(*client),
+>>>> +                                             GFP_KERNEL);
+>>>> +                       if (!client)
+>>>> +                               return NULL;
+>>>> +
+>>>> +                       client->index =
+>>>> atomic_inc_return(&of_slave_index);
+>>>> +                       client->cfg.slave_id = id;
+>>>> +                       client->cfg.mid_rid = id;
+>>>> +                       client->cfg.chcr = dma_spec->args[1];
+>>>
+>>>
+>>> Can you explain the purpose of setting the chcr in DT? For all I can
+>>> tell, this should come from the device driver when that calls the
+>>> dma_slave_config function, unlike the mid_rid value.
+>>
+>>
+>> See previous note about transfer-widths and register-sizes not always
+>> matching. I also do not have any idea about other SoCs in the series
+>> if there are any differences between channel settings.
+> 
+> If you look for sh_dmae_slave_config in arch/arm arch/sh, you find the values
+> for the existing board support.
+> 
+> The same device always seem to use the same value, i.e. MMC always uses
+> 32-bit, SCIF uses 8-bit, SDHI uses 16-bit. So I think it could be hardcoded
+> in the device driver (passed via enum dma_slave_buswidth {src,dst}_addr_width
+> in dma_slave_config?), and you can drop the field in the bindings.
+> 
+> Notes:
+>   - RSPI is special: on SH, it's 16-bit, while QSPI on R-Car uses 8-bit.
+>   - SDHI uses 32-bit according to the R-Car docs, but the (working) code
+>     uses 16-bit?
 
-I was hoping for an ack/nak from the DT guys before merging it.
+I will move to using the configuration passed when the slave is used
+instead of the one in the slave table.
 
 -- 
-Catalin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
