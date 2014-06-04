@@ -1,7 +1,7 @@
 From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 21/21] at91sam9_wdt: use devm_irq_of_parse_and_map()
-Date: Wed,  4 Jun 2014 15:13:21 +0400
-Message-ID: <1401880402-30091-22-git-send-email-nyushchenko@dev.rtsoft.ru>
+Subject: [PATCH 13/21] net/can: use devm_irq_of_parse_and_map() where appropriate
+Date: Wed,  4 Jun 2014 15:13:13 +0400
+Message-ID: <1401880402-30091-14-git-send-email-nyushchenko@dev.rtsoft.ru>
 References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
@@ -18,39 +18,105 @@ issues.
 
 Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 ---
- drivers/watchdog/at91sam9_wdt.c |   12 +++++++-----
- 1 file changed, 7 insertions(+), 5 deletions(-)
+ drivers/net/can/grcan.c                    |   11 ++++-------
+ drivers/net/can/mscan/mpc5xxx_can.c        |   11 ++++-------
+ drivers/net/can/sja1000/sja1000_platform.c |    2 +-
+ 3 files changed, 9 insertions(+), 15 deletions(-)
 
-diff --git a/drivers/watchdog/at91sam9_wdt.c b/drivers/watchdog/at91sam9_wdt.c
-index 489729b..11ebe54 100644
---- a/drivers/watchdog/at91sam9_wdt.c
-+++ b/drivers/watchdog/at91sam9_wdt.c
-@@ -207,9 +207,9 @@ static int at91_wdt_init(struct platform_device *pdev, struct at91wdt *wdt)
- 			 "min heartbeat and max heartbeat might be too close for the system to handle it correctly\n");
- 
- 	if ((tmp & AT91_WDT_WDFIEN) && wdt->irq) {
--		err = request_irq(wdt->irq, wdt_interrupt,
--				  IRQF_SHARED | IRQF_IRQPOLL,
--				  pdev->name, wdt);
-+		err = devm_request_irq(dev, wdt->irq, wdt_interrupt,
-+				       IRQF_SHARED | IRQF_IRQPOLL,
-+				       pdev->name, wdt);
- 		if (err)
- 			return err;
+diff --git a/drivers/net/can/grcan.c b/drivers/net/can/grcan.c
+index 3fd9fd9..695932f 100644
+--- a/drivers/net/can/grcan.c
++++ b/drivers/net/can/grcan.c
+@@ -1687,10 +1687,10 @@ static int grcan_probe(struct platform_device *ofdev)
+ 		goto exit_error;
  	}
-@@ -270,9 +270,11 @@ static int of_at91wdt_init(struct device_node *np, struct at91wdt *wdt)
- 	const char *tmp;
  
- 	/* Get the interrupts property */
--	wdt->irq = irq_of_parse_and_map(np, 0);
--	if (!wdt->irq)
-+	wdt->irq = devm_irq_of_parse_and_map(wdt->wdd.parent, np, 0);
-+	if (wdt->irq <= 0) {
- 		dev_warn(wdt->wdd.parent, "failed to get IRQ from DT\n");
-+		wdt->irq = NO_IRQ;
-+	}
+-	irq = irq_of_parse_and_map(np, GRCAN_IRQIX_IRQ);
+-	if (!irq) {
++	irq = devm_irq_of_parse_and_map(&ofdev->dev, np, GRCAN_IRQIX_IRQ);
++	if (irq <= 0) {
+ 		dev_err(&ofdev->dev, "no irq found\n");
+-		err = -ENODEV;
++		err = irq ? irq : -ENODEV;
+ 		goto exit_error;
+ 	}
  
- 	if (!of_property_read_u32_index(np, "atmel,max-heartbeat-sec", 0,
- 					&max)) {
+@@ -1698,12 +1698,10 @@ static int grcan_probe(struct platform_device *ofdev)
+ 
+ 	err = grcan_setup_netdev(ofdev, base, irq, ambafreq, txbug);
+ 	if (err)
+-		goto exit_dispose_irq;
++		goto exit_error;
+ 
+ 	return 0;
+ 
+-exit_dispose_irq:
+-	irq_dispose_mapping(irq);
+ exit_error:
+ 	dev_err(&ofdev->dev,
+ 		"%s socket CAN driver initialization failed with error %d\n",
+@@ -1718,7 +1716,6 @@ static int grcan_remove(struct platform_device *ofdev)
+ 
+ 	unregister_candev(dev); /* Will in turn call grcan_close */
+ 
+-	irq_dispose_mapping(dev->irq);
+ 	netif_napi_del(&priv->napi);
+ 	free_candev(dev);
+ 
+diff --git a/drivers/net/can/mscan/mpc5xxx_can.c b/drivers/net/can/mscan/mpc5xxx_can.c
+index 4472529..b59ef67 100644
+--- a/drivers/net/can/mscan/mpc5xxx_can.c
++++ b/drivers/net/can/mscan/mpc5xxx_can.c
+@@ -306,16 +306,16 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
+ 		return err;
+ 	}
+ 
+-	irq = irq_of_parse_and_map(np, 0);
+-	if (!irq) {
++	irq = devm_irq_of_parse_and_map(&ofdev->dev, np, 0);
++	if (irq <= 0) {
+ 		dev_err(&ofdev->dev, "no irq found\n");
+-		err = -ENODEV;
++		err = irq ? irq : -ENODEV;
+ 		goto exit_unmap_mem;
+ 	}
+ 
+ 	dev = alloc_mscandev();
+ 	if (!dev)
+-		goto exit_dispose_irq;
++		goto exit_unmap_mem;
+ 	platform_set_drvdata(ofdev, dev);
+ 	SET_NETDEV_DEV(dev, &ofdev->dev);
+ 
+@@ -348,8 +348,6 @@ static int mpc5xxx_can_probe(struct platform_device *ofdev)
+ 
+ exit_free_mscan:
+ 	free_candev(dev);
+-exit_dispose_irq:
+-	irq_dispose_mapping(irq);
+ exit_unmap_mem:
+ 	iounmap(base);
+ 
+@@ -370,7 +368,6 @@ static int mpc5xxx_can_remove(struct platform_device *ofdev)
+ 	if (data && data->put_clock)
+ 		data->put_clock(ofdev);
+ 	iounmap(priv->reg_base);
+-	irq_dispose_mapping(dev->irq);
+ 	free_candev(dev);
+ 
+ 	return 0;
+diff --git a/drivers/net/can/sja1000/sja1000_platform.c b/drivers/net/can/sja1000/sja1000_platform.c
+index 95a844a..36c8525 100644
+--- a/drivers/net/can/sja1000/sja1000_platform.c
++++ b/drivers/net/can/sja1000/sja1000_platform.c
+@@ -184,7 +184,7 @@ static int sp_probe(struct platform_device *pdev)
+ 		return -ENOMEM;
+ 
+ 	if (of)
+-		irq = irq_of_parse_and_map(of, 0);
++		irq = devm_irq_of_parse_and_map(&pdev->dev, of, 0);
+ 	else
+ 		res_irq = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
+ 
 -- 
 1.7.10.4
