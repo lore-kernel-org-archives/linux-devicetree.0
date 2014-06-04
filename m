@@ -1,90 +1,133 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH 4/7] i2c: Match using traditional OF methods,
- then by vendor-less compatible strings
-Date: Wed,  4 Jun 2014 13:09:53 +0100
-Message-ID: <1401883796-17841-5-git-send-email-lee.jones@linaro.org>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+From: Seungwon Jeon <tgih.jun@samsung.com>
+Subject: RE: [linux-sunxi] [PATCH v2 1/4] dt: bindings: mmc: Document the
+ practice of using subnodes for slots
+Date: Wed, 04 Jun 2014 21:14:38 +0900
+Message-ID: <001501cf7fee$8ec6c910$ac545b30$%jun@samsung.com>
+References: <1401563014-13856-1-git-send-email-hdegoede@redhat.com>
+ <1401563014-13856-2-git-send-email-hdegoede@redhat.com>
+ <CAOesGMisqtPWKY6N5ch36c0VyBP1Pu725cehBU+2gYtKXQs=hQ@mail.gmail.com>
+ <538AF124.9040106@redhat.com>
+ <CAPDyKFon5J6aUTzSmqGn_pkxgud26=+KBW0pkim-adMmWG_xXg@mail.gmail.com>
+ <538C3812.9060705@samsung.com>
+ <CAPDyKFp1KcQaOAqKBA7xrq85mVoNFecqO8QLT3EBzST6Giv-Sw@mail.gmail.com>
+ <538D29CF.9070102@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org, wsa@the-dreams.de, linus.walleij@linaro.org, linux-i2c@vger.kernel.org, grant.likely@linaro.org, Lee Jones <lee.jones@linaro.org>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <538D29CF.9070102@samsung.com>
+Content-language: ko
+Sender: linux-mmc-owner@vger.kernel.org
+To: 'Jaehoon Chung' <jh80.chung@samsung.com>, 'Ulf Hansson' <ulf.hansson@linaro.org>
+Cc: 'Hans de Goede' <hdegoede@redhat.com>, 'Olof Johansson' <olof@lixom.net>, linux-sunxi@googlegroups.com, 'Chris Ball' <chris@printf.net>, 'Sascha Hauer' <s.hauer@pengutronix.de>, 'Maxime Ripard' <maxime.ripard@free-electrons.com>, 'Arend van Spriel' <arend@broadcom.com>, 'Chen-Yu Tsai' <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, 'devicetree' <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This function provides a single call for all I2C devices which need to
-match firstly using traditional OF means i.e by of_node, then if that
-fails we attempt to match using the supplied I2C client name with a
-list of supplied compatible strings with the '<vendor>,' string
-removed.  The latter is required due to the unruly naming conventions
-used currently by I2C devices.
+On Tue, June 03, 2014, Jaehoon Chung wrote:
+> +Suegnwon Jeon
+> 
+> On 06/02/2014 05:48 PM, Ulf Hansson wrote:
+> > On 2 June 2014 10:38, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> >> On 06/02/2014 05:29 PM, Ulf Hansson wrote:
+> >>> On 1 June 2014 11:23, Hans de Goede <hdegoede@redhat.com> wrote:
+> >>>> Hi,
+> >>>>
+> >>>>
+> >>>> On 05/31/2014 10:13 PM, Olof Johansson wrote:
+> >>>>>
+> >>>>> On Sat, May 31, 2014 at 12:03 PM, Hans de Goede <hdegoede@redhat.com>
+> >>>>> wrote:
+> >>>>>>
+> >>>>>> The following existing MMC host controller bindings use slot subnodes:
+> >>>>>>
+> >>>>>> Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> >>>>>> Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> >>>>>> Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> >>>>>> Documentation/devicetree/bindings/mmc/socfpga-dw-mshc.txt
+> >>>>>> Documentation/devicetree/bindings/mmc/atmel-hsmci.txt
+> >>>>>> Documentation/devicetree/bindings/mmc/rockchip-dw-mshc.txt
+> >>>>>>
+> >>>>>> This commit documents this practice in the standard mmc bindings
+> >>>>>> documentation.
+> >>>>>>
+> >>>>>> Signed-off-by: Hans de Goede <hdegoede@redhat.com>
+> >>>>>
+> >>>>>
+> >>>>> There are today only two drivers that use this kind of binding, dw_mmc
+> >>>>> and the at91 one.
+> >>>>
+> >>>>
+> >>>> Correct.
+> >>>>
+> >>>>
+> >>>>> Neither seems to actually ever have been used with
+> >>>>> more than one slot. I doubt anyone building an exynos-based system
+> >>>>> will ever do a multi-slot solution, and it seems that the at91 driver
+> >>>>> doesn't actually handle more than one slot.
+> >>>>>
+> >>>>> I'm personally not that excited about complicating the bindings by
+> >>>>> opening up for this -- I would rather work towards removing the
+> >>>>> concept of slots if it's one of those things that are going to remain
+> >>>>> unused. We have actually been talking about reworking the dw_mmc
+> >>>>> binding to remove the slot concept (and simplify the driver by doing
+> >>>>> so).
+> >>>>
+> >>>>
+> >>>> I'm fine with removing the slot subnode, I added it because of it being
+> >>>> brought up in the powerup sequence discussion. I explicitly asked there
+> >>>> if adding such a subnode level was seen as desirable but nobody
+> >>>> answered :|
+> >>>>
+> >>>> Anyways, either way works for me. I can do a v3 dropping the slot subnode
+> >>>> level again. I would really like to move forward with a decision on how-to
+> >>>> represent non probable info for sdio devices in device nodes. So do you
+> >>>> have any other remarks other then that the slot subnode should be dropped ?
+> >>>> And if not can you please review and ack (*) v3 of this patch-set once
+> >>>> I've send it?
+> >>>>
+> >>>> Chris Ball and Ulf Hansson, what is your take on this, are you willing to
+> >>>> take this patch set? And do you want it with or without the slot subnodes ?
+> >>>
+> >>> I certainly appreciate you working actively on this Hans, I will look
+> >>> into the patchset as soon as I can.
+> >>>
+> >>> I share Olof's view about the slot nodes, we must not add DT bindings
+> >>> that isn't really needed.
+> >>>
+> >>> Regarding the slot subnodes; Jaehoon Chung recently posted a patchset
+> >>> for adding the parsing of it, intended for dwmmc. I withdraw my ack
+> >>> for it, and let's try to go in the other direction instead.
+> >>>
+> >>> [PATCHv3 0/4] mmc: fixed the mmc_of_parse for dwmmc.
+> >>>
+> >>> Thus I suggest we should clean-up host drivers to support only one
+> >>> card per host, and entirely skip the slot concept.
+> >>
+> >> Well, almost platform is used the only one card per host, although some controller is supported the
+> slot concept.
+> >> But we don't know that controller should be used the multi slot per host, in future.
+> >> So I think we can't skip the slot concept.
+> >
+> > The mmc core only supports one card per host.
+> 
+> Right, mmc core supports one card per host, but host controller can be supported the multiple slot,
+> right?
+> Of course, it should be handled at host controller, not core.
+> >
+> > Adding DT bindings for something that seems unlikely to be supported
+> > in future, seems like a bad idea. It's better to add it when/if
+> > needed.
+> If some SoC use the multiple slot for dw-mmc controller, we can't prevent to use the multiple slot.
+> So i'm not sure that host controller's subnode didn't need to support.
+> Right. this is bad idea, i also hope that it will not use the multiple slot at dw-mmc in future.
+> 
+> To Seungwon,
+> 
+> how about this?
 
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
----
- drivers/i2c/i2c-core.c | 13 +++++++++++++
- include/linux/i2c.h    |  9 +++++++++
- 2 files changed, 22 insertions(+)
+I have no objection to remove multi-slot.
+It seems not useful considering performance. Above all, there is no actual use case.
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 7dcd5c3..e8c2cba 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -1115,6 +1115,19 @@ const struct of_device_id
- 	return NULL;
- }
- EXPORT_SYMBOL_GPL(i2c_of_match_device_strip_vendor);
-+
-+const struct of_device_id
-+*i2c_of_match_device(const struct of_device_id *matches, struct device *dev)
-+{
-+	const struct of_device_id *match;
-+
-+	match = of_match_device(matches, dev);
-+	if (match)
-+		return match;
-+
-+	return i2c_of_match_device_strip_vendor(matches, dev);
-+}
-+EXPORT_SYMBOL_GPL(i2c_of_match_device);
- #else
- static void of_i2c_register_devices(struct i2c_adapter *adap) { }
- #endif /* CONFIG_OF */
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index f7ec75b..ab5866f 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -565,6 +565,9 @@ extern struct i2c_client *of_find_i2c_device_by_node(struct device_node *node);
- extern struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node);
- 
- extern const struct of_device_id
-+*i2c_of_match_device(const struct of_device_id *matches, struct device *dev);
-+
-+extern const struct of_device_id
- *i2c_of_match_device_strip_vendor(const struct of_device_id *matches,
- 				  struct device *dev);
- #else
-@@ -580,6 +583,12 @@ static inline struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node
- }
- 
- const struct of_device_id
-+*i2c_of_match_device(const struct of_device_id *matches, struct device *dev)
-+{
-+	return NULL;
-+}
-+
-+const struct of_device_id
- *i2c_of_match_device_strip_vendor(const struct of_device_id *matches,
- 				  struct device *dev)
- {
--- 
-1.8.3.2
+Thanks,
+Seungwon Jeon
+
+
