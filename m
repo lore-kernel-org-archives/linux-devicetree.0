@@ -1,84 +1,70 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 1/8] mmc: sdhci-st: Intial support for ST SDHCI controller
-Date: Wed, 4 Jun 2014 13:06:07 +0200
-Message-ID: <CAPDyKFqvQca9RfsVVyfeC9r=pEDM2mBkfS7SzpYZHHXMnHfyUQ@mail.gmail.com>
-References: <1400771902-26553-1-git-send-email-peter.griffin@linaro.org>
-	<1400771902-26553-2-git-send-email-peter.griffin@linaro.org>
-	<CAPDyKFpanhYbf89tEKru=_oOfBGZZxs0=eqr_5MvU9v_bGULjQ@mail.gmail.com>
-	<20140604084831.GB23469@griffinp-ThinkPad-X1-Carbon-2nd>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v6 2/6] dt-bindings: add mtk-timer bindings
+Date: Wed, 4 Jun 2014 06:05:40 -0500
+Message-ID: <CAL_Jsq+SkzTsczhh-DWvsktmCVtgNBsBtK3QqK5Am7UxMPgURA@mail.gmail.com>
+References: <1401468964-5307-1-git-send-email-matthias.bgg@gmail.com>
+ <1401468964-5307-3-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140604084831.GB23469@griffinp-ThinkPad-X1-Carbon-2nd>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Maxime Coquelin <maxime.coquelin@st.com>, Patrice CHOTARD <patrice.chotard@st.com>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel@stlinux.com, linux-mmc <linux-mmc@vger.kernel.org>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1401468964-5307-3-git-send-email-matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Soren
 List-Id: devicetree@vger.kernel.org
 
-On 4 June 2014 10:48, Peter Griffin <peter.griffin@linaro.org> wrote:
-> Hi Ulf,
+On Fri, May 30, 2014 at 11:56 AM, Matthias Brugger
+<matthias.bgg@gmail.com> wrote:
+> Add binding documentation for the General Porpose Timer driver of
+> the Mediatek SoCs.
 >
-> Thanks for reviewing, see my comments below: -
->
-> On Fri, 23 May 2014, Ulf Hansson wrote:
->> > +static unsigned int sdhci_st_get_max_clk(struct sdhci_host *host)
->> > +{
->> > +       struct sdhci_pltfm_host *pltfm_host =3D sdhci_priv(host);
->> > +
->> > +       return clk_get_rate(pltfm_host->clk);
->> > +}
->>
->> There are sdhci library function for the above:
->> sdhci_pltfm_clk_get_max_clock()
->
-> I've fixed in v2 to use the library function
->
->> > +       host->mmc->caps |=3D MMC_CAP_8_BIT_DATA | MMC_CAP_BUS_WIDT=
-H_TEST
->> > +                       | MMC_CAP_1_8V_DDR;
->>
->> Comment below.
->>
->> > +
->> > +       if (of_property_read_bool(np, "non-removable"))
->> > +               host->mmc->caps |=3D MMC_CAP_NONREMOVABLE;
->>
->> MMC_CAP_1_8V_DDR, MMC_CAP_8_BIT_DATA, MMC_CAP_NONREMOVABLE aren=E2=80=
-=99t
->> those board specific capabilities?
->
-> Yep
->>
->> Unless there are something that prevents you from using the common m=
-mc
->> DT parser, I would suggest you to use it. mmc_of_parse(). Thus you c=
-an
->> provide these capabilities through DT instead.
->
-> Thanks for pointing that out, I've switched over to using mmc_of_pars=
-e,
-> and everything works as expected.
->
-> Also as an added bonus this will simplify support for the next SoC wh=
-ich
-> needs access to the high speed ddr / sdr bindings which
-> mmc_of_parse already supports :-)
->
-> In v2 I've also removed the reset controller code from this platform =
-driver
-> with the intention of adding it back in, in the generic code. The ide=
-a
-> would be that an additional 'reset' binding could be provided, which =
-if
-> present would be used to deassert the IP reset line of the controller=
- at
-> probe / resume, and assert reset at remove / sleep.
->
-> Is this something you view as useful, if so I will prepare some RFC p=
-atches?
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 
-Sounds useful. Please go ahead and send patches! :-)
+Acked-by: Rob Herring <robh@kernel.org>
 
-Kind regards
-Uffe
+but one typo below:
+
+> ---
+>  .../bindings/timer/mediatek,mtk-timer.txt          |   18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+>
+> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+> new file mode 100644
+> index 0000000..0558ddd0
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+> @@ -0,0 +1,18 @@
+> +Mediatek MT6577, MT6572 and MT6589 Timers
+> +---------------------------------------
+> +
+> +Required properties:
+> +- compatible: Should be "mediatek,mt6577-timer"
+> +- reg: Should contain location and length for timers register.
+> +- clocks: Clocks driving the timer hardware. This list shoud include two
+
+s/shoud/should/
+
+> +       clocks. The order is system clock and as second clock the RTC clock.
+> +
+> +Examples:
+> +
+> +       timer@10008000 {
+> +               compatible = "mediatek,mt6577-timer";
+> +               reg = <0x10008000 0x80>;
+> +               interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
+> +               clocks = <&system_clk>, <&rtc_clk>;
+> +               clock-names = "system-clk", "rtc-clk";
+> +       };
+> --
+> 1.7.9.5
+>
