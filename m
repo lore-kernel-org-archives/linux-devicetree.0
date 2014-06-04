@@ -1,53 +1,42 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 4/7] ARM: shmobile: r8a7791: Add SYS-DMAC channel definitions for bindings
-Date: Wed, 04 Jun 2014 13:53:35 +0200
-Message-ID: <1917207.MSyb5W7vbK@avalon>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <3770565.HiyLmu1184@avalon> <538F06CF.5090406@codethink.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <538F06CF.5090406@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dmaengine@vger.kernel.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 0/7] i2c: Relax mandatory I2C ID table passing
+Date: Wed,  4 Jun 2014 13:09:49 +0100
+Message-ID: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ben,
+Hi Wolfram,
 
-On Wednesday 04 June 2014 12:45:19 Ben Dooks wrote:
-> On 04/06/14 12:30, Laurent Pinchart wrote:
-> > On Tuesday 03 June 2014 09:53:17 Geert Uytterhoeven wrote:
-> >> On Mon, Jun 2, 2014 at 3:52 PM, Ben Dooks wrote:
-> >>>> +// FIXME
-> >>>> +#define CHCR_RX_8BIT SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_8BIT)
-> >>>> +#define CHCR_TX_8BIT SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_8BIT)
-> >>>> +#define CHCR_RX_16BIT        SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_16BIT)
-> >>>> +#define CHCR_TX_16BIT        SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_16BIT)
-> >>>> +#define CHCR_RX_32BIT        SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_32BIT)
-> >>>> +#define CHCR_TX_32BIT        SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_32BIT)
-> >>>> +#define CHCR_RX_256BIT       SHDMA_ARM_CHCR_RX(SHDMA_ARM_SZ_256BIT)
-> >>>> +#define CHCR_TX_256BIT       SHDMA_ARM_CHCR_TX(SHDMA_ARM_SZ_256BIT)
-> >>> 
-> >>> I am pretty sure for round-2 we can remove these in favour of a
-> >>> table in the driver. The only device that has a non-standard setting
-> >>> is the SDHI and that will support 32bit and 256bit transfers.
-> >> 
-> >> Thanks, I'm eagerly awaiting your next version...
-> > 
-> > Speaking of that, Ben, do you have a git tree with your latest patches ?
-> 
-> Not yet, as currently working on sorting out the soc_camera before
-> moving back to the DMA. I have a plan, just not had the time to sort
-> it out.
+As previously discussed I believe it should be okay for an I2C device
+driver _not_ supply an I2C ID table to match to.  The I2C subsystem
+should be able to match via other means, such as via OF and/or ACPI
+tables.  The blocking factor during our previous conversation was
+to keep registering via sysfs up and running.  This set does that.
 
-I need to start implementing LPAE support for the DMAC using descriptors, and 
-I have to decide whether I'll go for a new driver of fix the existing one(s). 
-Having access to your code, even if it's work in progress, would be helpful, 
-otherwise there will be a high chance of conflicts.
+After thinking more deeply about the problem, it occurred to me that
+any I2C device driver which issues an {of,acpi}_match)_device()
+would also fail their probe().  Bolted on to this set is a new, more
+generic way for these devices to match against any of the tables
+which are present in the kernel today i.e. OF, ACPI and I2C.
 
--- 
-Regards,
+NB: ACPI is not fully supported, but OF is.
 
-Laurent Pinchart
+I hope this ticks all of your boxes.
 
+Kind regards,
+Lee
+
+ drivers/i2c/i2c-core.c          | 65 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-------
+ drivers/of/device.c             | 16 +++++++++++++++-
+ include/acpi/platform/aclinux.h |  5 +++--
+ include/linux/i2c.h             | 19 +++++++++++++++++++
+ include/linux/match.h           | 40 ++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 135 insertions(+), 10 deletions(-)
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
