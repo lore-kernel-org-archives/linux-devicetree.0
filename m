@@ -1,202 +1,93 @@
-From: nyushchenko@dev.rtsoft.ru
-Subject: [PATCH 01/21] irq: add devres version of OF IRQ mapping routines
-Date: Wed,  4 Jun 2014 15:13:01 +0400
-Message-ID: <1401880402-30091-2-git-send-email-nyushchenko@dev.rtsoft.ru>
-References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] arm: tegra: enable igb, stmpe, i2c chardev, spidev,
+ lm95245, pwm leds
+Date: Wed, 4 Jun 2014 12:17:55 +0100
+Message-ID: <20140604111755.GG2520@sirena.org.uk>
+References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com>
+ <39a8704a4c8170d6b0620a1e5e44042eae6d8810.1401665237.git.marcel@ziswiler.com>
+ <538CA24B.1010602@wwwdotorg.org>
+ <538CA635.4050502@ziswiler.com>
+ <20140602221627.GP31751@sirena.org.uk>
+ <538D64FD.2010909@ziswiler.com>
+ <20140603094537.GQ31751@sirena.org.uk>
+ <538EBACB.70100@ziswiler.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Fnm8lRGFTVS/3GuM"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+Content-Disposition: inline
+In-Reply-To: <538EBACB.70100@ziswiler.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru, Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+To: Marcel Ziswiler <marcel@ziswiler.com>
+Cc: Stephen Warren <swarren@wwwdotorg.org>, thierry.reding@gmail.com, linux@arm.linux.org.uk, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, stefan@agner.ch
 List-Id: devicetree@vger.kernel.org
 
-From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
 
-Many drivers use devres to manage their resources, and at the same time
-use irq_of_parse_and_map() / irq_dispose_mapping(). This creates problem
-on driver unload paths and on error paths:
-- it is invalid to call irq_dispose_mapping() while IRQ handler is still
-  installed,
-- devres moves removal of IRQ handler out of driver,
-- without explicit devres support for IRQ mapping, irq_dispose_mapping()
-  stays in driver and thus gets called while IRQ handler is still
-  installed.
+--Fnm8lRGFTVS/3GuM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This patch adds devm_irq_create_of_mapping() and devm_irq_of_parse_and_map()
-routines to be used by drivers for correct release of resources.
+On Wed, Jun 04, 2014 at 08:20:59AM +0200, Marcel Ziswiler wrote:
+> On 06/03/2014 11:45 AM, Mark Brown wrote:
 
-Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
----
- drivers/of/irq.c          |   24 +++++++++++++++++++++++
- include/linux/irqdomain.h |    3 +++
- include/linux/of_irq.h    |   12 ++++++++++++
- kernel/irq/irqdomain.c    |   47 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 86 insertions(+)
+> >When you say "generic user space access" you are describing a specific
+> >detail of how this device happens to be controlled with your software.
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 5aeb894..30b5010 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -46,6 +46,30 @@ unsigned int irq_of_parse_and_map(struct device_node *dev, int index)
- EXPORT_SYMBOL_GPL(irq_of_parse_and_map);
- 
- /**
-+ * devm_irq_of_parse_and_map - Parse and map an interrupt into linux virq space
-+ * @dev: Device interrupt will be used for
-+ * @dn: Device node of the device whose interrupt is to be mapped
-+ * @index: Index of the interrupt to map
-+ *
-+ * This function does the same as irq_of_parse_and_map(), but ensures that
-+ * irq_dispose_mapping() will be called automatically at driver detatch.
-+ *
-+ * If IRQ mapping created by this function needs to be removed manually,
-+ * devm_irq_dispose_mapping() must be called instead of irq_dispose_mapping().
-+ */
-+int devm_irq_of_parse_and_map(struct device *dev, struct device_node *dn,
-+		int index)
-+{
-+	struct of_phandle_args oirq;
-+
-+	if (of_irq_parse_one(dn, index, &oirq))
-+		return 0;
-+
-+	return devm_irq_create_of_mapping(dev, &oirq);
-+}
-+EXPORT_SYMBOL_GPL(devm_irq_of_parse_and_map);
-+
-+/**
-  * of_irq_find_parent - Given a device node, find its interrupt parent node
-  * @child: pointer to device node
-  *
-diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-index c983ed1..44e6261 100644
---- a/include/linux/irqdomain.h
-+++ b/include/linux/irqdomain.h
-@@ -176,6 +176,7 @@ extern void irq_domain_associate_many(struct irq_domain *domain,
- extern unsigned int irq_create_mapping(struct irq_domain *host,
- 				       irq_hw_number_t hwirq);
- extern void irq_dispose_mapping(unsigned int virq);
-+extern void devm_irq_dispose_mapping(struct device *dev, unsigned int virq);
- 
- /**
-  * irq_linear_revmap() - Find a linux irq from a hw irq number.
-@@ -220,6 +221,8 @@ int irq_domain_xlate_onetwocell(struct irq_domain *d, struct device_node *ctrlr,
- 
- #else /* CONFIG_IRQ_DOMAIN */
- static inline void irq_dispose_mapping(unsigned int virq) { }
-+static inline void devm_irq_dispose_mapping(struct device *dev,
-+		unsigned int virq) { }
- #endif /* !CONFIG_IRQ_DOMAIN */
- 
- #endif /* _LINUX_IRQDOMAIN_H */
-diff --git a/include/linux/of_irq.h b/include/linux/of_irq.h
-index 6404253..4ac7138 100644
---- a/include/linux/of_irq.h
-+++ b/include/linux/of_irq.h
-@@ -35,6 +35,8 @@ extern int of_irq_parse_raw(const __be32 *addr, struct of_phandle_args *out_irq)
- extern int of_irq_parse_one(struct device_node *device, int index,
- 			  struct of_phandle_args *out_irq);
- extern unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data);
-+extern int devm_irq_create_of_mapping(struct device *dev,
-+		struct of_phandle_args *irq_data);
- extern int of_irq_to_resource(struct device_node *dev, int index,
- 			      struct resource *r);
- extern int of_irq_to_resource_table(struct device_node *dev,
-@@ -63,6 +65,9 @@ static inline int of_irq_get(struct device_node *dev, int index)
-  * so declare it here regardless of the CONFIG_OF_IRQ setting.
-  */
- extern unsigned int irq_of_parse_and_map(struct device_node *node, int index);
-+extern int devm_irq_of_parse_and_map(struct device *dev,
-+				     struct device_node *node,
-+				     int index);
- extern struct device_node *of_irq_find_parent(struct device_node *child);
- 
- #else /* !CONFIG_OF */
-@@ -72,6 +77,13 @@ static inline unsigned int irq_of_parse_and_map(struct device_node *dev,
- 	return 0;
- }
- 
-+static inline int devm_irq_of_parse_and_map(struct device *dev,
-+					    struct device_node *node,
-+					    int index)
-+{
-+	return 0;
-+}
-+
- static inline void *of_irq_find_parent(struct device_node *child)
- {
- 	return NULL;
-diff --git a/kernel/irq/irqdomain.c b/kernel/irq/irqdomain.c
-index f140337..c8705de 100644
---- a/kernel/irq/irqdomain.c
-+++ b/kernel/irq/irqdomain.c
-@@ -16,6 +16,7 @@
- #include <linux/slab.h>
- #include <linux/smp.h>
- #include <linux/fs.h>
-+#include <linux/device.h>
- 
- static LIST_HEAD(irq_domain_list);
- static DEFINE_MUTEX(irq_domain_mutex);
-@@ -502,6 +503,34 @@ unsigned int irq_create_of_mapping(struct of_phandle_args *irq_data)
- }
- EXPORT_SYMBOL_GPL(irq_create_of_mapping);
- 
-+static void devm_release_irq_mapping(void *p)
-+{
-+	unsigned int virq = (unsigned int)((unsigned long)p);
-+
-+	if (virq)
-+		irq_dispose_mapping(virq);
-+}
-+
-+int devm_irq_create_of_mapping(struct device *dev,
-+		struct of_phandle_args *irq_data)
-+{
-+	unsigned int virq;
-+	int ret;
-+
-+	virq = irq_create_of_mapping(irq_data);
-+	if (virq) {
-+		ret = devm_add_action(dev, devm_release_irq_mapping,
-+				(void *)((unsigned long)virq));
-+		if (ret) {
-+			irq_dispose_mapping(virq);
-+			return ret;
-+		}
-+	}
-+
-+	return virq;
-+}
-+EXPORT_SYMBOL_GPL(devm_irq_create_of_mapping);
-+
- /**
-  * irq_dispose_mapping() - Unmap an interrupt
-  * @virq: linux irq number of the interrupt to unmap
-@@ -524,6 +553,24 @@ void irq_dispose_mapping(unsigned int virq)
- EXPORT_SYMBOL_GPL(irq_dispose_mapping);
- 
- /**
-+ * devm_irq_dispose_mapping() - Unmap an interrupt
-+ * @dev: device irq was used for
-+ * @virq: linux irq number of the interrupt to unmap
-+ *
-+ * This should be used instead of irq_dispose_mapping() if mapping was created
-+ * with devm_irq_create_of_mapping()
-+ */
-+void devm_irq_dispose_mapping(struct device *dev, unsigned int virq)
-+{
-+	if (virq) {
-+		devm_remove_action(dev, devm_release_irq_mapping,
-+				(void *)((unsigned long)virq));
-+		irq_dispose_mapping(virq);
-+	}
-+}
-+EXPORT_SYMBOL_GPL(devm_irq_dispose_mapping);
-+
-+/**
-  * irq_find_mapping() - Find a linux irq from an hw irq number.
-  * @domain: domain owning this hardware interrupt
-  * @hwirq: hardware irq number in that domain space
--- 
-1.7.10.4
+> No, not at all. In fact I did not even specify neither the exact type of
+> device apart from it being a SPI device nor any property of the software
+> apart from the generic user space access thereof implemented in the Linux
+
+You're saying you're controlling it from userspace.  This is a
+particular detail of what you are doing in your system.  You happen to
+want to control the devices you are hanging off the system with
+userspace drivers but that's just what you're doing right now.
+
+> kernel. I really don't see any difference to i2c chardev which is already
+> enabled in multi_v7_defconfig.
+
+That does not require explicit registration as the device driver for the
+device in order to be used.
+
+> >This is not a description of your hardware, it is a description of how
+> >it is controlled with your current software.
+
+> Sorry, but I really don't know what you are referring to. It's a pure
+> hardware description of some pins being the SPI bus namely MISO/MOSI and the
+> clock plus an accompanying chip-select pin.
+
+No, that's in the controller node - the chip selects are described
+there.  The child node references a chip select number that the master
+has and describes what's connected to that chip select.
+
+> I fear for some reason or another you have some affinity against spidev
+> which strikes me odd. Admittedly it is not perfect but it is the only
+> generic SPI user space access currently implemented in the Linux kernel and
+> so far did its job perfectly for many of our customers.
+
+It's a perfectly fine way of controlling things from userspace if that's
+a sensible way of controlling devices but that does not mean you should
+describe it in the device tree in that fashion.
+
+--Fnm8lRGFTVS/3GuM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTjwBfAAoJELSic+t+oim9g0kP/21/0pU2F2LXOmH3xpr0/hkV
+emJkq4yant0EYn3b2iG3DJS6LKVu4rXKnV/TyHeAHjJnxROGA1284YlZdiTxasxd
+Fucib/fvMQVFnEIiyMmwhb/RLQbd7Ieui8ViTP0o7hmA43ZKZ/G0yIMWXAVE3Uck
+Te7w5qrgZXsEg6/s+w/j79SqGCeBwlY/8A2dQzdsgn76FPbDrHuqrVEz/SOKwPoz
+7OcPsWYSaesjLq2uU0Amt/hDp13WgEZvO2F6CQXaQMlbxP2eVao0ayA8ElS+G4g4
+4ZDyw6wLwooXIuJiTh07la7PP9JmmZw8ymTdRI/tgG8Y4Qoyfk1GMAosFmIhBWFw
+o/71CJSil4OkuOJO7bvHBF2ei7l9ZksB+J1ZaIXju/oUelM4I3bT7HRysmmmNvCE
+aleTkdpKFJVxwfvYeeHkE8BYb9BAcMmdjkA1Lspq4PAiXsqODzwdIFkakVwc/SRS
+QH0eIpiaVggSuIH3F/eYE55jaBPSlJtMGrR5JyKIJpA1CYc3JILWir6BW3SWNzJ5
+0dvYpWEeaP5SulTNiRk+EpZQ2LB0tpImF7aE1xVMLjFm06X89amqzgnCFuV7MAT8
+KPogyqmoJmW2Nxcl+Jo3vcQzk8bMQhOqxeEh6dKOewL6bsDxMjJabDvYWqWD5X5B
+2JUWUObJXL1Hz3UB75oi
+=6UGA
+-----END PGP SIGNATURE-----
+
+--Fnm8lRGFTVS/3GuM--
