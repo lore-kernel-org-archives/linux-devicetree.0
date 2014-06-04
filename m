@@ -1,651 +1,138 @@
-From: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
-Subject: [PATCH v5] iio: add support of the max1027
-Date: Wed,  4 Jun 2014 21:59:47 +0200
-Message-ID: <1401911987-1791-1-git-send-email-tremyfr@yahoo.fr>
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] ARM: shmobile: r8a7790: link PCI USB devices to USB
+ PHY
+Date: Thu, 05 Jun 2014 00:03:51 +0400
+Message-ID: <538F7BA7.2010707@cogentembedded.com>
+References: <201405270217.33057.sergei.shtylyov@cogentembedded.com>	<CANqRtoT+xKmK7wkayiD9yCmUqFNKWxpeSgkGTiCqc+THYE0sVw@mail.gmail.com>	<5383C439.1080808@cogentembedded.com> <CANqRtoTanAWvEODE99dY-BRU1FOm3V78FM6ePYKtVbK1Ro+79A@mail.gmail.com> <53865A4F.7000007@cogentembedded.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <53865A4F.7000007@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: "Simon Horman [Horms]" <horms@verge.net.au>, SH-Linux <linux-sh@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This driver add partial support of the
-maxim 1027/1029/1031. Differential mode is not
-supported.
+Hello.
 
-It was tested on armadeus apf27 board.
+On 05/29/2014 01:51 AM, Sergei Shtylyov wrote:
 
-Signed-off-by: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
----
- .../devicetree/bindings/iio/adc/max1027-adc.txt    |   22 +
- drivers/iio/adc/Kconfig                            |    9 +
- drivers/iio/adc/Makefile                           |    1 +
- drivers/iio/adc/max1027.c                          |  531 ++++++++++++++++++++
- 4 files changed, 563 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
- create mode 100644 drivers/iio/adc/max1027.c
+>>>>> Describe the PCI USB devices that are behind the PCI bridges, adding
+>>>>> necessary
+>>>>> links to the USB PHY device.
 
-Changelog:
-v5: (thanks Jonathan Cameron for the feedback)
-- add validate_trigger
-- add validate_device
-- remove useless (void *) cast
-- use allocated buffer for spi_write
+>>>>> Based on the original work by Ben Dooks <ben.dooks@codethink.co.uk>.
 
-v4: (thanks Jonathan Cameron for the feedback)
-- use iio_trigger_generic_data_rdy_poll
+>>>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-v3: (thanks Hartmut Knaack, Lars-Peter Clausen and Jonathan Cameron for the feedback)
-- move to drivers/iio/adc (was in staging)
-- clean binding doc
-- drop empty update_scan_mode callback
-- add a lock around single channel read code
-- remove useless wrappers around spi_write and spi_read
-- fix available scan mask (a bit was missing)
-- remove useless header
-- some others little cleanp
+>>>>> ---
+>>>>> This patch is against 'renesas-devel-v3.15-rc7-20140526' tag of Simon
+>>>>> Horman's
+>>>>> 'renesas.git' repo plus R8A7790/Lager PCI and USB PHY support patches
+>>>>> posted
+>>>>> before. The patch requires the internal PCI DT support, USB PHY driver,
+>>>>> and
+>>>>> USB HCD generic PHY support (also already posted) in order to work.
 
-v2: (thanks Hartmut Knaack and Jonathan Cameron for the feedback)
-- really use devm_* 
-- use demux magic
-- use spi_read and spi_write (instead of spi_sync)
-- use define for register (instead of hardcoded value)
+>>>>> Changes in version 2:
+>>>>> - renamed the PCI OHCI/EHCI device nodes to comply with the PCI binding;
+>>>>> - changed the PHY specifier in the PCI#2 node to reflect that channel #1
+>>>>> support
+>>>>>     was dropped;
+>>>>> - resolved rejects, refreshed the patch.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-new file mode 100644
-index 0000000..a8770cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
-@@ -0,0 +1,22 @@
-+* Maxim 1027/1029/1031 Analog to Digital Converter (ADC)
-+
-+Required properties:
-+  - compatible: Should be "maxim,max1027" or "maxim,max1029" or "maxim,max1031"
-+  - reg: SPI chip select number for the device
-+  - interrupt-parent: phandle to the parent interrupt controller
-+  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+  - interrupts: IRQ line for the ADC
-+  see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+
-+Recommended properties:
-+- spi-max-frequency: Definition as per
-+                     Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Example:
-+adc@0 {
-+	compatible = "maxim,max1027";
-+	reg = <0>;
-+	interrupt-parent = <&gpio5>;
-+	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
-+	spi-max-frequency = <1000000>;
-+};
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 24c28e3..517f886 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -119,6 +119,15 @@ config LP8788_ADC
- 	help
- 	  Say yes here to build support for TI LP8788 ADC.
- 
-+config MAX1027
-+	tristate "Maxim max1027 ADC driver"
-+	depends on SPI
-+	select IIO_BUFFER
-+	select IIO_TRIGGERED_BUFFER
-+	help
-+	  Say yes here to build support for Maxim SPI ADC models
-+	  max1027, max1029 and max1031.
-+
- config MAX1363
- 	tristate "Maxim max1363 ADC driver"
- 	depends on I2C
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index ab346d8..daac784 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -14,6 +14,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
- obj-$(CONFIG_AT91_ADC) += at91_adc.o
- obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
- obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
-+obj-$(CONFIG_MAX1027) += max1027.o
- obj-$(CONFIG_MAX1363) += max1363.o
- obj-$(CONFIG_MCP320X) += mcp320x.o
- obj-$(CONFIG_MCP3422) += mcp3422.o
-diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
-new file mode 100644
-index 0000000..7195b84
---- /dev/null
-+++ b/drivers/iio/adc/max1027.c
-@@ -0,0 +1,531 @@
-+ /*
-+  * iio/adc/max1027.c
-+  * Copyright (C) 2014 Philippe Reynes
-+  *
-+  * based on linux/drivers/iio/ad7923.c
-+  * Copyright 2011 Analog Devices Inc (from AD7923 Driver)
-+  * Copyright 2012 CS Systemes d'Information
-+  *
-+  * This program is free software; you can redistribute it and/or modify
-+  * it under the terms of the GNU General Public License version 2 as
-+  * published by the Free Software Foundation.
-+  *
-+  * max1027.c
-+  *
-+  * Partial support for max1027 and similar chips.
-+  */
-+
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/spi/spi.h>
-+#include <linux/delay.h>
-+
-+#include <linux/iio/iio.h>
-+#include <linux/iio/buffer.h>
-+#include <linux/iio/trigger.h>
-+#include <linux/iio/trigger_consumer.h>
-+#include <linux/iio/triggered_buffer.h>
-+
-+#define MAX1027_CONV_REG  0x80
-+#define MAX1027_SETUP_REG 0x40
-+#define MAX1027_AVG_REG   0x20
-+#define MAX1027_RST_REG   0x10
-+
-+/* conversion register */
-+#define MAX1027_TEMP      0x01
-+#define MAX1027_SCAN_0_N  (0x00 << 1)
-+#define MAX1027_SCAN_N_M  (0x01 << 1)
-+#define MAX1027_SCAN_N    (0x02 << 1)
-+#define MAX1027_NOSCAN    (0x03 << 1)
-+#define MAX1027_CHAN(n)   ((n) << 3)
-+
-+/* setup register */
-+#define MAX1027_UNIPOLAR  0x02
-+#define MAX1027_BIPOLAR   0x03
-+#define MAX1027_REF_MODE0 (0x00 << 2)
-+#define MAX1027_REF_MODE1 (0x01 << 2)
-+#define MAX1027_REF_MODE2 (0x02 << 2)
-+#define MAX1027_REF_MODE3 (0x03 << 2)
-+#define MAX1027_CKS_MODE0 (0x00 << 4)
-+#define MAX1027_CKS_MODE1 (0x01 << 4)
-+#define MAX1027_CKS_MODE2 (0x02 << 4)
-+#define MAX1027_CKS_MODE3 (0x03 << 4)
-+
-+/* averaging register */
-+#define MAX1027_NSCAN_4   0x00
-+#define MAX1027_NSCAN_8   0x01
-+#define MAX1027_NSCAN_12  0x02
-+#define MAX1027_NSCAN_16  0x03
-+#define MAX1027_NAVG_4    (0x00 << 2)
-+#define MAX1027_NAVG_8    (0x01 << 2)
-+#define MAX1027_NAVG_16   (0x02 << 2)
-+#define MAX1027_NAVG_32   (0x03 << 2)
-+#define MAX1027_AVG_EN    (0x01 << 4)
-+
-+enum max1027_id {
-+	max1027,
-+	max1029,
-+	max1031,
-+};
-+
-+static const struct spi_device_id max1027_id[] = {
-+	{"max1027", max1027},
-+	{"max1029", max1029},
-+	{"max1031", max1031},
-+	{}
-+};
-+MODULE_DEVICE_TABLE(spi, max1027_id);
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id max1027_adc_dt_ids[] = {
-+	{ .compatible = "maxim,max1027" },
-+	{ .compatible = "maxim,max1029" },
-+	{ .compatible = "maxim,max1031" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, max1027_adc_dt_ids);
-+#endif
-+
-+#define MAX1027_V_CHAN(index)						\
-+	{								\
-+		.type = IIO_VOLTAGE,					\
-+		.indexed = 1,						\
-+		.channel = index,					\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.scan_index = index+1,					\
-+		.scan_type = {						\
-+			.sign = 'u',					\
-+			.realbits = 10,					\
-+			.storagebits = 16,				\
-+			.shift = 2,					\
-+			.endianness = IIO_BE,				\
-+		},							\
-+	}
-+
-+#define MAX1027_T_CHAN(index)						\
-+	{								\
-+		.type = IIO_TEMP,					\
-+		.channel = index,					\
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
-+		.scan_index = index,					\
-+		.scan_type = {						\
-+			.sign = 'u',					\
-+			.realbits = 12,					\
-+			.storagebits = 16,				\
-+			.endianness = IIO_BE,				\
-+		},							\
-+	}
-+
-+static const struct iio_chan_spec max1027_channels[] = {
-+	MAX1027_T_CHAN(0),
-+	MAX1027_V_CHAN(0),
-+	MAX1027_V_CHAN(1),
-+	MAX1027_V_CHAN(2),
-+	MAX1027_V_CHAN(3),
-+	MAX1027_V_CHAN(4),
-+	MAX1027_V_CHAN(5),
-+	MAX1027_V_CHAN(6),
-+	MAX1027_V_CHAN(7)
-+};
-+
-+static const struct iio_chan_spec max1029_channels[] = {
-+	MAX1027_T_CHAN(0),
-+	MAX1027_V_CHAN(0),
-+	MAX1027_V_CHAN(1),
-+	MAX1027_V_CHAN(2),
-+	MAX1027_V_CHAN(3),
-+	MAX1027_V_CHAN(4),
-+	MAX1027_V_CHAN(5),
-+	MAX1027_V_CHAN(6),
-+	MAX1027_V_CHAN(7),
-+	MAX1027_V_CHAN(8),
-+	MAX1027_V_CHAN(9),
-+	MAX1027_V_CHAN(10),
-+	MAX1027_V_CHAN(11)
-+};
-+
-+static const struct iio_chan_spec max1031_channels[] = {
-+	MAX1027_T_CHAN(0),
-+	MAX1027_V_CHAN(0),
-+	MAX1027_V_CHAN(1),
-+	MAX1027_V_CHAN(2),
-+	MAX1027_V_CHAN(3),
-+	MAX1027_V_CHAN(4),
-+	MAX1027_V_CHAN(5),
-+	MAX1027_V_CHAN(6),
-+	MAX1027_V_CHAN(7),
-+	MAX1027_V_CHAN(8),
-+	MAX1027_V_CHAN(9),
-+	MAX1027_V_CHAN(10),
-+	MAX1027_V_CHAN(11),
-+	MAX1027_V_CHAN(12),
-+	MAX1027_V_CHAN(13),
-+	MAX1027_V_CHAN(14),
-+	MAX1027_V_CHAN(15)
-+};
-+
-+static unsigned long max1027_available_scan_masks[] = {
-+	0x000001ff,
-+	0x00000000,
-+};
-+
-+static unsigned long max1029_available_scan_masks[] = {
-+	0x00001fff,
-+	0x00000000,
-+};
-+
-+static unsigned long max1031_available_scan_masks[] = {
-+	0x0001ffff,
-+	0x00000000,
-+};
-+
-+struct max1027_chip_info {
-+	const struct iio_chan_spec *channels;
-+	unsigned int num_channels;
-+	unsigned long *available_scan_masks;
-+};
-+
-+static const struct max1027_chip_info max1027_chip_info_tbl[] = {
-+	[max1027] = {
-+		.channels = max1027_channels,
-+		.num_channels = ARRAY_SIZE(max1027_channels),
-+		.available_scan_masks = max1027_available_scan_masks,
-+	},
-+	[max1029] = {
-+		.channels = max1029_channels,
-+		.num_channels = ARRAY_SIZE(max1029_channels),
-+		.available_scan_masks = max1029_available_scan_masks,
-+	},
-+	[max1031] = {
-+		.channels = max1031_channels,
-+		.num_channels = ARRAY_SIZE(max1031_channels),
-+		.available_scan_masks = max1031_available_scan_masks,
-+	},
-+};
-+
-+struct max1027_state {
-+	struct max1027_chip_info	*info;
-+	struct spi_device		*spi;
-+	struct iio_trigger		*trig;
-+	u16				*buffer;
-+	struct mutex			lock;
-+};
-+
-+static int max1027_read_single_value(struct iio_dev *indio_dev,
-+				     struct iio_chan_spec const *chan,
-+				     int *val)
-+{
-+	int ret;
-+	struct max1027_state *st = iio_priv(indio_dev);
-+	unsigned char *reg = (unsigned char *)st->buffer;
-+
-+	if (iio_buffer_enabled(indio_dev)) {
-+		dev_warn(&indio_dev->dev, "trigger mode already enabled");
-+		return -EIO;
-+	}
-+
-+	/* Start acquisition on conversion register write */
-+	*reg = MAX1027_SETUP_REG | MAX1027_REF_MODE2 | MAX1027_CKS_MODE2;
-+	ret = spi_write(st->spi, reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev,
-+			"Failed to configure setup register\n");
-+		return ret;
-+	}
-+
-+	/* Configure conversion register with the requested chan */
-+	*reg = MAX1027_CONV_REG | MAX1027_CHAN(chan->channel)
-+		| MAX1027_NOSCAN | !!(chan->type == IIO_TEMP);
-+	ret = spi_write(st->spi, reg, 1);
-+	if (ret < 0) {
-+		dev_err(&indio_dev->dev,
-+			"Failed to configure conversion register\n");
-+		return ret;
-+	}
-+
-+	/*
-+	 * For an unknown reason, when we use the mode "10" (write
-+	 * conversion register), the it doesn't occur every time.
-+	 * So we just wait 1 ms.
-+	 */
-+	mdelay(1);
-+
-+	/* Read result */
-+	ret = spi_read(st->spi, st->buffer, (chan->type == IIO_TEMP) ? 4 : 2);
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = be16_to_cpu(st->buffer[0]);
-+
-+	return IIO_VAL_INT;
-+}
-+
-+static int max1027_read_raw(struct iio_dev *indio_dev,
-+			    struct iio_chan_spec const *chan,
-+			    int *val, int *val2, long mask)
-+{
-+	int ret = 0;
-+	struct max1027_state *st = iio_priv(indio_dev);
-+
-+	mutex_lock(&st->lock);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		ret = max1027_read_single_value(indio_dev, chan, val);
-+		break;
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->type) {
-+		case IIO_TEMP:
-+			*val = 1;
-+			*val2 = 8;
-+			ret = IIO_VAL_FRACTIONAL;
-+			break;
-+		case IIO_VOLTAGE:
-+			*val = 2500;
-+			*val2 = 10;
-+			ret = IIO_VAL_FRACTIONAL_LOG2;
-+			break;
-+		default:
-+			ret = -EINVAL;
-+			break;
-+		};
-+		break;
-+	default:
-+		ret = -EINVAL;
-+		break;
-+	};
-+
-+	mutex_unlock(&st->lock);
-+
-+	return ret;
-+}
-+
-+static int max1027_debugfs_reg_access(struct iio_dev *indio_dev,
-+				      unsigned reg, unsigned writeval,
-+				      unsigned *readval)
-+{
-+	struct max1027_state *st = iio_priv(indio_dev);
-+	unsigned char *val = (unsigned char *)st->buffer;
-+
-+	if (readval != NULL)
-+		return -EINVAL;
-+
-+	*val = (unsigned char)writeval;
-+	return spi_write(st->spi, val, 1);
-+}
-+
-+static int max1027_validate_trigger(struct iio_dev *indio_dev,
-+				    struct iio_trigger *trig)
-+{
-+	struct max1027_state *st = iio_priv(indio_dev);
-+
-+	if (st->trig != trig)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static int max1027_set_trigger_state(struct iio_trigger *trig, bool state)
-+{
-+	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trig);
-+	struct max1027_state *st = iio_priv(indio_dev);
-+	unsigned char *reg = (unsigned char *)st->buffer;
-+	int ret;
-+
-+	if (state) {
-+		/* Start acquisition on cnvst */
-+		*reg = MAX1027_SETUP_REG|MAX1027_CKS_MODE0|MAX1027_REF_MODE2;
-+		ret = spi_write(st->spi, reg, 1);
-+		if (ret < 0)
-+			return ret;
-+
-+		/* Scan from 0 to max */
-+		*reg = MAX1027_CONV_REG | MAX1027_CHAN(0)
-+			| MAX1027_SCAN_N_M | MAX1027_TEMP;
-+		ret = spi_write(st->spi, reg, 1);
-+		if (ret < 0)
-+			return ret;
-+	} else {
-+		/* Start acquisition on conversion register write */
-+		*reg = MAX1027_SETUP_REG|MAX1027_CKS_MODE2|MAX1027_REF_MODE2;
-+		ret = spi_write(st->spi, reg, 1);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int max1027_validate_device(struct iio_trigger *trig,
-+				   struct iio_dev *indio_dev)
-+{
-+	struct iio_dev *indio = iio_trigger_get_drvdata(trig);
-+
-+	if (indio != indio_dev)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+static irqreturn_t max1027_trigger_handler(int irq, void *private)
-+{
-+	struct iio_poll_func *pf = (struct iio_poll_func *)private;
-+	struct iio_dev *indio_dev = pf->indio_dev;
-+	struct max1027_state *st = iio_priv(indio_dev);
-+
-+	pr_debug("%s(irq=%d, private=0x%p)\n", __func__, irq, private);
-+
-+	/* fill buffer with all channel */
-+	spi_read(st->spi, st->buffer, indio_dev->masklength * 2);
-+
-+	iio_push_to_buffers_with_timestamp(indio_dev, st->buffer,
-+					   iio_get_time_ns());
-+
-+	iio_trigger_notify_done(indio_dev->trig);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static const struct iio_trigger_ops max1027_trigger_ops = {
-+	.owner = THIS_MODULE,
-+	.validate_device = &max1027_validate_device,
-+	.set_trigger_state = &max1027_set_trigger_state,
-+};
-+
-+static const struct iio_info max1027_info = {
-+	.driver_module = THIS_MODULE,
-+	.read_raw = &max1027_read_raw,
-+	.validate_trigger = &max1027_validate_trigger,
-+	.debugfs_reg_access = &max1027_debugfs_reg_access,
-+};
-+
-+static int max1027_probe(struct spi_device *spi)
-+{
-+	int err;
-+	unsigned char *reg;
-+	struct iio_dev *indio_dev;
-+	struct max1027_state *st;
-+
-+	pr_debug("%s: probe(spi = 0x%p)\n", __func__, spi);
-+
-+	/* allocate iio device */
-+	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
-+	if (indio_dev == NULL) {
-+		pr_err("can't allocate iio device\n");
-+		return -ENOMEM;
-+	}
-+
-+	spi_set_drvdata(spi, indio_dev);
-+
-+	st = iio_priv(indio_dev);
-+	st->spi = spi;
-+	st->buffer = NULL;
-+	st->info = (struct max1027_chip_info *)
-+		&max1027_chip_info_tbl[spi_get_device_id(spi)->driver_data];
-+
-+	mutex_init(&st->lock);
-+
-+	indio_dev->name = spi_get_device_id(spi)->name;
-+	indio_dev->dev.parent = &spi->dev;
-+	indio_dev->info = &max1027_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = st->info->channels;
-+	indio_dev->num_channels = st->info->num_channels;
-+	indio_dev->available_scan_masks = st->info->available_scan_masks;
-+
-+	/* Allocate buffer (data) */
-+	st->buffer = devm_kmalloc(&indio_dev->dev,
-+				  indio_dev->num_channels * 2,
-+				  GFP_KERNEL);
-+	if (st->buffer == NULL) {
-+		dev_err(&indio_dev->dev, "Can't allocate bufffer\n");
-+		return -ENOMEM;
-+	}
-+
-+	/* Allocate buffer */
-+	err = iio_triggered_buffer_setup(indio_dev, &iio_pollfunc_store_time,
-+					 &max1027_trigger_handler, NULL);
-+	if (err < 0) {
-+		dev_err(&indio_dev->dev, "Failed to setup buffer\n");
-+		return err;
-+	}
-+
-+	/* Allocate trigger */
-+	st->trig = devm_iio_trigger_alloc(&spi->dev, "%s-trigger",
-+							indio_dev->name);
-+	if (st->trig == NULL) {
-+		err = -ENOMEM;
-+		dev_err(&indio_dev->dev, "Failed to allocate iio trigger\n");
-+		goto fail_trigger_alloc;
-+	}
-+
-+	/* configure and register trigger */
-+	st->trig->ops = &max1027_trigger_ops;
-+	st->trig->dev.parent = &spi->dev;
-+	iio_trigger_set_drvdata(st->trig, indio_dev);
-+	iio_trigger_register(st->trig);
-+
-+	/* request irq */
-+	err = devm_request_threaded_irq(&spi->dev, spi->irq,
-+					iio_trigger_generic_data_rdy_poll,
-+					NULL,
-+					IRQF_TRIGGER_FALLING,
-+					spi->dev.driver->name, st->trig);
-+	if (err < 0) {
-+		dev_err(&indio_dev->dev, "Failed to allocate IRQ.\n");
-+		goto fail_dev_register;
-+	}
-+
-+	/* Disable averaging */
-+	reg = (unsigned char *)st->buffer;
-+	*reg = MAX1027_AVG_REG;
-+	err = spi_write(st->spi, reg, 1);
-+	if (err < 0) {
-+		dev_err(&indio_dev->dev, "Failed to configure averaging register\n");
-+		goto fail_dev_register;
-+	}
-+
-+	/* Register the device */
-+	err = iio_device_register(indio_dev);
-+	if (err < 0) {
-+		dev_err(&indio_dev->dev, "Failed to register iio device\n");
-+		goto fail_dev_register;
-+	}
-+
-+	return 0;
-+
-+fail_dev_register:
-+fail_trigger_alloc:
-+	iio_triggered_buffer_cleanup(indio_dev);
-+
-+	return err;
-+}
-+
-+static int max1027_remove(struct spi_device *spi)
-+{
-+	struct iio_dev *indio_dev = spi_get_drvdata(spi);
-+
-+	pr_debug("%s: remove(spi = 0x%p)\n", __func__, spi);
-+
-+	iio_device_unregister(indio_dev);
-+	iio_triggered_buffer_cleanup(indio_dev);
-+
-+	return 0;
-+}
-+
-+static struct spi_driver max1027_driver = {
-+	.driver = {
-+		.name	= "max1027",
-+		.owner	= THIS_MODULE,
-+	},
-+	.probe		= max1027_probe,
-+	.remove		= max1027_remove,
-+	.id_table	= max1027_id,
-+};
-+module_spi_driver(max1027_driver);
-+
-+MODULE_AUTHOR("Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>");
-+MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.4.4
+>>>>>    arch/arm/boot/dts/r8a7790.dtsi |   28 ++++++++++++++++++++++++++++
+>>>>>    1 file changed, 28 insertions(+)
+
+>>>>> Index: renesas/arch/arm/boot/dts/r8a7790.dtsi
+>>>>> ===================================================================
+>>>>> --- renesas.orig/arch/arm/boot/dts/r8a7790.dtsi
+>>>>> +++ renesas/arch/arm/boot/dts/r8a7790.dtsi
+>>>>> @@ -919,6 +919,20 @@
+>>>>>                   interrupt-map = <0x0000 0 0 1 &gic 0 108
+>>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>>                                    0x0800 0 0 1 &gic 0 108
+>>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>>                                    0x1000 0 0 2 &gic 0 108
+>>>>> IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +
+>>>>> +               usb@0,1 {
+>>>>> +                       reg = <0x800 0 0 0 0>;
+>>>>> +                       device_type = "pci";
+>>>>> +                       phys = <&usbphy 0 0>;
+>>>>> +                       phy-names = "usb";
+>>>>> +               };
+>>>>> +
+>>>>> +               usb@0,2 {
+>>>>> +                       reg = <0x1000 0 0 0 0>;
+>>>>> +                       device_type = "pci";
+>>>>> +                       phys = <&usbphy 0 0>;
+>>>>> +                       phy-names = "usb";
+>>>>> +               };
+>>>>>           };
+>>>>>
+>>>>>           pci1: pci@ee0b0000 {
+>>>>> @@ -955,5 +969,19 @@
+>>>>>                   interrupt-map = <0x0000 0 0 1 &gic 0 113
+>>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>>                                    0x0800 0 0 1 &gic 0 113
+>>>>> IRQ_TYPE_LEVEL_HIGH
+>>>>>                                    0x1000 0 0 2 &gic 0 113
+>>>>> IRQ_TYPE_LEVEL_HIGH>;
+>>>>> +
+>>>>> +               usb@0,1 {
+>>>>> +                       reg = <0x800 0 0 0 0>;
+>>>>> +                       device_type = "pci";
+>>>>> +                       phys = <&usbphy 1 0>;
+>>>>> +                       phy-names = "usb";
+>>>>> +               };
+>>>>> +
+>>>>> +               usb@0,2 {
+>>>>> +                       reg = <0x1000 0 0 0 0>;
+>>>>> +                       device_type = "pci";
+>>>>> +                       phys = <&usbphy 1 0>;
+>>>>> +                       phy-names = "usb";
+>>>>> +               };
+>>>>>           };
+>>>>>    };
+
+[...]
+
+>> I know we've discussed this before, and for USB channel #1 you tend to
+>> say that the PHY is not necessary for operation. From my side I am not
+>> so sure. Over the months I seen several shortcuts and missing pieces
+>> so for now just assume this is another rushed attempt. As usual I
+>> would like to make sure the dependencies are correctly described in DT
+>> before merging anything.
+
+>> Like I mentioned earlier there are shared bits in UGCTRL register in
+
+>     Did you mean UGCTRL or UGCTRL2 register? My testing didn't prove that the
+> UGCTRL bits (CONNECT and PLLRESET) affect anything but the USBHS controller --
+> my PHY driver only touches these bits if the PHY selected corresponds to the
+> USBHS itself (which is not supported by DT yet)...
+
+>> the PHY. Those may or may not affect USB channel #1. Furthermore, on
+>> top of this we have the MSTP bit for the PHY that may or may not be
+>> related to USB channel #1.
+
+>     There is no MSTP bit for the PHY, there's MSTP bit for USBHS controller of
+> which this PHY is a part.
+
+>> My opinion is that if the USB PHY requires the MSTP clock to be
+>> enabled when using USB channel #1 _or_ the UGCTRL bits affect the USB
+>> Channel #1 then DT needs to point out the relationship between the PHY
+>> and the USB Host
+
+>     I agree and I can conduct some additional tests only linking the USB
+> channel #1 to the PHY driver, and hence enabling the USBHS clock only for it...
+
+    OK, I've done additional testing and USB channel #1 on R8A7790 works 
+regardless of the USBHS clock being enabled or not.
+
+>> Thanks,
+>> / magnus
+
+WBR, Sergei
+
