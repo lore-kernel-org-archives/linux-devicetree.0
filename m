@@ -1,43 +1,66 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v3 10/10] MAINTAINERS: Add sdhci-st file to ARCH/STI
- architecture
-Date: Wed,  4 Jun 2014 17:30:24 +0100
-Message-ID: <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
-References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
+From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
+Date: Wed, 4 Jun 2014 17:39:33 +0100
+Message-ID: <20140604163933.GE6644@arm.com>
+References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
+	<20140604134400.GE28484@ulmo> <20140604135600.GD6644@arm.com>
+	<13061821.NYx1AfEhs0@wuerfel>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, kernel@stlinux.com
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <13061821.NYx1AfEhs0@wuerfel>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+On Wed, Jun 04, 2014 at 03:01:15PM +0100, Arnd Bergmann wrote:
+> On Wednesday 04 June 2014 14:56:01 Will Deacon wrote:
+> > On Wed, Jun 04, 2014 at 02:44:03PM +0100, Thierry Reding wrote:
+> > > On Fri, May 30, 2014 at 09:54:37PM +0200, Arnd Bergmann wrote:
+> > > > On Friday 30 May 2014 22:29:13 Hiroshi Doyu wrote:
+> > > > > The disadvantage of this is that this limits the max number of streamIDs
+> > > > > to support. If # of streamID is increased later more than 64, this
+> > > > > format cannot cover any more. You have to predict the max # of streamIDs
+> > > > > in advance if steamID is statically assigned.
+> > > > > 
+> > > > 
+> > > > Well, the iommu specific binding could allow a variable #address-cells.
+> > > > That way, you just need to know the number of stream IDs for that instance
+> > > > of the iommu.
+> > > 
+> > > That sounds fairly complicated to me. I don't see what that buys us over
+> > > the clarity and simplicity that the above explicit notation gives us. Is
+> > > it not more common for a device to have a single master rather than a
+> > > whole bunch of them?
+> > 
+> > I've never seen a device upstream of an ARM SMMU with a single stream-id;
+> > they always seem to have a whole bunch of them. Calxeda's SATA controller
+> > had 10 IDs, for example, and a PL330 DMA controller tends to have at least
+> > 3.
+> 
+> What are those good for? Would we just always use the first one?
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6dc67b1..19dc265 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1306,6 +1306,7 @@ F:	drivers/pinctrl/pinctrl-st.c
- F:	drivers/media/rc/st_rc.c
- F:	drivers/i2c/busses/i2c-st.c
- F:	drivers/tty/serial/st-asc.c
-+F:	drivers/mmc/host/sdhci-st.c
- 
- ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
- M:	Lennert Buytenhek <kernel@wantstofly.org>
--- 
-1.9.1
+I think It's just an artifact of how these systems tend to be built. The
+StreamID is constructed out of bits on the bus (AXI and sideband), so a
+DMA controller could easily have one ID for reads, one for writes,
+one for execute. Masters capable of multiple outstanding transactions
+could also have sets of IDs too.
+
+The SMMU driver would point them all at the same context bank, as far as I
+can tell, but that means the driver does need to be aware of the incoming
+IDs.
+
+Rob might know how they constructed the IDs on the Calxeda SATA controller?
+
+Will
