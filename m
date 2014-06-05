@@ -1,158 +1,121 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock tree description
-Date: Thu,  5 Jun 2014 13:35:14 -0700
-Message-ID: <1402000514-30752-1-git-send-email-dianders@chromium.org>
-References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1401467562-5585-1-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: olof@lixom.net, javier.martinez@collabora.co.uk, Doug Anderson <dianders@chromium.org>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rahul.sharma@samsung.com, shaik.ameer@samsung.com, arun.kk@samsung.com, alim.akhtar@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/4] of: Add NVIDIA Tegra XUSB pad controller binding
+Date: Fri, 6 Jun 2014 00:08:34 +0200
+Message-ID: <20140605220833.GA28817@ulmo>
+References: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com>
+ <1401894990-30092-2-git-send-email-thierry.reding@gmail.com>
+ <53909F31.4050603@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="HcAYCG3uE/tztfnV"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53909F31.4050603-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The "aclk66_peric" clock is a gate clock with a whole bunch of gates
-underneath it.  This big gate isn't very useful to include in our
-clock tree.  If any of the children need to be turned on then the big
-gate will need to be on anyway.  ...and there are plenty of other "big
-gates" that aren't described in our clock tree, some of which shut off
-collections of clocks that have no relationship in the hierarchy so
-are hard to model.
 
-"aclk66_peric" is causing earlyprintk problems since it gets disabled
-as part of the boot process, so let's just remove it.
+--HcAYCG3uE/tztfnV
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Strangely (and for no good reason) this clock is exported as part of
-the common clock bindings.  Remove it since there are no in-kernel
-device trees using it and no reason anyone out of tree should refer to
-it either.
+On Thu, Jun 05, 2014 at 10:47:45AM -0600, Stephen Warren wrote:
+> On 06/04/2014 09:16 AM, Thierry Reding wrote:
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >=20
+> > This patch adds the device tree binding documentation for the XUSB pad
+> > controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and PHY
+> > capabilities.
+>=20
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-=
+xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124=
+-xusb-padctl.txt
+>=20
+> > +- #phy-cells: Should be 1. The specifier is the index of the PHY to re=
+ference.
+> > +  Possible values are:
+> > +  - 0: PCIe
+> > +  - 1: SATA
+>=20
+> Those values are defined in
+> include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h. I personally consider
+> the <dt-bindings/> header files to be part of the binding itself, rather
+> than being derived from the binding. As such, I'd suggest the following
+> changes:
+>=20
+> * Make this patch 1 not patch 2
+> * Move pinctrl-tegra-xusb.h into this patch.
+> * Remove the list of values above, and replace it with the text "See
+> <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the set of valid values".
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
----
-Changes in v3:
-- Now just remove aclk66_peric from the tree as suggested by Tomasz.
+I remember discussions where people explicitly said that relying on the
+symbolic names in the DT bindings was a mistake because it would mean
+that everyone would need to have access to a mechanism similar to what
+we have in the Linux kernel (and that the header files would always need
+to be shipped with the DT bindings).
 
-Changes in v2:
-- Use GATE_A and clk_get().  Save the clock for putting later.
-- Return 0 from exynos5420_clk_late_init().
+> > +Example:
+> > +=3D=3D=3D=3D=3D=3D=3D=3D
+> > +
+> > +SoC file extract:
+> > +-----------------
+> > +
+> > +	padctl@0,7009f000 {
+> > +		compatible =3D "nvidia,tegra124-xusb-padctl";
+> > +		reg =3D <0x0 0x7009f000 0x0 0x1000>;
+> > +		resets =3D <&tegra_car 142>;
+> > +		reset-names =3D "padctl";
+> > +
+> > +		#address-cells =3D <0>;
+> > +		#size-cells =3D <0>;
+>=20
+> Why are those two properties required? Yes, this node has sub-nodes, but
+> those sub-nodes don't have a reg property or unit address. The main
+> Tegra pinctrl nodes don't have #address/size-cells.
 
- drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
- include/dt-bindings/clock/exynos5420.h |  1 -
- 2 files changed, 55 insertions(+), 31 deletions(-)
+I seem to remember that there was a reason but I'm pulling a blank. I'll
+do some testing with those removed and verify that they are indeed not
+needed.
 
-diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
-index 9d7d7ee..61eccf0 100644
---- a/drivers/clk/samsung/clk-exynos5420.c
-+++ b/drivers/clk/samsung/clk-exynos5420.c
-@@ -890,8 +890,6 @@ static struct samsung_gate_clock exynos5x_gate_clks[] __initdata = {
- 			GATE_BUS_TOP, 9, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk66_psgen", "mout_user_aclk66_psgen",
- 			GATE_BUS_TOP, 10, CLK_IGNORE_UNUSED, 0),
--	GATE(CLK_ACLK66_PERIC, "aclk66_peric", "mout_user_aclk66_peric",
--			GATE_BUS_TOP, 11, CLK_IGNORE_UNUSED, 0),
- 	GATE(0, "aclk266_isp", "mout_user_aclk266_isp",
- 			GATE_BUS_TOP, 13, 0, 0),
- 	GATE(0, "aclk166", "mout_user_aclk166",
-@@ -994,34 +992,61 @@ static struct samsung_gate_clock exynos5x_gate_clks[] __initdata = {
- 			SRC_MASK_FSYS, 24, CLK_SET_RATE_PARENT, 0),
- 
- 	/* PERIC Block */
--	GATE(CLK_UART0, "uart0", "aclk66_peric", GATE_IP_PERIC, 0, 0, 0),
--	GATE(CLK_UART1, "uart1", "aclk66_peric", GATE_IP_PERIC, 1, 0, 0),
--	GATE(CLK_UART2, "uart2", "aclk66_peric", GATE_IP_PERIC, 2, 0, 0),
--	GATE(CLK_UART3, "uart3", "aclk66_peric", GATE_IP_PERIC, 3, 0, 0),
--	GATE(CLK_I2C0, "i2c0", "aclk66_peric", GATE_IP_PERIC, 6, 0, 0),
--	GATE(CLK_I2C1, "i2c1", "aclk66_peric", GATE_IP_PERIC, 7, 0, 0),
--	GATE(CLK_I2C2, "i2c2", "aclk66_peric", GATE_IP_PERIC, 8, 0, 0),
--	GATE(CLK_I2C3, "i2c3", "aclk66_peric", GATE_IP_PERIC, 9, 0, 0),
--	GATE(CLK_USI0, "usi0", "aclk66_peric", GATE_IP_PERIC, 10, 0, 0),
--	GATE(CLK_USI1, "usi1", "aclk66_peric", GATE_IP_PERIC, 11, 0, 0),
--	GATE(CLK_USI2, "usi2", "aclk66_peric", GATE_IP_PERIC, 12, 0, 0),
--	GATE(CLK_USI3, "usi3", "aclk66_peric", GATE_IP_PERIC, 13, 0, 0),
--	GATE(CLK_I2C_HDMI, "i2c_hdmi", "aclk66_peric", GATE_IP_PERIC, 14, 0, 0),
--	GATE(CLK_TSADC, "tsadc", "aclk66_peric", GATE_IP_PERIC, 15, 0, 0),
--	GATE(CLK_SPI0, "spi0", "aclk66_peric", GATE_IP_PERIC, 16, 0, 0),
--	GATE(CLK_SPI1, "spi1", "aclk66_peric", GATE_IP_PERIC, 17, 0, 0),
--	GATE(CLK_SPI2, "spi2", "aclk66_peric", GATE_IP_PERIC, 18, 0, 0),
--	GATE(CLK_I2S1, "i2s1", "aclk66_peric", GATE_IP_PERIC, 20, 0, 0),
--	GATE(CLK_I2S2, "i2s2", "aclk66_peric", GATE_IP_PERIC, 21, 0, 0),
--	GATE(CLK_PCM1, "pcm1", "aclk66_peric", GATE_IP_PERIC, 22, 0, 0),
--	GATE(CLK_PCM2, "pcm2", "aclk66_peric", GATE_IP_PERIC, 23, 0, 0),
--	GATE(CLK_PWM, "pwm", "aclk66_peric", GATE_IP_PERIC, 24, 0, 0),
--	GATE(CLK_SPDIF, "spdif", "aclk66_peric", GATE_IP_PERIC, 26, 0, 0),
--	GATE(CLK_USI4, "usi4", "aclk66_peric", GATE_IP_PERIC, 28, 0, 0),
--	GATE(CLK_USI5, "usi5", "aclk66_peric", GATE_IP_PERIC, 30, 0, 0),
--	GATE(CLK_USI6, "usi6", "aclk66_peric", GATE_IP_PERIC, 31, 0, 0),
--
--	GATE(CLK_KEYIF, "keyif", "aclk66_peric", GATE_BUS_PERIC, 22, 0, 0),
-+	GATE(CLK_UART0, "uart0", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 0, 0, 0),
-+	GATE(CLK_UART1, "uart1", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 1, 0, 0),
-+	GATE(CLK_UART2, "uart2", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 2, 0, 0),
-+	GATE(CLK_UART3, "uart3", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 3, 0, 0),
-+	GATE(CLK_I2C0, "i2c0", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 6, 0, 0),
-+	GATE(CLK_I2C1, "i2c1", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 7, 0, 0),
-+	GATE(CLK_I2C2, "i2c2", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 8, 0, 0),
-+	GATE(CLK_I2C3, "i2c3", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 9, 0, 0),
-+	GATE(CLK_USI0, "usi0", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 10, 0, 0),
-+	GATE(CLK_USI1, "usi1", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 11, 0, 0),
-+	GATE(CLK_USI2, "usi2", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 12, 0, 0),
-+	GATE(CLK_USI3, "usi3", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 13, 0, 0),
-+	GATE(CLK_I2C_HDMI, "i2c_hdmi", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 14, 0, 0),
-+	GATE(CLK_TSADC, "tsadc", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 15, 0, 0),
-+	GATE(CLK_SPI0, "spi0", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 16, 0, 0),
-+	GATE(CLK_SPI1, "spi1", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 17, 0, 0),
-+	GATE(CLK_SPI2, "spi2", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 18, 0, 0),
-+	GATE(CLK_I2S1, "i2s1", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 20, 0, 0),
-+	GATE(CLK_I2S2, "i2s2", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 21, 0, 0),
-+	GATE(CLK_PCM1, "pcm1", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 22, 0, 0),
-+	GATE(CLK_PCM2, "pcm2", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 23, 0, 0),
-+	GATE(CLK_PWM, "pwm", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 24, 0, 0),
-+	GATE(CLK_SPDIF, "spdif", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 26, 0, 0),
-+	GATE(CLK_USI4, "usi4", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 28, 0, 0),
-+	GATE(CLK_USI5, "usi5", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 30, 0, 0),
-+	GATE(CLK_USI6, "usi6", "mout_user_aclk66_peric",
-+			GATE_IP_PERIC, 31, 0, 0),
-+
-+	GATE(CLK_KEYIF, "keyif", "mout_user_aclk66_peric",
-+			GATE_BUS_PERIC, 22, 0, 0),
- 
- 	/* PERIS Block */
- 	GATE(CLK_CHIPID, "chipid", "aclk66_psgen",
-diff --git a/include/dt-bindings/clock/exynos5420.h b/include/dt-bindings/clock/exynos5420.h
-index 97dcb89..14e1c8f 100644
---- a/include/dt-bindings/clock/exynos5420.h
-+++ b/include/dt-bindings/clock/exynos5420.h
-@@ -63,7 +63,6 @@
- #define CLK_SCLK_MPHY_IXTAL24	161
- 
- /* gate clocks */
--#define CLK_ACLK66_PERIC	256
- #define CLK_UART0		257
- #define CLK_UART1		258
- #define CLK_UART2		259
--- 
-2.0.0.526.g5318336
+> > +Board file extract:
+> > +-------------------
+>=20
+> > +	padctl: padctl@0,7009f000 {
+> > +		pinmux {
+> > +			pinctrl-0 =3D <&padctl_default>;
+> > +			pinctrl-names =3D "default";
+>=20
+> Isn't there one extra level of nodes here. In the DT patches later in
+> this series, pinctrl-0/pinctrl-names are directly inside the top-level
+> padctl node.
+
+Yes, this is left-over from an earlier version of the patch. Thanks for
+catching this.
+
+Thierry
+
+--HcAYCG3uE/tztfnV
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTkOpgAAoJEN0jrNd/PrOh43IQAJqKwAMJMy9dEiuPXWZRHqRQ
+ZQDl9VUQYidevWc6B97ljjV2AksA64X9q/diMN6C47A8l0eys63qYUBMmA0LlzGB
+XR+9xPTK/l6dk9AckuzdIrT3cnOLouEeCD4BoJ1gt0baNDFB0HlBh5m1itz7tjUa
+DD/nsPSwZM6kwTlLfmZjavKJ9ivJk23/myqNpZXt406n7WIlDx4VdGNGM43oc0VU
+V0pE55lUOjhC1MMCSUwlxJqRxhYGXy4WC5XSlng/6meVzol3GAHyzBpxWntbYywA
+d9EKqXWEenvYMq517oZehnzL8CpLW/m/M6lFdtiyeSingZ5+YyhgmABwyVrY8CN1
+3z3IeNzWuXuJkJkNM6YOfQj/OBBrBxrZdlvyvMy1rRLXbT3LMsTzdrA2PTGQFK0G
+Yc5+7iRCvgHpN3txWmcfPOF1a55qGpyryuPdRJRnnaGDdiy8BlWcvyI7z+/5vL/G
+5w7/JckV4WapBvSWetIUgNMDIRhKeDhOzDjjaZSex5twfY/BQkvA1D70XEVeexn1
+R3xB3mY4bAYFHsLEMUCUc1A7xe3KuRx6PvJuYn6F30u9CqthlQpncidQIS1cWcRv
+iVOxCPHgdPpqBHN8a49ib7a5nHozzTEGpuL2WYitGwEjxf666PH7palt4mPngO4Y
+MUI4TH4gMLsQC6S0bOnT
+=CjvU
+-----END PGP SIGNATURE-----
+
+--HcAYCG3uE/tztfnV--
