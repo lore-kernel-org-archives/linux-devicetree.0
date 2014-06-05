@@ -1,40 +1,95 @@
 From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 10/10] MAINTAINERS: Add sdhci-st file to ARCH/STI
- architecture
-Date: Thu, 5 Jun 2014 15:26:12 +0100
-Message-ID: <20140605142612.GC24240@lee--X1>
-References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
- <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
+Subject: Re: [PATCH] stmmac: extend DMA initialization delay to 2.5 seconds
+Date: Thu, 5 Jun 2014 15:30:15 +0100
+Message-ID: <20140605143015.GD24240@lee--X1>
+References: <1401973080-10085-1-git-send-email-abrodkin@synopsys.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, kernel@stlinux.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <1401973080-10085-1-git-send-email-abrodkin@synopsys.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexey Brodkin <Alexey.Brodkin@synopsys.com>
+Cc: netdev@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Hans de Goede <hdegoede@redhat.com>, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Vineet Gupta <Vineet.Gupta1@synopsys.com>, srinivas.kandagatla@linaro.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
++Srinivas and the ST list.
+
+> On some platforms existing 100 msecond delay is not enough for DMA bl=
+ock to
+> recover after reset. This is because MAC DMA waits for all PHY input =
+clocks
+> to present and depending on the board reset bit deassertion may take =
+much
+> longer than previously used 100 milliseconds
+>=20
+> I have a board that requires more than 2 seconds for DMA to zero "res=
+et" bit.
+> If for other boards it's still not long enough this value should be e=
+xtended
+> once again.
+>=20
+> In the same change I convert "mdelay" to "msleep" to make CPU availab=
+le for
+> other processes during DMA init delay which is especially useful in c=
+ase of
+> delay for a few seconds.
+>=20
+> Signed-off-by: Alexey Brodkin <abrodkin@synopsys.com>
+>=20
+> Cc: David S. Miller <davem@davemloft.net>
+> Cc: Hans de Goede <hdegoede@redhat.com>
+> Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
+> Cc: Chen-Yu Tsai <wens@csie.org>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: Vineet Gupta <vgupta@synopsys.com>
 > ---
->  MAINTAINERS | 1 +
->  1 file changed, 1 insertion(+)
-
-Acked-by: Lee Jones <lee.jones@linaro.org>
-
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 6dc67b1..19dc265 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -1306,6 +1306,7 @@ F:	drivers/pinctrl/pinctrl-st.c
->  F:	drivers/media/rc/st_rc.c
->  F:	drivers/i2c/busses/i2c-st.c
->  F:	drivers/tty/serial/st-asc.c
-> +F:	drivers/mmc/host/sdhci-st.c
-> =20
->  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
->  M:	Lennert Buytenhek <kernel@wantstofly.org>
+>  drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c | 4 ++--
+>  drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c  | 4 ++--
+>  2 files changed, 4 insertions(+), 4 deletions(-)
+>=20
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/dr=
+ivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+> index 0c2058a..f713ea7 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+> @@ -39,11 +39,11 @@ static int dwmac1000_dma_init(void __iomem *ioadd=
+r, int pbl, int fb, int mb,
+>  	/* DMA SW reset */
+>  	value |=3D DMA_BUS_MODE_SFT_RESET;
+>  	writel(value, ioaddr + DMA_BUS_MODE);
+> -	limit =3D 10;
+> +	limit =3D 100;
+>  	while (limit--) {
+>  		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
+>  			break;
+> -		mdelay(10);
+> +		msleep(25);
+>  	}
+>  	if (limit < 0)
+>  		return -EBUSY;
+> diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c b/dri=
+vers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
+> index 7d1dce9..043585f 100644
+> --- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
+> +++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
+> @@ -41,11 +41,11 @@ static int dwmac100_dma_init(void __iomem *ioaddr=
+, int pbl, int fb, int mb,
+>  	/* DMA SW reset */
+>  	value |=3D DMA_BUS_MODE_SFT_RESET;
+>  	writel(value, ioaddr + DMA_BUS_MODE);
+> -	limit =3D 10;
+> +	limit =3D 100;
+>  	while (limit--) {
+>  		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
+>  			break;
+> -		mdelay(10);
+> +		msleep(25);
+>  	}
+>  	if (limit < 0)
+>  		return -EBUSY;
 
 --=20
 Lee Jones
