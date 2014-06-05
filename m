@@ -1,44 +1,152 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 1/4] pinctrl: Add NVIDIA Tegra XUSB pad controller support
-Date: Thu, 05 Jun 2014 11:08:54 -0600
-Message-ID: <5390A426.1050307@wwwdotorg.org>
-References: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Bresticker <abrestic@chromium.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v7 0/7] arm: Add basic support for Mediatek Cortex-A7 SoCs
+Date: Thu,  5 Jun 2014 19:26:14 +0200
+Message-ID: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/2014 09:16 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> The XUSB pad controller found on NVIDIA Tegra SoCs provides several pads
-> that lanes can be assigned to in order to support a variety of interface
-> options: USB 2.0, USB 3.0, PCIe and SATA.
-> 
-> In addition to the pin controller used to assign lanes to pads two PHYs
-> are exposed to allow the bricks for PCIe and SATA to be powered up and
-> down by PCIe and SATA drivers.
+Seventh round for the Mediatek basic support patches.
 
-> +#define TEGRA124_GROUP(_funcs)						\
-> +	{								\
-> +		.num_funcs = ARRAY_SIZE(tegra124_##_funcs##_functions),	\
-> +		.funcs = tegra124_##_funcs##_functions,			\
-> +	}
-> +
-> +static const struct tegra_xusb_padctl_group tegra124_groups[] = {
-> +	TEGRA124_GROUP(otg),
-> +	TEGRA124_GROUP(usb),
-> +	TEGRA124_GROUP(pci),
-> +};
+Due to the discussion about the need of request the memory needed by a
+device [0], I implemented the function of_io_request_and_map.
+The clocksource drivers uses proper error handling and keep on booting
+the device instead of calling panic.
 
-I'm not sure what this set of groups is for.
+[0] http://www.spinics.net/lists/arm-kernel/msg336924.html
 
-pinctrl muxes functions onto groups, so given that each pin in padctl is
-individually configurable, we need 1 group per pin. As far as I can
-tell, tegra_xusb_padctl_get_groups_count()/name() implement this
-correctly, and this array isn't used anywhere?
+---
+This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
+Support is quite basic, as the only component working up to now are the
+timers.
+
+The patch series is build against torvalds/master tree.
+
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+
+Changes for v7:
+1. OF address
+- add of_io_request_and_map
+
+2. Clocksource timer
+- use pr_warnings and error handling instead of panic
+- fix macro parentheses
+- use of_io_request_and_map
+
+3. Others
+- rename SoC DT bindings to mediatek.txt
+- fixed typos
+
+
+Changes for v6:
+- fix compatible string of the timer
+- encapsulate timer setup in function
+- add more information to the timer commit message
+- add address in timer DTS bindings documentation
+
+
+Changes for v5:
+1. Clocksource timer
+- Change the compatible string to mt6577
+
+2. Timer DT bindings
+- Change compatible string to mt6577
+
+
+Changes for v4:
+1. Clocksource timer
+- use cpu_possible_mask
+
+2. Timer DT bindings
+- Delete comments about the frequency of the clocks
+- Add clock-names for the input clocks
+
+3. Basic SoC support
+- add clock-names for the timer
+- rename the label of the clocks nodes
+
+
+Changes for v3:
+1. Clocksource timer
+- Set cpu_mask_all and irq in clock_event_device
+- Use device private structure for driver specific values
+
+2. Timer DT bindings
+- Define order of the clock phandles
+- Fix typos
+
+3. Basic SoC support
+- DTS: set gic to a15-gic
+- DTS: order by physical address
+- Remove call to dt_init function
+
+
+Changes for v2:
+1. Clocksource timer
+- Delete unused parts for sched_clock_source
+- Use irq_request instead of setup_irq
+- Remove unused SMP parts
+- Fix some style issues
+- use of_address_to resource and request_mem_region
+- delete use of named clock
+- select CLKSRC_MMIO in driver Kconfig
+
+2. DT bindings
+- delete named clock bindings
+
+3. Basic SoC support
+- Clean-up Kconfig
+- Add documentation of the SoC compatible property 
+- DTS: rename SoC file to mt6589.dts
+- DTS: Delete not present cache controller
+- DTS: Add missing GICv2 properties
+- DTS: Change clock names
+- DTS: Add Aquaris5 board
+
+4. Add earlyprintk
+- patch droped until serial driver is available
+
+5. Add support for Aquaris5 mobile phone
+
+
+
+Matthias Brugger (7):
+  of: Provide function to request and map memory
+  clocksource: Add support for the Mediatek SoCs
+  dt-bindings: add mtk-timer bindings
+  vendor-prefixes: add prefix for Mediaktek Inc.
+  arm: add basic support for Mediatek MT6589 boards
+  dt-bindings: add documentation for Mediatek SoC
+  arm: mediatek: add dts for Aquaris5 mobile phone
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    8 +
+ .../bindings/timer/mediatek,mtk-timer.txt          |   18 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ arch/arm/Kconfig                                   |    2 +
+ arch/arm/Makefile                                  |    1 +
+ arch/arm/boot/dts/mt6589-aquaris5.dts              |   25 ++
+ arch/arm/boot/dts/mt6589.dtsi                      |   94 +++++++
+ arch/arm/mach-mediatek/Kconfig                     |    6 +
+ arch/arm/mach-mediatek/Makefile                    |    1 +
+ arch/arm/mach-mediatek/mediatek.c                  |   27 ++
+ drivers/clocksource/Kconfig                        |    5 +
+ drivers/clocksource/Makefile                       |    1 +
+ drivers/clocksource/mtk_timer.c                    |  260 ++++++++++++++++++++
+ drivers/of/address.c                               |   28 +++
+ include/linux/of_address.h                         |    8 +
+ 15 files changed, 485 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+ create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+ create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+ create mode 100644 arch/arm/mach-mediatek/Kconfig
+ create mode 100644 arch/arm/mach-mediatek/Makefile
+ create mode 100644 arch/arm/mach-mediatek/mediatek.c
+ create mode 100644 drivers/clocksource/mtk_timer.c
+
+-- 
+1.7.9.5
+
