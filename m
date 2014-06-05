@@ -1,36 +1,44 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH RESEND 06/12] drivers: clk: st: Add
- polarity bit indication
-Date: Thu, 5 Jun 2014 08:45:16 +0100
-Message-ID: <20140605074516.GA3865@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
- <1401892320-18211-7-git-send-email-gabriel.fernandez@linaro.org>
+From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Subject: Re: [PATCH v5 4/4] drivers: net: Add APM X-Gene SoC ethernet
+ driver support.
+Date: Thu, 05 Jun 2014 00:45:55 -0700 (PDT)
+Message-ID: <20140605.004555.658378024391856482.davem@davemloft.net>
+References: <1401737954-26152-1-git-send-email-isubramanian@apm.com>
+	<1401737954-26152-5-git-send-email-isubramanian@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401892320-18211-7-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401737954-26152-5-git-send-email-isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: isubramanian-qTEPVZfXA3Y@public.gmane.org
+Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, rapatel-qTEPVZfXA3Y@public.gmane.org, kchudgar-qTEPVZfXA3Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabi,
+From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Date: Mon,  2 Jun 2014 12:39:14 -0700
 
-On Wed, 04 Jun 2014, Gabriel FERNANDEZ wrote:
+> +	netdev_err(ndev, "LERR: %d ring_num: %d ", status, ring->num);
+> +	switch (status) {
+> +	case HBF_READ_DATA:
+> +		netdev_err(ndev, "HBF read data error\n");
+> +		break;
 
-> This patch introduces polarity indication for pll power up bit
-> and for standby bit in order to have same code between Orly 2
-> and CAN.
+This is not really appropriate.
 
-I think it would be better to refer to the SoC's by there numeric
-name stih416 and stih407, as people unfamiliar with ST SoC names
-reading the commit message are unlikely to know what Orly2 or CAN 
-mean.
+We have statistics like the ones you are incrementing in this
+function as the mechanism people can use to learn what events
+happened on an interface, and how many times they happened.
 
-Once fixed you can add my:
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
+Therefore, emitting a log message for each one of those events too is
+not necessary.
 
-regards,
+We don't emit a netdev_err() for every packet that the IPv4 stack
+drops due to a bad checksum, for example.
 
-Peter.
+Please get rid of this.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
