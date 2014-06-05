@@ -1,37 +1,51 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [PATCH 1/3] ARM: dts: Create a cros-ec-keyboard fragment
-Date: Thu, 5 Jun 2014 09:12:09 -0700
-Message-ID: <CAOesGMh8j4S2E-3xqMuK5OWJfYfOUh0OPvfMEZfrssAwfqRU_g@mail.gmail.com>
-References: <1401920421-25729-1-git-send-email-dianders@chromium.org>
-	<53909219.6090200@wwwdotorg.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH 3/9] ARM: dts: berlin: add a required reset property in
+ the chip controller node
+Date: Thu, 05 Jun 2014 18:39:07 +0200
+Message-ID: <1401986347.4103.11.camel@paszta.hi.pengutronix.de>
+References: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
+	 <1401983326-19205-4-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53909219.6090200@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Doug Anderson <dianders@chromium.org>, "arm@kernel.org" <arm@kernel.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401983326-19205-4-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Antoine =?ISO-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 5, 2014 at 8:51 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
-> On 06/04/2014 04:20 PM, Doug Anderson wrote:
->> All ChromeOS ARM devices that have the standard "CrOS EC" have the
->> same keyboard mapping.  It's silly to include this same definition
->> everywhere.  Let's create a "dtsi" fragment that we can include from
->> many different boards.
->>
->> This fragment is based on what's currently in tegra124-venice2.dts
+Am Donnerstag, den 05.06.2014, 17:48 +0200 schrieb Antoine T=C3=A9nart:
+> The chip controller node now also describes the Marvell Berlin reset
+> controller. Add the required 'reset-cells' property.
+>=20
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org=
 >
-> This series looks fine to me. Given it touches both Tegra and Exynos,
-> should it be merged into a topic branch in arm-soc, so that it can be
-> pulled into both Tegra/Exynos trees to resolve any conflicts. So,
->
-> Acked-by: Stephen Warren <swarren@nvidia.com>
->
-> If you want, I'm happy to apply this to a topic branch and send a pull
-> request to arm-soc.
+> ---
+>  arch/arm/boot/dts/berlin2.dtsi   | 1 +
+>  arch/arm/boot/dts/berlin2cd.dtsi | 1 +
+>  arch/arm/boot/dts/berlin2q.dtsi  | 1 +
+>  3 files changed, 3 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/berli=
+n2.dtsi
+> index 2477dac4d643..379ff1a38377 100644
+> --- a/arch/arm/boot/dts/berlin2.dtsi
+> +++ b/arch/arm/boot/dts/berlin2.dtsi
+> @@ -243,6 +243,7 @@
+>  		chip: chip-control@ea0000 {
+>  			compatible =3D "marvell,berlin2-chip-ctrl";
+>  			#clock-cells =3D <1>;
+> +			#reset-cells =3D <1>;
 
-Sounds good.
+Are the marvell,berlin2q-chip-ctrl bindings already documented? This
+should also be added to the documentation.
 
+regards
+Philipp
 
--Olof
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
