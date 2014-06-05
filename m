@@ -1,36 +1,98 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH RESEND 03/12] drivers: clk: st: STiH407:
- Support for Flexgen Clocks
-Date: Thu, 5 Jun 2014 09:17:42 +0100
-Message-ID: <20140605081742.GC3865@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
- <1401892320-18211-4-git-send-email-gabriel.fernandez@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
+ aforementioned systems
+Date: Thu, 5 Jun 2014 09:20:08 +0100
+Message-ID: <20140605082008.GC19550@lee--X1>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
+ <5769487.6cMQUCkisu@vostro.rjw.lan>
+ <20140604125141.GB5214@lahna.fi.intel.com>
+ <20140604132820.GA19550@lee--X1>
+ <20140605080000.GE5214@lahna.fi.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1401892320-18211-4-git-send-email-gabriel.fernandez@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
-Cc: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, Olivier Bideau <olivier.bideau@st.com>, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20140605080000.GE5214-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
+Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 04 Jun 2014, Gabriel FERNANDEZ wrote:
+On Thu, 05 Jun 2014, Mika Westerberg wrote:
+> On Wed, Jun 04, 2014 at 02:28:20PM +0100, Lee Jones wrote:
+> > On Wed, 04 Jun 2014, Mika Westerberg wrote:
+> > > On Wed, Jun 04, 2014 at 02:37:42PM +0200, Rafael J. Wysocki wrote=
+:
+> > > > On Wednesday, June 04, 2014 01:09:56 PM Lee Jones wrote:
+> > > > > Currently this is a helper function for the I2C subsystem to =
+aid the
+> > > > > matching of non-standard compatible strings and devices which=
+ use DT
+> > > > > and/or ACPI, but do not supply any nodes (see: [1] Method 4).=
+  However,
+> > > > > it has been made more generic as it can be used to only make =
+one call
+> > > > > for drivers which support any mixture of OF, ACPI and/or I2C =
+matching.
+> > > > >=20
+> > > > > The initial aim is for of_match_device() to be replaced by th=
+is call
+> > > > > in all I2C device drivers.
+> > > > >=20
+> > > > > [1] Documentation/i2c/instantiating-devices
+> > > > >=20
+> > > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > >=20
+> > > > Mika, can you please have a look at this, please?
+> > >=20
+> > > I don't see any fundamental problems with this wrt. ACPI.
+> > >=20
+> > > That said, I find it kind of weird to have generic function that =
+then
+> > > has knowledge of how different buses do their matching.
+> > >=20
+> > > I would rather see something like firmware_device_match(dev) that=
+ goes
+> > > and matches from DT/ACPI and leave bus specific match to happen i=
+nternal
+> > > to that bus.
+> >=20
+> > Unfortunately that completely defeats the object of the patch.  Whe=
+n a
+> > of_match_device() is invoked it solely looks up devices based on OF
+> > matching, but I2C is special in that devices can be registered via
+> > sysfs, thus will no have device node.  If of_match_device() is call=
+ed
+> > in one of these instances it will fail.  The idea of this patch is =
+to
+> > generify the matching into something does has the knowledge to firs=
+tly
+> > attempt a traditional match, and if that fails will fall back to a
+> > special i2c_{of,acpi}_match_device() which knows how to deal with
+> > node-less registration.
+>=20
+> OK, then but since this is now I2C specific, why call it device_match=
+()
+> instead of something like i2c_device_match()? Or do you have plans to
 
-> This patch is the Flexgen implementation reusing as much as possible
-> of Common Clock Framework functions.
-> 
-> The idea is to have an instance of "struct flexgen" per output clock.
-> It represents the clock cross bar (by a mux element), and the pre and final dividers
-> (using dividers and gates elements).
-> 
-> Signed-off-by: Maxime Coquelin <maxime.coquelin@st.com>
-> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
-> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-> ---
->  drivers/clk/st/Makefile      |   2 +-
->  drivers/clk/st/clk-flexgen.c | 332 +++++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 333 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clk/st/clk-flexgen.c
+So in an early incarnation of the patch I did just that, and it might
+not actually be such a bad idea still - I'm open to other people's
+opinions on this.
 
-Acked-by: Peter Griffin <peter.griffin@linaro.org>
+> add there more knowledge about other buses like SPI and PCI to name f=
+ew?
+
+=2E.. but yes, this is the new idea - that it can be expanded as requir=
+ed.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
