@@ -1,95 +1,247 @@
-From: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/3] of: Migrate of_find_node_by_name() users to for_each_node_by_name()
-Date: Thu, 5 Jun 2014 12:48:54 -0500
-Message-ID: <CABGGisx=fhp1P68M+9aQUTzi6Bp+PnXK7Xq_TQ+=87AkGCZvwQ@mail.gmail.com>
-References: <1401983021-13829-1-git-send-email-grant.likely@linaro.org> <1401983021-13829-2-git-send-email-grant.likely@linaro.org>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v7 5/7] arm: add basic support for Mediatek MT6589 boards
+Date: Thu, 5 Jun 2014 19:21:38 +0100
+Message-ID: <20140605182138.GI31564@leverpostej>
+References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
+ <1401989181-4712-6-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401983021-13829-2-git-send-email-grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1401989181-4712-6-git-send-email-matthias.bgg@gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregory.clement@free-electrons.com" <gregory.clement@free>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 5, 2014 at 10:43 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> There are a bunch of users open coding the for_each_node_by_name() by
-> calling of_find_node_by_name() directly instead of using the macro. This
-> is getting in the way of some cleanups, and the possibility of removing
-> of_find_node_by_name() entirely. Clean it up so that all the users are
-> consistent.
->
-> Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+On Thu, Jun 05, 2014 at 06:26:19PM +0100, Matthias Brugger wrote:
+> This adds a generic devicetree board file and a dtsi for boards
+> based on MT6589 SoCs from Mediatek.
+> 
+> Apart from the generic parts (gic, clocks) the only component
+> currently supported are the timers.
+> 
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 > ---
->  arch/powerpc/platforms/powermac/feature.c  | 20 +++++---------------
->  arch/powerpc/platforms/powermac/pci.c      |  2 +-
->  arch/powerpc/platforms/powermac/smp.c      |  2 +-
->  arch/powerpc/platforms/powermac/udbg_adb.c |  2 +-
->  arch/powerpc/platforms/pseries/setup.c     |  3 +--
->  drivers/cpufreq/pmac64-cpufreq.c           |  3 +--
->  drivers/edac/cell_edac.c                   |  3 +--
->  drivers/pci/hotplug/rpaphp_core.c          |  4 ++--
->  drivers/tty/serial/pmac_zilog.c            |  9 +++------
->  sound/ppc/pmac.c                           |  6 +++---
->  10 files changed, 19 insertions(+), 35 deletions(-)
->
-> diff --git a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/platforms/powermac/feature.c
-> index 63d82bbc05e9..39e1d163c427 100644
-> --- a/arch/powerpc/platforms/powermac/feature.c
-> +++ b/arch/powerpc/platforms/powermac/feature.c
-> @@ -2805,25 +2805,20 @@ set_initial_features(void)
->                 /* Enable GMAC for now for PCI probing. It will be disabled
->                  * later on after PCI probe
->                  */
-> -               np = of_find_node_by_name(NULL, "ethernet");
-> -               while(np) {
-> +               for_each_node_by_name(np, "ethernet")
->                         if (of_device_is_compatible(np, "K2-GMAC"))
+>  arch/arm/Kconfig                  |    2 +
+>  arch/arm/Makefile                 |    1 +
+>  arch/arm/boot/dts/mt6589.dtsi     |   94 +++++++++++++++++++++++++++++++++++++
+>  arch/arm/mach-mediatek/Kconfig    |    6 +++
+>  arch/arm/mach-mediatek/Makefile   |    1 +
+>  arch/arm/mach-mediatek/mediatek.c |   27 +++++++++++
+>  6 files changed, 131 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+>  create mode 100644 arch/arm/mach-mediatek/Kconfig
+>  create mode 100644 arch/arm/mach-mediatek/Makefile
+>  create mode 100644 arch/arm/mach-mediatek/mediatek.c
+> 
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index db3c541..0fc8acd 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -997,6 +997,8 @@ source "arch/arm/mach-mv78xx0/Kconfig"
+>  
+>  source "arch/arm/mach-imx/Kconfig"
+>  
+> +source "arch/arm/mach-mediatek/Kconfig"
+> +
+>  source "arch/arm/mach-mxs/Kconfig"
+>  
+>  source "arch/arm/mach-netx/Kconfig"
+> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+> index 41c1931..8ce9774 100644
+> --- a/arch/arm/Makefile
+> +++ b/arch/arm/Makefile
+> @@ -170,6 +170,7 @@ machine-$(CONFIG_ARCH_MSM)		+= msm
+>  machine-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0
+>  machine-$(CONFIG_ARCH_MVEBU)		+= mvebu
+>  machine-$(CONFIG_ARCH_MXC)		+= imx
+> +machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
+>  machine-$(CONFIG_ARCH_MXS)		+= mxs
+>  machine-$(CONFIG_ARCH_NETX)		+= netx
+>  machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
+> diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+> new file mode 100644
+> index 0000000..f1d8a8b
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/mt6589.dtsi
+> @@ -0,0 +1,94 @@
+> +/*
+> + * Copyright (c) 2014 MundoReader S.L.
+> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+> +#include "skeleton.dtsi"
+> +
+> +/ {
+> +	compatible = "mediatek,mt6589";
+> +	interrupt-parent = <&gic>;
+> +
+> +	cpus {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		cpu@0 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x0>;
+> +		};
+> +		cpu@1 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x1>;
+> +		};
+> +		cpu@2 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x2>;
+> +		};
+> +		cpu@3 {
+> +			device_type = "cpu";
+> +			compatible = "arm,cortex-a7";
+> +			reg = <0x3>;
+> +		};
+> +
+> +	};
+> +
+> +	clocks {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		ranges;
 
-Can't for_each_compatible_node be used here instead?
+This is just nonsense. This /clocks node is in no way special -- /clocks
+was never reserved as a place to put clocks that we guarantee to probe.
+It's just an arbitrary containter node, and the fact we happen to probe
+clocks under it is an implementation detail (and arguably a bug).
 
->                                 g5_gmac_enable(np, 0, 1);
-> -                       np = of_find_node_by_name(np, "ethernet");
-> -               }
->
->                 /* Enable FW before PCI probe. Will be disabled later on
->                  * Note: We should have a batter way to check that we are
->                  * dealing with uninorth internal cell and not a PCI cell
->                  * on the external PCI. The code below works though.
->                  */
-> -               np = of_find_node_by_name(NULL, "firewire");
-> -               while(np) {
-> +               for_each_node_by_name(np, "firewire") {
->                         if (of_device_is_compatible(np, "pci106b,5811")) {
+I argued in the past to at least have them as a simple-bus,
+necessitating ranges, #address-cells, and #size-cells you have here, but
+you'r missing the compatible = "simple-bus", rendering the exercise
+pointless.
 
-and here...
+> +
+> +		system_clk: dummy13m {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <13000000>;
+> +			#clock-cells = <0>;
+> +		};
+> +
+> +		rtc_clk: dummy32k {
+> +			compatible = "fixed-clock";
+> +			clock-frequency = <32000>;
+> +			#clock-cells = <0>;
+> +		};
+> +	};
+> +
+> +	soc {
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		compatible = "simple-bus";
+> +		clock-ranges;
 
->                                 macio_chips[0].flags |= MACIO_FLAG_FW_SUPPORTED;
->                                 g5_fw_enable(np, 0, 1);
->                         }
-> -                       np = of_find_node_by_name(np, "firewire");
->                 }
->         }
->  #else /* CONFIG_POWER4 */
-> @@ -2834,13 +2829,11 @@ set_initial_features(void)
->                 /* Enable GMAC for now for PCI probing. It will be disabled
->                  * later on after PCI probe
->                  */
-> -               np = of_find_node_by_name(NULL, "ethernet");
-> -               while(np) {
-> +               for_each_node_by_name(np, "ethernet") {
->                         if (np->parent
->                             && of_device_is_compatible(np->parent, "uni-north")
->                             && of_device_is_compatible(np, "gmac"))
+Why the clock-ranges? You refer to them explicitly below.
 
-This one is a bit more complicated, but should still work with
-for_each_compatible_node.
+> +		ranges;
+> +
+> +		timer: timer@10008000 {
+> +			compatible = "mediatek,mt6577-timer";
+> +			reg = <0x10008000 0x80>;
+> +			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
+> +			clocks = <&system_clk>, <&rtc_clk>;
+> +			clock-names = "system-clk", "rtc-clk";
+> +		};
+> +
+> +		gic: interrupt-controller@10212000 {
+> +			compatible = "arm,cortex-a15-gic";
+> +			interrupt-controller;
+> +			#interrupt-cells = <3>;
+> +			reg = <0x10211000 0x1000>,
+> +			      <0x10212000 0x1000>,
+> +			      <0x10214000 0x2000>,
+> +			      <0x10216000 0x2000>;
+> +		};
+> +	};
+> +};
 
-There's a few more that could be converted. I guess it depends if you
-think dropping looking at node names is okay.
+No architected timers?
 
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+> new file mode 100644
+> index 0000000..2c043a2
+> --- /dev/null
+> +++ b/arch/arm/mach-mediatek/Kconfig
+> @@ -0,0 +1,6 @@
+> +config ARCH_MEDIATEK
+> +	bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+> +	select ARM_GIC
+> +	select MTK_TIMER
+> +	help
+> +	  Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
+> diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
+> new file mode 100644
+> index 0000000..43e619f
+> --- /dev/null
+> +++ b/arch/arm/mach-mediatek/Makefile
+> @@ -0,0 +1 @@
+> +obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
+> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+> new file mode 100644
+> index 0000000..f2acf07
+> --- /dev/null
+> +++ b/arch/arm/mach-mediatek/mediatek.c
+> @@ -0,0 +1,27 @@
+> +/*
+> + * Device Tree support for Mediatek SoCs
+> + *
+> + * Copyright (c) 2014 MundoReader S.L.
+> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +#include <linux/init.h>
+> +#include <asm/mach/arch.h>
+> +
+> +static const char * const mediatek_board_dt_compat[] = {
+> +	"mediatek,mt6589",
+> +	NULL,
+> +};
+> +
+> +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
+> +	.dt_compat	= mediatek_board_dt_compat,
+> +MACHINE_END
+
+If this is all we have, surely we can get by with the defaults?
+
+Cheers,
+Mark.
