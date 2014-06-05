@@ -1,113 +1,163 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Thu, 5 Jun 2014 11:37:09 +0100
-Message-ID: <20140605103709.GE19550@lee--X1>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
+From: Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv5 2/4] mailbox: Introduce framework for mailbox
+Date: Thu, 5 Jun 2014 07:12:05 -0400
+Message-ID: <20140605111205.GD32082@beef>
+References: <1400134105-3847-1-git-send-email-jaswinder.singh@linaro.org>
+ <1400134260-3962-1-git-send-email-jaswinder.singh@linaro.org>
+ <7978295.UBGxYvcnvH@wuerfel>
+ <CAJe_Zhe_VFTpPW0sKBsqit347MR7QmEDvzvQTyh1DWr3v991tg@mail.gmail.com>
+ <20140529154348.GH32082@beef>
+ <CABb+yY2PiGpqy2uevCFexAKeS4aZxJxZHEDJTRN1SW6VVjBzGQ@mail.gmail.com>
+ <20140602151454.GK32082@beef>
+ <CABb+yY3ZYqtT+R0PwZDtpW0O0SsbxTyiYmXaseZHoj4Nr6UBPQ@mail.gmail.com>
+ <CAPKp9uZTnWCojeZHyvrm=vTuY15dAHiW1CWP18JUfuKU-mfH0Q@mail.gmail.com>
+ <CAJe_ZheA_2PwzFGwx2rdba0oVsAKRnwK02XE-8nPY6K5NKpdTw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140605103009.85BE4C40A4D-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <CAJe_ZheA_2PwzFGwx2rdba0oVsAKRnwK02XE-8nPY6K5NKpdTw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org>, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Jun 2014, Grant Likely wrote:
+On Tue, Jun 03, 2014 at 03:51:55PM +0530, Jassi Brar wrote:
+> On 3 June 2014 15:05, Sudeep Holla <sudeep.holla-5wv7dgnIgG8@public.gmane.org> wrote:
+> > Hi Jassi,
+> >
+> > On Mon, Jun 2, 2014 at 6:11 PM, Jassi Brar <jassisinghbrar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> >> On Mon, Jun 2, 2014 at 8:44 PM, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> >>> On Fri, May 30, 2014 at 11:01:55AM +0530, Jassi Brar wrote:
+> >>>
+> >>>>  Being more specific to your platform, I think you need some server
+> >>>> code (mailbox's client) that every driver (like clock, pmu, pinmux
+> >>>> etc) registers with to send messages to remote and receive commands
+> >>>> from remote ... perhaps by registering some filter to sort out
+> >>>> messages for each driver.
+> >>>
+> >>> Right, and here's where you hit on the problem. This server you mention
+> >>> is not a piece of hardware, it would be a software construct. As such, it
+> >>> doesn't fit into the DT binding as it exists. It's probably best to
+> >>> illustrate in DT syntax.
+> >>>
+> >>> If I were to represent the hardware relationship in the DT binding now
+> >>> it would look like this:
+> >>>
+> >>> ---
+> >>> cpm: mailbox@deadbeef {
+> >>>         compatible = "brcm,bcm-cpm-mailbox";
+> >>>         reg = <...>;
+> >>>         #mbox-cells <1>;
+> >>>         interrupts = <...>;
+> >>> };
+> >>>
+> >>> /* clock complex */
+> >>> ccu {
+> >>>         compatible = "brcm,bcm-foo-ccu";
+> >>>         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
+> >>>         mbox-names = "system";
+> >>>         /* leaving out other mailboxes for brevity */
+> >>>         #clock-cells <1>;
+> >>>         clock-output-names = "bar",
+> >>>                              "baz";
+> >>> };
+> >>>
+> >>> pmu {
+> >>>         compatible = "brcm,bcm-foo-pmu"
+> >>>         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
+> >>>         mbox-names = "system";
+> >>> };
+> >>>
+> >>> pinmux {
+> >>>         compatible = "brcm,bcm-foo-pinctrl";
+> >>>         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
+> >>>         mbox-names = "system";
+> >>> };
+> >>> ---
+> >> Yeah, I too don't think its a good idea.
+> >>
+> >>
+> >>> What we would need to do is completely ignore this information in each
+> >>> of the of the client drivers associated with the clock, pmu, and pinmux
+> >>> devices. This IPC server would need to be instantiated and get the
+> >>> mailbox information from some source. mbox_request_channel() only works
+> >>> when the client has an of_node with the mbox-names property present.
+> >>> Let's say we follow this model and represent it in DT:
+> >>>
+> >>> --
+> >>> cpm: mailbox@deadbeef {
+> >>>         compatible = "brcm,bcm-cpm-mailbox";
+> >>>         reg = <...>;
+> >>>         #mbox-cells <1>;
+> >>>         interrupts = <...>;
+> >>> };
+> >>>
+> >>> cpm_ipc {
+> >>>         compatible = "brcm,bcm-cpm-ipc";
+> >>>         mbox = <&cpm CPM_SYSTEM_CHANNEL>;
+> >>>         mbox-names = "system";
+> >>>         /* leaving out other mailboxes for brevity */
+> >>> };
+> >>> ---
+> >>>
+> >>> This would allow an ipc driver to exclusively own this system channel,
+> >>> but now we've invented a binding that doesn't reflect the hardware at
+> >>> all. It's describing software so I don't believe the DT maintainers will
+> >>> allow this type of construct.
+> >>>
+> >> Must the server node specify MMIO and an IRQ, to be acceptable? Like ...
+> >>
+> >> cpm_ipc : cpm@deadbeef {
+> >>          compatible = "brcm,bcm-cpm-ipc";
+> >>        /*  reg = <0xdeadbeef 0x100>; */
+> >>        /*  interrupts = <0 123 4>;  */
+> >>          mbox = <&cpm CPM_SYSTEM_CHANNEL>;
+> >>          mbox-names = "system";
+> >> };
+> >>
+> >> cpm_ipc already specifies a hardware resource (mbox) that its driver
+> >> needs, I think that should be enough reason. If it were some purely
+> >> soft property for the driver like
+> >>       mode = "poll";  //or "irq"
+> >> then the node wouldn't be justified because that is the job of a
+> >> build-time config or run-time module option.
+> >>
+> >
+> > Like Matt, I am also in similar situation where there's a lot of common
+> > code necessary to construct/parse IPCs for each of the drivers using the
+> > mailbox.
+> >
+> > As per your suggestion if we have single DT node to specify both the
+> > controller and the client, we might still have to pollute this node with
+> > software specific compatibles.
+> >
+> I am afraid you misunderstood me. I don't suggest single node for
+> mailbox controller and client, and IIUC, neither did Matt. Please note
+> the controller is cpm and client is cpm_ipc.
 
-> On Wed,  4 Jun 2014 13:09:56 +0100, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
-wrote:
-> > Currently this is a helper function for the I2C subsystem to aid th=
-e
-> > matching of non-standard compatible strings and devices which use D=
-T
-> > and/or ACPI, but do not supply any nodes (see: [1] Method 4).  Howe=
-ver,
-> > it has been made more generic as it can be used to only make one ca=
-ll
-> > for drivers which support any mixture of OF, ACPI and/or I2C matchi=
-ng.
-> >=20
-> > The initial aim is for of_match_device() to be replaced by this cal=
-l
-> > in all I2C device drivers.
-> >=20
-> > [1] Documentation/i2c/instantiating-devices
-> >=20
-> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> I don't like this. It drops all type safety on the match entry
-> and the caller has no idea what it got back.
+Correct, I had separate controller and consumer nodes as written
+above...to match the binding.
 
-Okay, so what's the best way forward?
+> BTW, here we at least have a hardware resource to specify in the DT
+> node, there are examples in kernel where the DT nodes are purely
+> virtual. For ex, grep for "linux,spdif-dit". So I think we should be
+> ok.
+> 
 
-Introduce a i2c_of_match_device() call instead?
+There's a bit of a difference between my concern over a virtual node and
+this example you've cited. In the dummy spdif transmitter, it's defining
+a virtual device that plugs in for a codec, a hardware concept well
+defined in the audio bindings. I agree that there are many examples of
+this type of virtual node, including dummy phys, but in all cases they
+are stubbing out a real hardware concept.
 
-> > ---
-> >  include/linux/match.h | 40 +++++++++++++++++++++++++++++++++++++++=
-+
-> >  1 file changed, 40 insertions(+)
-> >  create mode 100644 include/linux/match.h
-> >=20
-> > diff --git a/include/linux/match.h b/include/linux/match.h
-> > new file mode 100644
-> > index 0000000..20a08e2
-> > --- /dev/null
-> > +++ b/include/linux/match.h
-> > @@ -0,0 +1,40 @@
-> > +#include <linux/of.h>
-> > +#include <linux/acpi.h>
-> > +#include <linux/i2c.h>
-> > +
-> > +static void *device_match(struct device *dev)
-> > +{
-> > +	struct device_driver *driver =3D dev->driver;
-> > +
-> > +	if (!driver)
-> > +		return NULL;
-> > +
-> > +	/* Attempt an OF style match */
-> > +	if (IS_ENABLED(CONFIG_OF)) {
-> > +		const struct of_device_id *of_match =3D
-> > +			i2c_of_match_device(driver->of_match_table, dev);
-> > +		if (of_match)
-> > +			return (void *)of_match;
-> > +	}
-> > +
-> > +	/* Then ACPI style match */
-> > +	if (IS_ENABLED(CONFIG_ACPI)) {
-> > +		const struct acpi_device_id *acpi_match	=3D
-> > +			acpi_match_device(driver->acpi_match_table, dev);
-> > +		if (acpi_match)
-> > +			return (void *)acpi_match;
-> > +	}
-> > +
-> > +	/* Finally an I2C match */
-> > +	if (IS_ENABLED(CONFIG_I2C)) {
-> > +		struct i2c_client *client =3D i2c_verify_client(dev);
-> > +		struct i2c_driver *i2c_drv =3D to_i2c_driver(driver);
-> > +		struct i2c_device_id *i2c_match;
-> > +
-> > +		i2c_match =3D i2c_match_id(i2c_drv->id_table, client);
-> > +		if (i2c_match)
-> > +			return (void *)i2c_match;
-> > +	}
-> > +
-> > +	return NULL;
-> > +}
->=20
+I find it to be distinctly different to create a node that doesn't
+represent the hardware's use of mailboxes. I'd be happy if a DT
+maintainer could say that this is acceptable though. ;)
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-Matt
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
