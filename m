@@ -1,98 +1,83 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Thu, 5 Jun 2014 09:20:08 +0100
-Message-ID: <20140605082008.GC19550@lee--X1>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <5769487.6cMQUCkisu@vostro.rjw.lan>
- <20140604125141.GB5214@lahna.fi.intel.com>
- <20140604132820.GA19550@lee--X1>
- <20140605080000.GE5214@lahna.fi.intel.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v4 00/14] drm/exynos: support LCD I80 interface display
+Date: Thu, 5 Jun 2014 10:20:30 +0200
+Message-ID: <20140605082028.GA22629@ulmo>
+References: <1401949194-20092-1-git-send-email-yj44.cho@samsung.com>
+ <539026F5.2010005@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140605080000.GE5214-3PARRvDOhMZrdx17CPfAsdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mika Westerberg <mika.westerberg-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>
-Cc: "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============0588252171=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <539026F5.2010005@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Inki Dae <inki.dae@samsung.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Jun 2014, Mika Westerberg wrote:
-> On Wed, Jun 04, 2014 at 02:28:20PM +0100, Lee Jones wrote:
-> > On Wed, 04 Jun 2014, Mika Westerberg wrote:
-> > > On Wed, Jun 04, 2014 at 02:37:42PM +0200, Rafael J. Wysocki wrote=
-:
-> > > > On Wednesday, June 04, 2014 01:09:56 PM Lee Jones wrote:
-> > > > > Currently this is a helper function for the I2C subsystem to =
-aid the
-> > > > > matching of non-standard compatible strings and devices which=
- use DT
-> > > > > and/or ACPI, but do not supply any nodes (see: [1] Method 4).=
-  However,
-> > > > > it has been made more generic as it can be used to only make =
-one call
-> > > > > for drivers which support any mixture of OF, ACPI and/or I2C =
-matching.
-> > > > >=20
-> > > > > The initial aim is for of_match_device() to be replaced by th=
-is call
-> > > > > in all I2C device drivers.
-> > > > >=20
-> > > > > [1] Documentation/i2c/instantiating-devices
-> > > > >=20
-> > > > > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > > >=20
-> > > > Mika, can you please have a look at this, please?
-> > >=20
-> > > I don't see any fundamental problems with this wrt. ACPI.
-> > >=20
-> > > That said, I find it kind of weird to have generic function that =
-then
-> > > has knowledge of how different buses do their matching.
-> > >=20
-> > > I would rather see something like firmware_device_match(dev) that=
- goes
-> > > and matches from DT/ACPI and leave bus specific match to happen i=
-nternal
-> > > to that bus.
-> >=20
-> > Unfortunately that completely defeats the object of the patch.  Whe=
-n a
-> > of_match_device() is invoked it solely looks up devices based on OF
-> > matching, but I2C is special in that devices can be registered via
-> > sysfs, thus will no have device node.  If of_match_device() is call=
-ed
-> > in one of these instances it will fail.  The idea of this patch is =
-to
-> > generify the matching into something does has the knowledge to firs=
-tly
-> > attempt a traditional match, and if that fails will fall back to a
-> > special i2c_{of,acpi}_match_device() which knows how to deal with
-> > node-less registration.
+
+--===============0588252171==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
+Content-Disposition: inline
+
+
+--k+w/mQv8wyuph6w0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Thu, Jun 05, 2014 at 05:14:45PM +0900, Inki Dae wrote:
 >=20
-> OK, then but since this is now I2C specific, why call it device_match=
-()
-> instead of something like i2c_device_match()? Or do you have plans to
+> Hi all,
+>=20
+>=20
+> Is there anyone who are reviewing this patch series? If there is no any
+> comment, I'd like to pick them up after test.
 
-So in an early incarnation of the patch I did just that, and it might
-not actually be such a bad idea still - I'm open to other people's
-opinions on this.
+What's with the rush? You should at least give people a day or two to
+get a chance to even see the patches.
 
-> add there more knowledge about other buses like SPI and PCI to name f=
-ew?
+Thierry
 
-=2E.. but yes, this is the new idea - that it can be expanded as requir=
-ed.
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--k+w/mQv8wyuph6w0
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTkChMAAoJEN0jrNd/PrOh+98QAKTWG7O8d+ARYBUc89GpeTNK
+Mqbd5ndVECcBa2bKjcF/x3zS6s0JO6h7hBE/xu3uUnfgZRk4Ec1KPsUqgbHnHaiK
+L6DTluClrNNqaQ4sLicrMrlWTpArqFjbmslFY74vTIThs4jXc8jgqPjnEc9FjYH3
+RvCNSObqk7KyEoqbi5rW3WaVCI+196YWbMCJh6F6Plzxc2vIEmNsswiZD5ONMs7U
+Cd0ekCoH22QXpKLIhYXMe5pHwuEjodEmeMPf9iCYlqL0iE1VdQcj49G+ksUNiQXh
+zQkb4XE8H07EpLwwHooLz+n5KxDM54Fv981EnPfj7iJKrQLtxDjCQZn3BbIXAr1N
+Sv1a9pIjXctW8145REU3LmSG4mcF9Xvg+jCURXdCvhQipBzIIQEncd6kHccuQDde
+8WQTInz++LjotjqncUFMnnJ9W6sFuCH5PtGz8XxAA0j2D1elbapaUvov228Enofo
+ZWAVp9bpx/OtzDjAw84MAN/MDoK+6r5ejXsdLhFACFmiYrNB7yqiUGMBBGjyoBLd
+kkpL32J0mFkb69E4bREFnwByjpQldYjaNOEh/5YbuxxPFEGHyz6JcdfgnQrZPkPB
+VMPFdnVg/PSq4p+JaIhXYuoptjng4wRnyvCvjpBaC1F1MdAcw7SbNVwvr3IDzK8l
++Vte/lpXuoTZUTafTLKP
+=dgfr
+-----END PGP SIGNATURE-----
+
+--k+w/mQv8wyuph6w0--
+
+--===============0588252171==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0588252171==--
