@@ -1,33 +1,43 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH 0/2] drm/panel: add support for Foxlink FL500WVR00-A0T panel
-Date: Thu,  5 Jun 2014 15:53:30 +0200
-Message-ID: <1401976412-27436-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Randy Dunlap <rdunlap@infradead.org>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 10/10] MAINTAINERS: Add sdhci-st file to ARCH/STI
+ architecture
+Date: Thu, 5 Jun 2014 15:26:12 +0100
+Message-ID: <20140605142612.GC24240@lee--X1>
+References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
+ <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, kernel@stlinux.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  MAINTAINERS | 1 +
+>  1 file changed, 1 insertion(+)
 
-This series adds a new entry in the vendor-prefixes.txt file for Foxlink
-Group and defines Foxlink FL500WVR00-A0T panel specifications in the simple
-panel driver.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-Best Regards,
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 6dc67b1..19dc265 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -1306,6 +1306,7 @@ F:	drivers/pinctrl/pinctrl-st.c
+>  F:	drivers/media/rc/st_rc.c
+>  F:	drivers/i2c/busses/i2c-st.c
+>  F:	drivers/tty/serial/st-asc.c
+> +F:	drivers/mmc/host/sdhci-st.c
+> =20
+>  ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT
+>  M:	Lennert Buytenhek <kernel@wantstofly.org>
 
-Boris
-
-
-Boris BREZILLON (2):
-  DT: add vendor prefix for Foxlink Group
-  drm/panel: add support for Foxlink FL500WVR00-A0T panel
-
- .../bindings/panel/foxlink,fl500wvr00-a0t.txt      |  7 ++++++
- .../devicetree/bindings/vendor-prefixes.txt        |  1 +
- drivers/gpu/drm/panel/panel-simple.c               | 25 ++++++++++++++++++++++
- 3 files changed, 33 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/panel/foxlink,fl500wvr00-a0t.txt
-
--- 
-1.8.3.2
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
