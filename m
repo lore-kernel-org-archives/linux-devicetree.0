@@ -1,68 +1,45 @@
-From: "Zheng, Lv" <lv.zheng@intel.com>
-Subject: RE: [PATCH 1/7] ACPICA: Only include ACPI asm files if ACPI is
- enabled
-Date: Thu, 5 Jun 2014 04:46:31 +0000
-Message-ID: <1AE640813FDE7649BE1B193DEA596E8802621528@SHSMSX101.ccr.corp.intel.com>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-2-git-send-email-lee.jones@linaro.org>
- <3061297.feg5DGUjIt@vostro.rjw.lan> <20140604125137.GA18171@lee--X1>
- <1AE640813FDE7649BE1B193DEA596E880262042C@SHSMSX101.ccr.corp.intel.com>
- <538FEDE9.4010603@linaro.org>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCHv5 2/2] ARM: dts: unuse the slot-node and deprecated supports-highspeed
+ for dw-mmc.
+Date: Thu, 05 Jun 2014 10:18:52 +0530
+Message-ID: <538FF6B4.7090609@gmail.com>
+References: <1401943439-8146-1-git-send-email-jh80.chung@samsung.com> <1401943439-8146-3-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <538FEDE9.4010603@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Hanjun Guo <hanjun.guo@linaro.org>, Lee Jones <lee.jones@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wsa@the-dreams.de" <wsa@the-dreams.de>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "Wysocki, Rafael J" <rafael.j.wysocki@intel.com>, "linux-acpi@vger.kernel.org" <linux-acpi@vger.kernel.org>, "devel@acpica.org" <devel@acpica.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1401943439-8146-3-git-send-email-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, mark.rutland@arm.com, tushar.behera@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIA0KDQo+IEZyb206IEhhbmp1biBHdW8gW21haWx0bzpoYW5qdW4uZ3VvQGxpbmFyby5vcmdd
-DQo+IFNlbnQ6IFRodXJzZGF5LCBKdW5lIDA1LCAyMDE0IDEyOjExIFBNDQo+IFRvOiBaaGVuZywg
-THY7IExlZSBKb25lczsgUmFmYWVsIEouIFd5c29ja2kNCj4gDQo+IE9uIDIwMTQtNi01IDk6MTQs
-IFpoZW5nLCBMdiB3cm90ZToNCj4gPiBIaSwgTGVlDQo+ID4NCj4gPj4gRnJvbTogTGVlIEpvbmVz
-IFttYWlsdG86bGVlLmpvbmVzQGxpbmFyby5vcmddDQo+ID4+IFNlbnQ6IFdlZG5lc2RheSwgSnVu
-ZSAwNCwgMjAxNCA4OjUyIFBNDQo+ID4+IFRvOiBSYWZhZWwgSi4gV3lzb2NraQ0KPiA+Pg0KPiA+
-PiBPbiBXZWQsIDA0IEp1biAyMDE0LCBSYWZhZWwgSi4gV3lzb2NraSB3cm90ZToNCj4gPj4NCj4g
-Pj4+IE9uIFdlZG5lc2RheSwgSnVuZSAwNCwgMjAxNCAwMTowOTo1MCBQTSBMZWUgSm9uZXMgd3Jv
-dGU6DQo+ID4+Pj4gQW55IGRyaXZlcnMgd2hpY2ggc3VwcG9ydCBBQ1BJIGFuZCBEZXZpY2UgVHJl
-ZSBwcm9iaW5nIG5lZWQgdG8gaW5jbHVkZQ0KPiA+Pj4+IGJvdGggcmVzcGVjdGl2ZSBoZWFkZXIg
-ZmlsZXMuICBXaXRob3V0IHRoaXMgcGF0Y2gsIGlmIGEgZHJpdmVyIGlzIGJlaW5nDQo+ID4+Pj4g
-dXNlZCBvbiBhIHBsYXRmb3JtIHdoaWNoIGRvZXMgbm90IHN1cHBvcnQgQUNQSSBhbmQgc3Vic2Vx
-dWVudGx5IGRvZXMgbm90DQo+ID4+Pj4gaGF2ZSB0aGUgY29uZmlnIG9wdGlvbiBlbmFibGVkLCBi
-dXQgaW5jbHVkZXMgbGludXgvYWNwaS5oIHRoZSBidWlsZA0KPiA+Pj4+IGJyZWFrcyB3aXRoOg0K
-PiA+Pj4+DQo+ID4+Pj4gICBJbiBmaWxlIGluY2x1ZGVkIGZyb20gLi4vaW5jbHVkZS9hY3BpL3Bs
-YXRmb3JtL2FjZW52Lmg6MTUwOjAsDQo+ID4+Pj4gICAgICAgICAgICAgICAgICAgIGZyb20gLi4v
-aW5jbHVkZS9hY3BpL2FjcGkuaDo1NiwNCj4gPj4+PiAgICAgICAgICAgICAgICAgICAgZnJvbSAu
-Li9pbmNsdWRlL2xpbnV4L21hdGNoLmg6MiwNCj4gPj4+PiAgICAgICAgICAgICAgICAgICAgZnJv
-bSAuLi9kcml2ZXJzL2kyYy9pMmMtY29yZS5jOjQzOg0KPiA+Pj4+ICAgLi4vaW5jbHVkZS9hY3Bp
-L3BsYXRmb3JtL2FjbGludXguaDo3MzoyMzoNCj4gPj4+PiAgICBmYXRhbCBlcnJvcjogYXNtL2Fj
-ZW52Lmg6IE5vIHN1Y2ggZmlsZSBvciBkaXJlY3RvcnkNCj4gPj4+PiAgICAjaW5jbHVkZSA8YXNt
-L2FjZW52Lmg+DQo+ID4+Pj4gICAgICAgICAgICAgICAgICAgICAgICBeDQo+ID4NCj4gPiBOb3Rl
-IHRoYXQ6DQo+ID4gSW4gb3VyIHRyZWU6DQo+ID4gPGFzbS9hY2Vudi5oPiBpcyBvbmx5IGluY2x1
-ZGVkIGJ5IDxhY3BpL2FjcGkuaD4uDQo+ID4gQW5kIDxhY3BpL2FjcGkuaD4gaXMgb25seSBpbmNs
-dWRlZCBieQ0KPiA+IDEuIDxsaW51eC9hY3BpLmg+IHdoZW4gQ09ORklHX0FDUEkgZW5hYmxlZA0K
-PiA+IDIuIDxsaW51eC9zZmlfYWNwaS5oPiAtIHRoaXMgaXMgeDg2IHNwZWNpZmljLCB3ZSdsbCBj
-bGVhbiBpdCB1cCBieSBpbXBsZW1lbnRpbmcgc3R1YnMgZm9yIGFsbCBBQ1BJIGV4dGVybmFsIGlu
-dGVyZmFjZXMuDQo+ID4gU28gdGhlcmUgaXMgbm8gY2FzZSB3ZSBuZWVkIHRvIGV4Y2x1ZGUgPGFz
-bS9hY2Vudi5oPiB3aGVuIENPTkZJR19BQ1BJIGlzIG5vdCBlbmFibGVkLg0KPiA+DQo+ID4gSSBj
-YW5ub3QgZmluZCBsaW51eC9tYXRjaC5oIGhlcmUuDQo+ID4gSWYgPGxpbnV4L21hdGNoLmg+IHdh
-bnQgdG8gaW5jbHVkZSBBQ1BJIGZlYXR1cmVzLCBpdCBzaG91bGRuJ3QgaW5jbHVkZSA8YWNwaS9h
-Y3BpLmg+LCBidXQgc2hvdWxkIGluY2x1ZGUgPGxpbnV4L2FjcGkuaD4uDQo+ID4gUGxlYXNlIHJl
-ZmVyIHRvOg0KPiA+IGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvY2dpdC9saW51eC9rZXJuZWwvZ2l0
-L3RvcnZhbGRzL2xpbnV4LmdpdC9jb21taXQvP2lkPThiNDg0NjNmDQo+ID4gQW5kIHN0b3AgaW5j
-bHVkaW5nIDxhY3BpL2FjcGkuaD4gZGlyZWN0bHkgaW4gYW55IGNhc2VzLg0KPiANCj4gQWgsIEkg
-YWdyZWUsIHBsZWFzZSBpZ25vcmUgbXkgcHJldmlvdXMgZW1haWwsDQo+IHNvcnJ5IGZvciB0aGUg
-bm9pc2UuDQo+IA0KPiBTaW5jZSBpdCBpcyB2ZXJ5IGltcG9ydGFudCB0byBpbmNsdWRlIDxsaW51
-eC9hY3BpLmg+IGJ1dCBub3QgPGFjcGkvYWNwaS5oPiwNCj4gY2FuIHdlIGRvY3VtZW50IGl0IHNv
-bWV3aGVyZSBhcyB0aGUgZ3VpZGFuY2U/IFRoZW4gcGVvcGxlIHdpbGwgbm90DQo+IG1ha2Ugc3Vj
-aCBtaXN0YWtlIDopDQoNCkFmdGVyIEkgdGVzdCB0aGUgQUNQSUNBIHN0dWJzIGFuZCByZW1vdmUg
-dGhlIG9ubHkgYWJub3JtYWwgZGlyZWN0IDxhY3BpL2FjcGkuaD4gaW5jbHVzaW9uIGZyb20gPGxp
-bnV4L3NmaV9hY3BpLmg+Lg0KV2UgY291bGQgaGF2ZSBhIGNvbW1pdCB0byBhZGQgc29tZXRoaW5n
-IGxpa2U6DQoNCiNpZm5kZWYgX0xJTlVYX0FDUElfSA0KI2Vycm9yIC4uLi4NCiNlbmRpZg0KVG8g
-dGhlIDxhY3BpL3BsYXRmb3JtL2FjbGludXguaD4gKHRoZSBMaW51eCBPU0wgZm9yIEFDUElDQSBo
-ZWFkZXJzLCBpdCBpcyBpbmNsdWRlZCBieSA8YWNwaS9hY3BpLmg+KS4NCkhvcGUgdGhpcyBjYW4g
-YmUgdGhlIGhpbnQgdG8gcHJldmVudCBmdXR1cmUgbWlzdGFrZXMuDQoNClRoYW5rcyBhbmQgYmVz
-dCByZWdhcmRzDQotTHYNCg0KDQo+IA0KPiBUaGFua3MNCj4gSGFuanVuDQoNCg==
+On 06/05/2014 10:13 AM, Jaehoon Chung wrote:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> ---
+> Changelog V5:
+> 	- Fix typo.
+> Changelog V4:
+> 	- Remove the slot-node.
+> 	- Rename Subject.
+> 		"[PATCHv3 4/4]ARM: dts: replace the slot property into slot sub-node for dwmmc"
+> Changelog V3:
+> 	- Merge "[PATCH 2/5] mmc: dw_mmc: rmove the "supports-highspeed" property"
+> Changelog V2:
+> 	- None
+> 
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
+>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+
+For the documentation changes,
+Reviewed-by: Tushar Behera <trblinux@gmail.com>
+
+-- 
+Tushar Behera
