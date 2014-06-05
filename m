@@ -1,74 +1,144 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH 2/4] of: Add NVIDIA Tegra XUSB pad controller binding
-Date: Thu, 05 Jun 2014 10:47:45 -0600
-Message-ID: <53909F31.4050603@wwwdotorg.org>
-References: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com> <1401894990-30092-2-git-send-email-thierry.reding@gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCHv2] arm64: Add atomic pool for non-coherent and CMA
+ allocaitons.
+Date: Thu, 5 Jun 2014 18:05:00 +0100
+Message-ID: <20140605170500.GC27946@arm.com>
+References: <1401739432-5358-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401894990-30092-2-git-send-email-thierry.reding@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Bresticker <abrestic@chromium.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1401739432-5358-1-git-send-email-lauraa@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Laura Abbott <lauraa@codeaurora.org>
+Cc: David Riley <davidriley@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ritesh Harjani <ritesh.harjani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/04/2014 09:16 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
-> 
-> This patch adds the device tree binding documentation for the XUSB pad
-> controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and PHY
-> capabilities.
+Hi Laura,
 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+On Mon, Jun 02, 2014 at 09:03:52PM +0100, Laura Abbott wrote:
+> Neither CMA nor noncoherent allocations support atomic allocations.
+> Add a dedicated atomic pool to support this.
 
-> +- #phy-cells: Should be 1. The specifier is the index of the PHY to reference.
-> +  Possible values are:
-> +  - 0: PCIe
-> +  - 1: SATA
+CMA indeed doesn't support atomic allocations but swiotlb does, the only
+problem being the vmap() to create a non-cacheable mapping. Could we not
+use the atomic pool only for non-coherent allocations?
 
-Those values are defined in
-include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h. I personally consider
-the <dt-bindings/> header files to be part of the binding itself, rather
-than being derived from the binding. As such, I'd suggest the following
-changes:
+> --- a/arch/arm64/mm/dma-mapping.c
+> +++ b/arch/arm64/mm/dma-mapping.c
+[...]
+>  static void *__dma_alloc_coherent(struct device *dev, size_t size,
+>  				  dma_addr_t *dma_handle, gfp_t flags,
+>  				  struct dma_attrs *attrs)
+> @@ -53,7 +157,16 @@ static void *__dma_alloc_coherent(struct device *dev, size_t size,
+>  	if (IS_ENABLED(CONFIG_ZONE_DMA) &&
+>  	    dev->coherent_dma_mask <= DMA_BIT_MASK(32))
+>  		flags |= GFP_DMA;
+> -	if (IS_ENABLED(CONFIG_DMA_CMA)) {
 
-* Make this patch 1 not patch 2
-* Move pinctrl-tegra-xusb.h into this patch.
-* Remove the list of values above, and replace it with the text "See
-<dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the set of valid values".
+So here just check for:
 
-We'll need to make sure this patch is applied to a topic branch that can
-be merged into the pinctrl tree and the Tegra tree for 3.17, assuming
-that you'll be sending patches for 3.17 that use pinctrl-tegra-xusb.h.
+	if ((flags & __GFP_WAIT) && IS_ENABLED(CONFIG_DMA_CMA)) {
 
-> +Example:
-> +========
 > +
-> +SoC file extract:
-> +-----------------
+> +	if (!(flags & __GFP_WAIT)) {
+> +		struct page *page = NULL;
+> +		void *addr = __alloc_from_pool(size, &page, true);
 > +
-> +	padctl@0,7009f000 {
-> +		compatible = "nvidia,tegra124-xusb-padctl";
-> +		reg = <0x0 0x7009f000 0x0 0x1000>;
-> +		resets = <&tegra_car 142>;
-> +		reset-names = "padctl";
+> +		if (addr)
+> +			*dma_handle = phys_to_dma(dev, page_to_phys(page));
 > +
-> +		#address-cells = <0>;
-> +		#size-cells = <0>;
+> +		return addr;
 
-Why are those two properties required? Yes, this node has sub-nodes, but
-those sub-nodes don't have a reg property or unit address. The main
-Tegra pinctrl nodes don't have #address/size-cells.
+and ignore the __alloc_from_pool() call.
 
-> +Board file extract:
-> +-------------------
+> @@ -78,7 +191,9 @@ static void __dma_free_coherent(struct device *dev, size_t size,
+>  		return;
+>  	}
+>  
+> -	if (IS_ENABLED(CONFIG_DMA_CMA)) {
+> +	if (__free_from_pool(vaddr, size, true)) {
+> +		return;
+> +	} else if (IS_ENABLED(CONFIG_DMA_CMA)) {
+>  		phys_addr_t paddr = dma_to_phys(dev, dma_handle);
+>  
+>  		dma_release_from_contiguous(dev,
 
-> +	padctl: padctl@0,7009f000 {
-> +		pinmux {
-> +			pinctrl-0 = <&padctl_default>;
-> +			pinctrl-names = "default";
+Here you check for the return value of dma_release_from_contiguous() and
+if false, fall back to the swiotlb release.
 
-Isn't there one extra level of nodes here. In the DT patches later in
-this series, pinctrl-0/pinctrl-names are directly inside the top-level
-padctl node.
+I guess we don't even need the IS_ENABLED(DMA_CMA) check since when
+disabled those functions return NULL/false anyway.
+
+> @@ -100,9 +215,21 @@ static void *__dma_alloc_noncoherent(struct device *dev, size_t size,
+>  	size = PAGE_ALIGN(size);
+>  	order = get_order(size);
+>  
+> +	if (!(flags & __GFP_WAIT)) {
+> +		struct page *page = NULL;
+> +		void *addr = __alloc_from_pool(size, &page, false);
+> +
+> +		if (addr)
+> +			*dma_handle = phys_to_dma(dev, page_to_phys(page));
+> +
+> +		return addr;
+> +
+> +	}
+
+Here we need the atomic pool as we can't remap the memory as uncacheable
+in atomic context.
+
+> @@ -332,6 +461,65 @@ static struct notifier_block amba_bus_nb = {
+>  
+>  extern int swiotlb_late_init_with_default_size(size_t default_size);
+>  
+> +static int __init atomic_pool_init(void)
+> +{
+> +	struct dma_pool *pool = &atomic_pool;
+> +	pgprot_t prot = pgprot_writecombine(pgprot_default);
+
+In linux-next I got rid of pgprot_default entirely, just use
+__pgprot(PROT_NORMAL_NC).
+
+> +	unsigned long nr_pages = pool->size >> PAGE_SHIFT;
+> +	unsigned long *bitmap;
+> +	struct page *page;
+> +	struct page **pages;
+> +	int bitmap_size = BITS_TO_LONGS(nr_pages) * sizeof(long);
+> +
+> +	bitmap = kzalloc(bitmap_size, GFP_KERNEL);
+> +	if (!bitmap)
+> +		goto no_bitmap;
+> +
+> +	pages = kzalloc(nr_pages * sizeof(struct page *), GFP_KERNEL);
+> +	if (!pages)
+> +		goto no_pages;
+> +
+> +	if (IS_ENABLED(CONFIG_CMA))
+> +		page = dma_alloc_from_contiguous(NULL, nr_pages,
+> +					get_order(pool->size));
+> +	else
+> +		page = alloc_pages(GFP_KERNEL, get_order(pool->size));
+
+I think the safest is to use GFP_DMA as well. Without knowing exactly
+what devices will do, what their dma masks are, I think that's a safer
+bet. I plan to limit the CMA buffer to ZONE_DMA as well for lack of a
+better option.
+
+BTW, most of this code could be turned into a library, especially if we
+don't need to separate coherent/non-coherent pools. Also, a lot of code
+is similar to the dma_alloc_from_coherent() implementation (apart from
+the ioremap() call in dma_declare_coherent_memory() and per-device pool
+rather than global one).
+
+-- 
+Catalin
