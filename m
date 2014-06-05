@@ -1,41 +1,64 @@
-From: Andrew Ruder <andrew.ruder@elecsyscorp.com>
-Subject: [PATCH 5/6] arm: pxa27x.dtsi: add pwri2c definition
-Date: Thu,  5 Jun 2014 14:27:07 -0500
-Message-ID: <9ddf8df8c0205563ac2b6d22601c28dc636845c9.1401995177.git.andrew.ruder@elecsyscorp.com>
-References: <cover.1401995177.git.andrew.ruder@elecsyscorp.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1401995177.git.andrew.ruder@elecsyscorp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux@arm.linux.org.uk, rdunlap@infradead.org, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, Andrew Ruder <andrew.ruder@elecsyscorp.com>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [RFC v3 3/9] irqchip: gic: Provide support for interrupt grouping
+Date: Thu, 5 Jun 2014 15:50:12 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1406051545380.25775@knanqh.ubzr>
+References: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
+ <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
+ <1401961994-18033-4-git-send-email-daniel.thompson@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1401961994-18033-4-git-send-email-daniel.thompson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Sricharan R <r.sricharan@ti.com>, Colin Cross <ccross@android.com>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg
 List-Id: devicetree@vger.kernel.org
 
-This adds the pwri2c definition to the pxa27x device tree.  This is
-already called out in pxa3xx.dtsi.
+On Thu, 5 Jun 2014, Daniel Thompson wrote:
 
-Signed-off-by: Andrew Ruder <andrew.ruder@elecsyscorp.com>
----
- arch/arm/boot/dts/pxa27x.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+> index 57d165e..aa8efe4 100644
+> --- a/drivers/irqchip/irq-gic.c
+> +++ b/drivers/irqchip/irq-gic.c
+> @@ -408,13 +408,27 @@ static void __init gic_dist_init(struct gic_chip_data *gic)
+>  		writel_relaxed(0xa0a0a0a0, base + GIC_DIST_PRI + i * 4 / 4);
+>  
+>  	/*
+> +	 * Set all global interrupts to be group 1.
+> +	 *
+> +	 * If grouping is not available (not implemented or prohibited by
+> +	 * security mode) these registers a read-as-zero/write-ignored.
+> +	 */
+> +	for (i = 32; i < gic_irqs; i += 32)
+> +		writel_relaxed(0xffffffff, base + GIC_DIST_IGROUP + i * 4 / 32);
+> +
+> +	/*
+>  	 * Disable all interrupts.  Leave the PPI and SGIs alone
+>  	 * as these enables are banked registers.
+>  	 */
+>  	for (i = 32; i < gic_irqs; i += 32)
+>  		writel_relaxed(0xffffffff, base + GIC_DIST_ENABLE_CLEAR + i * 4 / 32);
+>  
+> -	writel_relaxed(1, base + GIC_DIST_CTRL);
+> +	/*
+> +	 * Set EnableGrp1/EnableGrp0 (bit 1 and 0) or EnableGrp (bit 0 only,
+> +	 * bit 1 ignored)
+> +	 */
+> +	writel_relaxed(GIC_DIST_CTRL_ENABLE_GRP0_BIT |
+> +		       GIC_DIST_CTRL_ENABLE_GRP1_BIT, base + GIC_DIST_CTRL);
 
-diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
-index 931e1d5..2d05aa9 100644
---- a/arch/arm/boot/dts/pxa27x.dtsi
-+++ b/arch/arm/boot/dts/pxa27x.dtsi
-@@ -34,5 +34,14 @@
- 			reg = <0x40c00010 0x10>;
- 			#pwm-cells = <1>;
- 		};
-+
-+		pwri2c: i2c@40f00180 {
-+			compatible = "mrvl,pxa-i2c";
-+			reg = <0x40f00180 0x30>;
-+			interrupts = <6>;
-+			#address-cells = <0x1>;
-+			#size-cells = <0>;
-+			status = "disabled";
-+		};
- 	};
- };
--- 
-1.9.0.rc3.12.gbc97e2d
+Could there be more meaningful defines than GIC_DIST_CTRL_ENABLE_GRP0_BIT
+and GIC_DIST_CTRL_ENABLE_GRP1_BIT for those bits?  Otherwise the code 
+would look just as clear and possibly cleaner by simply using 0x3.
+
+
+Nicolas
