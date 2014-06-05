@@ -1,60 +1,80 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v2 5/7] ARM: shmobile: r8a7791 dtsi: Add SYS-DMAC0 and SYS-DMAC1 nodes
-Date: Thu, 05 Jun 2014 14:37:24 +0200
-Message-ID: <3309154.oqbpVVpMgz@avalon>
-References: <1401716531-29794-1-git-send-email-geert+renesas@glider.be> <2440127.sDc7m91LPu@avalon> <871tv4jjkh.wl%kuninori.morimoto.gx@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <871tv4jjkh.wl%kuninori.morimoto.gx@gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@gmail.com>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben.dooks@codethink.co.uk>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, dmaengine@vger.kernel.org
+From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+Subject: [PATCH] stmmac: extend DMA initialization delay to 2.5 seconds
+Date: Thu,  5 Jun 2014 16:58:00 +0400
+Message-ID: <1401973080-10085-1-git-send-email-abrodkin@synopsys.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+On some platforms existing 100 msecond delay is not enough for DMA block to
+recover after reset. This is because MAC DMA waits for all PHY input clocks
+to present and depending on the board reset bit deassertion may take much
+longer than previously used 100 milliseconds
 
-On Wednesday 04 June 2014 17:17:53 Kuninori Morimoto wrote:
-> Hi Laurent
-> 
-> > > Add nodes for the SYS-DMA controllers, SYS-DMAC0 and SYS-DMAC1. These
-> > > both share the same device sources, so are wrapped in the shdma-mux
-> > > node to allow both to be used.
-> > > 
-> > > Cfr. the r8a7790 version by Ben Dooks.
-> > > 
-> > > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > > ---
-> 
-> (snip)
-> 
-> > > +		sysdma0: dma-controller@e6700020 {
-> > > +			compatible = "renesas,shdma-r8a7791";
-> > > +			reg = <0 0xe6700020 0 0xffc0>;
-> > 
-> > Even though the registered defined in the datasheet start at 0xe6700020,
-> > the documentation clearly states that "The base address of registers for
-> > the lower-numbered channels  (0 to 14) is H'E670 0000". I'm also
-> > wondering where the size comes from, if you want to span the 0xe6700000
-> > to 0xe670ffff range, the size should be 0xffe0, not 0xffc0.
-> 
-> Unfortunately, this mapping (form 0x20) is required from driver
-> for historical reasons.
-> So, driver setting needs to care about it.
-> Please check DMA_CHANNEL macro for each setup-xxx.c
+I have a board that requires more than 2 seconds for DMA to zero "reset" bit.
+If for other boards it's still not long enough this value should be extended
+once again.
 
-Right, but that doesn't mean we shouldn't fix that while we still can :-) For 
-the r8a73a4 we're probably stuck (I won't reiterate here my view of 
-considering DT bindings as stable when it's clear they haven't gone through 
-proper review), but before we add support for new SoCs I'd like to see to 
-problems being fixed.
+In the same change I convert "mdelay" to "msleep" to make CPU available for
+other processes during DMA init delay which is especially useful in case of
+delay for a few seconds.
 
-> # but, it works without care about it (?)
-> # becase there are mirror register there (?), I'm not sure detail
+Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
 
+Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
+Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+---
+ drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c | 4 ++--
+ drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c  | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+index 0c2058a..f713ea7 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
+@@ -39,11 +39,11 @@ static int dwmac1000_dma_init(void __iomem *ioaddr, int pbl, int fb, int mb,
+ 	/* DMA SW reset */
+ 	value |= DMA_BUS_MODE_SFT_RESET;
+ 	writel(value, ioaddr + DMA_BUS_MODE);
+-	limit = 10;
++	limit = 100;
+ 	while (limit--) {
+ 		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
+ 			break;
+-		mdelay(10);
++		msleep(25);
+ 	}
+ 	if (limit < 0)
+ 		return -EBUSY;
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
+index 7d1dce9..043585f 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
+@@ -41,11 +41,11 @@ static int dwmac100_dma_init(void __iomem *ioaddr, int pbl, int fb, int mb,
+ 	/* DMA SW reset */
+ 	value |= DMA_BUS_MODE_SFT_RESET;
+ 	writel(value, ioaddr + DMA_BUS_MODE);
+-	limit = 10;
++	limit = 100;
+ 	while (limit--) {
+ 		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
+ 			break;
+-		mdelay(10);
++		msleep(25);
+ 	}
+ 	if (limit < 0)
+ 		return -EBUSY;
 -- 
-Regards,
+1.9.3
 
-Laurent Pinchart
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
