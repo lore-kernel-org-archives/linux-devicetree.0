@@ -1,83 +1,31 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v4 00/14] drm/exynos: support LCD I80 interface display
-Date: Thu, 5 Jun 2014 10:20:30 +0200
-Message-ID: <20140605082028.GA22629@ulmo>
-References: <1401949194-20092-1-git-send-email-yj44.cho@samsung.com>
- <539026F5.2010005@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
+ device tree
+Date: Thu, 5 Jun 2014 03:24:53 -0500
+Message-ID: <CAL_JsqLkTqVpwB6ynPZfh6CpOXgm4xHF2Lg9WEyYfHaDJ1uKEw@mail.gmail.com>
+References: <1395836346-9350-1-git-send-email-vkale@apm.com>
+	<CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw@mail.gmail.com>
+	<20140604154116.GN10126@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============0588252171=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <539026F5.2010005@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Inki Dae <inki.dae@samsung.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140604154116.GN10126-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Cc: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 4, 2014 at 10:41 AM, Catalin Marinas
+<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Wed, Jun 04, 2014 at 11:05:54AM +0100, Vinayak Kale wrote:
+>> Can you please merge this one?
+>
+> I was hoping for an ack/nak from the DT guys before merging it.
 
---===============0588252171==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k+w/mQv8wyuph6w0"
-Content-Disposition: inline
+We generally don't review every dts change.
 
-
---k+w/mQv8wyuph6w0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jun 05, 2014 at 05:14:45PM +0900, Inki Dae wrote:
->=20
-> Hi all,
->=20
->=20
-> Is there anyone who are reviewing this patch series? If there is no any
-> comment, I'd like to pick them up after test.
-
-What's with the rush? You should at least give people a day or two to
-get a chance to even see the patches.
-
-Thierry
-
---k+w/mQv8wyuph6w0
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTkChMAAoJEN0jrNd/PrOh+98QAKTWG7O8d+ARYBUc89GpeTNK
-Mqbd5ndVECcBa2bKjcF/x3zS6s0JO6h7hBE/xu3uUnfgZRk4Ec1KPsUqgbHnHaiK
-L6DTluClrNNqaQ4sLicrMrlWTpArqFjbmslFY74vTIThs4jXc8jgqPjnEc9FjYH3
-RvCNSObqk7KyEoqbi5rW3WaVCI+196YWbMCJh6F6Plzxc2vIEmNsswiZD5ONMs7U
-Cd0ekCoH22QXpKLIhYXMe5pHwuEjodEmeMPf9iCYlqL0iE1VdQcj49G+ksUNiQXh
-zQkb4XE8H07EpLwwHooLz+n5KxDM54Fv981EnPfj7iJKrQLtxDjCQZn3BbIXAr1N
-Sv1a9pIjXctW8145REU3LmSG4mcF9Xvg+jCURXdCvhQipBzIIQEncd6kHccuQDde
-8WQTInz++LjotjqncUFMnnJ9W6sFuCH5PtGz8XxAA0j2D1elbapaUvov228Enofo
-ZWAVp9bpx/OtzDjAw84MAN/MDoK+6r5ejXsdLhFACFmiYrNB7yqiUGMBBGjyoBLd
-kkpL32J0mFkb69E4bREFnwByjpQldYjaNOEh/5YbuxxPFEGHyz6JcdfgnQrZPkPB
-VMPFdnVg/PSq4p+JaIhXYuoptjng4wRnyvCvjpBaC1F1MdAcw7SbNVwvr3IDzK8l
-+Vte/lpXuoTZUTafTLKP
-=dgfr
------END PGP SIGNATURE-----
-
---k+w/mQv8wyuph6w0--
-
---===============0588252171==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-dri-devel mailing list
-dri-devel@lists.freedesktop.org
-http://lists.freedesktop.org/mailman/listinfo/dri-devel
-
---===============0588252171==--
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
