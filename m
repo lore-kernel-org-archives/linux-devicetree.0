@@ -1,80 +1,45 @@
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Subject: [PATCH] stmmac: extend DMA initialization delay to 2.5 seconds
-Date: Thu,  5 Jun 2014 16:58:00 +0400
-Message-ID: <1401973080-10085-1-git-send-email-abrodkin@synopsys.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet Gupta <Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v3 09/10] ARM: update multi_v7_defconfig for STI
+Date: Thu, 5 Jun 2014 14:08:09 +0100
+Message-ID: <20140605130809.GB24240@lee--X1>
+References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org>
+ <1401899424-1365-10-git-send-email-peter.griffin@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401899424-1365-10-git-send-email-peter.griffin@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, kernel@stlinux.com
 List-Id: devicetree@vger.kernel.org
 
-On some platforms existing 100 msecond delay is not enough for DMA block to
-recover after reset. This is because MAC DMA waits for all PHY input clocks
-to present and depending on the board reset bit deassertion may take much
-longer than previously used 100 milliseconds
+> This patch enables SDHCI STI platform driver.
+>=20
+> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> ---
+>  arch/arm/configs/multi_v7_defconfig | 1 +
+>  1 file changed, 1 insertion(+)
 
-I have a board that requires more than 2 seconds for DMA to zero "reset" bit.
-If for other boards it's still not long enough this value should be extended
-once again.
+Acked-by: Lee Jones <lee.jones@linaro.org>
 
-In the same change I convert "mdelay" to "msleep" to make CPU available for
-other processes during DMA init delay which is especially useful in case of
-delay for a few seconds.
+> diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/m=
+ulti_v7_defconfig
+> index d4e8a47..48951fc 100644
+> --- a/arch/arm/configs/multi_v7_defconfig
+> +++ b/arch/arm/configs/multi_v7_defconfig
+> @@ -277,6 +277,7 @@ CONFIG_MMC_SDHCI_TEGRA=3Dy
+>  CONFIG_MMC_SDHCI_DOVE=3Dy
+>  CONFIG_MMC_SDHCI_SPEAR=3Dy
+>  CONFIG_MMC_SDHCI_BCM_KONA=3Dy
+> +CONFIG_MMC_SDHCI_ST=3Dy
+>  CONFIG_MMC_OMAP=3Dy
+>  CONFIG_MMC_OMAP_HS=3Dy
+>  CONFIG_MMC_MVSDIO=3Dy
 
-Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-
-Cc: David S. Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Vineet Gupta <vgupta-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
----
- drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c | 4 ++--
- drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c  | 4 ++--
- 2 files changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-index 0c2058a..f713ea7 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac1000_dma.c
-@@ -39,11 +39,11 @@ static int dwmac1000_dma_init(void __iomem *ioaddr, int pbl, int fb, int mb,
- 	/* DMA SW reset */
- 	value |= DMA_BUS_MODE_SFT_RESET;
- 	writel(value, ioaddr + DMA_BUS_MODE);
--	limit = 10;
-+	limit = 100;
- 	while (limit--) {
- 		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
- 			break;
--		mdelay(10);
-+		msleep(25);
- 	}
- 	if (limit < 0)
- 		return -EBUSY;
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
-index 7d1dce9..043585f 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac100_dma.c
-@@ -41,11 +41,11 @@ static int dwmac100_dma_init(void __iomem *ioaddr, int pbl, int fb, int mb,
- 	/* DMA SW reset */
- 	value |= DMA_BUS_MODE_SFT_RESET;
- 	writel(value, ioaddr + DMA_BUS_MODE);
--	limit = 10;
-+	limit = 100;
- 	while (limit--) {
- 		if (!(readl(ioaddr + DMA_BUS_MODE) & DMA_BUS_MODE_SFT_RESET))
- 			break;
--		mdelay(10);
-+		msleep(25);
- 	}
- 	if (limit < 0)
- 		return -EBUSY;
--- 
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
