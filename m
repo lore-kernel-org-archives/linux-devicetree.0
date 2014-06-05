@@ -1,54 +1,97 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
- tree description
-Date: Fri, 06 Jun 2014 00:26:31 +0200
-Message-ID: <5390EE97.9020702@gmail.com>
-References: <1401467562-5585-1-git-send-email-dianders@chromium.org> <1402000514-30752-1-git-send-email-dianders@chromium.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 2/4] of: Add NVIDIA Tegra XUSB pad controller binding
+Date: Thu, 05 Jun 2014 16:57:11 -0600
+Message-ID: <5390F5C7.5070301@wwwdotorg.org>
+References: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com> <1401894990-30092-2-git-send-email-thierry.reding@gmail.com> <53909F31.4050603@wwwdotorg.org> <20140605220833.GA28817@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402000514-30752-1-git-send-email-dianders@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: olof@lixom.net, javier.martinez@collabora.co.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rahul.sharma@samsung.com, shaik.ameer@samsung.com, arun.kk@samsung.com, alim.akhtar@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="Pkt1FkuIKMqMg0rRt6J2mfxrRb13DSu3c"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140605220833.GA28817@ulmo>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 05.06.2014 22:35, Doug Anderson wrote:
-> The "aclk66_peric" clock is a gate clock with a whole bunch of gates
-> underneath it.  This big gate isn't very useful to include in our
-> clock tree.  If any of the children need to be turned on then the big
-> gate will need to be on anyway.  ...and there are plenty of other "big
-> gates" that aren't described in our clock tree, some of which shut off
-> collections of clocks that have no relationship in the hierarchy so
-> are hard to model.
-> 
-> "aclk66_peric" is causing earlyprintk problems since it gets disabled
-> as part of the boot process, so let's just remove it.
-> 
-> Strangely (and for no good reason) this clock is exported as part of
-> the common clock bindings.  Remove it since there are no in-kernel
-> device trees using it and no reason anyone out of tree should refer to
-> it either.
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> ---
-> Changes in v3:
-> - Now just remove aclk66_peric from the tree as suggested by Tomasz.
-> 
-> Changes in v2:
-> - Use GATE_A and clk_get().  Save the clock for putting later.
-> - Return 0 from exynos5420_clk_late_init().
-> 
->  drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
->  include/dt-bindings/clock/exynos5420.h |  1 -
->  2 files changed, 55 insertions(+), 31 deletions(-)
-> 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--Pkt1FkuIKMqMg0rRt6J2mfxrRb13DSu3c
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Mike, I can take this patch to my tree as a fix for 3.16-rc, or if still
-possible and you don't mind, feel free to apply it directly with my ACK:
+On 06/05/2014 04:08 PM, Thierry Reding wrote:
+> On Thu, Jun 05, 2014 at 10:47:45AM -0600, Stephen Warren wrote:
+>> On 06/04/2014 09:16 AM, Thierry Reding wrote:
+>>> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+>>>
+>>> This patch adds the device tree binding documentation for the XUSB pa=
+d
+>>> controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and =
+PHY
+>>> capabilities.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra12=
+4-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegr=
+a124-xusb-padctl.txt
+>>
+>>> +- #phy-cells: Should be 1. The specifier is the index of the PHY to =
+reference.
+>>> +  Possible values are:
+>>> +  - 0: PCIe
+>>> +  - 1: SATA
+>>
+>> Those values are defined in
+>> include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h. I personally conside=
+r
+>> the <dt-bindings/> header files to be part of the binding itself, rath=
+er
+>> than being derived from the binding. As such, I'd suggest the followin=
+g
+>> changes:
+>>
+>> * Make this patch 1 not patch 2
+>> * Move pinctrl-tegra-xusb.h into this patch.
+>> * Remove the list of values above, and replace it with the text "See
+>> <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the set of valid values=
+".
+>=20
+> I remember discussions where people explicitly said that relying on the=
 
-Acked-by: Tomasz Figa <t.figa@samsung.com>
+> symbolic names in the DT bindings was a mistake because it would mean
+> that everyone would need to have access to a mechanism similar to what
+> we have in the Linux kernel (and that the header files would always nee=
+d
+> to be shipped with the DT bindings).
 
-Best regards,
-Tomasz
+The entire point of the headers is so that the binding definitions and
+code using them can't get out of sync. In my opinion, the headers *are*
+part of the bindings, so of course anyone either reading DT bindings, or
+parsing DT, must have the headers, and hence the headers must be bundled
+with the DT files or with the bindings wherever they go.
+
+
+--Pkt1FkuIKMqMg0rRt6J2mfxrRb13DSu3c
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
+
+iQIcBAEBAgAGBQJTkPXHAAoJEJuNpwkmVCGczZgP/1UMgpmOSc+Wc4lu7V2FBINe
+chgGWejm/sdvWSEQ1vk9Uwf4wcrwy/z1eCW14tLaRxMvwm7ZSRMp29NngXUaegb4
+AVfTih6pH2/FYmvduAFmCEFFDGgFa8s3CkWis5qxg/J1NbhmojjVU6Na3tE2ueO1
+fCHHWRzTkaNu9PL+jUlb2Zn9swKSgYlGFE74XJkYXXvK49W7S9Tjq8VS7/gAJ3AZ
+4U0JQoo7tUtTlQQ9Sd9nvsw5JsEaK5Nhsb7wTwzB9wlOkAl+9yXzo1ChaY7F/E//
+/pJrCpSxdGGHefHM0OygWLWGokTNP2hh1JBOj2Sfn/Dk+qEQtR6YfJTu0uu3b31m
+0WHZ/3LyGMzX2a96N05xSaE/vo+1ysz65FkwaicnBBFOZXjhfikWiqomOEgTbG9G
+7J/OBf8UZPm63Nt4oD0I72rrGoeuzi5ohkTWGCdFJ3Rdqdn2HqkfsosqyHOydW52
+4gev36hcxgHNjSV0Yxrh5djUjAE55tPHOlv4ZeVHWTvm1b7IuQQ9KyRvYdlxHkZS
+Syksxu8SeDv5+qyYew5a4/oxw8W8vQRJ7XFkbzAyx/gFC9+yfrn9iDidNFyTBYRc
+MdUKVf1US79VCeBUqtY775EFJ6kJYBGvb7MvY+O2YdTCYPfIdN8su4duD7NZZCOo
+f5gOFSnCOrR8/6pJO+N1
+=lXuH
+-----END PGP SIGNATURE-----
+
+--Pkt1FkuIKMqMg0rRt6J2mfxrRb13DSu3c--
