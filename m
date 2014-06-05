@@ -1,53 +1,46 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH 7/9] Documentation: bindings: add doc for the Berlin ChipIdea USB driver
-Date: Thu,  5 Jun 2014 17:48:44 +0200
-Message-ID: <1401983326-19205-8-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Subject: [PATCH 5/9] Documentation: bindings: add doc for the Berlin USB PHY
+Date: Thu,  5 Jun 2014 17:48:42 +0200
+Message-ID: <1401983326-19205-6-git-send-email-antoine.tenart@free-electrons.com>
 References: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com, balbi@ti.com
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Document the Marvell Berlin USB driver bindings.
-
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- .../devicetree/bindings/usb/ci-hdrc-berlin.txt         | 18 ++++++++++=
-++++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-berli=
-n.txt
-
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-berlin.txt b=
-/Documentation/devicetree/bindings/usb/ci-hdrc-berlin.txt
-new file mode 100644
-index 000000000000..a3fc9054b830
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-berlin.txt
-@@ -0,0 +1,18 @@
-+* Marvell Berlin usb controllers
-+
-+Required properties:
-+- compatible: should be "marvell,berlin-usb"
-+- reg: base address and length of the registers
-+- interrupts: interrupt for the USB controller
-+- clocks: reference to the USB clock
-+- marvell,usbphy: reference to the USB PHY
-+
-+Example:
-+
-+	usb@f7ed0000 {
-+		compatible =3D "marvell,berlin-usb";
-+		reg =3D <0xf7ed0000 0x10000>;
-+		interrupts =3D <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks =3D <&chip CLKID_USB0>;
-+		marvell,usbphy =3D <&usb_phy0>;
-+	};
---=20
-1.9.1
+RG9jdW1lbnQgdGhlIGJpbmRpbmdzIG9mIHRoZSBNYXJ2ZWxsIEJlcmxpbiBVU0IgUEhZIGRyaXZl
+ci4KClNpZ25lZC1vZmYtYnk6IEFudG9pbmUgVMOpbmFydCA8YW50b2luZS50ZW5hcnRAZnJlZS1l
+bGVjdHJvbnMuY29tPgotLS0KIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9iZXJsaW4tdXNi
+cGh5LnR4dCAgICAgICAgICB8IDE4ICsrKysrKysrKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQs
+IDE4IGluc2VydGlvbnMoKykKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvdXNiL2Jlcmxpbi11c2JwaHkudHh0CgpkaWZmIC0tZ2l0IGEvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9iZXJsaW4tdXNicGh5LnR4dCBiL0RvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvYmVybGluLXVzYnBoeS50eHQKbmV3IGZp
+bGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5kOTdlYjFmOWQ1M2YKLS0tIC9kZXYv
+bnVsbAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2Jlcmxpbi11
+c2JwaHkudHh0CkBAIC0wLDAgKzEsMTggQEAKKyogTWFydmVsbCBCZXJsaW4gVVNCIFBIWQorCitS
+ZXF1aXJlZCBwcm9wZXJ0aWVzOgorLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgIm1hcnZlbGwsYmVy
+bGluLXVzYnBoeSIKKy0gcmVnOiBiYXNlIGFkZHJlc3MgYW5kIGxlbmd0aCBvZiB0aGUgcmVnaXN0
+ZXJzCistICNwaHlzLWNlbGxzOiBzaG91bGQgYmUgMAorLSByZXNldDogcmVmZXJlbmNlIHRvIHRo
+ZSByZXNldCBjb250cm9sbGVyCistIHBvd2VyLWdwaW86IHJlZmVyZW5jZSB0aGUgR1BJTyBwaW4g
+dG8gcG93ZXIgdGhlIFBIWQorCitFeGFtcGxlOgorCisJdXNicGh5QGY3NzQwMDAgeworCQljb21w
+YXRpYmxlID0gIm1hcnZlbGwsYmVybGluLXVzYnBoeSI7CisJCXJlZyA9IDwweGY3NzQwMDAgMHgx
+Mjg+OworCQkjcGh5LWNlbGxzID0gPDA+OworCQlyZXNldHMgPSA8JmNoaXAgMTQ+OworCQlwb3dl
+ci1ncGlvID0gPCZwb3J0YiA4IEdQSU9fQUNUSVZFX0hJR0g+OworCX07Ci0tIAoxLjkuMQoKCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1r
+ZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpo
+dHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJu
+ZWwK
