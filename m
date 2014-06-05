@@ -1,94 +1,59 @@
-From: YoungJun Cho <yj44.cho@samsung.com>
-Subject: Re: [PATCH v3 13/15] ARM: dts: exynos5: add system register support
-Date: Thu, 05 Jun 2014 11:52:57 +0900
-Message-ID: <538FDB89.70504@samsung.com>
-References: <1401686571-22148-1-git-send-email-yj44.cho@samsung.com>
- <1401686571-22148-14-git-send-email-yj44.cho@samsung.com>
- <CAFp+6iFpSHWwH68BSNzetrTdxt2wpZC3y3WfQ+nuRDBeask_MA@mail.gmail.com>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCHv4 2/2] ARM: dts: unuse the slot-node and deprecated support-highspeed
+ for dw-mmc.
+Date: Thu, 05 Jun 2014 08:39:17 +0530
+Message-ID: <538FDF5D.9060400@gmail.com>
+References: <1401934928-7300-1-git-send-email-jh80.chung@samsung.com> <1401934928-7300-3-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <CAFp+6iFpSHWwH68BSNzetrTdxt2wpZC3y3WfQ+nuRDBeask_MA@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Vivek Gautam <gautam.vivek@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, robh+dt <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1401934928-7300-3-git-send-email-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, mark.rutland@arm.com, tushar.behera@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vivek,
+On 06/05/2014 07:52 AM, Jaehoon Chung wrote:
+> dw-mmc controller can support the multiple slot.
 
-On 06/04/2014 08:50 PM, Vivek Gautam wrote:
-> On Mon, Jun 2, 2014 at 10:52 AM, YoungJun Cho <yj44.cho@samsung.com> wrote:
->> This patch adds sysreg device node, and sysreg property
->> to fimd device node which is required to use I80 interface.
->
-> Same here. The system register nodes have been added to exynos5250 and
-> exynos5420 by the patch:
-> dfbbdbf ARM: dts: Add sysreg sytem controller node to exynos5250 and exynos5420
->
-> May be, you may want to move those two nodes to this common file (exynos5.dtsi).
->
+'the' can be omitted, /s/slot/slots/
 
-Thank you for reporting.
-I didn't check linux-samsung-soc.
+> But, there is not use-case anywhere. So we don't need to support the
 
-The exynos5410, 5420 and 5422 use system register with base address
-0x10050000.
-But exynos5260 and 5430 are different.
-And I can't check exynos5250.
+/s/is not use-case/are no use-cases/
 
-So with this condition, it is reasonable to remove these sysreg relevant
-patches.
+> slot-node for dw-mmc controller.
+> And "support-highspeed" property in dw-mmc is deprecated.
+> "support-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-Thank you.
-Best regards YJ
+[ ... ]
 
->>
->> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
->> Acked-by: Inki Dae <inki.dae@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>   arch/arm/boot/dts/exynos5.dtsi |    6 ++++++
->>   1 file changed, 6 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
->> index 79d0608..95ee496 100644
->> --- a/arch/arm/boot/dts/exynos5.dtsi
->> +++ b/arch/arm/boot/dts/exynos5.dtsi
->> @@ -81,12 +81,18 @@
->>                  status = "disabled";
->>          };
->>
->> +       sys_reg: syscon@10050000 {
->> +               compatible = "samsung,exynos5-sysreg", "syscon";
->> +               reg = <0x10050000 0x500>;
->> +       };
->> +
->>          fimd@14400000 {
->>                  compatible = "samsung,exynos5250-fimd";
->>                  interrupt-parent = <&combiner>;
->>                  reg = <0x14400000 0x40000>;
->>                  interrupt-names = "fifo", "vsync", "lcd_sys";
->>                  interrupts = <18 4>, <18 5>, <18 6>;
->> +               samsung,sysreg = <&sys_reg>;
->>                  status = "disabled";
->>          };
->>
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->
->
->
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index 532b1d4..60d90c9 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -46,13 +46,14 @@ Required Properties:
+>        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
+>          phase shift clocks should be 0.
+>  
+> -Required properties for a slot:
+> +Required properties for a slot (Deprecated - Support the one slot per host):
+
+"Support only one slot per host" ?
+
+>  
+>  * gpios: specifies a list of gpios used for command, clock and data bus. The
+>    first gpio is the command line and the second gpio is the clock line. The
+>    rest of the gpios (depending on the bus-width property) are the data lines in
+>    no particular order. The format of the gpio specifier depends on the gpio
+>    controller.
+> + (Deprecated - Refer to Documentaion/devicetree/binding/samsung-pinctrl.txt)
+
+Update reference:
+Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+
+-- 
+Tushar Behera
