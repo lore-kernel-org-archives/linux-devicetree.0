@@ -1,38 +1,114 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH v4 00/14] drm/exynos: support LCD I80 interface display
-Date: Thu, 05 Jun 2014 17:43:10 +0900
-Message-ID: <53902D9E.6070905@samsung.com>
-References: <1401949194-20092-1-git-send-email-yj44.cho@samsung.com>
- <539026F5.2010005@samsung.com> <20140605082028.GA22629@ulmo>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
+ device tree
+Date: Thu, 5 Jun 2014 03:43:14 -0500
+Message-ID: <CAL_JsqKm-WktP+ad7aEMAPe=zhB7TPOftktUhccXyn=70wnLfQ@mail.gmail.com>
+References: <1395836346-9350-1-git-send-email-vkale@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-reply-to: <20140605082028.GA22629@ulmo>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1395836346-9350-1-git-send-email-vkale-qTEPVZfXA3Y@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNOuFhCAwNuyblCAwNeydvCAxNzoyMCwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24g
-VGh1LCBKdW4gMDUsIDIwMTQgYXQgMDU6MTQ6NDVQTSArMDkwMCwgSW5raSBEYWUgd3JvdGU6Cj4+
-Cj4+IEhpIGFsbCwKPj4KPj4KPj4gSXMgdGhlcmUgYW55b25lIHdobyBhcmUgcmV2aWV3aW5nIHRo
-aXMgcGF0Y2ggc2VyaWVzPyBJZiB0aGVyZSBpcyBubyBhbnkKPj4gY29tbWVudCwgSSdkIGxpa2Ug
-dG8gcGljayB0aGVtIHVwIGFmdGVyIHRlc3QuCj4gCj4gV2hhdCdzIHdpdGggdGhlIHJ1c2g/IFlv
-dSBzaG91bGQgYXQgbGVhc3QgZ2l2ZSBwZW9wbGUgYSBkYXkgb3IgdHdvIHRvCj4gZ2V0IGEgY2hh
-bmNlIHRvIGV2ZW4gc2VlIHRoZSBwYXRjaGVzLgoKTm8sIEkgZG9uJ3QgaHVycnkgdXAuIEkgcGxh
-biB0byBwaWNrIHRoZW0gdXAgYWZ0ZXIgdGVzdCwgYW5kIEkgZG9uJ3QKcGljayB0aGVtIHVwIGF0
-IGxlYXN0IGEgd2VlayBldmVuIGlmIHRoZXJlIGFyZSBubyBwZW9wbGUgd2hvIGFyZQpyZXZpZXdp
-bmcgdGhpcyBwYXRjaCBzZXJpZXMuCgpJIGp1c3QgZ2F2ZSBub3RpY2UgYmVmb3JlaGFuZC4KClRo
-YW5rcywKSW5raSBEYWUKCj4gCj4gVGhpZXJyeQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9kcmktZGV2ZWwK
+On Wed, Mar 26, 2014 at 7:19 AM, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org> wrote:
+> APM X-Gene Storm SoC supports 4 serial ports. This patch adds device nodes
+> for serial ports 1 to 3 (a device node for serial port 0 is already present
+> in the dts file).
+> This patch also sets the compatible property of serial nodes to "ns16550a".
+>
+> Signed-off-by: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
+>  arch/arm64/boot/dts/apm-storm.dtsi  | 36 +++++++++++++++++++++++++++++++++++-
+>  2 files changed, 39 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
+> index 1247ca1..6541962 100644
+> --- a/arch/arm64/boot/dts/apm-mustang.dts
+> +++ b/arch/arm64/boot/dts/apm-mustang.dts
+> @@ -24,3 +24,7 @@
+>                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
+>         };
+>  };
+> +
+> +&serial0 {
+> +       status = "ok";
+> +};
+> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+> index d37d736..2277b5c 100644
+> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> @@ -179,13 +179,47 @@
+>                 };
+>
+>                 serial0: serial@1c020000 {
+> +                       status = "disabled";
+>                         device_type = "serial";
+> -                       compatible = "ns16550";
+> +                       compatible = "ns16550a";
+
+Generally, changing a compatible string like this is a no-no. You
+could be breaking compatibility with different OS versions. However,
+this is one generic string to another and they have been around
+forever, so I think it is okay. You probably should have a specific
+string in case you ever have some quirk in your particular h/w.
+
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+Rob
+
+>                         reg = <0 0x1c020000 0x0 0x1000>;
+>                         reg-shift = <2>;
+>                         clock-frequency = <10000000>; /* Updated by bootloader */
+>                         interrupt-parent = <&gic>;
+>                         interrupts = <0x0 0x4c 0x4>;
+>                 };
+> +
+> +               serial1: serial@1c021000 {
+> +                       status = "disabled";
+> +                       device_type = "serial";
+> +                       compatible = "ns16550a";
+> +                       reg = <0 0x1c021000 0x0 0x1000>;
+> +                       reg-shift = <2>;
+> +                       clock-frequency = <10000000>; /* Updated by bootloader */
+> +                       interrupt-parent = <&gic>;
+> +                       interrupts = <0x0 0x4d 0x4>;
+> +               };
+> +
+> +               serial2: serial@1c022000 {
+> +                       status = "disabled";
+> +                       device_type = "serial";
+> +                       compatible = "ns16550a";
+> +                       reg = <0 0x1c022000 0x0 0x1000>;
+> +                       reg-shift = <2>;
+> +                       clock-frequency = <10000000>; /* Updated by bootloader */
+> +                       interrupt-parent = <&gic>;
+> +                       interrupts = <0x0 0x4e 0x4>;
+> +               };
+> +
+> +               serial3: serial@1c023000 {
+> +                       status = "disabled";
+> +                       device_type = "serial";
+> +                       compatible = "ns16550a";
+> +                       reg = <0 0x1c023000 0x0 0x1000>;
+> +                       reg-shift = <2>;
+> +                       clock-frequency = <10000000>; /* Updated by bootloader */
+> +                       interrupt-parent = <&gic>;
+> +                       interrupts = <0x0 0x4f 0x4>;
+> +               };
+>         };
+>  };
+> --
+> 1.8.2.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
