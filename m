@@ -1,40 +1,58 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH 4/6] thermal: sti: Add support for ST's
- Memory Mapped based Thermal controller
-Date: Thu, 5 Jun 2014 16:26:20 +0100
-Message-ID: <20140605152620.GD7446@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1401442715-6350-1-git-send-email-lee.jones@linaro.org>
- <1401442715-6350-5-git-send-email-lee.jones@linaro.org>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
+ aforementioned systems
+Date: Thu, 5 Jun 2014 16:41:34 +0100
+Message-ID: <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-8-git-send-email-lee.jones@linaro.org> <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
+ <20140605103709.GE19550@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401442715-6350-5-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-pm@vger.kernel.org, eduardo.valentin@ti.com, rui.zhang@intel.com
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140605103709.GE19550@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jun 5, 2014 at 11:37 AM, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 05 Jun 2014, Grant Likely wrote:
+>
+>> On Wed,  4 Jun 2014 13:09:56 +0100, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > Currently this is a helper function for the I2C subsystem to aid the
+>> > matching of non-standard compatible strings and devices which use DT
+>> > and/or ACPI, but do not supply any nodes (see: [1] Method 4).  However,
+>> > it has been made more generic as it can be used to only make one call
+>> > for drivers which support any mixture of OF, ACPI and/or I2C matching.
+>> >
+>> > The initial aim is for of_match_device() to be replaced by this call
+>> > in all I2C device drivers.
+>> >
+>> > [1] Documentation/i2c/instantiating-devices
+>> >
+>> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>
+>> I don't like this. It drops all type safety on the match entry
+>> and the caller has no idea what it got back.
+>
+> Okay, so what's the best way forward?
+>
+> Introduce a i2c_of_match_device() call instead?
 
-On Fri, 30 May 2014, Lee Jones wrote:
+I still think the way to do it is to emulate the missing i2c_device_id
+when calling the drivers .probe() hook by having a temporary copy on
+the stack and filling it with data from the OF or ACPI table....
+Actually I would completely skip trying to get the data from ACPI.
+Since all of this is to continue supporting instantiating devices from
+sysfs, having a fallback to the OF table completely solves that use
+case.
 
-> This is the traditional way of obtaining a device driver's register
-> address space.  The aim of this driver is to supply controller specific
-> information to the ST Thermal Core.
-> 
-> Signed-off-by: Ajit Pal Singh <ajitpal.singh@st.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> ---
->  drivers/thermal/st/Kconfig             |   4 +
->  drivers/thermal/st/Makefile            |   1 +
->  drivers/thermal/st/st_thermal_memmap.c | 209 +++++++++++++++++++++++++++++++++
->  3 files changed, 214 insertions(+)
->  create mode 100644 drivers/thermal/st/st_thermal_memmap.c
+Anticipating an objection of: "what do we do with drivers that are
+ACPI only?"... That will be an incredibly rare case. If that ever does
+happen then we'll solve it by simply adding an of_device_id table.
 
-For the rest of the series [4 to 6]: 
- Acked-by: Peter Griffin <peter.griffin@linaro.org>> 
-
-regards,
-
-Peter.
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
