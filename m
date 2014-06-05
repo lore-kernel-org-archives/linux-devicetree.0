@@ -1,44 +1,54 @@
-From: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Subject: Re: [PATCH] stmmac: extend DMA initialization delay to 2.5 seconds
-Date: Thu, 05 Jun 2014 15:24:59 -0700 (PDT)
-Message-ID: <20140605.152459.1082790961637060914.davem@davemloft.net>
-References: <1401973080-10085-1-git-send-email-abrodkin@synopsys.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
+ tree description
+Date: Fri, 06 Jun 2014 00:26:31 +0200
+Message-ID: <5390EE97.9020702@gmail.com>
+References: <1401467562-5585-1-git-send-email-dianders@chromium.org> <1402000514-30752-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401973080-10085-1-git-send-email-abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
-Cc: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, peppe.cavallaro-qxv4g6HH51o@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Vineet.Gupta1-HKixBCOQz3hWk0Htik3J/w@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402000514-30752-1-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: olof@lixom.net, javier.martinez@collabora.co.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rahul.sharma@samsung.com, shaik.ameer@samsung.com, arun.kk@samsung.com, alim.akhtar@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alexey Brodkin <Alexey.Brodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
-Date: Thu,  5 Jun 2014 16:58:00 +0400
-
-> On some platforms existing 100 msecond delay is not enough for DMA block to
-> recover after reset. This is because MAC DMA waits for all PHY input clocks
-> to present and depending on the board reset bit deassertion may take much
-> longer than previously used 100 milliseconds
+On 05.06.2014 22:35, Doug Anderson wrote:
+> The "aclk66_peric" clock is a gate clock with a whole bunch of gates
+> underneath it.  This big gate isn't very useful to include in our
+> clock tree.  If any of the children need to be turned on then the big
+> gate will need to be on anyway.  ...and there are plenty of other "big
+> gates" that aren't described in our clock tree, some of which shut off
+> collections of clocks that have no relationship in the hierarchy so
+> are hard to model.
 > 
-> I have a board that requires more than 2 seconds for DMA to zero "reset" bit.
-> If for other boards it's still not long enough this value should be extended
-> once again.
+> "aclk66_peric" is causing earlyprintk problems since it gets disabled
+> as part of the boot process, so let's just remove it.
 > 
-> In the same change I convert "mdelay" to "msleep" to make CPU available for
-> other processes during DMA init delay which is especially useful in case of
-> delay for a few seconds.
+> Strangely (and for no good reason) this clock is exported as part of
+> the common clock bindings.  Remove it since there are no in-kernel
+> device trees using it and no reason anyone out of tree should refer to
+> it either.
 > 
-> Signed-off-by: Alexey Brodkin <abrodkin-HKixBCOQz3hWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> ---
+> Changes in v3:
+> - Now just remove aclk66_peric from the tree as suggested by Tomasz.
+> 
+> Changes in v2:
+> - Use GATE_A and clk_get().  Save the clock for putting later.
+> - Return 0 from exynos5420_clk_late_init().
+> 
+>  drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
+>  include/dt-bindings/clock/exynos5420.h |  1 -
+>  2 files changed, 55 insertions(+), 31 deletions(-)
+> 
 
-This will not work, you cannot sleep with spinlocks held, and this code is
-absolutely called in such a context.
+Mike, I can take this patch to my tree as a fix for 3.16-rc, or if still
+possible and you don't mind, feel free to apply it directly with my ACK:
 
-For example stmmac_resume() --> stmmac_hw_setup() -> stmmac_init_dma_engine().
+Acked-by: Tomasz Figa <t.figa@samsung.com>
 
-stmmac_resume() holds priv->lock over all of these operations, and even has
-interrupts disabled.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
