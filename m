@@ -1,64 +1,53 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Subject: [PATCH 0/9] ARM: Berlin: USB support
-Date: Thu,  5 Jun 2014 17:48:37 +0200
-Message-ID: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH 7/9] Documentation: bindings: add doc for the Berlin ChipIdea USB driver
+Date: Thu,  5 Jun 2014 17:48:44 +0200
+Message-ID: <1401983326-19205-8-git-send-email-antoine.tenart@free-electrons.com>
+References: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com, p.zabel@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhpcyBzZXJpZXMgYWRkcyB0aGUgc3VwcG9ydCBmb3IgdGhlIE1hcnZlbGwgQmVybGluIFVTQiBj
-b250cm9sbGVycywKdGhlIFVTQiBQSFlzIGFuZCBhbHNvIGFkZHMgYSByZXNldCBjb250cm9sbGVy
-LgoKVGhlIHJlc2V0IGNvbnRyb2xsZXIgaXMgdXNlZCBieSB0aGUgVVNCIFBIWSBkcml2ZXIgYW5k
-IHNoYXJlcyB0aGUKZXhpc3RpbmcgY2hpcCBjb250cm9sbGVyIG5vZGUgd2l0aCB0aGUgY2xvY2tz
-IGFuZCBvbmUgcGluIGNvbnRyb2xsZXIuCgpUaGUgTWFydmVsbCBCZXJsaW4gVVNCIGNvbnRyb2xs
-ZXJzIGFyZSBob3N0IG9ubHkgb24gdGhlIEJHMlEgYW5kIGFyZQpjb21wYXRpYmxlIHdpdGggVVNC
-IENoaXBJZGVhLiBXZSBoZXJlIGFkZCBhIGdsdWUgdG8gdXNlIHRoZSBhdmFpbGFibGUKY29tbW9u
-IGZ1bmN0aW9ucyBmb3IgdGhpcyBraW5kIG9mIGNvbnRyb2xsZXJzLiBBIFVTQiBQSFkgZHJpdmVy
-IGlzIGFsc28KYWRkZWQgdG8gY29udHJvbCB0aGUgUEhZLgoKQW50b2luZSBUw6luYXJ0ICg5KToK
-ICByZXNldDogYWRkIHRoZSBCZXJsaW4gcmVzZXQgY29udHJvbGxlciBkcml2ZXIKICBBUk06IEJl
-cmxpbjogc2VsZWN0IHRoZSByZXNldCBjb250cm9sbGVyCiAgQVJNOiBkdHM6IGJlcmxpbjogYWRk
-IGEgcmVxdWlyZWQgcmVzZXQgcHJvcGVydHkgaW4gdGhlIGNoaXAgY29udHJvbGxlcgogICAgbm9k
-ZQogIHVzYjogcGh5OiBhZGQgdGhlIEJlcmxpbiBVU0IgUEhZIGRyaXZlcgogIERvY3VtZW50YXRp
-b246IGJpbmRpbmdzOiBhZGQgZG9jIGZvciB0aGUgQmVybGluIFVTQiBQSFkKICB1c2I6IGNoaXBp
-ZGVhOiBhZGQgQmVybGluIFVTQiBzdXBwb3J0CiAgRG9jdW1lbnRhdGlvbjogYmluZGluZ3M6IGFk
-ZCBkb2MgZm9yIHRoZSBCZXJsaW4gQ2hpcElkZWEgVVNCIGRyaXZlcgogIEFSTTogZHRzOiBiZXJs
-aW46IGFkZCBCRzJRIG5vZGVzIGZvciBVU0Igc3VwcG9ydAogIEFSTTogZHRzOiBCZXJsaW46IGVu
-YWJsZSBVU0Igb24gdGhlIEJHMlEgRE1QCgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvdXNiL2Jl
-cmxpbi11c2JwaHkudHh0ICAgICAgfCAgMTggKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3Vz
-Yi9jaS1oZHJjLWJlcmxpbi50eHQgICAgIHwgIDE4ICsrCiBhcmNoL2FybS9ib290L2R0cy9iZXJs
-aW4yLmR0c2kgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBhcmNoL2FybS9ib290L2R0cy9i
-ZXJsaW4yY2QuZHRzaSAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBhcmNoL2FybS9ib290L2R0
-cy9iZXJsaW4ycS1tYXJ2ZWxsLWRtcC5kdHMgICAgICAgICB8ICAyMCArKwogYXJjaC9hcm0vYm9v
-dC9kdHMvYmVybGluMnEuZHRzaSAgICAgICAgICAgICAgICAgICAgfCAgNTIgKysrKysKIGFyY2gv
-YXJtL21hY2gtYmVybGluL0tjb25maWcgICAgICAgICAgICAgICAgICAgICAgIHwgICAyICsKIGRy
-aXZlcnMvcmVzZXQvTWFrZWZpbGUgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHwgICAxICsK
-IGRyaXZlcnMvcmVzZXQvcmVzZXQtYmVybGluLmMgICAgICAgICAgICAgICAgICAgICAgIHwgMTEz
-ICsrKysrKysrKysrCiBkcml2ZXJzL3VzYi9jaGlwaWRlYS9NYWtlZmlsZSAgICAgICAgICAgICAg
-ICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3VzYi9jaGlwaWRlYS9jaV9oZHJjX2Jlcmxpbi5jICAg
-ICAgICAgICAgICB8IDEwOCArKysrKysrKysrCiBkcml2ZXJzL3VzYi9waHkvS2NvbmZpZyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICB8ICAgOSArCiBkcml2ZXJzL3VzYi9waHkvTWFrZWZpbGUg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3VzYi9waHkvcGh5LWJl
-cmxpbi11c2IuYyAgICAgICAgICAgICAgICAgICB8IDIyMyArKysrKysrKysrKysrKysrKysrKysK
-IDE0IGZpbGVzIGNoYW5nZWQsIDU2OCBpbnNlcnRpb25zKCspCiBjcmVhdGUgbW9kZSAxMDA2NDQg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9iZXJsaW4tdXNicGh5LnR4dAog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2Iv
-Y2ktaGRyYy1iZXJsaW4udHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9yZXNldC9yZXNl
-dC1iZXJsaW4uYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvdXNiL2NoaXBpZGVhL2NpX2hk
-cmNfYmVybGluLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL3VzYi9waHkvcGh5LWJlcmxp
-bi11c2IuYwoKLS0gCjEuOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
-bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
-bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Document the Marvell Berlin USB driver bindings.
+
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+---
+ .../devicetree/bindings/usb/ci-hdrc-berlin.txt         | 18 ++++++++++=
+++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-berli=
+n.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-berlin.txt b=
+/Documentation/devicetree/bindings/usb/ci-hdrc-berlin.txt
+new file mode 100644
+index 000000000000..a3fc9054b830
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-berlin.txt
+@@ -0,0 +1,18 @@
++* Marvell Berlin usb controllers
++
++Required properties:
++- compatible: should be "marvell,berlin-usb"
++- reg: base address and length of the registers
++- interrupts: interrupt for the USB controller
++- clocks: reference to the USB clock
++- marvell,usbphy: reference to the USB PHY
++
++Example:
++
++	usb@f7ed0000 {
++		compatible =3D "marvell,berlin-usb";
++		reg =3D <0xf7ed0000 0x10000>;
++		interrupts =3D <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++		clocks =3D <&chip CLKID_USB0>;
++		marvell,usbphy =3D <&usb_phy0>;
++	};
+--=20
+1.9.1
