@@ -1,51 +1,60 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [RFC v3 1/9] arm: fiq: arbitrary mappings from IRQ to FIQ virqs
-Date: Thu, 5 Jun 2014 12:51:16 +0100
-Message-ID: <20140605115116.GE23430@n2100.arm.linux.org.uk>
-References: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-2-git-send-email-daniel.thompson@linaro.org>
+From: Peter Griffin <peter.griffin@linaro.org>
+Subject: Re: [STLinux Kernel] [PATCH RESEND 05/12] drivers: clk: st: STiH407:
+ Support for clockgenA0
+Date: Thu, 5 Jun 2014 12:57:14 +0100
+Message-ID: <20140605115714.GA2294@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1401892320-18211-6-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1401961994-18033-2-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, Catalin Marinas <catalin.marinas@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Nicolas Pitre <nico@linaro.org>, Fabio Estevam <festevam@gmail.com>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, kgdb-bugreport@lists.sourceforge.net, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundati>
+In-Reply-To: <1401892320-18211-6-git-send-email-gabriel.fernandez@linaro.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Cc: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, Olivier Bideau <olivier.bideau@st.com>, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 05, 2014 at 10:53:06AM +0100, Daniel Thompson wrote:
->  static int fiq_def_op(void *ref, int relinquish)
->  {
-> -	if (!relinquish)
-> +	if (!relinquish) {
-> +		unsigned offset = FIQ_OFFSET;
-> +		no_fiq_insn = *(unsigned long *)(0xffff0000 + offset);
->  		set_fiq_handler(&no_fiq_insn, sizeof(no_fiq_insn));
-> +	}
-...
->  void __init init_FIQ(int start)
->  {
-> -	unsigned offset = FIQ_OFFSET;
-> -	no_fiq_insn = *(unsigned long *)(0xffff0000 + offset);
->  	fiq_start = start;
->  }
+Hi Gabi,
 
-This is wrong - when the default handler is "reinstalled", this change has
-the effect that we read the first instruction of the existing handler, and
-then write that same instruction back, rather than replacing the first
-instruction with the value that was there at boot.
+On Wed, 04 Jun 2014, Gabriel FERNANDEZ wrote:
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+> The patch added support for DT registration of ClockGenA0
+> It includes c32 type PLL.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+> Signed-off-by: Olivier Bideau <olivier.bideau@st.com>
+> ---
+>  drivers/clk/st/clkgen-pll.c | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+> 
+> diff --git a/drivers/clk/st/clkgen-pll.c b/drivers/clk/st/clkgen-pll.c
+> index d8b9b1a..6916cfa 100644
+> --- a/drivers/clk/st/clkgen-pll.c
+> +++ b/drivers/clk/st/clkgen-pll.c
+> @@ -180,6 +180,18 @@ static struct clkgen_pll_data st_pll1200c32_gpu_416 = {
+>  	.ops		= &st_pll1200c32_ops,
+>  };
+>  
+> +static struct clkgen_pll_data st_pll3200c32_407_a0 = {
+> +	/* 407 A0 */
+> +	.pdn_status	= CLKGEN_FIELD(0x2a0,	0x1,			8),
+> +	.locked_status	= CLKGEN_FIELD(0x2a0,	0x1,			24),
+> +	.ndiv		= CLKGEN_FIELD(0x2a4,	C32_NDIV_MASK,		16),
+> +	.idf		= CLKGEN_FIELD(0x2a4,	C32_IDF_MASK,		0x0),
+> +	.num_odfs = 1,
+> +	.odf		= { CLKGEN_FIELD(0x2b4, C32_ODF_MASK,		0) },
+> +	.odf_gate	= { CLKGEN_FIELD(0x2b4,	0x1,			6) },
+> +	.ops		= &stm_pll3200c32_ops,
+> +};
+> +
+>  /**
+I think these could be 'static const' as well, with some fixups in the function protoypes 
+which use it.
+
+Apart from that : -
+ Acked-by: Peter Griffin <peter.griffin@linaro.org>
+
+Regards,
+
+Peter
