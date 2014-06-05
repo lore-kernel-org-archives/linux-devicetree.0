@@ -1,113 +1,37 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
- device tree
-Date: Thu, 5 Jun 2014 03:43:14 -0500
-Message-ID: <CAL_JsqKm-WktP+ad7aEMAPe=zhB7TPOftktUhccXyn=70wnLfQ@mail.gmail.com>
-References: <1395836346-9350-1-git-send-email-vkale@apm.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [STLinux Kernel] [PATCH RESEND 01/12] clk: st: Update ST clock
+ binding documentation
+Date: Thu, 5 Jun 2014 09:48:28 +0100
+Message-ID: <20140605084828.GD3865@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
+ <1401892320-18211-2-git-send-email-gabriel.fernandez@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1395836346-9350-1-git-send-email-vkale-qTEPVZfXA3Y@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1401892320-18211-2-git-send-email-gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+To: Gabriel FERNANDEZ <gabriel.fernandez-qxv4g6HH51o@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Mar 26, 2014 at 7:19 AM, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org> wrote:
-> APM X-Gene Storm SoC supports 4 serial ports. This patch adds device nodes
-> for serial ports 1 to 3 (a device node for serial port 0 is already present
-> in the dts file).
-> This patch also sets the compatible property of serial nodes to "ns16550a".
->
-> Signed-off-by: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+On Wed, 04 Jun 2014, Gabriel FERNANDEZ wrote:
+
+> This patch adds new compatibilities to support STiH407 SoC.
+> 
+> Signed-off-by: Gabriel Fernandez <gabriel.fernandez-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm64/boot/dts/apm-mustang.dts |  4 ++++
->  arch/arm64/boot/dts/apm-storm.dtsi  | 36 +++++++++++++++++++++++++++++++++++-
->  2 files changed, 39 insertions(+), 1 deletion(-)
->
-> diff --git a/arch/arm64/boot/dts/apm-mustang.dts b/arch/arm64/boot/dts/apm-mustang.dts
-> index 1247ca1..6541962 100644
-> --- a/arch/arm64/boot/dts/apm-mustang.dts
-> +++ b/arch/arm64/boot/dts/apm-mustang.dts
-> @@ -24,3 +24,7 @@
->                 reg = < 0x1 0x00000000 0x0 0x80000000 >; /* Updated by bootloader */
->         };
->  };
-> +
-> +&serial0 {
-> +       status = "ok";
-> +};
-> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-> index d37d736..2277b5c 100644
-> --- a/arch/arm64/boot/dts/apm-storm.dtsi
-> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
-> @@ -179,13 +179,47 @@
->                 };
->
->                 serial0: serial@1c020000 {
-> +                       status = "disabled";
->                         device_type = "serial";
-> -                       compatible = "ns16550";
-> +                       compatible = "ns16550a";
+>  .../devicetree/bindings/clock/st/st,clkgen-mux.txt   |  2 +-
+>  .../devicetree/bindings/clock/st/st,clkgen-pll.txt   |  5 ++++-
+>  .../devicetree/bindings/clock/st/st,clkgen.txt       | 20 ++++++++++++++++----
+>  .../devicetree/bindings/clock/st/st,quadfs.txt       |  3 +++
+>  4 files changed, 24 insertions(+), 6 deletions(-)
 
-Generally, changing a compatible string like this is a no-no. You
-could be breaking compatibility with different OS versions. However,
-this is one generic string to another and they have been around
-forever, so I think it is okay. You probably should have a specific
-string in case you ever have some quirk in your particular h/w.
+Acked-by: Peter Griffin <peter.griffin-qxv4g6HH51o@public.gmane.org>
 
-Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Regards,
 
-Rob
-
->                         reg = <0 0x1c020000 0x0 0x1000>;
->                         reg-shift = <2>;
->                         clock-frequency = <10000000>; /* Updated by bootloader */
->                         interrupt-parent = <&gic>;
->                         interrupts = <0x0 0x4c 0x4>;
->                 };
-> +
-> +               serial1: serial@1c021000 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1c021000 0x0 0x1000>;
-> +                       reg-shift = <2>;
-> +                       clock-frequency = <10000000>; /* Updated by bootloader */
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0x0 0x4d 0x4>;
-> +               };
-> +
-> +               serial2: serial@1c022000 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1c022000 0x0 0x1000>;
-> +                       reg-shift = <2>;
-> +                       clock-frequency = <10000000>; /* Updated by bootloader */
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0x0 0x4e 0x4>;
-> +               };
-> +
-> +               serial3: serial@1c023000 {
-> +                       status = "disabled";
-> +                       device_type = "serial";
-> +                       compatible = "ns16550a";
-> +                       reg = <0 0x1c023000 0x0 0x1000>;
-> +                       reg-shift = <2>;
-> +                       clock-frequency = <10000000>; /* Updated by bootloader */
-> +                       interrupt-parent = <&gic>;
-> +                       interrupts = <0x0 0x4f 0x4>;
-> +               };
->         };
->  };
-> --
-> 1.8.2.1
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Peter
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
