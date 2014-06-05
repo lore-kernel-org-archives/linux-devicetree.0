@@ -1,152 +1,87 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v7 0/7] arm: Add basic support for Mediatek Cortex-A7 SoCs
-Date: Thu,  5 Jun 2014 19:26:14 +0200
-Message-ID: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
+Subject: [PATCH v7 1/7] of: Provide function to request and map memory
+Date: Thu,  5 Jun 2014 19:26:15 +0200
+Message-ID: <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
+References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Seventh round for the Mediatek basic support patches.
-
-Due to the discussion about the need of request the memory needed by a
-device [0], I implemented the function of_io_request_and_map.
-The clocksource drivers uses proper error handling and keep on booting
-the device instead of calling panic.
-
-[0] http://www.spinics.net/lists/arm-kernel/msg336924.html
-
----
-This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
-Support is quite basic, as the only component working up to now are the
-timers.
-
-The patch series is build against torvalds/master tree.
+A call to of_iomap does not request the memory region.
+This patch adds the function of_io_request_and_map which requests
+the memory region before mapping it.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+---
+ drivers/of/address.c       |   28 ++++++++++++++++++++++++++++
+ include/linux/of_address.h |    8 ++++++++
+ 2 files changed, 36 insertions(+)
 
-
-Changes for v7:
-1. OF address
-- add of_io_request_and_map
-
-2. Clocksource timer
-- use pr_warnings and error handling instead of panic
-- fix macro parentheses
-- use of_io_request_and_map
-
-3. Others
-- rename SoC DT bindings to mediatek.txt
-- fixed typos
-
-
-Changes for v6:
-- fix compatible string of the timer
-- encapsulate timer setup in function
-- add more information to the timer commit message
-- add address in timer DTS bindings documentation
-
-
-Changes for v5:
-1. Clocksource timer
-- Change the compatible string to mt6577
-
-2. Timer DT bindings
-- Change compatible string to mt6577
-
-
-Changes for v4:
-1. Clocksource timer
-- use cpu_possible_mask
-
-2. Timer DT bindings
-- Delete comments about the frequency of the clocks
-- Add clock-names for the input clocks
-
-3. Basic SoC support
-- add clock-names for the timer
-- rename the label of the clocks nodes
-
-
-Changes for v3:
-1. Clocksource timer
-- Set cpu_mask_all and irq in clock_event_device
-- Use device private structure for driver specific values
-
-2. Timer DT bindings
-- Define order of the clock phandles
-- Fix typos
-
-3. Basic SoC support
-- DTS: set gic to a15-gic
-- DTS: order by physical address
-- Remove call to dt_init function
-
-
-Changes for v2:
-1. Clocksource timer
-- Delete unused parts for sched_clock_source
-- Use irq_request instead of setup_irq
-- Remove unused SMP parts
-- Fix some style issues
-- use of_address_to resource and request_mem_region
-- delete use of named clock
-- select CLKSRC_MMIO in driver Kconfig
-
-2. DT bindings
-- delete named clock bindings
-
-3. Basic SoC support
-- Clean-up Kconfig
-- Add documentation of the SoC compatible property 
-- DTS: rename SoC file to mt6589.dts
-- DTS: Delete not present cache controller
-- DTS: Add missing GICv2 properties
-- DTS: Change clock names
-- DTS: Add Aquaris5 board
-
-4. Add earlyprintk
-- patch droped until serial driver is available
-
-5. Add support for Aquaris5 mobile phone
-
-
-
-Matthias Brugger (7):
-  of: Provide function to request and map memory
-  clocksource: Add support for the Mediatek SoCs
-  dt-bindings: add mtk-timer bindings
-  vendor-prefixes: add prefix for Mediaktek Inc.
-  arm: add basic support for Mediatek MT6589 boards
-  dt-bindings: add documentation for Mediatek SoC
-  arm: mediatek: add dts for Aquaris5 mobile phone
-
- Documentation/devicetree/bindings/arm/mediatek.txt |    8 +
- .../bindings/timer/mediatek,mtk-timer.txt          |   18 ++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- arch/arm/Kconfig                                   |    2 +
- arch/arm/Makefile                                  |    1 +
- arch/arm/boot/dts/mt6589-aquaris5.dts              |   25 ++
- arch/arm/boot/dts/mt6589.dtsi                      |   94 +++++++
- arch/arm/mach-mediatek/Kconfig                     |    6 +
- arch/arm/mach-mediatek/Makefile                    |    1 +
- arch/arm/mach-mediatek/mediatek.c                  |   27 ++
- drivers/clocksource/Kconfig                        |    5 +
- drivers/clocksource/Makefile                       |    1 +
- drivers/clocksource/mtk_timer.c                    |  260 ++++++++++++++++++++
- drivers/of/address.c                               |   28 +++
- include/linux/of_address.h                         |    8 +
- 15 files changed, 485 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
- create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
- create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
- create mode 100644 arch/arm/boot/dts/mt6589.dtsi
- create mode 100644 arch/arm/mach-mediatek/Kconfig
- create mode 100644 arch/arm/mach-mediatek/Makefile
- create mode 100644 arch/arm/mach-mediatek/mediatek.c
- create mode 100644 drivers/clocksource/mtk_timer.c
-
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index cb4242a..c55b107 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -721,3 +721,31 @@ void __iomem *of_iomap(struct device_node *np, int index)
+ 	return ioremap(res.start, resource_size(&res));
+ }
+ EXPORT_SYMBOL(of_iomap);
++
++/**
++ * of_io_request_and_map - Requests a resource and maps the memory mapped IO
++ *			   for a given device_node
++ * @device:	the device whose io range will be mapped
++ * @index:	index of the io range
++ * @name:	name of the resource
++ *
++ * Returns a pointer to the requested and mapped memory
++ */
++void __iomem *of_io_request_and_map(struct device_node *np, int index, char *name)
++{
++	struct resource res;
++	void __iomem *mem;
++
++	if (of_address_to_resource(np, index, &res))
++		return NULL;
++
++	if (!request_mem_region(res.start, resource_size(&res), name))
++		return NULL;
++
++	mem = ioremap(res.start, resource_size(&res));
++	if (!mem)
++		release_mem_region(res.start, resource_size(&res));
++
++	return mem;
++}
++EXPORT_SYMBOL(of_io_request_and_map);
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 5f6ed6b..725b875 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -96,6 +96,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ void __iomem *of_iomap(struct device_node *node, int index);
++void __iomem *of_io_request_and_map(struct device_node *device,
++					int index, char *name);
+ #else
+ static inline int of_address_to_resource(struct device_node *dev, int index,
+ 					 struct resource *r)
+@@ -107,6 +109,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+ {
+ 	return NULL;
+ }
++
++static inline void __iomem *of_io_request_and_map(struct device_node *device,
++					int index, char *name)
++{
++	return NULL;
++}
+ #endif
+ 
+ #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
 -- 
 1.7.9.5
 
