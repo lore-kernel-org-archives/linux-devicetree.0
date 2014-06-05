@@ -1,88 +1,308 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Thu, 5 Jun 2014 16:55:09 +0100
-Message-ID: <20140605155509.GH24240@lee--X1>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
- <20140605103709.GE19550@lee--X1>
- <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v7 2/8] clk: sunxi: Implement MMC phase control
+Date: Thu, 5 Jun 2014 18:01:00 +0200
+Message-ID: <20140605160100.GH5765@lukather>
+References: <20140217095907.15040.81893.stgit@pagira.o2s.ch>
+ <20140217100221.15040.47203.stgit@pagira.o2s.ch>
+ <20140218141532.GH3142@lukather>
+ <20140219052125.8345.70717@quantum>
+ <20140219083606.GR3142@lukather>
+ <20140223203143.22529.81640@quantum>
+ <20140602213134.10062.14293@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZPDwMsyfds7q4mrK"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+In-Reply-To: <20140602213134.10062.14293@quantum>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: David =?iso-8859-1?Q?Lanzend=F6rfer?= <david.lanzendoerfer-Z7Kmv9EsliU@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Laurent Pinchart <laurent.pinchart+renesas-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, H Hartley Sweeten <hsweeten-3FF4nKcrg1dE2c76skzGb0EOCMrvLtNR@public.gmane.org>, Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Simon Baatz <gmbnomis-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 05 Jun 2014, Grant Likely wrote:
-> On Thu, Jun 5, 2014 at 11:37 AM, Lee Jones <lee.jones@linaro.org> wro=
-te:
-> > On Thu, 05 Jun 2014, Grant Likely wrote:
-> >
-> >> On Wed,  4 Jun 2014 13:09:56 +0100, Lee Jones <lee.jones@linaro.or=
-g> wrote:
-> >> > Currently this is a helper function for the I2C subsystem to aid=
- the
-> >> > matching of non-standard compatible strings and devices which us=
-e DT
-> >> > and/or ACPI, but do not supply any nodes (see: [1] Method 4).  H=
-owever,
-> >> > it has been made more generic as it can be used to only make one=
- call
-> >> > for drivers which support any mixture of OF, ACPI and/or I2C mat=
-ching.
-> >> >
-> >> > The initial aim is for of_match_device() to be replaced by this =
-call
-> >> > in all I2C device drivers.
-> >> >
-> >> > [1] Documentation/i2c/instantiating-devices
-> >> >
-> >> > Signed-off-by: Lee Jones <lee.jones@linaro.org>
-> >>
-> >> I don't like this. It drops all type safety on the match entry
-> >> and the caller has no idea what it got back.
-> >
-> > Okay, so what's the best way forward?
-> >
-> > Introduce a i2c_of_match_device() call instead?
+
+--ZPDwMsyfds7q4mrK
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+Hi Mike,
+
+(I don't know what happened with your mailer, but all the recipients
+but devictree's ml, david had their mail address broken.)
+
+On Mon, Jun 02, 2014 at 02:31:34PM -0700, Mike Turquette wrote:
+> Quoting Mike Turquette (2014-02-23 12:31:43)
+> > Quoting Maxime Ripard (2014-02-19 00:36:06)
+> > > Hi Mike,
+> > >=20
+> > > On Tue, Feb 18, 2014 at 09:21:25PM -0800, Mike Turquette wrote:
+> > > > Quoting Maxime Ripard (2014-02-18 06:15:32)
+> > > > > Hi,
+> > > > >=20
+> > > > > On Mon, Feb 17, 2014 at 11:02:21AM +0100, David Lanzend=F6rfer wr=
+ote:
+> > > > > > From: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+> > > > > >=20
+> > > > > > Signed-off-by: Emilio L=F3pez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+> > > > >=20
+> > > > > You're missing your Signed-off-by here too.  Remember, for every =
+patch
+> > > > > you send, your Signed-off-by must be there, regardless wether you=
+'re
+> > > > > the author or not.
+> > > > >=20
+> > > > > A commit log would be very much welcome too.
+> > > > >=20
+> > > > > Now, down to the patch itself, I remember Mike saying that he wou=
+ld
+> > > > > prefer adding a function in the framework instead of hardcoding
+> > > > > it. Mike, what's your feeling on this? Would merging this seem
+> > > > > reasonnable to you as is, or do you want to take this to the
+> > > > > framework?
+> > > >=20
+> > > > Hi Maxime & Emilio,
+> > > >=20
+> > > > Maybe something like the following RFC? If it seems sufficient for =
+this
+> > > > case then I will post to the wider list with an eye towards merging=
+ it
+> > > > for 3.15. I've Cc'd Dinh since this came up on the socfpga thread as
+> > > > well.
+> > > >=20
+> > > > Regards,
+> > > > Mike
+> > > >=20
+> > > >=20
+> > > >=20
+> > > > From 56fa297591be5c5e22df6d2ca43fccf285a45636 Mon Sep 17 00:00:00 2=
+001
+> > > > From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > Date: Tue, 18 Feb 2014 20:33:50 -0800
+> > > > Subject: [PATCH] clk: introduce clk_set_phase function & callback
+> > > >=20
+> > > > A common operation for a clock signal generator is to shift the pha=
+se of
+> > > > that signal. This patch introduces a new function to the clk.h API =
+to
+> > > > dynamically adjust the phase of a clock signal. Additionally this p=
+atch
+> > > > introduces support for the new function in the common clock framewo=
+rk
+> > > > via the .set_phase call back in struct clk_ops.
+> > > >=20
+> > > > Signed-off-by: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > > > ---
+> > > > This patch is totally untested. It may make your board burst into
+> > > > flames.
+> > > >=20
+> > > >  drivers/clk/clk.c            | 84 ++++++++++++++++++++++++++++++++=
++++++++++---
+> > > >  include/linux/clk-private.h  |  1 +
+> > > >  include/linux/clk-provider.h |  5 +++
+> > > >  include/linux/clk.h          | 29 +++++++++++++++
+> > > >  4 files changed, 115 insertions(+), 4 deletions(-)
+> > > >=20
+> > > > diff --git a/drivers/clk/clk.c b/drivers/clk/clk.c
+> > > > index ea2ca9f..635170a 100644
+> > > > --- a/drivers/clk/clk.c
+> > > > +++ b/drivers/clk/clk.c
+> > > > @@ -106,11 +106,11 @@ static void clk_summary_show_one(struct seq_f=
+ile *s, struct clk *c, int level)
+> > > >       if (!c)
+> > > >               return;
+> > > > =20
+> > > > -     seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu",
+> > > > +     seq_printf(s, "%*s%-*s %-11d %-12d %-10lu %-11lu %-3d",
+> > > >                  level * 3 + 1, "",
+> > > >                  30 - level * 3, c->name,
+> > > >                  c->enable_count, c->prepare_count, clk_get_rate(c),
+> > > > -                clk_get_accuracy(c));
+> > > > +                clk_get_accuracy(c), clk_get_phase(c));
+> > > >       seq_printf(s, "\n");
+> > > >  }
+> > > > =20
+> > > > @@ -132,8 +132,8 @@ static int clk_summary_show(struct seq_file *s,=
+ void *data)
+> > > >  {
+> > > >       struct clk *c;
+> > > > =20
+> > > > -     seq_printf(s, "   clock                        enable_cnt  pr=
+epare_cnt  rate        accuracy\n");
+> > > > -     seq_printf(s, "----------------------------------------------=
+-----------------------------------\n");
+> > > > +     seq_printf(s, "   clock                        enable_cnt  pr=
+epare_cnt  rate        accuracy   phase\n");
+> > > > +     seq_printf(s, "----------------------------------------------=
+-------------------------------------------\n");
+> > > > =20
+> > > >       clk_prepare_lock();
+> > > > =20
+> > > > @@ -171,6 +171,7 @@ static void clk_dump_one(struct seq_file *s, st=
+ruct clk *c, int level)
+> > > >       seq_printf(s, "\"prepare_count\": %d,", c->prepare_count);
+> > > >       seq_printf(s, "\"rate\": %lu", clk_get_rate(c));
+> > > >       seq_printf(s, "\"accuracy\": %lu", clk_get_accuracy(c));
+> > > > +     seq_printf(s, "\"phase\": %d", clk_get_phase(c));
+> > > >  }
+> > > > =20
+> > > >  static void clk_dump_subtree(struct seq_file *s, struct clk *c, in=
+t level)
+> > > > @@ -257,6 +258,11 @@ static int clk_debug_create_one(struct clk *cl=
+k, struct dentry *pdentry)
+> > > >       if (!d)
+> > > >               goto err_out;
+> > > > =20
+> > > > +     d =3D debugfs_create_u32("clk_phase", S_IRUGO, clk->dentry,
+> > > > +                     (u32 *)&clk->phase);
+> > > > +     if (!d)
+> > > > +             goto err_out;
+> > > > +
+> > > >       d =3D debugfs_create_x32("clk_flags", S_IRUGO, clk->dentry,
+> > > >                       (u32 *)&clk->flags);
+> > > >       if (!d)
+> > > > @@ -1766,6 +1772,76 @@ out:
+> > > >  EXPORT_SYMBOL_GPL(clk_set_parent);
+> > > > =20
+> > > >  /**
+> > > > + * clk_set_phase - adjust the phase shift of a clock signal
+> > > > + * @clk: clock signal source
+> > > > + * @degrees: number of degrees the signal is shifted
+> > > > + *
+> > > > + * Shifts the phase of a clock signal by the specified degrees. Re=
+turns 0 on
+> > > > + * success, -EERROR otherwise.
+> > > > + *
+> > > > + * This function makes no distiction about the input or reference =
+signal that
+> > > > + * we adjust the clock signal phase against. For example phase loc=
+ked-loop
+> > > > + * clock signal generators we may shift phase with respect to feed=
+back clock
+> > > > + * signal input, but for other cases the clock phase may be shifte=
+d with
+> > > > + * respect to some other, unspecified signal.
+> > > > + *
+> > > > + * Additionally the concept of phase shift does not propagate thro=
+ugh the clock
+> > > > + * tree hierarchy, which sets it appart from clock rates and clock=
+ accuracy. A
+> > > > + * parent clock phase attribute does not have an impact on the pha=
+se attribute
+> > > > + * of a child clock.
+> > > > + */
+> > > > +int clk_set_phase(struct clk *clk, int degrees)
+> > >=20
+> > > Actually, while this is what I had in mind too, we'd need a bit more
+> > > control here. We have two phases to control (namely, input and
+> > > sample).
+> > >=20
+> > > Maybe passing an additional enum to tell which phase we want to
+> > > adjust, that could easily be extended by new drivers need would fit
+> > > our need here?
+> >=20
+> > Maxime,
+> >=20
+> > Do you have any documentation you could share with me on your
+> > requirements? I'd like to better understand them so we can get the API
+> > right.
+> >=20
+> > Shifting phase with respect to an input signal makes a lot of sense to
+> > me, but I don't really understand "sample".
 >=20
-> I still think the way to do it is to emulate the missing i2c_device_i=
-d
-> when calling the drivers .probe() hook by having a temporary copy on
-> the stack and filling it with data from the OF or ACPI table....
+> Hi Maxime,
+>=20
+> I'd like to merge this after -rc1 drops. I don't have documentation for
+> your platform so I can't investigate your needs any further.
 
-That's the opposite of what I'm trying to achieve.  I'm trying to get
-rid of unused i2c_device_id tables, rather than reinforce their
-mandatory existence.  I think an i2c_of_match_device() with knowledge
-of how to match via pure DT principles (of_node/compatible) and a
-fall-back, which is able to match on a provided of_device_id table
-alone i.e. without the requirement of an existing of_node.
+Unfortunately, I don't have either (on this part at least).
 
-I've also been mulling over the idea of removing the second probe()
-parameter, as suggested by Wolfram.  However, this has quite deep
-ramifications which would require a great deal of driver adaptions.
+> Some epic guesswork and rambling follows:
+>=20
+> I do wonder if the two different phase adjustments you need to do are
+> not properties of the *output* signal that corresponds to the MMC clock,
+> but instead they are properties of the input signal to two other nodes
+> that are not enumerated as struct clk's in Linux?
+>=20
+> As an example, consider the CLK & PERHIPHCLK on an OMAP4 Pandaboard, as
+> defined by the Cortex-A9 MPCORE TRM [1]. These clock signals are real,
+> but they don't show up anywhere inside of TI's OMAP4 TRM [2]. These
+> clocks are fed by OMAP4's dpll_mpu_m2_ck clock node, which is part of
+> OMAP4's Power Reset & Clock Manager, which acts as a clock signal
+> generator.
+>=20
+> As a thought exercise, let's say that we need to shift the phase by 90=B0
+> for the MPU to work properly. If we only have the dpll_mpu_m2_ck object
+> in the clock framework, it might be tempting to call clk_set_phase() on
+> it, but is that really the right thing? Perhaps what is missing is
+> properly modeling the hardware clock signals, and instead another struct
+> clk object should exist downstream of dpll_mpu_m2_ck, which belongs to
+> the MPU IP block, that shifts the phase for the MPU.
+>=20
+> Anyways, that might make things more confusing, I don't know. But the
+> point is that in Linux we tend to model an individual part of the clock
+> signal chain with a single struct clk object. That's why a struct clk
+> *foo doesn't output two different frequencies: it can only output one.
+> And struct clk *bar can have multiple possible parents, but only one
+> active parent feeding it a signal.
+>=20
+> Setting the phase should be the same way. If we set the phase for a
+> struct clk *baz in the CCF, then it must imply that the phase is shifted
+> for all downstream children. I'm worried that we're not modeling that
+> quite right for your MMC case.
 
-> Actually I would completely skip trying to get the data from ACPI.
-> Since all of this is to continue supporting instantiating devices fro=
-m
-> sysfs, having a fallback to the OF table completely solves that use
-> case.
+I do agree with you on the one software clock per hardware clock
+thing. It's definitely something we need to work on, and we want to
+fit in that model.
 
-> Anticipating an objection of: "what do we do with drivers that are
-> ACPI only?"... That will be an incredibly rare case. If that ever doe=
-s
-> happen then we'll solve it by simply adding an of_device_id table.
+The MMC clock tree, from what I understood is actually composed of 3
+clocks.
 
-I'm fine with leaving out ACPI support for now.
+  - The MMC clock that we have support for right now, which is a basic
+    factor clock. This clock has three outputs:
+      * The clock that goes to the SD card itself.
+      * an "output" clock
+      * and a "sample" clock
+
+The output and sample clocks are used to output/sample the
+commands/response/data that are exchanged with the SD card and are the
+one we change the phase of.
+
+The only thing that remains to be understood is what the values we put
+there are. The only indication that we have is that a value of 0 means
+a phase of 180=B0, which is why we're stalled on this.
+
+Maxime
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--ZPDwMsyfds7q4mrK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTkJQ8AAoJEBx+YmzsjxAg0C4P/RlCDVk5kKWwLGjo5ofZPBlZ
+pD6xzISGTV/4WMog1Os+XBvsqZS0JTcFdsrHaavOBr6t216IRx9l0yMyOQD+qkA3
+v8qkvaIpBxpNDyXiSs4U/48BsOnVcStuwnUHNdZDSHY/9EV3TiwFMx4IqXE40nxt
+se7XHXYG8xaL6voVvSEY55OcuSBAPOV7cTSJGy1YuLUCIshujoXQkv2hdBBc5anE
+DJj2rGEzIdWdCZng2LU5Sa09S61oLDzY8Dlvrr5Fe3OYi6EQoE/tg/TfeeTgx+BB
+qifSYygNmsFgOlleLpDEV5PL5PJrwxcEPY+xAGcv35+ZaUMsQrhryWRIt06BhHpT
+G/YksfLWGOr/i5aqfhz2gtMSAtPfMoPIawi6UC+TRck2tBjHuKAaf1K+rUoFMDS5
+oiX7cUahROuhPfTtJwwP8lzOr+7e9uuMfHKkVmIYvpDQytKq0Df7dfAyT/0GtPoE
+EHXamBlLWMnxS6N6UoBv8iyZh5e5aTDHWsXmxfuGznWvbgfIxgvJHgPmdf+w2qe2
+xs4dBK3qcw1cKk2YXgxf52/LMRoI9+KMQCLp+qBtMmJbjwhReo2xBoGRxJpmOrtc
+JCkwJrxNQ/EjYZZuOFVHsT5G1lJdzQrVMw8yq6Ct60qr1FGQEytX60XqHSXtoLJ1
+3MHNncUuwfq75Sw87sIO
+=Fc6w
+-----END PGP SIGNATURE-----
+
+--ZPDwMsyfds7q4mrK--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
