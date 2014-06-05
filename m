@@ -1,50 +1,40 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: Re: [STLinux Kernel] [PATCH RESEND 02/12] clk: st: Adds Flexgen
- clock binding
-Date: Thu, 5 Jun 2014 08:51:41 +0100
-Message-ID: <20140605075141.GB3865@griffinp-ThinkPad-X1-Carbon-2nd>
-References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org>
- <1401892320-18211-3-git-send-email-gabriel.fernandez@linaro.org>
+From: Gabriel Fernandez <gabriel.fernandez@st.com>
+Subject: Re: [STLinux Kernel] [PATCH RESEND 06/12] drivers: clk: st: Add polarity
+ bit indication
+Date: Thu, 5 Jun 2014 09:51:09 +0200
+Message-ID: <5390216D.9020306@st.com>
+References: <1401892320-18211-1-git-send-email-gabriel.fernandez@linaro.org> <1401892320-18211-7-git-send-email-gabriel.fernandez@linaro.org> <20140605074516.GA3865@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401892320-18211-3-git-send-email-gabriel.fernandez@linaro.org>
+In-Reply-To: <20140605074516.GA3865@griffinp-ThinkPad-X1-Carbon-2nd>
 Sender: linux-doc-owner@vger.kernel.org
-To: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+To: Peter Griffin <peter.griffin@linaro.org>
 Cc: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, kernel@stlinux.com, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Gabriel Fernandez <gabriel.fernandez@linaro.org>, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Gabi,
 
-> +Example:
-> +
-> +	clockgenD2@x9106000 {
-> +		compatible = "st,clkgen-c32";
-> +		reg = <0x9106000 0x1000>;
-> +
-> +		CLK_S_D2_FLEXGEN: CLK_S_D2_FLEXGEN {
-> +			compatible = "st,flexgen";
-> +
-> +			#clock-cells = <1>;
-> +			clocks = <&CLK_S_D2_QUADFS 0>,
-> +				 <&CLK_S_D2_QUADFS 1>,
-> +				 <&CLK_S_D2_QUADFS 2>,
-> +				 <&CLK_S_D2_QUADFS 3>;
-> +
-> +			clock-output-names = "CLK_PIX_MAIN_DISP",
-> +					     "CLK_PIX_PIP",
-> +					     "CLK_PIX_GDP1",
-> +					     "CLK_PIX_GDP2";
+On 06/05/2014 09:45 AM, Peter Griffin wrote:
+> Hi Gabi,
+>
+> On Wed, 04 Jun 2014, Gabriel FERNANDEZ wrote:
+>
+>> This patch introduces polarity indication for pll power up bit
+>> and for standby bit in order to have same code between Orly 2
+>> and CAN.
+> I think it would be better to refer to the SoC's by there numeric
+> name stih416 and stih407, as people unfamiliar with ST SoC names
+> reading the commit message are unlikely to know what Orly2 or CAN
+> mean.
+>
+> Once fixed you can add my:
+> Acked-by: Peter Griffin <peter.griffin@linaro.org>
 
-With the upper case to lower case renaming of the STI device tree
-this example also needs to be converted to lower case names 
-throughout.
+Ok thanks Peter
 
-Once rectified you can add my:
- Acked-by: Peter Griffin <peter.griffin@linaro.org>
-
-regards,
-
-Peter.
+> regards,
+>
+> Peter.
+>
 
