@@ -1,62 +1,71 @@
-From: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-Subject: Re: [GIT PULL] DeviceTree updates for 3.16
-Date: Thu, 5 Jun 2014 14:17:18 +1000
-Message-ID: <20140605141718.07073dd0@canb.auug.org.au>
-References: <CAL_JsqKPJzzR-Thvnd7Fw5aTymxvQBp+bf8sdmGfL-xHM+iJ-Q@mail.gmail.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCHv4 2/2] ARM: dts: unuse the slot-node and deprecated
+ support-highspeed for dw-mmc.
+Date: Thu, 05 Jun 2014 13:34:02 +0900
+Message-ID: <538FF33A.3020104@samsung.com>
+References: <1401934928-7300-1-git-send-email-jh80.chung@samsung.com>
+ <1401934928-7300-3-git-send-email-jh80.chung@samsung.com>
+ <538FDF5D.9060400@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/j4dcPF=I0IPySftXX50tRDH"; protocol="application/pgp-signature"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqKPJzzR-Thvnd7Fw5aTymxvQBp+bf8sdmGfL-xHM+iJ-Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Linus Torvalds <torvalds-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <538FDF5D.9060400@gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tushar Behera <trblinux@gmail.com>, linux-mmc@vger.kernel.org
+Cc: chris@printf.net, ulf.hansson@linaro.org, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, mark.rutland@arm.com, tushar.behera@linaro.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/j4dcPF=I0IPySftXX50tRDH
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 06/05/2014 12:09 PM, Tushar Behera wrote:
+> On 06/05/2014 07:52 AM, Jaehoon Chung wrote:
+>> dw-mmc controller can support the multiple slot.
+> 
+> 'the' can be omitted, /s/slot/slots/
+> 
+>> But, there is not use-case anywhere. So we don't need to support the
+> 
+> /s/is not use-case/are no use-cases/
 
-Hi Rob,
+Will fix.
+> 
+>> slot-node for dw-mmc controller.
+>> And "support-highspeed" property in dw-mmc is deprecated.
+>> "support-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+>>
+>> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> 
+> [ ... ]
+> 
+>> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> index 532b1d4..60d90c9 100644
+>> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+>> @@ -46,13 +46,14 @@ Required Properties:
+>>        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
+>>          phase shift clocks should be 0.
+>>  
+>> -Required properties for a slot:
+>> +Required properties for a slot (Deprecated - Support the one slot per host):
+> 
+> "Support only one slot per host" ?
+Don't need to support the multiple slots at dw-mmc controller.
+Recommend to use one slot per a host.
+> 
+>>  
+>>  * gpios: specifies a list of gpios used for command, clock and data bus. The
+>>    first gpio is the command line and the second gpio is the clock line. The
+>>    rest of the gpios (depending on the bus-width property) are the data lines in
+>>    no particular order. The format of the gpio specifier depends on the gpio
+>>    controller.
+>> + (Deprecated - Refer to Documentaion/devicetree/binding/samsung-pinctrl.txt)
+> 
+> Update reference:
+> Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
+Will Fix
 
-On Wed, 4 Jun 2014 11:48:50 -0500 Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->
-> The correct resolution is keeping the first "if (!of_kset)" and
-> dropping the 2nd one as found is no longer present. I'm not sure why,
-> but this error doesn't show up in linux-next.
+Thanks for comments.
 
-That would be because I did that merge resolution ... I informed Grant
-at the time (since it affected his tree).
+Best Regards,
+Jaehoon Chung
+> 
 
-See https://lkml.kernel.org/r/<20140526150557.219ea08f-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
---=20
-Cheers,
-Stephen Rothwell                    sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org
-
---Sig_/j4dcPF=I0IPySftXX50tRDH
-Content-Type: application/pgp-signature; name=signature.asc
-Content-Disposition: attachment; filename=signature.asc
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBCAAGBQJTj+9VAAoJEMDTa8Ir7ZwVWeYP/Rl4Yp/VRb4KL5byucGbmScJ
-L8JGk01TOG2QrgDtvKSGqqwRikAKTLGvVijlfJU6Sx00g3jpB7y+Va/IC65Iy7hy
-qJU991jY+OANaWrxvKd/6vcItUMFe+Fxb2kl1B1c86+B3angdDpCYj0FHfJ3P04n
-yMDtauwRh3fqmIbwcKub2kh/lhu/VerF6pjkiLS/JqAY3NLXcjpdg+8tm/kZVB3h
-ZXHm0iNtc4BavnH4P5gmcNRnECAKxN0pd1EMYMAgQjC+9y3PUunle9br9dbWArnf
-yzef4wj6XwaierdEMfxVpgkfmxN/2zd8TP8MxDPfI8U7Hft/Ly8KI85MpbVoyV70
-bZLpsfLMEnD7HUpaMjP14z/G/DDb621tnjmITVFkKTe7vTATcsCokZ5OowUzVZsp
-Hc5ivu15v6n6i6g8rKDYhXnnggnCjczMM/MrT9+oxRjNpcv0f3WQB70GakWdl+Zl
-DLMzy6CSJw6mrVHDbaz4CFnOeGie9PffwwXD8oA2+R4L9DPl2abqZoromUWdu0u+
-k4tZEYACf45t4KfWXPw/dm1iKiCJqU7O3aiUp/3gonJIPXKBxBkgganCzYQVvU/p
-NWyafkXShlifkSxAzUWgByKGjbadPWDiUs36lWlKLNJ1S4VCHmnoEFK8naF2lD7V
-AWlqwIZI/X3hvXZWKgAz
-=Gq+/
------END PGP SIGNATURE-----
-
---Sig_/j4dcPF=I0IPySftXX50tRDH--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
