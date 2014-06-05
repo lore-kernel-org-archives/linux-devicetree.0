@@ -1,31 +1,38 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Add more serial port nodes in APM X-Gene
- device tree
-Date: Thu, 5 Jun 2014 03:24:53 -0500
-Message-ID: <CAL_JsqLkTqVpwB6ynPZfh6CpOXgm4xHF2Lg9WEyYfHaDJ1uKEw@mail.gmail.com>
-References: <1395836346-9350-1-git-send-email-vkale@apm.com>
-	<CAPrCYkcJr5ODY3Sjcq5D_Db-cM3SAXYjUK2H9FGePrO_q0wMEw@mail.gmail.com>
-	<20140604154116.GN10126@arm.com>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH v4 00/14] drm/exynos: support LCD I80 interface display
+Date: Thu, 05 Jun 2014 17:43:10 +0900
+Message-ID: <53902D9E.6070905@samsung.com>
+References: <1401949194-20092-1-git-send-email-yj44.cho@samsung.com>
+ <539026F5.2010005@samsung.com> <20140605082028.GA22629@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140604154116.GN10126-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <20140605082028.GA22629@ulmo>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, galak@codeaurora.org, kgene.kim@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 4, 2014 at 10:41 AM, Catalin Marinas
-<catalin.marinas-5wv7dgnIgG8@public.gmane.org> wrote:
-> On Wed, Jun 04, 2014 at 11:05:54AM +0100, Vinayak Kale wrote:
->> Can you please merge this one?
->
-> I was hoping for an ack/nak from the DT guys before merging it.
-
-We generally don't review every dts change.
-
-Rob
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gMjAxNOuFhCAwNuyblCAwNeydvCAxNzoyMCwgVGhpZXJyeSBSZWRpbmcgd3JvdGU6Cj4gT24g
+VGh1LCBKdW4gMDUsIDIwMTQgYXQgMDU6MTQ6NDVQTSArMDkwMCwgSW5raSBEYWUgd3JvdGU6Cj4+
+Cj4+IEhpIGFsbCwKPj4KPj4KPj4gSXMgdGhlcmUgYW55b25lIHdobyBhcmUgcmV2aWV3aW5nIHRo
+aXMgcGF0Y2ggc2VyaWVzPyBJZiB0aGVyZSBpcyBubyBhbnkKPj4gY29tbWVudCwgSSdkIGxpa2Ug
+dG8gcGljayB0aGVtIHVwIGFmdGVyIHRlc3QuCj4gCj4gV2hhdCdzIHdpdGggdGhlIHJ1c2g/IFlv
+dSBzaG91bGQgYXQgbGVhc3QgZ2l2ZSBwZW9wbGUgYSBkYXkgb3IgdHdvIHRvCj4gZ2V0IGEgY2hh
+bmNlIHRvIGV2ZW4gc2VlIHRoZSBwYXRjaGVzLgoKTm8sIEkgZG9uJ3QgaHVycnkgdXAuIEkgcGxh
+biB0byBwaWNrIHRoZW0gdXAgYWZ0ZXIgdGVzdCwgYW5kIEkgZG9uJ3QKcGljayB0aGVtIHVwIGF0
+IGxlYXN0IGEgd2VlayBldmVuIGlmIHRoZXJlIGFyZSBubyBwZW9wbGUgd2hvIGFyZQpyZXZpZXdp
+bmcgdGhpcyBwYXRjaCBzZXJpZXMuCgpJIGp1c3QgZ2F2ZSBub3RpY2UgYmVmb3JlaGFuZC4KClRo
+YW5rcywKSW5raSBEYWUKCj4gCj4gVGhpZXJyeQo+IAoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxA
+bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHA6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1h
+bi9saXN0aW5mby9kcmktZGV2ZWwK
