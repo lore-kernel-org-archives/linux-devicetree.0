@@ -1,247 +1,171 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v7 5/7] arm: add basic support for Mediatek MT6589 boards
-Date: Thu, 5 Jun 2014 19:21:38 +0100
-Message-ID: <20140605182138.GI31564@leverpostej>
-References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
- <1401989181-4712-6-git-send-email-matthias.bgg@gmail.com>
+From: Ajay kumar <ajaynumb@gmail.com>
+Subject: Re: [PATCH V3 6/8] drm/exynos: dp: Modify driver to support bridge chaining
+Date: Fri, 6 Jun 2014 00:52:14 +0530
+Message-ID: <CAEC9eQPKkqq9VnzHdEBD3v8x41AGUh6hbGmgLnMaFa6FHwfb6A@mail.gmail.com>
+References: <1401995452-15798-1-git-send-email-ajaykumar.rs@samsung.com>
+	<1401995452-15798-7-git-send-email-ajaykumar.rs@samsung.com>
+	<CAEC9eQMqQe3Z5iLuURO6U34pONjrPd3cZ-Ehjaw8mQDKGPD8vg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1401989181-4712-6-git-send-email-matthias.bgg@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregory.clement@free-electrons.com" <gregory.clement@free>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAEC9eQMqQe3Z5iLuURO6U34pONjrPd3cZ-Ehjaw8mQDKGPD8vg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Dae <inki.dae@samsung.com>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Thierry Reding <thierry.reding@gmail.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 05, 2014 at 06:26:19PM +0100, Matthias Brugger wrote:
-> This adds a generic devicetree board file and a dtsi for boards
-> based on MT6589 SoCs from Mediatek.
-> 
-> Apart from the generic parts (gic, clocks) the only component
-> currently supported are the timers.
-> 
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  arch/arm/Kconfig                  |    2 +
->  arch/arm/Makefile                 |    1 +
->  arch/arm/boot/dts/mt6589.dtsi     |   94 +++++++++++++++++++++++++++++++++++++
->  arch/arm/mach-mediatek/Kconfig    |    6 +++
->  arch/arm/mach-mediatek/Makefile   |    1 +
->  arch/arm/mach-mediatek/mediatek.c |   27 +++++++++++
->  6 files changed, 131 insertions(+)
->  create mode 100644 arch/arm/boot/dts/mt6589.dtsi
->  create mode 100644 arch/arm/mach-mediatek/Kconfig
->  create mode 100644 arch/arm/mach-mediatek/Makefile
->  create mode 100644 arch/arm/mach-mediatek/mediatek.c
-> 
-> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> index db3c541..0fc8acd 100644
-> --- a/arch/arm/Kconfig
-> +++ b/arch/arm/Kconfig
-> @@ -997,6 +997,8 @@ source "arch/arm/mach-mv78xx0/Kconfig"
->  
->  source "arch/arm/mach-imx/Kconfig"
->  
-> +source "arch/arm/mach-mediatek/Kconfig"
-> +
->  source "arch/arm/mach-mxs/Kconfig"
->  
->  source "arch/arm/mach-netx/Kconfig"
-> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
-> index 41c1931..8ce9774 100644
-> --- a/arch/arm/Makefile
-> +++ b/arch/arm/Makefile
-> @@ -170,6 +170,7 @@ machine-$(CONFIG_ARCH_MSM)		+= msm
->  machine-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0
->  machine-$(CONFIG_ARCH_MVEBU)		+= mvebu
->  machine-$(CONFIG_ARCH_MXC)		+= imx
-> +machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
->  machine-$(CONFIG_ARCH_MXS)		+= mxs
->  machine-$(CONFIG_ARCH_NETX)		+= netx
->  machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
-> diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
-> new file mode 100644
-> index 0000000..f1d8a8b
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/mt6589.dtsi
-> @@ -0,0 +1,94 @@
-> +/*
-> + * Copyright (c) 2014 MundoReader S.L.
-> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <dt-bindings/interrupt-controller/irq.h>
-> +#include <dt-bindings/interrupt-controller/arm-gic.h>
-> +#include "skeleton.dtsi"
-> +
-> +/ {
-> +	compatible = "mediatek,mt6589";
-> +	interrupt-parent = <&gic>;
-> +
-> +	cpus {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +
-> +		cpu@0 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x0>;
-> +		};
-> +		cpu@1 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x1>;
-> +		};
-> +		cpu@2 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x2>;
-> +		};
-> +		cpu@3 {
-> +			device_type = "cpu";
-> +			compatible = "arm,cortex-a7";
-> +			reg = <0x3>;
-> +		};
-> +
-> +	};
-> +
-> +	clocks {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		ranges;
-
-This is just nonsense. This /clocks node is in no way special -- /clocks
-was never reserved as a place to put clocks that we guarantee to probe.
-It's just an arbitrary containter node, and the fact we happen to probe
-clocks under it is an implementation detail (and arguably a bug).
-
-I argued in the past to at least have them as a simple-bus,
-necessitating ranges, #address-cells, and #size-cells you have here, but
-you'r missing the compatible = "simple-bus", rendering the exercise
-pointless.
-
-> +
-> +		system_clk: dummy13m {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <13000000>;
-> +			#clock-cells = <0>;
-> +		};
-> +
-> +		rtc_clk: dummy32k {
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <32000>;
-> +			#clock-cells = <0>;
-> +		};
-> +	};
-> +
-> +	soc {
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +		compatible = "simple-bus";
-> +		clock-ranges;
-
-Why the clock-ranges? You refer to them explicitly below.
-
-> +		ranges;
-> +
-> +		timer: timer@10008000 {
-> +			compatible = "mediatek,mt6577-timer";
-> +			reg = <0x10008000 0x80>;
-> +			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
-> +			clocks = <&system_clk>, <&rtc_clk>;
-> +			clock-names = "system-clk", "rtc-clk";
-> +		};
-> +
-> +		gic: interrupt-controller@10212000 {
-> +			compatible = "arm,cortex-a15-gic";
-> +			interrupt-controller;
-> +			#interrupt-cells = <3>;
-> +			reg = <0x10211000 0x1000>,
-> +			      <0x10212000 0x1000>,
-> +			      <0x10214000 0x2000>,
-> +			      <0x10216000 0x2000>;
-> +		};
-> +	};
-> +};
-
-No architected timers?
-
-
-> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
-> new file mode 100644
-> index 0000000..2c043a2
-> --- /dev/null
-> +++ b/arch/arm/mach-mediatek/Kconfig
-> @@ -0,0 +1,6 @@
-> +config ARCH_MEDIATEK
-> +	bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
-> +	select ARM_GIC
-> +	select MTK_TIMER
-> +	help
-> +	  Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
-> diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
-> new file mode 100644
-> index 0000000..43e619f
-> --- /dev/null
-> +++ b/arch/arm/mach-mediatek/Makefile
-> @@ -0,0 +1 @@
-> +obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
-> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
-> new file mode 100644
-> index 0000000..f2acf07
-> --- /dev/null
-> +++ b/arch/arm/mach-mediatek/mediatek.c
-> @@ -0,0 +1,27 @@
-> +/*
-> + * Device Tree support for Mediatek SoCs
-> + *
-> + * Copyright (c) 2014 MundoReader S.L.
-> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/init.h>
-> +#include <asm/mach/arch.h>
-> +
-> +static const char * const mediatek_board_dt_compat[] = {
-> +	"mediatek,mt6589",
-> +	NULL,
-> +};
-> +
-> +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
-> +	.dt_compat	= mediatek_board_dt_compat,
-> +MACHINE_END
-
-If this is all we have, surely we can get by with the defaults?
-
-Cheers,
-Mark.
+On Fri, Jun 6, 2014 at 12:48 AM, Ajay kumar <ajaynumb@gmail.com> wrote:
+> +Device tree list
+>
+> On Fri, Jun 6, 2014 at 12:40 AM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
+>> exynos_dp supports a simple bridge chain with ptn3460 bridge
+>> and an LVDS panel attached to it.
+>> This patch creates the bridge chain with ptn3460 as the head
+>> of the list and panel_binder being the tail.
+>>
+>> Also, DERER_PROBE for exynos_dp is tested with this patch.
+>>
+>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+>> ---
+>>  .../devicetree/bindings/video/exynos_dp.txt        |    2 +
+>>  drivers/gpu/drm/exynos/Kconfig                     |    1 +
+>>  drivers/gpu/drm/exynos/exynos_dp_core.c            |   39 +++++++++++++++-----
+>>  drivers/gpu/drm/exynos/exynos_dp_core.h            |    1 +
+>>  4 files changed, 34 insertions(+), 9 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
+>> index 53dbccf..0c118ff 100644
+>> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
+>> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
+>> @@ -51,6 +51,8 @@ Required properties for dp-controller:
+>>                         LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
+>>         - display-timings: timings for the connected panel as described by
+>>                 Documentation/devicetree/bindings/video/display-timing.txt
+>> +       -edp-panel:
+>> +               phandle for the drm_panel node required by panel_binder.
+>>
+>>  Optional properties for dp-controller:
+>>         -interlaced:
+>> diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
+>> index 178d2a9..fd1c070 100644
+>> --- a/drivers/gpu/drm/exynos/Kconfig
+>> +++ b/drivers/gpu/drm/exynos/Kconfig
+>> @@ -52,6 +52,7 @@ config DRM_EXYNOS_DP
+>>         bool "EXYNOS DRM DP driver support"
+>>         depends on DRM_EXYNOS_FIMD && ARCH_EXYNOS && (DRM_PTN3460=n || DRM_PTN3460=y || DRM_PTN3460=DRM_EXYNOS)
+>>         default DRM_EXYNOS
+>> +       select DRM_PANEL
+>>         help
+>>           This enables support for DP device.
+>>
+>> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
+>> index 414f5e5..a608f5c 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
+>> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
+>> @@ -28,7 +28,9 @@
+>>  #include <drm/drmP.h>
+>>  #include <drm/drm_crtc.h>
+>>  #include <drm/drm_crtc_helper.h>
+>> +#include <drm/drm_panel.h>
+>>  #include <drm/bridge/ptn3460.h>
+>> +#include <drm/bridge/panel_binder.h>
+>>
+>>  #include "exynos_drm_drv.h"
+>>  #include "exynos_dp_core.h"
+>> @@ -983,7 +985,7 @@ static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
+>>                 struct drm_encoder *encoder)
+>>  {
+>>         struct bridge_init bridge;
+>> -       struct drm_bridge *bridge_chain = NULL;
+>> +       struct drm_bridge *bridge_chain = NULL, *next = NULL;
+>>         bool connector_created = false;
+>>
+>>         if (find_bridge("nxp,ptn3460", &bridge)) {
+>> @@ -991,6 +993,14 @@ static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
+>>                                                                 bridge.node);
+>>         }
+>>
+>> +       if (dp->edp_panel) {
+>> +               next = panel_binder_init(dp->drm_dev, encoder, bridge.client,
+>> +                       bridge.node, dp->edp_panel, DRM_CONNECTOR_POLL_HPD);
+>> +               if (next)
+>> +                       connector_created = true;
+>> +               drm_bridge_add_to_chain(bridge_chain, next);
+>> +       }
+>> +
+>>         return connector_created;
+>>  }
+>>
+>> @@ -1215,16 +1225,10 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
+>>         struct platform_device *pdev = to_platform_device(dev);
+>>         struct drm_device *drm_dev = data;
+>>         struct resource *res;
+>> -       struct exynos_dp_device *dp;
+>> +       struct exynos_dp_device *dp = exynos_dp_display.ctx;
+>>         unsigned int irq_flags;
+>> -
+>>         int ret = 0;
+>>
+>> -       dp = devm_kzalloc(&pdev->dev, sizeof(struct exynos_dp_device),
+>> -                               GFP_KERNEL);
+>> -       if (!dp)
+>> -               return -ENOMEM;
+>> -
+>>         dp->dev = &pdev->dev;
+>>         dp->dpms_mode = DRM_MODE_DPMS_OFF;
+>>
+>> @@ -1298,7 +1302,6 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
+>>         disable_irq(dp->irq);
+>>
+>>         dp->drm_dev = drm_dev;
+>> -       exynos_dp_display.ctx = dp;
+>>
+>>         platform_set_drvdata(pdev, &exynos_dp_display);
+>>
+>> @@ -1325,6 +1328,9 @@ static const struct component_ops exynos_dp_ops = {
+>>
+>>  static int exynos_dp_probe(struct platform_device *pdev)
+>>  {
+>> +       struct device *dev = &pdev->dev;
+>> +       struct device_node *panel_node;
+>> +       struct exynos_dp_device *dp;
+>>         int ret;
+>>
+>>         ret = exynos_drm_component_add(&pdev->dev, EXYNOS_DEVICE_TYPE_CONNECTOR,
+>> @@ -1332,6 +1338,21 @@ static int exynos_dp_probe(struct platform_device *pdev)
+>>         if (ret)
+>>                 return ret;
+>>
+>> +       dp = devm_kzalloc(&pdev->dev, sizeof(struct exynos_dp_device),
+>> +                               GFP_KERNEL);
+>> +       if (!dp)
+>> +               return -ENOMEM;
+>> +
+>> +       panel_node = of_parse_phandle(dev->of_node, "edp-panel", 0);
+>> +       if (panel_node) {
+>> +               dp->edp_panel = of_drm_find_panel(panel_node);
+>> +               of_node_put(panel_node);
+>> +               if (!dp->edp_panel)
+>> +                       return -EPROBE_DEFER;
+>> +       }
+>> +
+>> +       exynos_dp_display.ctx = dp;
+>> +
+>>         ret = component_add(&pdev->dev, &exynos_dp_ops);
+>>         if (ret)
+>>                 exynos_drm_component_del(&pdev->dev,
+>> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.h b/drivers/gpu/drm/exynos/exynos_dp_core.h
+>> index 02cc4f9..26a64d3 100644
+>> --- a/drivers/gpu/drm/exynos/exynos_dp_core.h
+>> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.h
+>> @@ -149,6 +149,7 @@ struct exynos_dp_device {
+>>         struct drm_device       *drm_dev;
+>>         struct drm_connector    connector;
+>>         struct drm_encoder      *encoder;
+>> +       struct drm_panel        *edp_panel;
+>>         struct clk              *clock;
+>>         unsigned int            irq;
+>>         void __iomem            *reg_base;
+>> --
+>> 1.7.9.5
+>>
