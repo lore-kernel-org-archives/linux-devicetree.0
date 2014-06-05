@@ -1,62 +1,94 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCHv4 1/2] mmc: dw_mmc: replace "disable-wp" from slot's quirk to
- host's quirk
-Date: Thu, 05 Jun 2014 11:22:07 +0900
-Message-ID: <1401934928-7300-2-git-send-email-jh80.chung@samsung.com>
-References: <1401934928-7300-1-git-send-email-jh80.chung@samsung.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1401934928-7300-1-git-send-email-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc@vger.kernel.org
-Cc: chris@printf.net, ulf.hansson@linaro.org, tgih.jun@samsung.com, devicetree@vger.kernel.org, heiko@sntech.de, dinguyen@altera.com, mark.rutland@arm.com, tushar.behera@linaro.org, Jaehoon Chung <jh80.chung@samsung.com>
+From: YoungJun Cho <yj44.cho@samsung.com>
+Subject: Re: [PATCH v3 13/15] ARM: dts: exynos5: add system register support
+Date: Thu, 05 Jun 2014 11:52:57 +0900
+Message-ID: <538FDB89.70504@samsung.com>
+References: <1401686571-22148-1-git-send-email-yj44.cho@samsung.com>
+ <1401686571-22148-14-git-send-email-yj44.cho@samsung.com>
+ <CAFp+6iFpSHWwH68BSNzetrTdxt2wpZC3y3WfQ+nuRDBeask_MA@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAFp+6iFpSHWwH68BSNzetrTdxt2wpZC3y3WfQ+nuRDBeask_MA@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Vivek Gautam <gautam.vivek@samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, ijc+devicetree@hellion.org.uk, sw0312.kim@samsung.com, dri-devel@lists.freedesktop.org, a.hajda@samsung.com, Kyungmin Park <kyungmin.park@samsung.com>, robh+dt <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Replaced the "disable-wp" into host's quirks.
-(Assume to support the one slot per a host)
+Hi Vivek,
 
-Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
----
-Changelog V4:
-	- Rename Subject
-		"[PATCHv3 2/4] mmc: dw_mmc: use the __mmc_of_parse to parse the slot node"
-	- Replace the "disable-wp" into host's quirks, according to remove the slot-node at dt-file.
-Changelog V3:
-	- Fix typo.
-	- Maintained the dw_mci_of_quirks().
-Changelog V2:
-	- None
+On 06/04/2014 08:50 PM, Vivek Gautam wrote:
+> On Mon, Jun 2, 2014 at 10:52 AM, YoungJun Cho <yj44.cho@samsung.com> wrote:
+>> This patch adds sysreg device node, and sysreg property
+>> to fimd device node which is required to use I80 interface.
+>
+> Same here. The system register nodes have been added to exynos5250 and
+> exynos5420 by the patch:
+> dfbbdbf ARM: dts: Add sysreg sytem controller node to exynos5250 and exynos5420
+>
+> May be, you may want to move those two nodes to this common file (exynos5.dtsi).
+>
 
- drivers/mmc/host/dw_mmc.c |   10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Thank you for reporting.
+I didn't check linux-samsung-soc.
 
-diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
-index 1ac227c..99fc939 100644
---- a/drivers/mmc/host/dw_mmc.c
-+++ b/drivers/mmc/host/dw_mmc.c
-@@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
- static struct dw_mci_of_slot_quirks {
- 	char *quirk;
- 	int id;
--} of_slot_quirks[] = {
--	{
--		.quirk	= "disable-wp",
--		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
--	},
--};
-+} of_slot_quirks[] = {};
- 
- static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
- {
-@@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
- 	{
- 		.quirk	= "broken-cd",
- 		.id	= DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
-+	}, {
-+		.quirk	= "disable-wp",
-+		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
- 	},
- };
- 
--- 
-1.7.9.5
+The exynos5410, 5420 and 5422 use system register with base address
+0x10050000.
+But exynos5260 and 5430 are different.
+And I can't check exynos5250.
 
+So with this condition, it is reasonable to remove these sysreg relevant
+patches.
+
+Thank you.
+Best regards YJ
+
+>>
+>> Signed-off-by: YoungJun Cho <yj44.cho@samsung.com>
+>> Acked-by: Inki Dae <inki.dae@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>   arch/arm/boot/dts/exynos5.dtsi |    6 ++++++
+>>   1 file changed, 6 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5.dtsi b/arch/arm/boot/dts/exynos5.dtsi
+>> index 79d0608..95ee496 100644
+>> --- a/arch/arm/boot/dts/exynos5.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5.dtsi
+>> @@ -81,12 +81,18 @@
+>>                  status = "disabled";
+>>          };
+>>
+>> +       sys_reg: syscon@10050000 {
+>> +               compatible = "samsung,exynos5-sysreg", "syscon";
+>> +               reg = <0x10050000 0x500>;
+>> +       };
+>> +
+>>          fimd@14400000 {
+>>                  compatible = "samsung,exynos5250-fimd";
+>>                  interrupt-parent = <&combiner>;
+>>                  reg = <0x14400000 0x40000>;
+>>                  interrupt-names = "fifo", "vsync", "lcd_sys";
+>>                  interrupts = <18 4>, <18 5>, <18 6>;
+>> +               samsung,sysreg = <&sys_reg>;
+>>                  status = "disabled";
+>>          };
+>>
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
+>
+>
