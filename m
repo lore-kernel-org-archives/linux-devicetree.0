@@ -1,55 +1,74 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH 3/9] ARM: dts: berlin: add a required reset property in
- the chip controller node
-Date: Thu, 5 Jun 2014 18:44:26 +0200
-Message-ID: <20140605164426.GA21960@kwain>
-References: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
- <1401983326-19205-4-git-send-email-antoine.tenart@free-electrons.com>
- <1401986347.4103.11.camel@paszta.hi.pengutronix.de>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 2/4] of: Add NVIDIA Tegra XUSB pad controller binding
+Date: Thu, 05 Jun 2014 10:47:45 -0600
+Message-ID: <53909F31.4050603@wwwdotorg.org>
+References: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com> <1401894990-30092-2-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401986347.4103.11.camel@paszta.hi.pengutronix.de>
+In-Reply-To: <1401894990-30092-2-git-send-email-thierry.reding@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Bresticker <abrestic@chromium.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 05, 2014 at 06:39:07PM +0200, Philipp Zabel wrote:
-> Am Donnerstag, den 05.06.2014, 17:48 +0200 schrieb Antoine T=E9nart:
-> > The chip controller node now also describes the Marvell Berlin rese=
-t
-> > controller. Add the required 'reset-cells' property.
-> >=20
-> > Signed-off-by: Antoine T=E9nart <antoine.tenart@free-electrons.com>
-> > ---
-> >  arch/arm/boot/dts/berlin2.dtsi   | 1 +
-> >  arch/arm/boot/dts/berlin2cd.dtsi | 1 +
-> >  arch/arm/boot/dts/berlin2q.dtsi  | 1 +
-> >  3 files changed, 3 insertions(+)
-> >=20
-> > diff --git a/arch/arm/boot/dts/berlin2.dtsi b/arch/arm/boot/dts/ber=
-lin2.dtsi
-> > index 2477dac4d643..379ff1a38377 100644
-> > --- a/arch/arm/boot/dts/berlin2.dtsi
-> > +++ b/arch/arm/boot/dts/berlin2.dtsi
-> > @@ -243,6 +243,7 @@
-> >  		chip: chip-control@ea0000 {
-> >  			compatible =3D "marvell,berlin2-chip-ctrl";
-> >  			#clock-cells =3D <1>;
-> > +			#reset-cells =3D <1>;
->=20
-> Are the marvell,berlin2q-chip-ctrl bindings already documented? This
-> should also be added to the documentation.
+On 06/04/2014 09:16 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
+> 
+> This patch adds the device tree binding documentation for the XUSB pad
+> controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and PHY
+> capabilities.
 
-It is, I'll add information about its reset function.
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
 
-Antoine
+> +- #phy-cells: Should be 1. The specifier is the index of the PHY to reference.
+> +  Possible values are:
+> +  - 0: PCIe
+> +  - 1: SATA
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Those values are defined in
+include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h. I personally consider
+the <dt-bindings/> header files to be part of the binding itself, rather
+than being derived from the binding. As such, I'd suggest the following
+changes:
+
+* Make this patch 1 not patch 2
+* Move pinctrl-tegra-xusb.h into this patch.
+* Remove the list of values above, and replace it with the text "See
+<dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the set of valid values".
+
+We'll need to make sure this patch is applied to a topic branch that can
+be merged into the pinctrl tree and the Tegra tree for 3.17, assuming
+that you'll be sending patches for 3.17 that use pinctrl-tegra-xusb.h.
+
+> +Example:
+> +========
+> +
+> +SoC file extract:
+> +-----------------
+> +
+> +	padctl@0,7009f000 {
+> +		compatible = "nvidia,tegra124-xusb-padctl";
+> +		reg = <0x0 0x7009f000 0x0 0x1000>;
+> +		resets = <&tegra_car 142>;
+> +		reset-names = "padctl";
+> +
+> +		#address-cells = <0>;
+> +		#size-cells = <0>;
+
+Why are those two properties required? Yes, this node has sub-nodes, but
+those sub-nodes don't have a reg property or unit address. The main
+Tegra pinctrl nodes don't have #address/size-cells.
+
+> +Board file extract:
+> +-------------------
+
+> +	padctl: padctl@0,7009f000 {
+> +		pinmux {
+> +			pinctrl-0 = <&padctl_default>;
+> +			pinctrl-names = "default";
+
+Isn't there one extra level of nodes here. In the DT patches later in
+this series, pinctrl-0/pinctrl-names are directly inside the top-level
+padctl node.
