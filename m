@@ -1,33 +1,37 @@
-From: Soren Brinkmann <soren.brinkmann@xilinx.com>
-Subject: [PATCH 2/2] ARM: multi_v7_defconfig: Enable XADC driver
-Date: Thu,  5 Jun 2014 09:05:24 -0700
-Message-ID: <1401984324-6075-2-git-send-email-soren.brinkmann@xilinx.com>
-References: <1401984324-6075-1-git-send-email-soren.brinkmann@xilinx.com>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [PATCH 1/3] ARM: dts: Create a cros-ec-keyboard fragment
+Date: Thu, 5 Jun 2014 09:12:09 -0700
+Message-ID: <CAOesGMh8j4S2E-3xqMuK5OWJfYfOUh0OPvfMEZfrssAwfqRU_g@mail.gmail.com>
+References: <1401920421-25729-1-git-send-email-dianders@chromium.org>
+	<53909219.6090200@wwwdotorg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1401984324-6075-1-git-send-email-soren.brinkmann@xilinx.com>
+In-Reply-To: <53909219.6090200@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Russell King <linux@arm.linux.org.uk>, Michal Simek <michal.simek@xilinx.com>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Soren Brinkmann <soren.brinkmann@xilinx.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Doug Anderson <dianders@chromium.org>, "arm@kernel.org" <arm@kernel.org>, Stephen Warren <swarren@nvidia.com>, Thierry Reding <treding@nvidia.com>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Xilinx A/D Converter is found in Xilinx devices including Zynq.
+On Thu, Jun 5, 2014 at 8:51 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 06/04/2014 04:20 PM, Doug Anderson wrote:
+>> All ChromeOS ARM devices that have the standard "CrOS EC" have the
+>> same keyboard mapping.  It's silly to include this same definition
+>> everywhere.  Let's create a "dtsi" fragment that we can include from
+>> many different boards.
+>>
+>> This fragment is based on what's currently in tegra124-venice2.dts
+>
+> This series looks fine to me. Given it touches both Tegra and Exynos,
+> should it be merged into a topic branch in arm-soc, so that it can be
+> pulled into both Tegra/Exynos trees to resolve any conflicts. So,
+>
+> Acked-by: Stephen Warren <swarren@nvidia.com>
+>
+> If you want, I'm happy to apply this to a topic branch and send a pull
+> request to arm-soc.
 
-Signed-off-by: Soren Brinkmann <soren.brinkmann@xilinx.com>
----
- arch/arm/configs/multi_v7_defconfig | 1 +
- 1 file changed, 1 insertion(+)
+Sounds good.
 
-diff --git a/arch/arm/configs/multi_v7_defconfig b/arch/arm/configs/multi_v7_defconfig
-index e2d62048e198..2d1039d8c7f1 100644
---- a/arch/arm/configs/multi_v7_defconfig
-+++ b/arch/arm/configs/multi_v7_defconfig
-@@ -360,6 +360,7 @@ CONFIG_TEGRA_IOMMU_GART=y
- CONFIG_TEGRA_IOMMU_SMMU=y
- CONFIG_MEMORY=y
- CONFIG_IIO=y
-+CONFIG_XILINX_XADC=y
- CONFIG_AK8975=y
- CONFIG_PWM=y
- CONFIG_PWM_TEGRA=y
--- 
-2.0.0
+
+-Olof
