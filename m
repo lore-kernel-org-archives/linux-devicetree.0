@@ -1,171 +1,77 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V3 6/8] drm/exynos: dp: Modify driver to support bridge chaining
-Date: Fri, 6 Jun 2014 00:52:14 +0530
-Message-ID: <CAEC9eQPKkqq9VnzHdEBD3v8x41AGUh6hbGmgLnMaFa6FHwfb6A@mail.gmail.com>
-References: <1401995452-15798-1-git-send-email-ajaykumar.rs@samsung.com>
-	<1401995452-15798-7-git-send-email-ajaykumar.rs@samsung.com>
-	<CAEC9eQMqQe3Z5iLuURO6U34pONjrPd3cZ-Ehjaw8mQDKGPD8vg@mail.gmail.com>
+From: Varun Sethi <Varun.Sethi@freescale.com>
+Subject: RE: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
+Date: Thu, 5 Jun 2014 19:10:19 +0000
+Message-ID: <07321368d15d4ad9928ebb83af87e401@DM2PR03MB479.namprd03.prod.outlook.com>
+References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
+ <4545972.cM7IP1qTXQ@wuerfel>
+ <CAL_Jsq+tkFNpjSEZboT+o69B_Z3a8e-ZVKaYDmLwtkyYoPy6VQ@mail.gmail.com>
+ <5288123.eXagyPAxNq@wuerfel>
+ <20140602104104.GD3855@e103592.cambridge.arm.com>
+ <20140604143509.GF28484@ulmo> <20140604164132.GF6644@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAEC9eQMqQe3Z5iLuURO6U34pONjrPd3cZ-Ehjaw8mQDKGPD8vg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Dae <inki.dae@samsung.com>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, Rob Clark <robdclark@gmail.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, Thierry Reding <thierry.reding@gmail.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140604164132.GF6644@arm.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Will Deacon <will.deacon@arm.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Grundler <grundler@chromium.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Stuart Yoder <stuart.yoder@freescale.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 6, 2014 at 12:48 AM, Ajay kumar <ajaynumb@gmail.com> wrote:
-> +Device tree list
->
-> On Fri, Jun 6, 2014 at 12:40 AM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
->> exynos_dp supports a simple bridge chain with ptn3460 bridge
->> and an LVDS panel attached to it.
->> This patch creates the bridge chain with ptn3460 as the head
->> of the list and panel_binder being the tail.
->>
->> Also, DERER_PROBE for exynos_dp is tested with this patch.
->>
->> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->> ---
->>  .../devicetree/bindings/video/exynos_dp.txt        |    2 +
->>  drivers/gpu/drm/exynos/Kconfig                     |    1 +
->>  drivers/gpu/drm/exynos/exynos_dp_core.c            |   39 +++++++++++++++-----
->>  drivers/gpu/drm/exynos/exynos_dp_core.h            |    1 +
->>  4 files changed, 34 insertions(+), 9 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/video/exynos_dp.txt b/Documentation/devicetree/bindings/video/exynos_dp.txt
->> index 53dbccf..0c118ff 100644
->> --- a/Documentation/devicetree/bindings/video/exynos_dp.txt
->> +++ b/Documentation/devicetree/bindings/video/exynos_dp.txt
->> @@ -51,6 +51,8 @@ Required properties for dp-controller:
->>                         LANE_COUNT1 = 1, LANE_COUNT2 = 2, LANE_COUNT4 = 4
->>         - display-timings: timings for the connected panel as described by
->>                 Documentation/devicetree/bindings/video/display-timing.txt
->> +       -edp-panel:
->> +               phandle for the drm_panel node required by panel_binder.
->>
->>  Optional properties for dp-controller:
->>         -interlaced:
->> diff --git a/drivers/gpu/drm/exynos/Kconfig b/drivers/gpu/drm/exynos/Kconfig
->> index 178d2a9..fd1c070 100644
->> --- a/drivers/gpu/drm/exynos/Kconfig
->> +++ b/drivers/gpu/drm/exynos/Kconfig
->> @@ -52,6 +52,7 @@ config DRM_EXYNOS_DP
->>         bool "EXYNOS DRM DP driver support"
->>         depends on DRM_EXYNOS_FIMD && ARCH_EXYNOS && (DRM_PTN3460=n || DRM_PTN3460=y || DRM_PTN3460=DRM_EXYNOS)
->>         default DRM_EXYNOS
->> +       select DRM_PANEL
->>         help
->>           This enables support for DP device.
->>
->> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.c b/drivers/gpu/drm/exynos/exynos_dp_core.c
->> index 414f5e5..a608f5c 100644
->> --- a/drivers/gpu/drm/exynos/exynos_dp_core.c
->> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.c
->> @@ -28,7 +28,9 @@
->>  #include <drm/drmP.h>
->>  #include <drm/drm_crtc.h>
->>  #include <drm/drm_crtc_helper.h>
->> +#include <drm/drm_panel.h>
->>  #include <drm/bridge/ptn3460.h>
->> +#include <drm/bridge/panel_binder.h>
->>
->>  #include "exynos_drm_drv.h"
->>  #include "exynos_dp_core.h"
->> @@ -983,7 +985,7 @@ static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
->>                 struct drm_encoder *encoder)
->>  {
->>         struct bridge_init bridge;
->> -       struct drm_bridge *bridge_chain = NULL;
->> +       struct drm_bridge *bridge_chain = NULL, *next = NULL;
->>         bool connector_created = false;
->>
->>         if (find_bridge("nxp,ptn3460", &bridge)) {
->> @@ -991,6 +993,14 @@ static int exynos_drm_attach_lcd_bridge(struct exynos_dp_device *dp,
->>                                                                 bridge.node);
->>         }
->>
->> +       if (dp->edp_panel) {
->> +               next = panel_binder_init(dp->drm_dev, encoder, bridge.client,
->> +                       bridge.node, dp->edp_panel, DRM_CONNECTOR_POLL_HPD);
->> +               if (next)
->> +                       connector_created = true;
->> +               drm_bridge_add_to_chain(bridge_chain, next);
->> +       }
->> +
->>         return connector_created;
->>  }
->>
->> @@ -1215,16 +1225,10 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
->>         struct platform_device *pdev = to_platform_device(dev);
->>         struct drm_device *drm_dev = data;
->>         struct resource *res;
->> -       struct exynos_dp_device *dp;
->> +       struct exynos_dp_device *dp = exynos_dp_display.ctx;
->>         unsigned int irq_flags;
->> -
->>         int ret = 0;
->>
->> -       dp = devm_kzalloc(&pdev->dev, sizeof(struct exynos_dp_device),
->> -                               GFP_KERNEL);
->> -       if (!dp)
->> -               return -ENOMEM;
->> -
->>         dp->dev = &pdev->dev;
->>         dp->dpms_mode = DRM_MODE_DPMS_OFF;
->>
->> @@ -1298,7 +1302,6 @@ static int exynos_dp_bind(struct device *dev, struct device *master, void *data)
->>         disable_irq(dp->irq);
->>
->>         dp->drm_dev = drm_dev;
->> -       exynos_dp_display.ctx = dp;
->>
->>         platform_set_drvdata(pdev, &exynos_dp_display);
->>
->> @@ -1325,6 +1328,9 @@ static const struct component_ops exynos_dp_ops = {
->>
->>  static int exynos_dp_probe(struct platform_device *pdev)
->>  {
->> +       struct device *dev = &pdev->dev;
->> +       struct device_node *panel_node;
->> +       struct exynos_dp_device *dp;
->>         int ret;
->>
->>         ret = exynos_drm_component_add(&pdev->dev, EXYNOS_DEVICE_TYPE_CONNECTOR,
->> @@ -1332,6 +1338,21 @@ static int exynos_dp_probe(struct platform_device *pdev)
->>         if (ret)
->>                 return ret;
->>
->> +       dp = devm_kzalloc(&pdev->dev, sizeof(struct exynos_dp_device),
->> +                               GFP_KERNEL);
->> +       if (!dp)
->> +               return -ENOMEM;
->> +
->> +       panel_node = of_parse_phandle(dev->of_node, "edp-panel", 0);
->> +       if (panel_node) {
->> +               dp->edp_panel = of_drm_find_panel(panel_node);
->> +               of_node_put(panel_node);
->> +               if (!dp->edp_panel)
->> +                       return -EPROBE_DEFER;
->> +       }
->> +
->> +       exynos_dp_display.ctx = dp;
->> +
->>         ret = component_add(&pdev->dev, &exynos_dp_ops);
->>         if (ret)
->>                 exynos_drm_component_del(&pdev->dev,
->> diff --git a/drivers/gpu/drm/exynos/exynos_dp_core.h b/drivers/gpu/drm/exynos/exynos_dp_core.h
->> index 02cc4f9..26a64d3 100644
->> --- a/drivers/gpu/drm/exynos/exynos_dp_core.h
->> +++ b/drivers/gpu/drm/exynos/exynos_dp_core.h
->> @@ -149,6 +149,7 @@ struct exynos_dp_device {
->>         struct drm_device       *drm_dev;
->>         struct drm_connector    connector;
->>         struct drm_encoder      *encoder;
->> +       struct drm_panel        *edp_panel;
->>         struct clk              *clock;
->>         unsigned int            irq;
->>         void __iomem            *reg_base;
->> --
->> 1.7.9.5
->>
+
+
+> -----Original Message-----
+> From: iommu-bounces@lists.linux-foundation.org [mailto:iommu-
+> bounces@lists.linux-foundation.org] On Behalf Of Will Deacon
+> Sent: Wednesday, June 04, 2014 10:12 PM
+> To: Thierry Reding
+> Cc: Mark Rutland; devicetree@vger.kernel.org; linux-samsung-
+> soc@vger.kernel.org; Pawel Moll; Arnd Bergmann; Ian Campbell; Grant
+> Grundler; Stephen Warren; linux-kernel@vger.kernel.org; Marc Zyngier;
+> Linux IOMMU; Rob Herring; Kumar Gala; linux-tegra@vger.kernel.org; Cho
+> KyongHo; Dave P Martin; linux-arm-kernel@lists.infradead.org
+> Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree
+> bindings
+> 
+> On Wed, Jun 04, 2014 at 03:35:10PM +0100, Thierry Reding wrote:
+> > On Mon, Jun 02, 2014 at 11:41:04AM +0100, Dave Martin wrote:
+> > > In the strictest sense, no.
+> > >
+> > > But for a large set of sane configurations, this probably works.
+> > >
+> > > Small sets of randomly-assigned IDs can just be enumerated one by
+> one.
+> > >
+> > > We wouldn't be able to describe folding and bit shuffling, but we
+> > > probably don't want to encourage that anyway.
+> >
+> > I'm having some difficulty understanding this. You make it sound like
+> > there's a fairly arbitrary number of IDs that the SMMU can handle. So
+> > how is the mapping to devices defined? If you say encourage that does
+> > make it sound like the assignment of IDs is purely defined by some
+> > mechanism in software rather than in hardware. Or they are more or
+> > less randomly picked by someone. If that's the case, is that not
+> > something that should be dynamically allocated by the kernel rather
+> > than put into the device tree?
+> 
+> The set of StreamIDs that can be generated by a master is fixed in the
+> hardware. The SMMU can then be programmed to map these incoming IDs onto
+> a context ID (or a set of context IDs), which are the IDs used internally
+> by the SMMU to find the page tables etc.
+> 
+> The StreamID -> ContextID mapping is dynamic and controlled by software.
+> The Master -> StreamIDs mapping is fixed in the hardware.
+The Master -> StreamIDs mapping may not always be fixed in the hardware. At, least in our case we plan to program these via software. PCI devices is one place where this mapping would have to be dynamic (based on the topology i.e. if the devices are connected to a bridge etc). Also, we have a hot plug device architecture where the stream ID is software programmable.
+
+Other than that, based on the isolation requirements (iommu domain) software programmability offers greater flexibility.
+
+-Varun
