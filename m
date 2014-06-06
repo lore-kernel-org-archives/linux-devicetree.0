@@ -1,76 +1,103 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Fri, 6 Jun 2014 13:36:53 +0100
-Message-ID: <20140606123653.GP24240@lee--X1>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
- <20140605103709.GE19550@lee--X1>
- <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
- <20140605155509.GH24240@lee--X1>
- <20140606102446.GK2520@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140606102446.GK2520-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: [patch added to the 3.12 stable tree] mips: dts: Fix missing device_type="memory" property in memory nodes
+Date: Fri,  6 Jun 2014 14:49:17 +0200
+Message-ID: <1402059090-31277-13-git-send-email-jslaby@suse.cz>
+References: <1402059090-31277-1-git-send-email-jslaby@suse.cz>
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <1402059090-31277-1-git-send-email-jslaby@suse.cz>
+Sender: stable-owner@vger.kernel.org
+To: stable@vger.kernel.org
+Cc: Leif Lindholm <leif.lindholm@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 06 Jun 2014, Mark Brown wrote:
+From: Leif Lindholm <leif.lindholm@linaro.org>
 
-> On Thu, Jun 05, 2014 at 04:55:09PM +0100, Lee Jones wrote:
-> > On Thu, 05 Jun 2014, Grant Likely wrote:
->=20
-> > > I still think the way to do it is to emulate the missing i2c_devi=
-ce_id
-> > > when calling the drivers .probe() hook by having a temporary copy=
- on
-> > > the stack and filling it with data from the OF or ACPI table....
->=20
-> > That's the opposite of what I'm trying to achieve.  I'm trying to g=
-et
-> > rid of unused i2c_device_id tables, rather than reinforce their
-> > mandatory existence.  I think an i2c_of_match_device() with knowled=
-ge
-> > of how to match via pure DT principles (of_node/compatible) and a
-> > fall-back, which is able to match on a provided of_device_id table
-> > alone i.e. without the requirement of an existing of_node.
->=20
-> > I've also been mulling over the idea of removing the second probe()
-> > parameter, as suggested by Wolfram.  However, this has quite deep
-> > ramifications which would require a great deal of driver adaptions.
->=20
-> If you're going to do that another option is to refactor the probe()
-> function to take the driver_data as an argument and then have the cor=
-e
-> pass that from whatever table it matched from rather than the entire
-> i2c_device_id structure.  That way the driver just needs to supply al=
-l
-> the ID tables mapping binding information to whatever it needs and th=
-e
-> core can pass in the driver data from whatever table it matched again=
-st.
+This patch has been added to the 3.12 stable tree. If you have any
+objections, please let us know.
 
-Unfortunately this means we're back to the aforementioned typing
-issue.  For struct {platform,i2c,spi,acpi,etc}_device_id the driver
-data is a kernel ulong but the of_device_id's driver data attribute is
-a void*.
+===============
 
-I've just started work on a migration over to a new probe().  I don't
-think it's all that much work, but if there are any objections I'd
-prefer to hear them now rather than waste any time.
+commit dfc44f8030653b345fc6fb337558c3a07536823f upstream.
 
-I propose to convert a couple of drivers, one which doesn't use the
-driver_data and one that does, but is DT only and send them for
-review.  See if Wolfram et. al like the method.
+A few platforms lack a 'device_type = "memory"' for their memory
+nodes, relying on an old ppc quirk in order to discover its memory.
+Add the missing data so that all parsing code can find memory nodes
+correctly.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: John Crispin <blogic@openwrt.org>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
+---
+ arch/mips/lantiq/dts/easy50712.dts    | 1 +
+ arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
+ arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
+index fac1f5b178eb..143b8a37b5e4 100644
+--- a/arch/mips/lantiq/dts/easy50712.dts
++++ b/arch/mips/lantiq/dts/easy50712.dts
+@@ -8,6 +8,7 @@
+ 	};
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
+index 35eb874ab7f1..709f58132f5c 100644
+--- a/arch/mips/ralink/dts/mt7620a_eval.dts
++++ b/arch/mips/ralink/dts/mt7620a_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink MT7620A evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/ralink/dts/rt2880_eval.dts
+index 322d7002595b..0a685db093d4 100644
+--- a/arch/mips/ralink/dts/rt2880_eval.dts
++++ b/arch/mips/ralink/dts/rt2880_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT2880 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x8000000 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/ralink/dts/rt3052_eval.dts
+index 0ac73ea28198..ec9e9a035541 100644
+--- a/arch/mips/ralink/dts/rt3052_eval.dts
++++ b/arch/mips/ralink/dts/rt3052_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3052 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
+index 2fa6b330bf4f..e8df21a5d10d 100644
+--- a/arch/mips/ralink/dts/rt3883_eval.dts
++++ b/arch/mips/ralink/dts/rt3883_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3883 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+-- 
+1.9.3
