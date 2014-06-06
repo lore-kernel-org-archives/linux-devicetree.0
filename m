@@ -1,64 +1,157 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH RFC 5/5] ahci_imx: add disable for spread-spectrum
-Date: Fri, 6 Jun 2014 14:50:38 -0500
-Message-ID: <CAL_JsqKmEXcO4rDELiLGZ4kJSEhmSFhJWh5XRjUfj8xNi0eFJw@mail.gmail.com>
-References: <20140416084227.GD24070@n2100.arm.linux.org.uk>
-	<E1WaLRa-0002yX-7L@rmk-PC.arm.linux.org.uk>
-	<CAL_JsqK_BbhXs0gcn=w=1KPKOD0HZzmYx5zAaS5_z=UvQDPNjw@mail.gmail.com>
-	<20140416225721.GP24070@n2100.arm.linux.org.uk>
-	<20140416230226.GQ24070@n2100.arm.linux.org.uk>
-	<20140606164027.GA22986@n2100.arm.linux.org.uk>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH] ARM: fix MPU build error after meminfo removal
+Date: Fri, 06 Jun 2014 22:39 +0200
+Message-ID: <4972295.r6xld2rRkU@wuerfel>
+References: <4797611.zvigUZsBv3@wuerfel> <20140606110657.GH23430@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140606164027.GA22986@n2100.arm.linux.org.uk>
-Sender: linux-ide-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140606110657.GH23430-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 6, 2014 at 11:40 AM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> On Thu, Apr 17, 2014 at 12:02:26AM +0100, Russell King - ARM Linux wrote:
->> On Wed, Apr 16, 2014 at 11:57:21PM +0100, Russell King - ARM Linux wrote:
->> > On Wed, Apr 16, 2014 at 05:46:47PM -0500, Rob Herring wrote:
->> > > On Wed, Apr 16, 2014 at 3:43 AM, Russell King
->> > > <rmk+kernel@arm.linux.org.uk> wrote:
->> > > > Spread-spectrum doesn't work with Cubox-i hardware, so we have to
->> > > > disable this feature.  Add a DT property so that platforms can
->> > > > indicate that this feature should not be enabled.
->> > >
->> > > This is for spread-spectrum tx or rx? Transmit SS is optional to
->> > > support, but the receiver must support SS. Otherwise random drives
->> > > won't work which makes for a good user experience. Is this really a
->> > > board quirk rather than a Si issue?
->> >
->> > No idea.  This bit controls clock generation, and one reason given to
->> > disable it is if the reference clock being supplied is already spread
->> > spectrum.  I don't think that applies here.  It doesn't say which
->> > clock(s) this is applied to - I would guess it's the transmit clock.
->> >
->> > All I know is that with SS enabled, the drive is not detected, and
->> > SolidRun's original port disables SS.  Disabling SS allows the external
->> > drive to be detected.
->> >
->> > I have no capability to check the eye pattern, so I've no idea if
->> > there's a problem with the electrical setup which stops SS from
->> > working.  All I know is with the parameters I give here (which are
->> > those which SolidRun's original port uses) and with SS disabled,
->> > it works.
->>
->> I'll correct that - it _is_ detected with SS enabled, but things go
->> awry very quickly with errors, which then result in corrupted IDENTIFY
->> responses, the link dropping back to 1.5Gbps, more errors and corruption
->> and eventually the SATA layer gives up and declares the port dead.
->
-> Rob,
->
-> Can I take your lack of reply on this as meaning that you don't have
-> any objections against these new DT properties for this driver - if
-> so, can I have your ack for these properties please?
+[adding linux-arm-kernel mailing list, sorry for missing it in the inital
+post. Also adding devicetree mailing list]
 
-Yes, they are okay. I'll ack the documentation once that is done.
+On Friday 06 June 2014 12:06:57 Russell King - ARM Linux wrote:
+> On Fri, Jun 06, 2014 at 01:01:21PM +0200, Arnd Bergmann wrote:
+> > I ran into a new build error while doing randconfig builds today,
+> > which was introduced by 1c2f87c2256 ("ARM: 8025/1: Get rid of meminfo"):
+> 
+> This kind of problem is why we need more nommu platforms merged into the
+> kernel - and my position on that is that nommu do *not* qualify for the
+> "must be DT" restriction.
+> 
+> Many of the nommu platforms have very little memory that doing anything
+> but building for the specific platform doesn't make that much sense (it
+> may make sense to build for a group of common SoC platforms, but not
+> more than that.)  Hence, I believe the DT demand is an unreasonable
+> restriction upon them.
 
-Rob
+I don't think it's unreasonable, but we can definitely discuss it some
+more. I've just build-tested the two nommu platforms we have in the kernel,
+at91x40 and efm32 and found this size difference between DT-enabled
+and disabled builds:
+
+EFM32, DT enabled
+
+   text    data     bss     dec     hex filename
+2338464  101184   42620 2482268  25e05c obj-tmp/vmlinux
+
+
+EFM32, DT disabled, no board file
+
+   text    data     bss     dec     hex filename
+2282264   96896   42204 2421364  24f274 obj-tmp/vmlinux
+
+at91x40, DT enabled
+   text    data     bss     dec     hex filename
+1569156   74540   52988 1696684  19e3ac obj-tmp/vmlinux
+
+at91x40, DT disabled
+   text    data     bss     dec     hex filename
+1498748   72184   53320 1624252  18c8bc obj-tmp/vmlinux
+
+That is 60 to 70 KB on object size, plus whatever the
+runtime data structures take, minus the board file.
+In total, I'd expect around 100KB overhead for DT enablement,
+most of it in ROM for XIP_KERNEL users.
+
+I agree that this is a significant amount for a tightly constraint
+system, and we have to weigh that carefully against the overall
+picture. Another way of looking at the overhead is by comparing
+it to the usual bloat we accumulate. I expect that within one to
+three years, the kernel will grow by the same amount that DT
+adds, so for a given feature set, removing DT from the picture
+extends the lifetime of a platform by those years.
+
+We have been enforcing the DT-only rule rather strictly in the
+past for new platforms, for two reasons:
+
+a) making exceptions for some people often leads to other people
+   asking for more exceptions. We are probably at the point now
+   where this is no longer a problem for DT, as it is widely
+   established now: all new platform submissions are using it,
+   so we could have a special rule about NOMMU if we all agree
+   it's a good idea.
+
+b) There is a hope that we can at some point in the future make
+   everything DT-only on ARM, after all platforms that anyone still
+   cares about have been converted to DT and the others have been
+   removed. This may be 5-10 years in the future, since there are
+   still platforms that people are using but not actively converting
+   to DT (e.g. sa1100 or ixp4xx).
+
+Relaxing the rules for new platforms probably means we are giving
+up on the goal of ever going to DT-only for ARM. It may be that it
+was an unrealistic goal to start with, but I think we need a broader
+consensus among developers before we do that.
+
+One thing we can probably do is enable both DT and ATAGS based
+booting for the platform, so you can disable DT for the most
+tightly constrained machines, but still allow getting upstream
+support for a new board without necessarily adding a board file.
+
+I'm definitely all for adding new platforms when they have an
+active maintainer.
+
+> I've said this before - I have an Oki M675001 based nommu platform, which
+> is ARM7TDMI based, and I have patches for that which I've been carrying
+> locally since 2011.  I /could/ add it into my test farm and have it
+> running nightly tests /if/ mainline kernels supported it, but they don't,
+> so I don't.
+> 
+> We either /need/ to get more support for these platforms, or get rid of
+> nommu support on ARM altogether as it's a source of repeated problems
+> like this - we only ever find problems with nommu after the fact.
+
+One thing I'd like to do that would have helped here is improve
+build testing support by making it possible to build ARCH_MULTIPLATFORM
+with MMU disabled, and get things like multi_v5_defconfig with MMU
+turned off into automated build bots. I realize that there is very
+little incentive to actually run a nommu kernel with support for
+multiple platforms in production, and in most cases it won't work
+because CONFIG_DRAM_BASE doesn't match, but it still seems like the
+right approach to allow it, and put new nommu platforms into
+ARCH_MULTIPLATFORM from the start.
+
+> So, I want one of two things to happen: either more nommu platforms merged
+> (preferably ones that we can boot test) or we delete nommu support.
+> Continuing as we are is not an option.
+
+One note about this: it doesn't have to be all-or-nothing, as we have
+three or four classes of nommu chips. The ARM7TDMI (and to a lesser
+degree ARM9TDMI, ARM1156T2 and FA510) was extremely popular in the old
+days but is getting rarely used in new designs running Linux, and
+replaced by Cortex-M class cores. Emcraft is probably the company with
+the best NOMMU ARM Linux support now, and they only support Cortex-M3/M4
+based SoCs (and use an ancient kernel), see http://www.emcraft.com/products.
+With the current hype around 'Internet-of-things', we'll likely see
+more people work on ARMv7-M Linux.
+
+Neither of those however would have caught the particular bug I found,
+as that is only for ARMv7-R. I believe there were at some point patches
+to support actual ARMv7-R hardware but what we have upstream is incomplete
+because you can't build an upstream kernel that runs on a real system.
+ARMv8-R seems very interesting to support in the future, but no hardware
+has been announced.
+
+By architecture level, I'd say:
+
+* ARMv7-M: keep it, as we just merged efm32 support, merge more if possible.
+* ARMv4T/V5: either drop it after at91 becomes multiplatform and we remove
+  at91x40 support, or merge your Lapis ML675001 support
+* ARMv7-R: See if anyone is interested on working on it again, otherwise
+  we can probably remove the bits we have.
+* ARMv6/v7-A: no idea, it doesn't seem that useful, probably depends on
+  what we do with ARMv4T/V5 and ARMv7-R.
+* ARMv8-R: wait what happens.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
