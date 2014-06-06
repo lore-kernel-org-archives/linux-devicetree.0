@@ -1,107 +1,67 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v7 1/7] of: Provide function to request and map memory
-Date: Fri, 6 Jun 2014 10:19:28 -0500
-Message-ID: <CAL_Jsq+KS8W6kZpCSpd68Oku7neFxPVLct1j=AYaXnyvOD3tGA@mail.gmail.com>
-References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
- <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
+From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: am43x-epos-evm: Add Missing cpsw-phy-sel for
+ am43x-epos-evm
+Date: Fri, 6 Jun 2014 10:28:01 -0500
+Message-ID: <5391DE01.2080600@ti.com>
+References: <1402035454-25676-1-git-send-email-george.cherian@ti.com> <53916556.10608@ti.com> <53918F75.1050000@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Soren
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53918F75.1050000-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 5, 2014 at 12:26 PM, Matthias Brugger
-<matthias.bgg@gmail.com> wrote:
-> A call to of_iomap does not request the memory region.
-> This patch adds the function of_io_request_and_map which requests
-> the memory region before mapping it.
->
-> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
->  drivers/of/address.c       |   28 ++++++++++++++++++++++++++++
->  include/linux/of_address.h |    8 ++++++++
->  2 files changed, 36 insertions(+)
->
-> diff --git a/drivers/of/address.c b/drivers/of/address.c
-> index cb4242a..c55b107 100644
-> --- a/drivers/of/address.c
-> +++ b/drivers/of/address.c
-> @@ -721,3 +721,31 @@ void __iomem *of_iomap(struct device_node *np, int index)
->         return ioremap(res.start, resource_size(&res));
->  }
->  EXPORT_SYMBOL(of_iomap);
-> +
-> +/**
-> + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
-> + *                        for a given device_node
+On 06/06/2014 04:52 AM, George Cherian wrote:
+> On 6/6/2014 12:23 PM, Nishanth Menon wrote:
+>> On 06/06/2014 01:17 AM, George Cherian wrote:
+>>> AM437x EPOS evm use external clock for RMII interface.
+>>> Enable the same in DT.
+>>>
+>>> Signed-off-by: George Cherian <george.cherian-l0cyMroinI0@public.gmane.org>
+>>> Reported-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>>> ---
+>>>   arch/arm/boot/dts/am43x-epos-evm.dts | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
+>>> index 19f1f7e..90098f9 100644
+>>> --- a/arch/arm/boot/dts/am43x-epos-evm.dts
+>>> +++ b/arch/arm/boot/dts/am43x-epos-evm.dts
+>>> @@ -319,6 +319,10 @@
+>>>   	phy-mode = "rmii";
+>>>   };
+>>>   
+>>> +&phy_sel {
+>>> +	rmii-clock-ext;
+>>> +};
+>>> +
+>>>   &i2c0 {
+>>>   	status = "okay";
+>>>   	pinctrl-names = "default";
+>>>
+>> Where does this apply on?
+>> With linux-next next-20140506 tag, and this patch applied, I get the
+> Is'nt next-20140506 a month old.
 
-I believe docbook requires this to be 1 line.
+Uggh.. yeah - 1AM+migraine is not a good combination to try to do
+testing. :( Apologies on the noise
 
-> + * @device:    the device whose io range will be mapped
-> + * @index:     index of the io range
-> + * @name:      name of the resource
-> + *
-> + * Returns a pointer to the requested and mapped memory
-> + */
-> +void __iomem *of_io_request_and_map(struct device_node *np, int index, char *name)
-> +{
-> +       struct resource res;
-> +       void __iomem *mem;
-> +
-> +       if (of_address_to_resource(np, index, &res))
-> +               return NULL;
-> +
-> +       if (!request_mem_region(res.start, resource_size(&res), name))
 
-Use the np->name here and drop the name parameter.
+> I tried the patch on next-20140604.
 
-> +               return NULL;
-> +
-> +       mem = ioremap(res.start, resource_size(&res));
-> +       if (!mem)
-> +               release_mem_region(res.start, resource_size(&res));
-> +
-> +       return mem;
-> +}
-> +EXPORT_SYMBOL(of_io_request_and_map);
-> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> index 5f6ed6b..725b875 100644
-> --- a/include/linux/of_address.h
-> +++ b/include/linux/of_address.h
-> @@ -96,6 +96,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
->  extern int of_address_to_resource(struct device_node *dev, int index,
->                                   struct resource *r);
->  void __iomem *of_iomap(struct device_node *node, int index);
-> +void __iomem *of_io_request_and_map(struct device_node *device,
-> +                                       int index, char *name);
->  #else
->  static inline int of_address_to_resource(struct device_node *dev, int index,
->                                          struct resource *r)
-> @@ -107,6 +109,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
->  {
->         return NULL;
->  }
-> +
-> +static inline void __iomem *of_io_request_and_map(struct device_node *device,
-> +                                       int index, char *name)
-> +{
-> +       return NULL;
-> +}
->  #endif
->
->  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
-> --
-> 1.7.9.5
->
+Tested on next-20140606 - applies clean, builds and works :)
+
+am43xx-epos:  Boot PASS: http://slexy.org/raw/s2fT6zs45y
+
+Tested-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+
+-- 
+Regards,
+Nishanth Menon
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
