@@ -1,98 +1,89 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
- tree description
-Date: Fri, 06 Jun 2014 15:31:23 -0700
-Message-ID: <20140606223123.10062.29366@quantum>
-References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
- <1402000514-30752-1-git-send-email-dianders@chromium.org>
- <20140606000324.10062.10257@quantum>
- <CAD=FV=UQhBh68Bgv=kfUROCOxg1dS1OnZ1ir+wouewKoDFE_1g@mail.gmail.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
+Date: Sat, 7 Jun 2014 00:45:45 +0200
+Message-ID: <20140606224542.GA22188@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAD=FV=UQhBh68Bgv=kfUROCOxg1dS1OnZ1ir+wouewKoDFE_1g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, a.hajda@samsung.com, Rob Herring <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Alim Akhtar <alim.akhtar@samsung.com>, Kumar Gala <galak@codeaurora.org>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Arun Kumar <arun.kk@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: multipart/mixed; boundary="===============6915435674400188627=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Doug Anderson (2014-06-05 17:46:23)
-> Mike,
-> 
-> On Thu, Jun 5, 2014 at 5:03 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> > Quoting Doug Anderson (2014-06-05 13:35:14)
-> >> The "aclk66_peric" clock is a gate clock with a whole bunch of gates
-> >> underneath it.  This big gate isn't very useful to include in our
-> >> clock tree.  If any of the children need to be turned on then the big
-> >> gate will need to be on anyway.  ...and there are plenty of other "big
-> >> gates" that aren't described in our clock tree, some of which shut off
-> >> collections of clocks that have no relationship in the hierarchy so
-> >> are hard to model.
-> >
-> > I think this is a common problem. On OMAP we have something similar to
-> > this called "clock domains" or "clkdm" and it has been historically
-> > handled outside of the Linux clock framework[1]. There is a relationship
-> > to the clock framework of course and in the future it might be
-> > worthwhile to see if there is a generic way to handle this stuff.
-> 
-> That sounds like something that would be nice to solve, but it's not
-> going to happen now.
-> 
-> On the off chance that the user manual mentioned the existence of one
-> of these "big gate" bits, it tends to not be very specific about
-> _exactly_ which sets of clocks it disables.
-> 
-> Tracking down every one of these would be hugely time consuming.
-> Also: as Tomasz has indicated they don't provide a huge amount of
-> benefit since we're already dealing with clocks on a more fine-grained
-> level...
 
-Sounds like you are dealing with crappy documentation :-(
+--===============6915435674400188627==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qMm9M+Fa2AknHoGS"
+Content-Disposition: inline
 
-> 
-> 
-> >> "aclk66_peric" is causing earlyprintk problems since it gets disabled
-> >> as part of the boot process, so let's just remove it.
-> >>
-> >> Strangely (and for no good reason) this clock is exported as part of
-> >> the common clock bindings.  Remove it since there are no in-kernel
-> >> device trees using it and no reason anyone out of tree should refer to
-> >> it either.
-> >
-> > So Linux has no control over the big gate now, correct? You are
-> > dependent on the bootloader to ungate this thing?
-> 
-> A better way to put it is that you're dependent on the bootloader not
-> to gate it.
-> 
-> ...but that's also true for pretty much any clock marked IGNORE_UNUSED
-> and not explicitly enabled anywhere.
-> 
-> 
-> Are you opposed to this landing as-is to unblock things and people can
-> continue to work on the clock driver to make it even better?
 
-No. I'm just trying to understand how things work so that we can arrive
-to the right decision. I know what it is like to try and quickly unblock
-everyone else and the rush to do so often leads to less awesome
-solutions.
+--qMm9M+Fa2AknHoGS
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Anyways, getting back on point, Tomasz was right about the whole clk_get
-thing. So I'm happy to take either V1 or V3 of your patch. I will be
-submitting a second PR for 3.16 next week and it will include whichever
-version you and Tomasz agree is best.
+This is somewhat off-topic, but given the various concepts discussed in
+this thread I'm beginning to wonder how they will be implemented. The
+current implementation hooks the IOMMU API into the DMA mapping API, and
+the way this is done is by setting a single IOMMU (or rather a set of
+IOMMU operations) globally per bus type.
 
-Regards,
-Mike
+There are two issues that I can see with that: one is that we can't
+support multiple IOMMUs in the system at all, and the other is that
+there is no context associated with the IOMMU ops, and therefore there
+is no way to differentiate between two instances of the same IOMMU. A
+few drivers use global variables to keep track of context information
+but that won't work with multiple instances, unless they keep a global
+list of all instances and then require explicit lookup in each of the
+IOMMU operations. That sounds more like a workaround rather than a
+proper solution to me.
 
-> 
-> -Doug
+Discussion in this thread indicates that both of the above will be
+required at some point. Have I completely missed something or will we
+have to rework (parts of) the IOMMU API to make this work?
+
+One other thing that I have some difficulty understanding is how we can
+support things like process isolation using the current IOMMU API. Since
+a device will be statically assigned to one IOMMU domain at probe time
+there is no way we can change the address space upon a context switch.
+
+Thierry
+
+--qMm9M+Fa2AknHoGS
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTkkSWAAoJEN0jrNd/PrOhnAoP/3dnbiyJe31uxLcJwE0Bm10+
+EMBYvkA7Bct+YasVpd/xS3BVCda+L4mG3qDxUWJriU9YZ6ybEnRIrpPhxh1+xoWA
+iQXLkPHK+1+0f5NR56vqfOtDlY+NS2YQx2lQZ/CtswpRSzA8dYXGiVZwWXQMjsC/
+f+Uj19Wusn+4Qym4AekPP5HclGyqBpYuqmZM8Yp96QHyrd3jEu4YZeRh492Fs9Xv
+Xi8R5en3ZHEfU2erAgJIrY1jg0/g8TI6WGaXmGEz5SsTX7QSLde1RaJYsSoLOqsE
+zm2icD8FEM3oS95zoAuoFXk5N0zL/xNWDghurLWcmG6A6iHNAeB0qAYebq888HNe
+KUUObwgkfy2UaFGcLqf1VmQ8uw4p76yNwgRT1Zv+jNO7zsrZAo7zyzcYFnF4pHrv
+BmspaojhXs3CRVXG0PwipcYP2SmKgnV2KpkK4aHnAS6uUMyEHP6ZB2UOqi7/SfOD
+57h5Eo6ZczLWbYzYHaLr7JZE2F94p9h2vZg6utUmlaWoVFFgJeowWr+DgpdhiCwH
+EFhYz4+YP4f8tEpnMY39Y8BqMJayIYbinqVgmwsbHOQWQnYAV+D3f0UzxxxRnqjP
+tYhmNsaC+fiW0ZXAifXcxkddv+Dr1Owg7cEvZ7lFr6CCsIdEsbVfs8aFZ5zHQiCI
+p2HYv8e/oeHFxbpX+8wi
+=iyXI
+-----END PGP SIGNATURE-----
+
+--qMm9M+Fa2AknHoGS--
+
+--===============6915435674400188627==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6915435674400188627==--
