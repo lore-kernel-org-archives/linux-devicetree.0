@@ -1,7 +1,7 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: [RFC PATCH 7/7] ARM: dts: DRA7: add PRM interrupt
-Date: Thu, 5 Jun 2014 22:36:01 -0500
-Message-ID: <1402025761-16831-8-git-send-email-nm@ti.com>
+Subject: [RFC PATCH 3/7] ARM: OMAP4+: PRM: remove "wkup" event
+Date: Thu, 5 Jun 2014 22:35:57 -0500
+Message-ID: <1402025761-16831-4-git-send-email-nm@ti.com>
 References: <1402025761-16831-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,25 +12,32 @@ To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <to
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Provide default DRA7 crossbar mapped interrupt for prm interrupt
+"wkup" event at bit offset 0 exists only on OMAP3.
+OMAP4430/60 PRM_IRQSTATUS_A9, OMAP5/DRA7 PRM_IRQSTATUS_MPU
+
+register bit 0 is DPLL_CORE_RECAL_ST not wakeup event like OMAP3.
+
+The same applies to AM437x as well.
+
+Remove the wrong definition.
 
 Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- arch/arm/boot/dts/dra7.dtsi |    1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-omap2/prm44xx.c |    1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index c29945e..38e8097 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -85,6 +85,7 @@
- 		prm: prm@4ae06000 {
- 			compatible = "ti,dra7-prm";
- 			reg = <0x4ae06000 0x3000>;
-+			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
+diff --git a/arch/arm/mach-omap2/prm44xx.c b/arch/arm/mach-omap2/prm44xx.c
+index d4d745e..1ecf244 100644
+--- a/arch/arm/mach-omap2/prm44xx.c
++++ b/arch/arm/mach-omap2/prm44xx.c
+@@ -32,7 +32,6 @@
+ /* Static data */
  
- 			prm_clocks: clocks {
- 				#address-cells = <1>;
+ static const struct omap_prcm_irq omap4_prcm_irqs[] = {
+-	OMAP_PRCM_IRQ("wkup",   0,      0),
+ 	OMAP_PRCM_IRQ("io",     9,      1),
+ };
+ 
 -- 
 1.7.9.5
 
