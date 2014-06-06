@@ -1,87 +1,51 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: Re: [PATCH] ARM: dts: am43x-epos-evm: Add Missing cpsw-phy-sel for
- am43x-epos-evm
-Date: Fri, 6 Jun 2014 15:26:11 +0530
-Message-ID: <5391903B.1050109@ti.com>
-References: <1402035454-25676-1-git-send-email-george.cherian@ti.com> <53916556.10608@ti.com> <539165E8.7030500@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/5] ASoC: atmel_wm8904: switch to CCF
+Date: Fri, 6 Jun 2014 11:02:14 +0100
+Message-ID: <20140606100214.GF2520@sirena.org.uk>
+References: <1401963572-10953-1-git-send-email-voice.shen@atmel.com>
+ <1401963572-10953-2-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <539165E8.7030500@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>, tony@atomide.com, bcousson@baylibre.com
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="qfesBOB4TKwppX3D"
+Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401963572-10953-2-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/6/2014 12:25 PM, Nishanth Menon wrote:
-> On 06/06/2014 01:53 AM, Nishanth Menon wrote:
->> On 06/06/2014 01:17 AM, George Cherian wrote:
->>> AM437x EPOS evm use external clock for RMII interface.
->>> Enable the same in DT.
->>>
->>> Signed-off-by: George Cherian <george.cherian@ti.com>
->>> Reported-by: Nishanth Menon <nm@ti.com>
->>> ---
->>>   arch/arm/boot/dts/am43x-epos-evm.dts | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/am43x-epos-evm.dts b/arch/arm/boot/dts/am43x-epos-evm.dts
->>> index 19f1f7e..90098f9 100644
->>> --- a/arch/arm/boot/dts/am43x-epos-evm.dts
->>> +++ b/arch/arm/boot/dts/am43x-epos-evm.dts
->>> @@ -319,6 +319,10 @@
->>>   	phy-mode = "rmii";
->>>   };
->>>   
->>> +&phy_sel {
->>> +	rmii-clock-ext;
->>> +};
->>> +
->>>   &i2c0 {
->>>   	status = "okay";
->>>   	pinctrl-names = "default";
->>>
->> Where does this apply on?
->> With linux-next next-20140506 tag, and this patch applied, I get the
->> following error.
->>
->>    LD      kernel/trace/built-in.o
->>    LD      kernel/built-in.o
->> build fail, Error:
->> Error: arch/arm/boot/dts/am43x-epos-evm.dts:219.2-3 label or path,
->> 'phy_sel', not found
->> FATAL ERROR: Syntax error parsing input tree
->> make[1]: *** [arch/arm/boot/dts/am43x-epos-evm.dtb] Error 1
->> make[1]: *** Waiting for unfinished jobs....
->> make: *** [dtbs] Error 2
->> make: *** Waiting for unfinished jobs....
->>
->> in the future, it is helpful if you can point out that this is a
->> regression seen on next-20140603 and the patch needs to be applied on
->> some specific branch.
->>
->> for the record:
->> last working next tag:
->> https://github.com/nmenon/kernel-test-logs/blob/next-20140602/omap2plus_defconfig/am43xx-epos.txt
->>
->> first broken next tag:
->> https://github.com/nmenon/kernel-test-logs/blob/next-20140603/omap2plus_defconfig/am43xx-epos.txt
->>
->>
-> interestingly, i just re-tested today's tag without the patch
-> (omap2plus_defconfig):
-> http://slexy.org/raw/s205sRdFvy
-Lil old kernel
-from the above link.
 
-Linux version 3.15.0-rc4-next-20140506 (nmenon@kahuna) (gcc version 
-4.6.3 (Ubuntu/Linaro 4.6.3-1ubuntu5) ) #2 SMP Fri Jun 6 01:47:42 CDT 2014
-> I wonder why the behavior change and what was being fixed here?
-This kernel should not have the dt entries for phy sel driver.
-Thats why it is working.
+--qfesBOB4TKwppX3D
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Thu, Jun 05, 2014 at 06:19:28PM +0800, Bo Shen wrote:
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
 
--- 
--George
+This looks good but it needs to go in along with the WM8904 change so
+I'll leave it for now.
 
+--qfesBOB4TKwppX3D
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTkZGiAAoJELSic+t+oim9iYIP/1OBd1u884KqkgO86kUkyO/z
+FmW4dsiEABOOF/rBT9hiSY/DfYcdGHUi5C980Q1QGLx8R96M03SmoUAnsC//qpQa
+R7zteChzJrPnL7agVJMOnFXWmVyXRqnDGADroD4zV/U1wgaPBHQS6XvwwXbtilzG
+TCXVJAB10Fb7hJsA1Y3CDnzyn5dqezzkI14lXr+a0ASQUXVSVl5ze3O8a3ZTN/76
+XGaKzU8ptoZlmofA+TjBk1ntpVNPeGJWWeuJEME7vk/u17T8wkxelzaDEfZpXMK5
+zoFn3GF+Xp/j71JQbrMluNuYtzdI+8vgY7/SFQ/RXHe+2mLrBvMNJR9wl1lZ/9+D
+rMtM7wTwRfXfIYirPDcZ9jh+9okvcNsJq7vXK83h5l1nCK+8olcmFz6MAcHxcRdc
+WcgMQXPDhpJShAv4ZoBxBlq407KX/XJGPPDe6MsPUASS2RY+M26n22wfPy/Shw3s
+hR3lNvVW5yNjY6aA8GeVlLhbDAwhPlxqoWFN4QrUOyZ9ynK5D/cFqJyetikqbwWN
+wqEJ15LjYnfxycpTQYXsa6veOt1TJr60nvJhLJ7AOqL3xfVqvEcSgBdVXN+5gDLD
+Lv9xOlNmvRL2cuTkhJAfEhbAEDFuLdyFoB65rln0a0OiuMiMxME0EfvHOZX+v4aY
+9uuiwOCwBoeBqEyqG20L
+=twkt
+-----END PGP SIGNATURE-----
+
+--qfesBOB4TKwppX3D--
