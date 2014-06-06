@@ -1,75 +1,54 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Fri, 6 Jun 2014 11:24:46 +0100
-Message-ID: <20140606102446.GK2520@sirena.org.uk>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
- <20140605103709.GE19550@lee--X1>
- <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
- <20140605155509.GH24240@lee--X1>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/5] dt: wm8904: add device tree binding document
+Date: Fri, 6 Jun 2014 10:58:39 +0100
+Message-ID: <20140606095839.GC2520@sirena.org.uk>
+References: <1401963572-10953-1-git-send-email-voice.shen@atmel.com>
+ <1401963572-10953-4-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HdZAANC5GEQnh8Bp"
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="6nSyB+bcl/pT7+kx"
+Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140605155509.GH24240@lee--X1>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1401963572-10953-4-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---HdZAANC5GEQnh8Bp
+--6nSyB+bcl/pT7+kx
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Thu, Jun 05, 2014 at 04:55:09PM +0100, Lee Jones wrote:
-> On Thu, 05 Jun 2014, Grant Likely wrote:
+On Thu, Jun 05, 2014 at 06:19:30PM +0800, Bo Shen wrote:
 
-> > I still think the way to do it is to emulate the missing i2c_device_id
-> > when calling the drivers .probe() hook by having a temporary copy on
-> > the stack and filling it with data from the OF or ACPI table....
+> +  - reg: the I2C address of the device.
+> +  - clocks and clock-names: reference to
+> +    <Documentation/devicetree/bindings/clock/clock-bindings.txt>
 
-> That's the opposite of what I'm trying to achieve.  I'm trying to get
-> rid of unused i2c_device_id tables, rather than reinforce their
-> mandatory existence.  I think an i2c_of_match_device() with knowledge
-> of how to match via pure DT principles (of_node/compatible) and a
-> fall-back, which is able to match on a provided of_device_id table
-> alone i.e. without the requirement of an existing of_node.
+This all looks good except for in the above you should list the name of
+the clock (mclk) - that name is part of the binding.
 
-> I've also been mulling over the idea of removing the second probe()
-> parameter, as suggested by Wolfram.  However, this has quite deep
-> ramifications which would require a great deal of driver adaptions.
-
-If you're going to do that another option is to refactor the probe()
-function to take the driver_data as an argument and then have the core
-pass that from whatever table it matched from rather than the entire
-i2c_device_id structure.  That way the driver just needs to supply all
-the ID tables mapping binding information to whatever it needs and the
-core can pass in the driver data from whatever table it matched against.
-
---HdZAANC5GEQnh8Bp
+--6nSyB+bcl/pT7+kx
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTkZbqAAoJELSic+t+oim9/e8P/1ahy4nWy5qhvn708KuMzIIl
-rdqHa3Vz/wGrlvjcMIPIB+4qYmmb1Yy3aRP/QmteZMTcpg6DAhstK7+nxzcSQ01i
-qUncE0YEvuy68T4Smp5zfM4oYBl2NdnO7hG5b0KQhNPyj4TSx+WtUNHoSqwG+TQy
-zNOjUYUjfjB+ZTHDfN6ew4Nj21BpAKODyVY0AqxURxxMcf42S74kXySyDUai+cqd
-ZI//TyfdrsMiHxtLweFjxwFHG9zmQDKGQOSTks2t+l17v117xnQiUamjZLBnBaV+
-8IrC84MYBOhklQypbpSeDnYLui31mj/8rW8CgiM9VfACjqRuImJwxKYwthVXgPd9
-aaGQ3Tcg6+GJgy43rmBdyk9KUfJgTNAUSfrlm/9ZZjA41KKHR1+HtZsxdzPhDJFG
-FqPo1iJ6Rf1aH23wn2qp7O/bUGvlwdoetglpz0Z7iqMOJPwyGgLsyQclelNVwB55
-VMd7whwtD72co2JH0j44k0eUfKcX9FgmSNpMNOGcwYHykjBL95LRJEuN/8lEy0iG
-PgNxKErRQCdzNaS1ViCglBqcoWrgDEcCNytjlmL1xmBOjp7PmDLAAt5duOQdWQDu
-Wjndbz8OgtEDt4qyaihR5JwmIKHMIZf7Izsht523J6lPLMzM3CA/y4eDA7NFNJ8D
-vDneN2im2ZjT9CQsrWsP
-=05Ec
+iQIcBAEBAgAGBQJTkZDMAAoJELSic+t+oim9/0UP/RrCMjaVTOwKgBUAFsZJfc0S
+YPjsSo/vI1vR5fPwCeGbwsZgaaluV14tmfY8BXkwL157fwqPytQVVSt0yW9THctE
+aLoJzG5wYfYs0TPD5rPN9int5Dg/wyJ8oQdBeoOUwa2i6mNpBc/Q56dX2hNWb0cR
+iz6MS1Gw7MhCCGI8f/M2iTHTXnE6G/SFRybYakT4m8xUenDsG3XSKJExwir8TGgH
+7Wt+4wC0dekoOxXEN2Mm7aQFUADzmI0HBWZAzJvhNpR6cYN4vkCnf156L0bSPnYZ
+jLYP9Nsx2hRo74ns6waQc0m4z+VYZPTtMqxZBkLiRY28UsFd4v1idMI4cU7QsD2t
+rZyYG7EK3jcPZBJgfrQ1jJ5AwLCfOk5jZmXAaHl7ddMpL55LowIxQ9QqRphxkyWY
+GmAN6cWUVHKS951E3jWb8PAM/fwOoOuBORhhn2iJ/SAvfkCrPcsESurDWrSTzpRs
+QjU64s48+MhVeIK5WR9/nTbFuWtOz6n6Ihlv2lyOnDVVDKR49jM9fhZ4HKKEArgG
+xU06TSCHAtSGsq5TAfchlfKTE2YkCxo5Xk1dg1iVnR1wVRue2qrmlfmcVP65AMRo
+I/mXJM32wRJlm6bkIUl/23x886PrLXe0SYtPUyGd47xSHgpcPg7DyQTB76Adw5vw
+XbcibAl9SPBvaF4rruRF
+=hzUb
 -----END PGP SIGNATURE-----
 
---HdZAANC5GEQnh8Bp--
+--6nSyB+bcl/pT7+kx--
