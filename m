@@ -1,70 +1,46 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
- tree description
-Date: Thu, 5 Jun 2014 17:46:23 -0700
-Message-ID: <CAD=FV=UQhBh68Bgv=kfUROCOxg1dS1OnZ1ir+wouewKoDFE_1g@mail.gmail.com>
-References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
-	<1402000514-30752-1-git-send-email-dianders@chromium.org>
-	<20140606000324.10062.10257@quantum>
+From: Nishanth Menon <nm@ti.com>
+Subject: [PATCH] ARM: dts: OMAP5: Update CPU OPP table as per final production Manual
+Date: Thu, 5 Jun 2014 20:09:46 -0500
+Message-ID: <1402016986-12508-1-git-send-email-nm@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140606000324.10062.10257@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Tomasz Figa <t.figa@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rahul Sharma <rahul.sharma@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, Arun Kumar <arun.kk@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, a.hajda@samsung.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>
+Cc: linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nishanth Menon <nm@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Mike,
+As per the Final production Data Manual for OMAP5432,
+SWPS050F(APRIL 2014)
 
-On Thu, Jun 5, 2014 at 5:03 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Doug Anderson (2014-06-05 13:35:14)
->> The "aclk66_peric" clock is a gate clock with a whole bunch of gates
->> underneath it.  This big gate isn't very useful to include in our
->> clock tree.  If any of the children need to be turned on then the big
->> gate will need to be on anyway.  ...and there are plenty of other "big
->> gates" that aren't described in our clock tree, some of which shut off
->> collections of clocks that have no relationship in the hierarchy so
->> are hard to model.
->
-> I think this is a common problem. On OMAP we have something similar to
-> this called "clock domains" or "clkdm" and it has been historically
-> handled outside of the Linux clock framework[1]. There is a relationship
-> to the clock framework of course and in the future it might be
-> worthwhile to see if there is a generic way to handle this stuff.
+There are only two OPPs - 1GHz and 1.5GHz. the older OPP_LOW has been
+completely descoped. The Nominal voltages are still correct though.
+However, expectation for final production configuration is operation
+with Adaptive Body Bias (ABB) and Adaptive Voltage Scaling Class 0
+operation.
 
-That sounds like something that would be nice to solve, but it's not
-going to happen now.
+There are no IDcode or version change information encoded to
+programmatically detect this and software is supposed to NOT use
+OPP_LOW(500MHz) anymore for all devices (legacy and production
+samples).
 
-On the off chance that the user manual mentioned the existence of one
-of these "big gate" bits, it tends to not be very specific about
-_exactly_ which sets of clocks it disables.
+Signed-off-by: Nishanth Menon <nm@ti.com>
+---
+ arch/arm/boot/dts/omap5.dtsi |    1 -
+ 1 file changed, 1 deletion(-)
 
-Tracking down every one of these would be hugely time consuming.
-Also: as Tomasz has indicated they don't provide a huge amount of
-benefit since we're already dealing with clocks on a more fine-grained
-level...
+diff --git a/arch/arm/boot/dts/omap5.dtsi b/arch/arm/boot/dts/omap5.dtsi
+index 3bfda16..a4ed549 100644
+--- a/arch/arm/boot/dts/omap5.dtsi
++++ b/arch/arm/boot/dts/omap5.dtsi
+@@ -45,7 +45,6 @@
+ 
+ 			operating-points = <
+ 				/* kHz    uV */
+-				500000  880000
+ 				1000000 1060000
+ 				1500000 1250000
+ 			>;
+-- 
+1.7.9.5
 
-
->> "aclk66_peric" is causing earlyprintk problems since it gets disabled
->> as part of the boot process, so let's just remove it.
->>
->> Strangely (and for no good reason) this clock is exported as part of
->> the common clock bindings.  Remove it since there are no in-kernel
->> device trees using it and no reason anyone out of tree should refer to
->> it either.
->
-> So Linux has no control over the big gate now, correct? You are
-> dependent on the bootloader to ungate this thing?
-
-A better way to put it is that you're dependent on the bootloader not
-to gate it.
-
-...but that's also true for pretty much any clock marked IGNORE_UNUSED
-and not explicitly enabled anywhere.
-
-
-Are you opposed to this landing as-is to unblock things and people can
-continue to work on the clock driver to make it even better?
-
--Doug
