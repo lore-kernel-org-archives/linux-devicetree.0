@@ -1,194 +1,122 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [RFC v3 4/9] irqchip: gic: Introduce shadow irqs for FIQ
-Date: Fri, 6 Jun 2014 10:46:14 +0300
-Message-ID: <20140606074614.GU5961@tbergstrom-lnx.Nvidia.com>
-References: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-5-git-send-email-daniel.thompson@linaro.org>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/7] i2c: Add the ability to match device to compatible
+ string without an of_node
+Date: Fri, 6 Jun 2014 09:10:26 +0100
+Message-ID: <20140606081026.GO24240@lee--X1>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-4-git-send-email-lee.jones@linaro.org>
+ <20140605173620.5BDFBC41CBF@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1401961994-18033-5-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>, "kernel@stlinux.com" <kernel@stlinux.com>, "kgdb-bugreport@lists.sourceforge.net" <kgdb-bugreport@lists.sourceforge.net>, Linus Walleij <linus.walleij@linaro.org>, Sricharan R <r.sricharan@ti.com>, Colin Cross <ccross@android.com>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, "patches@linaro.org" <patches@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, "kernel-team@android.com" <kernel-team@android.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Jason Cooper <jas>
+In-Reply-To: <20140605173620.5BDFBC41CBF-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 05, 2014 at 11:53:09AM +0200, Daniel Thompson wrote:
-> This patch registers two virqs for each interrupt source it supports.
-> Using multiple virqs allows the GIC driver to automatically modify the group
-> register, allowing the new virqs to be used as argument to enable_fiq().
-> This also allows FIQ resources to be described in the device tree's
-> interrupt list using a special flag (currently 0x80).
-> 
-> Both these aspects combine and allow a driver to deploy a FIQ handler
-> without any machine specific knowledge; it can be used effectively on
-> multi-arch kernels.
-> 
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Jason Cooper <jason@lakedaemon.net>
-> Cc: Nicolas Pitre <nicolas.pitre@linaro.org>
-> Cc: Christoffer Dall <christoffer.dall@linaro.org>
-> Cc: Sricharan R <r.sricharan@ti.com>
-> ---
->  drivers/irqchip/irq-gic.c | 62 ++++++++++++++++++++++++++++++++++++++++++-----
->  1 file changed, 56 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-> index aa8efe4..9a4712d 100644
-> --- a/drivers/irqchip/irq-gic.c
-> +++ b/drivers/irqchip/irq-gic.c
-> @@ -42,12 +42,17 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqchip/arm-gic.h>
->  
-> +#ifdef CONFIG_FIQ
-> +#include <asm/fiq.h>
-> +#endif
->  #include <asm/irq.h>
->  #include <asm/exception.h>
->  #include <asm/smp_plat.h>
->  
->  #include "irqchip.h"
->  
-> +#define GIC_INTSPEC_IRQ_IS_FIQ (1 << 7)
-> +
->  union gic_base {
->  	void __iomem *common_base;
->  	void __percpu * __iomem *percpu_base;
-> @@ -65,6 +70,7 @@ struct gic_chip_data {
->  #endif
->  	struct irq_domain *domain;
->  	unsigned int gic_irqs;
-> +	unsigned int fiq_shadow_offset;
->  #ifdef CONFIG_GIC_NON_BANKED
->  	void __iomem *(*get_base)(union gic_base *);
->  #endif
-> @@ -143,11 +149,34 @@ static inline void __iomem *gic_cpu_base(struct irq_data *d)
->  	return gic_data_cpu_base(gic_data);
->  }
->  
-> +static inline bool gic_is_fiq(struct irq_data *d)
-> +{
-> +	struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
-> +	return d->hwirq > gic_data->gic_irqs;
-> +}
-> +
->  static inline unsigned int gic_irq(struct irq_data *d)
->  {
-> +	struct gic_chip_data *gic_data = irq_data_get_irq_chip_data(d);
-> +	if (gic_is_fiq(d))
-> +		return d->hwirq - gic_data->fiq_shadow_offset;
->  	return d->hwirq;
->  }
->  
-> +static void gic_set_group_irq(struct irq_data *d, int group)
-> +{
-> +	unsigned int reg = gic_irq(d) / 32 * 4;
-> +	u32 mask = 1 << (gic_irq(d) % 32);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(gic_dist_base(d) + GIC_DIST_IGROUP + reg);
-> +	if (group)
-> +		val |= mask;
-> +	else
-> +		val &= ~mask;
-> +	writel_relaxed(val, gic_dist_base(d) + GIC_DIST_IGROUP + reg);
-> +}
-> +
->  /*
->   * Routines to acknowledge, disable and enable interrupts
->   */
-> @@ -159,6 +188,8 @@ static void gic_mask_irq(struct irq_data *d)
->  	writel_relaxed(mask, gic_dist_base(d) + GIC_DIST_ENABLE_CLEAR + (gic_irq(d) / 32) * 4);
->  	if (gic_arch_extn.irq_mask)
->  		gic_arch_extn.irq_mask(d);
-> +	if (gic_is_fiq(d))
-> +		gic_set_group_irq(d, 1);
->  	raw_spin_unlock(&irq_controller_lock);
->  }
->  
-> @@ -167,6 +198,8 @@ static void gic_unmask_irq(struct irq_data *d)
->  	u32 mask = 1 << (gic_irq(d) % 32);
->  
->  	raw_spin_lock(&irq_controller_lock);
-> +	if (gic_is_fiq(d))
-> +		gic_set_group_irq(d, 0);
->  	if (gic_arch_extn.irq_unmask)
->  		gic_arch_extn.irq_unmask(d);
->  	writel_relaxed(mask, gic_dist_base(d) + GIC_DIST_ENABLE_SET + (gic_irq(d) / 32) * 4);
-> @@ -940,7 +973,12 @@ static int gic_routable_irq_domain_xlate(struct irq_domain *d,
->  				unsigned long *out_hwirq,
->  				unsigned int *out_type)
->  {
-> +	struct gic_chip_data *gic_data = d->host_data;
->  	*out_hwirq += 16;
-> +
-> +	if (intspec[2] & GIC_INTSPEC_IRQ_IS_FIQ)
-> +		*out_hwirq += gic_data->fiq_shadow_offset;
-> +
->  	return 0;
->  }
->  
-> @@ -1026,10 +1064,11 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->  	gic->gic_irqs = gic_irqs;
->  
->  	gic_irqs -= hwirq_base; /* calculate # of irqs to allocate */
-> +	gic->fiq_shadow_offset = gic_irqs;
->  
->  	if (of_property_read_u32(node, "arm,routable-irqs",
->  				 &nr_routable_irqs)) {
-> -		irq_base = irq_alloc_descs(irq_start, 16, gic_irqs,
-> +		irq_base = irq_alloc_descs(irq_start, 16, 2 * gic_irqs,
->  					   numa_node_id());
->  		if (IS_ERR_VALUE(irq_base)) {
->  			WARN(1, "Cannot allocate irq_descs @ IRQ%d, assuming pre-allocated\n",
-> @@ -1037,17 +1076,28 @@ void __init gic_init_bases(unsigned int gic_nr, int irq_start,
->  			irq_base = irq_start;
->  		}
->  
-> -		gic->domain = irq_domain_add_legacy(node, gic_irqs, irq_base,
-> -					hwirq_base, &gic_irq_domain_ops, gic);
-> +		gic->domain =
-> +		    irq_domain_add_legacy(node, 2 * gic_irqs, irq_base,
-> +					  hwirq_base, &gic_irq_domain_ops, gic);
->  	} else {
-> -		gic->domain = irq_domain_add_linear(node, nr_routable_irqs,
-> -						    &gic_irq_domain_ops,
-> -						    gic);
-> +		gic->domain = irq_domain_add_linear(node, 2 * nr_routable_irqs,
-> +						    &gic_irq_domain_ops, gic);
->  	}
->  
->  	if (WARN_ON(!gic->domain))
->  		return;
->  
-> +#ifdef CONFIG_FIQ
-> +	/* FIQ can only be supported on platforms without an extended irq_eoi
-> +	 * method (otherwise we take a lock during irq_eoi handling).
-> +	 */
-> +	if (!gic_arch_extn.irq_eoi)
-> +		fiq_add_mapping(
-> +		    irq_linear_revmap(gic->domain, hwirq_base),
-> +		    irq_linear_revmap(gic->domain, hwirq_base + gic_irqs),
-> +		    gic_irqs);
-> +#endif
+On Thu, 05 Jun 2014, Grant Likely wrote:
 
-This is rather unfortunate. On Tegra for example we don't need a lock for the
-irq_eoi because the eoi ack can be handled with a single write to the
-appropriate irq ack register.
+> On Wed,  4 Jun 2014 13:09:52 +0100, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> =
+wrote:
+> > A great deal of I2C devices are currently matched via DT node name,=
+ and
+> > as such the compatible naming convention of '<vendor>,<device>' has=
+ gone
+> > somewhat awry - some nodes don't supply one, some supply an arbitra=
+ry
+> > string and others the correct device name with an arbitrary vendor =
+prefix.
+> >=20
+> > In an effort to correct this problem we have to supply a mechanism =
+to
+> > match a device by compatible string AND by simple device name.  Thi=
+s
+> > function strips off the '<vendor>,' part of a supplied compatible s=
+tring
+> > and attempts to match without it.
+> >=20
+> > The plan is to remove this function once all of the compatible stri=
+ngs
+> > for each device have been brought into line.
+> >=20
+> > Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> > ---
+> >  drivers/i2c/i2c-core.c | 25 +++++++++++++++++++++++++
+> >  include/linux/i2c.h    | 10 ++++++++++
+> >  2 files changed, 35 insertions(+)
+> >=20
+> > diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+> > index d3802dc..7dcd5c3 100644
+> > --- a/drivers/i2c/i2c-core.c
+> > +++ b/drivers/i2c/i2c-core.c
+> > @@ -1090,6 +1090,31 @@ struct i2c_adapter *of_find_i2c_adapter_by_n=
+ode(struct device_node *node)
+> >  	return i2c_verify_adapter(dev);
+> >  }
+> >  EXPORT_SYMBOL(of_find_i2c_adapter_by_node);
+> > +
+> > +const struct of_device_id
+> > +*i2c_of_match_device_strip_vendor(const struct of_device_id *match=
+es,
+> > +				  struct device *dev)
+> > +{
+> > +	const struct i2c_client *client =3D i2c_verify_client(dev);
+> > +	const char *name;
+> > +
+> > +	if (!(client && matches))
+> > +		return NULL;
+> > +
+> > +	for (; matches->compatible[0]; matches++) {
+> > +		name =3D strchr(matches->compatible, ',');
+> > +		if (!name)
+> > +			name =3D matches->compatible;
+> > +		else
+> > +			name++;
+> > +
+> > +		if (!strncmp(client->name, name, strlen(client->name)))
+> > +			return matches;
+> > +	}
+>=20
+> Is it actually necessary to strip off the vendor name? It would be fi=
+ne
+> to make users include the vendor prefix when creating the device in
+> sysfs. In fact that would be preferrable for new drivers so that vend=
+or
+> prefixes start getting used correctly.
 
-Cheers,
+I see a few issues with this strategy.  Firstly, there are already
+users registering their devices via sysfs, some are taking their
+device names from an EEPROM which would require reprogramming in order
+to prefix the vendor ID.  I'm keen not to break existing systems -
+which not stripping off the vendor name would inevitably do.
+Secondly, I'm not sure how Wolfram would feel about the client->name
+containing a DT compatible string. And finally, other than looking
+at the kernel source, there is no real way for a user to know if the
+device supports ACPI or OF, or neither and if an i2c_device_table is
+supplied or not.
 
-Peter.
+Remember that the idea of this set is to remove i2c_device_table's,
+doing so will break any devices which are still registering via sysfs
+with only the model number of the device.  I think the sysfs
+interface should be a black-box.  I think requiring users to have
+kernel knowledge is a sub-optimal idea.
+
+> If you're worried about preserving exisiting ABI, then I would make
+> striping the prefix an option that drivers can enable, but by default
+> only match on the full string.
+>=20
+> g.
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
