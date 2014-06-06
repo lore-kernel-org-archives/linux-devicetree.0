@@ -1,19 +1,107 @@
-From: "Santander Finance" <security-GwavncpLJkpvkV1kqAaYo1UujdpU1SSb@public.gmane.org>
-Subject: We offer all purpose loan at 3% interest rate
-Date: Thu, 05 Jun 2014 20:56:34 -0700
-Message-ID: <201406061344.s56AokkD001313@akmo.kz>
-Reply-To: santafinance-YDxpq3io04c@public.gmane.org
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v7 1/7] of: Provide function to request and map memory
+Date: Fri, 6 Jun 2014 10:19:28 -0500
+Message-ID: <CAL_Jsq+KS8W6kZpCSpd68Oku7neFxPVLct1j=AYaXnyvOD3tGA@mail.gmail.com>
+References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
+ <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Description: Mail message body
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Recipients <security-GwavncpLJkpvkV1kqAaYo1UujdpU1SSb@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Soren
 List-Id: devicetree@vger.kernel.org
 
-We offer all purpose loan at 3% interest rate. Contact Us for more details by Email:santanderfinancegroup-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Thu, Jun 5, 2014 at 12:26 PM, Matthias Brugger
+<matthias.bgg@gmail.com> wrote:
+> A call to of_iomap does not request the memory region.
+> This patch adds the function of_io_request_and_map which requests
+> the memory region before mapping it.
+>
+> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+> ---
+>  drivers/of/address.c       |   28 ++++++++++++++++++++++++++++
+>  include/linux/of_address.h |    8 ++++++++
+>  2 files changed, 36 insertions(+)
+>
+> diff --git a/drivers/of/address.c b/drivers/of/address.c
+> index cb4242a..c55b107 100644
+> --- a/drivers/of/address.c
+> +++ b/drivers/of/address.c
+> @@ -721,3 +721,31 @@ void __iomem *of_iomap(struct device_node *np, int index)
+>         return ioremap(res.start, resource_size(&res));
+>  }
+>  EXPORT_SYMBOL(of_iomap);
+> +
+> +/**
+> + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
+> + *                        for a given device_node
+
+I believe docbook requires this to be 1 line.
+
+> + * @device:    the device whose io range will be mapped
+> + * @index:     index of the io range
+> + * @name:      name of the resource
+> + *
+> + * Returns a pointer to the requested and mapped memory
+> + */
+> +void __iomem *of_io_request_and_map(struct device_node *np, int index, char *name)
+> +{
+> +       struct resource res;
+> +       void __iomem *mem;
+> +
+> +       if (of_address_to_resource(np, index, &res))
+> +               return NULL;
+> +
+> +       if (!request_mem_region(res.start, resource_size(&res), name))
+
+Use the np->name here and drop the name parameter.
+
+> +               return NULL;
+> +
+> +       mem = ioremap(res.start, resource_size(&res));
+> +       if (!mem)
+> +               release_mem_region(res.start, resource_size(&res));
+> +
+> +       return mem;
+> +}
+> +EXPORT_SYMBOL(of_io_request_and_map);
+> diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+> index 5f6ed6b..725b875 100644
+> --- a/include/linux/of_address.h
+> +++ b/include/linux/of_address.h
+> @@ -96,6 +96,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
+>  extern int of_address_to_resource(struct device_node *dev, int index,
+>                                   struct resource *r);
+>  void __iomem *of_iomap(struct device_node *node, int index);
+> +void __iomem *of_io_request_and_map(struct device_node *device,
+> +                                       int index, char *name);
+>  #else
+>  static inline int of_address_to_resource(struct device_node *dev, int index,
+>                                          struct resource *r)
+> @@ -107,6 +109,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+>  {
+>         return NULL;
+>  }
+> +
+> +static inline void __iomem *of_io_request_and_map(struct device_node *device,
+> +                                       int index, char *name)
+> +{
+> +       return NULL;
+> +}
+>  #endif
+>
+>  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
+> --
+> 1.7.9.5
+>
