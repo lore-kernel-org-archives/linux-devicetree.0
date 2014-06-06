@@ -1,53 +1,75 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 5/5] ARM: atmel: at91sam9n12ek: switch sound to CCF
-Date: Fri, 6 Jun 2014 11:00:54 +0100
-Message-ID: <20140606100054.GE2520@sirena.org.uk>
-References: <1401963572-10953-1-git-send-email-voice.shen@atmel.com>
- <1401963572-10953-6-git-send-email-voice.shen@atmel.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
+ aforementioned systems
+Date: Fri, 6 Jun 2014 11:24:46 +0100
+Message-ID: <20140606102446.GK2520@sirena.org.uk>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
+ <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
+ <20140605103709.GE19550@lee--X1>
+ <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
+ <20140605155509.GH24240@lee--X1>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TXtjXAp+Y+VkYOQB"
-Return-path: <linux-sound-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="HdZAANC5GEQnh8Bp"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1401963572-10953-6-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+In-Reply-To: <20140605155509.GH24240@lee--X1>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Linux I2C <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---TXtjXAp+Y+VkYOQB
+--HdZAANC5GEQnh8Bp
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Thu, Jun 05, 2014 at 06:19:32PM +0800, Bo Shen wrote:
-> As the at91sam9n12ek has switch to CCF, so add clock for wm8904
->=20
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+On Thu, Jun 05, 2014 at 04:55:09PM +0100, Lee Jones wrote:
+> On Thu, 05 Jun 2014, Grant Likely wrote:
 
-Reviwed-by: Mark Brown <broonie@linaro.org>
+> > I still think the way to do it is to emulate the missing i2c_device_id
+> > when calling the drivers .probe() hook by having a temporary copy on
+> > the stack and filling it with data from the OF or ACPI table....
 
---TXtjXAp+Y+VkYOQB
+> That's the opposite of what I'm trying to achieve.  I'm trying to get
+> rid of unused i2c_device_id tables, rather than reinforce their
+> mandatory existence.  I think an i2c_of_match_device() with knowledge
+> of how to match via pure DT principles (of_node/compatible) and a
+> fall-back, which is able to match on a provided of_device_id table
+> alone i.e. without the requirement of an existing of_node.
+
+> I've also been mulling over the idea of removing the second probe()
+> parameter, as suggested by Wolfram.  However, this has quite deep
+> ramifications which would require a great deal of driver adaptions.
+
+If you're going to do that another option is to refactor the probe()
+function to take the driver_data as an argument and then have the core
+pass that from whatever table it matched from rather than the entire
+i2c_device_id structure.  That way the driver just needs to supply all
+the ID tables mapping binding information to whatever it needs and the
+core can pass in the driver data from whatever table it matched against.
+
+--HdZAANC5GEQnh8Bp
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTkZFTAAoJELSic+t+oim94akP/jsJ8TZ5dBOhjCM2dM/3QFVL
-7jyp5rgVkMWIZkLCJi36vgtdp/xSK0cQePs/5qCPdF/6RVH5G0o0Pv7aLBR7AwXj
-ZeadoM30XaFuw//gopTfjDf+LBs8M2YBcRsa7PNgYtlBzqus4bW5ictckN8rhA8h
-nfnk0y/s5/kbrhcC9Xe7Zp6OLOlRAIvFYxgtVImfVNni6wQ15TNTJlOa/LYm8bn6
-N5qYpdkz7igFiJm+EwKdE6CwXVHZFPmA4lIGxC7Z+Q6exDVVttXGZ4Kvwg+Jtpqa
-EJWxi7hjvEgXq/AbyfHkBAmM5WK5WNsmNGfw4TmExBbd2v5z6Gw9bn+1ZjTX4Jgo
-l3Vp6Xc0c5uzJBhvuusjzbe4Nv7UAnuybX3uw+i5h/hy6TvIVBZXYzryPu12BcmY
-cgABo8KvLabZfOXSDn2KiNEnqxqzIyQq6yazs0CpkOhjn4U25jqJ36l6r/l8P/K6
-+TGNDORD8HdzjZi5kQ9eI5BEUY1Yp9IoRpc6mo/WKRbuduj55YuVv0aX6WLf8F73
-/rfidsfZSfKSVjsI8D00WzFtFHC70zvSOG2dbZ4Cmmc4dRPesQY6kipAUDFGB7sI
-IZltNcBrL9InsO2VrdYXs01TzP/lyOH9h0OBX8K6kForYgXn8FJL/Azb47vJQjQp
-TSziACId1kAbgyEB+27f
-=fJ9c
+iQIcBAEBAgAGBQJTkZbqAAoJELSic+t+oim9/e8P/1ahy4nWy5qhvn708KuMzIIl
+rdqHa3Vz/wGrlvjcMIPIB+4qYmmb1Yy3aRP/QmteZMTcpg6DAhstK7+nxzcSQ01i
+qUncE0YEvuy68T4Smp5zfM4oYBl2NdnO7hG5b0KQhNPyj4TSx+WtUNHoSqwG+TQy
+zNOjUYUjfjB+ZTHDfN6ew4Nj21BpAKODyVY0AqxURxxMcf42S74kXySyDUai+cqd
+ZI//TyfdrsMiHxtLweFjxwFHG9zmQDKGQOSTks2t+l17v117xnQiUamjZLBnBaV+
+8IrC84MYBOhklQypbpSeDnYLui31mj/8rW8CgiM9VfACjqRuImJwxKYwthVXgPd9
+aaGQ3Tcg6+GJgy43rmBdyk9KUfJgTNAUSfrlm/9ZZjA41KKHR1+HtZsxdzPhDJFG
+FqPo1iJ6Rf1aH23wn2qp7O/bUGvlwdoetglpz0Z7iqMOJPwyGgLsyQclelNVwB55
+VMd7whwtD72co2JH0j44k0eUfKcX9FgmSNpMNOGcwYHykjBL95LRJEuN/8lEy0iG
+PgNxKErRQCdzNaS1ViCglBqcoWrgDEcCNytjlmL1xmBOjp7PmDLAAt5duOQdWQDu
+Wjndbz8OgtEDt4qyaihR5JwmIKHMIZf7Izsht523J6lPLMzM3CA/y4eDA7NFNJ8D
+vDneN2im2ZjT9CQsrWsP
+=05Ec
 -----END PGP SIGNATURE-----
 
---TXtjXAp+Y+VkYOQB--
+--HdZAANC5GEQnh8Bp--
