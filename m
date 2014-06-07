@@ -1,115 +1,104 @@
-From: Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dts: Add UARTs to am335x-bone-common.dtsi
-Date: Sat, 7 Jun 2014 10:06:13 -0500
-Message-ID: <CAOCHtYjFT_96wxbsAUY4-aKAC7LmqVpFEGDfyLTODFQ-uy9e+A@mail.gmail.com>
-References: <alpine.LRH.2.00.1406071845220.13290@lnfm1.sai.msu.ru>
+From: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH v4] i2c: add driver for Rockchip RK3xxx SoC I2C adapter
+Date: Sat, 07 Jun 2014 17:32:09 +0200
+Message-ID: <1468105.xYIQWVNzVZ@typ>
+References: <5192968.EzcUiXba22@typ> <1547619.upPdAXDT0W@typ> <20140602120854.GA2654@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LRH.2.00.1406071845220.13290-SOd076a4/EvDFVh2fKDcTw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Matwey V. Kornilov" <matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org>
-Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, "tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org" <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140602120854.GA2654@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 7, 2014 at 9:48 AM, Matwey V. Kornilov <matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org> wrote:
-> From 739cee0aded1aac80764b3fca4e801464f199f93 Mon Sep 17 00:00:00 2001
-> From: "Matwey V. Kornilov" <matwey.kornilov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> Date: Sat, 7 Jun 2014 17:23:57 +0400
-> Subject: [PATCH] Add UARTs to am335x-bone-common.dtsi
->
-> Add four UARTs pinouts and ports to beagle bone common dtsi.
->
-> Signed-off-by: Matwey V. Kornilov <matwey-TTlVxmypnbovJsYlp49lxw@public.gmane.org>
-> ---
->  arch/arm/boot/dts/am335x-bone-common.dtsi | 48
-> +++++++++++++++++++++++++++++++
->  1 file changed, 48 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> index 2e7d932..da3db9f 100644
-> --- a/arch/arm/boot/dts/am335x-bone-common.dtsi
-> +++ b/arch/arm/boot/dts/am335x-bone-common.dtsi
-> @@ -90,6 +90,30 @@
->                         0x174 (PIN_OUTPUT_PULLDOWN | MUX_MODE0) /*
-> uart0_txd.uart0_txd */
->                 >;
->         };
-> +       uart1_pins: pinmux_uart1_pins {
-> +               pinctrl-single,pins = <
-> +                       0x180 (PIN_INPUT_PULLUP | MUX_MODE0)    /*
-> uart1_rxd.uart1_rxd */
-> +                       0x184 (PIN_OUTPUT_PULLDOWN | MUX_MODE0) /*
-> uart1_txd.uart1_txd */
-> +               >;
-> +       };
-> +       uart2_pins: pinmux_uart2_pins {
-> +               pinctrl-single,pins = <
-> +                       0x150 (PIN_INPUT_PULLUP | MUX_MODE1)    /*
-> spi0_sclk.uart2_rxd */
-> +                       0x154 (PIN_OUTPUT_PULLDOWN | MUX_MODE1) /*
-> spi0_d0.uart2_txd */
-> +               >;
-> +       };
-> +       uart3_pins: pinmux_uart3_pins {
-> +               pinctrl-single,pins = <
-> +       /* Pin 0x160 spi0_cs1.uart3_rxd is not exported to the expansion
-> header. The port is half-duplex */
-> +                       0x164 (PIN_OUTPUT_PULLDOWN | MUX_MODE1) /*
-> ecap0_in_pwm0_out.uart3_txd */
-> +               >;
-> +       };
-> +       uart4_pins: pinmux_uart4_pins {
-> +               pinctrl-single,pins = <
-> +                       0x070 (PIN_INPUT_PULLUP | MUX_MODE6)    /*
-> gpmc_wait0.uart4_rxd */
-> +                       0x074 (PIN_OUTPUT_PULLDOWN | MUX_MODE6) /*
-> gpmc_wpn.uart4_txd */
-> +               >;
-> +       };
->
->         clkout2_pin: pinmux_clkout2_pin {
->                 pinctrl-single,pins = <
-> @@ -179,6 +203,30 @@
->
->         status = "okay";
->  };
-> +&uart1 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart1_pins>;
-> +
-> +       status = "okay";
-> +};
-> +&uart2 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart2_pins>;
-> +
-> +       status = "okay";
-> +};
-> +&uart3 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart3_pins>;
-> +
-> +       status = "okay";
-> +};
-> +&uart4 {
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&uart4_pins>;
-> +
-> +       status = "okay";
-> +};
+Hi Wolfram,
 
-These need to stay disabled in mainline, so drop the status = "okay";
-, (till we get a working capemgr/overlay). Otherwise the pinmuxing
-looks good.
+thanks for the review!
 
-Regards,
+> > +
+> > +	/* Settings */
+> > +	unsigned int scl_frequency;
+> > +
+> > +	/* Synchronization & notification */
+> > +	spinlock_t lock;
+> 
+> Why the lock? The core has per-adapter locks anyhow.
 
--- 
-Robert Nelson
-http://www.rcn-ee.com/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm using it to lock the rk3x_i2c struct during interrupts. It's needed there 
+because an operation can timeout, which means the interrupt can occur at any 
+time and possibly conflict with the cleanup I do after a timeout.
+
+I looked around in i2c-exynos5.c, i2c-pxa.c and others, and they do it the 
+same way. Could you explain in more detail why it's not needed?
+
+> > +static void rk3x_i2c_handle_write(struct rk3x_i2c *i2c, unsigned int ipd)
+> > +{
+> > +	if (!(ipd & REG_INT_MBTF)) {
+> > +		rk3x_i2c_stop(i2c, -ENXIO);
+> > +		dev_err(i2c->dev, "unexpected irq in WRITE: 0x%x\n", ipd);
+> > +		rk3x_i2c_clean_ipd(i2c);
+> > +		return;
+> > +	}
+> > +
+> > +	/* ack interrupt */
+> > +	i2c_writel(i2c, REG_INT_MBTF, REG_IPD);
+> > +
+> > +	/* are we finished? */
+> > +	if (i2c->processed == i2c->msg->len)
+> > +		rk3x_i2c_stop(i2c, i2c->error);
+> > +	else
+> > +		rk3x_i2c_fill_transmit_buf(i2c);
+> 
+> It looks to me that you STOP after every message? You should use
+> REPEATED_START inbetween messages and only stop after the last message
+> of a transfer.
+
+I had a fight with the hw today and finally got it to issue a REPEATED_START 
+for multiple "boring" messages. Will be included in the next version.
+
+> > +/**
+> > + * Setup I2C registers for an I2C operation specified by msgs, num.
+> > + *
+> > + * Must be called with i2c->lock held.
+> > + *
+> > + * @msgs: I2C msgs to process
+> > + * @num: Number of msgs
+> > + *
+> > + * returns: Number of I2C msgs processed or negative in case of error
+> > + */
+> > +static int rk3x_i2c_setup(struct rk3x_i2c *i2c, struct i2c_msg *msgs, int
+> > num) +{
+> > +	u32 addr = (msgs[0].addr & 0x7f) << 1;
+> > +	int ret = 0;
+> > +
+> > +	/*
+> > +	 * The I2C adapter can issue a small (len < 4) write packet before
+> > +	 * reading. This speeds up SMBus-style register reads.
+> > +	 * The MRXADDR/MRXRADDR hold the slave address and the slave register
+> > +	 * address in this case.
+> > +	 */
+> > +
+> > +	if (num >= 2 && msgs[0].len < 4
+> > +	    && !(msgs[0].flags & I2C_M_RD)
+> > +	    && (msgs[1].flags & I2C_M_RD)) {
+> > +		u32 reg_addr = 0;
+> > +
+> > +		dev_dbg(i2c->dev, "Combined write/read from addr 0x%x\n",
+> > +			addr >> 1);
+> > +
+> > +		if (msgs[0].len == 0)
+> > +			return -EINVAL;
+> 
+> Can the controller do SMBUS_QUICK (len == 0) in general? For the case it
+> cannot do it only in this multi-packet mode, then you should fall back
+> to the "boring" mode.
+
+Actually, I wasn't aware that (len == 0) is a valid case. The hw supports it 
+in both modes, I just tested that. So the check is going away.
+
+I'm cleaning up now and you can expect a new version of the patch today.
+
+Cheers,
+  Max
