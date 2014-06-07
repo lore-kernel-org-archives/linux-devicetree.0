@@ -1,124 +1,91 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v7 1/7] of: Provide function to request and map memory
-Date: Sat, 07 Jun 2014 06:59:53 +0100
-Message-ID: <20140607055953.569D6C4099E@trevor.secretlab.ca>
-References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
- <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
- <CAL_Jsq+KS8W6kZpCSpd68Oku7neFxPVLct1j=AYaXnyvOD3tGA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
+ aforementioned systems
+Date: Sat, 7 Jun 2014 10:31:13 +0100
+Message-ID: <20140607093113.GY5099@sirena.org.uk>
+References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
+ <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
+ <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
+ <20140605103709.GE19550@lee--X1>
+ <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
+ <20140605155509.GH24240@lee--X1>
+ <20140606102446.GK2520@sirena.org.uk>
+ <20140606123653.GP24240@lee--X1>
+ <20140606234253.A4E25C427F0@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+KS8W6kZpCSpd68Oku7neFxPVLct1j=AYaXnyvOD3tGA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Heiko =?iso-8859-1?q?St=FCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Soren
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6y7Y3jhkIVKgvfoh"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140606234253.A4E25C427F0@trevor.secretlab.ca>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>
+Cc: Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 6 Jun 2014 10:19:28 -0500, Rob Herring <robherring2@gmail.com> wrote:
-> On Thu, Jun 5, 2014 at 12:26 PM, Matthias Brugger
-> <matthias.bgg@gmail.com> wrote:
-> > A call to of_iomap does not request the memory region.
-> > This patch adds the function of_io_request_and_map which requests
-> > the memory region before mapping it.
-> >
-> > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-> > ---
-> >  drivers/of/address.c       |   28 ++++++++++++++++++++++++++++
-> >  include/linux/of_address.h |    8 ++++++++
-> >  2 files changed, 36 insertions(+)
-> >
-> > diff --git a/drivers/of/address.c b/drivers/of/address.c
-> > index cb4242a..c55b107 100644
-> > --- a/drivers/of/address.c
-> > +++ b/drivers/of/address.c
-> > @@ -721,3 +721,31 @@ void __iomem *of_iomap(struct device_node *np, int index)
-> >         return ioremap(res.start, resource_size(&res));
-> >  }
-> >  EXPORT_SYMBOL(of_iomap);
-> > +
-> > +/**
-> > + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
-> > + *                        for a given device_node
-> 
-> I believe docbook requires this to be 1 line.
-> 
-> > + * @device:    the device whose io range will be mapped
-> > + * @index:     index of the io range
-> > + * @name:      name of the resource
-> > + *
-> > + * Returns a pointer to the requested and mapped memory
-> > + */
-> > +void __iomem *of_io_request_and_map(struct device_node *np, int index, char *name)
-> > +{
-> > +       struct resource res;
-> > +       void __iomem *mem;
-> > +
-> > +       if (of_address_to_resource(np, index, &res))
-> > +               return NULL;
-> > +
-> > +       if (!request_mem_region(res.start, resource_size(&res), name))
-> 
-> Use the np->name here and drop the name parameter.
 
-Name here would be the name of the owner (the driver), not the name of
-the node. Passing the name separately is fine by me.
+--6y7Y3jhkIVKgvfoh
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+On Sat, Jun 07, 2014 at 12:42:53AM +0100, Grant Likely wrote:
+> On Fri, 6 Jun 2014 13:36:53 +0100, Lee Jones <lee.jones@linaro.org> wrote:
+> > On Fri, 06 Jun 2014, Mark Brown wrote:
 
-You can merge this with the rest of the series.
+> > > > I've also been mulling over the idea of removing the second probe()
+> > > > parameter, as suggested by Wolfram.  However, this has quite deep
+> > > > ramifications which would require a great deal of driver adaptions.
 
-g.
+> > > If you're going to do that another option is to refactor the probe()
+> > > function to take the driver_data as an argument and then have the core
+> > > pass that from whatever table it matched from rather than the entire
+> > > i2c_device_id structure.  That way the driver just needs to supply all
+> > > the ID tables mapping binding information to whatever it needs and the
+> > > core can pass in the driver data from whatever table it matched against.
 
-> 
-> > +               return NULL;
-> > +
-> > +       mem = ioremap(res.start, resource_size(&res));
-> > +       if (!mem)
-> > +               release_mem_region(res.start, resource_size(&res));
-> > +
-> > +       return mem;
-> > +}
-> > +EXPORT_SYMBOL(of_io_request_and_map);
-> > diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-> > index 5f6ed6b..725b875 100644
-> > --- a/include/linux/of_address.h
-> > +++ b/include/linux/of_address.h
-> > @@ -96,6 +96,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
-> >  extern int of_address_to_resource(struct device_node *dev, int index,
-> >                                   struct resource *r);
-> >  void __iomem *of_iomap(struct device_node *node, int index);
-> > +void __iomem *of_io_request_and_map(struct device_node *device,
-> > +                                       int index, char *name);
-> >  #else
-> >  static inline int of_address_to_resource(struct device_node *dev, int index,
-> >                                          struct resource *r)
-> > @@ -107,6 +109,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
-> >  {
-> >         return NULL;
-> >  }
-> > +
-> > +static inline void __iomem *of_io_request_and_map(struct device_node *device,
-> > +                                       int index, char *name)
-> > +{
-> > +       return NULL;
-> > +}
-> >  #endif
-> >
-> >  #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
-> > --
-> > 1.7.9.5
-> >
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> > Unfortunately this means we're back to the aforementioned typing
+> > issue.  For struct {platform,i2c,spi,acpi,etc}_device_id the driver
+> > data is a kernel ulong but the of_device_id's driver data attribute is
+> > a void*.
+
+> We're actually okay there. Each subsystem defines it's own convention
+> about what those values mean. ulong and void* are the same size and
+> every user I've seen stuffs the same data into the data field of both
+> tables.
+
+Indeed - if we're going to go with that approach it seems to me like we
+should just pick one and put any casting in the core.
+
+> > I've just started work on a migration over to a new probe().  I don't
+> > think it's all that much work, but if there are any objections I'd
+> > prefer to hear them now rather than waste any time.
+
+> I have no problem with that approach.
+
+Converting probe() makes sense to me.  I think I would prefer to see the
+ID lookup handled as an argument to probe() rather than with functions
+in probe() but it's not the end of the world if it isn't.
+
+--6y7Y3jhkIVKgvfoh
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTktvXAAoJELSic+t+oim9l8wP/1jF0+blOk/7Tly8tDciwRIM
+drLZj2RqQUutNEh62orzIMbkygeH+zlOsLPhyDwOv8ROUJNZ7b5eAknl5olePEgx
+BFT+v00EogShn+QQepggCSTiEAxWLr2YNavzhzGm71m8l/wp6xDxoKeb4ZCubdCr
+97lAb/pB0wIFATZ3nGTCJrm56KOISw3AWkdmAp0NQHFfBxE+zBQ8zQcIfRm8LZVo
+KHsZc+PSlz6tJhJiqaC/aAn+jpRRJWKtaeoEZ9sGB5NWvvXqynnxD+rJPUft4sTC
+e2d/oUQlmp6nicfwOOSqs08afXCnneF6VEfKJl/SRHtlS1O64uiZXsQPCC7bunx0
+YfQ6DVdJIGfWh3eNxpSFaHkpm2snYT5pVosRobo675c1LaFT+QMmdk9cbIvUXYiU
+r9x67MhJCnADRHhYa8GIXT8xtJD/bTVKABvFX1VCRxt6r4Tda2wKr9a2rep7PA1p
+7W3I+0lsLxIW4moujk38lGOPvXE5XYeLUqxMtQkzURq/aIxrHluOjM0gkksozWB1
+Um/l3hf0/wfVTha8s/veQAa/EgkSmjgHzrk5xCpk90UFYObVL0XHZzV5dmkJIm+F
+KkgwbIYiW2Uzpga3EPbEkwox+J7xUzBu7aArG+wkVn6Y0pQhc9Hb/XyFHIwY6/34
+zV8lulsr1d9VQQOIduqC
+=e8OY
+-----END PGP SIGNATURE-----
+
+--6y7Y3jhkIVKgvfoh--
