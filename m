@@ -1,91 +1,295 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 7/7] OF/ACPI/I2C: Add generic match function for the
- aforementioned systems
-Date: Sat, 7 Jun 2014 10:31:13 +0100
-Message-ID: <20140607093113.GY5099@sirena.org.uk>
-References: <1401883796-17841-1-git-send-email-lee.jones@linaro.org>
- <1401883796-17841-8-git-send-email-lee.jones@linaro.org>
- <20140605103009.85BE4C40A4D@trevor.secretlab.ca>
- <20140605103709.GE19550@lee--X1>
- <CACxGe6vLuKygv0E7yq42qe-Lh+nMZ1wrL7PW_TAeoz55wz9q8A@mail.gmail.com>
- <20140605155509.GH24240@lee--X1>
- <20140606102446.GK2520@sirena.org.uk>
- <20140606123653.GP24240@lee--X1>
- <20140606234253.A4E25C427F0@trevor.secretlab.ca>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH v2 1/3] gpio: Add APM X-Gene SoC GPIO controller support
+Date: Sat, 7 Jun 2014 21:28:22 +0900
+Message-ID: <CAAVeFuL_hit8FRjktuNP8k4EUGAYRMHqRBnGhCU-TzYrOW4J2A@mail.gmail.com>
+References: <1401391413-3833-1-git-send-email-fkan@apm.com>
+ <1401391413-3833-2-git-send-email-fkan@apm.com> <CAAVeFuKwcO=kjijG-Sh66_pod4=-mSjKN3+_a8P-ppomv9wq7g@mail.gmail.com>
+ <CAL85gmBjZ_JWctRN+0GHAA6Wyeq_NpQV941OKgppuJrmh2yx6A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="6y7Y3jhkIVKgvfoh"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140606234253.A4E25C427F0@trevor.secretlab.ca>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>
-Cc: Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Linux I2C <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CAL85gmBjZ_JWctRN+0GHAA6Wyeq_NpQV941OKgppuJrmh2yx6A@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Feng Kan <fkan@apm.com>
+Cc: patches <patches@apm.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Sat, Jun 7, 2014 at 7:46 AM, Feng Kan <fkan@apm.com> wrote:
+> On Thu, Jun 5, 2014 at 10:04 PM, Alexandre Courbot <gnurou@gmail.com> wrote:
+>> On Fri, May 30, 2014 at 4:23 AM, Feng Kan <fkan@apm.com> wrote:
+>>> Add APM X-Gene SoC gpio controller driver.
+>>>
+>>> Signed-off-by: Feng Kan <fkan@apm.com>
+>>> ---
+>>>  drivers/gpio/Kconfig      |   9 ++
+>>>  drivers/gpio/Makefile     |   1 +
+>>>  drivers/gpio/gpio-xgene.c | 231 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 241 insertions(+)
+>>>  create mode 100644 drivers/gpio/gpio-xgene.c
+>>>
+>>> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+>>> index a86c49a..9a15983 100644
+>>> --- a/drivers/gpio/Kconfig
+>>> +++ b/drivers/gpio/Kconfig
+>>> @@ -324,6 +324,15 @@ config GPIO_TZ1090_PDC
+>>>         help
+>>>           Say yes here to support Toumaz Xenif TZ1090 PDC GPIOs.
+>>>
+>>> +config GPIO_XGENE
+>>> +       bool "APM X-Gene GPIO controller support"
+>>> +       depends on ARM64 && OF_GPIO
+>>> +       help
+>>> +         This driver is to support the GPIO block within the APM X-Gene SoC
+>>> +         platform's generic flash controller. The GPIO pins are muxed with
+>>> +         the generic flash controller's address and data pins. Say yes
+>>> +         here to enable the GFC GPIO functionality.
+>>> +
+>>>  config GPIO_XILINX
+>>>         bool "Xilinx GPIO support"
+>>>         depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
+>>> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+>>> index 6309aff..f0f2830 100644
+>>> --- a/drivers/gpio/Makefile
+>>> +++ b/drivers/gpio/Makefile
+>>> @@ -98,6 +98,7 @@ obj-$(CONFIG_GPIO_VX855)      += gpio-vx855.o
+>>>  obj-$(CONFIG_GPIO_WM831X)      += gpio-wm831x.o
+>>>  obj-$(CONFIG_GPIO_WM8350)      += gpio-wm8350.o
+>>>  obj-$(CONFIG_GPIO_WM8994)      += gpio-wm8994.o
+>>> +obj-$(CONFIG_GPIO_XGENE)       += gpio-xgene.o
+>>>  obj-$(CONFIG_GPIO_XILINX)      += gpio-xilinx.o
+>>>  obj-$(CONFIG_GPIO_XTENSA)      += gpio-xtensa.o
+>>>  obj-$(CONFIG_GPIO_ZEVIO)       += gpio-zevio.o
+>>> diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+>>> new file mode 100644
+>>> index 0000000..a542f76
+>>> --- /dev/null
+>>> +++ b/drivers/gpio/gpio-xgene.c
+>>> @@ -0,0 +1,231 @@
+>>> +/*
+>>> + * AppliedMicro X-Gene SoC GPIO Driver
+>>> + *
+>>> + * Copyright (c) 2014, Applied Micro Circuits Corporation
+>>> + * Author: Feng Kan <fkan@apm.com>.
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or modify
+>>> + * it under the terms of the GNU General Public License version 2 as
+>>> + * published by the Free Software Foundation.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + *
+>>> + * You should have received a copy of the GNU General Public License
+>>> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+>>> + */
+>>> +
+>>> +#include <linux/module.h>
+>>> +#include <linux/kernel.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/io.h>
+>>> +#include <linux/spinlock.h>
+>>> +#include <linux/platform_device.h>
+>>> +#include <linux/of_gpio.h>
+>>> +#include <linux/of.h>
+>>> +#include <linux/gpio.h>
+>>> +#include <linux/types.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/clk.h>
+>>> +#include <linux/bitops.h>
+>>> +
+>>> +#define GPIO_SET_MASK(x)       BIT(x + 16)
+>>> +
+>>> +#define GPIO_SET_DR_OFFSET     0x00
+>>> +#define GPIO_DATA_OFFSET       0x08
+>>> +
+>>> +#define XGENE_MAX_GPIO_PER_BANK        16
+>>> +
+>>> +struct xgene_gpio;
+>>> +
+>>> +struct xgene_gpio {
+>>> +       struct  device          *dev;
+>>> +       struct xgene_gpio_bank  *banks;
+>>
+>> I am not seeing this member being used at all in your driver, apart
+>> from being kzalloc'd.
+>>
+>>> +       struct gpio_chip        chip;
+>>> +       void __iomem            *base;
+>>> +       spinlock_t              lock;
+>>> +#ifdef CONFIG_PM
+>>> +       u32                     set_dr_val;
+>>> +       u32                     od_val;
+>>> +#endif
+>>> +};
+>>> +
+>>> +static inline struct xgene_gpio *to_xgene_gpio(struct gpio_chip *chip)
+>>> +{
+>>> +       return container_of(chip, struct xgene_gpio, chip);
+>>> +}
+>>> +
+>>> +static int xgene_gpio_get(struct gpio_chip *gc, unsigned int offset)
+>>> +{
+>>> +       struct xgene_gpio *bank = to_xgene_gpio(gc);
+>>> +
+>>> +       return !!(ioread32(bank->base + GPIO_DATA_OFFSET) & BIT(offset));
+>>> +}
+>>> +
+>>> +static void xgene_gpio_set(struct gpio_chip *gc, unsigned int offset, int val)
+>>> +{
+>>> +       struct xgene_gpio *bank = to_xgene_gpio(gc);
+>>> +       unsigned long flags;
+>>> +       u32 setval;
+>>> +
+>>> +       spin_lock_irqsave(&bank->lock, flags);
+>>> +
+>>> +       setval = ioread32(bank->base + GPIO_SET_DR_OFFSET);
+>>> +       if (val)
+>>> +               setval |= GPIO_SET_MASK(offset);
+>>> +       else
+>>> +               setval &= ~GPIO_SET_MASK(offset);
+>>
+>> Let's use __set_bit and __clear_bit here and everywhere it applies.
+> This is a bit of issue on arm64, where the op for set_bit requires
+> unsigned long.
+> Any suggestions?
 
---6y7Y3jhkIVKgvfoh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+You could change setval to be an unsigned long as well, and have it
+casted to u32 in your call to iowrite32 below, but that's not
+necessarily better. Maybe the current form is ok indeed.
 
-On Sat, Jun 07, 2014 at 12:42:53AM +0100, Grant Likely wrote:
-> On Fri, 6 Jun 2014 13:36:53 +0100, Lee Jones <lee.jones@linaro.org> wrote:
-> > On Fri, 06 Jun 2014, Mark Brown wrote:
+>
+>>
+>>> +       iowrite32(setval, bank->base + GPIO_SET_DR_OFFSET);
+>>> +
+>>> +       spin_unlock_irqrestore(&bank->lock, flags);
+>>> +}
+>>> +
+>>> +static int xgene_gpio_dir_in(struct gpio_chip *gc, unsigned int offset)
+>>> +{
+>>> +       struct xgene_gpio *bank = to_xgene_gpio(gc);
+>>> +       unsigned long flags;
+>>> +       u32 dirval;
+>>> +
+>>> +       spin_lock_irqsave(&bank->lock, flags);
+>>> +
+>>> +       dirval = ioread32(bank->base + GPIO_SET_DR_OFFSET);
+>>> +       dirval |= BIT(offset);
+>>> +       iowrite32(dirval, bank->base + GPIO_SET_DR_OFFSET);
+>>> +
+>>> +       spin_unlock_irqrestore(&bank->lock, flags);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int xgene_gpio_dir_out(struct gpio_chip *gc,
+>>> +                                       unsigned int offset, int val)
+>>> +{
+>>> +       struct xgene_gpio *bank = to_xgene_gpio(gc);
+>>> +       unsigned long flags;
+>>> +       u32 dirval;
+>>> +
+>>> +       spin_lock_irqsave(&bank->lock, flags);
+>>> +
+>>> +       dirval = ioread32(bank->base + GPIO_SET_DR_OFFSET);
+>>> +       dirval &= ~BIT(offset);
+>>> +       iowrite32(dirval, bank->base + GPIO_SET_DR_OFFSET);
+>>> +
+>>> +       spin_unlock_irqrestore(&bank->lock, flags);
+>>> +
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_PM
+>>> +static int xgene_gpio_suspend(struct device *dev)
+>>> +{
+>>> +       struct xgene_gpio *gpio = dev_get_drvdata(dev);
+>>> +
+>>> +       gpio->set_dr_val = ioread32(gpio->base + GPIO_SET_DR_OFFSET);
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static int xgene_gpio_resume(struct device *dev)
+>>> +{
+>>> +       struct xgene_gpio *gpio = dev_get_drvdata(dev);
+>>> +
+>>> +       iowrite32(gpio->set_dr_val, gpio->base + GPIO_SET_DR_OFFSET);
+>>> +       return 0;
+>>> +}
+>>> +
+>>> +static SIMPLE_DEV_PM_OPS(xgene_gpio_pm, xgene_gpio_suspend, xgene_gpio_resume);
+>>> +#define XGENE_GPIO_PM_OPS      (&xgene_gpio_pm)
+>>> +#else
+>>> +#define XGENE_GPIO_PM_OPS      NULL
+>>> +#endif
+>>> +
+>>> +static int xgene_gpio_probe(struct platform_device *pdev)
+>>> +{
+>>> +       struct device_node *np = pdev->dev.of_node;
+>>> +       struct resource *res;
+>>> +       struct xgene_gpio *gpio;
+>>> +       int err = 0;
+>>> +       unsigned int bank = 0, ngpio = 0;
+>>> +
+>>> +       gpio = devm_kzalloc(&pdev->dev, sizeof(*gpio), GFP_KERNEL);
+>>> +       if (!gpio) {
+>>> +               err = -ENOMEM;
+>>> +               goto err;
+>>> +       }
+>>> +       gpio->dev = &pdev->dev;
+>>> +
+>>> +       gpio->banks = devm_kzalloc(&pdev->dev,
+>>> +                                  sizeof(struct xgene_gpio), GFP_KERNEL);
+>>> +       if (!gpio->banks) {
+>>> +               err = -ENOMEM;
+>>> +               goto err;
+>>> +       }
+>>> +
+>>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>>> +       gpio->base = devm_ioremap_nocache(&pdev->dev, res->start,
+>>> +                                                       resource_size(res));
+>>> +       if (IS_ERR(gpio->base)) {
+>>> +               err = PTR_ERR(gpio->base);
+>>> +               goto err;
+>>> +       }
+>>> +
+>>> +       /*
+>>> +        * Determine gpio bank using gpio resource address
+>>> +        */
+>>> +       bank = (res->start & 0xff) / 0xc - 1;
+>>> +       if (bank > 2) {
+>>> +               dev_err(gpio->dev, "incorrect gpio base specified\n");
+>>> +               goto err;
+>>> +       }
+>>> +
+>>> +       ngpio = XGENE_MAX_GPIO_PER_BANK;
+>>> +       gpio->chip.ngpio = ngpio;
+>>
+>> Maybe use XGENE_MAX_GPIO_PER_BANK directly instead of ngpio which is
+>> not used otherwise.
+>>
+>>> +       gpio->chip.of_node = np;
+>>> +       gpio->chip.base = bank * ngpio;
+>>
+>> This is dangerous. You are assuming that your chip will be the first
+>> GPIO chip to be registered. Can't you leave chip.base uninitialized?
+> In a SoC system where there are multiple gpio blocks by different vendor, how
+> do one assign base to each block? I want them to boot up the system in a way
+> that the gpio values make sense each time.
 
-> > > > I've also been mulling over the idea of removing the second probe()
-> > > > parameter, as suggested by Wolfram.  However, this has quite deep
-> > > > ramifications which would require a great deal of driver adaptions.
+This used to be done in board files ; some older arm boards are still
+doing it. But this is really legacy and in your case you don't use
+board files anyway.
 
-> > > If you're going to do that another option is to refactor the probe()
-> > > function to take the driver_data as an argument and then have the core
-> > > pass that from whatever table it matched from rather than the entire
-> > > i2c_device_id structure.  That way the driver just needs to supply all
-> > > the ID tables mapping binding information to whatever it needs and the
-> > > core can pass in the driver data from whatever table it matched against.
+Ideally you should really not rely on global GPIO numbers. Device tree
+lets you assign GPIO to functions without having to rely on that
+knowledge. The gpiod interface completely gets rid of it. The only
+use-case I can think of is if you need to access the GPIO from the
+sysfs interface. Is it the case? If so, I'd suggest we try to devise a
+solution for this too. Otherwise, can you elaborate on why the GPIO
+numbers are important to you?
 
-> > Unfortunately this means we're back to the aforementioned typing
-> > issue.  For struct {platform,i2c,spi,acpi,etc}_device_id the driver
-> > data is a kernel ulong but the of_device_id's driver data attribute is
-> > a void*.
+In any case you cannot have your driver just assume that some range in
+the GPIO numberspace will be free. That's just not portable.
 
-> We're actually okay there. Each subsystem defines it's own convention
-> about what those values mean. ulong and void* are the same size and
-> every user I've seen stuffs the same data into the data field of both
-> tables.
-
-Indeed - if we're going to go with that approach it seems to me like we
-should just pick one and put any casting in the core.
-
-> > I've just started work on a migration over to a new probe().  I don't
-> > think it's all that much work, but if there are any objections I'd
-> > prefer to hear them now rather than waste any time.
-
-> I have no problem with that approach.
-
-Converting probe() makes sense to me.  I think I would prefer to see the
-ID lookup handled as an argument to probe() rather than with functions
-in probe() but it's not the end of the world if it isn't.
-
---6y7Y3jhkIVKgvfoh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTktvXAAoJELSic+t+oim9l8wP/1jF0+blOk/7Tly8tDciwRIM
-drLZj2RqQUutNEh62orzIMbkygeH+zlOsLPhyDwOv8ROUJNZ7b5eAknl5olePEgx
-BFT+v00EogShn+QQepggCSTiEAxWLr2YNavzhzGm71m8l/wp6xDxoKeb4ZCubdCr
-97lAb/pB0wIFATZ3nGTCJrm56KOISw3AWkdmAp0NQHFfBxE+zBQ8zQcIfRm8LZVo
-KHsZc+PSlz6tJhJiqaC/aAn+jpRRJWKtaeoEZ9sGB5NWvvXqynnxD+rJPUft4sTC
-e2d/oUQlmp6nicfwOOSqs08afXCnneF6VEfKJl/SRHtlS1O64uiZXsQPCC7bunx0
-YfQ6DVdJIGfWh3eNxpSFaHkpm2snYT5pVosRobo675c1LaFT+QMmdk9cbIvUXYiU
-r9x67MhJCnADRHhYa8GIXT8xtJD/bTVKABvFX1VCRxt6r4Tda2wKr9a2rep7PA1p
-7W3I+0lsLxIW4moujk38lGOPvXE5XYeLUqxMtQkzURq/aIxrHluOjM0gkksozWB1
-Um/l3hf0/wfVTha8s/veQAa/EgkSmjgHzrk5xCpk90UFYObVL0XHZzV5dmkJIm+F
-KkgwbIYiW2Uzpga3EPbEkwox+J7xUzBu7aArG+wkVn6Y0pQhc9Hb/XyFHIwY6/34
-zV8lulsr1d9VQQOIduqC
-=e8OY
------END PGP SIGNATURE-----
-
---6y7Y3jhkIVKgvfoh--
+Alex.
