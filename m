@@ -1,68 +1,45 @@
-From: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Subject: [PATCH v9 5/5] ARM: sunxi: Enable IR controller on
- cubieboard 2 and cubietruck in dts
-Date: Mon,  9 Jun 2014 00:08:13 +0600
-Message-ID: <1402250893-5412-6-git-send-email-bay@hackerdom.ru>
-References: <1402250893-5412-1-git-send-email-bay@hackerdom.ru>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 0/3] dmaengine: mpc512x: add device tree binding document
+ and DMA channel lookup
+Date: Sun, 8 Jun 2014 22:48:58 +0400
+Message-ID: <CAF0T0X5OQH8SED5a0JreZw8wNs2R-2c2v5=7F4v4up5viK3aYw@mail.gmail.com>
+References: <1400924009-23992-1-git-send-email-a13xp0p0v88@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCLIFP6QZ4HRB5ON2KOAKGQEBZSLBOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402250893-5412-1-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1400924009-23992-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables two IR devices in dts:
-- One IR device physically found on Cubieboard 2
-- One IR device physically found on Cubietruck
+2014-05-24 13:33 GMT+04:00 Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
+> This patch series introduces a device tree binding document for
+> the MPC512x DMA controller and adds device tree based DMA channel lookup
+> for it.
 
-Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts | 6 ++++++
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts  | 6 ++++++
- 2 files changed, 12 insertions(+)
+Hello, excuse me, could I have a feedback?
+Should I fix anything?
 
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index feeff64..b44d61b 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -65,6 +65,12 @@
- 			};
- 		};
- 
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index e288562..5f5c31d 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -121,6 +121,12 @@
- 			};
- 		};
- 
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
--- 
-1.9.3
+Thanks a lot!
+Alexander
+
+> Alexander Popov (3):
+>   dmaengine: mpc512x: add device tree binding document
+>   dmaengine: of: add common xlate function for matching by channel id
+>   dmaengine: mpc512x: register for device tree channel lookup
+>
+>  .../devicetree/bindings/dma/mpc512x-dma.txt        | 40 ++++++++++++++++++++++
+>  arch/powerpc/boot/dts/mpc5121.dtsi                 |  1 +
+>  drivers/dma/mpc512x_dma.c                          | 13 ++++++-
+>  drivers/dma/of-dma.c                               | 35 +++++++++++++++++++
+>  include/linux/of_dma.h                             |  4 +++
+>  5 files changed, 92 insertions(+), 1 deletion(-)
+>  create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
+>
+> --
+> 1.8.4.2
+>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
