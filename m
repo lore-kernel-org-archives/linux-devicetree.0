@@ -1,51 +1,32 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH v2 2/2] clk: clps711x: Add DT bindings documentation
-Date: Mon,  9 Jun 2014 20:42:39 +0400
-Message-ID: <1402332159-11730-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Joe Perches <joe@perches.com>
+Subject: Re: [PATCH v3 1/3] crypto: qce: Qualcomm crypto engine driver
+Date: Mon, 09 Jun 2014 09:46:49 -0700
+Message-ID: <1402332409.3142.2.camel@joe-AO725>
+References: <1402315720-5042-1-git-send-email-svarbanov@mm-sol.com>
+	 <1402315720-5042-2-git-send-email-svarbanov@mm-sol.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402315720-5042-2-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "David S. Miller" <davem@davemloft.net>, Herbert Xu <herbert@gondor.apana.org.au>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for the Cirrus Logic
-CLPS711X-based CPUs clock subsystem.
+On Mon, 2014-06-09 at 15:08 +0300, Stanimir Varbanov wrote:
+> The driver is separated by functional parts. The core part
+> implements a platform driver probe and remove callbaks.
+> The probe enables clocks, checks crypto version, initialize
+> and request dma channels, create done tasklet and init
+> crypto queue and finally register the algorithms into crypto
+> core subsystem.
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../devicetree/bindings/clock/clps711x-clock.txt      | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/clps711x-clock.txt
+trivia:
 
-diff --git a/Documentation/devicetree/bindings/clock/clps711x-clock.txt b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
-new file mode 100644
-index 0000000..ce5a747
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
-@@ -0,0 +1,19 @@
-+* Clock bindings for the Cirrus Logic CLPS711X CPUs
-+
-+Required properties:
-+- compatible       : Shall contain "cirrus,clps711x-clk".
-+- reg              : Address of the internal register set.
-+- startup-frequency: Factory set CPU startup frequency in HZ.
-+- #clock-cells     : Should be <1>.
-+
-+The clock consumer should specify the desired clock by having the clock
-+ID in its "clocks" phandle cell. See include/dt-bindings/clock/clps711x-clock.h
-+for the full list of CLPS711X clock IDs.
-+
-+Example:
-+	clks: clks@80000000 {
-+		#clock-cells = <1>;
-+		compatible = "cirrus,ep7312-clk", "cirrus,clps711x-clk";
-+		reg = <0x80000000 0xc000>;
-+		startup-frequency = <73728000>;
-+	};
--- 
-1.8.5.5
+> diff --git a/drivers/crypto/qce/dma.h b/drivers/crypto/qce/dma.h
+[]
+> +#define AUTH_NONCE_NUM_WORDS_SHIFT	20
+> +#define AUTH_NONCE_NUM_WORDS_MASK	GENMASK(22, 20);
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Unnecessary semicolon and appears to be unused.
