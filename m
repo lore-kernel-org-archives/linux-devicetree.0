@@ -1,50 +1,51 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 1/5] ASoC: atmel_wm8904: switch to CCF
-Date: Mon, 9 Jun 2014 21:14:24 +0100
-Message-ID: <20140609201424.GR5099@sirena.org.uk>
-References: <1402284707-23354-1-git-send-email-voice.shen@atmel.com>
- <1402284707-23354-2-git-send-email-voice.shen@atmel.com>
+From: Michal Marek <mmarek@suse.cz>
+Subject: Re: [PATCH v2] coccinelle: Check for missing NULL terminators in
+ of_device_id tables
+Date: Mon, 09 Jun 2014 23:47:00 +0200
+Message-ID: <53962B54.8030909@suse.cz>
+References: <1401213858-31950-1-git-send-email-sboyd@codeaurora.org> <alpine.DEB.2.02.1406031208380.2036@localhost6.localdomain6> <538E09C1.30200@codeaurora.org> <alpine.DEB.2.02.1406032013150.2009@localhost6.localdomain6> <538E119D.8010304@codeaurora.org> <alpine.DEB.2.02.1406032022540.2009@localhost6.localdomain6>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="YyN8ymQDUlI+Fj6t"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402284707-23354-2-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <alpine.DEB.2.02.1406032022540.2009@localhost6.localdomain6>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Julia Lawall <julia.lawall@lip6.fr>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, Mitchel Humpherys <mitchelh@codeaurora.org>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Dne 3.6.2014 20:25, Julia Lawall napsal(a):
+> From: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Failure to terminate an of_device_id table can lead to confusing
+> failures depending on where the compiler places the array. Add a
+> check to make sure these tables are terminated. Thanks to Mitchel
+> Humpherys for coming up with the pattern initially.
+> 
+> Cc: Mitchel Humpherys <mitchelh@codeaurora.org>
+> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
+> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
+> Cc: Nicolas Palix <nicolas.palix@imag.fr>
+> Cc: Grant Likely <grant.likely@linaro.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> Acked-by: Grant Likely <grant.likely@linaro.org>
+> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
+> 
+> ---
+> 
+> v3: Removed unneeded rule bad_of_table.  Placed * in context rule on the 
+> closing brace; putting it on the field caused all fields to be marked.
+> 
+> v4: corrected authorship
+> 
+>  scripts/coccinelle/misc/of_table.cocci |   62 +++++++++++++++++++++++++++++++++
+>  1 file changed, 62 insertions(+)
 
---YyN8ymQDUlI+Fj6t
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Applied to kbuild.git#misc, thanks. BTW, what is so special about of
+device drivers? Shouldn't we check for missing sentinels in all kinds of
+device tables?
 
-On Mon, Jun 09, 2014 at 11:31:43AM +0800, Bo Shen wrote:
-> Signed-off-by: Bo Shen <voice.shen@atmel.com>
-
-Applied, thanks.
-
---YyN8ymQDUlI+Fj6t
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTlhWcAAoJELSic+t+oim9dFUP/3wLLfzEBhfy9W7l1eTG9UAc
-owz51TvtAJ52hssq45XNm/Ih84TP3xHv3lPtTQaV4rjrNKqj112WaeydCCAJumRT
-ixqx3HQsdcf/xjBq/mZuvLM/fkVEEns8eH1fy1PF4PQpYBy+sId2ui0lNrPZIFN3
-O0jDJ9bxwS4yMp3TspVEkJAob62NeR3gma/zCvVjw3wmfSLmmmmMs8HXH5TKRH+g
-RVHawyp0ZJA3qODOKSqMtwfEGCRPuFCApfUJnoDzV6KnaqDoP8MbQ6a0C6pa3Liu
-I76jiVS9xFEuDDNWHfKxkJQFJWhMylVsfYQnI11LHC3Vf6nBWbc44z+JNvB61JtW
-VemUh6TUW/kZJB5DmdtNulEqrw06pCXYm3KvWsBtz1M0k7o8EmwGIUthp1AGk/G/
-rWSZ1xeYRPHV1soWbPA04KYNFhFQJRx9va/o9c2Kl3/KvEVjPw5g3jWXxZedEr4Q
-eralFcll9LPJfW8XPtvU7e/9bFkMbbFMCMJsDB6fYieGYOJFftqfrSXpwlQ6pSrl
-rb2aT0unPXbObzWo95N3XgirTfRtI3L9U02y7q13QFBE+aax0z7fUbryv6rhvgSE
-uyQjoJBnmeHsBOhYkceDPNM+Lgg+4YjkFiYjh3iFC5dYc0h0IUPgLS2klizi/aBC
-BYpDMegDJZbAKgh9zpCj
-=VhpF
------END PGP SIGNATURE-----
-
---YyN8ymQDUlI+Fj6t--
+Thanks,
+Michal
