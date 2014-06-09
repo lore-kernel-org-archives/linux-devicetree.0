@@ -1,201 +1,94 @@
-From: Dinh Nguyen <dinguyen@altera.com>
-Subject: Re: [PATCHv6 2/2] ARM: dts: unuse the slot-node and deprecated
- supports-highspeed for dw-mmc.
-Date: Mon, 9 Jun 2014 10:53:01 -0500
-Message-ID: <1402329181.9618.1.camel@linux-builds1>
-References: <1402284855-3968-1-git-send-email-jh80.chung@samsung.com>
-	 <1402284855-3968-3-git-send-email-jh80.chung@samsung.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 0/5] Add Maxim 77802 PMIC support
+Date: Mon, 9 Jun 2014 09:04:02 -0700
+Message-ID: <CAD=FV=U2zPJ=NohDjGvJKfmwJzQhphtVMefM0p_hvFVoReauhQ@mail.gmail.com>
+References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
+	<1402309011.17650.9.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1402284855-3968-3-git-send-email-jh80.chung@samsung.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, Heiko St?bner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402309011.17650.9.camel@AMDC1943>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Stone <daniels@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-06-09 at 12:34 +0900, Jaehoon Chung wrote:
-> dw-mmc controller can support multiple slots.
-> But, there are no use-cases anywhere. So we don't need to support the
-> slot-node for dw-mmc controller.
-> And "supports-highspeed" property in dw-mmc is deprecated.
-> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
-> 
-> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
-> Reviewed-by: Tushar Behera <trblinux@gmail.com>
-> ---
-> Changelog V6:
-> 	- Add the missing property.
-> Changelog V5:
-> 	- Fix typo.
-> Changelog V4:
-> 	- Remove the slot-node.
-> 	- Rename Subject.
-> 		"[PATCHv3 4/4]ARM: dts: replace the slot property into slot sub-node for dwmmc"
-> Changelog V3:
-> 	- Merge "[PATCH 2/5] mmc: dw_mmc: rmove the "supports-highspeed" property"
-> Changelog V2:
-> 	- None
-> 
->  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
->  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
->  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
->  arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
->  arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
->  arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
->  arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++---------
->  arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   28 ++++++--------------
->  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++---------
->  arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
->  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++--------
->  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++--------
->  arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++--------
->  arch/arm/boot/dts/socfpga_arria5.dtsi              |    5 ++--
->  arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
->  arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
->  16 files changed, 62 insertions(+), 144 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> index 532b1d4..4cdd283 100644
-> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
-> @@ -46,13 +46,14 @@ Required Properties:
->        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
->          phase shift clocks should be 0.
->  
-> -Required properties for a slot:
-> +Required properties for a slot (Deprecated - Recommend to use one slot per a host):
->  
->  * gpios: specifies a list of gpios used for command, clock and data bus. The
->    first gpio is the command line and the second gpio is the clock line. The
->    rest of the gpios (depending on the bus-width property) are the data lines in
->    no particular order. The format of the gpio specifier depends on the gpio
->    controller.
-> + (Deprecated - Refer to Documentaion/devicetree/binding/pinctrl/samsung-pinctrl.txt)
->  
->  Example:
->  
-> @@ -69,21 +70,13 @@ Example:
->  
->  	dwmmc0@12200000 {
->  		num-slots = <1>;
-> -		supports-highspeed;
->  		broken-cd;
-> +		cap-mmc-highspeed;
-> +		cap-sd-highspeed;
->  		fifo-depth = <0x80>;
->  		card-detect-delay = <200>;
->  		samsung,dw-mshc-ciu-div = <3>;
->  		samsung,dw-mshc-sdr-timing = <2 3>;
->  		samsung,dw-mshc-ddr-timing = <1 2>;
-> -
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <8>;
-> -			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
-> -				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
-> -				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
-> -				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
-> -				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
-> -		};
-> +		bus-width = <8>;
->  	};
-> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> index b8653ea..514c0fc 100644
-> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
-> @@ -34,13 +34,11 @@ Example:
->  		num-slots = <1>;
->  		vmmc-supply = <&ldo12>;
->  		fifo-depth = <0x100>;
-> -		supports-highspeed;
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
-> -		slot@0 {
-> -			reg = <0>;
-> -			bus-width = <4>;
-> -			disable-wp;
-> -			cd-gpios = <&gpio10 3 0>;
-> -		};
-> +		bus-width = <4>;
-> +		disable-wp;
-> +		cd-gpios = <&gpio10 3 0>;
-> +		cap-mmc-highspeed;
-> +		cap-sd-highspeed;
->  	};
+Krzystof,
 
-[snip]
+On Mon, Jun 9, 2014 at 3:16 AM, Krzysztof Kozlowski
+<k.kozlowski@samsung.com> wrote:
+> On pon, 2014-06-09 at 11:37 +0200, Javier Martinez Canillas wrote:
+>> MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
+>> 32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
+>> a Real-Time-Clock (RTC) and a I2C interface to program the individual
+>> regulators, clocks and the RTC.
+>>
+>> This series are based on drivers added by Simon Glass to the Chrome OS
+>> kernel and adds support for the Maxim 77802 Power Management IC, their
+>> regulators, clocks, RTC and I2C interface. It is composed of patches:
+>>
+>> [PATCH 1/5] mfd: Add driver for Maxim 77802 Power Management IC
+>> [PATCH 2/5] regulator: Add driver for Maxim 77802 PMIC regulators
+>> [PATCH 3/5] clk: Add driver for Maxim 77802 PMIC clocks
+>> [PATCH 4/5] rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+>> [PATCH 5/5] ARM: dts: Add max77802 device node for exynos5420-peach-pit
+>>
+>> Patches 1-4 add support for the different devices and Patch 5 enables
+>> the MAX77802 PMIC on the Exynos5420 based Peach pit board.
+>
+>
+> Hi,
+>
+> The main mfd, mfd irq, clk and rtc drivers look very similar to max77686
+> drivers. I haven't checked other Maxim drivers but I think there will be
+> a lot of similarities with them also. It is almost common for Maxim
+> chipsets to share components between each other.
+>
+> I think there is no need in duplicating all that stuff once again in new
+> driver for another Maxim-almost-the-same-as-others-XYZ chipset. Just
+> merge it with max77686 (or other better candidate).
+>
+> The only difference is in regulator driver. I am not sure whether this
+> is a result of differences in chip or differences in driver design.
 
->  
->  		gpio-keys {
-> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
-> index 6c87b70..1da0e81 100644
-> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
-> @@ -29,12 +29,13 @@
->  
->  		dwmmc0@ff704000 {
->  			num-slots = <1>;
-> -			supports-highspeed;
-> -			broken-cd;
->  
->  			slot@0 {
-
-You can remove the slot@0 here too right?
-
-Thanks,
-Dinh
-
->  				reg = <0>;
->  				bus-width = <4>;
-> +				broken-cd;
-> +				cap-mmc-highspeed;
-> +				cap-sd-highspeed;
->  			};
->  		};
->  
-> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-> index ca41b0e..c4ebf65 100644
-> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
-> @@ -30,13 +30,10 @@
->  
->  		dwmmc0@ff704000 {
->  			num-slots = <1>;
-> -			supports-highspeed;
->  			broken-cd;
-> -
-> -			slot@0 {
-> -				reg = <0>;
-> -				bus-width = <4>;
-> -			};
-> +			bus-width = <4>;
-> +			cap-mmc-highspeed;
-> +			cap-sd-highspeed;
->  		};
->  
->  		ethernet@ff702000 {
-> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
-> index 87d6f75..07e7206 100644
-> --- a/arch/arm/boot/dts/socfpga_vt.dts
-> +++ b/arch/arm/boot/dts/socfpga_vt.dts
-> @@ -43,13 +43,10 @@
->  
->  		dwmmc0@ff704000 {
->  			num-slots = <1>;
-> -			supports-highspeed;
->  			broken-cd;
-> -
-> -			slot@0 {
-> -				reg = <0>;
-> -				bus-width = <4>;
-> -			};
-> +			bus-width = <4>;
-> +			cap-mmc-highspeed;
-> +			cap-sd-highspeed;
->  		};
->  
->  		ethernet@ff700000 {
+Yes, we thought the same thing when we added support for the max77802
+in the ChromeOS tree.  Unfortunately it didn't work out half as well
+as we thought it would.  When Javier was asking advice about sending
+things upstream we suggested that perhaps he should split the two up.
 
 
+You can see the result of the combined driver the ChromeOS tree (the
+code there is older, probably misnamed as max77xxx, and doesn't have
+the proper clock pieces, but you can get the gist):
+
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/regulator/max77xxx-regulator.c
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/rtc/rtc-max77xxx.c
+
+
+Specific problems that made it ugly to have a combined driver:
+
+* The RTC has many subtle differences between the 77686 and 77802.
+They expanded it to handle a 200 year timeframe instead of 100 and
+that meant that they had to shuffle the bits around everywhere.  They
+also moved it to have the same i2c address as the main PMIC so all
+addresses are different (see max77686_map in the RTC link above).
+
+* The regulator itself has similar concepts between the two, but the
+list of bucks / ldos and how they behave is quite different.  Trying
+to understand the complex tables in
+<https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/regulator/max77xxx-regulator.c>
+was not easy.
+
+
+If we really need to write a single driver it certainly can be done,
+but please look at the above to be sure this is what you want.
+
+
+NOTE: it's possible that things could be more sane with more driver
+redesign, possibly making things more data driven.  The thing that
+would be really nice to do would be to avoid all of the crazy
+"regulator_zzz_desc_zzz" macros, maybe?  I'd have to actually try
+doing it to be sure it's cleaner, though...
+
+
+-Doug
