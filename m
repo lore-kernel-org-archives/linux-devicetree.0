@@ -1,41 +1,50 @@
-From: Bo Shen <voice.shen@atmel.com>
-Subject: [PATCH v2 5/5] ARM: atmel: at91sam9n12ek: switch sound to CCF
-Date: Mon, 9 Jun 2014 11:31:47 +0800
-Message-ID: <1402284707-23354-6-git-send-email-voice.shen@atmel.com>
-References: <1402284707-23354-1-git-send-email-voice.shen@atmel.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sound-owner@vger.kernel.org>
-In-Reply-To: <1402284707-23354-1-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv6 0/2] mmc: fixed the mmc_of_parse for dwmmc
+Date: Mon, 09 Jun 2014 12:34:13 +0900
+Message-ID: <1402284855-3968-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, =?UTF-8?q?Heiko=20St=FCbner?= <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-As the at91sam9n12ek has switch to CCF, so add clock for wm8904
+This patch-set is fixed the dw-mmc controller problem.
+dw-mmc controller have the slot, but mmc_of_parse didn't parse the slot sub-node.
+So dw-mmc controller didn't work correctly.
 
-Signed-off-by: Bo Shen <voice.shen@atmel.com>
-Reviwed-by: Mark Brown <broonie@linaro.org>
----
-Changes in v2:
-  - None
+Changelog V6:
+	- Add the missing property.
 
- arch/arm/boot/dts/at91sam9n12ek.dts | 2 ++
- 1 file changed, 2 insertions(+)
+Changelog V4/V5:
+	- Drop "mmc: host: add slot argument to mmc_of_parse"
+	- Drop "mmc: dw_mmc: remove the "supports-highspeed" property.
+	- Rename patch's subject.
+	- Remove the slot-node for dw-mmc controller.
 
-diff --git a/arch/arm/boot/dts/at91sam9n12ek.dts b/arch/arm/boot/dts/at91sam9n12ek.dts
-index 64bbe46..8ae771d 100644
---- a/arch/arm/boot/dts/at91sam9n12ek.dts
-+++ b/arch/arm/boot/dts/at91sam9n12ek.dts
-@@ -56,6 +56,8 @@
- 				wm8904: codec@1a {
- 					compatible = "wm8904";
- 					reg = <0x1a>;
-+					clocks = <&pck0>;
-+					clock-names = "mclk";
- 				};
- 
- 				qt1070: keyboard@1b {
+Jaehoon Chung (2):
+  mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
+  ARM: dts: unuse the slot-node and deprecated supports-highspeed for
+    dw-mmc.
+
+ .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
+ .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+ .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+ arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
+ arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
+ arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++---------
+ arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   28 ++++++--------------
+ arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++---------
+ arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
+ arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++--------
+ arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++--------
+ arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++--------
+ arch/arm/boot/dts/socfpga_arria5.dtsi              |    5 ++--
+ arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
+ arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
+ drivers/mmc/host/dw_mmc.c                          |   10 +++----
+ 17 files changed, 66 insertions(+), 150 deletions(-)
+
 -- 
-1.8.5.2
+1.7.9.5
 
