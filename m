@@ -1,39 +1,112 @@
-From: Laxman Dewangan <ldewangan@nvidia.com>
-Subject: [PATCH] dt-binding: mfd: as3722: correct macro name
-Date: Mon, 9 Jun 2014 14:01:59 +0530
-Message-ID: <1402302719-9766-1-git-send-email-ldewangan@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: lee.jones@linaro.org
-Cc: swarren@nvidia.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwillemsen@nvidia.com, Laxman Dewangan <ldewangan@nvidia.com>
+From: Jiri Slaby <jslaby@suse.cz>
+Subject: [PATCH 3.12 013/146] mips: dts: Fix missing device_type="memory" property in memory nodes
+Date: Mon,  9 Jun 2014 10:49:08 +0200
+Message-ID: <923aef0f16d9930bb275aa2fdbffdc732411ed2b.1402303820.git.jslaby@suse.cz>
+References: <ebe219e45dcf94c1a34281167427cff4d742faef.1402303820.git.jslaby@suse.cz>
+Return-path: <linux-mips-bounce@linux-mips.org>
+In-Reply-To: <ebe219e45dcf94c1a34281167427cff4d742faef.1402303820.git.jslaby@suse.cz>
+In-Reply-To: <cover.1402303820.git.jslaby@suse.cz>
+References: <cover.1402303820.git.jslaby@suse.cz>
+Sender: linux-mips-bounce@linux-mips.org
+Errors-to: linux-mips-bounce@linux-mips.org
+List-help: <mailto:ecartis@linux-mips.org?Subject=help>
+List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
+List-software: Ecartis version 1.0.0
+List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
+List-owner: <mailto:ralf@linux-mips.org>
+List-post: <mailto:linux-mips@linux-mips.org>
+List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+To: stable@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
 List-Id: devicetree@vger.kernel.org
 
-The macro name for enable3 pin is named as AS3722_EXT_CONTROL_PIN_ENABLE2
-which is conflict with the enable2 pin.
+From: Leif Lindholm <leif.lindholm@linaro.org>
 
-Correct this macro name to correctly reflect the enable pin i.e.
-AS3722_EXT_CONTROL_PIN_ENABLE3.
+3.12-stable review patch.  If anyone has any objections, please let me know.
 
-Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
-Reported-by: Dan Willemsen <dwillemsen@nvidia.com>
+===============
+
+commit dfc44f8030653b345fc6fb337558c3a07536823f upstream.
+
+A few platforms lack a 'device_type = "memory"' for their memory
+nodes, relying on an old ppc quirk in order to discover its memory.
+Add the missing data so that all parsing code can find memory nodes
+correctly.
+
+Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
+Cc: linux-mips@linux-mips.org
+Cc: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>
+Acked-by: John Crispin <blogic@openwrt.org>
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- include/dt-bindings/mfd/as3722.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/mips/lantiq/dts/easy50712.dts    | 1 +
+ arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
+ arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
+ 5 files changed, 5 insertions(+)
 
-diff --git a/include/dt-bindings/mfd/as3722.h b/include/dt-bindings/mfd/as3722.h
-index 0e69256..e66c089 100644
---- a/include/dt-bindings/mfd/as3722.h
-+++ b/include/dt-bindings/mfd/as3722.h
-@@ -13,7 +13,7 @@
- /* External control pins */
- #define AS3722_EXT_CONTROL_PIN_ENABLE1 1
- #define AS3722_EXT_CONTROL_PIN_ENABLE2 2
--#define AS3722_EXT_CONTROL_PIN_ENABLE2 3
-+#define AS3722_EXT_CONTROL_PIN_ENABLE3 3
+diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
+index fac1f5b178eb..143b8a37b5e4 100644
+--- a/arch/mips/lantiq/dts/easy50712.dts
++++ b/arch/mips/lantiq/dts/easy50712.dts
+@@ -8,6 +8,7 @@
+ 	};
  
- /* Interrupt numbers for AS3722 */
- #define AS3722_IRQ_LID			0
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
+index 35eb874ab7f1..709f58132f5c 100644
+--- a/arch/mips/ralink/dts/mt7620a_eval.dts
++++ b/arch/mips/ralink/dts/mt7620a_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink MT7620A evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/ralink/dts/rt2880_eval.dts
+index 322d7002595b..0a685db093d4 100644
+--- a/arch/mips/ralink/dts/rt2880_eval.dts
++++ b/arch/mips/ralink/dts/rt2880_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT2880 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x8000000 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/ralink/dts/rt3052_eval.dts
+index 0ac73ea28198..ec9e9a035541 100644
+--- a/arch/mips/ralink/dts/rt3052_eval.dts
++++ b/arch/mips/ralink/dts/rt3052_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3052 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
+diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
+index 2fa6b330bf4f..e8df21a5d10d 100644
+--- a/arch/mips/ralink/dts/rt3883_eval.dts
++++ b/arch/mips/ralink/dts/rt3883_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3883 evaluation board";
+ 
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+ 
 -- 
-1.8.1.5
+1.9.3
