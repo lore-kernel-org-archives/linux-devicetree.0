@@ -1,94 +1,201 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v7 1/7] of: Provide function to request and map memory
-Date: Mon, 9 Jun 2014 17:02:38 +0200
-Message-ID: <CABuKBeLnF3tyKskxDZs+TORJPCU8iHmKL792JmzFyv1J5R=_FA@mail.gmail.com>
-References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
- <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
- <CAL_Jsq+KS8W6kZpCSpd68Oku7neFxPVLct1j=AYaXnyvOD3tGA@mail.gmail.com>
- <20140607055953.569D6C4099E@trevor.secretlab.ca>
- <CAL_Jsq+yi+fdN1vHK6Wwx7Jzmvz3qd6z=8sO8+q==YRmBCGdww@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@altera.com>
+Subject: Re: [PATCHv6 2/2] ARM: dts: unuse the slot-node and deprecated
+ supports-highspeed for dw-mmc.
+Date: Mon, 9 Jun 2014 10:53:01 -0500
+Message-ID: <1402329181.9618.1.camel@linux-builds1>
+References: <1402284855-3968-1-git-send-email-jh80.chung@samsung.com>
+	 <1402284855-3968-3-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+yi+fdN1vHK6Wwx7Jzmvz3qd6z=8sO8+q==YRmBCGdww@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Thierry Reding <thierry.reding@gmail.com>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1402284855-3968-3-git-send-email-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, Heiko St?bner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-06-09 16:36 GMT+02:00 Rob Herring <robherring2@gmail.com>:
-> On Sat, Jun 7, 2014 at 12:59 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
->> On Fri, 6 Jun 2014 10:19:28 -0500, Rob Herring <robherring2@gmail.com> wrote:
->>> On Thu, Jun 5, 2014 at 12:26 PM, Matthias Brugger
->>> <matthias.bgg@gmail.com> wrote:
->>> > A call to of_iomap does not request the memory region.
->>> > This patch adds the function of_io_request_and_map which requests
->>> > the memory region before mapping it.
->>> >
->>> > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>> > ---
->>> >  drivers/of/address.c       |   28 ++++++++++++++++++++++++++++
->>> >  include/linux/of_address.h |    8 ++++++++
->>> >  2 files changed, 36 insertions(+)
->>> >
->>> > diff --git a/drivers/of/address.c b/drivers/of/address.c
->>> > index cb4242a..c55b107 100644
->>> > --- a/drivers/of/address.c
->>> > +++ b/drivers/of/address.c
->>> > @@ -721,3 +721,31 @@ void __iomem *of_iomap(struct device_node *np, int index)
->>> >         return ioremap(res.start, resource_size(&res));
->>> >  }
->>> >  EXPORT_SYMBOL(of_iomap);
->>> > +
->>> > +/**
->>> > + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
->>> > + *                        for a given device_node
->>>
->>> I believe docbook requires this to be 1 line.
->>>
->>> > + * @device:    the device whose io range will be mapped
->>> > + * @index:     index of the io range
->>> > + * @name:      name of the resource
->>> > + *
->>> > + * Returns a pointer to the requested and mapped memory
->>> > + */
->>> > +void __iomem *of_io_request_and_map(struct device_node *np, int index, char *name)
->>> > +{
->>> > +       struct resource res;
->>> > +       void __iomem *mem;
->>> > +
->>> > +       if (of_address_to_resource(np, index, &res))
->>> > +               return NULL;
->>> > +
->>> > +       if (!request_mem_region(res.start, resource_size(&res), name))
->>>
->>> Use the np->name here and drop the name parameter.
->>
->> Name here would be the name of the owner (the driver), not the name of
->> the node. Passing the name separately is fine by me.
->
-> This function is for when there is no driver. If there is a driver,
-> the devm_* functions should be used. I would like to see some standard
-> naming and consistency here rather than allowing random strings or
-> NULL to be passed by the caller.
+On Mon, 2014-06-09 at 12:34 +0900, Jaehoon Chung wrote:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+> 
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Reviewed-by: Tushar Behera <trblinux@gmail.com>
+> ---
+> Changelog V6:
+> 	- Add the missing property.
+> Changelog V5:
+> 	- Fix typo.
+> Changelog V4:
+> 	- Remove the slot-node.
+> 	- Rename Subject.
+> 		"[PATCHv3 4/4]ARM: dts: replace the slot property into slot sub-node for dwmmc"
+> Changelog V3:
+> 	- Merge "[PATCH 2/5] mmc: dw_mmc: rmove the "supports-highspeed" property"
+> Changelog V2:
+> 	- None
+> 
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
+>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+>  arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
+>  arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
+>  arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++---------
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   28 ++++++--------------
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++---------
+>  arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
+>  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++--------
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++--------
+>  arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++--------
+>  arch/arm/boot/dts/socfpga_arria5.dtsi              |    5 ++--
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
+>  arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
+>  16 files changed, 62 insertions(+), 144 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index 532b1d4..4cdd283 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -46,13 +46,14 @@ Required Properties:
+>        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
+>          phase shift clocks should be 0.
+>  
+> -Required properties for a slot:
+> +Required properties for a slot (Deprecated - Recommend to use one slot per a host):
+>  
+>  * gpios: specifies a list of gpios used for command, clock and data bus. The
+>    first gpio is the command line and the second gpio is the clock line. The
+>    rest of the gpios (depending on the bus-width property) are the data lines in
+>    no particular order. The format of the gpio specifier depends on the gpio
+>    controller.
+> + (Deprecated - Refer to Documentaion/devicetree/binding/pinctrl/samsung-pinctrl.txt)
+>  
+>  Example:
+>  
+> @@ -69,21 +70,13 @@ Example:
+>  
+>  	dwmmc0@12200000 {
+>  		num-slots = <1>;
+> -		supports-highspeed;
+>  		broken-cd;
+> +		cap-mmc-highspeed;
+> +		cap-sd-highspeed;
+>  		fifo-depth = <0x80>;
+>  		card-detect-delay = <200>;
+>  		samsung,dw-mshc-ciu-div = <3>;
+>  		samsung,dw-mshc-sdr-timing = <2 3>;
+>  		samsung,dw-mshc-ddr-timing = <1 2>;
+> -
+> -		slot@0 {
+> -			reg = <0>;
+> -			bus-width = <8>;
+> -			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
+> -				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
+> -				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
+> -				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
+> -				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
+> -		};
+> +		bus-width = <8>;
+>  	};
+> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> index b8653ea..514c0fc 100644
+> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> @@ -34,13 +34,11 @@ Example:
+>  		num-slots = <1>;
+>  		vmmc-supply = <&ldo12>;
+>  		fifo-depth = <0x100>;
+> -		supports-highspeed;
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
+> -		slot@0 {
+> -			reg = <0>;
+> -			bus-width = <4>;
+> -			disable-wp;
+> -			cd-gpios = <&gpio10 3 0>;
+> -		};
+> +		bus-width = <4>;
+> +		disable-wp;
+> +		cd-gpios = <&gpio10 3 0>;
+> +		cap-mmc-highspeed;
+> +		cap-sd-highspeed;
+>  	};
 
-A driver can request and map more then one memory region, so it is
-convenient that they have different names. Therefor the extra
-parameter.
-Another possibility would be to use np->name together with the index
-to get unique names for every region requested by the driver
+[snip]
 
-Regards,
-Matthias
+>  
+>  		gpio-keys {
+> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> index 6c87b70..1da0e81 100644
+> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> @@ -29,12 +29,13 @@
+>  
+>  		dwmmc0@ff704000 {
+>  			num-slots = <1>;
+> -			supports-highspeed;
+> -			broken-cd;
+>  
+>  			slot@0 {
 
--- 
-motzblog.wordpress.com
+You can remove the slot@0 here too right?
+
+Thanks,
+Dinh
+
+>  				reg = <0>;
+>  				bus-width = <4>;
+> +				broken-cd;
+> +				cap-mmc-highspeed;
+> +				cap-sd-highspeed;
+>  			};
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> index ca41b0e..c4ebf65 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> @@ -30,13 +30,10 @@
+>  
+>  		dwmmc0@ff704000 {
+>  			num-slots = <1>;
+> -			supports-highspeed;
+>  			broken-cd;
+> -
+> -			slot@0 {
+> -				reg = <0>;
+> -				bus-width = <4>;
+> -			};
+> +			bus-width = <4>;
+> +			cap-mmc-highspeed;
+> +			cap-sd-highspeed;
+>  		};
+>  
+>  		ethernet@ff702000 {
+> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+> index 87d6f75..07e7206 100644
+> --- a/arch/arm/boot/dts/socfpga_vt.dts
+> +++ b/arch/arm/boot/dts/socfpga_vt.dts
+> @@ -43,13 +43,10 @@
+>  
+>  		dwmmc0@ff704000 {
+>  			num-slots = <1>;
+> -			supports-highspeed;
+>  			broken-cd;
+> -
+> -			slot@0 {
+> -				reg = <0>;
+> -				bus-width = <4>;
+> -			};
+> +			bus-width = <4>;
+> +			cap-mmc-highspeed;
+> +			cap-sd-highspeed;
+>  		};
+>  
+>  		ethernet@ff700000 {
+
+
