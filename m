@@ -1,16 +1,16 @@
-From: Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 3.12 075/146] arm: dts: Fix missing device_type="memory" for
- ste-ccu8540
-Date: Mon,  9 Jun 2014 10:50:10 +0200
-Message-ID: <f91ba888fc325f37074be0e5ba0fba5d55a78783.1402303821.git.jslaby@suse.cz>
-References: <ebe219e45dcf94c1a34281167427cff4d742faef.1402303820.git.jslaby@suse.cz>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCHv2] arm64: Add atomic pool for non-coherent and CMA
+ allocaitons.
+Date: Mon, 9 Jun 2014 10:27:26 +0100
+Message-ID: <20140609092725.GB25590@arm.com>
+References: <1401739432-5358-1-git-send-email-lauraa@codeaurora.org>
+ <20140605170500.GC27946@arm.com> <539262FA.8010301@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <ebe219e45dcf94c1a34281167427cff4d742faef.1402303820.git.jslaby@suse.cz>
-In-Reply-To: <cover.1402303820.git.jslaby@suse.cz>
-References: <cover.1402303820.git.jslaby@suse.cz>
+Content-Disposition: inline
+In-Reply-To: <539262FA.8010301@codeaurora.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,45 +20,26 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: stable@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org
+To: Laura Abbott <lauraa@codeaurora.org>
+Cc: David Riley <davidriley@chromium.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ritesh Harjani <ritesh.harjani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Leif Lindholm <leif.lindholm@linaro.org>
+On Sat, Jun 07, 2014 at 01:55:22AM +0100, Laura Abbott wrote:
+> On 6/5/2014 10:05 AM, Catalin Marinas wrote:
+> > On Mon, Jun 02, 2014 at 09:03:52PM +0100, Laura Abbott wrote:
+> >> Neither CMA nor noncoherent allocations support atomic allocations.
+> >> Add a dedicated atomic pool to support this.
+> > 
+> > CMA indeed doesn't support atomic allocations but swiotlb does, the only
+> > problem being the vmap() to create a non-cacheable mapping. Could we not
+> > use the atomic pool only for non-coherent allocations?
+> 
+> CMA needs the atomic pool for both non-coherent and coherent allocations.
+> Perhaps I should update the code so we only create the coherent atomic
+> pool if CMA is used.
 
-3.12-stable review patch.  If anyone has any objections, please let me know.
+It's also needed with non-coherent swiotlb because of vmap (but coherent
+is fine).
 
-===============
-
-commit bfaed5abad998bfc88a66e6e71c7b08dcf82f04e upstream.
-
-The current .dts for ste-ccu8540 lacks a 'device_type = "memory"' for
-its memory node, relying on an old ppc quirk in order to discover its
-memory. Fix the data so that all parsing code can handle it correctly.
-
-Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: Mark Rutland <mark.rutland@arm.com>
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Signed-off-by: Jiri Slaby <jslaby@suse.cz>
----
- arch/arm/boot/dts/ste-ccu8540.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm/boot/dts/ste-ccu8540.dts b/arch/arm/boot/dts/ste-ccu8540.dts
-index 7f3baf51a3a9..32dd55e5f4e6 100644
---- a/arch/arm/boot/dts/ste-ccu8540.dts
-+++ b/arch/arm/boot/dts/ste-ccu8540.dts
-@@ -18,6 +18,7 @@
- 	compatible = "st-ericsson,ccu8540", "st-ericsson,u8540";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x20000000 0x1f000000>, <0xc0000000 0x3f000000>;
- 	};
- 
 -- 
-1.9.3
+Catalin
