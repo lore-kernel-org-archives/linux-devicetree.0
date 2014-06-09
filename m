@@ -1,73 +1,44 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCHv3 3/3] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
-Date: Mon, 09 Jun 2014 15:15:48 +0900
-Message-ID: <1402294548-10380-4-git-send-email-cw00.choi@samsung.com>
-References: <1402294548-10380-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <1402294548-10380-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: lee.jones@linaro.org, broonie@kernel.org, sbkim73@samsung.com, sameo@linux.intel.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
-Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, jonghwa3.lee@samsung.com, k.kozlowski@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Laxman Dewangan <ldewangan@nvidia.com>
+Subject: [PATCH] Doc: mfd: as3722: Add details of optional missing property
+Date: Mon, 9 Jun 2014 12:33:37 +0530
+Message-ID: <1402297417-9338-1-git-send-email-ldewangan@nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: lee.jones@linaro.org
+Cc: robh+dt@kernel.org, swarren@nvidia.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, Laxman Dewangan <ldewangan@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a little
-difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
+Add details of following properties which are used on driver but
+not documented on DT binding document.
+- ams,enable-internal-int-pullup
+- ams,enable-internal-i2c-pullup
 
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Lee Jones <lee.jones@linaro.org>
-Cc: Mark Brown <broonie@linaro.org>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Yadwinder Singh Brar <yadi.brar@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: Sachin Kamat <sachin.kamat@linaro.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-doc@vger.kernel.org
+Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+Reported-by: Lee Jones <lee.jones@linaro.org>
 ---
- Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/mfd/as3722.txt | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-index d81ba30..f7c9180 100644
---- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-+++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-@@ -1,5 +1,5 @@
+diff --git a/Documentation/devicetree/bindings/mfd/as3722.txt b/Documentation/devicetree/bindings/mfd/as3722.txt
+index 8edcb9b..4f64b2a 100644
+--- a/Documentation/devicetree/bindings/mfd/as3722.txt
++++ b/Documentation/devicetree/bindings/mfd/as3722.txt
+@@ -13,6 +13,14 @@ Required properties:
+   The second cell is the flags, encoded as the trigger masks from binding document
+ 	interrupts.txt, using dt-bindings/irq.
  
--* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
-+* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
++Optional properties:
++--------------------
++- ams,enable-internal-int-pullup: Boolean property, to enable internal pullup on
++	interrupt pin. Missing this will disable internal pullup on INT pin.
++- ams,enable-internal-i2c-pullup: Boolean property, to enable internal pullup on
++	i2c scl/sda pins. Missing this will disable internal pullup on i2c
++	scl/sda lines.
++
+ Optional submodule and their properties:
+ =======================================
  
- The Samsung S2MPS11 is a multi-function device which includes voltage and
- current regulators, RTC, charger controller and other sub-blocks. It is
-@@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interface. Each sub-block is
- addressed by the host system using different I2C slave addresses.
- 
- Required properties:
--- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
-+- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
-+              or "samsung,s2mpu02-pmic".
- - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
- 
- Optional properties:
-@@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
- 		  - valid values for n are:
- 			- S2MPS11: 1 to 38
- 			- S2MPS14: 1 to 25
-+			- S2MPU02: 1 to 28
- 		  - Example: LDO1, LD02, LDO28
- 	- BUCKn
- 		  - valid values for n are:
- 			- S2MPS11: 1 to 10
- 			- S2MPS14: 1 to 5
-+			- S2MPU02: 1 to 7
- 		  - Example: BUCK1, BUCK2, BUCK9
- 
- Example:
 -- 
-1.8.0
-
+1.8.1.5
