@@ -1,48 +1,39 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCH] ARM: dts: imx6: add missing compatible and clock
- properties for kpp
-Date: Mon, 9 Jun 2014 10:15:36 +0800
-Message-ID: <20140609021535.GX8860@dragon>
-References: <1402052579-22803-1-git-send-email-LW@KARO-electronics.de>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH v2 0/5] As the sama5d3xek and at91sam9n12ek have switch to CCF,
+Date: Mon, 9 Jun 2014 11:31:42 +0800
+Message-ID: <1402284707-23354-1-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402052579-22803-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-sound-owner@vger.kernel.org>
+Sender: linux-sound-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 06, 2014 at 01:02:59PM +0200, Lothar Wa=DFmann wrote:
->=20
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
-> ---
->  arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
->  1 file changed, 2 insertions(+)
+in order to support audio, also switch it to CCF.
 
-Applied, thanks.
+This patch series based on next-2014-0604 tag.
 
-Shawn
+Changes in v2:
+  - wm8904: Remove the mclk checking when try to enable or disable it,
+    as it is checked when required.
+  - dt: List the clock-names, which need by driver.
 
->=20
-> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6q=
-dl.dtsi
-> index ce05991..3266d01 100644
-> --- a/arch/arm/boot/dts/imx6qdl.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
-> @@ -466,8 +466,10 @@
->  			};
-> =20
->  			kpp: kpp@020b8000 {
-> +				compatible =3D "fsl,imx6q-kpp", "fsl,imx21-kpp";
->  				reg =3D <0x020b8000 0x4000>;
->  				interrupts =3D <0 82 IRQ_TYPE_LEVEL_HIGH>;
-> +				clocks =3D <&clks 62>; /* IPG clock */
->  			};
-> =20
->  			wdog1: wdog@020bc000 {
-> --=20
-> 1.7.10.4
->=20
+Bo Shen (5):
+  ASoC: atmel_wm8904: switch to CCF
+  ASoC: wm8904: switch to CCF
+  dt: wm8904: add device tree binding document
+  ARM: atmel: sama5d3xek: switch sound to CCF
+  ARM: atmel: at91sam9n12ek: switch sound to CCF
+
+ Documentation/devicetree/bindings/sound/wm8904.txt | 33 ++++++++++++++
+ arch/arm/boot/dts/at91sam9n12ek.dts                |  2 +
+ arch/arm/boot/dts/sama5d3xmb.dtsi                  |  2 +
+ sound/soc/atmel/atmel_wm8904.c                     | 50 ----------------------
+ sound/soc/codecs/wm8904.c                          | 11 +++++
+ 5 files changed, 48 insertions(+), 50 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/sound/wm8904.txt
+
+-- 
+1.8.5.2
+
