@@ -1,33 +1,117 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH V5 REPOST] mfd: add support for ams AS3722 PMIC
-Date: Mon, 9 Jun 2014 13:57:16 +0200
-Message-ID: <CACRpkdYPxPo2VPS=7-5UKWVJuQaZBV8JVGnfLQb=FxeemiCBgA@mail.gmail.com>
-References: <1382427526-2390-1-git-send-email-ldewangan@nvidia.com>
-	<20140606152840.GV24240@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140606152840.GV24240@lee--X1>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Laxman Dewangan <ldewangan@nvidia.com>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "rtc-linux@googlegroups.com" <rtc-linux@googlegroups.com>, Rob Herring <rob.herring@calxeda.com>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Rob Landley <rob@landley.net>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Grant Likely <grant.likely@linaro.org>, Florian Lobmaier <florian.lobmaier@ams.com>
+From: Stanimir Varbanov <svarbanov@mm-sol.com>
+Subject: [PATCH v3 0/3] Add Qualcomm crypto driver
+Date: Mon,  9 Jun 2014 15:08:37 +0300
+Message-ID: <1402315720-5042-1-git-send-email-svarbanov@mm-sol.com>
+Return-path: <linux-crypto-owner@vger.kernel.org>
+Sender: linux-crypto-owner@vger.kernel.org
+To: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "David S. Miller" <davem@davemloft.net>, Herbert Xu <herbert@gondor.apana.org.au>, Grant Likely <grant.likely@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Stanimir Varbanov <svarbanov@mm-sol.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 6, 2014 at 5:28 PM, Lee Jones <lee.jones@linaro.org> wrote:
+Here is the third version of the crypto driver.
 
->> +     as3722->en_intern_int_pullup = of_property_read_bool(np,
->> +                                     "ams,enable-internal-int-pullup");
->> +     as3722->en_intern_i2c_pullup = of_property_read_bool(np,
->> +                                     "ams,enable-internal-i2c-pullup");
->
-> These are still not documented.  Can you please do so?
+Changes since v2:
 
-...and these look an awful lot like some pin config shoehorned
-silently into the MFD subsystem.
+- reworked crypto_enqueue/dequeue_request mechanism. The queue
+  length has been changed to one to reflect the hardware
+  capabilities
+- the workqueue has been deleted and replaced by new queue function
+- few not functional changes like making some variables const
+- fixed one issue in SG helper related to SG table manipulation
+- added fallback for algorithms/modes unsupported by the hardware
+- patches 1 to 6 are squashed in one i.e 1/3
+- patches 7 and 8 are squashed in one i.e 2/3
 
-There *are* cases where a complete pin control driver for some
-IP is overkill though, I'm worried if this is some generic disease
-with this driver :-/
+regards,
+Stan
 
-Yours,
-Linus Walleij
+---------------------------------------------------------------------
+Here is the second version of the patch set. This time tagged
+as an RFC to avoid confusions. The driver is splitted by files
+and is buildable at the last patch. When the review has finished
+1/9 to 7/9 could be squashed in one patch.
+
+Any comments appreciated!
+
+Changes since v1:
+
+core
+ - added MODULE_DEVICE_TABLE
+ - reorganise includes
+ - kernel doc comments
+ - fix probe error path, forgot to destroy workqueue
+ - rework clocks and kill loops for enabling
+ - restructure the interfaces between core part of the driver
+   and crypto type algorithms. Now struct qce_algo_ops has
+   .unregister_algs operation and it is implemented by every
+   algorithm type (unregister_algs was common in v1).
+   Also async_req_queue/done are now part of core structure
+   qce_device
+
+regs-v5
+ - use GENMASK and include bitops.h
+
+dma-sg helpers
+ - do not check !IS_ERR on error path
+ - various fixes as per review comments
+ - reorganise includes
+ - return error on qce_dma_terminate_all
+
+ablkcipher
+ - use queue and done callbacks from struct qce_device
+ - reorganise includes
+ - kernel doc notation
+
+sha-hmac
+ - use queue and done callbacks from struct qce_device
+ - make byte_count __be32
+ - kernel doc notation
+ - make rctx flags member unsigned long
+ - cleanup qce_ahash_update function
+ - make const * input args of qce_import_common
+
+common
+ - rename bits/masks to use _SHIFT suffix
+ - reorganise includes and add qce_get_version function
+ - make rctx flags unsigned long
+ - move blocksize boundary check on function begging and
+   clear BYTECOUNT registers on first processing block
+
+This driver is based on Codeaurora's driver found at [1]
+
+[1] https://www.codeaurora.org/cgit/quic/la/kernel/msm-3.10/tree/drivers/crypto/msm?h=msm-3.10
+
+Stanimir Varbanov (3):
+  crypto: qce: Qualcomm crypto engine driver
+  crypto: qce: Build Qualcomm crypto driver
+  ARM: DT: qcom: Add Qualcomm crypto driver binding document
+
+ .../devicetree/bindings/crypto/qcom-qce.txt        |   25 +
+ drivers/crypto/Kconfig                             |   15 +
+ drivers/crypto/Makefile                            |    1 +
+ drivers/crypto/qce/Makefile                        |    6 +
+ drivers/crypto/qce/ablkcipher.c                    |  431 ++++++++++++++
+ drivers/crypto/qce/cipher.h                        |   68 +++
+ drivers/crypto/qce/common.c                        |  435 +++++++++++++++
+ drivers/crypto/qce/common.h                        |  102 ++++
+ drivers/crypto/qce/core.c                          |  286 ++++++++++
+ drivers/crypto/qce/core.h                          |   68 +++
+ drivers/crypto/qce/dma.c                           |  186 ++++++
+ drivers/crypto/qce/dma.h                           |   58 ++
+ drivers/crypto/qce/regs-v5.h                       |  334 +++++++++++
+ drivers/crypto/qce/sha.c                           |  588 ++++++++++++++++++++
+ drivers/crypto/qce/sha.h                           |   81 +++
+ 15 files changed, 2684 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/crypto/qcom-qce.txt
+ create mode 100644 drivers/crypto/qce/Makefile
+ create mode 100644 drivers/crypto/qce/ablkcipher.c
+ create mode 100644 drivers/crypto/qce/cipher.h
+ create mode 100644 drivers/crypto/qce/common.c
+ create mode 100644 drivers/crypto/qce/common.h
+ create mode 100644 drivers/crypto/qce/core.c
+ create mode 100644 drivers/crypto/qce/core.h
+ create mode 100644 drivers/crypto/qce/dma.c
+ create mode 100644 drivers/crypto/qce/dma.h
+ create mode 100644 drivers/crypto/qce/regs-v5.h
+ create mode 100644 drivers/crypto/qce/sha.c
+ create mode 100644 drivers/crypto/qce/sha.h
