@@ -1,32 +1,61 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH v3 1/3] crypto: qce: Qualcomm crypto engine driver
-Date: Mon, 09 Jun 2014 09:46:49 -0700
-Message-ID: <1402332409.3142.2.camel@joe-AO725>
-References: <1402315720-5042-1-git-send-email-svarbanov@mm-sol.com>
-	 <1402315720-5042-2-git-send-email-svarbanov@mm-sol.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402315720-5042-2-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "David S. Miller" <davem@davemloft.net>, Herbert Xu <herbert@gondor.apana.org.au>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH 2/2] clocksource: clps711x: Add DT bindings documentation
+Date: Mon,  9 Jun 2014 21:03:58 +0400
+Message-ID: <1402333438-13731-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-06-09 at 15:08 +0300, Stanimir Varbanov wrote:
-> The driver is separated by functional parts. The core part
-> implements a platform driver probe and remove callbaks.
-> The probe enables clocks, checks crypto version, initialize
-> and request dma channels, create done tasklet and init
-> crypto queue and finally register the algorithms into crypto
-> core subsystem.
+This patch adds DT binding documentation for the Cirrus Logic
+CLPS711X-based CPUs clocksource subsystem.
 
-trivia:
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../bindings/timer/cirrus,clps711x-timer.txt       | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
 
-> diff --git a/drivers/crypto/qce/dma.h b/drivers/crypto/qce/dma.h
-[]
-> +#define AUTH_NONCE_NUM_WORDS_SHIFT	20
-> +#define AUTH_NONCE_NUM_WORDS_MASK	GENMASK(22, 20);
+diff --git a/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt b/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
+new file mode 100644
+index 0000000..cd55b52
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
+@@ -0,0 +1,29 @@
++* Cirrus Logic CLPS711X Timer Counter
++
++Required properties:
++- compatible: Shall contain "cirrus,clps711x-timer".
++- reg       : Address and length of the register set.
++- interrupts: The interrupt number of the timer.
++- clocks    : phandle of timer reference clock.
++
++Note: Each timer should have an alias correctly numbered in "aliases" node.
++
++Example:
++	aliases {
++		timer0 = &timer1;
++		timer1 = &timer2;
++	};
++
++	timer1: timer@80000300 {
++		compatible = "cirrus,ep7312-timer", "cirrus,clps711x-timer";
++		reg = <0x80000300 0x4>;
++		interrupts = <8>;
++		clocks = <&clks 5>;
++	};
++
++	timer2: timer@80000340 {
++		compatible = "cirrus,ep7312-timer", "cirrus,clps711x-timer";
++		reg = <0x80000340 0x4>;
++		interrupts = <9>;
++		clocks = <&clks 6>;
++	};
+-- 
+1.8.5.5
 
-Unnecessary semicolon and appears to be unused.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
