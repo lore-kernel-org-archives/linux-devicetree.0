@@ -1,108 +1,72 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 1/5] mfd: Add driver for Maxim 77802 Power Management
- IC
-Date: Tue, 10 Jun 2014 01:40:30 +0200
-Message-ID: <539645EE.6020009@collabora.co.uk>
-References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk> <1402306670-17041-2-git-send-email-javier.martinez@collabora.co.uk> <20140609194713.GF5099@sirena.org.uk>
+From: Sarah Newman <sarah.newman-bdq14YP6qtRg9hUCZPvPmw@public.gmane.org>
+Subject: [RFC] PCI express slot bindings
+Date: Mon, 09 Jun 2014 16:38:07 -0700
+Message-ID: <5396455F.30303@computer.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140609194713.GF5099@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Greetings,
 
-On 06/09/2014 09:47 PM, Mark Brown wrote:
-> On Mon, Jun 09, 2014 at 11:37:46AM +0200, Javier Martinez Canillas wrote:
-> 
->> +Optional node:
->> +- voltage-regulators : The regulators of max77802 have to be instantiated
->> +  under subnode named "voltage-regulators" using the following format.
-> 
-> Every other PMIC calls this node regulators...
-> 
+I have a client whose board has two mini pci express slots.  Having reviewed the pinouts at
+http://www.allpinouts.org/index.php/PCI_Express_Card_and_PCI_Express_Mini_Card and some of the PCI
+express documentation I believe the below may be sufficient to adequately describe the interface.
 
-Ok, I'll change for consistency.
+Feedback on style and/or correctness would be deeply appreciated. I have not written any drivers yet
+and I'm not sure it would make sense to submit this as a patch until a minimal driver is present.
 
->> +	regulator_name {
->> +		regulator-compatible = LDOn/BUCKn
-> 
-> regulator-compatible is deprecated, use the node name instead.
-> 
+Thanks, Sarah
 
-Ok.
+--
+pcieslot-gpio.txt
 
->> +config MFD_MAX77802
->> +	bool "Maxim Integrated MAX77802 PMIC Support"
-> 
-> Why is this bool and not tristate?
-> 
+Defines a pci express or mini pci express card slot.
 
-I noticed that the majority of the mfd PMIC drivers were bool and not tristate
-so I thought it was a convention. But nothing prevents this driver to be built
-as a module so I'll change it to tristate.
+This binding makes the assumption that pcie bridges are not dynamically
+added and removed such that pci addressing should remain constant.
 
->> +int max77802_irq_resume(struct max77802_dev *max77802)
->> +{
->> +	/*
->> +	 * The IRQ that woke us up may still need to be ACK'ed on resume.
->> +	 * If it isn't ever ACK'ed, future IRQs may not be delivered.
->> +	 */
->> +	if (max77802->irq)
->> +		max77802_irq_thread(0, max77802);
->> +
->> +	return 0;
->> +}
-> 
-> As covered in another subthread all this code looks like it should be
-> regmap-irq.
-> 
+Required properties:
+- compatible: should contain "pcieslot-gpio"
+- #address-cells: set to <2>
+- #size-cells: set to <0>
+- reg: A cell where the first number is the pci bus and the second number is the slot.
 
-It seems so, I'll take that into account for v2.
+Optional properties:
+- wake-up-gpio: GPIO for WAKE#.
+	Will be a falling edge interrupt enabled while the slot is enabled.
+	No special handling will occur for this interrupt at this time.
+- wdisable-gpio: GPIO for W_DISABLE# or W_DISABLE1#.  Active low.
+- wdisable2-gpio: GPIO for W_DISABLE2#. Active low.
+- reset-gpio: GPIO for PERST#.
+- vdd-supplies: List of regulator phandles required to power on/off the slot.
+- hot-pluggable: If present, the slot may be powered on and off at after boot.
+- cd-gpio: GPIO for card detection on hot-swappable slots.
+   Implies hot-pluggable. Typically active low.
+- cd-inverted: If present, polarity on the CD line is active high.
+- usb: usb controller associated with this slot.
+- smb: system management bus associated with this slot.
 
->> +	if (regmap_read(max77802->regmap,
->> +			 MAX77802_REG_DEVICE_ID, &data) < 0) {
->> +		dev_err(max77802->dev,
->> +			"device not found on this channel (this is not an error)\n");
->> +		return -ENODEV;
-> 
-> If this is not an error why is it printed as dev_err()?  It does look
-> like an error to me, though.
-> 
+Example:
 
-Yeah, it is an error so I'll clean that message.
+	pcislots {
+   		#address-cells = <2>;
+		#size-cells = <0>;
 
->> +	} else {
->> +		dev_info(max77802->dev, "device found\n");
->> +	}
-> 
-> These sort of prints are just noise, remove this unless there is some
-> revision information you can display.  It's also better practice to
-> check that the device ID is actually what was expected in case there was
-> an error in the DT.
-> 
-
-Ok, will do.
-
->> +static const struct i2c_device_id max77802_i2c_id[] = {
->> +	{ "max77802", TYPE_MAX77802 },
->> +	{ }
->> +};
->> +MODULE_DEVICE_TABLE(i2c, max77802_i2c_id);
-> 
-> We have type information here but not in the OF ID table (not that we
-> ever look at it).
-> 
-
-Yeah, I'll remove the type information here. It is a left over when trying to
-combine both max77802 and max77686 drivers since in a combined driver we need
-the type information.
-
-Thanks a lot for your feedback.
-
-Best regards,
-Javier
+		slot@3,0 {
+			compatible = "pcieslot-gpio";
+			reg = <3 0>;
+			wake-up-gpio = <&gpio1 5 0>;
+			disable1-gpio = <&gpio4 14 0>;
+			vdd-supplies = <&pcie1_fixed_3v3>;
+			usb = <&usbotg>;
+			smb = <&i2c3>;
+		};
+	};
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
