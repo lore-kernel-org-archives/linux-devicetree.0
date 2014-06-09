@@ -1,55 +1,48 @@
-From: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt/documentation: add specification of dma bus information
-Date: Sun, 8 Jun 2014 23:13:29 -0300
-Message-ID: <CAOMZO5Ceg9RpC8Lgt0BwGTuaz-Z2614Die2PrbtT_j4QYjL_sA@mail.gmail.com>
-References: <1401981720-6946-1-git-send-email-santosh.shilimkar@ti.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH] ARM: dts: imx6: add missing compatible and clock
+ properties for kpp
+Date: Mon, 9 Jun 2014 10:15:36 +0800
+Message-ID: <20140609021535.GX8860@dragon>
+References: <1402052579-22803-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1401981720-6946-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, grygorii.strashko-l0cyMroinI0@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402052579-22803-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 5, 2014 at 12:22 PM, Santosh Shilimkar
-<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> Recently we introduced the generic device tree infrastructure for couple of DMA
-> bus parameter, dma-ranges and dma-coherent. Update the documentation so that
-> its useful for future users.
->
-> The "dma-ranges" property is intended to be used for describing the
-> configuration of DMA bus RAM addresses and its offset w.r.t CPU addresses.
->
-> The "dma-coherent" property is intended to be used for identifying devices
-> supported coherent DMA operations.
->
-> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+On Fri, Jun 06, 2014 at 01:02:59PM +0200, Lothar Wa=DFmann wrote:
+>=20
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
 > ---
->  Documentation/devicetree/booting-without-of.txt |   60 +++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->
-> diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
-> index 1f013bd..f0120c1 100644
-> --- a/Documentation/devicetree/booting-without-of.txt
-> +++ b/Documentation/devicetree/booting-without-of.txt
-> @@ -51,6 +51,8 @@ Table of Contents
->
->    VIII - Specifying device power management information (sleep property)
->
-> +  VIV - Specifying dma bus information
+>  arch/arm/boot/dts/imx6qdl.dtsi |    2 ++
+>  1 file changed, 2 insertions(+)
 
-"9" in Roman numeral is "IX"
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Applied, thanks.
+
+Shawn
+
+>=20
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6q=
+dl.dtsi
+> index ce05991..3266d01 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -466,8 +466,10 @@
+>  			};
+> =20
+>  			kpp: kpp@020b8000 {
+> +				compatible =3D "fsl,imx6q-kpp", "fsl,imx21-kpp";
+>  				reg =3D <0x020b8000 0x4000>;
+>  				interrupts =3D <0 82 IRQ_TYPE_LEVEL_HIGH>;
+> +				clocks =3D <&clks 62>; /* IPG clock */
+>  			};
+> =20
+>  			wdog1: wdog@020bc000 {
+> --=20
+> 1.7.10.4
+>=20
