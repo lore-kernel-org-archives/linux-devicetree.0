@@ -1,44 +1,45 @@
-From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] dmaengine: mpc512x: add device tree binding document
- and DMA channel lookup
-Date: Sun, 8 Jun 2014 22:48:58 +0400
-Message-ID: <CAF0T0X5OQH8SED5a0JreZw8wNs2R-2c2v5=7F4v4up5viK3aYw@mail.gmail.com>
-References: <1400924009-23992-1-git-send-email-a13xp0p0v88@gmail.com>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH] dt/documentation: add specification of dma bus
+ information
+Date: Mon, 9 Jun 2014 10:06:12 +0800
+Message-ID: <20140609020611.GW8860@dragon>
+References: <1401981720-6946-1-git-send-email-santosh.shilimkar@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1400924009-23992-1-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1401981720-6946-1-git-send-email-santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grygorii.strashko-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-05-24 13:33 GMT+04:00 Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>:
-> This patch series introduces a device tree binding document for
-> the MPC512x DMA controller and adds device tree based DMA channel lookup
-> for it.
+On Thu, Jun 05, 2014 at 11:22:00AM -0400, Santosh Shilimkar wrote:
+> Recently we introduced the generic device tree infrastructure for couple of DMA
+> bus parameter, dma-ranges and dma-coherent. Update the documentation so that
+> its useful for future users.
+> 
+> The "dma-ranges" property is intended to be used for describing the
+> configuration of DMA bus RAM addresses and its offset w.r.t CPU addresses.
+> 
+> The "dma-coherent" property is intended to be used for identifying devices
+> supported coherent DMA operations.
+> 
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
 
-Hello, excuse me, could I have a feedback?
-Should I fix anything?
+Thanks for the documentation.  I think it's definitely useful for future
+users of the binding.
 
-Thanks a lot!
-Alexander
-
-> Alexander Popov (3):
->   dmaengine: mpc512x: add device tree binding document
->   dmaengine: of: add common xlate function for matching by channel id
->   dmaengine: mpc512x: register for device tree channel lookup
->
->  .../devicetree/bindings/dma/mpc512x-dma.txt        | 40 ++++++++++++++++++++++
->  arch/powerpc/boot/dts/mpc5121.dtsi                 |  1 +
->  drivers/dma/mpc512x_dma.c                          | 13 ++++++-
->  drivers/dma/of-dma.c                               | 35 +++++++++++++++++++
->  include/linux/of_dma.h                             |  4 +++
->  5 files changed, 92 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
->
-> --
-> 1.8.4.2
->
+Acked-by: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
