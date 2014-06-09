@@ -1,47 +1,60 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 4/4] ARM: sunxi: dt: Add DT bindings
- documentation for SUNXI Security System
-Date: Mon,  9 Jun 2014 12:59:11 +0200
-Message-ID: <1402311551-19564-5-git-send-email-clabbe.montjoie@gmail.com>
-References: <1402311551-19564-1-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD7YLCN32UNBBDVH22OAKGQEBEJSW4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402311551-19564-1-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH] ARM: dts: remove display power domain for exynos5420
+Date: Mon, 09 Jun 2014 16:58:19 +0530
+Message-ID: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the Security
-System cryptographic accelerator driver.
+Display domain is removed due to instability issues. Explaining
+the problem below:
 
-Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+exynos_init_late triggers the pm_genpd_poweroff_unused which
+powers off the unused power domains. This call hits before
+the trigger to deferred probes.
+
+DRM DP Panel defers the probe due to supply get failure. By the
+time, deferred probe is scheduled again, Display Power Domain is
+powered off by pm_genpd_poweroff_unused.
+
+FIMD and DP drivers are accessing registers during Probe and Bind
+callbacks. If display domain is enabled/disabled around register
+accesses, display domain gets unstable and we are getting Power
+Domain Disable fail notification. Increasing the Timeout also
+didn't help.
+
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 ---
- Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+based on Kukjin's for-next branch.
 
-diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-new file mode 100644
-index 0000000..a566803
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-@@ -0,0 +1,9 @@
-+* Allwinner Security System found on A20 SoC
-+
-+Required properties:
-+- compatible : Should be "allwinner,sun7i-a20-crypto".
-+- reg: Should contain the Security System register location and length.
-+- interrupts: Should contain the IRQ line for the Security System.
-+- clocks : A phandle to the functional clock node of the Security System module
-+- clock-names : Name of the functional clock, should be "ahb" and "mod".
-+
+ arch/arm/boot/dts/exynos5420.dtsi |    6 ------
+ 1 file changed, 6 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+index e385322..3d528cf 100644
+--- a/arch/arm/boot/dts/exynos5420.dtsi
++++ b/arch/arm/boot/dts/exynos5420.dtsi
+@@ -262,11 +262,6 @@
+ 		reg = <0x10044060 0x20>;
+ 	};
+ 
+-	disp_pd: power-domain@100440C0 {
+-		compatible = "samsung,exynos4210-pd";
+-		reg = <0x100440C0 0x20>;
+-	};
+-
+ 	msc_pd: power-domain@10044120 {
+ 		compatible = "samsung,exynos4210-pd";
+ 		reg = <0x10044120 0x20>;
+@@ -518,7 +513,6 @@
+ 	};
+ 
+ 	fimd: fimd@14400000 {
+-		samsung,power-domain = <&disp_pd>;
+ 		clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
+ 		clock-names = "sclk_fimd", "fimd";
+ 	};
 -- 
-1.8.5.5
+1.7.9.5
