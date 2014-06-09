@@ -1,68 +1,62 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Mon, 09 Jun 2014 16:34:19 +0400
-Message-ID: <5395A9CB.5010008@cogentembedded.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <1599447.RVY9gPzyeE@avalon>
+From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH] dt/documentation: add specification of dma bus information
+Date: Mon, 9 Jun 2014 09:59:03 -0400
+Message-ID: <5395BDA7.3060507@ti.com>
+References: <1401981720-6946-1-git-send-email-santosh.shilimkar@ti.com> <CAOMZO5Ceg9RpC8Lgt0BwGTuaz-Z2614Die2PrbtT_j4QYjL_sA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1599447.RVY9gPzyeE@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, grant.likely@linaro.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAOMZO5Ceg9RpC8Lgt0BwGTuaz-Z2614Die2PrbtT_j4QYjL_sA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, grygorii.strashko-l0cyMroinI0@public.gmane.org, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Sunday 08 June 2014 10:13 PM, Fabio Estevam wrote:
+> On Thu, Jun 5, 2014 at 12:22 PM, Santosh Shilimkar
+> <santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
+>> Recently we introduced the generic device tree infrastructure for couple of DMA
+>> bus parameter, dma-ranges and dma-coherent. Update the documentation so that
+>> its useful for future users.
+>>
+>> The "dma-ranges" property is intended to be used for describing the
+>> configuration of DMA bus RAM addresses and its offset w.r.t CPU addresses.
+>>
+>> The "dma-coherent" property is intended to be used for identifying devices
+>> supported coherent DMA operations.
+>>
+>> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+>> Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+>> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+>> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+>> Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+>> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+>> Signed-off-by: Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/booting-without-of.txt |   60 +++++++++++++++++++++++
+>>  1 file changed, 60 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+>> index 1f013bd..f0120c1 100644
+>> --- a/Documentation/devicetree/booting-without-of.txt
+>> +++ b/Documentation/devicetree/booting-without-of.txt
+>> @@ -51,6 +51,8 @@ Table of Contents
+>>
+>>    VIII - Specifying device power management information (sleep property)
+>>
+>> +  VIV - Specifying dma bus information
+> 
+> "9" in Roman numeral is "IX"
+> 
+Yeah.. Not sure what I was thinking...
 
-On 06/09/2014 03:44 PM, Laurent Pinchart wrote:
-
-> Thank you for the patch.
-
-    Could you please remove the parts of the patch to which you didn't reply? 
-I've hardly found your comment.
-
-> On Saturday 24 May 2014 02:06:03 Sergei Shtylyov wrote:
->> This PHY, though formally being a part of Renesas USBHS controller, contains
->> the UGCTRL2 register that controls multiplexing of the USB ports (Renesas
->> calls them channels) to the different USB controllers: channel 0 can be
->> connected to either PCI EHCI/OHCI or USBHS controllers, channel 2 can be
->> connected to PCI EHCI/OHCI or xHCI controllers.
-
->> This is a new driver for this USB PHY currently already supported under
->> drivers/ usb/phy/. The reason for writing the new driver was the
->> requirement that the multiplexing of USB channels to the controller be
->> dynamic, depending on what USB drivers are loaded,  rather than static as
->> provided by the old driver. The infrastructure provided by
->> drivers/phy/phy-core.c seems to fit that purpose ideally. The new driver
->> only supports device tree probing for now.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-[...]
-
->> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
->> ===================================================================
->> --- /dev/null
->> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
->> @@ -0,0 +1,60 @@
->> +* Renesas R-Car generation 2 USB PHY
->> +
->> +This file provides information on what the device node for the R-Car
->> generation +2 USB PHY contains.
->> +
->> +Required properties:
->> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790
->> SoC. +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791
->> SoC. +- reg: offset and length of the register block.
->> +- #phy-cells: see phy-bindings.txt in the same directory, must be 2.
->> +- clocks: clock phandle and specifier pair.
->> +- clock-names: string, clock input name, must be "usbhs".
-
-> Is that the functional clock for the PHY ? If so, what about naming it "fck"
-> (or something similar) ?
-
-    No, it's the clock for the USBHS controller to which this PHY belongs.
-
-WBR, Sergei
-
+Regards,
+Santosh
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
