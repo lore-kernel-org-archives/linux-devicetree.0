@@ -1,40 +1,68 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RESEND: PATCH 1/2] mfd: tc3589x: Add device tree bindings
-Date: Mon, 9 Jun 2014 14:14:20 +0200
-Message-ID: <CACRpkdbhqoywNyHuXzo2Oqjz5ybcM_DhsRDYy28_qN8K0RYE_w@mail.gmail.com>
-References: <1397028480-15413-1-git-send-email-linus.walleij@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
+Date: Mon, 09 Jun 2014 16:34:19 +0400
+Message-ID: <5395A9CB.5010008@cogentembedded.com>
+References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <1599447.RVY9gPzyeE@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-input-owner@vger.kernel.org>
-In-Reply-To: <1397028480-15413-1-git-send-email-linus.walleij@linaro.org>
-Sender: linux-input-owner@vger.kernel.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Linux Input <linux-input@vger.kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1599447.RVY9gPzyeE@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, kishon@ti.com, grant.likely@linaro.org, devicetree@vger.kernel.org, rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Apr 9, 2014 at 9:28 AM, Linus Walleij <linus.walleij@linaro.org> wrote:
+Hello.
 
-> This defines the device tree bindings for the Toshiba TC3589x
-> series of multi-purpose expanders. Only the stuff I can test
-> is defined: GPIO and keypad. Others may implement more
-> subdevices further down the road.
->
-> This is to complement
-> commit a435ae1d51e2f18414f2a87219fdbe068231e692
-> "mfd: Enable the tc3589x for Device Tree" which left off
-> the definition of the device tree bindings.
->
-> Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
-> ---
-> ChangeLog v2->v3:
-> - Fix the keys/rows bindings to be u32 rather than
->   /bits/ 8, inconsistency noted by Mark Rutland.
-> ChangeLog v1->v2:
-> - Include a verbose example in the DT bindings.
-> - Explain why this is a stand-alone bindings patch.
+On 06/09/2014 03:44 PM, Laurent Pinchart wrote:
 
-Lee, ping on this - it seems to have fallen to the floor at some
-point...
+> Thank you for the patch.
 
-Yours,
-Linus Walleij
+    Could you please remove the parts of the patch to which you didn't reply? 
+I've hardly found your comment.
+
+> On Saturday 24 May 2014 02:06:03 Sergei Shtylyov wrote:
+>> This PHY, though formally being a part of Renesas USBHS controller, contains
+>> the UGCTRL2 register that controls multiplexing of the USB ports (Renesas
+>> calls them channels) to the different USB controllers: channel 0 can be
+>> connected to either PCI EHCI/OHCI or USBHS controllers, channel 2 can be
+>> connected to PCI EHCI/OHCI or xHCI controllers.
+
+>> This is a new driver for this USB PHY currently already supported under
+>> drivers/ usb/phy/. The reason for writing the new driver was the
+>> requirement that the multiplexing of USB channels to the controller be
+>> dynamic, depending on what USB drivers are loaded,  rather than static as
+>> provided by the old driver. The infrastructure provided by
+>> drivers/phy/phy-core.c seems to fit that purpose ideally. The new driver
+>> only supports device tree probing for now.
+
+>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+[...]
+
+>> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+>> ===================================================================
+>> --- /dev/null
+>> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
+>> @@ -0,0 +1,60 @@
+>> +* Renesas R-Car generation 2 USB PHY
+>> +
+>> +This file provides information on what the device node for the R-Car
+>> generation +2 USB PHY contains.
+>> +
+>> +Required properties:
+>> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790
+>> SoC. +	      "renesas,usb-phy-r8a7791" if the device is a part of R8A7791
+>> SoC. +- reg: offset and length of the register block.
+>> +- #phy-cells: see phy-bindings.txt in the same directory, must be 2.
+>> +- clocks: clock phandle and specifier pair.
+>> +- clock-names: string, clock input name, must be "usbhs".
+
+> Is that the functional clock for the PHY ? If so, what about naming it "fck"
+> (or something similar) ?
+
+    No, it's the clock for the USBHS controller to which this PHY belongs.
+
+WBR, Sergei
+
