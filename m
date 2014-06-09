@@ -1,105 +1,50 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/5] mfd: Add driver for Maxim 77802 Power Management IC
-Date: Mon, 9 Jun 2014 20:47:13 +0100
-Message-ID: <20140609194713.GF5099@sirena.org.uk>
-References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
- <1402306670-17041-2-git-send-email-javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v2 2/5] ASoC: wm8904: switch to CCF
+Date: Mon, 9 Jun 2014 21:13:22 +0100
+Message-ID: <20140609201322.GP5099@sirena.org.uk>
+References: <1402284707-23354-1-git-send-email-voice.shen@atmel.com>
+ <1402284707-23354-3-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yqX3wpb4QnjwKg06"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="wR9Y6Ks0OCEmDFVd"
+Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1402306670-17041-2-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1402284707-23354-3-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: nicolas.ferre@atmel.com, boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
---yqX3wpb4QnjwKg06
+--wR9Y6Ks0OCEmDFVd
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Mon, Jun 09, 2014 at 11:37:46AM +0200, Javier Martinez Canillas wrote:
+On Mon, Jun 09, 2014 at 11:31:44AM +0800, Bo Shen wrote:
+> Enable WM8904 to support common clock framework.
 
-> +Optional node:
-> +- voltage-regulators : The regulators of max77802 have to be instantiated
-> +  under subnode named "voltage-regulators" using the following format.
+Applied, thanks.
 
-Every other PMIC calls this node regulators...
-
-> +	regulator_name {
-> +		regulator-compatible = LDOn/BUCKn
-
-regulator-compatible is deprecated, use the node name instead.
-
-> +config MFD_MAX77802
-> +	bool "Maxim Integrated MAX77802 PMIC Support"
-
-Why is this bool and not tristate?
-
-> +int max77802_irq_resume(struct max77802_dev *max77802)
-> +{
-> +	/*
-> +	 * The IRQ that woke us up may still need to be ACK'ed on resume.
-> +	 * If it isn't ever ACK'ed, future IRQs may not be delivered.
-> +	 */
-> +	if (max77802->irq)
-> +		max77802_irq_thread(0, max77802);
-> +
-> +	return 0;
-> +}
-
-As covered in another subthread all this code looks like it should be
-regmap-irq.
-
-> +	if (regmap_read(max77802->regmap,
-> +			 MAX77802_REG_DEVICE_ID, &data) < 0) {
-> +		dev_err(max77802->dev,
-> +			"device not found on this channel (this is not an error)\n");
-> +		return -ENODEV;
-
-If this is not an error why is it printed as dev_err()?  It does look
-like an error to me, though.
-
-> +	} else {
-> +		dev_info(max77802->dev, "device found\n");
-> +	}
-
-These sort of prints are just noise, remove this unless there is some
-revision information you can display.  It's also better practice to
-check that the device ID is actually what was expected in case there was
-an error in the DT.
-
-> +static const struct i2c_device_id max77802_i2c_id[] = {
-> +	{ "max77802", TYPE_MAX77802 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, max77802_i2c_id);
-
-We have type information here but not in the OF ID table (not that we
-ever look at it).
-
---yqX3wpb4QnjwKg06
+--wR9Y6Ks0OCEmDFVd
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJTlg8+AAoJELSic+t+oim9tGsP/RrgPb6Ks5oqJYi8qd7kKfJi
-HqC48BXqJACEvfLkvCun302iOEYFus4bX/q2tQ753ffz1qsoi2n8iDBNYLzYi87T
-hllh0FWJHbMWmdoR22OjaWQLfYiF5MfgaRzsS+9eOkxNMeVXAJrAH91wormsA41W
-fm7chn07pHGqbWYIUw4lULAOzBmtmkr7jIsroNuzROjwkb4Lyg8/8+epxAk9V2qm
-TgB53v0yrqxWD41dZqwYT+u+rBhxGIqmv93OEZ3LzgFq4bcR33Amn7jNSkhSFf++
-9/RrEmBWBmC5cuFXwpkZuqEzoYk4JoOhqFWZnWQv+uIRSMq8RiyxXAcagAtBJnok
-FMJofsfT0Saitj7x42pdSylvUYU7DHcalslrwGD53Jay+3w7B5OkBS8pOJCLft7R
-hzjizuKzKG+ULtStlKYtZ1fvX0KPeF3SDrE1IVXYMaT4MIuC98s+EVl3tiTXIrrc
-F9vrk2op+mEmgC0Ea4HqWyhu9fGcfw4gpgaFWeI6TW5H+WDbhbU9bHwgR5mjNTJx
-2SvA7v4UW617HSsJpQHNq6i+LRrSn1MAMydbPLhd38bh2SImmVQq8lcuc5utW/mX
-jbUQqqEbotCdjdUggoKWj+rInlYXLmNljO+btrIrwO29JqqRZ+vYprGVd+FbN01b
-Pde+ix2Kgvv4YuZNkXxf
-=x6e0
+iQIcBAEBAgAGBQJTlhVfAAoJELSic+t+oim98sEP/iKbrohevFfY2kjiq3SqPp2t
+KUoQBO/bCR1ArPcF8aKx0fbob64mKivpSL372dBDagd7/wV2AROzVFbDTo1X319O
+QE7wOcbU5Hz4Nz/XPQOktYL37r7F8luk9W4vL5CcoGlShqSF/wH7r7f5bvb27MY0
+XRF03ILNY6oRALFbWOzWd6IHHI8Gg0gairWKSs//3Zjf/WfcOKHKe6r9eyjyOe/6
+VLOxNO5J0uWanyixtXQGJE9VZ7gsHMmiqP/bgiAgcVvupPWH1Xd4vzahXaG7O8yD
+bS7hjNziPNebgwXSoE8JAWfOOkpIGG278mNsBflUw3N+tUDuqYU/IUqS2TxfVJZM
+iD5LOV1keinsLyltgLuRD66N2YekF3zL5w9qBcWeW5YvgIonGZHb7ThbAnezNnPJ
+/SAm/nqczrxRbPHc0Qd9fY5D/YfBPFuDBICBfjI+v6sKvkm9q8Fk3iuhqT9EbIGD
+Yf6RRCFgK4NYHl2uNh9OurE3pbeIb3/Fhpe5+04B+3ArXQGaVzAHq23NuZizjj9K
+Zl0SIYFVKX82v85xfDtXSAn6PGGXF7+rxIJlY78eQsPLKJiOc9/25e03j2rdvcCT
+6Tms0gN6fGJT+YTOa+d+nexx1HTD11vxG7z5bxmHELjk4MT/Vvf50BsS7raZ2QZf
+jH04GI5Tlx4yZLn9ox6C
+=q8iP
 -----END PGP SIGNATURE-----
 
---yqX3wpb4QnjwKg06--
+--wR9Y6Ks0OCEmDFVd--
