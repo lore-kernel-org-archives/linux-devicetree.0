@@ -1,23 +1,27 @@
 From: Jiri Slaby <jslaby@suse.cz>
-Subject: [PATCH 3.12 013/146] mips: dts: Fix missing device_type="memory" property in memory nodes
-Date: Mon,  9 Jun 2014 10:49:08 +0200
-Message-ID: <923aef0f16d9930bb275aa2fdbffdc732411ed2b.1402303820.git.jslaby@suse.cz>
+Subject: [PATCH 3.12 075/146] arm: dts: Fix missing device_type="memory" for
+ ste-ccu8540
+Date: Mon,  9 Jun 2014 10:50:10 +0200
+Message-ID: <f91ba888fc325f37074be0e5ba0fba5d55a78783.1402303821.git.jslaby@suse.cz>
 References: <ebe219e45dcf94c1a34281167427cff4d742faef.1402303820.git.jslaby@suse.cz>
-Return-path: <linux-mips-bounce@linux-mips.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <ebe219e45dcf94c1a34281167427cff4d742faef.1402303820.git.jslaby@suse.cz>
 In-Reply-To: <cover.1402303820.git.jslaby@suse.cz>
 References: <cover.1402303820.git.jslaby@suse.cz>
-Sender: linux-mips-bounce@linux-mips.org
-Errors-to: linux-mips-bounce@linux-mips.org
-List-help: <mailto:ecartis@linux-mips.org?Subject=help>
-List-unsubscribe: <mailto:ecartis@linux-mips.org?subject=unsubscribe%20linux-mips>
-List-software: Ecartis version 1.0.0
-List-subscribe: <mailto:ecartis@linux-mips.org?subject=subscribe%20linux-mips>
-List-owner: <mailto:ralf@linux-mips.org>
-List-post: <mailto:linux-mips@linux-mips.org>
-List-archive: <http://www.linux-mips.org/archives/linux-mips/>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: stable@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, linux-mips@linux-mips.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Leif Lindholm <leif.lindholm@linaro.org>, Grant Likely <grant.likely@linaro.org>, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 From: Leif Lindholm <leif.lindholm@linaro.org>
@@ -26,86 +30,34 @@ From: Leif Lindholm <leif.lindholm@linaro.org>
 
 ===============
 
-commit dfc44f8030653b345fc6fb337558c3a07536823f upstream.
+commit bfaed5abad998bfc88a66e6e71c7b08dcf82f04e upstream.
 
-A few platforms lack a 'device_type = "memory"' for their memory
-nodes, relying on an old ppc quirk in order to discover its memory.
-Add the missing data so that all parsing code can find memory nodes
-correctly.
+The current .dts for ste-ccu8540 lacks a 'device_type = "memory"' for
+its memory node, relying on an old ppc quirk in order to discover its
+memory. Fix the data so that all parsing code can handle it correctly.
 
 Signed-off-by: Leif Lindholm <leif.lindholm@linaro.org>
-Cc: linux-mips@linux-mips.org
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
 Cc: Mark Rutland <mark.rutland@arm.com>
-Acked-by: John Crispin <blogic@openwrt.org>
 Signed-off-by: Grant Likely <grant.likely@linaro.org>
 Signed-off-by: Jiri Slaby <jslaby@suse.cz>
 ---
- arch/mips/lantiq/dts/easy50712.dts    | 1 +
- arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
- arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
- arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
- arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
- 5 files changed, 5 insertions(+)
+ arch/arm/boot/dts/ste-ccu8540.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
-index fac1f5b178eb..143b8a37b5e4 100644
---- a/arch/mips/lantiq/dts/easy50712.dts
-+++ b/arch/mips/lantiq/dts/easy50712.dts
-@@ -8,6 +8,7 @@
- 	};
+diff --git a/arch/arm/boot/dts/ste-ccu8540.dts b/arch/arm/boot/dts/ste-ccu8540.dts
+index 7f3baf51a3a9..32dd55e5f4e6 100644
+--- a/arch/arm/boot/dts/ste-ccu8540.dts
++++ b/arch/arm/boot/dts/ste-ccu8540.dts
+@@ -18,6 +18,7 @@
+ 	compatible = "st-ericsson,ccu8540", "st-ericsson,u8540";
  
  	memory@0 {
 +		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
-index 35eb874ab7f1..709f58132f5c 100644
---- a/arch/mips/ralink/dts/mt7620a_eval.dts
-+++ b/arch/mips/ralink/dts/mt7620a_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink MT7620A evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/ralink/dts/rt2880_eval.dts
-index 322d7002595b..0a685db093d4 100644
---- a/arch/mips/ralink/dts/rt2880_eval.dts
-+++ b/arch/mips/ralink/dts/rt2880_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink RT2880 evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x8000000 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/ralink/dts/rt3052_eval.dts
-index 0ac73ea28198..ec9e9a035541 100644
---- a/arch/mips/ralink/dts/rt3052_eval.dts
-+++ b/arch/mips/ralink/dts/rt3052_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink RT3052 evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
- 	};
- 
-diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
-index 2fa6b330bf4f..e8df21a5d10d 100644
---- a/arch/mips/ralink/dts/rt3883_eval.dts
-+++ b/arch/mips/ralink/dts/rt3883_eval.dts
-@@ -7,6 +7,7 @@
- 	model = "Ralink RT3883 evaluation board";
- 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x0 0x2000000>;
+ 		reg = <0x20000000 0x1f000000>, <0xc0000000 0x3f000000>;
  	};
  
 -- 
