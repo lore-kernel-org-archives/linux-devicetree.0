@@ -1,70 +1,72 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
- tree description
-Date: Mon, 9 Jun 2014 11:56:58 -0700
-Message-ID: <CAD=FV=UZape0qnV0wfYUdtS-spkOAQxt1s1vrmG96H+WpyhW6Q@mail.gmail.com>
-References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
-	<1402000514-30752-1-git-send-email-dianders@chromium.org>
-	<5390EE97.9020702@gmail.com>
-	<20140606234155.10062.58609@quantum>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/2] dt-bindings: regulator: Add regulator suspend state
+ for PM state
+Date: Mon, 9 Jun 2014 20:16:45 +0100
+Message-ID: <20140609191645.GC5099@sirena.org.uk>
+References: <1402309780-8118-1-git-send-email-cw00.choi@samsung.com>
+ <1402309780-8118-3-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140606234155.10062.58609@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rahul Sharma <rahul.sharma@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, Arun Kumar <arun.kk@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, a.hajda@samsung.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="vUOrpVjU9N5sOsWB"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402309780-8118-3-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tomasz,
 
-On Fri, Jun 6, 2014 at 4:41 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Tomasz Figa (2014-06-05 15:26:31)
->> On 05.06.2014 22:35, Doug Anderson wrote:
->> > The "aclk66_peric" clock is a gate clock with a whole bunch of gates
->> > underneath it.  This big gate isn't very useful to include in our
->> > clock tree.  If any of the children need to be turned on then the big
->> > gate will need to be on anyway.  ...and there are plenty of other "big
->> > gates" that aren't described in our clock tree, some of which shut off
->> > collections of clocks that have no relationship in the hierarchy so
->> > are hard to model.
->> >
->> > "aclk66_peric" is causing earlyprintk problems since it gets disabled
->> > as part of the boot process, so let's just remove it.
->> >
->> > Strangely (and for no good reason) this clock is exported as part of
->> > the common clock bindings.  Remove it since there are no in-kernel
->> > device trees using it and no reason anyone out of tree should refer to
->> > it either.
->> >
->> > Signed-off-by: Doug Anderson <dianders@chromium.org>
->> > ---
->> > Changes in v3:
->> > - Now just remove aclk66_peric from the tree as suggested by Tomasz.
->> >
->> > Changes in v2:
->> > - Use GATE_A and clk_get().  Save the clock for putting later.
->> > - Return 0 from exynos5420_clk_late_init().
->> >
->> >  drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
->> >  include/dt-bindings/clock/exynos5420.h |  1 -
->> >  2 files changed, 55 insertions(+), 31 deletions(-)
->> >
->>
->> Mike, I can take this patch to my tree as a fix for 3.16-rc, or if still
->> possible and you don't mind, feel free to apply it directly with my ACK:
->>
->> Acked-by: Tomasz Figa <t.figa@samsung.com>
->
-> I'll send a second PR next week that includes this.
+--vUOrpVjU9N5sOsWB
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-This doesn't apply cleanly to Mike's tree.  Can you add it to your
-tree and send it out for 3.16?  Mike said you should add his Ack and
-I've confirmed that the patch applies cleanly to the most recent
-linuxnext (next-20140606) as well as to the top of your
-'samsung-clk-next' tree (2ce16c5 clk: samsung: exynos3250: Add clocks
-using common clock framework).
+On Mon, Jun 09, 2014 at 07:29:40PM +0900, Chanwoo Choi wrote:
 
-Thanks!
+> +- regulator-initial-state: initial state for suspend state
+> +- regulator-state-[standby/mem/disk] sub-root node for suspend state
+> +	regulator-volt: voltage consumers may set in suspend state
+> +	regulator-mode: voltage mode in suspend state
+> +	regulator-on-in-suspend: regulator should be on in suspend state
+> +	regulator-off-in-suspend: regulator should be off in suspend state
 
--Doug
+These need to define what the states are in general terms - in
+particular it's very unclear what standby is and how it differs from
+suspend to RAM.  You also need to define what happens if neither
+X-in-suspend property is set.
+
+> +		regulator-state-mem {
+> +			regulator-volt = <1000000>;
+> +			regulator-mode = <0x8>;
+> +			regulator-off-in-suspend;
+> +		};
+
+Probably best to remove mode from this.
+
+--vUOrpVjU9N5sOsWB
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTlggaAAoJELSic+t+oim9TF0P+wX+yll+5iSqe6ERYk7eTmD4
+n8JY1dUtsVF0OFVQUVBC30jKUMz2DXUqXDpMQ1rPtDtMt9qmWq0Wcys5ZH+o/AqV
+r2ME3E8zkE15YfUYYz24w1xAZvFUDJfGs/xgnBEpXeH9TjbuxkDxb975xyxLQ3M+
+DBrwRyO8EDfsP3nR74Rl26x6admlGxlbC7Bj/TpXiVc6gTO67s3bywXT1HsOD00y
+SIpm1bPbjd5IuIfRBW8aoysHgBY91DvkNk9wnTwOTTh07rqZgoCvcaV7vAdb0LHu
+b0DsJi9YGphHTHYc3jyvWI09XPtDntDjojAvGONe4LyErwJ3AushFMEqgnfu+8wp
+T3Ci0MQHSEkU1fRUV6Nwk0/R67vh4JBzPaufUdhSxXG/1HD0pskTmIl3jYLEIqU9
+9ooGrqDYfACezkMrhHOXy+zk/P+gjvNqMAeUzlZjBxKYRmP/oJ/bin7pAjFryg9a
+NpuRQvlD3GXHzaO+4/UqcXsvsw54E/QBy5B4i5co4WvnONInMw3p45oLWcBdCKpO
+9b30fwI1Y76HWPn9jkNd5Xt52dIX96deDMF8Y5wz67Pi7BUDoBFZND6I6G5IhsAk
+bjO2vyTNN03EMv4fv7R/gmSifyF4YKKjz6WVaO7cPWXXsdGxWVrRzylJTX/zOafU
+4Jug78WpTouy7CvlMtJ1
+=Du7p
+-----END PGP SIGNATURE-----
+
+--vUOrpVjU9N5sOsWB--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
