@@ -1,38 +1,52 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 0/5] Add Maxim 77802 PMIC support
-Date: Mon, 9 Jun 2014 16:57:07 -0700
-Message-ID: <CAD=FV=WknbbqSojDD4pe-Xpd6J4LxkjU-O9JwQjU+gnh+6N=4A@mail.gmail.com>
-References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
-	<1402309011.17650.9.camel@AMDC1943>
-	<CAD=FV=U2zPJ=NohDjGvJKfmwJzQhphtVMefM0p_hvFVoReauhQ@mail.gmail.com>
-	<53963B5D.8090908@collabora.co.uk>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: of: Add support for parsing regulator_state
+ for suspend state
+Date: Tue, 10 Jun 2014 08:59:01 +0900
+Message-ID: <53964A45.3010108@samsung.com>
+References: <1402309780-8118-1-git-send-email-cw00.choi@samsung.com>
+ <1402309780-8118-2-git-send-email-cw00.choi@samsung.com>
+ <20140609192133.GD5099@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53963B5D.8090908@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Stone <daniels@collabora.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <20140609192133.GD5099-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Javier,
+Hi Mark,
 
-On Mon, Jun 9, 2014 at 3:55 PM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
->> * The RTC has many subtle differences between the 77686 and 77802.
->> They expanded it to handle a 200 year timeframe instead of 100 and
->> that meant that they had to shuffle the bits around everywhere.  They
->> also moved it to have the same i2c address as the main PMIC so all
->> addresses are different (see max77686_map in the RTC link above).
->>
-> There are other differences that were not mentioned:
->
-> - The max77802 uses a single register to enable RTC alarm while max77686 uses 1
-> bit from a set of registers.
+On 06/10/2014 04:21 AM, Mark Brown wrote:
+> On Mon, Jun 09, 2014 at 07:29:39PM +0900, Chanwoo Choi wrote:
+> 
+>> +		ret = of_property_read_u32(suspend_np, "regulator-mode", &pval);
+>> +		if (!ret)
+>> +			suspend_state->mode = pval;
+> 
+> If we're going to do that we'd need to define what modes mean in the DT
+> binding - currently there's no support for modes at all because it's
+> complicated to come up with sensible and meaningful generic defintions.
+> 
 
-Ironically this is one and the same issue, but you're right that it's
-more major than I made it out to be.  See RTCYEARA2.  My theory is
-that to account for more possible year values they needed all 8 bits.
-That meant that the enable bit needed to move to a different register.
-...and once you moved one enable you might as well move them all, I
-guess.
+The 'regulator-mode' of this patch means following defined constant variable
+as following in include/linux/regulator/consumer.h:
+#define REGULATOR_MODE_FAST		0x1
+#define REGULATOR_MODE_NORMAL		0x2
+#define REGULATOR_MODE_IDLE		0x4
+#define REGULATOR_MODE_STANDBY		0x8
+
+If regulator consumer would use this mode('regulator-mode),
+specific regulator driver should implement rdev->desc->ops->set_suspend_mode function
+to control regulator state according to 'regulator-mode' in suspend state.
+
+Best Regards,
+Chanwoo CHoi
+
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
