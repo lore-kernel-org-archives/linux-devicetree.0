@@ -1,81 +1,73 @@
-From: Peter Chen <peter.chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH 0/9] ARM: Berlin: USB support
-Date: Mon, 9 Jun 2014 12:30:20 +0800
-Message-ID: <20140609043019.GA32255@shlinux1.ap.freescale.net>
-References: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1401983326-19205-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv3 3/3] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
+Date: Mon, 09 Jun 2014 15:15:48 +0900
+Message-ID: <1402294548-10380-4-git-send-email-cw00.choi@samsung.com>
+References: <1402294548-10380-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1402294548-10380-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, sbkim73@samsung.com, sameo@linux.intel.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, jonghwa3.lee@samsung.com, k.kozlowski@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 05, 2014 at 05:48:37PM +0200, Antoine T=E9nart wrote:
-> This series adds the support for the Marvell Berlin USB controllers,
-> the USB PHYs and also adds a reset controller.
->=20
-> The reset controller is used by the USB PHY driver and shares the
-> existing chip controller node with the clocks and one pin controller.
->=20
-> The Marvell Berlin USB controllers are host only on the BG2Q and are
-> compatible with USB ChipIdea. We here add a glue to use the available
-> common functions for this kind of controllers. A USB PHY driver is al=
-so
-> added to control the PHY.
->=20
-> Antoine T=E9nart (9):
->   reset: add the Berlin reset controller driver
->   ARM: Berlin: select the reset controller
->   ARM: dts: berlin: add a required reset property in the chip control=
-ler
->     node
->   usb: phy: add the Berlin USB PHY driver
->   Documentation: bindings: add doc for the Berlin USB PHY
->   usb: chipidea: add Berlin USB support
->   Documentation: bindings: add doc for the Berlin ChipIdea USB driver
->   ARM: dts: berlin: add BG2Q nodes for USB support
->   ARM: dts: Berlin: enable USB on the BG2Q DMP
->=20
->  .../devicetree/bindings/usb/berlin-usbphy.txt      |  18 ++
->  .../devicetree/bindings/usb/ci-hdrc-berlin.txt     |  18 ++
->  arch/arm/boot/dts/berlin2.dtsi                     |   1 +
->  arch/arm/boot/dts/berlin2cd.dtsi                   |   1 +
->  arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |  20 ++
->  arch/arm/boot/dts/berlin2q.dtsi                    |  52 +++++
->  arch/arm/mach-berlin/Kconfig                       |   2 +
->  drivers/reset/Makefile                             |   1 +
->  drivers/reset/reset-berlin.c                       | 113 +++++++++++
->  drivers/usb/chipidea/Makefile                      |   1 +
->  drivers/usb/chipidea/ci_hdrc_berlin.c              | 108 ++++++++++
->  drivers/usb/phy/Kconfig                            |   9 +
->  drivers/usb/phy/Makefile                           |   1 +
->  drivers/usb/phy/phy-berlin-usb.c                   | 223 +++++++++++=
-++++++++++
->  14 files changed, 568 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/berlin-usbp=
-hy.txt
->  create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-ber=
-lin.txt
->  create mode 100644 drivers/reset/reset-berlin.c
->  create mode 100644 drivers/usb/chipidea/ci_hdrc_berlin.c
->  create mode 100644 drivers/usb/phy/phy-berlin-usb.c
->=20
-> --=20
-> 1.9.1
->=20
+This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a little
+difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
 
-I am fine with 6/9, 7/9, will queue them if no other objections.
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Yadwinder Singh Brar <yadi.brar@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
---=20
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index d81ba30..f7c9180 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -1,5 +1,5 @@
+ 
+-* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
++* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
+ 
+ The Samsung S2MPS11 is a multi-function device which includes voltage and
+ current regulators, RTC, charger controller and other sub-blocks. It is
+@@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+ addressed by the host system using different I2C slave addresses.
+ 
+ Required properties:
+-- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
++- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
++              or "samsung,s2mpu02-pmic".
+ - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+@@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
+ 		  - valid values for n are:
+ 			- S2MPS11: 1 to 38
+ 			- S2MPS14: 1 to 25
++			- S2MPU02: 1 to 28
+ 		  - Example: LDO1, LD02, LDO28
+ 	- BUCKn
+ 		  - valid values for n are:
+ 			- S2MPS11: 1 to 10
+ 			- S2MPS14: 1 to 5
++			- S2MPU02: 1 to 7
+ 		  - Example: BUCK1, BUCK2, BUCK9
+ 
+ Example:
+-- 
+1.8.0
 
-Best Regards,
-Peter Chen
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
