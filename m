@@ -1,58 +1,42 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH v2] coccinelle: Check for missing NULL terminators in
- of_device_id tables
-Date: Mon, 09 Jun 2014 14:50:42 -0700
-Message-ID: <53962C32.2040003@codeaurora.org>
-References: <1401213858-31950-1-git-send-email-sboyd@codeaurora.org> <alpine.DEB.2.02.1406031208380.2036@localhost6.localdomain6> <538E09C1.30200@codeaurora.org> <alpine.DEB.2.02.1406032013150.2009@localhost6.localdomain6> <538E119D.8010304@codeaurora.org> <alpine.DEB.2.02.1406032022540.2009@localhost6.localdomain6> <53962B54.8030909@suse.cz>
+From: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH 2/3] arm: tegra: enable igb, stmpe, i2c chardev, spidev,
+ lm95245, pwm leds
+Date: Tue, 10 Jun 2014 00:16:13 +0200
+Message-ID: <5396322D.6030003@ziswiler.com>
+References: <c5522b0efcbfc7690dcde6aaf78b9dd568f99604.1401665237.git.marcel@ziswiler.com> <39a8704a4c8170d6b0620a1e5e44042eae6d8810.1401665237.git.marcel@ziswiler.com> <538CA24B.1010602@wwwdotorg.org> <538CA635.4050502@ziswiler.com> <20140602221627.GP31751@sirena.org.uk> <538D64FD.2010909@ziswiler.com> <20140603094537.GQ31751@sirena.org.uk> <538EBACB.70100@ziswiler.com> <20140604111755.GG2520@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53962B54.8030909@suse.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Marek <mmarek@suse.cz>
-Cc: Julia Lawall <julia.lawall@lip6.fr>, linux-kernel@vger.kernel.org, Mitchel Humpherys <mitchelh@codeaurora.org>, Gilles Muller <Gilles.Muller@lip6.fr>, Nicolas Palix <nicolas.palix@imag.fr>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140604111755.GG2520-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/14 14:47, Michal Marek wrote:
-> Dne 3.6.2014 20:25, Julia Lawall napsal(a):
->> From: Stephen Boyd <sboyd@codeaurora.org>
->>
->> Failure to terminate an of_device_id table can lead to confusing
->> failures depending on where the compiler places the array. Add a
->> check to make sure these tables are terminated. Thanks to Mitchel
->> Humpherys for coming up with the pattern initially.
->>
->> Cc: Mitchel Humpherys <mitchelh@codeaurora.org>
->> Cc: Julia Lawall <Julia.Lawall@lip6.fr>
->> Cc: Gilles Muller <Gilles.Muller@lip6.fr>
->> Cc: Nicolas Palix <nicolas.palix@imag.fr>
->> Cc: Grant Likely <grant.likely@linaro.org>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
->> Acked-by: Grant Likely <grant.likely@linaro.org>
->> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
->>
->> ---
->>
->> v3: Removed unneeded rule bad_of_table.  Placed * in context rule on the 
->> closing brace; putting it on the field caused all fields to be marked.
->>
->> v4: corrected authorship
->>
->>  scripts/coccinelle/misc/of_table.cocci |   62 +++++++++++++++++++++++++++++++++
->>  1 file changed, 62 insertions(+)
-> Applied to kbuild.git#misc, thanks. BTW, what is so special about of
-> device drivers? Shouldn't we check for missing sentinels in all kinds of
-> device tables?
->
+On 06/04/2014 01:17 PM, Mark Brown wrote:
+> You're saying you're controlling it from userspace.  This is a
+> particular detail of what you are doing in your system.  You happen to
+> want to control the devices you are hanging off the system with
+> userspace drivers but that's just what you're doing right now.
 
-Yes the rule should probably be expanded to cover more tables. I guess
-this is just more noticeable because a driver may match some device that
-it isn't supposed to match and start writing random bits to registers it
-shouldn't be, causing the system to hang.
+Sorry, I don't get it. Yes, spidev is to control stuff from user space 
+just like i2c-dev however bad that might sound.
 
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+> No, that's in the controller node - the chip selects are described
+> there.  The child node references a chip select number that the master
+> has and describes what's connected to that chip select.
+
+Well, unfortunately SPI without any chip select is just plain simply 
+useless. It won't work.
+
+> It's a perfectly fine way of controlling things from userspace if that's
+> a sensible way of controlling devices but that does not mean you should
+> describe it in the device tree in that fashion.
+
+Only that without describing such a chip select in the device tree 
+spidev won't ever work.
+
+I don't see us reaching any consensus here therefore I retreat. I will 
+re-submit the whole thing without spidev however sad having to see that 
+useful feature being dropped.
