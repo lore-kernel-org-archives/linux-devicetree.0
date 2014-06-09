@@ -1,61 +1,70 @@
-From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
-Subject: [PATCH 2/2] clocksource: clps711x: Add DT bindings documentation
-Date: Mon,  9 Jun 2014 21:03:58 +0400
-Message-ID: <1402333438-13731-1-git-send-email-shc_work@mail.ru>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
+ tree description
+Date: Mon, 9 Jun 2014 11:56:58 -0700
+Message-ID: <CAD=FV=UZape0qnV0wfYUdtS-spkOAQxt1s1vrmG96H+WpyhW6Q@mail.gmail.com>
+References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
+	<1402000514-30752-1-git-send-email-dianders@chromium.org>
+	<5390EE97.9020702@gmail.com>
+	<20140606234155.10062.58609@quantum>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140606234155.10062.58609@quantum>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mike Turquette <mturquette@linaro.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Rahul Sharma <rahul.sharma@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, Arun Kumar <arun.kk@samsung.com>, Alim Akhtar <alim.akhtar@samsung.com>, a.hajda@samsung.com, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for the Cirrus Logic
-CLPS711X-based CPUs clocksource subsystem.
+Tomasz,
 
-Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
----
- .../bindings/timer/cirrus,clps711x-timer.txt       | 29 ++++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
+On Fri, Jun 6, 2014 at 4:41 PM, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Tomasz Figa (2014-06-05 15:26:31)
+>> On 05.06.2014 22:35, Doug Anderson wrote:
+>> > The "aclk66_peric" clock is a gate clock with a whole bunch of gates
+>> > underneath it.  This big gate isn't very useful to include in our
+>> > clock tree.  If any of the children need to be turned on then the big
+>> > gate will need to be on anyway.  ...and there are plenty of other "big
+>> > gates" that aren't described in our clock tree, some of which shut off
+>> > collections of clocks that have no relationship in the hierarchy so
+>> > are hard to model.
+>> >
+>> > "aclk66_peric" is causing earlyprintk problems since it gets disabled
+>> > as part of the boot process, so let's just remove it.
+>> >
+>> > Strangely (and for no good reason) this clock is exported as part of
+>> > the common clock bindings.  Remove it since there are no in-kernel
+>> > device trees using it and no reason anyone out of tree should refer to
+>> > it either.
+>> >
+>> > Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> > ---
+>> > Changes in v3:
+>> > - Now just remove aclk66_peric from the tree as suggested by Tomasz.
+>> >
+>> > Changes in v2:
+>> > - Use GATE_A and clk_get().  Save the clock for putting later.
+>> > - Return 0 from exynos5420_clk_late_init().
+>> >
+>> >  drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
+>> >  include/dt-bindings/clock/exynos5420.h |  1 -
+>> >  2 files changed, 55 insertions(+), 31 deletions(-)
+>> >
+>>
+>> Mike, I can take this patch to my tree as a fix for 3.16-rc, or if still
+>> possible and you don't mind, feel free to apply it directly with my ACK:
+>>
+>> Acked-by: Tomasz Figa <t.figa@samsung.com>
+>
+> I'll send a second PR next week that includes this.
 
-diff --git a/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt b/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
-new file mode 100644
-index 0000000..cd55b52
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/cirrus,clps711x-timer.txt
-@@ -0,0 +1,29 @@
-+* Cirrus Logic CLPS711X Timer Counter
-+
-+Required properties:
-+- compatible: Shall contain "cirrus,clps711x-timer".
-+- reg       : Address and length of the register set.
-+- interrupts: The interrupt number of the timer.
-+- clocks    : phandle of timer reference clock.
-+
-+Note: Each timer should have an alias correctly numbered in "aliases" node.
-+
-+Example:
-+	aliases {
-+		timer0 = &timer1;
-+		timer1 = &timer2;
-+	};
-+
-+	timer1: timer@80000300 {
-+		compatible = "cirrus,ep7312-timer", "cirrus,clps711x-timer";
-+		reg = <0x80000300 0x4>;
-+		interrupts = <8>;
-+		clocks = <&clks 5>;
-+	};
-+
-+	timer2: timer@80000340 {
-+		compatible = "cirrus,ep7312-timer", "cirrus,clps711x-timer";
-+		reg = <0x80000340 0x4>;
-+		interrupts = <9>;
-+		clocks = <&clks 6>;
-+	};
--- 
-1.8.5.5
+This doesn't apply cleanly to Mike's tree.  Can you add it to your
+tree and send it out for 3.16?  Mike said you should add his Ack and
+I've confirmed that the patch applies cleanly to the most recent
+linuxnext (next-20140606) as well as to the top of your
+'samsung-clk-next' tree (2ce16c5 clk: samsung: exynos3250: Add clocks
+using common clock framework).
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+
+-Doug
