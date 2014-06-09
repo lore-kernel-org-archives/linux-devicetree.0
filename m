@@ -1,199 +1,51 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v2 7/7] ARM: at91/dt: enable the LCD panel on sama5d3xek boards
-Date: Mon,  9 Jun 2014 18:04:20 +0200
-Message-ID: <1402329860-27520-8-git-send-email-boris.brezillon@free-electrons.com>
-References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, Boris BREZILLON <boris.brezillon@free-electrons.com>, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2 2/2] clk: clps711x: Add DT bindings documentation
+Date: Mon,  9 Jun 2014 20:42:39 +0400
+Message-ID: <1402332159-11730-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Enable LCD related nodes and reference panel node in the hlcdc (High
-LCD Controller) controller on sama5d3xek boards.
+This patch adds DT binding documentation for the Cirrus Logic
+CLPS711X-based CPUs clock subsystem.
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 ---
- arch/arm/boot/dts/sama5d31ek.dts | 24 ++++++++++++++++++++++++
- arch/arm/boot/dts/sama5d33ek.dts | 24 ++++++++++++++++++++++++
- arch/arm/boot/dts/sama5d34ek.dts | 24 ++++++++++++++++++++++++
- arch/arm/boot/dts/sama5d36ek.dts | 24 ++++++++++++++++++++++++
- 4 files changed, 96 insertions(+)
+ .../devicetree/bindings/clock/clps711x-clock.txt      | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/clps711x-clock.txt
 
-diff --git a/arch/arm/boot/dts/sama5d31ek.dts b/arch/arm/boot/dts/sama5d31ek.dts
-index 04eec0d..338f4c3 100644
---- a/arch/arm/boot/dts/sama5d31ek.dts
-+++ b/arch/arm/boot/dts/sama5d31ek.dts
-@@ -33,6 +33,14 @@
- 				status = "okay";
- 			};
- 
-+			hlcdc: hlcdc@f0030000 {
-+				status = "okay";
+diff --git a/Documentation/devicetree/bindings/clock/clps711x-clock.txt b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
+new file mode 100644
+index 0000000..ce5a747
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clps711x-clock.txt
+@@ -0,0 +1,19 @@
++* Clock bindings for the Cirrus Logic CLPS711X CPUs
 +
-+				hlcdc-display-controller {
-+					atmel,panel = <&panel 3 0>;
-+				};
-+			};
++Required properties:
++- compatible       : Shall contain "cirrus,clps711x-clk".
++- reg              : Address of the internal register set.
++- startup-frequency: Factory set CPU startup frequency in HZ.
++- #clock-cells     : Should be <1>.
 +
- 			macb1: ethernet@f802c000 {
- 				status = "okay";
- 			};
-@@ -46,6 +54,22 @@
- 		};
- 	};
- 
-+	bl_reg: backlight_regulator {
-+		status = "okay";
++The clock consumer should specify the desired clock by having the clock
++ID in its "clocks" phandle cell. See include/dt-bindings/clock/clps711x-clock.h
++for the full list of CLPS711X clock IDs.
++
++Example:
++	clks: clks@80000000 {
++		#clock-cells = <1>;
++		compatible = "cirrus,ep7312-clk", "cirrus,clps711x-clk";
++		reg = <0x80000000 0xc000>;
++		startup-frequency = <73728000>;
 +	};
-+
-+	panel_reg: panel_regulator {
-+		status = "okay";
-+	};
-+
-+	backlight: backlight {
-+		status = "okay";
-+	};
-+
-+	panel: panel {
-+		status = "okay";
-+	};
-+
- 	sound {
- 		status = "okay";
- 	};
-diff --git a/arch/arm/boot/dts/sama5d33ek.dts b/arch/arm/boot/dts/sama5d33ek.dts
-index cbd6a3f..f2ab41d 100644
---- a/arch/arm/boot/dts/sama5d33ek.dts
-+++ b/arch/arm/boot/dts/sama5d33ek.dts
-@@ -36,9 +36,33 @@
- 			macb0: ethernet@f0028000 {
- 				status = "okay";
- 			};
-+
-+			hlcdc: hlcdc@f0030000 {
-+				status = "okay";
-+
-+				hlcdc-display-controller {
-+					atmel,panel = <&panel 3 0>;
-+				};
-+			};
- 		};
- 	};
- 
-+	bl_reg: backlight_regulator {
-+		status = "okay";
-+	};
-+
-+	panel_reg: panel_regulator {
-+		status = "okay";
-+	};
-+
-+	backlight: backlight {
-+		status = "okay";
-+	};
-+
-+	panel: panel {
-+		status = "okay";
-+	};
-+
- 	sound {
- 		status = "okay";
- 	};
-diff --git a/arch/arm/boot/dts/sama5d34ek.dts b/arch/arm/boot/dts/sama5d34ek.dts
-index 878aa16..0d0049c 100644
---- a/arch/arm/boot/dts/sama5d34ek.dts
-+++ b/arch/arm/boot/dts/sama5d34ek.dts
-@@ -46,6 +46,14 @@
- 			macb0: ethernet@f0028000 {
- 				status = "okay";
- 			};
-+
-+			hlcdc: hlcdc@f0030000 {
-+				status = "okay";
-+
-+				hlcdc-display-controller {
-+					atmel,panel = <&panel 3 0>;
-+				};
-+			};
- 		};
- 	};
- 
-@@ -56,6 +64,22 @@
- 		};
- 	};
- 
-+	bl_reg: backlight_regulator {
-+		status = "okay";
-+	};
-+
-+	panel_reg: panel_regulator {
-+		status = "okay";
-+	};
-+
-+	backlight: backlight {
-+		status = "okay";
-+	};
-+
-+	panel: panel {
-+		status = "okay";
-+	};
-+
- 	sound {
- 		status = "okay";
- 	};
-diff --git a/arch/arm/boot/dts/sama5d36ek.dts b/arch/arm/boot/dts/sama5d36ek.dts
-index 59576c6..8350358 100644
---- a/arch/arm/boot/dts/sama5d36ek.dts
-+++ b/arch/arm/boot/dts/sama5d36ek.dts
-@@ -41,12 +41,36 @@
- 				status = "okay";
- 			};
- 
-+			hlcdc: hlcdc@f0030000 {
-+				status = "okay";
-+
-+				hlcdc-display-controller {
-+					atmel,panel = <&panel 3 0>;
-+				};
-+			};
-+
- 			macb1: ethernet@f802c000 {
- 				status = "okay";
- 			};
- 		};
- 	};
- 
-+	bl_reg: backlight_regulator {
-+		status = "okay";
-+	};
-+
-+	panel_reg: panel_regulator {
-+		status = "okay";
-+	};
-+
-+	backlight: backlight {
-+		status = "okay";
-+	};
-+
-+	panel: panel {
-+		status = "okay";
-+	};
-+
- 	sound {
- 		status = "okay";
- 	};
 -- 
-1.8.3.2
+1.8.5.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
