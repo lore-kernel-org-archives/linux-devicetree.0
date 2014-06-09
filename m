@@ -1,64 +1,73 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH 0/5] Add Maxim 77802 PMIC support
-Date: Mon, 09 Jun 2014 12:16:51 +0200
-Message-ID: <1402309011.17650.9.camel@AMDC1943>
-References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, Daniel Stone <daniels@collabora.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv4 3/3] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
+Date: Mon, 09 Jun 2014 19:21:39 +0900
+Message-ID: <1402309299-7805-4-git-send-email-cw00.choi@samsung.com>
+References: <1402309299-7805-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1402309299-7805-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: lee.jones@linaro.org, broonie@kernel.org, sbkim73@samsung.com, sameo@linux.intel.com, lgirdwood@gmail.com, linux-kernel@vger.kernel.org
+Cc: myungjoo.ham@samsung.com, kyungmin.park@samsung.com, jonghwa3.lee@samsung.com, k.kozlowski@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On pon, 2014-06-09 at 11:37 +0200, Javier Martinez Canillas wrote:
-> MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
-> 32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
-> a Real-Time-Clock (RTC) and a I2C interface to program the individual
-> regulators, clocks and the RTC.
-> 
-> This series are based on drivers added by Simon Glass to the Chrome OS
-> kernel and adds support for the Maxim 77802 Power Management IC, their
-> regulators, clocks, RTC and I2C interface. It is composed of patches:
-> 
-> [PATCH 1/5] mfd: Add driver for Maxim 77802 Power Management IC
-> [PATCH 2/5] regulator: Add driver for Maxim 77802 PMIC regulators
-> [PATCH 3/5] clk: Add driver for Maxim 77802 PMIC clocks
-> [PATCH 4/5] rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
-> [PATCH 5/5] ARM: dts: Add max77802 device node for exynos5420-peach-pit
-> 
-> Patches 1-4 add support for the different devices and Patch 5 enables
-> the MAX77802 PMIC on the Exynos5420 based Peach pit board.
+This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a little
+difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
 
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Yadwinder Singh Brar <yadi.brar@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+---
+ Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-Hi,
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index d81ba30..f7c9180 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -1,5 +1,5 @@
+ 
+-* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
++* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
+ 
+ The Samsung S2MPS11 is a multi-function device which includes voltage and
+ current regulators, RTC, charger controller and other sub-blocks. It is
+@@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+ addressed by the host system using different I2C slave addresses.
+ 
+ Required properties:
+-- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
++- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
++              or "samsung,s2mpu02-pmic".
+ - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+@@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
+ 		  - valid values for n are:
+ 			- S2MPS11: 1 to 38
+ 			- S2MPS14: 1 to 25
++			- S2MPU02: 1 to 28
+ 		  - Example: LDO1, LD02, LDO28
+ 	- BUCKn
+ 		  - valid values for n are:
+ 			- S2MPS11: 1 to 10
+ 			- S2MPS14: 1 to 5
++			- S2MPU02: 1 to 7
+ 		  - Example: BUCK1, BUCK2, BUCK9
+ 
+ Example:
+-- 
+1.8.0
 
-The main mfd, mfd irq, clk and rtc drivers look very similar to max77686
-drivers. I haven't checked other Maxim drivers but I think there will be
-a lot of similarities with them also. It is almost common for Maxim
-chipsets to share components between each other.
-
-I think there is no need in duplicating all that stuff once again in new
-driver for another Maxim-almost-the-same-as-others-XYZ chipset. Just
-merge it with max77686 (or other better candidate).
-
-The only difference is in regulator driver. I am not sure whether this
-is a result of differences in chip or differences in driver design.
-
-Best regards,
-Krzysztof
-
-
-
-> Lee,
-> 
-> Patches 2-4 depend on Patch 1 so I think that it makes sense if you take
-> 1-4 through your mfd tree once the relevant maintainers ack the drivers
-> added to the other subsystems (regulator, clk and rtc).
-> 
-> Patch 5 can go through Kukjin tree since is just DTS changes.
-> 
-> Thanks a lot and best regards,
-> Javier
