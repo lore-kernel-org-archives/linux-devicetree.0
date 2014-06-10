@@ -1,140 +1,88 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 0/5] Add Maxim 77802 PMIC support
-Date: Tue, 10 Jun 2014 09:50:27 +0200
-Message-ID: <F27F8EB2-39C2-4A03-A5AC-E11C5A35BF9C@collabora.co.uk>
-References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk> <1402309011.17650.9.camel@AMDC1943> <CAD=FV=U2zPJ=NohDjGvJKfmwJzQhphtVMefM0p_hvFVoReauhQ@mail.gmail.com> <1402385558.6989.11.camel@AMDC1943>
-Mime-Version: 1.0 (1.0)
-Content-Type: text/plain;
-	charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1402385558.6989.11.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Doug Anderson <dianders@chromium.org>, Lee Jones <lee.jones@linaro.org>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Stone <daniels@collabora.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH v4] i2c: add driver for Rockchip RK3xxx SoC I2C adapter
+Date: Tue, 10 Jun 2014 10:19:50 +0200
+Message-ID: <20140610081950.GA2620@katana>
+References: <5192968.EzcUiXba22@typ>
+ <1547619.upPdAXDT0W@typ>
+ <20140602120854.GA2654@katana>
+ <1468105.xYIQWVNzVZ@typ>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="6c2NcOVqGQ03X4Wi"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1468105.xYIQWVNzVZ@typ>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Max Schwarz <max.schwarz-BGeptl67XyCzQB+pC5nmwQ@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
 
-> On 10/06/2014, at 09:32, Krzysztof Kozlowski <k.kozlowski@samsung.com> wrote:
-> 
->> On pon, 2014-06-09 at 09:04 -0700, Doug Anderson wrote:
->> Krzystof,
->> 
->> On Mon, Jun 9, 2014 at 3:16 AM, Krzysztof Kozlowski
->> <k.kozlowski@samsung.com> wrote:
->>> On pon, 2014-06-09 at 11:37 +0200, Javier Martinez Canillas wrote:
->>>> MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
->>>> 32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
->>>> a Real-Time-Clock (RTC) and a I2C interface to program the individual
->>>> regulators, clocks and the RTC.
->>>> 
->>>> This series are based on drivers added by Simon Glass to the Chrome OS
->>>> kernel and adds support for the Maxim 77802 Power Management IC, their
->>>> regulators, clocks, RTC and I2C interface. It is composed of patches:
->>>> 
->>>> [PATCH 1/5] mfd: Add driver for Maxim 77802 Power Management IC
->>>> [PATCH 2/5] regulator: Add driver for Maxim 77802 PMIC regulators
->>>> [PATCH 3/5] clk: Add driver for Maxim 77802 PMIC clocks
->>>> [PATCH 4/5] rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
->>>> [PATCH 5/5] ARM: dts: Add max77802 device node for exynos5420-peach-pit
->>>> 
->>>> Patches 1-4 add support for the different devices and Patch 5 enables
->>>> the MAX77802 PMIC on the Exynos5420 based Peach pit board.
->>> 
->>> 
->>> Hi,
->>> 
->>> The main mfd, mfd irq, clk and rtc drivers look very similar to max77686
->>> drivers. I haven't checked other Maxim drivers but I think there will be
->>> a lot of similarities with them also. It is almost common for Maxim
->>> chipsets to share components between each other.
->>> 
->>> I think there is no need in duplicating all that stuff once again in new
->>> driver for another Maxim-almost-the-same-as-others-XYZ chipset. Just
->>> merge it with max77686 (or other better candidate).
->>> 
->>> The only difference is in regulator driver. I am not sure whether this
->>> is a result of differences in chip or differences in driver design.
->> 
->> Yes, we thought the same thing when we added support for the max77802
->> in the ChromeOS tree.  Unfortunately it didn't work out half as well
->> as we thought it would.  When Javier was asking advice about sending
->> things upstream we suggested that perhaps he should split the two up.
->> 
->> 
->> You can see the result of the combined driver the ChromeOS tree (the
->> code there is older, probably misnamed as max77xxx, and doesn't have
->> the proper clock pieces, but you can get the gist):
->> 
->> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/regulator/max77xxx-regulator.c
->> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/rtc/rtc-max77xxx.c
->> 
->> 
->> Specific problems that made it ugly to have a combined driver:
->> 
->> * The RTC has many subtle differences between the 77686 and 77802.
->> They expanded it to handle a 200 year timeframe instead of 100 and
->> that meant that they had to shuffle the bits around everywhere.  They
->> also moved it to have the same i2c address as the main PMIC so all
->> addresses are different (see max77686_map in the RTC link above).
-> 
-> The difference in RTC registers seems the biggest but it can be solved
-> in readable manner. I see other differences but there aren't many. It
-> just hurts seeing so much code duplication:
-> $ sed -e 's/max77686/max77802/g' -e 's/MAX77686/MAX77802/g' \
->  -i drivers/rtc/rtc-max77686.c
-> $ diff -ubB drivers/rtc/rtc-max77686.c drivers/rtc/rtc-max77802.c
-> 
-> The combined RTC driver from ChromeOS seems fine to me... but I do not
-> insist.
-> 
->> * The regulator itself has similar concepts between the two, but the
->> list of bucks / ldos and how they behave is quite different.  Trying
->> to understand the complex tables in
->> <https://chromium.googlesource.com/chromiumos/third_party/kernel/+/chromeos-3.8/drivers/regulator/max77xxx-regulator.c>
->> was not easy.
->> 
->> 
->> If we really need to write a single driver it certainly can be done,
->> but please look at the above to be sure this is what you want.
-> 
-> Sure, I don't stick to the idea of one merged driver where this
-> increases code size and complexity. I see your point that merging
-> regulator drivers won't bring benefits but please:
-> $ sed -e 's/max77686/max77802/g' -e 's/MAX77686/MAX77802/g' \
->  -i drivers/clk/clk-max77686.c
-> $ diff -ubB drivers/clk/clk-max77686.c drivers/clk/clk-max77802.c
-> 
+--6c2NcOVqGQ03X4Wi
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I agree that there is too much duplicated code between those two and others Maxim PMIC drivers.
 
-I also agree that at some point we have to stop duplicating code and clean up all this.
+> > > +	/* Synchronization & notification */
+> > > +	spinlock_t lock;
+> >=20
+> > Why the lock? The core has per-adapter locks anyhow.
+>=20
+> I'm using it to lock the rk3x_i2c struct during interrupts. It's needed t=
+here=20
+> because an operation can timeout, which means the interrupt can occur at =
+any=20
+> time and possibly conflict with the cleanup I do after a timeout.
+>=20
+> I looked around in i2c-exynos5.c, i2c-pxa.c and others, and they do it th=
+e=20
+> same way. Could you explain in more detail why it's not needed?
 
-So, I think that instead of trying to make a single driver support two similar but different PMIC I can factor out the generic code in a max-core driver so the PMIC specific code is small and well contained.
+I saw that you disable IRQs on timeout, so that shouldn't happen? You
+don't disable IRQs after a successful transfer, though, AFAICS.
 
-I'll work on that and post a v2.
+> > It looks to me that you STOP after every message? You should use
+> > REPEATED_START inbetween messages and only stop after the last message
+> > of a transfer.
+>=20
+> I had a fight with the hw today and finally got it to issue a REPEATED_ST=
+ART=20
+> for multiple "boring" messages. Will be included in the next version.
 
-Thanks a lot for your feedback and best regards,
+Great.
 
-Javier
+> Actually, I wasn't aware that (len =3D=3D 0) is a valid case. The hw supp=
+orts it=20
+> in both modes, I just tested that. So the check is going away.
 
-> The difference in number of clocks (2 vs 3) is not an obstacle here.
-> 
-> The same applies to main MFD driver and IRQ code. However MAX77686
-> doesn't use regmap_irq_chip so it needs changes before merging the IRQ
-> code into one piece.
-> 
-> Best regards,
-> Krzysztof
-> 
->> 
->> NOTE: it's possible that things could be more sane with more driver
->> redesign, possibly making things more data driven.  The thing that
->> would be really nice to do would be to avoid all of the crazy
->> "regulator_zzz_desc_zzz" macros, maybe?  I'd have to actually try
->> doing it to be sure it's cleaner, though...
->> 
->> 
->> -Doug
-> 
+Also good!
+
+
+--6c2NcOVqGQ03X4Wi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTlr+mAAoJEBQN5MwUoCm2E38QAIc0r1TB/LiT/wQnX8dUL+TC
+vWEM0bpIm5CIaHnrS08HbAflht0ZfLB0zqXnDbfylYLzO1a8fPary5wDVFRUq2Z7
+oCYx4mpKscRnInrozhrDVPgu0WaVRunPn4XzixEoNqo/EK0/jXfT+gDosm8eQwBU
+HkjV4cPdflzwmw6MkVu0pa9+ojEY/qa9jY4z67OQICvAor58JwXjAzhXkz7o9C5U
+dMmRFMUVxc60ukRx4BzlT8sqzdVc8n2bmdWtJxkibtObHDH/xfZK9UCkYunPwG3H
+HuvoFj73siBNe3Ukjk5k3yWBWUECE2TzMidyXU8bz0sxR4pWYfD8NOIlr8stecHD
+Ulc1iGzNvgZJ6NRZ4hw40lo0Nrb5XsrSbMp9TOptzNa5+kbmxT0Q+gnHAzqr9KQW
+j769QJ247gubRnFagbUPiSR3G5Q1vM51OT5Iye87fZ9D4ews2yxO4prVMCyT0zyy
+D3HVx6qLwB5S3XT87aivkXYBc4dtTHmpWus08RUDmtRndN8HJdISy2RXjZYXrxoE
+7DeF9dqaepMNpDSs2Xmeaq8gJca+D/EXb/XyAB3kC/M3I3Dd1EDXEaRAgxX/3iGt
+MwdaYjvJrcR94/mRc4sCfONdD+Wk9s9Qz4BDbHb/riGwfHeYppqFl3IzSLxXRhEc
+jAEwTAcGewT4mjs9Gyws
+=pzGX
+-----END PGP SIGNATURE-----
+
+--6c2NcOVqGQ03X4Wi--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
