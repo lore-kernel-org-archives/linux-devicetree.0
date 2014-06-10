@@ -1,47 +1,56 @@
-From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v3 4/4] ARM: sunxi: dt: Add DT bindings
- documentation for SUNXI Security System
-Date: Tue, 10 Jun 2014 14:43:17 +0200
-Message-ID: <1402404197-4236-5-git-send-email-clabbe.montjoie@gmail.com>
-References: <1402404197-4236-1-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 02/24] drivercore: Bind/unbind power domain on probe/remove
+Date: Tue, 10 Jun 2014 14:53:26 +0200
+Message-ID: <CAPDyKFqWZdA4ZisJvCDP8j6D2_A8oRAHkjikddyGSwpToFg-Gw@mail.gmail.com>
+References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
+	<1402397497-26737-3-git-send-email-ulf.hansson@linaro.org>
+	<CAJZ5v0hUT0QPGWeDM9WoxnobaL5eoNi5UFrUUZrQ1gSBCX=aVg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBD7YLCN32UNBB6X23OOAKGQEEFZRXOY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402404197-4236-1-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAJZ5v0hUT0QPGWeDM9WoxnobaL5eoNi5UFrUUZrQ1gSBCX=aVg@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for Device-Tree bindings for the Security
-System cryptographic accelerator driver.
+On 10 June 2014 14:11, Rafael J. Wysocki <rafael@kernel.org> wrote:
+> On Tue, Jun 10, 2014 at 12:51 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
+>> From: Tomasz Figa <t.figa@samsung.com>
+>>
+>> On a number of platforms, devices are part of controllable power
+>> domains, which need to be enabled before such devices can be accessed
+>> and may be powered down when the device is idle to save some power.
+>> This means that on systems that support power domain control using
+>> generic power domains subsystem, it is necessary to add device to its
+>> power domain before binding a driver to it and remove it from its power
+>> domain after its driver is unbound to make sure that an unused device
+>> does not affect power domain state.
+>>
+>> Since this is not limited to particular busses and specific
+>> archs/platforms,
+>
+> Actually, this isn't correrct.  It is limited to the platforms that
+> use Device Trees now.
 
-Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- Documentation/devicetree/bindings/crypto/sunxi-ss.txt | 9 +++++++++
- 1 file changed, 9 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/crypto/sunxi-ss.txt
+Correct, we should update the commit message/docs.
 
-diff --git a/Documentation/devicetree/bindings/crypto/sunxi-ss.txt b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-new file mode 100644
-index 0000000..a566803
---- /dev/null
-+++ b/Documentation/devicetree/bindings/crypto/sunxi-ss.txt
-@@ -0,0 +1,9 @@
-+* Allwinner Security System found on A20 SoC
-+
-+Required properties:
-+- compatible : Should be "allwinner,sun7i-a20-crypto".
-+- reg: Should contain the Security System register location and length.
-+- interrupts: Should contain the IRQ line for the Security System.
-+- clocks : A phandle to the functional clock node of the Security System module
-+- clock-names : Name of the functional clock, should be "ahb" and "mod".
-+
--- 
-1.8.5.5
+>
+> Moreover, it is not consistent with the way we add devices to the ACPI PM
+> domain, which is the ACPI counterpart of this.
+
+I am not sure why you think consistency for ACPI is important here.
+ACPI PM will still be able to handle it's domain/device registering as
+before. There are even other pm_domains that don't use genpd which
+need to handle this themselves.
+
+Or are you saying that you prefer bus notifiers in favour of making
+use of the driver core for this matter? Shouldn't the driver core
+handle most of the common things for a device driver? Let's compare
+how the pinctrls are being managed in the driver core, for example.
+
+Kind regards
+Ulf Hansson
+
+>
+> Rafael
