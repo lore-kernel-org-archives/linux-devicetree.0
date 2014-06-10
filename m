@@ -1,49 +1,65 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
-Date: Tue, 10 Jun 2014 21:15:14 +0200
-Message-ID: <6544148.4RKn2Y8vCE@wuerfel>
-References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com> <20140610154118.GA4254@lukather>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead
+ of "cs-gpio"
+Date: Tue, 10 Jun 2014 21:25:40 +0200
+Message-ID: <53975BB4.6040104@gmail.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>	<1402394881-31564-2-git-send-email-ch.naveen@samsung.com> <CAD=FV=WgvyF-P+69SdmCGX0jxJ3FVxpa+AcgQKg-Emya_W-w3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140610154118.GA4254@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=WgvyF-P+69SdmCGX0jxJ3FVxpa+AcgQKg-Emya_W-w3Q@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, May 27, 2014 at 10:35:36AM +0200, Ludovic Desroches wrote:
-> +static struct dma_chan *at_xdmac_xlate(struct of_phandle_args *dma_spec,
-> +                                    struct of_dma *of_dma)
-> +{
-> +     struct at_xdmac_chan    *atchan;
-> +     struct dma_chan         *chan;
-> +     dma_cap_mask_t          mask;
-> +     struct platform_device  *pdev = of_find_device_by_node(dma_spec->np);
+On 10.06.2014 20:26, Doug Anderson wrote:
+> Naveen,
+> 
+> Not a full review, but a few quick things I happened to notice:
+> 
+> On Tue, Jun 10, 2014 at 3:08 AM, Naveen Krishna Chatradhi
+> <ch.naveen@samsung.com> wrote:
+>> @@ -94,7 +93,6 @@ Example:
+>>                         spi-max-frequency = <10000>;
+>>
+>>                         controller-data {
+>> -                               cs-gpio = <&gpa2 5 1 0 3>;
+>>                                 samsung,spi-feedback-delay = <0>;
+> 
+> In a future patch (not this one!) it might make sense to also move
+> spi-feedback-delay out.
+> 
+> 
+>> +static struct s3c64xx_spi_csinfo *s3c64xx_get_cs_gpios(struct spi_device *spi)
+> 
+> I believe that you can make use of the fact that the SPI core already
+> got these GPIOs for you.  See of_spi_register_master().  Everything
+> you need ought to be in master->num_chipselect and master->cs_gpios.
+> 
+> Strangely, it doesn't look like any other drivers use this, so
+> possibly I'm confused...
+> 
+> 
+>> @@ -806,9 +815,14 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+>>         struct s3c64xx_spi_info *sci;
+>>         int err;
+>>
+>> +       if (!spi->dev.of_node) {
+>> +               dev_err(&spi->dev, "device node not found\n");
+>> +               return -EINVAL;
+>> +       }
+> 
+> This seems incredibly broken.  You're saying that the SPI driver no
+> longer works without the device tree?  I don't think that's desirable,
+> but I suppose I could be wrong.
+> 
+> Also note that you still left an "if" test below for trying to deal
+> with the fact that there is no "of_node".
 
-No need to search through all the device nodes, you can look up the
-device from of_dma->of_dma_data.
+This driver can be also used by non-DT platforms (namely s3c2443,
+s3c64xx and s5p*) and so this assumption is wrong.
 
-> +     if (dma_spec->args_count != 2) {
-> +             dev_err(&pdev->dev, "dma phandler args: bad number of args\n");
-> +             return NULL;
-> +     }
-> +
-> +     dma_cap_zero(mask);
-> +     dma_cap_set(DMA_SLAVE, mask);
-> +     chan = dma_request_channel(mask, NULL, NULL);
-> +     if (!chan) {
-> +             dev_err(&pdev->dev, "can't get a dma channel\n");
-> +             return NULL;
-> +     }
-
-You must use dma_get_any_slave_channel. dma_request_channel gives you a
-channel from a random dma engine that is present in the system, not
-necessarily the one you are managing here.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
