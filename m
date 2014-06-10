@@ -1,68 +1,53 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface) controller support
-Date: Tue, 10 Jun 2014 16:47:55 +0200
-Message-ID: <13219561.hrRmVFjmAv@wuerfel>
-References: <1402408036-5235-1-git-send-email-boris.brezillon@free-electrons.com> <6454089.IP8IFVsofj@wuerfel> <20140610143604.GC7054@lukather>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v2 1/3] ARM: EXYNOS: Add support for clock handling in
+ power domain
+Date: Tue, 10 Jun 2014 17:38:16 +0200
+Message-ID: <53972668.7090903@samsung.com>
+References: <1401105384-8678-1-git-send-email-shaik.ameer@samsung.com>
+ <1401105384-8678-2-git-send-email-shaik.ameer@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140610143604.GC7054@lukather>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@free-electrons.com>
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Wolfram Sang <wsa@the-dreams.de>, Randy Dunlap <rdunlap@infradead.org>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1401105384-8678-2-git-send-email-shaik.ameer@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Shaik Ameer Basha <shaik.ameer@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: kgene.kim@samsung.com, tomasz.figa@gmail.com, mark.rutland@arm.com, pawel.moll@arm.com, swarren@wwwdotorg.org, prathyush.k@samsung.com, abrestic@chromium.org, arunkk.samsung@gmail.com, joshi@samsung.com, Arun Kumar K <arun.kk@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 June 2014 16:36:04 Maxime Ripard wrote:
-> On Tue, Jun 10, 2014 at 03:54:56PM +0200, Arnd Bergmann wrote:
-> > On Tuesday 10 June 2014 15:47:16 Boris BREZILLON wrote:
-> > > 
-> > > +config I2C_SUN6I_P2WI
-> > > +       tristate "Allwinner sun6i internal P2WI controller"
-> > > +       depends on ARCH_SUNXI
-> > > +       help
-> > > +         If you say yes to this option, support will be included for the
-> > > +         P2WI (Push/Pull 2 Wire Interface) controller embedded in some sunxi
-> > > +         SOCs.
-> > > +         The P2WI looks like an SMBus controller (which supports only byte
-> > > +         accesses), except that it only supports one slave device.
-> > > +         This interface is used to connect to specific PMIC devices (like the
-> > > +         AXP221).
-> > > +
-> > 
-> > Sorry for the stupid question, but why is this an i2c driver if the
-> > hardware protocol is completely different?
+Hi,
+
+On 26.05.2014 13:56, Shaik Ameer Basha wrote:
+> From: Prathyush K <prathyush.k@samsung.com>
 > 
-> It's not completely different. It deviates, but still looks very
-> similar to i2c, and to be precise, SMBus.
+> While powering on/off a local powerdomain in exynos5 chipsets, the input
+> clocks to each device gets modified. This behaviour is based on the
+> SYSCLK_SYS_PWR_REG registers.
+> E.g. SYSCLK_MFC_SYS_PWR_REG = 0x0, the parent of input clock to MFC
+> 				   (aclk333) gets modified to oscclk
+> 			    = 0x1, no change in clocks.
+> The recommended value of SYSCLK_SYS_PWR_REG before power gating any
+> domain is 0x0. So we must also restore the clocks while powering on a
+> domain everytime.
 > 
-> You'll have the full discussion that led to do this in i2c here:
-> http://www.spinics.net/lists/linux-i2c/msg15066.html
+> This patch adds the framework for getting the required mux and parent clocks
+> through a power domain device node. With this patch, while powering off
+> a domain, parent is set to oscclk and while powering back on, its re-set
+> to the correct parent which is as per the recommended pd on/off
+> sequence.
 > 
-> Also, one significant thing to take into account is that the
-> communication with a device starts as I2C, only to switch to this
-> protocol after some initialization sequence.
-
-Ok, sounds good.
-
-> > I understand that a lot of devices can be driven using either spi or
-> > i2c, and we have two sets of {directories,maintainers,bus_types,...}
-> > for them. Your description sounds like this is a separate option
-> > that isn't any closer to i2c than it is to spi.
+> Signed-off-by: Prathyush K <prathyush.k@samsung.com>
+> Signed-off-by: Andrew Bresticker <abrestic@chromium.org>
+> Signed-off-by: Arun Kumar K <arun.kk@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  .../bindings/arm/exynos/power_domain.txt           |   20 +++++++
+>  arch/arm/mach-exynos/pm_domains.c                  |   59 +++++++++++++++++++-
+>  2 files changed, 78 insertions(+), 1 deletion(-)
 > 
-> That's not true. It's *much* closer from I2C than it is from SPI.
 
-Ok.
+Reviewed-by: Tomasz Figa <t.figa@samsung.com>
 
-> > Would it perhaps be better to expose it only as a regmap rather than
-> > an i2c host?
-> 
-> That could be a solution, but is it a common practice to define a bus
-> adapter driver in a regmap driver?
-
-No, not yet.
-
-Maybe Boris can just put an explanation into the changeset description
-of the driver so other people are able to find it more easily.
-
-	Arnd
+--
+Best regards,
+Tomasz
