@@ -1,56 +1,153 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 02/24] drivercore: Bind/unbind power domain on probe/remove
-Date: Tue, 10 Jun 2014 14:53:26 +0200
-Message-ID: <CAPDyKFqWZdA4ZisJvCDP8j6D2_A8oRAHkjikddyGSwpToFg-Gw@mail.gmail.com>
-References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
-	<1402397497-26737-3-git-send-email-ulf.hansson@linaro.org>
-	<CAJZ5v0hUT0QPGWeDM9WoxnobaL5eoNi5UFrUUZrQ1gSBCX=aVg@mail.gmail.com>
+From: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 1/6] i2c: s3c2410: Handle i2c sys_cfg register in i2c
+ driver
+Date: Tue, 10 Jun 2014 15:35:16 +0200
+Message-ID: <53970994.8010400@samsung.com>
+References: <1399706287-13919-1-git-send-email-y@samsung.com>
+ <1399706419-13976-1-git-send-email-pankaj.dubey@samsung.com>
+ <1399706419-13976-2-git-send-email-pankaj.dubey@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAJZ5v0hUT0QPGWeDM9WoxnobaL5eoNi5UFrUUZrQ1gSBCX=aVg@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rafael@kernel.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1399706419-13976-2-git-send-email-pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 10 June 2014 14:11, Rafael J. Wysocki <rafael@kernel.org> wrote:
-> On Tue, Jun 10, 2014 at 12:51 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->> From: Tomasz Figa <t.figa@samsung.com>
->>
->> On a number of platforms, devices are part of controllable power
->> domains, which need to be enabled before such devices can be accessed
->> and may be powered down when the device is idle to save some power.
->> This means that on systems that support power domain control using
->> generic power domains subsystem, it is necessary to add device to its
->> power domain before binding a driver to it and remove it from its power
->> domain after its driver is unbound to make sure that an unused device
->> does not affect power domain state.
->>
->> Since this is not limited to particular busses and specific
->> archs/platforms,
->
-> Actually, this isn't correrct.  It is limited to the platforms that
-> use Device Trees now.
+Hi Pankaj,
 
-Correct, we should update the commit message/docs.
+On 10.05.2014 09:20, Pankaj Dubey wrote:
+> Let's handle i2c interrupt re-configuration in i2c driver. This will
+> help us in removing some soc specific checks from machine files.
+> Since only Exynos5250, and Exynos5420 need to do this, added syscon
+> based phandle to i2c device nodes of respective SoC DT files.
+> Also handle saving and restoring of SYS_I2C_CFG register during
+> suspend and resume of i2c driver. This will help in removing soc
+> specific check from mach-exynos/pm.c.
+> 
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
+> CC: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+> CC: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> CC: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> CC: linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Signed-off-by: Pankaj Dubey <pankaj.dubey-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/arm/samsung/sysreg.txt     |    1 +
+>  arch/arm/boot/dts/exynos5.dtsi                     |    5 +++
+>  arch/arm/boot/dts/exynos5250.dtsi                  |    4 +++
+>  arch/arm/boot/dts/exynos5420.dtsi                  |    4 +++
 
->
-> Moreover, it is not consistent with the way we add devices to the ACPI PM
-> domain, which is the ACPI counterpart of this.
+What about Exynos5410 and Exynos5800?
 
-I am not sure why you think consistency for ACPI is important here.
-ACPI PM will still be able to handle it's domain/device registering as
-before. There are even other pm_domains that don't use genpd which
-need to handle this themselves.
+>  drivers/i2c/busses/i2c-s3c2410.c                   |   32 ++++++++++++++++++++
+>  5 files changed, 46 insertions(+)
 
-Or are you saying that you prefer bus notifiers in favour of making
-use of the driver core for this matter? Shouldn't the driver core
-handle most of the common things for a device driver? Let's compare
-how the pinctrls are being managed in the driver core, for example.
+[snip]
 
-Kind regards
-Ulf Hansson
+> diff --git a/drivers/i2c/busses/i2c-s3c2410.c b/drivers/i2c/busses/i2c-s3c2410.c
+> index ae44910..e707062 100644
+> --- a/drivers/i2c/busses/i2c-s3c2410.c
+> +++ b/drivers/i2c/busses/i2c-s3c2410.c
+> @@ -39,6 +39,8 @@
+>  #include <linux/of.h>
+>  #include <linux/of_gpio.h>
+>  #include <linux/pinctrl/consumer.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+>  
+>  #include <asm/irq.h>
+>  
+> @@ -91,6 +93,9 @@
+>  /* Max time to wait for bus to become idle after a xfer (in us) */
+>  #define S3C2410_IDLE_TIMEOUT	5000
+>  
+> +/* Exynos5 Sysreg offset */
+> +#define EXYNOS5_SYS_I2C_CFG	0x0234
+> +
+>  /* i2c controller state */
+>  enum s3c24xx_i2c_state {
+>  	STATE_IDLE,
+> @@ -127,6 +132,8 @@ struct s3c24xx_i2c {
+>  #if defined(CONFIG_ARM_S3C24XX_CPUFREQ)
+>  	struct notifier_block	freq_transition;
+>  #endif
+> +	struct regmap		*sysreg;
+> +	unsigned int		sys_i2s_cfg;
 
->
-> Rafael
+typo: s/i2s/i2c/
+
+>  };
+>  
+>  static struct platform_device_id s3c24xx_driver_ids[] = {
+> @@ -1075,6 +1082,8 @@ static void
+>  s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+>  {
+>  	struct s3c2410_platform_i2c *pdata = i2c->pdata;
+> +	u32 val = 0;
+> +	int id;
+>  
+>  	if (!np)
+>  		return;
+> @@ -1084,6 +1093,23 @@ s3c24xx_i2c_parse_dt(struct device_node *np, struct s3c24xx_i2c *i2c)
+>  	of_property_read_u32(np, "samsung,i2c-slave-addr", &pdata->slave_addr);
+>  	of_property_read_u32(np, "samsung,i2c-max-bus-freq",
+>  				(u32 *)&pdata->frequency);
+> +	/*
+> +	 * Exynos5's legacy i2c controller and new high speed i2c
+> +	 * controller have muxed interrupt sources. By default the
+
+What do you mean by "by default"? Is it a setting from the bootloader or
+reset value?
+
+Probably to ensure that the mux is set correctly, same thing should be
+also added to hsi2c driver.
+
+> +	 * interrupts for 4-channel HS-I2C controller are enabled.
+> +	 * If node for first four channels of legacy i2c controller
+> +	 * are available then re-configure the interrupts via the
+> +	 * system register.
+> +	 */
+> +	id = of_alias_get_id(np, "i2c");
+> +	i2c->sysreg = syscon_regmap_lookup_by_phandle(np,
+> +			"samsung,syscon-phandle");
+> +	if (IS_ERR(i2c->sysreg)) {
+> +		/* As this is not compulsory do not return error */
+> +		pr_info("i2c-%d skipping re-configuration of interrutps\n", id);
+> +		return;
+> +	}
+> +	regmap_update_bits(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, BIT(id), val);
+
+As Wolfram pointed, val can be replaced with immediate 0 here.
+
+>  }
+>  #else
+>  static void
+> @@ -1268,6 +1294,9 @@ static int s3c24xx_i2c_suspend_noirq(struct device *dev)
+>  
+>  	i2c->suspended = 1;
+>  
+> +	if (!IS_ERR(i2c->sysreg))
+> +		regmap_read(i2c->sysreg, EXYNOS5_SYS_I2C_CFG, &i2c->sys_i2s_cfg);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1276,6 +1305,9 @@ static int s3c24xx_i2c_resume(struct device *dev)
+>  	struct platform_device *pdev = to_platform_device(dev);
+>  	struct s3c24xx_i2c *i2c = platform_get_drvdata(pdev);
+>  
+> +	if (!IS_ERR(i2c->sysreg))
+> +		regmap_write(i2c->sysreg, i2c->sys_i2s_cfg, EXYNOS5_SYS_I2C_CFG);
+
+According to include/linux/regmap.h:
+
+int regmap_write(struct regmap *map, unsigned int reg, unsigned int val);
+
+So in your code reg is swapped with val.
+
+Best regards,
+Tomasz
