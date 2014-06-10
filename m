@@ -1,37 +1,50 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH 02/24] drivercore: Bind/unbind power domain on probe/remove
-Date: Tue, 10 Jun 2014 14:11:31 +0200
-Message-ID: <CAJZ5v0hUT0QPGWeDM9WoxnobaL5eoNi5UFrUUZrQ1gSBCX=aVg@mail.gmail.com>
-References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
-	<1402397497-26737-3-git-send-email-ulf.hansson@linaro.org>
+From: Nicolas Ferre <nicolas.ferre@atmel.com>
+Subject: Re: [PATCH v2 4/5] ARM: atmel: sama5d3xek: switch sound to CCF
+Date: Tue, 10 Jun 2014 14:27:30 +0200
+Message-ID: <5396F9B2.9010106@atmel.com>
+References: <1402284707-23354-1-git-send-email-voice.shen@atmel.com> <1402284707-23354-5-git-send-email-voice.shen@atmel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1402397497-26737-3-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sound-owner@vger.kernel.org>
+In-Reply-To: <1402284707-23354-5-git-send-email-voice.shen@atmel.com>
+Sender: linux-sound-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>, Mark Brown <broonie@kernel.org>
+Cc: boris.brezillon@free-electrons.com, alsa-devel@alsa-project.org, linux-sound@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 10, 2014 at 12:51 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> From: Tomasz Figa <t.figa@samsung.com>
->
-> On a number of platforms, devices are part of controllable power
-> domains, which need to be enabled before such devices can be accessed
-> and may be powered down when the device is idle to save some power.
-> This means that on systems that support power domain control using
-> generic power domains subsystem, it is necessary to add device to its
-> power domain before binding a driver to it and remove it from its power
-> domain after its driver is unbound to make sure that an unused device
-> does not affect power domain state.
->
-> Since this is not limited to particular busses and specific
-> archs/platforms,
+On 09/06/2014 05:31, Bo Shen :
+> As the sama5d3xek board has switch to CCF, so add clock for wm8904
+> 
+> Signed-off-by: Bo Shen <voice.shen@atmel.com>
+> Reviwed-by: Mark Brown <broonie@linaro.org>
 
-Actually, this isn't correrct.  It is limited to the platforms that
-use Device Trees now.
+Acked-by: Nicolas Ferre <nicolas.ferre@atmel.com>
 
-Moreover, it is not consistent with the way we add devices to the ACPI PM
-domain, which is the ACPI counterpart of this.
+And taken for next "dt" branch (maybe can go in before). Thanks.
 
-Rafael
+> ---
+> Changes in v2:
+>   - None
+> 
+>  arch/arm/boot/dts/sama5d3xmb.dtsi | 2 ++
+>  1 file changed, 2 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/sama5d3xmb.dtsi b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> index 306eef0..b8c6f20 100644
+> --- a/arch/arm/boot/dts/sama5d3xmb.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3xmb.dtsi
+> @@ -45,6 +45,8 @@
+>  				wm8904: wm8904@1a {
+>  					compatible = "wm8904";
+>  					reg = <0x1a>;
+> +					clocks = <&pck0>;
+> +					clock-names = "mclk";
+>  				};
+>  			};
+>  
+> 
+
+
+-- 
+Nicolas Ferre
