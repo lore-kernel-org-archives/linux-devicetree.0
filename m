@@ -1,7 +1,7 @@
 From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH 02/12] clk: mmp: add spin lock for clk-frac
-Date: Tue, 10 Jun 2014 09:27:38 +0800
-Message-ID: <1402363668-25806-3-git-send-email-chao.xie@marvell.com>
+Subject: [PATCH 06/12] clk: mmp: add mmp private gate clock
+Date: Tue, 10 Jun 2014 09:27:42 +0800
+Message-ID: <1402363668-25806-7-git-send-email-chao.xie@marvell.com>
 References: <1402363668-25806-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,127 +22,209 @@ List-Id: devicetree@vger.kernel.org
 
 From: Chao Xie <chao.xie@marvell.com>
 
-The register used by clk-frac may be shared with
-other clocks.
-So it needs to use spin lock to protect the register
-access.
+Some SOCes have this kind of the gate clock
+1. There are some bits to control the gate not only one bit.
+2. Some clocks has operations of "out of reset" and "enable".
+   To enable clock, we need do "out of reset" and "enable".
+   To disable clock, we may not need "set to reset". It depends
+   on the SOCes' design.
+3. It is not always that "1" is to enable while "0" is to disable
+   when write register.
+
+So we have to define the "mask", "enable_val", "disable_val" for
+this kind of gate clock.
 
 Signed-off-by: Chao Xie <chao.xie@marvell.com>
 ---
- drivers/clk/mmp/clk-frac.c   | 11 ++++++++++-
- drivers/clk/mmp/clk-mmp2.c   |  2 +-
- drivers/clk/mmp/clk-pxa168.c |  2 +-
- drivers/clk/mmp/clk-pxa910.c |  2 +-
- drivers/clk/mmp/clk.h        |  3 ++-
- 5 files changed, 15 insertions(+), 5 deletions(-)
+ drivers/clk/mmp/Makefile   |   2 +-
+ drivers/clk/mmp/clk-gate.c | 133 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/clk/mmp/clk.h      |  21 +++++++
+ 3 files changed, 155 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/clk/mmp/clk-gate.c
 
-diff --git a/drivers/clk/mmp/clk-frac.c b/drivers/clk/mmp/clk-frac.c
-index 3fbc9ca..e29d006 100644
---- a/drivers/clk/mmp/clk-frac.c
-+++ b/drivers/clk/mmp/clk-frac.c
-@@ -29,6 +29,7 @@ struct mmp_clk_factor {
- 	struct mmp_clk_factor_masks	*masks;
- 	struct mmp_clk_factor_tbl	*ftbl;
- 	unsigned int		ftbl_cnt;
-+	spinlock_t *lock;
- };
+diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
+index 8bfee860..2855f7b 100644
+--- a/drivers/clk/mmp/Makefile
++++ b/drivers/clk/mmp/Makefile
+@@ -2,7 +2,7 @@
+ # Makefile for mmp specific clk
+ #
  
- static long clk_factor_round_rate(struct clk_hw *hw, unsigned long drate,
-@@ -86,6 +87,7 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long drate,
- 	int i;
- 	unsigned long val;
- 	unsigned long prev_rate, rate = 0;
+-obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o
++obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o
+ 
+ obj-$(CONFIG_CPU_PXA168) += clk-pxa168.o
+ obj-$(CONFIG_CPU_PXA910) += clk-pxa910.o
+diff --git a/drivers/clk/mmp/clk-gate.c b/drivers/clk/mmp/clk-gate.c
+new file mode 100644
+index 0000000..adbd9d6
+--- /dev/null
++++ b/drivers/clk/mmp/clk-gate.c
+@@ -0,0 +1,133 @@
++/*
++ * mmp gate clock operation source file
++ *
++ * Copyright (C) 2014 Marvell
++ * Chao Xie <chao.xie@marvell.com>
++ *
++ * This file is licensed under the terms of the GNU General Public
++ * License version 2. This program is licensed "as is" without any
++ * warranty of any kind, whether express or implied.
++ */
++
++#include <linux/clk-provider.h>
++#include <linux/slab.h>
++#include <linux/io.h>
++#include <linux/err.h>
++#include <linux/delay.h>
++
++#include "clk.h"
++
++/*
++ * Some clocks will have mutiple bits to enable the clocks, and
++ * the bits to disable the clock is not same as enabling bits.
++ */
++
++#define to_clk_mmp_gate(hw)	container_of(hw, struct mmp_clk_gate, hw)
++
++static int mmp_clk_gate_enable(struct clk_hw *hw)
++{
++	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
++	struct clk *clk = hw->clk;
 +	unsigned long flags = 0;
- 
- 	for (i = 0; i < factor->ftbl_cnt; i++) {
- 		prev_rate = rate;
-@@ -97,6 +99,9 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long drate,
- 	if (i > 0)
- 		i--;
- 
-+	if (factor->lock)
-+		spin_lock_irqsave(factor->lock, flags);
++	unsigned long rate;
++	u32 tmp;
 +
- 	val = readl_relaxed(factor->base);
- 
- 	val &= ~(masks->num_mask << masks->num_shift);
-@@ -107,6 +112,9 @@ static int clk_factor_set_rate(struct clk_hw *hw, unsigned long drate,
- 
- 	writel_relaxed(val, factor->base);
- 
-+	if (factor->lock)
-+		spin_unlock_irqrestore(factor->lock, flags);
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
 +
- 	return 0;
- }
- 
-@@ -120,7 +128,7 @@ struct clk *mmp_clk_register_factor(const char *name, const char *parent_name,
- 		unsigned long flags, void __iomem *base,
- 		struct mmp_clk_factor_masks *masks,
- 		struct mmp_clk_factor_tbl *ftbl,
--		unsigned int ftbl_cnt)
-+		unsigned int ftbl_cnt, spinlock_t *lock)
- {
- 	struct mmp_clk_factor *factor;
- 	struct clk_init_data init;
-@@ -143,6 +151,7 @@ struct clk *mmp_clk_register_factor(const char *name, const char *parent_name,
- 	factor->ftbl = ftbl;
- 	factor->ftbl_cnt = ftbl_cnt;
- 	factor->hw.init = &init;
-+	factor->lock = lock;
- 
- 	init.name = name;
- 	init.ops = &clk_factor_ops;
-diff --git a/drivers/clk/mmp/clk-mmp2.c b/drivers/clk/mmp/clk-mmp2.c
-index 7083f12..5c90a42 100644
---- a/drivers/clk/mmp/clk-mmp2.c
-+++ b/drivers/clk/mmp/clk-mmp2.c
-@@ -191,7 +191,7 @@ void __init mmp2_clk_init(void)
- 	clk = mmp_clk_register_factor("uart_pll", "pll1_4", 0,
- 				mpmu_base + MPMU_UART_PLL,
- 				&uart_factor_masks, uart_factor_tbl,
--				ARRAY_SIZE(uart_factor_tbl));
-+				ARRAY_SIZE(uart_factor_tbl), &clk_lock);
- 	clk_set_rate(clk, 14745600);
- 	clk_register_clkdev(clk, "uart_pll", NULL);
- 
-diff --git a/drivers/clk/mmp/clk-pxa168.c b/drivers/clk/mmp/clk-pxa168.c
-index 75266ac..93e967c 100644
---- a/drivers/clk/mmp/clk-pxa168.c
-+++ b/drivers/clk/mmp/clk-pxa168.c
-@@ -158,7 +158,7 @@ void __init pxa168_clk_init(void)
- 	uart_pll = mmp_clk_register_factor("uart_pll", "pll1_4", 0,
- 				mpmu_base + MPMU_UART_PLL,
- 				&uart_factor_masks, uart_factor_tbl,
--				ARRAY_SIZE(uart_factor_tbl));
-+				ARRAY_SIZE(uart_factor_tbl), &clk_lock);
- 	clk_set_rate(uart_pll, 14745600);
- 	clk_register_clkdev(uart_pll, "uart_pll", NULL);
- 
-diff --git a/drivers/clk/mmp/clk-pxa910.c b/drivers/clk/mmp/clk-pxa910.c
-index f817999..993abcd 100644
---- a/drivers/clk/mmp/clk-pxa910.c
-+++ b/drivers/clk/mmp/clk-pxa910.c
-@@ -163,7 +163,7 @@ void __init pxa910_clk_init(void)
- 	uart_pll =  mmp_clk_register_factor("uart_pll", "pll1_4", 0,
- 				mpmu_base + MPMU_UART_PLL,
- 				&uart_factor_masks, uart_factor_tbl,
--				ARRAY_SIZE(uart_factor_tbl));
-+				ARRAY_SIZE(uart_factor_tbl), &clk_lock);
- 	clk_set_rate(uart_pll, 14745600);
- 	clk_register_clkdev(uart_pll, "uart_pll", NULL);
- 
++	tmp = readl(gate->reg);
++	tmp &= ~gate->mask;
++	tmp |= gate->val_enable;
++	writel(tmp, gate->reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++
++	if (gate->flags & MMP_CLK_GATE_NEED_DELAY) {
++		rate = __clk_get_rate(clk);
++		/* Need delay 2 cycles. */
++		udelay(2000000/rate);
++	}
++
++	return 0;
++}
++
++static void mmp_clk_gate_disable(struct clk_hw *hw)
++{
++	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
++	unsigned long flags = 0;
++	u32 tmp;
++
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
++
++	tmp = readl(gate->reg);
++	tmp &= ~gate->mask;
++	tmp |= gate->val_disable;
++	writel(tmp, gate->reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++}
++
++static int mmp_clk_gate_is_enabled(struct clk_hw *hw)
++{
++	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
++	unsigned long flags = 0;
++	u32 tmp;
++
++	if (gate->lock)
++		spin_lock_irqsave(gate->lock, flags);
++
++	tmp = readl(gate->reg);
++
++	if (gate->lock)
++		spin_unlock_irqrestore(gate->lock, flags);
++
++	return (tmp & gate->mask) == gate->val_enable;
++}
++
++const struct clk_ops mmp_clk_gate_ops = {
++	.enable = mmp_clk_gate_enable,
++	.disable = mmp_clk_gate_disable,
++	.is_enabled = mmp_clk_gate_is_enabled,
++};
++
++struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
++		const char *parent_name, unsigned long flags,
++		void __iomem *reg, u32 mask, u32 val_enable, u32 val_disable,
++		unsigned int gate_flags, spinlock_t *lock)
++{
++	struct mmp_clk_gate *gate;
++	struct clk *clk;
++	struct clk_init_data init;
++
++	/* allocate the gate */
++	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
++	if (!gate) {
++		pr_err("%s:%s could not allocate gate clk\n", __func__, name);
++		return ERR_PTR(-ENOMEM);
++	}
++
++	init.name = name;
++	init.ops = &mmp_clk_gate_ops;
++	init.flags = flags | CLK_IS_BASIC;
++	init.parent_names = (parent_name ? &parent_name : NULL);
++	init.num_parents = (parent_name ? 1 : 0);
++
++	/* struct clk_gate assignments */
++	gate->reg = reg;
++	gate->mask = mask;
++	gate->val_enable = val_enable;
++	gate->val_disable = val_disable;
++	gate->flags = gate_flags;
++	gate->lock = lock;
++	gate->hw.init = &init;
++
++	clk = clk_register(dev, &gate->hw);
++
++	if (IS_ERR(clk))
++		kfree(gate);
++
++	return clk;
++}
 diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index 3fe92be..b71b717 100644
+index 426616b..9096f0a 100644
 --- a/drivers/clk/mmp/clk.h
 +++ b/drivers/clk/mmp/clk.h
-@@ -31,5 +31,6 @@ extern struct clk *mmp_clk_register_apmu(const char *name,
- extern struct clk *mmp_clk_register_factor(const char *name,
- 		const char *parent_name, unsigned long flags,
- 		void __iomem *base, struct mmp_clk_factor_masks *masks,
--		struct mmp_clk_factor_tbl *ftbl, unsigned int ftbl_cnt);
-+		struct mmp_clk_factor_tbl *ftbl, unsigned int ftbl_cnt,
-+		spinlock_t *lock);
- #endif
+@@ -99,6 +99,27 @@ extern struct clk *mmp_clk_register_mix(struct device *dev,
+ 					spinlock_t *lock);
+ 
+ 
++/* Clock type "gate". MMP private gate */
++#define MMP_CLK_GATE_NEED_DELAY		BIT(0)
++
++struct mmp_clk_gate {
++	struct clk_hw hw;
++	void __iomem *reg;
++	u32 mask;
++	u32 val_enable;
++	u32 val_disable;
++	unsigned int flags;
++	spinlock_t *lock;
++};
++
++extern const struct clk_ops mmp_clk_gate_ops;
++extern struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
++			const char *parent_name, unsigned long flags,
++			void __iomem *reg, u32 mask, u32 val_enable,
++			u32 val_disable, unsigned int gate_flags,
++			spinlock_t *lock);
++
++
+ extern struct clk *mmp_clk_register_pll2(const char *name,
+ 		const char *parent_name, unsigned long flags);
+ extern struct clk *mmp_clk_register_apbc(const char *name,
 -- 
 1.8.3.2
