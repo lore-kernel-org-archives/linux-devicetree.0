@@ -1,46 +1,48 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: [PATCH] of/platform: Fix microblaze build failure
-Date: Tue, 10 Jun 2014 11:59:14 -0700
-Message-ID: <1402426754-7328-1-git-send-email-linux@roeck-us.net>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
+Date: Tue, 10 Jun 2014 21:15:14 +0200
+Message-ID: <6544148.4RKn2Y8vCE@wuerfel>
+References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com> <20140610154118.GA4254@lukather>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140610154118.GA4254@lukather>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Commit bf5db2f (microblaze: Use generic device.h) removes the
-microblaze specific pdev_archdata and dma_mask.
+On Tue, May 27, 2014 at 10:35:36AM +0200, Ludovic Desroches wrote:
+> +static struct dma_chan *at_xdmac_xlate(struct of_phandle_args *dma_spec,
+> +                                    struct of_dma *of_dma)
+> +{
+> +     struct at_xdmac_chan    *atchan;
+> +     struct dma_chan         *chan;
+> +     dma_cap_mask_t          mask;
+> +     struct platform_device  *pdev = of_find_device_by_node(dma_spec->np);
 
-At the same time, commit 591c1ee (of: configure the platform
-device dma parameters) initializes the just removed field.
-This causes all microblaze builds to fail.
+No need to search through all the device nodes, you can look up the
+device from of_dma->of_dma_data.
 
-Drop the unnecessary initialization.
+> +     if (dma_spec->args_count != 2) {
+> +             dev_err(&pdev->dev, "dma phandler args: bad number of args\n");
+> +             return NULL;
+> +     }
+> +
+> +     dma_cap_zero(mask);
+> +     dma_cap_set(DMA_SLAVE, mask);
+> +     chan = dma_request_channel(mask, NULL, NULL);
+> +     if (!chan) {
+> +             dev_err(&pdev->dev, "can't get a dma channel\n");
+> +             return NULL;
+> +     }
 
-Cc: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
----
- drivers/of/platform.c | 4 ----
- 1 file changed, 4 deletions(-)
+You must use dma_get_any_slave_channel. dma_request_channel gives you a
+channel from a random dma engine that is present in the system, not
+necessarily the one you are managing here.
 
-diff --git a/drivers/of/platform.c b/drivers/of/platform.c
-index 6c48d73..500436f 100644
---- a/drivers/of/platform.c
-+++ b/drivers/of/platform.c
-@@ -166,10 +166,6 @@ static void of_dma_configure(struct platform_device *pdev)
- 	int ret;
- 	struct device *dev = &pdev->dev;
- 
--#if defined(CONFIG_MICROBLAZE)
--	pdev->archdata.dma_mask = 0xffffffffUL;
--#endif
--
- 	/*
- 	 * Set default dma-mask to 32 bit. Drivers are expected to setup
- 	 * the correct supported dma_mask.
--- 
-1.9.1
-
+	Arnd
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
