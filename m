@@ -1,87 +1,74 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 24/24] ARM: ux500: Add sdi[n] devices to VAPE power domain
-Date: Tue, 10 Jun 2014 12:51:37 +0200
-Message-ID: <1402397497-26737-25-git-send-email-ulf.hansson@linaro.org>
-References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/5] regulator: Add driver for Maxim 77802 PMIC regulators
+Date: Tue, 10 Jun 2014 11:53:34 +0100
+Message-ID: <20140610105334.GF5099@sirena.org.uk>
+References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1402306670-17041-3-git-send-email-javier.martinez@collabora.co.uk>
+ <20140609193849.GE5099@sirena.org.uk>
+ <5396434D.3020402@collabora.co.uk>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="k4P7DRXulMjuQ+XK"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5396434D.3020402@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Since ux500 uses the mmci host driver for these devices and since that
-driver are well behaving from a runtime PM perspective, we can now add
-these device to the VAPE power domain.
 
-Cc: Linus Walleij <linus.walleij@linaro.org>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- arch/arm/boot/dts/ste-dbx5x0.dtsi |    7 +++++++
- 1 file changed, 7 insertions(+)
+--k4P7DRXulMjuQ+XK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/ste-dbx5x0.dtsi b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-index 29a7013..630690b 100644
---- a/arch/arm/boot/dts/ste-dbx5x0.dtsi
-+++ b/arch/arm/boot/dts/ste-dbx5x0.dtsi
-@@ -11,6 +11,7 @@
- 
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/mfd/dbx500-prcmu.h>
-+#include <dt-bindings/arm/ux500_pm_domains.h>
- #include "skeleton.dtsi"
- 
- / {
-@@ -840,6 +841,7 @@
- 
- 			clocks = <&prcc_kclk 1 5>, <&prcc_pclk 1 5>;
- 			clock-names = "sdi", "apb_pclk";
-+			power-domains = <&pm_domains DOMAIN_VAPE>;
- 
- 			status = "disabled";
- 		};
-@@ -855,6 +857,7 @@
- 
- 			clocks = <&prcc_kclk 2 4>, <&prcc_pclk 2 6>;
- 			clock-names = "sdi", "apb_pclk";
-+			power-domains = <&pm_domains DOMAIN_VAPE>;
- 
- 			status = "disabled";
- 		};
-@@ -870,6 +873,7 @@
- 
- 			clocks = <&prcc_kclk 3 4>, <&prcc_pclk 3 4>;
- 			clock-names = "sdi", "apb_pclk";
-+			power-domains = <&pm_domains DOMAIN_VAPE>;
- 
- 			status = "disabled";
- 		};
-@@ -881,6 +885,7 @@
- 
- 			clocks = <&prcc_kclk 2 5>, <&prcc_pclk 2 7>;
- 			clock-names = "sdi", "apb_pclk";
-+			power-domains = <&pm_domains DOMAIN_VAPE>;
- 
- 			status = "disabled";
- 		};
-@@ -896,6 +901,7 @@
- 
- 			clocks = <&prcc_kclk 2 2>, <&prcc_pclk 2 4>;
- 			clock-names = "sdi", "apb_pclk";
-+			power-domains = <&pm_domains DOMAIN_VAPE>;
- 
- 			status = "disabled";
- 		};
-@@ -907,6 +913,7 @@
- 
- 			clocks = <&prcc_kclk 3 7>, <&prcc_pclk 3 7>;
- 			clock-names = "sdi", "apb_pclk";
-+			power-domains = <&pm_domains DOMAIN_VAPE>;
- 
- 			status = "disabled";
- 		};
--- 
-1.7.9.5
+On Tue, Jun 10, 2014 at 01:29:17AM +0200, Javier Martinez Canillas wrote:
+> On 06/09/2014 09:38 PM, Mark Brown wrote:
+> > On Mon, Jun 09, 2014 at 11:37:47AM +0200, Javier Martinez Canillas wrote:
 
+> >> +	case REGULATOR_MODE_STANDBY:			/* switch off */
+> >> +		if (id != MAX77802_LDO1 && id != MAX77802_LDO20 &&
+> >> +			id != MAX77802_LDO21 && id != MAX77802_LDO3) {
+> >> +			val = MAX77802_OPMODE_STANDBY;
+> >> +			break;
+> >> +		}
+> >> +		/* no break */
+
+> > This sounds very broken...
+
+> The problem is that not all regulators supports the same operational modes. For
+> instance regulators LDO 1, 20, 21 and 3 does not support REGULATOR_MODE_STANDBY
+> so if the condition is not met a break is not needed since the default case is
+> to warn that the mode is not supported.
+
+No, it's the "switch off" comment...
+
+> But I'll rework that logic on v2 to make it cleaner and have a break on each
+> case and don't rely on case cascading.
+
+...though you should also consider splitting things up so you have
+separate ops for separate regulators if they behave differently.
+
+--k4P7DRXulMjuQ+XK
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTluOrAAoJELSic+t+oim9UdsP/A2NV35f4BsE16AuepYtgcKm
+q8fkRqeDl95SmG+glxmMTPbCL1lDQW2n+mpvoComlcChOeVH5FfqaSDMbuHqEFQq
+O53RoZ5KWg38LLwoN0HF3IBg+jhppDejOgcGglgkjL9Uf2xfUQzKMZpQhAbNHj+W
+1GSMEIyGqOLWnkqAMbV55jYav5RONYr6l6HhK3ul9FthC6Rh55zyLTUp8M0PLVBG
+X7l/zA7Uxfg3NmOwgggB1UUt/VqOQU9MHrPJRfzju/8rjrMDNgJTpVH3C85Py9ck
+oJRASYDdxqxv6LDk7MxoDPAMRshTfFIglbi+JzI8SElkRkYRxipi+TTHlhFM9fWM
+qmxQ2/hQf1Ix/8xv6ozuT3XZvvvIYzTuH3TIUsz+pZ4seJBzSKl8caw1VvKhBwrJ
+6T1+WheVRJ54CPaKOnZeEiVm3NzW3+dvGQ2Sul9dvvu5tvEqFrMDjkRTH6bo1ihr
+wovMKBqwlhQPzh0EqRzLBmRZYO+rEOJOlNq4YU0umKdMWzKa1sBe49MJM1Ws3zZv
+1DXcRP2HfemOeeNWjfTcsNjd/1vzmope0YQo+vIqLOGHcCrHJSh+uChQA1bMtkR5
+/lCA1fyJpfWPIEGWJo/Qmh8f98T9/GtBUeGc4yq3bg1uJBkdeCIoL0dV4fWJA+bx
+fL+6IdzaOmZg+FxUiVuj
+=HzFx
+-----END PGP SIGNATURE-----
+
+--k4P7DRXulMjuQ+XK--
