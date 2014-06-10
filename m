@@ -1,147 +1,74 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
- controller support
-Date: Tue, 10 Jun 2014 21:45:11 +0200
-Message-ID: <20140610194511.GC3122@katana>
-References: <1402408036-5235-1-git-send-email-boris.brezillon@free-electrons.com>
- <1402408036-5235-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead
+ of "cs-gpio"
+Date: Tue, 10 Jun 2014 21:49:40 +0200
+Message-ID: <53976154.60308@gmail.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com> <1402394881-31564-2-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HG+GLK89HZ1zG0kk"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402408036-5235-3-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1402394881-31564-2-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Naveen,
 
---HG+GLK89HZ1zG0kk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 10.06.2014 12:08, Naveen Krishna Chatradhi wrote:
+> Currently, spi-s3c64xx.c needs "cs-gpio" chip select GPIO to be
+> defined under "controller-data" node under each slave node.
 
-Hi,
+[snip]
 
-compiling this driver gives me:
+> @@ -85,6 +83,7 @@ Example:
+>  		#size-cells = <0>;
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&spi0_bus>;
+> +		cs-gpios = <&gpa2 5 1 0 3>;
 
-drivers/i2c/busses/i2c-sun6i-p2wi.c: In function 'p2wi_probe':
-drivers/i2c/busses/i2c-sun6i-p2wi.c:272:2: error: implicit declaration of function 'devm_reset_control_get' [-Werror=implicit-function-declaration]
-drivers/i2c/busses/i2c-sun6i-p2wi.c:272:13: warning: assignment makes pointer from integer without a cast [enabled by default]
+While at it, you might also update the example to something more
+appropriate on Samsung platforms, e.g. <&gpa2 5 0>;
 
-> diff --git a/drivers/i2c/busses/i2c-sun6i-p2wi.c b/drivers/i2c/busses/i2c-sun6i-p2wi.c
-> new file mode 100644
-> index 0000000..4f7b93f
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-sun6i-p2wi.c
-> @@ -0,0 +1,356 @@
-> +/*
-> + * P2WI (Push-Pull Two Wire Interface) bus driver.
-> + *
-> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> + *
-> + * This file is licensed under the terms of the GNU General Public License
-> + * version 2.  This program is licensed "as is" without any warranty of any
-> + * kind, whether express or implied.
-> + *
-> + * The P2WI controller looks like an SMBus controller which only supports byte
-> + * data transfers. But, it differs from standard SMBus protocol on several
-> + * aspects:
-> + * - it supports only one slave device, and thus drop the address field
-> + * - it adds a parity bit every 8bits of data
-> + * - only one read access is required to read a byte (instead of a write
-> + *   followed by a read access in standard SMBus protocol)
-> + * - there's no Ack bit after each byte transfer
-> + *
-> + * This means this bus cannot be used to interface with standard SMBus
-> + * devices (the only known device to support this interface is the AXP221
-> + * PMIC).
-> + *
-> + */
-> +#include <linux/kernel.h>
-> +#include <linux/slab.h>
-> +#include <linux/module.h>
-> +#include <linux/spinlock.h>
+>  
+>  		w25q80bw@0 {
+>  			#address-cells = <1>;
 
-Unneeded. Please check other includes, too.
+[snip]
 
-> +#include <linux/i2c.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/clk.h>
-> +#include <linux/err.h>
-> +#include <linux/delay.h>
-> +#include <linux/clk.h>
-> +#include <linux/reset.h>
+> +static struct s3c64xx_spi_csinfo *s3c64xx_get_cs_gpios(struct spi_device *spi)
+> +{
+> +	struct device_node *parent_np = NULL;
+> +	struct s3c64xx_spi_driver_data *sdd;
+> +	struct s3c64xx_spi_csinfo *cs;
 > +
-
-...
-
-> +	r = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	p2wi->regs = devm_ioremap_resource(dev, r);
-> +	if (IS_ERR(p2wi->regs)) {
-> +		ret = PTR_ERR(p2wi->regs);
-> +		return ret;
-> +	}
-
-return PTR_ERR(...)?
-
+> +	parent_np = of_get_parent(spi->dev.of_node);
+> +	if (!parent_np) {
+> +		dev_err(&spi->dev, "Parent node not found\n");
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> +	sdd = spi_master_get_devdata(spi->master);
 > +
-> +	snprintf(p2wi->adapter.name, sizeof(p2wi->adapter.name), pdev->name);
-> +	irq = platform_get_irq(pdev, 0);
-> +	if (irq < 0) {
-> +		dev_err(dev, "failed to retrieve irq: %d\n", ret);
-> +		return irq;
-> +	}
-> +
-> +	p2wi->clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(p2wi->clk)) {
-> +		ret = PTR_ERR(p2wi->clk);
-> +		dev_err(dev, "failed to retrieve clk: %d\n",
-> +			ret);
+>  	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
+>  	if (!cs) {
+> -		of_node_put(data_np);
+> +		of_node_put(parent_np);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+>  	/* The CS line is asserted/deasserted by the gpio pin */
+>  	if (sdd->cs_gpio)
+> -		cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
+> +		cs->line = of_get_named_gpio(parent_np, "cs-gpios", 0);
 
-dangling ret.
+This is wrong. The "cs-gpios" property is supposed to be an array,
+indexed by chip select number of SPI devices (indicated by their "reg"
+properties).
 
-> +		return ret;
-> +	}
-> +
+Moreover, is there a need to parse this manually in this driver? I can
+see respective parsing code in of_spi_register_master().
 
-...
-
-> +MODULE_AUTHOR("Boris BREZILLON <boris.brezillon@free-electrons.com>");
-> +MODULE_DESCRIPTION("Allwinner P2WI driver");
-> +MODULE_LICENSE("GPL");
-
-"GPL v2"
-
-Thanks,
-
-   Wolfram
-
---HG+GLK89HZ1zG0kk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTl2BHAAoJEBQN5MwUoCm2wtkP/3+cULS3I7KVt7Ey5jylyXg5
-jMRr8tOzYmwVpX1qGvNxPZJSgwd+8pVDJ8T4Biwx1CAumbisFopxSV7m3yoGM2gt
-yFPE7qs4DlOlLTrua6p/hafBoTiyGCQhHJKojYd0zDetKuqij9QrtgUsQQr+cwu4
-LxjVUyXKOte6dRBCLCU29pWzQKSZpQ+knHdpZeNKPkGoiVZn0MK1mWhp1R9uwxxI
-oXo1cuB14qeN5QD2rzvIGK3xwYqR+WZBJZq9JVLxdvCvylYD5x+P7cIka0/nSGQy
-HowkB8ax3kDsxN13mFAcp/hxxnfZAbvmW7WF+ZaM13+4FQ6Bo7UKTB6AdkkcewN5
-jhbecPAtZNkJw+UK42QD545JOUDX7Rdy6FqWawrImckwfx99uB2v2lLa07RnoTkg
-DWOjV8/lRSuuFriu9kqhA7p8KFSboh8gnLWnYnqcoRKHYQ/WzebqUrPahZvim45X
-HwGBXH2S1KxOCMNGO0OsgOV7K3OsbHe24Eb+dkHSinsVuiiIKwiQ12jdavaF1L+Q
-qLdzROYlEMzohWRybz2KZ6xujeNxB7CDLhWoCCTIv2oKgHY4ipBnesiHeNFm7t68
-VtbTMtpGaW1VrnaTWbesiXytpiokVw7fkro1mACRO/UgIkaGeIjWKbKnX0ATRu6u
-al39h7tQ8m28fefG6Qki
-=5ZK7
------END PGP SIGNATURE-----
-
---HG+GLK89HZ1zG0kk--
+Best regards,
+Tomasz
