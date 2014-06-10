@@ -1,59 +1,63 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH v2 3/4] ARM: tegra: tegra124: Add XUSB pad controller
-Date: Tue, 10 Jun 2014 13:11:47 +0200
-Message-ID: <1402398708-10722-3-git-send-email-thierry.reding@gmail.com>
-References: <1402398708-10722-1-git-send-email-thierry.reding@gmail.com>
+From: Maxime Ripard <maxime.ripard@free-electrons.com>
+Subject: Re: [PATCH 0/2] ARM: topology: Allow to set the frequency through a
+ clock
+Date: Tue, 10 Jun 2014 13:47:52 +0200
+Message-ID: <20140610114752.GL9791@lukather>
+References: <1400700796-5763-1-git-send-email-maxime.ripard@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="DN8g+DOX2TxGxleI"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402398708-10722-1-git-send-email-thierry.reding@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1400700796-5763-1-git-send-email-maxime.ripard@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Andrew Bresticker <abrestic@chromium.org>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Russell King <linux@arm.linux.org.uk>, Arnd Bergmann <arnd@arndb.de>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Nicolas Pitre <nico@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding@nvidia.com>
 
-The device tree node in the SoC file contains only the resources (such
-as registers, resets, ...) but none of the lane assignment information
-since that's board specific and belongs in the board file.
+--DN8g+DOX2TxGxleI
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
-Changes in v2:
-- include dt-bindings/pinctrl/pinctrl-tegra-xusb.h so that board files
-  don't have to include it explicitly
-- remove unneeded #address-cells/#size-cells = <0>
-- add padctl label for XUSB pad controller node
+On Wed, May 21, 2014 at 09:33:14PM +0200, Maxime Ripard wrote:
+> Hi,
+>=20
+> This patch series add the possibility for the topology code to get the
+> CPU frequency through a DT clock handle instead of needing a
+> clock-frequency property.
+>=20
+> Indeed, this information can be quite redundant if the clock tree
+> defined in the DT is already describing the CPU parent clock.
 
- arch/arm/boot/dts/tegra124.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Ping?
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 6e6bc4e8185c..b7cb944b2faa 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -1,6 +1,7 @@
- #include <dt-bindings/clock/tegra124-car.h>
- #include <dt-bindings/gpio/tegra-gpio.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
-+#include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- #include "skeleton.dtsi"
-@@ -449,6 +450,15 @@
- 		clock-names = "pclk", "clk32k_in";
- 	};
- 
-+	padctl: padctl@0,7009f000 {
-+		compatible = "nvidia,tegra124-xusb-padctl";
-+		reg = <0x0 0x7009f000 0x0 0x1000>;
-+		resets = <&tegra_car 142>;
-+		reset-names = "padctl";
-+
-+		#phy-cells = <1>;
-+	};
-+
- 	sdhci@0,700b0000 {
- 		compatible = "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
--- 
-1.9.2
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--DN8g+DOX2TxGxleI
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTlvBoAAoJEBx+YmzsjxAgUukP/156rKpf5kfu5EOyOMRrPUnr
+h2gIXX7IeGekEPCTcWVEvtzJ72D0oUxgen1BiPIGsoDyieWqpITKOvvm14VYprmJ
+acfv1Ki7twVBA3bwRskXSMPaYrgllrbqUDX79IQEGCzdn3pKjWefpi1oCuSxra3p
+Q5Bh+KF9r2z5QP5oVohEuyFJdT7CpvOjhHxjXXwraJrA+PClvCec5W9q90OirvvC
+OtG9f1vapTHgprc+xFZcNdcHqI/nInpvMJc70zw2JzkT/Vlv0jEiip7342H+DpNj
+Q2cYSM8rufTiIRtGVGLJDNnLJ08x4/f2pfAzHACqALlQkDbEM24rwSmnJyltOkSR
+FN9MYzvJOIH7k9cQvVFlyPaJG3Gdqo9IhrgOAjEdoDXXFU8GMKaWwtO2WNILIUq+
+zxV1pnukXyyY2cZy0fOT47UyWuPxBPCxJa3DIMPt4y/inbgOqkgcNud4EWVxSmsB
+KkaMUyoVJEEJpqDD1dPht+PO1HZcvU3NsVfkra2QWcTyUmDwO8AeoBkNZPRfUSJc
+PDrCyRX56dlS9x+Y0TGGXjIiOd63CVUGVdHsDzluYnnRFTBhg1YWCwhL5LZOSbxD
+DSwyej2TeiPZyICWiXW6SaXQT7uPiXt1w+Mp4LA7sibh9YL8j4f+Wnkr+G2Vetcr
+SeEjUeNgJM/vuGtOMka7
+=IuMQ
+-----END PGP SIGNATURE-----
+
+--DN8g+DOX2TxGxleI--
