@@ -1,44 +1,63 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA Controller driver
-Date: Tue, 10 Jun 2014 19:58:01 +0200
-Message-ID: <11151546.Z6056AoQxM@wuerfel>
-References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com> <20140610154118.GA4254@lukather>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead
+ of "cs-gpio"
+Date: Tue, 10 Jun 2014 11:09:13 -0700
+Message-ID: <CAD=FV=XtdgKEg7fTHe+tsFM1Y_YwqNNk_DBW7ZX83YERGJsHBg@mail.gmail.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>
+	<1402394881-31564-2-git-send-email-ch.naveen@samsung.com>
+	<5396E051.8050803@samsung.com>
+	<CAHfPSqAq9L5Zu7z3-y6Y2pG8AhE4Y1j8DE35LDfMW_DYc_x-gw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140610154118.GA4254@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAHfPSqAq9L5Zu7z3-y6Y2pG8AhE4Y1j8DE35LDfMW_DYc_x-gw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "broonie@kernel.org" <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 10 June 2014 17:41:18 Maxime Ripard wrote:
-> > +DMA clients connected to the Atmel XDMA controller must use the format
-> > +described in the dma.txt file, using a three-cell specifier for each channel:
-> > +a phandle plus two integer cells.
-> > +The three cells in order are:
-> > +
-> > +1. A phandle pointing to the DMA controller.
-> > +2. The memory interface (16 most significant bits), the peripheral interface
-> > +(16 less significant bits).
-> 
-> Can you elaborate on this? What are they? The request IDs on both ends
-> of the transfers?
-> 
-> > +3. Channel configuration register. Configurable fields are:
-> > +  - bit 2-1: MBSIZE, memory burst size.
-> > +  - bit 10-8: CSIZE, chunk size.
-> > +  - bit 12-11: DWIDTH, data width.
-> 
-> I'd rather see those as generic properties.
+Naveen / Sylwester,
 
-Actually these are standard settings that a slave driver
-configures using dma_slave_config. They don't belong into
-DT at all, as they are slave driver specific.
+On Tue, Jun 10, 2014 at 4:00 AM, Naveen Krishna Ch
+<naveenkrishna.ch@gmail.com> wrote:
+>> Can we support both "cs-gpio" and "cs-gpios" for backward compatibility ?
+>> After your change all DTBs using the original pattern will not work with
+>> new kernels any more. At least I would expect such backward compatibility
+>> maintained for few kernel releases.
+>
+> The reason behind removing the "cs-gpio" or not providing backward
+> compatibility was
+>
+> 1. Since spi-core started using "cs-gpios" string from spi device node
+> several months ago.
+>   The spi-s3c64xx.c driver is partially broken for more than 6 months.
+>
+> 2. Supporting "cs-gpio" would add extra bit of code.
+>
+> I've corrected the dts files that were using "cs-gpio" under
+> "controller-data"(child node)
+> to use "cs-gpio" from spi device node (parent node).
+>
+> I will make another version if you insist.
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Yup, as near as I can tell this has been broken since (3146bee spi:
+s3c64xx: Added provision for dedicated cs pin).  That landed June 25th
+of 2013 into the SPI tree.
+
+...so clearly nobody was really testing Samsung's SPI driver on ToT
+Linux.  1 year of unnoticed brokenness seems like enough time that we
+could do away with the old code.  If someone comes out of the woodwork
+and claims a dire need to support the old binding then it can be added
+then.
+
+In-tree users of this appear to be:
+
+arch/arm/boot/dts/exynos4210-smdkv310.dts:
+ cs-gpio = <&gpc1 2 0>;
+arch/arm/boot/dts/exynos4412-trats2.dts:
+ cs-gpio = <&gpb 5 0>;
+arch/arm/boot/dts/exynos5250-smdk5250.dts:
+ cs-gpio = <&gpa2 5 0>;
+
+...and I guess nobody has bothered using the SPI flash on those boards
+for the last year?
