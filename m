@@ -1,51 +1,37 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: of: Add support for parsing regulator_state
- for suspend state
-Date: Tue, 10 Jun 2014 08:59:01 +0900
-Message-ID: <53964A45.3010108@samsung.com>
-References: <1402309780-8118-1-git-send-email-cw00.choi@samsung.com>
- <1402309780-8118-2-git-send-email-cw00.choi@samsung.com>
- <20140609192133.GD5099@sirena.org.uk>
+From: Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: RE: [PATCH 0/9] ARM: Berlin: USB support
+Date: Tue, 10 Jun 2014 01:16:18 +0000
+Message-ID: <63fc1fa8280b498182ebf8a3654732b9@BL2PR03MB226.namprd03.prod.outlook.com>
+References: <1401983326-19205-1-git-send-email-antoine.tenart@free-electrons.com>
+ <20140609043019.GA32255@shlinux1.ap.freescale.net>
+ <53958913.8080708@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140609192133.GD5099-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+In-Reply-To: <53958913.8080708-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, =?iso-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org" <jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mark,
-
-On 06/10/2014 04:21 AM, Mark Brown wrote:
-> On Mon, Jun 09, 2014 at 07:29:39PM +0900, Chanwoo Choi wrote:
+ 
 > 
->> +		ret = of_property_read_u32(suspend_np, "regulator-mode", &pval);
->> +		if (!ret)
->> +			suspend_state->mode = pval;
-> 
-> If we're going to do that we'd need to define what modes mean in the DT
-> binding - currently there's no support for modes at all because it's
-> complicated to come up with sensible and meaningful generic defintions.
+> we are early in the cycle and I feel there will be a v2 of the chipidea
+> stub. IMHO, controlling the vbus regulator should not be business of the
+> phy driver, so ci will have to deal with it.
 > 
 
-The 'regulator-mode' of this patch means following defined constant variable
-as following in include/linux/regulator/consumer.h:
-#define REGULATOR_MODE_FAST		0x1
-#define REGULATOR_MODE_NORMAL		0x2
-#define REGULATOR_MODE_IDLE		0x4
-#define REGULATOR_MODE_STANDBY		0x8
+vbus handling has already in chipidea common code, it treats vbus as a regulator.
+So, the glue layer only needs to register and add vbus-supply to dts file, no source
+code change is needed.
 
-If regulator consumer would use this mode('regulator-mode),
-specific regulator driver should implement rdev->desc->ops->set_suspend_mode function
-to control regulator state according to 'regulator-mode' in suspend state.
+Peter
 
-Best Regards,
-Chanwoo CHoi
-
-
-
+> Anyways, good to know you are fine with it already!
+> 
+> Sebastian
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
