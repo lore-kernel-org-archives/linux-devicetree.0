@@ -1,72 +1,196 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: of: Add support for parsing
- regulator_state for suspend state
-Date: Tue, 10 Jun 2014 11:02:32 +0100
-Message-ID: <20140610100232.GD5099@sirena.org.uk>
-References: <1402309780-8118-1-git-send-email-cw00.choi@samsung.com>
- <1402309780-8118-2-git-send-email-cw00.choi@samsung.com>
- <20140609192133.GD5099@sirena.org.uk>
- <53964A45.3010108@samsung.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kEeQdy8Dt6IIuJte"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53964A45.3010108-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead of
+ "cs-gpio"
+Date: Tue, 10 Jun 2014 15:38:00 +0530
+Message-ID: <1402394881-31564-2-git-send-email-ch.naveen@samsung.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
+Currently, spi-s3c64xx.c needs "cs-gpio" chip select GPIO to be
+defined under "controller-data" node under each slave node.
 
---kEeQdy8Dt6IIuJte
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+&spi_x {
+	cs-gpios <>;
+	...
+	slave_node {
 
-On Tue, Jun 10, 2014 at 08:59:01AM +0900, Chanwoo Choi wrote:
-> On 06/10/2014 04:21 AM, Mark Brown wrote:
+		controller-data {
+			cs-gpio = <>;
+			...
+		};
+		...
+	};
+	...
+};
 
-> > If we're going to do that we'd need to define what modes mean in the DT
-> > binding - currently there's no support for modes at all because it's
-> > complicated to come up with sensible and meaningful generic defintions.
+Where as, SPI core and many other drivers uses "cs-gpios" for
+from device tree node.
 
-> The 'regulator-mode' of this patch means following defined constant variable
-> as following in include/linux/regulator/consumer.h:
-> #define REGULATOR_MODE_FAST		0x1
-> #define REGULATOR_MODE_NORMAL		0x2
-> #define REGULATOR_MODE_IDLE		0x4
-> #define REGULATOR_MODE_STANDBY		0x8
+Hence, make changes in spi-s3c64xx.c driver to make use of
+"cs-gpios" from SPI node(parent) instead of "cs-gpio" defined in
+slaves "controller-data"(child) node.
 
-> If regulator consumer would use this mode('regulator-mode),
-> specific regulator driver should implement rdev->desc->ops->set_suspend_mode function
-> to control regulator state according to 'regulator-mode' in suspend state.
+Also updates the Device tree Documentation.
 
-Sure, but what do those mean?
+Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Doug Anderson <dianders@chromium.org>
+---
+Changes since v1:
+1. fixed a compilation warning thus squashing the other patch into this.
+2. Updated device tree description in spi-samsung.txt
 
---kEeQdy8Dt6IIuJte
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+ .../devicetree/bindings/spi/spi-samsung.txt        |    8 ++-
+ drivers/spi/spi-s3c64xx.c                          |   56 ++++++++++++--------
+ 2 files changed, 38 insertions(+), 26 deletions(-)
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTlte1AAoJELSic+t+oim9sY4QAImMhtfX0+Yn1lWOosuRTeZ9
-ljUdsjTW/i71LL9qVhxhCuS/aVptstBUh7ZugNYxfbBQtRiWFIxf1t/sndzsuN3j
-FnxCofUBkntTFQKlgkmI5a9N8u9WgapfJKUtXYPLlgGGdA0bJ0Ay3/awRJZ6n+TM
-7BY4kBiq0C9rr7V8CSn9aLYk0SZODOXyvI+GP+fdgcBDTZA5p/W04JevW1zYPLqV
-kG88PvVhktItdLuJtOVzXBD1LSJ/G9Z+LR/HjL6dL1D/kX+6yP1RHu5ZWu9ffNQn
-1j9xs9b6TkTpKD3a+Sqv5HNZCa1cNxPBn+WZRFzEVhFH5DPMnNEG5oGOyleZ8Dnu
-tRGQVrHjScsZizFprI6YqwIq03hHd6CWd0yyc7BLKV+JRzNEAcdZqQFIGHeCmoCJ
-peoRLlGvwqK9R29ooZ6RGB/OejSd2lNiDTTLRyk5tM1SmwiM84SP0JV+edL+0nMg
-7zHnoPSkkNv7QtKnxjmfr0Isk20ykgPpQV2bCktJHOHfE7ZwuoGiqcstGUi8yBdz
-9KNNrpLcjICwYFS/cC/aGsRYNXuTWB8ZJ55oue5U8fsbHDAm5Izb1lWhgVfDo7Og
-PQZeC4n00BW81bAEB39az5SR/oceL33oy9rqAfYsJnpRdO3DhCxC8Ji2Le/r9Nze
-cNvpIi/uj2LBD4AtKafp
-=A0r0
------END PGP SIGNATURE-----
-
---kEeQdy8Dt6IIuJte--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+index 86aa061..13bfcb5 100644
+--- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
++++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+@@ -42,15 +42,13 @@ Optional Board Specific Properties:
+ - num-cs: Specifies the number of chip select lines supported. If
+   not specified, the default number of chip select lines is set to 1.
+ 
++- cs-gpios: should specify GPIOs used for chipselects (see spi-bus.txt)
++
+ SPI Controller specific data in SPI slave nodes:
+ 
+ - The spi slave nodes should provide the following information which is required
+   by the spi controller.
+ 
+-  - cs-gpio: A gpio specifier that specifies the gpio line used as
+-    the slave select line by the spi controller. The format of the gpio
+-    specifier depends on the gpio controller.
+-
+   - samsung,spi-feedback-delay: The sampling phase shift to be applied on the
+     miso line (to account for any lag in the miso line). The following are the
+     valid values.
+@@ -85,6 +83,7 @@ Example:
+ 		#size-cells = <0>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&spi0_bus>;
++		cs-gpios = <&gpa2 5 1 0 3>;
+ 
+ 		w25q80bw@0 {
+ 			#address-cells = <1>;
+@@ -94,7 +93,6 @@ Example:
+ 			spi-max-frequency = <10000>;
+ 
+ 			controller-data {
+-				cs-gpio = <&gpa2 5 1 0 3>;
+ 				samsung,spi-feedback-delay = <0>;
+ 			};
+ 
+diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+index 75a5696..4594dde 100644
+--- a/drivers/spi/spi-s3c64xx.c
++++ b/drivers/spi/spi-s3c64xx.c
+@@ -750,47 +750,56 @@ static int s3c64xx_spi_transfer_one(struct spi_master *master,
+ }
+ 
+ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+-				struct spi_device *spi)
++				struct spi_device *spi,
++				struct s3c64xx_spi_csinfo *cs)
+ {
+-	struct s3c64xx_spi_csinfo *cs;
+-	struct device_node *slave_np, *data_np = NULL;
+-	struct s3c64xx_spi_driver_data *sdd;
++	struct device_node *data_np = NULL;
+ 	u32 fb_delay = 0;
+ 
+-	sdd = spi_master_get_devdata(spi->master);
+-	slave_np = spi->dev.of_node;
+-	if (!slave_np) {
+-		dev_err(&spi->dev, "device node not found\n");
++	data_np = of_get_child_by_name(spi->dev.of_node, "controller-data");
++	if (!data_np) {
++		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	data_np = of_get_child_by_name(slave_np, "controller-data");
+-	if (!data_np) {
+-		dev_err(&spi->dev, "child node 'controller-data' not found\n");
++	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
++	cs->fb_delay = fb_delay;
++	of_node_put(data_np);
++
++	return cs;
++}
++
++static struct s3c64xx_spi_csinfo *s3c64xx_get_cs_gpios(struct spi_device *spi)
++{
++	struct device_node *parent_np = NULL;
++	struct s3c64xx_spi_driver_data *sdd;
++	struct s3c64xx_spi_csinfo *cs;
++
++	parent_np = of_get_parent(spi->dev.of_node);
++	if (!parent_np) {
++		dev_err(&spi->dev, "Parent node not found\n");
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
++	sdd = spi_master_get_devdata(spi->master);
++
+ 	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
+ 	if (!cs) {
+-		of_node_put(data_np);
++		of_node_put(parent_np);
+ 		return ERR_PTR(-ENOMEM);
+ 	}
+ 
+ 	/* The CS line is asserted/deasserted by the gpio pin */
+ 	if (sdd->cs_gpio)
+-		cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
++		cs->line = of_get_named_gpio(parent_np, "cs-gpios", 0);
+ 
+ 	if (!gpio_is_valid(cs->line)) {
+ 		dev_err(&spi->dev, "chip select gpio is not specified or invalid\n");
+-		kfree(cs);
+-		of_node_put(data_np);
++		of_node_put(parent_np);
+ 		return ERR_PTR(-EINVAL);
+ 	}
+ 
+-	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
+-	cs->fb_delay = fb_delay;
+-	of_node_put(data_np);
+-	return cs;
++	return s3c64xx_get_slave_ctrldata(spi, cs);
+ }
+ 
+ /*
+@@ -806,9 +815,14 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+ 	struct s3c64xx_spi_info *sci;
+ 	int err;
+ 
++	if (!spi->dev.of_node) {
++		dev_err(&spi->dev, "device node not found\n");
++		return -EINVAL;
++	}
++
+ 	sdd = spi_master_get_devdata(spi->master);
+ 	if (!cs && spi->dev.of_node) {
+-		cs = s3c64xx_get_slave_ctrldata(spi);
++		cs = s3c64xx_get_cs_gpios(spi);
+ 		spi->controller_data = cs;
+ 	}
+ 
+@@ -1077,7 +1091,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+ 	sdd->sfr_start = mem_res->start;
+ 	sdd->cs_gpio = true;
+ 	if (pdev->dev.of_node) {
+-		if (!of_find_property(pdev->dev.of_node, "cs-gpio", NULL))
++		if (!of_find_property(pdev->dev.of_node, "cs-gpios", NULL))
+ 			sdd->cs_gpio = false;
+ 
+ 		ret = of_alias_get_id(pdev->dev.of_node, "spi");
+-- 
+1.7.9.5
