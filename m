@@ -1,68 +1,129 @@
 From: Chao Xie <chao.xie@marvell.com>
-Subject: [PATCH 06/12] clk: mmp: add mmp private gate clock
-Date: Tue, 10 Jun 2014 09:27:42 +0800
-Message-ID: <1402363668-25806-7-git-send-email-chao.xie@marvell.com>
+Subject: [PATCH 08/12] clk: mmp: add clock type master
+Date: Tue, 10 Jun 2014 09:27:44 +0800
+Message-ID: <1402363668-25806-9-git-send-email-chao.xie@marvell.com>
 References: <1402363668-25806-1-git-send-email-chao.xie@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1402363668-25806-1-git-send-email-chao.xie@marvell.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: haojian.zhuang@gmail.com, mturquette@linaro.org, chao.xie@marvell.com, xiechao_mail@163.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Chao Xie <chao.xie@marvell.com>
 
-Some SOCes have this kind of the gate clock
-1. There are some bits to control the gate not only one bit.
-2. Some clocks has operations of "out of reset" and "enable".
-   To enable clock, we need do "out of reset" and "enable".
-   To disable clock, we may not need "set to reset". It depends
-   on the SOCes' design.
-3. It is not always that "1" is to enable while "0" is to disable
-   when write register.
+To support device tree for clock, we need pass the register
+base and range to the clock.
+There are many clock share same range of registers.
+For example, clk1 has register as 0xd4210010 while clk2
+has 0xd42100c0. If we map the register seperately. There
+will waste some space. If there are many clocks like that,
+the waste will be huge.
+clock type "master node" will map the register for all clocks
+that listed as its child in DT file. Each clock will invoke
+the APIs provided by "master node" to get its register base.
+The following is a exmaple of master clock usage in DT file
 
-So we have to define the "mask", "enable_val", "disable_val" for
-this kind of gate clock.
+apmu_clocks {
+	compatible = "marvell,mmp-clk-master";
+	reg = <0xd4210000 0x1000>;
+
+	ck1 {
+		marvell,reg-offset = <0 0x10>;
+	};
+
+	clk2 {
+		marvell,reg-offset = <0 0xc0>;
+	};
+}
 
 Signed-off-by: Chao Xie <chao.xie@marvell.com>
 ---
- drivers/clk/mmp/Makefile   |   2 +-
- drivers/clk/mmp/clk-gate.c | 133 +++++++++++++++++++++++++++++++++++++++++++++
- drivers/clk/mmp/clk.h      |  21 +++++++
- 3 files changed, 155 insertions(+), 1 deletion(-)
- create mode 100644 drivers/clk/mmp/clk-gate.c
+ .../devicetree/bindings/clock/mmp/clk-master       |  47 +++++
+ drivers/clk/mmp/Makefile                           |   4 +
+ drivers/clk/mmp/clk-master-node.c                  | 195 +++++++++++++++++++++
+ drivers/clk/mmp/clk.h                              |   7 +
+ 4 files changed, 253 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/mmp/clk-master
+ create mode 100644 drivers/clk/mmp/clk-master-node.c
 
+diff --git a/Documentation/devicetree/bindings/clock/mmp/clk-master b/Documentation/devicetree/bindings/clock/mmp/clk-master
+new file mode 100644
+index 0000000..b6acde1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/mmp/clk-master
+@@ -0,0 +1,47 @@
++Binding for Marvell MMP series master clock.
++
++The MMP related device tree support for clock based on the clock type not clock
++controller. So specific SOC, user need define the DT file for the clock such as
++pxa910-clock.dtsi.
++
++Almost all types of clock will need parameter as "register", and it will map the
++"register" before access it. If every clock map the "register" seperately, there
++will be a lot of waste.
++
++A master clock is defined for this kind of situation. It will be responsible for
++map the registers for all clocks that lists as its children in DT file.
++
++Required properties
++- compatible : It should be "marvell,mmp-clk-master".
++
++
++Optional properties:
++- reg : The register start and range the master clock covered.
++
++Optional properties for child node:
++- marvell,reg-offset : It is a two-values item - <register_index regiser_offset>.
++                   Master node will map the registers for all its children. So
++                   for the child it need to pass the information about register
++                   index and offset. "register_index" indicates which register space
++                   it from because master clock can have mutiple register space in
++                   "reg". "register_offset" indicates the offset in the register
++                   space.
++
++Examples
++There are two clocks, clk1 has register at 0xd4210010, and clk2 has register at
++0xd42100c0.
++
++apmu_clk {
++	compatible = "marvell,mmp-clk-master";
++	reg = <0xd4210000 0x1000>;
++
++	clk1 {
++		...
++		marvell,reg-offset = <0 0x10>;
++	};
++
++	clk2 {
++		...
++		marvell,reg-offset = <0 0xc0>;
++	};
++};
 diff --git a/drivers/clk/mmp/Makefile b/drivers/clk/mmp/Makefile
-index 8bfee860..2855f7b 100644
+index 2cd7d94..518931e 100644
 --- a/drivers/clk/mmp/Makefile
 +++ b/drivers/clk/mmp/Makefile
-@@ -2,7 +2,7 @@
- # Makefile for mmp specific clk
- #
+@@ -5,6 +5,10 @@
+ obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o	\
+ 	 clk-mix-composite.o
  
--obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o
-+obj-y += clk-apbc.o clk-apmu.o clk-frac.o clk-mix.o clk-gate.o
- 
++ifneq ($(CONFIG_OF),)
++obj-y += clk-master-node.o
++endif
++
  obj-$(CONFIG_CPU_PXA168) += clk-pxa168.o
  obj-$(CONFIG_CPU_PXA910) += clk-pxa910.o
-diff --git a/drivers/clk/mmp/clk-gate.c b/drivers/clk/mmp/clk-gate.c
+ obj-$(CONFIG_CPU_MMP2) += clk-mmp2.o
+diff --git a/drivers/clk/mmp/clk-master-node.c b/drivers/clk/mmp/clk-master-node.c
 new file mode 100644
-index 0000000..adbd9d6
+index 0000000..584f72f
 --- /dev/null
-+++ b/drivers/clk/mmp/clk-gate.c
-@@ -0,0 +1,133 @@
++++ b/drivers/clk/mmp/clk-master-node.c
+@@ -0,0 +1,195 @@
 +/*
-+ * mmp gate clock operation source file
++ * mmp master clock source file
 + *
 + * Copyright (C) 2014 Marvell
 + * Chao Xie <chao.xie@marvell.com>
@@ -72,155 +133,203 @@ index 0000000..adbd9d6
 + * warranty of any kind, whether express or implied.
 + */
 +
++#include <linux/clk.h>
 +#include <linux/clk-provider.h>
-+#include <linux/slab.h>
-+#include <linux/io.h>
 +#include <linux/err.h>
-+#include <linux/delay.h>
++#include <linux/slab.h>
++#include <linux/list.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/ioport.h>
 +
 +#include "clk.h"
 +
-+/*
-+ * Some clocks will have mutiple bits to enable the clocks, and
-+ * the bits to disable the clock is not same as enabling bits.
-+ */
++#define MAX_REG		8
 +
-+#define to_clk_mmp_gate(hw)	container_of(hw, struct mmp_clk_gate, hw)
-+
-+static int mmp_clk_gate_enable(struct clk_hw *hw)
-+{
-+	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
-+	struct clk *clk = hw->clk;
-+	unsigned long flags = 0;
-+	unsigned long rate;
-+	u32 tmp;
-+
-+	if (gate->lock)
-+		spin_lock_irqsave(gate->lock, flags);
-+
-+	tmp = readl(gate->reg);
-+	tmp &= ~gate->mask;
-+	tmp |= gate->val_enable;
-+	writel(tmp, gate->reg);
-+
-+	if (gate->lock)
-+		spin_unlock_irqrestore(gate->lock, flags);
-+
-+	if (gate->flags & MMP_CLK_GATE_NEED_DELAY) {
-+		rate = __clk_get_rate(clk);
-+		/* Need delay 2 cycles. */
-+		udelay(2000000/rate);
-+	}
-+
-+	return 0;
-+}
-+
-+static void mmp_clk_gate_disable(struct clk_hw *hw)
-+{
-+	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
-+	unsigned long flags = 0;
-+	u32 tmp;
-+
-+	if (gate->lock)
-+		spin_lock_irqsave(gate->lock, flags);
-+
-+	tmp = readl(gate->reg);
-+	tmp &= ~gate->mask;
-+	tmp |= gate->val_disable;
-+	writel(tmp, gate->reg);
-+
-+	if (gate->lock)
-+		spin_unlock_irqrestore(gate->lock, flags);
-+}
-+
-+static int mmp_clk_gate_is_enabled(struct clk_hw *hw)
-+{
-+	struct mmp_clk_gate *gate = to_clk_mmp_gate(hw);
-+	unsigned long flags = 0;
-+	u32 tmp;
-+
-+	if (gate->lock)
-+		spin_lock_irqsave(gate->lock, flags);
-+
-+	tmp = readl(gate->reg);
-+
-+	if (gate->lock)
-+		spin_unlock_irqrestore(gate->lock, flags);
-+
-+	return (tmp & gate->mask) == gate->val_enable;
-+}
-+
-+const struct clk_ops mmp_clk_gate_ops = {
-+	.enable = mmp_clk_gate_enable,
-+	.disable = mmp_clk_gate_disable,
-+	.is_enabled = mmp_clk_gate_is_enabled,
++struct mmp_clk_master_node {
++	unsigned int reg_base[MAX_REG];
++	void __iomem *reg[MAX_REG];
++	struct device_node *np;
++	struct list_head node;
 +};
 +
-+struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
-+		const char *parent_name, unsigned long flags,
-+		void __iomem *reg, u32 mask, u32 val_enable, u32 val_disable,
-+		unsigned int gate_flags, spinlock_t *lock)
-+{
-+	struct mmp_clk_gate *gate;
-+	struct clk *clk;
-+	struct clk_init_data init;
++static LIST_HEAD(master_list);
++static DEFINE_MUTEX(master_mutex);
 +
-+	/* allocate the gate */
-+	gate = kzalloc(sizeof(*gate), GFP_KERNEL);
-+	if (!gate) {
-+		pr_err("%s:%s could not allocate gate clk\n", __func__, name);
-+		return ERR_PTR(-ENOMEM);
++static void mmp_clk_master_setup(struct device_node *np)
++{
++	struct mmp_clk_master_node *node;
++	struct resource res;
++	int i, ret;
++
++	node = kzalloc(sizeof(*node), GFP_KERNEL);
++	if (!node) {
++		pr_err("%s:%s failed to allocate master node.\n",
++			__func__, np->name);
++		return;
 +	}
 +
-+	init.name = name;
-+	init.ops = &mmp_clk_gate_ops;
-+	init.flags = flags | CLK_IS_BASIC;
-+	init.parent_names = (parent_name ? &parent_name : NULL);
-+	init.num_parents = (parent_name ? 1 : 0);
++	for (i = 0; i < MAX_REG; i++) {
++		ret = of_address_to_resource(np, i, &res);
++		if (ret)
++			break;
++		node->reg_base[i] = res.start;
++		node->reg[i] = ioremap(res.start, resource_size(&res));
++		if (!node->reg[i]) {
++			pr_err("%s:%s failed to map register.\n",
++				__func__, np->name);
++			goto error;
++		}
++	}
 +
-+	/* struct clk_gate assignments */
-+	gate->reg = reg;
-+	gate->mask = mask;
-+	gate->val_enable = val_enable;
-+	gate->val_disable = val_disable;
-+	gate->flags = gate_flags;
-+	gate->lock = lock;
-+	gate->hw.init = &init;
++	node->np = np;
++	INIT_LIST_HEAD(&node->node);
 +
-+	clk = clk_register(dev, &gate->hw);
++	mutex_lock(&master_mutex);
 +
-+	if (IS_ERR(clk))
-+		kfree(gate);
++	list_add(&node->node, &master_list);
 +
-+	return clk;
++	mutex_unlock(&master_mutex);
++
++	return;
++error:
++	for (i--; i >= 0; i--)
++		iounmap(node->reg[i]);
++
++	kfree(node);
++}
++
++struct of_device_id mmp_clk_master_of_id[] = {
++	{
++		.compatible = "marvell,mmp-clk-master",
++		.data = mmp_clk_master_setup,
++	},
++	{ },
++};
++
++static struct mmp_clk_master_node *get_master_node(struct device_node *child)
++{
++	struct device_node *master;
++	struct mmp_clk_master_node *node;
++
++	/* Find the master device node */
++	master = child;
++	do {
++		master = of_get_next_parent(master);
++	} while (!of_match_node(mmp_clk_master_of_id, master));
++
++	mutex_lock(&master_mutex);
++
++	list_for_each_entry(node, &master_list, node) {
++		if (node->np == master) {
++			mutex_unlock(&master_mutex);
++			return node;
++		}
++	}
++
++	mutex_unlock(&master_mutex);
++
++	return NULL;
++}
++
++static void __iomem *get_child_reg(struct device_node *child,
++				unsigned int reg_index,
++				unsigned int *reg_base)
++{
++	struct mmp_clk_master_node *node;
++
++	if (reg_index >= MAX_REG) {
++		pr_err("%s:%s reg_index too big.\n", __func__, child->name);
++		return NULL;
++	}
++
++	node = get_master_node(child);
++	if (!node) {
++		pr_err("%s:%s failed to get master node\n",
++			__func__, child->name);
++		return NULL;
++	}
++
++	*reg_base = node->reg_base[reg_index];
++
++	return node->reg[reg_index];
++}
++
++void __iomem *of_mmp_clk_get_reg(struct device_node *np,
++					unsigned int index,
++					unsigned int *reg_phys)
++{
++	const __be32 *prop;
++	unsigned int proplen, size;
++	u32 reg_index, reg_offset;
++	unsigned int reg_base;
++	void __iomem *reg;
++
++	prop = of_get_property(np, "marvell,reg-offset", &proplen);
++	if (!prop) {
++		pr_err("%s:%s can not find marvell,reg-offset\n",
++			__func__, np->name);
++		return NULL;
++	}
++
++	size = proplen / sizeof(u32);
++
++	if ((proplen % sizeof(u32)) || (size <= (index * 2))) {
++		pr_err("%s:%s prop len is not correct\n",
++			__func__, np->name);
++		return NULL;
++	}
++
++	reg_index = be32_to_cpup(prop + index * 2);
++	reg_offset = be32_to_cpup(prop + index * 2 + 1);
++	reg = get_child_reg(np, reg_index, &reg_base);
++	if (!reg) {
++		pr_err("%s:%s failed to get reg\n",
++			__func__, np->name);
++		return NULL;
++	}
++
++	*reg_phys = reg_base + reg_offset;
++
++	return reg + reg_offset;
++}
++
++struct device_node *of_mmp_clk_master_init(struct device_node *from)
++{
++	struct device_node *parent, *child;
++	const struct of_device_id *match;
++	of_clk_init_cb_t clk_init_cb;
++
++	parent = from;
++	parent = of_find_matching_node_and_match(from, mmp_clk_master_of_id,
++						&match);
++	if (parent) {
++		clk_init_cb = (of_clk_init_cb_t)match->data;
++		clk_init_cb(parent);
++		for_each_child_of_node(parent, child) {
++			match = of_match_node(&__clk_of_table, child);
++			if (!match)
++				continue;
++			clk_init_cb = (of_clk_init_cb_t)match->data;
++			clk_init_cb(child);
++		}
++	}
++
++	return parent;
 +}
 diff --git a/drivers/clk/mmp/clk.h b/drivers/clk/mmp/clk.h
-index 426616b..9096f0a 100644
+index 9827a4f..6d8c3b3 100644
 --- a/drivers/clk/mmp/clk.h
 +++ b/drivers/clk/mmp/clk.h
-@@ -99,6 +99,27 @@ extern struct clk *mmp_clk_register_mix(struct device *dev,
- 					spinlock_t *lock);
+@@ -140,6 +140,13 @@ extern struct clk *mmp_clk_register_composite(struct device *dev,
+ 			unsigned long flags);
  
  
-+/* Clock type "gate". MMP private gate */
-+#define MMP_CLK_GATE_NEED_DELAY		BIT(0)
-+
-+struct mmp_clk_gate {
-+	struct clk_hw hw;
-+	void __iomem *reg;
-+	u32 mask;
-+	u32 val_enable;
-+	u32 val_disable;
-+	unsigned int flags;
-+	spinlock_t *lock;
-+};
-+
-+extern const struct clk_ops mmp_clk_gate_ops;
-+extern struct clk *mmp_clk_register_gate(struct device *dev, const char *name,
-+			const char *parent_name, unsigned long flags,
-+			void __iomem *reg, u32 mask, u32 val_enable,
-+			u32 val_disable, unsigned int gate_flags,
-+			spinlock_t *lock);
++/* Master clock exported APIs and data. */
++extern void __iomem *of_mmp_clk_get_reg(struct device_node *np,
++					unsigned int reg_index,
++					unsigned int *reg_phys);
++struct device_node *of_mmp_clk_master_init(struct device_node *from);
 +
 +
  extern struct clk *mmp_clk_register_pll2(const char *name,
