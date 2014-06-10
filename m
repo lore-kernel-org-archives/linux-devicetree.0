@@ -1,217 +1,92 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Tue, 10 Jun 2014 16:13:44 +0530
-Message-ID: <5396E160.7000707@ti.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <538F05BC.7000800@ti.com> <538F95A7.8010409@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <538F95A7.8010409@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH 00/24] PM / Domains: Generic OF-based support and cleanups
+Date: Tue, 10 Jun 2014 12:51:13 +0200
+Message-ID: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Kevin Hilman <khilman@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Parts of this patchset has been posted earlier. To be able to smoothly continue
+my work in re-factoring genpd I have collected patches into this patchset.
 
-On Thursday 05 June 2014 03:24 AM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 06/04/2014 03:40 PM, Kishon Vijay Abraham I wrote:
-> 
->>> This PHY, though formally being a part of Renesas USBHS controller, contains
->>> the
->>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
->>> them
->>> channels) to the different USB controllers: channel 0 can be connected to
->>> either
->>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI EHCI/OHCI
->>> or xHCI controllers.
-> 
->>> This is a new driver for this USB PHY currently already supported under
->>> drivers/
->>> usb/phy/. The reason for writing the new driver was the requirement that the
->>> multiplexing of USB channels to the controller be dynamic, depending on what
->>> USB drivers are loaded,  rather than static as provided by the old driver.
->>> The infrastructure provided by drivers/phy/phy-core.c seems to fit that purpose
->>> ideally. The new driver only supports device tree probing for now.
-> 
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> 
-> [...]
-> 
->>> Index: linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
->>> ===================================================================
->>> --- /dev/null
->>> +++ linux-phy/Documentation/devicetree/bindings/phy/rcar-gen2-phy.txt
->>> @@ -0,0 +1,60 @@
->>> +* Renesas R-Car generation 2 USB PHY
->>> +
->>> +This file provides information on what the device node for the R-Car
->>> generation
->>> +2 USB PHY contains.
->>> +
->>> +Required properties:
->>> +- compatible: "renesas,usb-phy-r8a7790" if the device is a part of R8A7790
->>> SoC.
->>> +          "renesas,usb-phy-r8a7791" if the device is a part of R8A7791 SoC.
->>> +- reg: offset and length of the register block.
->>> +- #phy-cells: see phy-bindings.txt in the same directory, must be 2.
->>> +- clocks: clock phandle and specifier pair.
->>> +- clock-names: string, clock input name, must be "usbhs".
->>> +
->>> +The phandle's first argument in the PHY specifier identifies the USB channel,
->>> +the second one is the USB controller selector and depends on the first:
->>> +
->>> ++-----------+---------------+---------------+
->>> +|\ Selector |               |               |
->>> ++ --------- +       0       |       1       |
->>> +| Channel  \|               |               |
->>> ++-----------+---------------+---------------+
->>> +| 0         | PCI EHCI/OHCI | HS-USB        |
->>> +| 1         | PCI EHCI/OHCI | xHCI          |
->>> ++-----------+---------------+---------------+
->>> +
->>> +The USB PHY device tree node should be the subnodes corresponding to the USB
->>> +channels and the controllers connected to them. These subnodes must contain
->>> the
->>> +following properties:
->>> +- renesas,phy-select: the first cell identifies the USB channel, the second
->>> cell
->>> +  is the USB controller selector; see the table above for the values.
->>> +- renesas,ugctrl2-masks: the first cell is the UGCTRL2 mask corresponding to
->>> +  the USB channel, the second cell is the UGCTRL2 value corresponding to the
->>> +  USB controller selected for that channel.
->>> +
->>> +Example (Lager board):
->>> +
->>> +    usb-phy@e6590100 {
->>> +        compatible = "renesas,usb-phy-r8a7790";
->>> +        reg = <0 0xe6590100 0 0x100>;
->>> +        #phy-cells = <2>;
->>> +        clocks = <&mstp7_clks R8A7790_CLK_HSUSB>;
->>> +        clock-names = "usbhs";
->>> +
->>> +        usb-phy@0,0 {
->>> +            renesas,phy-select = <0 0>;
->>> +            renesas,ugctrl2-masks = <0x00000030 0x00000010>;
->>> +        };
->>> +        usb-phy@0,1 {
->>> +            renesas,phy-select = <0 1>;
->>> +            renesas,ugctrl2-masks = <0x00000030 0x00000030>;
->>> +        };
->>> +        usb-phy@1,0 {
->>> +            renesas,phy-select = <1 0>;
->>> +            renesas,ugctrl2-masks = <0x80000000 0x00000000>;
->>> +        };
->>> +        usb-phy@1,1 {
->>> +            renesas,phy-select = <1 1>;
->>> +            renesas,ugctrl2-masks = <0x80000000 0x80000000>;
->>> +        };
->>> +    };
-> 
->> IIUC, channel 0 can be configured for either EHCI/OHCI or HS-USB but can't be
->> used for both.  And channel 1 can be configured for either PCI EHCI/OHCI or
->> xHCI. right?
-> 
->    Yes. However that depends on the driver load order: if e.g. xHCI driver is
-> loaded later than PCI USB drivers,
-> it will override the channel routing.
+The complete patchset is available at the linux-pm_linux-next_genpd branch at:
+git.linaro.org/people/ulf.hansson/linux-2.6.git
+This branch is based upon Rafael's linux-pm tree's linux-next branch.
 
-So will the PCI USB drivers will be notified of that?
-> 
->> So ideally only two sub-nodes should be created for channel '0' and channel
->> '1'.
-> 
->    Hm, but I need to perform a special PHY power up sequence for the USBHS PHY
-> itself (corresponding to channel #0, selector #1).
-> 
->> You can configure a channel to a particular mode by passing the mode in
->> PHY specifier
-> 
->    I already have "#phy-cells" prop equal to 2.
-> 
->> (The channel should be configured to a particualr mode in xlate).
-> 
->    I have even considered using the of_xlate() method at first but then
-> abandoned that idea for the phy_init() method...
+And important note. There are dependencies througout this patchset, which means
+the all need to go together. I suggest we use Rafael's tree, thus I seek for
+acks from the affected ARM SoC maintainers.
 
-If you want to configure the PHY to a particular mode, xlate should be the best
-place.
-> 
->> Btw I'm not sure if it is recommended to pass register mask values from dt.
-> 
->    Neither am I. I did that because you requested the device tree
-> representation for each of the sub-PHYs under that part of the driver which
-> initialized the register masks, so that I thought that you wanted those masks
-> to be represented in the device tree as well...
 
-No I didn't mean that. Maybe for now we can have a identifier in the sub-node
-and select mask and value based on that.
-> 
-> [...]
->>> Index: linux-phy/drivers/phy/phy-rcar-gen2.c
->>> ===================================================================
->>> --- /dev/null
->>> +++ linux-phy/drivers/phy/phy-rcar-gen2.c
->>> @@ -0,0 +1,288 @@
-> [...]
->>> +#define USBHS_LPSTS            0x02
->>> +#define USBHS_UGCTRL            0x80
->>> +#define USBHS_UGCTRL2            0x84
->>> +#define USBHS_UGSTS            0x88
->>> +
->>> +/* Low Power Status register (LPSTS) */
->>> +#define USBHS_LPSTS_SUSPM        0x4000
->>> +
->>> +/* USB General control register (UGCTRL) */
->>> +#define USBHS_UGCTRL_CONNECT        0x00000004
->>> +#define USBHS_UGCTRL_PLLRESET        0x00000001
->>> +
->>> +/* USB General control register 2 (UGCTRL2) */
->>> +#define USBHS_UGCTRL2_USB2SEL        0x80000000
->>> +#define USBHS_UGCTRL2_USB2SEL_PCI    0x00000000
->>> +#define USBHS_UGCTRL2_USB2SEL_USB30    0x80000000
->>> +#define USBHS_UGCTRL2_USB0SEL        0x00000030
->>> +#define USBHS_UGCTRL2_USB0SEL_PCI    0x00000010
->>> +#define USBHS_UGCTRL2_USB0SEL_HS_USB    0x00000030
->>> +
->>> +/* USB General status register (UGSTS) */
->>> +#define USBHS_UGSTS_LOCK        0x00000300
->>> +
->>> +#define    NUM_USB_CHANNELS    2
->>> +
->>> +struct rcar_gen2_phy {
->>> +    struct phy *phy;
->>> +    struct rcar_gen2_phy_driver *drv;
->>> +    u32 select_mask;
->>> +    u32 select_value;
->>> +};
->>> +
->>> +struct rcar_gen2_phy_driver {
->>> +    void __iomem *base;
->>> +    struct clk *clk;
->>> +    spinlock_t lock;
->>> +    struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
-> 
->> This can be created dynamically based on the number of sub-nodes. In this case
-> 
->    Hm, that sounds to me like another complication of the driver with no
-> apparent win...
+Tomasz Figa (3):
+  base: power: Add generic OF-based power domain look-up
+  drivercore: Bind/unbind power domain on probe/remove
+  ARM: exynos: Move to generic power domain bindings
 
-dynamic allocation is in no way going to complicate the driver.
-> 
->> it'll be only rcar_gen2_phy phys[2], one for each channel.
->> By this we need not hard code NUM_USB_CHANNELS.
-> 
->    I don't quite understand what's up with hard-coding it -- this constant is
-> dictated by the UGCTRL2 register layout anyway.
+Ulf Hansson (21):
+  PM / Domains: Ignore callbacks for subsys generic_pm_domain_data
+  PM / Domains: Remove the pm_genpd_add|remove_callbacks APIs
+  PM / Domains: Remove system PM callbacks from gpd_dev_ops
+  ARM: shmobile: Drop dev_irq_safe from r8a7779 genpd config
+  ARM: shmobile: Drop dev_irq_safe from R-mobile genpd config
+  PM / Domains: Remove dev_irq_safe from genpd config
+  PM / Domains: Remove redundant check for CONFIG_PM
+  PM / Domains: Remove legacy API for adding devices through DT
+  PM / Domains: Remove pm_genpd_syscore_switch() API
+  PM / Domains: Remove genpd_queue_power_off_work() API
+  PM / Domains: Add late_initcall to disable unused domains
+  ARM: exynos: Leave disabling of unused pm domains to genpd
+  ARM: s3c64xx: Leave disabling of unused pm domains to genpd
+  drivers: sh: Leave disabling of unused pm domains to genpd
+  PM / Domains: Remove default_stop_ok() API
+  dt: bindings: ux500: Add documentation for power domains
+  dt: bindings: ux500: Add header for power domains specifiers
+  ARM: ux500: Initial support for power domains
+  ARM: ux500: Enable Kconfig for the generic power domain
+  ARM: ux500: Add DT node for ux500 power domains
+  ARM: ux500: Add sdi[n] devices to VAPE power domain
 
-right but you don't want to change the driver a whole lot when they change the
-no of channels in the next version or they use a slightly modified version of
-this IP in a different SoC. And finding the number of channels dynamically is
-not complicated anyway IMO.
+ .../bindings/arm/exynos/power_domain.txt           |   12 +-
+ .../devicetree/bindings/arm/ux500/power_domain.txt |   35 ++
+ .../devicetree/bindings/power/power_domain.txt     |   51 ++
+ arch/arm/boot/dts/ste-dbx5x0.dtsi                  |   11 +
+ arch/arm/mach-exynos/exynos.c                      |    1 -
+ arch/arm/mach-exynos/pm_domains.c                  |   81 +--
+ arch/arm/mach-s3c64xx/common.c                     |    5 -
+ arch/arm/mach-s3c64xx/common.h                     |    7 -
+ arch/arm/mach-s3c64xx/mach-anw6410.c               |    1 -
+ arch/arm/mach-s3c64xx/mach-crag6410.c              |    1 -
+ arch/arm/mach-s3c64xx/mach-hmt.c                   |    1 -
+ arch/arm/mach-s3c64xx/mach-mini6410.c              |    1 -
+ arch/arm/mach-s3c64xx/mach-ncp.c                   |    1 -
+ arch/arm/mach-s3c64xx/mach-real6410.c              |    1 -
+ arch/arm/mach-s3c64xx/mach-smartq5.c               |    1 -
+ arch/arm/mach-s3c64xx/mach-smartq7.c               |    1 -
+ arch/arm/mach-s3c64xx/mach-smdk6400.c              |    1 -
+ arch/arm/mach-s3c64xx/mach-smdk6410.c              |    1 -
+ arch/arm/mach-s3c64xx/pm.c                         |    7 -
+ arch/arm/mach-shmobile/pm-r8a7779.c                |    1 -
+ arch/arm/mach-shmobile/pm-rmobile.c                |    1 -
+ arch/arm/mach-ux500/Kconfig                        |    1 +
+ arch/arm/mach-ux500/Makefile                       |    1 +
+ arch/arm/mach-ux500/pm.c                           |    4 +
+ arch/arm/mach-ux500/pm_domains.c                   |   77 +++
+ arch/arm/mach-ux500/pm_domains.h                   |   17 +
+ drivers/base/dd.c                                  |    9 +-
+ drivers/base/power/domain.c                        |  638 ++++++++++----------
+ drivers/base/power/domain_governor.c               |    7 +-
+ drivers/sh/pm_runtime.c                            |   11 -
+ include/dt-bindings/arm/ux500_pm_domains.h         |   15 +
+ include/linux/pm_domain.h                          |  107 ++--
+ kernel/power/Kconfig                               |    4 +
+ 33 files changed, 593 insertions(+), 520 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/ux500/power_domain.txt
+ create mode 100644 Documentation/devicetree/bindings/power/power_domain.txt
+ create mode 100644 arch/arm/mach-ux500/pm_domains.c
+ create mode 100644 arch/arm/mach-ux500/pm_domains.h
+ create mode 100644 include/dt-bindings/arm/ux500_pm_domains.h
 
-Thanks
-Kishon
+-- 
+1.7.9.5
