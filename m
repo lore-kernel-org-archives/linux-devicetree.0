@@ -1,91 +1,60 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: [PATCH v7 1/7] of: Provide function to request and map memory
-Date: Tue, 10 Jun 2014 13:31:06 +0100
-Message-ID: <CACxGe6uthx3hzgDjEbHs+9itjLSVX1fWX=F7Y2S0z2F=s56G5A@mail.gmail.com>
-References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
- <1401989181-4712-2-git-send-email-matthias.bgg@gmail.com>
- <CAL_Jsq+KS8W6kZpCSpd68Oku7neFxPVLct1j=AYaXnyvOD3tGA@mail.gmail.com>
- <20140607055953.569D6C4099E@trevor.secretlab.ca>
- <CAL_Jsq+yi+fdN1vHK6Wwx7Jzmvz3qd6z=8sO8+q==YRmBCGdww@mail.gmail.com>
+From: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3] crypto: Add Allwinner Security System crypto accelerator
+Date: Tue, 10 Jun 2014 14:43:13 +0200
+Message-ID: <1402404197-4236-1-git-send-email-clabbe.montjoie@gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_Jsq+yi+fdN1vHK6Wwx7Jzmvz3qd6z=8sO8+q==YRmBCGdww@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Thierry Reding <thierry.reding@gmail.com>, =?ISO-8859-1?Q?Heiko_St=FCbner?= <heiko.stuebner@bq.com>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Florian Vaussard <florian.vaussard@epfl.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Gregory Clement <gregory.clement@free-electrons.com>, Thomas
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBD7YLCN32UNBB4P23OOAKGQEQZX7GYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 9, 2014 at 3:36 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Sat, Jun 7, 2014 at 12:59 AM, Grant Likely <grant.likely@secretlab.ca> wrote:
->> On Fri, 6 Jun 2014 10:19:28 -0500, Rob Herring <robherring2@gmail.com> wrote:
->>> On Thu, Jun 5, 2014 at 12:26 PM, Matthias Brugger
->>> <matthias.bgg@gmail.com> wrote:
->>> > A call to of_iomap does not request the memory region.
->>> > This patch adds the function of_io_request_and_map which requests
->>> > the memory region before mapping it.
->>> >
->>> > Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
->>> > ---
->>> >  drivers/of/address.c       |   28 ++++++++++++++++++++++++++++
->>> >  include/linux/of_address.h |    8 ++++++++
->>> >  2 files changed, 36 insertions(+)
->>> >
->>> > diff --git a/drivers/of/address.c b/drivers/of/address.c
->>> > index cb4242a..c55b107 100644
->>> > --- a/drivers/of/address.c
->>> > +++ b/drivers/of/address.c
->>> > @@ -721,3 +721,31 @@ void __iomem *of_iomap(struct device_node *np, int index)
->>> >         return ioremap(res.start, resource_size(&res));
->>> >  }
->>> >  EXPORT_SYMBOL(of_iomap);
->>> > +
->>> > +/**
->>> > + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
->>> > + *                        for a given device_node
->>>
->>> I believe docbook requires this to be 1 line.
->>>
->>> > + * @device:    the device whose io range will be mapped
->>> > + * @index:     index of the io range
->>> > + * @name:      name of the resource
->>> > + *
->>> > + * Returns a pointer to the requested and mapped memory
->>> > + */
->>> > +void __iomem *of_io_request_and_map(struct device_node *np, int index, char *name)
->>> > +{
->>> > +       struct resource res;
->>> > +       void __iomem *mem;
->>> > +
->>> > +       if (of_address_to_resource(np, index, &res))
->>> > +               return NULL;
->>> > +
->>> > +       if (!request_mem_region(res.start, resource_size(&res), name))
->>>
->>> Use the np->name here and drop the name parameter.
->>
->> Name here would be the name of the owner (the driver), not the name of
->> the node. Passing the name separately is fine by me.
->
-> This function is for when there is no driver. If there is a driver,
-> the devm_* functions should be used. I would like to see some standard
-> naming and consistency here rather than allowing random strings or
-> NULL to be passed by the caller.
+Hello
 
-The node name doesn't provide a whole lot of help here though because
-we want to identify the code creating the resource, not the node. I'm
-not going to make a big deal about it. I've told Matthias on IRC that
-he can go ahead and merge it because it is a very minor issue. If you
-feel strongly about it, then we'll get him to change it or do a
-follow-up patch to change the function signature.
+This is the driver for the Security System included in Allwinner SoC A20.
+The Security System (SS for short) is a hardware cryptographic accelerator that support AES/MD5/SHA1/DES/3DES/PRNG algorithms.
+It could be found on others Allwinner SoC: 
+- A10s and A31 diagram speak about it with precisions (AES/DES/3DES/Md5/SHA1/PRNG)
+- A10 and A13 manual give the same datasheet for SS than A20
+- A23 speak about a security system but without precisions
+But I do not have access on any of those hardware, tests are welcome.
 
-g.
+This driver currently supports:
+- MD5 and SHA1 hash algorithms
+- AES block cipher in CBC mode with 128/196/256bits keys.
+- DES and 3DES block cipher in CBC mode
+- PRNG
+The driver exposes all those algorithms through the kernel cryptographic API.
+
+The driver support only CPU driven (aka poll mode) transfer mode since the DMA engine of the A20 does not have a driver yet.
+
+Changes since v2:
+- Fix Makefile and Kconfig for static kernel.
+
+Changes since v1:
+- annotate ss->base as __iomem
+- regroup all mutex in the ss_ctx structure
+- splited driver in 7 modules (core md5 sha1 aes des 3des prng) in sunxi-ss directory
+- use dev_exit_p() for .remove
+- added missing CRYPTO_BLKCIPHER dep in Kconfig
+- use ahash instead of shash
+- use ablkcipher instead of blkcipher
+- use crypto_rng_ctx instead of crypto_tfm_ctx
+- set seed as an u32
+- drop useless comment decoration
+- drop useless debug
+- ss_ctx is now a static pointer and whole structure being allocated
+- fix the platform_get_resource/devm_ioremap_resource pattern
+- invert getting die id and configuring clock
+- set clock value as a const unsigned long
+- add MODULE_ALIAS
+- use define names more consistency (SS_xxx)
+- fix PRNG errors
+- respell SS to Security System in DT documentation
