@@ -1,50 +1,213 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: of: Add support for parsing regulator_state
- for suspend state
-Date: Tue, 10 Jun 2014 19:25:46 +0900
-Message-ID: <5396DD2A.7060701@samsung.com>
-References: <1402309780-8118-1-git-send-email-cw00.choi@samsung.com>
- <1402309780-8118-2-git-send-email-cw00.choi@samsung.com>
- <20140609192133.GD5099@sirena.org.uk> <53964A45.3010108@samsung.com>
- <20140610100232.GD5099@sirena.org.uk>
+From: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Subject: Re: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead
+ of "cs-gpio"
+Date: Tue, 10 Jun 2014 12:39:13 +0200
+Message-ID: <5396E051.8050803@samsung.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>
+ <1402394881-31564-2-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140610100232.GD5099-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1402394881-31564-2-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-samsung-soc@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/10/2014 07:02 PM, Mark Brown wrote:
-> On Tue, Jun 10, 2014 at 08:59:01AM +0900, Chanwoo Choi wrote:
->> On 06/10/2014 04:21 AM, Mark Brown wrote:
+On 10/06/14 12:08, Naveen Krishna Chatradhi wrote:
+> Currently, spi-s3c64xx.c needs "cs-gpio" chip select GPIO to be
+> defined under "controller-data" node under each slave node.
 > 
->>> If we're going to do that we'd need to define what modes mean in the DT
->>> binding - currently there's no support for modes at all because it's
->>> complicated to come up with sensible and meaningful generic defintions.
+> &spi_x {
+> 	cs-gpios <>;
+> 	...
+> 	slave_node {
 > 
->> The 'regulator-mode' of this patch means following defined constant variable
->> as following in include/linux/regulator/consumer.h:
->> #define REGULATOR_MODE_FAST		0x1
->> #define REGULATOR_MODE_NORMAL		0x2
->> #define REGULATOR_MODE_IDLE		0x4
->> #define REGULATOR_MODE_STANDBY		0x8
+> 		controller-data {
+> 			cs-gpio = <>;
+> 			...
+> 		};
+> 		...
+> 	};
+> 	...
+> };
 > 
->> If regulator consumer would use this mode('regulator-mode),
->> specific regulator driver should implement rdev->desc->ops->set_suspend_mode function
->> to control regulator state according to 'regulator-mode' in suspend state.
+> Where as, SPI core and many other drivers uses "cs-gpios" for
+> from device tree node.
 > 
-> Sure, but what do those mean?
+> Hence, make changes in spi-s3c64xx.c driver to make use of
+> "cs-gpios" from SPI node(parent) instead of "cs-gpio" defined in
+> slaves "controller-data"(child) node.
 > 
+> Also updates the Device tree Documentation.
+> 
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Cc: Doug Anderson <dianders@chromium.org>
+> ---
+> Changes since v1:
+> 1. fixed a compilation warning thus squashing the other patch into this.
+> 2. Updated device tree description in spi-samsung.txt
+> 
+>  .../devicetree/bindings/spi/spi-samsung.txt        |    8 ++-
+>  drivers/spi/spi-s3c64xx.c                          |   56 ++++++++++++--------
+>  2 files changed, 38 insertions(+), 26 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+> index 86aa061..13bfcb5 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+> @@ -42,15 +42,13 @@ Optional Board Specific Properties:
+>  - num-cs: Specifies the number of chip select lines supported. If
+>    not specified, the default number of chip select lines is set to 1.
+>  
+> +- cs-gpios: should specify GPIOs used for chipselects (see spi-bus.txt)
+> +
+>  SPI Controller specific data in SPI slave nodes:
+>  
+>  - The spi slave nodes should provide the following information which is required
+>    by the spi controller.
+>  
+> -  - cs-gpio: A gpio specifier that specifies the gpio line used as
+> -    the slave select line by the spi controller. The format of the gpio
+> -    specifier depends on the gpio controller.
+> -
+>    - samsung,spi-feedback-delay: The sampling phase shift to be applied on the
+>      miso line (to account for any lag in the miso line). The following are the
+>      valid values.
+> @@ -85,6 +83,7 @@ Example:
+>  		#size-cells = <0>;
+>  		pinctrl-names = "default";
+>  		pinctrl-0 = <&spi0_bus>;
+> +		cs-gpios = <&gpa2 5 1 0 3>;
 
-We could check basic explanation of regulator mode in include/linux/regulator/consumer.h.
-Should I add detailed descritpion of REGULATOR_MODE_* constant in drivers/regulator/of_regulator.c?
+While at it, please change the GPIO specifier format, this one is not
+valid any more.
 
+>  		w25q80bw@0 {
+>  			#address-cells = <1>;
+> @@ -94,7 +93,6 @@ Example:
+>  			spi-max-frequency = <10000>;
+>  
+>  			controller-data {
+> -				cs-gpio = <&gpa2 5 1 0 3>;
+>  				samsung,spi-feedback-delay = <0>;
+>  			};
+>  
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index 75a5696..4594dde 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -750,47 +750,56 @@ static int s3c64xx_spi_transfer_one(struct spi_master *master,
+>  }
+>  
+>  static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+> -				struct spi_device *spi)
+> +				struct spi_device *spi,
+> +				struct s3c64xx_spi_csinfo *cs)
+>  {
+> -	struct s3c64xx_spi_csinfo *cs;
+> -	struct device_node *slave_np, *data_np = NULL;
+> -	struct s3c64xx_spi_driver_data *sdd;
+> +	struct device_node *data_np = NULL;
+>  	u32 fb_delay = 0;
+>  
+> -	sdd = spi_master_get_devdata(spi->master);
+> -	slave_np = spi->dev.of_node;
+> -	if (!slave_np) {
+> -		dev_err(&spi->dev, "device node not found\n");
+> +	data_np = of_get_child_by_name(spi->dev.of_node, "controller-data");
+> +	if (!data_np) {
+> +		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> -	data_np = of_get_child_by_name(slave_np, "controller-data");
+> -	if (!data_np) {
+> -		dev_err(&spi->dev, "child node 'controller-data' not found\n");
+> +	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
+> +	cs->fb_delay = fb_delay;
+> +	of_node_put(data_np);
+> +
+> +	return cs;
+> +}
+> +
+> +static struct s3c64xx_spi_csinfo *s3c64xx_get_cs_gpios(struct spi_device *spi)
+> +{
+> +	struct device_node *parent_np = NULL;
+> +	struct s3c64xx_spi_driver_data *sdd;
+> +	struct s3c64xx_spi_csinfo *cs;
+> +
+> +	parent_np = of_get_parent(spi->dev.of_node);
+> +	if (!parent_np) {
+> +		dev_err(&spi->dev, "Parent node not found\n");
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> +	sdd = spi_master_get_devdata(spi->master);
+> +
+>  	cs = kzalloc(sizeof(*cs), GFP_KERNEL);
+>  	if (!cs) {
+> -		of_node_put(data_np);
+> +		of_node_put(parent_np);
+>  		return ERR_PTR(-ENOMEM);
+>  	}
+>  
+>  	/* The CS line is asserted/deasserted by the gpio pin */
+>  	if (sdd->cs_gpio)
+> -		cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
+> +		cs->line = of_get_named_gpio(parent_np, "cs-gpios", 0);
 
+Can we support both "cs-gpio" and "cs-gpios" for backward compatibility ?
+After your change all DTBs using the original pattern will not work with
+new kernels any more. At least I would expect such backward compatibility
+maintained for few kernel releases.
+
+>  	if (!gpio_is_valid(cs->line)) {
+>  		dev_err(&spi->dev, "chip select gpio is not specified or invalid\n");
+> -		kfree(cs);
+> -		of_node_put(data_np);
+> +		of_node_put(parent_np);
+>  		return ERR_PTR(-EINVAL);
+>  	}
+>  
+> -	of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
+> -	cs->fb_delay = fb_delay;
+> -	of_node_put(data_np);
+> -	return cs;
+> +	return s3c64xx_get_slave_ctrldata(spi, cs);
+>  }
+>  
+>  /*
+> @@ -806,9 +815,14 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+>  	struct s3c64xx_spi_info *sci;
+>  	int err;
+>  
+> +	if (!spi->dev.of_node) {
+> +		dev_err(&spi->dev, "device node not found\n");
+> +		return -EINVAL;
+> +	}
+> +
+>  	sdd = spi_master_get_devdata(spi->master);
+>  	if (!cs && spi->dev.of_node) {
+> -		cs = s3c64xx_get_slave_ctrldata(spi);
+> +		cs = s3c64xx_get_cs_gpios(spi);
+>  		spi->controller_data = cs;
+>  	}
+>  
+> @@ -1077,7 +1091,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+>  	sdd->sfr_start = mem_res->start;
+>  	sdd->cs_gpio = true;
+>  	if (pdev->dev.of_node) {
+> -		if (!of_find_property(pdev->dev.of_node, "cs-gpio", NULL))
+> +		if (!of_find_property(pdev->dev.of_node, "cs-gpios", NULL))
+>  			sdd->cs_gpio = false;
+
+Ditto.
+
+>  		ret = of_alias_get_id(pdev->dev.of_node, "spi");
 
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks!
+Sylwester
