@@ -1,48 +1,72 @@
-From: Paul Carpenter <paul-YHLC2tV1sDlxR4N9A70vTlRxknfHcPLb9dF7HbQ/qKg@public.gmane.org>
-Subject: Re: [RESEND2 PATCH v4 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire
- Interface) controller support
-Date: Tue, 10 Jun 2014 09:56:40 +0100
-Message-ID: <5396C848.8020701@pcserviceselectronics.co.uk>
-References: <1401785392-26602-1-git-send-email-boris.brezillon@free-electrons.com> <1401785392-26602-3-git-send-email-boris.brezillon@free-electrons.com> <20140610083850.GB2620@katana>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: of: Add support for parsing
+ regulator_state for suspend state
+Date: Tue, 10 Jun 2014 11:02:32 +0100
+Message-ID: <20140610100232.GD5099@sirena.org.uk>
+References: <1402309780-8118-1-git-send-email-cw00.choi@samsung.com>
+ <1402309780-8118-2-git-send-email-cw00.choi@samsung.com>
+ <20140609192133.GD5099@sirena.org.uk>
+ <53964A45.3010108@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140610083850.GB2620@katana>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="kEeQdy8Dt6IIuJte"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53964A45.3010108-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Wolfram Sang wrote:
-> On Tue, Jun 03, 2014 at 10:49:52AM +0200, Boris BREZILLON wrote:
->> The P2WI looks like an SMBus controller which only supports byte data
->> transfers. But, it differs from standard SMBus protocol on several
->> aspects:
->> - it supports only one slave device, and thus drop the address field
->> - it adds a parity bit every 8bits of data
->> - only one read access is required to read a byte (instead of a read
->>   followed by a write access in standard SMBus protocol)
 
-Minor quibble should be
-"(instead of a write followed by a read access in standard SMBus
-   protocol)"
+--kEeQdy8Dt6IIuJte
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-That being similar to EEPROM and other types of devices write internal
-address followed by read access from internal address.
+On Tue, Jun 10, 2014 at 08:59:01AM +0900, Chanwoo Choi wrote:
+> On 06/10/2014 04:21 AM, Mark Brown wrote:
 
->> - there's no Ack bit after each byte transfer
->>
->> This means this bus cannot be used to interface with standard SMBus
->> devices (the only known device to support this interface is the AXP221
->> PMIC).
-> 
-> Good description. Should be a comment at the top of the driver to spread
-> the word.
+> > If we're going to do that we'd need to define what modes mean in the DT
+> > binding - currently there's no support for modes at all because it's
+> > complicated to come up with sensible and meaningful generic defintions.
 
--- 
-Paul Carpenter          | paul-YHLC2tV1sDlxR4N9A70vTlRxknfHcPLb9dF7HbQ/qKg@public.gmane.org
-<http://www.pcserviceselectronics.co.uk/>    PC Services
-<http://www.pcserviceselectronics.co.uk/pi/>  Raspberry Pi Add-ons
-<http://www.pcserviceselectronics.co.uk/fonts/> Timing Diagram Font
-<http://www.badweb.org.uk/> For those web sites you hate
+> The 'regulator-mode' of this patch means following defined constant variable
+> as following in include/linux/regulator/consumer.h:
+> #define REGULATOR_MODE_FAST		0x1
+> #define REGULATOR_MODE_NORMAL		0x2
+> #define REGULATOR_MODE_IDLE		0x4
+> #define REGULATOR_MODE_STANDBY		0x8
+
+> If regulator consumer would use this mode('regulator-mode),
+> specific regulator driver should implement rdev->desc->ops->set_suspend_mode function
+> to control regulator state according to 'regulator-mode' in suspend state.
+
+Sure, but what do those mean?
+
+--kEeQdy8Dt6IIuJte
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTlte1AAoJELSic+t+oim9sY4QAImMhtfX0+Yn1lWOosuRTeZ9
+ljUdsjTW/i71LL9qVhxhCuS/aVptstBUh7ZugNYxfbBQtRiWFIxf1t/sndzsuN3j
+FnxCofUBkntTFQKlgkmI5a9N8u9WgapfJKUtXYPLlgGGdA0bJ0Ay3/awRJZ6n+TM
+7BY4kBiq0C9rr7V8CSn9aLYk0SZODOXyvI+GP+fdgcBDTZA5p/W04JevW1zYPLqV
+kG88PvVhktItdLuJtOVzXBD1LSJ/G9Z+LR/HjL6dL1D/kX+6yP1RHu5ZWu9ffNQn
+1j9xs9b6TkTpKD3a+Sqv5HNZCa1cNxPBn+WZRFzEVhFH5DPMnNEG5oGOyleZ8Dnu
+tRGQVrHjScsZizFprI6YqwIq03hHd6CWd0yyc7BLKV+JRzNEAcdZqQFIGHeCmoCJ
+peoRLlGvwqK9R29ooZ6RGB/OejSd2lNiDTTLRyk5tM1SmwiM84SP0JV+edL+0nMg
+7zHnoPSkkNv7QtKnxjmfr0Isk20ykgPpQV2bCktJHOHfE7ZwuoGiqcstGUi8yBdz
+9KNNrpLcjICwYFS/cC/aGsRYNXuTWB8ZJ55oue5U8fsbHDAm5Izb1lWhgVfDo7Og
+PQZeC4n00BW81bAEB39az5SR/oceL33oy9rqAfYsJnpRdO3DhCxC8Ji2Le/r9Nze
+cNvpIi/uj2LBD4AtKafp
+=A0r0
+-----END PGP SIGNATURE-----
+
+--kEeQdy8Dt6IIuJte--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
