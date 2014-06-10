@@ -1,207 +1,74 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v5] i2c: add driver for Rockchip RK3xxx SoC I2C adapter
-Date: Tue, 10 Jun 2014 21:27:09 +0200
-Message-ID: <20140610192709.GA3122@katana>
-References: <5192968.EzcUiXba22@typ>
- <1956748.HoDAyYWJMb@typ>
- <10794912.fZysmMBNIZ@typ>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead
+ of "cs-gpio"
+Date: Tue, 10 Jun 2014 21:43:59 +0200
+Message-ID: <53975FFF.7010209@gmail.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>	<1402394881-31564-2-git-send-email-ch.naveen@samsung.com>	<5396E051.8050803@samsung.com>	<CAHfPSqAq9L5Zu7z3-y6Y2pG8AhE4Y1j8DE35LDfMW_DYc_x-gw@mail.gmail.com> <CAD=FV=XtdgKEg7fTHe+tsFM1Y_YwqNNk_DBW7ZX83YERGJsHBg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="5mCyUwZo2JvN/JJP"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <10794912.fZysmMBNIZ@typ>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Max Schwarz <max.schwarz@online.de>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>, Maxime Ripard <maxime.ripard@free-electrons.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=XtdgKEg7fTHe+tsFM1Y_YwqNNk_DBW7ZX83YERGJsHBg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "broonie@kernel.org" <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
+On 10.06.2014 20:09, Doug Anderson wrote:
+> Naveen / Sylwester,
+> 
+> On Tue, Jun 10, 2014 at 4:00 AM, Naveen Krishna Ch
+> <naveenkrishna.ch@gmail.com> wrote:
+>>> Can we support both "cs-gpio" and "cs-gpios" for backward compatibility ?
+>>> After your change all DTBs using the original pattern will not work with
+>>> new kernels any more. At least I would expect such backward compatibility
+>>> maintained for few kernel releases.
+>>
+>> The reason behind removing the "cs-gpio" or not providing backward
+>> compatibility was
+>>
+>> 1. Since spi-core started using "cs-gpios" string from spi device node
+>> several months ago.
+>>   The spi-s3c64xx.c driver is partially broken for more than 6 months.
+>>
+>> 2. Supporting "cs-gpio" would add extra bit of code.
+>>
+>> I've corrected the dts files that were using "cs-gpio" under
+>> "controller-data"(child node)
+>> to use "cs-gpio" from spi device node (parent node).
+>>
+>> I will make another version if you insist.
+> 
+> Yup, as near as I can tell this has been broken since (3146bee spi:
+> s3c64xx: Added provision for dedicated cs pin).  That landed June 25th
+> of 2013 into the SPI tree.
+> 
+> ...so clearly nobody was really testing Samsung's SPI driver on ToT
+> Linux.  1 year of unnoticed brokenness seems like enough time that we
+> could do away with the old code.  If someone comes out of the woodwork
+> and claims a dire need to support the old binding then it can be added
+> then.
+> 
+> In-tree users of this appear to be:
+> 
+> arch/arm/boot/dts/exynos4210-smdkv310.dts:
+>  cs-gpio = <&gpc1 2 0>;
+> arch/arm/boot/dts/exynos4412-trats2.dts:
+>  cs-gpio = <&gpb 5 0>;
+> arch/arm/boot/dts/exynos5250-smdk5250.dts:
+>  cs-gpio = <&gpa2 5 0>;
+> 
+> ...and I guess nobody has bothered using the SPI flash on those boards
+> for the last year?
 
---5mCyUwZo2JvN/JJP
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Trats2, it's actually a camera sensor, not SPI flash...
 
-Hi,
+Still, that's really a shame that:
 
-On Sat, Jun 07, 2014 at 07:36:19PM +0200, Max Schwarz wrote:
-> Driver for the native I2C adapter found in Rockchip RK3xxx SoCs.
->=20
-> Configuration is only possible through devicetree. The driver is
-> interrupt driven and supports the I2C_M_IGNORE_NAK mangling bit.
->=20
-> Signed-off-by: Max Schwarz <max.schwarz@online.de>
+a) such patch went in (i.e. its brokenness was not spotted in review),
+b) the regression was not spotted.
 
-Checking if the spinlock is needed would be nice, but we can also fix
-this later. Besides this, my code-checkers say:
+Anyway, IMHO this justifies removing the old binding then.
 
-    CHECKPATCH
-CHECK: Logical continuations should be on the previous line
-#615: FILE: drivers/i2c/busses/i2c-rk3x.c:470:
-+	if (num >=3D 2 && msgs[0].len < 4
-+	    && !(msgs[0].flags & I2C_M_RD)
-
-CHECK: Logical continuations should be on the previous line
-#616: FILE: drivers/i2c/busses/i2c-rk3x.c:471:
-+	    && !(msgs[0].flags & I2C_M_RD)
-+	    && (msgs[1].flags & I2C_M_RD)) {
-
-    SPARSE
-drivers/i2c/busses/i2c-rk3x.c:173:20: warning: Using plain integer as NULL =
-pointer
-drivers/i2c/busses/i2c-rk3x.c:664:45: warning: Using plain integer as NULL =
-pointer
-drivers/i2c/busses/i2c-rk3x.c:735:9: warning: cast removes address space of=
- expression
-    SMATCH
-drivers/i2c/busses/i2c-rk3x.c:592 rk3x_i2c_xfer() error: double unlock 'spi=
-n_lock:&i2c->lock'
-    SPATCH
-drivers/i2c/busses/i2c-rk3x.c:366:1-10: WARNING: Assignment of bool to 0/1
-drivers/i2c/busses/i2c-rk3x.c:187:2-11: WARNING: Assignment of bool to 0/1
-  CC      drivers/i2c/busses/i2c-rk3x.o
-drivers/i2c/busses/i2c-rk3x.c: In function 'rk3x_i2c_irq':
-drivers/i2c/busses/i2c-rk3x.c:336:15: warning: 'val' may be used uninitiali=
-zed in this function [-Wuninitialized]
-drivers/i2c/busses/i2c-rk3x.c:321:15: note: 'val' was declared here
-
-The smatch warning may be a false positive, please check. The gcc warning i=
-s a
-false positive but to prevent people from sending fixup patches, please do
-something like commit a55b44ac3fe0.
-
-> diff --git a/drivers/i2c/busses/i2c-rk3x.c b/drivers/i2c/busses/i2c-rk3x.c
-> new file mode 100644
-> index 0000000..7a430f4
-> --- /dev/null
-> +++ b/drivers/i2c/busses/i2c-rk3x.c
-> @@ -0,0 +1,769 @@
-> +/*
-> + * Driver for I2C adapter in Rockchip RK3xxx SoC
-> + *
-> + * Max Schwarz <max.schwarz@online.de>
-> + * based on the patches by Rockchip Inc.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +
-
-No empty line here.
-
-> +#include <linux/i2c.h>
-> +#include <linux/time.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/delay.h>
-> +#include <linux/errno.h>
-> +#include <linux/err.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/io.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/spinlock.h>
-> +#include <linux/clk.h>
-> +#include <linux/wait.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-
-Do you really need delay.h and time.h? Look like leftovers to me.
-
-> +/**
-> + * Generate a START condition, which triggers a REG_INT_START interrupt.
-> + */
-> +static void rk3x_i2c_start(struct rk3x_i2c *i2c)
-> +{
-> +	u32 val;
-> +
-> +	dev_dbg(i2c->dev, "start\n");
-
-I think this debug could go now, or?
-
-> +
-> +	rk3x_i2c_clean_ipd(i2c);
-> +	i2c_writel(i2c, REG_INT_START, REG_IEN);
-> +
-> +	/* enable adapter with correct mode, send START condition */
-> +	val =3D REG_CON_EN | REG_CON_MOD(i2c->mode) | REG_CON_START;
-> +
-> +	/* if we want to react to NACK, set ACTACK bit */
-> +	if (!(i2c->msg->flags & I2C_M_IGNORE_NAK))
-> +		val |=3D REG_CON_ACTACK;
-> +
-> +	i2c_writel(i2c, val, REG_CON);
-> +}
-
-=2E..
-
-> +
-> +static void rk3x_i2c_prepare_read(struct rk3x_i2c *i2c)
-> +{
-> +	unsigned int len =3D i2c->msg->len - i2c->processed;
-> +	u32 con;
-> +
-> +	con =3D i2c_readl(i2c, REG_CON);
-> +
-> +	/*
-> +	 * The hw can read up to 32 bytes at a time. If we need more than one
-> +	 * chunk, send an ACK after the last byte of the current chunk.
-> +	 */
-> +	if (unlikely(len > 32)) {
-> +		len =3D 32;
-> +		con &=3D ~REG_CON_LASTACK;
-> +	} else {
-> +		con |=3D REG_CON_LASTACK;
-> +	}
-
-This is a bit confusing also due to the description of this bit:
-"/* 1: do not send ACK after last receive */"
-
-It means not only don't send ACK, but merely do send NACK (to signal end of
-read). I though "not send ack" means clock stretching so I was wondering. M=
-aybe
-needs some rewording.
-
-> +
-> +	/* make sure we are in plain RX mode if we read a second chunk */
-> +	if (i2c->processed !=3D 0) {
-> +		con &=3D ~REG_CON_MOD_MASK;
-> +		con |=3D REG_CON_MOD(REG_CON_MOD_RX);
-> +	}
-> +
-> +	i2c_writel(i2c, con, REG_CON);
-> +	i2c_writel(i2c, len, REG_MRXCNT);
-> +}
-> +
-
-Thanks, I think we're very close to go...
-
-   Wolfram
-
-
---5mCyUwZo2JvN/JJP
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTl1wMAAoJEBQN5MwUoCm2D/YQAKPh43T/DiiswA0UVK9Isf+j
-m1/BdVvdP4zJBKmXH13WCazMhkhU15rFl+RxuJCwL3obfLs2mNaMaL68+gFl9lu2
-H4KCJvejZy1DL5BPGSLrCVsI5Pasvo5o7uk8BJwFEhWOHydOdeVyZ/9fyat+ThZn
-tRXv7f7grVL8J4Wg9/0sQ5gYB5oeTq6uXSdIMAGm2mcSTLJa9xqCt3kPWK2FX75D
-g79wJ74FgY5AKpS7zwHk7V/oroBbbmhfUBDMIt66L4hp1zy9wJ89H8z9TlSkpdq3
-aFFyT6WtkgJQgzxfvoko3dXsf/9HgyRQNJ7LfpxR3001nmdluVUVhQ9/eEehWeJV
-vYnovvBWTyAMPKW2od9vNRnwTczNB8U0tni8iM6gxsYsVxUsiu05r82RFeIqQGeO
-TsHqwTjqbo23PWzcPkRkcQLzZjPyag/mHDRDzQBLt7nupj8jq0G2weHPDXhSpQKf
-rUKHDLb1c4di5J/+J+xQjRekZHZT+RSpBZKoRVN6lwD3cQmRVe0x2EpNAQwlpnUu
-82CsZzPh91kSFhrQOsgp97bKFy8pRR00o7PXRHTNEtbkJFgAJjTBjSaN3jTCZsBx
-abMYJVBOXYdQMtglluk+zLKFTzqEbBS3T5KARKPluh+cxCtuQFuDHYaDGyQMomHi
-GUvRr8SYTlkEvg8Ctayv
-=AlKq
------END PGP SIGNATURE-----
-
---5mCyUwZo2JvN/JJP--
+Best regards,
+Tomasz
