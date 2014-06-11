@@ -1,63 +1,33 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 1/2 v3] spi: s3c64xx: use "cs-gpios" from spi node instead
- of "cs-gpio"
-Date: Wed, 11 Jun 2014 19:50:51 +0200
-Message-ID: <539896FB.4050702@gmail.com>
-References: <1402468318-7342-1-git-send-email-ch.naveen@samsung.com> <539839D6.1050305@collabora.co.uk> <CAHfPSqCYqTRBBH56y81na-t18pvoPmyWobZwXNgkrtq=H_79CQ@mail.gmail.com> <5398918F.4060800@collabora.co.uk>
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH 07/24] ARM: shmobile: Drop dev_irq_safe from r8a7779 genpd config
+Date: Wed, 11 Jun 2014 11:13:11 -0700
+Message-ID: <7ha99jiabs.fsf@paris.lan>
+References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
+	<1402397497-26737-8-git-send-email-ulf.hansson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <5398918F.4060800@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>
+Content-Type: text/plain
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1402397497-26737-8-git-send-email-ulf.hansson@linaro.org> (Ulf
+	Hansson's message of "Tue, 10 Jun 2014 12:51:20 +0200")
+Sender: linux-pm-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11.06.2014 19:27, Javier Martinez Canillas wrote:
-> On 06/11/2014 01:38 PM, Naveen Krishna Ch wrote:
->> On 11 June 2014 16:43, Javier Martinez Canillas
->> <javier.martinez@collabora.co.uk> wrote:
->>> On 06/11/2014 08:31 AM, Naveen Krishna Chatradhi wrote:
+Ulf Hansson <ulf.hansson@linaro.org> writes:
 
-[snip]
+> The dev_irq_safe configuration is redundant, genpd don't have any
+> special treatmeant for handling it.  Let's remove it.
 
->>>
->>>>               return ERR_PTR(-EINVAL);
->>>>       }
->>>> +     cs->line = spi->cs_gpio;
->>>>
->>>
->>> I wonder why are you keeping cs->line? AFAICT it's only used in
->>> s3c64xx_spi_setup() to request the GPIO and since you get the struct spi_device
->>> pointer as a parameter then you can just use spi->s_gpio instead.
->> I'm trying not to touch the non-DT part of the code.
->>
->> struct s3c64xx_spi_csinfo *cs = spi->controller_data;
->>
->> This will update the cs->line and cs->fb_delay in case of non-DT.
-> 
-> I see, then I prefer the opposite and do something like this on s3c64xx_spi_probe():
-> 
-> if (!pdev->dev.of_node)
->        spi->cs_gpio = cs->line;
+Why?
 
-Hmm, as far as I understand, spi here is spi_device, not spi_master. I
-don't think you have access to SPI devices on your bus in controller
-probe().
+The genpd core needs to handle irq_safe properly eventully (right now it
+just doesn't call power_off/power_on callbacks, but that needs to be
+implmenented.  c.f commit 0aa2a22169)
 
-What I think could work is reworking the driver to:
+If we remove these flags from platforms, we're taking away information
+that the platform maintainers have specified tha will be useful when
+full support is avialble.
 
-- in DT case, don't do anything in the driver about the GPIO chip
-select, because it will be handled automatically by the core.
+Kevin
 
-- in non-DT case, in s3c64xx_spi_setup(), just take the GPIO pin from
-s3c64xx_spi_csinfo struct passed through spi->controller_data, request
-it and save it to spi->cs_gpio,
-
-- in non-DT case, in s3c64xx_spi_cleanup(), free the GPIO requested in
-s3c64xx_spi_setup() and set spi->cs_gpio to -ENOENT (as done initially
-in spi_alloc_device()).
-
-Best regards,
-Tomasz
