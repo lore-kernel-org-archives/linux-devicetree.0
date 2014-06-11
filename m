@@ -1,59 +1,29 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA
- Controller driver
-Date: Wed, 11 Jun 2014 11:04:21 +0200
-Message-ID: <4675005.TnHGXm92zV@wuerfel>
-References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com>
- <8696483.Dng95cR5kK@wuerfel>
- <20140611081248.GS1701@ldesroches-Latitude-E6320>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v6 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
+ controller support
+Date: Wed, 11 Jun 2014 11:12:06 +0200
+Message-ID: <53981D66.4020002@free-electrons.com>
+References: <1402475980-15513-1-git-send-email-boris.brezillon@free-electrons.com> <1402475980-15513-3-git-send-email-boris.brezillon@free-electrons.com> <20140611085557.GA2676@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140611081248.GS1701@ldesroches-Latitude-E6320>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, vinod.koul@intel.com, nicolas.ferre@atmel.com, Ludovic Desroches <ludovic.desroches@atmel.com>, dmaengine@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>, plagnioj@jcrosoft.com, dan.j.williams@intel.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140611085557.GA2676@katana>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Wolfram Sang <wsa@the-dreams.de>
+Cc: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 June 2014 10:12:48 Ludovic Desroches wrote:
-> I have noticed that the filter function was missing in the RFC version.
-> I had to add it since there are two xdma controllers in the system.
-> 
-> static bool at_xdmac_filter(struct dma_chan *chan, void *slave)                 
-> {                                                                               
->         struct device *dma_dev = (struct device *) slave;                       
->                                                                                 
->         if (dma_dev == chan->device->dev)                                       
->                 return true;                                                    
->         else                                                                    
->                 return false;                                                   
-> }
 
-Yes, looks good. Note that you can save the typecast and just do
+On 11/06/2014 10:55, Wolfram Sang wrote:
+>> +MODULE_LICENSE("GPL");
+> "GPL v2"
 
-	struct device *dma_dev = slave; 
-	if (chan->device->dev == dma_dev)
-		...
+Oops, I missed this one.
 
-or shorter
+Sorry for the inconvenience.
 
-	if (chan->device->dev == slave)
-		...
-
-or shortest:
-
-	return chan->device->dev == slave;
-
-I find the shorter versions more readable here, but any of these
-are correct.
-
-	Arnd
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
