@@ -1,75 +1,269 @@
-From: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 0/8] Add initial support for DA9150 Charger & Fuel-Gauge IC
-Date: Wed, 11 Jun 2014 12:11:04 +0100
-Message-ID: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v7 5/7] arm: add basic support for Mediatek MT6589 boards
+Date: Wed, 11 Jun 2014 13:18:03 +0200
+Message-ID: <CABuKBeJHUNEaGru=MG4S8wr+uxhtZxWM6fDd-of8-nhTnzTzLA@mail.gmail.com>
+References: <1401989181-4712-1-git-send-email-matthias.bgg@gmail.com>
+ <1401989181-4712-6-git-send-email-matthias.bgg@gmail.com>
+ <20140605182138.GI31564@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140605182138.GI31564@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "arnd@arndb.de" <arnd@arndb.de>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Marc Zyngier <Marc.Zyngier@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregory.clement@free-electrons.com" <gregory.clement@free>
 List-Id: devicetree@vger.kernel.org
 
-This patch set adds initial support for the Dialog DA9150 Integrated Charger &
-Fuel-Gauge IC. The device also provides GPIO and GPADC functionality.
+2014-06-05 20:21 GMT+02:00 Mark Rutland <mark.rutland@arm.com>:
+> On Thu, Jun 05, 2014 at 06:26:19PM +0100, Matthias Brugger wrote:
+>> This adds a generic devicetree board file and a dtsi for boards
+>> based on MT6589 SoCs from Mediatek.
+>>
+>> Apart from the generic parts (gic, clocks) the only component
+>> currently supported are the timers.
+>>
+>> Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+>> ---
+>>  arch/arm/Kconfig                  |    2 +
+>>  arch/arm/Makefile                 |    1 +
+>>  arch/arm/boot/dts/mt6589.dtsi     |   94 +++++++++++++++++++++++++++++++++++++
+>>  arch/arm/mach-mediatek/Kconfig    |    6 +++
+>>  arch/arm/mach-mediatek/Makefile   |    1 +
+>>  arch/arm/mach-mediatek/mediatek.c |   27 +++++++++++
+>>  6 files changed, 131 insertions(+)
+>>  create mode 100644 arch/arm/boot/dts/mt6589.dtsi
+>>  create mode 100644 arch/arm/mach-mediatek/Kconfig
+>>  create mode 100644 arch/arm/mach-mediatek/Makefile
+>>  create mode 100644 arch/arm/mach-mediatek/mediatek.c
+>>
+>> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+>> index db3c541..0fc8acd 100644
+>> --- a/arch/arm/Kconfig
+>> +++ b/arch/arm/Kconfig
+>> @@ -997,6 +997,8 @@ source "arch/arm/mach-mv78xx0/Kconfig"
+>>
+>>  source "arch/arm/mach-imx/Kconfig"
+>>
+>> +source "arch/arm/mach-mediatek/Kconfig"
+>> +
+>>  source "arch/arm/mach-mxs/Kconfig"
+>>
+>>  source "arch/arm/mach-netx/Kconfig"
+>> diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+>> index 41c1931..8ce9774 100644
+>> --- a/arch/arm/Makefile
+>> +++ b/arch/arm/Makefile
+>> @@ -170,6 +170,7 @@ machine-$(CONFIG_ARCH_MSM)                += msm
+>>  machine-$(CONFIG_ARCH_MV78XX0)               += mv78xx0
+>>  machine-$(CONFIG_ARCH_MVEBU)         += mvebu
+>>  machine-$(CONFIG_ARCH_MXC)           += imx
+>> +machine-$(CONFIG_ARCH_MEDIATEK)              += mediatek
+>>  machine-$(CONFIG_ARCH_MXS)           += mxs
+>>  machine-$(CONFIG_ARCH_NETX)          += netx
+>>  machine-$(CONFIG_ARCH_NOMADIK)               += nomadik
+>> diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+>> new file mode 100644
+>> index 0000000..f1d8a8b
+>> --- /dev/null
+>> +++ b/arch/arm/boot/dts/mt6589.dtsi
+>> @@ -0,0 +1,94 @@
+>> +/*
+>> + * Copyright (c) 2014 MundoReader S.L.
+>> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +
+>> +#include <dt-bindings/interrupt-controller/irq.h>
+>> +#include <dt-bindings/interrupt-controller/arm-gic.h>
+>> +#include "skeleton.dtsi"
+>> +
+>> +/ {
+>> +     compatible = "mediatek,mt6589";
+>> +     interrupt-parent = <&gic>;
+>> +
+>> +     cpus {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <0>;
+>> +
+>> +             cpu@0 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "arm,cortex-a7";
+>> +                     reg = <0x0>;
+>> +             };
+>> +             cpu@1 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "arm,cortex-a7";
+>> +                     reg = <0x1>;
+>> +             };
+>> +             cpu@2 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "arm,cortex-a7";
+>> +                     reg = <0x2>;
+>> +             };
+>> +             cpu@3 {
+>> +                     device_type = "cpu";
+>> +                     compatible = "arm,cortex-a7";
+>> +                     reg = <0x3>;
+>> +             };
+>> +
+>> +     };
+>> +
+>> +     clocks {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +             ranges;
+>
+> This is just nonsense. This /clocks node is in no way special -- /clocks
+> was never reserved as a place to put clocks that we guarantee to probe.
+> It's just an arbitrary containter node, and the fact we happen to probe
+> clocks under it is an implementation detail (and arguably a bug).
+>
+> I argued in the past to at least have them as a simple-bus,
+> necessitating ranges, #address-cells, and #size-cells you have here, but
+> you'r missing the compatible = "simple-bus", rendering the exercise
+> pointless.
+>
+>> +
+>> +             system_clk: dummy13m {
+>> +                     compatible = "fixed-clock";
+>> +                     clock-frequency = <13000000>;
+>> +                     #clock-cells = <0>;
+>> +             };
+>> +
+>> +             rtc_clk: dummy32k {
+>> +                     compatible = "fixed-clock";
+>> +                     clock-frequency = <32000>;
+>> +                     #clock-cells = <0>;
+>> +             };
+>> +     };
+>> +
+>> +     soc {
+>> +             #address-cells = <1>;
+>> +             #size-cells = <1>;
+>> +             compatible = "simple-bus";
+>> +             clock-ranges;
+>
+> Why the clock-ranges? You refer to them explicitly below.
+>
+>> +             ranges;
+>> +
+>> +             timer: timer@10008000 {
+>> +                     compatible = "mediatek,mt6577-timer";
+>> +                     reg = <0x10008000 0x80>;
+>> +                     interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
+>> +                     clocks = <&system_clk>, <&rtc_clk>;
+>> +                     clock-names = "system-clk", "rtc-clk";
+>> +             };
+>> +
+>> +             gic: interrupt-controller@10212000 {
+>> +                     compatible = "arm,cortex-a15-gic";
+>> +                     interrupt-controller;
+>> +                     #interrupt-cells = <3>;
+>> +                     reg = <0x10211000 0x1000>,
+>> +                           <0x10212000 0x1000>,
+>> +                           <0x10214000 0x2000>,
+>> +                           <0x10216000 0x2000>;
+>> +             };
+>> +     };
+>> +};
+>
+> No architected timers?
 
-In this patch set the following is provided:
- - MFD Core support and DT bindings documentation.
- - Fix to IIO framework (inkern.c, of_iio_channel_get_by_name()) to correctly
-   return NULL for failure cases.
- - IIO GPADC support and DT bindings documentation.
- - Power Supply Charger support and DT bindings documentation.
- - Add Dialog vendor prefix for DT.
+I was trying to get the arch timer working [0], but unfortunately with no luck.
 
- To keep patch submission from being too large, support for GPIO and Fuel-Gauge
- will come after initial support patches are accepted.
+[0] http://article.gmane.org/gmane.linux.ports.arm.kernel/321976
 
- This patch set is baselined against the v3.15 kernel version.
+>
+>
+>> diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+>> new file mode 100644
+>> index 0000000..2c043a2
+>> --- /dev/null
+>> +++ b/arch/arm/mach-mediatek/Kconfig
+>> @@ -0,0 +1,6 @@
+>> +config ARCH_MEDIATEK
+>> +     bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
+>> +     select ARM_GIC
+>> +     select MTK_TIMER
+>> +     help
+>> +       Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
+>> diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
+>> new file mode 100644
+>> index 0000000..43e619f
+>> --- /dev/null
+>> +++ b/arch/arm/mach-mediatek/Makefile
+>> @@ -0,0 +1 @@
+>> +obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
+>> diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+>> new file mode 100644
+>> index 0000000..f2acf07
+>> --- /dev/null
+>> +++ b/arch/arm/mach-mediatek/mediatek.c
+>> @@ -0,0 +1,27 @@
+>> +/*
+>> + * Device Tree support for Mediatek SoCs
+>> + *
+>> + * Copyright (c) 2014 MundoReader S.L.
+>> + * Author: Matthias Brugger <matthias.bgg@gmail.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License as published by
+>> + * the Free Software Foundation; either version 2 of the License, or
+>> + * (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +#include <linux/init.h>
+>> +#include <asm/mach/arch.h>
+>> +
+>> +static const char * const mediatek_board_dt_compat[] = {
+>> +     "mediatek,mt6589",
+>> +     NULL,
+>> +};
+>> +
+>> +DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
+>> +     .dt_compat      = mediatek_board_dt_compat,
+>> +MACHINE_END
+>
+> If this is all we have, surely we can get by with the defaults?
 
-Adam Thomson (8):
-  mfd: Add support for DA9150 combined charger & fuel-gauge device
-  mfd: da9150: Add DT binding documentation for core
-  iio: of_iio_channel_get_by_name() returns non-null pointers for error
-    legs
-  iio: Add support for DA9150 GPADC
-  iio: da9150: Add DT binding documentation for GPADC
-  power: Add support for DA9150 Charger
-  power: da9150: Add DT binding documentation for charger
-  DT: Add vendor prefix for Dialog Semiconductor Ltd.
+We reach to the point where the bootconsole gets disabled. Due to the
+still missing console driver, we get stuck there.
 
- .../devicetree/bindings/iio/da9150-gpadc.txt       |   16 +
- Documentation/devicetree/bindings/mfd/da9150.txt   |   53 +
- .../devicetree/bindings/power/da9150-charger.txt   |   29 +
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- drivers/iio/adc/Kconfig                            |    9 +
- drivers/iio/adc/Makefile                           |    1 +
- drivers/iio/adc/da9150-gpadc.c                     |  396 +++++++
- drivers/iio/inkern.c                               |    6 +-
- drivers/mfd/Kconfig                                |   12 +
- drivers/mfd/Makefile                               |    2 +
- drivers/mfd/da9150-core.c                          |  398 +++++++
- drivers/mfd/da9150-i2c.c                           |  268 +++++
- drivers/power/Kconfig                              |   23 +
- drivers/power/Makefile                             |    1 +
- drivers/power/da9150-charger.c                     |  790 +++++++++++++
- include/linux/mfd/da9150/charger.h                 |   58 +
- include/linux/mfd/da9150/core.h                    |  125 +++
- include/linux/mfd/da9150/gpadc.h                   |   71 ++
- include/linux/mfd/da9150/pdata.h                   |  148 +++
- include/linux/mfd/da9150/registers.h               | 1160 ++++++++++++++++++++
- 20 files changed, 3565 insertions(+), 2 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/iio/da9150-gpadc.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/da9150.txt
- create mode 100644 Documentation/devicetree/bindings/power/da9150-charger.txt
- create mode 100644 drivers/iio/adc/da9150-gpadc.c
- create mode 100644 drivers/mfd/da9150-core.c
- create mode 100644 drivers/mfd/da9150-i2c.c
- create mode 100644 drivers/power/da9150-charger.c
- create mode 100644 include/linux/mfd/da9150/charger.h
- create mode 100644 include/linux/mfd/da9150/core.h
- create mode 100644 include/linux/mfd/da9150/gpadc.h
- create mode 100644 include/linux/mfd/da9150/pdata.h
- create mode 100644 include/linux/mfd/da9150/registers.h
+Best regards,
+Matthias
 
---
-1.9.3
+>
+> Cheers,
+> Mark.
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+motzblog.wordpress.com
