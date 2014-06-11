@@ -1,78 +1,35 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v6 0/2] i2c: sunxi: add P2WI controller support
-Date: Wed, 11 Jun 2014 10:39:38 +0200
-Message-ID: <1402475980-15513-1-git-send-email-boris.brezillon@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Ben Dooks <ben.dooks@codethink.co.uk>
+Subject: Re: [alsa-devel] "ak" vs "asahi-kasei" (was: Re: [PATCH 3/3 v3] ARM:
+ shmobile: lager: add sound support on DT)
+Date: Wed, 11 Jun 2014 09:40:06 +0100
+Message-ID: <539815E6.2050304@codethink.co.uk>
+References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com> <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Linux-sh list <linux-sh@vger.kernel.org>, Magnus <magnus.damm@gmail.com>, Simon <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On 11/06/14 09:30, Kuninori Morimoto wrote:
+> 
+> Hi Geert
+> 
+>>> grep asahi-kasei sound/soc/codecs/*
+>>> sound/soc/codecs/ak4104.c:      { .compatible = "asahi-kasei,ak4104", },
+>>> sound/soc/codecs/ak4554.c:      { .compatible = "asahi-kasei,ak4554" },
+>>> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4642",   .data = &ak4642_drvdata},
+>>> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4643",   .data = &ak4643_drvdata},
+>>> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4648",   .data = &ak4648_drvdata},
+>>> sound/soc/codecs/ak5386.c:      { .compatible = "asahi-kasei,ak5386", },
+>>>
+>>> ak4642 driver can't probe by "ak";
 
-This series adds support for the P2WI block used by some Allwinner boards
-to interface with the AXP221 PMIC.
-
-The P2WI controller looks like an SMBus controller which only supports byte
-data transfers. But, it differs from standard SMBus protocol on several
-aspects:
-- it supports only one slave device, and thus drop the address field
-- it adds a parity bit every 8bits of data
-- only one read access is required to read a byte (instead of a write
-  followed by a read access in standard SMBus protocol)
-- there's no Ack bit after each byte transfer
-
-This means this bus cannot be used to interface with standard SMBus
-devices (the only known device to support this interface is the AXP221
-PMIC).
-However the P2WI protocol is close enough to SMBus to be integrated in
-the I2C subsystem (see this thread [1] for detailed reasons that led to
-integrating this driver in the I2C subsystem).
-
-[1] http://www.spinics.net/lists/linux-i2c/msg15066.html
-
-Best Regards,
-
-Boris
-
-Changes since v5:
-- add Maxime's ack
-- rework commit message to mention the discussion that led to integrating
-  this driver in the I2C subsystem
-- add missing dependency on RESET_CONTROLLER
-- clean up header inclusions
-- fix coding style issues
-
-Changes since v4:
-- add P2WI protocol description in driver header comment
-- remove unneeded i2c address check
-- remove unneeded irq field from p2wi struct
-
-Changes since v3:
-- update the DT bindings doc
-- fix a comment that was no longer true
-
-Changes since v2:
-- drop the initialization (switch from I2C to P2WI mode) part
-- print devm_ioremap_resource err code
-
-
-Boris BREZILLON (2):
-  i2c: sunxi: add P2WI DT bindings documentation
-  i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface) controller support
-
- .../devicetree/bindings/i2c/i2c-sunxi-p2wi.txt     |  41 +++
- drivers/i2c/busses/Kconfig                         |  12 +
- drivers/i2c/busses/Makefile                        |   1 +
- drivers/i2c/busses/i2c-sun6i-p2wi.c                | 345 +++++++++++++++++++++
- 4 files changed, 399 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/i2c-sunxi-p2wi.txt
- create mode 100644 drivers/i2c/busses/i2c-sun6i-p2wi.c
+Should we add ak, as well?
 
 -- 
-1.8.3.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
