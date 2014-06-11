@@ -1,50 +1,75 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
-Date: Wed, 11 Jun 2014 17:58:55 +0200
-Message-ID: <CABxcv=kX07pNCd-YPYp6J8S5hHzG1rsoer1YRfdPE0g-xFqZnQ@mail.gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
-	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCHv5 2/4] mailbox: Introduce framework for mailbox
+Date: Wed, 11 Jun 2014 17:07:26 +0100
+Message-ID: <20140611160726.GJ5099@sirena.org.uk>
+References: <1400134260-3962-1-git-send-email-jaswinder.singh@linaro.org>
+ <7978295.UBGxYvcnvH@wuerfel>
+ <CAJe_Zhe_VFTpPW0sKBsqit347MR7QmEDvzvQTyh1DWr3v991tg@mail.gmail.com>
+ <20140529154348.GH32082@beef>
+ <CABb+yY2PiGpqy2uevCFexAKeS4aZxJxZHEDJTRN1SW6VVjBzGQ@mail.gmail.com>
+ <20140602151454.GK32082@beef>
+ <CABb+yY3ZYqtT+R0PwZDtpW0O0SsbxTyiYmXaseZHoj4Nr6UBPQ@mail.gmail.com>
+ <CAPKp9uZTnWCojeZHyvrm=vTuY15dAHiW1CWP18JUfuKU-mfH0Q@mail.gmail.com>
+ <CAJe_ZheA_2PwzFGwx2rdba0oVsAKRnwK02XE-8nPY6K5NKpdTw@mail.gmail.com>
+ <20140605111205.GD32082@beef>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="oQ95xoC0NK0Hccgk"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402464739-19044-3-git-send-email-tushar.b@samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20140605111205.GD32082@beef>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tushar Behera <tushar.b@samsung.com>
-Cc: Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, mturquette@linaro.org, t.figa@samsung.com, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@linaro.org>, dianders@google.com, trblinux@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
+To: Matt Porter <mporter@linaro.org>
+Cc: Jassi Brar <jaswinder.singh@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Anna, Suman" <s-anna@ti.com>, Loic Pallardy <loic.pallardy@st.com>, LeyFoon Tan <lftan.linux@gmail.com>, Craig McGeachie <slapdau@yahoo.com.au>, Courtney Cavin <courtney.cavin@sonymobile.com>, Rob Herring <robherring2@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Devicetree List <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 11, 2014 at 7:32 AM, Tushar Behera <tushar.b@samsung.com> wrote:
-> Currently CLK_FOUT_EPLL was set as one of the parents of AUDSS mux.
-> As per the user manual, it should be CLK_MAU_EPLL.
->
-> The problem surfaced when the bootloader in Peach-pit board set
-> the EPLL clock as the parent of AUDSS mux. While booting the kernel,
-> we used to get a system hang during late boot if CLK_MAU_EPLL was
-> disabled.
->
-> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> Reported-by: Kevin Hilman <khilman@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index e385322..79e9119 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -167,7 +167,7 @@
->                 compatible = "samsung,exynos5420-audss-clock";
->                 reg = <0x03810000 0x0C>;
->                 #clock-cells = <1>;
-> -               clocks = <&clock CLK_FIN_PLL>, <&clock CLK_FOUT_EPLL>,
-> +               clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MAU_EPLL>,
->                          <&clock CLK_SCLK_MAUDIO0>, <&clock CLK_SCLK_MAUPCM0>;
->                 clock-names = "pll_ref", "pll_in", "sclk_audio", "sclk_pcm_in";
->         };
-> --
-> 1.7.9.5
->
-> --
 
-Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+--oQ95xoC0NK0Hccgk
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Thu, Jun 05, 2014 at 07:12:05AM -0400, Matt Porter wrote:
+> On Tue, Jun 03, 2014 at 03:51:55PM +0530, Jassi Brar wrote:
+
+> > BTW, here we at least have a hardware resource to specify in the DT
+> > node, there are examples in kernel where the DT nodes are purely
+> > virtual. For ex, grep for "linux,spdif-dit". So I think we should be
+> > ok.
+
+> There's a bit of a difference between my concern over a virtual node and
+> this example you've cited. In the dummy spdif transmitter, it's defining
+> a virtual device that plugs in for a codec, a hardware concept well
+> defined in the audio bindings. I agree that there are many examples of
+> this type of virtual node, including dummy phys, but in all cases they
+> are stubbing out a real hardware concept.
+
+Well, really it's an actual physical thing - it's something that appears
+in the schematic and can be pointed at on the board but just doesn't
+have software control.  From that point of view if the software that's
+being interacted with on the remote processor is in ROM/flash which
+won't or can't be realistically be updated (which seems to be mostly the
+case) then you can reasonably say the same thing.
+
+--oQ95xoC0NK0Hccgk
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTmH67AAoJELSic+t+oim9Bt8P/160qN+CPShJ28IiDzmny6PA
+AVGJksSE68Q5wbWYyvV0058YND8nksw1E9fm+QeXMjNyk8Et2p/Wle882EIMRo6b
+BgpiMxz5yU1Pl49VEUmhit9HIbt0Fi/acibc2YcDHmcxNxjyiuMPC9FL6as9ZBs/
+fAkjSL3CXsQaKBhVj5QVJdsvgU7/i1GPrF9wH820NAXDXqDY2aDbKKAFPEV/xJby
+03GZ6nrF00+ql2lerazQNqtvPljmEjbU/sLsdO0zdjXnfgZdUtRkILnOBiYT2q+b
+0GK9FoNG5LqihQ47I2qa6s0UMyWmPVHgLr5G641845TuGIWnsJrdPB4wF7AkP9Co
+bT2ozwOhm4tAK/rsLYUX6WVVX7LSyAN9LgdxouVT6Lr6xwkMgREPJVFFzQ2VKfJf
+uSFhNyXyZZzgxuX1JHQkIxq7/sPRp5EYyoIKf0RDJZfu/wnp6PBNu3B1VAKvhEzQ
+bCFJen+MG3O+tDgts37qIewR4yErUXwN3zBtnZ6JvTJ/eA5tPo24/E+IAuiyBWK0
+6zJmcqK7OIRK9iaAmpju9RMTuPzfxNFKosqPENpaJn/5h9vm+VZpCkukFtCvlBmD
+zL4HkyI+hEa8iir46jdhNnMG2QzwBs2m26KIHvT6NWKNuKPpbUDJJ/krD/paiDkB
+NTQ6gRwb2wI8LWiLr5LE
+=UeEw
+-----END PGP SIGNATURE-----
+
+--oQ95xoC0NK0Hccgk--
