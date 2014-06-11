@@ -1,77 +1,82 @@
-From: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
-Date: Wed, 11 Jun 2014 11:02:19 +0530
-Message-ID: <1402464739-19044-4-git-send-email-tushar.b@samsung.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2 v2] spi: s3c64xx: use "cs-gpios" from spi node instead
+ of "cs-gpio"
+Date: Wed, 11 Jun 2014 11:40:40 +0530
+Message-ID: <CAHfPSqBrAPa6eo63OFk0-TQtKY9GcOv1AXrN0rtsCxfU6fC5uQ@mail.gmail.com>
+References: <1402394881-31564-1-git-send-email-ch.naveen@samsung.com>
+ <1402394881-31564-2-git-send-email-ch.naveen@samsung.com> <CAD=FV=WgvyF-P+69SdmCGX0jxJ3FVxpa+AcgQKg-Emya_W-w3Q@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402464739-19044-1-git-send-email-tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <CAD=FV=WgvyF-P+69SdmCGX0jxJ3FVxpa+AcgQKg-Emya_W-w3Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, spi-devel-general-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Jaswinder Singh <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Peach-pi board has MAX98090 audio codec connected on HSI2C-7 bus.
+Hello Doug,
 
-Signed-off-by: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- arch/arm/boot/dts/exynos5800-peach-pi.dts |   31 +++++++++++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+On 10 June 2014 23:56, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Naveen,
+>
+> Not a full review, but a few quick things I happened to notice:
+>
+> On Tue, Jun 10, 2014 at 3:08 AM, Naveen Krishna Chatradhi
+> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> @@ -94,7 +93,6 @@ Example:
+>>                         spi-max-frequency = <10000>;
+>>
+>>                         controller-data {
+>> -                               cs-gpio = <&gpa2 5 1 0 3>;
+>>                                 samsung,spi-feedback-delay = <0>;
+>
+> In a future patch (not this one!) it might make sense to also move
+> spi-feedback-delay out.
+After this change, "cs->line" in the struct s3c64xx_spi_csinfo {} is useless.
+Will take others opinion and remove "fb_delay" too.
+>
+>
+>> +static struct s3c64xx_spi_csinfo *s3c64xx_get_cs_gpios(struct spi_device *spi)
+>
+> I believe that you can make use of the fact that the SPI core already
+> got these GPIOs for you.  See of_spi_register_master().  Everything
+> you need ought to be in master->num_chipselect and master->cs_gpios.
+cs->line is a duplicate and can be replaced with master->cs_gpios from SPI core.
+>
+> Strangely, it doesn't look like any other drivers use this, so
+> possibly I'm confused...
+>
+>
+>> @@ -806,9 +815,14 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+>>         struct s3c64xx_spi_info *sci;
+>>         int err;
+>>
+>> +       if (!spi->dev.of_node) {
+>> +               dev_err(&spi->dev, "device node not found\n");
+>> +               return -EINVAL;
+>> +       }
+>
+> This seems incredibly broken.  You're saying that the SPI driver no
+> longer works without the device tree?  I don't think that's desirable,
+> but I suppose I could be wrong.
+I will move this check to the s3c64xx_get_slave_ctrldata() function.
 
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index f3af207..76f5966 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -78,9 +78,27 @@
- 		pinctrl-0 = <&usb301_vbus_en>;
- 		enable-active-high;
- 	};
-+
-+	sound {
-+		compatible = "google,snow-audio-max98090";
-+
-+		samsung,i2s-controller = <&i2s0>;
-+		samsung,audio-codec = <&max98090>;
-+	};
-+};
-+
-+&i2s0 {
-+	status = "okay";
- };
- 
- &pinctrl_0 {
-+	max98090_irq: max98090-irq {
-+		samsung,pins = "gpx0-2";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
- 	tpm_irq: tpm-irq {
- 		samsung,pins = "gpx1-0";
- 		samsung,pin-function = <0>;
-@@ -207,6 +225,19 @@
- 	samsung,invert-vclk;
- };
- 
-+&hsi2c_7 {
-+	status = "okay";
-+
-+	max98090: codec@10 {
-+		compatible = "maxim,max98090";
-+		reg = <0x10>;
-+		interrupts = <2 0>;
-+		interrupt-parent = <&gpx0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&max98090_irq>;
-+	};
-+};
-+
- &hsi2c_9 {
- 	status = "okay";
- 	clock-frequency = <400000>;
+
+I guess the non-DT version of the driver is broken too.
+For non-DT driver sdd->cs_gpio is true, but the cs->line is never initialized.
+>
+> Also note that you still left an "if" test below for trying to deal
+> with the fact that there is no "of_node".
+
+>
+>
+> -Doug
+
+
+
 -- 
-1.7.9.5
-
+Shine bright,
+(: Nav :)
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
