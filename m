@@ -1,33 +1,59 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss always enabled
-Date: Wed, 11 Jun 2014 09:50:38 -0700
-Message-ID: <7ha99jjspt.fsf@paris.lan>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
-	<1402464739-19044-2-git-send-email-tushar.b@samsung.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] "ak" vs "asahi-kasei" (was: Re: [PATCH 3/3 v3] ARM:
+ shmobile: lager: add sound support on DT)
+Date: Wed, 11 Jun 2014 17:54:10 +0100
+Message-ID: <20140611165410.GK5099@sirena.org.uk>
+References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
+ <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
+ <539815E6.2050304@codethink.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402464739-19044-2-git-send-email-tushar.b@samsung.com> (Tushar
-	Behera's message of "Wed, 11 Jun 2014 11:02:17 +0530")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tushar Behera <tushar.b@samsung.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mturquette@linaro.org, t.figa@samsung.com, linux@arm.linux.org.uk, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, kgene.kim@samsung.com, dianders@google.com, trblinux@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LOs/ZW1jHVHgcZ4f"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <539815E6.2050304@codethink.co.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Ben Dooks <ben.dooks@codethink.co.uk>
+Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, Geert Uytterhoeven <geert@linux-m68k.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Tushar Behera <tushar.b@samsung.com> writes:
 
-> When the output clock of AUDSS mux is disabled, we are getting kernel
-> oops while doing a clk_get() on other clocks provided by AUDSS. 
->
-> Though user manual doesn't specify this dependency, we came across
-> this issue while disabling the parent of AUDSS mux clocks.
->
-> Keeping the parents of AUDSS mux always enabled fixes this issue.
+--LOs/ZW1jHVHgcZ4f
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-While this patch works (and fixes the boot problem for me), it seems
-like it's papering over the real problem.
+On Wed, Jun 11, 2014 at 09:40:06AM +0100, Ben Dooks wrote:
+> On 11/06/14 09:30, Kuninori Morimoto wrote:
 
-Seems like the right fix is actually modelling the clocks properly so
-that enabling a child clock ensures that the parent is also enabled.
+> >>> ak4642 driver can't probe by "ak";
 
-Kevin
+> Should we add ak, as well?
+
+They're usually referred to as AKM when abbreviated and their web site
+is http://www.akm.com/ - don't know what the stock ticker symbol is.  In
+any case there's no real cost to adding both abbreviated and
+non-abbreviated forms if we want to transition.
+
+--LOs/ZW1jHVHgcZ4f
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTmImvAAoJELSic+t+oim9inUP/0yTkXJkxnPc5jfwkZx8kcuV
+qVaCgf5JKdyPnvnwdjFV8qf6TS6lGnK4fWzcdGhCqFRcb5v2Wjdp1j3EBhE2BduA
+PCd4k2pO+xTg/v5mxXenYqbLtzh+RxHMz8hckvrpOEscD6iwguFSypTcU/JoHQt9
+AzWbCjiYYfns3vCkItVozw+SuWcb2oY1+UCfgpAFLhbkr10tUt62HoHMJA/tKuvI
+35i5j3EpX74iOQ0hcZgwGsG6sKdVEPZUSixb98Jxv4nHr9emrGLgWfFg8+wYm168
+VdeoVvTnKwFGT9hcQTbH7O/6RHmIbH3CeaD/IlSH2PaLIALONLoIBcbjm9/4HnrA
+qxEJrYQC1EboXATzhIWgoyH1pDR+A+Rm1XSBrhP/cWbLu79VwY0+HiWWBUj1ddrz
+U/hfB3ShS/pEdXr8JsLc/EgLZEtcpNoaEYWbEk0CtZDWmwdV4rj5Ysvin4MRZI5f
+WyPPtokdrqxFI3PfrALqb+S92N52M5sX2p9Qexuvun+5u8U4CThC0Ug/1zxR1K0Q
+giav2gF7qccSlzwbI1NY1/ppXa7xgp6VcbqT2s4KPBJ460kr8ITHwSy8gaHDkDxm
+3KEaCJqEpB7KIuE6DaXer31HkJ05wsRQemnQBXOEgs65S4yw3R3Jr6C4sMv5ZYCQ
+sh9jw4sfsUr945IZhGyo
+=Z6IQ
+-----END PGP SIGNATURE-----
+
+--LOs/ZW1jHVHgcZ4f--
