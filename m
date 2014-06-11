@@ -1,335 +1,62 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v8 2/7] clocksource: Add support for the Mediatek SoCs
-Date: Wed, 11 Jun 2014 14:34:10 +0200
-Message-ID: <1402490055-15197-3-git-send-email-matthias.bgg@gmail.com>
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v8 3/7] dt-bindings: add mtk-timer bindings
+Date: Wed, 11 Jun 2014 14:34:11 +0200
+Message-ID: <1402490055-15197-4-git-send-email-matthias.bgg@gmail.com>
 References: <1402490055-15197-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402490055-15197-1-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402490055-15197-1-git-send-email-matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, florian.vaussard-p8DiymsW2f8@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, andrew-g2DYL2Zd6BY@public.gmane.org, silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, heiko.stuebner-K3U4GQvHnyU@public.gmane.org, olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, anders.berg-M7mHMAq9Yzo@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a clock source and clock event for the timer found
-on the Mediatek SoCs.
+Add binding documentation for the General Porpose Timer driver of
+the Mediatek SoCs.
 
-The Mediatek General Purpose Timer block provides five 32 bit timers and
-one 64 bit timer.
-
-Two 32 bit timers are used by this driver:
-TIMER1: clock events supporting periodic and oneshot events
-TIMER2: clock source configured as a free running counter
-
-The General Purpose Timer block can be run with two clocks. A 13 MHz system
-clock and the RTC clock running at 32 KHz. This implementation uses the system
-clock with no clock source divider.
-
-The interrupts are shared between the different timers and have to be read back
-from a register. We just enable one interrupt for the clock event. The clock
-event timer is used by all cores.
-
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Acked-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- drivers/clocksource/Kconfig     |    5 +
- drivers/clocksource/Makefile    |    1 +
- drivers/clocksource/mtk_timer.c |  261 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 267 insertions(+)
- create mode 100644 drivers/clocksource/mtk_timer.c
+ .../bindings/timer/mediatek,mtk-timer.txt          |   18 ++++++++++++=
+++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mt=
+k-timer.txt
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index 065131c..1e2fdf0 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -149,6 +149,11 @@ config VF_PIT_TIMER
- config SYS_SUPPORTS_SH_CMT
-         bool
- 
-+config MTK_TIMER
-+	select CLKSRC_OF
-+	select CLKSRC_MMIO
-+	bool
-+
- config SYS_SUPPORTS_SH_MTU2
-         bool
- 
-diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-index 800b130..da1ac09 100644
---- a/drivers/clocksource/Makefile
-+++ b/drivers/clocksource/Makefile
-@@ -34,6 +34,7 @@ obj-$(CONFIG_CLKSRC_SAMSUNG_PWM)	+= samsung_pwm_timer.o
- obj-$(CONFIG_FSL_FTM_TIMER)	+= fsl_ftm_timer.o
- obj-$(CONFIG_VF_PIT_TIMER)	+= vf_pit_timer.o
- obj-$(CONFIG_CLKSRC_QCOM)	+= qcom-timer.o
-+obj-$(CONFIG_MTK_TIMER)		+= mtk_timer.o
- 
- obj-$(CONFIG_ARM_ARCH_TIMER)		+= arm_arch_timer.o
- obj-$(CONFIG_ARM_GLOBAL_TIMER)		+= arm_global_timer.o
-diff --git a/drivers/clocksource/mtk_timer.c b/drivers/clocksource/mtk_timer.c
+diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer=
+=2Etxt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
 new file mode 100644
-index 0000000..a0d232d
+index 0000000..10b7e09
 --- /dev/null
-+++ b/drivers/clocksource/mtk_timer.c
-@@ -0,0 +1,261 @@
-+/*
-+ * Mediatek SoCs General-Purpose Timer handling.
-+ *
-+ * Copyright (C) 2014 Matthias Brugger
-+ *
-+ * Matthias Brugger <matthias.bgg@gmail.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ */
++++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
+@@ -0,0 +1,18 @@
++Mediatek MT6577, MT6572 and MT6589 Timers
++---------------------------------------
 +
-+#include <linux/clk.h>
-+#include <linux/clockchips.h>
-+#include <linux/interrupt.h>
-+#include <linux/irq.h>
-+#include <linux/irqreturn.h>
-+#include <linux/of.h>
-+#include <linux/of_address.h>
-+#include <linux/of_irq.h>
-+#include <linux/slab.h>
++Required properties:
++- compatible: Should be "mediatek,mt6577-timer"
++- reg: Should contain location and length for timers register.
++- clocks: Clocks driving the timer hardware. This list should include =
+two
++	clocks. The order is system clock and as second clock the RTC clock.
 +
-+#define GPT_IRQ_EN_REG		0x00
-+#define GPT_IRQ_ENABLE(val)	BIT((val) - 1)
-+#define GPT_IRQ_ACK_REG		0x08
-+#define GPT_IRQ_ACK(val)	BIT((val) - 1)
++Examples:
 +
-+#define TIMER_CTRL_REG(val)	(0x10 * (val))
-+#define TIMER_CTRL_OP(val)	(((val) & 0x3) << 4)
-+#define TIMER_CTRL_OP_ONESHOT	(0)
-+#define TIMER_CTRL_OP_REPEAT	(1)
-+#define TIMER_CTRL_OP_FREERUN	(3)
-+#define TIMER_CTRL_CLEAR	(2)
-+#define TIMER_CTRL_ENABLE	(1)
-+#define TIMER_CTRL_DISABLE	(0)
-+
-+#define TIMER_CLK_REG(val)	(0x04 + (0x10 * (val)))
-+#define TIMER_CLK_SRC(val)	(((val) & 0x1) << 4)
-+#define TIMER_CLK_SRC_SYS13M	(0)
-+#define TIMER_CLK_SRC_RTC32K	(1)
-+#define TIMER_CLK_DIV1		(0x0)
-+#define TIMER_CLK_DIV2		(0x1)
-+
-+#define TIMER_CNT_REG(val)	(0x08 + (0x10 * (val)))
-+#define TIMER_CMP_REG(val)	(0x0C + (0x10 * (val)))
-+
-+#define GPT_CLK_EVT	1
-+#define GPT_CLK_SRC	2
-+
-+struct mtk_clock_event_device {
-+	void __iomem *gpt_base;
-+	u32 ticks_per_jiffy;
-+	struct clock_event_device dev;
-+};
-+
-+static inline struct mtk_clock_event_device *to_mtk_clk(
-+				struct clock_event_device *c)
-+{
-+	return container_of(c, struct mtk_clock_event_device, dev);
-+}
-+
-+static void mtk_clkevt_time_stop(struct mtk_clock_event_device *evt, u8 timer)
-+{
-+	u32 val;
-+
-+	val = readl(evt->gpt_base + TIMER_CTRL_REG(timer));
-+	writel(val & ~TIMER_CTRL_ENABLE, evt->gpt_base +
-+			TIMER_CTRL_REG(timer));
-+}
-+
-+static void mtk_clkevt_time_setup(struct mtk_clock_event_device *evt,
-+				unsigned long delay, u8 timer)
-+{
-+	writel(delay, evt->gpt_base + TIMER_CMP_REG(timer));
-+}
-+
-+static void mtk_clkevt_time_start(struct mtk_clock_event_device *evt,
-+		bool periodic, u8 timer)
-+{
-+	u32 val;
-+
-+	/* Acknowledge interrupt */
-+	writel(GPT_IRQ_ACK(timer), evt->gpt_base + GPT_IRQ_ACK_REG);
-+
-+	val = readl(evt->gpt_base + TIMER_CTRL_REG(timer));
-+
-+	/* Clear 2 bit timer operation mode field */
-+	val &= ~TIMER_CTRL_OP(0x3);
-+
-+	if (periodic)
-+		val |= TIMER_CTRL_OP(TIMER_CTRL_OP_REPEAT);
-+	else
-+		val |= TIMER_CTRL_OP(TIMER_CTRL_OP_ONESHOT);
-+
-+	writel(val | TIMER_CTRL_ENABLE | TIMER_CTRL_CLEAR,
-+	       evt->gpt_base + TIMER_CTRL_REG(timer));
-+}
-+
-+static void mtk_clkevt_mode(enum clock_event_mode mode,
-+				struct clock_event_device *clk)
-+{
-+	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
-+
-+	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
-+
-+	switch (mode) {
-+	case CLOCK_EVT_MODE_PERIODIC:
-+		mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
-+		mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
-+		break;
-+	case CLOCK_EVT_MODE_ONESHOT:
-+		mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
-+		break;
-+	case CLOCK_EVT_MODE_UNUSED:
-+	case CLOCK_EVT_MODE_SHUTDOWN:
-+	default:
-+		/* No more interrupts will occur as source is disabled */
-+		break;
-+	}
-+}
-+
-+static int mtk_clkevt_next_event(unsigned long event,
-+				   struct clock_event_device *clk)
-+{
-+	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
-+
-+	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
-+	mtk_clkevt_time_setup(evt, event, GPT_CLK_EVT);
-+	mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
-+
-+	return 0;
-+}
-+
-+static irqreturn_t mtk_timer_interrupt(int irq, void *dev_id)
-+{
-+	struct mtk_clock_event_device *evt = dev_id;
-+
-+	/* Acknowledge timer0 irq */
-+	writel(GPT_IRQ_ACK(GPT_CLK_EVT), evt->gpt_base + GPT_IRQ_ACK_REG);
-+	evt->dev.event_handler(&evt->dev);
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static void mtk_timer_global_reset(struct mtk_clock_event_device *evt)
-+{
-+	/* Disable all interrupts */
-+	writel(0x0, evt->gpt_base + GPT_IRQ_EN_REG);
-+	/* Acknowledge all interrupts */
-+	writel(0x3f, evt->gpt_base + GPT_IRQ_ACK_REG);
-+}
-+
-+static void
-+mtk_timer_setup(struct mtk_clock_event_device *evt, u8 timer, u8 option)
-+{
-+	writel(TIMER_CTRL_CLEAR | TIMER_CTRL_DISABLE,
-+		evt->gpt_base + TIMER_CTRL_REG(timer));
-+
-+	writel(TIMER_CLK_SRC(TIMER_CLK_SRC_SYS13M) | TIMER_CLK_DIV1,
-+			evt->gpt_base + TIMER_CLK_REG(timer));
-+
-+	writel(0x0, evt->gpt_base + TIMER_CMP_REG(timer));
-+
-+	writel(TIMER_CTRL_OP(option) | TIMER_CTRL_ENABLE,
-+			evt->gpt_base + TIMER_CTRL_REG(timer));
-+}
-+
-+static void mtk_timer_enable_irq(struct mtk_clock_event_device *evt, u8 timer)
-+{
-+	u32 val;
-+
-+	val = readl(evt->gpt_base + GPT_IRQ_EN_REG);
-+	writel(val | GPT_IRQ_ENABLE(timer),
-+			evt->gpt_base + GPT_IRQ_EN_REG);
-+}
-+
-+static void __init mtk_timer_init(struct device_node *node)
-+{
-+	struct mtk_clock_event_device *evt;
-+	struct resource res;
-+	unsigned long rate = 0;
-+	struct clk *clk;
-+
-+	evt = kzalloc(sizeof(*evt), GFP_KERNEL);
-+	if (!evt) {
-+		pr_warn("Can't allocate mtk clock event driver struct");
-+		return;
-+	}
-+
-+	evt->dev.name = "mtk_tick";
-+	evt->dev.rating = 300;
-+	evt->dev.features = CLOCK_EVT_FEAT_PERIODIC | CLOCK_EVT_FEAT_ONESHOT;
-+	evt->dev.set_mode = mtk_clkevt_mode;
-+	evt->dev.set_next_event = mtk_clkevt_next_event;
-+	evt->dev.cpumask = cpu_possible_mask;
-+
-+	evt->gpt_base = of_io_request_and_map(node, 0, "mtk-timer");
-+	if (!evt->gpt_base) {
-+		pr_warn("Can't get resource\n");
-+		return;
-+	}
-+
-+	evt->dev.irq = irq_of_parse_and_map(node, 0);
-+	if (evt->dev.irq <= 0) {
-+		pr_warn("Can't parse IRQ");
-+		goto err_mem;
-+	}
-+
-+	clk = of_clk_get(node, 0);
-+	if (IS_ERR(clk)) {
-+		pr_warn("Can't get timer clock");
-+		goto err_irq;
-+	}
-+
-+	if (clk_prepare_enable(clk)) {
-+		pr_warn("Can't prepare clock");
-+		goto err_clk_put;
-+	}
-+	rate = clk_get_rate(clk);
-+
-+	if (request_irq(evt->dev.irq, mtk_timer_interrupt,
-+			IRQF_TIMER | IRQF_IRQPOLL, "mtk_timer", evt)) {
-+		pr_warn("failed to setup irq %d\n", evt->dev.irq);
-+		goto err_clk_disable;
-+	}
-+
-+	evt->ticks_per_jiffy = DIV_ROUND_UP(rate, HZ);
-+
-+	mtk_timer_global_reset(evt);
-+
-+	/* Configure clock source */
-+	mtk_timer_setup(evt, GPT_CLK_SRC, TIMER_CTRL_OP_FREERUN);
-+	clocksource_mmio_init(evt->gpt_base + TIMER_CNT_REG(GPT_CLK_SRC),
-+			node->name, rate, 300, 32, clocksource_mmio_readl_up);
-+
-+	/* Configure clock event */
-+	mtk_timer_setup(evt, GPT_CLK_EVT, TIMER_CTRL_OP_REPEAT);
-+	mtk_timer_enable_irq(evt, GPT_CLK_EVT);
-+
-+	clockevents_config_and_register(&evt->dev, rate, 0x3,
-+					0xffffffff);
-+	return;
-+
-+err_clk_disable:
-+	clk_disable_unprepare(clk);
-+err_clk_put:
-+	clk_put(clk);
-+err_irq:
-+	irq_dispose_mapping(evt->dev.irq);
-+err_mem:
-+	iounmap(evt->gpt_base);
-+	of_address_to_resource(node, 0, &res);
-+	release_mem_region(res.start, resource_size(&res));
-+}
-+CLOCKSOURCE_OF_DECLARE(mtk_mt6577, "mediatek,mt6577-timer", mtk_timer_init);
--- 
++	timer@10008000 {
++		compatible =3D "mediatek,mt6577-timer";
++		reg =3D <0x10008000 0x80>;
++		interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&system_clk>, <&rtc_clk>;
++		clock-names =3D "system-clk", "rtc-clk";
++	};
+--=20
 1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
