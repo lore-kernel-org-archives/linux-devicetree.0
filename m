@@ -1,63 +1,86 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 8/8] DT: Add vendor prefix for Dialog Semiconductor Ltd.
-Date: Wed, 11 Jun 2014 09:22:27 -0500
-Message-ID: <CAL_JsqJJz2S4fn25pJK5UDG9j36JKnS++VQCMhbdxQd_4-2OFQ@mail.gmail.com>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
-	<bf4b6d7b061e66d3ca7f3dd44319b9e26ae7103f.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
-	<CAMuHMdWirVk+jrz40yw4=zAOFH6VTX9CXcpO01e0rK8S8VGGHw@mail.gmail.com>
-	<CAL_JsqK0RqYuZ8YB1sBZK7hMXvp6oEPfAu11m95F61_kGV3Ptg@mail.gmail.com>
-	<2E89032DDAA8B9408CB92943514A0337A56F53A6@SW-EX-MBX01.diasemi.com>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss
+ always enabled
+Date: Wed, 11 Jun 2014 17:58:18 +0200
+Message-ID: <CABxcv=nR+QqzBkzgn6EpZenFWsGLJ0_6HW=QX13H2XYgqcF24A@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-2-git-send-email-tushar.b@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337A56F53A6-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402464739-19044-2-git-send-email-tushar.b@samsung.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tushar Behera <tushar.b@samsung.com>
+Cc: Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, mturquette@linaro.org, t.figa@samsung.com, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@linaro.org>, dianders@google.com, trblinux@gmail.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 11, 2014 at 8:17 AM, Opensource [Adam Thomson]
-<Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org> wrote:
->> On Wed, Jun 11, 2014 at 13:43, Rob Herring wrote:
->>
->> dlg is the correct one and seems to be the most widely used, so we
->> should go with that and mark the others deprecated.
->>
->> diasemi is documented for the da9210, but not used anywhere.
->>
->> There appears to be 2 different da9053 bindings. I'd guess the dialog
->> variant used on 2 i.MX boards is not used. Other i.MX boards use the
->> dlg version. I'm not sure what is going on with da9055. Please sort
->> these out.
->>
+On Wed, Jun 11, 2014 at 7:32 AM, Tushar Behera <tushar.b@samsung.com> wrote:
+> When the output clock of AUDSS mux is disabled, we are getting kernel
+> oops while doing a clk_get() on other clocks provided by AUDSS. Though
+> user manual doesn't specify this dependency, we came across this issue
+> while disabling the parent of AUDSS mux clocks.
 >
-> The intention is to update the other Dialog drivers after we've agreed this
-> prefix. With regards to da9055, what's the issue here as I believe that uses
-> the 'dlg' prefix already?
+> Keeping the parents of AUDSS mux always enabled fixes this issue.
+>
+> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
+> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+> ---
+>  drivers/clk/samsung/clk-exynos-audss.c |   17 ++++++++++++++---
+>  1 file changed, 14 insertions(+), 3 deletions(-)
+>
+> diff --git a/drivers/clk/samsung/clk-exynos-audss.c b/drivers/clk/samsung/clk-exynos-audss.c
+> index 13eae14c..1542f30 100644
+> --- a/drivers/clk/samsung/clk-exynos-audss.c
+> +++ b/drivers/clk/samsung/clk-exynos-audss.c
+> @@ -30,6 +30,8 @@ static struct clk **clk_table;
+>  static void __iomem *reg_base;
+>  static struct clk_onecell_data clk_data;
+>
+> +static struct clk *pll_ref, *pll_in;
+> +
+>  #define ASS_CLK_SRC 0x0
+>  #define ASS_CLK_DIV 0x4
+>  #define ASS_CLK_GATE 0x8
+> @@ -83,7 +85,7 @@ static int exynos_audss_clk_probe(struct platform_device *pdev)
+>         const char *mout_audss_p[] = {"fin_pll", "fout_epll"};
+>         const char *mout_i2s_p[] = {"mout_audss", "cdclk0", "sclk_audio0"};
+>         const char *sclk_pcm_p = "sclk_pcm0";
+> -       struct clk *pll_ref, *pll_in, *cdclk, *sclk_audio, *sclk_pcm_in;
+> +       struct clk *cdclk, *sclk_audio, *sclk_pcm_in;
+>         const struct of_device_id *match;
+>         enum exynos_audss_clk_type variant;
+>
+> @@ -113,10 +115,14 @@ static int exynos_audss_clk_probe(struct platform_device *pdev)
+>
+>         pll_ref = devm_clk_get(&pdev->dev, "pll_ref");
+>         pll_in = devm_clk_get(&pdev->dev, "pll_in");
+> -       if (!IS_ERR(pll_ref))
+> +       if (!IS_ERR(pll_ref)) {
+>                 mout_audss_p[0] = __clk_get_name(pll_ref);
+> -       if (!IS_ERR(pll_in))
+> +               clk_prepare_enable(pll_ref);
+> +       }
+> +       if (!IS_ERR(pll_in)) {
+>                 mout_audss_p[1] = __clk_get_name(pll_in);
+> +               clk_prepare_enable(pll_in);
+> +       }
+>         clk_table[EXYNOS_MOUT_AUDSS] = clk_register_mux(NULL, "mout_audss",
+>                                 mout_audss_p, ARRAY_SIZE(mout_audss_p),
+>                                 CLK_SET_RATE_NO_REPARENT,
+> @@ -217,6 +223,11 @@ static int exynos_audss_clk_remove(struct platform_device *pdev)
+>                         clk_unregister(clk_table[i]);
+>         }
+>
+> +       if (!IS_ERR(pll_in))
+> +               clk_disable_unprepare(pll_in);
+> +       if (!IS_ERR(pll_ref))
+> +               clk_disable_unprepare(pll_ref);
+> +
+>         return 0;
+>  }
+>
+> --
+> 1.7.9.5
+>
 
-In documentation it does, but I'm not sure how these strings are used:
-
-drivers/mfd/da9055-core.c:              .of_compatible = "dialog,da9055-gpio",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-regulator",
-drivers/mfd/da9055-core.c:              .of_compatible = "dialog,da9055-onkey",
-drivers/mfd/da9055-core.c:              .of_compatible = "dialog,da9055-rtc",
-drivers/mfd/da9055-core.c:              .of_compatible = "dialog,da9055-hwmon",
-drivers/mfd/da9055-core.c:              .of_compatible =
-"dialog,da9055-watchdog",
-
-Rob
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
