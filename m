@@ -1,83 +1,49 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 00/36] OMAP: GPMC: Restructure and move OMAP GPMC driver
- out of mach-omap2
-Date: Wed, 11 Jun 2014 14:54:49 +0300
-Message-ID: <53984389.40000@ti.com>
-References: <1402477001-31132-1-git-send-email-rogerq@ti.com> <CABxcv=mMAnnjd=F7itDWCt5QpVr=U5_mP=xhCW-oB5c2Doo75w@mail.gmail.com>
+From: Nick Dyer <nick.dyer@itdev.co.uk>
+Subject: Re: [RFC PATCH] input, touch, atmel_mxt_ts: use atmel driver
+Date: Wed, 11 Jun 2014 13:06:51 +0100
+Message-ID: <5398465B.7060101@itdev.co.uk>
+References: <1402468526-9165-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABxcv=mMAnnjd=F7itDWCt5QpVr=U5_mP=xhCW-oB5c2Doo75w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier@dowhile0.org>
-Cc: Tony Lindgren <tony@atomide.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, kyungmin.park@samsung.com, "Gupta, Pekon" <pekon@ti.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, nsekhar@ti.com, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, linux-mtd@lists.infradead.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>
+Return-path: <linux-input-owner@vger.kernel.org>
+In-Reply-To: <1402468526-9165-1-git-send-email-hs@denx.de>
+Sender: linux-input-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Tomasz Figa <t.figa@samsung.com>, Kyungmin Park <kyungmin.park@samsung.com>, Henrik Rydberg <rydberg@euromail.se>, linux-input@vger.kernel.org, Benson Leung <bleung@chromium.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+Heiko Schocher wrote:
+> try to bring the driver from
+> https://github.com/ndyer/linux for-next
+> 
+> to mainline. Post this as a RFC, to see if this is possible...
+> 
+> based on:
+> commit dda0a5570574cfe467c1c794cf7a17e1d742ec02 ("Input:
+> atmel_mxt_ts - implement improved debug message interface")
+> 
+> from Nick Dyer <nick.dyer@itdev.co.uk>
+> 
+> added:
+> - remove some (not all) checkpatch warnings
+> - Add support for voltage regulator
+> - Add support for Device Tree support
 
-On 06/11/2014 02:52 PM, Javier Martinez Canillas wrote:
-> Hello Roger,
-> 
-> What a great series!!
+My thinking has been that the maintainers will more likely accept a series
+of small patches than to make such a huge change to the entire driver, my
+for-next tree is where I'm working on this, and I plan to post another set
+of 15 patches soon, when I've fixed up some issues to do with probe/remove
+cycles.
 
-Thanks :)
+You should note that my for-next branch has moved on slightly since you
+have taken this, because I have implemented device tree support and changed
+the config download to use the request_firmware_async() function.
 
-> 
-> On Wed, Jun 11, 2014 at 10:56 AM, Roger Quadros <rogerq@ti.com> wrote:
->> Hi,
->>
->> This is a complete functional set to get the gpmc driver out of mach-omap2
->> and into drivers/memory. The DT binding remains the same except for the
->> following minor changes
-> 
-> I probably won't have time to do a proper review until at least next
-> week but doing a quick glance it looks very good to me.
-> 
->> - compatible property is required for NAND & OneNAND nodes
-> 
-> This is a minor ABI breakage but I agree with you that it is wrong
-> that these were not introduced in the first place and relied on the
-> dev node so I think is not that bad to break it in this case.
-> 
->> - Second register space and interrupts properties are required for
->>   NAND controller node
->> - ti,onenand-sync-rw property added for OneNAND node.
->>
->> The series does the following changes
->> - Move GPMC IRQ and NAND register handling to NAND driver.
->>   The entire GPMC register space is made available to the NAND driver.
->> - Clean up NAND device tree handling. Don't rely on legacy platform device
->>   i.e. don't call gpmc_nand_init()
->> - Add 2 public APIs omap_gpmc_retime() and omap_gpmc_get_clk_period()
->>   omap_gpmc_retime() allows to reconfigure the GPMC settings and timings
->>   for the specified Chip select region.
->>   omap_gpmc_get_clk_period() allows to query the GPMC_CLK (external clock)
->>   period, to perform timing calculations.
->>   Both functions will be needed by the OneNAND driver since it calculates
->>   device timings on the fly and needs to change from Asynchronous mode
->>   to Synchronous mode.
->> - Setup OneNAND in Asynchronous mode by default and move Synchronous
->>   setting code into OneNAND driver.
->> - Clean up OneNAND device tree handling. Don't rely on legacy platform device
->>   i.e. don't call gpmc_onenand_init()
->> - Introduce gpmc_generic_init() that should be used by board files to specify
->>   GPMC chip select setting/timing and platform device within that Chip Select.
->> - Stop using all gpmc*() that are meant to be private to GPMC driver.
->> - Move GPMC driver into drivers/memory
->>
->> Tested on:
->>
->> - beagleboard C4: NAND
->> - Nokia N900: OneNAND
->>
-> 
-> Do you have a tree somewhere that I can use it to test on the boards I
-> maintain and post patches to update the DTS according the new binding?
+Your device tree stuff for mach-goni.c looks really useful, however - if
+you can send me a patch for that against my current for-next branch I can
+include it with my version of the device tree support.
 
-You can find the series at
-git@github.com:rogerq/linux.git
-gpmc-3.16-v1
+all the best
 
-cheers,
--roger
+Nick
