@@ -1,158 +1,211 @@
 From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v8 0/7] arm: Add basic support for Mediatek Cortex-A7 SoCs
-Date: Wed, 11 Jun 2014 14:34:08 +0200
-Message-ID: <1402490055-15197-1-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
+Subject: [PATCH v8 5/7] arm: add basic support for Mediatek MT6589 boards
+Date: Wed, 11 Jun 2014 14:34:13 +0200
+Message-ID: <1402490055-15197-6-git-send-email-matthias.bgg@gmail.com>
+References: <1402490055-15197-1-git-send-email-matthias.bgg@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402490055-15197-1-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org
 Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Eighth round for the Mediatek basic support patches.
+This adds a generic devicetree board file and a dtsi for boards
+based on MT6589 SoCs from Mediatek.
 
-The biggest change are the DTS definition of the clocks.
-
----
-This patch set adds basic support for the Mediatek Cortex-A7 SoCs.
-Support is quite basic, as the only component working up to now are the
-timers.
-
-The patch series is build against torvalds/master tree.
+Apart from the generic parts (gic, clocks) the only component
+currently supported are the timers.
 
 Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-
-Changes for v8:
-1. OF address
-- fix style issue
-
-2. clocksource driver
-- fix style issue
-
-3. Basic SoC support
-- define the clock node as a simple-bus
-- delete unused clock-ranges
-
-
-Changes for v7:
-1. OF address
-- add of_io_request_and_map
-
-2. Clocksource timer
-- use pr_warnings and error handling instead of panic
-- fix macro parentheses
-- use of_io_request_and_map
-
-3. Others
-- rename SoC DT bindings to mediatek.txt
-- fixed typos
-
-
-Changes for v6:
-- fix compatible string of the timer
-- encapsulate timer setup in function
-- add more information to the timer commit message
-- add address in timer DTS bindings documentation
-
-
-Changes for v5:
-1. Clocksource timer
-- Change the compatible string to mt6577
-
-2. Timer DT bindings
-- Change compatible string to mt6577
-
-
-Changes for v4:
-1. Clocksource timer
-- use cpu_possible_mask
-
-2. Timer DT bindings
-- Delete comments about the frequency of the clocks
-- Add clock-names for the input clocks
-
-3. Basic SoC support
-- add clock-names for the timer
-- rename the label of the clocks nodes
-
-
-Changes for v3:
-1. Clocksource timer
-- Set cpu_mask_all and irq in clock_event_device
-- Use device private structure for driver specific values
-
-2. Timer DT bindings
-- Define order of the clock phandles
-- Fix typos
-
-3. Basic SoC support
-- DTS: set gic to a15-gic
-- DTS: order by physical address
-- Remove call to dt_init function
-
-
-Changes for v2:
-1. Clocksource timer
-- Delete unused parts for sched_clock_source
-- Use irq_request instead of setup_irq
-- Remove unused SMP parts
-- Fix some style issues
-- use of_address_to resource and request_mem_region
-- delete use of named clock
-- select CLKSRC_MMIO in driver Kconfig
-
-2. DT bindings
-- delete named clock bindings
-
-3. Basic SoC support
-- Clean-up Kconfig
-- Add documentation of the SoC compatible property 
-- DTS: rename SoC file to mt6589.dts
-- DTS: Delete not present cache controller
-- DTS: Add missing GICv2 properties
-- DTS: Change clock names
-- DTS: Add Aquaris5 board
-
-4. Add earlyprintk
-- patch droped until serial driver is available
-
-5. Add support for Aquaris5 mobile phone
-
-
-
-Matthias Brugger (7):
-  of: Provide function to request and map memory
-  clocksource: Add support for the Mediatek SoCs
-  dt-bindings: add mtk-timer bindings
-  vendor-prefixes: add prefix for Mediaktek Inc.
-  arm: add basic support for Mediatek MT6589 boards
-  dt-bindings: add documentation for Mediatek SoC
-  arm: mediatek: add dts for Aquaris5 mobile phone
-
- Documentation/devicetree/bindings/arm/mediatek.txt |    8 +
- .../bindings/timer/mediatek,mtk-timer.txt          |   18 ++
- .../devicetree/bindings/vendor-prefixes.txt        |    1 +
- arch/arm/Kconfig                                   |    2 +
- arch/arm/Makefile                                  |    1 +
- arch/arm/boot/dts/mt6589-aquaris5.dts              |   25 ++
- arch/arm/boot/dts/mt6589.dtsi                      |   94 +++++++
- arch/arm/mach-mediatek/Kconfig                     |    6 +
- arch/arm/mach-mediatek/Makefile                    |    1 +
- arch/arm/mach-mediatek/mediatek.c                  |   27 ++
- drivers/clocksource/Kconfig                        |    5 +
- drivers/clocksource/Makefile                       |    1 +
- drivers/clocksource/mtk_timer.c                    |  261 ++++++++++++++++++++
- drivers/of/address.c                               |   29 +++
- include/linux/of_address.h                         |    8 +
- 15 files changed, 487 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/mediatek.txt
- create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
- create mode 100644 arch/arm/boot/dts/mt6589-aquaris5.dts
+---
+ arch/arm/Kconfig                  |    2 +
+ arch/arm/Makefile                 |    1 +
+ arch/arm/boot/dts/mt6589.dtsi     |   94 +++++++++++++++++++++++++++++++++++++
+ arch/arm/mach-mediatek/Kconfig    |    6 +++
+ arch/arm/mach-mediatek/Makefile   |    1 +
+ arch/arm/mach-mediatek/mediatek.c |   27 +++++++++++
+ 6 files changed, 131 insertions(+)
  create mode 100644 arch/arm/boot/dts/mt6589.dtsi
  create mode 100644 arch/arm/mach-mediatek/Kconfig
  create mode 100644 arch/arm/mach-mediatek/Makefile
  create mode 100644 arch/arm/mach-mediatek/mediatek.c
- create mode 100644 drivers/clocksource/mtk_timer.c
 
+diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+index 87b63fd..845c12d 100644
+--- a/arch/arm/Kconfig
++++ b/arch/arm/Kconfig
+@@ -978,6 +978,8 @@ source "arch/arm/mach-mv78xx0/Kconfig"
+ 
+ source "arch/arm/mach-imx/Kconfig"
+ 
++source "arch/arm/mach-mediatek/Kconfig"
++
+ source "arch/arm/mach-mxs/Kconfig"
+ 
+ source "arch/arm/mach-netx/Kconfig"
+diff --git a/arch/arm/Makefile b/arch/arm/Makefile
+index 6721fab..1895de2 100644
+--- a/arch/arm/Makefile
++++ b/arch/arm/Makefile
+@@ -172,6 +172,7 @@ machine-$(CONFIG_ARCH_MSM)		+= msm
+ machine-$(CONFIG_ARCH_MV78XX0)		+= mv78xx0
+ machine-$(CONFIG_ARCH_MVEBU)		+= mvebu
+ machine-$(CONFIG_ARCH_MXC)		+= imx
++machine-$(CONFIG_ARCH_MEDIATEK)		+= mediatek
+ machine-$(CONFIG_ARCH_MXS)		+= mxs
+ machine-$(CONFIG_ARCH_NETX)		+= netx
+ machine-$(CONFIG_ARCH_NOMADIK)		+= nomadik
+diff --git a/arch/arm/boot/dts/mt6589.dtsi b/arch/arm/boot/dts/mt6589.dtsi
+new file mode 100644
+index 0000000..d0297a0
+--- /dev/null
++++ b/arch/arm/boot/dts/mt6589.dtsi
+@@ -0,0 +1,94 @@
++/*
++ * Copyright (c) 2014 MundoReader S.L.
++ * Author: Matthias Brugger <matthias.bgg@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <dt-bindings/interrupt-controller/irq.h>
++#include <dt-bindings/interrupt-controller/arm-gic.h>
++#include "skeleton.dtsi"
++
++/ {
++	compatible = "mediatek,mt6589";
++	interrupt-parent = <&gic>;
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x1>;
++		};
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x2>;
++		};
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a7";
++			reg = <0x3>;
++		};
++
++	};
++
++	clocks {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++
++		system_clk: dummy13m {
++			compatible = "fixed-clock";
++			clock-frequency = <13000000>;
++			#clock-cells = <0>;
++		};
++
++		rtc_clk: dummy32k {
++			compatible = "fixed-clock";
++			clock-frequency = <32000>;
++			#clock-cells = <0>;
++		};
++	};
++
++	soc {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "simple-bus";
++		ranges;
++
++		timer: timer@10008000 {
++			compatible = "mediatek,mt6577-timer";
++			reg = <0x10008000 0x80>;
++			interrupts = <GIC_SPI 113 IRQ_TYPE_EDGE_RISING>;
++			clocks = <&system_clk>, <&rtc_clk>;
++			clock-names = "system-clk", "rtc-clk";
++		};
++
++		gic: interrupt-controller@10212000 {
++			compatible = "arm,cortex-a15-gic";
++			interrupt-controller;
++			#interrupt-cells = <3>;
++			reg = <0x10211000 0x1000>,
++			      <0x10212000 0x1000>,
++			      <0x10214000 0x2000>,
++			      <0x10216000 0x2000>;
++		};
++	};
++};
+diff --git a/arch/arm/mach-mediatek/Kconfig b/arch/arm/mach-mediatek/Kconfig
+new file mode 100644
+index 0000000..2c043a2
+--- /dev/null
++++ b/arch/arm/mach-mediatek/Kconfig
+@@ -0,0 +1,6 @@
++config ARCH_MEDIATEK
++	bool "Mediatek MT6589 SoC" if ARCH_MULTI_V7
++	select ARM_GIC
++	select MTK_TIMER
++	help
++	  Support for Mediatek Cortex-A7 Quad-Core-SoC MT6589.
+diff --git a/arch/arm/mach-mediatek/Makefile b/arch/arm/mach-mediatek/Makefile
+new file mode 100644
+index 0000000..43e619f
+--- /dev/null
++++ b/arch/arm/mach-mediatek/Makefile
+@@ -0,0 +1 @@
++obj-$(CONFIG_ARCH_MEDIATEK) += mediatek.o
+diff --git a/arch/arm/mach-mediatek/mediatek.c b/arch/arm/mach-mediatek/mediatek.c
+new file mode 100644
+index 0000000..f2acf07
+--- /dev/null
++++ b/arch/arm/mach-mediatek/mediatek.c
+@@ -0,0 +1,27 @@
++/*
++ * Device Tree support for Mediatek SoCs
++ *
++ * Copyright (c) 2014 MundoReader S.L.
++ * Author: Matthias Brugger <matthias.bgg@gmail.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++#include <linux/init.h>
++#include <asm/mach/arch.h>
++
++static const char * const mediatek_board_dt_compat[] = {
++	"mediatek,mt6589",
++	NULL,
++};
++
++DT_MACHINE_START(MEDIATEK_DT, "Mediatek Cortex-A7 (Device Tree)")
++	.dt_compat	= mediatek_board_dt_compat,
++MACHINE_END
 -- 
 1.7.9.5
-
