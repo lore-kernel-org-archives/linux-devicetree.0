@@ -1,37 +1,68 @@
 From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 0/2] Add VIN and ADV7180 DT support for R8A7791/Henninger
- board
-Date: Wed, 11 Jun 2014 08:54:45 +0900
-Message-ID: <20140610235445.GE20738@verge.net.au>
-References: <201406110304.18976.sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2] ARM: shmobile: henninger: add I2C2 DT support
+Date: Wed, 11 Jun 2014 09:01:18 +0900
+Message-ID: <20140611000118.GB19789@verge.net.au>
+References: <201406110245.22692.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <201406110304.18976.sergei.shtylyov@cogentembedded.com>
+In-Reply-To: <201406110245.22692.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Cc: linux-sh@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 11, 2014 at 03:04:18AM +0400, Sergei Shtylyov wrote:
-> Hello.
+On Wed, Jun 11, 2014 at 02:45:21AM +0400, Sergei Shtylyov wrote:
+> Define the Henninger board dependent part of the I2C2 device node.
 > 
->    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-v3.15-20140610' tag plus the Henninger I2C2 DT support patch
-> that I posted earlier. Here we add the VIN and ADV7180 video decoder device
-> tree support on the R8A7791/Henninger board. The patchset requires Ben Dooks'
-> adv7180, rcar_vin, and soc_camera DT support patches posted back in April in
-> order to work.
-
-I wonder what the status of those (driver?) patches are.
-
-In general I prefer bindings to be accepted before they are used.
-
-> [1/2] ARM: shmobile: r8a7791: add VIN DT support
-> [2/2] ARM: shmobile: henninger: add VIN0/ADV7180 DT support
+> Based on the Koelsch I2C2 device tree patch by Wolfram Sang.
 > 
-> WBR, Sergei
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+
+Thanks, I will queue this up.
+
+> ---
+> This patch is against 'renesas-devel-v3.15-20140610' tag of Simon Horman's
+> 'renesas.git' repo.
+> 
+> Changes in version 2:
+> - removed I2C devices, to be added by separate patches.
+> 
+>  arch/arm/boot/dts/r8a7791-henninger.dts |   13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> Index: renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791-henninger.dts
+> +++ renesas/arch/arm/boot/dts/r8a7791-henninger.dts
+> @@ -110,6 +110,11 @@
+>  		renesas,function = "sdhi2";
+>  	};
+>  
+> +	i2c2_pins: i2c2 {
+> +		renesas,groups = "i2c2";
+> +		renesas,function = "i2c2";
+> +	};
+> +
+>  	qspi_pins: spi0 {
+>  		renesas,groups = "qspi_ctrl", "qspi_data4";
+>  		renesas,function = "qspi";
+> @@ -170,6 +175,14 @@
+>  	status = "okay";
+>  };
+>  
+> +&i2c2 {
+> +	pinctrl-0 = <&i2c2_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	status = "okay";
+> +	clock-frequency = <400000>;
+> +};
+> +
+>  &qspi {
+>  	pinctrl-0 = <&qspi_pins>;
+>  	pinctrl-names = "default";
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-sh" in
 > the body of a message to majordomo@vger.kernel.org
