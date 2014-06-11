@@ -1,67 +1,34 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] "ak" vs "asahi-kasei"
-Date: Wed, 11 Jun 2014 20:04:44 +0100
-Message-ID: <20140611190444.GN5099@sirena.org.uk>
-References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
- <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
- <539815E6.2050304@codethink.co.uk>
- <20140611165410.GK5099@sirena.org.uk>
- <CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>
- <20140611170233.GL5099@sirena.org.uk>
- <5398A53D.3020706@wwwdotorg.org>
+From: Chris Ball <chris@printf.net>
+Subject: Re: [PATCH v4] mmc: add a driver for the Renesas usdhi6rol0 SD/SDIO host controller
+Date: Wed, 11 Jun 2014 20:08:15 +0100
+Message-ID: <86y4x3mfhc.fsf@void.printf.net>
+References: <Pine.LNX.4.64.1405312005390.20582@axis700.grange>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HYp1lSkoFcXgiw1x"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5398A53D.3020706@wwwdotorg.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1405312005390.20582@axis700.grange> (Guennadi
+	Liakhovetski's message of "Sat, 31 May 2014 20:38:51 +0200 (CEST)")
+Sender: linux-mmc-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: linux-mmc@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Ulf Hansson <ulf.hansson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Guennadi,
 
---HYp1lSkoFcXgiw1x
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Sat, May 31 2014, Guennadi Liakhovetski wrote:
+> This patch adds a driver for the Renesas usdhi6rol0 SD/SDIO host controller
+> in both PIO and DMA modes.
+>
+> Signed-off-by: Guennadi Liakhovetski <g.liakhovetski+renesas@gmail.com>
+> ---
+>
+> v4: replaced several numerical values with macros
 
-On Wed, Jun 11, 2014 at 12:51:41PM -0600, Stephen Warren wrote:
-> On 06/11/2014 11:02 AM, Mark Brown wrote:
+Please send fixes for the compiler warnings, potential-null mrq, and
+perhaps add an ARCH_ dependency to stop this building on x86_64.
 
-> > I think the bikeshed would be much better painted pink with yellow spots :)
+Thanks,
 
-> Sorry to jump in on this late, but what on earth is wrong with "ak". It
-> went through the appropriate review process, and is already in use.
-> Admittedly only in a single ARM DT file, but it's still in use. We'll
-> have to allow the ak prefix forever given that DT is an ABI, so rather
-> than introducing more random variations, we should just stick with what
-> we have.
-
-Well, the issue is that in reality the bulk of the drivers are using
-asahi-kasei, we're going to have to churn at least something anyway.  We
-seem to have one in tree user of ak in a DTS file and two DTSs using
-asahi-kasei with seven drivers.
-
---HYp1lSkoFcXgiw1x
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTmKhJAAoJELSic+t+oim9WJYP/3Zcxx3gxVg/h2bumn8vnZtP
-ZkoxgG4k8Zqkh6Mvx0I6xrcwqv2X0H9D3Gd7VNAXSU+EFJ9iYpydaHwcQU2v5ZRw
-gs9X9LseZvaIjR8Zc3ZbMH1RjeG5XVC/fRnrfy6f+ZZRBDKjwPA/oRnavZc+Atzo
-KYmJZvROwq0BeJFhb3OdwthQegASXLliU4qRkjrya6iXRcLkAT0CsJbBhmTkVSby
-wjuVsPuCqeLY1wvYShhIYjj7cuagINUytdFUV2yOdiOiExsskgzL8DjdQhStfGJS
-NOYMkMujm9qPT9XL2QVo2/QYzjUHlXyFL+U6+mqk3nuyp1jnp0QyvMwSOKK9b6fg
-6nHYoxywWN4Xff5jBerWsZRjNweHZJTceVMgrxzgu2MAw+8YoJIVS0c5jq2x5jwG
-g/uCk8x87UwLnaDSNhHs4y516bbIzFsQGD8Q/x1gEVv4yHy3izgx1/PBmsBGEulE
-+JdVdcsd3iVHBeM7m+7Qzt7AQnGet++mUUWXuC5uyJ5j/h9Y5DNklAfyqUypRsyi
-y4Ev7Ei/LEJIu/sEXF8Z5ME8iJjJYHv8Wo4bBuWQR1sUQUEzejy07ZR6yVJzGpDG
-5RIdf8BLJQXh7pCRtlqOdEzB0ORZUu8lxL2b8cfcdrYzHC2r/aeJg8csXtNc1ZJ/
-2CQg6u2hWmnMBc0pqMdp
-=5d7L
------END PGP SIGNATURE-----
-
---HYp1lSkoFcXgiw1x--
+- Chris.
+-- 
+Chris Ball   <http://printf.net/>
