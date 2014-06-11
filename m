@@ -1,51 +1,79 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v6 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface)
- controller support
-Date: Wed, 11 Jun 2014 10:55:57 +0200
-Message-ID: <20140611085557.GA2676@katana>
-References: <1402475980-15513-1-git-send-email-boris.brezillon@free-electrons.com>
- <1402475980-15513-3-git-send-email-boris.brezillon@free-electrons.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 03/36] ARM: OMAP2+: gpmc: Add platform data
+Date: Wed, 11 Jun 2014 11:56:08 +0300
+Message-ID: <1402477001-31132-4-git-send-email-rogerq@ti.com>
+References: <1402477001-31132-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TB36FDmn/VVEgNH/"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402475980-15513-3-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1402477001-31132-1-git-send-email-rogerq@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: tony@atomide.com, dwmw2@infradead.org, computersforpeace@gmail.com
+Cc: kyungmin.park@samsung.com, pekon@ti.com, ezequiel.garcia@free-electrons.com, javier@dowhile0.org, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
+Add a platform data structure for GPMC. It contains all the necessary
+platform information that needs to be passed from platform init code
+to GPMC driver.
 
---TB36FDmn/VVEgNH/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm/mach-omap2/gpmc.h              |  4 +---
+ include/linux/platform_data/gpmc-omap.h | 30 ++++++++++++++++++++++++++++++
+ 2 files changed, 31 insertions(+), 3 deletions(-)
+ create mode 100644 include/linux/platform_data/gpmc-omap.h
 
-> +MODULE_LICENSE("GPL");
+diff --git a/arch/arm/mach-omap2/gpmc.h b/arch/arm/mach-omap2/gpmc.h
+index 707f6d5..c476712 100644
+--- a/arch/arm/mach-omap2/gpmc.h
++++ b/arch/arm/mach-omap2/gpmc.h
+@@ -12,9 +12,7 @@
+ #define __OMAP2_GPMC_H
+ 
+ #include <linux/platform_data/mtd-nand-omap2.h>
+-
+-/* Maximum Number of Chip Selects */
+-#define GPMC_CS_NUM		8
++#include <linux/platform_data/gpmc-omap.h>
+ 
+ #define GPMC_CS_CONFIG1		0x00
+ #define GPMC_CS_CONFIG2		0x04
+diff --git a/include/linux/platform_data/gpmc-omap.h b/include/linux/platform_data/gpmc-omap.h
+new file mode 100644
+index 0000000..d32d9de
+--- /dev/null
++++ b/include/linux/platform_data/gpmc-omap.h
+@@ -0,0 +1,30 @@
++/*
++ * OMAP GPMC Platform data
++ *
++ * Copyright (C) 2014 Texas Instruments, Inc. - http://www.ti.com
++ *	Roger Quadros <rogerq@ti.com>
++ *
++ * This program is free software; you can redistribute it and/or modify it
++ * under the terms and conditions of the GNU General Public License,
++ * version 2, as published by the Free Software Foundation.
++ */
++
++#ifndef _GPMC_OMAP_H_
++#define _GPMC_OMAP_H_
++
++/* Maximum Number of Chip Selects */
++#define GPMC_CS_NUM		8
++
++/* Data for each chip select */
++struct gpmc_omap_cs_data {
++	bool valid;			/* data is valid */
++	bool is_nand;			/* device within this CS is NAND */
++	struct platform_device *pdev;	/* device within this CS region */
++	unsigned pdata_size;
++};
++
++struct gpmc_omap_platform_data {
++	struct gpmc_omap_cs_data cs[GPMC_CS_NUM];
++};
++
++#endif /* _GPMC_OMAP_H */
+-- 
+1.8.3.2
 
-"GPL v2"
-
-
---TB36FDmn/VVEgNH/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTmBmdAAoJEBQN5MwUoCm2k8cP+gNR9VauwA7C7gmgPA3oP7rI
-87jLKKobhkMU1oboXNXO4U87IV71ST/bCkBd6XUWOM4m7+knrMouF6giF/upZ2av
-Rwlo+FjSwkT+EwYYjeCQc7JrnoRLh0d7157lTDNjm3J1dw8bqQX9KMqmHdCXJzK3
-OMIp3qFnP/Bk9eFsP+F9RJ9ctOhve8NTIWjCHktLxDPTHWcQVL3veI7Wlty67bPX
-oP798dS4Xvy8puthrk8nnN/HUZJ9QVVMnCrgyxVtK2cO9jDMueehxk1ACgCwCNu1
-cZ1T9/RwNemIoQCehc6RwCId5LODM/KARLjnE5mGNzdwOTtNA2k499cacH8r7jXB
-TfCpKwfBuMWcsTOBSdezvod+VKr3xsge7BIiyYAKuIadNAhCZs7LrSnRYmjMIc32
-XeyQRJEbcSYN3AcBJPsXYr55r1XAD8FCB5QrgOXTYsPJSduyILTgR74TVb7NCAVd
-yV5n1cSHtmBd1zjd642on90ro+ggj4Rq4E1Qw2fo5se2I4B24gUaeHBEF1698QzT
-b9Sjm+yTDshrhoPh6OWeRkXfQ5TmvcSJ0i0J2pGgapb6JHwK/06Pz473iDRLw5HD
-zJ3R0KV9KAFI/80v52iDkopOCrScPhFHytlt32xwPCrqQkHuokXrEzcBvWqONCWM
-UCkVAajebDi0KiDH0j0Q
-=gSS3
------END PGP SIGNATURE-----
-
---TB36FDmn/VVEgNH/--
