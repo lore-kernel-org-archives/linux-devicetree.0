@@ -1,54 +1,39 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH 1/2] ARM: dts: hummingboard: add support for BT/wifi where
- fitted
-Date: Wed, 11 Jun 2014 10:58:12 +0100
-Message-ID: <E1WufIK-0007yl-2k@rmk-PC.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Bo Shen <voice.shen@atmel.com>
+Subject: [PATCH v2 0/4] ASoC: atmel_ssc: enable fslen extension feature
+Date: Wed, 11 Jun 2014 18:14:38 +0800
+Message-ID: <1402481682-9811-1-git-send-email-voice.shen@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-sound-owner@vger.kernel.org>
+Sender: linux-sound-owner@vger.kernel.org
+To: broonie@kernel.org
+Cc: nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Bo Shen <voice.shen@atmel.com>
 List-Id: devicetree@vger.kernel.org
 
-Some microsom modules have BT/Wifi fitted for the Hummingboard.  Enable
-support for this additional hardware; where it isn't present, the SDIO
-BT/Wifi will not be detected, and no harm will come from having these
-additional devices enabled.
+On at91sam9rl, at91sam9g10, at91sam9g20, at91sam9g45 and newer
+SoCs, the SSC peripheral supports frame sync length extension
+feature. When SSC works as master, it can generate frame sync
+lenght larger than 16 bits. After enable this feature, it can
+playback 24/32 bits audio clips.
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
----
- arch/arm/boot/dts/imx6dl-hummingboard.dts | 8 ++++++++
- 1 file changed, 8 insertions(+)
+Changes in v2:
+  - Using compatible string to distinguish whether SSC supports
+    frame sync length extension to replace check IP version.
+  - Add related modification for dts file.
 
-diff --git a/arch/arm/boot/dts/imx6dl-hummingboard.dts b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-index 5373a5f2782b..cb9691bac161 100644
---- a/arch/arm/boot/dts/imx6dl-hummingboard.dts
-+++ b/arch/arm/boot/dts/imx6dl-hummingboard.dts
-@@ -172,6 +172,10 @@
- 	status = "okay";
- };
- 
-+&uart4 {
-+	status = "okay";
-+};
-+
- &usbh1 {
- 	vbus-supply = <&reg_usbh1_vbus>;
- 	status = "okay";
-@@ -182,6 +186,10 @@
- 	status = "okay";
- };
- 
-+&usdhc1 {
-+	status = "okay";
-+};
-+
- &usdhc2 {
- 	pinctrl-names = "default";
- 	pinctrl-0 = <
+Bo Shen (4):
+  ASoC: atmel-ssc: distinguish whether SSC supports fslen ext
+  ASoC: atmel_ssc_dai: enable fslen extension feature
+  dts: atmel: at91sam9rl: switch ssc compatible string
+  dts: atmel: at91sam9g20: switch ssc compatible string
+
+ arch/arm/boot/dts/at91sam9g20.dtsi |  4 ++++
+ arch/arm/boot/dts/at91sam9rl.dtsi  |  4 ++--
+ drivers/misc/atmel-ssc.c           | 13 +++++++++++++
+ include/linux/atmel-ssc.h          | 13 +++++++++++++
+ sound/soc/atmel/atmel_ssc_dai.c    | 34 ++++++++++++++++++----------------
+ 5 files changed, 50 insertions(+), 18 deletions(-)
+
 -- 
-1.8.3.1
+1.8.5.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
