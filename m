@@ -1,29 +1,53 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>
-Subject: RE: [PATCH 4/8] iio: Add support for DA9150 GPADC
-Date: Wed, 11 Jun 2014 16:56:44 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337A56F5455@SW-EX-MBX01.diasemi.com>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <3c1a7551c7deaeccdca731fa95f4349c57e04249.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <ba29cc7f-7586-430c-8947-763510e04212@email.android.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [alsa-devel] "ak" vs "asahi-kasei" (was: Re: [PATCH 3/3 v3] ARM:
+ shmobile: lager: add sound support on DT)
+Date: Wed, 11 Jun 2014 18:57:44 +0200
+Message-ID: <CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>
+References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
+	<87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
+	<539815E6.2050304@codethink.co.uk>
+	<20140611165410.GK5099@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba29cc7f-7586-430c-8947-763510e04212@email.android.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Support Opensource <Support.Opensource@diasemi.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <20140611165410.GK5099@sirena.org.uk>
+Sender: linux-sh-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Ben Dooks <ben.dooks@codethink.co.uk>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gSnVuZSAxMSwgMjAxNCAxNzozNSwgSm9uYXRob24gQ2FtZXJvbiB3cm90ZToNCg0KPiBIaSBB
-ZGFtLiBTaWxseSBxdWVzdGlvbiBidXQgd2hhdCBhcmUgdGhlIF8gY2hhbm5lbHM/DQo+IA0KPiBJ
-IGhhdmUgcHV0IGluIGEgcGVyaGFwcyBvcHRpbWlzdGljIGRhdGEgc2hlZXQgcmVxdWVzdCB2aWEg
-dGhlIHdlYnNpdGUsIHRocm93aW5nIGluDQo+IHlvdXIgbmFtZS4gSG9wZSB5b3UgZG9uJ3QgbWlu
-ZCENCj4gDQo+IEpvbmF0aGFuDQoNCkhpIEpvbmF0aG9uLiBTb21lIG9mIHRoZSBfY2hhbm5lbHMg
-YXJlIGEgZGlmZmVyZW50IHJlcHJlc2VudGF0aW9uIG9mIHRoZSByZWFkaW5nDQooZS5nLiBkaWZm
-ZXJlbnQgc2NhbGUgLSBvbmUgd291bGQgYmUgMC02ViByYW5nZSwgYW5kIG9uZSB3b3VsZCBiZSAw
-LTIxViBmb3INCmV4YW1wbGUpLiBPdGhlcnMgcHJvdmlkZSBpZGVudGljYWwgcmVhZGluZ3MgdG8g
-dGhlIG5vbiBfY2hhbm5lbCBidXQgaGF2ZSBsZWZ0DQp0aG9zZSBpbiB0byBrZWVwIHRoZSBjaGFu
-bmVsIG51bWJlcmluZyBzYW5lIGFuZCBlYXN5IHRvIHJlZmVyZW5jZS4NCg0KTm8gcHJvYmxlbSBy
-ZWdhcmRpbmcgdGhlIHJlcXVlc3QuDQo=
+On Wed, Jun 11, 2014 at 6:54 PM, Mark Brown <broonie@kernel.org> wrote:
+> On Wed, Jun 11, 2014 at 09:40:06AM +0100, Ben Dooks wrote:
+>> On 11/06/14 09:30, Kuninori Morimoto wrote:
+>
+>> >>> ak4642 driver can't probe by "ak";
+>
+>> Should we add ak, as well?
+>
+> They're usually referred to as AKM when abbreviated and their web site
+> is http://www.akm.com/ - don't know what the stock ticker symbol is.  In
+> any case there's no real cost to adding both abbreviated and
+> non-abbreviated forms if we want to transition.
+
+commit ae8c4209af2cec065fef15d200a42a04130799f7
+Author: Stephen Warren <swarren@nvidia.com>
+Date:   Mon Nov 19 15:34:43 2012 -0700
+
+    of: Add vendor prefix for Asahi Kasei Corp.
+
+    Their stock ticker is 3407.T which wouldn't make a good DT vendor
+    prefix. Use the company name initials instead.
+
+    Signed-off-by: Stephen Warren <swarren@nvidia.com>
+    Signed-off-by: Rob Herring <rob.herring@calxeda.com>
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
