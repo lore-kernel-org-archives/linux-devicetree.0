@@ -1,73 +1,44 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH v7 0/2] i2c: sunxi: add P2WI controller support
-Date: Thu, 12 Jun 2014 00:24:44 +0200
-Message-ID: <20140611222444.GB3109@katana>
-References: <1402478250-7292-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7791: add VIN DT support
+Date: Thu, 12 Jun 2014 03:53:40 +0400
+Message-ID: <5398EC04.5040802@cogentembedded.com>
+References: <201406110304.18976.sergei.shtylyov@cogentembedded.com> <201406110306.08759.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="IrhDeMKUP4DT/M7F"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402478250-7292-1-git-send-email-boris.brezillon@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, Randy Dunlap <rdunlap@infradead.org>, Maxime Ripard <maxime.ripard@free-electrons.com>, Hans de Goede <hdegoede@redhat.com>, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <201406110306.08759.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---IrhDeMKUP4DT/M7F
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/11/2014 03:06 AM, Sergei Shtylyov wrote:
 
-On Wed, Jun 11, 2014 at 11:17:28AM +0200, Boris BREZILLON wrote:
-> Hello,
->=20
-> This series adds support for the P2WI block used by some Allwinner boards
-> to interface with the AXP221 PMIC.
->=20
-> The P2WI controller looks like an SMBus controller which only supports by=
-te
-> data transfers. But, it differs from standard SMBus protocol on several
-> aspects:
-> - it supports only one slave device, and thus drop the address field
-> - it adds a parity bit every 8bits of data
-> - only one read access is required to read a byte (instead of a write
->   followed by a read access in standard SMBus protocol)
-> - there's no Ack bit after each byte transfer
->=20
-> This means this bus cannot be used to interface with standard SMBus
-> devices (the only known device to support this interface is the AXP221
-> PMIC).
-> However the P2WI protocol is close enough to SMBus to be integrated in
-> the I2C subsystem (see this thread [1] for detailed reasons that led to
-> integrating this driver in the I2C subsystem).
->=20
-> [1] http://www.spinics.net/lists/linux-i2c/msg15066.html
+> Define the generic R8A7791 parts of the VIN[0-2] device nodes. Add aliases for
+> the VIN[0-2] device nodes.
 
-Applied to for-next, thanks!
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
+> ---
+>   arch/arm/boot/dts/r8a7791.dtsi |   27 +++++++++++++++++++++++++++
+>   1 file changed, 27 insertions(+)
 
---IrhDeMKUP4DT/M7F
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+> ===================================================================
+> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
+> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
+[...]
+> @@ -518,6 +521,30 @@
+>   		status = "disabled";
+>   	};
+>
+> +	vin0: video@e6ef0000 {
+> +		compatible = "renesas,vin-r8a7790";
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+    Duh, should have been "renesas,vin-r8a7791"...
 
-iQIcBAEBAgAGBQJTmNcrAAoJEBQN5MwUoCm2WokP/0s7/lQmKJce9e1SGgjfhSn2
-VeuDGa1n1wRApLc+BvP2EEeZzdqYNRzDEpH1Nxinye3C+ECdi3yI4hULumH4izep
-lvDQYPlRqdUDct2NUSHZzq0n8svPxL9jrtWwz9zSSlx6J9rxTJpqGMNiCcauPzGU
-qsF8jdBJtB62SEnPJ7zqE6w6gyPdA3+f7sCT99vGwZbyg6yeH5/QBQ92AZAFsvNV
-A/YnGNndYNG9wccOi1QKMhO1TtGE3+8TZ0dCS7T8SAVpX1OZ3hopHl9YY7NhWpXI
-0QMv2IRHbRab0xssISaNNoDW2Vv/aPXqdSJcCH9KejIRt/XiRWzjo/Hi86bG7a8s
-KtPGl5Z9Gpfs2V+TWF7YK4zccaaXy6BSil/Cgrxqh7dBpz3uqxhGWT1HVfoHbSlv
-Ygzh2RnXixF6kUxX6P/13hj38c0ck4hukxE0PCxl3Az08XThMBxcpNFmCXGjeoGB
-O1u/5woqBH+OUSEg7HlAWRioHXbZxbB/UbTrVfOKAX5pnN/eQquYupPJH4D7bHTP
-B7N8/ppJPI+3sE1Blhb9F22PNMMIWb1x7z5K1FfMGwl63qjjYUOijEu4sTIPk1DM
-oN4zca6rCU35qq4gpbvKa9hwoqJ1hsyWJ3a6zJR5NuFlNpnwoyM33s/PbISCEREi
-t/wA9oPEzHtWebFrw1Xf
-=MvHO
------END PGP SIGNATURE-----
+WBR, Sergei
 
---IrhDeMKUP4DT/M7F--
