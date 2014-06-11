@@ -1,58 +1,73 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: "ak" vs "asahi-kasei" (was: Re: [PATCH 3/3 v3] ARM: shmobile: lager:
- add sound support on DT)
-Date: Wed, 11 Jun 2014 10:12:21 +0200
-Message-ID: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA
+ Controller driver
+Date: Wed, 11 Jun 2014 10:12:48 +0200
+Message-ID: <20140611081248.GS1701@ldesroches-Latitude-E6320>
+References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com>
+ <6544148.4RKn2Y8vCE@wuerfel>
+ <20140611073525.GQ1701@ldesroches-Latitude-E6320>
+ <8696483.Dng95cR5kK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-Cc: Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8696483.Dng95cR5kK@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Morimoto-san,
+On Wed, Jun 11, 2014 at 09:41:47AM +0200, Arnd Bergmann wrote:
+> On Wednesday 11 June 2014 09:35:25 Ludovic Desroches wrote:
+> > > > +     if (dma_spec->args_count != 2) {
+> > > > +             dev_err(&pdev->dev, "dma phandler args: bad number of args\n");
+> > > > +             return NULL;
+> > > > +     }
+> > > > +
+> > > > +     dma_cap_zero(mask);
+> > > > +     dma_cap_set(DMA_SLAVE, mask);
+> > > > +     chan = dma_request_channel(mask, NULL, NULL);
+> > > > +     if (!chan) {
+> > > > +             dev_err(&pdev->dev, "can't get a dma channel\n");
+> > > > +             return NULL;
+> > > > +     }
+> > > 
+> > > You must use dma_get_any_slave_channel. dma_request_channel gives you a
+> > > channel from a random dma engine that is present in the system, not
+> > > necessarily the one you are managing here.
+> > 
+> > It is planned to use dma_get_any_slave_channel but currently I am doing
+> > tests on a 3.10 kernel that's why I am still using dma_request_channel.
+> 
+> Ok, I see. The correct way to do this then would be to have a filter
+> function that compares the channel's dmadevice pointer to the one
+> you get from the of_dma_data pointer. Since you already plan to
+> change this, and you probably know that there are no other engines
+> in the system, maybe you can do it like this in the meantime:
+> 
+> 	/* FIXME: use dma_get_any_slave_chan to avoid the WARN_ON */
+> 	if (!chan || WARN_ON(chan->device != dev)) {
+> 		dev_err(&pdev->dev, "can't get a dma channel\n");
+> 		return NULL;
+> 	}
+> 
 
-CC devicetree, alsa-devel
+I have noticed that the filter function was missing in the RFC version.
+I had to add it since there are two xdma controllers in the system.
 
-On Wed, Jun 11, 2014 at 9:40 AM, Kuninori Morimoto
-<kuninori.morimoto.gx@renesas.com> wrote:
->> On Wed, Jun 11, 2014 at 8:54 AM, Kuninori Morimoto
->> <kuninori.morimoto.gx@renesas.com> wrote:
->> > +               compatible = "asahi-kasei,ak4643";
->>
->> As Sergei already commented,
->> Documentation/devicetree/bindings/vendor-prefixes.txt
->> says
->>
->>         ak      Asahi Kasei Corp.
->
-> I know, but,
->
-> grep asahi-kasei sound/soc/codecs/*
-> sound/soc/codecs/ak4104.c:      { .compatible = "asahi-kasei,ak4104", },
-> sound/soc/codecs/ak4554.c:      { .compatible = "asahi-kasei,ak4554" },
-> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4642",   .data = &ak4642_drvdata},
-> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4643",   .data = &ak4643_drvdata},
-> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4648",   .data = &ak4648_drvdata},
-> sound/soc/codecs/ak5386.c:      { .compatible = "asahi-kasei,ak5386", },
->
-> ak4642 driver can't probe by "ak";
+static bool at_xdmac_filter(struct dma_chan *chan, void *slave)                 
+{                                                                               
+        struct device *dma_dev = (struct device *) slave;                       
+                                                                                
+        if (dma_dev == chan->device->dev)                                       
+                return true;                                                    
+        else                                                                    
+                return false;                                                   
+}
 
-That's bad. And all but one of these match entries have been added
-_after_ the addition of "ak" to vendor-prefixes.txt...
 
-Outside sound, there's also "asahi-kasei,ak8975" vs. "ak,ak8975".
-
-> My code is based on "code", not "document"
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
+Ludovic
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
