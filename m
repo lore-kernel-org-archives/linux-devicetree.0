@@ -1,75 +1,118 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCHv5 2/4] mailbox: Introduce framework for mailbox
-Date: Wed, 11 Jun 2014 17:07:26 +0100
-Message-ID: <20140611160726.GJ5099@sirena.org.uk>
-References: <1400134260-3962-1-git-send-email-jaswinder.singh@linaro.org>
- <7978295.UBGxYvcnvH@wuerfel>
- <CAJe_Zhe_VFTpPW0sKBsqit347MR7QmEDvzvQTyh1DWr3v991tg@mail.gmail.com>
- <20140529154348.GH32082@beef>
- <CABb+yY2PiGpqy2uevCFexAKeS4aZxJxZHEDJTRN1SW6VVjBzGQ@mail.gmail.com>
- <20140602151454.GK32082@beef>
- <CABb+yY3ZYqtT+R0PwZDtpW0O0SsbxTyiYmXaseZHoj4Nr6UBPQ@mail.gmail.com>
- <CAPKp9uZTnWCojeZHyvrm=vTuY15dAHiW1CWP18JUfuKU-mfH0Q@mail.gmail.com>
- <CAJe_ZheA_2PwzFGwx2rdba0oVsAKRnwK02XE-8nPY6K5NKpdTw@mail.gmail.com>
- <20140605111205.GD32082@beef>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="oQ95xoC0NK0Hccgk"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140605111205.GD32082@beef>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matt Porter <mporter@linaro.org>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, Sudeep Holla <sudeep.holla@arm.com>, Jassi Brar <jassisinghbrar@gmail.com>, Arnd Bergmann <arnd@arndb.de>, lkml <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Anna, Suman" <s-anna@ti.com>, Loic Pallardy <loic.pallardy@st.com>, LeyFoon Tan <lftan.linux@gmail.com>, Craig McGeachie <slapdau@yahoo.com.au>, Courtney Cavin <courtney.cavin@sonymobile.com>, Rob Herring <robherring2@gmail.com>, Josh Cartwright <joshc@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>, Devicetree List <devicetree@vger.kernel.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: [PATCH v4 0/6] ARM generic idle states
+Date: Wed, 11 Jun 2014 17:18:34 +0100
+Message-ID: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-pm-owner@vger.kernel.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Chander Kashyap <chander.kashyap@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch is v4 of a previous posting:
 
---oQ95xoC0NK0Hccgk
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/253693.html
 
-On Thu, Jun 05, 2014 at 07:12:05AM -0400, Matt Porter wrote:
-> On Tue, Jun 03, 2014 at 03:51:55PM +0530, Jassi Brar wrote:
+Changes in v4:
 
-> > BTW, here we at least have a hardware resource to specify in the DT
-> > node, there are examples in kernel where the DT nodes are purely
-> > virtual. For ex, grep for "linux,spdif-dit". So I think we should be
-> > ok.
+- States sorting using exit-latency
+- Added cosmetic review comments
+- Dropped RFC tag
+- Rebased against 3.15
 
-> There's a bit of a difference between my concern over a virtual node and
-> this example you've cited. In the dummy spdif transmitter, it's defining
-> a virtual device that plugs in for a codec, a hardware concept well
-> defined in the audio bindings. I agree that there are many examples of
-> this type of virtual node, including dummy phys, but in all cases they
-> are stubbing out a real hardware concept.
+Changes in v3:
 
-Well, really it's an actual physical thing - it's something that appears
-in the schematic and can be pointed at on the board but just doesn't
-have software control.  From that point of view if the software that's
-being interacted with on the remote processor is in ROM/flash which
-won't or can't be realistically be updated (which seems to be mostly the
-case) then you can reasonably say the same thing.
+- Streamlined the idle states bindings and added them to the series
+  http://www.spinics.net/lists/arm-kernel/msg316299.html
+- Sorting states through min-residency+exit-latency
+- Added debug strings formatting
+- Reworded min-residency-us idle state property
+- Removed power-domain properties from idle states waiting for code
+  examples requiring them to be defined
 
---oQ95xoC0NK0Hccgk
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes in v2:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+- Moved OF parsing code to drivers/cpuidle
+- Improved states detection and sorting through linked list
+- Split code in generic and ARM64 specific bits
+- Moved idle enter function into ARM64 idle driver
+- Refactored PSCI idle states register function
+- Renamed suspend operations and moved detection to ARM64 idle driver
+- Changed the way CPUIDLE_FLAG_TIMER_STOP is handled
+- Simplified idle state nodes parsing since according to the latest
+  bindings idle state nodes are a flat list, not hierarchical anymore
+- Used min-residency-us to sort the states, to be further discussed
 
-iQIcBAEBAgAGBQJTmH67AAoJELSic+t+oim9Bt8P/160qN+CPShJ28IiDzmny6PA
-AVGJksSE68Q5wbWYyvV0058YND8nksw1E9fm+QeXMjNyk8Et2p/Wle882EIMRo6b
-BgpiMxz5yU1Pl49VEUmhit9HIbt0Fi/acibc2YcDHmcxNxjyiuMPC9FL6as9ZBs/
-fAkjSL3CXsQaKBhVj5QVJdsvgU7/i1GPrF9wH820NAXDXqDY2aDbKKAFPEV/xJby
-03GZ6nrF00+ql2lerazQNqtvPljmEjbU/sLsdO0zdjXnfgZdUtRkILnOBiYT2q+b
-0GK9FoNG5LqihQ47I2qa6s0UMyWmPVHgLr5G641845TuGIWnsJrdPB4wF7AkP9Co
-bT2ozwOhm4tAK/rsLYUX6WVVX7LSyAN9LgdxouVT6Lr6xwkMgREPJVFFzQ2VKfJf
-uSFhNyXyZZzgxuX1JHQkIxq7/sPRp5EYyoIKf0RDJZfu/wnp6PBNu3B1VAKvhEzQ
-bCFJen+MG3O+tDgts37qIewR4yErUXwN3zBtnZ6JvTJ/eA5tPo24/E+IAuiyBWK0
-6zJmcqK7OIRK9iaAmpju9RMTuPzfxNFKosqPENpaJn/5h9vm+VZpCkukFtCvlBmD
-zL4HkyI+hEa8iir46jdhNnMG2QzwBs2m26KIHvT6NWKNuKPpbUDJJ/krD/paiDkB
-NTQ6gRwb2wI8LWiLr5LE
-=UeEw
------END PGP SIGNATURE-----
+Idle states on most ARM platforms can be characterized by a set of
+parameters that are platform agnostic and describe the HW idle states
+features. So far, CPU idle drivers for ARM platforms required the definitio=
+n
+of parameters through static tables, duplicating control data for different
+platforms. Moreover, the lack of standardization on firmware interfaces
+hampered any standardization effort, resulting in CPU idle drivers for ARM
+platforms containing duplicated code and platform specific power down routi=
+nes.
 
---oQ95xoC0NK0Hccgk--
+The introduction of the PSCI firmware interface, and more in general, well
+defined suspend back-ends, allows the definition of generic idle states and
+the respective kernel infrastructure to support them.
+
+Building on top of DT idle states bindings, that standardize idle states
+parameters and corresponding suspend back-ends, this patchset provides code
+that parses DT idle states nodes and builds at run-time the control data
+infrastructure required by the ARM CPU idle drivers.
+
+Idle states define an entry method (eg PSCI), that requires the respective
+ARM64 kernel back-end to be invoked to initialize idle states parameters, s=
+o
+that when the idle driver executes the back-end specific entry method a tab=
+le
+look-up can be carried out to retrieve the corresponding idle state paramet=
+er.
+
+On legacy ARM platforms, the OF idle states are just used to initialize
+states data.
+
+The idle states bindings can be extended with new back-ends; the ARM64 CPUi=
+dle
+driver must be updated accordingly so that the corresponding back
+end initializer can be invoked at boot time for parameters initialization.
+
+Patchset has been tested on AEM v8 models, on top of bootwrapper PSCI CPU
+SUSPEND implementation which provides simulated core power gating.
+
+[1] http://www.spinics.net/lists/arm-kernel/msg316299.html
+
+Lorenzo Pieralisi (6):
+  Documentation: arm: define DT idle states bindings
+  Documentation: devicetree: psci: define CPU suspend parameter
+  drivers: cpuidle: implement OF based idle states infrastructure
+  arm64: add PSCI CPU_SUSPEND based cpu_suspend support
+  drivers: cpuidle: CPU idle ARM64 driver
+  arm64: boot: dts: update rtsm aemv8 dts with PSCI and idle states
+
+ Documentation/devicetree/bindings/arm/cpus.txt     |   8 +
+ .../devicetree/bindings/arm/idle-states.txt        | 507 +++++++++++++++++=
+++++
+ Documentation/devicetree/bindings/arm/psci.txt     |  12 +-
+ arch/arm64/boot/dts/rtsm_ve-aemv8a.dts             |  44 +-
+ arch/arm64/include/asm/psci.h                      |   4 +
+ arch/arm64/kernel/psci.c                           | 103 +++++
+ drivers/cpuidle/Kconfig                            |  14 +
+ drivers/cpuidle/Kconfig.arm64                      |  13 +
+ drivers/cpuidle/Makefile                           |   5 +
+ drivers/cpuidle/cpuidle-arm64.c                    | 168 +++++++
+ drivers/cpuidle/of_idle_states.c                   | 282 ++++++++++++
+ drivers/cpuidle/of_idle_states.h                   |   8 +
+ 12 files changed, 1159 insertions(+), 9 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
+ create mode 100644 drivers/cpuidle/Kconfig.arm64
+ create mode 100644 drivers/cpuidle/cpuidle-arm64.c
+ create mode 100644 drivers/cpuidle/of_idle_states.c
+ create mode 100644 drivers/cpuidle/of_idle_states.h
+
+--=20
+1.8.4
+
+
