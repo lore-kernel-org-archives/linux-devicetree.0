@@ -1,38 +1,44 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 0/2] Add VIN and ADV7180 DT support for R8A7791/Henninger
- board
-Date: Wed, 11 Jun 2014 16:41:33 +0400
-Message-ID: <53984E7D.8010909@cogentembedded.com>
-References: <201406110304.18976.sergei.shtylyov@cogentembedded.com> <20140610235445.GE20738@verge.net.au>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH 8/8] DT: Add vendor prefix for Dialog Semiconductor Ltd.
+Date: Wed, 11 Jun 2014 07:43:12 -0500
+Message-ID: <CAL_JsqK0RqYuZ8YB1sBZK7hMXvp6oEPfAu11m95F61_kGV3Ptg@mail.gmail.com>
+References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
+	<bf4b6d7b061e66d3ca7f3dd44319b9e26ae7103f.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
+	<CAMuHMdWirVk+jrz40yw4=zAOFH6VTX9CXcpO01e0rK8S8VGGHw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140610235445.GE20738@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWirVk+jrz40yw4=zAOFH6VTX9CXcpO01e0rK8S8VGGHw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Adam Thomson <Adam.Thomson.Opensource@diasemi.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Jonathan Cameron <jic23@kernel.org>, linux-iio@vger.kernel.org, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, support.opensource@diasemi.com, Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Jun 11, 2014 at 7:09 AM, Geert Uytterhoeven
+<geert@linux-m68k.org> wrote:
+> On Wed, Jun 11, 2014 at 1:11 PM, Adam Thomson
+> <Adam.Thomson.Opensource@diasemi.com> wrote:
+>> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+>> @@ -36,6 +36,7 @@ dallas        Maxim Integrated Products (formerly Dallas Semiconductor)
+>>  davicom        DAVICOM Semiconductor, Inc.
+>>  denx   Denx Software Engineering
+>>  digi   Digi International Inc.
+>> +dlg    Dialog Semiconductor Ltd.
+>
+> "diasemi" has been proposed before
+> https://groups.google.com/forum/#!msg/linux.kernel/htUxLpV_Ng0/ClJVAxgK4e4J
+>
+> "dialog", "diasemi", and "dlg" all seem to be already in use...
 
-On 06/11/2014 03:54 AM, Simon Horman wrote:
+dlg is the correct one and seems to be the most widely used, so we
+should go with that and mark the others deprecated.
 
->>     Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
->> 'renesas-devel-v3.15-20140610' tag plus the Henninger I2C2 DT support patch
->> that I posted earlier. Here we add the VIN and ADV7180 video decoder device
->> tree support on the R8A7791/Henninger board. The patchset requires Ben Dooks'
->> adv7180, rcar_vin, and soc_camera DT support patches posted back in April in
->> order to work.
+diasemi is documented for the da9210, but not used anywhere.
 
-> I wonder what the status of those (driver?) patches are.
+There appears to be 2 different da9053 bindings. I'd guess the dialog
+variant used on 2 i.MX boards is not used. Other i.MX boards use the
+dlg version. I'm not sure what is going on with da9055. Please sort
+these out.
 
-    Someone in CodeThink is working on them, I was told. I had to fix them up 
-somewhat in order for them to compile.
-
-> In general I prefer bindings to be accepted before they are used.
-
-    No argument here. I just have my own schedule.
-
-WBR, Sergei
-
+Rob
