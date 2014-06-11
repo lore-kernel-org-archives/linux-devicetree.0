@@ -1,217 +1,64 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCHv6 2/2] ARM: dts: unuse the slot-node and deprecated
- supports-highspeed for dw-mmc.
-Date: Wed, 11 Jun 2014 15:49:17 +0900
-Message-ID: <5397FBED.2020100@samsung.com>
-References: <1402284855-3968-1-git-send-email-jh80.chung@samsung.com>
- <1402284855-3968-3-git-send-email-jh80.chung@samsung.com>
- <1402329181.9618.1.camel@linux-builds1>
+From: Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC PATCH] dma: at_xdmac: creation of the atmel eXtended DMA
+ Controller driver
+Date: Wed, 11 Jun 2014 09:35:25 +0200
+Message-ID: <20140611073525.GQ1701@ldesroches-Latitude-E6320>
+References: <1401179736-8235-1-git-send-email-ludovic.desroches@atmel.com>
+ <20140610154118.GA4254@lukather>
+ <6544148.4RKn2Y8vCE@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <1402329181.9618.1.camel@linux-builds1>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Dinh Nguyen <dinguyen@altera.com>, Jaehoon Chung <jh80.chung@samsung.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, Heiko St?bner <heiko@sntech.de>, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <6544148.4RKn2Y8vCE@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ludovic Desroches <ludovic.desroches-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Dinh.
+On Tue, Jun 10, 2014 at 09:15:14PM +0200, Arnd Bergmann wrote:
+> On Tue, May 27, 2014 at 10:35:36AM +0200, Ludovic Desroches wrote:
+> > +static struct dma_chan *at_xdmac_xlate(struct of_phandle_args *dma_spec,
+> > +                                    struct of_dma *of_dma)
+> > +{
+> > +     struct at_xdmac_chan    *atchan;
+> > +     struct dma_chan         *chan;
+> > +     dma_cap_mask_t          mask;
+> > +     struct platform_device  *pdev = of_find_device_by_node(dma_spec->np);
+> 
+> No need to search through all the device nodes, you can look up the
+> device from of_dma->of_dma_data.
 
-Thanks for pointing out.
-Will Fix it.
+Thanks for the tip.
 
-Best Regards,
-Jaehoon Chung
+> 
+> > +     if (dma_spec->args_count != 2) {
+> > +             dev_err(&pdev->dev, "dma phandler args: bad number of args\n");
+> > +             return NULL;
+> > +     }
+> > +
+> > +     dma_cap_zero(mask);
+> > +     dma_cap_set(DMA_SLAVE, mask);
+> > +     chan = dma_request_channel(mask, NULL, NULL);
+> > +     if (!chan) {
+> > +             dev_err(&pdev->dev, "can't get a dma channel\n");
+> > +             return NULL;
+> > +     }
+> 
+> You must use dma_get_any_slave_channel. dma_request_channel gives you a
+> channel from a random dma engine that is present in the system, not
+> necessarily the one you are managing here.
 
-On 06/10/2014 12:53 AM, Dinh Nguyen wrote:
-> On Mon, 2014-06-09 at 12:34 +0900, Jaehoon Chung wrote:
->> dw-mmc controller can support multiple slots.
->> But, there are no use-cases anywhere. So we don't need to support the
->> slot-node for dw-mmc controller.
->> And "supports-highspeed" property in dw-mmc is deprecated.
->> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
->>
->> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
->> Reviewed-by: Tushar Behera <trblinux@gmail.com>
->> ---
->> Changelog V6:
->> 	- Add the missing property.
->> Changelog V5:
->> 	- Fix typo.
->> Changelog V4:
->> 	- Remove the slot-node.
->> 	- Rename Subject.
->> 		"[PATCHv3 4/4]ARM: dts: replace the slot property into slot sub-node for dwmmc"
->> Changelog V3:
->> 	- Merge "[PATCH 2/5] mmc: dw_mmc: rmove the "supports-highspeed" property"
->> Changelog V2:
->> 	- None
->>
->>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
->>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
->>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
->>  arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
->>  arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
->>  arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
->>  arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++---------
->>  arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   28 ++++++--------------
->>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++---------
->>  arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
->>  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++--------
->>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++--------
->>  arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++--------
->>  arch/arm/boot/dts/socfpga_arria5.dtsi              |    5 ++--
->>  arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
->>  arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
->>  16 files changed, 62 insertions(+), 144 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> index 532b1d4..4cdd283 100644
->> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
->> @@ -46,13 +46,14 @@ Required Properties:
->>        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
->>          phase shift clocks should be 0.
->>  
->> -Required properties for a slot:
->> +Required properties for a slot (Deprecated - Recommend to use one slot per a host):
->>  
->>  * gpios: specifies a list of gpios used for command, clock and data bus. The
->>    first gpio is the command line and the second gpio is the clock line. The
->>    rest of the gpios (depending on the bus-width property) are the data lines in
->>    no particular order. The format of the gpio specifier depends on the gpio
->>    controller.
->> + (Deprecated - Refer to Documentaion/devicetree/binding/pinctrl/samsung-pinctrl.txt)
->>  
->>  Example:
->>  
->> @@ -69,21 +70,13 @@ Example:
->>  
->>  	dwmmc0@12200000 {
->>  		num-slots = <1>;
->> -		supports-highspeed;
->>  		broken-cd;
->> +		cap-mmc-highspeed;
->> +		cap-sd-highspeed;
->>  		fifo-depth = <0x80>;
->>  		card-detect-delay = <200>;
->>  		samsung,dw-mshc-ciu-div = <3>;
->>  		samsung,dw-mshc-sdr-timing = <2 3>;
->>  		samsung,dw-mshc-ddr-timing = <1 2>;
->> -
->> -		slot@0 {
->> -			reg = <0>;
->> -			bus-width = <8>;
->> -			gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
->> -				<&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
->> -				<&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
->> -				<&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
->> -				<&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
->> -		};
->> +		bus-width = <8>;
->>  	};
->> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->> index b8653ea..514c0fc 100644
->> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
->> @@ -34,13 +34,11 @@ Example:
->>  		num-slots = <1>;
->>  		vmmc-supply = <&ldo12>;
->>  		fifo-depth = <0x100>;
->> -		supports-highspeed;
->>  		pinctrl-names = "default";
->>  		pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
->> -		slot@0 {
->> -			reg = <0>;
->> -			bus-width = <4>;
->> -			disable-wp;
->> -			cd-gpios = <&gpio10 3 0>;
->> -		};
->> +		bus-width = <4>;
->> +		disable-wp;
->> +		cd-gpios = <&gpio10 3 0>;
->> +		cap-mmc-highspeed;
->> +		cap-sd-highspeed;
->>  	};
+It is planned to use dma_get_any_slave_channel but currently I am doing
+tests on a 3.10 kernel that's why I am still using dma_request_channel.
+
 > 
-> [snip]
-> 
->>  
->>  		gpio-keys {
->> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
->> index 6c87b70..1da0e81 100644
->> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
->> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
->> @@ -29,12 +29,13 @@
->>  
->>  		dwmmc0@ff704000 {
->>  			num-slots = <1>;
->> -			supports-highspeed;
->> -			broken-cd;
->>  
->>  			slot@0 {
-> 
-> You can remove the slot@0 here too right?
-> 
-> Thanks,
-> Dinh
-> 
->>  				reg = <0>;
->>  				bus-width = <4>;
->> +				broken-cd;
->> +				cap-mmc-highspeed;
->> +				cap-sd-highspeed;
->>  			};
->>  		};
->>  
->> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
->> index ca41b0e..c4ebf65 100644
->> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
->> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
->> @@ -30,13 +30,10 @@
->>  
->>  		dwmmc0@ff704000 {
->>  			num-slots = <1>;
->> -			supports-highspeed;
->>  			broken-cd;
->> -
->> -			slot@0 {
->> -				reg = <0>;
->> -				bus-width = <4>;
->> -			};
->> +			bus-width = <4>;
->> +			cap-mmc-highspeed;
->> +			cap-sd-highspeed;
->>  		};
->>  
->>  		ethernet@ff702000 {
->> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
->> index 87d6f75..07e7206 100644
->> --- a/arch/arm/boot/dts/socfpga_vt.dts
->> +++ b/arch/arm/boot/dts/socfpga_vt.dts
->> @@ -43,13 +43,10 @@
->>  
->>  		dwmmc0@ff704000 {
->>  			num-slots = <1>;
->> -			supports-highspeed;
->>  			broken-cd;
->> -
->> -			slot@0 {
->> -				reg = <0>;
->> -				bus-width = <4>;
->> -			};
->> +			bus-width = <4>;
->> +			cap-mmc-highspeed;
->> +			cap-sd-highspeed;
->>  		};
->>  
->>  		ethernet@ff700000 {
-> 
-> 
+> 	Arnd
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
+> To unsubscribe from this list: send the line "unsubscribe dmaengine" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
