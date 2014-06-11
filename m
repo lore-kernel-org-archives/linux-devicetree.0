@@ -1,29 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 2/2] i2c: sunxi: add P2WI (Push/Pull 2 Wire Interface) controller support
-Date: Wed, 11 Jun 2014 10:07:04 +0200
-Message-ID: <5138962.eWJk3tfacf@wuerfel>
-References: <1402408036-5235-1-git-send-email-boris.brezillon@free-electrons.com> <13219561.hrRmVFjmAv@wuerfel> <53980AD4.2080001@free-electrons.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: "ak" vs "asahi-kasei" (was: Re: [PATCH 3/3 v3] ARM: shmobile: lager:
+ add sound support on DT)
+Date: Wed, 11 Jun 2014 10:12:21 +0200
+Message-ID: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53980AD4.2080001@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Boris BREZILLON <boris.brezillon@free-electrons.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, Randy Dunlap <rdunlap@infradead.org>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, Hans de Goede <hdegoede@redhat.com>, linux-i2c@vger.kernel.org, Shuge <shuge@allwinnertech.com>, kevin@allwinnertech.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
+Cc: Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>, Ben Dooks <ben.dooks@codethink.co.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 11 June 2014 09:52:52 Boris BREZILLON wrote:
-> You mean in my commit message ?
-> I thought it was already explaining the subtle differences between P2WI
-> and the SMBus protocols.
-> 
-> What would you like me to add to this explanation ?
-> Something about the I2C to P2WI initialization part ?
-> 
+Hi Morimoto-san,
 
-What I'd like to see is a mention of previous discussion that
-concluded that it should be an i2c driver rather than a new
-type of driver, and why.
+CC devicetree, alsa-devel
 
-	Arnd
+On Wed, Jun 11, 2014 at 9:40 AM, Kuninori Morimoto
+<kuninori.morimoto.gx@renesas.com> wrote:
+>> On Wed, Jun 11, 2014 at 8:54 AM, Kuninori Morimoto
+>> <kuninori.morimoto.gx@renesas.com> wrote:
+>> > +               compatible = "asahi-kasei,ak4643";
+>>
+>> As Sergei already commented,
+>> Documentation/devicetree/bindings/vendor-prefixes.txt
+>> says
+>>
+>>         ak      Asahi Kasei Corp.
+>
+> I know, but,
+>
+> grep asahi-kasei sound/soc/codecs/*
+> sound/soc/codecs/ak4104.c:      { .compatible = "asahi-kasei,ak4104", },
+> sound/soc/codecs/ak4554.c:      { .compatible = "asahi-kasei,ak4554" },
+> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4642",   .data = &ak4642_drvdata},
+> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4643",   .data = &ak4643_drvdata},
+> sound/soc/codecs/ak4642.c:      { .compatible = "asahi-kasei,ak4648",   .data = &ak4648_drvdata},
+> sound/soc/codecs/ak5386.c:      { .compatible = "asahi-kasei,ak5386", },
+>
+> ak4642 driver can't probe by "ak";
+
+That's bad. And all but one of these match entries have been added
+_after_ the addition of "ak" to vendor-prefixes.txt...
+
+Outside sound, there's also "asahi-kasei,ak8975" vs. "ak,ak8975".
+
+> My code is based on "code", not "document"
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
