@@ -1,93 +1,34 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss
- always enabled
-Date: Thu, 12 Jun 2014 14:09:20 -0700
-Message-ID: <20140612210920.6562.96815@quantum>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
- <1402464739-19044-2-git-send-email-tushar.b@samsung.com>
- <20140611165027.6562.64928@quantum>
- <CAC5m3BwR9WhiiDqUw1A6FjmzAnQ02xCBxOeAaY2nt3CRqTz+oQ@mail.gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: tegra: tamonten: add the base board regulators
+Date: Thu, 12 Jun 2014 15:17:56 -0600
+Message-ID: <539A1904.2000601@wwwdotorg.org>
+References: <1402585885-28247-1-git-send-email-alban.bedel@avionic-design.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAC5m3BwR9WhiiDqUw1A6FjmzAnQ02xCBxOeAaY2nt3CRqTz+oQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Tushar Behera <tushar.b@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, lkml <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Doug Anderson <dianders@google.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Kukjin Kim <kgene.kim@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402585885-28247-1-git-send-email-alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Tushar Behera (2014-06-12 00:29:23)
-> On Wed, Jun 11, 2014 at 10:20 PM, Mike Turquette <mturquette@linaro.org> wrote:
-> > Quoting Tushar Behera (2014-06-10 22:32:17)
-> >> When the output clock of AUDSS mux is disabled, we are getting kernel
-> >> oops while doing a clk_get() on other clocks provided by AUDSS. Though
-> >> user manual doesn't specify this dependency, we came across this issue
-> >> while disabling the parent of AUDSS mux clocks.
-> >
-> > Hi Tushar,
-> >
-> > Can you help me understand better what the actual problem is? What is
-> > the root cause of the kernel oops?
-> 
-> Currently AUDSS mux has two parents, XXTI crystal and MAU_EPLL clock.
-> As per observation, when the output of AUDSS mux is gated, we are not
-> able to do any operation on the clocks provided by MAU block (mostly
-> the clocks used by ADMA and audio blocks).
+On 06/12/2014 09:11 AM, Alban Bedel wrote:
+> Currently the Tamonten DTS define a fixed regulator for the 5V supply.
+> However this regulator is in fact on the base board. Fix this by
+> properly defining the regulators found on the base boards.
 
-I tried to get a datasheet for Exynos 54xx but could not find it. I even
-looked at the public 5250 data sheet, but it is completely missing
-Chapter 34, "Audio Subsystem", which apparently contains Figure 34-3,
-"Clock names and clock tree diagram of MAUDIO_BLK".
+> diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
 
-So without any clue about your hardware (not for lack of trying) I would
-guess that somewhere in the parent hierarchy you have an interface clock
-which must be enabled in order for you to touch the registers pertaining
-to the downstream audio clocks.
+> +	board_regulators {
 
-The right way to handle this requires two steps:
+The name "board_regulators" encodes both type ("regulators") and
+identify ("board": the regulators on the board). DT node names are
+suposed to contain type but not identity information.
 
-1) model your interface clock in the Linux clock framework if you
-haven't already (I assume it is a gate clock, or the child of a gate
-clock)
+The way this is done in other Tegra DTs is to have a regulators node in
+both the board and module DT files, and use different ranges of reg
+values for the board and module; e.g. 0..99 for module and 100.. for the
+board or similar.
 
-2) the clk_ops callbacks for the affected audio clocks should wrap their
-operations (i.e. critical secion) with a clk_enable/clk_disable pair,
-where the clock being enables/disable is the interface clock mentioned
-above in #1
-
-The CCF is reentrant, so you can do this by simply using the top-level
-clk.h API from within your clk_ops callbacks.
-
-I might be totally wrong about the cause of the hang, but that's my best
-guess based on everyone's bug reports.
-
-Regards,
-Mike
-
-> 
-> >
-> > You mention calling clk_get on child clocks of the AUDSS mux fails, but
-> > I cannot imagine why. How can the enable/disable state of a clock affect
-> > the ability to clk_get other clocks?
-> >
-> 
-> I might have a little vogue while updating the commit message
-> (mentioning about clk_get which surely is only a s/w operation), but
-> there is definitely some issue with handling those clocks under given
-> scenario.
-> 
-> I am on leave till end of this week, so I will update you more with
-> the logs on Monday.
-> 
-> Thanks,
-> --
-> Tushar
+Other than that, this patch looks fine.
