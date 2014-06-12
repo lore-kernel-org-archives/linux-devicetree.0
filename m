@@ -1,139 +1,64 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: [PATCH 7/9] serial/arc: inline the probe helper
-Date: Thu, 12 Jun 2014 16:01:37 +0530
-Message-ID: <1402569099-9900-8-git-send-email-vgupta@synopsys.com>
-References: <1402569099-9900-1-git-send-email-vgupta@synopsys.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [alsa-devel] "ak" vs "asahi-kasei"
+Date: Thu, 12 Jun 2014 12:12:51 +0100
+Message-ID: <20140612111251.GW5099@sirena.org.uk>
+References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
+ <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
+ <539815E6.2050304@codethink.co.uk>
+ <20140611165410.GK5099@sirena.org.uk>
+ <CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>
+ <20140611170233.GL5099@sirena.org.uk>
+ <5398A53D.3020706@wwwdotorg.org>
+ <20140611190444.GN5099@sirena.org.uk>
+ <5398AB07.4040304@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1402569099-9900-1-git-send-email-vgupta@synopsys.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Francois.Bedard@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="gZp/6GhZa3TIWvVc"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5398AB07.4040304@wwwdotorg.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
----
- drivers/tty/serial/arc_uart.c | 90 +++++++++++++++++++------------------------
- 1 file changed, 40 insertions(+), 50 deletions(-)
 
-diff --git a/drivers/tty/serial/arc_uart.c b/drivers/tty/serial/arc_uart.c
-index dc3d5db37dc4..435de4f2af3b 100644
---- a/drivers/tty/serial/arc_uart.c
-+++ b/drivers/tty/serial/arc_uart.c
-@@ -496,50 +496,6 @@ static struct uart_ops arc_serial_pops = {
- #endif
- };
- 
--static int
--arc_uart_init_one(struct platform_device *pdev, int dev_id)
--{
--	struct device_node *np = pdev->dev.of_node;
--	struct arc_uart_port *uart = &arc_uart_ports[dev_id];
--	struct uart_port *port = &uart->port;
--	u32 val;
--
--	if (of_property_read_u32(np, "clock-frequency", &val)) {
--		dev_err(&pdev->dev, "clock-frequency property NOTset\n");
--		return -EINVAL;
--	}
--	port->uartclk = val;
--
--	if (of_property_read_u32(np, "current-speed", &val)) {
--		dev_err(&pdev->dev, "current-speed property NOT set\n");
--		return -EINVAL;
--	}
--	uart->baud = val;
--
--	port->membase = of_iomap(np, 0);
--	if (!port->membase)
--		/* No point of dev_err since UART itself is hosed here */
--		return -ENXIO;
--
--	port->irq = irq_of_parse_and_map(np, 0);
--
--	port->dev = &pdev->dev;
--	port->iotype = UPIO_MEM;
--	port->flags = UPF_BOOT_AUTOCONF;
--	port->line = dev_id;
--	port->ops = &arc_serial_pops;
--
--	port->fifosize = ARC_UART_TX_FIFO_SIZE;
--
--	/*
--	 * uart_insert_char( ) uses it in decideding whether to ignore a
--	 * char or not. Explicitly setting it here, removes the subtelty
--	 */
--	port->ignore_status_mask = 0;
--
--	return 0;
--}
--
- #ifdef CONFIG_SERIAL_ARC_CONSOLE
- 
- static int arc_serial_console_setup(struct console *co, char *options)
-@@ -628,8 +584,11 @@ EARLYCON_DECLARE(arc_uart, arc_early_console_setup);
- 
- static int arc_serial_probe(struct platform_device *pdev)
- {
--	int rc, dev_id;
- 	struct device_node *np = pdev->dev.of_node;
-+	struct arc_uart_port *uart;
-+	struct uart_port *port;
-+	int dev_id;
-+	u32 val;
- 
- 	/* no device tree device */
- 	if (!np)
-@@ -639,12 +598,43 @@ static int arc_serial_probe(struct platform_device *pdev)
- 	if (dev_id < 0)
- 		dev_id = 0;
- 
--	rc = arc_uart_init_one(pdev, dev_id);
--	if (rc)
--		return rc;
-+	uart = &arc_uart_ports[dev_id];
-+	port = &uart->port;
-+
-+	if (of_property_read_u32(np, "clock-frequency", &val)) {
-+		dev_err(&pdev->dev, "clock-frequency property NOTset\n");
-+		return -EINVAL;
-+	}
-+	port->uartclk = val;
-+
-+	if (of_property_read_u32(np, "current-speed", &val)) {
-+		dev_err(&pdev->dev, "current-speed property NOT set\n");
-+		return -EINVAL;
-+	}
-+	uart->baud = val;
-+
-+	port->membase = of_iomap(np, 0);
-+	if (!port->membase)
-+		/* No point of dev_err since UART itself is hosed here */
-+		return -ENXIO;
-+
-+	port->irq = irq_of_parse_and_map(np, 0);
-+
-+	port->dev = &pdev->dev;
-+	port->iotype = UPIO_MEM;
-+	port->flags = UPF_BOOT_AUTOCONF;
-+	port->line = dev_id;
-+	port->ops = &arc_serial_pops;
-+
-+	port->fifosize = ARC_UART_TX_FIFO_SIZE;
-+
-+	/*
-+	 * uart_insert_char( ) uses it in decideding whether to ignore a
-+	 * char or not. Explicitly setting it here, removes the subtelty
-+	 */
-+	port->ignore_status_mask = 0;
- 
--	rc = uart_add_one_port(&arc_uart_driver, &arc_uart_ports[dev_id].port);
--	return rc;
-+	return uart_add_one_port(&arc_uart_driver, &arc_uart_ports[dev_id].port);
- }
- 
- static int arc_serial_remove(struct platform_device *pdev)
--- 
-1.8.3.2
+--gZp/6GhZa3TIWvVc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Jun 11, 2014 at 01:16:23PM -0600, Stephen Warren wrote:
+
+> As far as DTs go, there are only 2 users of asahi-kasei, and they were
+> both added well after the prefix was documented, so those seem like
+> plain old bugs.
+
+> But due to ABIness, perhaps we have to support both ak and asahi-kasei.
+> I don't think fixing this implies we should introduce a third option akm
+> though. No DT is using that today.
+
+See my prior comments about how fetching pink with yellow spots would be :)
+
+--gZp/6GhZa3TIWvVc
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTmYswAAoJELSic+t+oim9ZAcQAJQECSHh3R3TbLPF+iL7uIo0
+LXXl4tfi5jHZQWCyCwy/hGl6nM4pnJC6oTsHwLDK1GNk53Vk+S4j19W+qsNc3Rs+
+OrgUgfy7meO89S0GwUdmiuegi6mk2Zf2CC2FGQoLOy+gbRYFwv+BMsP7Sknq5a/W
+AEmy9+LMNRhMVf7tk0L0oVVeZg2M42JXoKfmkeEMFxjCUDXg3wfx2SoQy8nsSxkB
+VhcU1ljDNwvcwx2iTYdcn/iiQ+EDLpo/jor5Fku5vNPYXW0kcUgDLJCDd51hbMFs
+3hRSaWxB97srYf2XZciH3HufulHcDuFmKQvfZt4RL9mtRB+jwFurd2tEyW8CrVwY
+K+zJEbnsJmS3jOQImE0r1iAkHVC55tXe+qd4ArN1H8cQwfTexeCmp6lChxbh/AZB
+fMYCWfjH2rCn7KcFKQ2OxHesUATmGJaah+tg2QoYoLQm3epSUqZv8RbzeAaZYOcN
+iXRVZdJOdJDl5VaGmoGIIF314DQZ4IUff1BYbHekymC4f39mbi0LEVsEcOhS5Vkz
+OXw1hC2sdIjswbFY/gpVWwEZEibta9IlJtw98B+rntBw4U3oSQZ3n/a/RWhHblyf
+htsNHxKm+IDrtvd8A+3jeiWiBV7xslTCSTcuqLKIVcy/XSZ0xN4mYuDuv2vgyofq
++OlaB/vBbrqoN54OwShU
+=Lmbw
+-----END PGP SIGNATURE-----
+
+--gZp/6GhZa3TIWvVc--
