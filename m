@@ -1,53 +1,34 @@
-From: Sachin Kamat <sachin.kamat@samsung.com>
-Subject: Re: [PATCH] ARM: dts: exynos4: fix pwm-cells in pwm node
-Date: Thu, 12 Jun 2014 14:51:42 +0530
-Message-ID: <CAK5sBcGyDJ9n+_ei_p-5ukW0NMW_ytSXv8dGkkMx2TquDFWBOQ@mail.gmail.com>
-References: <1402561392-21702-1-git-send-email-jaewon02.kim@samsung.com>
+From: Jisheng Zhang <jszhang@marvell.com>
+Subject: [PATCH] ARM: dts: berlin2q.dtsi: set L2CC tag and data latency as 2 cycles
+Date: Thu, 12 Jun 2014 17:38:40 +0800
+Message-ID: <1402565920-5636-1-git-send-email-jszhang@marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1402561392-21702-1-git-send-email-jaewon02.kim@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jaewon Kim <jaewon02.kim@samsung.com>
-Cc: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, Sachin Kamat <spk.linux@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, sebastian.hesselbarth@gmail.com, alexandre.belloni@free-electrons.com, antoine.tenart@free-electrons.com
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Jisheng Zhang <jszhang@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jaewon,
+For all BG2Q SoCs, 2 cycles is the best/correct value
 
-On Thu, Jun 12, 2014 at 1:53 PM, Jaewon Kim <jaewon02.kim@samsung.com> wrote:
-> pwm-cells should be 3. Third cell is optional PWM flags.
-> And This flag supported by this binding is PWM_POLARITY_INVERTED
->
-> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4.dtsi |    4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
-> index b8ece4b..b687e53 100644
-> --- a/arch/arm/boot/dts/exynos4.dtsi
-> +++ b/arch/arm/boot/dts/exynos4.dtsi
-> @@ -548,13 +548,13 @@
->                 status = "disabled";
->         };
->
-> -       pwm@139D0000 {
-> +       pwm: pwm@139D0000 {
+Signed-off-by: Jisheng Zhang <jszhang@marvell.com>
+---
+ arch/arm/boot/dts/berlin2q.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-unrelated change.
-
->                 compatible = "samsung,exynos4210-pwm";
->                 reg = <0x139D0000 0x1000>;
->                 interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
->                 clocks = <&clock CLK_PWM>;
->                 clock-names = "timers";
-> -               #pwm-cells = <2>;
-> +               #pwm-cells = <3>;
->                 status = "disabled";
->         };
-
-Otherwise looks good.
-Reviewed-by: Sachin Kamat <sachin.kamat@samsung.com>
-
-Regards,
-Sachin
+diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin2q.dtsi
+index 635a16a..3f95dc5 100644
+--- a/arch/arm/boot/dts/berlin2q.dtsi
++++ b/arch/arm/boot/dts/berlin2q.dtsi
+@@ -90,6 +90,8 @@
+ 			compatible = "arm,pl310-cache";
+ 			reg = <0xac0000 0x1000>;
+ 			cache-level = <2>;
++			arm,data-latency = <2 2 2>;
++			arm,tag-latency = <2 2 2>;
+ 		};
+ 
+ 		scu: snoop-control-unit@ad0000 {
+-- 
+2.0.0
