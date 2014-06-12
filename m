@@ -1,81 +1,51 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 2/4] pinctrl: Add NVIDIA Tegra XUSB pad controller
- support
-Date: Thu, 12 Jun 2014 09:22:21 +0200
-Message-ID: <20140612072220.GC17027@ulmo>
-References: <1402398708-10722-1-git-send-email-thierry.reding@gmail.com>
- <1402398708-10722-2-git-send-email-thierry.reding@gmail.com>
- <CAL1qeaGKUGjSzriDGptR+h23+bS3ZWuStz6koPURCstkFbEjNA@mail.gmail.com>
+From: Tushar Behera <tushar.b@samsung.com>
+Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss
+ always enabled
+Date: Thu, 12 Jun 2014 12:59:23 +0530
+Message-ID: <CAC5m3BwR9WhiiDqUw1A6FjmzAnQ02xCBxOeAaY2nt3CRqTz+oQ@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-2-git-send-email-tushar.b@samsung.com>
+	<20140611165027.6562.64928@quantum>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL1qeaGKUGjSzriDGptR+h23+bS3ZWuStz6koPURCstkFbEjNA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140611165027.6562.64928@quantum>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@linaro.org>, Doug Anderson <dianders@google.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, Jun 11, 2014 at 10:20 PM, Mike Turquette <mturquette@linaro.org> wrote:
+> Quoting Tushar Behera (2014-06-10 22:32:17)
+>> When the output clock of AUDSS mux is disabled, we are getting kernel
+>> oops while doing a clk_get() on other clocks provided by AUDSS. Though
+>> user manual doesn't specify this dependency, we came across this issue
+>> while disabling the parent of AUDSS mux clocks.
+>
+> Hi Tushar,
+>
+> Can you help me understand better what the actual problem is? What is
+> the root cause of the kernel oops?
 
---Sr1nOIr3CvdE5hEN
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Currently AUDSS mux has two parents, XXTI crystal and MAU_EPLL clock.
+As per observation, when the output of AUDSS mux is gated, we are not
+able to do any operation on the clocks provided by MAU block (mostly
+the clocks used by ADMA and audio blocks).
 
-On Wed, Jun 11, 2014 at 01:23:59PM -0700, Andrew Bresticker wrote:
-> On Tue, Jun 10, 2014 at 4:11 AM, Thierry Reding <thierry.reding@gmail.com=
-> wrote:
-[...]
-> > +static int tegra_xusb_padctl_pinconf_group_set(struct pinctrl_dev *pin=
-ctrl,
-> > +                                              unsigned int group,
-> > +                                              unsigned long *configs,
-> > +                                              unsigned int num_configs)
-> > +{
-> > +       struct tegra_xusb_padctl *padctl =3D pinctrl_dev_get_drvdata(pi=
-nctrl);
-> > +       const struct tegra_xusb_padctl_lane *lane;
-> > +       enum tegra_xusb_padctl_param param;
-> > +       unsigned int i;
-> > +       u32 value;
-> > +
-> > +       lane =3D &padctl->soc->lanes[group];
-> > +
-> > +       for (i =3D 0; i < num_configs; i++) {
-> > +               param =3D TEGRA_XUSB_PADCTL_UNPACK_PARAM(configs[i]);
-> > +               value =3D TEGRA_XUSB_PADCTL_UNPACK_VALUE(configs[i]);
-> > +
-> > +               switch (param) {
-> > +               case TEGRA_XUSB_PADCTL_IDDQ:
-> > +                       value =3D padctl_readl(padctl, lane->offset);
->=20
-> This overwrites the configuration value - probably want to use a
-> separate variable for the register value.
+>
+> You mention calling clk_get on child clocks of the AUDSS mux fails, but
+> I cannot imagine why. How can the enable/disable state of a clock affect
+> the ability to clk_get other clocks?
+>
 
-Good catch, thanks.
+I might have a little vogue while updating the commit message
+(mentioning about clk_get which surely is only a s/w operation), but
+there is definitely some issue with handling those clocks under given
+scenario.
 
-Thierry
+I am on leave till end of this week, so I will update you more with
+the logs on Monday.
 
---Sr1nOIr3CvdE5hEN
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTmVUsAAoJEN0jrNd/PrOh+6EP/RUAe4FJ6STniIkgYa/Snsz8
-rtxsLjiXJ2Fk8T8kNgJ6fmZo9txwDHJLD9Z0LmxvVWa22BFQoLTBWr08Z04t+T+J
-dq4pT3H7nUCRr/oQaefUy2tnA6giAJwjBZPqA4R4UAK9WlZh7pMqHnnEt780UUwN
-4Tvd1b4E9ufRLLDPWt634AmVjcAjardhKg4qqvMl7+dGwHND0E3m9AGogn287y+U
-I9u7lUne+eddyl/akrkMr2KPA41smAKhjZ/Bfti6zdRNdPUrxVb1aMkdS6TtnCYF
-7dTR9BoSD6hjz/OAG2uzrJTndqpSrz/kl2NqxI++M9ZgQzzO0+oboB/EXSwdFQh+
-nR1eLk/pGTiHd4zNeV3JL3WQXaEPuiXYoJm+fsNMmOGuGowW2ZEU3NRCDgfrGqVb
-9OYU0m+A5FIC5sD5Rc4DRx0Pgme78SU3ewkszyuR2eq66zhWe3pFbqBr7pac6UtU
-EUaXmZylfJRrlGLHXQ9gRa9E8IFKHVgDYuMvbGol2y4K9IjDSniJBW5I/ljAMpbN
-JfdMJ1r7oPOtNZRJ5lIXetnBVWFsDsSxF7luWw71TTOHzFOrfFmDSG8Dl4q/dDd3
-s60htEBBlSQrg3JtWSkaRm7ngyw4urWix9ImDE/IPwpRNdLE/tuUqD9K7BWhwOG2
-Y7Zjqk86Mc9PGTmViTOh
-=Elqb
------END PGP SIGNATURE-----
-
---Sr1nOIr3CvdE5hEN--
+Thanks,
+--
+Tushar
