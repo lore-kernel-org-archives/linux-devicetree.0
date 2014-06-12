@@ -1,64 +1,72 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [alsa-devel] "ak" vs "asahi-kasei"
-Date: Thu, 12 Jun 2014 12:12:51 +0100
-Message-ID: <20140612111251.GW5099@sirena.org.uk>
-References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>
- <87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>
- <539815E6.2050304@codethink.co.uk>
- <20140611165410.GK5099@sirena.org.uk>
- <CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>
- <20140611170233.GL5099@sirena.org.uk>
- <5398A53D.3020706@wwwdotorg.org>
- <20140611190444.GN5099@sirena.org.uk>
- <5398AB07.4040304@wwwdotorg.org>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: [PATCH V2 00/19] irqchip: crossbar: driver fixes
+Date: Thu, 12 Jun 2014 17:23:08 +0530
+Message-ID: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="gZp/6GhZa3TIWvVc"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <5398AB07.4040304@wwwdotorg.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Ben Dooks <ben.dooks@codethink.co.uk>, Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ALSA Development Mailing List <alsa-devel@alsa-project.org>, Simon <horms@verge.net.au>, Magnus <magnus.damm@gmail.com>, Linux-sh list <linux-sh@vger.kernel.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, r.sricharan@ti.com, tglx@linutronix.de, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
+This series does some cleanups, fixes for handling two interrupts
+getting mapped twice to same crossbar and provides support for
+hardwired IRQ and crossbar definitions.
 
---gZp/6GhZa3TIWvVc
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
+131, 132, 133 are direct wired to hardware blocks bypassing
+crossbar. This quirky implementation is *NOT* supposed to be the
+expectation of crossbar hardware usage. This series adds support
+to represent such hard-wired irqs through DT and avoid generic
+allocation/programming of crossbar in the driver.
 
-On Wed, Jun 11, 2014 at 01:16:23PM -0600, Stephen Warren wrote:
+This way of supporting hard-wired irqs was a result of
+the below discussions.
+http://www.spinics.net/lists/arm-kernel/msg329946.html
 
-> As far as DTs go, there are only 2 users of asahi-kasei, and they were
-> both added well after the prefix was documented, so those seem like
-> plain old bugs.
+Based on 3.15 mainline.
 
-> But due to ABIness, perhaps we have to support both ak and asahi-kasei.
-> I don't think fixing this implies we should introduce a third option akm
-> though. No DT is using that today.
+All the patches are available here
+ git@github.com:Sricharanti/sricharan.git crossbar_updates
 
-See my prior comments about how fetching pink with yellow spots would be :)
+The fixes series[1] earlier posted is merged in to this.
+[1] http://www.spinics.net/lists/arm-kernel/msg328273.html
 
---gZp/6GhZa3TIWvVc
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+[V2] Merged the above series and rebased on 3.15 mainline
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Nishanth Menon (16):
+  irqchip: crossbar: dont use '0' to mark reserved interrupts
+  irqchip: crossbar: check for premapped crossbar before allocating
+  irqchip: crossbar: Skip some irqs from getting mapped to crossbar
+  irqchip: crossbar: Initialise the crossbar with a safe value
+  irqchip: crossbar: Change allocation logic by reversing search for
+    free irqs
+  irqchip: crossbar: remove IS_ERR_VALUE check
+  irqchip: crossbar: fix sparse warnings
+  irqchip: crossbar: fix checkpatch warning
+  irqchip: crossbar: fix kerneldoc warning
+  irqchip: crossbar: fix memory leak incase of invalid entry
+  irqchip: crossbar: return proper error value
+  irqchip: crossbar: change the goto naming
+  irqchip: crossbar: introduce ti,max-crossbar-sources to identify
+    valid crossbar mapping
+  irqchip: crossbar: introduce centralized check for crossbar write
+  Documentation: dt: OMAP: crossbar: add description for interrupt
+    consumer
+  irqchip: crossbar allow for quirky hardware with direct hardwiring of
+    GIC
 
-iQIcBAEBAgAGBQJTmYswAAoJELSic+t+oim9ZAcQAJQECSHh3R3TbLPF+iL7uIo0
-LXXl4tfi5jHZQWCyCwy/hGl6nM4pnJC6oTsHwLDK1GNk53Vk+S4j19W+qsNc3Rs+
-OrgUgfy7meO89S0GwUdmiuegi6mk2Zf2CC2FGQoLOy+gbRYFwv+BMsP7Sknq5a/W
-AEmy9+LMNRhMVf7tk0L0oVVeZg2M42JXoKfmkeEMFxjCUDXg3wfx2SoQy8nsSxkB
-VhcU1ljDNwvcwx2iTYdcn/iiQ+EDLpo/jor5Fku5vNPYXW0kcUgDLJCDd51hbMFs
-3hRSaWxB97srYf2XZciH3HufulHcDuFmKQvfZt4RL9mtRB+jwFurd2tEyW8CrVwY
-K+zJEbnsJmS3jOQImE0r1iAkHVC55tXe+qd4ArN1H8cQwfTexeCmp6lChxbh/AZB
-fMYCWfjH2rCn7KcFKQ2OxHesUATmGJaah+tg2QoYoLQm3epSUqZv8RbzeAaZYOcN
-iXRVZdJOdJDl5VaGmoGIIF314DQZ4IUff1BYbHekymC4f39mbi0LEVsEcOhS5Vkz
-OXw1hC2sdIjswbFY/gpVWwEZEibta9IlJtw98B+rntBw4U3oSQZ3n/a/RWhHblyf
-htsNHxKm+IDrtvd8A+3jeiWiBV7xslTCSTcuqLKIVcy/XSZ0xN4mYuDuv2vgyofq
-+OlaB/vBbrqoN54OwShU
-=Lmbw
------END PGP SIGNATURE-----
+Rajendra Nayak (1):
+  irqchip: crossbar: DRA7: Fix unused crossbar list
 
---gZp/6GhZa3TIWvVc--
+Sricharan R (2):
+  irqchip: crossbar: set cb pointer to null in case of error
+  irqchip: crossbar: Add kerneldoc for crossbar_domain_unmap callback
+
+ .../devicetree/bindings/arm/omap/crossbar.txt      |   27 +++
+ drivers/irqchip/irq-crossbar.c                     |  193 +++++++++++++++++---
+ 2 files changed, 191 insertions(+), 29 deletions(-)
+
+-- 
+1.7.9.5
