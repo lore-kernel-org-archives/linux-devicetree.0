@@ -1,137 +1,108 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv4 3/5] mtd: gpmi: make blockmark swapping optional
-Date: Thu, 12 Jun 2014 15:20:43 +0200
-Message-ID: <1402579245-13377-4-git-send-email-LW@KARO-electronics.de>
-References: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-2-git-send-email-LW@KARO-electronics.de>
- <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
+From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
+Date: Thu, 12 Jun 2014 19:05:24 +0530
+Message-ID: <5399AC9C.4080602@ti.com>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-9-git-send-email-r.sricharan@ti.com> <20140612131042.GU8664@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1402579245-13377-3-git-send-email-LW@KARO-electronics.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>, Boris BREZILLON <b.brezillon.dev@gmail.com>, Ezequie
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140612131042.GU8664-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-V2l0aCBhIGZsYXNoLWJhc2VkIEJCVCB0aGVyZSBpcyBubyByZWFzb24gdG8gbW92ZSB0aGUgRmFj
-dG9yeSBCYWQKQmxvY2sgTWFya2VyIGZyb20gdGhlIGRhdGEgYXJlYSBidWZmZXIgKHRvIHdoZXJl
-IGl0IGlzIG1hcHBlZCBieSB0aGUKR1BNSSBOQU5EIGNvbnRyb2xsZXIpIHRvIHRoZSBPT0IgYnVm
-ZmVyLiBUaHVzLCBtYWtlIHRoaXMgZmVhdHVyZQpjb25maWd1cmFibGUgdmlhIERULiBUaGlzIGlz
-IHJlcXVpcmVkIGZvciB0aGUgS2EtUm8gZWxlY3Ryb25pY3MKcGxhdGZvcm1zLgoKSW4gdGhlIG9y
-aWdpbmFsIGNvZGUgJ3RoaXMtPnN3YXBfYmxvY2tfbWFyaycgd2FzIHN5bm9ueW1vdXMgd2l0aAon
-IUdQTUlfSVNfTVgyMygpJywgc28gdXNlIHRoZSBsYXR0ZXIgYXQgdGhlIHJlbGV2YW50IHBsYWNl
-cy4KClNpZ25lZC1vZmYtYnk6IExvdGhhciBXYcOfbWFubiA8TFdAS0FSTy1lbGVjdHJvbmljcy5k
-ZT4KLS0tCiAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dCAgICAgICAg
-ICB8ICAgMTAgKysrKwogZHJpdmVycy9tdGQvbmFuZC9ncG1pLW5hbmQvZ3BtaS1uYW5kLmMgICAg
-ICAgICAgICAgfCAgIDUxICsrKysrKysrKysrKy0tLS0tLS0tCiAyIGZpbGVzIGNoYW5nZWQsIDQy
-IGluc2VydGlvbnMoKyksIDE5IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dCBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvZ3BtaS1uYW5kLnR4dAppbmRleCA0NThkNTk2Li5hMDEx
-ZmRmIDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2dw
-bWktbmFuZC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL210ZC9n
-cG1pLW5hbmQudHh0CkBAIC0yNSw2ICsyNSwxNiBAQCBPcHRpb25hbCBwcm9wZXJ0aWVzOgogICAg
-ICAgICAgICAgICAgICAgICAgICBkaXNjb3ZlcmFibGUgb3IgdGhpcyBwcm9wZXJ0eSBpcyBub3Qg
-ZW5hYmxlZCwKICAgICAgICAgICAgICAgICAgICAgICAgdGhlIHNvZnR3YXJlIG1heSBjaG9vc2Vz
-IGFuIGltcGxlbWVudGF0aW9uLWRlZmluZWQKICAgICAgICAgICAgICAgICAgICAgICAgRUNDIHNj
-aGVtZS4KKyAgLSBmc2wsbm8tYmxvY2ttYXJrLXN3YXA6IERvbid0IHN3YXAgdGhlIGJhZCBibG9j
-ayBtYXJrZXIgZnJvbSB0aGUgT09CCisgICAgICAgICAgICAgICAgICAgICAgIGFyZWEgd2l0aCB0
-aGUgYnl0ZSBpbiB0aGUgZGF0YSBhcmVhIGJ1dCByZWx5IG9uIHRoZQorICAgICAgICAgICAgICAg
-ICAgICAgICBmbGFzaCBiYXNlZCBCQlQgZm9yIGlkZW50aWZ5aW5nIGJhZCBibG9ja3MuCisgICAg
-ICAgICAgICAgICAgICAgICAgIE5PVEU6IHRoaXMgaXMgb25seSB2YWxpZCBpbiBjb25qdW5jdGlv
-biB3aXRoCisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICduYW5kLW9uLWZsYXNoLWJidCcu
-CisgICAgICAgICAgICAgICAgICAgICAgIFdBUk5JTkc6IG9uIGkuTVgyOCBibG9ja21hcmsgc3dh
-cHBpbmcgY2Fubm90IGJlCisgICAgICAgICAgICAgICAgICAgICAgIGRpc2FibGVkIGZvciB0aGUg
-Qm9vdFJPTSBpbiB0aGUgRkNCLiBUaHVzLAorICAgICAgICAgICAgICAgICAgICAgICBwYXJ0aXRp
-b25zIHdyaXR0ZW4gZnJvbSBMaW51eCB3aXRoIHRoaXMgZmVhdHVyZQorICAgICAgICAgICAgICAg
-ICAgICAgICB0dXJuZWQgb24gbWF5IG5vdCBiZSBhY2Nlc3NpYmxlIGJ5IHRoZSBCb290Uk9NCisg
-ICAgICAgICAgICAgICAgICAgICAgIGNvZGUuCiAKIFRoZSBkZXZpY2UgdHJlZSBtYXkgb3B0aW9u
-YWxseSBjb250YWluIHN1Yi1ub2RlcyBkZXNjcmliaW5nIHBhcnRpdGlvbnMgb2YgdGhlCiBhZGRy
-ZXNzIHNwYWNlLiBTZWUgcGFydGl0aW9uLnR4dCBmb3IgbW9yZSBkZXRhaWwuCmRpZmYgLS1naXQg
-YS9kcml2ZXJzL210ZC9uYW5kL2dwbWktbmFuZC9ncG1pLW5hbmQuYyBiL2RyaXZlcnMvbXRkL25h
-bmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCmluZGV4IDE2YTUzM2EuLjk1OWNiOWIgMTAwNjQ0Ci0t
-LSBhL2RyaXZlcnMvbXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCisrKyBiL2RyaXZlcnMv
-bXRkL25hbmQvZ3BtaS1uYW5kL2dwbWktbmFuZC5jCkBAIC0xMDgxLDYgKzEwODEsNyBAQCBzdGF0
-aWMgaW50IGdwbWlfZWNjX3JlYWRfc3VicGFnZShzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgc3RydWN0
-IG5hbmRfY2hpcCAqY2hpcCwKIAlpbnQgZmlyc3QsIGxhc3QsIG1hcmtlcl9wb3M7CiAJaW50IGVj
-Y19wYXJpdHlfc2l6ZTsKIAlpbnQgY29sID0gMDsKKwlpbnQgb2xkX3N3YXBfYmxvY2tfbWFyayA9
-IHRoaXMtPnN3YXBfYmxvY2tfbWFyazsKIAogCS8qIFRoZSBzaXplIG9mIEVDQyBwYXJpdHkgKi8K
-IAllY2NfcGFyaXR5X3NpemUgPSBnZW8tPmdmX2xlbiAqIGdlby0+ZWNjX3N0cmVuZ3RoIC8gODsK
-QEAgLTEwODksMTcgKzEwOTAsMjEgQEAgc3RhdGljIGludCBncG1pX2VjY19yZWFkX3N1YnBhZ2Uo
-c3RydWN0IG10ZF9pbmZvICptdGQsIHN0cnVjdCBuYW5kX2NoaXAgKmNoaXAsCiAJZmlyc3QgPSBv
-ZmZzIC8gc2l6ZTsKIAlsYXN0ID0gKG9mZnMgKyBsZW4gLSAxKSAvIHNpemU7CiAKLQkvKgotCSAq
-IEZpbmQgdGhlIGNodW5rIHdoaWNoIGNvbnRhaW5zIHRoZSBCbG9jayBNYXJrZXIuIElmIHRoaXMg
-Y2h1bmsgaXMKLQkgKiBpbiB0aGUgcmFuZ2Ugb2YgW2ZpcnN0LCBsYXN0XSwgd2UgaGF2ZSB0byBy
-ZWFkIG91dCB0aGUgd2hvbGUgcGFnZS4KLQkgKiBXaHk/IHNpbmNlIHdlIGhhZCBzd2FwcGVkIHRo
-ZSBkYXRhIGF0IHRoZSBwb3NpdGlvbiBvZiBCbG9jayBNYXJrZXIKLQkgKiB0byB0aGUgbWV0YWRh
-dGEgd2hpY2ggaXMgYm91bmQgd2l0aCB0aGUgY2h1bmsgMC4KLQkgKi8KLQltYXJrZXJfcG9zID0g
-Z2VvLT5ibG9ja19tYXJrX2J5dGVfb2Zmc2V0IC8gc2l6ZTsKLQlpZiAobGFzdCA+PSBtYXJrZXJf
-cG9zICYmIGZpcnN0IDw9IG1hcmtlcl9wb3MpIHsKLQkJZGV2X2RiZyh0aGlzLT5kZXYsICJwYWdl
-OiVkLCBmaXJzdDolZCwgbGFzdDolZCwgbWFya2VyIGF0OiVkXG4iLAorCWlmICh0aGlzLT5zd2Fw
-X2Jsb2NrX21hcmspIHsKKwkJLyoKKwkJICogRmluZCB0aGUgY2h1bmsgd2hpY2ggY29udGFpbnMg
-dGhlIEJsb2NrIE1hcmtlci4KKwkJICogSWYgdGhpcyBjaHVuayBpcyBpbiB0aGUgcmFuZ2Ugb2Yg
-W2ZpcnN0LCBsYXN0XSwKKwkJICogd2UgaGF2ZSB0byByZWFkIG91dCB0aGUgd2hvbGUgcGFnZS4K
-KwkJICogV2h5PyBzaW5jZSB3ZSBoYWQgc3dhcHBlZCB0aGUgZGF0YSBhdCB0aGUgcG9zaXRpb24g
-b2YgQmxvY2sKKwkJICogTWFya2VyIHRvIHRoZSBtZXRhZGF0YSB3aGljaCBpcyBib3VuZCB3aXRo
-IHRoZSBjaHVuayAwLgorCQkgKi8KKwkJbWFya2VyX3BvcyA9IGdlby0+YmxvY2tfbWFya19ieXRl
-X29mZnNldCAvIHNpemU7CisJCWlmIChsYXN0ID49IG1hcmtlcl9wb3MgJiYgZmlyc3QgPD0gbWFy
-a2VyX3BvcykgeworCQkJZGV2X2RiZyh0aGlzLT5kZXYsCisJCQkJInBhZ2U6JWQsIGZpcnN0OiVk
-LCBsYXN0OiVkLCBtYXJrZXIgYXQ6JWRcbiIsCiAJCQkJcGFnZSwgZmlyc3QsIGxhc3QsIG1hcmtl
-cl9wb3MpOwotCQlyZXR1cm4gZ3BtaV9lY2NfcmVhZF9wYWdlKG10ZCwgY2hpcCwgYnVmLCAwLCBw
-YWdlKTsKKwkJCXJldHVybiBncG1pX2VjY19yZWFkX3BhZ2UobXRkLCBjaGlwLCBidWYsIDAsIHBh
-Z2UpOworCQl9CiAJfQogCiAJbWV0YSA9IGdlby0+bWV0YWRhdGFfc2l6ZTsKQEAgLTExNDUsNyAr
-MTE1MCw3IEBAIHN0YXRpYyBpbnQgZ3BtaV9lY2NfcmVhZF9zdWJwYWdlKHN0cnVjdCBtdGRfaW5m
-byAqbXRkLCBzdHJ1Y3QgbmFuZF9jaGlwICpjaGlwLAogCXdyaXRlbChyMV9vbGQsIGJjaF9yZWdz
-ICsgSFdfQkNIX0ZMQVNIMExBWU9VVDApOwogCXdyaXRlbChyMl9vbGQsIGJjaF9yZWdzICsgSFdf
-QkNIX0ZMQVNIMExBWU9VVDEpOwogCXRoaXMtPmJjaF9nZW9tZXRyeSA9IG9sZF9nZW87Ci0JdGhp
-cy0+c3dhcF9ibG9ja19tYXJrID0gdHJ1ZTsKKwl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSBvbGRf
-c3dhcF9ibG9ja19tYXJrOwogCiAJcmV0dXJuIG1heF9iaXRmbGlwczsKIH0KQEAgLTEzMDksMTAg
-KzEzMTQsMTAgQEAgc3RhdGljIGludCBncG1pX2VjY19yZWFkX29vYihzdHJ1Y3QgbXRkX2luZm8g
-Km10ZCwgc3RydWN0IG5hbmRfY2hpcCAqY2hpcCwKIAogCS8qCiAJICogTm93LCB3ZSB3YW50IHRv
-IG1ha2Ugc3VyZSB0aGUgYmxvY2sgbWFyayBpcyBjb3JyZWN0LiBJbiB0aGUKLQkgKiBTd2FwcGlu
-Zy9SYXcgY2FzZSwgd2UgYWxyZWFkeSBoYXZlIGl0LiBPdGhlcndpc2UsIHdlIG5lZWQgdG8KLQkg
-KiBleHBsaWNpdGx5IHJlYWQgaXQuCisJICogbm9uLXRyYW5zY3JpYmluZyBjYXNlICghR1BNSV9J
-U19NWDIzKCkpLCB3ZSBhbHJlYWR5IGhhdmUgaXQuCisJICogT3RoZXJ3aXNlLCB3ZSBuZWVkIHRv
-IGV4cGxpY2l0bHkgcmVhZCBpdC4KIAkgKi8KLQlpZiAoIXRoaXMtPnN3YXBfYmxvY2tfbWFyaykg
-eworCWlmIChHUE1JX0lTX01YMjModGhpcykpIHsKIAkJLyogUmVhZCB0aGUgYmxvY2sgbWFyayBp
-bnRvIHRoZSBmaXJzdCBieXRlIG9mIHRoZSBPT0IgYnVmZmVyLiAqLwogCQljaGlwLT5jbWRmdW5j
-KG10ZCwgTkFORF9DTURfUkVBRDAsIDAsIHBhZ2UpOwogCQljaGlwLT5vb2JfcG9pWzBdID0gY2hp
-cC0+cmVhZF9ieXRlKG10ZCk7CkBAIC0xMzUzLDcgKzEzNTgsNyBAQCBzdGF0aWMgaW50IGdwbWlf
-YmxvY2tfbWFya2JhZChzdHJ1Y3QgbXRkX2luZm8gKm10ZCwgbG9mZl90IG9mcykKIAljaGlwbnIg
-PSAoaW50KShvZnMgPj4gY2hpcC0+Y2hpcF9zaGlmdCk7CiAJY2hpcC0+c2VsZWN0X2NoaXAobXRk
-LCBjaGlwbnIpOwogCi0JY29sdW1uID0gdGhpcy0+c3dhcF9ibG9ja19tYXJrID8gbXRkLT53cml0
-ZXNpemUgOiAwOworCWNvbHVtbiA9ICFHUE1JX0lTX01YMjModGhpcykgPyBtdGQtPndyaXRlc2l6
-ZSA6IDA7CiAKIAkvKiBXcml0ZSB0aGUgYmxvY2sgbWFyay4gKi8KIAlibG9ja19tYXJrID0gdGhp
-cy0+ZGF0YV9idWZmZXJfZG1hOwpAQCAtMTY0OSw5ICsxNjU0LDYgQEAgc3RhdGljIGludCBncG1p
-X2luaXRfbGFzdChzdHJ1Y3QgZ3BtaV9uYW5kX2RhdGEgKnRoaXMpCiAJc3RydWN0IGJjaF9nZW9t
-ZXRyeSAqYmNoX2dlbyA9ICZ0aGlzLT5iY2hfZ2VvbWV0cnk7CiAJaW50IHJldDsKIAotCS8qIFNl
-dCB1cCBzd2FwX2Jsb2NrX21hcmssIG11c3QgYmUgc2V0IGJlZm9yZSB0aGUgZ3BtaV9zZXRfZ2Vv
-bWV0cnkoKSAqLwotCXRoaXMtPnN3YXBfYmxvY2tfbWFyayA9ICFHUE1JX0lTX01YMjModGhpcyk7
-Ci0KIAkvKiBTZXQgdXAgdGhlIG1lZGl1bSBnZW9tZXRyeSAqLwogCXJldCA9IGdwbWlfc2V0X2dl
-b21ldHJ5KHRoaXMpOwogCWlmIChyZXQpCkBAIC0xNzE1LDkgKzE3MTcsMjAgQEAgc3RhdGljIGlu
-dCBncG1pX25hbmRfaW5pdChzdHJ1Y3QgZ3BtaV9uYW5kX2RhdGEgKnRoaXMpCiAJY2hpcC0+YmFk
-YmxvY2tfcGF0dGVybgk9ICZncG1pX2JidF9kZXNjcjsKIAljaGlwLT5ibG9ja19tYXJrYmFkCT0g
-Z3BtaV9ibG9ja19tYXJrYmFkOwogCWNoaXAtPm9wdGlvbnMJCXw9IE5BTkRfTk9fU1VCUEFHRV9X
-UklURTsKLQlpZiAob2ZfZ2V0X25hbmRfb25fZmxhc2hfYmJ0KHRoaXMtPmRldi0+b2Zfbm9kZSkp
-CisKKwkvKiBTZXQgdXAgc3dhcF9ibG9ja19tYXJrLCBtdXN0IGJlIHNldCBiZWZvcmUgdGhlIGdw
-bWlfc2V0X2dlb21ldHJ5KCkgKi8KKwl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPSAhR1BNSV9JU19N
-WDIzKHRoaXMpOworCisJaWYgKG9mX2dldF9uYW5kX29uX2ZsYXNoX2JidCh0aGlzLT5kZXYtPm9m
-X25vZGUpKSB7CiAJCWNoaXAtPmJidF9vcHRpb25zIHw9IE5BTkRfQkJUX1VTRV9GTEFTSCB8IE5B
-TkRfQkJUX05PX09PQjsKIAorCQlpZiAob2ZfcHJvcGVydHlfcmVhZF9ib29sKHRoaXMtPmRldi0+
-b2Zfbm9kZSwKKwkJCQkJCSJmc2wsbm8tYmxvY2ttYXJrLXN3YXAiKSkKKwkJCXRoaXMtPnN3YXBf
-YmxvY2tfbWFyayA9IGZhbHNlOworCX0KKwlkZXZfZGJnKHRoaXMtPmRldiwgIkJsb2NrbWFyayBz
-d2FwcGluZyAlc2FibGVkXG4iLAorCQl0aGlzLT5zd2FwX2Jsb2NrX21hcmsgPyAiZW4iIDogImRp
-cyIpOworCiAJLyoKIAkgKiBBbGxvY2F0ZSBhIHRlbXBvcmFyeSBETUEgYnVmZmVyIGZvciByZWFk
-aW5nIElEIGluIHRoZQogCSAqIG5hbmRfc2Nhbl9pZGVudCgpLgotLSAKMS43LjEwLjQKCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2Vy
-bmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0
-cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVs
-Cg==
+Hi Jason,
+
+On Thursday 12 June 2014 06:40 PM, Jason Cooper wrote:
+> On Thu, Jun 12, 2014 at 05:23:16PM +0530, Sricharan R wrote:
+>> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>>
+>> remove un-necessary space in function pointer.
+>>
+>> Fixes checkpatch warning:
+>> WARNING: Unnecessary space before function pointer arguments
+>>  #37: FILE: drivers/irqchip/irq-crossbar.c:37:
+>>  +	void (*write) (int, int);
+>>
+>> WARNING: Missing a blank line after declarations
+>> +	int *register_offsets;
+>> +	void (*write)(int, int);
+>>
+>> WARNING: Prefer kcalloc over kzalloc with multiply
+>> +	cb->irq_map = kzalloc(max * sizeof(int), GFP_KERNEL);
+>>
+>> WARNING: Prefer kcalloc over kzalloc with multiply
+>> +	cb->register_offsets = kzalloc(max * sizeof(int), GFP_KERNEL);
+>>
+>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> ---
+>>  drivers/irqchip/irq-crossbar.c |    7 ++++---
+>>  1 file changed, 4 insertions(+), 3 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+>> index 5da9d36..58790d4 100644
+>> --- a/drivers/irqchip/irq-crossbar.c
+>> +++ b/drivers/irqchip/irq-crossbar.c
+>> @@ -34,7 +34,8 @@ struct crossbar_device {
+>>  	uint *irq_map;
+>>  	void __iomem *crossbar_base;
+>>  	int *register_offsets;
+>> -	void (*write) (int, int);
+>> +
+>> +	void (*write)(int, int);
+> 
+> The empty line here looks bogus to me.  Did you re-run checkpatch after
+> fixing the unnecessary space to see if it still complained about having
+> a 'blank line after declarations'?
+> 
+ Yes, it still complains even after fixing unnecessary space.
+
+WARNING: Missing a blank line after declarations
+#37: FILE: ./drivers/irqchip/irq-crossbar.c:37:
++	int *register_offsets;
++	void (*write)(int, int);
+
+>>  };
+>>  
+>>  /**
+>> @@ -150,7 +151,7 @@ static int __init crossbar_of_init(struct device_node *node,
+>>  		goto err1;
+>>  
+>>  	of_property_read_u32(node, "ti,max-irqs", &max);
+>> -	cb->irq_map = kzalloc(max * sizeof(int), GFP_KERNEL);
+>> +	cb->irq_map = kcalloc(max, sizeof(int), GFP_KERNEL);
+>>  	if (!cb->irq_map)
+>>  		goto err2;
+>>  
+>> @@ -176,7 +177,7 @@ static int __init crossbar_of_init(struct device_node *node,
+>>  		}
+>>  	}
+>>  
+>> -	cb->register_offsets = kzalloc(max * sizeof(int), GFP_KERNEL);
+>> +	cb->register_offsets = kcalloc(max, sizeof(int), GFP_KERNEL);
+>>  	if (!cb->register_offsets)
+>>  		goto err3;
+> 
+> I'm generally opposed to these sorts of checkpatch patches, especially
+> when they are just warnings.  It's great for a new driver in the staging
+> tree, but it makes backporting future bugfixes that much harder when
+> drivers have been live in mainline.
+> 
+> If, in the future, you're changing code in this area, go ahead and
+> convert to kcalloc(), but I wouldn't do a separate patch for this kind
+> of thing.
+> 
+> Honestly, I would just drop this patch and not worry about it.
+> 
+  Ok, but i just hope that there may not be real needs to make changes
+  for this driver in future. So if that's the case then it might be 
+  better to fix it once for now.
+
+Regards,
+ Sricharan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
