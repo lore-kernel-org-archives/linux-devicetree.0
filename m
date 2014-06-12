@@ -1,35 +1,28 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v2 3/3] arm: tegra: initial support for apalis t30
-Date: Thu, 12 Jun 2014 13:45:27 -0600
-Message-ID: <539A0357.6070403@wwwdotorg.org>
-References: <dadd07f9ed693d6bcf541764b62a2caf4cc38630.1402353627.git.marcel@ziswiler.com> <95c131deb3e410e8defc9fe125dc662bdb276310.1402353627.git.marcel@ziswiler.com>
+From: Bjorn Andersson <bjorn@kryo.se>
+Subject: Re: [PATCH v2 0/3] Qualcomm Resource Power Manager driver
+Date: Thu, 12 Jun 2014 13:06:06 -0700
+Message-ID: <CAJAp7OgSKBqu1Xi0WFWCj=yqp+1PJcBtb9d5WCB8Lgo_EuspJg@mail.gmail.com>
+References: <1402594402-30374-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <95c131deb3e410e8defc9fe125dc662bdb276310.1402353627.git.marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1402594402-30374-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/09/2014 04:52 PM, Marcel Ziswiler wrote:
-> This patch adds the device tree to support Toradex Apalis T30, a
-> computer on module which can be used on different carrier boards.
+On Thu, Jun 12, 2014 at 10:33 AM, Bjorn Andersson
+<bjorn.andersson@sonymobile.com> wrote:
+> Changes since v1:
+>   - Moved rpm driver to drivers/soc
+[...]
+>  include/linux/mfd/qcom_rpm.h                       |  12 +
 
-This looks OK; I'll apply once the merge window is done.
+Missed the last one in the move...
 
-> diff --git a/arch/arm/boot/dts/tegra30-apalis-eval.dts b/arch/arm/boot/dts/tegra30-apalis-eval.dts
+s/mfd/soc/
 
-> +	pwmleds {
-...
-> +		pwm3 {
-> +		pwm2 {
-> +		pwm1 {
+Will wait a little before sending out v3, to allow time for other comments.
 
-Those still aren't sorted. I'll try and remember to fix that when I
-apply it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+// Bjorn
