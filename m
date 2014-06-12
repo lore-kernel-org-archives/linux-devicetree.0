@@ -1,108 +1,109 @@
-From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
-Date: Thu, 12 Jun 2014 19:05:24 +0530
-Message-ID: <5399AC9C.4080602@ti.com>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-9-git-send-email-r.sricharan@ti.com> <20140612131042.GU8664@titan.lakedaemon.net>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V2 12/19] irqchip: crossbar: return proper error value
+Date: Thu, 12 Jun 2014 09:39:17 -0400
+Message-ID: <20140612133917.GY8664@titan.lakedaemon.net>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+ <1402574007-13987-13-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140612131042.GU8664-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402574007-13987-13-git-send-email-r.sricharan@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+On Thu, Jun 12, 2014 at 05:23:20PM +0530, Sricharan R wrote:
+> From: Nishanth Menon <nm@ti.com>
+> 
+> crossbar_of_init always returns -ENOMEM in case of errors, return proper
+> error results in case of failures.
 
-On Thursday 12 June 2014 06:40 PM, Jason Cooper wrote:
-> On Thu, Jun 12, 2014 at 05:23:16PM +0530, Sricharan R wrote:
->> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->>
->> remove un-necessary space in function pointer.
->>
->> Fixes checkpatch warning:
->> WARNING: Unnecessary space before function pointer arguments
->>  #37: FILE: drivers/irqchip/irq-crossbar.c:37:
->>  +	void (*write) (int, int);
->>
->> WARNING: Missing a blank line after declarations
->> +	int *register_offsets;
->> +	void (*write)(int, int);
->>
->> WARNING: Prefer kcalloc over kzalloc with multiply
->> +	cb->irq_map = kzalloc(max * sizeof(int), GFP_KERNEL);
->>
->> WARNING: Prefer kcalloc over kzalloc with multiply
->> +	cb->register_offsets = kzalloc(max * sizeof(int), GFP_KERNEL);
->>
->> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->> ---
->>  drivers/irqchip/irq-crossbar.c |    7 ++++---
->>  1 file changed, 4 insertions(+), 3 deletions(-)
->>
->> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
->> index 5da9d36..58790d4 100644
->> --- a/drivers/irqchip/irq-crossbar.c
->> +++ b/drivers/irqchip/irq-crossbar.c
->> @@ -34,7 +34,8 @@ struct crossbar_device {
->>  	uint *irq_map;
->>  	void __iomem *crossbar_base;
->>  	int *register_offsets;
->> -	void (*write) (int, int);
->> +
->> +	void (*write)(int, int);
-> 
-> The empty line here looks bogus to me.  Did you re-run checkpatch after
-> fixing the unnecessary space to see if it still complained about having
-> a 'blank line after declarations'?
-> 
- Yes, it still complains even after fixing unnecessary space.
+Please describe what the other possible failures are and how the changes
+are more correct.
 
-WARNING: Missing a blank line after declarations
-#37: FILE: ./drivers/irqchip/irq-crossbar.c:37:
-+	int *register_offsets;
-+	void (*write)(int, int);
+> 
+> Signed-off-by: Nishanth Menon <nm@ti.com>
+> ---
+>  drivers/irqchip/irq-crossbar.c |   15 ++++++++++++---
+>  1 file changed, 12 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+> index fea3e5d..524e6e9 100644
+> --- a/drivers/irqchip/irq-crossbar.c
+> +++ b/drivers/irqchip/irq-crossbar.c
+> @@ -140,20 +140,26 @@ static const struct irq_domain_ops routable_irq_domain_ops = {
+>  static int __init crossbar_of_init(struct device_node *node,
+>  				   const struct crossbar_data *data)
+>  {
+> -	int i, size, max, reserved = 0, entry, safe_map;
+> +	int i, size, max = 0, reserved = 0, entry, safe_map;
+>  	const __be32 *irqsr;
+>  	const int *irqsk = NULL;
+> +	int ret = -ENOMEM;
+>  
+>  	cb = kzalloc(sizeof(*cb), GFP_KERNEL);
+>  
+>  	if (!cb)
+> -		return -ENOMEM;
+> +		return ret;
+>  
+>  	cb->crossbar_base = of_iomap(node, 0);
+>  	if (!cb->crossbar_base)
+>  		goto err1;
+>  
+>  	of_property_read_u32(node, "ti,max-irqs", &max);
+> +	if (!max) {
+> +		pr_err("missing 'ti,max-irqs' property\n");
+> +		ret = -EINVAL;
+> +		goto err2;
+> +	}
+>  	cb->irq_map = kcalloc(max, sizeof(int), GFP_KERNEL);
+>  	if (!cb->irq_map)
+>  		goto err2;
+> @@ -174,6 +180,7 @@ static int __init crossbar_of_init(struct device_node *node,
+>  						   i, &entry);
+>  			if (entry > max) {
+>  				pr_err("Invalid reserved entry\n");
+> +				ret = -EINVAL;
+>  				goto err3;
+>  			}
+>  			cb->irq_map[entry] = IRQ_RESERVED;
+> @@ -198,6 +205,7 @@ static int __init crossbar_of_init(struct device_node *node,
+>  		break;
+>  	default:
+>  		pr_err("Invalid reg-size property\n");
+> +		ret = -EINVAL;
+>  		goto err4;
+>  		break;
+>  	}
+> @@ -225,6 +233,7 @@ static int __init crossbar_of_init(struct device_node *node,
+>  
+>  			if (entry > max) {
+>  				pr_err("Invalid skip entry\n");
+> +				ret = -EINVAL;
+>  				goto err4;
+>  			}
+>  			cb->irq_map[entry] = IRQ_SKIP;
+> @@ -250,7 +259,7 @@ err2:
+>  	iounmap(cb->crossbar_base);
+>  err1:
+>  	kfree(cb);
+> -	return -ENOMEM;
+> +	return ret;
+>  }
 
->>  };
->>  
->>  /**
->> @@ -150,7 +151,7 @@ static int __init crossbar_of_init(struct device_node *node,
->>  		goto err1;
->>  
->>  	of_property_read_u32(node, "ti,max-irqs", &max);
->> -	cb->irq_map = kzalloc(max * sizeof(int), GFP_KERNEL);
->> +	cb->irq_map = kcalloc(max, sizeof(int), GFP_KERNEL);
->>  	if (!cb->irq_map)
->>  		goto err2;
->>  
->> @@ -176,7 +177,7 @@ static int __init crossbar_of_init(struct device_node *node,
->>  		}
->>  	}
->>  
->> -	cb->register_offsets = kzalloc(max * sizeof(int), GFP_KERNEL);
->> +	cb->register_offsets = kcalloc(max, sizeof(int), GFP_KERNEL);
->>  	if (!cb->register_offsets)
->>  		goto err3;
-> 
-> I'm generally opposed to these sorts of checkpatch patches, especially
-> when they are just warnings.  It's great for a new driver in the staging
-> tree, but it makes backporting future bugfixes that much harder when
-> drivers have been live in mainline.
-> 
-> If, in the future, you're changing code in this area, go ahead and
-> convert to kcalloc(), but I wouldn't do a separate patch for this kind
-> of thing.
-> 
-> Honestly, I would just drop this patch and not worry about it.
-> 
-  Ok, but i just hope that there may not be real needs to make changes
-  for this driver in future. So if that's the case then it might be 
-  better to fix it once for now.
+So, where is the change to the successful initialization?  Shouldn't it
+now set ret = 0?
 
-Regards,
- Sricharan
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This whole function seems to be a hodge-podge of different error
+handling styles, which led to the memory leak fixed earlier in this
+series.
+
+Please go over this function, choose sane labels, and consolidate _all_
+returns to the end of the function.
+
+thx,
+
+Jason.
