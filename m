@@ -1,47 +1,142 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH] of: Add vendor 2nd prefix for Asahi Kasei Corp
-Date: Thu, 12 Jun 2014 09:33:04 -0600
-Message-ID: <5399C830.8070607@wwwdotorg.org>
-References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>	<87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>	<539815E6.2050304@codethink.co.uk>	<20140611165410.GK5099@sirena.org.uk>	<CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>	<20140611170233.GL5099@sirena.org.uk>	<5398A53D.3020706@wwwdotorg.org>	<20140611190444.GN5099@sirena.org.uk>	<5398AB07.4040304@wwwdotorg.org> <87sinbdk44.wl%kuninori.morimoto.gx@renesas.com>
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
+Subject: [PATCH v8 0/6] efuse driver for Tegra
+Date: Thu, 12 Jun 2014 18:36:34 +0300
+Message-ID: <1402587400-1544-1-git-send-email-pdeschrijver@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <87sinbdk44.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter De Schrijver <pdeschrijver@nvidia.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Paul Gortmaker <paul.gortmaker@windriver.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Herbert Xu <herbert@gondor.apana.org.au>
 List-Id: devicetree@vger.kernel.org
 
-On 06/11/2014 06:53 PM, Kuninori Morimoto wrote:
-> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-> 
-> Current vendor-prefixes.txt already has
-> "ak" prefix for Asahi Kasei Corp by
-> ae8c4209af2cec065fef15d200a42a04130799f7
-> (of: Add vendor prefix for Asahi Kasei Corp.)
-> 
-> It went through the appropriate review process,
-> and is already in use.
-> But, almost all Asahi Kasei chip driver is
-> using "asahi-kasei" prefix today.
+This driver allows userspace to read the raw efuse data. Its userspace
+interface is modelled after the sunxi_sid driver which provides similar
+functionality for some Allwinner SoCs. It has been tested on
+Tegra20 (ventana), Tegra30 (beaverboard), Tegra114 (dalmore) and
+Tegra124 (jetson TK1).
 
-I'm fine with this patch, but just wanted to comment on this part of the
-commit description:
+Changes since v1:
 
-What is in the drivers isn't relevant; that's not what drives the ABI.
-The issue is that some *DTs* use ak and some use asahi-kasei, so both
-those need to be supported.
+* Add documentation for sysfs interface
+* Cleanup messages
 
-That said, we should document which one of the two prefixes is
-preferred, and use this for any new AK binding.
+Changes since v2:
 
-It would also be nice to ensure the preferred prefix is in all drivers'
-of_match_tables, and remove the deprecated prefix from all drivers'
-of_match_tables *except* where there's already a DT file that references
-the deprecated vendor prefix.
+* Incorporate early fuse code
+* Remove module support
+* Make driver always build when Tegra platform is selected
+* Add DT binding document
+* Address comments on v2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v3:
+
+* Document sysfs file format
+* Added apbmisc DT node for access to the apbmisc registers
+* Address comments on v3
+
+Changes since v4:
+
+* Provide fallback to hardcoded 0x70000800 in case the apbmisc DT node is
+  missing. This is exactly what the current code does and prevents a system
+  crash in that case due to an invalid memory access by tegra_read_chipid()
+* Added tegra_fuse_readl() function for drivers to read calibration data
+
+Changes since v5:
+
+* Fix kernel panic when booting on Tegra20 A03 with a missing fuse DT node
+* Incorporate review comments
+
+Changes since v6:
+
+* Add the fix when booting on Tegra20 A03 which was supposed to be in v6 but
+  missing
+
+Changes since v7:
+
+* Initialize speedo info and randomness in early boot
+* Expose speedo, sku and revision related info in tegra_sku_info
+* Move APB DMA into Tegra20 fuse driver and remove apbio
+* Make code more complex to support systems without conforming DT
+
+Peter De Schrijver (6):
+  ARM: tegra: export apb dma readl/writel
+  ARM: tegra: move fuse exports to tegra-soc.h
+  misc: fuse: Add efuse driver for Tegra
+  ARM: tegra: Add efuse and apbmisc bindings
+  ARM: tegra: build new fuse driver in drivers/misc
+  misc: fuse: move APB DMA into Tegra20 fuse driver
+
+ Documentation/ABI/testing/sysfs-driver-tegra-fuse  |   11 +
+ .../bindings/fuse/nvidia,tegra20-fuse.txt          |   40 +++
+ .../bindings/misc/nvidia,tegra20-apbmisc.txt       |   13 +
+ arch/arm/boot/dts/tegra114.dtsi                    |   15 +
+ arch/arm/boot/dts/tegra124.dtsi                    |   15 +
+ arch/arm/boot/dts/tegra20.dtsi                     |   15 +
+ arch/arm/boot/dts/tegra30.dtsi                     |   15 +
+ arch/arm/mach-tegra/Makefile                       |    5 -
+ arch/arm/mach-tegra/apbio.c                        |  206 --------------
+ arch/arm/mach-tegra/apbio.h                        |   22 --
+ arch/arm/mach-tegra/cpuidle.c                      |    2 +-
+ arch/arm/mach-tegra/flowctrl.c                     |    2 +-
+ arch/arm/mach-tegra/fuse.c                         |  252 -----------------
+ arch/arm/mach-tegra/fuse.h                         |   79 ------
+ arch/arm/mach-tegra/hotplug.c                      |    2 +-
+ arch/arm/mach-tegra/platsmp.c                      |    2 +-
+ arch/arm/mach-tegra/pm.c                           |    2 +-
+ arch/arm/mach-tegra/pmc.c                          |    2 +-
+ arch/arm/mach-tegra/powergate.c                    |    2 +-
+ arch/arm/mach-tegra/reset-handler.S                |    2 +-
+ arch/arm/mach-tegra/reset.c                        |    2 +-
+ arch/arm/mach-tegra/sleep-tegra30.S                |    2 +-
+ arch/arm/mach-tegra/tegra.c                        |    7 +-
+ arch/arm/mach-tegra/tegra114_speedo.c              |  104 -------
+ arch/arm/mach-tegra/tegra20_speedo.c               |  109 --------
+ arch/arm/mach-tegra/tegra30_speedo.c               |  292 --------------------
+ drivers/misc/Makefile                              |    1 +
+ drivers/misc/fuse/Makefile                         |    1 +
+ drivers/misc/fuse/tegra/Makefile                   |    8 +
+ drivers/misc/fuse/tegra/fuse-tegra.c               |  154 ++++++++++
+ drivers/misc/fuse/tegra/fuse-tegra20.c             |  214 ++++++++++++++
+ drivers/misc/fuse/tegra/fuse-tegra30.c             |  223 +++++++++++++++
+ drivers/misc/fuse/tegra/fuse.h                     |   71 +++++
+ drivers/misc/fuse/tegra/speedo-tegra114.c          |  109 ++++++++
+ drivers/misc/fuse/tegra/speedo-tegra124.c          |  167 +++++++++++
+ drivers/misc/fuse/tegra/speedo-tegra20.c           |  109 ++++++++
+ drivers/misc/fuse/tegra/speedo-tegra30.c           |  287 +++++++++++++++++++
+ drivers/misc/fuse/tegra/tegra-apbmisc.c            |  110 ++++++++
+ include/linux/tegra-soc.h                          |   42 +++
+ 39 files changed, 1633 insertions(+), 1083 deletions(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-driver-tegra-fuse
+ create mode 100644 Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.txt
+ create mode 100644 Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+ delete mode 100644 arch/arm/mach-tegra/apbio.c
+ delete mode 100644 arch/arm/mach-tegra/apbio.h
+ delete mode 100644 arch/arm/mach-tegra/fuse.c
+ delete mode 100644 arch/arm/mach-tegra/fuse.h
+ delete mode 100644 arch/arm/mach-tegra/tegra114_speedo.c
+ delete mode 100644 arch/arm/mach-tegra/tegra20_speedo.c
+ delete mode 100644 arch/arm/mach-tegra/tegra30_speedo.c
+ create mode 100644 drivers/misc/fuse/Makefile
+ create mode 100644 drivers/misc/fuse/tegra/Makefile
+ create mode 100644 drivers/misc/fuse/tegra/fuse-tegra.c
+ create mode 100644 drivers/misc/fuse/tegra/fuse-tegra20.c
+ create mode 100644 drivers/misc/fuse/tegra/fuse-tegra30.c
+ create mode 100644 drivers/misc/fuse/tegra/fuse.h
+ create mode 100644 drivers/misc/fuse/tegra/speedo-tegra114.c
+ create mode 100644 drivers/misc/fuse/tegra/speedo-tegra124.c
+ create mode 100644 drivers/misc/fuse/tegra/speedo-tegra20.c
+ create mode 100644 drivers/misc/fuse/tegra/speedo-tegra30.c
+ create mode 100644 drivers/misc/fuse/tegra/tegra-apbmisc.c
+
+-- 
+1.7.7.rc0.72.g4b5ea.dirty
