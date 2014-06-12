@@ -1,55 +1,65 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V2 03/19] irqchip: crossbar: Skip some irqs from
- getting mapped to crossbar
-Date: Thu, 12 Jun 2014 10:05:08 -0400
-Message-ID: <20140612140508.GC8664@titan.lakedaemon.net>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
- <1402574007-13987-4-git-send-email-r.sricharan@ti.com>
- <20140612125134.GS8664@titan.lakedaemon.net>
- <20140612135715.GE17845@atomide.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 2/3 v4] spi: s3c64xx: for DT platofrms always get the
+ chipselect info from DT node
+Date: Thu, 12 Jun 2014 16:06:52 +0200
+Message-ID: <5399B3FC.5030605@collabora.co.uk>
+References: <1402578821-27338-1-git-send-email-ch.naveen@samsung.com> <1402578821-27338-2-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140612135715.GE17845@atomide.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Sricharan R <r.sricharan@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1402578821-27338-2-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 12, 2014 at 06:57:15AM -0700, Tony Lindgren wrote:
-> * Jason Cooper <jason@lakedaemon.net> [140612 05:52]:
-> > On Thu, Jun 12, 2014 at 05:23:11PM +0530, Sricharan R wrote:
-> > > From: Nishanth Menon <nm@ti.com>
-> > > 
-> > > When, in the system due to varied reasons, interrupts might be unusable
-> > > due to hardware behavior, but register maps do exist, then those interrupts
-> > > should be skipped while mapping irq to crossbars.
-> > > 
-> > > Signed-off-by: Nishanth Menon <nm@ti.com>
-> > > Signed-off-by: Sricharan R <r.sricharan@ti.com>
-> > > Signed-off-by: Tony Lindgren <tony@atomide.com>
-> > 
-> > Tony, have you applied these somewhere already?
+Hello Naveen,
+
+On 06/12/2014 03:13 PM, Naveen Krishna Chatradhi wrote:
+> Use controller_data structure only for the Non Device tree  platforms.
+> For Device tree platforms, always derive the chipselect info from
+> DT node.
 > 
-> I think some of these I had applied into a branch ready for
-> merging but then it was discovered that further changes
-> were needed and the branch was dropped.
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> ---
+>  drivers/spi/spi-s3c64xx.c |   11 ++++++-----
+>  1 file changed, 6 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+> index b888c66..f27e15d 100644
+> --- a/drivers/spi/spi-s3c64xx.c
+> +++ b/drivers/spi/spi-s3c64xx.c
+> @@ -795,14 +795,15 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+>  	int err;
+>  
+>  	sdd = spi_master_get_devdata(spi->master);
+> -	if (!cs && spi->dev.of_node) {
+> +	if (spi->dev.of_node) {
+>  		cs = s3c64xx_get_slave_ctrldata(spi);
+>  		spi->controller_data = cs;
+> -	}
+> -
+> -	/* For the non-DT platforms derive chip selects from controller data */
+> -	if (!spi->dev.of_node)
+> +	} else {
+> +		/* For the non-DT platforms derive chip
+> +		 * selects from controller data
+> +		 */
+>  		spi->cs_gpio = cs->line;
+> +	}
+>  
+>  	if (IS_ERR_OR_NULL(cs)) {
+>  		dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
+> 
 
-Ok.
+Personally I wouldn't have this change as a separate patch since it's too
+related to what you changed in Patch 1. But it's just a nitpick.
 
-> Sricharan, please remove my Signed-off-by from this series.
-> If I end up applying it for merging my scripts will add it
-> automatically.
+Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
-Do you have other changes outside of irqchip depending on this series?
-If so, I can set up a topic branch for you guys to base off of.
-Otherwise, I'll just apply them to irqchip/core when they're ready.
-
-Also, Sricharan, when you respin this, please clearly identify (in the
-comment section) those patches that need to be flagged for stable.  It
-would be helpful if they were the first patches in the series as well.
-
-thx,
-
-Jason.
+Best regards,
+Javier
