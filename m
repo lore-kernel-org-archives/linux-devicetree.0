@@ -1,59 +1,121 @@
-From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
-Date: Thu, 12 Jun 2014 07:18:31 -0700
-Message-ID: <1402582711.9947.17.camel@joe-AO725>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
-	 <1402574007-13987-9-git-send-email-r.sricharan@ti.com>
-	 <20140612131042.GU8664@titan.lakedaemon.net> <5399AC9C.4080602@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
+From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCHv5 1/3] ARM: mm: add support for HW coherent systems in PL310 cache
+Date: Thu, 12 Jun 2014 17:09:30 +0200
+Message-ID: <1402585772-10405-2-git-send-email-thomas.petazzoni@free-electrons.com>
+References: <1402585772-10405-1-git-send-email-thomas.petazzoni@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5399AC9C.4080602-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1402585772-10405-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2014-06-12 at 19:05 +0530, Sricharan R wrote:
-> On Thursday 12 June 2014 06:40 PM, Jason Cooper wrote:
-> > On Thu, Jun 12, 2014 at 05:23:16PM +0530, Sricharan R wrote:
-> >> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-[]
-> >> @@ -34,7 +34,8 @@ struct crossbar_device {
-> >>  	uint *irq_map;
-> >>  	void __iomem *crossbar_base;
-> >>  	int *register_offsets;
-> >> -	void (*write) (int, int);
-> >> +
-> >> +	void (*write)(int, int);
-> > 
-> > The empty line here looks bogus to me.
+When a PL310 cache is used on a system that provides hardware
+coherency, the outer cache sync operation is useless, and can be
+skipped. Moreover, on some systems, it is harmful as it causes
+deadlocks between the Marvell coherency mechanism, the Marvell PCIe
+controller and the Cortex-A9.
 
-Good eye.  It's unnecessary.
+To avoid this, this commit introduces a new Device Tree property
+'arm,io-coherent' for the L2 cache controller node, valid only for the
+PL310 cache. It identifies the usage of the PL310 cache in an I/O
+coherent configuration. Internally, it makes the driver disable the
+outer cache sync operation.
 
->   Did you re-run checkpatch after
-> > fixing the unnecessary space to see if it still complained about having
-> > a 'blank line after declarations'?
-> > 
->  Yes, it still complains even after fixing unnecessary space.
+Note that technically speaking, a fully coherent system wouldn't
+require any of the other .outer_cache operations. However, in
+practice, when booting secondary CPUs, these are not yet coherent, and
+therefore a set of cache maintenance operations are necessary at this
+point. This explains why we keep the other .outer_cache operations and
+only ->sync is disabled.
 
-It's a checkpatch defect.
+While in theory any write to a PL310 register could cause the
+deadlock, in practice, disabling ->sync is sufficient to workaround
+the deadlock, since the other cache maintenance operations are only
+used in very specific situations.
 
-It's been fixed by:
-https://lkml.org/lkml/2014/6/6/426
+Contrary to previous versions of this patch, this new version does not
+simply NULL-ify the ->sync member, because the l2c_init_data
+structures are now 'const' and therefore cannot be modified, which is
+a good thing. Therefore, this patch introduces a separate
+l2c_init_data instance, called of_l2c310_coherent_data.
 
-> > I'm generally opposed to these sorts of checkpatch patches, especially
-> > when they are just warnings.  It's great for a new driver in the staging
-> > tree, but it makes backporting future bugfixes that much harder when
-> > drivers have been live in mainline.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+This patch is based on the latest mainline, as it depends on the L2CC
+cleanup from Russell King.
 
-Blind adherence to checkpatch isn't always a great idea.
+Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/arm/l2cc.txt |  3 +++
+ arch/arm/mm/cache-l2x0.c                       | 31 ++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
-But bugfix backports haven't been much of an issue in
-other subsystems with fairly active whitespace/style
-changes.
-
+diff --git a/Documentation/devicetree/bindings/arm/l2cc.txt b/Documentation/devicetree/bindings/arm/l2cc.txt
+index b513cb8..af527ee 100644
+--- a/Documentation/devicetree/bindings/arm/l2cc.txt
++++ b/Documentation/devicetree/bindings/arm/l2cc.txt
+@@ -40,6 +40,9 @@ Optional properties:
+ - arm,filter-ranges : <start length> Starting address and length of window to
+   filter. Addresses in the filter window are directed to the M1 port. Other
+   addresses will go to the M0 port.
++- arm,io-coherent : indicates that the system is operating in an hardware
++  I/O coherent mode. Valid only when the arm,pl310-cache compatible
++  string is used.
+ - interrupts : 1 combined interrupt.
+ - cache-id-part: cache id part number to be used if it is not present
+   on hardware
+diff --git a/arch/arm/mm/cache-l2x0.c b/arch/arm/mm/cache-l2x0.c
+index efc5cab..076172b 100644
+--- a/arch/arm/mm/cache-l2x0.c
++++ b/arch/arm/mm/cache-l2x0.c
+@@ -1069,6 +1069,33 @@ static const struct l2c_init_data of_l2c310_data __initconst = {
+ };
+ 
+ /*
++ * This is a variant of the of_l2c310_data with .sync set to
++ * NULL. Outer sync operations are not needed when the system is I/O
++ * coherent, and potentially harmful in certain situations (PCIe/PL310
++ * deadlock on Armada 375/38x due to hardware I/O coherency). The
++ * other operations are kept because they are infrequent (therefore do
++ * not cause the deadlock in practice) and needed for secondary CPU
++ * boot and other power management activities.
++ */
++static const struct l2c_init_data of_l2c310_coherent_data __initconst = {
++	.type = "L2C-310 Coherent",
++	.way_size_0 = SZ_8K,
++	.num_lock = 8,
++	.of_parse = l2c310_of_parse,
++	.enable = l2c310_enable,
++	.fixup = l2c310_fixup,
++	.save  = l2c310_save,
++	.outer_cache = {
++		.inv_range   = l2c210_inv_range,
++		.clean_range = l2c210_clean_range,
++		.flush_range = l2c210_flush_range,
++		.flush_all   = l2c210_flush_all,
++		.disable     = l2c310_disable,
++		.resume      = l2c310_resume,
++	},
++};
++
++/*
+  * Note that the end addresses passed to Linux primitives are
+  * noninclusive, while the hardware cache range operations use
+  * inclusive start and end addresses.
+@@ -1487,6 +1514,10 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+ 
+ 	data = of_match_node(l2x0_ids, np)->data;
+ 
++	if (of_device_is_compatible(np, "arm,pl310-cache") &&
++	    of_property_read_bool(np, "arm,io-coherent"))
++		data = &of_l2c310_coherent_data;
++
+ 	old_aux = readl_relaxed(l2x0_base + L2X0_AUX_CTRL);
+ 	if (old_aux != ((old_aux & aux_mask) | aux_val)) {
+ 		pr_warn("L2C: platform modifies aux control register: 0x%08x -> 0x%08x\n",
+-- 
+2.0.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
