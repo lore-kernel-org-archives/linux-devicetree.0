@@ -1,45 +1,53 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v4 3/6] drivers: cpuidle: implement OF based idle states
- infrastructure
-Date: Thu, 12 Jun 2014 10:19:32 +0100
-Message-ID: <20140612091932.GC29295@e102568-lin.cambridge.arm.com>
-References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1402503520-8611-4-git-send-email-lorenzo.pieralisi@arm.com>
- <alpine.LFD.2.11.1406111431080.25775@knanqh.ubzr>
+From: Sachin Kamat <sachin.kamat@samsung.com>
+Subject: Re: [PATCH] ARM: dts: exynos4: fix pwm-cells in pwm node
+Date: Thu, 12 Jun 2014 14:51:42 +0530
+Message-ID: <CAK5sBcGyDJ9n+_ei_p-5ukW0NMW_ytSXv8dGkkMx2TquDFWBOQ@mail.gmail.com>
+References: <1402561392-21702-1-git-send-email-jaewon02.kim@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.11.1406111431080.25775@knanqh.ubzr>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@ke>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1402561392-21702-1-git-send-email-jaewon02.kim@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Jaewon Kim <jaewon02.kim@samsung.com>
+Cc: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, myungjoo.ham@samsung.com, cw00.choi@samsung.com, Sachin Kamat <spk.linux@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 11, 2014 at 07:38:51PM +0100, Nicolas Pitre wrote:
-> On Wed, 11 Jun 2014, Lorenzo Pieralisi wrote:
-> 
-> > On most common ARM systems, the low-power states a CPU can be put into are
-> > not discoverable in HW and require device tree bindings to describe
-> > power down suspend operations and idle states parameters.
-> > 
-> > In order to enable DT based idle states and configure idle drivers, this
-> > patch implements the bulk infrastructure required to parse the device tree
-> > idle states bindings and initialize the corresponding CPUidle driver states
-> > data.
-> 
-> Oh and another pet peeve of mine: given we always talk about "device 
-> tree" all the time, could you s/OF/DT/ in the subject?  It's been a 
-> while that DT has outgrown its OF origins.
+Hi Jaewon,
 
-> >  create mode 100644 drivers/cpuidle/of_idle_states.c
-> >  create mode 100644 drivers/cpuidle/of_idle_states.h
-> 
-> Ditto here, including any new symbols you introduced.
+On Thu, Jun 12, 2014 at 1:53 PM, Jaewon Kim <jaewon02.kim@samsung.com> wrote:
+> pwm-cells should be 3. Third cell is optional PWM flags.
+> And This flag supported by this binding is PWM_POLARITY_INVERTED
+>
+> Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4.dtsi |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+> index b8ece4b..b687e53 100644
+> --- a/arch/arm/boot/dts/exynos4.dtsi
+> +++ b/arch/arm/boot/dts/exynos4.dtsi
+> @@ -548,13 +548,13 @@
+>                 status = "disabled";
+>         };
+>
+> -       pwm@139D0000 {
+> +       pwm: pwm@139D0000 {
 
-Yes you have a point, I will do.
+unrelated change.
 
-Thanks,
-Lorenzo
+>                 compatible = "samsung,exynos4210-pwm";
+>                 reg = <0x139D0000 0x1000>;
+>                 interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
+>                 clocks = <&clock CLK_PWM>;
+>                 clock-names = "timers";
+> -               #pwm-cells = <2>;
+> +               #pwm-cells = <3>;
+>                 status = "disabled";
+>         };
 
+Otherwise looks good.
+Reviewed-by: Sachin Kamat <sachin.kamat@samsung.com>
+
+Regards,
+Sachin
