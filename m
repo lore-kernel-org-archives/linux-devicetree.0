@@ -1,47 +1,59 @@
-From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v5 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
-Date: Wed, 11 Jun 2014 18:59:47 -0700
-Message-ID: <CAKh23F=F3YOc830v45FavdToOvHEXO7tw6duRvn7-32GUb6cjw@mail.gmail.com>
-References: <1401737954-26152-1-git-send-email-isubramanian@apm.com>
-	<1401737954-26152-5-git-send-email-isubramanian@apm.com>
-	<20140605.004555.658378024391856482.davem@davemloft.net>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
+ v3.16
+Date: Wed, 11 Jun 2014 22:43:48 -0700
+Message-ID: <20140612054348.GC17845@atomide.com>
+References: <1401214140-9828-1-git-send-email-tony@atomide.com>
+ <20140528071313.GH4227@lee--X1>
+ <20140528180607.GB4707@atomide.com>
+ <20140602163841.GC11004@atomide.com>
+ <20140603080632.GC3060@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140605.004555.658378024391856482.davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
-Cc: netdev <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg KH <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org" <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140603080632.GC3060@lee--X1>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 5, 2014 at 12:45 AM, David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org> wrote:
-> From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-> Date: Mon,  2 Jun 2014 12:39:14 -0700
->
->> +     netdev_err(ndev, "LERR: %d ring_num: %d ", status, ring->num);
->> +     switch (status) {
->> +     case HBF_READ_DATA:
->> +             netdev_err(ndev, "HBF read data error\n");
->> +             break;
->
-> This is not really appropriate.
->
-> We have statistics like the ones you are incrementing in this
-> function as the mechanism people can use to learn what events
-> happened on an interface, and how many times they happened.
->
-> Therefore, emitting a log message for each one of those events too is
-> not necessary.
->
-> We don't emit a netdev_err() for every packet that the IPv4 stack
-> drops due to a bad checksum, for example.
->
-> Please get rid of this.
+* Lee Jones <lee.jones@linaro.org> [140603 01:08]:
+> On Mon, 02 Jun 2014, Tony Lindgren wrote:
+> > * Tony Lindgren <tony@atomide.com> [140528 11:11]:
+> > > * Lee Jones <lee.jones@linaro.org> [140528 00:14]:
+> > > > Thanks Tony, here's the pull-request:
+> > > > 
+> > > > The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
+> > > > 
+> > > >   Linux 3.14 (2014-03-30 20:40:15 -0700)
+> > > > 
+> > > > are available in the git repository at:
+> > > > 
+> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-omap-v3.16-1
+> > > > 
+> > > > for you to fetch changes up to 43fef47f94a1ae46fb2720dada32fa3b5547bee2:
+> > > > 
+> > > >   mfd: twl4030-power: Add a configuration to turn off oscillator during off-idle (2014-05-28 08:06:18 +0100)
+> > > > 
+> > > > ----------------------------------------------------------------
+> > > > Second immutable branch between MFD and OMAP due for the v3.16 merge window.
+> > > 
+> > > Thanks a lot, this will make it easier for me to chase down potential
+> > > PM related regressions ;) I'm merging this for testing only into the
+> > > linux-omap master branch, no need for me to include it into any
+> > > of my upstream heading branches.
+> > 
+> > Lee, I'm not seeing this in linux next, did you maybe forget to merge
+> > it into the MFD tree?
+> 
+> I didn't forget, but I didn't do it either. :)
+> 
+> I have re-merged all of the IBs this morning, so should be in -next
+> by tomorrow.
 
-Sure.  I will remove the error message prints and clean up the function.
+Still not seeing this branch being merged..
 
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+
+Tony
