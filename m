@@ -1,80 +1,242 @@
-From: Grygorii Strashko <grygorii.strashko@ti.com>
-Subject: [RFC PATCH 0/2] use named clocks list to register clocks for PM clock domain
-Date: Thu, 12 Jun 2014 19:53:41 +0300
-Message-ID: <1402592023-13416-1-git-send-email-grygorii.strashko@ti.com>
-References: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 1/3 v4] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
+Date: Thu, 12 Jun 2014 21:36:50 +0530
+Message-ID: <CAHfPSqAPKOYWJKw2+16gMcYuiq0syQ-p19_6rRvjbN9kUO-5Rg@mail.gmail.com>
+References: <1402578821-27338-1-git-send-email-ch.naveen@samsung.com> <5399B273.5050500@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398334403-26181-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-kernel-owner@vger.kernel.org
-To: geert+renesas@glider.be
-Cc: laurent.pinchart@ideasonboard.com, ulf.hansson@linaro.org, khilman@linaro.org, grant.likely@secretlab.ca, mturquette@linaro.org, tomasz.figa@gmail.com, ben.dooks@codethink.co.uk, horms@verge.net.au, magnus.damm@gmail.com, rjw@rjwysocki.net, linux-sh@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Grygorii Strashko <grygorii.strashko@ti.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <5399B273.5050500@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, Kukjin Kim <kgene.kim@samsung.com>, cpgs@samsung.com, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
+Hello Javier,
 
-I've spent some time testing your patches on Keystone 2 SoC as I am interested 
-in these patches.
+On 12 June 2014 19:30, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> Hello Naveen,
+>
+> On 06/12/2014 03:13 PM, Naveen Krishna Chatradhi wrote:
+>> Since, (3146bee spi: s3c64xx: Added provision for dedicated cs pin)
+>>
+>> spi-s3c64xx.c driver expects
+>> 1. chip select gpios from "cs-gpio"(singular) under the
+>>    "controller-data" node of the client/slave device of the SPI.
+>>
+>> 2. "cs-gpio"(singular) entry to be present in the SPI device node.
+>>
+>> Eg of current broken usage:
+>> &spi_1 {
+>>       cs-gpio <>;     /* this entry is checked during probe */
+>>       ...
+>>       slave_node {
+>>               controller-data {
+>>                       cs-gpio <&gpioa2 5 0>;
+>>                       /* This field is parsed during .setup() */
+>>               }
+>>       };
+>> };
+>>
+>> The following dts files which were using this driver. But,
+>> din't have the "cs-gpio" entry under SPI node.
+>> -- arch/arm/boot/dts/exynos4210-smdkv310.dts
+>> -- arch/arm/boot/dts/exynos4412-trats2.dts
+>> -- arch/arm/boot/dts/exynos5250-smdk5250.dts
+>>
+>> Also, the SPI core and many drivers moved on to using "cs-gpios"
+>> from SPI node and removed the gpio handling code from drivers
+>> (including spi-s3c64xx.c).
+>>
+>> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
+>> considering the time with no compliants about the breakage.
+>>
+>> We are assuming it is safe to remove the "cs-gpio"(singular) usage
+>> from device tree binding of spi-samsung.txt and makes appropriate
+>> changes in the driver to use "cs-gpios"(plural) from
+>> SPI device node.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> Acked-by: Rob Herring <robh@kernel.org>
+>> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> Cc: Doug Anderson <dianders@chromium.org>
+>> Cc: Tomasz Figa <t.figa@samsung.com>
+>> ---
+>
+> Usually when you send a new version of a series is good to keep a history of the
+> patch-set so reviewers don't have to look at the previous threads in order to
+> see what changed from version to version.
 
-The Keystone 2 is pure DT platform, but we reuse some Drivers from Davinci SoC.
-Now I have to dial with following problem:
-- Some modules on Keystone need more then one clock to be managed by PM clock.
-  As result, I can solve this by filling cond_id list in  structure
-  pm_clk_notifier_block.
-  For example:
-  static struct pm_clk_notifier_block platform_domain_notifier = {
-	.pm_domain = &keystone_pm_domain,
-	.con_ids = { "fck", "master", "slave", NULL },
-	};
-  But, in this case I'll need to add names for all clocks or rename existed
-  clock's names in DT to be compatible with above list, like: 
-	clock-names = "gpio"; -> clock-names = "fck";
-    - or -
-    clocks = <&clkspi>;
-	+ clock-names = "fck";
+Yes, I usually keep track of all the changes in my previous CLs.
+But, I missed it in this version my bad.
 
-Your series gracefully solves this problem for me, but I'd like to avoid
-to use new CLK flag CLK_RUNTIME_PM, because:
- - The same driver is used for all gated clocks for Keystone (and probably for
-   other SoCs)
- - Some gated clocks can be optional.
-Taking into account above, driver for gated clock will need to maintain additional
-information internally about clocks which are suitable for Runtime PM - 
-it is too hard to support :(.
+>
+> Anything that is between "---" and the actual diff is not part of a commit and
+> tools like git am omits that part so that's were you usually describe the history.
 
-Therefore, I propose a solution which allows to specify clocks suitable for
-Runtime PM in DT using special property "clkops-clocks" (name can be changed:).
+I've used it in my earlier patches.
+Anyway, Thanks for the detailed information.
 
-Another possible option is to use DT definition like this:
-	spi2: spi@21000800 {
-		compatible = "ti,dm6441-spi";
-		reg = <0x21000800 0x200>;
-		num-cs = <4>;
-		ti,davinci-spi-intr-line = <0>;
-		interrupts = <GIC_SPI 300 IRQ_TYPE_EDGE_RISING>;
-->		clkops-clocks {
-->			clocks = <&clkspi>;
-->		}
-	}
+>
+>>  .../devicetree/bindings/spi/spi-samsung.txt        |    8 ++--
+>>  drivers/spi/spi-s3c64xx.c                          |   41 ++++++++------------
+>>  2 files changed, 20 insertions(+), 29 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-samsung.txt b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+>> index 86aa061..2d29dac 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-samsung.txt
+>> +++ b/Documentation/devicetree/bindings/spi/spi-samsung.txt
+>> @@ -42,15 +42,13 @@ Optional Board Specific Properties:
+>>  - num-cs: Specifies the number of chip select lines supported. If
+>>    not specified, the default number of chip select lines is set to 1.
+>>
+>> +- cs-gpios: should specify GPIOs used for chipselects (see spi-bus.txt)
+>> +
+>>  SPI Controller specific data in SPI slave nodes:
+>>
+>>  - The spi slave nodes should provide the following information which is required
+>>    by the spi controller.
+>>
+>> -  - cs-gpio: A gpio specifier that specifies the gpio line used as
+>> -    the slave select line by the spi controller. The format of the gpio
+>> -    specifier depends on the gpio controller.
+>> -
+>>    - samsung,spi-feedback-delay: The sampling phase shift to be applied on the
+>>      miso line (to account for any lag in the miso line). The following are the
+>>      valid values.
+>> @@ -85,6 +83,7 @@ Example:
+>>               #size-cells = <0>;
+>>               pinctrl-names = "default";
+>>               pinctrl-0 = <&spi0_bus>;
+>> +             cs-gpios = <&gpa2 5 0>;
+>>
+>>               w25q80bw@0 {
+>>                       #address-cells = <1>;
+>> @@ -94,7 +93,6 @@ Example:
+>>                       spi-max-frequency = <10000>;
+>>
+>>                       controller-data {
+>> -                             cs-gpio = <&gpa2 5 1 0 3>;
+>>                               samsung,spi-feedback-delay = <0>;
+>>                       };
+>>
+>> diff --git a/drivers/spi/spi-s3c64xx.c b/drivers/spi/spi-s3c64xx.c
+>> index 75a5696..b888c66 100644
+>> --- a/drivers/spi/spi-s3c64xx.c
+>> +++ b/drivers/spi/spi-s3c64xx.c
+>> @@ -197,7 +197,6 @@ struct s3c64xx_spi_driver_data {
+>>       struct s3c64xx_spi_dma_data     tx_dma;
+>>       struct s3c64xx_spi_port_config  *port_conf;
+>>       unsigned int                    port_id;
+>> -     bool                            cs_gpio;
+>>  };
+>>
+>>  static void flush_fifo(struct s3c64xx_spi_driver_data *sdd)
+>> @@ -776,17 +775,6 @@ static struct s3c64xx_spi_csinfo *s3c64xx_get_slave_ctrldata(
+>>               return ERR_PTR(-ENOMEM);
+>>       }
+>>
+>> -     /* The CS line is asserted/deasserted by the gpio pin */
+>> -     if (sdd->cs_gpio)
+>> -             cs->line = of_get_named_gpio(data_np, "cs-gpio", 0);
+>> -
+>> -     if (!gpio_is_valid(cs->line)) {
+>> -             dev_err(&spi->dev, "chip select gpio is not specified or invalid\n");
+>> -             kfree(cs);
+>> -             of_node_put(data_np);
+>> -             return ERR_PTR(-EINVAL);
+>> -     }
+>> -
+>>       of_property_read_u32(data_np, "samsung,spi-feedback-delay", &fb_delay);
+>>       cs->fb_delay = fb_delay;
+>>       of_node_put(data_np);
+>> @@ -812,6 +800,10 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+>>               spi->controller_data = cs;
+>>       }
+>>
+>> +     /* For the non-DT platforms derive chip selects from controller data */
+>> +     if (!spi->dev.of_node)
+>> +             spi->cs_gpio = cs->line;
+>> +
+>>       if (IS_ERR_OR_NULL(cs)) {
+>>               dev_err(&spi->dev, "No CS for SPI(%d)\n", spi->chip_select);
+>>               return -ENODEV;
+>> @@ -819,17 +811,19 @@ static int s3c64xx_spi_setup(struct spi_device *spi)
+>>
+>>       if (!spi_get_ctldata(spi)) {
+>>               /* Request gpio only if cs line is asserted by gpio pins */
+>> -             if (sdd->cs_gpio) {
+>> -                     err = gpio_request_one(cs->line, GPIOF_OUT_INIT_HIGH,
+>> -                                     dev_name(&spi->dev));
+>> +             if (gpio_is_valid(spi->cs_gpio)) {
+>> +                     err = gpio_request_one(spi->cs_gpio,
+>> +                                             GPIOF_OUT_INIT_HIGH,
+>> +                                             dev_name(&spi->dev));
+>>                       if (err) {
+>>                               dev_err(&spi->dev,
+>>                                       "Failed to get /CS gpio [%d]: %d\n",
+>> -                                     cs->line, err);
+>> +                                     spi->cs_gpio, err);
+>>                               goto err_gpio_req;
+>>                       }
+>> -
+>> -                     spi->cs_gpio = cs->line;
+>> +             } else {
+>> +                     dev_err(&spi->dev, "chip select gpio is invalid\n");
+>> +                     return -EINVAL;
+>>               }
+>>
+>>               spi_set_ctldata(spi, cs);
+>> @@ -884,7 +878,8 @@ setup_exit:
+>>       /* setup() returns with device de-selected */
+>>       writel(S3C64XX_SPI_SLAVE_SIG_INACT, sdd->regs + S3C64XX_SPI_SLAVE_SEL);
+>>
+>> -     gpio_free(cs->line);
+>> +     if (gpio_is_valid(spi->cs_gpio))
+>> +             gpio_free(spi->cs_gpio);
+>>       spi_set_ctldata(spi, NULL);
+>>
+>>  err_gpio_req:
+>> @@ -900,10 +895,12 @@ static void s3c64xx_spi_cleanup(struct spi_device *spi)
+>>       struct s3c64xx_spi_driver_data *sdd;
+>>
+>>       sdd = spi_master_get_devdata(spi->master);
+>> -     if (spi->cs_gpio) {
+>> +     if (gpio_is_valid(spi->cs_gpio)) {
+>>               gpio_free(spi->cs_gpio);
+>>               if (spi->dev.of_node)
+>>                       kfree(cs);
+>> +             else
+>> +                     spi->cs_gpio = -ENOENT;
+>>       }
+>>       spi_set_ctldata(spi, NULL);
+>>  }
+>> @@ -1075,11 +1072,7 @@ static int s3c64xx_spi_probe(struct platform_device *pdev)
+>>       sdd->cntrlr_info = sci;
+>>       sdd->pdev = pdev;
+>>       sdd->sfr_start = mem_res->start;
+>> -     sdd->cs_gpio = true;
+>>       if (pdev->dev.of_node) {
+>> -             if (!of_find_property(pdev->dev.of_node, "cs-gpio", NULL))
+>> -                     sdd->cs_gpio = false;
+>> -
+>>               ret = of_alias_get_id(pdev->dev.of_node, "spi");
+>>               if (ret < 0) {
+>>                       dev_err(&pdev->dev, "failed to get alias id, errno %d\n",
+>>
+>
+> Your changes look good to me now.
+>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
-Regarding supporting of EPROBE_DEFER, in my opinion simplest solution would be to
-call of_clk_register_runtime_pm_clocks() directly from drivers.
-Another option 1, call of_clk_register_runtime_pm_clocks() before driver's probing 
-seems will be banned by Greg and Rafael.
-Another option 2, continue to use Bus notifiers, but then error path need to be
-handled somehow. Now BUS_NOTIFY_BIND_DRIVER even is sent before probing, but 
-it seems that nothing is sent in case if probe was failed.
+Thanks for your review.
+>
+> Best regards,
+> Javier
 
-Grygorii Strashko (2):
-  clk: of: introduce of_clk_get_from_set()
-  of/clk: use "clkops-clocks" to specify clocks handled by clock_ops
-    domain
 
- drivers/clk/clkdev.c |   24 ++++++++++++++++++++++--
- drivers/of/of_clk.c  |    7 ++-----
- include/linux/clk.h  |    7 +++++++
- 3 files changed, 31 insertions(+), 7 deletions(-)
 
 -- 
-1.7.9.5
+Shine bright,
+(: Nav :)
