@@ -1,41 +1,56 @@
-From: =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>
-Subject: [PATCHv4 0/5] mtd: gpmi: make blockmark swapping optional
-Date: Thu, 12 Jun 2014 15:20:40 +0200
-Message-ID: <1402579245-13377-1-git-send-email-LW@KARO-electronics.de>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: Re: [PATCH V2 10/19] irqchip: crossbar: DRA7: Fix unused crossbar
+ list
+Date: Thu, 12 Jun 2014 18:51:08 +0530
+Message-ID: <5399A944.40000@ti.com>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-11-git-send-email-r.sricharan@ti.com> <20140612131600.GW8664@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Fabio Estevam <fabio.estevam@freescale.com>, Huang Shijie <b32955@freescale.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, =?UTF-8?q?Lothar=20Wa=C3=9Fmann?= <LW@KARO-electronics.de>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, Shawn Guo <shawn.guo@linaro.org>, Boris BREZILLON <b.brezillon.dev@gmail.com>, Ezequie
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140612131600.GW8664@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-With a flash-based BBT there is no reason to move the Factory Bad
-Block Marker from the data area buffer (to where it is mapped by the
-GPMI NAND controller) to the OOB buffer. Thus, make this feature
-configurable via DT. This is required for the Ka-Ro electronics
-i.MX6 platforms.
+Hi Jason,
 
-Changes wrt. v2:
-- added a warning for i.MX28 to the binding documentation
-- fixed the gpmi_ecc_read_subpage() routine which turned on blockmark
-  swapping unconditionally
-- use !GPMI_IS_MX23() in place of this->swap_block_mark (which were
-  synonymous the original code) in gpmi_ecc_read_oob() and
-  gpmi_block_markbad()
-- make nand-on-flash-bbt a prerequisite for this feature
+On Thursday 12 June 2014 06:46 PM, Jason Cooper wrote:
+> On Thu, Jun 12, 2014 at 05:23:18PM +0530, Sricharan R wrote:
+>> From: Rajendra Nayak <rnayak@ti.com>
+>>
+>> On DRA7 compatible IRQ crossbar, IRQ 10 default mapped to L3_APP_IRQ,
+>> IRQ133 is default mapped to NMI pin, 139 and 140 crossbars are
+>> unused(not routed). Mark these as unused crossbar IRQs.
+>>
+>> Technical Reference Manual documentation update expected
+>> DRA72x-TRMINC00067 is being used to track the update.
+>>
+>> Reported-by: Nishanth Menon <nm@ti.com>
+>> Reported-by: Sricharan R <r.sricharan@ti.com>
+>> Reported-by: Suman Anna <s-anna@ti.com>
+>> Signed-off-by: Rajendra Nayak <rnayak@ti.com>
+>> ---
+>>  drivers/irqchip/irq-crossbar.c |    4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+>> index 7d4db07..42a2e62 100644
+>> --- a/drivers/irqchip/irq-crossbar.c
+>> +++ b/drivers/irqchip/irq-crossbar.c
+>> @@ -253,8 +253,8 @@ err1:
+>>  	return -ENOMEM;
+>>  }
+>>  
+>> -/* irq number 10 cannot be used because of hw bug */
+>> -static int dra_irqs_unused[] = { 10 };
+>> +/* irq number 10,133,139 and 140 cannot be used because of hw bug */
+>> +static int dra_irqs_unused[] = { 10 , 133, 139, 140 };
+> 
+> see my earlier comment regarding a potential dts property.
+> 
+Ok, if dts would be the better approach then I can change this.
 
-patch added:
-- add an additional option to turn of BB mark writing
-
-Changes wrt. v3:
-- added two code cleanup patches
-- added a patch to turn of NAND_BBT_CREATE, if blockmark swapping is disabled
+Regards,
+ Sricharan
