@@ -1,614 +1,300 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V2 2/2] ARM: dts: DRA7: Add crossbar device binding
-Date: Thu, 12 Jun 2014 17:35:47 +0530
-Message-ID: <1402574747-14359-3-git-send-email-r.sricharan@ti.com>
-References: <1402574747-14359-1-git-send-email-r.sricharan@ti.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [RFC PATCH] gpio: Add a defer reset object to send board specific reset
+Date: Thu, 12 Jun 2014 14:35:40 +0200
+Message-ID: <CACRpkdZvANiXp2S134jmcsFDr1m=dqGkpsf3Y6ZAg6mvd6RHOQ@mail.gmail.com>
+References: <1402189798-7665-1-git-send-email-houcheng@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1402574747-14359-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
-Cc: tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, r.sricharan@ti.com, Benoit Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1402189798-7665-1-git-send-email-houcheng@gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Houcheng Lin <houcheng@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>
+Cc: Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-From: R Sricharan <r.sricharan@ti.com>
+On Sun, Jun 8, 2014 at 3:09 AM, Houcheng Lin <houcheng@gmail.com> wrote:
 
-There is a IRQ crossbar device in the soc, which
-maps the irq requests from the peripherals to the
-mpu interrupt controller's inputs. The Peripheral irq
-requests are connected to only one crossbar
-input and the output of the crossbar is connected to only one
-controller's input line. The crossbar device is used to map
-a peripheral input to a free mpu's interrupt controller line.
+> In some hardware design, devices on bus need a non-standard and extra reset
+> signal after bus is initialied. Most reason is to wake up device from hanging
+> state.
+>
+> The board spefic reset code can not be put into machine init code, as it is
+> too early. This code can not also be put onto chip's driver, as it is board
+> specific and not suitable for a common chip driver.
+>
+> Defer Reset Object
+> ------------------
+> The defer reset object is to resolve this issue, developer can put a defer-
+> reset device on the board's dts file and enable DEFER RESET OBJECT CONFIG.
+> During driver init-calls, a defer-reset object is created and issue reset signal
+> after the enclosing device is initialized.
+>
+> This eliminate the need to rewrite a driver module with only one purpose: sending
+> a board specific reset. This also allow mainstream kernel to support many boards
+> that modify the common drivers to send board specific reset. Configuring defer-reset
+> device in dts leave the board specific reset rules on board level and simple to
+> maintain.
+>
+> Example dts File
+> ----------------
+>     usb-ehci-chip@1211000{
+>         usb-phy = <&usb2_phy>;
+>         defer_reset_vbus {
+>             compatible = "defer-reset";
+>             reset-gpios = <&gpx3 5 1>;
+>             reset-init = <0>;
+>             reset-end = <1>;
 
-Here, adding a new crossbar device node and replacing all the peripheral
-interrupt numbers with its fixed crossbar input lines.
+This needs some serious DT binding documentation. What are you trying to
+achive here? Any kind of sequence encoding in DT is out of the question.
 
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Tested-by: Darren Etheridge <detheridge@ti.com>
-Tested-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm/boot/dts/dra7.dtsi |  133 ++++++++++++++++++++++++-------------------
- 1 file changed, 75 insertions(+), 58 deletions(-)
+>             delay = <5>;
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 1cf4ee1..0fedbcd 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -80,8 +80,8 @@
- 		ti,hwmods = "l3_main_1", "l3_main_2";
- 		reg = <0x44000000 0x1000000>,
- 		      <0x45000000 0x1000>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		prm: prm@4ae06000 {
- 			compatible = "ti,dra7-prm";
-@@ -156,10 +156,10 @@
- 		sdma: dma-controller@4a056000 {
- 			compatible = "ti,omap4430-sdma";
- 			reg = <0x4a056000 0x1000>;
--			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			#dma-channels = <32>;
- 			#dma-requests = <127>;
-@@ -168,7 +168,7 @@
- 		gpio1: gpio@4ae10000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4ae10000 0x200>;
--			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio1";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -179,7 +179,7 @@
- 		gpio2: gpio@48055000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48055000 0x200>;
--			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio2";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -190,7 +190,7 @@
- 		gpio3: gpio@48057000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48057000 0x200>;
--			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio3";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -201,7 +201,7 @@
- 		gpio4: gpio@48059000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48059000 0x200>;
--			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio4";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -212,7 +212,7 @@
- 		gpio5: gpio@4805b000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4805b000 0x200>;
--			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio5";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -223,7 +223,7 @@
- 		gpio6: gpio@4805d000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4805d000 0x200>;
--			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio6";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -234,7 +234,7 @@
- 		gpio7: gpio@48051000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48051000 0x200>;
--			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio7";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -245,7 +245,7 @@
- 		gpio8: gpio@48053000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48053000 0x200>;
--			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio8";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -256,7 +256,7 @@
- 		uart1: serial@4806a000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4806a000 0x100>;
--			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart1";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -265,7 +265,7 @@
- 		uart2: serial@4806c000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4806c000 0x100>;
--			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart2";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -274,7 +274,7 @@
- 		uart3: serial@48020000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48020000 0x100>;
--			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart3";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -283,7 +283,7 @@
- 		uart4: serial@4806e000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4806e000 0x100>;
--			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart4";
- 			clock-frequency = <48000000>;
-                         status = "disabled";
-@@ -292,7 +292,7 @@
- 		uart5: serial@48066000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48066000 0x100>;
--			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart5";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -301,7 +301,7 @@
- 		uart6: serial@48068000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48068000 0x100>;
--			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart6";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -310,6 +310,7 @@
- 		uart7: serial@48420000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48420000 0x100>;
-+			interrupts = <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart7";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -318,6 +319,7 @@
- 		uart8: serial@48422000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48422000 0x100>;
-+			interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart8";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -326,6 +328,7 @@
- 		uart9: serial@48424000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48424000 0x100>;
-+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart9";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -334,6 +337,7 @@
- 		uart10: serial@4ae2b000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4ae2b000 0x100>;
-+			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart10";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -342,7 +346,7 @@
- 		timer1: timer@4ae18000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4ae18000 0x80>;
--			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer1";
- 			ti,timer-alwon;
- 		};
-@@ -350,28 +354,28 @@
- 		timer2: timer@48032000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48032000 0x80>;
--			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer2";
- 		};
- 
- 		timer3: timer@48034000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48034000 0x80>;
--			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer3";
- 		};
- 
- 		timer4: timer@48036000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48036000 0x80>;
--			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer4";
- 		};
- 
- 		timer5: timer@48820000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48820000 0x80>;
--			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer5";
- 			ti,timer-dsp;
- 		};
-@@ -379,7 +383,7 @@
- 		timer6: timer@48822000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48822000 0x80>;
--			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer6";
- 			ti,timer-dsp;
- 			ti,timer-pwm;
-@@ -388,7 +392,7 @@
- 		timer7: timer@48824000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48824000 0x80>;
--			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer7";
- 			ti,timer-dsp;
- 		};
-@@ -396,7 +400,7 @@
- 		timer8: timer@48826000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48826000 0x80>;
--			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer8";
- 			ti,timer-dsp;
- 			ti,timer-pwm;
-@@ -405,21 +409,21 @@
- 		timer9: timer@4803e000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4803e000 0x80>;
--			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer9";
- 		};
- 
- 		timer10: timer@48086000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48086000 0x80>;
--			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer10";
- 		};
- 
- 		timer11: timer@48088000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48088000 0x80>;
--			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer11";
- 			ti,timer-pwm;
- 		};
-@@ -427,6 +431,7 @@
- 		timer13: timer@48828000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48828000 0x80>;
-+			interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer13";
- 			status = "disabled";
- 		};
-@@ -434,6 +439,7 @@
- 		timer14: timer@4882a000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4882a000 0x80>;
-+			interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer14";
- 			status = "disabled";
- 		};
-@@ -441,6 +447,7 @@
- 		timer15: timer@4882c000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4882c000 0x80>;
-+			interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer15";
- 			status = "disabled";
- 		};
-@@ -448,6 +455,7 @@
- 		timer16: timer@4882e000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4882e000 0x80>;
-+			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer16";
- 			status = "disabled";
- 		};
-@@ -455,7 +463,7 @@
- 		wdt2: wdt@4ae14000 {
- 			compatible = "ti,omap4-wdt";
- 			reg = <0x4ae14000 0x80>;
--			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "wd_timer2";
- 		};
- 
-@@ -469,14 +477,14 @@
- 		dmm@4e000000 {
- 			compatible = "ti,omap5-dmm";
- 			reg = <0x4e000000 0x800>;
--			interrupts = <0 113 0x4>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "dmm";
- 		};
- 
- 		i2c1: i2c@48070000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48070000 0x100>;
--			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c1";
-@@ -486,7 +494,7 @@
- 		i2c2: i2c@48072000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48072000 0x100>;
--			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c2";
-@@ -496,7 +504,7 @@
- 		i2c3: i2c@48060000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48060000 0x100>;
--			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c3";
-@@ -506,7 +514,7 @@
- 		i2c4: i2c@4807a000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x4807a000 0x100>;
--			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c4";
-@@ -516,7 +524,7 @@
- 		i2c5: i2c@4807c000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x4807c000 0x100>;
--			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c5";
-@@ -526,7 +534,7 @@
- 		mmc1: mmc@4809c000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x4809c000 0x400>;
--			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc1";
- 			ti,dual-volt;
- 			ti,needs-special-reset;
-@@ -539,7 +547,7 @@
- 		mmc2: mmc@480b4000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x480b4000 0x400>;
--			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc2";
- 			ti,needs-special-reset;
- 			dmas = <&sdma 47>, <&sdma 48>;
-@@ -550,7 +558,7 @@
- 		mmc3: mmc@480ad000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x480ad000 0x400>;
--			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc3";
- 			ti,needs-special-reset;
- 			dmas = <&sdma 77>, <&sdma 78>;
-@@ -561,7 +569,7 @@
- 		mmc4: mmc@480d1000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x480d1000 0x400>;
--			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc4";
- 			ti,needs-special-reset;
- 			dmas = <&sdma 57>, <&sdma 58>;
-@@ -704,7 +712,7 @@
- 		mcspi1: spi@48098000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x48098000 0x200>;
--			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi1";
-@@ -725,7 +733,7 @@
- 		mcspi2: spi@4809a000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x4809a000 0x200>;
--			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi2";
-@@ -741,7 +749,7 @@
- 		mcspi3: spi@480b8000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x480b8000 0x200>;
--			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi3";
-@@ -754,7 +762,7 @@
- 		mcspi4: spi@480ba000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x480ba000 0x200>;
--			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi4";
-@@ -774,7 +782,7 @@
- 			clocks = <&qspi_gfclk_div>;
- 			clock-names = "fck";
- 			num-cs = <4>;
--			interrupts = <0 343 0x4>;
-+			interrupts = <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
- 
-@@ -810,7 +818,7 @@
- 		sata: sata@4a141100 {
- 			compatible = "snps,dwc-ahci";
- 			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
--			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&sata_phy>;
- 			phy-names = "sata-phy";
- 			clocks = <&sata_ref_clk>;
-@@ -887,7 +895,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss1";
- 			reg = <0x48880000 0x10000>;
--			interrupts = <0 77 4>;
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -895,7 +903,7 @@
- 			usb1: usb@48890000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x48890000 0x17000>;
--				interrupts = <0 76 4>;
-+				interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&usb2_phy1>, <&usb3_phy1>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 				tx-fifo-resize;
-@@ -908,7 +916,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss2";
- 			reg = <0x488c0000 0x10000>;
--			interrupts = <0 92 4>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -916,7 +924,7 @@
- 			usb2: usb@488d0000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x488d0000 0x17000>;
--				interrupts = <0 78 4>;
-+				interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&usb2_phy2>;
- 				phy-names = "usb2-phy";
- 				tx-fifo-resize;
-@@ -930,7 +938,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss3";
- 			reg = <0x48900000 0x10000>;
--		/*	interrupts = <0 TBD 4>; */
-+			interrupts = <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -939,7 +947,7 @@
- 			usb3: usb@48910000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x48910000 0x17000>;
--		/*		interrupts = <0 93 4>; */
-+				interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
- 				tx-fifo-resize;
- 				maximum-speed = "high-speed";
- 				dr_mode = "otg";
-@@ -950,7 +958,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss4";
- 			reg = <0x48940000 0x10000>;
--		/*	interrupts = <0 TBD 4>; */
-+			interrupts = <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -959,7 +967,7 @@
- 			usb4: usb@48950000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x48950000 0x17000>;
--		/*		interrupts = <0 TBD 4>; */
-+				interrupts = <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>;
- 				tx-fifo-resize;
- 				maximum-speed = "high-speed";
- 				dr_mode = "otg";
-@@ -969,7 +977,7 @@
- 		elm: elm@48078000 {
- 			compatible = "ti,am3352-elm";
- 			reg = <0x48078000 0xfc0>;      /* device IO registers */
--			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "elm";
- 			status = "disabled";
- 		};
-@@ -978,7 +986,7 @@
- 			compatible = "ti,am3352-gpmc";
- 			ti,hwmods = "gpmc";
- 			reg = <0x50000000 0x37c>;      /* device IO registers */
--			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 			gpmc,num-cs = <8>;
- 			gpmc,num-waitpins = <2>;
- 			#address-cells = <2>;
-@@ -986,6 +994,15 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	crossbar_mpu: crossbar@4a020000 {
-+		compatible = "ti,irq-crossbar";
-+		reg = <0x4a002a48 0x130>;
-+		ti,max-irqs = <160>;
-+		ti,max-crossbar-sources = <400>;
-+		ti,reg-size = <2>;
-+		ti,irqs-reserved = <0 1 2 3 5 6 131 132>;
-+	};
- };
- 
- /include/ "dra7xx-clocks.dtsi"
--- 
-1.7.9.5
+nanoseconds? milliseconds? seconds? years? picoseconds?
 
+>         };
+>     };
+
+OK this is interesting stuff..
+
+But this driver *MUST* live under drivers/power/reset/*, as it
+has absolutely *nothing* to do with GPIO except for being a consumer
+of it. I won't merge it.
+
+And you should discuss it with Dmitry and David W.
+
+But I will review it nevertheless :-D
+
+> +#include <linux/clk.h>
+
+What? This driver is not using any clocks.
+
+> +#include <linux/dma-mapping.h>
+
+What?
+
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_platform.h>
+
+No way. Include
+#include <linux/gpio/consumer.h>
+
+Read up on how to use that in
+Documentation/gpio/consumer.txt
+Thanks.
+
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/phy.h>
+> +#include <linux/usb/samsung_usb_phy.h>
+> +#include <linux/usb.h>
+> +#include <linux/usb/hcd.h>
+> +#include <linux/usb/otg.h>
+
+Please go over this list and see what is actually needed.
+
+> +
+> +
+> +#define DRIVER_DESC "GPIO Defer Reset Driver"
+
+#define DRIVER_NAME would be more to the point.
+
+> +#define GDR_MAX_DEV 32
+> +
+> +static DEFINE_MUTEX(deferred_reset_mutex);
+> +static LIST_HEAD(deferred_reset_list);
+> +
+> +struct defer_reset_private {
+> +       struct list_head next;
+> +       struct device_node *node;  /* defer_reset device */
+> +       int    issued;
+
+Use a bool.
+
+> +};
+> +
+> +static void gdr_issue_reset(
+> +       struct platform_device *pdev, struct device_node *dnode)
+> +{
+> +       int gpio;
+> +       int i;
+> +       int count = of_gpio_named_count(dnode, "reset-gpios");
+
+Hm seems reasonable...
+
+> +       u32 reset_init[GDR_MAX_DEV];
+> +       u32 reset_end[GDR_MAX_DEV];
+> +       u32 delay;
+> +
+> +       if (count != of_property_count_u32_elems(dnode, "reset-init")) {
+> +               dev_err(&pdev->dev, "should call std error here, number is wrong:%d\n",
+> +                       of_property_count_u32_elems(dnode, "reset-init"));
+> +               return;
+> +       }
+> +       if (count != of_property_count_u32_elems(dnode, "reset-end")) {
+> +               dev_err(&pdev->dev, "should call std error here, number is wrong:%d\n",
+> +                       of_property_count_u32_elems(dnode, "reset-end"));
+> +               return;
+> +       }
+> +       if (count > GDR_MAX_DEV) {
+> +               dev_err(&pdev->dev, "too large reset array!\n");
+> +               return;
+> +       }
+> +
+> +       /* setup parameters */
+> +       of_property_read_u32_array(dnode, "reset-init", reset_init, count);
+> +       of_property_read_u32_array(dnode, "reset-end", reset_end, count);
+> +       of_property_read_u32(dnode, "delay", &delay);
+
+OK so you stack up these u32's...
+
+> +       /* reset init */
+> +       for (i = 0; i < count; i++) {
+> +               gpio = of_get_named_gpio(dnode, "reset-gpios", i);
+
+Use gpiod interface to obtain a GPIO descriptor.
+
+> +               dev_info(&pdev->dev,
+> +                       "issue reset to gpio %d for device [%s]\n",
+> +                       gpio, dnode->parent->name);
+> +               if (!gpio_is_valid(gpio))
+> +                       continue;
+> +               __gpio_set_value(gpio, reset_init[i]);
+
+__gpio_set_value??
+
+Are you using the platform-specific implementation? No way.
+
+gpiod_set_value() please.
+
+> +       }
+> +       if (delay == 0)
+> +               delay = 5;
+
+So what on earth says that this is a sensible default?
+Why not, say 10 seconds?
+
+I think probe should simply fail if delay is not specified.
+
+> +       mdelay(delay);
+
+Aha so it is milliseconds. OK.
+
+> +       /* reset end */
+> +       for (i = 0; i < count; i++) {
+> +               gpio = of_get_named_gpio(dnode, "reset-gpios", i);
+> +               if (!gpio_is_valid(gpio))
+> +                       continue;
+> +               __gpio_set_value(gpio, reset_end[i]);
+> +       }
+
+OK so reset init and reset end is a way to specify when reset
+is asserted (as one or zero).
+
+DON'T do this. The GPIO bindings already know a way to define
+if GPIOs are active high or low, and the gpiod interface will invert
+the signal for you if this is specified as active low.
+
+This way you get rid of both strange properties.
+
+> +/**
+> +  * the pdev parameter is null as it is provided by register routine, platform_device_register_simple
+> +  **/
+> +static int gdr_probe(struct platform_device *pdev)
+> +{
+> +       struct list_head *pos;
+> +
+> +       pr_debug("gpio defer reset probe\n");
+> +       list_for_each(pos, &deferred_reset_list) {
+> +               struct platform_device *pd;
+> +               struct defer_reset_private *prv = list_entry(
+> +                       pos, struct defer_reset_private, next);
+> +               if (prv->issued)
+> +                       continue;
+> +               pd = of_find_device_by_node(
+> +                       prv->node->parent);
+> +               if (pd->dev.driver != 0) {
+> +                       gdr_issue_reset(pdev, prv->node);
+> +                       prv->issued = 1;
+> +               }
+> +       }
+> +       list_for_each(pos, &deferred_reset_list) {
+> +               struct defer_reset_private *prv = list_entry(pos,
+> +                       struct defer_reset_private, next);
+> +               if (!prv->issued)
+> +                       return -EPROBE_DEFER;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static int gdr_remove(struct platform_device *pdev)
+> +{
+> +       return 0;
+> +}
+
+Isn't this callback optional then?
+
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id gdr_match[] = {
+> +       { .compatible = "gpio-defer-reset" },
+> +       { .compatible = "defer-reset" },
+
+Why two compatible strings? If we're inventing this let's stick to
+one.
+
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, gdr_match);
+> +#endif
+> +
+> +
+> +static struct platform_driver gdr_driver = {
+> +       .probe      = gdr_probe,
+> +       .remove     = gdr_remove,
+> +       .driver = {
+> +               .name   = "defer-reset",
+
+So why are you not using this #define DRIVER_DESC for the name
+you did up there?
+
+> +               .owner  = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(gdr_match),
+> +       }
+> +};
+> +
+> +static int __init gdr_init(void)
+> +{
+> +       struct device_node *node;
+> +       pr_info("defer-reset-object initialied.\n");
+> +       platform_device_register_simple("defer-reset", -1, NULL, 0);
+> +       mutex_lock(&deferred_reset_mutex);
+> +       for_each_compatible_node(node, NULL, "defer-reset") {
+> +               struct defer_reset_private *prv = kmalloc(
+> +                       sizeof(struct defer_reset_private), GFP_KERNEL);
+> +               prv->node = node;
+> +               prv->issued = 0;
+> +               list_add_tail(&prv->next, &deferred_reset_list);
+> +       }
+> +       mutex_unlock(&deferred_reset_mutex);
+> +       return platform_driver_register(&gdr_driver);
+> +}
+> +module_init(gdr_init);
+
+Hm hm. I don't know if this is a good approach. Grant will know maybe.
+
+> +
+> +static void __exit gdr_cleanup(void)
+> +{
+> +       platform_driver_unregister(&gdr_driver);
+> +}
+> +module_exit(gdr_cleanup);
+
+You forgot to free the deferred_reset_list here. Fix that.
+
+Yours,
+Linus Walleij
