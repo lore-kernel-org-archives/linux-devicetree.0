@@ -1,217 +1,80 @@
-From: Alban Bedel <alban.bedel@avionic-design.de>
-Subject: [PATCH 1/2] ARM: tegra: tamonten: add the base board regulators
-Date: Thu, 12 Jun 2014 17:11:24 +0200
-Message-ID: <1402585885-28247-1-git-send-email-alban.bedel@avionic-design.de>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
+Date: Thu, 12 Jun 2014 11:32:26 -0400
+Message-ID: <20140612153226.GE8664@titan.lakedaemon.net>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+ <1402574007-13987-9-git-send-email-r.sricharan@ti.com>
+ <20140612131042.GU8664@titan.lakedaemon.net>
+ <5399AC9C.4080602@ti.com>
+ <1402582711.9947.17.camel@joe-AO725>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402582711.9947.17.camel@joe-AO725>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, Alban Bedel <alban.bedel@avionic-design.de>
+To: Joe Perches <joe@perches.com>
+Cc: Sricharan R <r.sricharan@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Currently the Tamonten DTS define a fixed regulator for the 5V supply.
-However this regulator is in fact on the base board. Fix this by
-properly defining the regulators found on the base boards.
+Hey Joe,
 
-Signed-off-by: Alban Bedel <alban.bedel@avionic-design.de>
----
- arch/arm/boot/dts/tegra20-medcom-wide.dts | 46 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/tegra20-plutux.dts      | 46 +++++++++++++++++++++++++++++++
- arch/arm/boot/dts/tegra20-tamonten.dtsi   | 10 +------
- arch/arm/boot/dts/tegra20-tec.dts         | 46 +++++++++++++++++++++++++++++++
- 4 files changed, 139 insertions(+), 9 deletions(-)
+On Thu, Jun 12, 2014 at 07:18:31AM -0700, Joe Perches wrote:
+> On Thu, 2014-06-12 at 19:05 +0530, Sricharan R wrote:
+> > On Thursday 12 June 2014 06:40 PM, Jason Cooper wrote:
+> > > On Thu, Jun 12, 2014 at 05:23:16PM +0530, Sricharan R wrote:
+> > >> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+> []
+> > >> @@ -34,7 +34,8 @@ struct crossbar_device {
+> > >>  	uint *irq_map;
+> > >>  	void __iomem *crossbar_base;
+> > >>  	int *register_offsets;
+> > >> -	void (*write) (int, int);
+> > >> +
+> > >> +	void (*write)(int, int);
+> > > 
+> > > The empty line here looks bogus to me.
+> 
+> Good eye.  It's unnecessary.
+> 
+> > > Did you re-run checkpatch after fixing the unnecessary space to
+> > > see if it still complained about having a 'blank line after
+> > > declarations'?
+> > > 
+> >  Yes, it still complains even after fixing unnecessary space.
+> 
+> It's a checkpatch defect.
+> 
+> It's been fixed by:
+> https://lkml.org/lkml/2014/6/6/426
 
-diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
-index 6d3a4cb..0cd05f7 100644
---- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
-+++ b/arch/arm/boot/dts/tegra20-medcom-wide.dts
-@@ -64,4 +64,50 @@
- 			 <&tegra_car TEGRA20_CLK_CDEV1>;
- 		clock-names = "pll_a", "pll_a_out0", "mclk";
- 	};
-+
-+	board_regulators {
-+		compatible = "simple-bus";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc_24v_reg: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "vcc_24v";
-+			regulator-min-microvolt = <24000000>;
-+			regulator-max-microvolt = <24000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_5v0_reg: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "vdd_5v0";
-+			vin-supply = <&vcc_24v_reg>;
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_3v3_reg: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "vdd_3v3";
-+			vin-supply = <&vcc_24v_reg>;
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_1v8_reg: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "vdd_1v8";
-+			vin-supply = <&vdd_3v3_reg>;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/tegra20-plutux.dts b/arch/arm/boot/dts/tegra20-plutux.dts
-index 29051a2..a1b0e86 100644
---- a/arch/arm/boot/dts/tegra20-plutux.dts
-+++ b/arch/arm/boot/dts/tegra20-plutux.dts
-@@ -58,4 +58,50 @@
- 			 <&tegra_car TEGRA20_CLK_CDEV1>;
- 		clock-names = "pll_a", "pll_a_out0", "mclk";
- 	};
-+
-+	board_regulators {
-+		compatible = "simple-bus";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc_24v_reg: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "vcc_24v";
-+			regulator-min-microvolt = <24000000>;
-+			regulator-max-microvolt = <24000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_5v0_reg: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "vdd_5v0";
-+			vin-supply = <&vcc_24v_reg>;
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_3v3_reg: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "vdd_3v3";
-+			vin-supply = <&vcc_24v_reg>;
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_1v8_reg: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "vdd_1v8";
-+			vin-supply = <&vdd_3v3_reg>;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+	};
- };
-diff --git a/arch/arm/boot/dts/tegra20-tamonten.dtsi b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-index a1b0d96..9c83185 100644
---- a/arch/arm/boot/dts/tegra20-tamonten.dtsi
-+++ b/arch/arm/boot/dts/tegra20-tamonten.dtsi
-@@ -334,6 +334,7 @@
- 			#gpio-cells = <2>;
- 			gpio-controller;
- 
-+			/* vdd_5v0_reg must be provided by the base board */
- 			sys-supply = <&vdd_5v0_reg>;
- 			vin-sm0-supply = <&sys_reg>;
- 			vin-sm1-supply = <&sys_reg>;
-@@ -511,15 +512,6 @@
- 		#address-cells = <1>;
- 		#size-cells = <0>;
- 
--		vdd_5v0_reg: regulator@0 {
--			compatible = "regulator-fixed";
--			reg = <0>;
--			regulator-name = "vdd_5v0";
--			regulator-min-microvolt = <5000000>;
--			regulator-max-microvolt = <5000000>;
--			regulator-always-on;
--		};
--
- 		pci_vdd_reg: regulator@1 {
- 			compatible = "regulator-fixed";
- 			reg = <1>;
-diff --git a/arch/arm/boot/dts/tegra20-tec.dts b/arch/arm/boot/dts/tegra20-tec.dts
-index 890562c..173201a 100644
---- a/arch/arm/boot/dts/tegra20-tec.dts
-+++ b/arch/arm/boot/dts/tegra20-tec.dts
-@@ -67,4 +67,50 @@
- 			 <&tegra_car TEGRA20_CLK_CDEV1>;
- 		clock-names = "pll_a", "pll_a_out0", "mclk";
- 	};
-+
-+	board_regulators {
-+		compatible = "simple-bus";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		vcc_24v_reg: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "vcc_24v";
-+			regulator-min-microvolt = <24000000>;
-+			regulator-max-microvolt = <24000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_5v0_reg: regulator@1 {
-+			compatible = "regulator-fixed";
-+			reg = <1>;
-+			regulator-name = "vdd_5v0";
-+			vin-supply = <&vcc_24v_reg>;
-+			regulator-min-microvolt = <5000000>;
-+			regulator-max-microvolt = <5000000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_3v3_reg: regulator@2 {
-+			compatible = "regulator-fixed";
-+			reg = <2>;
-+			regulator-name = "vdd_3v3";
-+			vin-supply = <&vcc_24v_reg>;
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+
-+		vdd_1v8_reg: regulator@3 {
-+			compatible = "regulator-fixed";
-+			reg = <3>;
-+			regulator-name = "vdd_1v8";
-+			vin-supply = <&vdd_3v3_reg>;
-+			regulator-min-microvolt = <1800000>;
-+			regulator-max-microvolt = <1800000>;
-+			regulator-always-on;
-+		};
-+	};
- };
--- 
-2.0.0
+Ah, good to know.
+
+> > > I'm generally opposed to these sorts of checkpatch patches, especially
+> > > when they are just warnings.  It's great for a new driver in the staging
+> > > tree, but it makes backporting future bugfixes that much harder when
+> > > drivers have been live in mainline.
+> 
+> Blind adherence to checkpatch isn't always a great idea.
+
+Agreed.
+
+> But bugfix backports haven't been much of an issue in
+> other subsystems with fairly active whitespace/style
+> changes.
+
+Most of the mvebu fixes we've had that failed to apply were generally
+due to a large whitespace change (dts node shuffling, admittedly not
+checkpatch-related).  I've also frequently been stymied by code cleanups
+when using git blame to find the commit introducing a regression.
+
+So, my general rule is: If you're submitting a patch to make checkpatch
+be quiet, re-assess the need.  If you're making changes and you can fix
+some checkpatch items while you're there, then do so.
+
+There are certainly legitimate checkpatch-only patches, I just don't
+think this is one qualifies.
+
+thx,
+
+Jason.
