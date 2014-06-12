@@ -1,80 +1,47 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
-Date: Thu, 12 Jun 2014 11:32:26 -0400
-Message-ID: <20140612153226.GE8664@titan.lakedaemon.net>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
- <1402574007-13987-9-git-send-email-r.sricharan@ti.com>
- <20140612131042.GU8664@titan.lakedaemon.net>
- <5399AC9C.4080602@ti.com>
- <1402582711.9947.17.camel@joe-AO725>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH] of: Add vendor 2nd prefix for Asahi Kasei Corp
+Date: Thu, 12 Jun 2014 09:33:04 -0600
+Message-ID: <5399C830.8070607@wwwdotorg.org>
+References: <CAMuHMdWTVBjFzA9L9Eqpq_2Xi9_NHkOCLrb_UjK611SBfwnc=Q@mail.gmail.com>	<87ioo7c0g5.wl%kuninori.morimoto.gx@renesas.com>	<539815E6.2050304@codethink.co.uk>	<20140611165410.GK5099@sirena.org.uk>	<CAMuHMdUT0hEBGbN+W-Oz5zJ0N8S2VDMndqtDO=EtWF3jG2MEew@mail.gmail.com>	<20140611170233.GL5099@sirena.org.uk>	<5398A53D.3020706@wwwdotorg.org>	<20140611190444.GN5099@sirena.org.uk>	<5398AB07.4040304@wwwdotorg.org> <87sinbdk44.wl%kuninori.morimoto.gx@renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402582711.9947.17.camel@joe-AO725>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joe Perches <joe@perches.com>
-Cc: Sricharan R <r.sricharan@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <87sinbdk44.wl%kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ALSA Development Mailing List <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, Linux-sh list <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Simon <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Joe,
-
-On Thu, Jun 12, 2014 at 07:18:31AM -0700, Joe Perches wrote:
-> On Thu, 2014-06-12 at 19:05 +0530, Sricharan R wrote:
-> > On Thursday 12 June 2014 06:40 PM, Jason Cooper wrote:
-> > > On Thu, Jun 12, 2014 at 05:23:16PM +0530, Sricharan R wrote:
-> > >> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-> []
-> > >> @@ -34,7 +34,8 @@ struct crossbar_device {
-> > >>  	uint *irq_map;
-> > >>  	void __iomem *crossbar_base;
-> > >>  	int *register_offsets;
-> > >> -	void (*write) (int, int);
-> > >> +
-> > >> +	void (*write)(int, int);
-> > > 
-> > > The empty line here looks bogus to me.
+On 06/11/2014 06:53 PM, Kuninori Morimoto wrote:
+> From: Kuninori Morimoto <kuninori.morimoto.gx-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
 > 
-> Good eye.  It's unnecessary.
+> Current vendor-prefixes.txt already has
+> "ak" prefix for Asahi Kasei Corp by
+> ae8c4209af2cec065fef15d200a42a04130799f7
+> (of: Add vendor prefix for Asahi Kasei Corp.)
 > 
-> > > Did you re-run checkpatch after fixing the unnecessary space to
-> > > see if it still complained about having a 'blank line after
-> > > declarations'?
-> > > 
-> >  Yes, it still complains even after fixing unnecessary space.
-> 
-> It's a checkpatch defect.
-> 
-> It's been fixed by:
-> https://lkml.org/lkml/2014/6/6/426
+> It went through the appropriate review process,
+> and is already in use.
+> But, almost all Asahi Kasei chip driver is
+> using "asahi-kasei" prefix today.
 
-Ah, good to know.
+I'm fine with this patch, but just wanted to comment on this part of the
+commit description:
 
-> > > I'm generally opposed to these sorts of checkpatch patches, especially
-> > > when they are just warnings.  It's great for a new driver in the staging
-> > > tree, but it makes backporting future bugfixes that much harder when
-> > > drivers have been live in mainline.
-> 
-> Blind adherence to checkpatch isn't always a great idea.
+What is in the drivers isn't relevant; that's not what drives the ABI.
+The issue is that some *DTs* use ak and some use asahi-kasei, so both
+those need to be supported.
 
-Agreed.
+That said, we should document which one of the two prefixes is
+preferred, and use this for any new AK binding.
 
-> But bugfix backports haven't been much of an issue in
-> other subsystems with fairly active whitespace/style
-> changes.
+It would also be nice to ensure the preferred prefix is in all drivers'
+of_match_tables, and remove the deprecated prefix from all drivers'
+of_match_tables *except* where there's already a DT file that references
+the deprecated vendor prefix.
 
-Most of the mvebu fixes we've had that failed to apply were generally
-due to a large whitespace change (dts node shuffling, admittedly not
-checkpatch-related).  I've also frequently been stymied by code cleanups
-when using git blame to find the commit introducing a regression.
-
-So, my general rule is: If you're submitting a patch to make checkpatch
-be quiet, re-assess the need.  If you're making changes and you can fix
-some checkpatch items while you're there, then do so.
-
-There are certainly legitimate checkpatch-only patches, I just don't
-think this is one qualifies.
-
-thx,
-
-Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
