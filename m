@@ -1,94 +1,62 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 3/3 v4] ARM: DTS: fix the chip select gpios definition in the
- SPI nodes
-Date: Thu, 12 Jun 2014 18:43:41 +0530
-Message-ID: <1402578821-27338-3-git-send-email-ch.naveen@samsung.com>
-References: <1402578821-27338-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1402578821-27338-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V2 11/19] irqchip: crossbar: fix memory leak incase of
+ invalid entry
+Date: Thu, 12 Jun 2014 09:20:23 -0400
+Message-ID: <20140612132023.GX8664@titan.lakedaemon.net>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+ <1402574007-13987-12-git-send-email-r.sricharan@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402574007-13987-12-git-send-email-r.sricharan-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch replaces the "cs-gpio" from "controller-data" node
-as was specified in the old binding and use the standard
-"cs-gpios" property expected by the SPI core as is defined in
-the new binding.
+On Thu, Jun 12, 2014 at 05:23:19PM +0530, Sricharan R wrote:
+> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> 
+> When the provided unused skip list entry is greater than max irqs
+> possible, we go to err3, but we fail to free register_offsets,
+> should have returned to err4 instead which ensures that allocated
 
-Respective changes are preposed to spi-s3c64xx.c driver.
-@ http://www.spinics.net/lists/linux-samsung-soc/msg32282.html
+s/returned/jumped/
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Doug Anderson <dianders@chromium.org>
-Cc: Tomasz Figa <t.figa@samsung.com>
----
- arch/arm/boot/dts/exynos4210-smdkv310.dts |    2 +-
- arch/arm/boot/dts/exynos4412-trats2.dts   |    2 +-
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+> register_offsets are freed as well.
+> 
+> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+> ---
+>  drivers/irqchip/irq-crossbar.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+> index 42a2e62..fea3e5d 100644
+> --- a/drivers/irqchip/irq-crossbar.c
+> +++ b/drivers/irqchip/irq-crossbar.c
+> @@ -225,7 +225,7 @@ static int __init crossbar_of_init(struct device_node *node,
+>  
+>  			if (entry > max) {
+>  				pr_err("Invalid skip entry\n");
+> -				goto err3;
+> +				goto err4;
 
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 636d166..9191491 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -169,6 +169,7 @@
- 
- 	spi_2: spi@13940000 {
- 		status = "okay";
-+		cs-gpios = <&gpc1 2 0>;
- 
- 		w25x80@0 {
- 			#address-cells = <1>;
-@@ -178,7 +179,6 @@
- 			spi-max-frequency = <1000000>;
- 
- 			controller-data {
--				cs-gpio = <&gpc1 2 0>;
- 				samsung,spi-feedback-delay = <0>;
- 			};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 8a558b7..204b0de 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -512,6 +512,7 @@
- 	spi_1: spi@13930000 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&spi1_bus>;
-+		cs-gpios = <&gpb 5 0>;
- 		status = "okay";
- 
- 		s5c73m3_spi: s5c73m3 {
-@@ -519,7 +520,6 @@
- 			spi-max-frequency = <50000000>;
- 			reg = <0>;
- 			controller-data {
--				cs-gpio = <&gpb 5 0>;
- 				samsung,spi-feedback-delay = <2>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a794a70..0c6433a 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -316,6 +316,7 @@
- 	};
- 
- 	spi_1: spi@12d30000 {
-+		cs-gpios = <&gpa2 5 0>;
- 		status = "okay";
- 
- 		w25q80bw@0 {
-@@ -326,7 +327,6 @@
- 			spi-max-frequency = <1000000>;
- 
- 			controller-data {
--				cs-gpio = <&gpa2 5 0>;
- 				samsung,spi-feedback-delay = <0>;
- 			};
- 
--- 
-1.7.9.5
+This would be a good opportunity to reduce the possibility of future
+errors.  Please consider renaming err{1,2,3,4} to something more
+recognizable while you are here.
+
+thx,
+
+Jason.
+
+>  			}
+>  			cb->irq_map[entry] = IRQ_SKIP;
+>  		}
+> -- 
+> 1.7.9.5
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
