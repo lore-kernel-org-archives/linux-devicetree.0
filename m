@@ -1,87 +1,40 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
- v3.16
-Date: Thu, 12 Jun 2014 01:00:31 -0700
-Message-ID: <20140612080030.GD17845@atomide.com>
-References: <1401214140-9828-1-git-send-email-tony@atomide.com>
- <20140528071313.GH4227@lee--X1>
- <20140528180607.GB4707@atomide.com>
- <20140602163841.GC11004@atomide.com>
- <20140603080632.GC3060@lee--X1>
- <20140612054348.GC17845@atomide.com>
- <20140612074705.GB11421@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140612074705.GB11421@lee--X1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Jaewon Kim <jaewon02.kim@samsung.com>
+Subject: [PATCH] ARM: dts: exynos4: fix pwm-cells in pwm node
+Date: Thu, 12 Jun 2014 17:23:12 +0900
+Message-ID: <1402561392-21702-1-git-send-email-jaewon02.kim@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: myungjoo.ham@samsung.com, cw00.choi@samsung.com, Jaewon Kim <jaewon02.kim@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [140612 00:48]:
-> On Wed, 11 Jun 2014, Tony Lindgren wrote:
-> 
-> > * Lee Jones <lee.jones@linaro.org> [140603 01:08]:
-> > > On Mon, 02 Jun 2014, Tony Lindgren wrote:
-> > > > * Tony Lindgren <tony@atomide.com> [140528 11:11]:
-> > > > > * Lee Jones <lee.jones@linaro.org> [140528 00:14]:
-> > > > > > Thanks Tony, here's the pull-request:
-> > > > > > 
-> > > > > > The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
-> > > > > > 
-> > > > > >   Linux 3.14 (2014-03-30 20:40:15 -0700)
-> > > > > > 
-> > > > > > are available in the git repository at:
-> > > > > > 
-> > > > > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-omap-v3.16-1
-> > > > > > 
-> > > > > > for you to fetch changes up to 43fef47f94a1ae46fb2720dada32fa3b5547bee2:
-> > > > > > 
-> > > > > >   mfd: twl4030-power: Add a configuration to turn off oscillator during off-idle (2014-05-28 08:06:18 +0100)
-> > > > > > 
-> > > > > > ----------------------------------------------------------------
-> > > > > > Second immutable branch between MFD and OMAP due for the v3.16 merge window.
-> > > > > 
-> > > > > Thanks a lot, this will make it easier for me to chase down potential
-> > > > > PM related regressions ;) I'm merging this for testing only into the
-> > > > > linux-omap master branch, no need for me to include it into any
-> > > > > of my upstream heading branches.
-> > > > 
-> > > > Lee, I'm not seeing this in linux next, did you maybe forget to merge
-> > > > it into the MFD tree?
-> > > 
-> > > I didn't forget, but I didn't do it either. :)
-> > > 
-> > > I have re-merged all of the IBs this morning, so should be in -next
-> > > by tomorrow.
-> > 
-> > Still not seeing this branch being merged..
-> 
-> Oh crap, I see what's happened and it's completely my fault.
-> 
-> If you read the final merge commit carefully:
-> 
-> 28fee3f: ("Merge branches 'ib-from-asoc-3.16', 'ib-from-pm-3.16',
-> 'ib-from-regulator-3.16', 'ib-mfd-gpio-3.16' and
-> 'ib-mfd-mmc-memstick-3.16', tags 'ib-mfd-extcon-3.16',
-> 'ib-mfd-omap-3.16' and 'ib-mfd-regulator-3.16' into
-> ibs-for-mfd-merged")
-> 
-> I appear to have a _branch_ AND a _tag_ called ib-mfd-omap-3.16 and it
-> looks like Git has taken the tag as a preference. heads/ib-mfd-omap-3.16
-> is actually at tag/ib-mfd-omap-3.16-1 (notice the appended '-1'),
-> which contains your most recent patches.  Since I created the MFD-OMAP
-> shared branch I have changed the naming convention to avoid this sort
-> of ambiguity.  I'll send a second MFD pull-request to Linus today.
+pwm-cells should be 3. Third cell is optional PWM flags.
+And This flag supported by this binding is PWM_POLARITY_INVERTED
 
-Heh OK yeah I've hit that also at some point :)
+Signed-off-by: Jaewon Kim <jaewon02.kim@samsung.com>
+---
+ arch/arm/boot/dts/exynos4.dtsi |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/exynos4.dtsi b/arch/arm/boot/dts/exynos4.dtsi
+index b8ece4b..b687e53 100644
+--- a/arch/arm/boot/dts/exynos4.dtsi
++++ b/arch/arm/boot/dts/exynos4.dtsi
+@@ -548,13 +548,13 @@
+ 		status = "disabled";
+ 	};
  
-> Sorry Tony.
-
-No problem, good to hear you got it figured out.
-
-Regards,
-
-Tony
+-	pwm@139D0000 {
++	pwm: pwm@139D0000 {
+ 		compatible = "samsung,exynos4210-pwm";
+ 		reg = <0x139D0000 0x1000>;
+ 		interrupts = <0 37 0>, <0 38 0>, <0 39 0>, <0 40 0>, <0 41 0>;
+ 		clocks = <&clock CLK_PWM>;
+ 		clock-names = "timers";
+-		#pwm-cells = <2>;
++		#pwm-cells = <3>;
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.7.9.5
