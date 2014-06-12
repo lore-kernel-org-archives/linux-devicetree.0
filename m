@@ -1,106 +1,61 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 3/3 v4] ARM: DTS: fix the chip select gpios definition
- in the SPI nodes
-Date: Thu, 12 Jun 2014 16:07:53 +0200
-Message-ID: <5399B439.1010300@collabora.co.uk>
-References: <1402578821-27338-1-git-send-email-ch.naveen@samsung.com> <1402578821-27338-3-git-send-email-ch.naveen@samsung.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
+Date: Thu, 12 Jun 2014 07:18:31 -0700
+Message-ID: <1402582711.9947.17.camel@joe-AO725>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+	 <1402574007-13987-9-git-send-email-r.sricharan@ti.com>
+	 <20140612131042.GU8664@titan.lakedaemon.net> <5399AC9C.4080602@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1402578821-27338-3-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5399AC9C.4080602-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Naveen,
+On Thu, 2014-06-12 at 19:05 +0530, Sricharan R wrote:
+> On Thursday 12 June 2014 06:40 PM, Jason Cooper wrote:
+> > On Thu, Jun 12, 2014 at 05:23:16PM +0530, Sricharan R wrote:
+> >> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+[]
+> >> @@ -34,7 +34,8 @@ struct crossbar_device {
+> >>  	uint *irq_map;
+> >>  	void __iomem *crossbar_base;
+> >>  	int *register_offsets;
+> >> -	void (*write) (int, int);
+> >> +
+> >> +	void (*write)(int, int);
+> > 
+> > The empty line here looks bogus to me.
 
-On 06/12/2014 03:13 PM, Naveen Krishna Chatradhi wrote:
-> This patch replaces the "cs-gpio" from "controller-data" node
-> as was specified in the old binding and use the standard
-> "cs-gpios" property expected by the SPI core as is defined in
-> the new binding.
-> 
-> Respective changes are preposed to spi-s3c64xx.c driver.
-> @ http://www.spinics.net/lists/linux-samsung-soc/msg32282.html
-> 
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> Cc: Doug Anderson <dianders@chromium.org>
-> Cc: Tomasz Figa <t.figa@samsung.com>
-> ---
->  arch/arm/boot/dts/exynos4210-smdkv310.dts |    2 +-
->  arch/arm/boot/dts/exynos4412-trats2.dts   |    2 +-
->  arch/arm/boot/dts/exynos5250-smdk5250.dts |    2 +-
->  3 files changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-> index 636d166..9191491 100644
-> --- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-> +++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-> @@ -169,6 +169,7 @@
->  
->  	spi_2: spi@13940000 {
->  		status = "okay";
-> +		cs-gpios = <&gpc1 2 0>;
->  
->  		w25x80@0 {
->  			#address-cells = <1>;
-> @@ -178,7 +179,6 @@
->  			spi-max-frequency = <1000000>;
->  
->  			controller-data {
-> -				cs-gpio = <&gpc1 2 0>;
->  				samsung,spi-feedback-delay = <0>;
->  			};
->  
-> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-> index 8a558b7..204b0de 100644
-> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
-> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-> @@ -512,6 +512,7 @@
->  	spi_1: spi@13930000 {
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&spi1_bus>;
-> +		cs-gpios = <&gpb 5 0>;
->  		status = "okay";
->  
->  		s5c73m3_spi: s5c73m3 {
-> @@ -519,7 +520,6 @@
->  			spi-max-frequency = <50000000>;
->  			reg = <0>;
->  			controller-data {
-> -				cs-gpio = <&gpb 5 0>;
->  				samsung,spi-feedback-delay = <2>;
->  			};
->  		};
-> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> index a794a70..0c6433a 100644
-> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-> @@ -316,6 +316,7 @@
->  	};
->  
->  	spi_1: spi@12d30000 {
-> +		cs-gpios = <&gpa2 5 0>;
->  		status = "okay";
->  
->  		w25q80bw@0 {
-> @@ -326,7 +327,6 @@
->  			spi-max-frequency = <1000000>;
->  
->  			controller-data {
-> -				cs-gpio = <&gpa2 5 0>;
->  				samsung,spi-feedback-delay = <0>;
->  			};
->  
-> 
+Good eye.  It's unnecessary.
 
-Looks good to me.
+>   Did you re-run checkpatch after
+> > fixing the unnecessary space to see if it still complained about having
+> > a 'blank line after declarations'?
+> > 
+>  Yes, it still complains even after fixing unnecessary space.
 
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+It's a checkpatch defect.
 
-Best regards,
-Javier
+It's been fixed by:
+https://lkml.org/lkml/2014/6/6/426
+
+> > I'm generally opposed to these sorts of checkpatch patches, especially
+> > when they are just warnings.  It's great for a new driver in the staging
+> > tree, but it makes backporting future bugfixes that much harder when
+> > drivers have been live in mainline.
+
+Blind adherence to checkpatch isn't always a great idea.
+
+But bugfix backports haven't been much of an issue in
+other subsystems with fairly active whitespace/style
+changes.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
