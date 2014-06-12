@@ -1,227 +1,62 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v8 4/6] ARM: tegra: Add efuse and apbmisc bindings
-Date: Thu, 12 Jun 2014 18:36:38 +0300
-Message-ID: <1402587400-1544-5-git-send-email-pdeschrijver@nvidia.com>
-References: <1402587400-1544-1-git-send-email-pdeschrijver@nvidia.com>
+From: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
+Date: Thu, 12 Jun 2014 09:05:59 -0700
+Message-ID: <1402589159.12385.4.camel@joe-AO725>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+	 <1402574007-13987-9-git-send-email-r.sricharan@ti.com>
+	 <20140612131042.GU8664@titan.lakedaemon.net> <5399AC9C.4080602@ti.com>
+	 <1402582711.9947.17.camel@joe-AO725>
+	 <20140612153226.GE8664@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402587400-1544-1-git-send-email-pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140612153226.GE8664-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add efuse and apbmisc bindings for Tegra20, Tegra30, Tegra114 and Tegra124.
+On Thu, 2014-06-12 at 11:32 -0400, Jason Cooper wrote:
 
-Signed-off-by: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/fuse/nvidia,tegra20-fuse.txt          |   40 ++++++++++++++++++++
- .../bindings/misc/nvidia,tegra20-apbmisc.txt       |   13 ++++++
- arch/arm/boot/dts/tegra114.dtsi                    |   15 +++++++
- arch/arm/boot/dts/tegra124.dtsi                    |   15 +++++++
- arch/arm/boot/dts/tegra20.dtsi                     |   15 +++++++
- arch/arm/boot/dts/tegra30.dtsi                     |   15 +++++++
- 6 files changed, 113 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.txt
- create mode 100644 Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
+Hi Jason.
 
-diff --git a/Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.txt b/Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.txt
-new file mode 100644
-index 0000000..d8c98c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/fuse/nvidia,tegra20-fuse.txt
-@@ -0,0 +1,40 @@
-+NVIDIA Tegra20/Tegra30/Tegr114/Tegra124 fuse block.
-+
-+Required properties:
-+- compatible : should be:
-+	"nvidia,tegra20-efuse"
-+	"nvidia,tegra30-efuse"
-+	"nvidia,tegra114-efuse"
-+	"nvidia,tegra124-efuse"
-+  Details:
-+  nvidia,tegra20-efuse: Tegra20 requires using APB DMA to read the fuse data
-+	due to a hardware bug. Tegra20 also lacks certain information which is
-+	available in later generations such as fab code, lot code, wafer id,..
-+  nvidia,tegra30-efuse, nvidia,tegra114-efuse and nvidia,tegra124-efuse:
-+	The differences between these SoCs are the size of the efuse array,
-+	the location of the spare (OEM programmable) bits and the location of
-+	the speedo data.
-+- reg: Should contain 1 entry: the entry gives the physical address and length
-+       of the fuse registers.
-+- clocks: Must contain an entry for each entry in clock-names.
-+  See ../clocks/clock-bindings.txt for details.
-+- clock-names: Must include the following entries:
-+  - fuse
-+- resets: Must contain an entry for each entry in reset-names.
-+  See ../reset/reset.txt for details.
-+- reset-names: Must include the following entries:
-+ - fuse
-+
-+Example:
-+
-+	fuse@7000f800 {
-+		compatible = "nvidia,tegra20-efuse";
-+		reg = <0x7000F800 0x400>,
-+		      <0x70000000 0x400>;
-+		clocks = <&tegra_car TEGRA20_CLK_FUSE>;
-+		clock-names = "fuse";
-+		resets = <&tegra_car 39>;
-+		reset-names = "fuse";
-+	};
-+
-+
-diff --git a/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-new file mode 100644
-index 0000000..b97b8be
---- /dev/null
-+++ b/Documentation/devicetree/bindings/misc/nvidia,tegra20-apbmisc.txt
-@@ -0,0 +1,13 @@
-+NVIDIA Tegra20/Tegra30/Tegr114/Tegra124 apbmisc block
-+
-+Required properties:
-+- compatible : should be:
-+       "nvidia,tegra20-apbmisc"
-+       "nvidia,tegra30-apbmisc"
-+       "nvidia,tegra114-apbmisc"
-+       "nvidia,tegra124-apbmisc"
-+- reg: Should contain 2 entries: the first entry gives the physical address
-+       and length of the registers which contain revision and debug features.
-+       The second entry gives the physical address and length of the
-+       registers indicating the strapping options.
-+
-diff --git a/arch/arm/boot/dts/tegra114.dtsi b/arch/arm/boot/dts/tegra114.dtsi
-index fdc559a..335a1d8 100644
---- a/arch/arm/boot/dts/tegra114.dtsi
-+++ b/arch/arm/boot/dts/tegra114.dtsi
-@@ -220,6 +220,12 @@
- 		interrupt-controller;
- 	};
- 
-+	apbmisc@70000800 {
-+		compatible = "nvidia,tegra114-apbmisc", "nvidia,tegra20-apbmisc";
-+		reg = <0x70000800 0x64   /* Chip revision */
-+		       0x70000008 0x04>; /* Strapping options */
-+	};
-+
- 	pinmux: pinmux@70000868 {
- 		compatible = "nvidia,tegra114-pinmux";
- 		reg = <0x70000868 0x148		/* Pad control registers */
-@@ -485,6 +491,15 @@
- 		clock-names = "pclk", "clk32k_in";
- 	};
- 
-+	fuse@7000f800 {
-+		compatible = "nvidia,tegra114-efuse";
-+		reg = <0x7000f800 0x400>;
-+		clocks = <&tegra_car TEGRA114_CLK_FUSE>;
-+		clock-names = "fuse";
-+		resets = <&tegra_car 39>;
-+		reset-names = "fuse";
-+	};
-+
- 	iommu@70019010 {
- 		compatible = "nvidia,tegra114-smmu", "nvidia,tegra30-smmu";
- 		reg = <0x70019010 0x02c
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 6d540a0..9739a13 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -167,6 +167,12 @@
- 		#dma-cells = <1>;
- 	};
- 
-+	apbmisc@0,70000800 {
-+		compatible = "nvidia,tegra124-apbmisc", "nvidia,tegra20-apbmisc";
-+		reg = <0x0 0x70000800 0x0 0x64>,   /* Chip revision */
-+		      <0x0 0x7000E864 0x0 0x04>;   /* Strapping options */
-+	};
-+
- 	pinmux: pinmux@0,70000868 {
- 		compatible = "nvidia,tegra124-pinmux";
- 		reg = <0x0 0x70000868 0x0 0x164>, /* Pad control registers */
-@@ -437,6 +443,15 @@
- 		clock-names = "pclk", "clk32k_in";
- 	};
- 
-+	fuse@0,7000f800 {
-+		compatible = "nvidia,tegra124-efuse";
-+		reg = <0x0 0x7000f800 0x0 0x400>;
-+		clocks = <&tegra_car TEGRA124_CLK_FUSE>;
-+		clock-names = "fuse";
-+		resets = <&tegra_car 39>;
-+		reset-names = "fuse";
-+	};
-+
- 	sdhci@0,700b0000 {
- 		compatible = "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
-diff --git a/arch/arm/boot/dts/tegra20.dtsi b/arch/arm/boot/dts/tegra20.dtsi
-index a7ddf70..243d84c 100644
---- a/arch/arm/boot/dts/tegra20.dtsi
-+++ b/arch/arm/boot/dts/tegra20.dtsi
-@@ -236,6 +236,12 @@
- 		interrupt-controller;
- 	};
- 
-+	apbmisc@70000800 {
-+		compatible = "nvidia,tegra20-apbmisc";
-+		reg = <0x70000800 0x64   /* Chip revision */
-+		       0x70000008 0x04>; /* Strapping options */
-+	};
-+
- 	pinmux: pinmux@70000014 {
- 		compatible = "nvidia,tegra20-pinmux";
- 		reg = <0x70000014 0x10   /* Tri-state registers */
-@@ -545,6 +551,15 @@
- 		#size-cells = <0>;
- 	};
- 
-+	fuse@7000f800 {
-+		compatible = "nvidia,tegra20-efuse";
-+		reg = <0x7000F800 0x400>;
-+		clocks = <&tegra_car TEGRA20_CLK_FUSE>;
-+		clock-names = "fuse";
-+		resets = <&tegra_car 39>;
-+		reset-names = "fuse";
-+	};
-+
- 	pcie-controller@80003000 {
- 		compatible = "nvidia,tegra20-pcie";
- 		device_type = "pci";
-diff --git a/arch/arm/boot/dts/tegra30.dtsi b/arch/arm/boot/dts/tegra30.dtsi
-index dec4fc8..0b1ede9 100644
---- a/arch/arm/boot/dts/tegra30.dtsi
-+++ b/arch/arm/boot/dts/tegra30.dtsi
-@@ -335,6 +335,12 @@
- 		interrupt-controller;
- 	};
- 
-+	apbmisc@70000800 {
-+		compatible = "nvidia,tegra30-apbmisc", "nvidia,tegra20-apbmisc";
-+		reg = <0x70000800 0x64   /* Chip revision */
-+		       0x70000008 0x04>; /* Strapping options */
-+	};
-+
- 	pinmux: pinmux@70000868 {
- 		compatible = "nvidia,tegra30-pinmux";
- 		reg = <0x70000868 0xd4    /* Pad control registers */
-@@ -631,6 +637,15 @@
- 		nvidia,ahb = <&ahb>;
- 	};
- 
-+	fuse@7000f800 {
-+		compatible = "nvidia,tegra30-efuse";
-+		reg = <0x7000f800 0x400>;
-+		clocks = <&tegra_car TEGRA30_CLK_FUSE>;
-+		clock-names = "fuse";
-+		resets = <&tegra_car 39>;
-+		reset-names = "fuse";
-+	};
-+
- 	ahub@70080000 {
- 		compatible = "nvidia,tegra30-ahub";
- 		reg = <0x70080000 0x200
--- 
-1.7.7.rc0.72.g4b5ea.dirty
+> > But bugfix backports haven't been much of an issue in
+> > other subsystems with fairly active whitespace/style
+> > changes.
+> 
+> Most of the mvebu fixes we've had that failed to apply were generally
+> due to a large whitespace change (dts node shuffling, admittedly not
+> checkpatch-related).
+
+So not due to this.
+
+>   I've also frequently been stymied by code cleanups
+> when using git blame to find the commit introducing a regression.
+
+git blame -w can frequently help there.
+
+> So, my general rule is: If you're submitting a patch to make checkpatch
+> be quiet, re-assess the need.  If you're making changes and you can fix
+> some checkpatch items while you're there, then do so.
+
+Decent rule.
+
+> There are certainly legitimate checkpatch-only patches, I just don't
+> think this is one qualifies.
+
+Of course it's the maintainer's choice (and last I saw,
+that's you) to ignore whatever doesn't fit the appropriate
+vision for the code.
+
+$ ./scripts/get_maintainer.pl -f drivers/irqchip/irq-crossbar.c
+Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org> (maintainer:IRQCHIP DRIVERS)
+Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> (maintainer:IRQCHIP DRIVERS)
+...
+
+cheers, Joe
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
