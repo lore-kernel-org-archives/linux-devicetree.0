@@ -1,7 +1,7 @@
 From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V2 14/19] irqchip: crossbar: set cb pointer to null in case of error
-Date: Thu, 12 Jun 2014 17:23:22 +0530
-Message-ID: <1402574007-13987-15-git-send-email-r.sricharan@ti.com>
+Subject: [PATCH V2 11/19] irqchip: crossbar: fix memory leak incase of invalid entry
+Date: Thu, 12 Jun 2014 17:23:19 +0530
+Message-ID: <1402574007-13987-12-git-send-email-r.sricharan@ti.com>
 References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,27 +12,31 @@ To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree
 Cc: tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, r.sricharan@ti.com, tglx@linutronix.de, jason@lakedaemon.net
 List-Id: devicetree@vger.kernel.org
 
-If crossbar_of_init returns with a error, then set the cb pointer
-to null.
+From: Nishanth Menon <nm@ti.com>
 
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
+When the provided unused skip list entry is greater than max irqs
+possible, we go to err3, but we fail to free register_offsets,
+should have returned to err4 instead which ensures that allocated
+register_offsets are freed as well.
+
+Signed-off-by: Nishanth Menon <nm@ti.com>
 ---
- drivers/irqchip/irq-crossbar.c |    2 ++
- 1 file changed, 2 insertions(+)
+ drivers/irqchip/irq-crossbar.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-index cf0d79f..5f3e75a 100644
+index 42a2e62..fea3e5d 100644
 --- a/drivers/irqchip/irq-crossbar.c
 +++ b/drivers/irqchip/irq-crossbar.c
-@@ -259,6 +259,8 @@ err_base:
- 	iounmap(cb->crossbar_base);
- err_cb:
- 	kfree(cb);
-+
-+	cb = NULL;
- 	return ret;
- }
+@@ -225,7 +225,7 @@ static int __init crossbar_of_init(struct device_node *node,
  
+ 			if (entry > max) {
+ 				pr_err("Invalid skip entry\n");
+-				goto err3;
++				goto err4;
+ 			}
+ 			cb->irq_map[entry] = IRQ_SKIP;
+ 		}
 -- 
 1.7.9.5
 
