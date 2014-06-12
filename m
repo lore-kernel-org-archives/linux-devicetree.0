@@ -1,44 +1,40 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH 1/2] ARM: shmobile: r8a7791: add VIN DT support
-Date: Thu, 12 Jun 2014 03:53:40 +0400
-Message-ID: <5398EC04.5040802@cogentembedded.com>
-References: <201406110304.18976.sergei.shtylyov@cogentembedded.com> <201406110306.08759.sergei.shtylyov@cogentembedded.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 0/2] Add VIN and ADV7180 DT support for R8A7791/Henninger
+ board
+Date: Thu, 12 Jun 2014 09:19:08 +0900
+Message-ID: <20140612001908.GA11549@verge.net.au>
+References: <201406110304.18976.sergei.shtylyov@cogentembedded.com>
+ <20140610235445.GE20738@verge.net.au>
+ <53984E7D.8010909@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201406110306.08759.sergei.shtylyov@cogentembedded.com>
+Content-Disposition: inline
+In-Reply-To: <53984E7D.8010909@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Wed, Jun 11, 2014 at 04:41:33PM +0400, Sergei Shtylyov wrote:
+> Hello.
+> 
+> On 06/11/2014 03:54 AM, Simon Horman wrote:
+> 
+> >>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+> >>'renesas-devel-v3.15-20140610' tag plus the Henninger I2C2 DT support patch
+> >>that I posted earlier. Here we add the VIN and ADV7180 video decoder device
+> >>tree support on the R8A7791/Henninger board. The patchset requires Ben Dooks'
+> >>adv7180, rcar_vin, and soc_camera DT support patches posted back in April in
+> >>order to work.
+> 
+> >I wonder what the status of those (driver?) patches are.
+> 
+>    Someone in CodeThink is working on them, I was told. I had to fix them up
+> somewhat in order for them to compile.
+> 
+> >In general I prefer bindings to be accepted before they are used.
+> 
+>    No argument here. I just have my own schedule.
 
-On 06/11/2014 03:06 AM, Sergei Shtylyov wrote:
-
-> Define the generic R8A7791 parts of the VIN[0-2] device nodes. Add aliases for
-> the VIN[0-2] device nodes.
-
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-> ---
->   arch/arm/boot/dts/r8a7791.dtsi |   27 +++++++++++++++++++++++++++
->   1 file changed, 27 insertions(+)
-
-> Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-> +++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-[...]
-> @@ -518,6 +521,30 @@
->   		status = "disabled";
->   	};
->
-> +	vin0: video@e6ef0000 {
-> +		compatible = "renesas,vin-r8a7790";
-
-    Duh, should have been "renesas,vin-r8a7791"...
-
-WBR, Sergei
-
+No argument there either :)
