@@ -1,40 +1,52 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 19/24] dt: bindings: ux500: Add documentation for power
- domains
-Date: Thu, 12 Jun 2014 12:26:55 +0200
-Message-ID: <20140612102655.GA6945@amd.pavel.ucw.cz>
-References: <1402397497-26737-1-git-send-email-ulf.hansson@linaro.org>
- <1402397497-26737-20-git-send-email-ulf.hansson@linaro.org>
- <7hoaxzgvfw.fsf@paris.lan>
+From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
+Subject: [PATCH 0/9] Generic earlyconsole for ARC UART Driver
+Date: Thu, 12 Jun 2014 16:01:30 +0530
+Message-ID: <1402569099-9900-1-git-send-email-vgupta@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <7hoaxzgvfw.fsf@paris.lan>
-Sender: linux-pm-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Len Brown <len.brown@intel.com>, linux-pm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, Stephen Boyd <sboyd@codeaurora.org>, Philipp Zabel <philipp.zabel@gmail.com>, Mark Brown <broonie@kernel.org>
+Content-Type: text/plain
+Return-path: <linux-serial-owner@vger.kernel.org>
+Sender: linux-serial-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, Francois.Bedard@synopsys.com, Vineet Gupta <Vineet.Gupta1@synopsys.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2014-06-11 11:20:03, Kevin Hilman wrote:
-> Ulf Hansson <ulf.hansson@linaro.org> writes:
-> 
-> -EMISSING_CHANGELOG
+Hi,
 
--EBAD_REVIEW
+This series switches ARC UART from custom earlyprintk support to generic
+earlycon (many thanks to Rob for doing that).
 
-Subject says it all, it adds documentation, what more would you like
-to see in the changelog?
+The motivation is to get rid of the early platform code, which in turn
+would help consolidate the init code across several ARC platforms.
 
-Lets not make patch submission harder than it needs to be...
+First 3 patches are general cleanup/refactoring, not necesarily related to
+earlycon.
 
-									Pavel
+Also the ARC platform change (8/9) is bundled in to keep series bisectable
+w/o timing hassles. However it can be dropped if tty maintainers deem so.
 
-> > Cc: Linus Walleij <linus.walleij@linaro.org>
-> > Cc: Tomasz Figa <tomasz.figa@gmail.com>
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Please review.
+
+Thx,
+-Vineet
+
+Vineet Gupta (9):
+  serial/arc: use uart_console_write() helper
+  serial/arc: Refactor by referencing to uart_port where possible
+  serial/arc: Remove the workaround for legacy ISS
+  serial/arc: Use generic earlycon infrastructure
+  serial/arc: remove earlyprintk support and switch to earlycon
+  serial/arc: remove last remanants of platform data
+  serial/arc: inline the probe helper
+  ARC: [arcfpga] RIP early uart platform device stuff
+  serial/arc: Add DT based earlycon support
+
+ arch/arc/boot/dts/angel4.dts     |   3 +-
+ arch/arc/plat-arcfpga/Kconfig    |   7 -
+ arch/arc/plat-arcfpga/platform.c |  97 +-----------
+ drivers/tty/serial/Kconfig       |   1 +
+ drivers/tty/serial/arc_uart.c    | 329 ++++++++++++++-------------------------
+ 5 files changed, 123 insertions(+), 314 deletions(-)
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.8.3.2
+
