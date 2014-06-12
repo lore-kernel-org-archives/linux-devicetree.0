@@ -1,99 +1,68 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCHv5 3/3] ARM: mvebu: update L2/PCIe deadlock workaround after L2CC cleanup
-Date: Thu, 12 Jun 2014 17:09:32 +0200
-Message-ID: <1402585772-10405-4-git-send-email-thomas.petazzoni@free-electrons.com>
-References: <1402585772-10405-1-git-send-email-thomas.petazzoni@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402585772-10405-1-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Subject: [PATCH 2/2] ARM: tegra: tamonten: add the display to the Medcom Wide
+Date: Thu, 12 Jun 2014 17:11:25 +0200
+Message-ID: <1402585885-28247-2-git-send-email-alban.bedel@avionic-design.de>
+References: <1402585885-28247-1-git-send-email-alban.bedel@avionic-design.de>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402585885-28247-1-git-send-email-alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Commit 497a92308af8e9385fa3d135f7f416a997e4b93b ("ARM: mvebu:
-implement L2/PCIe deadlock workaround") introduced some logic in
-coherency.c to adjust the PL310 cache controller Device Tree node of
-Armada 375 and Armada 38x platform to include the 'arm,io-coherent'
-property if the system is running with hardware I/O coherency enabled.
+Enable the RGB output and add the panel definition to the Medcom Wide
+DTS. Also add a label to the backlight defintion to reference it in
+the panel definition.
 
-However, with the L2CC driver cleanup done by Russell King, the
-initialization of the L2CC driver has been moved earlier, and is now
-part of the init_IRQ() ARM function in
-arch/arm/kernel/irq.c. Therefore, calling coherency_init() in
-->init_time() is now too late, as the Device Tree property gets added
-too late (after the L2CC driver has been initialized).
-
-In order to fix this, this commit removes the ->init_time() callback
-use in board-v7.c and replaces it with an ->init_irq() callback. We
-therefore no longer use the default ->init_irq() callback, but we now
-use the default ->init_time() callback.
-
-In this newly introduced ->init_irq() callback, we call irqchip_init()
-which is the default behavior when ->init_irq() isn't defined, and
-then do the initialization related to the coherency: SCU, coherency
-fabric, and mvebu-mbus (which is needed to start secondary CPUs).
-
-Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Signed-off-by: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
 ---
- arch/arm/mach-mvebu/board-v7.c | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/tegra20-medcom-wide.dts | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-index 804c952..b2524d6 100644
---- a/arch/arm/mach-mvebu/board-v7.c
-+++ b/arch/arm/mach-mvebu/board-v7.c
-@@ -23,6 +23,7 @@
- #include <linux/mbus.h>
- #include <linux/signal.h>
- #include <linux/slab.h>
-+#include <linux/irqchip.h>
- #include <asm/hardware/cache-l2x0.h>
- #include <asm/mach/arch.h>
- #include <asm/mach/map.h>
-@@ -71,10 +72,9 @@ static int armada_375_external_abort_wa(unsigned long addr, unsigned int fsr,
- 	return 1;
- }
+diff --git a/arch/arm/boot/dts/tegra20-medcom-wide.dts b/arch/arm/boot/dts/tegra20-medcom-wide.dts
+index 0cd05f7..97a9101 100644
+--- a/arch/arm/boot/dts/tegra20-medcom-wide.dts
++++ b/arch/arm/boot/dts/tegra20-medcom-wide.dts
+@@ -10,6 +10,15 @@
+ 		status = "okay";
+ 	};
  
--static void __init mvebu_timer_and_clk_init(void)
-+static void __init mvebu_init_irq(void)
- {
--	of_clk_init(NULL);
--	clocksource_of_init();
-+	irqchip_init();
- 	mvebu_scu_enable();
- 	coherency_init();
- 	BUG_ON(mvebu_mbus_dt_init(coherency_available()));
-@@ -194,7 +194,7 @@ DT_MACHINE_START(ARMADA_370_XP_DT, "Marvell Armada 370/XP (Device Tree)")
- 	.l2c_aux_mask	= ~0,
- 	.smp		= smp_ops(armada_xp_smp_ops),
- 	.init_machine	= mvebu_dt_init,
--	.init_time	= mvebu_timer_and_clk_init,
-+	.init_irq       = mvebu_init_irq,
- 	.restart	= mvebu_restart,
- 	.dt_compat	= armada_370_xp_dt_compat,
- MACHINE_END
-@@ -207,7 +207,7 @@ static const char * const armada_375_dt_compat[] = {
- DT_MACHINE_START(ARMADA_375_DT, "Marvell Armada 375 (Device Tree)")
- 	.l2c_aux_val	= 0,
- 	.l2c_aux_mask	= ~0,
--	.init_time	= mvebu_timer_and_clk_init,
-+	.init_irq       = mvebu_init_irq,
- 	.init_machine	= mvebu_dt_init,
- 	.restart	= mvebu_restart,
- 	.dt_compat	= armada_375_dt_compat,
-@@ -222,7 +222,7 @@ static const char * const armada_38x_dt_compat[] = {
- DT_MACHINE_START(ARMADA_38X_DT, "Marvell Armada 380/385 (Device Tree)")
- 	.l2c_aux_val	= 0,
- 	.l2c_aux_mask	= ~0,
--	.init_time	= mvebu_timer_and_clk_init,
-+	.init_irq       = mvebu_init_irq,
- 	.restart	= mvebu_restart,
- 	.dt_compat	= armada_38x_dt_compat,
- MACHINE_END
++	host1x@50000000 {
++		dc@54200000 {
++			rgb {
++				status = "okay";
++				nvidia,panel = <&panel>;
++			};
++		};
++	};
++
+ 	i2c@7000c000 {
+ 		wm8903: wm8903@1a {
+ 			compatible = "wlf,wm8903";
+@@ -30,7 +39,7 @@
+ 		};
+ 	};
+ 
+-	backlight {
++	backlight: backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm 0 5000000>;
+ 
+@@ -38,6 +47,15 @@
+ 		default-brightness-level = <6>;
+ 	};
+ 
++	panel: panel {
++		compatible = "innolux,n156bge-l21", "simple-panel";
++
++		power-supply =  <&vdd_1v8_reg>, <&vdd_3v3_reg>;
++		enable-gpios = <&gpio TEGRA_GPIO(B, 2) GPIO_ACTIVE_HIGH>;
++
++		backlight = <&backlight>;
++	};
++
+ 	sound {
+ 		compatible = "ad,tegra-audio-wm8903-medcom-wide",
+ 			     "nvidia,tegra-audio-wm8903";
 -- 
 2.0.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
