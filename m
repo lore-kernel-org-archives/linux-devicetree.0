@@ -1,59 +1,81 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
- v3.16
-Date: Wed, 11 Jun 2014 22:43:48 -0700
-Message-ID: <20140612054348.GC17845@atomide.com>
-References: <1401214140-9828-1-git-send-email-tony@atomide.com>
- <20140528071313.GH4227@lee--X1>
- <20140528180607.GB4707@atomide.com>
- <20140602163841.GC11004@atomide.com>
- <20140603080632.GC3060@lee--X1>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v2 2/4] pinctrl: Add NVIDIA Tegra XUSB pad controller
+ support
+Date: Thu, 12 Jun 2014 09:22:21 +0200
+Message-ID: <20140612072220.GC17027@ulmo>
+References: <1402398708-10722-1-git-send-email-thierry.reding@gmail.com>
+ <1402398708-10722-2-git-send-email-thierry.reding@gmail.com>
+ <CAL1qeaGKUGjSzriDGptR+h23+bS3ZWuStz6koPURCstkFbEjNA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Sr1nOIr3CvdE5hEN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140603080632.GC3060@lee--X1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <CAL1qeaGKUGjSzriDGptR+h23+bS3ZWuStz6koPURCstkFbEjNA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-* Lee Jones <lee.jones@linaro.org> [140603 01:08]:
-> On Mon, 02 Jun 2014, Tony Lindgren wrote:
-> > * Tony Lindgren <tony@atomide.com> [140528 11:11]:
-> > > * Lee Jones <lee.jones@linaro.org> [140528 00:14]:
-> > > > Thanks Tony, here's the pull-request:
-> > > > 
-> > > > The following changes since commit 455c6fdbd219161bd09b1165f11699d6d73de11c:
-> > > > 
-> > > >   Linux 3.14 (2014-03-30 20:40:15 -0700)
-> > > > 
-> > > > are available in the git repository at:
-> > > > 
-> > > >   git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git tags/mfd-omap-v3.16-1
-> > > > 
-> > > > for you to fetch changes up to 43fef47f94a1ae46fb2720dada32fa3b5547bee2:
-> > > > 
-> > > >   mfd: twl4030-power: Add a configuration to turn off oscillator during off-idle (2014-05-28 08:06:18 +0100)
-> > > > 
-> > > > ----------------------------------------------------------------
-> > > > Second immutable branch between MFD and OMAP due for the v3.16 merge window.
-> > > 
-> > > Thanks a lot, this will make it easier for me to chase down potential
-> > > PM related regressions ;) I'm merging this for testing only into the
-> > > linux-omap master branch, no need for me to include it into any
-> > > of my upstream heading branches.
-> > 
-> > Lee, I'm not seeing this in linux next, did you maybe forget to merge
-> > it into the MFD tree?
-> 
-> I didn't forget, but I didn't do it either. :)
-> 
-> I have re-merged all of the IBs this morning, so should be in -next
-> by tomorrow.
 
-Still not seeing this branch being merged..
+--Sr1nOIr3CvdE5hEN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Regards,
+On Wed, Jun 11, 2014 at 01:23:59PM -0700, Andrew Bresticker wrote:
+> On Tue, Jun 10, 2014 at 4:11 AM, Thierry Reding <thierry.reding@gmail.com=
+> wrote:
+[...]
+> > +static int tegra_xusb_padctl_pinconf_group_set(struct pinctrl_dev *pin=
+ctrl,
+> > +                                              unsigned int group,
+> > +                                              unsigned long *configs,
+> > +                                              unsigned int num_configs)
+> > +{
+> > +       struct tegra_xusb_padctl *padctl =3D pinctrl_dev_get_drvdata(pi=
+nctrl);
+> > +       const struct tegra_xusb_padctl_lane *lane;
+> > +       enum tegra_xusb_padctl_param param;
+> > +       unsigned int i;
+> > +       u32 value;
+> > +
+> > +       lane =3D &padctl->soc->lanes[group];
+> > +
+> > +       for (i =3D 0; i < num_configs; i++) {
+> > +               param =3D TEGRA_XUSB_PADCTL_UNPACK_PARAM(configs[i]);
+> > +               value =3D TEGRA_XUSB_PADCTL_UNPACK_VALUE(configs[i]);
+> > +
+> > +               switch (param) {
+> > +               case TEGRA_XUSB_PADCTL_IDDQ:
+> > +                       value =3D padctl_readl(padctl, lane->offset);
+>=20
+> This overwrites the configuration value - probably want to use a
+> separate variable for the register value.
 
-Tony
+Good catch, thanks.
+
+Thierry
+
+--Sr1nOIr3CvdE5hEN
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTmVUsAAoJEN0jrNd/PrOh+6EP/RUAe4FJ6STniIkgYa/Snsz8
+rtxsLjiXJ2Fk8T8kNgJ6fmZo9txwDHJLD9Z0LmxvVWa22BFQoLTBWr08Z04t+T+J
+dq4pT3H7nUCRr/oQaefUy2tnA6giAJwjBZPqA4R4UAK9WlZh7pMqHnnEt780UUwN
+4Tvd1b4E9ufRLLDPWt634AmVjcAjardhKg4qqvMl7+dGwHND0E3m9AGogn287y+U
+I9u7lUne+eddyl/akrkMr2KPA41smAKhjZ/Bfti6zdRNdPUrxVb1aMkdS6TtnCYF
+7dTR9BoSD6hjz/OAG2uzrJTndqpSrz/kl2NqxI++M9ZgQzzO0+oboB/EXSwdFQh+
+nR1eLk/pGTiHd4zNeV3JL3WQXaEPuiXYoJm+fsNMmOGuGowW2ZEU3NRCDgfrGqVb
+9OYU0m+A5FIC5sD5Rc4DRx0Pgme78SU3ewkszyuR2eq66zhWe3pFbqBr7pac6UtU
+EUaXmZylfJRrlGLHXQ9gRa9E8IFKHVgDYuMvbGol2y4K9IjDSniJBW5I/ljAMpbN
+JfdMJ1r7oPOtNZRJ5lIXetnBVWFsDsSxF7luWw71TTOHzFOrfFmDSG8Dl4q/dDd3
+s60htEBBlSQrg3JtWSkaRm7ngyw4urWix9ImDE/IPwpRNdLE/tuUqD9K7BWhwOG2
+Y7Zjqk86Mc9PGTmViTOh
+=Elqb
+-----END PGP SIGNATURE-----
+
+--Sr1nOIr3CvdE5hEN--
