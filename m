@@ -1,95 +1,37 @@
-From: Stephen Boyd <sboyd@codeaurora.org>
-Subject: Re: [PATCH 1/2] phy: qcom: Add driver for QCOM IPQ806x SATA PHY
-Date: Thu, 12 Jun 2014 13:16:54 -0700
-Message-ID: <539A0AB6.90200@codeaurora.org>
-References: <1402600724-20651-1-git-send-email-galak@codeaurora.org>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v2 2/4] pinctrl: Add NVIDIA Tegra XUSB pad controller
+ support
+Date: Thu, 12 Jun 2014 14:39:05 -0600
+Message-ID: <539A0FE9.1080802@wwwdotorg.org>
+References: <1402398708-10722-1-git-send-email-thierry.reding@gmail.com> <1402398708-10722-2-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1402600724-20651-1-git-send-email-galak@codeaurora.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-ide@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402398708-10722-2-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/14 12:18, Kumar Gala wrote:
-> +
-> +struct qcom_ipq806x_sata_phy {
-> +	struct device *dev;
+On 06/10/2014 05:11 AM, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> The XUSB pad controller found on NVIDIA Tegra SoCs provides several pads
+> that lanes can be assigned to in order to support a variety of interface
+> options: USB 2.0, USB 3.0, PCIe and SATA.
+> 
+> In addition to the pin controller used to assign lanes to pads two PHYs
+> are exposed to allow the bricks for PCIe and SATA to be powered up and
+> down by PCIe and SATA drivers.
 
-Is this used?
+Aside from the issue Andrew pointed out, this series looks good to me.
+I'll apply once that one issue is fixed.
 
-> +	void __iomem *mmio;
-> +	struct clk *cfg_clk;
-[...]
-> +
-> +static int qcom_ipq806x_sata_phy_init(struct phy *generic_phy)
-> +{
-> +	struct qcom_ipq806x_sata_phy *phy = phy_get_drvdata(generic_phy);
-> +	u32 reg = 0;
+Linus,
 
-unnecessary initialization
-
-> +
-> +static int qcom_ipq806x_sata_phy_exit(struct phy *generic_phy)
-> +{
-> +	struct qcom_ipq806x_sata_phy *phy = phy_get_drvdata(generic_phy);
-> +	u32 reg = 0;
-
-unnecessary initialization
-
->
-> +static int qcom_ipq806x_sata_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct qcom_ipq806x_sata_phy *phy;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +	struct phy *generic_phy;
-> +	int ret;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy) {
-> +		dev_err(dev, "%s: failed to allocate phy\n", __func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	phy->mmio = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(phy->mmio)) {
-> +		dev_err(dev, "%s: phy mmio get resource failed\n", __func__);
-
-Unnecessary error message.
-
-> +		return PTR_ERR(phy->mmio);
-> +	}
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "%s: failed to register phy\n", __func__);
-> +		return PTR_ERR(phy_provider);
-> +	}
-> +
-> +	generic_phy = devm_phy_create(dev, &qcom_ipq806x_sata_phy_ops, NULL);
-> +	if (IS_ERR(generic_phy)) {
-> +		dev_err(dev, "%s: failed to create phy\n", __func__);
-> +		return PTR_ERR(generic_phy);
-> +	}
-> +
-> +	phy->cfg_clk = devm_clk_get(dev, "cfg");
-> +	if (IS_ERR(phy->cfg_clk)) {
-> +		dev_err(dev, "Failed to get sata cfg clock\n");
-> +		return PTR_ERR(phy->cfg_clk);
-> +	}
-> +
-> +	ret = clk_prepare_enable(phy->cfg_clk);
-> +	if (ret)
-> +		return ret;
-
-Shouldn't there be a remove that disables this clock?
-
--- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
-
+Patch 2 (pinctrl driver) depends on patch 1 (binding header), and there
+are other patches that will also depend on the binding header in patch
+1. I guess I should apply patch 1 in a topic branch and send you a pull
+request which you can merge before applying patch 2. Does that sound OK
+to you?
