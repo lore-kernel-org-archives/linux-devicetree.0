@@ -1,38 +1,43 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v8 0/6] efuse driver for Tegra
-Date: Thu, 12 Jun 2014 16:17:02 -0600
-Message-ID: <539A26DE.8050609@wwwdotorg.org>
-References: <1402587400-1544-1-git-send-email-pdeschrijver@nvidia.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 3/3 v4] ARM: DTS: fix the chip select gpios definition in
+ the SPI nodes
+Date: Thu, 12 Jun 2014 16:14:39 -0700
+Message-ID: <CAD=FV=WwkifF6NBtedeTisBEAqgz2MYrER-YFD6DP1Nsu-X9aQ@mail.gmail.com>
+References: <1402578821-27338-1-git-send-email-ch.naveen@samsung.com>
+	<1402578821-27338-3-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1402587400-1544-1-git-send-email-pdeschrijver@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Peter De Schrijver <pdeschrijver@nvidia.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Paul Gortmaker <paul.gortmaker@windriver.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, linux-doc@vger.kernel.org, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Courbot <acourbot@nvidia.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Herbert Xu <herbert@gondor.apana.org.au>, Greg Kroah-Hartman <gregkh@linuxf>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1402578821-27338-3-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/12/2014 09:36 AM, Peter De Schrijver wrote:
-> This driver allows userspace to read the raw efuse data. Its userspace
-> interface is modelled after the sunxi_sid driver which provides similar
-> functionality for some Allwinner SoCs. It has been tested on
-> Tegra20 (ventana), Tegra30 (beaverboard), Tegra114 (dalmore) and
-> Tegra124 (jetson TK1).
+Hi,
 
-I think this series looks OK now. However, I noticed one change in
-behaviour that I don't think is expected:
+On Thu, Jun 12, 2014 at 6:13 AM, Naveen Krishna Chatradhi
+<ch.naveen@samsung.com> wrote:
+> This patch replaces the "cs-gpio" from "controller-data" node
+> as was specified in the old binding and use the standard
+> "cs-gpios" property expected by the SPI core as is defined in
+> the new binding.
+>
+> Respective changes are preposed to spi-s3c64xx.c driver.
+> @ http://www.spinics.net/lists/linux-samsung-soc/msg32282.html
+>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Cc: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Cc: Doug Anderson <dianders@chromium.org>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> ---
+>  arch/arm/boot/dts/exynos4210-smdkv310.dts |    2 +-
+>  arch/arm/boot/dts/exynos4412-trats2.dts   |    2 +-
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts |    2 +-
+>  3 files changed, 3 insertions(+), 3 deletions(-)
 
-The current code/DTB print:
-Tegra Revision: A01 SKU: 0 CPU Process: 0 Core Process: 0
+This looks fine, though I will note that you're not very consistent
+with the ordering of "cs-gpios" and "status".
 
-However, applying these patches and booting yields:
-Tegra Revision: A01 SKU: 0 CPU Process: 1 Core Process: 1
+Reviewed-by: Doug Anderson <dianders@chromium.org>
