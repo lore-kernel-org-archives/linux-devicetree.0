@@ -1,65 +1,69 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [RFC v3 1/9] arm: fiq: arbitrary mappings from IRQ to FIQ virqs
-Date: Thu, 12 Jun 2014 10:37:32 +0200
-Message-ID: <CACRpkdaQnpk5FQWOjWXGhhXrnWjNKJo0=mHf2c9YZcrxTGoEPA@mail.gmail.com>
-References: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-2-git-send-email-daniel.thompson@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1401961994-18033-2-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Fabio Estevam <festevam@gmail.com>, Patch Tracking <patches@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@l>
+From: Geert Uytterhoeven <geert+renesas@glider.be>
+Subject: [PATCH 1/3] ARM: shmobile: rcar-gen2: Update for of_get_flat_dt_prop() update
+Date: Thu, 12 Jun 2014 10:42:22 +0200
+Message-ID: <1402562544-4527-2-git-send-email-geert+renesas@glider.be>
+References: <1402562544-4527-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1402562544-4527-1-git-send-email-geert+renesas@glider.be>
+Sender: linux-sh-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>
+Cc: linux-sh@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 5, 2014 at 11:53 AM, Daniel Thompson
-<daniel.thompson@linaro.org> wrote:
+Commit 9d0c4dfedd96ee54fc075b16d02f82499c8cc3a6 ("of/fdt: update
+of_get_flat_dt_prop in prep for libfdt") changed the function prototypes
+of of_get_flat_dt_prop():
+  - The return type was made const,
+  - The last parameter was changed from "unsigned long *" to "int *".
+and dt_mem_next_cell():
+  - The second parameter was made const.
 
-> Currently enable_fiq/disable_fiq use a simple offset to convert an IRQ
-> virq into a FIQ virq. This is too inflexible for multi-platform kernels
-> and makes runtime error checking impossible.
->
-> We solve this by introducing a flexible mapping that allows interrupt
-> controllers that support FIQ to register those mappings. This, in turn,
-> makes it much possible for drivers in DT kernels to gain access to
-> FIQ virqs.
+This causes the following compiler warnings:
 
-I always had a big problem with the term "virq" which I take to mean
-"virtual IRQ".
+arch/arm/mach-shmobile/setup-rcar-gen2.c: In function 'rcar_gen2_scan_mem':
+arch/arm/mach-shmobile/setup-rcar-gen2.c:125:15: warning: initialization discards 'const' qualifier from pointer target type [enabled by default]
+arch/arm/mach-shmobile/setup-rcar-gen2.c:142:2: warning: passing argument 3 of 'of_get_flat_dt_prop' from incompatible pointer type [enabled by default]
+include/linux/of_fdt.h:53:20: note: expected 'int *' but argument is of type 'long unsigned int *'
+arch/arm/mach-shmobile/setup-rcar-gen2.c:142:6: warning: assignment discards 'const' qualifier from pointer target type [enabled by default]
+arch/arm/mach-shmobile/setup-rcar-gen2.c:144:3: warning: passing argument 3 of 'of_get_flat_dt_prop' from incompatible pointer type [enabled by default]
+include/linux/of_fdt.h:53:20: note: expected 'int *' but argument is of type 'long unsigned int *'
+arch/arm/mach-shmobile/setup-rcar-gen2.c:144:7: warning: assignment discards 'const' qualifier from pointer target type [enabled by default]
+arch/arm/mach-shmobile/setup-rcar-gen2.c:152:3: warning: passing argument 2 of 'dt_mem_next_cell' from incompatible pointer type [enabled by default]
+include/linux/of_fdt.h:69:12: note: expected 'const __be32 **' but argument is of type '__be32 **'
+arch/arm/mach-shmobile/setup-rcar-gen2.c:153:3: warning: passing argument 2 of 'dt_mem_next_cell' from incompatible pointer type [enabled by default]
+include/linux/of_fdt.h:69:12: note: expected 'const __be32 **' but argument is of type '__be32 **'
 
-The distinction is:
+Update the variable types in rcar_gen2_scan_mem() to fix this.
 
-- Hardware IRQ offsets/numbers - a number encoded in HW
-  specs which we usually call hwirqs
+Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: devicetree@vger.kernel.org
+---
+This depends on commit 9d0c4dfedd96ee54fc075b16d02f82499c8cc3a6 ("of/fdt:
+update of_get_flat_dt_prop in prep for libfdt") in Linus' tree, and
+commit ae8bf91c80b0145a54a492851aa7e23cf8054dc0 ("ARM: shmobile: Add shared
+R-Car Gen2 CMA reservation code") in Simon's tree
+(renesas-devel-v3.15-20140610 and later).
 
-- Linux IRQ numbers - just some number
+ arch/arm/mach-shmobile/setup-rcar-gen2.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-Sometimes, just sometimes, the Linux IRQ number matches the
-HW numbers, and then I guess the IRQ is regarded "non-virtual".
-The only real effect being that the numbers shown in
-/proc/interrupts are the same in both columns... the leftmost
-column with the Linux IRQ number and the one right next to
-the IRQ controller name which is the hwirq local offset.
+diff --git a/arch/arm/mach-shmobile/setup-rcar-gen2.c b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+index 8fecda04a145..1c09789393cd 100644
+--- a/arch/arm/mach-shmobile/setup-rcar-gen2.c
++++ b/arch/arm/mach-shmobile/setup-rcar-gen2.c
+@@ -122,9 +122,9 @@ struct memory_reserve_config {
+ static int __init rcar_gen2_scan_mem(unsigned long node, const char *uname,
+ 				     int depth, void *data)
+ {
+-	char *type = of_get_flat_dt_prop(node, "device_type", NULL);
+-	__be32 *reg, *endp;
+-	unsigned long l;
++	const char *type = of_get_flat_dt_prop(node, "device_type", NULL);
++	const __be32 *reg, *endp;
++	int l;
+ 	struct memory_reserve_config *mrc = data;
+ 	u64 lpae_start = (u64)1 << 32;
+ 
+-- 
+1.9.1
 
-But all Linux IRQ numbers are virtual by definition. It's just some
-number that the kernel use as a cookie to look up the irq_desc.
-And one day we may get rid of IRQ numbers altogether.
-
-I would prefer just to s/virq/irq/g on this patch or if that is
-disturbing something more to the point like s/virq/linux_irq/g.
-
-Maybe this is a pointless battle, but still...
-
-Yours,
-Linus Walleij
