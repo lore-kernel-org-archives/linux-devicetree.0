@@ -1,29 +1,34 @@
-From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/4] of: Add NVIDIA Tegra XUSB pad controller binding
-Date: Thu, 12 Jun 2014 10:46:13 +0200
-Message-ID: <CACRpkdZxS3UKaykTXsaGADCWmvfpAW_nhbxYHLSh44HMXLWvCg@mail.gmail.com>
-References: <1401894990-30092-1-git-send-email-thierry.reding@gmail.com>
-	<1401894990-30092-2-git-send-email-thierry.reding@gmail.com>
-	<53909F31.4050603@wwwdotorg.org>
-	<20140605220833.GA28817@ulmo>
-	<5390F5C7.5070301@wwwdotorg.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v4 3/6] drivers: cpuidle: implement OF based idle states
+ infrastructure
+Date: Thu, 12 Jun 2014 09:46:19 +0100
+Message-ID: <20140612084619.GA29295@e102568-lin.cambridge.arm.com>
+References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1402503520-8611-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <alpine.LFD.2.11.1406111420450.25775@knanqh.ubzr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5390F5C7.5070301-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.11.1406111420450.25775@knanqh.ubzr>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@ke>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 6, 2014 at 12:57 AM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
+On Wed, Jun 11, 2014 at 07:24:12PM +0100, Nicolas Pitre wrote:
+> On Wed, 11 Jun 2014, Lorenzo Pieralisi wrote:
+> 
+> > +config OF_IDLE_STATES
+> > +        bool "Idle states DT support"
+> > +	depends on ARM || ARM64
+> > +	default n
+> 
+> The default for default is n already, so you don't have to default to 
+> the default's default.
 
-> In my opinion, the headers *are*
-> part of the bindings, so of course anyone either reading DT bindings, or
-> parsing DT, must have the headers, and hence the headers must be bundled
-> with the DT files or with the bindings wherever they go.
+Ok, thanks for spotting that.
 
-I agree 100% with Stephen's stance. Reference the headers.
+Lorenzo
 
-Yours,
-Linus Walleij
