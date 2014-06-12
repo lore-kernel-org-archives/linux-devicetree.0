@@ -1,48 +1,70 @@
-From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
-Subject: Re: [PATCH 00/21] add and use devm_irq_of_parse_and_map()
-Date: Thu, 12 Jun 2014 23:02:03 +0400
-Message-ID: <5399F92B.50406@dev.rtsoft.ru>
-References: <53997AF6.1040003@gaisler.com> <5399AE1B.1080301@gaisler.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH 3/3] ata: qcom: Add device tree bindings information
+Date: Thu, 12 Jun 2014 14:13:24 -0500
+Message-ID: <1402600404-19214-3-git-send-email-galak@codeaurora.org>
+References: <1402600404-19214-1-git-send-email-galak@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5399AE1B.1080301@gaisler.com>
+In-Reply-To: <1402600404-19214-1-git-send-email-galak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Larsson <andreas@gaisler.com>
-Cc: lugovskoy@dev.rtsoft.ru, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sparclinux@vger.kernel.org, davem@davemloft.net
+To: Tejun Heo <tj@kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>, linux-ide@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->> Currently many device tree aware drivers use irq_of_parse_and_map() to
->> get
->> IRQ number and then devm_request_irq() to set up IRQ handler.
->>
->> This causes a problem for exit path and for error paths: undo action for
->> irq_of_parse_and_map() is irq_dispose_mapping() that must not be called
->> while IRQ handler is defined, but devres moves free_irq() out of driver
->> so driver does not have safe place to call irq_dispose_mapping().
->>
->> So many drivers do not call irq_dispose_mapping() at all, others call it
->> while IRQ handler is defined (which is incorrect and causes error
->> messages
->> in logs), even others refuse to use devres for managing IRQ handlers.
->>
->> This patchset adds devres version of irq_of_parse_and_map(), and updates
->> in-tree users of both devres and irq_of_parse_and_map() to use
->> devm_irq_of_parse_and_map() instead.
-> 
-> 
-> SPARC does not use OF_IRQ and has a different implementation of
-> irq_of_parse_and_map than the one in drivers/of/irq.c. All code
-> converted from irq_of_parse_and_map to devm_irq_of_parse_and_map in this
-> patch set will be unlinkable for SPARC. This includes SPI in general and
-> many drivers that are used for SPARC (of which several are currently
-> only used on SPARC platforms).
+Add device tree binding for Qualcomm AHCI SATA controller and specifically
+the sata controller on the IPQ806x family of SoCs.
 
-Can this be fixed by adding a copy of devm_irq_of_parse_and_map() to
-arch/sparc/kernel/of_device_common.c ?
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+ .../devicetree/bindings/ata/qcom-sata.txt          | 40 ++++++++++++++++++++++
+ 1 file changed, 40 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/ata/qcom-sata.txt
 
-Or there are some deep reasons why irq_of_parse_and_map() can't be
-devm'd for sparc at all?
-
-Nikita
+diff --git a/Documentation/devicetree/bindings/ata/qcom-sata.txt b/Documentation/devicetree/bindings/ata/qcom-sata.txt
+new file mode 100644
+index 0000000..5e74e41
+--- /dev/null
++++ b/Documentation/devicetree/bindings/ata/qcom-sata.txt
+@@ -0,0 +1,40 @@
++* Qualcomm AHCI SATA Controller
++
++SATA nodes are defined to describe on-chip Serial ATA controllers.
++Each SATA controller should have its own node.
++
++Required properties:
++- compatible		: compatible list, contains "qcom,msm-ahci"
++- interrupts		: <interrupt mapping for SATA IRQ>
++- reg			: <registers mapping>
++- phys			: Must contain exactly one entry as specified
++			  in phy-bindings.txt
++- phy-names		: Must be "sata-phy"
++
++Required properties for "qcom,ipq806x-ahci" compatible:
++- clocks		: Must contain an entry for each entry in clock-names.
++- clock-names		: Shall be:
++				"slave_iface" - Fabric port AHB clock for SATA
++				"iface" - AHB clock
++				"core" - core clock
++				"rxoob" - RX out-of-band clock
++				"pmalive" - Power Module Alive clock
++
++Example:
++	sata@29000000 {
++		compatible = "qcom,ipq806x-ahci", "qcom,msm-ahci";
++		reg = <0x29000000 0x180>;
++
++		interrupts = <0 209 0x0>;
++
++		clocks = <&gcc SFAB_SATA_S_H_CLK>,
++			 <&gcc SATA_H_CLK>,
++			 <&gcc SATA_A_CLK>,
++			 <&gcc SATA_RXOOB_CLK>,
++			 <&gcc SATA_PMALIVE_CLK>;
++		clock-names = "slave_iface", "iface", "core",
++				"rxoob", "pmalive";
++
++		phys = <&sata_phy>;
++		phy-names = "sata-phy";
++	};
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
