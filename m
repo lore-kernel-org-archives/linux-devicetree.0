@@ -1,58 +1,85 @@
-From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Subject: [PATCH 3/4] of: Add named interrupts to CODA bindings
-Date: Fri, 13 Jun 2014 19:14:00 +0200
-Message-ID: <1402679641-868-3-git-send-email-p.zabel@pengutronix.de>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: [PATCH 4/4] ARM: dts: imx6qdl: Enable CODA960 VPU
+Date: Fri, 13 Jun 2014 19:14:01 +0200
+Message-ID: <1402679641-868-4-git-send-email-p.zabel@pengutronix.de>
 References: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402679641-868-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Kumar Gala <galak@codeaurora.org>, Shawn Guo <shawn.guo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch documents named interrupt bindings for the CODA
-video processing units.
+This patch adds links to the on-chip SRAM and reset controller nodes
+and switches the interrupts. Make the BIT processor interrupt, which exists on
+all variants, the first one. The JPEG unit interrupt, which does not exist on
+i.MX27 and i.MX5 thus is an optional second interrupt.
+Use different compatible strings for i.MX6Q/D and i.MX6S/DL, as they have to
+load separate firmware images for some reason.
 
-Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- Documentation/devicetree/bindings/media/coda.txt | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/imx6dl.dtsi  |  4 ++++
+ arch/arm/boot/dts/imx6q.dtsi   |  4 ++++
+ arch/arm/boot/dts/imx6qdl.dtsi | 10 ++++++++--
+ 3 files changed, 16 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/media/coda.txt b/Documentation/devicetree/bindings/media/coda.txt
-index f5e4d4b..a44c4aa 100644
---- a/Documentation/devicetree/bindings/media/coda.txt
-+++ b/Documentation/devicetree/bindings/media/coda.txt
-@@ -12,19 +12,24 @@ Required properties:
-   (d) "fsl,imx6dl-vpu", "cnm,coda960" for CODA960 present in i.MX6DL/S
- - reg: should be register base and length as documented in the
-   SoC reference manual
--- interrupts : Should contain the VPU interrupt. For CODA960,
--  a second interrupt is needed for the MJPEG unit.
-+- interrupts : Should contain the VPU (BIT processor) interrupt.
-+  For CODA960, a second interrupt is needed for the JPEG unit.
- - clocks : Should contain the ahb and per clocks, in the order
-   determined by the clock-names property.
- - clock-names : Should be "ahb", "per"
- - iram : phandle pointing to the SRAM device node
- 
-+Optional properties:
-+- interrupt-names: Should be "bit" for the BIT processor interrupt
-+  and "jpeg" for the JPEG unit interrupt on CODA960.
+diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+index 5c5f574..fbbdfca 100644
+--- a/arch/arm/boot/dts/imx6dl.dtsi
++++ b/arch/arm/boot/dts/imx6dl.dtsi
+@@ -110,3 +110,7 @@
+ 		      "di0_sel", "di1_sel",
+ 		      "di0", "di1";
+ };
 +
- Example:
++&vpu {
++	compatible = "fsl,imx6dl-vpu", "cnm,coda960";
++};
+diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+index addd3f8..2c1dbf8 100644
+--- a/arch/arm/boot/dts/imx6q.dtsi
++++ b/arch/arm/boot/dts/imx6q.dtsi
+@@ -291,3 +291,7 @@
+ 		};
+ 	};
+ };
++
++&vpu {
++	compatible = "fsl,imx6q-vpu", "cnm,coda960";
++};
+diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+index eca0971..2052303 100644
+--- a/arch/arm/boot/dts/imx6qdl.dtsi
++++ b/arch/arm/boot/dts/imx6qdl.dtsi
+@@ -315,9 +315,15 @@
+ 			};
  
- vpu: vpu@63ff4000 {
- 	compatible = "fsl,imx53-vpu", "cnm,coda7541";
- 	reg = <0x63ff4000 0x1000>;
- 	interrupts = <9>;
-+	interrupt-names = "bit";
- 	clocks = <&clks 63>, <&clks 63>;
- 	clock-names = "ahb", "per";
- 	iram = <&ocram>;
+ 			vpu: vpu@02040000 {
++				compatible = "cnm,coda960";
+ 				reg = <0x02040000 0x3c000>;
+-				interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>,
+-				             <0 12 IRQ_TYPE_LEVEL_HIGH>;
++				interrupts = <0 12 IRQ_TYPE_LEVEL_HIGH>,
++				             <0 3 IRQ_TYPE_LEVEL_HIGH>;
++				interrupt-names = "bit", "jpeg";
++				clocks = <&clks 168>, <&clks 168>;
++				clock-names = "per", "ahb";
++				resets = <&src 1>;
++				iram = <&ocram>;
+ 			};
+ 
+ 			aipstz@0207c000 { /* AIPSTZ1 */
 -- 
 2.0.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
