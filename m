@@ -1,134 +1,42 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: CPU revision IDs
-Date: Fri, 13 Jun 2014 10:37:37 -0400
-Message-ID: <CAKON4Oz44X7G+yM2R-XX_D_6FV4ekWiOKY2t_p0Y3+gUXJ17iw@mail.gmail.com>
-References: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com>
-	<4285095.l6sVUI20tQ@wuerfel>
-	<CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ@mail.gmail.com>
-	<5045739.TmqqIG2CDG@wuerfel>
-	<CAKON4Ox+tCgiu6N988ds7ED2KbECw=60Y6BRqV_2UcM+vshw4Q@mail.gmail.com>
-	<20140613132022.GJ3448@lukather>
-	<CAKON4OxZLaL9sJFPjnUhec_LMZKGvGXrKyUjW-whHzY6byVUxw@mail.gmail.com>
-	<20140613135817.GK3448@lukather>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 1/1] ARM: EXYNOS: Fix compilation warning
+Date: Fri, 13 Jun 2014 16:52:03 +0200
+Message-ID: <201406131652.03461.arnd@arndb.de>
+References: <1399282008-9738-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHyFEb3hchLLndfqW1xOHD59d_bsFMA4k5MLJ8Hgpx7Ekw@mail.gmail.com> <537D6F12.7000201@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140613135817.GK3448@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: Text/Plain; charset=windows-1252
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <537D6F12.7000201@linaro.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Tushar Behera <tushar.behera@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 9:58 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Jun 13, 2014 at 09:34:05AM -0400, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> On Fri, Jun 13, 2014 at 9:20 AM, Maxime Ripard
->> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Fri, Jun 13, 2014 at 09:14:45AM -0400, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> >> On Fri, Jun 13, 2014 at 9:08 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> >> > On Friday 13 June 2014 09:05:14 jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> >> >> I was adding the CPU revision ID to the top level compatible string,
->> >> >> nothing specific to the device.  By knowing the CPU revision I know
->> >> >> which errata to apply.
->> >> >>
->> >> >> If you patch the device strings, then you have to maintain knowledge
->> >> >> of which devices are broken in two places -- the device driver and the
->> >> >> machine file where you are patching the strings.
->> >> >
->> >> > IMHO, the driver only has to know what device versions exist, it
->> >> > shouldn't need to know which soc has which version of the device.
->> >> >
->> >> > Can you describe which kind of quirk you are looking at in the driver,
->> >> > and how common it is?
->> >>
->> >> Allwinner wired the volume control for their on-chip codec up
->> >> backwards on the A revsion of the the A10 chip. In later revisions is
->> >> it fixed to work in the right direction.
->> >>
->> >> I was wanting to add code like this to the device driver...
->> >>
->> >> if (of_machine_is_compatible("allwinner,sun7i-a20a")) {
->> >>       fix bug
->> >> }
->> >>
->> >> Another solution would be for me to detect the chip revision in the
->> >> init code of the driver and remember it.
->> >
->> > The point is that you don't have that kind of constructs. You can
->> > associate any number of compatibles to your driver, and data to each
->> > of these compatibles. So, with different compatibles, you will be
->> > probed and retrieved these data directly, without even having this in
->> > your driver.
->>
->>
->> Then I end up with code in the machine file like this...
->>
->> find SOC revision
->> if revision == A
->>     fix up codec and i2s driver compatible
->> if revision == B
->>     fix up HDMI compatible
->> if revision == C
->>     fix up whatever
->> I've seen chips with revision levels of J
->>
->> Why do you want this knowledge in the machine file? Why not just add
->> the test for SOC revision inside the device driver?
->
-> Because it's going to be a mess anyway. No matter if it's in the
-> driver or the machine code. So at least, that way, we're having it
-> centralized and isolated from the driver's code.
+On Thursday 22 May 2014, Tushar Behera wrote:
+> On 05/21/2014 04:56 PM, Sachin Kamat wrote:
+> > On 5 May 2014 14:56, Sachin Kamat <sachin.kamat@linaro.org> wrote:
+> >> of_get_flat_dt_prop return type is now const.
+> >> Fixes the following compilation warning introduced by commit 9d0c4=
+dfedd96
+> >> ("of/fdt: update of_get_flat_dt_prop in prep for libfdt")
+> >>
+> >> arch/arm/mach-exynos/exynos.c:259:6: warning:
+> >> assignment discards =91const=92 qualifier from pointer target type=
+ [enabled by default]
+> >>
+> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
+> >> Cc: Rob Herring <robh@kernel.org>
+> >> ---
+>=20
+> Change looks good.
+>=20
+> Reviewed-by: Tushar Behera <tushar.behera@linaro.org>
 
-The mess is always going to be in the driver code. You are just
-changing the the string the driver code selects on...
+This hasn't shown up in linux-next yet, and hte bug is still there, so =
+I'm applying
+it directly to the fixes branch in arm-soc before we get more people se=
+nding
+the same patch. Thanks!
 
-if (of_machine_is_compatible("allwinner,sun7i-codec-rev-a")) {
-      fix bug
-}
-
-if (of_machine_is_compatible("allwinner,sun7i-a20a")) {
-      fix bug
-}
-
-The mess is not required in the machine file.  Init time code can
-always modify the machine compatible string like this with no side
-effects. It would add 'a'-'j' as appropriate for the CPU.
-
-Code changes this:
- compatible = "cubietech,cubietruck", "allwinner,sun7i-a20"
-to:
- compatible = "cubietech,cubietruck",  "allwinner,sun7i-a20-a",
-"allwinner,sun7i-a20"
-
-There is an existing API in the FDT code for changing compatible strings.
-
->
-> Plus, we're going to need these several compatibles anyway, for boards
-> that come with a single SoC revision, so why not just use them.
->
-> And if it's a single revision of a single SoC for the moment, it's
-> completely fine. When we'll get overwhelmed, if we ever are, we can
-> always refactor that code to something smarter.
->
->> I do see the logic for wanting to change the compatible string for the
->> device, but these aren't really different devices. They are errata
->> being applied to the same device.
->
-> No, they're not really different, but they're not the same either, or
-> at least, for whatever reason, they don't behave in the exact same
-> way.
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-
-
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+	Arnd
