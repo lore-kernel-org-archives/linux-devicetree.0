@@ -1,56 +1,103 @@
-From: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-Subject: Re: [PATCH] IBM Akebono: Remove obsolete config select
-Date: Fri, 13 Jun 2014 13:56:32 +0200
-Message-ID: <1402660592.28881.22.camel@x220>
-References: <1398998002.2925.15.camel@pasglop>
-	 <1399018005-23136-1-git-send-email-alistair@popple.id.au>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 05/36] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Fri, 13 Jun 2014 05:08:39 -0700
+Message-ID: <20140613120839.GV17845@atomide.com>
+References: <1402477001-31132-1-git-send-email-rogerq@ti.com>
+ <1402477001-31132-6-git-send-email-rogerq@ti.com>
+ <20140613071820.GI17845@atomide.com>
+ <539AAA8C.2070709@ti.com>
+ <20140613075856.GQ17845@atomide.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EAF51DB@DBDE04.ent.ti.com>
+ <539AB4E4.6050408@ti.com>
+ <20140613104610.GS17845@atomide.com>
+ <539AE390.4080504@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1399018005-23136-1-git-send-email-alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <539AE390.4080504-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-Cc: benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, "dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org" <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org" <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org" <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>, "Nori, Sekhar" <nsekhar-l0cyMroinI0@public.gmane.org>, "linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2014-05-02 at 18:06 +1000, Alistair Popple wrote:
-> The original implementation of MMC support for Akebono introduced a
-> new configuration symbol (MMC_SDHCI_OF_476GTR). This symbol has been
-> dropped in favour of using the generic platform driver however the
-> select for this symbol was mistakenly left in the platform
-> configuration.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140613 04:43]:
+> On 06/13/2014 01:46 PM, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140613 01:24]:
+> >> On 06/13/2014 11:13 AM, Gupta, Pekon wrote:
+> >>>> From: Tony Lindgren [mailto:tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org]
+> >>>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140613 00:40]:
+> >>>>>> On 06/13/2014 10:18 AM, Tony Lindgren wrote:
+> >>>>>>> * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140611 01:58]:
+> >>>>>
+> >>>>> OK. But wait pin edge detection was not yet being used and I couldn't
+> >>>>> think of how it would ever be used. Any ideas?
+> >>>>
+> >>>> Maybe to wake-up the system on bus activity or something?
+> >>>>
+> >>> Sorry, I wasn't able to review this series.
+> >>> But just as pointer, GPMC driver was used for interfacing many
+> >>> non-memory devices like Ethernet (smc91x) and in past GPMC has been
+> >>> proved to work with camera devices too, but that's wasn't mainlined.
+> >>> So keeping IRQ and few other things in GPMC driver is helpful.
+> >>>
+> >>
+> >> On further study it seems that the wait pin edge detection is only used in the NAND controller use case.
+> >> see section 10.1.5.14.2.2 Ready Pin Monitored by Hardware Interrupt
+> > 
+> > It seems they can be used for anything slow like NOR and NAND.
 > 
-> This patch removes the obsolete symbol selection.
+> But NOR driver never requests for any IRQ.
 > 
-> Signed-off-by: Alistair Popple <alistair-Y4h6yKqj69EXC2x5gXVKYQ@public.gmane.org>
-
-This patch hasn't yet entered linux-next nor Linus' tree. Is it queued
-somewhere? If not, would a
-    Acked-by: Paul Bolle <pebolle-IWqWACnzNjzz+pZb47iToQ@public.gmane.org>
-
-help to get this trivial patch queued for either of those trees?
-
-
-Paul Bolle
-
-> ---
->  arch/powerpc/platforms/44x/Kconfig | 1 -
->  1 file changed, 1 deletion(-)
+> We should not confuse this wait pin edge interrupt with NOR bus cycle WAIT pin mechanism.
+> That is configured using GPMC_CONFIG1 register via WAITPINSELECT and WAITREAD/WRITEMONITORING bits.
+> That wait pin handling is done completely in hardware and doesn't need any software intervention.
+> Imagine using it for interrupt for every bus cycle wait. It will be dead slow and unusable.
 > 
-> diff --git a/arch/powerpc/platforms/44x/Kconfig b/arch/powerpc/platforms/44x/Kconfig
-> index 8beec7d..908bf11 100644
-> --- a/arch/powerpc/platforms/44x/Kconfig
-> +++ b/arch/powerpc/platforms/44x/Kconfig
-> @@ -220,7 +220,6 @@ config AKEBONO
->  	select USB_EHCI_HCD_PLATFORM
->  	select MMC_SDHCI
->  	select MMC_SDHCI_PLTFM
-> -	select MMC_SDHCI_OF_476GTR
->  	select ATA
->  	select SATA_AHCI_PLATFORM
->  	help
+> The WAIT edge interrupt mechanism is exclusively for NAND use case to notify the status of READY pin after a block/page operation.
 
+OK thanks for clarifying it. 
+ 
+> >> For memory devices, no software wait pin intervention is necessary and doesn't even make sense.
+> > 
+> > Still seems that it's use can be generic though, not limited
+> > to NAND.
+> >  
+> >> So I don't agree on managing the IRQSTATUS and IRQENABLE register in the GPMC driver. It is adding unnecessary complexity. I don't mind having a wrapper around it though like the other nand registers.
+> > 
+> > But all the consumer driver should need to do is request_irq()
+> > on it? That's pretty much the most common interface we have
+> > for drivers :)
+> 
+> the client driver side is easy, but it adds unnecessary complication to model it as IRQ chip and assign a line for each event. Since it is going to be used exclusively by NAND we should avoid IRQ chip modeling.
+
+OK up to you if there are no other users for it. 
+ 
+> >> To be frank, I think it is cleaner if the NAND driver directly accesses the NAND registers.
+> >> I don't see why we should make things complicated just because the hardware designers didn't create a clear register split between GPMC and NAND.
+> > 
+> > Because they are in separate hardware modules :)
+> > 
+> > Who knows why it was set up this way. Maybe the plan was to have
+> > the common features in GPMC that then can be used by various MTD
+> > devices.
+> >  
+> >> Only the GPMC_CONFIG register needs to remain with the GPMC driver.
+> > 
+> > And managing clocks and runtime PM in general. In any case, let's
+> > not let drivers tinker with the GPMC registers directly though.
+> > Some kind of abstraction via existing frameworks or with regmap
+> > is needed.
+> 
+> OK. I agree about using some kind of abstraction instead of direct access.
+
+Yes and like we chatted on irc, adding a syscon mapping for for
+the NAND specific registers might do the trick here.
+
+Regards,
+
+Tony
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
