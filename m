@@ -1,70 +1,83 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC PATCH]  OF: fix of_find_node_by_path() assumption that of_allnodes
- is root
-Date: Thu, 12 Jun 2014 22:53:38 -0700
-Message-ID: <539A91E2.7000606@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCH 3/4] Documentation: devicetree: Add cpu clock configuration
+ data binding for Exynos3250
+Date: Fri, 13 Jun 2014 15:08:12 +0900
+Message-ID: <1402639693-31108-4-git-send-email-cw00.choi@samsung.com>
+References: <1402639693-31108-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1402639693-31108-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, shawn.guo@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, heiko@sntech.de, kyungmin.park@samsung.com, cw00.choi@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+The clock block of Exynos3250 add new properties to support cpu clock provider.
+To register cpu clock provider of Exynos3250, must need armclk-provider-table
+which includes various dividers to change CPU clock to support Exynos3250 cpufreq.
 
-Pantelis Antoniou reports that of_find_node_by_path() is borked because
-of_allnodes is not guaranteed to contain the root of the tree after using
-any of the dynamic update functions because some other nodes ends up as
-of_allnodes.
-
-Fixes: c22e650e66b8 of: Make of_find_node_by_path() handle /aliases
-
-Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Thomas Abraham <thomas.ab@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: <devicetree@vger.kernel.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 ---
+ .../devicetree/bindings/clock/exynos3250-clock.txt | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
 
-
-Pantelis,
-
-Can you test whether the problem you reported in irc?
-
-This patch has not been tested, not even compile tested.
-
-
- drivers/of/base.c |    8 	6 +	2 -	0 !
- 1 file changed, 6 insertions(+), 2 deletions(-)
-
-Index: b/drivers/of/base.c
-===================================================================
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1948,6 +1948,9 @@ int of_reconfig_notify(unsigned long act
+diff --git a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
+index aadc9c5..189b506 100644
+--- a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
+@@ -13,6 +13,25 @@ Required Properties:
  
- /**
-  * of_attach_node - Plug a device node into the tree and global list.
-+ *
-+ * Put the device node after of_allnodes in the global list so that
-+ * of_allnodes remains the root.
-  */
- int of_attach_node(struct device_node *np)
- {
-@@ -1958,11 +1961,12 @@ int of_attach_node(struct device_node *n
- 	if (rc)
- 		return rc;
+ - #clock-cells: should be 1.
  
-+	BUG_ON(!of_allnodes);
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	np->sibling = np->parent->child;
--	np->allnext = of_allnodes;
-+	np->allnext = of_allnodes->allnext;
- 	np->parent->child = np;
--	of_allnodes = np;
-+	of_allnodes->allnext = np;
- 	of_node_clear_flag(np, OF_DETACHED);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++- samsung,armclk-divider-table: when the frequency of the APLL is changed
++  the divider clocks in CMU_CPU clock domain also need to be updated. These
++  divider clocks have SoC specific divider clock output requirements for a
++  specific APLL clock speeds. When APLL clock rate is changed, these divider
++  clocks are reprogrammed with pre-determined values in order to maintain the
++  SoC specific divider clock outputs. This property lists the divider values
++  for divider clocks in the CMU_CPU block for supported APLL clock speeds.
++  The format of each entry included in the arm-frequency-table should be
++  as defined below
++
++      cell #1: expected arm clock parent frequency
++      cell #2 ~ cell #7: value of clock divider in the following order
++		corem_ratio, atb_ratio, pclk_dbg_ratio, apll_ratio,
++		copy_ratio, hpm_ratio
++
++- samsung,armclk-cells: defines the number of cells in
++  samsung,armclk-divider-table property. The value of this property depends on
++  the SoC type.
++
+ Each clock is assigned an identifier and client nodes can use this identifier
+ to specify the clock which they consume.
  
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+@@ -26,6 +45,19 @@ Example 1: An example of a clock controller node is listed below.
+ 		compatible = "samsung,exynos3250-cmu";
+ 		reg = <0x10030000 0x20000>;
+ 		#clock-cells = <1>;
++
++		samsung,armclk-cells = <7>;
++		samsung,armclk-divider-table =
++			<1000000 1 4 7 1 7 7>,
++			<900000  1 3 7 1 7 7>,
++			<800000  1 3 7 1 7 7>,
++			<700000  1 3 7 1 7 7>,
++			<600000  1 3 7 1 7 7>,
++			<500000  1 3 7 1 7 7>,
++			<400000  1 3 7 1 7 7>,
++			<300000  1 3 5 1 7 7>,
++			<200000  1 3 3 1 7 7>,
++			<100000  1 1 1 1 7 7>;
+ 	};
+ 
+ Example 2: UART controller node that consumes the clock generated by the clock
+-- 
+1.8.0
