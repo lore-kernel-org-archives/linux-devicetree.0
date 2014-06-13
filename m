@@ -1,52 +1,37 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: CPU revision IDs
-Date: Fri, 13 Jun 2014 09:14:45 -0400
-Message-ID: <CAKON4Ox+tCgiu6N988ds7ED2KbECw=60Y6BRqV_2UcM+vshw4Q@mail.gmail.com>
-References: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com>
-	<4285095.l6sVUI20tQ@wuerfel>
-	<CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ@mail.gmail.com>
-	<5045739.TmqqIG2CDG@wuerfel>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH V2 08/19] irqchip: crossbar: fix checkpatch warning
+Date: Fri, 13 Jun 2014 09:15:26 -0400
+Message-ID: <20140613131526.GH8664@titan.lakedaemon.net>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+ <1402574007-13987-9-git-send-email-r.sricharan@ti.com>
+ <20140612131042.GU8664@titan.lakedaemon.net>
+ <5399AC9C.4080602@ti.com>
+ <1402582711.9947.17.camel@joe-AO725>
+ <20140612153226.GE8664@titan.lakedaemon.net>
+ <1402589159.12385.4.camel@joe-AO725>
+ <539A9A87.6020004@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5045739.TmqqIG2CDG@wuerfel>
+Content-Disposition: inline
+In-Reply-To: <539A9A87.6020004-l0cyMroinI0@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 9:08 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
-> On Friday 13 June 2014 09:05:14 jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> I was adding the CPU revision ID to the top level compatible string,
->> nothing specific to the device.  By knowing the CPU revision I know
->> which errata to apply.
->>
->> If you patch the device strings, then you have to maintain knowledge
->> of which devices are broken in two places -- the device driver and the
->> machine file where you are patching the strings.
->
-> IMHO, the driver only has to know what device versions exist, it
-> shouldn't need to know which soc has which version of the device.
->
-> Can you describe which kind of quirk you are looking at in the driver,
-> and how common it is?
+On Fri, Jun 13, 2014 at 12:00:31PM +0530, Sricharan R wrote:
+>   Ok, if this is not qualifying as a separate patch then i will merge
+>   this with other patches in the series which touch them.
 
-Allwinner wired the volume control for their on-chip codec up
-backwards on the A revsion of the the A10 chip. In later revisions is
-it fixed to work in the right direction.
+A good general rule of thumb is to just run checkpatch on the patches,
+not the source files.  This way, we prevent new warnings from being
+introduced, and we can cleanup stuff in the immediate vicinity to code
+we are already changing.
 
-I was wanting to add code like this to the device driver...
+thx,
 
-if (of_machine_is_compatible("allwinner,sun7i-a20a")) {
-      fix bug
-}
-
-Another solution would be for me to detect the chip revision in the
-init code of the driver and remember it.
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
