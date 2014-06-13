@@ -1,42 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/1] ARM: EXYNOS: Fix compilation warning
-Date: Fri, 13 Jun 2014 16:52:03 +0200
-Message-ID: <201406131652.03461.arnd@arndb.de>
-References: <1399282008-9738-1-git-send-email-sachin.kamat@linaro.org> <CAK9yfHyFEb3hchLLndfqW1xOHD59d_bsFMA4k5MLJ8Hgpx7Ekw@mail.gmail.com> <537D6F12.7000201@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] of: avoid format string parsing in kobject names
+Date: Fri, 13 Jun 2014 09:55:04 -0500
+Message-ID: <CAL_JsqKJq-u7GGDfNONAT7tjAK-2AKQi64X8Au0N8gzPpEoNug@mail.gmail.com>
+References: <20140610165700.GA3453@www.outflux.net>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=windows-1252
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <537D6F12.7000201@linaro.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Tushar Behera <tushar.behera@linaro.org>, Sachin Kamat <sachin.kamat@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140610165700.GA3453@www.outflux.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kees Cook <keescook@chromium.org>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 22 May 2014, Tushar Behera wrote:
-> On 05/21/2014 04:56 PM, Sachin Kamat wrote:
-> > On 5 May 2014 14:56, Sachin Kamat <sachin.kamat@linaro.org> wrote:
-> >> of_get_flat_dt_prop return type is now const.
-> >> Fixes the following compilation warning introduced by commit 9d0c4=
-dfedd96
-> >> ("of/fdt: update of_get_flat_dt_prop in prep for libfdt")
-> >>
-> >> arch/arm/mach-exynos/exynos.c:259:6: warning:
-> >> assignment discards =91const=92 qualifier from pointer target type=
- [enabled by default]
-> >>
-> >> Signed-off-by: Sachin Kamat <sachin.kamat@linaro.org>
-> >> Cc: Rob Herring <robh@kernel.org>
-> >> ---
->=20
-> Change looks good.
->=20
-> Reviewed-by: Tushar Behera <tushar.behera@linaro.org>
+On Tue, Jun 10, 2014 at 11:57 AM, Kees Cook <keescook@chromium.org> wrote:
+> This makes sure a format string cannot leak into the kobject name that
+> is constructed. (And splits the >80 character line.)
+>
+> Signed-off-by: Kees Cook <keescook@chromium.org>
 
-This hasn't shown up in linux-next yet, and hte bug is still there, so =
-I'm applying
-it directly to the fixes branch in arm-soc before we get more people se=
-nding
-the same patch. Thanks!
+Applied.
 
-	Arnd
+This seems like a non-obvious thing to do, but I guess most people
+aren't dealing directly with kobjects.
+
+Rob
+
+> ---
+>  drivers/of/base.c |    3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 8368d96ae7b4..f27d922eaece 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -227,7 +227,8 @@ static int __of_node_add(struct device_node *np)
+>         np->kobj.kset = of_kset;
+>         if (!np->parent) {
+>                 /* Nodes without parents are new top level trees */
+> -               rc = kobject_add(&np->kobj, NULL, safe_name(&of_kset->kobj, "base"));
+> +               rc = kobject_add(&np->kobj, NULL, "%s",
+> +                                safe_name(&of_kset->kobj, "base"));
+>         } else {
+>                 name = safe_name(&np->parent->kobj, kbasename(np->full_name));
+>                 if (!name || !name[0])
+> --
+> 1.7.9.5
+>
+>
+> --
+> Kees Cook
+> Chrome OS Security
