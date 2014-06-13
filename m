@@ -1,35 +1,59 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: CPU revision IDs
-Date: Fri, 13 Jun 2014 15:08:30 +0200
-Message-ID: <5045739.TmqqIG2CDG@wuerfel>
-References: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com> <4285095.l6sVUI20tQ@wuerfel> <CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ@mail.gmail.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V2 03/19] irqchip: crossbar: Skip some irqs from
+ getting mapped to crossbar
+Date: Fri, 13 Jun 2014 09:10:05 -0400
+Message-ID: <20140613131005.GF8664@titan.lakedaemon.net>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+ <1402574007-13987-4-git-send-email-r.sricharan@ti.com>
+ <20140612125134.GS8664@titan.lakedaemon.net>
+ <20140612135715.GE17845@atomide.com>
+ <20140612140508.GC8664@titan.lakedaemon.net>
+ <539AA08A.7010001@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <539AA08A.7010001@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 June 2014 09:05:14 jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> I was adding the CPU revision ID to the top level compatible string,
-> nothing specific to the device.  By knowing the CPU revision I know
-> which errata to apply.
+On Fri, Jun 13, 2014 at 12:26:10PM +0530, Sricharan R wrote:
+> On Thursday 12 June 2014 07:35 PM, Jason Cooper wrote:
+...
+> > Do you have other changes outside of irqchip depending on this series?
+> > If so, I can set up a topic branch for you guys to base off of.
+> > Otherwise, I'll just apply them to irqchip/core when they're ready.
+> > 
+>  There are dts changes which are dependent upon this series.
 > 
-> If you patch the device strings, then you have to maintain knowledge
-> of which devices are broken in two places -- the device driver and the
-> machine file where you are patching the strings.
+>   http://www.spinics.net/lists/linux-omap/msg108116.html
 
-IMHO, the driver only has to know what device versions exist, it
-shouldn't need to know which soc has which version of the device.
+In general, dts changes shouldn't depend on code changes or vice-versa.
+If they do, that's an indicator that we're breaking compatibility with
+older dtbs.
 
-Can you describe which kind of quirk you are looking at in the driver,
-and how common it is?
+Looking at the dra7.dtsi changes, we're redefining the interrupt
+property, which can't be good. :(
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Perhaps a better solution would be to add a property, say 'ti,cross-irq'
+that is the exact same format as 'interrupts', but is used by the
+crossbar driver?
+
+I'm not convinced of this yet, I suspect we may not actually have a
+dependency between the dtsi changes and the code changes.  We would have
+the ugly "if you have the crossbar node, 'interrupts' means X, if not it
+means Y" in the binding docs.  But the absence of the node prevents the
+crossbar driver from re-interpreting the interrupts property.
+
+Have you tried booting all the different scenarios?  eg:
+
+  old dtb, new driver
+  new dtb, old driver
+  old dtb, old driver
+  new dtb, new driver
+
+thx,
+
+Jason.
