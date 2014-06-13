@@ -1,54 +1,88 @@
-From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
-Date: Fri, 13 Jun 2014 14:58:51 -0700
-Message-ID: <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com>
-References: <1402689965-19397-1-git-send-email-jwerner@chromium.org>
-	<CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
+Date: Fri, 13 Jun 2014 23:04:21 +0100
+Message-ID: <20140613220421.GD5099@sirena.org.uk>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+ <1402464739-19044-4-git-send-email-tushar.b@samsung.com>
+ <CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
+ <20140613170511.GA20112@sirena.org.uk>
+ <CAD=FV=VvkvH1TPiKttm9VXbBRnBo7kmTVK8bZZvexK=bAvaO4Q@mail.gmail.com>
+ <CAD=FV=XCk9E-7VPV=LQrdLU5fKsFHviQf79MBmC8va3gsg=Ydw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <stephen.r.warren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stefan Reinauer <stefan.reinauer-7ChRSZmxDtxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/mixed; boundary="===============7459033505561555662=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD=FV=XCk9E-7VPV=LQrdLU5fKsFHviQf79MBmC8va3gsg=Ydw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Anderson <dianders@google.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Tomasz Figa <t.figa@samsung.com>, Tushar Behera <tushar.b@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Tushar Behera <trblinux@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> This is just to export a fixed log to userspace (like a DMI table) or
-> the kernel will actually use the data in some way? Based on the link,
-> it looks like the former to me.
 
-I could imagine both. The link is an in-kernel driver that exposes a
-log through a sysfs node (in a way that has already been established
-on x86 systems, which find the location through EBDA or ACPI entries
-instead). We are also using a user-space tool that reads the address
-from /proc/device-tree and accesses it through /dev/mem. The areas can
-contain many interesting entries (like the location of an early
-framebuffer set up by the firmware), so I could also imagine use cases
-where the kernel makes use of it directly.
+--===============7459033505561555662==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="lZ/I5ubSOvRSGe9j"
+Content-Disposition: inline
 
-> Don't you need need to keep the kernel from allocating this memory by
-> using one of the reserved memory mechanisms? The recently added one
-> should be able to specific what the memory is reserved for IIRC.
 
-Our bootloader is carving the location out of the /memory node and
-adding it to the device tree reserve map. As far as I know, that only
-contains a list of raw start and size entries. At any rate, I think
-it's useful (and in line with other bindings) to add a more explicit
-node like this (if only to make it easier accessible through
-/proc/device-tree).
+--lZ/I5ubSOvRSGe9j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> /firmware is already used IIRC. What if you have other firmware such
-> as Trustzone?
+On Fri, Jun 13, 2014 at 02:58:26PM -0700, Doug Anderson wrote:
 
-I'm not quite sure how Trusted Foundations works and whether it would
-even make sense to use it in parallel to coreboot, but it seems to be
-using the /firmware/trusted-foundations subnode so that should be
-fine. "firmware" seems to be used by other firmware implementations
-(like "samsung,secure-firmware") which are similar in nature to and
-mutually exclusive with coreboot, so I thought the node makes sense.
-(The kernel should use the compatible string to find it anyway, so a
-future name clash would not be world-ending.)
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Anyway, suffice to say that the i2c core needs to be extended to
+> handle the idea that a single device has more than one "compatible"
+> string.  I'll leave it to an eager reader of this thread to implement
+> this since we can also fix our own problem by just listing "max98091"
+> in "sound/soc/codecs/max98090.c" like has always been done in the
+> past.
+
+Why do you need to register multiple compatible strings (I guess for
+fallback purposes?).  A quick fix that is about as good is to take the
+first compatible only.
+
+--lZ/I5ubSOvRSGe9j
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTm3ViAAoJELSic+t+oim9u4cP+gLyrS+envDYQbCSY/eJAnXp
+a9lLZdgtRF9Xy8H+ong5D2qiMGJ0aQv5Xs7o3fxECrYQh0jHbUxoP41AacXzgcsq
+kGKOT3jt+nXbG0nFG6IkjasWcL7QzSXvFu9ziU7Fb3hridPMe8UHfLWcTtsL4iLO
+GZHn5sF3RGd+6JOSOP5dOi8cTfT4HFAD21aAhchLUTPor4VOEL6PG9LQ7/ykOxjl
+MrwHbUXAAeTjsmFOIU5aLyEyUEePL5lgteV8DTaWq0IyLN5DKssdI4/KCbg5+lbc
+8rVfvRsARY+hQrxzYSqz5dlTBPSglcIDepLk/Fqad3OtT+0Vufe1WXAwvWrTcC/x
+er+2C7qKnFuOHcl0tM5BFSjodChqM84RqkY+lWN2SEKBRXjnpryIpCMKPs4eLpwR
+jZoNGZ/umb/LYuzOy59ZUyZVcrk2Y4bbhUv8LHeS7hwmKLkFgeDI15RI8YfrAbCJ
+yPV0/RY6gBdT+jZ6NZ2jQWz+zr+GJ4YxmfJio4uMRyIVzsHg80q6fgy3oCtFn94F
+z8MkTh+8LhRTQcbYxo4w10JBgVLTq26QKrmWbll/wiKH0pLWHMsJAX9cgnXH2XBA
+qSqoO9hbQgEXqUVdADWWsGwSLqk/pjZDI6zh7yTMk56sDCS9xtN25sxqsH/o2c3R
+L5DkwPYca0G1ieVtySdY
+=YGt1
+-----END PGP SIGNATURE-----
+
+--lZ/I5ubSOvRSGe9j--
+
+
+--===============7459033505561555662==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7459033505561555662==--
