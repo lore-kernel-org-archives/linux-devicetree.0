@@ -1,94 +1,167 @@
-From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: CPU revision IDs
-Date: Fri, 13 Jun 2014 09:34:05 -0400
-Message-ID: <CAKON4OxZLaL9sJFPjnUhec_LMZKGvGXrKyUjW-whHzY6byVUxw@mail.gmail.com>
-References: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com>
-	<4285095.l6sVUI20tQ@wuerfel>
-	<CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ@mail.gmail.com>
-	<5045739.TmqqIG2CDG@wuerfel>
-	<CAKON4Ox+tCgiu6N988ds7ED2KbECw=60Y6BRqV_2UcM+vshw4Q@mail.gmail.com>
-	<20140613132022.GJ3448@lukather>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V2 03/19] irqchip: crossbar: Skip some irqs from
+ getting mapped to crossbar
+Date: Fri, 13 Jun 2014 09:34:46 -0400
+Message-ID: <20140613133446.GK8664@titan.lakedaemon.net>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com>
+ <1402574007-13987-4-git-send-email-r.sricharan@ti.com>
+ <20140612125134.GS8664@titan.lakedaemon.net>
+ <5399A8D5.6070105@ti.com>
+ <20140612140729.GD8664@titan.lakedaemon.net>
+ <539A9C3D.3050407@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140613132022.GJ3448@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <539A9C3D.3050407@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 9:20 AM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Fri, Jun 13, 2014 at 09:14:45AM -0400, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> On Fri, Jun 13, 2014 at 9:08 AM, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> wrote:
->> > On Friday 13 June 2014 09:05:14 jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
->> >> I was adding the CPU revision ID to the top level compatible string,
->> >> nothing specific to the device.  By knowing the CPU revision I know
->> >> which errata to apply.
->> >>
->> >> If you patch the device strings, then you have to maintain knowledge
->> >> of which devices are broken in two places -- the device driver and the
->> >> machine file where you are patching the strings.
->> >
->> > IMHO, the driver only has to know what device versions exist, it
->> > shouldn't need to know which soc has which version of the device.
->> >
->> > Can you describe which kind of quirk you are looking at in the driver,
->> > and how common it is?
->>
->> Allwinner wired the volume control for their on-chip codec up
->> backwards on the A revsion of the the A10 chip. In later revisions is
->> it fixed to work in the right direction.
->>
->> I was wanting to add code like this to the device driver...
->>
->> if (of_machine_is_compatible("allwinner,sun7i-a20a")) {
->>       fix bug
->> }
->>
->> Another solution would be for me to detect the chip revision in the
->> init code of the driver and remember it.
->
-> The point is that you don't have that kind of constructs. You can
-> associate any number of compatibles to your driver, and data to each
-> of these compatibles. So, with different compatibles, you will be
-> probed and retrieved these data directly, without even having this in
-> your driver.
+On Fri, Jun 13, 2014 at 12:07:49PM +0530, Sricharan R wrote:
+> Hi Jason,
+> 
+> On Thursday 12 June 2014 07:37 PM, Jason Cooper wrote:
+> > On Thu, Jun 12, 2014 at 06:49:17PM +0530, Sricharan R wrote:
+> >> Hi Jason,
+> >>
+> >> On Thursday 12 June 2014 06:21 PM, Jason Cooper wrote:
+> >>> On Thu, Jun 12, 2014 at 05:23:11PM +0530, Sricharan R wrote:
+> >>>> From: Nishanth Menon <nm@ti.com>
+> >>>>
+> >>>> When, in the system due to varied reasons, interrupts might be unusable
+> >>>> due to hardware behavior, but register maps do exist, then those interrupts
+> >>>> should be skipped while mapping irq to crossbars.
+> >>>>
+> >>>> Signed-off-by: Nishanth Menon <nm@ti.com>
+> >>>> Signed-off-by: Sricharan R <r.sricharan@ti.com>
+> >>>> Signed-off-by: Tony Lindgren <tony@atomide.com>
+> >>>
+> >>> Tony, have you applied these somewhere already?
+> >>>
+> >>>> ---
+> >>>>  drivers/irqchip/irq-crossbar.c |   47 ++++++++++++++++++++++++++++++++++++----
+> >>>>  1 file changed, 43 insertions(+), 4 deletions(-)
+> >>>>
+> >>>> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+> >>>> index 51d4b87..847f6e3 100644
+> >>>> --- a/drivers/irqchip/irq-crossbar.c
+> >>>> +++ b/drivers/irqchip/irq-crossbar.c
+> >>>> @@ -13,11 +13,13 @@
+> >>>>  #include <linux/io.h>
+> >>>>  #include <linux/of_address.h>
+> >>>>  #include <linux/of_irq.h>
+> >>>> +#include <linux/of_device.h>
+> >>>>  #include <linux/slab.h>
+> >>>>  #include <linux/irqchip/arm-gic.h>
+> >>>>  
+> >>>>  #define IRQ_FREE	-1
+> >>>>  #define IRQ_RESERVED	-2
+> >>>> +#define IRQ_SKIP	-3
+> >>>>  #define GIC_IRQ_START	32
+> >>>>  
+> >>>>  /*
+> >>>> @@ -34,6 +36,16 @@ struct crossbar_device {
+> >>>>  	void (*write) (int, int);
+> >>>>  };
+> >>>>  
+> >>>> +/**
+> >>>> + * struct crossbar_data: Platform specific data
+> >>>> + * @irqs_unused: array of irqs that cannot be used because of hw erratas
+> >>>> + * @size: size of the irqs_unused array
+> >>>> + */
+> >>>> +struct crossbar_data {
+> >>>> +	const uint *irqs_unused;
+> >>>> +	const uint size;
+> >>>> +};
+> >>>> +
+> >>>>  static struct crossbar_device *cb;
+> >>>>  
+> >>>>  static inline void crossbar_writel(int irq_no, int cb_no)
+> >>>> @@ -119,10 +131,12 @@ const struct irq_domain_ops routable_irq_domain_ops = {
+> >>>>  	.xlate = crossbar_domain_xlate
+> >>>>  };
+> >>>>  
+> >>>> -static int __init crossbar_of_init(struct device_node *node)
+> >>>> +static int __init crossbar_of_init(struct device_node *node,
+> >>>> +				   const struct crossbar_data *data)
+> >>>>  {
+> >>>>  	int i, size, max, reserved = 0, entry;
+> >>>>  	const __be32 *irqsr;
+> >>>> +	const int *irqsk = NULL;
+> >>>>  
+> >>>>  	cb = kzalloc(sizeof(*cb), GFP_KERNEL);
+> >>>>  
+> >>>> @@ -194,6 +208,22 @@ static int __init crossbar_of_init(struct device_node *node)
+> >>>>  		reserved += size;
+> >>>>  	}
+> >>>>  
+> >>>> +	/* Skip the ones marked as unused */
+> >>>> +	if (data) {
+> >>>> +		irqsk = data->irqs_unused;
+> >>>> +		size = data->size;
+> >>>> +
+> >>>> +		for (i = 0; i < size; i++) {
+> >>>> +			entry = irqsk[i];
+> >>>> +
+> >>>> +			if (entry > max) {
+> >>>> +				pr_err("Invalid skip entry\n");
+> >>>> +				goto err3;
+> >>>> +			}
+> >>>> +			cb->irq_map[entry] = IRQ_SKIP;
+> >>>> +		}
+> >>>> +	}
+> >>>> +
+> >>>>  	register_routable_domain_ops(&routable_irq_domain_ops);
+> >>>>  	return 0;
+> >>>>  
+> >>>> @@ -208,18 +238,27 @@ err1:
+> >>>>  	return -ENOMEM;
+> >>>>  }
+> >>>>  
+> >>>> +/* irq number 10 cannot be used because of hw bug */
+> >>>> +int dra_irqs_unused[] = { 10 };
+> >>>> +struct crossbar_data cb_dra_data = { dra_irqs_unused,
+> >>>> +				     ARRAY_SIZE(dra_irqs_unused) };
+> >>>> +
+> >>>>  static const struct of_device_id crossbar_match[] __initconst = {
+> >>>> -	{ .compatible = "ti,irq-crossbar" },
+> >>>> +	{ .compatible = "ti,irq-crossbar", .data = &cb_dra_data },
+> >>>>  	{}
+> >>>>  };
+> >>>
+> >>> This is a bug in all implementations of this IP?  Or, a specific
+> >>> SoC's implementation?  Would this be better expressed in the dts via a
+> >>> property?  Can we expect future implementations to be fixed?
+> >>>
+> >>> thx,
+> >>>
+> >>> Jason.
+> >>  Infact this and PATCH#10 should be merged. I will change that.
+> >>
+> >>  So in Socs's (2 so far) that do have a crossbar, some irqs are mapped
+> >>  through a crossbar and some are directly wired to the irqchip.
+> >>  These 'unused irqs' are those which are directly wired but they still
+> >>  have a crossbar register. Their routing cannot be changed. So this
+> >>  is not really expected usage of the crossbar hw ip. We initially thought
+> >>  having a dts property separately for this, but took this path to avoid
+> >>  loading the dts with additional bindings which may not be generic.
+> > 
+> > How do you plan to handle future SoCs with this IP and possibly
+> > different hard-wired irqs?
+>   Yes, that would require adding a new compatible in the above list and dts.
+>   So if adding a new binding in the dts would be cleaner, then i will change
+>   it that way.
 
+Yes, unless the DT maintainers have shot the idea down, I'd prefer to
+see a separate property.  With the method you currently have, we'll have
+to change the compatible when the IP _hasn't_ changed, just because the
+SoC was wired differently.
 
-Then I end up with code in the machine file like this...
+We could trigger on the SoC compatible and maintain a table, but that
+seems overly hacky when the dt is supposed to describe the hardware.
 
-find SOC revision
-if revision == A
-    fix up codec and i2s driver compatible
-if revision == B
-    fix up HDMI compatible
-if revision == C
-    fix up whatever
-I've seen chips with revision levels of J
+thx,
 
-Why do you want this knowledge in the machine file? Why not just add
-the test for SOC revision inside the device driver?
-
-I do see the logic for wanting to change the compatible string for the
-device, but these aren't really different devices. They are errata
-being applied to the same device.
-
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
-
-
-
--- 
-Jon Smirl
-jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Jason.
