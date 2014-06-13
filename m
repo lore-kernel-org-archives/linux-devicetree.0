@@ -1,22 +1,98 @@
-From: Sebastian Capella <sebcape@gmail.com>
-Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states bindings
-Date: Fri, 13 Jun 2014 10:40:18 -0700
-Message-ID: <CAPd3N-86XRWHSBmAbbPMaWMqX56aB4ytbSebDrZ6ewBMw0-xow@mail.gmail.com>
-References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com>
-	<alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr>
-	<20140613164954.GA16745@e102568-lin.cambridge.arm.com>
+From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
+ H2 and M2 xHCI controllers
+Date: Fri, 13 Jun 2014 19:08:23 +0100
+Message-ID: <539B3E17.6050607@codethink.co.uk>
+References: <539AEC8F.4030003@renesas.com> <20140613142525.GE8319@saruman.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140613164954.GA16745@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140613142525.GE8319-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: balbi-l0cyMroinI0@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Cc: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-I like these too!  Nice job!
+On 13/06/14 15:25, Felipe Balbi wrote:
+> Hi,
+> 
+>> + +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem" 
+>> +MODULE_FIRMWARE(FIRMWARE_NAME);
 
-Thanks!
+Where can we get this from, it would be nice to test this.
 
-Sebastian
+>> +/*** Register Offset ***/ +#define RCAR_USB3_INT_ENA	0x224	/* 
+>> Interrupt Enable */ +#define RCAR_USB3_DL_CTRL	0x250	/* FW 
+>> Download Control & Status */ +#define RCAR_USB3_FW_DATA0	0x258
+>> /* FW Data0 */ + +#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
+>>  +#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */ 
+>> +#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */ 
+>> +#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */ 
+>> +#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
+>> +#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */ + +/***
+>> Register Settings ***/ +/* Interrupt Enable */ +#define 
+>> RCAR_USB3_INT_XHC_ENA	0x00000001 +#define RCAR_USB3_INT_PME_ENA 
+>> 0x00000002 +#define RCAR_USB3_INT_HSE_ENA	0x00000004 +#define 
+>> RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \ + 
+>> RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA) + +/* FW Download 
+>> Control & Status */ +#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
+>>  +#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010 +#define 
+>> RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100 + +/* LCLK Select */ 
+>> +#define RCAR_USB3_LCLK_ENA_VAL	0x01030001 + +/* USB3.0 
+>> Configuration */ +#define RCAR_USB3_CONF1_VAL	0x00030204
+>> +#define RCAR_USB3_CONF2_VAL	0x00030300 +#define
+>> RCAR_USB3_CONF3_VAL 0x13802007 + +/* USB3.0 Polarity */ +#define
+>> RCAR_USB3_RX_POL_VAL BIT(21) +#define RCAR_USB3_TX_POL_VAL	BIT(4)
+>> + +void xhci_rcar_start(struct usb_hcd *hcd) +{ +	u32 temp; + +
+>> if (hcd->regs != NULL) { +		/* Interrupt Enable */ +		temp = 
+>> readl(hcd->regs + RCAR_USB3_INT_ENA); +		temp |= 
+>> RCAR_USB3_INT_ENA_VAL; +		writel(temp, hcd->regs + 
+>> RCAR_USB3_INT_ENA); +		/* LCLK Select */ + 
+>> writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK); +
+>> /* USB3.0 Configuration */ +		writel(RCAR_USB3_CONF1_VAL,
+>> hcd->regs + RCAR_USB3_CONF1); +		writel(RCAR_USB3_CONF2_VAL,
+>> hcd->regs + RCAR_USB3_CONF2); +		writel(RCAR_USB3_CONF3_VAL,
+>> hcd->regs + RCAR_USB3_CONF3); +		/* USB3.0 Polarity */ + 
+>> writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL); + 
+>> writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL); +	} 
+>> +} + +static int xhci_rcar_download_firmware(struct device *dev, 
+>> void __iomem *regs) +{ +	const struct firmware *fw; +	int
+>> retval, index, j, time; +	int timeout = 10000; +	u32 data, val,
+>> temp; + + /* request R-Car USB3.0 firmware */ +	retval = 
+>> request_firmware(&fw, FIRMWARE_NAME, dev); +	if (retval) + return
+>> retval; + +	/* download R-Car USB3.0 firmware */ +	temp = 
+>> readl(regs + RCAR_USB3_DL_CTRL); +	temp |= 
+>> RCAR_USB3_DL_CTRL_ENABLE; +	writel(temp, regs + 
+>> RCAR_USB3_DL_CTRL); + +	for (index = 0; index < fw->size; index 
+>> += 4) { +		/* to avoid reading beyond the end of the buffer */ + 
+>> for (data = 0, j = 3; j >= 0; j--) { +			if ((j + index) < 
+>> fw->size) +				data |= fw->data[index + j] << (8 * j); +		} + 
+>> writel(data, regs + RCAR_USB3_FW_DATA0); +		temp = readl(regs + 
+>> RCAR_USB3_DL_CTRL); +		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0; + 
+>> writel(temp, regs + RCAR_USB3_DL_CTRL); + +		for (time = 0; time 
+>> < timeout; time++) { +			val = readl(regs + RCAR_USB3_DL_CTRL);
+>> + if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0) +				break; + 
+>> udelay(1); +		} +		if (time == timeout) { +			retval = 
+>> -ETIMEDOUT; +			break; +		} +	} + +	temp = readl(regs + 
+>> RCAR_USB3_DL_CTRL); +	temp &= ~RCAR_USB3_DL_CTRL_ENABLE; + 
+>> writel(temp, regs + RCAR_USB3_DL_CTRL); + +	for (time = 0; time
+>> < timeout; time++) { +		val = readl(regs + RCAR_USB3_DL_CTRL); + 
+>> if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) { +			retval = 0; + 
+>> break; +		} +		udelay(1); +	} +	if (time == timeout) +		retval = 
+>> -ETIMEDOUT; + +	release_firmware(fw); + +	return retval; +} +
+>> +/* This function needs to initialize a "phy" of usb before */
+> 
+> initializing a PHY looks like something that the PHY layer should 
+> do. Why don't you write a PHY driver and teach xhci-core about
+> PHYs ? Then, more people would benefit.
+
+The rcar phy code should already do this, so I agree.
+
+-- 
+Ben Dooks				http://www.codethink.co.uk/
+Senior Engineer				Codethink - Providing Genius
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
