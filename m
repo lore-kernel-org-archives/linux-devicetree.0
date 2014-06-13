@@ -1,302 +1,151 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car H2
- and M2 xHCI controllers
-Date: Fri, 13 Jun 2014 21:20:31 +0900
-Message-ID: <539AEC8F.4030003@renesas.com>
+From: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: CPU revision IDs
+Date: Fri, 13 Jun 2014 08:29:41 -0400
+Message-ID: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-Sender: linux-sh-owner@vger.kernel.org
-To: "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The R-Car H2 and M2 SoCs come with an xHCI controller that requires
-some specific initializations related to the firmware downloading and
-some specific registers. This patch adds the support for this special
-configuration as an xHCI quirk executed during probe and start.
+How are CPU revision IDs encoded into the device tree? It is not
+reasonable to ask people to manually identify their revision and then
+use the right device tree. For example a heat sink may obscure the
+markings. The CPU ID is needed for device driver quirks.
 
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/usb/host/Kconfig     |    8 +++
- drivers/usb/host/Makefile    |    3 +
- drivers/usb/host/xhci-plat.c |   19 ++++++
- drivers/usb/host/xhci-rcar.c |  148 ++++++++++++++++++++++++++++++++++++++++++
- drivers/usb/host/xhci-rcar.h |   27 ++++++++
- 5 files changed, 205 insertions(+)
- create mode 100644 drivers/usb/host/xhci-rcar.c
- create mode 100644 drivers/usb/host/xhci-rcar.h
+I was thinking of doing something like adding code at early boot that
+fixes up the root compatible string. The revision is a
+property of the CPU.
 
-diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
-index 61b7817..537d9e1 100644
---- a/drivers/usb/host/Kconfig
-+++ b/drivers/usb/host/Kconfig
-@@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
- 	  Say 'Y' to enable the support for the xHCI host controller
- 	  found in Marvell Armada 375/38x ARM SOCs.
+Code changes this:
+ compatible =3D "cubietech,cubietruck", "allwinner,sun7i-a20"
+to:
+ compatible =3D "cubietech,cubietruck",  "allwinner,sun7i-a20a",
+"allwinner,sun7i-a20"
 
-+config USB_XHCI_RCAR
-+	tristate "xHCI support for Renesas R-Car SoCs"
-+	select USB_XHCI_PLATFORM
-+	depends on ARCH_SHMOBILE || COMPILE_TEST
-+	---help---
-+	  Say 'Y' to enable the support for the xHCI host controller
-+	  found in Renesas R-Car ARM SoCs.
-+
- endif # USB_XHCI_HCD
+Alternatively this could be done in uboot.
 
- config USB_EHCI_HCD
-diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
-index af89a90..144c038 100644
---- a/drivers/usb/host/Makefile
-+++ b/drivers/usb/host/Makefile
-@@ -22,6 +22,9 @@ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
- ifneq ($(CONFIG_USB_XHCI_MVEBU), )
- 	xhci-hcd-y		+= xhci-mvebu.o
- endif
-+ifneq ($(CONFIG_USB_XHCI_RCAR), )
-+	xhci-hcd-y		+= xhci-rcar.o
-+endif
- endif
+Browsing around the kernel code there seems to be multiple solutions
+to this problem.  For example this Marvell code modifies the device
+driver compatible string.
 
- obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 29d8adb..b6f2b6b 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -20,6 +20,7 @@
+http://lxr.free-electrons.com/source/arch/arm/mach-mvebu/board-v7.c#L71
 
- #include "xhci.h"
- #include "xhci-mvebu.h"
-+#include "xhci-rcar.h"
+On Fri, Jun 13, 2014 at 8:09 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org=
+> wrote:
+> On Fri, Jun 13, 2014 at 6:15 AM, Maxime Ripard
+> <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> On Fri, Jun 13, 2014 at 11:54:06AM +0200, Hans de Goede wrote:
+>>> Hi,
+>>>
+>>> On 06/13/2014 10:40 AM, Maxime Ripard wrote:
+>>> > On Fri, Jun 13, 2014 at 09:32:20AM +0200, Hans de Goede wrote:
+>>> >> Hi,
+>>> >>
+>>> >> On 06/13/2014 12:48 AM, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+>>> >>> On Thu, Jun 12, 2014 at 6:35 PM, Emilio L=C3=B3pez <emilio@elop=
+ez.com.ar> wrote:
+>>> >>>> El 12/06/14 19:11, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org escribi=C3=B3:
+>>> >>>>
+>>> >>>>> What has replaced sw_get_ic_ver() on 3.15?
+>>> >>>>>
+>>> >>>>> Codec code varies on every chip revision A,B,C and A10/20.
+>>> >>>>
+>>> >>>>
+>>> >>>> A10/A20 can be determined by the compatible string. Chip revis=
+ion is going
+>>> >>>> to be trickier though, there is no direct replacement of sw_ge=
+t_ic_ver()
+>>> >>>> that I'm aware of. sw_get_ic_ver() seems to poke a timer regis=
+ter in the
+>>> >>>> sun4i case, and SID (for which we do have a driver[1]) on the =
+sun5i case.
+>>> >>>>
+>>> >>>> [1] drivers/misc/eeprom/sunxi_sid.c
+>>> >>>
+>>> >>> We may have to reimplement it. Codec driver has stuff like this=
+ in it.
+>>> >>
+>>> >> I think adding some sort of SoC version detection makes sense, s=
+o go for it.
+>>> >
+>>> > It might, and we probably will come to it eventually, but I don't=
+ get
+>>> > what it would bring here.
+>>> >
+>>> > Have different compatible strings for the various revisions of th=
+e IP
+>>> > is much simpler and adds no code at all.
+>>>
+>>> That assumes that for a single board only a single revision of the =
+SoC has
+>>> ever been used. I would not be so sure that that is the case, I'm p=
+retty
+>>> sure that there were various rruns of the original mk802 A10 versio=
+n,
+>>> likely with the first runs having A10 Revision A and later runs
+>>> revision B. I really don't want to have to do different dts files j=
+ust
+>>> to deal with this, that is not helpful from a maintenance pov, and =
+it
+>>> will also only serve to confuse our end users as they will have no =
+idea
+>>> which revision of the SoC they have, so solving the differences bet=
+ween
+>>> the A10 revision A vs B/C with a compatible string seems counter pr=
+oductive.
+>>
+>> There's usually two patterns to deal with this:
+>>   - Either have two different DT, depending on the revision of the
+>>     board
+>>
+>>   - If the board rev hasn't changed, have the machine code come and
+>>     update the DT with the appropriate compatible (see
+>>     http://lxr.free-electrons.com/source/arch/arm/mach-mvebu/board-v=
+7.c#L71)
+>
+> This code fixes up the I2C compatible string based on SOC ID. That
+> doesn't seem right to me. Instead I would have put some code in early
+> boot that fixes up the root compatible string. The revision is a
+> property of the CPU.
+>
+> Change this:
+> compatible =3D "cubietech,cubietruck", "allwinner,sun7i-a20"
+> to:
+> compatible =3D "cubietech,cubietruck",  "allwinner,sun7i-a20a",
+> "allwinner,sun7i-a20"
+>
+> Uboot can fix up device trees. Power PC uses it to add memory size an=
+d
+> CPU clock speed.  Maybe uboot should fix the compatible string?
+>
+>
+>>
+>> The latter is much better, for the reasons you mentionned, but in an=
+y
+>> case, the driver itself shouldn't have to worry about that kind of
+>> things, and only deal with compatibles.
+>>
+>> Max
+>>
+>> --
+>> Maxime Ripard, Free Electrons
+>> Embedded Linux, Kernel and Android engineering
+>> http://free-electrons.com
+>
+>
+>
+> --
+> Jon Smirl
+> jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 
- static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- {
-@@ -34,11 +35,27 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
- /* called during probe() after chip reset completes */
- static int xhci_plat_setup(struct usb_hcd *hcd)
- {
-+	struct device_node *of_node = hcd->self.controller->of_node;
-+	int ret;
-+
-+	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
-+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791")) {
-+		ret = xhci_rcar_init_quirk(hcd);
-+		if (ret)
-+			return ret;
-+	}
-+
- 	return xhci_gen_setup(hcd, xhci_plat_quirks);
- }
-
- static int xhci_plat_start(struct usb_hcd *hcd)
- {
-+	struct device_node *of_node = hcd->self.controller->of_node;
-+
-+	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
-+	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791"))
-+		xhci_rcar_start(hcd);
-+
- 	return xhci_run(hcd);
- }
-
-@@ -270,6 +287,8 @@ static const struct of_device_id usb_xhci_of_match[] = {
- 	{ .compatible = "xhci-platform" },
- 	{ .compatible = "marvell,armada-375-xhci"},
- 	{ .compatible = "marvell,armada-380-xhci"},
-+	{ .compatible = "renesas,xhci-r8a7790"},
-+	{ .compatible = "renesas,xhci-r8a7791"},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
-diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
-new file mode 100644
-index 0000000..ff0d1b4
---- /dev/null
-+++ b/drivers/usb/host/xhci-rcar.c
-@@ -0,0 +1,148 @@
-+/*
-+ * xHCI host controller driver for R-Car SoCs
-+ *
-+ * Copyright (C) 2014 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+#include <linux/firmware.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/usb/phy.h>
-+
-+#include "xhci.h"
-+#include "xhci-rcar.h"
-+
-+#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem"
-+MODULE_FIRMWARE(FIRMWARE_NAME);
-+
-+/*** Register Offset ***/
-+#define RCAR_USB3_INT_ENA	0x224	/* Interrupt Enable */
-+#define RCAR_USB3_DL_CTRL	0x250	/* FW Download Control & Status */
-+#define RCAR_USB3_FW_DATA0	0x258	/* FW Data0 */
-+
-+#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
-+#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */
-+#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */
-+#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */
-+#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
-+#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */
-+
-+/*** Register Settings ***/
-+/* Interrupt Enable */
-+#define RCAR_USB3_INT_XHC_ENA	0x00000001
-+#define RCAR_USB3_INT_PME_ENA	0x00000002
-+#define RCAR_USB3_INT_HSE_ENA	0x00000004
-+#define RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \
-+				RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA)
-+
-+/* FW Download Control & Status */
-+#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
-+#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010
-+#define RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100
-+
-+/* LCLK Select */
-+#define RCAR_USB3_LCLK_ENA_VAL	0x01030001
-+
-+/* USB3.0 Configuration */
-+#define RCAR_USB3_CONF1_VAL	0x00030204
-+#define RCAR_USB3_CONF2_VAL	0x00030300
-+#define RCAR_USB3_CONF3_VAL	0x13802007
-+
-+/* USB3.0 Polarity */
-+#define RCAR_USB3_RX_POL_VAL	BIT(21)
-+#define RCAR_USB3_TX_POL_VAL	BIT(4)
-+
-+void xhci_rcar_start(struct usb_hcd *hcd)
-+{
-+	u32 temp;
-+
-+	if (hcd->regs != NULL) {
-+		/* Interrupt Enable */
-+		temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
-+		temp |= RCAR_USB3_INT_ENA_VAL;
-+		writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
-+		/* LCLK Select */
-+		writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
-+		/* USB3.0 Configuration */
-+		writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
-+		writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
-+		writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
-+		/* USB3.0 Polarity */
-+		writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
-+		writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
-+	}
-+}
-+
-+static int xhci_rcar_download_firmware(struct device *dev, void __iomem *regs)
-+{
-+	const struct firmware *fw;
-+	int retval, index, j, time;
-+	int timeout = 10000;
-+	u32 data, val, temp;
-+
-+	/* request R-Car USB3.0 firmware */
-+	retval = request_firmware(&fw, FIRMWARE_NAME, dev);
-+	if (retval)
-+		return retval;
-+
-+	/* download R-Car USB3.0 firmware */
-+	temp = readl(regs + RCAR_USB3_DL_CTRL);
-+	temp |= RCAR_USB3_DL_CTRL_ENABLE;
-+	writel(temp, regs + RCAR_USB3_DL_CTRL);
-+
-+	for (index = 0; index < fw->size; index += 4) {
-+		/* to avoid reading beyond the end of the buffer */
-+		for (data = 0, j = 3; j >= 0; j--) {
-+			if ((j + index) < fw->size)
-+				data |= fw->data[index + j] << (8 * j);
-+		}
-+		writel(data, regs + RCAR_USB3_FW_DATA0);
-+		temp = readl(regs + RCAR_USB3_DL_CTRL);
-+		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0;
-+		writel(temp, regs + RCAR_USB3_DL_CTRL);
-+
-+		for (time = 0; time < timeout; time++) {
-+			val = readl(regs + RCAR_USB3_DL_CTRL);
-+			if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0)
-+				break;
-+			udelay(1);
-+		}
-+		if (time == timeout) {
-+			retval = -ETIMEDOUT;
-+			break;
-+		}
-+	}
-+
-+	temp = readl(regs + RCAR_USB3_DL_CTRL);
-+	temp &= ~RCAR_USB3_DL_CTRL_ENABLE;
-+	writel(temp, regs + RCAR_USB3_DL_CTRL);
-+
-+	for (time = 0; time < timeout; time++) {
-+		val = readl(regs + RCAR_USB3_DL_CTRL);
-+		if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
-+			retval = 0;
-+			break;
-+		}
-+		udelay(1);
-+	}
-+	if (time == timeout)
-+		retval = -ETIMEDOUT;
-+
-+	release_firmware(fw);
-+
-+	return retval;
-+}
-+
-+/* This function needs to initialize a "phy" of usb before */
-+int xhci_rcar_init_quirk(struct usb_hcd *hcd)
-+{
-+	/* If hcd->regs is NULL, we don't just call the following function */
-+	if (!hcd->regs)
-+		return 0;
-+
-+	return xhci_rcar_download_firmware(hcd->self.controller, hcd->regs);
-+}
-diff --git a/drivers/usb/host/xhci-rcar.h b/drivers/usb/host/xhci-rcar.h
-new file mode 100644
-index 0000000..5850125
---- /dev/null
-+++ b/drivers/usb/host/xhci-rcar.h
-@@ -0,0 +1,27 @@
-+/*
-+ * drivers/usb/host/xhci-rcar.h
-+ *
-+ * Copyright (C) 2014 Renesas Electronics Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+
-+#ifndef _XHCI_RCAR_H
-+#define _XHCI_RCAR_H
-+
-+#if IS_ENABLED(CONFIG_USB_XHCI_RCAR)
-+void xhci_rcar_start(struct usb_hcd *hcd);
-+int xhci_rcar_init_quirk(struct usb_hcd *hcd);
-+#else
-+static inline void xhci_rcar_start(struct usb_hcd *hcd)
-+{
-+}
-+
-+static inline int xhci_rcar_init_quirk(struct usb_hcd *hcd)
-+{
-+	return 0;
-+}
-+#endif
-+#endif /* _XHCI_RCAR_H */
--- 
-1.7.9.5
-
+--=20
+Jon Smirl
+jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
