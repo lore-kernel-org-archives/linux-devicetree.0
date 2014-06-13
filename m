@@ -1,52 +1,70 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: [PATCHv7 0/2] mmc: fixed the mmc_of_parse for dwmmc
-Date: Fri, 13 Jun 2014 13:31:05 +0900
-Message-ID: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: linux-mmc <linux-mmc@vger.kernel.org>
-Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, "Heiko St.bner" <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>
+From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [RFC PATCH]  OF: fix of_find_node_by_path() assumption that of_allnodes
+ is root
+Date: Thu, 12 Jun 2014 22:53:38 -0700
+Message-ID: <539A91E2.7000606@gmail.com>
+Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch-set is fixed the dw-mmc controller problem.
-dw-mmc controller have the slot, but mmc_of_parse didn't parse the slot sub-node.
-So dw-mmc controller didn't work correctly.
+From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 
-Changelog V7:
-	- Remove the missing subnode.
+Pantelis Antoniou reports that of_find_node_by_path() is borked because
+of_allnodes is not guaranteed to contain the root of the tree after using
+any of the dynamic update functions because some other nodes ends up as
+of_allnodes.
 
-Changelog V6:
-	- Add the missing property.
+Fixes: c22e650e66b8 of: Make of_find_node_by_path() handle /aliases
 
-Changelog V4/V5:
-	- Drop "mmc: host: add slot argument to mmc_of_parse"
-	- Drop "mmc: dw_mmc: remove the "supports-highspeed" property.
-	- Rename patch's subject.
-	- Remove the slot-node for dw-mmc controller.
-Jaehoon Chung (2):
-  mmc: dw_mmc: replace "disable-wp" from slot's quirk to host's quirk
-  ARM: dts: unuse the slot-node and deprecated supports-highspeed for
-    dw-mmc.
+Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+---
 
- .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
- .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
- .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
- arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
- arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
- arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
- arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++---------
- arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   28 ++++++--------------
- arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++---------
- arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
- arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++--------
- arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++--------
- arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++--------
- arch/arm/boot/dts/socfpga_arria5.dtsi              |   10 +++----
- arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
- arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
- drivers/mmc/host/dw_mmc.c                          |   10 +++----
- 17 files changed, 67 insertions(+), 154 deletions(-)
 
--- 
-1.7.9.5
+Pantelis,
 
+Can you test whether the problem you reported in irc?
+
+This patch has not been tested, not even compile tested.
+
+
+ drivers/of/base.c |    8 	6 +	2 -	0 !
+ 1 file changed, 6 insertions(+), 2 deletions(-)
+
+Index: b/drivers/of/base.c
+===================================================================
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -1948,6 +1948,9 @@ int of_reconfig_notify(unsigned long act
+ 
+ /**
+  * of_attach_node - Plug a device node into the tree and global list.
++ *
++ * Put the device node after of_allnodes in the global list so that
++ * of_allnodes remains the root.
+  */
+ int of_attach_node(struct device_node *np)
+ {
+@@ -1958,11 +1961,12 @@ int of_attach_node(struct device_node *n
+ 	if (rc)
+ 		return rc;
+ 
++	BUG_ON(!of_allnodes);
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 	np->sibling = np->parent->child;
+-	np->allnext = of_allnodes;
++	np->allnext = of_allnodes->allnext;
+ 	np->parent->child = np;
+-	of_allnodes = np;
++	of_allnodes->allnext = np;
+ 	of_node_clear_flag(np, OF_DETACHED);
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
