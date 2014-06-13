@@ -1,53 +1,59 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
-Date: Fri, 13 Jun 2014 10:13:57 -0700
-Message-ID: <CAD=FV=VvkvH1TPiKttm9VXbBRnBo7kmTVK8bZZvexK=bAvaO4Q@mail.gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
-	<1402464739-19044-4-git-send-email-tushar.b@samsung.com>
-	<CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
-	<20140613170511.GA20112@sirena.org.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140613170511.GA20112@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Tushar Behera <tushar.b@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@linaro.org>, Tushar Behera <trblinux@gmail.com>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: [PATCH 2/4] of: Add new compatibles for CODA bindings
+Date: Fri, 13 Jun 2014 19:13:59 +0200
+Message-ID: <1402679641-868-2-git-send-email-p.zabel@pengutronix.de>
+References: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402679641-868-1-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark,
+This patch adds new compatibles using the new Chips&Media vendor
+prefix "cnm" and CODA model name as well as a Freescale specific
+compatible value for i.MX6DL/S.
+The latter is because for some reason the i.MX6DL/S firmware
+provided by Freescale differs from the i.MX6Q/D version.
 
-On Fri, Jun 13, 2014 at 10:05 AM, Mark Brown <broonie@kernel.org> wrote:
-> On Fri, Jun 13, 2014 at 10:03:50AM -0700, Doug Anderson wrote:
->> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b@samsung.com> wrote:
->
->> > Peach-pi board has MAX98090 audio codec connected on HSI2C-7 bus.
->
->> If you want to be a stickler about it, peach-pi actually has a
->> max98091.  That requires code changes to the i2c driver, though.
->> ...and unfortunately listing two compatible strings for i2c devices is
->> broken.  :(
->
-> It is?  We should fix that if it's the case...
+Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+---
+ Documentation/devicetree/bindings/media/coda.txt | 11 ++++++-----
+ 1 file changed, 6 insertions(+), 5 deletions(-)
 
-Yah, I mentioned it to Mark Rutland at the last ELC and he said he
-might take a look at it, but I probably should have posted something
-up to the i2c list.
+diff --git a/Documentation/devicetree/bindings/media/coda.txt b/Documentation/devicetree/bindings/media/coda.txt
+index 2865d04..f5e4d4b 100644
+--- a/Documentation/devicetree/bindings/media/coda.txt
++++ b/Documentation/devicetree/bindings/media/coda.txt
+@@ -5,10 +5,11 @@ Coda codec IPs are present in i.MX SoCs in various versions,
+ called VPU (Video Processing Unit).
+ 
+ Required properties:
+-- compatible : should be "fsl,<chip>-src" for i.MX SoCs:
+-  (a) "fsl,imx27-vpu" for CodaDx6 present in i.MX27
+-  (b) "fsl,imx53-vpu" for CODA7541 present in i.MX53
+-  (c) "fsl,imx6q-vpu" for CODA960 present in i.MX6q
++- compatible : should be "fsl,<chip>-src", "cnm,coda<model>" for i.MX SoCs:
++  (a) "fsl,imx27-vpu", "cnm,codadx6" for CodaDx6 present in i.MX27
++  (b) "fsl,imx53-vpu", "cnm,coda7541" for CODA7541 present in i.MX53
++  (c) "fsl,imx6q-vpu", "cnm,coda960" for CODA960 present in i.MX6Q/D
++  (d) "fsl,imx6dl-vpu", "cnm,coda960" for CODA960 present in i.MX6DL/S
+ - reg: should be register base and length as documented in the
+   SoC reference manual
+ - interrupts : Should contain the VPU interrupt. For CODA960,
+@@ -21,7 +22,7 @@ Required properties:
+ Example:
+ 
+ vpu: vpu@63ff4000 {
+-	compatible = "fsl,imx53-vpu";
++	compatible = "fsl,imx53-vpu", "cnm,coda7541";
+ 	reg = <0x63ff4000 0x1000>;
+ 	interrupts = <9>;
+ 	clocks = <&clks 63>, <&clks 63>;
+-- 
+2.0.0
 
-I made a half-assed attempt to fix it locally in the ChromeOS but
-quickly found that it was going to be a much bigger job than I had
-time for...
-
-https://chromium-review.googlesource.com/#/c/184406/
-
-IIRC i2c_new_device didn't return an error like I thought it would,
-probably trying to deal with the fact that devices might show up at a
-later point in time.
-
-
-Hrm, now that I think about it I wonder if the right answer is just to
-call i2c_new_device for all the compatible strings even if it doesn't
-return an error.  I'd have to go back and try that and re-explore this
-code...
-
--Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
