@@ -1,29 +1,66 @@
-From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] ARM: OMAP5: hwmod: Add ocp2scp3 and sata hwmods
-Date: Fri, 13 Jun 2014 09:36:26 +0530
-Message-ID: <539A78C2.8080404@ti.com>
-References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274487-24688-1-git-send-email-rogerq@ti.com> <5399A12F.7010301@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <5399A12F.7010301-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
-Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: [PATCHv7 1/2] mmc: dw_mmc: replace "disable-wp" from slot's quirk to
+ host's quirk
+Date: Fri, 13 Jun 2014 13:31:06 +0900
+Message-ID: <1402633867-25155-2-git-send-email-jh80.chung@samsung.com>
+References: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: linux-mmc <linux-mmc@vger.kernel.org>
+Cc: Chris Ball <chris@printf.net>, Ulf Hansson <ulf.hansson@linaro.org>, tgih.jun@samsung.com, devicetree@vger.kernel.org, "Heiko St.bner" <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>, Jaehoon Chung <jh80.chung@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 12 June 2014 06:16 PM, Roger Quadros wrote:
-> Tony,
-> 
-> Looks like we've missed this for 3.16.
+Replaced the "disable-wp" into host's quirks.
+(Because the slot-node is removed at dt-file.)
 
-Without these SATA support will be broken for DRA7x and OMAP5 so can
-they be queued for -rc2?
+Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+---
+Changelog V6/V7:
+	-None
+Changelog V5:
+	- Modify comment.
+Changelog V4:
+	- Rename Subject
+		"[PATCHv3 2/4] mmc: dw_mmc: use the __mmc_of_parse to parse the slot node"
+	- Replace the "disable-wp" into host's quirks, according to remove the slot-node at dt-file.
+Changelog V3:
+	- Fix typo.
+	- Maintained the dw_mci_of_quirks().
+Changelog V2:
+	- None
 
-Thanks,
-Sekhar
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ drivers/mmc/host/dw_mmc.c |   10 ++++------
+ 1 file changed, 4 insertions(+), 6 deletions(-)
+
+diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+index 1ac227c..99fc939 100644
+--- a/drivers/mmc/host/dw_mmc.c
++++ b/drivers/mmc/host/dw_mmc.c
+@@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
+ static struct dw_mci_of_slot_quirks {
+ 	char *quirk;
+ 	int id;
+-} of_slot_quirks[] = {
+-	{
+-		.quirk	= "disable-wp",
+-		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
+-	},
+-};
++} of_slot_quirks[] = {};
+ 
+ static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
+ {
+@@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
+ 	{
+ 		.quirk	= "broken-cd",
+ 		.id	= DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
++	}, {
++		.quirk	= "disable-wp",
++		.id	= DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
+ 	},
+ };
+ 
+-- 
+1.7.9.5
+
