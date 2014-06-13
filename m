@@ -1,83 +1,47 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 3/4] Documentation: devicetree: Add cpu clock configuration
- data binding for Exynos3250
-Date: Fri, 13 Jun 2014 15:08:12 +0900
-Message-ID: <1402639693-31108-4-git-send-email-cw00.choi@samsung.com>
-References: <1402639693-31108-1-git-send-email-cw00.choi@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1402639693-31108-1-git-send-email-cw00.choi@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: cpufreq@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: linux-samsung-soc@vger.kernel.org, mturquette@linaro.org, shawn.guo@linaro.org, kgene.kim@samsung.com, t.figa@samsung.com, viresh.kumar@linaro.org, thomas.ab@samsung.com, heiko@sntech.de, kyungmin.park@samsung.com, cw00.choi@samsung.com, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, devicetree@vger.kernel.org
+From: Sricharan R <r.sricharan@ti.com>
+Subject: Re: [PATCH V2 05/19] irqchip: crossbar: Change allocation logic by
+ reversing search for free irqs
+Date: Fri, 13 Jun 2014 11:39:39 +0530
+Message-ID: <539A95A3.1010301@ti.com>
+References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-6-git-send-email-r.sricharan@ti.com> <20140612125615.GT8664@titan.lakedaemon.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140612125615.GT8664@titan.lakedaemon.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-The clock block of Exynos3250 add new properties to support cpu clock provider.
-To register cpu clock provider of Exynos3250, must need armclk-provider-table
-which includes various dividers to change CPU clock to support Exynos3250 cpufreq.
+Hi Jason,
 
-Cc: Thomas Abraham <thomas.ab@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
-Cc: Kumar Gala <galak@codeaurora.org>
-Cc: <devicetree@vger.kernel.org>
-Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
----
- .../devicetree/bindings/clock/exynos3250-clock.txt | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+On Thursday 12 June 2014 06:26 PM, Jason Cooper wrote:
+> On Thu, Jun 12, 2014 at 05:23:13PM +0530, Sricharan R wrote:
+>> From: Nishanth Menon <nm@ti.com>
+>>
+>> Reverse the search algorithm to ensure that address mapping and IRQ
+>> allocation logics are proper. This can open up new bugs which are
+>> easily fixable rather than wait till allocation logic approaches
+>> the limit to find new bugs.
+> 
+> Could you expand on this logic some more?  What class of bugs are you
+> hoping to discover more easily?
+> 
 
-diff --git a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
-index aadc9c5..189b506 100644
---- a/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
-+++ b/Documentation/devicetree/bindings/clock/exynos3250-clock.txt
-@@ -13,6 +13,25 @@ Required Properties:
- 
- - #clock-cells: should be 1.
- 
-+- samsung,armclk-divider-table: when the frequency of the APLL is changed
-+  the divider clocks in CMU_CPU clock domain also need to be updated. These
-+  divider clocks have SoC specific divider clock output requirements for a
-+  specific APLL clock speeds. When APLL clock rate is changed, these divider
-+  clocks are reprogrammed with pre-determined values in order to maintain the
-+  SoC specific divider clock outputs. This property lists the divider values
-+  for divider clocks in the CMU_CPU block for supported APLL clock speeds.
-+  The format of each entry included in the arm-frequency-table should be
-+  as defined below
-+
-+      cell #1: expected arm clock parent frequency
-+      cell #2 ~ cell #7: value of clock divider in the following order
-+		corem_ratio, atb_ratio, pclk_dbg_ratio, apll_ratio,
-+		copy_ratio, hpm_ratio
-+
-+- samsung,armclk-cells: defines the number of cells in
-+  samsung,armclk-divider-table property. The value of this property depends on
-+  the SoC type.
-+
- Each clock is assigned an identifier and client nodes can use this identifier
- to specify the clock which they consume.
- 
-@@ -26,6 +45,19 @@ Example 1: An example of a clock controller node is listed below.
- 		compatible = "samsung,exynos3250-cmu";
- 		reg = <0x10030000 0x20000>;
- 		#clock-cells = <1>;
-+
-+		samsung,armclk-cells = <7>;
-+		samsung,armclk-divider-table =
-+			<1000000 1 4 7 1 7 7>,
-+			<900000  1 3 7 1 7 7>,
-+			<800000  1 3 7 1 7 7>,
-+			<700000  1 3 7 1 7 7>,
-+			<600000  1 3 7 1 7 7>,
-+			<500000  1 3 7 1 7 7>,
-+			<400000  1 3 7 1 7 7>,
-+			<300000  1 3 5 1 7 7>,
-+			<200000  1 3 3 1 7 7>,
-+			<100000  1 1 1 1 7 7>;
- 	};
- 
- Example 2: UART controller node that consumes the clock generated by the clock
--- 
-1.8.0
+class 1. address space errors -> example:
+reg = <a size_b>
+ti,max-irqs =  is a wrong parameter
+
+class 2: irq-reserved list - which decides which entries in the
+address space is not actually wired in
+
+class 3: wrong list of routable-irqs.
+
+in general allocating from max to min tends to have benefits in
+ensuring the different issues that may be present in dts is easily
+caught at definition time, rather than at a later point in time.
+
+
+Regards,
+ Sricharan
