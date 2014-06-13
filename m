@@ -1,51 +1,38 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH 9/9] serial/arc: Add DT based earlycon support
-Date: Fri, 13 Jun 2014 14:10:41 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA230751A6B772C@IN01WEMBXA.internal.synopsys.com>
-References: <1402569099-9900-1-git-send-email-vgupta@synopsys.com>
- <1402569099-9900-10-git-send-email-vgupta@synopsys.com>
- <CAL_Jsq+wf-nwzw_sYk4FiZxRr2advvjkd7i32arqVAFptDeVGA@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/3] arm: multi_v7: enable igb, stmpe, lm95245, pwm leds
+Date: Fri, 13 Jun 2014 16:10:17 +0200
+Message-ID: <201406131610.18048.arnd@arndb.de>
+References: <1741a33cd88cd5525f3c50c0e0cacc0853a3512a.1402350905.git.marcel@ziswiler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-serial-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "Francois.Bedard@synopsys.com" <Francois.Bedard@synopsys.com>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1741a33cd88cd5525f3c50c0e0cacc0853a3512a.1402350905.git.marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
+Cc: swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stefan-XLVq0VzYD2Y@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 June 2014 06:57 AM, Rob Herring wrote:
-> On Thu, Jun 12, 2014 at 5:31 AM, Vineet Gupta
-> <Vineet.Gupta1@synopsys.com> wrote:
->> > Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
->> > ---
-> Nice series!
->
->> >  arch/arc/boot/dts/angel4.dts  | 3 ++-
->> >  drivers/tty/serial/arc_uart.c | 1 +
->> >  2 files changed, 3 insertions(+), 1 deletion(-)
->> >
->> > diff --git a/arch/arc/boot/dts/angel4.dts b/arch/arc/boot/dts/angel4.dts
->> > index 6b57475967a6..e9fc270d1e0b 100644
->> > --- a/arch/arc/boot/dts/angel4.dts
->> > +++ b/arch/arc/boot/dts/angel4.dts
->> > @@ -17,7 +17,8 @@
->> >         interrupt-parent = <&intc>;
->> >
->> >         chosen {
->> > -               bootargs = "earlycon=arc_uart,mmio32,0xc0fc1000,115200n8 console=ttyARC0,115200n8";
->> > +               bootargs = "earlycon console=ttyARC0,115200n8";
->> > +               stdout-path = &arcuart0;
-> Just FYI, Grant has a series to pickup the normal console from
-> stdout-path which would mean you can remove console param as well.
-> I've kicked him to respin it.
+On Tuesday 10 June 2014, Marcel Ziswiler wrote:
+> The NVIDIA Tegra 3 based Apalis T30 module contains an Intel i210 resp.
+> i211 gigabit Ethernet controller, an STMPE811 ADC/touch controller, PWM
+> LEDs generically accessible from user space and an LM95245 temperature
+> sensor chip. The later three can also be found on the Colibri T30
+> module.
+> 
+> While at it move the NEON entry down to its proper place to have it all
+> nicely ordered again.
+> 
+> Signed-off-by: Marcel Ziswiler <marcel-mitwqZ+T+m9Wk0Htik3J/w@public.gmane.org>
 
-OK ! I can split up 9/9 into driver chg and DT change.
+Stephen, Thierry,
 
-In the mean time could you take a look at the driver patches which switch to
-earlycon and DT earlycon
-and possibly provide Ack/Reviewed by.
+do you want me to queue it up directly, or do you want to put it into
+a tegra fixes branch?
 
-Thx,
--Vineet
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
