@@ -1,88 +1,78 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
-Date: Fri, 13 Jun 2014 16:11:30 -0500
-Message-ID: <CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com>
-References: <1402689965-19397-1-git-send-email-jwerner@chromium.org>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
+Date: Fri, 13 Jun 2014 14:58:26 -0700
+Message-ID: <CAD=FV=XCk9E-7VPV=LQrdLU5fKsFHviQf79MBmC8va3gsg=Ydw@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-4-git-send-email-tushar.b@samsung.com>
+	<CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
+	<20140613170511.GA20112@sirena.org.uk>
+	<CAD=FV=VvkvH1TPiKttm9VXbBRnBo7kmTVK8bZZvexK=bAvaO4Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402689965-19397-1-git-send-email-jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <stephen.r.warren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stefan Reinauer <stefan.reinauer-7ChRSZmxDtxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=VvkvH1TPiKttm9VXbBRnBo7kmTVK8bZZvexK=bAvaO4Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 3:06 PM, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> This patch adds documentation describing a device tree binding for the
-> coreboot firmware project (www.coreboot.org). It is meant to be
-> dynamically added during boot and contains address definitions for the
-> coreboot table (a list of variable-sized descriptors providing
-> information about various compile- and run-time generated firmware
-> parameters) and the CBMEM area (the structure containing most run-time
-> resident memory regions set up by coreboot).
+Mark,
+
+On Fri, Jun 13, 2014 at 10:13 AM, Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org> wrote:
+> Mark,
 >
-> These definitions allow kernel drivers to easily access data contained
-> in and pointed to by these regions (such as coreboot's in-memory log).
-> (An example implementation can be seen at http://crosreview.com/203371,
-> which will be submitted at a later point.)
-
-This is just to export a fixed log to userspace (like a DMI table) or
-the kernel will actually use the data in some way? Based on the link,
-it looks like the former to me.
-
-> Signed-off-by: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
->  .../devicetree/bindings/firmware/coreboot.txt      | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/firmware/coreboot.txt
+> On Fri, Jun 13, 2014 at 10:05 AM, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>> On Fri, Jun 13, 2014 at 10:03:50AM -0700, Doug Anderson wrote:
+>>> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>
+>>> > Peach-pi board has MAX98090 audio codec connected on HSI2C-7 bus.
+>>
+>>> If you want to be a stickler about it, peach-pi actually has a
+>>> max98091.  That requires code changes to the i2c driver, though.
+>>> ...and unfortunately listing two compatible strings for i2c devices is
+>>> broken.  :(
+>>
+>> It is?  We should fix that if it's the case...
 >
-> diff --git a/Documentation/devicetree/bindings/firmware/coreboot.txt b/Documentation/devicetree/bindings/firmware/coreboot.txt
-> new file mode 100644
-> index 0000000..89d7bf3
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/firmware/coreboot.txt
-> @@ -0,0 +1,28 @@
-> +COREBOOT firmware information
-> +
-> +The device tree node to communicate the location of coreboot's memory-resident
-> +bookkeeping structures to the kernel. Since coreboot itself cannot boot a
-> +device-tree-based kernel (yet), this node needs to be inserted by a
-> +second-stage bootloader (a coreboot "payload").
-> +
-> +Required properties:
-> + - compatible: Should be "coreboot"
-> + - reg: Address and length of the following two memory regions, in order:
-> +       1.) The coreboot table. This is a list of variable-sized descriptors
-> +       that contain various compile- and run-time generated firmware
-> +       parameters. It is identified by the magic string "LBIO" in its first
-> +       four bytes. See coreboot's src/include/boot/coreboot_tables.h for
-> +       details.
-> +       2.) The CBMEM area. This is a downward-growing memory region used by
-> +       coreboot to dynamically allocate data structures that remain resident.
-> +       It may or may not include the coreboot table as one of its members. It
-> +       is identified by a root node descriptor with the magic number
-> +       0xc0389479 that resides in the topmost 8 bytes of the area. See
-> +       coreboot's src/lib/dynamic_cbmem.c for details.
-
-Don't you need need to keep the kernel from allocating this memory by
-using one of the reserved memory mechanisms? The recently added one
-should be able to specific what the memory is reserved for IIRC.
-
-> +
-> +Example:
-> +       firmware {
-
-/firmware is already used IIRC. What if you have other firmware such
-as Trustzone?
-
-> +               compatible = "coreboot";
-> +               reg = <0xfdfea000 0x264>,
-> +                     <0xfdfea000 0x16000>;
-> +       };
-> --
-> 1.8.3.2
+> Yah, I mentioned it to Mark Rutland at the last ELC and he said he
+> might take a look at it, but I probably should have posted something
+> up to the i2c list.
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> I made a half-assed attempt to fix it locally in the ChromeOS but
+> quickly found that it was going to be a much bigger job than I had
+> time for...
+>
+> https://chromium-review.googlesource.com/#/c/184406/
+>
+> IIRC i2c_new_device didn't return an error like I thought it would,
+> probably trying to deal with the fact that devices might show up at a
+> later point in time.
+>
+>
+> Hrm, now that I think about it I wonder if the right answer is just to
+> call i2c_new_device for all the compatible strings even if it doesn't
+> return an error.  I'd have to go back and try that and re-explore this
+> code...
+
+Nope, that didn't work either.  Now I remember trying that before,
+too.  It doesn't like you registering two different devices with the
+same address:
+
+[    2.582539] DOUG: /i2c@12CD0000/codec@10 (0) max98091
+[    2.587360] DOUG: /i2c@12CD0000/codec@10 (0) max98091
+[    2.591160] DOUG: /i2c@12CD0000/codec@10 (1) max98090
+[    2.596686] i2c i2c-7: Failed to register i2c client max98090 at 0x10 (-16)
+
+If you hack out the check for address business:
+
+sysfs: cannot create duplicate filename '/devices/12cd0000.i2c/i2c-7/7-0010'
+
+Anyway, suffice to say that the i2c core needs to be extended to
+handle the idea that a single device has more than one "compatible"
+string.  I'll leave it to an eager reader of this thread to implement
+this since we can also fix our own problem by just listing "max98091"
+in "sound/soc/codecs/max98090.c" like has always been done in the
+past.
+
+
+-Doug
