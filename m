@@ -1,84 +1,100 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [RFC PATCH] OF: fix of_find_node_by_path() assumption that
- of_allnodes is root
-Date: Fri, 13 Jun 2014 16:06:25 +0100
-Message-ID: <CACxGe6sG+h7j9Npd-xR4-E13i=_p8OtbisgJv1PUzf981nGHUw@mail.gmail.com>
-References: <539A91E2.7000606@gmail.com> <CAL_JsqJ+f0CjwGnqTzXjMOAvbDOf0O3BZgcQwrzaWBy9Gwiw8A@mail.gmail.com>
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH/RFC V6 2/2] clk: Add handling of clk parent and rate
+ assigned from DT
+Date: Fri, 13 Jun 2014 17:08:33 +0200
+Message-ID: <539B13F1.8090804@samsung.com>
+References: <1400520171-6698-1-git-send-email-s.nawrocki@samsung.com>
+ <1400520171-6698-3-git-send-email-s.nawrocki@samsung.com>
+ <538468B5.6090505@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ+f0CjwGnqTzXjMOAvbDOf0O3BZgcQwrzaWBy9Gwiw8A@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Frank Rowand <frowand.list@gmail.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel list <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <538468B5.6090505-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tushar Behera <tushar.behera-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sw0312.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 2:52 PM, Rob Herring <robherring2@gmail.com> wrote:
-> On Fri, Jun 13, 2014 at 12:53 AM, Frank Rowand <frowand.list@gmail.com> wrote:
->> From: Frank Rowand <frank.rowand@sonymobile.com>
+On 27/05/14 12:28, Tushar Behera wrote:
+> On 05/19/2014 10:52 PM, Sylwester Nawrocki wrote:
+>> This patch adds a helper function to configure clock parents and
+>> rates as specified in clock-parents, clock-rates DT properties
+>> for a consumer device and a call to it before driver is bound to
+>> a device.
 >>
->> Pantelis Antoniou reports that of_find_node_by_path() is borked because
->> of_allnodes is not guaranteed to contain the root of the tree after using
->> any of the dynamic update functions because some other nodes ends up as
->> of_allnodes.
+>> Signed-off-by: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> 
+> [ ... ]
+> 
+>> diff --git a/drivers/base/platform.c b/drivers/base/platform.c
+>> index 5b47210..f622733 100644
+>> --- a/drivers/base/platform.c
+>> +++ b/drivers/base/platform.c
+>> @@ -23,6 +23,7 @@
+>>  #include <linux/pm_runtime.h>
+>>  #include <linux/idr.h>
+>>  #include <linux/acpi.h>
+>> +#include <linux/clk/clk-conf.h>
 >>
->> Fixes: c22e650e66b8 of: Make of_find_node_by_path() handle /aliases
->
-> Is it not possible to do a fix in of_find_node_by_path instead? I just
-> wonder if this could have any other unintended side-effects on
-> of_attach_node's behavior.
+>>  #include "base.h"
+>>  #include "power/power.h"
+>> @@ -486,6 +487,10 @@ static int platform_drv_probe(struct device *_dev)
+>>  	struct platform_device *dev = to_platform_device(_dev);
+>>  	int ret;
+>>
+>> +	ret = of_clk_set_defaults(_dev->of_node, false);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+> 
+> of_clk_set_defaults() is not getting called when the related driver is
+> not registered through platform_driver_register().
+> 
+> I came across this issue while testing this patch on peach-pit board with
+> following dts change. max98090 audio codec driver is registered through
+> module_i2c_driver().
 
-Given that I'm going to replace the custom list with list_head which
-makes this problem go away, I think this solution is fine.
+Yes, that shouldn't be surprising, since now in this RFC the clocks setting
+is done only for platform bus devices. Similarly the above call would need to
+be added to i2c, amba, spi and maybe other busses.
 
-Acked-by: Grant Likely <grant.likely@linaro.org>
+We just need to be careful to avoid attempting to set up clocks of a clock
+provider device before it is probed and actually registers its clocks.
 
-g.
+I'm still not sure if we should carry on with this approach or do all the
+clocks set up in one place, similarly to disabling unused clocks. I'm afraid
+when attempting to set up all clocks at one point in time the clock parent/rate
+dependencies may get even more hairy.
 
->
-> Rob
->
->>
->> Signed-off-by: Frank Rowand <frank.rowand@sonymobile.com>
->> ---
->>
->>
->> Pantelis,
->>
->> Can you test whether the problem you reported in irc?
->>
->> This patch has not been tested, not even compile tested.
->>
->>
->>  drivers/of/base.c |    8       6 +     2 -     0 !
->>  1 file changed, 6 insertions(+), 2 deletions(-)
->>
->> Index: b/drivers/of/base.c
->> ===================================================================
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -1948,6 +1948,9 @@ int of_reconfig_notify(unsigned long act
->>
->>  /**
->>   * of_attach_node - Plug a device node into the tree and global list.
->> + *
->> + * Put the device node after of_allnodes in the global list so that
->> + * of_allnodes remains the root.
->>   */
->>  int of_attach_node(struct device_node *np)
->>  {
->> @@ -1958,11 +1961,12 @@ int of_attach_node(struct device_node *n
->>         if (rc)
->>                 return rc;
->>
->> +       BUG_ON(!of_allnodes);
->>         raw_spin_lock_irqsave(&devtree_lock, flags);
->>         np->sibling = np->parent->child;
->> -       np->allnext = of_allnodes;
->> +       np->allnext = of_allnodes->allnext;
->>         np->parent->child = np;
->> -       of_allnodes = np;
->> +       of_allnodes->allnext = np;
->>         of_node_clear_flag(np, OF_DETACHED);
->>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->>
+The deferred probe mechanism helps to resolve the dependencies when the
+clock defaults setting is done before or within a driver probe() call. Either
+for clock supplier and consumer nodes or a supplier only.
+
+> * arch/arm/boot/dts/exynos5420-peach-pit.dts
+> 
+> &hsi2c_7 {
+> 
+> 	status = "okay";
+> 
+> 	max98090: codec@10 {
+> 		compatible = "maxim,max98090";
+> 		reg = <0x10>;
+> 		interrupts = <2 0>;
+> 		interrupt-parent = <&gpx0>;
+> 		pinctrl-names = "default";
+> 		pinctrl-0 = <&max98090_irq>;
+> +		clocks = <&pmu_system_controller 0>;
+> +		clock-names = "mclk";
+> +		clock-parents = <&clock CLK_FIN_PLL>;
+> +		clock-rates = <24000000>;
+> 	};
+> };
+
+--
+Regards,
+Sylwester
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
