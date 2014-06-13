@@ -1,78 +1,123 @@
-From: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 03/19] irqchip: crossbar: Skip some irqs from getting
- mapped to crossbar
-Date: Fri, 13 Jun 2014 09:35:20 -0400
-Message-ID: <539AFE18.3020706@ti.com>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-4-git-send-email-r.sricharan@ti.com> <20140612125134.GS8664@titan.lakedaemon.net> <20140612135715.GE17845@atomide.com> <20140612140508.GC8664@titan.lakedaemon.net> <539AA08A.7010001@ti.com> <20140613131005.GF8664@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140613131005.GF8664-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: [PATCH v3] spi: dw-mmio: add devicetree support
+Date: Fri, 13 Jun 2014 15:36:18 +0200
+Message-ID: <1402666578-16540-1-git-send-email-s.trumtrar@pengutronix.de>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Mark Brown <broonie@kernel.org>, Rob Landley <rob@landley.net>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Steffen Trumtrar <s.trumtrar@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 June 2014 09:10 AM, Jason Cooper wrote:
-> On Fri, Jun 13, 2014 at 12:26:10PM +0530, Sricharan R wrote:
->> On Thursday 12 June 2014 07:35 PM, Jason Cooper wrote:
-> ...
->>> Do you have other changes outside of irqchip depending on this series?
->>> If so, I can set up a topic branch for you guys to base off of.
->>> Otherwise, I'll just apply them to irqchip/core when they're ready.
->>>
->>  There are dts changes which are dependent upon this series.
->>
->>   http://www.spinics.net/lists/linux-omap/msg108116.html
-> 
-> In general, dts changes shouldn't depend on code changes or vice-versa.
-> If they do, that's an indicator that we're breaking compatibility with
-> older dtbs.
->
-Thats true. The case with cross-bar though is the feature wasn't
-completly supported so far before this series. Perhaps the the initial
-bindings should have been marked unstable. 
+Allow probing the dw-mmio from devicetree.
+
+Signed-off-by: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+---
+Changes since v2:
+	- rebase to spi-v3.16
+	- add cs-gpios to optional properties
+
+Changes since v1:
+	- num-chipselect -> num-cs
+        - snps,dw-spi-mmio -> snps,dw-apb-ssi
+
+ .../devicetree/bindings/spi/snps,dw-apb-ssi.txt    | 28 ++++++++++++++++++++++
+ drivers/spi/spi-dw-mmio.c                          | 19 ++++++++++++++-
+ 2 files changed, 46 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+
+diff --git a/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+new file mode 100644
+index 0000000..bd99193
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/snps,dw-apb-ssi.txt
+@@ -0,0 +1,28 @@
++Synopsys DesignWare AMBA 2.0 Synchronous Serial Interface.
++
++Required properties:
++- compatible : "snps,dw-apb-ssi"
++- reg : The register base for the controller.
++- interrupts : One interrupt, used by the controller.
++- #address-cells : <1>, as required by generic SPI binding.
++- #size-cells : <0>, also as required by generic SPI binding.
++
++Optional properties:
++- cs-gpios : Specifies the gpio pis to be used for chipselects.
++- num-cs : The number of chipselects. If omitted, this will default to 4.
++
++Child nodes as per the generic SPI binding.
++
++Example:
++
++	spi@fff00000 {
++		compatible = "snps,dw-apb-ssi";
++		reg = <0xfff00000 0x1000>;
++		interrupts = <0 154 4>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++		num-cs = <2>;
++		cs-gpios = <&gpio0 13 0>,
++			   <&gpio0 14 0>;
++	};
++
+diff --git a/drivers/spi/spi-dw-mmio.c b/drivers/spi/spi-dw-mmio.c
+index a5cba14..21ce0e3 100644
+--- a/drivers/spi/spi-dw-mmio.c
++++ b/drivers/spi/spi-dw-mmio.c
+@@ -16,7 +16,9 @@
+ #include <linux/spi/spi.h>
+ #include <linux/scatterlist.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/of_gpio.h>
++#include <linux/of_platform.h>
  
-> Looking at the dra7.dtsi changes, we're redefining the interrupt
-> property, which can't be good. :(
->
-> Perhaps a better solution would be to add a property, say 'ti,cross-irq'
-> that is the exact same format as 'interrupts', but is used by the
-> crossbar driver?
->
-We have gone over those earlier and it was agreed to re-use interrupt
-properties and for special cases, define a cross-bar property to describe
-it.
+ #include "spi-dw.h"
  
-> I'm not convinced of this yet, I suspect we may not actually have a
-> dependency between the dtsi changes and the code changes.  We would have
-> the ugly "if you have the crossbar node, 'interrupts' means X, if not it
-> means Y" in the binding docs.  But the absence of the node prevents the
-> crossbar driver from re-interpreting the interrupts property.
-> 
-In ideal cross-bar hardware you don't need the assumption "if you have the
-crossbar node, 'interrupts' means X, if not it means Y"
-
-It is purely because the cross-bar irq router hardware has few nasty
-bugs which needs those special handling. And thats the reason, the
-property was added.
-
-> Have you tried booting all the different scenarios?  eg:
-> 
->   old dtb, new driver
->   new dtb, old driver
->   old dtb, old driver
->   new dtb, new driver
-> 
-Old driver wasn't complete as mentioned and hence the above
-combinations becomes bit irrelevant.
-
-Regards,
-Santosh
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+@@ -33,6 +35,7 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 	struct dw_spi *dws;
+ 	struct resource *mem;
+ 	int ret;
++	int num_cs;
+ 
+ 	dwsmmio = devm_kzalloc(&pdev->dev, sizeof(struct dw_spi_mmio),
+ 			GFP_KERNEL);
+@@ -68,9 +71,16 @@ static int dw_spi_mmio_probe(struct platform_device *pdev)
+ 		return ret;
+ 
+ 	dws->bus_num = pdev->id;
+-	dws->num_cs = 4;
++
+ 	dws->max_freq = clk_get_rate(dwsmmio->clk);
+ 
++	num_cs = 4;
++
++	if (pdev->dev.of_node)
++		of_property_read_u32(pdev->dev.of_node, "num-cs", &num_cs);
++
++	dws->num_cs = num_cs;
++
+ 	if (pdev->dev.of_node) {
+ 		int i;
+ 
+@@ -114,12 +124,19 @@ static int dw_spi_mmio_remove(struct platform_device *pdev)
+ 	return 0;
+ }
+ 
++static const struct of_device_id dw_spi_mmio_of_match[] = {
++	{ .compatible = "snps,dw-apb-ssi", },
++	{ /* end of table */}
++};
++MODULE_DEVICE_TABLE(of, dw_spi_mmio_of_match);
++
+ static struct platform_driver dw_spi_mmio_driver = {
+ 	.probe		= dw_spi_mmio_probe,
+ 	.remove		= dw_spi_mmio_remove,
+ 	.driver		= {
+ 		.name	= DRIVER_NAME,
+ 		.owner	= THIS_MODULE,
++		.of_match_table = dw_spi_mmio_of_match,
+ 	},
+ };
+ module_platform_driver(dw_spi_mmio_driver);
+-- 
+2.0.0.rc2
