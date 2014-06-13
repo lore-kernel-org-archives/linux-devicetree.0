@@ -1,60 +1,91 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V2 03/19] irqchip: crossbar: Skip some irqs from getting
- mapped to crossbar
-Date: Fri, 13 Jun 2014 12:26:10 +0530
-Message-ID: <539AA08A.7010001@ti.com>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-4-git-send-email-r.sricharan@ti.com> <20140612125134.GS8664@titan.lakedaemon.net> <20140612135715.GE17845@atomide.com> <20140612140508.GC8664@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: [RFC PATCH]  OF: fix of_find_node_by_path() assumption that of_allnodes is root
+Date: Fri, 13 Jun 2014 10:07:33 +0300
+Message-ID: <CC628CCC-7C30-48BA-8A2A-49E60ED72854@konsulko.com>
+References: <539A91E2.7000606@gmail.com>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140612140508.GC8664@titan.lakedaemon.net>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>
-Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <539A91E2.7000606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jason,
+Hi Frank,
 
-On Thursday 12 June 2014 07:35 PM, Jason Cooper wrote:
-> On Thu, Jun 12, 2014 at 06:57:15AM -0700, Tony Lindgren wrote:
->> * Jason Cooper <jason@lakedaemon.net> [140612 05:52]:
->>> On Thu, Jun 12, 2014 at 05:23:11PM +0530, Sricharan R wrote:
->>>> From: Nishanth Menon <nm@ti.com>
->>>>
->>>> When, in the system due to varied reasons, interrupts might be unusable
->>>> due to hardware behavior, but register maps do exist, then those interrupts
->>>> should be skipped while mapping irq to crossbars.
->>>>
->>>> Signed-off-by: Nishanth Menon <nm@ti.com>
->>>> Signed-off-by: Sricharan R <r.sricharan@ti.com>
->>>> Signed-off-by: Tony Lindgren <tony@atomide.com>
->>>
->>> Tony, have you applied these somewhere already?
->>
->> I think some of these I had applied into a branch ready for
->> merging but then it was discovered that further changes
->> were needed and the branch was dropped.
+On Jun 13, 2014, at 8:53 AM, Frank Rowand wrote:
+
+> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
 > 
-> Ok.
+> Pantelis Antoniou reports that of_find_node_by_path() is borked because
+> of_allnodes is not guaranteed to contain the root of the tree after using
+> any of the dynamic update functions because some other nodes ends up as
+> of_allnodes.
 > 
->> Sricharan, please remove my Signed-off-by from this series.
->> If I end up applying it for merging my scripts will add it
->> automatically.
+> Fixes: c22e650e66b8 of: Make of_find_node_by_path() handle /aliases
 > 
-> Do you have other changes outside of irqchip depending on this series?
-> If so, I can set up a topic branch for you guys to base off of.
-> Otherwise, I'll just apply them to irqchip/core when they're ready.
+> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> ---
 > 
- There are dts changes which are dependent upon this series.
+> 
+> Pantelis,
+> 
+> Can you test whether the problem you reported in irc?
+> 
+> This patch has not been tested, not even compile tested.
+> 
 
-  http://www.spinics.net/lists/linux-omap/msg108116.html
+I can verify that this fixes the problem. Please make sure this gets 
+applied to mainline otherwise every arch which updates DT on runtime
+is going to break in subtle ways.
 
-> Also, Sricharan, when you respin this, please clearly identify (in the
-> comment section) those patches that need to be flagged for stable.  It
-> would be helpful if they were the first patches in the series as well.
+Regards
 
-Ok, i will point this out clearly.
+-- Pantelis
 
-Regards,
- Sricharan
+Tested-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+
+> 
+> drivers/of/base.c |    8 	6 +	2 -	0 !
+> 1 file changed, 6 insertions(+), 2 deletions(-)
+> 
+> Index: b/drivers/of/base.c
+> ===================================================================
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -1948,6 +1948,9 @@ int of_reconfig_notify(unsigned long act
+> 
+> /**
+>  * of_attach_node - Plug a device node into the tree and global list.
+> + *
+> + * Put the device node after of_allnodes in the global list so that
+> + * of_allnodes remains the root.
+>  */
+> int of_attach_node(struct device_node *np)
+> {
+> @@ -1958,11 +1961,12 @@ int of_attach_node(struct device_node *n
+> 	if (rc)
+> 		return rc;
+> 
+> +	BUG_ON(!of_allnodes);
+> 	raw_spin_lock_irqsave(&devtree_lock, flags);
+> 	np->sibling = np->parent->child;
+> -	np->allnext = of_allnodes;
+> +	np->allnext = of_allnodes->allnext;
+> 	np->parent->child = np;
+> -	of_allnodes = np;
+> +	of_allnodes->allnext = np;
+> 	of_node_clear_flag(np, OF_DETACHED);
+> 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
