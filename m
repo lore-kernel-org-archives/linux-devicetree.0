@@ -1,57 +1,54 @@
-From: Peter De Schrijver <pdeschrijver@nvidia.com>
-Subject: Re: [PATCH v8 0/6] efuse driver for Tegra
-Date: Fri, 13 Jun 2014 11:00:52 +0300
-Message-ID: <20140613080052.GN5961@tbergstrom-lnx.Nvidia.com>
-References: <1402587400-1544-1-git-send-email-pdeschrijver@nvidia.com>
- <539A26DE.8050609@wwwdotorg.org>
- <20140613072328.GK5961@tbergstrom-lnx.Nvidia.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 14/36] ARM: OMAP2+: gpmc: Allow drivers to reconfigure
+ GPMC settings & timings
+Date: Fri, 13 Jun 2014 01:04:09 -0700
+Message-ID: <20140613080408.GR17845@atomide.com>
+References: <1402477001-31132-1-git-send-email-rogerq@ti.com>
+ <1402477001-31132-15-git-send-email-rogerq@ti.com>
+ <20140613072550.GM17845@atomide.com>
+ <539AABE5.10907@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20140613072328.GK5961@tbergstrom-lnx.Nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Warren <swarren@wwwdotorg.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Wolfram Sang <wsa@the-dreams.de>, Linus Walleij <linus.walleij@linaro.org>, Stefan Agner <stefan@agner.ch>, Paul Gortmaker <paul.gortmaker@windriver.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Alex Courbot <acourbot@nvidia.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel>
+In-Reply-To: <539AABE5.10907-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 09:23:28AM +0200, Peter De Schrijver wrote:
-> On Fri, Jun 13, 2014 at 12:17:02AM +0200, Stephen Warren wrote:
-> > On 06/12/2014 09:36 AM, Peter De Schrijver wrote:
-> > > This driver allows userspace to read the raw efuse data. Its userspace
-> > > interface is modelled after the sunxi_sid driver which provides similar
-> > > functionality for some Allwinner SoCs. It has been tested on
-> > > Tegra20 (ventana), Tegra30 (beaverboard), Tegra114 (dalmore) and
-> > > Tegra124 (jetson TK1).
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140613 00:46]:
+> On 06/13/2014 10:25 AM, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140611 01:58]:
+> >> Some devices (e.g. TUSB6010, omap-onenand) need to reconfigure the GPMC
+> >> timings in order to operate with different peripheral clock frequencies.
+> >> Introduce omap_gpmc_retime() to allow them to do that. The driver
+> >> needs to pass the chips select number, GPMC settings and Device timings to
+> >> omap_gpmc_retime().
+> >>
+> >> NOTE: Device tree and board code must still pass the most conservative
+> >> timings to GPMC so that the device can be probed by the respective driver.
+> >> e.g. Onenand must operate in asynchronous mode at bootup. The device driver
+> >> can then request for more optimal timings via omap_gpmc_retime().
 > > 
-> > I think this series looks OK now. However, I noticed one change in
-> > behaviour that I don't think is expected:
-> > 
-> > The current code/DTB print:
-> > Tegra Revision: A01 SKU: 0 CPU Process: 0 Core Process: 0
-> > 
-> > However, applying these patches and booting yields:
-> > Tegra Revision: A01 SKU: 0 CPU Process: 1 Core Process: 1
-> > 
+> > Hmm but many of the devices are Linux generic like sms91x and 8250 so it's
+> > not nice to start stuffing omap bus specific data there.
 > 
-> On which board/SoC?
-> 
+> Those drivers should never need to use this function. Hopefully they will work with a one time setup where we specify the timings in the DT. This function is primarily for use by omap-onenand and tusb6010, which are both OMAP specific.
 
-I'm guessing you're running on Tegra124 because the silicon revision reported
-is A01. If this is correct then, the current output is bogus. The current fuse
-code does not have any Tegra124 support and will fall back to reading the same
-fuse bits as on Tegra20 to determine the process IDs. You should get a warning
-message though: 'Tegra: unknown chip id'
+Well those were the only ones so far that had to tolerate with L3
+speed changes at some point, so others may need it potentially too.
+And we could get rid of the omap specific onenand driver at some
+point..
 
-Cheers,
+But yeah, I'm fine keeping those recalc functions in the device
+drivers if it makes things simpler. Just something to consider in
+any case.
 
-Peter.
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
