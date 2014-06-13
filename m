@@ -1,98 +1,421 @@
-From: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Fri, 13 Jun 2014 19:08:23 +0100
-Message-ID: <539B3E17.6050607@codethink.co.uk>
-References: <539AEC8F.4030003@renesas.com> <20140613142525.GE8319@saruman.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140613142525.GE8319-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: balbi-l0cyMroinI0@public.gmane.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Cc: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH 2/2] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi
+Date: Fri, 13 Jun 2014 11:13:33 -0700
+Message-ID: <1402683213-23120-2-git-send-email-dianders@chromium.org>
+References: <1402683213-23120-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1402683213-23120-1-git-send-email-dianders@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, broonie@kernel.org, sjg@chromium.org, olof@lixom.net, javier.martinez@collabora.co.uk, ch.naveen@samsung.com, swarren@wwwdotorg.org, khilman@linaro.org, ajaynumb@gmail.com, rahul.sharma@samsung.com, tushar.b@samsung.com, linux-samsung-soc@vger.kernel.org, Doug Anderson <dianders@chromium.org>, ben-linux@fluff.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/14 15:25, Felipe Balbi wrote:
-> Hi,
-> 
->> + +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem" 
->> +MODULE_FIRMWARE(FIRMWARE_NAME);
+This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
+including:
+* The keyboard
+* The i2c tunnel
+* The tps65090 under the i2c tunnel
+* The battery under the i2c tunnel
 
-Where can we get this from, it would be nice to test this.
+To add extra motivation, it should be noted that tps65090 is one of
+the things needed to get display-related FETs turned on for pit and
+pi.
 
->> +/*** Register Offset ***/ +#define RCAR_USB3_INT_ENA	0x224	/* 
->> Interrupt Enable */ +#define RCAR_USB3_DL_CTRL	0x250	/* FW 
->> Download Control & Status */ +#define RCAR_USB3_FW_DATA0	0x258
->> /* FW Data0 */ + +#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
->>  +#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */ 
->> +#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */ 
->> +#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */ 
->> +#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
->> +#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */ + +/***
->> Register Settings ***/ +/* Interrupt Enable */ +#define 
->> RCAR_USB3_INT_XHC_ENA	0x00000001 +#define RCAR_USB3_INT_PME_ENA 
->> 0x00000002 +#define RCAR_USB3_INT_HSE_ENA	0x00000004 +#define 
->> RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \ + 
->> RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA) + +/* FW Download 
->> Control & Status */ +#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
->>  +#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010 +#define 
->> RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100 + +/* LCLK Select */ 
->> +#define RCAR_USB3_LCLK_ENA_VAL	0x01030001 + +/* USB3.0 
->> Configuration */ +#define RCAR_USB3_CONF1_VAL	0x00030204
->> +#define RCAR_USB3_CONF2_VAL	0x00030300 +#define
->> RCAR_USB3_CONF3_VAL 0x13802007 + +/* USB3.0 Polarity */ +#define
->> RCAR_USB3_RX_POL_VAL BIT(21) +#define RCAR_USB3_TX_POL_VAL	BIT(4)
->> + +void xhci_rcar_start(struct usb_hcd *hcd) +{ +	u32 temp; + +
->> if (hcd->regs != NULL) { +		/* Interrupt Enable */ +		temp = 
->> readl(hcd->regs + RCAR_USB3_INT_ENA); +		temp |= 
->> RCAR_USB3_INT_ENA_VAL; +		writel(temp, hcd->regs + 
->> RCAR_USB3_INT_ENA); +		/* LCLK Select */ + 
->> writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK); +
->> /* USB3.0 Configuration */ +		writel(RCAR_USB3_CONF1_VAL,
->> hcd->regs + RCAR_USB3_CONF1); +		writel(RCAR_USB3_CONF2_VAL,
->> hcd->regs + RCAR_USB3_CONF2); +		writel(RCAR_USB3_CONF3_VAL,
->> hcd->regs + RCAR_USB3_CONF3); +		/* USB3.0 Polarity */ + 
->> writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL); + 
->> writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL); +	} 
->> +} + +static int xhci_rcar_download_firmware(struct device *dev, 
->> void __iomem *regs) +{ +	const struct firmware *fw; +	int
->> retval, index, j, time; +	int timeout = 10000; +	u32 data, val,
->> temp; + + /* request R-Car USB3.0 firmware */ +	retval = 
->> request_firmware(&fw, FIRMWARE_NAME, dev); +	if (retval) + return
->> retval; + +	/* download R-Car USB3.0 firmware */ +	temp = 
->> readl(regs + RCAR_USB3_DL_CTRL); +	temp |= 
->> RCAR_USB3_DL_CTRL_ENABLE; +	writel(temp, regs + 
->> RCAR_USB3_DL_CTRL); + +	for (index = 0; index < fw->size; index 
->> += 4) { +		/* to avoid reading beyond the end of the buffer */ + 
->> for (data = 0, j = 3; j >= 0; j--) { +			if ((j + index) < 
->> fw->size) +				data |= fw->data[index + j] << (8 * j); +		} + 
->> writel(data, regs + RCAR_USB3_FW_DATA0); +		temp = readl(regs + 
->> RCAR_USB3_DL_CTRL); +		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0; + 
->> writel(temp, regs + RCAR_USB3_DL_CTRL); + +		for (time = 0; time 
->> < timeout; time++) { +			val = readl(regs + RCAR_USB3_DL_CTRL);
->> + if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0) +				break; + 
->> udelay(1); +		} +		if (time == timeout) { +			retval = 
->> -ETIMEDOUT; +			break; +		} +	} + +	temp = readl(regs + 
->> RCAR_USB3_DL_CTRL); +	temp &= ~RCAR_USB3_DL_CTRL_ENABLE; + 
->> writel(temp, regs + RCAR_USB3_DL_CTRL); + +	for (time = 0; time
->> < timeout; time++) { +		val = readl(regs + RCAR_USB3_DL_CTRL); + 
->> if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) { +			retval = 0; + 
->> break; +		} +		udelay(1); +	} +	if (time == timeout) +		retval = 
->> -ETIMEDOUT; + +	release_firmware(fw); + +	return retval; +} +
->> +/* This function needs to initialize a "phy" of usb before */
-> 
-> initializing a PHY looks like something that the PHY layer should 
-> do. Why don't you write a PHY driver and teach xhci-core about
-> PHYs ? Then, more people would benefit.
+Note that this relies on a few outstanding changes:
+* Needs "cros-ec-keyboard.dtsi" in order to compile properly.  See
+  (ARM: dts: Create a cros-ec-keyboard fragment) at
+  <https://patchwork.kernel.org/patch/4297451/>.
+* Needs (mfd: cros_ec: spi: Fix end of transfer on devices with no
+  spi-msg-delay) from this series to work properly.
+* Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
+  (spi: s3c64xx: for DT platofrms always get the chipselect info from
+  DT node) to work properly and match the documented bindings.  See
+  <https://patchwork.kernel.org/patch/4346701/> and
+  <https://patchwork.kernel.org/patch/4346711/>
 
-The rcar phy code should already do this, so I agree.
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+---
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 146 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 146 +++++++++++++++++++++++++++++
+ 2 files changed, 292 insertions(+)
 
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 1c5b8f9..67b7c32 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -25,6 +25,11 @@
+ 		"google,pit", "google,peach","samsung,exynos5420",
+ 		"samsung,exynos5";
+ 
++	aliases {
++		/* Assign 20 so we don't get confused w/ builtin ones */
++		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
++	};
++
+ 	memory {
+ 		reg = <0x20000000 0x80000000>;
+ 	};
+@@ -87,6 +92,13 @@
+ 		pinctrl-0 = <&usb301_vbus_en>;
+ 		enable-active-high;
+ 	};
++
++	vbat: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vbat-supply";
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
+ 
+ &pinctrl_0 {
+@@ -111,6 +123,20 @@
+ 		samsung,pin-drv = <0>;
+ 	};
+ 
++	ec_irq: ec-irq {
++		samsung,pins = "gpx1-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
++	tps65090_irq: tps65090-irq {
++		samsung,pins = "gpx2-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
+ 	hdmi_hpd_irq: hdmi-hpd-irq {
+ 		samsung,pins = "gpx3-7";
+ 		samsung,pin-function = <0>;
+@@ -127,6 +153,19 @@
+ };
+ 
+ &pinctrl_3 {
++	/* Drive SPI lines at x2 for better integrity */
++	spi2-bus {
++		samsung,pin-drv = <2>;
++	};
++
++	/* Drive SPI chip select at x2 for better integrity */
++	ec_spi_cs: ec-spi-cs {
++		samsung,pins = "gpb1-2";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <2>;
++	};
++
+ 	usb300_vbus_en: usb300-vbus-en {
+ 		samsung,pins = "gph0-0";
+ 		samsung,pin-function = <1>;
+@@ -189,6 +228,111 @@
+ 	};
+ };
+ 
++&spi_2 {
++	status = "okay";
++	num-cs = <1>;
++	samsung,spi-src-clk = <0>;
++	cs-gpios = <&gpb1 2 0>;
++
++	cros_ec: cros-ec@0 {
++		compatible = "google,cros-ec-spi";
++		interrupt-parent = <&gpx1>;
++		interrupts = <5 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ec_spi_cs &ec_irq>;
++		reg = <0>;
++		spi-max-frequency = <3125000>;
++
++		controller-data {
++			samsung,spi-feedback-delay = <1>;
++		};
++
++		i2c-tunnel {
++			compatible = "google,cros-ec-i2c-tunnel";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			google,remote-bus = <0>;
++
++			battery: sbs-battery@b {
++				compatible = "sbs,sbs-battery";
++				reg = <0xb>;
++				sbs,poll-retry-count = <1>;
++				sbs,i2c-retry-count = <2>;
++			};
++
++			power-regulator@48 {
++				compatible = "ti,tps65090";
++				reg = <0x48>;
++
++				/*
++				 * Config irq to disable internal pulls
++				 * even though we run in polling mode.
++				 */
++				pinctrl-names = "default";
++				pinctrl-0 = <&tps65090_irq>;
++
++				vsys1-supply = <&vbat>;
++				vsys2-supply = <&vbat>;
++				vsys3-supply = <&vbat>;
++				infet1-supply = <&vbat>;
++				infet2-supply = <&vbat>;
++				infet3-supply = <&vbat>;
++				infet4-supply = <&vbat>;
++				infet5-supply = <&vbat>;
++				infet6-supply = <&vbat>;
++				infet7-supply = <&vbat>;
++				vsys-l1-supply = <&vbat>;
++				vsys-l2-supply = <&vbat>;
++
++				regulators {
++					dcdc1 {
++						ti,enable-ext-control;
++					};
++					dcdc2 {
++						ti,enable-ext-control;
++					};
++					dcdc3 {
++						ti,enable-ext-control;
++					};
++					fet1 {
++						regulator-name = "vcd_led";
++					};
++					tps65090_fet2: fet2 {
++						regulator-name = "video_mid";
++						regulator-always-on;
++					};
++					fet3 {
++						regulator-name = "wwan_r";
++						regulator-always-on;
++					};
++					fet4 {
++						regulator-name = "sdcard";
++						regulator-always-on;
++					};
++					fet5 {
++						regulator-name = "camout";
++					};
++					fet6 {
++						regulator-name = "lcd_vdd";
++					};
++					tps65090_fet7: fet7 {
++						regulator-name = "video_mid_1a";
++						regulator-always-on;
++					};
++					ldo1 {
++					};
++					ldo2 {
++					};
++				};
++
++				charger {
++					compatible = "ti,tps65090-charger";
++				};
++			};
++		};
++	};
++};
++
+ &hsi2c_7 {
+ 	status = "okay";
+ 
+@@ -285,3 +429,5 @@
+ 		};
+ 	};
+ };
++
++#include "cros-ec-keyboard.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index f3af207..b33f548 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -23,6 +23,11 @@
+ 		"google,pi", "google,peach", "samsung,exynos5800",
+ 		"samsung,exynos5";
+ 
++	aliases {
++		/* Assign 20 so we don't get confused w/ builtin ones */
++		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
++	};
++
+ 	memory {
+ 		reg = <0x20000000 0x80000000>;
+ 	};
+@@ -78,6 +83,13 @@
+ 		pinctrl-0 = <&usb301_vbus_en>;
+ 		enable-active-high;
+ 	};
++
++	vbat: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vbat-supply";
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
+ 
+ &pinctrl_0 {
+@@ -102,6 +114,20 @@
+ 		samsung,pin-drv = <0>;
+ 	};
+ 
++	ec_irq: ec-irq {
++		samsung,pins = "gpx1-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
++	tps65090_irq: tps65090-irq {
++		samsung,pins = "gpx2-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
+ 	hdmi_hpd_irq: hdmi-hpd-irq {
+ 		samsung,pins = "gpx3-7";
+ 		samsung,pin-function = <0>;
+@@ -111,6 +137,19 @@
+ };
+ 
+ &pinctrl_3 {
++	/* Drive SPI lines at x2 for better integrity */
++	spi2-bus {
++		samsung,pin-drv = <2>;
++	};
++
++	/* Drive SPI chip select at x2 for better integrity */
++	ec_spi_cs: ec-spi-cs {
++		samsung,pins = "gpb1-2";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <2>;
++	};
++
+ 	usb300_vbus_en: usb300-vbus-en {
+ 		samsung,pins = "gph0-0";
+ 		samsung,pin-function = <1>;
+@@ -173,6 +212,111 @@
+ 	};
+ };
+ 
++&spi_2 {
++	status = "okay";
++	num-cs = <1>;
++	samsung,spi-src-clk = <0>;
++	cs-gpios = <&gpb1 2 0>;
++
++	cros_ec: cros-ec@0 {
++		compatible = "google,cros-ec-spi";
++		interrupt-parent = <&gpx1>;
++		interrupts = <5 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ec_spi_cs &ec_irq>;
++		reg = <0>;
++		spi-max-frequency = <3125000>;
++
++		controller-data {
++			samsung,spi-feedback-delay = <1>;
++		};
++
++		i2c-tunnel {
++			compatible = "google,cros-ec-i2c-tunnel";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			google,remote-bus = <0>;
++
++			battery: sbs-battery@b {
++				compatible = "sbs,sbs-battery";
++				reg = <0xb>;
++				sbs,poll-retry-count = <1>;
++				sbs,i2c-retry-count = <2>;
++			};
++
++			power-regulator@48 {
++				compatible = "ti,tps65090";
++				reg = <0x48>;
++
++				/*
++				 * Config irq to disable internal pulls
++				 * even though we run in polling mode.
++				 */
++				pinctrl-names = "default";
++				pinctrl-0 = <&tps65090_irq>;
++
++				vsys1-supply = <&vbat>;
++				vsys2-supply = <&vbat>;
++				vsys3-supply = <&vbat>;
++				infet1-supply = <&vbat>;
++				infet2-supply = <&vbat>;
++				infet3-supply = <&vbat>;
++				infet4-supply = <&vbat>;
++				infet5-supply = <&vbat>;
++				infet6-supply = <&vbat>;
++				infet7-supply = <&vbat>;
++				vsys-l1-supply = <&vbat>;
++				vsys-l2-supply = <&vbat>;
++
++				regulators {
++					dcdc1 {
++						ti,enable-ext-control;
++					};
++					dcdc2 {
++						ti,enable-ext-control;
++					};
++					dcdc3 {
++						ti,enable-ext-control;
++					};
++					fet1 {
++						regulator-name = "vcd_led";
++					};
++					tps65090_fet2: fet2 {
++						regulator-name = "video_mid";
++						regulator-always-on;
++					};
++					fet3 {
++						regulator-name = "wwan_r";
++						regulator-always-on;
++					};
++					fet4 {
++						regulator-name = "sdcard";
++						regulator-always-on;
++					};
++					fet5 {
++						regulator-name = "camout";
++					};
++					fet6 {
++						regulator-name = "lcd_vdd";
++					};
++					tps65090_fet7: fet7 {
++						regulator-name = "video_mid_1a";
++						regulator-always-on;
++					};
++					ldo1 {
++					};
++					ldo2 {
++					};
++				};
++
++				charger {
++					compatible = "ti,tps65090-charger";
++				};
++			};
++		};
++	};
++};
++
+ &dp {
+ 	status = "okay";
+ 	pinctrl-names = "default";
+@@ -251,3 +395,5 @@
+ &watchdog {
+ 	timeout-sec = <32>;
+ };
++
++#include "cros-ec-keyboard.dtsi"
 -- 
-Ben Dooks				http://www.codethink.co.uk/
-Senior Engineer				Codethink - Providing Genius
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.0.526.g5318336
