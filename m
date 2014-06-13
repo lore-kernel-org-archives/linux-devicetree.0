@@ -1,119 +1,37 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: [PATCH 05/36] mtd: nand: omap: Move IRQ handling from GPMC to
- NAND driver
-Date: Fri, 13 Jun 2014 08:13:55 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAF51DB@DBDE04.ent.ti.com>
-References: <1402477001-31132-1-git-send-email-rogerq@ti.com>
- <1402477001-31132-6-git-send-email-rogerq@ti.com>
- <20140613071820.GI17845@atomide.com> <539AAA8C.2070709@ti.com>
- <20140613075856.GQ17845@atomide.com>
+From: Ming Lei <ming.lei@canonical.com>
+Subject: Re: [PATCH v1 0/2]ata: Fix the dma state machine lockup for APM
+ X-Gene SoC
+Date: Fri, 13 Jun 2014 16:20:14 +0800
+Message-ID: <CACVXFVMTfNtBe3FXNuo-UqzY5fx+CpGhSCBOspM9G6By8Oi4RA@mail.gmail.com>
+References: <1402574362-24986-1-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140613075856.GQ17845@atomide.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, "Quadros, Roger" <rogerq@ti.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "javier@dowhile0.org" <javier@dowhile0.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1402574362-24986-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, ddutile@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Suman,
 
->From: Tony Lindgren [mailto:tony@atomide.com]
->>* Roger Quadros <rogerq@ti.com> [140613 00:40]:
->>> On 06/13/2014 10:18 AM, Tony Lindgren wrote:
->> >> * Roger Quadros <rogerq@ti.com> [140611 01:58]:
->> >> Since the Interrupt Events are used only by the NAND driver,
->> >> there is no point in managing the Interrupt registers
->> >> in the GPMC driver and complicating it with irqchip modeling.
->> >>
->> >> Let's manage the interrupt registers directly in the NAND driver
->> >> and get rid of irqchip model from GPMC driver.
->> >>
->> >> Get rid of IRQ commands and unused commands from gpmc_configure() in
->> >> the GPMC driver.
->> >
->> > This seems like a step backward to me. The GPMC interrupt enable
->> > register can do edge detection on the wait pins, how is that
->> > limited to NAND?
->>
->> OK. But wait pin edge detection was not yet being used and I couldn't
->> think of how it would ever be used. Any ideas?
+On Thu, Jun 12, 2014 at 7:59 PM, Suman Tripathi <stripathi@apm.com> wrote:
+> Suman Tripathi (2):
+>   libahci: Implement the function ahci_restart_engine to restart the
+>     port dma engine.
+>   ata: Fix the dma state machine lockup for the PIO mode commands.
 >
->Maybe to wake-up the system on bus activity or something?
->
-Sorry, I wasn't able to review this series.
-But just as pointer, GPMC driver was used for interfacing many
-non-memory devices like Ethernet (smc91x) and in past GPMC has been
-proved to work with camera devices too, but that's wasn't mainlined.
-So keeping IRQ and few other things in GPMC driver is helpful.
+>  drivers/ata/ahci.h       |  3 +++
+>  drivers/ata/ahci_xgene.c | 17 +++--------------
+>  drivers/ata/libahci.c    | 43 +++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 49 insertions(+), 14 deletions(-)
+
+Looks the patch doesn't fix the issue of booting hang on my
+mustang board.
+
+And the ata failure message still can be seen.
 
 
-
-
->> > Further, let's not start mixing GPMC hardware module register
->> > access with the NAND driver register access. They can be clocked
->> > separately. And bugs in the NAND driver can cause issues in other
->> > GPMC using drivers.
->>
->> I understood that NAND controller is integrated into the GPMC module and they are clocked
->> the same. Not sure why the hardware designers would keep the registers so closely knit.
->
->Yeah. Maybe regmap could provide some abstraction to the the
->NAND registers.
->
-As you mentioned, GPMC has two set of registers:
-(a) Chip-select registers (CONFIGx_cs) for device specific parameters
- (like device-width, signal-timings, etc) which are statically programmed
-during probe or via DT.
-(b) ECC registers which are continuously reconfigured based on
- ECC engine.
-
-*Ideal Scenario*
-NAND driver should be considered equivalent to protocol driver,
-Therefore ideally it should use only those registers which are
-specific to NAND (b).
-
-*Actual Scenario*
-But most NAND device today are ONFI compliant and they have
-almost all device parameters like device-width, signal-timings
-burned on-die in an ONFI page. These values are read back from
-NAND device during device_probe() and then re-configured back
-Chip-select registers (a).
-Hence NAND driver needs access of both (a) and (b), which is why
-You need to export complete GPMC register set to NAND driver.
-However this is not the case and has been discussed earlier too..
-
-http://lists.infradead.org/pipermail/linux-mtd/2013-October/049284.html
-http://lists.infradead.org/pipermail/linux-mtd/2013-October/049347.html
-(Just pointing out my version of history, would be good to read the
-entire discussion. But the summary was that we need to re-configure
-some GPMC chip-select registers (a) based on probe done in
-NAND driver. So we need all GPMC registers exposed to NAND driver).
-
-
-
-
->> FYI. memory/ti-amif.c and mtd/nand/davinci_nand.c share the AMIF register space in the
->> same way. I thought it'd be nice to be consistent across TI drivers.
->
->Probably they did not yet learn the problems caused by it :)
->
-I havn't reviewed the ti-amif.c driver completely but I think they too
-configure device signal timing statically based on DT. But as per
-today this is frowned upon because:
-
-(1) Its difficult for layman user to decipher NAND signal timings
-from datasheet and then convert it into controller understandable DT
-
-(2) ONFI parameter page on NAND has these timings specified
-on-die itself, and these timings are characterized for best performance
-so NAND driver should re-configure these timings after probe.
-Refer below mail from '<Rob Herring> robherring2@gmail.com'
-http://lists.infradead.org/pipermail/linux-mtd/2014-April/053488.html
-
-
-Considering all these details, please re-review the changes you plan
-for GPMC driver.
-
-with regards, pekon
+Thanks,
+--
+Ming Lei
