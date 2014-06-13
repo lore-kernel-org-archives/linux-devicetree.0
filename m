@@ -1,101 +1,29 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 3/3 v5] ARM: DTS: fix the chip select gpios definition in the
- SPI nodes
-Date: Fri, 13 Jun 2014 09:29:52 +0530
-Message-ID: <1402631992-500-3-git-send-email-ch.naveen@samsung.com>
-References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org
-Cc: naveenkrishna.ch@gmail.com, broonie@kernel.org, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
+From: Sekhar Nori <nsekhar-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v4 1/4] ARM: OMAP5: hwmod: Add ocp2scp3 and sata hwmods
+Date: Fri, 13 Jun 2014 09:36:26 +0530
+Message-ID: <539A78C2.8080404@ti.com>
+References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274487-24688-1-git-send-email-rogerq@ti.com> <5399A12F.7010301@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <5399A12F.7010301-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Cc: kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch replaces the "cs-gpio" from "controller-data" node
-as was specified in the old binding and use the standard
-"cs-gpios" property expected by the SPI core as is defined in
-the new binding.
+On Thursday 12 June 2014 06:16 PM, Roger Quadros wrote:
+> Tony,
+> 
+> Looks like we've missed this for 3.16.
 
-Respective changes are preposed to spi-s3c64xx.c driver.
-@ http://www.spinics.net/lists/linux-samsung-soc/msg32282.html
+Without these SATA support will be broken for DRA7x and OMAP5 so can
+they be queued for -rc2?
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
-Cc: Tomasz Figa <t.figa@samsung.com>
----
-Changes since v4:
-1. Added reviewed by from Javier and Doug.
-2. Maintained the "status" and "cs-gpios" ordering
-
-Changes since v3:
-None
-
- arch/arm/boot/dts/exynos4210-smdkv310.dts |    2 +-
- arch/arm/boot/dts/exynos4412-trats2.dts   |    2 +-
- arch/arm/boot/dts/exynos5250-smdk5250.dts |    2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4210-smdkv310.dts b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-index 636d166..676e6e0 100644
---- a/arch/arm/boot/dts/exynos4210-smdkv310.dts
-+++ b/arch/arm/boot/dts/exynos4210-smdkv310.dts
-@@ -168,6 +168,7 @@
- 	};
- 
- 	spi_2: spi@13940000 {
-+		cs-gpios = <&gpc1 2 0>;
- 		status = "okay";
- 
- 		w25x80@0 {
-@@ -178,7 +179,6 @@
- 			spi-max-frequency = <1000000>;
- 
- 			controller-data {
--				cs-gpio = <&gpc1 2 0>;
- 				samsung,spi-feedback-delay = <0>;
- 			};
- 
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 8a558b7..204b0de 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -512,6 +512,7 @@
- 	spi_1: spi@13930000 {
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&spi1_bus>;
-+		cs-gpios = <&gpb 5 0>;
- 		status = "okay";
- 
- 		s5c73m3_spi: s5c73m3 {
-@@ -519,7 +520,6 @@
- 			spi-max-frequency = <50000000>;
- 			reg = <0>;
- 			controller-data {
--				cs-gpio = <&gpb 5 0>;
- 				samsung,spi-feedback-delay = <2>;
- 			};
- 		};
-diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-index a794a70..0c6433a 100644
---- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
-+++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
-@@ -316,6 +316,7 @@
- 	};
- 
- 	spi_1: spi@12d30000 {
-+		cs-gpios = <&gpa2 5 0>;
- 		status = "okay";
- 
- 		w25q80bw@0 {
-@@ -326,7 +327,6 @@
- 			spi-max-frequency = <1000000>;
- 
- 			controller-data {
--				cs-gpio = <&gpa2 5 0>;
- 				samsung,spi-feedback-delay = <0>;
- 			};
- 
--- 
-1.7.9.5
+Thanks,
+Sekhar
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
