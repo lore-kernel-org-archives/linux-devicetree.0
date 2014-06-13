@@ -1,69 +1,614 @@
-From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH V2 03/19] irqchip: crossbar: Skip some irqs from getting
- mapped to crossbar
-Date: Fri, 13 Jun 2014 16:34:53 +0530
-Message-ID: <539ADAD5.1000904@ti.com>
-References: <1402574007-13987-1-git-send-email-r.sricharan@ti.com> <1402574007-13987-4-git-send-email-r.sricharan@ti.com> <20140612125134.GS8664@titan.lakedaemon.net> <20140612135715.GE17845@atomide.com> <20140612140508.GC8664@titan.lakedaemon.net> <539AA08A.7010001@ti.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCHv7 2/2] ARM: dts: unuse the slot-node and deprecated
+ supports-highspeed for dw-mmc.
+Date: Fri, 13 Jun 2014 13:14:45 +0200
+Message-ID: <CAPDyKFr46gaAnZc34ELv4GYaK+XjuiAcewTmgJU=iyC3WgxWVg@mail.gmail.com>
+References: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
+	<1402633867-25155-3-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <539AA08A.7010001-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1402633867-25155-3-git-send-email-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Heiko St.bner" <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Friday 13 June 2014 12:26 PM, Sricharan R wrote:
-> Hi Jason,
-> 
-> On Thursday 12 June 2014 07:35 PM, Jason Cooper wrote:
->> On Thu, Jun 12, 2014 at 06:57:15AM -0700, Tony Lindgren wrote:
->>> * Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> [140612 05:52]:
->>>> On Thu, Jun 12, 2014 at 05:23:11PM +0530, Sricharan R wrote:
->>>>> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->>>>>
->>>>> When, in the system due to varied reasons, interrupts might be unusable
->>>>> due to hardware behavior, but register maps do exist, then those interrupts
->>>>> should be skipped while mapping irq to crossbars.
->>>>>
->>>>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
->>>>> Signed-off-by: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
->>>>> Signed-off-by: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
->>>>
->>>> Tony, have you applied these somewhere already?
->>>
->>> I think some of these I had applied into a branch ready for
->>> merging but then it was discovered that further changes
->>> were needed and the branch was dropped.
->>
->> Ok.
->>
->>> Sricharan, please remove my Signed-off-by from this series.
->>> If I end up applying it for merging my scripts will add it
->>> automatically.
->>
->> Do you have other changes outside of irqchip depending on this series?
->> If so, I can set up a topic branch for you guys to base off of.
->> Otherwise, I'll just apply them to irqchip/core when they're ready.
->>
->  There are dts changes which are dependent upon this series.
-> 
->   http://www.spinics.net/lists/linux-omap/msg108116.html
-> 
->> Also, Sricharan, when you respin this, please clearly identify (in the
->> comment section) those patches that need to be flagged for stable.  It
->> would be helpful if they were the first patches in the series as well.
-> 
-> Ok, i will point this out clearly.
- Infact since the dts node is not present in the older kernel (even now),
- the driver itself is not used. So i feel there is nothing to be flagged
-  for stable as such.
+On 13 June 2014 06:31, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> dw-mmc controller can support multiple slots.
+> But, there are no use-cases anywhere. So we don't need to support the
+> slot-node for dw-mmc controller.
+> And "supports-highspeed" property in dw-mmc is deprecated.
+> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
 
-Regards,
- Sricharan
- 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This looks good to me.
+
+Though, you need to help me understand how to handle this patch.
+
+1) Is it to consider as a fix for 3.16?
+2 ) I am not sure if there are a dependency to patch 1 - if not this
+patch is better suited for ARM SoC.
+
+Kind regards
+Uffe
+
+>
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
+> Reviewed-by: Tushar Behera <trblinux@gmail.com>
+> ---
+> Changelog V7:
+>         - Remove the missing subnode.
+> Changelog V6:
+>         - Add the missing property.
+> Changelog V5:
+>         - Fix typo.
+> Changelog V4:
+>         - Remove the slot-node.
+>         - Rename Subject.
+>                 "[PATCHv3 4/4]ARM: dts: replace the slot property into slot sub-node for dwmmc"
+> Changelog V3:
+>         - Merge "[PATCH 2/5] mmc: dw_mmc: rmove the "supports-highspeed" property"
+> Changelog V2:
+>         - None
+>
+>  .../devicetree/bindings/mmc/exynos-dw-mshc.txt     |   17 ++++--------
+>  .../devicetree/bindings/mmc/k3-dw-mshc.txt         |   12 ++++-----
+>  .../devicetree/bindings/mmc/synopsys-dw-mshc.txt   |   12 ++++-----
+>  arch/arm/boot/dts/exynos4412-odroidx.dts           |    8 ++----
+>  arch/arm/boot/dts/exynos4412-origen.dts            |    8 ++----
+>  arch/arm/boot/dts/exynos4412-trats2.dts            |    8 ++----
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |   18 ++++---------
+>  arch/arm/boot/dts/exynos5250-cros-common.dtsi      |   28 ++++++--------------
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |   18 ++++---------
+>  arch/arm/boot/dts/exynos5250-snow.dts              |    6 ++---
+>  arch/arm/boot/dts/exynos5420-arndale-octa.dts      |   16 +++--------
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |   16 +++--------
+>  arch/arm/boot/dts/rk3066a-bqcurie2.dts             |   16 +++--------
+>  arch/arm/boot/dts/socfpga_arria5.dtsi              |   10 +++----
+>  arch/arm/boot/dts/socfpga_cyclone5.dtsi            |    9 +++----
+>  arch/arm/boot/dts/socfpga_vt.dts                   |    9 +++----
+>  16 files changed, 63 insertions(+), 148 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> index 532b1d4..4cdd283 100644
+> --- a/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/exynos-dw-mshc.txt
+> @@ -46,13 +46,14 @@ Required Properties:
+>        - if CIU clock divider value is 0 (that is divide by 1), both tx and rx
+>          phase shift clocks should be 0.
+>
+> -Required properties for a slot:
+> +Required properties for a slot (Deprecated - Recommend to use one slot per a host):
+>
+>  * gpios: specifies a list of gpios used for command, clock and data bus. The
+>    first gpio is the command line and the second gpio is the clock line. The
+>    rest of the gpios (depending on the bus-width property) are the data lines in
+>    no particular order. The format of the gpio specifier depends on the gpio
+>    controller.
+> + (Deprecated - Refer to Documentaion/devicetree/binding/pinctrl/samsung-pinctrl.txt)
+>
+>  Example:
+>
+> @@ -69,21 +70,13 @@ Example:
+>
+>         dwmmc0@12200000 {
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+> +               cap-mmc-highspeed;
+> +               cap-sd-highspeed;
+>                 fifo-depth = <0x80>;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -                       gpios = <&gpc0 0 2 0 3>, <&gpc0 1 2 0 3>,
+> -                               <&gpc1 0 2 3 3>, <&gpc1 1 2 3 3>,
+> -                               <&gpc1 2 2 3 3>, <&gpc1 3 2 3 3>,
+> -                               <&gpc0 3 2 3 3>, <&gpc0 4 2 3 3>,
+> -                               <&gpc0 5 2 3 3>, <&gpc0 6 2 3 3>;
+> -               };
+> +               bus-width = <8>;
+>         };
+> diff --git a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> index b8653ea..514c0fc 100644
+> --- a/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/k3-dw-mshc.txt
+> @@ -34,13 +34,11 @@ Example:
+>                 num-slots = <1>;
+>                 vmmc-supply = <&ldo12>;
+>                 fifo-depth = <0x100>;
+> -               supports-highspeed;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd_pmx_pins &sd_cfg_func1 &sd_cfg_func2>;
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -                       disable-wp;
+> -                       cd-gpios = <&gpio10 3 0>;
+> -               };
+> +               bus-width = <4>;
+> +               disable-wp;
+> +               cd-gpios = <&gpio10 3 0>;
+> +               cap-mmc-highspeed;
+> +               cap-sd-highspeed;
+>         };
+> diff --git a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> index 2d4a725..346c609 100644
+> --- a/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/synopsys-dw-mshc.txt
+> @@ -67,7 +67,8 @@ Optional properties:
+>  * card-detect-delay: Delay in milli-seconds before detecting card after card
+>    insert event. The default value is 0.
+>
+> -* supports-highspeed: Enables support for high speed cards (up to 50MHz)
+> +* supports-highspeed (DEPRECATED): Enables support for high speed cards (up to 50MHz)
+> +                          (use "cap-mmc-highspeed" or "cap-sd-highspeed" instead)
+>
+>  * broken-cd: as documented in mmc core bindings.
+>
+> @@ -98,14 +99,11 @@ board specific portions as listed below.
+>                 clock-frequency = <400000000>;
+>                 clock-freq-min-max = <400000 200000000>;
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 fifo-depth = <0x80>;
+>                 card-detect-delay = <200>;
+>                 vmmc-supply = <&buck8>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+> +               cap-sd-highspeed;
+>         };
+> diff --git a/arch/arm/boot/dts/exynos4412-odroidx.dts b/arch/arm/boot/dts/exynos4412-odroidx.dts
+> index 31db28a..778aec6 100644
+> --- a/arch/arm/boot/dts/exynos4412-odroidx.dts
+> +++ b/arch/arm/boot/dts/exynos4412-odroidx.dts
+> @@ -45,17 +45,13 @@
+>                 status = "okay";
+>
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         regulator_p3v3 {
+> diff --git a/arch/arm/boot/dts/exynos4412-origen.dts b/arch/arm/boot/dts/exynos4412-origen.dts
+> index e2c0dca..8832424 100644
+> --- a/arch/arm/boot/dts/exynos4412-origen.dts
+> +++ b/arch/arm/boot/dts/exynos4412-origen.dts
+> @@ -128,17 +128,13 @@
+>                 status = "okay";
+>
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         codec@13400000 {
+> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
+> index 73be464..47b6f3a 100644
+> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
+> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
+> @@ -459,7 +459,6 @@
+>
+>         mmc@12550000 {
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 non-removable;
+>                 card-detect-delay = <200>;
+> @@ -468,14 +467,11 @@
+>                 samsung,dw-mshc-ciu-div = <0>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>                 pinctrl-0 = <&sd4_clk &sd4_cmd &sd4_bus4 &sd4_bus8>;
+>                 pinctrl-names = "default";
+>                 status = "okay";
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+>         };
+>
+>         sd_reg: voltage-regulator@1 {
+> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot/dts/exynos5250-arndale.dts
+> index 090f983..2f61e4d 100644
+> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
+> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
+> @@ -399,7 +399,6 @@
+>         mmc_0: mmc@12200000 {
+>                 status = "okay";
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+> @@ -408,17 +407,13 @@
+>                 vmmc-supply = <&mmc_reg>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         mmc_2: mmc@12220000 {
+>                 status = "okay";
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+> @@ -426,12 +421,9 @@
+>                 vmmc-supply = <&mmc_reg>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -                       disable-wp;
+> -               };
+> +               bus-width = <4>;
+> +               disable-wp;
+> +               cap-sd-highspeed;
+>         };
+>
+>         i2s0: i2s@03830000 {
+> diff --git a/arch/arm/boot/dts/exynos5250-cros-common.dtsi b/arch/arm/boot/dts/exynos5250-cros-common.dtsi
+> index 2c1560d..70bbd03 100644
+> --- a/arch/arm/boot/dts/exynos5250-cros-common.dtsi
+> +++ b/arch/arm/boot/dts/exynos5250-cros-common.dtsi
+> @@ -248,7 +248,6 @@
+>
+>         mmc@12200000 {
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+> @@ -256,44 +255,33 @@
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4 &sd0_bus8>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         mmc@12220000 {
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -                       wp-gpios = <&gpc2 1 0>;
+> -               };
+> +               bus-width = <4>;
+> +               wp-gpios = <&gpc2 1 0>;
+> +               cap-sd-highspeed;
+>         };
+>
+>         mmc@12230000 {
+>                 num-slots = <1>;
+> -               supports-highspeed;
+> -               broken-cd;
+>                 card-detect-delay = <200>;
+> +               broken-cd;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+>                 /* See board-specific dts files for pin setup */
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -               };
+> +               bus-width = <4>;
+> +               cap-sd-highspeed;
+>         };
+>
+>         spi_1: spi@12d30000 {
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index a794a70..e00ffc6 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -282,7 +282,6 @@
+>         mmc@12200000 {
+>                 status = "okay";
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 broken-cd;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+> @@ -290,29 +289,22 @@
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         mmc@12220000 {
+>                 status = "okay";
+>                 num-slots = <1>;
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -                       disable-wp;
+> -               };
+> +               bus-width = <4>;
+> +               disable-wp;
+> +               cap-sd-highspeed;
+>         };
+>
+>         spi_1: spi@12d30000 {
+> diff --git a/arch/arm/boot/dts/exynos5250-snow.dts b/arch/arm/boot/dts/exynos5250-snow.dts
+> index 1ce1088..2245278 100644
+> --- a/arch/arm/boot/dts/exynos5250-snow.dts
+> +++ b/arch/arm/boot/dts/exynos5250-snow.dts
+> @@ -190,10 +190,8 @@
+>          */
+>         mmc@12230000 {
+>                 status = "okay";
+> -               slot@0 {
+> -                       pinctrl-names = "default";
+> -                       pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
+> -               };
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&sd3_clk &sd3_cmd &sd3_bus4>;
+>         };
+>
+>         usb@12110000 {
+> diff --git a/arch/arm/boot/dts/exynos5420-arndale-octa.dts b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> index 80a3bf4..752715a 100644
+> --- a/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> +++ b/arch/arm/boot/dts/exynos5420-arndale-octa.dts
+> @@ -40,7 +40,6 @@
+>         mmc@12200000 {
+>                 status = "okay";
+>                 broken-cd;
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <0 4>;
+> @@ -48,16 +47,12 @@
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+>                 vmmc-supply = <&ldo10_reg>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         mmc@12220000 {
+>                 status = "okay";
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+> @@ -65,11 +60,8 @@
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+>                 vmmc-supply = <&ldo10_reg>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -               };
+> +               bus-width = <4>;
+> +               cap-sd-highspeed;
+>         };
+>
+>         hsi2c_4: i2c@12CA0000 {
+> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> index 6910485..7f5e35b 100644
+> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
+> @@ -71,34 +71,26 @@
+>         mmc@12200000 {
+>                 status = "okay";
+>                 broken-cd;
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <0 4>;
+>                 samsung,dw-mshc-ddr-timing = <0 2>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_bus4 &sd0_bus8>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <8>;
+> -               };
+> +               bus-width = <8>;
+> +               cap-mmc-highspeed;
+>         };
+>
+>         mmc@12220000 {
+>                 status = "okay";
+> -               supports-highspeed;
+>                 card-detect-delay = <200>;
+>                 samsung,dw-mshc-ciu-div = <3>;
+>                 samsung,dw-mshc-sdr-timing = <2 3>;
+>                 samsung,dw-mshc-ddr-timing = <1 2>;
+>                 pinctrl-names = "default";
+>                 pinctrl-0 = <&sd2_clk &sd2_cmd &sd2_cd &sd2_bus4>;
+> -
+> -               slot@0 {
+> -                       reg = <0>;
+> -                       bus-width = <4>;
+> -               };
+> +               bus-width = <4>;
+> +               cap-sd-highspeed;
+>         };
+>
+>         dp-controller@145B0000 {
+> diff --git a/arch/arm/boot/dts/rk3066a-bqcurie2.dts b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+> index 035df40..0e618d5 100644
+> --- a/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+> +++ b/arch/arm/boot/dts/rk3066a-bqcurie2.dts
+> @@ -58,12 +58,8 @@
+>                         pinctrl-names = "default";
+>                         pinctrl-0 = <&sd0_clk &sd0_cmd &sd0_cd &sd0_bus4>;
+>                         vmmc-supply = <&vcc_sd0>;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                               disable-wp;
+> -                       };
+> +                       bus-width = <4>;
+> +                       disable-wp;
+>                 };
+>
+>                 dwmmc@10218000 { /* wifi */
+> @@ -73,12 +69,8 @@
+>
+>                         pinctrl-names = "default";
+>                         pinctrl-0 = <&sd1_clk &sd1_cmd &sd1_bus4>;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                               disable-wp;
+> -                       };
+> +                       bus-width = <4>;
+> +                       disable-wp;
+>                 };
+>
+>                 gpio-keys {
+> diff --git a/arch/arm/boot/dts/socfpga_arria5.dtsi b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> index 6c87b70..45ec0e4 100644
+> --- a/arch/arm/boot/dts/socfpga_arria5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria5.dtsi
+> @@ -29,13 +29,11 @@
+>
+>                 dwmmc0@ff704000 {
+>                         num-slots = <1>;
+> -                       supports-highspeed;
+> -                       broken-cd;
+>
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                       };
+> +                       bus-width = <4>;
+> +                       broken-cd;
+> +                       cap-mmc-highspeed;
+> +                       cap-sd-highspeed;
+>                 };
+>
+>                 serial0@ffc02000 {
+> diff --git a/arch/arm/boot/dts/socfpga_cyclone5.dtsi b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> index ca41b0e..c4ebf65 100644
+> --- a/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_cyclone5.dtsi
+> @@ -30,13 +30,10 @@
+>
+>                 dwmmc0@ff704000 {
+>                         num-slots = <1>;
+> -                       supports-highspeed;
+>                         broken-cd;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                       };
+> +                       bus-width = <4>;
+> +                       cap-mmc-highspeed;
+> +                       cap-sd-highspeed;
+>                 };
+>
+>                 ethernet@ff702000 {
+> diff --git a/arch/arm/boot/dts/socfpga_vt.dts b/arch/arm/boot/dts/socfpga_vt.dts
+> index 87d6f75..07e7206 100644
+> --- a/arch/arm/boot/dts/socfpga_vt.dts
+> +++ b/arch/arm/boot/dts/socfpga_vt.dts
+> @@ -43,13 +43,10 @@
+>
+>                 dwmmc0@ff704000 {
+>                         num-slots = <1>;
+> -                       supports-highspeed;
+>                         broken-cd;
+> -
+> -                       slot@0 {
+> -                               reg = <0>;
+> -                               bus-width = <4>;
+> -                       };
+> +                       bus-width = <4>;
+> +                       cap-mmc-highspeed;
+> +                       cap-sd-highspeed;
+>                 };
+>
+>                 ethernet@ff700000 {
+> --
+> 1.7.9.5
+>
