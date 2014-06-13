@@ -1,621 +1,271 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v2] hwmon: Driver for TI TMP103 temperature sensor
-Date: Fri, 13 Jun 2014 09:03:01 -0700
-Message-ID: <539B20B5.7000506@roeck-us.net>
-References: <1402643421-9102-1-git-send-email-hs@denx.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402643421-9102-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kumar Gala <galak@codeaurora.org>
+Subject: [PATCH v2 1/2] phy: qcom: Add driver for QCOM IPQ806x SATA PHY
+Date: Fri, 13 Jun 2014 11:12:18 -0500
+Message-ID: <1402675938-30135-1-git-send-email-galak@codeaurora.org>
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Kumar Gala <galak@codeaurora.org>, linux-ide@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sboyd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2014 12:10 AM, Heiko Schocher wrote:
-> Driver for the TI TMP103.
->
-> The TI TMP103 is similar to the TMP102.  It differs from the TMP102
-> by having only 8 bit registers.
->
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
->
-Hello Heiko,
+Add a PHY driver for uses with AHCI based SATA controller driver on the
+IPQ806x family of SoCs.
 
-Couple of additional comments.
+Signed-off-by: Kumar Gala <galak@codeaurora.org>
+---
+v2:
+* dropped unused dev pointer in struct qcom_ipq806x_sata_phy
+* remove unnecessary reg initializaiton
+* Removed unneeded error message
+* Added remove function to disable the clock
 
-Thanks,
-Guenter
+ drivers/phy/Kconfig                 |   6 ++
+ drivers/phy/Makefile                |   1 +
+ drivers/phy/phy-qcom-ipq806x-sata.c | 210 ++++++++++++++++++++++++++++++++++++
+ 3 files changed, 217 insertions(+)
+ create mode 100644 drivers/phy/phy-qcom-ipq806x-sata.c
 
-> ---
->
-> Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>
-> Cc: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->
-> - change for v2:
->    - add comments from GuenterRoeck:
->      - remove Cc from commit subject
->      - add devicetree mailinglist
->      - move Documentation to Documentation/hwmon/tmp103
->      - remove devicetree bindings from Documentation
->      - add compatible string to
->        "Documentation/devicetree/bindings/i2c/trivial-devices.txt"
->      - remove CamelCase
->      - fix Codingstyle issues
->      - use ATTRIBUTE_GROUPS and devm_hwmon_device_register_with_group=
-s()
->      - remove unsused define TMP103_CONFIG_RD_ONLY
->      - restore config register when exit()
->      - use regmap
->
->   .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
->   Documentation/hwmon/tmp103                         |  28 ++
->   drivers/hwmon/Kconfig                              |  10 +
->   drivers/hwmon/Makefile                             |   1 +
->   drivers/hwmon/tmp103.c                             | 304 ++++++++++=
-+++++++++++
->   5 files changed, 344 insertions(+)
->   create mode 100644 Documentation/hwmon/tmp103
->   create mode 100644 drivers/hwmon/tmp103.c
->
-> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
-t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> index bef86e5..fc944e0 100644
-> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
-> @@ -83,5 +83,6 @@ stm,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
->   taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Inter=
-face
->   ti,tsc2003		I2C Touch-Screen Controller
->   ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire=
- Serial Interface
-> +ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire =
-Serial Interface
->   ti,tmp275		Digital Temperature Sensor
->   winbond,wpct301		i2c trusted platform module (TPM)
-> diff --git a/Documentation/hwmon/tmp103 b/Documentation/hwmon/tmp103
-> new file mode 100644
-> index 0000000..559fea5
-> --- /dev/null
-> +++ b/Documentation/hwmon/tmp103
-> @@ -0,0 +1,28 @@
-> +Kernel driver tmp103
-> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> +
-> +Supported chips:
-> +  * Texas Instruments TMP103
-> +    Prefix: 'tmp103'
-> +    Addresses scanned: none
-> +    Product info and datasheet: http://www.ti.com/product/tmp103
-> +
-> +Author:
-> +	Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> +
-> +Description
-> +-----------
-> +
-> +The TMP103 is a digital output temperature sensor in a four-ball
-> +wafer chip-scale package (WCSP). The TMP103 is capable of reading
-> +temperatures to a resolution of 1=C2=B0C. The TMP103 is specified fo=
-r
-> +operation over a temperature range of =E2=80=9340=C2=B0C to +125=C2=B0=
-C.
-> +
-> +Resolution: 8 Bits
-> +Accuracy: =C2=B11=C2=B0C Typ (=E2=80=9310=C2=B0C to +100=C2=B0C)
-> +
-> +The driver provides the common sysfs-interface for temperatures (see
-> +Documentation/hwmon/sysfs-interface under Temperatures).
-> +
-> +please refer how to instantiate this driver:
+diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+index 16a2f06..52bfb93 100644
+--- a/drivers/phy/Kconfig
++++ b/drivers/phy/Kconfig
+@@ -178,4 +178,10 @@ config PHY_XGENE
+ 	help
+ 	  This option enables support for APM X-Gene SoC multi-purpose PHY.
+ 
++config PHY_QCOM_IPQ806X_SATA
++	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
++	depends on ARCH_QCOM
++	depends on OF
++	select GENERIC_PHY
++
+ endmenu
+diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+index b4f1d57..d950317 100644
+--- a/drivers/phy/Makefile
++++ b/drivers/phy/Makefile
+@@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
+ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+ obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+ obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
++obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+diff --git a/drivers/phy/phy-qcom-ipq806x-sata.c b/drivers/phy/phy-qcom-ipq806x-sata.c
+new file mode 100644
+index 0000000..f22b9a2
+--- /dev/null
++++ b/drivers/phy/phy-qcom-ipq806x-sata.c
+@@ -0,0 +1,210 @@
++/*
++ * Copyright (c) 2014, The Linux Foundation. All rights reserved.
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 and
++ * only version 2 as published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ */
++
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/time.h>
++#include <linux/delay.h>
++#include <linux/clk.h>
++#include <linux/slab.h>
++#include <linux/platform_device.h>
++#include <linux/phy/phy.h>
++
++struct qcom_ipq806x_sata_phy {
++	void __iomem *mmio;
++	struct clk *cfg_clk;
++};
++
++#define __set(v, a, b)	(((v) << (b)) & GENMASK(a, b))
++
++#define SATA_PHY_P0_PARAM0		0x200
++#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3(x)	__set(x, 17, 12)
++#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3_MASK	GENMASK(17, 12)
++#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN2(x)	__set(x, 11, 6)
++#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN2_MASK	GENMASK(11, 6)
++#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN1(x)	__set(x, 5, 0)
++#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN1_MASK	GENMASK(5, 0)
++
++#define SATA_PHY_P0_PARAM1		0x204
++#define SATA_PHY_P0_PARAM1_RESERVED_BITS31_21(x)	__set(x, 31, 21)
++#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3(x)	__set(x, 20, 14)
++#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3_MASK	GENMASK(20, 14)
++#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2(x)	__set(x, 13, 7)
++#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2_MASK	GENMASK(13, 7)
++#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1(x)	__set(x, 6, 0)
++#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1_MASK	GENMASK(6, 0)
++
++#define SATA_PHY_P0_PARAM2		0x208
++#define SATA_PHY_P0_PARAM2_RX_EQ(x)	__set(x, 20, 18)
++#define SATA_PHY_P0_PARAM2_RX_EQ_MASK	GENMASK(20, 18)
++
++#define SATA_PHY_P0_PARAM3		0x20C
++#define SATA_PHY_SSC_EN			0x8
++#define SATA_PHY_P0_PARAM4		0x210
++#define SATA_PHY_REF_SSP_EN		0x2
++#define SATA_PHY_RESET			0x1
++
++static inline void qcom_ipq806x_sata_delay_us(unsigned int delay)
++{
++	/* sleep for max. 50us more to combine processor wakeups */
++	usleep_range(delay, delay + 50);
++}
++
++static int qcom_ipq806x_sata_phy_init(struct phy *generic_phy)
++{
++	struct qcom_ipq806x_sata_phy *phy = phy_get_drvdata(generic_phy);
++	u32 reg;
++
++	/* Setting SSC_EN to 1 */
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM3);
++	reg = reg | SATA_PHY_SSC_EN;
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM3);
++
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM0) &
++			~(SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3_MASK |
++			  SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN2_MASK |
++			  SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN1_MASK);
++	reg |= SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3(0xf);
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM0);
++
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM1) &
++			~(SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3_MASK |
++			  SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2_MASK |
++			  SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1_MASK);
++	reg |= SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3(0x55) |
++		SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2(0x55) |
++		SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1(0x55);
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM1);
++
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM2) &
++		~SATA_PHY_P0_PARAM2_RX_EQ_MASK;
++	reg |= SATA_PHY_P0_PARAM2_RX_EQ(0x3);
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM2);
++
++	/* Setting PHY_RESET to 1 */
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
++	reg = reg | SATA_PHY_RESET;
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
++
++	/* Setting REF_SSP_EN to 1 */
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
++	reg = reg | SATA_PHY_REF_SSP_EN | SATA_PHY_RESET;
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
++	mb();
++	qcom_ipq806x_sata_delay_us(20);
++
++	/* Clearing PHY_RESET to 0 */
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
++	reg = reg & ~SATA_PHY_RESET;
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
++
++	return 0;
++}
++
++static int qcom_ipq806x_sata_phy_exit(struct phy *generic_phy)
++{
++	struct qcom_ipq806x_sata_phy *phy = phy_get_drvdata(generic_phy);
++	u32 reg;
++
++	/* Setting PHY_RESET to 1 */
++	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
++	reg = reg | SATA_PHY_RESET;
++	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
++
++	return 0;
++}
++
++static struct phy_ops qcom_ipq806x_sata_phy_ops = {
++	.init		= qcom_ipq806x_sata_phy_init,
++	.exit		= qcom_ipq806x_sata_phy_exit,
++	.owner		= THIS_MODULE,
++};
++
++static int qcom_ipq806x_sata_phy_probe(struct platform_device *pdev)
++{
++	struct qcom_ipq806x_sata_phy *phy;
++	struct device *dev = &pdev->dev;
++	struct resource *res;
++	struct phy_provider *phy_provider;
++	struct phy *generic_phy;
++	int ret;
++
++	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
++	if (!phy) {
++		dev_err(dev, "%s: failed to allocate phy\n", __func__);
++		return -ENOMEM;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	phy->mmio = devm_ioremap_resource(dev, res);
++	if (IS_ERR(phy->mmio))
++		return PTR_ERR(phy->mmio);
++
++	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
++	if (IS_ERR(phy_provider)) {
++		dev_err(dev, "%s: failed to register phy\n", __func__);
++		return PTR_ERR(phy_provider);
++	}
++
++	generic_phy = devm_phy_create(dev, &qcom_ipq806x_sata_phy_ops, NULL);
++	if (IS_ERR(generic_phy)) {
++		dev_err(dev, "%s: failed to create phy\n", __func__);
++		return PTR_ERR(generic_phy);
++	}
++
++	phy->cfg_clk = devm_clk_get(dev, "cfg");
++	if (IS_ERR(phy->cfg_clk)) {
++		dev_err(dev, "Failed to get sata cfg clock\n");
++		return PTR_ERR(phy->cfg_clk);
++	}
++
++	ret = clk_prepare_enable(phy->cfg_clk);
++	if (ret)
++		return ret;
++
++	phy_set_drvdata(generic_phy, phy);
++
++	return 0;
++}
++
++static int qcom_ipq806x_sata_phy_remove(struct platform_device *pdev)
++{
++	struct qcom_ipq806x_sata_phy *phy = platform_get_drvdata(pdev);
++
++	clk_disable_unprepare(phy->cfg_clk);
++
++	return 0;
++}
++
++static const struct of_device_id qcom_ipq806x_sata_phy_of_match[] = {
++	{ .compatible = "qcom,ipq806x-sata-phy" },
++	{ },
++};
++MODULE_DEVICE_TABLE(of, qcom_ipq806x_sata_phy_of_match);
++
++static struct platform_driver qcom_ipq806x_sata_phy_driver = {
++	.probe	= qcom_ipq806x_sata_phy_probe,
++	.remove	= qcom_ipq806x_sata_phy_remove,
++	.driver = {
++		.name	= "qcom-ipq806x-sata-phy",
++		.owner	= THIS_MODULE,
++		.of_match_table	= qcom_ipq806x_sata_phy_of_match,
++	}
++};
++module_platform_driver(qcom_ipq806x_sata_phy_driver);
++
++MODULE_DESCRIPTION("QCOM IPQ806x SATA PHY driver");
++MODULE_LICENSE("GPL v2");
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
 
-s/please/Please/
-
-> +Documentation/i2c/instantiating-devices
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index 0034316..0f44dbb 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -1381,6 +1381,16 @@ config SENSORS_TMP102
->   	  This driver can also be built as a module.  If so, the module
->   	  will be called tmp102.
->
-> +config SENSORS_TMP103
-> +	tristate "Texas Instruments TMP103"
-> +	depends on I2C
-> +	help
-> +	  If you say yes here you get support for Texas Instruments TMP103
-> +	  sensor chips.
-> +
-> +	  This driver can also be built as a module.  If so, the module
-> +	  will be called tmp103.
-> +
->   config SENSORS_TMP401
->   	tristate "Texas Instruments TMP401 and compatibles"
->   	depends on I2C
-> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
-> index 11798ad..8e2f6a2 100644
-> --- a/drivers/hwmon/Makefile
-> +++ b/drivers/hwmon/Makefile
-> @@ -134,6 +134,7 @@ obj-$(CONFIG_SENSORS_SMSC47M192)+=3D smsc47m192.o
->   obj-$(CONFIG_SENSORS_AMC6821)	+=3D amc6821.o
->   obj-$(CONFIG_SENSORS_THMC50)	+=3D thmc50.o
->   obj-$(CONFIG_SENSORS_TMP102)	+=3D tmp102.o
-> +obj-$(CONFIG_SENSORS_TMP103)	+=3D tmp103.o
->   obj-$(CONFIG_SENSORS_TMP401)	+=3D tmp401.o
->   obj-$(CONFIG_SENSORS_TMP421)	+=3D tmp421.o
->   obj-$(CONFIG_SENSORS_TWL4030_MADC)+=3D twl4030-madc-hwmon.o
-> diff --git a/drivers/hwmon/tmp103.c b/drivers/hwmon/tmp103.c
-> new file mode 100644
-> index 0000000..01119a6
-> --- /dev/null
-> +++ b/drivers/hwmon/tmp103.c
-> @@ -0,0 +1,304 @@
-> +/*
-> + * Texas Instruments TMP103 SMBus temperature sensor driver
-> + * Copyright (C) 2014 Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-> + *
-> + * Based on:
-> + * Texas Instruments TMP102 SMBus temperature sensor driver
-> + *
-> + * Copyright (C) 2010 Steven King <sfking-xS0NTnu2YfYAvxtiuMwx3w@public.gmane.org>
-> + *
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License as published=
- by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/init.h>
-> +#include <linux/slab.h>
-> +#include <linux/i2c.h>
-> +#include <linux/hwmon.h>
-> +#include <linux/hwmon-sysfs.h>
-> +#include <linux/err.h>
-> +#include <linux/mutex.h>
-> +#include <linux/device.h>
-> +#include <linux/jiffies.h>
-> +#include <linux/regmap.h>
-> +
-> +#define	DRIVER_NAME "tmp103"
-> +
-> +#define	TMP103_TEMP_REG			0x00
-> +#define	TMP103_CONF_REG			0x01
-> +#define	TMP103_TLOW_REG			0x02
-> +#define	TMP103_THIGH_REG		0x03
-> +
-> +#define		TMP103_CONF_M0		0x01
-> +#define		TMP103_CONF_M1		0x02
-> +#define		TMP103_CONF_LC		0x04
-> +#define		TMP103_CONF_FL		0x08
-> +#define		TMP103_CONF_FH		0x10
-> +#define		TMP103_CONF_CR0		0x20
-> +#define		TMP103_CONF_CR1		0x40
-> +#define		TMP103_CONF_ID		0x80
-> +#define		TMP103_CONF_SD		(TMP103_CONF_M0 | TMP103_CONF_M1)
-> +
-No tab between #define and the actual definition, please.
-
-> +struct tmp103 {
-> +	struct i2c_client *client;
-
-No longer needed. See below.
-
-> +	struct device *hwmon_dev;
-> +	struct regmap *regmap;
-> +	struct mutex lock;
-> +	unsigned int config_orig;
-> +	unsigned long last_update;
-> +	int temp[3];
-
-Both no longer needed.
-
-Actually, the entire structure is not really needed anymore with the ch=
-anges suggested
-below. The only value still needed would be regmap, and you could store=
- that directly
-in drvdata.
-
-> +};
-> +
-> +static inline int tmp103_reg_to_mc(s8 val)
-> +{
-> +	return val * 1000;
-> +}
-> +
-> +static inline u8 tmp103_mc_to_reg(int val)
-> +{
-> +	return DIV_ROUND_CLOSEST(val, 1000);
-> +}
-> +
-> +static const u8 tmp103_reg[] =3D {
-> +	TMP103_TEMP_REG,
-> +	TMP103_TLOW_REG,
-> +	TMP103_THIGH_REG,
-> +};
-
-No longer needed; you can put the register directly into sda->index.
-
-> +
-> +#define TMP103_INVALID	0xffff
-> +
-> +static ssize_t tmp103_show_temp(struct device *dev,
-> +				struct device_attribute *attr,
-> +				char *buf)
-> +{
-> +	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
-> +	struct i2c_client *client =3D to_i2c_client(dev);
-> +	struct tmp103 *tmp103 =3D i2c_get_clientdata(client);
-
-Too complicated. Attributes are now attached to the hwmon device, and t=
-mp103
-can be retrieved from there.
-
-	struct tmp103 *tmp103 =3D dev_get_drvdata(dev);
-or, with all the changes I suggested, even simpler
-	struct regmap *regmap =3D dev_get_drvdata(dev);
-
-> +	unsigned int status;
-> +	int ret;
-> +
-> +	mutex_lock(&tmp103->lock);
-> +	if (time_after(jiffies, tmp103->last_update + HZ / 3)) {
-> +		int i;
-> +
-> +		for (i =3D 0; i < ARRAY_SIZE(tmp103->temp); ++i) {
-> +			ret =3D regmap_read(tmp103->regmap, tmp103_reg[i],
-> +					  &status);
-> +			if (ret < 0)
-> +				tmp103->temp[i] =3D TMP103_INVALID;
-
-Good idea, but not really what we'd want to see. In this case the error
-should be reported to use space, ie return the value of 'ret', not "inv=
-alid".
-Also, you don't need to read all registers here, and just forget about
-local caching (not worth it).
-
-Suggested replacement below.
-
-> +			else
-> +				tmp103->temp[i] =3D tmp103_reg_to_mc(status);
-> +		}
-> +		tmp103->last_update =3D jiffies;
-> +	}
-> +	mutex_unlock(&tmp103->lock);
-> +
-> +	if (tmp103->temp[sda->index] !=3D TMP103_INVALID)
-> +		return sprintf(buf, "%d\n", tmp103->temp[sda->index]);
-> +
-> +	return sprintf(buf, "invalid\n");
-> +}
-
-static ssize_t tmp103_show_temp(struct device *dev,
-				struct device_attribute *attr,
-				char *buf)
-{
-	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
-	struct tmp103 *tmp103 =3D dev_get_drvdata(dev);	/* or struct regmap *r=
-egmap =3D dev_get_drvdata(dev); */
-	unsigned int regval;
-	int ret;
-
-	ret =3D regmap_read(tmp103->regmap, sda->index, &regval);
-	if (ret < 0)
-		return ret;
-
-	return return sprintf(buf, "%d\n", tmp103_reg_to_mc(regval));
-}
-
-
-> +
-> +static ssize_t tmp103_set_temp(struct device *dev,
-> +			       struct device_attribute *attr,
-> +			       const char *buf, size_t count)
-> +{
-> +	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
-> +	struct i2c_client *client =3D to_i2c_client(dev);
-> +	struct tmp103 *tmp103 =3D i2c_get_clientdata(client);
-
-Same as above.
-	struct tmp103 *tmp103 =3D dev_get_drvdata(dev);
-
-
-> +	long val;
-> +	int ret;
-> +
-> +	if (kstrtol(buf, 10, &val) < 0)
-> +		return -EINVAL;
-> +
-> +	val =3D clamp_val(val, -55000, 127000);
-> +	mutex_lock(&tmp103->lock);
-> +	tmp103->temp[sda->index] =3D val;
-> +	ret =3D regmap_write(tmp103->regmap, tmp103_reg[sda->index],
-> +			   tmp103_mc_to_reg(val));
-
-After dropping tmp103->temp[] you don't need the lock anymore,
-which means it can go away completely.
-
-> +	mutex_unlock(&tmp103->lock);
-> +	return ret ? : count;
-> +}
-> +
-> +static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, tmp103_show_temp, NU=
-LL , 0);
-> +
-As suggested above, instead of using an indirect index, use TMP103_TEMP=
-_REG directly
-to simplify the code.
-
-> +static SENSOR_DEVICE_ATTR(temp1_min, S_IWUSR | S_IRUGO, tmp103_show_=
-temp,
-> +			  tmp103_set_temp, 1);
-> +
-> +static SENSOR_DEVICE_ATTR(temp1_max, S_IWUSR | S_IRUGO, tmp103_show_=
-temp,
-> +			  tmp103_set_temp, 2);
-> +
-> +static struct attribute *tmp103_attrs[] =3D {
-> +	&sensor_dev_attr_temp1_input.dev_attr.attr,
-> +	&sensor_dev_attr_temp1_min.dev_attr.attr,
-> +	&sensor_dev_attr_temp1_max.dev_attr.attr,
-> +	NULL
-> +};
-> +ATTRIBUTE_GROUPS(tmp103);
-> +
-> +static struct regmap_config tmp103_regmap_config =3D {
-> +	.reg_bits =3D 8,
-> +	.val_bits =3D 8,
-> +	.max_register =3D TMP103_THIGH_REG,
-
-You can also add a 'volatile' function to tell regmap which registers a=
-re volatile.
-
-	.volatile_reg =3D tmp103_is_volatile,
-
-with
-
-static bool tmp103_regmap_is_volatile(struct device *dev, unsigned int =
-reg)
-{
-	return reg =3D=3D TMP103_TEMP_REG;
-}
-
-With this, only the temperature register will be read after the first i=
-nitialization.
-If you add alarm attributes, you'd have to add the configuration regist=
-er, but not
-for now.
-
-> +};
-> +
-> +#define TMP103_CONFIG		(TMP103_CONF_CR1 | TMP103_CONF_M1)
-> +
-Can you move this to the other definitions ? TMP103_CONF_SD is already =
-there,
-so this would be more consistent.
-
-> +static int tmp103_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct device *dev =3D &client->dev;
-> +	struct device *hwmon_dev;
-> +	struct tmp103 *tmp103;
-> +	int ret;
-> +	unsigned int status;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_BYTE_DATA)) {
-> +		dev_err(&client->dev,
-> +			"adapter doesn't support SMBus byte transactions\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	tmp103 =3D devm_kzalloc(&client->dev, sizeof(*tmp103), GFP_KERNEL);
-> +	if (!tmp103)
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(client, tmp103);
-> +	tmp103->client =3D client;
-
-Both no longer needed.
-
-> +
-> +	tmp103->regmap =3D devm_regmap_init_i2c(client, &tmp103_regmap_conf=
-ig);
-> +	if (IS_ERR(tmp103->regmap)) {
-> +		dev_err(dev, "failed to allocate register map\n");
-> +		return PTR_ERR(tmp103->regmap);
-> +	}
-> +
-> +	ret =3D regmap_read(tmp103->regmap, TMP103_CONF_REG, &status);
-> +	if (ret < 0)
-> +		goto fail_init_regmap;
-> +
-> +	tmp103->config_orig =3D status;
-> +	ret =3D regmap_write(tmp103->regmap, TMP103_CONF_REG, TMP103_CONFIG=
-);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "error writing config register\n");
-> +		goto fail_restore_config;
-> +	}
-> +
-> +	ret =3D regmap_read(tmp103->regmap, TMP103_CONF_REG, &status);
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "error reading config register\n");
-> +		goto fail_restore_config;
-> +	}
-> +	if (status !=3D TMP103_CONFIG) {
-> +		dev_err(&client->dev, "config settings did not stick\n");
-> +		ret =3D -ENODEV;
-> +		goto fail_restore_config;
-> +	}
-
-The above write/read sequence can be made conditional.
-If (config_orig & 0x67) =3D=3D TMP103_CONFIG, there is no need to updat=
-e the
-configuration register.
-
-Also, I just realized that the current code won't work: The FH and FL b=
-its
-are not controlled by you, but by the chip. So the verification (as wri=
-tten)
-will fail if you have an alarm condition. I would suggest to drop the
-verification entirely; I don't think it adds much if any value.
-At the very least, you'll have to mask the result against 0x67.
-
-Actually, I would suggest to drop config_orig entirely. Then you can
-use regmap_update_bits() to set the configuration. Also, you can then u=
-se
-devm_hwmon_device_register_with_groups(), and drop the remove function
-as well.
-
-> +	tmp103->last_update =3D jiffies - HZ;
-
-No longer needed.
-
-> +	mutex_init(&tmp103->lock);
-> +
-> +	hwmon_dev =3D hwmon_device_register_with_groups(dev, client->name,
-> +						      tmp103, tmp103_groups);
-> +	if (IS_ERR(hwmon_dev)) {
-> +		dev_dbg(dev, "unable to register hwmon device\n");
-
-
-> +		status =3D PTR_ERR(hwmon_dev);
-> +		goto fail_restore_config;
-> +	}
-> +	tmp103->hwmon_dev =3D hwmon_dev;
-> +
-> +	return 0;
-> +
-> +fail_restore_config:
-> +	regmap_write(tmp103->regmap, TMP103_CONF_REG, tmp103->config_orig);
-> +fail_init_regmap:
-> +	regmap_exit(tmp103->regmap);
-
-This is not needed since you used the devm_ initialization function abo=
-ve.
-In fact, it is likely wrong.
-
-If you drop restoring the configuration register, the entire sequence c=
-an become
-
-	hwmon_dev =3D devm_hwmon_device_register_with_groups(dev, client->name=
-,
-						           tmp103, tmp103_groups);
-	return PTR_ERR_OR_ZERO(hwmon_dev);
-
-> +	return ret;
-> +}
-> +
-> +static int tmp103_remove(struct i2c_client *client)
-> +{
-> +	struct tmp103 *tmp103 =3D i2c_get_clientdata(client);
-> +	int ret;
-> +
-> +	ret =3D regmap_write(tmp103->regmap, TMP103_CONF_REG,
-> +			   tmp103->config_orig);
-
-Only needed if (config_orig & 0x67) !=3D TMP103_CONFIG.
-
-> +	if (ret < 0)
-> +		dev_err(&client->dev, "error writing config register\n");
-> +
-I'd suggest to drop the error message. It does not really matter,
-after all, and is quite unlikely.
-
-> +	hwmon_device_unregister(tmp103->hwmon_dev);
-> +
-> +	return 0;
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int tmp103_suspend(struct device *dev)
-> +{
-> +	struct i2c_client *client =3D to_i2c_client(dev);
-> +	struct tmp103 *tmp103 =3D i2c_get_clientdata(client);
-> +	unsigned int config;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(tmp103->regmap, TMP103_CONF_REG, &config);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	config &=3D ~TMP103_CONF_SD;
-> +	return regmap_write(tmp103->regmap, TMP103_CONF_REG, config);
-
-You can use regmap_update_bits() here.
-
-> +}
-> +
-> +static int tmp103_resume(struct device *dev)
-> +{
-> +	struct i2c_client *client =3D to_i2c_client(dev);
-> +	struct tmp103 *tmp103 =3D i2c_get_clientdata(client);
-> +	unsigned int config;
-> +	int ret;
-> +
-> +	ret =3D regmap_read(tmp103->regmap, TMP103_CONF_REG, &config);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	config |=3D TMP103_CONF_SD;
-> +	return regmap_write(tmp103->regmap, TMP103_CONF_REG, config);
-
-You can use regmap_update_bits() here.
-
-> +}
-> +
-> +static const struct dev_pm_ops tmp103_dev_pm_ops =3D {
-> +	.suspend	=3D tmp103_suspend,
-> +	.resume		=3D tmp103_resume,
-> +};
-> +
-> +#define TMP103_DEV_PM_OPS (&tmp103_dev_pm_ops)
-> +#else
-> +#define	TMP103_DEV_PM_OPS NULL
-> +#endif /* CONFIG_PM */
-> +
-> +static const struct i2c_device_id tmp103_id[] =3D {
-> +	{ DRIVER_NAME, 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, tmp103_id);
-> +
-> +static struct i2c_driver tmp103_driver =3D {
-> +	.driver =3D {
-> +		.name	=3D DRIVER_NAME,
-> +		.pm	=3D TMP103_DEV_PM_OPS,
-> +	},
-> +	.probe		=3D tmp103_probe,
-> +	.remove		=3D tmp103_remove,
-> +	.id_table	=3D tmp103_id,
-> +};
-> +
-> +module_i2c_driver(tmp103_driver);
-> +
-> +MODULE_AUTHOR("Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>");
-> +MODULE_DESCRIPTION("Texas Instruments TMP103 temperature sensor driv=
-er");
-> +MODULE_LICENSE("GPL");
->
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
