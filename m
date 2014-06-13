@@ -1,39 +1,36 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 15/36] ARM: OMAP2+: gpmc: Allow drivers to query GPMC_CLK
- period
-Date: Fri, 13 Jun 2014 10:48:09 +0300
-Message-ID: <539AACB9.5080105@ti.com>
-References: <1402477001-31132-1-git-send-email-rogerq@ti.com> <1402477001-31132-16-git-send-email-rogerq@ti.com> <20140613072645.GN17845@atomide.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 18/36] ARM: OMAP2+: gpmc-onenand: Move Synchronous
+ setting code to drivers/
+Date: Fri, 13 Jun 2014 00:55:28 -0700
+Message-ID: <20140613075527.GP17845@atomide.com>
+References: <1402477001-31132-1-git-send-email-rogerq@ti.com>
+ <1402477001-31132-19-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140613072645.GN17845@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: dwmw2@infradead.org, computersforpeace@gmail.com, kyungmin.park@samsung.com, pekon@ti.com, ezequiel.garcia@free-electrons.com, javier@dowhile0.org, nsekhar@ti.com, linux-omap@vger.kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402477001-31132-19-git-send-email-rogerq-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org, nsekhar-l0cyMroinI0@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2014 10:26 AM, Tony Lindgren wrote:
-> * Roger Quadros <rogerq@ti.com> [140611 01:59]:
->> GPMC_CLK is the external clock output pin that is used for syncronous
->> accesses.
->>
->> Device drivers need to know the fastest possible GPMC_CLK period in order
->> to calculate the most optimal device timings. Add the function
->> omap_gpmc_get_clk_period() to allow drivers to get the nearset possible
->> (equal to or greater than) GPMC_CLK period given the minimum
->> clock period supported by the attached device.
->>
->> This is especially needed by the onenand driver as it calculates
->> device timings on the fly for various onenand speed grades.
+* Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org> [140611 01:59]:
+> Move the code that puts the onenand in synchronous mode
+> into the appropriate place i.e. drivers/mtd/onenand/omap2.c.
 > 
-> Here too this should probably still be done by the gpmc to driver
-> glue layer, not by the actual driver that shoud be Linux generic.
+> Make use of omap_gpmc_get_clk_period() and omap_gpmc_retime()
+> to calculate the necessary timings and configure the GPMC
+> parent's timings.
 
-Well, this is only needed by the omap-onenand driver to perform the timing calculations at run-time.
-Other option is to model the GPMC_CLK (external) as a clock and request the rate using the clock framework.
-But since this and the retime() is only used by 2 OMAP specific drivers, I'm not sure if it is worth the effort.
+Ideally we would just use the drivers/mtd/onenand/generic.c
+and get rid of drivers/mtd/onenand/omap2.c. We still need
+the bus glue, which should probably be in drivers/memory?
 
-cheers,
--roger
+Regards,
+
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
