@@ -1,36 +1,35 @@
-From: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
-Subject: Re: [PATCH v3 2/4] crypto: Update makefile and Kconfig
- for Security System
-Date: Sat, 14 Jun 2014 21:01:30 +0200
-Message-ID: <201406142101.30546.marex@denx.de>
-References: <1402404197-4236-1-git-send-email-clabbe.montjoie@gmail.com> <1402404197-4236-3-git-send-email-clabbe.montjoie@gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/3] mmc: Add APM X-Gene SoC SDHC controller support to Arasan SDHCI driver
+Date: Sat, 14 Jun 2014 23:36:29 +0200
+Message-ID: <5219148.cLBgakF4fc@wuerfel>
+References: <1401829985-5212-1-git-send-email-lho@apm.com> <1401829985-5212-3-git-send-email-lho@apm.com> <9432f705-fd6a-44a6-8e04-c0455f0a551c@BN1AFFO11FD054.protection.gbl>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDIOBYPK6QDRBMWH6KOAKGQEKZST65A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402404197-4236-3-git-send-email-clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, herbert-lOAM2aK0SrRLBo1qDEOMRrpzq4S04n8Q@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-crypto-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <9432f705-fd6a-44a6-8e04-c0455f0a551c@BN1AFFO11FD054.protection.gbl>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Michal Simek <michal.simek@xilinx.com>
+Cc: Loc Ho <lho@apm.com>, chris@printf.net, ulf.hansson@linaro.org, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday, June 10, 2014 at 02:43:15 PM, LABBE Corentin wrote:
-> Add necessary changes for configuring and compiling the Security System
-> driver.
+On Wednesday 04 June 2014 08:09:12 Michal Simek wrote:
+> > +
+> > +static void sdhci_arasn_xgene_xlat_addr(struct sdhci_arasan_data *data,
+> > +                                    u64 dma_addr)
+> > +{
+> > +     #define AIM_AXI_HI_OFFSET       0x0000000c
+> > +     #define  AIM_AXI_ADDRESS_HI_N_WR(src) \
+> > +                                     (((u32) (src) << 20) & 0xfff00000)
 > 
-> Signed-off-by: LABBE Corentin <clabbe.montjoie-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  drivers/crypto/Kconfig  | 91
-> +++++++++++++++++++++++++++++++++++++++++++++++++ drivers/crypto/Makefile
-> |  1 +
->  2 files changed, 92 insertions(+)
+> ditto with indentation.
+> 20 should be shift
+> 0xfff00000 is mask.
+> 
+> Also you should take this opportunity and add function description
+> in kernel doc to be exactly clear what this function is doing.
 
-This should be part of 1/4, otherwise 1/4 just adds dead code.
+Actually this should just be configured in the dma-ranges property
+I think. It's not the driver's business to do the dma translation.
 
-Best regards,
-Marek Vasut
+	Arnd
