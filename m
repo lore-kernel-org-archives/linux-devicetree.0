@@ -1,100 +1,54 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH] input: touchscreen: ti_am335x_tsc: warn about incorrect
- spelling
-Date: Fri, 13 Jun 2014 19:23:55 -0500
-Message-ID: <20140614002355.GB24821@saruman.home>
-References: <20131118114029.GD30853@e106331-lin.cambridge.arm.com>
- <1384788541-16338-1-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] rx51_battery: convert to iio consumer
+Date: Sat, 14 Jun 2014 10:32:32 +0200
+Message-ID: <20140614083231.GA15326@Nokia-N900>
+References: <1393375569-21751-1-git-send-email-sre@debian.org>
+ <1393705366-32420-1-git-send-email-sre@debian.org>
+ <1393705366-32420-2-git-send-email-sre@debian.org>
+ <5336A9F9.4080504@kernel.org>
+ <20140420120823.GB12135@amd.pavel.ucw.cz>
+ <20140423160936.GB32049@earth.universe>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jy6Sn24JjFx/iggw"
-Return-path: <linux-input-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1384788541-16338-1-git-send-email-balbi@ti.com>
-Sender: linux-input-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>, Andrew Morton <akpm@linux-foundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Sebastian Andrzej Siewior <bigeasy@linutronix.de>, dmitry.torokhov@gmail.com, rob.herring@calxeda.com, Pawel.Moll@arm.com, swarren@wwwdotorg.org, ijc+devicetree@hellion.org.uk, bcousson@baylibre.com, Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, linux-input@vger.kernel.org
+In-Reply-To: <20140423160936.GB32049-SfvFxonMDyemK9LvCR3Hrw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali Roh?r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---jy6Sn24JjFx/iggw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Wed 2014-04-23 18:09:37, Sebastian Reichel wrote:
+> On Sun, Apr 20, 2014 at 02:08:23PM +0200, Pavel Machek wrote:
+> > On Sat 2014-03-29 11:09:45, Jonathan Cameron wrote:
+> > > On 01/03/14 20:22, Sebastian Reichel wrote:
+> > > >Update rx51-battery driver to use the new IIO API of
+> > > >twl4030-madc and add DT support.
+> > > >
+> > > >Signed-off-by: Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>
+> > > This looks fine to me.  I'd love to see a more generic solution, but
+> > > we can work on that another time.
+> > > 
+> > > Acked-by: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > 
+> > Reviewed-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+> > 
+> > I don't see this patch in 3.15-rc nor -next. What is needed to push
+> > this patch?
+> 
+> The problem is, that the power subsystem maintainers seem to be too
+> busy with real life. The last change in their git [0] was 2014-02-01
+> and I haven't seen any mail from them on the mailinglist since about
+> the same time. I have just queried his status @ Google+ (there were
+> some life-signs there).
 
-Hi,
+If there is stilll no life out there, you may want to ask
+Rafael W. to queue the patches...
 
-Here's another patch which has been pending for months.
-
-On Mon, Nov 18, 2013 at 09:29:01AM -0600, Felipe Balbi wrote:
-> In the hopes that people run new kernels on
-> their devices, let's add a warning message
-> asking users to have their DTS file fixed.
->=20
-> The goal is that by Linux 4.0 we will be
-> able to remove support for the bogus version
-> of our touchscreen's DTS.
->=20
-> Suggested-by: Mark Rutland <mark.rutland@arm.com>
-> Signed-off-by: Felipe Balbi <balbi@ti.com>
-> ---
->=20
-> Here you go, I've added your Suggested-by Mark,
-> if you wish I can remove or change to something
-> else.
->=20
-> cheers
->=20
->  drivers/input/touchscreen/ti_am335x_tsc.c | 5 ++++-
->  1 file changed, 4 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/input/touchscreen/ti_am335x_tsc.c b/drivers/input/to=
-uchscreen/ti_am335x_tsc.c
-> index b61df9d..91302cd 100644
-> --- a/drivers/input/touchscreen/ti_am335x_tsc.c
-> +++ b/drivers/input/touchscreen/ti_am335x_tsc.c
-> @@ -354,9 +354,12 @@ static int titsc_parse_dt(struct platform_device *pd=
-ev,
->  	 */
->  	err =3D of_property_read_u32(node, "ti,coordinate-readouts",
->  			&ts_dev->coordinate_readouts);
-> -	if (err < 0)
-> +	if (err < 0) {
-> +		dev_warn(&pdev->dev, "please use 'ti,coordinate-readouts' instead\n");
->  		err =3D of_property_read_u32(node, "ti,coordiante-readouts",
->  				&ts_dev->coordinate_readouts);
-> +	}
-> +
->  	if (err < 0)
->  		return err;
-> =20
-> --=20
-> 1.8.4.GIT
->=20
-
---=20
-balbi
-
---jy6Sn24JjFx/iggw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTm5YbAAoJEIaOsuA1yqREA78P/iLF0BHGBbl9ppi7nKhphItv
-1xu5HKVN0YcI9e6EtUGfc5GWwQXZ3KXsuceAIzbugf0ofUT86Wh2ewhHRf3Aei2T
-aJllzrnVI8BSZT0HSD+t6P5AOe2VpyNk5Cx39FPswwYqq0JMLFmobMxESPE8wkn9
-YooKKBEXLrqA5A6COOFlYCAeFRGdvu9T6PMf11qQf8Y6+pEL1+BI7+MBEELxjtii
-uiCVnrw0dwMdTtLVk89Izhj3204NbxG+k902NBioDniie/5LW1vy32ri2xQro7EQ
-0UT8xbhUbkblDyAuSg94HcpdcveUxMHXGMWaV74ijTvg2zw4GH7C99PzstvgF4fj
-GcyUr343kp1sEQtsfRvB10qrsD7NjEeLDCTPYehlui5+tz/b/fjkdCoqT1B3ZHOB
-SRk2yYDsk8CrMjAZ/2bv1PuoPFYeEMRDilKnINCKWAPv50zOQChOTUsTeQpvnw0B
-X7338qT8EqWCUpX/qEaFCP/uIyqxvSsG1JjRpgxuQ1abDwOiTPXhCFKAp1PLGcYX
-LD5S8PEg2vN+kGbihIV7ref9GFAzTK4Io8zVdH+YNsHEcFj0OeTTxBpDaEOKdj7d
-2arElTOZHfSz3GEv5S1Zn9CElWJCTPsYln02oAAkR2Q13QlMwVOINYZwg+Bl3s6C
-8JIbi8Yl0txJcGNe83AE
-=vAUv
------END PGP SIGNATURE-----
-
---jy6Sn24JjFx/iggw--
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
