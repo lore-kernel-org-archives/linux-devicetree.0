@@ -1,20 +1,20 @@
-From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 Subject: Re: [PATCH v6] iio: add support of the max1027
-Date: Sat, 14 Jun 2014 15:56:30 +0200
-Message-ID: <539C548E.8080602@gmx.de>
-References: <1402148312-22663-1-git-send-email-tremyfr@yahoo.fr> <539C3AA6.4030004@kernel.org>
+Date: Sat, 14 Jun 2014 15:09:57 +0100
+Message-ID: <539C57B5.9080305@kernel.org>
+References: <1402148312-22663-1-git-send-email-tremyfr@yahoo.fr> <539C53AD.4020504@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <539C3AA6.4030004-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+In-Reply-To: <539C53AD.4020504-Mmb7MZpHnFY@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jonathan Cameron schrieb:
-> On 07/06/14 14:38, Philippe Reynes wrote:
+On 14/06/14 14:52, Hartmut Knaack wrote:
+> Philippe Reynes schrieb:
 >> This driver add partial support of the
 >> maxim 1027/1029/1031. Differential mode is not
 >> supported.
@@ -22,17 +22,14 @@ Jonathan Cameron schrieb:
 >> It was tested on armadeus apf27 board.
 >>
 >> Signed-off-by: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
-> Hi,
->
-> There is one trivial bit inline.   If no one else raises anything
-> about this driver, I may well just fix that up and take this later
-> today.
->
-> I'd ideally like to collect reviewed-by or acked-by from the various
-> people who have reviewed the driver (to make sure their hard work is
-> not forgotten!)  Hence I might let this sit for a little longer
->
-> Jonathan
+Hi Philippe,
+
+There's just enough stuff in here in my review that I'd rather you rolled
+a V7 rather than me just fixing it up during the apply.
+
+Last time round ;)
+
+Jonathan
 >> ---
 >>   .../devicetree/bindings/iio/adc/max1027-adc.txt    |   22 +
 >>   drivers/iio/adc/Kconfig                            |    9 +
@@ -107,9 +104,6 @@ Jonathan Cameron schrieb:
 >> +	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
 >> +	spi-max-frequency = <1000000>;
 >> +};
-> I think we can take the view on this that it is so simple that no
-> one will mind.  Could in theory have gone in the trivial devices
-> file but is fine on it's own.
 >> diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
 >> index 24c28e3..517f886 100644
 >> --- a/drivers/iio/adc/Kconfig
@@ -176,6 +170,17 @@ Jonathan Cameron schrieb:
 >> +#include <linux/iio/trigger_consumer.h>
 >> +#include <linux/iio/triggered_buffer.h>
 >> +
+> We had some tendency on the list lately to include bitops.h and use
+> BIT(n) instead of 1 << n. Jonathan, is it "planned" to switch to that
+> style for the whole IIO subsystem? If so, it would safe some cleanup
+> to implement it already in new drivers.
+This definitely comes in the category of things I really find it hard
+to care about either way.
+   
+So nope, not going to suggest we tidy this up in new drivers (or indeed
+in the subsystem). If people feel it makes some element of code easier to
+read then fair enough.
+
 >> +#define MAX1027_CONV_REG  0x80
 >> +#define MAX1027_SETUP_REG 0x40
 >> +#define MAX1027_AVG_REG   0x20
@@ -244,6 +249,7 @@ Jonathan Cameron schrieb:
 >> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
 >> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
 >> +		.scan_index = index+1,					\
+> Separate operators with whitespaces.
 >> +		.scan_type = {						\
 >> +			.sign = 'u',					\
 >> +			.realbits = 10,					\
@@ -357,8 +363,6 @@ Jonathan Cameron schrieb:
 >> +
 >> +struct max1027_state {
 >> +	struct max1027_chip_info	*info;
-> const
->
 >> +	struct spi_device		*spi;
 >> +	struct iio_trigger		*trig;
 >> +	__be16				*buffer;
@@ -372,10 +376,6 @@ Jonathan Cameron schrieb:
 >> +	int ret;
 >> +	struct max1027_state *st = iio_priv(indio_dev);
 >> +	unsigned char *reg = (unsigned char *)st->buffer;
-> I'd have a slight preference for u8 as it isn't a character in anyway
-> and we have a convenient type defined for 8 bit unsigned.
-Full Ack!
-> It is slight enough that I wouldn't ask for a respin for this...
 >> +
 >> +	if (iio_buffer_enabled(indio_dev)) {
 >> +		dev_warn(&indio_dev->dev, "trigger mode already enabled");
@@ -493,6 +493,7 @@ Full Ack!
 >> +	if (state) {
 >> +		/* Start acquisition on cnvst */
 >> +		*reg = MAX1027_SETUP_REG|MAX1027_CKS_MODE0|MAX1027_REF_MODE2;
+> Also put some a whitespace around operators here.
 >> +		ret = spi_write(st->spi, reg, 1);
 >> +		if (ret < 0)
 >> +			return ret;
@@ -506,6 +507,7 @@ Full Ack!
 >> +	} else {
 >> +		/* Start acquisition on conversion register write */
 >> +		*reg = MAX1027_SETUP_REG|MAX1027_CKS_MODE2|MAX1027_REF_MODE2;
+> And here as well.
 >> +		ret = spi_write(st->spi, reg, 1);
 >> +		if (ret < 0)
 >> +			return ret;
@@ -559,6 +561,7 @@ Full Ack!
 >> +static int max1027_probe(struct spi_device *spi)
 >> +{
 >> +	int err;
+> After calling your error/return value ret before, it would be more consistent to do the same here.
 >> +	unsigned char *reg;
 >> +	struct iio_dev *indio_dev;
 >> +	struct max1027_state *st;
@@ -568,6 +571,7 @@ Full Ack!
 >> +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
 >> +	if (indio_dev == NULL) {
 >> +		pr_err("can't allocate iio device\n");
+> Start sentence with capital letter.
 >> +		return -ENOMEM;
 >> +	}
 >> +
@@ -577,9 +581,6 @@ Full Ack!
 >> +	st->spi = spi;
 >> +	st->info = (struct max1027_chip_info *)
 >> +		&max1027_chip_info_tbl[spi_get_device_id(spi)->driver_data];
-> Why not make st->info const as you don't ever change anything in it that
-> I can see...  Also gets rid of the ugly typecast.
->
 >> +
 >> +	mutex_init(&st->lock);
 >> +
@@ -632,6 +633,12 @@ Full Ack!
 >> +	/* Disable averaging */
 >> +	reg = (unsigned char *)st->buffer;
 >> +	*reg = MAX1027_AVG_REG;
+> What is your intention here? Why not define reg independently as u8 (or unsigned char, if it really has to be) and set your desired value?
+This will be avoiding cacheline issues for the spi_write and trying to avoid allocating two cachelines
+just to have 1 spare bytes to play with.
+
+This could be handled by an annonymous union, but they tend to just make code harder to read.
+(I typed a suggestion to do this in my review then deleted it as probably being a bad idea ;)
 >> +	err = spi_write(st->spi, reg, 1);
 >> +	if (err < 0) {
 >> +		dev_err(&indio_dev->dev, "Failed to configure averaging register\n");
@@ -679,7 +686,7 @@ Full Ack!
 >> +MODULE_AUTHOR("Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>");
 >> +MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
 >> +MODULE_LICENSE("GPL v2");
->>
+>
 > --
 > To unsubscribe from this list: send the line "unsubscribe linux-iio" in
 > the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
