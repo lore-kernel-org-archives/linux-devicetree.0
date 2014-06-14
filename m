@@ -1,57 +1,35 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/6] thermal: sti: Introduce ST Thermal core code
-Date: Sun, 15 Jun 2014 00:31:56 +0200
-Message-ID: <20140614223156.GC1389@xo-6d-61-c0.localdomain>
-References: <1401980819-19962-1-git-send-email-lee.jones@linaro.org>
- <1401980819-19962-3-git-send-email-lee.jones@linaro.org>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] staging: imx-drm: ipu-v3: ipu-common.c: Cleaning up return of
+ uninitialized variable
+Date: Sun, 15 Jun 2014 01:35:20 +0200
+Message-ID: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401980819-19962-3-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, ajitpal.singh@st.com, edubezval@gmail.com, rui.zhang@intel.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Sascha Hauer <s.hauer@pengutronix.de>, Valentina Manea <valentina.manea.m@gmail.com>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 2014-06-05 16:06:55, Lee Jones wrote:
-> This core is shared by both ST's 'memory mapped' and
-> 'system configuration register' based Thermal controllers.
-> 
-> Signed-off-by: Ajit Pal Singh <ajitpal.singh@st.com>
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+Before when there was an error a uninitialized variable would be returnd.
+Now it returns -ENODEV
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+This was found using a static code analysis program called cppcheck.
 
+Rickard Strandqvist (1):
+  staging: imx-drm: ipu-v3: ipu-common.c:  Cleaning up return of uninitialized variable
 
-
-> +++ b/drivers/thermal/st/st_thermal.c
-> @@ -0,0 +1,313 @@
-> +/*
-> + * ST Thermal Sensor Driver core routines
-> + * Author: Ajit Pal Singh <ajitpal.singh@st.com>
-> + *
-> + * Copyright (C) 2003-2014 STMicroelectronics (R&D) Limited
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + *
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +
-> +#include "st_thermal.h"
-...
-> +/* Callback to get temperature from HW*/
-
-Add space before */, but feel free to do it in followup patch.
-
+ drivers/staging/imx-drm/ipu-v3/ipu-common.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
 -- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+1.7.10.4
