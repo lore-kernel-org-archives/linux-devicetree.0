@@ -1,19 +1,19 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+From: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
 Subject: Re: [PATCH v6] iio: add support of the max1027
-Date: Sat, 14 Jun 2014 13:05:58 +0100
-Message-ID: <539C3AA6.4030004@kernel.org>
+Date: Sat, 14 Jun 2014 15:52:45 +0200
+Message-ID: <539C53AD.4020504@gmx.de>
 References: <1402148312-22663-1-git-send-email-tremyfr@yahoo.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset=ISO-8859-15
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1402148312-22663-1-git-send-email-tremyfr-Qt13gs6zZMY@public.gmane.org>
 Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, knaack.h-Mmb7MZpHnFY@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/06/14 14:38, Philippe Reynes wrote:
+Philippe Reynes schrieb:
 > This driver add partial support of the
 > maxim 1027/1029/1031. Differential mode is not
 > supported.
@@ -21,25 +21,14 @@ On 07/06/14 14:38, Philippe Reynes wrote:
 > It was tested on armadeus apf27 board.
 >
 > Signed-off-by: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
-Hi,
-
-There is one trivial bit inline.   If no one else raises anything
-about this driver, I may well just fix that up and take this later
-today.
-
-I'd ideally like to collect reviewed-by or acked-by from the various
-people who have reviewed the driver (to make sure their hard work is
-not forgotten!)  Hence I might let this sit for a little longer
-
-Jonathan
 > ---
->   .../devicetree/bindings/iio/adc/max1027-adc.txt    |   22 +
->   drivers/iio/adc/Kconfig                            |    9 +
->   drivers/iio/adc/Makefile                           |    1 +
->   drivers/iio/adc/max1027.c                          |  522 ++++++++++++++++++++
->   4 files changed, 554 insertions(+), 0 deletions(-)
->   create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
->   create mode 100644 drivers/iio/adc/max1027.c
+>  .../devicetree/bindings/iio/adc/max1027-adc.txt    |   22 +
+>  drivers/iio/adc/Kconfig                            |    9 +
+>  drivers/iio/adc/Makefile                           |    1 +
+>  drivers/iio/adc/max1027.c                          |  522 ++++++++++++++++++++
+>  4 files changed, 554 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/max1027-adc.txt
+>  create mode 100644 drivers/iio/adc/max1027.c
 >
 > Changelog:
 > v6: (thanks Peter Meerwald for the feedback)
@@ -73,7 +62,7 @@ Jonathan
 > - some others little cleanp
 >
 > v2: (thanks Hartmut Knaack and Jonathan Cameron for the feedback)
-> - really use devm_*
+> - really use devm_* 
 > - use demux magic
 > - use spi_read and spi_write (instead of spi_sync)
 > - use define for register (instead of hardcoded value)
@@ -106,17 +95,14 @@ Jonathan
 > +	interrupts = <15 IRQ_TYPE_EDGE_RISING>;
 > +	spi-max-frequency = <1000000>;
 > +};
-I think we can take the view on this that it is so simple that no
-one will mind.  Could in theory have gone in the trivial devices
-file but is fine on it's own.
 > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
 > index 24c28e3..517f886 100644
 > --- a/drivers/iio/adc/Kconfig
 > +++ b/drivers/iio/adc/Kconfig
 > @@ -119,6 +119,15 @@ config LP8788_ADC
->   	help
->   	  Say yes here to build support for TI LP8788 ADC.
->
+>  	help
+>  	  Say yes here to build support for TI LP8788 ADC.
+>  
 > +config MAX1027
 > +	tristate "Maxim max1027 ADC driver"
 > +	depends on SPI
@@ -126,21 +112,21 @@ file but is fine on it's own.
 > +	  Say yes here to build support for Maxim SPI ADC models
 > +	  max1027, max1029 and max1031.
 > +
->   config MAX1363
->   	tristate "Maxim max1363 ADC driver"
->   	depends on I2C
+>  config MAX1363
+>  	tristate "Maxim max1363 ADC driver"
+>  	depends on I2C
 > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
 > index ab346d8..daac784 100644
 > --- a/drivers/iio/adc/Makefile
 > +++ b/drivers/iio/adc/Makefile
 > @@ -14,6 +14,7 @@ obj-$(CONFIG_AD7887) += ad7887.o
->   obj-$(CONFIG_AT91_ADC) += at91_adc.o
->   obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
->   obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
+>  obj-$(CONFIG_AT91_ADC) += at91_adc.o
+>  obj-$(CONFIG_EXYNOS_ADC) += exynos_adc.o
+>  obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
 > +obj-$(CONFIG_MAX1027) += max1027.o
->   obj-$(CONFIG_MAX1363) += max1363.o
->   obj-$(CONFIG_MCP320X) += mcp320x.o
->   obj-$(CONFIG_MCP3422) += mcp3422.o
+>  obj-$(CONFIG_MAX1363) += max1363.o
+>  obj-$(CONFIG_MCP320X) += mcp320x.o
+>  obj-$(CONFIG_MCP3422) += mcp3422.o
 > diff --git a/drivers/iio/adc/max1027.c b/drivers/iio/adc/max1027.c
 > new file mode 100644
 > index 0000000..92d6c7f
@@ -175,6 +161,7 @@ file but is fine on it's own.
 > +#include <linux/iio/trigger_consumer.h>
 > +#include <linux/iio/triggered_buffer.h>
 > +
+We had some tendency on the list lately to include bitops.h and use BIT(n) instead of 1 << n. Jonathan, is it "planned" to switch to that style for the whole IIO subsystem? If so, it would safe some cleanup to implement it already in new drivers.
 > +#define MAX1027_CONV_REG  0x80
 > +#define MAX1027_SETUP_REG 0x40
 > +#define MAX1027_AVG_REG   0x20
@@ -243,6 +230,7 @@ file but is fine on it's own.
 > +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
 > +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE),	\
 > +		.scan_index = index+1,					\
+Separate operators with whitespaces.
 > +		.scan_type = {						\
 > +			.sign = 'u',					\
 > +			.realbits = 10,					\
@@ -356,8 +344,6 @@ file but is fine on it's own.
 > +
 > +struct max1027_state {
 > +	struct max1027_chip_info	*info;
-const
-
 > +	struct spi_device		*spi;
 > +	struct iio_trigger		*trig;
 > +	__be16				*buffer;
@@ -371,9 +357,6 @@ const
 > +	int ret;
 > +	struct max1027_state *st = iio_priv(indio_dev);
 > +	unsigned char *reg = (unsigned char *)st->buffer;
-I'd have a slight preference for u8 as it isn't a character in anyway
-and we have a convenient type defined for 8 bit unsigned.
-It is slight enough that I wouldn't ask for a respin for this...
 > +
 > +	if (iio_buffer_enabled(indio_dev)) {
 > +		dev_warn(&indio_dev->dev, "trigger mode already enabled");
@@ -491,6 +474,7 @@ It is slight enough that I wouldn't ask for a respin for this...
 > +	if (state) {
 > +		/* Start acquisition on cnvst */
 > +		*reg = MAX1027_SETUP_REG|MAX1027_CKS_MODE0|MAX1027_REF_MODE2;
+Also put some a whitespace around operators here.
 > +		ret = spi_write(st->spi, reg, 1);
 > +		if (ret < 0)
 > +			return ret;
@@ -504,6 +488,7 @@ It is slight enough that I wouldn't ask for a respin for this...
 > +	} else {
 > +		/* Start acquisition on conversion register write */
 > +		*reg = MAX1027_SETUP_REG|MAX1027_CKS_MODE2|MAX1027_REF_MODE2;
+And here as well.
 > +		ret = spi_write(st->spi, reg, 1);
 > +		if (ret < 0)
 > +			return ret;
@@ -557,6 +542,7 @@ It is slight enough that I wouldn't ask for a respin for this...
 > +static int max1027_probe(struct spi_device *spi)
 > +{
 > +	int err;
+After calling your error/return value ret before, it would be more consistent to do the same here.
 > +	unsigned char *reg;
 > +	struct iio_dev *indio_dev;
 > +	struct max1027_state *st;
@@ -566,6 +552,7 @@ It is slight enough that I wouldn't ask for a respin for this...
 > +	indio_dev = devm_iio_device_alloc(&spi->dev, sizeof(*st));
 > +	if (indio_dev == NULL) {
 > +		pr_err("can't allocate iio device\n");
+Start sentence with capital letter.
 > +		return -ENOMEM;
 > +	}
 > +
@@ -575,9 +562,6 @@ It is slight enough that I wouldn't ask for a respin for this...
 > +	st->spi = spi;
 > +	st->info = (struct max1027_chip_info *)
 > +		&max1027_chip_info_tbl[spi_get_device_id(spi)->driver_data];
-Why not make st->info const as you don't ever change anything in it that
-I can see...  Also gets rid of the ugly typecast.
-
 > +
 > +	mutex_init(&st->lock);
 > +
@@ -630,6 +614,7 @@ I can see...  Also gets rid of the ugly typecast.
 > +	/* Disable averaging */
 > +	reg = (unsigned char *)st->buffer;
 > +	*reg = MAX1027_AVG_REG;
+What is your intention here? Why not define reg independently as u8 (or unsigned char, if it really has to be) and set your desired value?
 > +	err = spi_write(st->spi, reg, 1);
 > +	if (err < 0) {
 > +		dev_err(&indio_dev->dev, "Failed to configure averaging register\n");
@@ -677,4 +662,3 @@ I can see...  Also gets rid of the ugly typecast.
 > +MODULE_AUTHOR("Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>");
 > +MODULE_DESCRIPTION("MAX1027/MAX1029/MAX1031 ADC");
 > +MODULE_LICENSE("GPL v2");
->
