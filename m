@@ -1,94 +1,71 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC PATCH] OF: fix of_find_node_by_path() assumption that
- of_allnodes is root
-Date: Sat, 14 Jun 2014 16:00:02 +0100
-Message-ID: <CACxGe6tv8H8yUYCs9N959T3KKDUDiDqJQ1LRfO5RJE3bxw5r5A@mail.gmail.com>
-References: <539A91E2.7000606@gmail.com> <CAL_JsqJ+f0CjwGnqTzXjMOAvbDOf0O3BZgcQwrzaWBy9Gwiw8A@mail.gmail.com>
- <CACxGe6sG+h7j9Npd-xR4-E13i=_p8OtbisgJv1PUzf981nGHUw@mail.gmail.com>
+From: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] rx51_battery: convert to iio consumer
+Date: Sat, 14 Jun 2014 17:47:33 +0200
+Message-ID: <20140614154733.GB13614@earth.universe>
+References: <1393375569-21751-1-git-send-email-sre@debian.org>
+ <1393705366-32420-1-git-send-email-sre@debian.org>
+ <1393705366-32420-2-git-send-email-sre@debian.org>
+ <5336A9F9.4080504@kernel.org>
+ <20140420120823.GB12135@amd.pavel.ucw.cz>
+ <20140423160936.GB32049@earth.universe>
+ <20140614083231.GA15326@Nokia-N900>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6sG+h7j9Npd-xR4-E13i=_p8OtbisgJv1PUzf981nGHUw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="TRYliJ5NKNqkz5bu"
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140614083231.GA15326@Nokia-N900>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Cc: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pali Roh?r <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 4:06 PM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Fri, Jun 13, 2014 at 2:52 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->> On Fri, Jun 13, 2014 at 12:53 AM, Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->>>
->>> Pantelis Antoniou reports that of_find_node_by_path() is borked because
->>> of_allnodes is not guaranteed to contain the root of the tree after using
->>> any of the dynamic update functions because some other nodes ends up as
->>> of_allnodes.
->>>
->>> Fixes: c22e650e66b8 of: Make of_find_node_by_path() handle /aliases
->>
->> Is it not possible to do a fix in of_find_node_by_path instead? I just
->> wonder if this could have any other unintended side-effects on
->> of_attach_node's behavior.
->
-> Given that I'm going to replace the custom list with list_head which
-> makes this problem go away, I think this solution is fine.
->
-> Acked-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
-That said, the following might be better because it would guarantee
-that children always appear after parents...
+--TRYliJ5NKNqkz5bu
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
->> Rob
->>
->>>
->>> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
->>> ---
->>>
->>>
->>> Pantelis,
->>>
->>> Can you test whether the problem you reported in irc?
->>>
->>> This patch has not been tested, not even compile tested.
->>>
->>>
->>>  drivers/of/base.c |    8       6 +     2 -     0 !
->>>  1 file changed, 6 insertions(+), 2 deletions(-)
->>>
->>> Index: b/drivers/of/base.c
->>> ===================================================================
->>> --- a/drivers/of/base.c
->>> +++ b/drivers/of/base.c
->>> @@ -1948,6 +1948,9 @@ int of_reconfig_notify(unsigned long act
->>>
->>>  /**
->>>   * of_attach_node - Plug a device node into the tree and global list.
->>> + *
->>> + * Put the device node after of_allnodes in the global list so that
->>> + * of_allnodes remains the root.
->>>   */
->>>  int of_attach_node(struct device_node *np)
->>>  {
->>> @@ -1958,11 +1961,12 @@ int of_attach_node(struct device_node *n
->>>         if (rc)
->>>                 return rc;
->>>
->>> +       BUG_ON(!of_allnodes);
->>>         raw_spin_lock_irqsave(&devtree_lock, flags);
->>>         np->sibling = np->parent->child;
->>> -       np->allnext = of_allnodes;
->>> +       np->allnext = of_allnodes->allnext;
+On Sat, Jun 14, 2014 at 10:32:32AM +0200, Pavel Machek wrote:
+> > The problem is, that the power subsystem maintainers seem to be too
+> > busy with real life. The last change in their git [0] was 2014-02-01
+> > and I haven't seen any mail from them on the mailinglist since about
+> > the same time. I have just queried his status @ Google+ (there were
+> > some life-signs there).
+>=20
+> If there is still no life out there, you may want to ask
+> Rafael W. to queue the patches...
 
-np->allnext = np->parent->allnext;
-np->parent->allnext = np;
+Don't worry, I haven't forgotten the patches. I don't think they
+make it into 3.16, but they will go into 3.17. For now I have
+put them into a dev branch on [0] and requested to take over the
+power supply subsystem (see thread [1] on LKML).
 
->>>         np->parent->child = np;
->>> -       of_allnodes = np;
->>> +       of_allnodes->allnext = np;
->>>         of_node_clear_flag(np, OF_DETACHED);
->>>         raw_spin_unlock_irqrestore(&devtree_lock, flags);
->>>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[0] https://git.kernel.org/cgit/linux/kernel/git/sre/linux-power-supply.git
+[1] https://lkml.org/lkml/2014/5/16/504
+
+-- Sebastian
+
+--TRYliJ5NKNqkz5bu
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBCgAGBQJTnG6UAAoJENju1/PIO/qahdAP/2AlUpdABUFOHnAoDN/pJKXn
+SJe9seEdV37eOfqoizjL9sZTD0JdaubgP/ryLBaFDIcUaaghkCx1kP1FkusaTeF/
+UzCr7yy8Hzdh2mfyhTiyIw9xVEz7eJ0QJ0tpF5SpJF9q7mKpZtbwzpMjukshN3nN
+0R9WnMXVRyXd7OGzC/eE4Ka1Nz2xXco2Ib9zja3dYdQXFEYg+swjiLbuOEyaObmG
+nyDrzeNq6Qx8FZ4E5n+gUSKZCfWCLyxoCQTvL+HR0HH/Aop5g4siLGxLDZ0dvSML
+dSO710Y0nbjaMnarsDIyADzOpFTyjHy+rgjjax4nPWyqWtkhaE1OPi9WA0uFSVrt
+RL7tAgzjwsAI8SjyfyRiKX0xvTxIivXLPSqB4+/JcNU/Dm/BB518ZktEqIXUHrrb
+lTjyQwcM39m+yk1+Jr1l2qOfWggEZlR6/a4yGJRPLWKUiX2SiSFuDbtWxLPTUhpE
+QGL8l7ijGXaGxoi9vPa7OR280iPhNeE60kMo7dpSZVhkjPml87mwDrCQy2keGz4Z
+oAjBPWEc0+PXvESll0NAXrl+EUWi9Zxgi+Jad1ABI+WIqdFg57p7O2MHX+0ngjPB
+3bkbCWoL2RCEhN5QZWKcEmAg9Jbm2LJ8zPiV6Bn+MEOeDIy7o8HRgz7lDXfX97QO
+vh673dAMRHtNXo5osaa5
+=hq0y
+-----END PGP SIGNATURE-----
+
+--TRYliJ5NKNqkz5bu--
