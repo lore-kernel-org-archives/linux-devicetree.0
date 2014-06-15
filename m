@@ -1,30 +1,66 @@
-From: Ming Lei <ming.lei@canonical.com>
-Subject: Re: [PATCH v1 0/2]ata: Fix the dma state machine lockup for APM
- X-Gene SoC
-Date: Sun, 15 Jun 2014 21:00:31 +0800
-Message-ID: <CACVXFVMCJ14KdKOTeidhE5_kMHNgbgz0axK+YB2i_c-iCNRruQ@mail.gmail.com>
-References: <1402574362-24986-1-git-send-email-stripathi@apm.com>
-	<CACVXFVMTfNtBe3FXNuo-UqzY5fx+CpGhSCBOspM9G6By8Oi4RA@mail.gmail.com>
-	<CAOHikRD+e2VLj8cN0B_D67bVosMmOf0rU-zuxFNeA8OgoypQGw@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 1/7] mfd: add atmel-hlcdc driver
+Date: Sun, 15 Jun 2014 16:48:58 +0200
+Message-ID: <539DB25A.4000201@free-electrons.com>
+References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com> <1402329860-27520-2-git-send-email-boris.brezillon@free-electrons.com> <539D5F24.1020304@traphandler.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <CAOHikRD+e2VLj8cN0B_D67bVosMmOf0rU-zuxFNeA8OgoypQGw@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <539D5F24.1020304@traphandler.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: jjhiblot@traphandler.com, Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>
+Cc: Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 13, 2014 at 7:03 PM, Suman Tripathi <stripathi@apm.com> wrote:
-> Hi Ming,
->
-> I also tested in our mustang board. It is working fine. Without this patch ,
-> I was also facing issues. Can send me the entire log of failure ?
+Hello JJ,
 
-Please see the dmsg log from patched kernel in below link:
+On 15/06/2014 10:53, Jean-Jacques Hiblot wrote:
+> On 06/09/2014 06:04 PM, Boris BREZILLON wrote:
+>> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
+>> family or sama5d3 family) exposes 2 subdevices:
+>> - a display controller (controlled by a DRM driver)
+>> - a PWM chip
+>>
+>> Add support for the MFD device which will just retrieve HLCDC clocks and
+>> create a regmap so that subdevices can access the HLCDC register range
+>> concurrently.
+>>
+>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+>> ---
+>>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  41 ++++++++
+>>  drivers/mfd/Kconfig                                |  11 ++
+>>  drivers/mfd/Makefile                               |   1 +
+[...]
+>> +	memset(&config, 0, sizeof(config));
+>> +	config.reg_bits = 32;
+>> +	config.val_bits = 32;
+>> +	config.reg_stride = 4;
+>> +	config.max_register = (resource_size(res) / 4) - 1;
+>> +	hlcdc->regmap = devm_regmap_init_mmio_clk(dev, "periph_clk", regs,
+>> +						  &config);
+> I don't think it's necessary to use "periph_clk" here. This clock will
+> always be running because the HLCDC needs it to work (it's not just an
+> interface clock). In the end it's just some extra work for each register
+> access.
 
-  http://pastebin.com/4XcnHyrV
+Yes, I thought about removing this clk from regmap registration too (for
+the exact same reason: avoiding extra enable/disable work when accessing
+registers), but ATM I do not prepare/enable periph_clk in the hlcdc-pwm
+driver, this means the regmap won't work until the hlcdc-dc driver has
+probed the display controller device.
 
-Thanks,
---
-Ming Lei
+How about preparing/enabling the periph_clk in the MFD device, so that
+PWM and Display Controller subdevices won't have to bother about this
+clk, and the regmap will work as expected ?
+Or, should we just prepare/enable the periph clock in each subdevices ?
+
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
