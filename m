@@ -1,56 +1,122 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] staging: imx-drm: ipu-v3: ipu-common.c: Cleaning up return of
- uninitialized variable
-Date: Sun, 15 Jun 2014 01:35:21 +0200
-Message-ID: <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-References: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v4 3/4] ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
+Date: Sun, 15 Jun 2014 03:33:22 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1406150331530.659@utopia.booyaka.com>
+References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274559-24777-1-git-send-email-rogerq@ti.com> <alpine.DEB.2.02.1406131901340.340@utopia.booyaka.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Sascha Hauer <s.hauer@pengutronix.de>, Valentina Manea <valentina.manea.m@gmail.com>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <alpine.DEB.2.02.1406131901340.340-rwI8Ez+7Ko+d5PgPZx9QOdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Roger Quadros <rogerq-l0cyMroinI0@public.gmane.org>
+Cc: tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, kishon-l0cyMroinI0@public.gmane.org, george.cherian-l0cyMroinI0@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Nikhil Devshatwar <nikhil.nd-l0cyMroinI0@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Before when there was an error a uninitialized variable would be returnd.
-Now it returns -ENODEV
+On Fri, 13 Jun 2014, Paul Walmsley wrote:
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
----
- drivers/staging/imx-drm/ipu-v3/ipu-common.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+> Hi Roger,
+> 
+> On Wed, 23 Apr 2014, Roger Quadros wrote:
+> 
+> > From: Nikhil Devshatwar <nikhil.nd-l0cyMroinI0@public.gmane.org>
+> > 
+> > Add hwmods for ocp2scp3 and sata modules.
+> > 
+> > [Roger Q] Clean up.
+> 
+> Sorry for the delay on this.  Have been corresponding with TI to figure 
+> out what to do about these DRA7xx/AM43xx patches, since I don't have 
+> boards or public documentation for these devices, so it's impossible for 
+> me to meaningfully review the patches.  Looks like boards and/or public 
+> docs won't be coming any time soon.
+> 
+> So for my part, here's what I'll need to merge any hwmod patches that 
+> involve AM437x or DRA7xx:
+> 
+> 1. A Reviewed-by: from one of the following folks (which should come from 
+> a different person than who is submitting the patches):
+> 
+> Roger Quadros
+> Nishanth Menon
+> Rajendra Nayak
+> Kevin Hilman
+> Tony Lindgren
+> 
+> 2. A Tested-by: from one of the following folks (who can be the same as 
+> the person who is the same as the person who is submitting the patches):
+> 
+> Nishanth Menon
+> Rajendra Nayak
+> Kevin Hilman 
+> Tony Lindgren
+> 
+> Once these are in place, I'd be happy to queue it for 3.16.
 
-diff --git a/drivers/staging/imx-drm/ipu-v3/ipu-common.c b/drivers/staging/imx-drm/ipu-v3/ipu-common.c
-index ca85d3d..468e364 100644
---- a/drivers/staging/imx-drm/ipu-v3/ipu-common.c
-+++ b/drivers/staging/imx-drm/ipu-v3/ipu-common.c
-@@ -1002,7 +1002,7 @@ static int ipu_add_client_devices(struct ipu_soc *ipu)
- {
- 	struct device *dev = ipu->dev;
- 	unsigned i;
--	int id, ret;
-+	int id;
- 
- 	mutex_lock(&ipu_client_id_mutex);
- 	id = ipu_client_id;
-@@ -1025,7 +1025,7 @@ static int ipu_add_client_devices(struct ipu_soc *ipu)
- err_register:
- 	platform_device_unregister_children(to_platform_device(dev));
- 
--	return ret;
-+	return -ENODEV;
- }
- 
- 
--- 
-1.7.10.4
+I've tried to clarify this a bit.  The update is below.
+
+
+- Paul
+
+
+
+For boards that I don't have access to, that I don't have 
+documentation for, such as the AM43xx and DRA7xx), for me to merge or ack 
+SoC infrastructure or PM-related patches, I want to have:
+
+1. a Reviewed-by: from people who:
+
+a. I think know something about SoC integration or PM in general, and 
+about OMAP-style integration specifically; and
+
+b. who have a track record of doing strong and detailed reviews of that 
+code, or who have contributed significantly to that code in the past.
+
+My initial list of those reviewers is listed above, and I am happy to 
+consider extending it or modifying that list.
+
+
+2. confidence that the patch or series has been tested against a mainline 
+commit and isn't obviously breaking other things, like PM, and confidence 
+that it's not adding new runtime warnings.
+
+I've listed an initial set of people above who I feel have proven track 
+records in testing who I'm happy to accept Tested-by:s without further 
+explanation.  I'm sure I've missed some folks and if anyone who should be 
+on that list is offended that I didn't mention them, please accept my 
+apologies.  For other folks, like yourself, who aren't on that list (yet), 
+please just specifically state:
+
+a. what mainline commit they've tested the patch against,
+
+b. what other prerequisite patches were needed for the patch to apply,
+
+c. and a cut-and-paste of the serial console boot log from the boot 
+portion of the test.
+
+in such a way that myself or someone else can easily doublecheck it. 
+
+And frankly, I'll probably be happy to merge it.
+
+After someone has done these three things a few times, and I gain 
+confidence that they're doing the right thing, I'm happy to add them to 
+my list.
+
+The testing doesn't have to be expressed via a Tested-by: tag in cases 
+where you're testing as part of a Signed-off-by:.  Just be sure to state 
+those three things above as part of the patch or series message.  The boot 
+log can either be placed on a different page and linked to, or sent in 
+another public E-mail.
+
+If you can get two or three people to do the above, that's great - the 
+more, the better.
+
+...
+
+These two steps do not apply to boards that I have in my testbed or which 
+I have documentation for (although they would definitely be very welcome 
+in those cases too).
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
