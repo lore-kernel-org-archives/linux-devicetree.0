@@ -1,55 +1,45 @@
-From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH V3 2/3] Documentation: gpio: Add APM X-Gene SoC GPIO
- controller DTS binding
-Date: Mon, 16 Jun 2014 08:02:35 +0900
-Message-ID: <CAAVeFuKnBzK5hfq0G+x7uJPbCrA9ejQMMAbPqLQLX2JJ1=MWKQ@mail.gmail.com>
-References: <1402362278-12419-1-git-send-email-fkan@apm.com> <1402362278-12419-3-git-send-email-fkan@apm.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/6] pinctrl: rockchip: support rk3288
+Date: Mon, 16 Jun 2014 01:35:33 +0200
+Message-ID: <1887108.ECBDVhibgn@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1402362278-12419-3-git-send-email-fkan@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: patches <patches@apm.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 10, 2014 at 10:04 AM, Feng Kan <fkan@apm.com> wrote:
-> Documentation for APM X-Gene SoC GPIO controller DTS binding.
->
-> Signed-off-by: Feng Kan <fkan@apm.com>
-> ---
->  .../devicetree/bindings/gpio/gpio-xgene.txt          | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
->
-> diff --git a/Documentation/devicetree/bindings/gpio/gpio-xgene.txt b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
-> new file mode 100644
-> index 0000000..bd5fd85
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/gpio-xgene.txt
-> @@ -0,0 +1,20 @@
-> +APM X-Gene SoC GPIO controller bindings
-> +
-> +This is a gpio controller that is part of the flash controller.
-> +This gpio controller controls a total of 48 gpios.
-> +
-> +Required properties:
-> +- compatible: "apm,xgene-gpio" for X-Gene GPIO controller
-> +- reg: Physical base address and size of the controller's registers
-> +- #gpio-cells: Should be two.
-> +       - first cell is the pin number
-> +       - second cell is used to specify optional parameters (unused)
-> +- gpio-controller: Marks the device node as a GPIO controller.
-> +
-> +Example:
-> +       gpio0: gpio0@1701c000 {
-> +               compatible = "apm,xgene-gpio";
-> +               reg = <0x0 0x1701c000 0x0 0x40>;
-> +               gpio-controller;
-> +               #gpio-cells = <2>;
-> +       };
+This series adds support for the rk3288 SoC.
 
-Much simpler, and a better fit if the number of banks and GPIOs are
-fixed on this chip as they seem to be.
+The first patch generalizes the gpio-only handling of the rk3188 into a
+general quirk-handling making it possible to deprecate the special bank
+compatible and also to add quirks of later SoCs.
 
-Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
+Patches 2 to 5 enable the driver to handle the quirks of rk3288 and
+patch 6 then simply adds the description of the rk3288 banks.
+
+Tested on a rk3288-evb and on a rk3188-radxarock with both the
+deprecated and new regular notation for bank0.
+
+Heiko Stuebner (6):
+  pinctrl: rockchip: generalize bank-quirks
+  pinctrl: rockchip: precalculate iomux offsets
+  pinctrl: rockchip: add support for 4bit wide iomux settings
+  pinctrl: rockchip: enable iomuxes from pmu space
+  pinctrl: rockchip: support unrouted iomuxes per bank
+  pinctrl: rockchip: add support for rk3288 pin-controller
+
+ .../bindings/pinctrl/rockchip,pinctrl.txt          |   4 +-
+ drivers/pinctrl/pinctrl-rockchip.c                 | 251 +++++++++++++++++----
+ 2 files changed, 215 insertions(+), 39 deletions(-)
+
+-- 
+1.9.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
