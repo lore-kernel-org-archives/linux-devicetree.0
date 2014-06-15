@@ -1,53 +1,140 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 4/8] iio: Add support for DA9150 GPADC
-Date: Sun, 15 Jun 2014 20:55:58 +0100
-Message-ID: <539DFA4E.5030203@kernel.org>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com> <3c1a7551c7deaeccdca731fa95f4349c57e04249.1402484954.git.Adam.Thomson.Opensource@diasemi.com> <ba29cc7f-7586-430c-8947-763510e04212@email.android.com> <2E89032DDAA8B9408CB92943514A0337A56F5455@SW-EX-MBX01.diasemi.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337A56F5455-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH 2/2] media: soc_camera: pxa_camera device-tree support
+Date: Sun, 15 Jun 2014 22:17:16 +0200
+Message-ID: <1402863436-30311-2-git-send-email-robert.jarzmik@free.fr>
+References: <1402863436-30311-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1402863436-30311-1-git-send-email-robert.jarzmik@free.fr>
+Sender: linux-media-owner@vger.kernel.org
+To: g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-On 11/06/14 17:56, Opensource [Adam Thomson] wrote:
-> On June 11, 2014 17:35, Jonathon Cameron wrote:
->
->> Hi Adam. Silly question but what are the _ channels?
->>
->> I have put in a perhaps optimistic data sheet request via the websit=
-e, throwing in
->> your name. Hope you don't mind!
->>
->> Jonathan
->
-> Hi Jonathon. Some of the _channels are a different representation of =
-the reading
-> (e.g. different scale - one would be 0-6V range, and one would be 0-2=
-1V for
-> example).
-Why? That is, why present the data twice with the different scales?
+Add device-tree support to pxa_camera host driver.
 
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ drivers/media/platform/soc_camera/pxa_camera.c | 80 ++++++++++++++++++++++++++
+ 1 file changed, 80 insertions(+)
 
-> Others provide identical readings to the non _channel but have left
-> those in to keep the channel numbering sane and easy to reference.
-If there is a reason to support this functionality, this is not a sensi=
-ble
-way to do it!
->
-> No problem regarding the request.
-> N=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BDr=EF=BF=BD=EF=BF=BDy=EF=
-=BF=BD=EF=BF=BD=EF=BF=BDb=EF=BF=BDX=EF=BF=BD=EF=BF=BD=C7=A7v=EF=BF=BD^=EF=
-=BF=BD)=DE=BA{.n=EF=BF=BD+=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD{=EF=BF=BD=
-=EF=BF=BD*"=EF=BF=BD=EF=BF=BD^n=EF=BF=BDr=EF=BF=BD=EF=BF=BD=EF=BF=BDz=EF=
-=BF=BD=1A=EF=BF=BD=EF=BF=BDh=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BD&=EF=BF=
-=BD=EF=BF=BD=1E=EF=BF=BDG=EF=BF=BD=EF=BF=BD=EF=BF=BDh=EF=BF=BD=03(=EF=BF=
-=BD=E9=9A=8E=EF=BF=BD=DD=A2j"=EF=BF=BD=EF=BF=BD=1A=EF=BF=BD=1Bm=EF=BF=BD=
-=EF=BF=BD=EF=BF=BD=EF=BF=BD=EF=BF=BDz=EF=BF=BD=DE=96=EF=BF=BD=EF=BF=BD=EF=
-=BF=BDf=EF=BF=BD=EF=BF=BD=EF=BF=BDh=EF=BF=BD=EF=BF=BD=EF=BF=BD~=EF=BF=BD=
-mml=3D=3D
->
+diff --git a/drivers/media/platform/soc_camera/pxa_camera.c b/drivers/media/platform/soc_camera/pxa_camera.c
+index d4df305..e48d821 100644
+--- a/drivers/media/platform/soc_camera/pxa_camera.c
++++ b/drivers/media/platform/soc_camera/pxa_camera.c
+@@ -34,6 +34,7 @@
+ #include <media/videobuf-dma-sg.h>
+ #include <media/soc_camera.h>
+ #include <media/soc_mediabus.h>
++#include <media/v4l2-of.h>
+ 
+ #include <linux/videodev2.h>
+ 
+@@ -1650,9 +1651,74 @@ static struct soc_camera_host_ops pxa_soc_camera_host_ops = {
+ 	.set_bus_param	= pxa_camera_set_bus_param,
+ };
+ 
++static const struct of_device_id pxacamera_dt_ids[] = {
++	{ .compatible = "mrvl,pxa_camera", },
++	{ }
++};
++
++static int pxa_camera_pdata_from_dt(struct device *dev,
++				    struct pxacamera_platform_data *pdata)
++{
++	int err = 0;
++	struct device_node *np = dev->of_node;
++	struct v4l2_of_endpoint ep;
++
++	dev_info(dev, "RJK: %s()\n", __func__);
++	err = of_property_read_u32(np, "mclk_10khz",
++				   (u32 *)&pdata->mclk_10khz);
++	if (!err)
++		pdata->flags |= PXA_CAMERA_MCLK_EN;
++
++	np = of_graph_get_next_endpoint(np, NULL);
++	if (!np) {
++		dev_err(dev, "could not find endpoint\n");
++		return -EINVAL;
++	}
++
++	err = v4l2_of_parse_endpoint(np, &ep);
++	if (err) {
++		dev_err(dev, "could not parse endpoint\n");
++		return err;
++	}
++
++	switch (ep.bus.parallel.bus_width) {
++	case 4:
++		pdata->flags |= PXA_CAMERA_DATAWIDTH_4;
++		break;
++	case 5:
++		pdata->flags |= PXA_CAMERA_DATAWIDTH_5;
++		break;
++	case 8:
++		pdata->flags |= PXA_CAMERA_DATAWIDTH_8;
++		break;
++	case 9:
++		pdata->flags |= PXA_CAMERA_DATAWIDTH_9;
++		break;
++	case 10:
++		pdata->flags |= PXA_CAMERA_DATAWIDTH_10;
++		break;
++	default:
++		break;
++	};
++
++	if (ep.bus.parallel.flags & V4L2_MBUS_MASTER)
++		pdata->flags |= PXA_CAMERA_MASTER;
++	if (ep.bus.parallel.flags & V4L2_MBUS_HSYNC_ACTIVE_HIGH)
++		pdata->flags |= PXA_CAMERA_HSP;
++	if (ep.bus.parallel.flags & V4L2_MBUS_VSYNC_ACTIVE_HIGH)
++		pdata->flags |= PXA_CAMERA_VSP;
++	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_RISING)
++		pdata->flags |= PXA_CAMERA_PCLK_EN | PXA_CAMERA_PCP;
++	if (ep.bus.parallel.flags & V4L2_MBUS_PCLK_SAMPLE_FALLING)
++		pdata->flags |= PXA_CAMERA_PCLK_EN;
++
++	return 0;
++}
++
+ static int pxa_camera_probe(struct platform_device *pdev)
+ {
+ 	struct pxa_camera_dev *pcdev;
++	struct pxacamera_platform_data pdata_dt;
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	int irq;
+@@ -1676,6 +1742,13 @@ static int pxa_camera_probe(struct platform_device *pdev)
+ 	pcdev->res = res;
+ 
+ 	pcdev->pdata = pdev->dev.platform_data;
++	if (&pdev->dev.of_node && !pcdev->pdata)
++		err = pxa_camera_pdata_from_dt(&pdev->dev, &pdata_dt);
++	if (err < 0)
++		return err;
++	else
++		pcdev->pdata = &pdata_dt;
++
+ 	pcdev->platform_flags = pcdev->pdata->flags;
+ 	if (!(pcdev->platform_flags & (PXA_CAMERA_DATAWIDTH_8 |
+ 			PXA_CAMERA_DATAWIDTH_9 | PXA_CAMERA_DATAWIDTH_10))) {
+@@ -1799,10 +1872,17 @@ static const struct dev_pm_ops pxa_camera_pm = {
+ 	.resume		= pxa_camera_resume,
+ };
+ 
++static const struct of_device_id pxa_camera_of_match[] = {
++	{ .compatible = "mrvl,pxa_camera", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, pxa_camera_of_match);
++
+ static struct platform_driver pxa_camera_driver = {
+ 	.driver		= {
+ 		.name	= PXA_CAM_DRV_NAME,
+ 		.pm	= &pxa_camera_pm,
++		.of_match_table = of_match_ptr(pxa_camera_of_match),
+ 	},
+ 	.probe		= pxa_camera_probe,
+ 	.remove		= pxa_camera_remove,
+-- 
+2.0.0.rc2
