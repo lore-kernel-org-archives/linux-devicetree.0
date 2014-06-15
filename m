@@ -1,66 +1,62 @@
-From: Frank Rowand <frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC PATCH] OF: fix of_find_node_by_path() assumption that of_allnodes
- is root
-Date: Sat, 14 Jun 2014 20:42:06 -0700
-Message-ID: <539D160E.5080208@gmail.com>
-References: <539A91E2.7000606@gmail.com> <CAL_JsqJ+f0CjwGnqTzXjMOAvbDOf0O3BZgcQwrzaWBy9Gwiw8A@mail.gmail.com> <CACxGe6sG+h7j9Npd-xR4-E13i=_p8OtbisgJv1PUzf981nGHUw@mail.gmail.com> <CACxGe6tv8H8yUYCs9N959T3KKDUDiDqJQ1LRfO5RJE3bxw5r5A@mail.gmail.com> <539D14CA.1060105@gmail.com> <539D1559.8080603@gmail.com>
-Reply-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+From: Houcheng Lin <houcheng@gmail.com>
+Subject: Re: [RFC PATCH] gpio: Add a defer reset object to send board specific reset
+Date: Sun, 15 Jun 2014 13:16:17 +0800
+Message-ID: <CAL8JtxAhx9R2XC11d_eAObnjxFVKQ6R7auvUd_=Uw40HYH3UyQ@mail.gmail.com>
+References: <1402189798-7665-1-git-send-email-houcheng@gmail.com>
+	<CACRpkdZvANiXp2S134jmcsFDr1m=dqGkpsf3Y6ZAg6mvd6RHOQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <539D1559.8080603-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <CACRpkdZvANiXp2S134jmcsFDr1m=dqGkpsf3Y6ZAg6mvd6RHOQ@mail.gmail.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/14/2014 8:39 PM, Frank Rowand wrote:
-> From: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> 
-> of_find_node_by_path() is borked because of_allnodes is not guaranteed to
-> contain the root of the tree after using any of the dynamic update functions
-> because some other nodes ends up as of_allnodes.
-> 
-> Fixes: c22e650e66b8 of: Make of_find_node_by_path() handle /aliases
-> Reported-by: pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org
-> Signed-off-by: Frank Rowand <frank.rowand-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
-> ---
-> 
-> v2:
->   Remove change to function header, no longer needed.
->   Remove BUG_ON(), no longer needed.
->   Add np as np->parent->allnext instead of np->parent->allnext, as suggested
+Hi Linus, please see my replies below,
 
-Aaaargh, cut and paste error, that should be:
+2014-06-12 20:35 GMT+08:00 Linus Walleij <linus.walleij@linaro.org>:
+>
+> OK this is interesting stuff..
+>
+> But this driver *MUST* live under drivers/power/reset/*, as it
+> has absolutely *nothing* to do with GPIO except for being a consumer
+> of it. I won't merge it.
+>
+> And you should discuss it with Dmitry and David W.
+>
+> But I will review it nevertheless :-D
 
-    Add np as np->parent->allnext instead of of_allnodes->allnext, as suggested
+Thanks for this information, I changed source to under drivers/
+power/reset.
 
->     by Grant Likely.
-> 
-> 
->  drivers/of/base.c |    4 	2 +	2 -	0 !
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> Index: b/drivers/of/base.c
-> ===================================================================
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -1960,9 +1960,9 @@ int of_attach_node(struct device_node *n
->  
->  	raw_spin_lock_irqsave(&devtree_lock, flags);
->  	np->sibling = np->parent->child;
-> -	np->allnext = of_allnodes;
-> +	np->allnext = np->parent->allnext;
-> +	np->parent->allnext = np;
->  	np->parent->child = np;
-> -	of_allnodes = np;
->  	of_node_clear_flag(np, OF_DETACHED);
->  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
->  
-> 
+>
+> OK so reset init and reset end is a way to specify when reset
+> is asserted (as one or zero).
+>
+> DON'T do this. The GPIO bindings already know a way to define
+> if GPIOs are active high or low, and the gpiod interface will invert
+> the signal for you if this is specified as active low.
+>
+> This way you get rid of both strange properties.
+>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+May I reserve the "reset-init" and ""reset-end" properties? As
+some boards use power line off to reset device. The power line
+is active high when as power but active low when as a reset signal.
+
+>
+> You forgot to free the deferred_reset_list here. Fix that.
+>
+
+Thank a lot for your reviews :) Here are fixed of version 2:
+    - change location to drivers/power/reset
+    - remove unused #include
+    - change to use GPIO descriptor interface and use customer.h
+    - free resources after issue reset. However, if a enclosing
+      chip is not probled, the correpsonding reset will not send
+      and memeory is still not free in this case.
+    - other minor fixs
+
+Best regards,
+Houcheng Lin
