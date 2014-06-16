@@ -1,121 +1,181 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/8] mfd: Add support for DA9150 combined charger & fuel-gauge
- device
-Date: Mon, 16 Jun 2014 21:13:16 +0100
-Message-ID: <539F4FDC.80300@kernel.org>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com> <bf472aa7fddd1e67a3d5b9024b5b621744146a27.1402484954.git.Adam.Thomson.Opensource@diasemi.com> <539DF8C6.8030009@kernel.org> <2E89032DDAA8B9408CB92943514A0337AB4FD95E@SW-EX-MBX01.diasemi.com>
+From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
+Date: Mon, 16 Jun 2014 13:13:37 -0700
+Message-ID: <CAODwPW9w0sKme=QSthJN7QACGcwpR6NmxufFtirkm6d3XYZ1_g@mail.gmail.com>
+References: <1402689965-19397-1-git-send-email-jwerner@chromium.org>
+	<CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com>
+	<CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com>
+	<CALiw-2GWHKPbXuMFXUHY_pgpUJNdqQbyPEV1UjEep3zD2sSRPQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB4FD95E-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
+In-Reply-To: <CALiw-2GWHKPbXuMFXUHY_pgpUJNdqQbyPEV1UjEep3zD2sSRPQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+To: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <stephen.r.warren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stefan Reinauer <stefan.reinauer-7ChRSZmxDtxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, David Hendrix <dhendrix-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16/06/14 14:12, Opensource [Adam Thomson] wrote:
-> On Sun, Jun 15, 2014 at 20:49, Jonathan Cameron wrote:
->
->> Hi Adam,
+On Mon, Jun 16, 2014 at 6:30 AM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Fri, Jun 13, 2014 at 4:58 PM, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+>>> This is just to export a fixed log to userspace (like a DMI table) or
+>>> the kernel will actually use the data in some way? Based on the link,
+>>> it looks like the former to me.
 >>
->> Some general comments inline.
+>> I could imagine both. The link is an in-kernel driver that exposes a
+>> log through a sysfs node (in a way that has already been established
+>> on x86 systems, which find the location through EBDA or ACPI entries
+>> instead). We are also using a user-space tool that reads the address
+>> from /proc/device-tree and accesses it through /dev/mem. The areas can
+>> contain many interesting entries (like the location of an early
+>> framebuffer set up by the firmware), so I could also imagine use cases
+>> where the kernel makes use of it directly.
+>
+> I can be argued that the boot interface is DT and any configuration
+> data should be put there in a common way. We don't really need yet
+> another boot mechanism as we already have:
+>
+> UEFI + FDT
+> UEFI + ACPI
+> "standard" bootloaders (e.g. u-boot, grub, barebox, etc.) + FDT
+>
+> Allowing every bootloader to define its own boot interfaces would only
+> result in a mess for both code and testing. I don't want to get into a
+> debate about this now as it is not too relevant to this patch, but
+> just want to highlight the resistance you will face going down this
+> path.
+>
+>>> Don't you need need to keep the kernel from allocating this memory by
+>>> using one of the reserved memory mechanisms? The recently added one
+>>> should be able to specific what the memory is reserved for IIRC.
 >>
->> It's been a while since I've looked at any particularly similar parts,
->> but it seems to me that a lot of indirection gets added here that
->> if anything makes the codes slightly harder to follow...
->>
->> Feel free to disagree with me though!
+>> Our bootloader is carving the location out of the /memory node and
+>> adding it to the device tree reserve map. As far as I know, that only
+>> contains a list of raw start and size entries. At any rate, I think
+>> it's useful (and in line with other bindings) to add a more explicit
+>> node like this (if only to make it easier accessible through
+>> /proc/device-tree).
 >
-> Will do :)
+> Understand there are 3 different memory reservation bindings. The
+> original "/memreserve/" method is indeed limited. What I think you
+> should use is the binding documented in
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+> So you could do something like this:
 >
->> To my mind all these wrappers add nothing significant so you might as well
->> just call da9150->read_dev etc directly.
->>
->> Also, what are the read_qif and write_qif for?  They don't seem to be used
->> anywhere.
+>        reserved-memory {
+>                #address-cells = <1>;
+>                #size-cells = <1>;
+>                ranges;
 >
-> read_qif and write_qif are for the Fuel-Gauge functionality of the chip. The
-> associated driver will be submitted after acceptance of initial driver code,
-> and will make use of these functions.
-I'll be interested to see how this interacts with the rest of the driver.
-Or does it?  Often these dual i2c address devices are best handled as two
-entirely separate drivers sitting on the same bus.  No idea if that
-is true here as don't have a datasheet!
+>                /* global autoconfigured region for contiguous allocations */
+>                linux,cma {
+>                        compatible = "shared-dma-pool";
+>                        reusable;
+>                        size = <0x4000000>;
+>                        alignment = <0x2000>;
+>                        linux,cma-default;
+>                };
 >
-> The wrappers automatically choose the correct client to use (QIF uses a
-> different slave address to the main chip one). Means the child drivers only need
-> to pass through the da9150 struct and the rest is dealt with underneath.
+>                coreboot_reserved: coreboot@fdfea000 {
+>                      compatible = "coreboot";
+>                      reg = <0xfdfea000 0x264>,
+>                          <0xfdfea000 0x16000>;
+>                };
 >
->> The only real reason I can see for these wrappers is because you want
->> to hide the struct da9150 contents from the children of the mfd. As you
->> aren't doing that, you might as well drop these in favour of direct
->> calls to regmap_read and friends.
 >
-> As I have a need to pass through the main da9150 struct point for the
-> aforementioned wrappers, it seemed cleaner and more consistent to have wrappers
-> for these as well, which did the job of regmap access. Means all HW access
-> uses the same kind of approach, and all sub-devices just need a point to the
-> main da9150 struct to be able to use the functions.
->
->> I'll continue my tirade against obvious comments. Wrong format and
->> adds nothing to what is here as init and exit functions are clearly
->> doing what their name suggests (it's one of my pet hates ;)
->
-> I agree the comment doesn't add much in terms of description but for me it
-> breaks up the code to make it easier to follow. However if I get an overwhelming
-> hatred for this I can change it. Also, I know the rule regarding single/multiple
-> line comments but here again I feel it helps separate the code and makes it
-> easier to read.
-Kernel code generally has to keep to the kernel coding style.  If you leave the
-single line comments as are, then chances are the mfd maintainers will get a
-patch soon after 'fixing' them which is always irritating.
 
-Having said that, mfd is their area not mine, so up to Lee / Samuel.
-The same is true of the code structure comments. Now for the IIO driver
-I get to be picky ;)
->
->> As a general good practice point, I'd rather that the driver supported
->> more than one instance of the chip.. Hence you'd take a copy of da9150_devs
->> to use here.  I guess it is relatively unlikely with one of these, but
->> you never know ;)
->
-> Have followed the general methods for MFD here, and a number of drivers take the
-> same approach. Also, I think it would be undesirable to have multiple charger
-> chips of the same type in one platform. I agree generally it's best to support
-> multiple instances, but here I don't think we should.
-I'm happy to let this go if it is something that would not be done, but we
-certainly should not be preventing it if someone wants to build hardware
-with more than one of these.  If they submit a patch later allowing it because
-they have hardware that does this, then there is no way anyone is going to
-block it.
->
->> Why does this need it's own file?  Does the DA9150 support any other
->> interfaces?
->
-> Yes, the DA9150 also has a SPI interface. At present the plan is to just add I2C
-> support for now, but in the future we may add SPI support, so have written the
-> code with this in mind.
->
->> Why the indirection?  The da9150 only supports i2c as far as I can see.
->
-> As per my last comment.
-Fair enough.  I couldn't find a datasheet and the product brief only seemed to mention
-i2c.
->
->> I'd roll this into one line and not bother with the local variable...
->
-> Fair enough but I think this keeps the code cleaner, and to me it makes sense
-> for the actual logic to be in core file as that's interface agnostic.
->
->> Drop comments on things that are self-evident.  Also these are one
->> line comments so should be using the single line comment syntax.
->
-> As per my previous comment I think it just helps to break up the code and makes
-> it more readable. Will change it though if the general consensus is to remove
-> it.
+Okay, I see. But do you really think this is the best way to specify
+that interface? Bindings for other firmware also seems to prefer some
+form of /firmware, so I think putting it there or under there is more
+consistent. Especially if we later find a need to add more properties
+to the coreboot node (maybe a version number, feature availability, or
+things like that), a reserved-memory node would feel like the wrong
+place for it to me.
 
+>>> /firmware is already used IIRC. What if you have other firmware such
+>>> as Trustzone?
+>>
+>> I'm not quite sure how Trusted Foundations works and whether it would
+>> even make sense to use it in parallel to coreboot, but it seems to be
+>> using the /firmware/trusted-foundations subnode so that should be
+>> fine. "firmware" seems to be used by other firmware implementations
+>> (like "samsung,secure-firmware") which are similar in nature to and
+>> mutually exclusive with coreboot, so I thought the node makes sense.
+>> (The kernel should use the compatible string to find it anyway, so a
+>> future name clash would not be world-ending.)
+>
+> They are not mutually exclusive. What runs in secure world or not is
+> entirely independent of non-secure boot. You may not care about it,
+> but other platforms could.
 
+On Mon, Jun 16, 2014 at 9:39 AM, Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> 2014-06-13 14:58 GMT-07:00 Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
+>>> This is just to export a fixed log to userspace (like a DMI table) or
+>>> the kernel will actually use the data in some way? Based on the link,
+>>> it looks like the former to me.
+>>
+>> I could imagine both. The link is an in-kernel driver that exposes a
+>> log through a sysfs node (in a way that has already been established
+>> on x86 systems, which find the location through EBDA or ACPI entries
+>> instead). We are also using a user-space tool that reads the address
+>> from /proc/device-tree and accesses it through /dev/mem. The areas can
+>> contain many interesting entries (like the location of an early
+>> framebuffer set up by the firmware), so I could also imagine use cases
+>> where the kernel makes use of it directly.
+>
+> Hmm. It'd be much better if the early framebuffer was communicated
+> using the already existing methods (i.e. simplefb device tree node).
+> That way we don't have to add custom code to grab it out of the
+> coreboot memory structure.
+>
+> Adding a platform driver for coreboot to do it later in boot isn't so
+> hard (and registering platform devices based on the contents), but we
+> probably need to be more generic if it is to be used in actual early
+> boot, which is the main use case for it.
+>
+
+The framebuffer was just a further example I could think of, I don't
+have any plans to add kernel code using it for the moment. I agree
+that it's better to define generic interfaces and have the firmware
+support those... but these take some time to flesh out, and I think
+there may always be cases of things that are too new or too specific
+to a particular firmware to have a generic interface (e.g. debug tools
+that could dump left-over firmware state to analyze a problem). I
+think having direct access to data structures like these is still
+useful, even if you also have support for generic interfaces.
+
+>>> Don't you need need to keep the kernel from allocating this memory by
+>>> using one of the reserved memory mechanisms? The recently added one
+>>> should be able to specific what the memory is reserved for IIRC.
+>>
+>> Our bootloader is carving the location out of the /memory node and
+>> adding it to the device tree reserve map. As far as I know, that only
+>> contains a list of raw start and size entries. At any rate, I think
+>> it's useful (and in line with other bindings) to add a more explicit
+>> node like this (if only to make it easier accessible through
+>> /proc/device-tree).
+>>
+>>> /firmware is already used IIRC. What if you have other firmware such
+>>> as Trustzone?
+>>
+>> I'm not quite sure how Trusted Foundations works and whether it would
+>> even make sense to use it in parallel to coreboot, but it seems to be
+>> using the /firmware/trusted-foundations subnode so that should be
+>> fine. "firmware" seems to be used by other firmware implementations
+>> (like "samsung,secure-firmware") which are similar in nature to and
+>> mutually exclusive with coreboot, so I thought the node makes sense.
+>> (The kernel should use the compatible string to find it anyway, so a
+>> future name clash would not be world-ending.)
+>
+> Right, coreboot really should go under /firmware/coreboot -- we
+> already use /firmware/chromeos on chromebooks to specify
+> chromeos-specific firmware properties, this follows that convention.
+>
+> The samsung,secure-firmware should probably also be moved to a
+> subnode. The binding shouldn't require a specific location no matter
+> what.
+
+Okay, fair enough. I'll upload a new patch that suggests
+/firmware/coreboot instead.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
