@@ -1,76 +1,65 @@
-From: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
-Date: Mon, 16 Jun 2014 09:39:07 -0700
-Message-ID: <CALiw-2GWHKPbXuMFXUHY_pgpUJNdqQbyPEV1UjEep3zD2sSRPQ@mail.gmail.com>
-References: <1402689965-19397-1-git-send-email-jwerner@chromium.org>
-	<CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com>
-	<CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com>
+From: Doug Anderson <dianders-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
+Date: Mon, 16 Jun 2014 09:49:26 -0700
+Message-ID: <CAD=FV=UaaRQVq3TmXMTv9OkER+zORC89YfPNjwZwfCQKmuavrw@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-4-git-send-email-tushar.b@samsung.com>
+	<CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
+	<539ED2C0.8030405@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <539ED2C0.8030405-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <stephen.r.warren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stefan Reinauer <stefan.reinauer-7ChRSZmxDtxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Brown <broonie-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-06-13 14:58 GMT-07:00 Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
->> This is just to export a fixed log to userspace (like a DMI table) or
->> the kernel will actually use the data in some way? Based on the link,
->> it looks like the former to me.
+Tushar,
+
+On Mon, Jun 16, 2014 at 4:19 AM, Tushar Behera <trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On 06/13/2014 10:33 PM, Doug Anderson wrote:
+>> Tushar,
+>>
+>> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>> Peach-pi board has MAX98090 audio codec connected on HSI2C-7 bus.
+>>
+>> If you want to be a stickler about it, peach-pi actually has a
+>> max98091.  That requires code changes to the i2c driver, though.
+>> ...and unfortunately listing two compatible strings for i2c devices is
+>> broken.  :(
+>>
+> Hi Doug,
 >
-> I could imagine both. The link is an in-kernel driver that exposes a
-> log through a sysfs node (in a way that has already been established
-> on x86 systems, which find the location through EBDA or ACPI entries
-> instead). We are also using a user-space tool that reads the address
-> from /proc/device-tree and accesses it through /dev/mem. The areas can
-> contain many interesting entries (like the location of an early
-> framebuffer set up by the firmware), so I could also imagine use cases
-> where the kernel makes use of it directly.
-
-Hmm. It'd be much better if the early framebuffer was communicated
-using the already existing methods (i.e. simplefb device tree node).
-That way we don't have to add custom code to grab it out of the
-coreboot memory structure.
-
-Adding a platform driver for coreboot to do it later in boot isn't so
-hard (and registering platform devices based on the contents), but we
-probably need to be more generic if it is to be used in actual early
-boot, which is the main use case for it.
-
->> Don't you need need to keep the kernel from allocating this memory by
->> using one of the reserved memory mechanisms? The recently added one
->> should be able to specific what the memory is reserved for IIRC.
+> You are right. I checked the boot logs, the detected codec type is
+> MAX98091. Since both these CODECs are supported through a single driver
+> and the detection of chip is done during runtime, I would suggest we go
+> ahead with "max98090" compatible string. I will update the commit
+> message accordingly.
 >
-> Our bootloader is carving the location out of the /memory node and
-> adding it to the device tree reserve map. As far as I know, that only
-> contains a list of raw start and size entries. At any rate, I think
-> it's useful (and in line with other bindings) to add a more explicit
-> node like this (if only to make it easier accessible through
-> /proc/device-tree).
->
->> /firmware is already used IIRC. What if you have other firmware such
->> as Trustzone?
->
-> I'm not quite sure how Trusted Foundations works and whether it would
-> even make sense to use it in parallel to coreboot, but it seems to be
-> using the /firmware/trusted-foundations subnode so that should be
-> fine. "firmware" seems to be used by other firmware implementations
-> (like "samsung,secure-firmware") which are similar in nature to and
-> mutually exclusive with coreboot, so I thought the node makes sense.
-> (The kernel should use the compatible string to find it anyway, so a
-> future name clash would not be world-ending.)
+> Does that sound okay to you?
 
-Right, coreboot really should go under /firmware/coreboot -- we
-already use /firmware/chromeos on chromebooks to specify
-chromeos-specific firmware properties, this follows that convention.
+As per my understanding you shouldn't do this.  You should have two patches:
 
-The samsung,secure-firmware should probably also be moved to a
-subnode. The binding shouldn't require a specific location no matter
-what.
+1. Add "max98091".  You could simply post Wonjoon's patch from
+<https://chromium-review.googlesource.com/184091>
+
+2. Change the device tree to refer to "max98091"
+
+The argument that the "current kernel driver has a single driver" is
+an argument that you're not supposed to make for device tree.  The
+same device tree is supposed to work for U-Boot, BSD, or any other
+platform.  On those platforms it might not be a shared driver.
 
 
--Olof
+> If you so desire, I will submit a patch to sort peach-pi device-tree
+> nodes (w.r.t. peach-pit dts file).
+
+Yes please.  I think there's supposed to be some official ordering of
+things.  If anyone reading this has a pointer to the official sort
+order of things in the device tree I'd love to see it!  ;)
+
+-Doug
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
