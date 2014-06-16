@@ -1,51 +1,61 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH v6 2/7] Documentation: bindings: add the Berlin SATA PHY
-Date: Mon, 16 Jun 2014 12:26:27 +0200
-Message-ID: <1402914392-6028-3-git-send-email-antoine.tenart@free-electrons.com>
-References: <1402914392-6028-1-git-send-email-antoine.tenart@free-electrons.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
+ v3.16
+Date: Mon, 16 Jun 2014 03:36:16 -0700
+Message-ID: <20140616103615.GB17845@atomide.com>
+References: <1401214140-9828-1-git-send-email-tony@atomide.com>
+ <20140528071313.GH4227@lee--X1>
+ <20140528180607.GB4707@atomide.com>
+ <20140602163841.GC11004@atomide.com>
+ <20140603080632.GC3060@lee--X1>
+ <20140612054348.GC17845@atomide.com>
+ <20140612074705.GB11421@lee--X1>
+ <20140612080030.GD17845@atomide.com>
+ <20140612083357.GB14323@lee--X1>
+ <20140616101743.GO14323@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1402914392-6028-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140616101743.GO14323@lee--X1>
+Sender: linux-omap-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Berlin SATA PHY drives the PHY related to the SATA interface. Add
-the corresponding documentation.
+* Lee Jones <lee.jones@linaro.org> [140616 03:19]:
+> > > > > Still not seeing this branch being merged..
+> > > > 
+> > > > Oh crap, I see what's happened and it's completely my fault.
+> > > > 
+> > > > If you read the final merge commit carefully:
+> > > > 
+> > > > 28fee3f: ("Merge branches 'ib-from-asoc-3.16', 'ib-from-pm-3.16',
+> > > > 'ib-from-regulator-3.16', 'ib-mfd-gpio-3.16' and
+> > > > 'ib-mfd-mmc-memstick-3.16', tags 'ib-mfd-extcon-3.16',
+> > > > 'ib-mfd-omap-3.16' and 'ib-mfd-regulator-3.16' into
+> > > > ibs-for-mfd-merged")
+> > > > 
+> > > > I appear to have a _branch_ AND a _tag_ called ib-mfd-omap-3.16 and it
+> > > > looks like Git has taken the tag as a preference. heads/ib-mfd-omap-3.16
+> > > > is actually at tag/ib-mfd-omap-3.16-1 (notice the appended '-1'),
+> > > > which contains your most recent patches.  Since I created the MFD-OMAP
+> > > > shared branch I have changed the naming convention to avoid this sort
+> > > > of ambiguity.  I'll send a second MFD pull-request to Linus today.
+> > > 
+> > > Heh OK yeah I've hit that also at some point :)
+> > >  
+> > > > Sorry Tony.
+> > > 
+> > > No problem, good to hear you got it figured out.
+> > 
+> > Pull-request sent.  Hopefully it's sorted now.
+> 
+> bae14e7a2dcb726476b5020396923a24ccc4c40b
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- Documentation/devicetree/bindings/phy/berlin-sata-phy.txt | 14 +++++++=
-+++++++
- 1 file changed, 14 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/berlin-sata-p=
-hy.txt
+Yes saw that thanks, omap PM tests are now working for
+me with v3.16-rc1.
 
-diff --git a/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt =
-b/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-new file mode 100644
-index 000000000000..72646db2f5fc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/berlin-sata-phy.txt
-@@ -0,0 +1,14 @@
-+Berlin SATA PHY
-+---------------
-+
-+Required properties:
-+- compatible: "marvell,berlin-sata-phy"
-+- phy-cells: from the generic PHY bindings, must be 1
-+- reg: address and length of the register
-+
-+Example:
-+	sata_phy: phy@f7e900a0 {
-+		compatible =3D "marvell,berlin-sata-phy";
-+		reg =3D <0xf7e900a0 0x200>;
-+		#phy-cells =3D <1>;
-+	};
---=20
-1.9.1
+Regards,
 
+Tony
