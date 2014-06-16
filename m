@@ -1,64 +1,88 @@
-From: Jaehoon Chung <jh80.chung@samsung.com>
-Subject: Re: [PATCHv7 2/2] ARM: dts: unuse the slot-node and deprecated
- supports-highspeed for dw-mmc.
-Date: Mon, 16 Jun 2014 16:47:05 +0900
-Message-ID: <539EA0F9.60508@samsung.com>
-References: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
- <1402633867-25155-3-git-send-email-jh80.chung@samsung.com>
- <CAPDyKFr46gaAnZc34ELv4GYaK+XjuiAcewTmgJU=iyC3WgxWVg@mail.gmail.com>
- <CAELcNGSOV2GD_uLO5HHuJgN2_pNoXtFrCmbPJh4RGc2pEaaYUA@mail.gmail.com>
- <CAPDyKFo18wi-kZHsoF4k_U9G8jK9maRj0DNs=3ciqUuDfxAHcw@mail.gmail.com>
+From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
+Subject: Re: [PATCH v2 1/7] mfd: add atmel-hlcdc driver
+Date: Mon, 16 Jun 2014 09:46:52 +0200
+Message-ID: <CACh+v5MJ92=jNVkpx=FS3bNYcr+Xw2MUpLDfqwpYsj1zNZOu9w@mail.gmail.com>
+References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1402329860-27520-2-git-send-email-boris.brezillon@free-electrons.com>
+ <539D5F24.1020304@traphandler.com>
+ <539DB25A.4000201@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-reply-to: <CAPDyKFo18wi-kZHsoF4k_U9G8jK9maRj0DNs=3ciqUuDfxAHcw@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Heiko St.bner" <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <539DB25A.4000201@free-electrons.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-doc@vger.kernel.org, David Airlie <airlied@linux.ie>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pwm <linux-pwm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2014 03:56 PM, Ulf Hansson wrote:
-> On 13 June 2014 15:31, Jae hoon Chung <jh80.chung@gmail.com> wrote:
->> Hi, Ulf.
->>
->>
->> 2014-06-13 20:14 GMT+09:00 Ulf Hansson <ulf.hansson@linaro.org>:
->>
->>> On 13 June 2014 06:31, Jaehoon Chung <jh80.chung@samsung.com> wrote:
->>>> dw-mmc controller can support multiple slots.
->>>> But, there are no use-cases anywhere. So we don't need to support the
->>>> slot-node for dw-mmc controller.
->>>> And "supports-highspeed" property in dw-mmc is deprecated.
->>>> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
->>>
->>> This looks good to me.
->>>
->>> Though, you need to help me understand how to handle this patch.
->>>
->>> 1) Is it to consider as a fix for 3.16?
->>
->> Right..It's related with "mmc: dw_mmc: use the mmc_of_parse() instead of
->> local parser"
->> DW-MMC didn't parse the subnode, so it didn't set to correct bus-width.
->>
->>> 2 ) I am not sure if there are a dependency to patch 1 - if not this
->>> patch is better suited for ARM SoC.
->>
->> It's not a dependency on patch 1.
->> Let me know how i do, plz.
-> 
-> I would suggest you to re-send it to the ARM lits and the ARM SoC guys
-> and keeping the respective SoC maintainer on the to list of course.
-> 
-> Add a note that it's intended as fix for 3.16 and you may also add my
-> reviewed by tag.
-Ok. I will resend the patch..Thanks
+2014-06-15 16:48 GMT+02:00 Boris BREZILLON <boris.brezillon@free-electrons.com>:
+>
+>
+> Hello JJ,
+>
+> On 15/06/2014 10:53, Jean-Jacques Hiblot wrote:
+> > On 06/09/2014 06:04 PM, Boris BREZILLON wrote:
+> >> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
+> >> family or sama5d3 family) exposes 2 subdevices:
+> >> - a display controller (controlled by a DRM driver)
+> >> - a PWM chip
+> >>
+> >> Add support for the MFD device which will just retrieve HLCDC clocks and
+> >> create a regmap so that subdevices can access the HLCDC register range
+> >> concurrently.
+> >>
+> >> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> >> ---
+> >>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  41 ++++++++
+> >>  drivers/mfd/Kconfig                                |  11 ++
+> >>  drivers/mfd/Makefile                               |   1 +
+> [...]
+> >> +    memset(&config, 0, sizeof(config));
+> >> +    config.reg_bits = 32;
+> >> +    config.val_bits = 32;
+> >> +    config.reg_stride = 4;
+> >> +    config.max_register = (resource_size(res) / 4) - 1;
+> >> +    hlcdc->regmap = devm_regmap_init_mmio_clk(dev, "periph_clk", regs,
+> >> +                                              &config);
+> > I don't think it's necessary to use "periph_clk" here. This clock will
+> > always be running because the HLCDC needs it to work (it's not just an
+> > interface clock). In the end it's just some extra work for each register
+> > access.
+>
+> Yes, I thought about removing this clk from regmap registration too (for
+> the exact same reason: avoiding extra enable/disable work when accessing
+> registers), but ATM I do not prepare/enable periph_clk in the hlcdc-pwm
+> driver, this means the regmap won't work until the hlcdc-dc driver has
+> probed the display controller device.
+>
+> How about preparing/enabling the periph_clk in the MFD device, so that
+> PWM and Display Controller subdevices won't have to bother about this
+> clk, and the regmap will work as expected ?
+> Or, should we just prepare/enable the periph clock in each subdevices ?
 
-Best Regards,
-Jaehoon Chung
-> 
-> Kind regards
-> Uffe
-> 
+I think the latest is the best approach. This way the PWM and the DRM
+driver can handle their clock gating independently. BTW it's quite
+probable that the PWM don't really needs this clock except for
+register access.
 
+>
+>
+>
+> Best Regards,
+>
+> Boris
+>
+> --
+> Boris Brezillon, Free Electrons
+> Embedded Linux and Kernel engineering
+> http://free-electrons.com
+>
