@@ -1,50 +1,57 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 3/4] brcmfmac: Fix some wrong register defines
-Date: Mon, 16 Jun 2014 19:56:46 +0200
-Message-ID: <1402941407-8210-4-git-send-email-hdegoede@redhat.com>
-References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORB2677SOAKGQENVEFCWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402941407-8210-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v2 00/10] Add Maxim 77802 PMIC support
+Date: Mon, 16 Jun 2014 20:02:28 +0200
+Message-ID: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
----
- drivers/net/wireless/brcm80211/brcmfmac/sdio_host.h | 12 ++++++------
- 1 file changed, 6 insertions(+), 6 deletions(-)
+MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
+32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
+a Real-Time-Clock (RTC) and a I2C interface to program the individual
+regulators, clocks and the RTC.
 
-diff --git a/drivers/net/wireless/brcm80211/brcmfmac/sdio_host.h b/drivers/net/wireless/brcm80211/brcmfmac/sdio_host.h
-index 3deab79..6e6a366 100644
---- a/drivers/net/wireless/brcm80211/brcmfmac/sdio_host.h
-+++ b/drivers/net/wireless/brcm80211/brcmfmac/sdio_host.h
-@@ -72,12 +72,12 @@
- #define SBSDIO_SPROM_DATA_HIGH		0x10003
- /* sprom indirect access addr byte 0 */
- #define SBSDIO_SPROM_ADDR_LOW		0x10004
--/* sprom indirect access addr byte 0 */
--#define SBSDIO_SPROM_ADDR_HIGH		0x10005
--/* xtal_pu (gpio) output */
--#define SBSDIO_CHIP_CTRL_DATA		0x10006
--/* xtal_pu (gpio) enable */
--#define SBSDIO_CHIP_CTRL_EN		0x10007
-+/* gpio select */
-+#define SBSDIO_GPIO_SELECT		0x10005
-+/* gpio output */
-+#define SBSDIO_GPIO_OUT			0x10006
-+/* gpio enable */
-+#define SBSDIO_GPIO_EN			0x10007
- /* rev < 7, watermark for sdio device */
- #define SBSDIO_WATERMARK		0x10008
- /* control busy signal generation */
--- 
-2.0.0
+This second version of the patch-set addresses several issues pointed
+out by Krzysztof Kozlowski, Mark Brown and Lee Jones. The individual
+changes are added on each patch change log.
+
+The series are based on drivers added by Simon Glass to the Chrome OS
+kernel and adds support for the Maxim 77802 Power Management IC, their
+regulators, clocks, RTC and I2C interface. It's composed of patches:
+
+[PATCH v2 1/10] mfd: max77686: Convert to use regmap_irq
+[PATCH v2 2/10] clk: max77686: add DT include for MAX77686 PMIC clock
+[PATCH v2 3/10] Documentation: dt: improve Maxim 77686 PMIC clocks binding
+[PATCH v2 4/10] clk: Add generic driver for Maxim PMIC clocks
+[PATCH v2 5/10] clk: max77686: convert to the generic max clock driver
+[PATCH v2 6/10] mfd: Add driver for Maxim 77802 Power Management IC
+[PATCH v2 7/10] regulator: Add driver for Maxim 77802 PMIC regulators
+[PATCH v2 8/10] clk: Add driver for Maxim 77802 PMIC clocks
+[PATCH v2 9/10] rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+[PATCH v2 10/10] ARM: dts: Add max77802 device node for exynos5420-peach-pit
+
+Patches 1-3 are improvements to the max77686 driver, Patch 4 adds a generic
+clock driver that can be shared by both max77686 and max77802 clock drivers
+and Patch 5 converts the former.
+
+Patches 6-9 add support for the different 77802 devices and Patch 10 enables
+the MAX77802 PMIC on the Exynos5420 based Peach pit board.
+
+The patch-set has been tested on both Daisy/Snow (max77686) and Peach pit
+(max77802) Chromebooks.
+
+NOTE: Since this series convert the max77686 driver to use regmap_irq API
+(getting rid of drivers/mfd/max77686-irq.c) and refactor the clock driver,
+the amount of duplicated code between 77686 and 77802 drivers were reduced
+significantly since v1. Still there is room for more code consolidation if
+the max77686 core mfd driver is extended to support max77802 instead.
+
+drivers/mfd/max14577.c is an example of such a combined driver that support
+two different Maxim PMIC (14577 and 77836) but I'm not convinced that having
+a single driver to support both 77686 and 77802 lead to a cleaner and more
+maintainable code than having two separate (and now smaller) mfd core drivers.
+
+Thanks a lot and best regards,
+Javier
