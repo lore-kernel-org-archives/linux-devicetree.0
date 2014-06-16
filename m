@@ -1,361 +1,105 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 1/7] mfd: add atmel-hlcdc driver
-Date: Mon, 16 Jun 2014 15:23:36 +0200
-Message-ID: <539EEFD8.20703@free-electrons.com>
-References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
- <1402329860-27520-2-git-send-email-boris.brezillon@free-electrons.com>
- <20140616125030.GT14323@lee--X1>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v9 4/5] ARM: sunxi: Add IR controllers on
+ A20 to dtsi
+Date: Mon, 16 Jun 2014 15:24:19 +0200
+Message-ID: <20140616132419.GA9757@lukather>
+References: <1402250893-5412-1-git-send-email-bay@hackerdom.ru>
+ <1402250893-5412-5-git-send-email-bay@hackerdom.ru>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140616125030.GT14323@lee--X1>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-doc@vger.kernel.org, David Airlie <airlied@linux.ie>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cNdxnHkX5QqsyA0e"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBL7A7OOAKGQELSCG5AQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402250893-5412-5-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Cc: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee,
 
-On 16/06/2014 14:50, Lee Jones wrote:
->> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
->> family or sama5d3 family) exposes 2 subdevices:
->> - a display controller (controlled by a DRM driver)
->> - a PWM chip
->>
->> Add support for the MFD device which will just retrieve HLCDC clocks and
->> create a regmap so that subdevices can access the HLCDC register range
->> concurrently.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> ---
->>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  41 ++++++++
->>  drivers/mfd/Kconfig                                |  11 ++
->>  drivers/mfd/Makefile                               |   1 +
->>  drivers/mfd/atmel-hlcdc.c                          | 116 +++++++++++++++++++++
->>  include/linux/mfd/atmel-hlcdc.h                    |  78 ++++++++++++++
->>  5 files changed, 247 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
->>  create mode 100644 drivers/mfd/atmel-hlcdc.c
->>  create mode 100644 include/linux/mfd/atmel-hlcdc.h
->> diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
->> new file mode 100644
->> index 0000000..f5b69cb
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
->> @@ -0,0 +1,41 @@
->> +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD driver
->> +
->> +Required properties:
->> + - compatible: value should be one of the following:
->> +   "atmel,sama5d3-hlcdc"
->> + - reg: base address and size of the HLCDC device registers.
->> + - clock-names: the name of the 3 clocks requested by the HLCDC device.
->> +   Should contain "periph_clk", "sys_clk" and "slow_clk".
->> + - clocks: should contain the 3 clocks requested by the HLCDC device.
->> +
->> +The HLCDC IP exposes two subdevices:
->> + - a PWM chip: see Documentation/devicetree/bindings/pwm/atmel-hlcdc-pwm.txt
->> + - a Display Controller: see Documentation/devicetree/bindings/drm/atmel-hlcdc-dc.txt
->> +
->> +Example:
->> +
->> +	hlcdc: hlcdc@f0030000 {
->> +		compatible = "atmel,sama5d3-hlcdc";
->> +		reg = <0xf0030000 0x2000>;
->> +		clocks = <&lcdc_clk>, <&lcdck>, <&clk32k>;
->> +		clock-names = "periph_clk","sys_clk", "slow_clk";
->> +		status = "disabled";
-> Not sure you really want to disable the the node in the example.
+--cNdxnHkX5QqsyA0e
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Nope, I'll remove this line.
+Hi,
 
->> +		hlcdc-display-controller {
->> +			compatible = "atmel,hlcdc-dc";
->> +			interrupts = <36 IRQ_TYPE_LEVEL_HIGH 0>;
-> I assume you're using the 3rd parameter for flags.  If so, please use
-> the defines.
+On Mon, Jun 09, 2014 at 12:08:12AM +0600, Alexander Bersenev wrote:
+> This patch adds records for two IR controllers on A20
+>=20
+> Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+> Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/sun7i-a20.dtsi | 18 ++++++++++++++++++
+>  1 file changed, 18 insertions(+)
+>=20
+> diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a=
+20.dtsi
+> index c057c3e..fe1f8ff 100644
+> --- a/arch/arm/boot/dts/sun7i-a20.dtsi
+> +++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+> @@ -763,6 +763,24 @@
+>  			interrupts =3D <0 24 4>;
+>  		};
+> =20
+> +		ir0: ir@01c21800 {
+> +			compatible =3D "allwinner,sun7i-a20-ir";
+> +			clocks =3D <&apb0_gates 6>, <&ir0_clk>;
+> +			clock-names =3D "apb", "ir";
+> +			interrupts =3D <0 5 4>;
+> +			reg =3D <0x01c21800 0x40>;
+> +			status =3D "disabled";
+> +		};
+> +
+> +		ir1: ir@01c21c00 {
+> +			compatible =3D "allwinner,sun7i-a20-ir";
+> +			clocks =3D <&apb0_gates 7>, <&ir1_clk>;
+> +			clock-names =3D "apb", "ir";
+> +			interrupts =3D <0 6 4>;
+> +			reg =3D <0x01c21c00 0x40>;
+> +			status =3D "disabled";
+> +		};
+> +
+>  		lradc: lradc@01c22800 {
+>  			compatible =3D "allwinner,sun4i-lradc-keys";
+>  			reg =3D <0x01c22800 0x100>;
 
-No, the third parameter encodes the irq priority (from 0 to 7 IIRC).
+I'm fine with this patch, but it doesn't apply, since the above node
+doesn't exist. Please rebase on top of v3.16-rc1 and resend the patch.
 
->> +			pinctrl-names = "default", "rgb-444", "rgb-565", "rgb-666", "rgb-888";
->> +			pinctrl-0 = <&pinctrl_lcd_base>;
->> +			pinctrl-1 = <&pinctrl_lcd_base &pinctrl_lcd_rgb444>;
->> +			pinctrl-2 = <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
->> +			pinctrl-3 = <&pinctrl_lcd_base &pinctrl_lcd_rgb666>;
->> +			pinctrl-4 = <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
->> +		};
->> +
->> +		hlcdc_pwm: hlcdc-pwm {
->> +			compatible = "atmel,hlcdc-pwm";
->> +			pinctrl-names = "default";
->> +			pinctrl-0 = <&pinctrl_lcd_pwm>;
->> +			#pwm-cells = <3>;
->> +		};
->> +	};
->> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
->> index ee8204c..82777f6 100644
->> --- a/drivers/mfd/Kconfig
->> +++ b/drivers/mfd/Kconfig
->> @@ -59,6 +59,17 @@ config MFD_AAT2870_CORE
->>  	  additional drivers must be enabled in order to use the
->>  	  functionality of the device.
->>  
->> +config MFD_ATMEL_HLCDC
->> +	tristate "Atmel HLCDC (High LCD Controller)"
-> What's the difference between a high and a low controller?
+Maxime
 
-I don't know exactly.
-I guess the name changed when the LCD Controller design changed.
-Maybe "High-end LCD Controller" would be better...
-
-Nicolas, can you help me on this one ?
-
->
->> +	select MFD_CORE
->> +	select REGMAP_MMIO
->> +	help
->> +	  Choose this option if you have an ATMEL SoC with an HLCDC (High
->> +	  LCD Controller) IP (i.e. at91sam9n12, at91sam9x5 family or sama5d3
->> +	  family).
->> +	  This MFD device exposes two subdevices: a PWM chip and a Display
->> +	  Controller.
->> +
->>  config MFD_BCM590XX
->>  	tristate "Broadcom BCM590xx PMUs"
->>  	select MFD_CORE
->> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
->> index 8afedba..5f25b0d 100644
->> --- a/drivers/mfd/Makefile
->> +++ b/drivers/mfd/Makefile
->> @@ -156,6 +156,7 @@ obj-$(CONFIG_MFD_PM8921_CORE) 	+= pm8921-core.o ssbi.o
->>  obj-$(CONFIG_TPS65911_COMPARATOR)	+= tps65911-comparator.o
->>  obj-$(CONFIG_MFD_TPS65090)	+= tps65090.o
->>  obj-$(CONFIG_MFD_AAT2870_CORE)	+= aat2870-core.o
->> +obj-$(CONFIG_MFD_ATMEL_HLCDC)	+= atmel-hlcdc.o
->>  obj-$(CONFIG_MFD_INTEL_MSIC)	+= intel_msic.o
->>  obj-$(CONFIG_MFD_PALMAS)	+= palmas.o
->>  obj-$(CONFIG_MFD_VIPERBOARD)    += viperboard.o
->> diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
->> new file mode 100644
->> index 0000000..e4636e8
->> --- /dev/null
->> +++ b/drivers/mfd/atmel-hlcdc.c
->> @@ -0,0 +1,116 @@
->> +/*
->> + * Copyright (C) 2014 Free Electrons
->> + * Copyright (C) 2014 Atmel
->> + *
->> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms of the GNU General Public License version 2 as published by
->> + * the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/mfd/atmel-hlcdc.h>
->> +#include <linux/mfd/core.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
-> Looks like you're inheriting the clk and regmap header files - don't
-> do that.  Each source file which uses the interfaces should include
-> them independently.
-
-Okay, I'll explicitly include clk and regmap headers.
-
->
->> +static const struct mfd_cell atmel_hlcdc_cells[] = {
->> +	{
->> +		.name = "atmel-hlcdc-pwm",
->> +		.of_compatible = "atmel,hlcdc-pwm",
->> +	},
->> +	{
->> +		.name = "atmel-hlcdc-dc",
->> +		.of_compatible = "atmel,hlcdc-dc",
->> +	},
->> +};
->> +
->> +static int atmel_hlcdc_probe(struct platform_device *pdev)
->> +{
->> +	struct device *dev = &pdev->dev;
->> +	struct regmap_config config;
->> +	struct atmel_hlcdc *hlcdc;
->> +	struct resource *res;
->> +	void __iomem *regs;
->> +
->> +	hlcdc = devm_kzalloc(dev, sizeof(*hlcdc), GFP_KERNEL);
->> +	if (!hlcdc)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> +	regs = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(regs))
->> +		return PTR_ERR(regs);
->> +
->> +	hlcdc->periph_clk = devm_clk_get(dev, "periph_clk");
->> +	if (IS_ERR(hlcdc->periph_clk)) {
->> +		dev_err(dev, "failed to get functional clock\n");
->> +		return PTR_ERR(hlcdc->periph_clk);
->> +	}
->> +
->> +	hlcdc->sys_clk = devm_clk_get(dev, "sys_clk");
->> +	if (IS_ERR(hlcdc->sys_clk)) {
->> +		dev_err(dev, "failed to get functional clock\n");
-> Can you be more descriptive?  This error message is the same as the
-> one above.  How will a user know which one has failed?
-
-This is a copy/paste error. I'll fix that.
-
->
->> +		return PTR_ERR(hlcdc->sys_clk);
->> +	}
->> +
->> +	hlcdc->slow_clk = devm_clk_get(dev, "slow_clk");
->> +	if (IS_ERR(hlcdc->slow_clk)) {
->> +		dev_err(dev, "failed to get slow clock\n");
->> +		return PTR_ERR(hlcdc->slow_clk);
->> +	}
->> +
->> +	memset(&config, 0, sizeof(config));
->> +	config.reg_bits = 32;
->> +	config.val_bits = 32;
->> +	config.reg_stride = 4;
->> +	config.max_register = (resource_size(res) / 4) - 1;
-> I'd prefer you did this as a separate struct, like everyone else
-> does.
-
-I tend to avoid static structures when they're used to initialize
-configurable things (here max_register depends on the resource size).
-This prevent getting the structure filled with dirty values from
-previous probe calls.
-Moreover, AFAIK, all the fields set in config are copied to the regmap
-struct during registration, and config pointer is never used after the
-registration has completed.
-
-Anyway, I can define a static struct and dynamically modify max_register.
-
->> +	hlcdc->regmap = devm_regmap_init_mmio_clk(dev, "periph_clk", regs,
->> +						  &config);
->> +	if (IS_ERR(hlcdc->regmap))
->> +		return PTR_ERR(hlcdc->regmap);
->> +
->> +	dev_set_drvdata(dev, hlcdc);
->> +
->> +	return mfd_add_devices(dev, -1, atmel_hlcdc_cells,
->> +			       ARRAY_SIZE(atmel_hlcdc_cells),
->> +			       NULL, 0, NULL);
->> +}
->> +
->> +static int atmel_hlcdc_remove(struct platform_device *pdev)
->> +{
->> +	mfd_remove_devices(&pdev->dev);
->> +
->> +	dev_set_drvdata(&pdev->dev, NULL);
-> This is done automatically for you - you can remove it.
-
-Okay.
-
->
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id atmel_hlcdc_match[] = {
->> +	{ .compatible = "atmel,sama5d3-hlcdc" },
->> +	{ },
->> +};
->> +
->> +static struct platform_driver atmel_hlcdc_driver = {
->> +	.probe = atmel_hlcdc_probe,
->> +	.remove = atmel_hlcdc_remove,
->> +	.driver = {
->> +		.name = "atmel-hlcdc",
->> +		.owner = THIS_MODULE,
->> +		.of_match_table = atmel_hlcdc_match,
-> Is this driver DT only?
-
-Yes it is.
-
->
->> +	},
->> +};
->> +module_platform_driver(atmel_hlcdc_driver);
->> +
->> +MODULE_ALIAS("platform:atmel-hlcdc");
->> +MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com>");
->> +MODULE_DESCRIPTION("Atmel HLCDC driver");
->> +MODULE_LICENSE("GPL");
->> diff --git a/include/linux/mfd/atmel-hlcdc.h b/include/linux/mfd/atmel-hlcdc.h
->> new file mode 100644
->> index 0000000..d7a5589
->> --- /dev/null
->> +++ b/include/linux/mfd/atmel-hlcdc.h
->> @@ -0,0 +1,78 @@
->> +/*
->> + * Copyright (C) 2014 Free Electrons
->> + * Copyright (C) 2014 Atmel
->> + *
->> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify it
->> + * under the terms of the GNU General Public License version 2 as published by
->> + * the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope that it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
->> + * more details.
->> + *
->> + * You should have received a copy of the GNU General Public License along with
->> + * this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#ifndef __LINUX_MFD_HLCDC_H
->> +#define __LINUX_MFD_HLCDC_H
->> +
->> +#include <linux/clk.h>
->> +#include <linux/regmap.h>
->> +
->> +#define ATMEL_HLCDC_CFG(i)		((i) * 0x4)
->> +#define ATMEL_HLCDC_SIG_CFG		LCDCFG(5)
->> +#define		ATMEL_HLCDC_HSPOL		BIT(0)
->> +#define		ATMEL_HLCDC_VSPOL		BIT(1)
->> +#define		ATMEL_HLCDC_VSPDLYS		BIT(2)
->> +#define		ATMEL_HLCDC_VSPDLYE		BIT(3)
->> +#define		ATMEL_HLCDC_DISPPOL		BIT(4)
->> +#define		ATMEL_HLCDC_DITHER		BIT(6)
->> +#define		ATMEL_HLCDC_DISPDLY		BIT(7)
->> +#define		ATMEL_HLCDC_MODE_MASK		0x300
->> +#define		ATMEL_HLCDC_PP			BIT(10)
->> +#define		ATMEL_HLCDC_VSPSU		BIT(12)
->> +#define		ATMEL_HLCDC_VSPHO		BIT(13)
->> +#define		ATMEL_HLCDC_GUARDTIME_MASK	0x1f0000
-> There should only be one space after '#define'.
-
-I'll fix that.
-
-Thanks for your review.
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
+
+--cNdxnHkX5QqsyA0e
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTnvADAAoJEBx+YmzsjxAgrvIP/ivUAegnXZuO7abzCG8lZ1gU
+FdLXWuoyU8ONZ3RQm2gdPvxECugIySP3n8U3VExhCY/k2zW2IkIEUPUqRfvo80EU
+LQvkGvXqJBK7iXUOxxP7zbyPaBnHwZpt7rnzXqw1+0fXLe0ulTkYv89efmnukzkA
+yLMIK72qnaKGKEd28Zj7kL+DqvCOi62VMOa0djpx07k20Eepln6gCG4rPsRkymjP
+vf4qXHd3UlZUlpZ0Cp8HrCOStajOfCI2rwdV2JnAxHNd76MrddM/G0huWfP5viAz
+pfdC6KdsuNzhIjnaP76zqV9kauQuDHr7j9sqNa6wFGod4MjM0MiXh8lyreohpknG
+bF3pD9QHHamOy7D596Ti8OnOWRkpBp/w5BzIpB2l0hCBV7yLQiHurkVSMtava60E
+HLZB1cuqkmaXYSwa3seUIhixV5g3+jIqJPVas6w81bJv8+PeV/xaNfFEqtHcnPgc
+e1NrB/lAr+9/gcqxZZqMCV0NLKobHpjZuR4jLj2NL2n+82c27FBBU/PR94iur82S
+Xb3Qe7UDT+dD7j1NS5Yd0DhrSrfIwjA7LpgTq7lDbYpwZ3nCdms/Rwo3+mu/Jq9f
+2YYswRz/naYPOAIMvJCEzAfsJzLchbos/u8ndKNwRiQZJErlsGogf61N2FrhK1ci
+zRpar6kTkTLKPJUhto3S
+=skBL
+-----END PGP SIGNATURE-----
+
+--cNdxnHkX5QqsyA0e--
