@@ -1,88 +1,78 @@
-From: Jean-Jacques Hiblot <jjhiblot@traphandler.com>
-Subject: Re: [PATCH v2 1/7] mfd: add atmel-hlcdc driver
-Date: Mon, 16 Jun 2014 09:46:52 +0200
-Message-ID: <CACh+v5MJ92=jNVkpx=FS3bNYcr+Xw2MUpLDfqwpYsj1zNZOu9w@mail.gmail.com>
-References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
- <1402329860-27520-2-git-send-email-boris.brezillon@free-electrons.com>
- <539D5F24.1020304@traphandler.com>
- <539DB25A.4000201@free-electrons.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCHv7 1/2] mmc: dw_mmc: replace "disable-wp" from slot's quirk
+ to host's quirk
+Date: Mon, 16 Jun 2014 10:30:27 +0200
+Message-ID: <CAPDyKFoxEs8k4ou0AyknL7-u7KYkg1==imNMSEv=imUS4KABNg@mail.gmail.com>
+References: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
+	<1402633867-25155-2-git-send-email-jh80.chung@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <539DB25A.4000201@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Samuel Ortiz <sameo@linux.intel.com>, linux-doc@vger.kernel.org, David Airlie <airlied@linux.ie>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dri-devel@lists.freedesktop.org, Nicolas Ferre <nicolas.ferre@atmel.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-pwm <linux-pwm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <1402633867-25155-2-git-send-email-jh80.chung@samsung.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Jaehoon Chung <jh80.chung@samsung.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Heiko St.bner" <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-06-15 16:48 GMT+02:00 Boris BREZILLON <boris.brezillon@free-electrons.com>:
+On 13 June 2014 06:31, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+> Replaced the "disable-wp" into host's quirks.
+> (Because the slot-node is removed at dt-file.)
 >
->
-> Hello JJ,
->
-> On 15/06/2014 10:53, Jean-Jacques Hiblot wrote:
-> > On 06/09/2014 06:04 PM, Boris BREZILLON wrote:
-> >> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9x5
-> >> family or sama5d3 family) exposes 2 subdevices:
-> >> - a display controller (controlled by a DRM driver)
-> >> - a PWM chip
-> >>
-> >> Add support for the MFD device which will just retrieve HLCDC clocks and
-> >> create a regmap so that subdevices can access the HLCDC register range
-> >> concurrently.
-> >>
-> >> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
-> >> ---
-> >>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  41 ++++++++
-> >>  drivers/mfd/Kconfig                                |  11 ++
-> >>  drivers/mfd/Makefile                               |   1 +
-> [...]
-> >> +    memset(&config, 0, sizeof(config));
-> >> +    config.reg_bits = 32;
-> >> +    config.val_bits = 32;
-> >> +    config.reg_stride = 4;
-> >> +    config.max_register = (resource_size(res) / 4) - 1;
-> >> +    hlcdc->regmap = devm_regmap_init_mmio_clk(dev, "periph_clk", regs,
-> >> +                                              &config);
-> > I don't think it's necessary to use "periph_clk" here. This clock will
-> > always be running because the HLCDC needs it to work (it's not just an
-> > interface clock). In the end it's just some extra work for each register
-> > access.
->
-> Yes, I thought about removing this clk from regmap registration too (for
-> the exact same reason: avoiding extra enable/disable work when accessing
-> registers), but ATM I do not prepare/enable periph_clk in the hlcdc-pwm
-> driver, this means the regmap won't work until the hlcdc-dc driver has
-> probed the display controller device.
->
-> How about preparing/enabling the periph_clk in the MFD device, so that
-> PWM and Display Controller subdevices won't have to bother about this
-> clk, and the regmap will work as expected ?
-> Or, should we just prepare/enable the periph clock in each subdevices ?
+> Signed-off-by: Jaehoon Chung <jh80.chung@samsung.com>
 
-I think the latest is the best approach. This way the PWM and the DRM
-driver can handle their clock gating independently. BTW it's quite
-probable that the PWM don't really needs this clock except for
-register access.
+Thanks!
 
+Applied for next.
+
+Kind regards
+Uffe
+
+> ---
+> Changelog V6/V7:
+>         -None
+> Changelog V5:
+>         - Modify comment.
+> Changelog V4:
+>         - Rename Subject
+>                 "[PATCHv3 2/4] mmc: dw_mmc: use the __mmc_of_parse to parse the slot node"
+>         - Replace the "disable-wp" into host's quirks, according to remove the slot-node at dt-file.
+> Changelog V3:
+>         - Fix typo.
+>         - Maintained the dw_mci_of_quirks().
+> Changelog V2:
+>         - None
 >
+>  drivers/mmc/host/dw_mmc.c |   10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
 >
+> diff --git a/drivers/mmc/host/dw_mmc.c b/drivers/mmc/host/dw_mmc.c
+> index 1ac227c..99fc939 100644
+> --- a/drivers/mmc/host/dw_mmc.c
+> +++ b/drivers/mmc/host/dw_mmc.c
+> @@ -2006,12 +2006,7 @@ static struct device_node *dw_mci_of_find_slot_node(struct device *dev, u8 slot)
+>  static struct dw_mci_of_slot_quirks {
+>         char *quirk;
+>         int id;
+> -} of_slot_quirks[] = {
+> -       {
+> -               .quirk  = "disable-wp",
+> -               .id     = DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
+> -       },
+> -};
+> +} of_slot_quirks[] = {};
 >
-> Best Regards,
->
-> Boris
+>  static int dw_mci_of_get_slot_quirks(struct device *dev, u8 slot)
+>  {
+> @@ -2238,6 +2233,9 @@ static struct dw_mci_of_quirks {
+>         {
+>                 .quirk  = "broken-cd",
+>                 .id     = DW_MCI_QUIRK_BROKEN_CARD_DETECTION,
+> +       }, {
+> +               .quirk  = "disable-wp",
+> +               .id     = DW_MCI_SLOT_QUIRK_NO_WRITE_PROTECT,
+>         },
+>  };
 >
 > --
-> Boris Brezillon, Free Electrons
-> Embedded Linux and Kernel engineering
-> http://free-electrons.com
+> 1.7.9.5
 >
