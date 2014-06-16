@@ -1,118 +1,36 @@
-From: Mikko Perttunen <mikko.perttunen@kapsi.fi>
-Subject: Re: [RFC PATCH 4/4] cpufreq: tegra: Register a minimum EMC frequency
- based on the CPU clock
-Date: Mon, 16 Jun 2014 17:08:43 +0300
-Message-ID: <539EFA6B.20501@kapsi.fi>
-References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com> <1402925713-25426-5-git-send-email-tomeu.vizoso@collabora.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH v2 4/4] ARM: DTS: dra7/dra7xx-clocks: ATL related changes
+Date: Mon, 16 Jun 2014 07:13:32 -0700
+Message-ID: <20140616141331.GK17845@atomide.com>
+References: <1399458048-28213-1-git-send-email-peter.ujfalusi@ti.com>
+ <1399458048-28213-5-git-send-email-peter.ujfalusi@ti.com>
+ <539EF8C6.1080207@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402925713-25426-5-git-send-email-tomeu.vizoso@collabora.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tomeu Vizoso <tomeu.vizoso@collabora.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Airlie <airlied@linux.ie>, Mike Turquette <mturquette@linaro.org>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <539EF8C6.1080207@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>
+Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, mturquette@linaro.org, grant.likely@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-doc@vger.kernel.org, robh+dt@kernel.org, bcousson@baylibre.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The tegra-cpufreq driver is only for Tegra20, an upcoming driver for 
-Tegra124 will be separate, so this is not needed.
+* Tero Kristo <t-kristo@ti.com> [140616 07:03]:
+> On 05/07/2014 01:20 PM, Peter Ujfalusi wrote:
+> >Modify the clock nodes for the ATL clocks to use the ATL clock driver to
+> >handle them.
+> >
+> >Add the ATL device node at the same time for DRA7.
+> >
+> >Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> 
+> This patch missed the merge window due to long dependency chain, however
+> Tony promised to pull this with rc-fixes. So, for that purpose:
+> 
+> Acked-by: Tero Kristo <t-kristo@ti.com>
 
-Thanks,
-- Mikko
+Thanks applying into omap-for-v3.16/fixes.
 
-On 06/16/2014 04:35 PM, Tomeu Vizoso wrote:
-> Instead of setting a direct correlation to the CPU frequency. This allows
-> for other devices to influence the final effective EMC frequency.
->
-> In the future, this should be done instead by an ACTMON driver,
-> which would also take load stats into account when calculating the
-> floor EMC frequency.
->
-> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-> ---
->   drivers/cpufreq/tegra-cpufreq.c | 20 +++++---------------
->   1 file changed, 5 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/cpufreq/tegra-cpufreq.c b/drivers/cpufreq/tegra-cpufreq.c
-> index 8084c7f..64935f8 100644
-> --- a/drivers/cpufreq/tegra-cpufreq.c
-> +++ b/drivers/cpufreq/tegra-cpufreq.c
-> @@ -26,6 +26,7 @@
->   #include <linux/err.h>
->   #include <linux/clk.h>
->   #include <linux/io.h>
-> +#include <linux/platform_data/tegra_emc.h>
->
->   static struct cpufreq_frequency_table freq_table[] = {
->   	{ .frequency = 216000 },
-> @@ -44,7 +45,6 @@ static struct cpufreq_frequency_table freq_table[] = {
->   static struct clk *cpu_clk;
->   static struct clk *pll_x_clk;
->   static struct clk *pll_p_clk;
-> -static struct clk *emc_clk;
->   static bool pll_x_prepared;
->
->   static unsigned int tegra_get_intermediate(struct cpufreq_policy *policy,
-> @@ -96,15 +96,15 @@ static int tegra_target(struct cpufreq_policy *policy, unsigned int index)
->   	int ret = 0;
->
->   	/*
-> -	 * Vote on memory bus frequency based on cpu frequency
-> +	 * Set minimum memory bus frequency based on cpu frequency
->   	 * This sets the minimum frequency, display or avp may request higher
->   	 */
->   	if (rate >= 816000)
-> -		clk_set_rate(emc_clk, 600000000); /* cpu 816 MHz, emc max */
-> +		tegra124_emc_set_floor(600000000); /* cpu 816 MHz, emc max */
->   	else if (rate >= 456000)
-> -		clk_set_rate(emc_clk, 300000000); /* cpu 456 MHz, emc 150Mhz */
-> +		tegra124_emc_set_floor(300000000); /* cpu 456 MHz, emc 150Mhz */
->   	else
-> -		clk_set_rate(emc_clk, 100000000);  /* emc 50Mhz */
-> +		tegra124_emc_set_floor(100000000);  /* emc 50Mhz */
->
->   	/*
->   	 * target freq == pll_p, don't need to take extra reference to pll_x_clk
-> @@ -141,14 +141,12 @@ static int tegra_cpu_init(struct cpufreq_policy *policy)
->   	if (policy->cpu >= NUM_CPUS)
->   		return -EINVAL;
->
-> -	clk_prepare_enable(emc_clk);
->   	clk_prepare_enable(cpu_clk);
->
->   	/* FIXME: what's the actual transition time? */
->   	ret = cpufreq_generic_init(policy, freq_table, 300 * 1000);
->   	if (ret) {
->   		clk_disable_unprepare(cpu_clk);
-> -		clk_disable_unprepare(emc_clk);
->   		return ret;
->   	}
->
-> @@ -160,7 +158,6 @@ static int tegra_cpu_init(struct cpufreq_policy *policy)
->   static int tegra_cpu_exit(struct cpufreq_policy *policy)
->   {
->   	clk_disable_unprepare(cpu_clk);
-> -	clk_disable_unprepare(emc_clk);
->   	return 0;
->   }
->
-> @@ -194,19 +191,12 @@ static int __init tegra_cpufreq_init(void)
->   	if (IS_ERR(pll_p_clk))
->   		return PTR_ERR(pll_p_clk);
->
-> -	emc_clk = clk_get_sys("cpu", "emc");
-> -	if (IS_ERR(emc_clk)) {
-> -		clk_put(cpu_clk);
-> -		return PTR_ERR(emc_clk);
-> -	}
-> -
->   	return cpufreq_register_driver(&tegra_cpufreq_driver);
->   }
->
->   static void __exit tegra_cpufreq_exit(void)
->   {
->           cpufreq_unregister_driver(&tegra_cpufreq_driver);
-> -	clk_put(emc_clk);
->   	clk_put(cpu_clk);
->   }
->
->
+Regards,
+
+Tony
