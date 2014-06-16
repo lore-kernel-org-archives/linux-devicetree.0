@@ -1,68 +1,59 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V3 01/16] irqchip: crossbar: dont use '0' to mark reserved
- interrupts
-Date: Mon, 16 Jun 2014 16:53:01 +0530
-Message-ID: <1402917796-31574-2-git-send-email-r.sricharan@ti.com>
-References: <1402917796-31574-1-git-send-email-r.sricharan@ti.com>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
+Date: Mon, 16 Jun 2014 16:56:42 +0530
+Message-ID: <539ED472.5020102@gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>	<1402464739-19044-3-git-send-email-tushar.b@samsung.com> <CABxcv=kX07pNCd-YPYp6J8S5hHzG1rsoer1YRfdPE0g-xFqZnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1402917796-31574-1-git-send-email-r.sricharan@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: nm@ti.com, linux@arm.linux.org.uk, jason@lakedaemon.net, tony@atomide.com, rnayak@ti.com, r.sricharan@ti.com, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=kX07pNCd-YPYp6J8S5hHzG1rsoer1YRfdPE0g-xFqZnQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, Tushar Behera <tushar.b@samsung.com>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, mturquette@linaro.org, t.figa@samsung.com, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, dianders@google.com, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Nishanth Menon <nm@ti.com>
+On 06/11/2014 09:28 PM, Javier Martinez Canillas wrote:
+> On Wed, Jun 11, 2014 at 7:32 AM, Tushar Behera <tushar.b@samsung.com> wrote:
+>> Currently CLK_FOUT_EPLL was set as one of the parents of AUDSS mux.
+>> As per the user manual, it should be CLK_MAU_EPLL.
+>>
+>> The problem surfaced when the bootloader in Peach-pit board set
+>> the EPLL clock as the parent of AUDSS mux. While booting the kernel,
+>> we used to get a system hang during late boot if CLK_MAU_EPLL was
+>> disabled.
+>>
+>> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
+>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+>> Reported-by: Kevin Hilman <khilman@linaro.org>
+>> ---
+>>  arch/arm/boot/dts/exynos5420.dtsi |    2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index e385322..79e9119 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -167,7 +167,7 @@
+>>                 compatible = "samsung,exynos5420-audss-clock";
+>>                 reg = <0x03810000 0x0C>;
+>>                 #clock-cells = <1>;
+>> -               clocks = <&clock CLK_FIN_PLL>, <&clock CLK_FOUT_EPLL>,
+>> +               clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MAU_EPLL>,
+>>                          <&clock CLK_SCLK_MAUDIO0>, <&clock CLK_SCLK_MAUPCM0>;
+>>                 clock-names = "pll_ref", "pll_in", "sclk_audio", "sclk_pcm_in";
+>>         };
+>> --
+>> 1.7.9.5
+>>
+>> --
+> 
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> 
 
-Today '0' is actually reserved, but may not be the same in the future.
+Kukjin,
 
-So, use a flag to mark the GIC interrupts that are reserved.
+Would you please take this patch as a fix for 3.16?
 
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
----
- drivers/irqchip/irq-crossbar.c |    5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
-index 3d15d16..20105bc 100644
---- a/drivers/irqchip/irq-crossbar.c
-+++ b/drivers/irqchip/irq-crossbar.c
-@@ -17,6 +17,7 @@
- #include <linux/irqchip/arm-gic.h>
- 
- #define IRQ_FREE	-1
-+#define IRQ_RESERVED	-2
- #define GIC_IRQ_START	32
- 
- /*
-@@ -139,7 +140,7 @@ static int __init crossbar_of_init(struct device_node *node)
- 				pr_err("Invalid reserved entry\n");
- 				goto err3;
- 			}
--			cb->irq_map[entry] = 0;
-+			cb->irq_map[entry] = IRQ_RESERVED;
- 		}
- 	}
- 
-@@ -170,7 +171,7 @@ static int __init crossbar_of_init(struct device_node *node)
- 	 * reserved irqs. so find and store the offsets once.
- 	 */
- 	for (i = 0; i < max; i++) {
--		if (!cb->irq_map[i])
-+		if (cb->irq_map[i] == IRQ_RESERVED)
- 			continue;
- 
- 		cb->register_offsets[i] = reserved;
 -- 
-1.7.9.5
+Tushar Behera
