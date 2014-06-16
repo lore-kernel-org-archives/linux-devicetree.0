@@ -1,63 +1,82 @@
-From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH v5 1/5] devicetree: bindings: document Broadcom CPU enable method
-Date: Mon, 16 Jun 2014 14:39:43 -0500
-Message-ID: <1402947587-13898-2-git-send-email-elder@linaro.org>
-References: <1402947587-13898-1-git-send-email-elder@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402947587-13898-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
+Date: Mon, 16 Jun 2014 14:02:12 -0600
+Message-ID: <539F4D44.3070309@wwwdotorg.org>
+References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com> <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402925713-25426-2-git-send-email-tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Broadcom mobile SoCs use a ROM-implemented holding pen for
-controlled boot of secondary cores.  A special register is
-used to communicate to the ROM that a secondary core should
-start executing kernel code.  This enable method is currently
-used for members of the bcm281xx and bcm21664 SoC families.
+On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
+> Adds functionality for registering memory bandwidth needs and setting
+> the EMC clock rate based on that.
+> 
+> Also adds API for setting floor and ceiling frequency rates.
 
-The use of an enable method also allows the SMP operation vector to
-be assigned as a result of device tree content for these SoCs.
+> diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-emc.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-emc.txt
+> new file mode 100644
+> index 0000000..88e6a55
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-emc.txt
+> @@ -0,0 +1,26 @@
+> +Tegra124 External Memory Controller
+> +
+> +Properties:
+> +- compatible : Should contain "nvidia,tegra124-emc".
+> +- reg : Should contain the register range of the device
+> +- #address-cells : Should be 1
+> +- #size-cells : Should be 0
+> +- nvidia,mc : phandle to the mc bus connected to EMC.
+> +- clocks : phandle to EMC, EMC shared bus override, and all parent clocks.
+> +- clock-names : name of each clock.
+> +- nvidia,pmc : phandle to the PMC syscon node.
+> +- max-clock-frequency : optional, specifies the maximum EMC rate in kHz.
+> +
+> +Child device nodes describe the memory settings for different configurations and
+> +clock rates.
 
-Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+How do the child nodes do that? The binding needs to specify the format
+of the child node. This binding looks quite anaemic vs.
+Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt; I
+would expect that this binding needs all the EMC register data from the
+tegra20-emc binding too. Can the two bindings be identical?
 
-diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
-index 1fe72a0..cdca080 100644
---- a/Documentation/devicetree/bindings/arm/cpus.txt
-+++ b/Documentation/devicetree/bindings/arm/cpus.txt
-@@ -184,6 +184,7 @@ nodes to be present and contain the properties described below.
- 			  can be one of:
- 			    "allwinner,sun6i-a31"
- 			    "arm,psci"
-+			    "brcm,bcm11351-cpu-method"
- 			    "marvell,armada-375-smp"
- 			    "marvell,armada-380-smp"
- 			    "marvell,armada-xp-smp"
-@@ -215,6 +216,17 @@ nodes to be present and contain the properties described below.
- 		Value type: <phandle>
- 		Definition: Specifies the ACC[2] node associated with this CPU.
- 
-+	- secondary-boot-reg
-+		Usage:
-+			Required for systems that have an "enable-method"
-+			property value of "brcm,bcm11351-cpu-method".
-+		Value type: <u32>
-+		Definition:
-+			Specifies the physical address of the register used to
-+			request the ROM holding pen code release a secondary
-+			CPU.  The value written to the register is formed by
-+			encoding the target CPU id into the low bits of the
-+			physical start address it should jump to.
- 
- Example 1 (dual-cluster big.LITTLE system 32-bit):
- 
--- 
-1.9.1
+Can you explain what the nvidia,mc and nvidia,pmc references are needed
+for? Hopefully, this driver isn't going to reach into those devices and
+touch their registers directly.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/include/linux/platform_data/tegra_emc.h b/include/linux/platform_data/tegra_emc.h
+
+A header file that defines platform data format isn't the correct place
+to put the definitions of public APIs. I'd expect something more like
+<linux/tegra-soc.h>.
+
+> +#ifdef CONFIG_TEGRA124_EMC
+> +int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsigned long rate);
+> +void tegra124_emc_set_floor(unsigned long freq);
+> +void tegra124_emc_set_ceiling(unsigned long freq);
+> +#else
+> +int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsigned long rate)
+> +{ return -ENODEV; }
+> +void tegra124_emc_set_floor(unsigned long freq)
+> +{ return; }
+> +void tegra124_emc_set_ceiling(unsigned long freq)
+> +{ return; }
+> +#endif
+
+I'll repeat what I said off-list so that we can have the whole
+conversation on the list:
+
+That looks like a custom Tegra-specific API. I think it'd be much better
+to integrate this into the common clock framework as a standard clock
+constraints API. There are other use-cases for clock constraints besides
+EMC scaling (e.g. some in audio on Tegra, and I'm sure many on other
+SoCs too).
+
+See https://lkml.org/lkml/2014/5/16/569 for some previous discussion on
+this topic.
