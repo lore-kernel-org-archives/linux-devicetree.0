@@ -1,74 +1,104 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
-Date: Mon, 16 Jun 2014 14:43:56 -0600
-Message-ID: <539F570C.2000507@wwwdotorg.org>
-References: <1402689965-19397-1-git-send-email-jwerner@chromium.org> <CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com> <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com> <CAL_Jsq+rGLFcOcs8Rmr8NntbPhGBG+F7yAF0YQ-Rm-UsmmTLSA@mail.gmail.com>
+From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt: bindings: add bindings for
+ Broadcom bcm43xx sdio devices
+Date: Mon, 16 Jun 2014 13:53:56 -0700
+Message-ID: <CAGVrzcZBzDTfnd6o0ib1FBvBK2VPNitS=rpb4jDkjF=T7Fy=DQ@mail.gmail.com>
+References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-2-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+rGLFcOcs8Rmr8NntbPhGBG+F7yAF0YQ-Rm-UsmmTLSA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>, Julius Werner <jwerner@chromium.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <stephen.r.warren@gmail.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Stefan Reinauer <stefan.reinauer@coreboot.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
+Return-path: <linux-sunxi+bncBCH67JWTV4DBBDNT7WOAKGQEIZ2GLZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1402941407-8210-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ATHEROS ATH5K WIR..." <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2014 07:30 AM, Rob Herring wrote:
-> On Fri, Jun 13, 2014 at 4:58 PM, Julius Werner <jwerner@chromium.org> wrote:
-...
->> Rob Herring wrote:
->>> Don't you need need to keep the kernel from allocating this memory by
->>> using one of the reserved memory mechanisms? The recently added one
->>> should be able to specific what the memory is reserved for IIRC.
->>
->> Our bootloader is carving the location out of the /memory node and
->> adding it to the device tree reserve map. As far as I know, that only
->> contains a list of raw start and size entries. At any rate, I think
->> it's useful (and in line with other bindings) to add a more explicit
->> node like this (if only to make it easier accessible through
->> /proc/device-tree).
-> 
-> Understand there are 3 different memory reservation bindings. The
-> original "/memreserve/" method is indeed limited. What I think you
-> should use is the binding documented in
-> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
-> So you could do something like this:
-> 
->         reserved-memory {
->                 #address-cells = <1>;
->                 #size-cells = <1>;
->                 ranges;
-> 
->                 /* global autoconfigured region for contiguous allocations */
->                 linux,cma {
->                         compatible = "shared-dma-pool";
->                         reusable;
->                         size = <0x4000000>;
->                         alignment = <0x2000>;
->                         linux,cma-default;
->                 };
-> 
->                 coreboot_reserved: coreboot@fdfea000 {
->                       compatible = "coreboot";
->                       reg = <0xfdfea000 0x264>,
->                           <0xfdfea000 0x16000>;
->                 };
-> 
+2014-06-16 10:56 GMT-07:00 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>
+> The Broadcom bcm43xx sdio devices are fullmac devices that may be
+> integrated in ARM platforms. Currently, the brcmfmac driver for
+> these devices support use of platform data. This patch specifies
+> the bindings that allow this platform data to be expressed in the
+> devicetree.
+>
+> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no consensus
+>  on how to handle this yet]
+> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 29 ++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>
+> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> new file mode 100644
+> index 0000000..6a0aaf2
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+> @@ -0,0 +1,29 @@
+> +Broadcom BCM43xx Fullmac wireless SDIO devices
+> +
+> +This node provides properties for controlling the Broadcom wireless device. The
+> +node is expected to be specified as a child node to the SDIO controller that
+> +connects the device to the system.
+> +
+> +Required properties:
+> +
+> + - compatible : Should be "brcm,bcm43xx-fmac".
 
-I thought that the /reserved-memory node was more so that the
-(preferred?) location of firmware images or data buffers used by HW
-accelerators could be communicated to the kernel. This feels like pure data.
+In general, the use of a wildcard compatible string is discouraged
+over the use of a more descriptive compatible string. So you should
+find out what is the first chip that is compatible, and use that
+compatible string as long as that compatibility remains.
 
-The coreboot binding seems to be more about defining an interface to a
-particular firmware (this feels like semantics), which as a side-effect
-needs to communicate the location of certain data.
+> +
+> +Optional properties:
+> + - brcm,drive-strength : drive strength used for SDIO pins on device.
+> +       (default = 6mA).
 
-If /reserved-memory is used to communicate the address of the memory
-regions, I think we still need a /firmware/coreboot node to indicate the
-semantics of the reserved memory region, and point at the phandle of the
-region. As such, it seems simpler just to put the addresses in the
-coreboot node's reg property. The only exception I see to that argument
-is if putting the region in /reserved-memory automatically carves that
-region out of the memory the kernel will allocate from. That would
-simplify the bootloader, since it wouldn't have to fiddle with the
-/memory node and do the carveout itself.
+It would not hurt if you did specify the unit of the
+"brcm,drive-strength" property here. Also, if the default is 6, maybe
+the example below should be fixed to reflect that so people do not
+think that writing 4 to a register = 6 mA.
+
+> + - interrupt-parent : the phandle for the interrupt controller to which the
+> +       device interrupts are connected.
+> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+> +       When not specified the device will use in-band SDIO interrupts.
+> + - interrupt-names : name of the out-of-band interrupt, which must be set
+> +       to "host-wake".
+> +
+> +Example:
+> +
+> +bcm4335 {
+> +       compatible = "brcm,bcm43xx-fmac";
+> +       brcm,drive-strength = <4>;
+> +       interrupt-parent = <&gpx2>;
+> +       interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+> +       interrupt-names = "host-wake";
+> +};
+> --
+> 2.0.0
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+
+
+-- 
+Florian
