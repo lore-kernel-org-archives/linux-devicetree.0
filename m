@@ -1,7 +1,7 @@
 From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v5 5/5] ARM: dts: enable SMP support for bcm21664
-Date: Mon, 16 Jun 2014 14:39:47 -0500
-Message-ID: <1402947587-13898-6-git-send-email-elder@linaro.org>
+Subject: [PATCH v5 4/5] ARM: dts: enable SMP support for bcm28155
+Date: Mon, 16 Jun 2014 14:39:46 -0500
+Message-ID: <1402947587-13898-5-git-send-email-elder@linaro.org>
 References: <1402947587-13898-1-git-send-email-elder@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1402947587-13898-1-git-send-email-elder@linaro.org>
@@ -10,26 +10,27 @@ To: mporter@linaro.org, bcm@fixthebug.org, linux@arm.linux.org.uk, devicetree@vg
 Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define nodes representing the two Cortex A9 CPUs in a bcm21644 SoC.
+Define nodes representing the two Cortex A9 CPUs in a bcm28155 SoC.
 
+Signed-off-by: Ray Jui <rjui@broadcom.com>
 Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- arch/arm/boot/dts/bcm21664.dtsi | 19 +++++++++++++++++++
+ arch/arm/boot/dts/bcm11351.dtsi | 19 +++++++++++++++++++
  1 file changed, 19 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm21664.dtsi b/arch/arm/boot/dts/bcm21664.dtsi
-index 8b36682..2016b72 100644
---- a/arch/arm/boot/dts/bcm21664.dtsi
-+++ b/arch/arm/boot/dts/bcm21664.dtsi
+diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
+index 6b05ae6..2ddaa51 100644
+--- a/arch/arm/boot/dts/bcm11351.dtsi
++++ b/arch/arm/boot/dts/bcm11351.dtsi
 @@ -27,6 +27,25 @@
  		bootargs = "console=ttyS0,115200n8";
  	};
  
-+       cpus {
++	cpus {
 +		#address-cells = <1>;
 +		#size-cells = <0>;
 +		enable-method = "brcm,bcm11351-cpu-method";
-+		secondary-boot-reg = <0x35004178>;
++		secondary-boot-reg = <0x3500417c>;
 +
 +		cpu0: cpu@0 {
 +			device_type = "cpu";
