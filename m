@@ -1,94 +1,77 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v3 14/19] ARM: shmobile: r8a7779: Add TMU devices to DT
-Date: Mon, 16 Jun 2014 18:19:02 +0200
-Message-ID: <CAMuHMdXeyKy4vR0jNS3RC9E7+0_=xPXRUDokXe0kP+V8uVEiyQ@mail.gmail.com>
-References: <1402763021-4067-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<1402763021-4067-15-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-	<20140616084707.GF11582@verge.net.au>
-	<1462083.WMstm6aRc1@avalon>
+From: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
+Date: Mon, 16 Jun 2014 09:39:07 -0700
+Message-ID: <CALiw-2GWHKPbXuMFXUHY_pgpUJNdqQbyPEV1UjEep3zD2sSRPQ@mail.gmail.com>
+References: <1402689965-19397-1-git-send-email-jwerner@chromium.org>
+	<CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com>
+	<CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <1462083.WMstm6aRc1@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <stephen.r.warren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stefan Reinauer <stefan.reinauer-7ChRSZmxDtxg9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
-
-On Mon, Jun 16, 2014 at 4:22 PM, Laurent Pinchart
-<laurent.pinchart@ideasonboard.com> wrote:
->> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
->> index bf716ce..81714ce 100644
->> --- a/arch/arm/boot/dts/r8a7779.dtsi
->> +++ b/arch/arm/boot/dts/r8a7779.dtsi
->> @@ -269,9 +269,10 @@
->>       tmu0: timer@ffd80000 {
->>               compatible = "renesas,tmu";
->>               reg = <0xffd80000 0x30>;
->> -             interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
->> -                          <0 41 IRQ_TYPE_LEVEL_HIGH>,
->> -                          <0 42 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-parent = <&gic>;
->> +             interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <0 33 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <0 34 IRQ_TYPE_LEVEL_HIGH>;
->>               clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
->>               clock-names = "fck";
->>
->> @@ -283,9 +284,10 @@
->>       tmu1: timer@ffd81000 {
->>               compatible = "renesas,tmu";
->>               reg = <0xffd81000 0x30>;
->> -             interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>,
->> -                          <0 45 IRQ_TYPE_LEVEL_HIGH>,
->> -                          <0 46 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupt-parent = <&gic>;
->> +             interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <0 36 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <0 37 IRQ_TYPE_LEVEL_HIGH>;
+2014-06-13 14:58 GMT-07:00 Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>:
+>> This is just to export a fixed log to userspace (like a DMI table) or
+>> the kernel will actually use the data in some way? Based on the link,
+>> it looks like the former to me.
 >
-> If I'm not mistaken the interrupts should be 36, 37 and 38.
+> I could imagine both. The link is an in-kernel driver that exposes a
+> log through a sysfs node (in a way that has already been established
+> on x86 systems, which find the location through EBDA or ACPI entries
+> instead). We are also using a user-space tool that reads the address
+> from /proc/device-tree and accesses it through /dev/mem. The areas can
+> contain many interesting entries (like the location of an early
+> framebuffer set up by the firmware), so I could also imagine use cases
+> where the kernel makes use of it directly.
 
-(diving into the documentation)
+Hmm. It'd be much better if the early framebuffer was communicated
+using the already existing methods (i.e. simplefb device tree node).
+That way we don't have to add custom code to grab it out of the
+coreboot memory structure.
 
-Yes, probably 36, 37, and 38. I say "probably", as I find it non-trivial
-to convert from docs to DT.
+Adding a platform driver for coreboot to do it later in boot isn't so
+hard (and registering platform devices based on the contents), but we
+probably need to be more generic if it is to be used in actual early
+boot, which is the main use case for it.
 
-What happens with 35, which is "TMU21 (input capture)"?
-As DT describes the hardware, shouldn't it be mentioned here?
-
->>               clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
->>               clock-names = "fck";
->>
->> @@ -296,10 +298,11 @@
->>
->>       tmu2: timer@ffd82000 {
->>               compatible = "renesas,tmu";
->> +             interrupt-parent = <&gic>;
->>               reg = <0xffd82000 0x30>;
->> -             interrupts = <0 48 IRQ_TYPE_LEVEL_HIGH>,
->> -                          <0 49 IRQ_TYPE_LEVEL_HIGH>,
->> -                          <0 50 IRQ_TYPE_LEVEL_HIGH>;
->> +             interrupts = <0 38 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <0 39 IRQ_TYPE_LEVEL_HIGH>,
->> +                          <0 40 IRQ_TYPE_LEVEL_HIGH>;
+>> Don't you need need to keep the kernel from allocating this memory by
+>> using one of the reserved memory mechanisms? The recently added one
+>> should be able to specific what the memory is reserved for IIRC.
 >
-> And 40, 41 and 42 here.
+> Our bootloader is carving the location out of the /memory node and
+> adding it to the device tree reserve map. As far as I know, that only
+> contains a list of raw start and size entries. At any rate, I think
+> it's useful (and in line with other bindings) to add a more explicit
+> node like this (if only to make it easier accessible through
+> /proc/device-tree).
+>
+>> /firmware is already used IIRC. What if you have other firmware such
+>> as Trustzone?
+>
+> I'm not quite sure how Trusted Foundations works and whether it would
+> even make sense to use it in parallel to coreboot, but it seems to be
+> using the /firmware/trusted-foundations subnode so that should be
+> fine. "firmware" seems to be used by other firmware implementations
+> (like "samsung,secure-firmware") which are similar in nature to and
+> mutually exclusive with coreboot, so I thought the node makes sense.
+> (The kernel should use the compatible string to find it anyway, so a
+> future name clash would not be world-ending.)
 
-Likewise for "TMU51 (input capture)"?
+Right, coreboot really should go under /firmware/coreboot -- we
+already use /firmware/chromeos on chromebooks to specify
+chromeos-specific firmware properties, this follows that convention.
 
->>               clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
->>               clock-names = "fck";
+The samsung,secure-firmware should probably also be moved to a
+subnode. The binding shouldn't require a specific location no matter
+what.
 
-Gr{oetje,eeting}s,
 
-                        Geert
-
+-Olof
 --
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
