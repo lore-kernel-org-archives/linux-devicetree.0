@@ -1,291 +1,641 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Mon, 16 Jun 2014 21:17:59 +0900
-Message-ID: <539EE077.8000601@renesas.com>
-References: <539AEC8F.4030003@renesas.com> <20140613142525.GE8319@saruman.home>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [RFC 1/2] backlight: add new tps611xx backlight driver
+Date: Mon, 16 Jun 2014 21:19:18 +0900
+Message-ID: <000001cf895d$322e4250$968ac6f0$%han@samsung.com>
+References: <1402885043-3626-1-git-send-email-gshark.jeong@gmail.com>
+ <1402885043-3626-2-git-send-email-gshark.jeong@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140613142525.GE8319-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
-Cc: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1402885043-3626-2-git-send-email-gshark.jeong@gmail.com>
+Content-language: ko
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Daniel Jeong' <gshark.jeong@gmail.com>
+Cc: 'Daniel Jeong' <daniel.jeong@ti.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 'Bryan Wu' <cooloney@gmail.com>, 'Lee Jones' <lee.jones@linaro.org>, 'Jean-Christophe Plagniol-Villard' <plagnioj@jcrosoft.com>, 'Tomi Valkeinen' <tomi.valkeinen@ti.com>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-(2014/06/13 23:25), Felipe Balbi wrote:
-> Hi,
+On Monday, June 16, 2014 11:17 AM, Daniel Jeong wrote:
 > 
-> On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
->> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
->> some specific initializations related to the firmware downloading and
->> some specific registers. This patch adds the support for this special
->> configuration as an xHCI quirk executed during probe and start.
->>
->> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
->> ---
->>  drivers/usb/host/Kconfig     |    8 +++
->>  drivers/usb/host/Makefile    |    3 +
->>  drivers/usb/host/xhci-plat.c |   19 ++++++
->>  drivers/usb/host/xhci-rcar.c |  148 ++++++++++++++++++++++++++++++++++++++++++
->>  drivers/usb/host/xhci-rcar.h |   27 ++++++++
->>  5 files changed, 205 insertions(+)
->>  create mode 100644 drivers/usb/host/xhci-rcar.c
->>  create mode 100644 drivers/usb/host/xhci-rcar.h
->>
->> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
->> index 61b7817..537d9e1 100644
->> --- a/drivers/usb/host/Kconfig
->> +++ b/drivers/usb/host/Kconfig
->> @@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
->>  	  Say 'Y' to enable the support for the xHCI host controller
->>  	  found in Marvell Armada 375/38x ARM SOCs.
->>
->> +config USB_XHCI_RCAR
->> +	tristate "xHCI support for Renesas R-Car SoCs"
->> +	select USB_XHCI_PLATFORM
->> +	depends on ARCH_SHMOBILE || COMPILE_TEST
->> +	---help---
->> +	  Say 'Y' to enable the support for the xHCI host controller
->> +	  found in Renesas R-Car ARM SoCs.
->> +
->>  endif # USB_XHCI_HCD
->>
->>  config USB_EHCI_HCD
->> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
->> index af89a90..144c038 100644
->> --- a/drivers/usb/host/Makefile
->> +++ b/drivers/usb/host/Makefile
->> @@ -22,6 +22,9 @@ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
->>  ifneq ($(CONFIG_USB_XHCI_MVEBU), )
->>  	xhci-hcd-y		+= xhci-mvebu.o
->>  endif
->> +ifneq ($(CONFIG_USB_XHCI_RCAR), )
->> +	xhci-hcd-y		+= xhci-rcar.o
->> +endif
->>  endif
->>
->>  obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
->> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
->> index 29d8adb..b6f2b6b 100644
->> --- a/drivers/usb/host/xhci-plat.c
->> +++ b/drivers/usb/host/xhci-plat.c
->> @@ -20,6 +20,7 @@
->>
->>  #include "xhci.h"
->>  #include "xhci-mvebu.h"
->> +#include "xhci-rcar.h"
->>
->>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
->>  {
->> @@ -34,11 +35,27 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
->>  /* called during probe() after chip reset completes */
->>  static int xhci_plat_setup(struct usb_hcd *hcd)
->>  {
->> +	struct device_node *of_node = hcd->self.controller->of_node;
->> +	int ret;
->> +
->> +	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
->> +	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791")) {
->> +		ret = xhci_rcar_init_quirk(hcd);
->> +		if (ret)
->> +			return ret;
->> +	}
->> +
->>  	return xhci_gen_setup(hcd, xhci_plat_quirks);
->>  }
->>
->>  static int xhci_plat_start(struct usb_hcd *hcd)
->>  {
->> +	struct device_node *of_node = hcd->self.controller->of_node;
->> +
->> +	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
->> +	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791"))
->> +		xhci_rcar_start(hcd);
->> +
->>  	return xhci_run(hcd);
->>  }
->>
->> @@ -270,6 +287,8 @@ static const struct of_device_id usb_xhci_of_match[] = {
->>  	{ .compatible = "xhci-platform" },
->>  	{ .compatible = "marvell,armada-375-xhci"},
->>  	{ .compatible = "marvell,armada-380-xhci"},
->> +	{ .compatible = "renesas,xhci-r8a7790"},
->> +	{ .compatible = "renesas,xhci-r8a7791"},
->>  	{ },
->>  };
->>  MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
->> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
->> new file mode 100644
->> index 0000000..ff0d1b4
->> --- /dev/null
->> +++ b/drivers/usb/host/xhci-rcar.c
->> @@ -0,0 +1,148 @@
->> +/*
->> + * xHCI host controller driver for R-Car SoCs
->> + *
->> + * Copyright (C) 2014 Renesas Electronics Corporation
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * version 2 as published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/firmware.h>
->> +#include <linux/module.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/usb/phy.h>
->> +
->> +#include "xhci.h"
->> +#include "xhci-rcar.h"
->> +
->> +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem"
->> +MODULE_FIRMWARE(FIRMWARE_NAME);
->> +
->> +/*** Register Offset ***/
->> +#define RCAR_USB3_INT_ENA	0x224	/* Interrupt Enable */
->> +#define RCAR_USB3_DL_CTRL	0x250	/* FW Download Control & Status */
->> +#define RCAR_USB3_FW_DATA0	0x258	/* FW Data0 */
->> +
->> +#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
->> +#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */
->> +#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */
->> +#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */
->> +#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
->> +#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */
->> +
->> +/*** Register Settings ***/
->> +/* Interrupt Enable */
->> +#define RCAR_USB3_INT_XHC_ENA	0x00000001
->> +#define RCAR_USB3_INT_PME_ENA	0x00000002
->> +#define RCAR_USB3_INT_HSE_ENA	0x00000004
->> +#define RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \
->> +				RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA)
->> +
->> +/* FW Download Control & Status */
->> +#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
->> +#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010
->> +#define RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100
->> +
->> +/* LCLK Select */
->> +#define RCAR_USB3_LCLK_ENA_VAL	0x01030001
->> +
->> +/* USB3.0 Configuration */
->> +#define RCAR_USB3_CONF1_VAL	0x00030204
->> +#define RCAR_USB3_CONF2_VAL	0x00030300
->> +#define RCAR_USB3_CONF3_VAL	0x13802007
->> +
->> +/* USB3.0 Polarity */
->> +#define RCAR_USB3_RX_POL_VAL	BIT(21)
->> +#define RCAR_USB3_TX_POL_VAL	BIT(4)
->> +
->> +void xhci_rcar_start(struct usb_hcd *hcd)
->> +{
->> +	u32 temp;
->> +
->> +	if (hcd->regs != NULL) {
->> +		/* Interrupt Enable */
->> +		temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
->> +		temp |= RCAR_USB3_INT_ENA_VAL;
->> +		writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
->> +		/* LCLK Select */
->> +		writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
->> +		/* USB3.0 Configuration */
->> +		writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
->> +		writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
->> +		writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
->> +		/* USB3.0 Polarity */
->> +		writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
->> +		writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
->> +	}
->> +}
->> +
->> +static int xhci_rcar_download_firmware(struct device *dev, void __iomem *regs)
->> +{
->> +	const struct firmware *fw;
->> +	int retval, index, j, time;
->> +	int timeout = 10000;
->> +	u32 data, val, temp;
->> +
->> +	/* request R-Car USB3.0 firmware */
->> +	retval = request_firmware(&fw, FIRMWARE_NAME, dev);
->> +	if (retval)
->> +		return retval;
->> +
->> +	/* download R-Car USB3.0 firmware */
->> +	temp = readl(regs + RCAR_USB3_DL_CTRL);
->> +	temp |= RCAR_USB3_DL_CTRL_ENABLE;
->> +	writel(temp, regs + RCAR_USB3_DL_CTRL);
->> +
->> +	for (index = 0; index < fw->size; index += 4) {
->> +		/* to avoid reading beyond the end of the buffer */
->> +		for (data = 0, j = 3; j >= 0; j--) {
->> +			if ((j + index) < fw->size)
->> +				data |= fw->data[index + j] << (8 * j);
->> +		}
->> +		writel(data, regs + RCAR_USB3_FW_DATA0);
->> +		temp = readl(regs + RCAR_USB3_DL_CTRL);
->> +		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0;
->> +		writel(temp, regs + RCAR_USB3_DL_CTRL);
->> +
->> +		for (time = 0; time < timeout; time++) {
->> +			val = readl(regs + RCAR_USB3_DL_CTRL);
->> +			if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0)
->> +				break;
->> +			udelay(1);
->> +		}
->> +		if (time == timeout) {
->> +			retval = -ETIMEDOUT;
->> +			break;
->> +		}
->> +	}
->> +
->> +	temp = readl(regs + RCAR_USB3_DL_CTRL);
->> +	temp &= ~RCAR_USB3_DL_CTRL_ENABLE;
->> +	writel(temp, regs + RCAR_USB3_DL_CTRL);
->> +
->> +	for (time = 0; time < timeout; time++) {
->> +		val = readl(regs + RCAR_USB3_DL_CTRL);
->> +		if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
->> +			retval = 0;
->> +			break;
->> +		}
->> +		udelay(1);
->> +	}
->> +	if (time == timeout)
->> +		retval = -ETIMEDOUT;
->> +
->> +	release_firmware(fw);
->> +
->> +	return retval;
->> +}
->> +
->> +/* This function needs to initialize a "phy" of usb before */
+> This driver a general version for tps611xx backlgiht chips of TI.
+> It supports tps61158, tps61161, tps61163 and tps61165 backlight driver
+> based on EasyScale protocol.
+
+"EasyScale" protocol is a TI-specific protocol. How about adding more
+detailed description as below? I referred to the datasheet of tps61158.
+
+based on EasyScale protocol (1-Wire Control Interface). The protocol
+consists of a device specific address byte and a data byte. The device
+specific address byte is fixed to 58 hex. The data byte consists of
+five bits for information, two address bits ("00"), and the RFA bit.
+
 > 
-> initializing a PHY looks like something that the PHY layer should do.
-> Why don't you write a PHY driver and teach xhci-core about PHYs ? Then,
-> more people would benefit.
+> Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
+> ---
+>  drivers/video/backlight/Kconfig           |    7 +
+>  drivers/video/backlight/Makefile          |    1 +
+>  drivers/video/backlight/tps611xx_bl.c     |  486 +++++++++++++++++++++++++++++
+>  include/linux/platform_data/tps611xx_bl.h |   30 ++
+>  4 files changed, 524 insertions(+)
+>  create mode 100644 drivers/video/backlight/tps611xx_bl.c
+>  create mode 100644 include/linux/platform_data/tps611xx_bl.h
+> 
+> diff --git a/drivers/video/backlight/Kconfig b/drivers/video/backlight/Kconfig
+> index 5a3eb2e..c779a85 100644
+> --- a/drivers/video/backlight/Kconfig
+> +++ b/drivers/video/backlight/Kconfig
+> @@ -418,6 +418,13 @@ config BACKLIGHT_TPS65217
+>  	  If you have a Texas Instruments TPS65217 say Y to enable the
+>  	  backlight driver.
+> 
+> +config BACKLIGHT_TPS611xx
+> +	tristate "TPS611xx Backlight"
+> +	depends on BACKLIGHT_CLASS_DEVICE && GPIOLIB
+> +	help
+> +	  This supports TI TPS61158, TPS61161, TPS61163 and TPS61165
+> +	  backlight driver based on EasyScale Protocol.
+> +
+>  config BACKLIGHT_AS3711
+>  	tristate "AS3711 Backlight"
+>  	depends on BACKLIGHT_CLASS_DEVICE && MFD_AS3711
+> diff --git a/drivers/video/backlight/Makefile b/drivers/video/backlight/Makefile
+> index bb82002..44f1641 100644
+> --- a/drivers/video/backlight/Makefile
+> +++ b/drivers/video/backlight/Makefile
+> @@ -52,4 +52,5 @@ obj-$(CONFIG_BACKLIGHT_PWM)		+= pwm_bl.o
+>  obj-$(CONFIG_BACKLIGHT_SAHARA)		+= kb3886_bl.o
+>  obj-$(CONFIG_BACKLIGHT_TOSA)		+= tosa_bl.o
+>  obj-$(CONFIG_BACKLIGHT_TPS65217)	+= tps65217_bl.o
+> +obj-$(CONFIG_BACKLIGHT_TPS611xx)	+= tps611xx_bl.o
+>  obj-$(CONFIG_BACKLIGHT_WM831X)		+= wm831x_bl.o
+> diff --git a/drivers/video/backlight/tps611xx_bl.c b/drivers/video/backlight/tps611xx_bl.c
+> new file mode 100644
+> index 0000000..4b76cdd
+> --- /dev/null
+> +++ b/drivers/video/backlight/tps611xx_bl.c
+> @@ -0,0 +1,486 @@
+> +/*
+> + * Simple driver for Texas Instruments TPS611XX Backlight driver chip
+> + *        using EasyScale Interface. It supports TPS61158, TPS61161,
+> + *        TPS61163 and TPS61165.
+> + *
+> + * Copyright (C) 2014 Texas Instruments
+> + * Author: Daniel Jeong  <gshark.jeong@gmail.com>
+> + *	       Ldd Mlp <ldd-mlp@list.ti.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#include <linux/backlight.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/fb.h>
+> +#include <linux/gpio.h>
+> +#include <linux/init.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/platform_data/tps611xx_bl.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/slab.h>
+> +
+> +#define CMD_FORWARD 0
+> +#define CMD_BACKWARD 1
+> +
+> +enum tps611xx_id {
+> +	TPS61158_ID = 0,
+> +	TPS61161_ID,
+> +	TPS61163_ID,
+> +	TPS61165_ID,
+> +};
+> +
+> +/*
+> + * easyscale time spec
+> + * @es_delay : es delay time(ns)
+> + * @es_det   : es detection time(ns)
+> + * @start    : start time of data stream(ns)
+> + * @eos      : end time of data stream(ns)
+> + * @reset    : ic shutdown time(ms)
+> + * @logic_1_low : low time high bit(ns)
+> + * @logic_0_low : low time low bit(ns)
+> + * @ackn        : duation of ack condistion(ns)
+> + * @ack_poll    : ack polling duration(ns)
+> + */
+> +struct tps611xx_time {
+> +	unsigned int es_delay;
+> +	unsigned int es_det;
+> +	unsigned int start;
+> +	unsigned int eos;
+> +	unsigned int reset;
+> +	unsigned int logic_1_low;
+> +	unsigned int logic_0_low;
+> +	unsigned int ackn;
+> +	unsigned int ack_poll;
+> +};
+> +
+> +/*
+> + * @seq : sequence of data transfer
+> + * @size: size of data
+> + * @brt_max : max brightness
+> + * @brt_bmask : bit mask of dimming bits
+> + * @rfa_bmask : bit mask of request of ack
 
-Sergei wrote a PHY driver for the controller, but it is not merged yet.
-http://marc.info/?l=linux-sh&m=140088276126653&w=2
+s/request of ack/request for ack ?
 
-According to the manual, it just said:
-"The USB3.0 host controller shall download FW via AXI to operate as a Host".
-So, I don't think this is an initializing a PHY.
-However, if I don't initialize a "phy" by the driver, I could not read/write
-all of the USB 3.0 controller registers. (So, I added the comment.)
+> + */
+> +struct tps611xx_command {
+> +	int seq;
+> +	int size;
+> +	int brt_max;
+> +	int brt_bmask;
+> +	int rfa_bmask;
+> +};
+> +
+> +/*
+> + * @id : product id
+> + * @name : product name
+> + * @addr : device address
+> + * @cmd  : es command info
+> + * @time : es time info
+> + */
+> +struct tps611xx_esdata {
+> +	enum tps611xx_id id;
+> +	char *name;
+> +	int addr;
+> +	struct tps611xx_command cmd;
+> +	struct tps611xx_time time;
+> +};
+> +
+> +struct tps611xx_bl_data {
+> +	struct device *dev;
+> +	struct backlight_device *bled;
+> +	struct tps611xx_platform_data *pdata;
+> +
+> +	/*
+> +	 * @rfa_en : acknowlege request enable
 
-Should I move this function to the PHY driver?
+s/acknowledge/acknowledge
+
+How about the following?
+
++	 * @rfa_en : request for acknowledge enable
+
+> +	 * @en_gpio: enable pin gpio no.
+> +	 * @esdata : easyscale data
+> +	 */
+> +	int rfa_en;
+> +	unsigned int en_gpio;
+> +	const struct tps611xx_esdata *esdata;
+> +};
+> +
+> +static struct tps611xx_esdata tps611xx_info[] = {
+> +	[TPS61158_ID] = {
+> +			 .id = TPS61158_ID,
+> +			 .name = "tps61158",
+> +			 .addr = 0x5800,
+> +			 .cmd = {
+> +				 .seq = CMD_FORWARD,
+> +				 .size = 16,
+> +				 .brt_max = 31,
+> +				 .brt_bmask = 0x1f,
+> +				 .rfa_bmask = 0x80},
+
+Would you keep the coding style? The following looks better.
+
++				 .rfa_bmask = 0x80
++			},
+
+
+> +			.time = {
+> +				  .es_delay = 100000,
+> +				  .es_det = 450000,
+> +				  .start = 3500,
+> +				  .eos = 3500,
+> +				  .reset = 4,
+> +				  .logic_1_low = 5000,
+> +				  .logic_0_low = 15000,
+> +				  .ackn = 900000,
+> +				  .ack_poll = 2000},
+> +			 },
+> +
+> +	[TPS61161_ID] = {
+> +			 .id = TPS61161_ID,
+> +			 .name = "tps61161",
+> +			 .addr = 0x7200,
+> +			 .cmd = {
+> +				 .seq = CMD_FORWARD,
+> +				 .size = 16,
+> +				 .brt_max = 31,
+> +				 .brt_bmask = 0x1f,
+> +				 .rfa_bmask = 0x80},
+> +			 .time = {
+> +				  .es_delay = 120000,
+> +				  .es_det = 280000,
+> +				  .start = 2000,
+> +				  .eos = 2000,
+> +				  .reset = 3,
+> +				  .logic_1_low = 3000,
+> +				  .logic_0_low = 7000,
+> +				  .ackn = 512000,
+> +				  .ack_poll = 2000},
+> +			 },
+> +
+> +	[TPS61163_ID] = {
+> +			 .id = TPS61163_ID,
+> +			 .name = "tps61163",
+> +			 .addr = 0x8F0000,
+> +			 .cmd = {
+> +				 .seq = CMD_BACKWARD,
+> +				 .size = 24,
+> +				 .brt_max = 511,
+> +				 .brt_bmask = 0x1ff,
+> +				 .rfa_bmask = 0x400},
+> +			 .time = {
+> +				  .es_delay = 100000,
+> +				  .es_det = 260000,
+> +				  .start = 2000,
+> +				  .eos = 2000,
+> +				  .reset = 3,
+> +				  .logic_1_low = 3000,
+> +				  .logic_0_low = 7000,
+> +				  .ackn = 512000,
+> +				  .ack_poll = 2000},
+> +			 },
+> +
+> +	[TPS61165_ID] = {
+> +			 .id = TPS61165_ID,
+> +			 .name = "tps61165",
+> +			 .addr = 0x7200,
+> +			 .cmd = {
+> +				 .seq = CMD_FORWARD,
+> +				 .size = 16,
+> +				 .brt_max = 31,
+> +				 .brt_bmask = 0x1f,
+> +				 .rfa_bmask = 0x80},
+> +			 .time = {
+> +				  .es_delay = 120000,
+> +				  .es_det = 280000,
+> +				  .start = 4000,
+> +				  .eos = 4000,
+> +				  .reset = 3,
+> +				  .logic_1_low = 3000,
+> +				  .logic_0_low = 7000,
+> +				  .ackn = 512000,
+> +				  .ack_poll = 2000},
+> +			 },
+> +};
+> +
+> +static int tps611xx_bl_update_status(struct backlight_device *bl)
+> +{
+> +	struct tps611xx_bl_data *pchip = bl_get_data(bl);
+> +	const struct tps611xx_esdata *esdata = pchip->esdata;
+> +	int data_in, t_low, t_logic, max_bmask;
+> +	unsigned long flags;
+> +
+> +	data_in = esdata->addr | (bl->props.brightness & esdata->cmd.brt_bmask);
+> +	if (pchip->rfa_en)
+> +		data_in |= esdata->cmd.rfa_bmask;
+> +
+> +	max_bmask = 0x1 << esdata->cmd.size;
+> +	t_logic = esdata->time.logic_1_low + esdata->time.logic_0_low;
+> +
+> +	local_irq_save(flags);
+> +	/* t_start : 2us high before data byte */
+> +	gpio_direction_output(pchip->en_gpio, 1);
+> +	ndelay(esdata->time.start);
+> +
+> +	/* forward command transfer */
+> +	if (esdata->cmd.seq == CMD_FORWARD) {
+> +		int addr_bmask = max_bmask >> 8;
+> +
+> +		for (max_bmask >>= 1; max_bmask > 0x0; max_bmask >>= 1) {
+> +			if (data_in & max_bmask)
+> +				t_low = esdata->time.logic_1_low;
+> +			else
+> +				t_low = esdata->time.logic_0_low;
+> +
+> +			gpio_direction_output(pchip->en_gpio, 0);
+> +			ndelay(t_low);
+> +			gpio_direction_output(pchip->en_gpio, 1);
+> +			ndelay(t_logic - t_low);
+> +
+> +			if (max_bmask == addr_bmask) {
+> +				gpio_direction_output(pchip->en_gpio, 0);
+> +				/* t_eos : low after address byte */
+> +				ndelay(esdata->time.eos);
+> +				gpio_direction_output(pchip->en_gpio, 1);
+> +				/* t_start : high before data byte */
+> +				ndelay(esdata->time.start);
+> +			}
+> +		}
+> +	} else {
+> +		/* backward command tansfer */
+> +		int bmask;
+> +
+> +		for (bmask = 0x01; bmask < max_bmask; bmask <<= 1) {
+> +			if (data_in & bmask)
+> +				t_low = esdata->time.logic_1_low;
+> +			else
+> +				t_low = esdata->time.logic_0_low;
+> +
+> +			gpio_direction_output(pchip->en_gpio, 0);
+> +			ndelay(t_low);
+> +			gpio_direction_output(pchip->en_gpio, 1);
+> +			ndelay(t_logic - t_low);
+> +		}
+> +	}
+> +
+> +	/*
+> +	 * t_eos : low after address byte
+> +	 * t_ackVal is also t_eos
+> +	 */
+> +	gpio_direction_output(pchip->en_gpio, 0);
+> +	ndelay(esdata->time.eos);
+> +
+> +	/* RFA management  */
+> +	if (pchip->rfa_en) {
+> +		int max_ack_time = esdata->time.ackn;
+> +		/* set input */
+> +		gpio_direction_input(pchip->en_gpio);
+> +		/* read acknowledge from chip */
+> +		while (max_ack_time > 0) {
+> +			if (gpio_get_value(pchip->en_gpio) == 0)
+> +				break;
+> +			max_ack_time -= esdata->time.ack_poll;
+> +		}
+> +		if (max_ack_time <= 0)
+> +			dev_err(pchip->dev,
+> +				"easyscale : no ack from %s\n", esdata->name);
+> +		else
+> +			ndelay(max_ack_time);
+> +	}
+> +	gpio_direction_output(pchip->en_gpio, 1);
+> +	local_irq_restore(flags);
+> +
+> +	return bl->props.brightness;
+> +}
+> +
+> +static int tps611xx_bl_get_brightness(struct backlight_device *bl)
+> +{
+> +	return bl->props.brightness;
+> +}
+> +
+> +static const struct backlight_ops tps611xx_bl_ops = {
+> +	.update_status = tps611xx_bl_update_status,
+> +	.get_brightness = tps611xx_bl_get_brightness,
+> +};
+> +
+> +static ssize_t tps611xx_enable_store(struct device *dev,
+> +				     struct device_attribute *devAttr,
+> +				     const char *buf, size_t size)
+> +{
+> +	struct tps611xx_bl_data *pchip = dev_get_drvdata(dev);
+> +	const struct tps611xx_esdata *esdata = pchip->esdata;
+> +	unsigned long flags;
+> +	unsigned int input;
+> +	int ret;
+> +
+> +	ret = kstrtouint(buf, 10, &input);
+> +	if (ret)
+> +		return -EINVAL;
+> +
+> +	local_irq_save(flags);
+> +	if (input == 0) {
+> +		/* chip disable */
+> +		gpio_direction_output(pchip->en_gpio, 0);
+> +		/* low more than reset ms to reset */
+> +		mdelay(esdata->time.reset);
+> +	} else {
+> +		/* easyscale detection window */
+> +		gpio_direction_output(pchip->en_gpio, 1);
+> +		ndelay(esdata->time.es_delay);
+> +		gpio_direction_output(pchip->en_gpio, 0);
+> +		ndelay(esdata->time.es_det);
+> +		gpio_direction_output(pchip->en_gpio, 1);
+> +	}
+> +	local_irq_restore(flags);
+> +
+> +	return size;
+> +}
+> +
+> +static DEVICE_ATTR(enable, S_IWUSR, NULL, tps611xx_enable_store);
+> +
+> +#ifdef CONFIG_OF
+> +static struct of_device_id tps611xx_backlight_of_match[] = {
+
+Please add 'const' as below.
+
++static const struct of_device_id tps611xx_backlight_of_match[] = {
+
+> +	{.compatible = "ti,tps61158_bl", .data = &tps611xx_info[TPS61158_ID]},
+> +	{.compatible = "ti,tps61161_bl", .data = &tps611xx_info[TPS61161_ID]},
+> +	{.compatible = "ti,tps61163_bl", .data = &tps611xx_info[TPS61163_ID]},
+> +	{.compatible = "ti,tps61165_bl", .data = &tps611xx_info[TPS61165_ID]},
+> +	{}
+> +};
+> +
+> +MODULE_DEVICE_TABLE(of, tps611xx_backlight_of_match);
+> +
+> +static int tps611xx_backlight_parse_dt(struct tps611xx_bl_data *pchip)
+> +{
+> +	struct device *dev = pchip->dev;
+> +	struct device_node *node = dev->of_node;
+> +	const struct of_device_id *of_id =
+> +	    of_match_device(tps611xx_backlight_of_match, dev);
+> +	u32 value;
+> +	int ret;
+> +
+> +	if (!node)
+> +		return -ENODEV;
+> +
+> +	if (!of_id || !of_id->data) {
+> +		dev_err(dev, "Failed to find tps611xx chip id\n");
+> +		return -EFAULT;
+> +	}
+> +	pchip->esdata = of_id->data;
+> +
+> +	ret = of_property_read_u32(node, "en_gpio_num", &value);
+> +	if (ret < 0)
+> +		return ret;
+> +	pchip->en_gpio = value;
+> +	ret = of_property_read_u32(node, "rfa_en", &value);
+> +	if (ret < 0)
+> +		return ret;
+> +	pchip->rfa_en = value;
+> +
+> +	return 0;
+> +}
+> +#else
+> +static int tps611xx_backlight_parse_dt(struct tps611xx_bl_data *pchip)
+> +{
+> +	return -ENODEV;
+> +}
+> +#endif
+> +
+> +static int tps611xx_backlight_probe(struct platform_device *pdev)
+> +{
+> +	struct tps611xx_bl_data *pchip;
+> +	struct backlight_properties props;
+> +	const struct tps611xx_esdata *esdata;
+> +	struct tps611xx_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> +	unsigned long flags;
+> +	int ret;
+> +
+> +	pchip = devm_kzalloc(&pdev->dev,
+> +			     sizeof(struct tps611xx_bl_data), GFP_KERNEL);
+> +	if (pchip == NULL)
+> +		return -ENOMEM;
+> +	pchip->dev = &pdev->dev;
+> +
+> +	if (pdata == NULL) {
+> +		ret = tps611xx_backlight_parse_dt(pchip);
+> +		if (ret < 0)
+> +			return ret;
+> +	} else {
+> +		pchip->rfa_en = pdata->rfa_en;
+> +		pchip->en_gpio = pdata->en_gpio_num;
+> +		pchip->esdata = (const struct tps611xx_esdata *)
+> +		    platform_get_device_id(pdev)->driver_data;
+> +	}
+> +	esdata = pchip->esdata;
+> +
+> +	memset(&props, 0, sizeof(struct backlight_properties));
+> +	props.brightness = esdata->cmd.brt_max;
+> +	props.max_brightness = esdata->cmd.brt_max;
+> +	props.type = BACKLIGHT_RAW;
+> +	pchip->bled =
+> +	    devm_backlight_device_register(pchip->dev, TPS611XX_NAME,
+> +					   pchip->dev, pchip,
+> +					   &tps611xx_bl_ops, &props);
+> +	if (IS_ERR(pchip->bled))
+> +		return PTR_ERR(pchip->bled);
+> +
+> +	/* for enable/disable */
+> +	ret = device_create_file(&(pchip->bled->dev), &dev_attr_enable);
+> +	if (ret < 0) {
+> +		dev_err(pchip->dev, "failed : add sysfs entries\n");
+> +		return ret;
+> +	}
+> +	platform_set_drvdata(pdev, pchip);
+> +
+> +	/* EasyScale init */
+> +	ret = gpio_request_one(pchip->en_gpio, GPIOF_OUT_INIT_HIGH, "tps611xx");
+> +	if (ret) {
+> +		device_remove_file(&(pchip->bled->dev), &dev_attr_enable);
+> +		dev_err(pchip->dev, "failed : get gpio %d\n", pchip->en_gpio);
+> +		return ret;
+> +	}
+> +
+> +	/*
+> +	 * ES Detection Window
+> +	 *   - ES detect delay
+> +	 *   - ES detect time
+> +	 */
+> +	local_irq_save(flags);
+> +	gpio_direction_output(pchip->en_gpio, 1);
+> +	ndelay(esdata->time.es_delay);
+> +	gpio_direction_output(pchip->en_gpio, 0);
+> +	ndelay(esdata->time.es_det);
+> +	gpio_direction_output(pchip->en_gpio, 1);
+> +	local_irq_restore(flags);
+> +	dev_info(pchip->dev,
+> +		 "%s EasyScale is initialized\n", pchip->esdata->name);
+> +	return 0;
+> +}
+> +
+> +static int tps611xx_backlight_remove(struct platform_device *pdev)
+> +{
+> +	struct tps611xx_bl_data *pchip = platform_get_drvdata(pdev);
+> +	const struct tps611xx_esdata *esdata = pchip->esdata;
+> +
+> +	device_remove_file(&(pchip->bled->dev), &dev_attr_enable);
+> +	gpio_direction_output(pchip->en_gpio, 0);
+> +	mdelay(esdata->time.reset);
+> +	return 0;
+> +}
+> +
+> +static const struct platform_device_id tps611xx_id_table[] = {
+> +	{TPS61158_NAME, (unsigned long)&tps611xx_info[TPS61158_ID]},
+> +	{TPS61161_NAME, (unsigned long)&tps611xx_info[TPS61161_ID]},
+> +	{TPS61163_NAME, (unsigned long)&tps611xx_info[TPS61163_ID]},
+> +	{TPS61165_NAME, (unsigned long)&tps611xx_info[TPS61165_ID]},
+> +	{}
+> +};
+> +
+> +static struct platform_driver tps611xx_backlight_driver = {
+> +	.driver = {
+> +		   .name = TPS611XX_NAME,
+> +		   .owner = THIS_MODULE,
+> +		   .of_match_table = of_match_ptr(tps611xx_backlight_of_match),
+> +		   },
+> +	.probe = tps611xx_backlight_probe,
+> +	.remove = tps611xx_backlight_remove,
+> +	.id_table = tps611xx_id_table,
+> +};
+> +
+> +module_platform_driver(tps611xx_backlight_driver);
+> +
+> +MODULE_DESCRIPTION("EasyScale based tps611xx Backlight Driver");
+> +MODULE_LICENSE("GPL");
+
+How about adding 'GPL v2' instead of 'GPL'?
+
++ MODULE_LICENSE("GPL v2");
+
+> +MODULE_ALIAS("platform:tps611xx_bl");
+> diff --git a/include/linux/platform_data/tps611xx_bl.h b/include/linux/platform_data/tps611xx_bl.h
+> new file mode 100644
+> index 0000000..b7c4504
+> --- /dev/null
+> +++ b/include/linux/platform_data/tps611xx_bl.h
+> @@ -0,0 +1,30 @@
+> +/*
+> + * Simple driver for Texas Instruments TPS61163a Backlight driver chip
+> + * Copyright (C) 2014 Texas Instruments
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + */
+> +
+> +#ifndef __TPS611XX_H
+> +#define __TPS611XX_H
+> +
+> +#define TPS611XX_NAME "tps611xx_bl"
+> +#define TPS61158_NAME "tps61158_bl"
+> +#define TPS61161_NAME "tps61161_bl"
+> +#define TPS61163_NAME "tps61163_bl"
+> +#define TPS61165_NAME "tps61165_bl"
+> +
+> +/* struct tps61163a platform data
+
+Please use the proper coding style as below.
+
++/*
++ * struct tps61163a platform data
+
+> + * @rfa_en : request for acknowledge
+> + * @en_gpio_num : gpio number for en_pin
+> + */
+> +struct tps611xx_platform_data {
+> +
+> +	int rfa_en;
+> +	unsigned int en_gpio_num;
+> +};
+> +
+> +#endif /* __TPS61163A_H */
+
+s/__TPS61163A_H/__TPS611XX_H
+
 
 Best regards,
-Yoshihiro Shimoda
+Jingoo Han
 
-> cheers
-> 
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> 1.7.9.5
+
