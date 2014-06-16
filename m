@@ -1,64 +1,73 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH] dma: imx-sdma: Add a new DMATYPE for Shared Peripheral ASRC
-Date: Mon, 16 Jun 2014 11:31:05 +0800
-Message-ID: <1402889465-23797-1-git-send-email-nicoleotsuka@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinod.koul@intel.com, s.hauer@pengutronix.de
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, dan.j.williams@intel.com, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [PATCHv5 3/3] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
+Date: Mon, 16 Jun 2014 13:42:37 +0900
+Message-ID: <1402893757-18957-4-git-send-email-cw00.choi@samsung.com>
+References: <1402893757-18957-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <1402893757-18957-1-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: lee.jones@linaro.org, sbkim73@samsung.com, sameo@linux.intel.com
+Cc: k.kozlowski@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, linux-kernel@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Shared Peripheral ASRC, running on SPBA, needs to use shp sciprts for
-DMA transfer. So this patch just adds a new DMATYPE for it.
+This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a little
+difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Lee Jones <lee.jones@linaro.org>
+Cc: Mark Brown <broonie@linaro.org>
+Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Yadwinder Singh Brar <yadi.brar@samsung.com>
+Cc: Tomasz Figa <t.figa@samsung.com>
+Cc: Sachin Kamat <sachin.kamat@linaro.org>
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
 ---
- Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
- drivers/dma/imx-sdma.c                                 | 5 +++++
- include/linux/platform_data/dma-imx.h                  | 1 +
- 3 files changed, 7 insertions(+)
+ Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-index ee9be99..d2e91f1 100644
---- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-+++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
-@@ -47,6 +47,7 @@ The full ID of peripheral types can be found below.
- 	20	ASRC
- 	21	ESAI
- 	22	SSI Dual FIFO	(needs firmware ver >= 2)
-+	23	Shared ASRC
+diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+index d81ba30..f7c9180 100644
+--- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
++++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
+@@ -1,5 +1,5 @@
  
- The third cell specifies the transfer priority as below.
+-* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
++* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
  
-diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
-index fc04add..85561dc 100644
---- a/drivers/dma/imx-sdma.c
-+++ b/drivers/dma/imx-sdma.c
-@@ -745,6 +745,11 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
- 		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
- 		per_2_per = sdma->script_addrs->per_2_per_addr;
- 		break;
-+	case IMX_DMATYPE_ASRC_SP:
-+		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
-+		emi_2_per = sdma->script_addrs->mcu_2_shp_addr;
-+		per_2_per = sdma->script_addrs->per_2_per_addr;
-+		break;
- 	case IMX_DMATYPE_MSHC:
- 		per_2_emi = sdma->script_addrs->mshc_2_mcu_addr;
- 		emi_2_per = sdma->script_addrs->mcu_2_mshc_addr;
-diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
-index bcbc6c3..7aa0e89 100644
---- a/include/linux/platform_data/dma-imx.h
-+++ b/include/linux/platform_data/dma-imx.h
-@@ -40,6 +40,7 @@ enum sdma_peripheral_type {
- 	IMX_DMATYPE_ASRC,	/* ASRC */
- 	IMX_DMATYPE_ESAI,	/* ESAI */
- 	IMX_DMATYPE_SSI_DUAL,	/* SSI Dual FIFO */
-+	IMX_DMATYPE_ASRC_SP,	/* Shared ASRC */
- };
+ The Samsung S2MPS11 is a multi-function device which includes voltage and
+ current regulators, RTC, charger controller and other sub-blocks. It is
+@@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interface. Each sub-block is
+ addressed by the host system using different I2C slave addresses.
  
- enum imx_dma_prio {
+ Required properties:
+-- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic".
++- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-pmic"
++              or "samsung,s2mpu02-pmic".
+ - reg: Specifies the I2C slave address of the pmic block. It should be 0x66.
+ 
+ Optional properties:
+@@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
+ 		  - valid values for n are:
+ 			- S2MPS11: 1 to 38
+ 			- S2MPS14: 1 to 25
++			- S2MPU02: 1 to 28
+ 		  - Example: LDO1, LD02, LDO28
+ 	- BUCKn
+ 		  - valid values for n are:
+ 			- S2MPS11: 1 to 10
+ 			- S2MPS14: 1 to 5
++			- S2MPU02: 1 to 7
+ 		  - Example: BUCK1, BUCK2, BUCK9
+ 
+ Example:
 -- 
-1.8.4
+1.8.0
+
