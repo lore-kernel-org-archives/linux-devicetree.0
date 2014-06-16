@@ -1,114 +1,94 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 4/8] iio: Add support for DA9150 GPADC
-Date: Mon, 16 Jun 2014 15:58:33 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB4FD9C7@SW-EX-MBX01.diasemi.com>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <3c1a7551c7deaeccdca731fa95f4349c57e04249.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <539DFFC8.3080406@kernel.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH v3 14/19] ARM: shmobile: r8a7779: Add TMU devices to DT
+Date: Mon, 16 Jun 2014 18:19:02 +0200
+Message-ID: <CAMuHMdXeyKy4vR0jNS3RC9E7+0_=xPXRUDokXe0kP+V8uVEiyQ@mail.gmail.com>
+References: <1402763021-4067-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<1402763021-4067-15-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+	<20140616084707.GF11582@verge.net.au>
+	<1462083.WMstm6aRc1@avalon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <539DFFC8.3080406-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1462083.WMstm6aRc1@avalon>
+Sender: linux-sh-owner@vger.kernel.org
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gSnVuZSAxNSwgMjAxNCAyMToxOSwgSm9uYXRob24gQ2FtZXJvbiB3cm90ZToNCg0KPiBIaSBB
-ZGFtDQo+IA0KPiBSZWFzb25hYmx5IGNsZWFuIGNvZGUsIGJ1dCB0aGUgXyBjaGFubmVscyBzdHVm
-ZiBkb2Vzbid0IGNvbXBseSB3aXRoIHRoZSBBQkkNCj4gYW5kIGlzIHJhdGhlciBjb25mdXNpbmcu
-DQoNClRvIGJlIGhvbmVzdCBJIGRpZCBkZWJhdGUgdGhpcyBpbiBteSBoZWFkIGZvciBhIHdoaWxl
-LiBUaGUgcmVhc29uIEkgd2VudCB3aXRoDQp0aGUgY3VycmVudCBhcHByb2FjaCB3YXMgdG8gbWFr
-ZSB0aGUgZHJpdmVyIGNoYW5uZWwgbGF5b3V0IG1hdGNoIHRoYXQgb2YgdGhlIA0KZGF0YXNoZWV0
-IGZvciB0aGUgZGV2aWNlLiBTb3VuZHMgbGlrZSBpdCB3YXNuJ3QgdGhlIGNvcnJlY3QgZGlyZWN0
-aW9uIHRob3VnaC4NCg0KPiBJZiBpdCByZWFsbHkgZG9lcyBtYWtlIHNlbnNlIHRvIGFsbG93IHJl
-YWRpbmcgdGhlc2UgY2hhbm5lbHMgYXQgZGlmZmVyZW50DQo+IHJhbmdlcyAocHJlc3VtYWJseSB0
-byBlbmhhbmNlIHRoZSBlZmZlY3RpdmUgYWRjIHJlc29sdXRpb24pIHRoZW4gd2UgbmVlZA0KPiB0
-byBjb250cm9sIHRoaXMgdmlhIGV4aXN0aW5nIEFCSXMuIENvbnRyb2xsaW5nIGl0IHZpYSBzY2Fs
-ZSB3aXRoIGENCj4gcmFuZ2UgYXR0cmlidXRlIGlmIHJlcXVpcmVkIChyZWFkIG9ubHkgYnV0IGNo
-YW5nZXMgd2l0aCB3aGF0ZXZlciB0aGUNCj4gc2NhbGUgYXR0cmlidXRlIGl0IHNldCB0bykuDQoN
-Clllcywgd2l0aCBzbWFsbGVyIHJhbmdlIHRoZW4geW91IGdldCBhIGJldHRlciBkZWdyZWUgb2Yg
-YWNjdXJhY3kuIE9rLCB3aWxsIGhhdmUNCmEgbG9vayBhdCB0aGlzIGFuZCBzZWUgaWYgSSBjYW4g
-aW1wcm92ZSB0aGluZ3MgYmFzZWQgb24geW91ciBjb21tZW50cy4NCg0KPiBPZnRlbiwgZm9yIHNs
-b3cgcGFydHMgYXQgbGVhc3QgaXQgbWFrZXMgbGl0dGxlIHNlbnNlIHRvIGhhdmUgcHJvdmlkZQ0K
-PiBzb2Z0d2FyZSBzdXBwb3J0IGZvciB2YXJpYWJsZSBpbnB1dCByYW5nZXMuDQo+IA0KPiBMb29r
-aW5nIGF0IHdoYXQgaXMgY292ZXJlZCwgaXMgaXQgdGhlIGNhc2UgdGhhdCBvbmx5IG9uZSBvcHRp
-b24gd2lsbCBtYWtlDQo+IHNlbnNlIGZvciBhIGdpdmVuIGhhcmR3YXJlIHNldHVwPyAoY292ZXIg
-dGhlIHJlcXVpcmVkIHJhbmdlIGFuZCBub3RoaW5nIG1vcmUpLg0KPiANCj4gSWYgc28sIHBlcmhh
-cHMgdGhpcyB3YW50cyB0byBnbyBpbnRvIHRoZSBkZXZpY2UgdHJlZSBvciBzaW1pbGFyPw0KDQpQ
-b3NzaWJseS4gSGF2aW5nIHJlYWQgeW91ciBjb21tZW50cyBmdXJ0aGVyIG9uIHRob3VnaCwgYW5k
-IGdpdmVuIHRoYXQNCml0IHNlZW1zIHJlYXNvbmFibGUgdG8gdXNlIHRoZSByYW5nZS9zY2FsZSBh
-dHRyaWJ1dGUgdG8gY2hvb3NlIHRoZSByZXNvbHV0aW9uLA0KSSdkIHByZWZlciB0byBvcHQgZm9y
-IHRoYXQgYXBwcm9hY2ggKHNlZW1zIG1vcmUgZmxleGlibGUpLg0KDQo+IFBsZWFzZSBnZXQgcmlk
-IG9mIGV4Y2VzcyB3aGl0ZSBzcGFjZSBhbmQgY29tbWVudHMgdGhhdCBqdXN0IHRlbGwgeW91DQo+
-IHNvbWV0aGluZyBvYnZpb3VzIGFib3V0IHRoZSBjb2RlIGZvbGxvd2luZyB0aGVtLg0KDQpQcmVm
-ZXJhYmx5IEknZCBsaWtlIHRvIGtlZXAgaXQgdGhpcyB3YXkgYXMgSSB0aGluayBpdCBtYWtlcyB0
-aGUgY29kZQ0KZWFzaWVyIHRvIHJlYWQsIGJ1dCBpZiB5b3UncmUgZGVhZCBhZ2FpbnN0IGl0IHRo
-ZW4gSSdsbCByZW1vdmUgdGhlbS4NCg0KPiBMaW5lYXIgaW4gdGhlIGNvZWVmaWNpZW50cywgc28g
-ZmluZSBmb3IgcmF3IG91dHB1dCB3aXRoIGEgc2NhbGUgYW5kIG9mZnNldC4NCg0KT2sgd2lsbCBo
-YXZlIGEgbG9vayBhdCByZS13b3JraW5nIHRoaXMgYXMgcGVyIHlvdXIgY29tbWVudC4NCg0KPiBB
-aCwgc28gaGVyZSBpcyB5b3VyIHJlYXNvbmluZyBiZWhpbmQgdGhlICdpbnRlcmVzdGluZycgdW5k
-ZXJzY29yZSBjaGFubmVscy4NCj4gVGhpcyBpcyBqdXN0IGRvaW5nIGRpZmZlcmVudCByYW5nZSBj
-aGVja3Mgb24gdGhlIGNoYW5uZWw/ICBJZiBzbyBhbGxvdyBvbmUNCj4gYXQgYSB0aW1lIGFuZCBw
-cm92aWRlIGEgd3JpdGFibGUgc2NhbGUgaW5mb19tYXNrIGVsZW1lbnQgdG8gY29udHJvbCB3aGlj
-aA0KPiBpcyB1c2VkLi4NCj4gDQo+IExvb2tzIGxpa2UgdGhlcmUgYXJlIG9ubHkgdGhlcyB0d28g
-Y2hhbm5lbHMgZG9pbmcgdGhpcywgc28gc2hvdWxkbid0IGJlDQo+IHRvbyBoYXJkIHRvIHN1cHBv
-cnQgaXQgdmlhIG1vcmUgY29udmVudGlvbmFsIG1lYW5zLg0KDQpUaGUgR1BJTywgVkJVUyBhbmQg
-VlNZUyByZWxhdGVkIGNoYW5uZWxzIHByb3ZpZGUgZGlmZmVyZW50IHJhbmdlcy4gSSBndWVzcyB0
-aGV5DQpzaG91bGQgYWxsIGZvbGxvdyB0aGUgc2FtZSBhcHByb2FjaCBmb3IgaW1wbGVtZW50aW5n
-IHRoaXMgYWx0ZXJuYXRlIHJhbmdlLiBTbyBJDQp3aWxsIGFzc3VtZSB0aGF0IGZvciB0aGUgJ3Jl
-cGVhdCcgY2hhbm5lbHMgd2hlcmUgdGhlIHNhbWUgcmF3IHZhbHVlIGlzIHByb3ZpZGVkDQpvbiBi
-b3RoIHRoZSBfIGFuZCBub24gXyBjaGFubmVscyBvbmx5IG9uZSBjaGFubmVsIHNob3VsZCBiZSBw
-cm92aWRlZC4NCg0KPiBEb24ndCB1c2UgdGhlIHw9LCBqdXN0ID0gYW5kIHlvdSBjYW4ndCBhdm9p
-ZCBhc3NpZ25pbmcgcmVnIGFib3ZlLg0KPiBBY3R1YWxseSwgaXQncyBub3QgY29tcGxleCBlbm91
-Z2ggdGhhdCB5b3UgY291bGRuJ3QganVzdCBkbyBpdCBkaXJlY3RseSBpbnRvDQo+IHRoZSB3cml0
-ZSBmdW5jdGlvbiBhbmQgc2tpcCB0aGlzIGxvY2FsIHZhcmlhYmxlLg0KDQpPayBmaW5lLiBXaWxs
-IHVwZGF0ZSB0byB0aWR5IHVwLg0KDQo+IFVubG9jayBmaXJzdCwgdGhlbiBjaGVjayBmb3IgZXJy
-b3IuDQoNClllcC4gTWFrZXMgc2Vuc2UuIFdpbGwgdXBkYXRlLg0KDQo+IFRoZSBtaXh0dXJlIG9m
-IGhhdmluZyBkZWZzIGhlcmUgZm9yIHRoZSBzaGlmdC4NCj4gPiArCS8qIE1TQnMgLSA4IGJpdHMg
-Ki8NCj4gPiArCXJlc3VsdCB8PSByZXN1bHRfcmVnc1swXSA8PCAyOw0KPiBhbmQgbm90IGhlcmUg
-aXMgaW5jb25zaXN0ZW50LiAgSSBob25lc3RseSBkb24ndCBtaW5kIHdoaWNoIHdheSwgYnV0DQo+
-IGp1c3QgdXNlIG9uZSBzdHlsZS4NCj4gDQo+IFlvdSBjb3VsZCBqdXN0IHVzZSBhbiBlbmRpYW4g
-Y29udmVyc2lvbiBhbmQgc2hpZnQgdGhlIGNvbWJpbmVkIDE2Yml0IHJlc3VsdA0KDQpGYWlyIHBv
-aW50LiBXaWxsIG1ha2UgdGhpcyBjbGVhbmVyLg0KDQo+IEl0IHZlcnkgcmFyZWx5IG1ha2VzIHNl
-bnNlIHRvIHByb3ZpZGUgYm90aCByYXcgYW5kIHByb2Nlc3NlZCBpbnRlcmZhY2VzLg0KPiBJZiB0
-aGUgdHJhbnNmb3JtIGlzIG5hc3R5IGFuZCBub24gbGluZWFyIHRoZW4gdXNlcnNwYWNlIHdvbid0
-IGhhdmUgdGhlIGluZm8NCj4gdG8gZG8gYW55dGhpbmcgd2l0aCBpdC4gIElmIHRoZSB0cmFuc2Zv
-cm0gaXMgbGluZWFyLCB0aGVuIHByb3ZpZGUgc2NhbGUNCj4gYW5kIG9mZnNldCBhbmQgbGV0IHVz
-ZXJzcGFjZSBwZXJmb3JtIHRoZSBjb21wdXRhdGlvbi4NCg0KVGhlIGNoYXJnZXIgbW9kdWxlIHVz
-ZXMgY2VydGFpbiBjaGFubmVscyBmb3IgaXRzIHJlYWRpbmdzLCBhbmQgdG8gbWUgaXQgbWFrZXMN
-Cm1vcmUgc2Vuc2UgZm9yIHRoYXQgY2FsY3VsYXRpb24gdG8gYmUgZG9uZSBieSB0aGUgR1BBREMu
-IEhvd2V2ZXIgaGF2aW5nIGxvb2tlZA0KYXQgdGhlIGlua2Vybi5jIGZyYW1ld29yayBjb2RlIGl0
-IGxvb2tzIGxpa2UgaWYgeW91IHJlcXVlc3QgYSBwcm9jZXNzZWQgY2hhbm5lbA0KYW5kIGl0J3Mg
-ZG9lc24ndCBwcm92aWRlIHRoYXQgZmVhdHVyZSwgdGhlbiB0aGUgY29kZSBkcm9wcyB0byBsaW5l
-YXIgc2NhbGluZyBpZg0KcG9zc2libGUgdG8gcHJvdmlkZSB0aGUgcHJvY2Vzc2VkIHZhbHVlLiBJ
-IHRha2UgaXQgdGhpcyBpcyB0aGUgcHJlZmVycmVkDQphcHByb2FjaCB0aGVuPyBKdXN0IHRob3Vn
-aHQgaXQgd2FzIG1vcmUgY29uc2lzdGVudCB0byBzZWUgdGhlIGNhbGN1bGF0aW9uIHVzaW5nDQpk
-ZWRpY2F0ZWQgZnVuY3Rpb25zIChwcm9jZXNzZWQgY2hhbm5lbCBhcHByb2FjaCkuDQoNCj4gR2V0
-IHJpZCBvZiB0aGlzIGNvbW1lbnQgYW5kIGFueSBvdGhlciBvbmVzIHRoYXQgZG9uJ3QgYWRkIGFu
-eQ0KPiBhY3R1YWwgaW5mb3JtYXRpb24uICBBbHNvIHRoaXMgaXMgc2luZ2xlIGxpbmUgY29tbWVu
-dCwgcGxlYXNlDQo+IGNoZWNrIHRoZSBjb21tZW50IHN5bnRheC4NCg0KQXMgcGVyIHByZXZpb3Vz
-IGNvbW1lbnQgb24gdGhpcyB0b3BpYy4NCg0KPiBXaHkgYSBibGFuayBsaW5lIGhlcmUuDQoNCkFj
-Y2lkZW50YWwuIFdpbGwgcmVtb3ZlIGl0Lg0KDQo+IFRoZSBkZXZpY2UgcmVnaXN0ZXIgY2FsbCBp
-cyB0aGUgb25lIHRoYXQgZXhwb3NlcyB1c2Vyc3BhY2UgaW50ZXJmYWNlcy4gQXMNCj4gYSBnZW5l
-cmFsIHJ1bGUgaXQgd2FudHMgdG8gYmUgdGhlIGxhc3QgdGhpbmcgaW4gcHJvYmUgYXMgZXZlcnl0
-aGluZw0KPiBlbHNlIHNob3VsZCBiZSBzZXR1cCBmaXJzdC4NCg0KT2ssIHRoYXQncyBzb21ldGhp
-bmcgSSBtaXNzZWQuIFdpbGwgbWFrZSB0aGUgY2hhbmdlLg0KDQo+ID4gKyNpbmNsdWRlIDxsaW51
-eC9paW8vbWFjaGluZS5oPg0KPiBUaGlzIGlzbid0IHVzZWQgaW4gdGhlIGhlYWRlciwgc28gc2hv
-dWxkIGJlIGluY2x1ZGVkIGluIHRoZSBjIGZpbGUsIG5vdCBoZXJlLg0KDQpZZXMsIGlzIHNvbWV0
-aGluZyBJIG1lYW50IHRvIHJlbW92ZSBkdXJpbmcgZGV2ZWxvcG1lbnQgaW5jcmVtZW50cy4gQ29u
-c2lkZXIgaXQNCmdvbmUuDQoNCj4gPiArI2luY2x1ZGUgPGxpbnV4L21mZC9kYTkxNTAvY29yZS5o
-Pg0KPiBIYXZpbmcgbW92ZWQgdGhlIHN0cnVjdCBkZWZpbml0aW9uIGludG8gdGhlIGMgZmlsZQ0K
-PiB0aGlzIGhlYWRlciBpbmNsdWRlIHdpbGwgbm90IHdhbnQgdG8gYmUgaGVyZS4NCg0KSSBwZXJz
-b25hbGx5IHdvdWxkIHByZWZlciBhIHNlcGFyYXRlIGhlYWRlciBmb3IgdGhlIGRlZmluaXRpb25z
-IGFzIEkgYmVsaWV2ZQ0KdGhpcyBpcyB0aWRpZXIuIEhhdmUgbmV2ZXIgcmVhbGx5IGxpa2VkIHN0
-cnVjdCBkZWZpbml0aW9ucyBpbiBjIGZpbGVzLiBJIGNvdWxkDQptb3ZlIHRoaXMgaGVhZGVyIHRv
-IHRoZSBzYW1lIGRpcmVjdG9yeSBhcyB0aGUgc291cmNlIGZpbGUsIGlmIHRoYXQgaXMgcHJlZmVy
-cmVkLg0KQXMgaXQgc3RhbmRzIHRoaXMgaGVhZGVyIGlzIG9ubHkgcmVsYXRlZCB0byBEQTkxNTAg
-aW4gaXRzIGN1cnJlbnQgbG9jYXRpb24sIHNvDQppcyB0aGlzIGEgYmlnIGlzc3VlPyBJZiBub3Qg
-dGhlbiBJJ2QgcmF0aGVyIGtlZXAgaXQgYXMgaXMuDQoNCj4gPiArLyogUHJpdmF0ZSBkYXRhICov
-DQo+IFdoeSBpcyB0aGlzIGluIHRoZSBoZWFkZXI/ICBTaG91bGQgYmUgZGVmaW5lZCBkaXJlY3Rs
-eSBpbiB0aGUgYyBmaWxlDQo+IGFzIG5vdGhpbmcgb3V0c2lkZSB0aGUgZHJpdmVyIHNob3VsZCBi
-ZSB0b3VjaGluZyBpdC4NCg0KQXMgcGVyIHByZXZpb3VzIGNvbW1lbnQuDQo=
+Hi Laurent,
+
+On Mon, Jun 16, 2014 at 4:22 PM, Laurent Pinchart
+<laurent.pinchart@ideasonboard.com> wrote:
+>> diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
+>> index bf716ce..81714ce 100644
+>> --- a/arch/arm/boot/dts/r8a7779.dtsi
+>> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+>> @@ -269,9 +269,10 @@
+>>       tmu0: timer@ffd80000 {
+>>               compatible = "renesas,tmu";
+>>               reg = <0xffd80000 0x30>;
+>> -             interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
+>> -                          <0 41 IRQ_TYPE_LEVEL_HIGH>,
+>> -                          <0 42 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupt-parent = <&gic>;
+>> +             interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 33 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 34 IRQ_TYPE_LEVEL_HIGH>;
+>>               clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
+>>               clock-names = "fck";
+>>
+>> @@ -283,9 +284,10 @@
+>>       tmu1: timer@ffd81000 {
+>>               compatible = "renesas,tmu";
+>>               reg = <0xffd81000 0x30>;
+>> -             interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>,
+>> -                          <0 45 IRQ_TYPE_LEVEL_HIGH>,
+>> -                          <0 46 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupt-parent = <&gic>;
+>> +             interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 36 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 37 IRQ_TYPE_LEVEL_HIGH>;
+>
+> If I'm not mistaken the interrupts should be 36, 37 and 38.
+
+(diving into the documentation)
+
+Yes, probably 36, 37, and 38. I say "probably", as I find it non-trivial
+to convert from docs to DT.
+
+What happens with 35, which is "TMU21 (input capture)"?
+As DT describes the hardware, shouldn't it be mentioned here?
+
+>>               clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
+>>               clock-names = "fck";
+>>
+>> @@ -296,10 +298,11 @@
+>>
+>>       tmu2: timer@ffd82000 {
+>>               compatible = "renesas,tmu";
+>> +             interrupt-parent = <&gic>;
+>>               reg = <0xffd82000 0x30>;
+>> -             interrupts = <0 48 IRQ_TYPE_LEVEL_HIGH>,
+>> -                          <0 49 IRQ_TYPE_LEVEL_HIGH>,
+>> -                          <0 50 IRQ_TYPE_LEVEL_HIGH>;
+>> +             interrupts = <0 38 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 39 IRQ_TYPE_LEVEL_HIGH>,
+>> +                          <0 40 IRQ_TYPE_LEVEL_HIGH>;
+>
+> And 40, 41 and 42 here.
+
+Likewise for "TMU51 (input capture)"?
+
+>>               clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
+>>               clock-names = "fck";
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
