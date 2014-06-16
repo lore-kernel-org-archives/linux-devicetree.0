@@ -1,69 +1,82 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
- v3.16
-Date: Mon, 16 Jun 2014 11:17:43 +0100
-Message-ID: <20140616101743.GO14323@lee--X1>
-References: <1401214140-9828-1-git-send-email-tony@atomide.com>
- <20140528071313.GH4227@lee--X1>
- <20140528180607.GB4707@atomide.com>
- <20140602163841.GC11004@atomide.com>
- <20140603080632.GC3060@lee--X1>
- <20140612054348.GC17845@atomide.com>
- <20140612074705.GB11421@lee--X1>
- <20140612080030.GD17845@atomide.com>
- <20140612083357.GB14323@lee--X1>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v6 0/7] ARM: berlin: add AHCI support
+Date: Mon, 16 Jun 2014 12:26:25 +0200
+Message-ID: <1402914392-6028-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140612083357.GB14323@lee--X1>
-Sender: linux-omap-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > > > Still not seeing this branch being merged..
-> > >=20
-> > > Oh crap, I see what's happened and it's completely my fault.
-> > >=20
-> > > If you read the final merge commit carefully:
-> > >=20
-> > > 28fee3f: ("Merge branches 'ib-from-asoc-3.16', 'ib-from-pm-3.16',
-> > > 'ib-from-regulator-3.16', 'ib-mfd-gpio-3.16' and
-> > > 'ib-mfd-mmc-memstick-3.16', tags 'ib-mfd-extcon-3.16',
-> > > 'ib-mfd-omap-3.16' and 'ib-mfd-regulator-3.16' into
-> > > ibs-for-mfd-merged")
-> > >=20
-> > > I appear to have a _branch_ AND a _tag_ called ib-mfd-omap-3.16 a=
-nd it
-> > > looks like Git has taken the tag as a preference. heads/ib-mfd-om=
-ap-3.16
-> > > is actually at tag/ib-mfd-omap-3.16-1 (notice the appended '-1'),
-> > > which contains your most recent patches.  Since I created the MFD=
--OMAP
-> > > shared branch I have changed the naming convention to avoid this =
-sort
-> > > of ambiguity.  I'll send a second MFD pull-request to Linus today=
-=2E
-> >=20
-> > Heh OK yeah I've hit that also at some point :)
-> > =20
-> > > Sorry Tony.
-> >=20
-> > No problem, good to hear you got it figured out.
->=20
-> Pull-request sent.  Hopefully it's sorted now.
+This series adds the support for Berlin SoC AHCI controller. The
+controller allows to use the SATA host interface and, for example, the
+eSATA port on the BG2Q.
 
-bae14e7a2dcb726476b5020396923a24ccc4c40b
+The series adds a PHY driver to control the two SATA ports available,
+and adds a generic compatible to use the existing ahci_platform driver.
+
+Also enable the eSATA interface on the BG2Q DMP.
+
+Changes sinve v5:
+	- rebased on top of v3.16-rc1
+	- added the clocks property in the sata node
+
+Changes since v4:
+        - updated PHY driver as tristate
+        - handled the case were no SATA port is enabled
+        - updated the compatible to a generic one
+        - cosmetic fixups
+
+Changes since v3:
+        - moved all PHY operations to the PHY driver
+        - removed PHY sub-nodes
+        - removed the custom Berlin AHCI driver and switched to
+          ahci_platform
+        - added multiple PHYs support to the libahci_platform
+
+Changes since v2:
+        - modeled each PHY as a sub-node
+        - cosmetic fixups
+
+Changes since v1:
+        - added a PHY driver, allowing to enable each port
+          individually and removed the 'force-port-map' property
+        - made the drivers a bit less magic :)
+        - wrote a function to select and configure registers in the
+          AHCI driver
+        - removed BG2 / BG2CD nodes
+
+Antoine T=C3=A9nart (7):
+  phy: add a driver for the Berlin SATA PHY
+  Documentation: bindings: add the Berlin SATA PHY
+  ata: libahci: allow to use multiple PHYs
+  ata: ahci_platform: add a generic AHCI compatible
+  Documentation: bindings: document the sub-nodes AHCI bindings
+  ARM: berlin: add the AHCI node for the BG2Q
+  ARM: berlin: enable the eSATA interface on the BG2Q DMP
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  37 ++++
+ .../devicetree/bindings/phy/berlin-sata-phy.txt    |  14 ++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   8 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  28 +++
+ drivers/ata/ahci.h                                 |   3 +-
+ drivers/ata/ahci_platform.c                        |   2 +
+ drivers/ata/libahci.c                              |   7 +
+ drivers/ata/libahci_platform.c                     | 170 +++++++++++--=
+--
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-sata.c                      | 232 +++++++++++++=
+++++++++
+ 11 files changed, 473 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-sata-p=
+hy.txt
+ create mode 100644 drivers/phy/phy-berlin-sata.c
 
 --=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
-n
-the body of a message to majordomo@vger.kernel.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
+
