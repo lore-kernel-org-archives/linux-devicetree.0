@@ -1,77 +1,92 @@
-From: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v2] firmware: Add device tree binding for coreboot
-Date: Mon, 16 Jun 2014 13:17:34 -0700
-Message-ID: <1402949854-30380-1-git-send-email-jwerner@chromium.org>
-References: <1402689965-19397-1-git-send-email-jwerner@chromium.org> <CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com> <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com> <CALiw-2GWHKPbXuMFXUHY_pgpUJNdqQbyPEV1UjEep3zD2sSRPQ@mail.gmail.com> <CAODwPW9w0sKme=QSthJN7QACGcwpR6NmxufFtirkm6d3XYZ1_g@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAODwPW9w0sKme=QSthJN7QACGcwpR6NmxufFtirkm6d3XYZ1_g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olof Johansson <olofj-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <stephen.r.warren-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stefan Reinauer <stefan.reinauer-7ChRSZmxDtxg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 14/19] ARM: shmobile: r8a7779: Add TMU devices to DT
+Date: Mon, 16 Jun 2014 22:31:17 +0200
+Message-ID: <5236750.dtz35JItTk@avalon>
+References: <1402763021-4067-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1462083.WMstm6aRc1@avalon> <CAMuHMdXeyKy4vR0jNS3RC9E7+0_=xPXRUDokXe0kP+V8uVEiyQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdXeyKy4vR0jNS3RC9E7+0_=xPXRUDokXe0kP+V8uVEiyQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation describing a device tree binding for the
-coreboot firmware. It is meant to be dynamically added during boot and
-contains address definitions for the coreboot table (a list of
-variable-sized descriptors providing information about various compile-
-and run-time generated firmware parameters) and the CBMEM area (the
-structure containing most run-time resident memory regions set up by
-coreboot).
+Hi Geert,
 
-These definitions allow kernel drivers to easily access data contained
-in and pointed to by these regions (such as coreboot's in-memory log).
-(An example implementation can be seen at http://crosreview.com/203371,
-which will be submitted at a later point.)
+On Monday 16 June 2014 18:19:02 Geert Uytterhoeven wrote:
+> On Mon, Jun 16, 2014 at 4:22 PM, Laurent Pinchart wrote:
+> >> diff --git a/arch/arm/boot/dts/r8a7779.dtsi
+> >> b/arch/arm/boot/dts/r8a7779.dtsi index bf716ce..81714ce 100644
+> >> --- a/arch/arm/boot/dts/r8a7779.dtsi
+> >> +++ b/arch/arm/boot/dts/r8a7779.dtsi
+> >> @@ -269,9 +269,10 @@
+> >>       tmu0: timer@ffd80000 {
+> >>               compatible = "renesas,tmu";
+> >>               reg = <0xffd80000 0x30>;
+> >> -             interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
+> >> -                          <0 41 IRQ_TYPE_LEVEL_HIGH>,
+> >> -                          <0 42 IRQ_TYPE_LEVEL_HIGH>;
+> >> +             interrupt-parent = <&gic>;
+> >> +             interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                          <0 33 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                          <0 34 IRQ_TYPE_LEVEL_HIGH>;
+> >> 
+> >>               clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
+> >>               clock-names = "fck";
+> >> 
+> >> @@ -283,9 +284,10 @@
+> >>       tmu1: timer@ffd81000 {
+> >>               compatible = "renesas,tmu";
+> >>               reg = <0xffd81000 0x30>;
+> >> -             interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>,
+> >> -                          <0 45 IRQ_TYPE_LEVEL_HIGH>,
+> >> -                          <0 46 IRQ_TYPE_LEVEL_HIGH>;
+> >> +             interrupt-parent = <&gic>;
+> >> +             interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                          <0 36 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                          <0 37 IRQ_TYPE_LEVEL_HIGH>;
+> > 
+> > If I'm not mistaken the interrupts should be 36, 37 and 38.
+> 
+> (diving into the documentation)
+> 
+> Yes, probably 36, 37, and 38. I say "probably", as I find it non-trivial
+> to convert from docs to DT.
+> 
+> What happens with 35, which is "TMU21 (input capture)"?
+> As DT describes the hardware, shouldn't it be mentioned here?
 
-Change-Id: I97609d461d306f85851e5efc26c675ca1e2d7e9d
-Signed-off-by: Julius Werner <jwerner-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- .../devicetree/bindings/firmware/coreboot.txt      | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/coreboot.txt
+Input capture isn't supported by the TMU driver yet. I haven't checked how the 
+feature is implemented in the hardware, which is why I've left it out from the 
+DT bindings for now.
 
-diff --git a/Documentation/devicetree/bindings/firmware/coreboot.txt b/Documentation/devicetree/bindings/firmware/coreboot.txt
-new file mode 100644
-index 0000000..5055f0e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/coreboot.txt
-@@ -0,0 +1,32 @@
-+COREBOOT firmware information
-+
-+The device tree node to communicate the location of coreboot's memory-resident
-+bookkeeping structures to the kernel. Since coreboot itself cannot boot a
-+device-tree-based kernel (yet), this node needs to be inserted by a
-+second-stage bootloader (a coreboot "payload").
-+
-+Required properties:
-+ - compatible: Should be "coreboot"
-+ - reg: Address and length of the following two memory regions, in order:
-+	1.) The coreboot table. This is a list of variable-sized descriptors
-+	that contain various compile- and run-time generated firmware
-+	parameters. It is identified by the magic string "LBIO" in its first
-+	four bytes. See coreboot's src/include/boot/coreboot_tables.h for
-+	details.
-+	2.) The CBMEM area. This is a downward-growing memory region used by
-+	coreboot to dynamically allocate data structures that remain resident.
-+	It may or may not include the coreboot table as one of its members. It
-+	is identified by a root node descriptor with the magic number
-+	0xc0389479 that resides in the topmost 8 bytes of the area. See
-+	coreboot's src/lib/dynamic_cbmem.c for details.
-+
-+Example:
-+	firmware {
-+		ranges;
-+
-+		coreboot {
-+			compatible = "coreboot";
-+			reg = <0xfdfea000 0x264>,
-+			      <0xfdfea000 0x16000>;
-+		}
-+	};
+> >>               clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
+> >>               clock-names = "fck";
+> >> 
+> >> @@ -296,10 +298,11 @@
+> >> 
+> >>       tmu2: timer@ffd82000 {
+> >>               compatible = "renesas,tmu";
+> >> +             interrupt-parent = <&gic>;
+> >>               reg = <0xffd82000 0x30>;
+> >> -             interrupts = <0 48 IRQ_TYPE_LEVEL_HIGH>,
+> >> -                          <0 49 IRQ_TYPE_LEVEL_HIGH>,
+> >> -                          <0 50 IRQ_TYPE_LEVEL_HIGH>;
+> >> +             interrupts = <0 38 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                          <0 39 IRQ_TYPE_LEVEL_HIGH>,
+> >> +                          <0 40 IRQ_TYPE_LEVEL_HIGH>;
+> > 
+> > And 40, 41 and 42 here.
+> 
+> Likewise for "TMU51 (input capture)"?
+> 
+> >>               clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
+> >>               clock-names = "fck";
+
 -- 
-1.8.3.2
+Regards,
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Laurent Pinchart
+
