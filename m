@@ -1,616 +1,291 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: [PATCH V3 2/2] arm: dts: dra7: add crossbar device binding
-Date: Mon, 16 Jun 2014 17:40:22 +0530
-Message-ID: <1402920622-7998-3-git-send-email-r.sricharan@ti.com>
-References: <1402920622-7998-1-git-send-email-r.sricharan@ti.com>
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
+ H2 and M2 xHCI controllers
+Date: Mon, 16 Jun 2014 21:17:59 +0900
+Message-ID: <539EE077.8000601@renesas.com>
+References: <539AEC8F.4030003@renesas.com> <20140613142525.GE8319@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402920622-7998-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: tony@atomide.com, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, r.sricharan@ti.com, tglx@linutronix.de, jason@lakedaemon.net, joe@perches.com, Benoit Cousson <bcousson@baylibre.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140613142525.GE8319-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>
+Cc: "mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org" <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, SH-Linux <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: R Sricharan <r.sricharan@ti.com>
+Hi,
 
-There is a IRQ crossbar device in the soc, which
-maps the irq requests from the peripherals to the
-mpu interrupt controller's inputs. The Peripheral irq
-requests are connected to only one crossbar
-input and the output of the crossbar is connected to only one
-controller's input line. The crossbar device is used to map
-a peripheral input to a free mpu's interrupt controller line.
+(2014/06/13 23:25), Felipe Balbi wrote:
+> Hi,
+> 
+> On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
+>> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
+>> some specific initializations related to the firmware downloading and
+>> some specific registers. This patch adds the support for this special
+>> configuration as an xHCI quirk executed during probe and start.
+>>
+>> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh-zM6kxYcvzFBBDgjK7y7TUQ@public.gmane.org>
+>> ---
+>>  drivers/usb/host/Kconfig     |    8 +++
+>>  drivers/usb/host/Makefile    |    3 +
+>>  drivers/usb/host/xhci-plat.c |   19 ++++++
+>>  drivers/usb/host/xhci-rcar.c |  148 ++++++++++++++++++++++++++++++++++++++++++
+>>  drivers/usb/host/xhci-rcar.h |   27 ++++++++
+>>  5 files changed, 205 insertions(+)
+>>  create mode 100644 drivers/usb/host/xhci-rcar.c
+>>  create mode 100644 drivers/usb/host/xhci-rcar.h
+>>
+>> diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+>> index 61b7817..537d9e1 100644
+>> --- a/drivers/usb/host/Kconfig
+>> +++ b/drivers/usb/host/Kconfig
+>> @@ -37,6 +37,14 @@ config USB_XHCI_MVEBU
+>>  	  Say 'Y' to enable the support for the xHCI host controller
+>>  	  found in Marvell Armada 375/38x ARM SOCs.
+>>
+>> +config USB_XHCI_RCAR
+>> +	tristate "xHCI support for Renesas R-Car SoCs"
+>> +	select USB_XHCI_PLATFORM
+>> +	depends on ARCH_SHMOBILE || COMPILE_TEST
+>> +	---help---
+>> +	  Say 'Y' to enable the support for the xHCI host controller
+>> +	  found in Renesas R-Car ARM SoCs.
+>> +
+>>  endif # USB_XHCI_HCD
+>>
+>>  config USB_EHCI_HCD
+>> diff --git a/drivers/usb/host/Makefile b/drivers/usb/host/Makefile
+>> index af89a90..144c038 100644
+>> --- a/drivers/usb/host/Makefile
+>> +++ b/drivers/usb/host/Makefile
+>> @@ -22,6 +22,9 @@ ifneq ($(CONFIG_USB_XHCI_PLATFORM), )
+>>  ifneq ($(CONFIG_USB_XHCI_MVEBU), )
+>>  	xhci-hcd-y		+= xhci-mvebu.o
+>>  endif
+>> +ifneq ($(CONFIG_USB_XHCI_RCAR), )
+>> +	xhci-hcd-y		+= xhci-rcar.o
+>> +endif
+>>  endif
+>>
+>>  obj-$(CONFIG_USB_WHCI_HCD)	+= whci/
+>> diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+>> index 29d8adb..b6f2b6b 100644
+>> --- a/drivers/usb/host/xhci-plat.c
+>> +++ b/drivers/usb/host/xhci-plat.c
+>> @@ -20,6 +20,7 @@
+>>
+>>  #include "xhci.h"
+>>  #include "xhci-mvebu.h"
+>> +#include "xhci-rcar.h"
+>>
+>>  static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>>  {
+>> @@ -34,11 +35,27 @@ static void xhci_plat_quirks(struct device *dev, struct xhci_hcd *xhci)
+>>  /* called during probe() after chip reset completes */
+>>  static int xhci_plat_setup(struct usb_hcd *hcd)
+>>  {
+>> +	struct device_node *of_node = hcd->self.controller->of_node;
+>> +	int ret;
+>> +
+>> +	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
+>> +	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791")) {
+>> +		ret = xhci_rcar_init_quirk(hcd);
+>> +		if (ret)
+>> +			return ret;
+>> +	}
+>> +
+>>  	return xhci_gen_setup(hcd, xhci_plat_quirks);
+>>  }
+>>
+>>  static int xhci_plat_start(struct usb_hcd *hcd)
+>>  {
+>> +	struct device_node *of_node = hcd->self.controller->of_node;
+>> +
+>> +	if (of_device_is_compatible(of_node, "renesas,xhci-r8a7790") ||
+>> +	    of_device_is_compatible(of_node, "renesas,xhci-r8a7791"))
+>> +		xhci_rcar_start(hcd);
+>> +
+>>  	return xhci_run(hcd);
+>>  }
+>>
+>> @@ -270,6 +287,8 @@ static const struct of_device_id usb_xhci_of_match[] = {
+>>  	{ .compatible = "xhci-platform" },
+>>  	{ .compatible = "marvell,armada-375-xhci"},
+>>  	{ .compatible = "marvell,armada-380-xhci"},
+>> +	{ .compatible = "renesas,xhci-r8a7790"},
+>> +	{ .compatible = "renesas,xhci-r8a7791"},
+>>  	{ },
+>>  };
+>>  MODULE_DEVICE_TABLE(of, usb_xhci_of_match);
+>> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
+>> new file mode 100644
+>> index 0000000..ff0d1b4
+>> --- /dev/null
+>> +++ b/drivers/usb/host/xhci-rcar.c
+>> @@ -0,0 +1,148 @@
+>> +/*
+>> + * xHCI host controller driver for R-Car SoCs
+>> + *
+>> + * Copyright (C) 2014 Renesas Electronics Corporation
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License
+>> + * version 2 as published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/firmware.h>
+>> +#include <linux/module.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/usb/phy.h>
+>> +
+>> +#include "xhci.h"
+>> +#include "xhci-rcar.h"
+>> +
+>> +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem"
+>> +MODULE_FIRMWARE(FIRMWARE_NAME);
+>> +
+>> +/*** Register Offset ***/
+>> +#define RCAR_USB3_INT_ENA	0x224	/* Interrupt Enable */
+>> +#define RCAR_USB3_DL_CTRL	0x250	/* FW Download Control & Status */
+>> +#define RCAR_USB3_FW_DATA0	0x258	/* FW Data0 */
+>> +
+>> +#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
+>> +#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */
+>> +#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */
+>> +#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */
+>> +#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
+>> +#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */
+>> +
+>> +/*** Register Settings ***/
+>> +/* Interrupt Enable */
+>> +#define RCAR_USB3_INT_XHC_ENA	0x00000001
+>> +#define RCAR_USB3_INT_PME_ENA	0x00000002
+>> +#define RCAR_USB3_INT_HSE_ENA	0x00000004
+>> +#define RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \
+>> +				RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA)
+>> +
+>> +/* FW Download Control & Status */
+>> +#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
+>> +#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010
+>> +#define RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100
+>> +
+>> +/* LCLK Select */
+>> +#define RCAR_USB3_LCLK_ENA_VAL	0x01030001
+>> +
+>> +/* USB3.0 Configuration */
+>> +#define RCAR_USB3_CONF1_VAL	0x00030204
+>> +#define RCAR_USB3_CONF2_VAL	0x00030300
+>> +#define RCAR_USB3_CONF3_VAL	0x13802007
+>> +
+>> +/* USB3.0 Polarity */
+>> +#define RCAR_USB3_RX_POL_VAL	BIT(21)
+>> +#define RCAR_USB3_TX_POL_VAL	BIT(4)
+>> +
+>> +void xhci_rcar_start(struct usb_hcd *hcd)
+>> +{
+>> +	u32 temp;
+>> +
+>> +	if (hcd->regs != NULL) {
+>> +		/* Interrupt Enable */
+>> +		temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
+>> +		temp |= RCAR_USB3_INT_ENA_VAL;
+>> +		writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
+>> +		/* LCLK Select */
+>> +		writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
+>> +		/* USB3.0 Configuration */
+>> +		writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
+>> +		writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
+>> +		writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
+>> +		/* USB3.0 Polarity */
+>> +		writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
+>> +		writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
+>> +	}
+>> +}
+>> +
+>> +static int xhci_rcar_download_firmware(struct device *dev, void __iomem *regs)
+>> +{
+>> +	const struct firmware *fw;
+>> +	int retval, index, j, time;
+>> +	int timeout = 10000;
+>> +	u32 data, val, temp;
+>> +
+>> +	/* request R-Car USB3.0 firmware */
+>> +	retval = request_firmware(&fw, FIRMWARE_NAME, dev);
+>> +	if (retval)
+>> +		return retval;
+>> +
+>> +	/* download R-Car USB3.0 firmware */
+>> +	temp = readl(regs + RCAR_USB3_DL_CTRL);
+>> +	temp |= RCAR_USB3_DL_CTRL_ENABLE;
+>> +	writel(temp, regs + RCAR_USB3_DL_CTRL);
+>> +
+>> +	for (index = 0; index < fw->size; index += 4) {
+>> +		/* to avoid reading beyond the end of the buffer */
+>> +		for (data = 0, j = 3; j >= 0; j--) {
+>> +			if ((j + index) < fw->size)
+>> +				data |= fw->data[index + j] << (8 * j);
+>> +		}
+>> +		writel(data, regs + RCAR_USB3_FW_DATA0);
+>> +		temp = readl(regs + RCAR_USB3_DL_CTRL);
+>> +		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0;
+>> +		writel(temp, regs + RCAR_USB3_DL_CTRL);
+>> +
+>> +		for (time = 0; time < timeout; time++) {
+>> +			val = readl(regs + RCAR_USB3_DL_CTRL);
+>> +			if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0)
+>> +				break;
+>> +			udelay(1);
+>> +		}
+>> +		if (time == timeout) {
+>> +			retval = -ETIMEDOUT;
+>> +			break;
+>> +		}
+>> +	}
+>> +
+>> +	temp = readl(regs + RCAR_USB3_DL_CTRL);
+>> +	temp &= ~RCAR_USB3_DL_CTRL_ENABLE;
+>> +	writel(temp, regs + RCAR_USB3_DL_CTRL);
+>> +
+>> +	for (time = 0; time < timeout; time++) {
+>> +		val = readl(regs + RCAR_USB3_DL_CTRL);
+>> +		if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
+>> +			retval = 0;
+>> +			break;
+>> +		}
+>> +		udelay(1);
+>> +	}
+>> +	if (time == timeout)
+>> +		retval = -ETIMEDOUT;
+>> +
+>> +	release_firmware(fw);
+>> +
+>> +	return retval;
+>> +}
+>> +
+>> +/* This function needs to initialize a "phy" of usb before */
+> 
+> initializing a PHY looks like something that the PHY layer should do.
+> Why don't you write a PHY driver and teach xhci-core about PHYs ? Then,
+> more people would benefit.
 
-Here, adding a new crossbar device node and replacing all the peripheral
-interrupt numbers with its fixed crossbar input lines.
+Sergei wrote a PHY driver for the controller, but it is not merged yet.
+http://marc.info/?l=linux-sh&m=140088276126653&w=2
 
-Signed-off-by: Sricharan R <r.sricharan@ti.com>
-Signed-off-by: Nishanth Menon <nm@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>
-Cc: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>
----
-[V3] Added ti,irqs-skip and ti,irqs-safe-map properties
-     to the crossbar device node.
+According to the manual, it just said:
+"The USB3.0 host controller shall download FW via AXI to operate as a Host".
+So, I don't think this is an initializing a PHY.
+However, if I don't initialize a "phy" by the driver, I could not read/write
+all of the USB 3.0 controller registers. (So, I added the comment.)
 
- arch/arm/boot/dts/dra7.dtsi |  135 ++++++++++++++++++++++++-------------------
- 1 file changed, 77 insertions(+), 58 deletions(-)
+Should I move this function to the PHY driver?
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index 1cf4ee1..6de99c2 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -80,8 +80,8 @@
- 		ti,hwmods = "l3_main_1", "l3_main_2";
- 		reg = <0x44000000 0x1000000>,
- 		      <0x45000000 0x1000>;
--		interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
--			     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
-+		interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-+			     <GIC_SPI 410 IRQ_TYPE_LEVEL_HIGH>;
- 
- 		prm: prm@4ae06000 {
- 			compatible = "ti,dra7-prm";
-@@ -156,10 +156,10 @@
- 		sdma: dma-controller@4a056000 {
- 			compatible = "ti,omap4430-sdma";
- 			reg = <0x4a056000 0x1000>;
--			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
--				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
- 			#dma-cells = <1>;
- 			#dma-channels = <32>;
- 			#dma-requests = <127>;
-@@ -168,7 +168,7 @@
- 		gpio1: gpio@4ae10000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4ae10000 0x200>;
--			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 24 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio1";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -179,7 +179,7 @@
- 		gpio2: gpio@48055000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48055000 0x200>;
--			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio2";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -190,7 +190,7 @@
- 		gpio3: gpio@48057000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48057000 0x200>;
--			interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio3";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -201,7 +201,7 @@
- 		gpio4: gpio@48059000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48059000 0x200>;
--			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio4";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -212,7 +212,7 @@
- 		gpio5: gpio@4805b000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4805b000 0x200>;
--			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio5";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -223,7 +223,7 @@
- 		gpio6: gpio@4805d000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x4805d000 0x200>;
--			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio6";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -234,7 +234,7 @@
- 		gpio7: gpio@48051000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48051000 0x200>;
--			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 30 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio7";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -245,7 +245,7 @@
- 		gpio8: gpio@48053000 {
- 			compatible = "ti,omap4-gpio";
- 			reg = <0x48053000 0x200>;
--			interrupts = <GIC_SPI 121 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 116 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "gpio8";
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -256,7 +256,7 @@
- 		uart1: serial@4806a000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4806a000 0x100>;
--			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 67 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart1";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -265,7 +265,7 @@
- 		uart2: serial@4806c000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4806c000 0x100>;
--			interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 68 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart2";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -274,7 +274,7 @@
- 		uart3: serial@48020000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48020000 0x100>;
--			interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart3";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -283,7 +283,7 @@
- 		uart4: serial@4806e000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4806e000 0x100>;
--			interrupts = <GIC_SPI 70 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart4";
- 			clock-frequency = <48000000>;
-                         status = "disabled";
-@@ -292,7 +292,7 @@
- 		uart5: serial@48066000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48066000 0x100>;
--			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart5";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -301,7 +301,7 @@
- 		uart6: serial@48068000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48068000 0x100>;
--			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart6";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -310,6 +310,7 @@
- 		uart7: serial@48420000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48420000 0x100>;
-+			interrupts = <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart7";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -318,6 +319,7 @@
- 		uart8: serial@48422000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48422000 0x100>;
-+			interrupts = <GIC_SPI 219 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart8";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -326,6 +328,7 @@
- 		uart9: serial@48424000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x48424000 0x100>;
-+			interrupts = <GIC_SPI 220 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart9";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -334,6 +337,7 @@
- 		uart10: serial@4ae2b000 {
- 			compatible = "ti,omap4-uart";
- 			reg = <0x4ae2b000 0x100>;
-+			interrupts = <GIC_SPI 221 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "uart10";
- 			clock-frequency = <48000000>;
- 			status = "disabled";
-@@ -342,7 +346,7 @@
- 		timer1: timer@4ae18000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4ae18000 0x80>;
--			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer1";
- 			ti,timer-alwon;
- 		};
-@@ -350,28 +354,28 @@
- 		timer2: timer@48032000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48032000 0x80>;
--			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 33 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer2";
- 		};
- 
- 		timer3: timer@48034000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48034000 0x80>;
--			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer3";
- 		};
- 
- 		timer4: timer@48036000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48036000 0x80>;
--			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 35 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer4";
- 		};
- 
- 		timer5: timer@48820000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48820000 0x80>;
--			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 36 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer5";
- 			ti,timer-dsp;
- 		};
-@@ -379,7 +383,7 @@
- 		timer6: timer@48822000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48822000 0x80>;
--			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 37 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer6";
- 			ti,timer-dsp;
- 			ti,timer-pwm;
-@@ -388,7 +392,7 @@
- 		timer7: timer@48824000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48824000 0x80>;
--			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 38 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer7";
- 			ti,timer-dsp;
- 		};
-@@ -396,7 +400,7 @@
- 		timer8: timer@48826000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48826000 0x80>;
--			interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 39 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer8";
- 			ti,timer-dsp;
- 			ti,timer-pwm;
-@@ -405,21 +409,21 @@
- 		timer9: timer@4803e000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4803e000 0x80>;
--			interrupts = <GIC_SPI 45 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 40 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer9";
- 		};
- 
- 		timer10: timer@48086000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48086000 0x80>;
--			interrupts = <GIC_SPI 46 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 41 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer10";
- 		};
- 
- 		timer11: timer@48088000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48088000 0x80>;
--			interrupts = <GIC_SPI 47 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer11";
- 			ti,timer-pwm;
- 		};
-@@ -427,6 +431,7 @@
- 		timer13: timer@48828000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x48828000 0x80>;
-+			interrupts = <GIC_SPI 339 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer13";
- 			status = "disabled";
- 		};
-@@ -434,6 +439,7 @@
- 		timer14: timer@4882a000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4882a000 0x80>;
-+			interrupts = <GIC_SPI 340 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer14";
- 			status = "disabled";
- 		};
-@@ -441,6 +447,7 @@
- 		timer15: timer@4882c000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4882c000 0x80>;
-+			interrupts = <GIC_SPI 341 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer15";
- 			status = "disabled";
- 		};
-@@ -448,6 +455,7 @@
- 		timer16: timer@4882e000 {
- 			compatible = "ti,omap5430-timer";
- 			reg = <0x4882e000 0x80>;
-+			interrupts = <GIC_SPI 342 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "timer16";
- 			status = "disabled";
- 		};
-@@ -455,7 +463,7 @@
- 		wdt2: wdt@4ae14000 {
- 			compatible = "ti,omap4-wdt";
- 			reg = <0x4ae14000 0x80>;
--			interrupts = <GIC_SPI 80 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "wd_timer2";
- 		};
- 
-@@ -469,14 +477,14 @@
- 		dmm@4e000000 {
- 			compatible = "ti,omap5-dmm";
- 			reg = <0x4e000000 0x800>;
--			interrupts = <0 113 0x4>;
-+			interrupts = <GIC_SPI 108 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "dmm";
- 		};
- 
- 		i2c1: i2c@48070000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48070000 0x100>;
--			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c1";
-@@ -486,7 +494,7 @@
- 		i2c2: i2c@48072000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48072000 0x100>;
--			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c2";
-@@ -496,7 +504,7 @@
- 		i2c3: i2c@48060000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x48060000 0x100>;
--			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c3";
-@@ -506,7 +514,7 @@
- 		i2c4: i2c@4807a000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x4807a000 0x100>;
--			interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c4";
-@@ -516,7 +524,7 @@
- 		i2c5: i2c@4807c000 {
- 			compatible = "ti,omap4-i2c";
- 			reg = <0x4807c000 0x100>;
--			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "i2c5";
-@@ -526,7 +534,7 @@
- 		mmc1: mmc@4809c000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x4809c000 0x400>;
--			interrupts = <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc1";
- 			ti,dual-volt;
- 			ti,needs-special-reset;
-@@ -539,7 +547,7 @@
- 		mmc2: mmc@480b4000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x480b4000 0x400>;
--			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc2";
- 			ti,needs-special-reset;
- 			dmas = <&sdma 47>, <&sdma 48>;
-@@ -550,7 +558,7 @@
- 		mmc3: mmc@480ad000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x480ad000 0x400>;
--			interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc3";
- 			ti,needs-special-reset;
- 			dmas = <&sdma 77>, <&sdma 78>;
-@@ -561,7 +569,7 @@
- 		mmc4: mmc@480d1000 {
- 			compatible = "ti,omap4-hsmmc";
- 			reg = <0x480d1000 0x400>;
--			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "mmc4";
- 			ti,needs-special-reset;
- 			dmas = <&sdma 57>, <&sdma 58>;
-@@ -704,7 +712,7 @@
- 		mcspi1: spi@48098000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x48098000 0x200>;
--			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 60 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi1";
-@@ -725,7 +733,7 @@
- 		mcspi2: spi@4809a000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x4809a000 0x200>;
--			interrupts = <GIC_SPI 66 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi2";
-@@ -741,7 +749,7 @@
- 		mcspi3: spi@480b8000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x480b8000 0x200>;
--			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 86 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi3";
-@@ -754,7 +762,7 @@
- 		mcspi4: spi@480ba000 {
- 			compatible = "ti,omap4-mcspi";
- 			reg = <0x480ba000 0x200>;
--			interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 43 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			ti,hwmods = "mcspi4";
-@@ -774,7 +782,7 @@
- 			clocks = <&qspi_gfclk_div>;
- 			clock-names = "fck";
- 			num-cs = <4>;
--			interrupts = <0 343 0x4>;
-+			interrupts = <GIC_SPI 343 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
- 
-@@ -810,7 +818,7 @@
- 		sata: sata@4a141100 {
- 			compatible = "snps,dwc-ahci";
- 			reg = <0x4a140000 0x1100>, <0x4a141100 0x7>;
--			interrupts = <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&sata_phy>;
- 			phy-names = "sata-phy";
- 			clocks = <&sata_ref_clk>;
-@@ -887,7 +895,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss1";
- 			reg = <0x48880000 0x10000>;
--			interrupts = <0 77 4>;
-+			interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -895,7 +903,7 @@
- 			usb1: usb@48890000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x48890000 0x17000>;
--				interrupts = <0 76 4>;
-+				interrupts = <GIC_SPI 71 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&usb2_phy1>, <&usb3_phy1>;
- 				phy-names = "usb2-phy", "usb3-phy";
- 				tx-fifo-resize;
-@@ -908,7 +916,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss2";
- 			reg = <0x488c0000 0x10000>;
--			interrupts = <0 92 4>;
-+			interrupts = <GIC_SPI 87 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -916,7 +924,7 @@
- 			usb2: usb@488d0000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x488d0000 0x17000>;
--				interrupts = <0 78 4>;
-+				interrupts = <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;
- 				phys = <&usb2_phy2>;
- 				phy-names = "usb2-phy";
- 				tx-fifo-resize;
-@@ -930,7 +938,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss3";
- 			reg = <0x48900000 0x10000>;
--		/*	interrupts = <0 TBD 4>; */
-+			interrupts = <GIC_SPI 344 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -939,7 +947,7 @@
- 			usb3: usb@48910000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x48910000 0x17000>;
--		/*		interrupts = <0 93 4>; */
-+				interrupts = <GIC_SPI 88 IRQ_TYPE_LEVEL_HIGH>;
- 				tx-fifo-resize;
- 				maximum-speed = "high-speed";
- 				dr_mode = "otg";
-@@ -950,7 +958,7 @@
- 			compatible = "ti,dwc3";
- 			ti,hwmods = "usb_otg_ss4";
- 			reg = <0x48940000 0x10000>;
--		/*	interrupts = <0 TBD 4>; */
-+			interrupts = <GIC_SPI 346 IRQ_TYPE_LEVEL_HIGH>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			utmi-mode = <2>;
-@@ -959,7 +967,7 @@
- 			usb4: usb@48950000 {
- 				compatible = "snps,dwc3";
- 				reg = <0x48950000 0x17000>;
--		/*		interrupts = <0 TBD 4>; */
-+				interrupts = <GIC_SPI 345 IRQ_TYPE_LEVEL_HIGH>;
- 				tx-fifo-resize;
- 				maximum-speed = "high-speed";
- 				dr_mode = "otg";
-@@ -969,7 +977,7 @@
- 		elm: elm@48078000 {
- 			compatible = "ti,am3352-elm";
- 			reg = <0x48078000 0xfc0>;      /* device IO registers */
--			interrupts = <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 1 IRQ_TYPE_LEVEL_HIGH>;
- 			ti,hwmods = "elm";
- 			status = "disabled";
- 		};
-@@ -978,7 +986,7 @@
- 			compatible = "ti,am3352-gpmc";
- 			ti,hwmods = "gpmc";
- 			reg = <0x50000000 0x37c>;      /* device IO registers */
--			interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 			gpmc,num-cs = <8>;
- 			gpmc,num-waitpins = <2>;
- 			#address-cells = <2>;
-@@ -986,6 +994,17 @@
- 			status = "disabled";
- 		};
- 	};
-+
-+	crossbar_mpu: crossbar@4a020000 {
-+		compatible = "ti,irq-crossbar";
-+		reg = <0x4a002a48 0x130>;
-+		ti,max-irqs = <160>;
-+		ti,max-crossbar-sources = <400>;
-+		ti,reg-size = <2>;
-+		ti,irqs-reserved = <0 1 2 3 5 6 131 132>;
-+		ti,irqs-skip = <10 133 139 140>;
-+		ti,irqs-safe-map = <0>;
-+	};
- };
- 
- /include/ "dra7xx-clocks.dtsi"
--- 
-1.7.9.5
+Best regards,
+Yoshihiro Shimoda
+
+> cheers
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
