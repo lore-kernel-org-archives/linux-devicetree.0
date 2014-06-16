@@ -1,88 +1,47 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v3] hwmon: Driver for TI TMP103 temperature sensor
-Date: Mon, 16 Jun 2014 07:34:59 -0700
-Message-ID: <539F0093.7070503@roeck-us.net>
-References: <1402901276-6114-1-git-send-email-hs@denx.de>
+From: Nicolas Pitre <nicolas.pitre@linaro.org>
+Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states
+ bindings
+Date: Mon, 16 Jun 2014 10:48:30 -0400 (EDT)
+Message-ID: <alpine.LFD.2.11.1406161044180.31631@knanqh.ubzr>
+References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com> <1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com> <alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr> <20140613164954.GA16745@e102568-lin.cambridge.arm.com>
+ <alpine.LFD.2.11.1406131306160.25775@knanqh.ubzr> <20140616142259.GA6650@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1402901276-6114-1-git-send-email-hs@denx.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Heiko Schocher <hs@denx.de>, lm-sensors@lm-sensors.org
-Cc: Jean Delvare <khali@linux-fr.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140616142259.GA6650@e102568-lin.cambridge.arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@ke>
 List-Id: devicetree@vger.kernel.org
 
-On 06/15/2014 11:47 PM, Heiko Schocher wrote:
-> Driver for the TI TMP103.
->
-> The TI TMP103 is similar to the TMP102.  It differs from the TMP102
-> by having only 8 bit registers.
->
-> Signed-off-by: Heiko Schocher <hs@denx.de>
->
-Hello Heiko,
+On Mon, 16 Jun 2014, Lorenzo Pieralisi wrote:
 
-Almost there.
+> On Fri, Jun 13, 2014 at 06:33:35PM +0100, Nicolas Pitre wrote:
+> > >    idle_state.exit_latency = worst-wakeup-latency
+> > >    idle_state.target_residency = min-residency-us
+> > 
+> > But exit_latency is not necessarily equal to worst-wakeup-latency.  
+> > We'll need any of those 4 values depending on the context.  So I'd add 
+> > entry_latency and worst_wakeup_latency to struct cpuidle_state.  If a 
+> > driver doesn't initialize entry_latency then it can be left to 0, and if 
+> > worst_wakeup_latency is 0 then it should be set to entry_latency + 
+> > exit_latency by the core code.
+> 
+> Well, that's why I mentioned idle_state.exit_latency, because in CPUidle
+> today, the struct cpuidle_state.exit_latency field corresponds to our
+> worst-wakeup-latency property, not to the exit_latency property; I know
+> it is confusing but at least by defining proper bindings the kernel
+> structures can be updated with clear semantics (I would not rename them
+> for the time being though).
 
-> ---
->
-> +static int tmp103_probe(struct i2c_client *client,
-> +			const struct i2c_device_id *id)
-> +{
-> +	struct device *dev = &client->dev;
-> +	struct device *hwmon_dev;
-> +	struct regmap *regmap;
-> +	int ret;
-> +
-> +	if (!i2c_check_functionality(client->adapter,
-> +				     I2C_FUNC_SMBUS_BYTE_DATA)) {
-> +		dev_err(&client->dev,
-> +			"adapter doesn't support SMBus byte transactions\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	regmap = devm_regmap_init_i2c(client, &tmp103_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		dev_err(dev, "failed to allocate register map\n");
-> +		return PTR_ERR(regmap);
-> +	}
-> +
-> +	ret = regmap_update_bits(regmap, TMP103_CONF_REG, TMP103_CONFIG,
-> +				 TMP103_CONFIG);
+Why not?  Adding more confusion or even simply keeping the existing one, 
+even if it is temporary, doesn't benefit anyone.
 
-You actually want to mask out CR0, CR1, M0, and M1 here.
+> Fields required by the scheduler (ie entry_latency) can be added in 
+> the patches that rely on them, when we agreed on the bindings, adding 
+> the variables is no big deal.
 
-> +	if (ret < 0) {
-> +		dev_err(&client->dev, "error writing config register\n");
-> +		return ret;
-> +	}
-> +
-> +	hwmon_dev = hwmon_device_register_with_groups(dev, client->name,
-> +						      regmap, tmp103_groups);
-> +	return PTR_ERR_OR_ZERO(hwmon_dev);
-> +}
-> +
-> +#ifdef CONFIG_PM
-> +static int tmp103_suspend(struct device *dev)
-> +{
-> +	struct regmap *regmap = dev_get_drvdata(dev);
-> +
-> +	return regmap_update_bits(regmap, TMP103_CONF_REG, TMP103_CONF_SD, 0);
-> +}
-> +
-> +static int tmp103_resume(struct device *dev)
-> +{
-> +	struct regmap *regmap = dev_get_drvdata(dev);
-> +
-> +	return regmap_update_bits(regmap, TMP103_CONF_REG, TMP103_CONF_SD,
-> +				  TMP103_CONF_SD);
+Sure.
 
-That changes {M0, M1} to {1, 1}, but you really want {0, 1} to restore the
-pre-suspend configuration.
 
-One solution for both would be to define TMP103_CONFIG_MASK and TMP103_CONF_SD_MASK
-separately to ensure you catch all the to-be-cleared bits.
-
-Guenter
-
+Nicolas
