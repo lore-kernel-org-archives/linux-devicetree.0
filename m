@@ -1,111 +1,209 @@
 From: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Subject: [PATCH v4 00/19] Renesas CMT, MTU2 and TMU timers DT support
-Date: Mon, 16 Jun 2014 17:07:12 +0200
-Message-ID: <1402931251-22581-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+Subject: [PATCH v4 09/19] clocksource: sh_cmt: Add DT support
+Date: Mon, 16 Jun 2014 17:07:21 +0200
+Message-ID: <1402931251-22581-10-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+References: <1402931251-22581-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <1402931251-22581-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: linux-sh@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Simon Horman <horms@verge.net.au>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-This patch set adds DT bindings to the Renesas CMT, MTU2 and TMU timers.
-Patches 02/19 to 13/19, 16/19 and 17/19 have already been posted in the
-previous version of this series. Patches 14/19, 15/19, 18/19 and 19/19 are
-new.
-
-The first 11 patches should go through the timers tree while the last 8
-patches should go through the Renesas SoC tree. Patches 12/19 to 15/19 have
-no build time or run time dependency on the drivers changes. Patches 16/19 to
-19/19 may have a run time dependency on the drivers changes depending on the
-kernel configuration. Patches 16/19 and 17/19, for instance, require the
-driver changes only when architected timer support isn't enabled in the
-kernel.
-
-Changes since v3:
-
-- Fixed TMU interrupt numbers
-- Fixed NULL platform device ID dereference in TMU driver
-- Removed interrupt-parent property from documentation
-- Add missing of_match_ptr() and __maybe_unused() annotations
-
-Changes since v2:
-
-- Rebased on top of Simon's latest devel branch
-
-Changes since v1:
-
-- Dropped the channel subnodes from the CMT DT bindings and just use a
-  channels mask, as we don't need to specify per-channel properties.
-
-(I'm slightly uncertain about this change though, as I can't easily predict
-whether per-channel properties would be needed later for new hardware. It
-won't be difficult to reintroduce channel subnodes then, so I'd rather not
-clutter the DT bindings with channel subnodes now. Please feel free to
-disagree.)
+Document DT bindings and parse them in the CMT driver.
 
 Cc: devicetree@vger.kernel.org
-
-Laurent Pinchart (19):
-  clocksource: sh_tmu: Fix channel IRQ retrieval in legacy case
-  clocksource: sh_cmt: Drop support for legacy platform data
-  clocksource: sh_cmt: Replace global spinlock with a per-device
-    spinlock
-  clocksource: sh_tmu: Drop support for legacy platform data
-  clocksource: sh_tmu: Replace global spinlock with a per-device
-    spinlock
-  clocksource: sh_mtu2: Drop support for legacy platform data
-  clocksource: sh_mtu2: Replace global spinlock with a per-device
-    spinlock
-  clocksource: shmobile: Remove unused sh_timer_config members
-  clocksource: sh_cmt: Add DT support
-  clocksource: sh_tmu: Add DT support
-  clocksource: sh_mtu2: Add DT support
-  ARM: shmobile: r8a7790: Add CMT devices to DT
-  ARM: shmobile: r8a7791: Add CMT devices to DT
-  ARM: shmobile: r8a7779: Add TMU devices to DT
-  ARM: shmobile: r7s72100: Add MTU2 device to DT
-  ARM: shmobile: lager-reference: Enable CMT0 in device tree
-  ARM: shmobile: koelsch-reference: Enable CMT0 in device tree
-  ARM: shmobile: marzen-reference: Enable TMU0 in device tree
-  ARM: shmobile: genmai-reference: Enable MTU2 in device tree
-
- .../devicetree/bindings/timer/renesas,cmt.txt      |  47 +++++
- .../devicetree/bindings/timer/renesas,mtu2.txt     |  39 ++++
- .../devicetree/bindings/timer/renesas,tmu.txt      |  39 ++++
- arch/arm/boot/dts/r7s72100-genmai.dts              |   4 +
- arch/arm/boot/dts/r7s72100.dtsi                    |  10 +
- arch/arm/boot/dts/r8a7779-marzen.dts               |   4 +
- arch/arm/boot/dts/r8a7779.dtsi                     |  42 ++++
- arch/arm/boot/dts/r8a7790-lager.dts                |   4 +
- arch/arm/boot/dts/r8a7790.dtsi                     |  32 +++
- arch/arm/boot/dts/r8a7791-koelsch.dts              |   4 +
- arch/arm/boot/dts/r8a7791.dtsi                     |  32 +++
- arch/arm/mach-shmobile/board-genmai-reference.c    |  16 --
- arch/arm/mach-shmobile/board-genmai.c              |  14 +-
- arch/arm/mach-shmobile/board-koelsch-reference.c   |   2 -
- arch/arm/mach-shmobile/board-lager-reference.c     |   2 -
- arch/arm/mach-shmobile/board-marzen-reference.c    |  10 -
- arch/arm/mach-shmobile/include/mach/r7s72100.h     |   1 -
- arch/arm/mach-shmobile/include/mach/r8a7779.h      |   1 -
- arch/arm/mach-shmobile/include/mach/r8a7790.h      |   1 -
- arch/arm/mach-shmobile/include/mach/r8a7791.h      |   1 -
- arch/arm/mach-shmobile/setup-r7s72100.c            |  21 --
- arch/arm/mach-shmobile/setup-r8a7779.c             |  17 +-
- arch/arm/mach-shmobile/setup-r8a7790.c             |   7 +-
- arch/arm/mach-shmobile/setup-r8a7791.c             |   7 +-
- drivers/clocksource/sh_cmt.c                       | 233 ++++++++-------------
- drivers/clocksource/sh_mtu2.c                      | 146 ++++---------
- drivers/clocksource/sh_tmu.c                       | 129 +++++-------
- include/linux/sh_timer.h                           |   5 -
- 28 files changed, 462 insertions(+), 408 deletions(-)
+Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Tested-by: Simon Horman <horms+renesas@verge.net.au>
+---
+ .../devicetree/bindings/timer/renesas,cmt.txt      | 47 +++++++++++++++
+ drivers/clocksource/sh_cmt.c                       | 66 ++++++++++++++++------
+ 2 files changed, 95 insertions(+), 18 deletions(-)
  create mode 100644 Documentation/devicetree/bindings/timer/renesas,cmt.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,mtu2.txt
- create mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.txt
 
+diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+new file mode 100644
+index 0000000..643cfff
+--- /dev/null
++++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
+@@ -0,0 +1,47 @@
++* Renesas R-Car Compare Match Timer (CMT)
++
++The CMT is a multi-channel 16/32/48-bit timer/counter with configurable clock
++inputs and programmable compare match.
++
++Channels share hardware resources but their counter and compare match value
++are independent. A particular CMT instance can implement only a subset of the
++channels supported by the CMT model. Channel indices represent the hardware
++position of the channel in the CMT and don't match the channel numbers in the
++datasheets.
++
++Required Properties:
++
++  - compatible: must contain one of the following.
++    - "renesas,cmt-32" for the 32-bit CMT
++		(CMT0 on sh7372, sh73a0 and r8a7740)
++    - "renesas,cmt-32-fast" for the 32-bit CMT with fast clock support
++		(CMT[234] on sh7372, sh73a0 and r8a7740)
++    - "renasas,cmt-48" for the 48-bit CMT
++		(CMT1 on sh7372, sh73a0 and r8a7740)
++    - "renesas,cmt-48-gen2" for the second generation 48-bit CMT
++		(CMT[01] on r8a73a4, r8a7790 and r8a7791)
++
++  - reg: base address and length of the registers block for the timer module.
++  - interrupts: interrupt-specifier for the timer, one per channel.
++  - clocks: a list of phandle + clock-specifier pairs, one for each entry
++    in clock-names.
++  - clock-names: must contain "fck" for the functional clock.
++
++  - renesas,channels-mask: bitmask of the available channels.
++
++
++Example: R8A7790 (R-Car H2) CMT0 node
++
++	CMT0 on R8A7790 implements hardware channels 5 and 6 only and names
++	them channels 0 and 1 in the documentation.
++
++	cmt0: timer@ffca0000 {
++		compatible = "renesas,cmt-48-gen2";
++		reg = <0 0xffca0000 0 0x1004>;
++		interrupts = <0 142 IRQ_TYPE_LEVEL_HIGH>,
++			     <0 142 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&mstp1_clks R8A7790_CLK_CMT0>;
++		clock-names = "fck";
++
++		renesas,channels-mask = <0x60>;
++	};
+diff --git a/drivers/clocksource/sh_cmt.c b/drivers/clocksource/sh_cmt.c
+index 4d00e4b..09a93c4 100644
+--- a/drivers/clocksource/sh_cmt.c
++++ b/drivers/clocksource/sh_cmt.c
+@@ -24,6 +24,7 @@
+ #include <linux/ioport.h>
+ #include <linux/irq.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/platform_device.h>
+ #include <linux/pm_domain.h>
+ #include <linux/pm_runtime.h>
+@@ -122,6 +123,7 @@ struct sh_cmt_device {
+ 
+ 	struct sh_cmt_channel *channels;
+ 	unsigned int num_channels;
++	unsigned int hw_channels;
+ 
+ 	bool has_clockevent;
+ 	bool has_clocksource;
+@@ -924,10 +926,35 @@ static int sh_cmt_map_memory(struct sh_cmt_device *cmt)
+ 	return 0;
+ }
+ 
++static const struct platform_device_id sh_cmt_id_table[] = {
++	{ "sh-cmt-16", (kernel_ulong_t)&sh_cmt_info[SH_CMT_16BIT] },
++	{ "sh-cmt-32", (kernel_ulong_t)&sh_cmt_info[SH_CMT_32BIT] },
++	{ "sh-cmt-32-fast", (kernel_ulong_t)&sh_cmt_info[SH_CMT_32BIT_FAST] },
++	{ "sh-cmt-48", (kernel_ulong_t)&sh_cmt_info[SH_CMT_48BIT] },
++	{ "sh-cmt-48-gen2", (kernel_ulong_t)&sh_cmt_info[SH_CMT_48BIT_GEN2] },
++	{ }
++};
++MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
++
++static const struct of_device_id sh_cmt_of_table[] __maybe_unused = {
++	{ .compatible = "renesas,cmt-32", .data = &sh_cmt_info[SH_CMT_32BIT] },
++	{ .compatible = "renesas,cmt-32-fast", .data = &sh_cmt_info[SH_CMT_32BIT_FAST] },
++	{ .compatible = "renasas,cmt-48", .data = &sh_cmt_info[SH_CMT_48BIT] },
++	{ .compatible = "renesas,cmt-48-gen2", .data = &sh_cmt_info[SH_CMT_48BIT_GEN2] },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, sh_cmt_of_table);
++
++static int sh_cmt_parse_dt(struct sh_cmt_device *cmt)
++{
++	struct device_node *np = cmt->pdev->dev.of_node;
++
++	return of_property_read_u32(np, "renesas,channels-mask",
++				    &cmt->hw_channels);
++}
++
+ static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
+ {
+-	struct sh_timer_config *cfg = pdev->dev.platform_data;
+-	const struct platform_device_id *id = pdev->id_entry;
+ 	unsigned int mask;
+ 	unsigned int i;
+ 	int ret;
+@@ -936,13 +963,26 @@ static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
+ 	cmt->pdev = pdev;
+ 	raw_spin_lock_init(&cmt->lock);
+ 
+-	if (!cfg) {
++	if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) {
++		const struct of_device_id *id;
++
++		id = of_match_node(sh_cmt_of_table, pdev->dev.of_node);
++		cmt->info = id->data;
++
++		ret = sh_cmt_parse_dt(cmt);
++		if (ret < 0)
++			return ret;
++	} else if (pdev->dev.platform_data) {
++		struct sh_timer_config *cfg = pdev->dev.platform_data;
++		const struct platform_device_id *id = pdev->id_entry;
++
++		cmt->info = (const struct sh_cmt_info *)id->driver_data;
++		cmt->hw_channels = cfg->channels_mask;
++	} else {
+ 		dev_err(&cmt->pdev->dev, "missing platform data\n");
+ 		return -ENXIO;
+ 	}
+ 
+-	cmt->info = (const struct sh_cmt_info *)id->driver_data;
+-
+ 	/* Get hold of clock. */
+ 	cmt->clk = clk_get(&cmt->pdev->dev, "fck");
+ 	if (IS_ERR(cmt->clk)) {
+@@ -960,8 +1000,7 @@ static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
+ 		goto err_clk_unprepare;
+ 
+ 	/* Allocate and setup the channels. */
+-	cmt->num_channels = hweight8(cfg->channels_mask);
+-
++	cmt->num_channels = hweight8(cmt->hw_channels);
+ 	cmt->channels = kzalloc(cmt->num_channels * sizeof(*cmt->channels),
+ 				GFP_KERNEL);
+ 	if (cmt->channels == NULL) {
+@@ -973,7 +1012,7 @@ static int sh_cmt_setup(struct sh_cmt_device *cmt, struct platform_device *pdev)
+ 	 * Use the first channel as a clock event device and the second channel
+ 	 * as a clock source. If only one channel is available use it for both.
+ 	 */
+-	for (i = 0, mask = cfg->channels_mask; i < cmt->num_channels; ++i) {
++	for (i = 0, mask = cmt->hw_channels; i < cmt->num_channels; ++i) {
+ 		unsigned int hwidx = ffs(mask) - 1;
+ 		bool clocksource = i == 1 || cmt->num_channels == 1;
+ 		bool clockevent = i == 0;
+@@ -1044,21 +1083,12 @@ static int sh_cmt_remove(struct platform_device *pdev)
+ 	return -EBUSY; /* cannot unregister clockevent and clocksource */
+ }
+ 
+-static const struct platform_device_id sh_cmt_id_table[] = {
+-	{ "sh-cmt-16", (kernel_ulong_t)&sh_cmt_info[SH_CMT_16BIT] },
+-	{ "sh-cmt-32", (kernel_ulong_t)&sh_cmt_info[SH_CMT_32BIT] },
+-	{ "sh-cmt-32-fast", (kernel_ulong_t)&sh_cmt_info[SH_CMT_32BIT_FAST] },
+-	{ "sh-cmt-48", (kernel_ulong_t)&sh_cmt_info[SH_CMT_48BIT] },
+-	{ "sh-cmt-48-gen2", (kernel_ulong_t)&sh_cmt_info[SH_CMT_48BIT_GEN2] },
+-	{ }
+-};
+-MODULE_DEVICE_TABLE(platform, sh_cmt_id_table);
+-
+ static struct platform_driver sh_cmt_device_driver = {
+ 	.probe		= sh_cmt_probe,
+ 	.remove		= sh_cmt_remove,
+ 	.driver		= {
+ 		.name	= "sh_cmt",
++		.of_match_table = of_match_ptr(sh_cmt_of_table),
+ 	},
+ 	.id_table	= sh_cmt_id_table,
+ };
 -- 
-Regards,
-
-Laurent Pinchart
+1.8.5.5
 
