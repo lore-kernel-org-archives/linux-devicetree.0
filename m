@@ -1,47 +1,180 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states
- bindings
-Date: Mon, 16 Jun 2014 10:48:30 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1406161044180.31631@knanqh.ubzr>
-References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com> <1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com> <alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr> <20140613164954.GA16745@e102568-lin.cambridge.arm.com>
- <alpine.LFD.2.11.1406131306160.25775@knanqh.ubzr> <20140616142259.GA6650@e102568-lin.cambridge.arm.com>
-Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140616142259.GA6650@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@ke>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v3 1/4] of: Add NVIDIA Tegra XUSB pad controller binding
+Date: Mon, 16 Jun 2014 16:57:00 +0200
+Message-ID: <1402930623-28886-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 16 Jun 2014, Lorenzo Pieralisi wrote:
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-> On Fri, Jun 13, 2014 at 06:33:35PM +0100, Nicolas Pitre wrote:
-> > >    idle_state.exit_latency = worst-wakeup-latency
-> > >    idle_state.target_residency = min-residency-us
-> > 
-> > But exit_latency is not necessarily equal to worst-wakeup-latency.  
-> > We'll need any of those 4 values depending on the context.  So I'd add 
-> > entry_latency and worst_wakeup_latency to struct cpuidle_state.  If a 
-> > driver doesn't initialize entry_latency then it can be left to 0, and if 
-> > worst_wakeup_latency is 0 then it should be set to entry_latency + 
-> > exit_latency by the core code.
-> 
-> Well, that's why I mentioned idle_state.exit_latency, because in CPUidle
-> today, the struct cpuidle_state.exit_latency field corresponds to our
-> worst-wakeup-latency property, not to the exit_latency property; I know
-> it is confusing but at least by defining proper bindings the kernel
-> structures can be updated with clear semantics (I would not rename them
-> for the time being though).
+This patch adds the device tree binding documentation for the XUSB pad
+controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and PHY
+capabilities.
 
-Why not?  Adding more confusion or even simply keeping the existing one, 
-even if it is temporary, doesn't benefit anyone.
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+- move header file to this patch and refer to it in the binding
+- update example to match the latest binding
 
-> Fields required by the scheduler (ie entry_latency) can be added in 
-> the patches that rely on them, when we agreed on the bindings, adding 
-> the variables is no big deal.
+ .../pinctrl/nvidia,tegra124-xusb-padctl.txt        | 131 +++++++++++++++++++++
+ include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h   |   7 ++
+ 2 files changed, 138 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+ create mode 100644 include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
 
-Sure.
-
-
-Nicolas
+diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+new file mode 100644
+index 000000000000..9a6b04d9ff92
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+@@ -0,0 +1,131 @@
++Device tree binding for NVIDIA Tegra XUSB pad controller
++========================================================
++
++The Tegra XUSB pad controller manages a set of lanes, each of which can be
++assigned to one out of a set of different pads. Some of these pads have an
++associated PHY that must be powered up before the pad can be used.
++
++This document defines the device-specific binding for the XUSB pad controller.
++
++Refer to pinctrl-bindings.txt in this directory for generic information about
++pin controller device tree bindings and ../phy/phy-bindings.txt for details on
++how to describe and reference PHYs in device trees.
++
++Required properties:
++--------------------
++- compatible: should be "nvidia,tegra124-xusb-padctl"
++- reg: Physical base address and length of the controller's registers.
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must include the following entries:
++  - padctl
++- #address-cells: Should be 0.
++- #size-cells: Should be 0.
++- #phy-cells: Should be 1. The specifier is the index of the PHY to reference.
++  See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the list of valid values.
++
++Lane muxing:
++------------
++
++Child nodes contain the pinmux configurations following the conventions from
++the pinctrl-bindings.txt document. Typically a single, static configuration is
++given and applied at boot time.
++
++Each subnode describes groups of lanes along with parameters and pads that
++they should be assigned to. The name of these subnodes is not important. All
++subnodes should be parsed solely based on their content.
++
++Each subnode only applies the parameters that are explicitly listed. In other
++words, if a subnode that lists a function but no pin configuration parameters
++implies no information about any pin configuration parameters. Similarly, a
++subnode that describes only an IDDQ parameter implies no information about
++what function the pins are assigned to. For this reason even seemingly boolean
++values are actually tristates in this binding: unspecified, off or on.
++Unspecified is represented as an absent property, and off/on are represented
++as integer values 0 and 1.
++
++Required properties:
++- nvidia,lanes: An array of strings. Each string is the name of a lane.
++
++Optional properties:
++- nvidia,function: A string that is the name of the function (pad) that the
++  pin or group should be assigned to. Valid values for function names are
++  listed below.
++- nvidia,iddq: Enables IDDQ mode of the lane. (0: no, 1: yes)
++
++Note that not all of these properties are valid for all lanes. Lanes can be
++divided into three groups:
++
++  - otg-0, otg-1, otg-2:
++
++    Valid functions for this group are: "snps", "xusb", "uart", "rsvd".
++
++    The nvidia,iddq property does not apply to this group.
++
++  - ulpi-0, hsic-0, hsic-1:
++
++    Valid functions for this group are: "snps", "xusb".
++
++    The nvidia,iddq property does not apply to this group.
++
++  - pcie-0, pcie-1, pcie-2, pcie-3, pcie-4, sata-0:
++
++    Valid functions for this group are: "pcie", "usb3", "sata", "rsvd".
++
++
++Example:
++========
++
++SoC file extract:
++-----------------
++
++	padctl@0,7009f000 {
++		compatible = "nvidia,tegra124-xusb-padctl";
++		reg = <0x0 0x7009f000 0x0 0x1000>;
++		resets = <&tegra_car 142>;
++		reset-names = "padctl";
++
++		#address-cells = <0>;
++		#size-cells = <0>;
++		#phy-cells = <1>;
++	};
++
++Board file extract:
++-------------------
++
++	pcie-controller@0,01003000 {
++		...
++
++		phys = <&padctl 0>;
++		phy-names = "pcie";
++
++		...
++	};
++
++	...
++
++	padctl: padctl@0,7009f000 {
++		pinctrl-0 = <&padctl_default>;
++		pinctrl-names = "default";
++
++		padctl_default: pinmux {
++			usb3 {
++				nvidia,lanes = "pcie-0", "pcie-1";
++				nvidia,function = "usb3";
++				nvidia,iddq = <0>;
++			};
++
++			pcie {
++				nvidia,lanes = "pcie-2", "pcie-3",
++					       "pcie-4";
++				nvidia,function = "pcie";
++				nvidia,iddq = <0>;
++			};
++
++			sata {
++				nvidia,lanes = "sata-0";
++				nvidia,function = "sata";
++				nvidia,iddq = <0>;
++			};
++		};
++	};
+diff --git a/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h b/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
+new file mode 100644
+index 000000000000..914d56da9324
+--- /dev/null
++++ b/include/dt-bindings/pinctrl/pinctrl-tegra-xusb.h
+@@ -0,0 +1,7 @@
++#ifndef _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H
++#define _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H 1
++
++#define TEGRA_XUSB_PADCTL_PCIE 0
++#define TEGRA_XUSB_PADCTL_SATA 1
++
++#endif /* _DT_BINDINGS_PINCTRL_TEGRA_XUSB_H */
+-- 
+1.9.2
