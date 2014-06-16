@@ -1,21 +1,64 @@
-From: Nick Krause <xerofoify-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Bug is a rework idea and not a bug for Bug Id 72851 on Bugzilla
-Date: Sun, 15 Jun 2014 23:02:54 -0400
-Message-ID: <CAPDOMVj-XDjXZaD2x8fCFodnXkgbgYBegg5WyhMM8-FnHSR_ZQ@mail.gmail.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH] dma: imx-sdma: Add a new DMATYPE for Shared Peripheral ASRC
+Date: Mon, 16 Jun 2014 11:31:05 +0800
+Message-ID: <1402889465-23797-1-git-send-email-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org
-Cc: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinod.koul@intel.com, s.hauer@pengutronix.de
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, dan.j.williams@intel.com, shawn.guo@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This bug based on the comments around it seems to need to closes
-due to it being a code rework and not a bug. The If for the bug on
-the Bugzilla is 72851 as stated in the bug log is that it's a code
-rework idea and not a bug.
-Cheers Nick
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Shared Peripheral ASRC, running on SPBA, needs to use shp sciprts for
+DMA transfer. So this patch just adds a new DMATYPE for it.
+
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+---
+ Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt | 1 +
+ drivers/dma/imx-sdma.c                                 | 5 +++++
+ include/linux/platform_data/dma-imx.h                  | 1 +
+ 3 files changed, 7 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+index ee9be99..d2e91f1 100644
+--- a/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
++++ b/Documentation/devicetree/bindings/dma/fsl-imx-sdma.txt
+@@ -47,6 +47,7 @@ The full ID of peripheral types can be found below.
+ 	20	ASRC
+ 	21	ESAI
+ 	22	SSI Dual FIFO	(needs firmware ver >= 2)
++	23	Shared ASRC
+ 
+ The third cell specifies the transfer priority as below.
+ 
+diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+index fc04add..85561dc 100644
+--- a/drivers/dma/imx-sdma.c
++++ b/drivers/dma/imx-sdma.c
+@@ -745,6 +745,11 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+ 		emi_2_per = sdma->script_addrs->asrc_2_mcu_addr;
+ 		per_2_per = sdma->script_addrs->per_2_per_addr;
+ 		break;
++	case IMX_DMATYPE_ASRC_SP:
++		per_2_emi = sdma->script_addrs->shp_2_mcu_addr;
++		emi_2_per = sdma->script_addrs->mcu_2_shp_addr;
++		per_2_per = sdma->script_addrs->per_2_per_addr;
++		break;
+ 	case IMX_DMATYPE_MSHC:
+ 		per_2_emi = sdma->script_addrs->mshc_2_mcu_addr;
+ 		emi_2_per = sdma->script_addrs->mcu_2_mshc_addr;
+diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
+index bcbc6c3..7aa0e89 100644
+--- a/include/linux/platform_data/dma-imx.h
++++ b/include/linux/platform_data/dma-imx.h
+@@ -40,6 +40,7 @@ enum sdma_peripheral_type {
+ 	IMX_DMATYPE_ASRC,	/* ASRC */
+ 	IMX_DMATYPE_ESAI,	/* ESAI */
+ 	IMX_DMATYPE_SSI_DUAL,	/* SSI Dual FIFO */
++	IMX_DMATYPE_ASRC_SP,	/* Shared ASRC */
+ };
+ 
+ enum imx_dma_prio {
+-- 
+1.8.4
