@@ -1,135 +1,221 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v2 2/2] ata: Fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode command.
-Date: Mon, 16 Jun 2014 15:05:36 +0530
-Message-ID: <1402911336-31788-3-git-send-email-stripathi@apm.com>
-References: <1402911336-31788-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1402911336-31788-1-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>
+From: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 20/21] usb: use devm_irq_of_parse_and_map() where appropriate
+Date: Mon, 16 Jun 2014 11:35:43 +0200
+Message-ID: <539EBA6F.7060008@gaisler.com>
+References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru> <1401880402-30091-21-git-send-email-nyushchenko@dev.rtsoft.ru>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1401880402-30091-21-git-send-email-nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lugovskoy-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the dma state machine lockup due to the IDENTIFY DEVICE PIO mode command. The controller is unable to clear the BSY bit after receiving the PIO setup FIS and results the dma state machine to go into the CMFatalErrorUpdate state resulting in the dma state machine lockup.
----
- drivers/ata/ahci.h       |  3 +++
- drivers/ata/ahci_xgene.c | 17 +++--------------
- drivers/ata/libahci.c    | 34 ++++++++++++++++++++++++++++++++++
- 3 files changed, 40 insertions(+), 14 deletions(-)
+On 2014-06-04 13:13, nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org wrote:
+> From: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+>
+> This avoids leak of IRQ mapping on error paths, and makes it possible
+> to use devm_request_irq() without facing unmap-while-handler-installed
+> issues.
+>
+> Signed-off-by: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+> ---
+>   drivers/usb/gadget/gr_udc.c       |   17 +++++++++++------
+>   drivers/usb/host/ehci-grlib.c     |   11 ++++-------
+>   drivers/usb/host/ehci-orion.c     |    3 ++-
+>   drivers/usb/host/ehci-ppc-of.c    |   11 ++++-------
+>   drivers/usb/host/ehci-xilinx-of.c |    8 ++++----
+>   drivers/usb/host/ohci-ppc-of.c    |    7 ++-----
+>   6 files changed, 27 insertions(+), 30 deletions(-)
+>
+> diff --git a/drivers/usb/gadget/gr_udc.c b/drivers/usb/gadget/gr_udc.c
+> index f984ee7..0a3e586 100644
+> --- a/drivers/usb/gadget/gr_udc.c
+> +++ b/drivers/usb/gadget/gr_udc.c
+> @@ -2108,19 +2108,24 @@ static int gr_probe(struct platform_device *ofdev)
+>   	if (IS_ERR(regs))
+>   		return PTR_ERR(regs);
+>
+> -	dev->irq = irq_of_parse_and_map(dev->dev->of_node, 0);
+> -	if (!dev->irq) {
+> +	dev->irq = devm_irq_of_parse_and_map(dev->dev, dev->dev->of_node, 0);
+> +	if (dev->irq <= 0) {
+>   		dev_err(dev->dev, "No irq found\n");
+>   		return -ENODEV;
+>   	}
+>
+>   	/* Some core configurations has separate irqs for IN and OUT events */
+> -	dev->irqi = irq_of_parse_and_map(dev->dev->of_node, 1);
+> +	dev->irqi = devm_irq_of_parse_and_map(dev->dev, dev->dev->of_node, 1);
+> +	if (dev->irqi < 0) {
+> +		dev_err(dev->dev, "could not locate irq\n");
+> +		return dev->irqi;
+> +	}
+>   	if (dev->irqi) {
+> -		dev->irqo = irq_of_parse_and_map(dev->dev->of_node, 2);
+> -		if (!dev->irqo) {
+> +		dev->irqo = devm_irq_of_parse_and_map(dev->dev,
+> +				dev->dev->of_node, 2);
+> +		if (dev->irqo <= 0) {
+>   			dev_err(dev->dev, "Found irqi but not irqo\n");
+> -			return -ENODEV;
+> +			return dev->irqo ? dev->irqo : -ENODEV;
+>   		}
+>   	}
+>
+> diff --git a/drivers/usb/host/ehci-grlib.c b/drivers/usb/host/ehci-grlib.c
+> index 495b6fb..666c03e 100644
+> --- a/drivers/usb/host/ehci-grlib.c
+> +++ b/drivers/usb/host/ehci-grlib.c
+> @@ -111,11 +111,11 @@ static int ehci_hcd_grlib_probe(struct platform_device *op)
+>   	hcd->rsrc_start = res.start;
+>   	hcd->rsrc_len = resource_size(&res);
+>
+> -	irq = irq_of_parse_and_map(dn, 0);
+> -	if (irq == NO_IRQ) {
+> -		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
+> +	irq = devm_irq_of_parse_and_map(&op->dev, dn, 0);
+> +	if (irq <= 0) {
+> +		dev_err(&op->dev, "%s: devm_irq_of_parse_and_map failed\n",
+>   			__FILE__);
+> -		rv = -EBUSY;
+> +		rv = irq ? irq : -EINVAL;
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 3c1760e..a4dd567 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -237,6 +237,9 @@ enum {
- 						        error-handling stage) */
- 	AHCI_HFLAG_MULTI_MSI		= (1 << 16), /* multiple PCI MSIs */
- 	AHCI_HFLAG_NO_DEVSLP		= (1 << 17), /* no device sleep */
-+	AHCI_HFLAG_BROKEN_PIO_CMD	= (1 << 18), /* Some PIO cmd's
-+							resulting in HBA
-+							dma state lockup */
+Here and in more places below you change the return value from -EBUSY to 
+-EINVAL when irq == 0. These changes and the reason for them is not 
+something that is commented upon in the commit message. Maybe these 
+changes were not intended or should be in a separate patch?
 
- 	/* ap->flags bits */
-
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 77c89bf..741d5c7 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -104,14 +104,12 @@ static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
-  * @id: data buffer
-  *
-  * This custom read ID function is required due to the fact that the HW
-- * does not support DEVSLP and the controller state machine may get stuck
-- * after processing the ID query command.
-+ * does not support DEVSLP.
-  */
- static unsigned int xgene_ahci_read_id(struct ata_device *dev,
- 				       struct ata_taskfile *tf, u16 *id)
- {
- 	u32 err_mask;
--	void __iomem *port_mmio = ahci_port_base(dev->link->ap);
-
- 	err_mask = ata_do_dev_read_id(dev, tf, id);
- 	if (err_mask)
-@@ -133,16 +131,6 @@ static unsigned int xgene_ahci_read_id(struct ata_device *dev,
- 	 */
- 	id[ATA_ID_FEATURE_SUPP] &= ~(1 << 8);
-
--	/*
--	 * Due to HW errata, restart the port if no other command active.
--	 * Otherwise the controller may get stuck.
--	 */
--	if (!readl(port_mmio + PORT_CMD_ISSUE)) {
--		writel(PORT_CMD_FIS_RX, port_mmio + PORT_CMD);
--		readl(port_mmio + PORT_CMD);	/* Force a barrier */
--		writel(PORT_CMD_FIS_RX | PORT_CMD_START, port_mmio + PORT_CMD);
--		readl(port_mmio + PORT_CMD);	/* Force a barrier */
--	}
- 	return 0;
- }
-
-@@ -303,7 +291,8 @@ static struct ata_port_operations xgene_ahci_ops = {
- };
-
- static const struct ata_port_info xgene_ahci_port_info = {
--	AHCI_HFLAGS(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_YES_NCQ),
-+	AHCI_HFLAGS(AHCI_HFLAG_NO_PMP | AHCI_HFLAG_YES_NCQ |
-+		    AHCI_HFLAG_BROKEN_PIO_CMD),
- 	.flags = AHCI_FLAG_COMMON | ATA_FLAG_NCQ,
- 	.pio_mask = ATA_PIO4,
- 	.udma_mask = ATA_UDMA6,
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index 584da77..2f0daa3 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -1592,6 +1592,32 @@ static void ahci_fbs_dec_intr(struct ata_port *ap)
- 		dev_err(ap->host->dev, "failed to clear device error\n");
- }
-
-+int ahci_complete_pio_cmd(struct ata_port *ap, u32 cmd_done)
-+{
-+	struct ata_queued_cmd *qc;
-+
-+	while (cmd_done) {
-+		unsigned int tag = __ffs(cmd_done);
-+
-+		qc = ata_qc_from_tag(ap, tag);
-+		if (qc) {
-+			/*
-+			 * For the IDENTIFY DEVICE PIO command,
-+			 * some controller's unable to clear the BSY bit after
-+			 * receiving the PIO Setup FIS from device resulting
-+			 * the DMA state to go into CMFatalErrorUpdate state.
-+			 * So need to restart the dma engine to get the
-+			 * controller out of this state.
-+			 */
-+			if (qc->tf.command == ATA_CMD_ID_ATA)
-+				ahci_restart_engine(ap);
-+		}
-+		cmd_done &= ~(1 << tag);
-+	}
-+
-+	return 0;
-+}
-+
- static void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
- {
- 	struct ahci_host_priv *hpriv = ap->host->private_data;
-@@ -1778,6 +1804,14 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
- 	}
-
-
-+	/* Due to HW errata, some controllers need special handling
-+	 * of the completion of some PIO commands.
-+	 */
-+	if (hpriv->flags & AHCI_HFLAG_BROKEN_PIO_CMD) {
-+		u32 cmd_done = ap->qc_active ^ qc_active;
-+		ahci_complete_pio_cmd(ap, cmd_done);
-+	}
-+
- 	rc = ata_qc_complete_multiple(ap, qc_active);
-
- 	/* while resetting, invalid completions are expected */
+>   		goto err_irq;
+>   	}
+>
+> @@ -145,7 +145,6 @@ static int ehci_hcd_grlib_probe(struct platform_device *op)
+>   	return 0;
+>
+>   err_ioremap:
+> -	irq_dispose_mapping(irq);
+>   err_irq:
+>   	usb_put_hcd(hcd);
+>
+> @@ -161,8 +160,6 @@ static int ehci_hcd_grlib_remove(struct platform_device *op)
+>
+>   	usb_remove_hcd(hcd);
+>
+> -	irq_dispose_mapping(hcd->irq);
+> -
+>   	usb_put_hcd(hcd);
+>
+>   	return 0;
+> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> index 30d35e5..c88177b 100644
+> --- a/drivers/usb/host/ehci-orion.c
+> +++ b/drivers/usb/host/ehci-orion.c
+> @@ -155,7 +155,8 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>   	pr_debug("Initializing Orion-SoC USB Host Controller\n");
+>
+>   	if (pdev->dev.of_node)
+> -		irq = irq_of_parse_and_map(pdev->dev.of_node, 0);
+> +		irq = devm_irq_of_parse_and_map(&pdev->dev,
+> +				pdev->dev.of_node, 0);
+>   	else
+>   		irq = platform_get_irq(pdev, 0);
+>   	if (irq <= 0) {
+> diff --git a/drivers/usb/host/ehci-ppc-of.c b/drivers/usb/host/ehci-ppc-of.c
+> index 5479247..cc64210 100644
+> --- a/drivers/usb/host/ehci-ppc-of.c
+> +++ b/drivers/usb/host/ehci-ppc-of.c
+> @@ -117,11 +117,11 @@ static int ehci_hcd_ppc_of_probe(struct platform_device *op)
+>   	hcd->rsrc_start = res.start;
+>   	hcd->rsrc_len = resource_size(&res);
+>
+> -	irq = irq_of_parse_and_map(dn, 0);
+> -	if (irq == NO_IRQ) {
+> -		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
+> +	irq = devm_irq_of_parse_and_map(&op->dev, dn, 0);
+> +	if (irq <= 0) {
+> +		dev_err(&op->dev, "%s: devm_irq_of_parse_and_map failed\n",
+>   			__FILE__);
+> -		rv = -EBUSY;
+> +		rv = irq ? irq : -EINVAL;
+>   		goto err_irq;
+>   	}
+>
+> @@ -174,7 +174,6 @@ static int ehci_hcd_ppc_of_probe(struct platform_device *op)
+>   	return 0;
+>
+>   err_ioremap:
+> -	irq_dispose_mapping(irq);
+>   err_irq:
+>   	usb_put_hcd(hcd);
+>
+> @@ -194,8 +193,6 @@ static int ehci_hcd_ppc_of_remove(struct platform_device *op)
+>
+>   	usb_remove_hcd(hcd);
+>
+> -	irq_dispose_mapping(hcd->irq);
+> -
+>   	/* use request_mem_region to test if the ohci driver is loaded.  if so
+>   	 * ensure the ohci core is operational.
+>   	 */
+> diff --git a/drivers/usb/host/ehci-xilinx-of.c b/drivers/usb/host/ehci-xilinx-of.c
+> index fe57710..6c6f8c7 100644
+> --- a/drivers/usb/host/ehci-xilinx-of.c
+> +++ b/drivers/usb/host/ehci-xilinx-of.c
+> @@ -153,11 +153,11 @@ static int ehci_hcd_xilinx_of_probe(struct platform_device *op)
+>   	hcd->rsrc_start = res.start;
+>   	hcd->rsrc_len = resource_size(&res);
+>
+> -	irq = irq_of_parse_and_map(dn, 0);
+> -	if (!irq) {
+> -		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
+> +	irq = devm_irq_of_parse_and_map(&op->dev, dn, 0);
+> +	if (irq <= 0) {
+> +		dev_err(&op->dev, "%s: devm_irq_of_parse_and_map failed\n",
+>   			__FILE__);
+> -		rv = -EBUSY;
+> +		rv = irq ? irq : -EINVAL;
+>   		goto err_irq;
+>   	}
+>
+> diff --git a/drivers/usb/host/ohci-ppc-of.c b/drivers/usb/host/ohci-ppc-of.c
+> index 965e3e9..fcdd23a 100644
+> --- a/drivers/usb/host/ohci-ppc-of.c
+> +++ b/drivers/usb/host/ohci-ppc-of.c
+> @@ -121,11 +121,11 @@ static int ohci_hcd_ppc_of_probe(struct platform_device *op)
+>   		goto err_rmr;
+>   	}
+>
+> -	irq = irq_of_parse_and_map(dn, 0);
+> +	irq = devm_irq_of_parse_and_map(*op->dev, dn, 0);
+>   	if (irq == NO_IRQ) {
+>   		dev_err(&op->dev, "%s: irq_of_parse_and_map failed\n",
+>   			__FILE__);
+> -		rv = -EBUSY;
+> +		rv = irq ? irq : -EINVAL;
+>   		goto err_rmr;
+>   	}
+>
+> @@ -170,7 +170,6 @@ static int ohci_hcd_ppc_of_probe(struct platform_device *op)
+>   			pr_debug("%s: cannot get ehci offset from fdt\n", __FILE__);
+>   	}
+>
+> -	irq_dispose_mapping(irq);
+>   err_rmr:
+>    	usb_put_hcd(hcd);
+>
+> @@ -185,8 +184,6 @@ static int ohci_hcd_ppc_of_remove(struct platform_device *op)
+>
+>   	usb_remove_hcd(hcd);
+>
+> -	irq_dispose_mapping(hcd->irq);
+> -
+>   	usb_put_hcd(hcd);
+>
+>   	return 0;
+>
 --
-1.8.2.1
-
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
