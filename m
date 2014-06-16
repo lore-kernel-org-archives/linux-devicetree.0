@@ -1,92 +1,74 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v3 14/19] ARM: shmobile: r8a7779: Add TMU devices to DT
-Date: Mon, 16 Jun 2014 22:31:17 +0200
-Message-ID: <5236750.dtz35JItTk@avalon>
-References: <1402763021-4067-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com> <1462083.WMstm6aRc1@avalon> <CAMuHMdXeyKy4vR0jNS3RC9E7+0_=xPXRUDokXe0kP+V8uVEiyQ@mail.gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
+Date: Mon, 16 Jun 2014 14:43:56 -0600
+Message-ID: <539F570C.2000507@wwwdotorg.org>
+References: <1402689965-19397-1-git-send-email-jwerner@chromium.org> <CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com> <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com> <CAL_Jsq+rGLFcOcs8Rmr8NntbPhGBG+F7yAF0YQ-Rm-UsmmTLSA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CAMuHMdXeyKy4vR0jNS3RC9E7+0_=xPXRUDokXe0kP+V8uVEiyQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, Linux-sh list <linux-sh@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+rGLFcOcs8Rmr8NntbPhGBG+F7yAF0YQ-Rm-UsmmTLSA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>, Julius Werner <jwerner@chromium.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <stephen.r.warren@gmail.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Stefan Reinauer <stefan.reinauer@coreboot.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Geert,
-
-On Monday 16 June 2014 18:19:02 Geert Uytterhoeven wrote:
-> On Mon, Jun 16, 2014 at 4:22 PM, Laurent Pinchart wrote:
-> >> diff --git a/arch/arm/boot/dts/r8a7779.dtsi
-> >> b/arch/arm/boot/dts/r8a7779.dtsi index bf716ce..81714ce 100644
-> >> --- a/arch/arm/boot/dts/r8a7779.dtsi
-> >> +++ b/arch/arm/boot/dts/r8a7779.dtsi
-> >> @@ -269,9 +269,10 @@
-> >>       tmu0: timer@ffd80000 {
-> >>               compatible = "renesas,tmu";
-> >>               reg = <0xffd80000 0x30>;
-> >> -             interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
-> >> -                          <0 41 IRQ_TYPE_LEVEL_HIGH>,
-> >> -                          <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> >> +             interrupt-parent = <&gic>;
-> >> +             interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
-> >> +                          <0 33 IRQ_TYPE_LEVEL_HIGH>,
-> >> +                          <0 34 IRQ_TYPE_LEVEL_HIGH>;
-> >> 
-> >>               clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-> >>               clock-names = "fck";
-> >> 
-> >> @@ -283,9 +284,10 @@
-> >>       tmu1: timer@ffd81000 {
-> >>               compatible = "renesas,tmu";
-> >>               reg = <0xffd81000 0x30>;
-> >> -             interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>,
-> >> -                          <0 45 IRQ_TYPE_LEVEL_HIGH>,
-> >> -                          <0 46 IRQ_TYPE_LEVEL_HIGH>;
-> >> +             interrupt-parent = <&gic>;
-> >> +             interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>,
-> >> +                          <0 36 IRQ_TYPE_LEVEL_HIGH>,
-> >> +                          <0 37 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> > If I'm not mistaken the interrupts should be 36, 37 and 38.
+On 06/16/2014 07:30 AM, Rob Herring wrote:
+> On Fri, Jun 13, 2014 at 4:58 PM, Julius Werner <jwerner@chromium.org> wrote:
+...
+>> Rob Herring wrote:
+>>> Don't you need need to keep the kernel from allocating this memory by
+>>> using one of the reserved memory mechanisms? The recently added one
+>>> should be able to specific what the memory is reserved for IIRC.
+>>
+>> Our bootloader is carving the location out of the /memory node and
+>> adding it to the device tree reserve map. As far as I know, that only
+>> contains a list of raw start and size entries. At any rate, I think
+>> it's useful (and in line with other bindings) to add a more explicit
+>> node like this (if only to make it easier accessible through
+>> /proc/device-tree).
 > 
-> (diving into the documentation)
+> Understand there are 3 different memory reservation bindings. The
+> original "/memreserve/" method is indeed limited. What I think you
+> should use is the binding documented in
+> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+> So you could do something like this:
 > 
-> Yes, probably 36, 37, and 38. I say "probably", as I find it non-trivial
-> to convert from docs to DT.
+>         reserved-memory {
+>                 #address-cells = <1>;
+>                 #size-cells = <1>;
+>                 ranges;
 > 
-> What happens with 35, which is "TMU21 (input capture)"?
-> As DT describes the hardware, shouldn't it be mentioned here?
-
-Input capture isn't supported by the TMU driver yet. I haven't checked how the 
-feature is implemented in the hardware, which is why I've left it out from the 
-DT bindings for now.
-
-> >>               clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
-> >>               clock-names = "fck";
-> >> 
-> >> @@ -296,10 +298,11 @@
-> >> 
-> >>       tmu2: timer@ffd82000 {
-> >>               compatible = "renesas,tmu";
-> >> +             interrupt-parent = <&gic>;
-> >>               reg = <0xffd82000 0x30>;
-> >> -             interrupts = <0 48 IRQ_TYPE_LEVEL_HIGH>,
-> >> -                          <0 49 IRQ_TYPE_LEVEL_HIGH>,
-> >> -                          <0 50 IRQ_TYPE_LEVEL_HIGH>;
-> >> +             interrupts = <0 38 IRQ_TYPE_LEVEL_HIGH>,
-> >> +                          <0 39 IRQ_TYPE_LEVEL_HIGH>,
-> >> +                          <0 40 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> > And 40, 41 and 42 here.
+>                 /* global autoconfigured region for contiguous allocations */
+>                 linux,cma {
+>                         compatible = "shared-dma-pool";
+>                         reusable;
+>                         size = <0x4000000>;
+>                         alignment = <0x2000>;
+>                         linux,cma-default;
+>                 };
 > 
-> Likewise for "TMU51 (input capture)"?
+>                 coreboot_reserved: coreboot@fdfea000 {
+>                       compatible = "coreboot";
+>                       reg = <0xfdfea000 0x264>,
+>                           <0xfdfea000 0x16000>;
+>                 };
 > 
-> >>               clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
-> >>               clock-names = "fck";
 
--- 
-Regards,
+I thought that the /reserved-memory node was more so that the
+(preferred?) location of firmware images or data buffers used by HW
+accelerators could be communicated to the kernel. This feels like pure data.
 
-Laurent Pinchart
+The coreboot binding seems to be more about defining an interface to a
+particular firmware (this feels like semantics), which as a side-effect
+needs to communicate the location of certain data.
 
+If /reserved-memory is used to communicate the address of the memory
+regions, I think we still need a /firmware/coreboot node to indicate the
+semantics of the reserved memory region, and point at the phandle of the
+region. As such, it seems simpler just to put the addresses in the
+coreboot node's reg property. The only exception I see to that argument
+is if putting the region in /reserved-memory automatically carves that
+region out of the memory the kernel will allocate from. That would
+simplify the bootloader, since it wouldn't have to fiddle with the
+/memory node and do the carveout itself.
