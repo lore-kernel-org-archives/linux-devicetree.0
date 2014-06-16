@@ -1,52 +1,63 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH v5 4/5] ARM: dts: enable SMP support for bcm28155
-Date: Mon, 16 Jun 2014 14:39:46 -0500
-Message-ID: <1402947587-13898-5-git-send-email-elder@linaro.org>
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v5 1/5] devicetree: bindings: document Broadcom CPU enable method
+Date: Mon, 16 Jun 2014 14:39:43 -0500
+Message-ID: <1402947587-13898-2-git-send-email-elder@linaro.org>
 References: <1402947587-13898-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402947587-13898-1-git-send-email-elder@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mporter@linaro.org, bcm@fixthebug.org, linux@arm.linux.org.uk, devicetree@vger.kernel.org, arnd@arndb.de, sboyd@codeaurora.org
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1402947587-13898-1-git-send-email-elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bcm-xK7y4jjYLqYh9ZMKESR00Q@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Cc: bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Define nodes representing the two Cortex A9 CPUs in a bcm28155 SoC.
+Broadcom mobile SoCs use a ROM-implemented holding pen for
+controlled boot of secondary cores.  A special register is
+used to communicate to the ROM that a secondary core should
+start executing kernel code.  This enable method is currently
+used for members of the bcm281xx and bcm21664 SoC families.
 
-Signed-off-by: Ray Jui <rjui@broadcom.com>
-Signed-off-by: Alex Elder <elder@linaro.org>
+The use of an enable method also allows the SMP operation vector to
+be assigned as a result of device tree content for these SoCs.
+
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/bcm11351.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ Documentation/devicetree/bindings/arm/cpus.txt | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/bcm11351.dtsi b/arch/arm/boot/dts/bcm11351.dtsi
-index 6b05ae6..2ddaa51 100644
---- a/arch/arm/boot/dts/bcm11351.dtsi
-+++ b/arch/arm/boot/dts/bcm11351.dtsi
-@@ -27,6 +27,25 @@
- 		bootargs = "console=ttyS0,115200n8";
- 	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 1fe72a0..cdca080 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -184,6 +184,7 @@ nodes to be present and contain the properties described below.
+ 			  can be one of:
+ 			    "allwinner,sun6i-a31"
+ 			    "arm,psci"
++			    "brcm,bcm11351-cpu-method"
+ 			    "marvell,armada-375-smp"
+ 			    "marvell,armada-380-smp"
+ 			    "marvell,armada-xp-smp"
+@@ -215,6 +216,17 @@ nodes to be present and contain the properties described below.
+ 		Value type: <phandle>
+ 		Definition: Specifies the ACC[2] node associated with this CPU.
  
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm11351-cpu-method";
-+		secondary-boot-reg = <0x3500417c>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <1>;
-+		};
-+	};
-+
- 	gic: interrupt-controller@3ff00100 {
- 		compatible = "arm,cortex-a9-gic";
- 		#interrupt-cells = <3>;
++	- secondary-boot-reg
++		Usage:
++			Required for systems that have an "enable-method"
++			property value of "brcm,bcm11351-cpu-method".
++		Value type: <u32>
++		Definition:
++			Specifies the physical address of the register used to
++			request the ROM holding pen code release a secondary
++			CPU.  The value written to the register is formed by
++			encoding the target CPU id into the low bits of the
++			physical start address it should jump to.
+ 
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
