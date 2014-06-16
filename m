@@ -1,83 +1,302 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 1/8] mfd: Add support for DA9150 combined charger &
- fuel-gauge device
-Date: Mon, 16 Jun 2014 13:12:10 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB4FD95E@SW-EX-MBX01.diasemi.com>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <bf472aa7fddd1e67a3d5b9024b5b621744146a27.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <539DF8C6.8030009@kernel.org>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [RFC PATCH] gpio: Add a defer reset object to send board specific reset
+Date: Mon, 16 Jun 2014 15:18:20 +0200
+Message-ID: <CAPDyKFpqb=pSR0ZKXdgqJOAWioC+x2OqA7nVR4Q74iVQPfqXMg@mail.gmail.com>
+References: <1402189798-7665-1-git-send-email-houcheng@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <539DF8C6.8030009-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402189798-7665-1-git-send-email-houcheng@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Houcheng Lin <houcheng@gmail.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-gpio@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gU3VuLCBKdW4gMTUsIDIwMTQgYXQgMjA6NDksIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6IA0K
-DQo+IEhpIEFkYW0sDQo+IA0KPiBTb21lIGdlbmVyYWwgY29tbWVudHMgaW5saW5lLg0KPiANCj4g
-SXQncyBiZWVuIGEgd2hpbGUgc2luY2UgSSd2ZSBsb29rZWQgYXQgYW55IHBhcnRpY3VsYXJseSBz
-aW1pbGFyIHBhcnRzLA0KPiBidXQgaXQgc2VlbXMgdG8gbWUgdGhhdCBhIGxvdCBvZiBpbmRpcmVj
-dGlvbiBnZXRzIGFkZGVkIGhlcmUgdGhhdA0KPiBpZiBhbnl0aGluZyBtYWtlcyB0aGUgY29kZXMg
-c2xpZ2h0bHkgaGFyZGVyIHRvIGZvbGxvdy4uLg0KPiANCj4gRmVlbCBmcmVlIHRvIGRpc2FncmVl
-IHdpdGggbWUgdGhvdWdoIQ0KDQpXaWxsIGRvIDopDQoNCj4gVG8gbXkgbWluZCBhbGwgdGhlc2Ug
-d3JhcHBlcnMgYWRkIG5vdGhpbmcgc2lnbmlmaWNhbnQgc28geW91IG1pZ2h0IGFzIHdlbGwNCj4g
-anVzdCBjYWxsIGRhOTE1MC0+cmVhZF9kZXYgZXRjIGRpcmVjdGx5Lg0KPiANCj4gQWxzbywgd2hh
-dCBhcmUgdGhlIHJlYWRfcWlmIGFuZCB3cml0ZV9xaWYgZm9yPyAgVGhleSBkb24ndCBzZWVtIHRv
-IGJlIHVzZWQNCj4gYW55d2hlcmUuDQoNCnJlYWRfcWlmIGFuZCB3cml0ZV9xaWYgYXJlIGZvciB0
-aGUgRnVlbC1HYXVnZSBmdW5jdGlvbmFsaXR5IG9mIHRoZSBjaGlwLiBUaGUNCmFzc29jaWF0ZWQg
-ZHJpdmVyIHdpbGwgYmUgc3VibWl0dGVkIGFmdGVyIGFjY2VwdGFuY2Ugb2YgaW5pdGlhbCBkcml2
-ZXIgY29kZSwNCmFuZCB3aWxsIG1ha2UgdXNlIG9mIHRoZXNlIGZ1bmN0aW9ucy4NCg0KVGhlIHdy
-YXBwZXJzIGF1dG9tYXRpY2FsbHkgY2hvb3NlIHRoZSBjb3JyZWN0IGNsaWVudCB0byB1c2UgKFFJ
-RiB1c2VzIGENCmRpZmZlcmVudCBzbGF2ZSBhZGRyZXNzIHRvIHRoZSBtYWluIGNoaXAgb25lKS4g
-TWVhbnMgdGhlIGNoaWxkIGRyaXZlcnMgb25seSBuZWVkDQp0byBwYXNzIHRocm91Z2ggdGhlIGRh
-OTE1MCBzdHJ1Y3QgYW5kIHRoZSByZXN0IGlzIGRlYWx0IHdpdGggdW5kZXJuZWF0aC4NCg0KPiBU
-aGUgb25seSByZWFsIHJlYXNvbiBJIGNhbiBzZWUgZm9yIHRoZXNlIHdyYXBwZXJzIGlzIGJlY2F1
-c2UgeW91IHdhbnQNCj4gdG8gaGlkZSB0aGUgc3RydWN0IGRhOTE1MCBjb250ZW50cyBmcm9tIHRo
-ZSBjaGlsZHJlbiBvZiB0aGUgbWZkLiBBcyB5b3UNCj4gYXJlbid0IGRvaW5nIHRoYXQsIHlvdSBt
-aWdodCBhcyB3ZWxsIGRyb3AgdGhlc2UgaW4gZmF2b3VyIG9mIGRpcmVjdA0KPiBjYWxscyB0byBy
-ZWdtYXBfcmVhZCBhbmQgZnJpZW5kcy4NCg0KQXMgSSBoYXZlIGEgbmVlZCB0byBwYXNzIHRocm91
-Z2ggdGhlIG1haW4gZGE5MTUwIHN0cnVjdCBwb2ludCBmb3IgdGhlDQphZm9yZW1lbnRpb25lZCB3
-cmFwcGVycywgaXQgc2VlbWVkIGNsZWFuZXIgYW5kIG1vcmUgY29uc2lzdGVudCB0byBoYXZlIHdy
-YXBwZXJzDQpmb3IgdGhlc2UgYXMgd2VsbCwgd2hpY2ggZGlkIHRoZSBqb2Igb2YgcmVnbWFwIGFj
-Y2Vzcy4gTWVhbnMgYWxsIEhXIGFjY2Vzcw0KdXNlcyB0aGUgc2FtZSBraW5kIG9mIGFwcHJvYWNo
-LCBhbmQgYWxsIHN1Yi1kZXZpY2VzIGp1c3QgbmVlZCBhIHBvaW50IHRvIHRoZQ0KbWFpbiBkYTkx
-NTAgc3RydWN0IHRvIGJlIGFibGUgdG8gdXNlIHRoZSBmdW5jdGlvbnMuDQoNCj4gSSdsbCBjb250
-aW51ZSBteSB0aXJhZGUgYWdhaW5zdCBvYnZpb3VzIGNvbW1lbnRzLiBXcm9uZyBmb3JtYXQgYW5k
-DQo+IGFkZHMgbm90aGluZyB0byB3aGF0IGlzIGhlcmUgYXMgaW5pdCBhbmQgZXhpdCBmdW5jdGlv
-bnMgYXJlIGNsZWFybHkNCj4gZG9pbmcgd2hhdCB0aGVpciBuYW1lIHN1Z2dlc3RzIChpdCdzIG9u
-ZSBvZiBteSBwZXQgaGF0ZXMgOykNCg0KSSBhZ3JlZSB0aGUgY29tbWVudCBkb2Vzbid0IGFkZCBt
-dWNoIGluIHRlcm1zIG9mIGRlc2NyaXB0aW9uIGJ1dCBmb3IgbWUgaXQNCmJyZWFrcyB1cCB0aGUg
-Y29kZSB0byBtYWtlIGl0IGVhc2llciB0byBmb2xsb3cuIEhvd2V2ZXIgaWYgSSBnZXQgYW4gb3Zl
-cndoZWxtaW5nDQpoYXRyZWQgZm9yIHRoaXMgSSBjYW4gY2hhbmdlIGl0LiBBbHNvLCBJIGtub3cg
-dGhlIHJ1bGUgcmVnYXJkaW5nIHNpbmdsZS9tdWx0aXBsZQ0KbGluZSBjb21tZW50cyBidXQgaGVy
-ZSBhZ2FpbiBJIGZlZWwgaXQgaGVscHMgc2VwYXJhdGUgdGhlIGNvZGUgYW5kIG1ha2VzIGl0DQpl
-YXNpZXIgdG8gcmVhZC4NCg0KPiBBcyBhIGdlbmVyYWwgZ29vZCBwcmFjdGljZSBwb2ludCwgSSdk
-IHJhdGhlciB0aGF0IHRoZSBkcml2ZXIgc3VwcG9ydGVkDQo+IG1vcmUgdGhhbiBvbmUgaW5zdGFu
-Y2Ugb2YgdGhlIGNoaXAuLiBIZW5jZSB5b3UnZCB0YWtlIGEgY29weSBvZiBkYTkxNTBfZGV2cw0K
-PiB0byB1c2UgaGVyZS4gIEkgZ3Vlc3MgaXQgaXMgcmVsYXRpdmVseSB1bmxpa2VseSB3aXRoIG9u
-ZSBvZiB0aGVzZSwgYnV0DQo+IHlvdSBuZXZlciBrbm93IDspDQoNCkhhdmUgZm9sbG93ZWQgdGhl
-IGdlbmVyYWwgbWV0aG9kcyBmb3IgTUZEIGhlcmUsIGFuZCBhIG51bWJlciBvZiBkcml2ZXJzIHRh
-a2UgdGhlDQpzYW1lIGFwcHJvYWNoLiBBbHNvLCBJIHRoaW5rIGl0IHdvdWxkIGJlIHVuZGVzaXJh
-YmxlIHRvIGhhdmUgbXVsdGlwbGUgY2hhcmdlcg0KY2hpcHMgb2YgdGhlIHNhbWUgdHlwZSBpbiBv
-bmUgcGxhdGZvcm0uIEkgYWdyZWUgZ2VuZXJhbGx5IGl0J3MgYmVzdCB0byBzdXBwb3J0DQptdWx0
-aXBsZSBpbnN0YW5jZXMsIGJ1dCBoZXJlIEkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWxkLg0KDQo+IFdo
-eSBkb2VzIHRoaXMgbmVlZCBpdCdzIG93biBmaWxlPyAgRG9lcyB0aGUgREE5MTUwIHN1cHBvcnQg
-YW55IG90aGVyDQo+IGludGVyZmFjZXM/DQoNClllcywgdGhlIERBOTE1MCBhbHNvIGhhcyBhIFNQ
-SSBpbnRlcmZhY2UuIEF0IHByZXNlbnQgdGhlIHBsYW4gaXMgdG8ganVzdCBhZGQgSTJDDQpzdXBw
-b3J0IGZvciBub3csIGJ1dCBpbiB0aGUgZnV0dXJlIHdlIG1heSBhZGQgU1BJIHN1cHBvcnQsIHNv
-IGhhdmUgd3JpdHRlbiB0aGUNCmNvZGUgd2l0aCB0aGlzIGluIG1pbmQuDQoNCj4gV2h5IHRoZSBp
-bmRpcmVjdGlvbj8gIFRoZSBkYTkxNTAgb25seSBzdXBwb3J0cyBpMmMgYXMgZmFyIGFzIEkgY2Fu
-IHNlZS4NCg0KQXMgcGVyIG15IGxhc3QgY29tbWVudC4gDQoNCj4gSSdkIHJvbGwgdGhpcyBpbnRv
-IG9uZSBsaW5lIGFuZCBub3QgYm90aGVyIHdpdGggdGhlIGxvY2FsIHZhcmlhYmxlLi4uDQoNCkZh
-aXIgZW5vdWdoIGJ1dCBJIHRoaW5rIHRoaXMga2VlcHMgdGhlIGNvZGUgY2xlYW5lciwgYW5kIHRv
-IG1lIGl0IG1ha2VzIHNlbnNlDQpmb3IgdGhlIGFjdHVhbCBsb2dpYyB0byBiZSBpbiBjb3JlIGZp
-bGUgYXMgdGhhdCdzIGludGVyZmFjZSBhZ25vc3RpYy4NCg0KPiBEcm9wIGNvbW1lbnRzIG9uIHRo
-aW5ncyB0aGF0IGFyZSBzZWxmLWV2aWRlbnQuICBBbHNvIHRoZXNlIGFyZSBvbmUNCj4gbGluZSBj
-b21tZW50cyBzbyBzaG91bGQgYmUgdXNpbmcgdGhlIHNpbmdsZSBsaW5lIGNvbW1lbnQgc3ludGF4
-Lg0KDQpBcyBwZXIgbXkgcHJldmlvdXMgY29tbWVudCBJIHRoaW5rIGl0IGp1c3QgaGVscHMgdG8g
-YnJlYWsgdXAgdGhlIGNvZGUgYW5kIG1ha2VzDQppdCBtb3JlIHJlYWRhYmxlLiBXaWxsIGNoYW5n
-ZSBpdCB0aG91Z2ggaWYgdGhlIGdlbmVyYWwgY29uc2Vuc3VzIGlzIHRvIHJlbW92ZQ0KaXQuDQo=
+On 8 June 2014 03:09, Houcheng Lin <houcheng@gmail.com> wrote:
+> The Problem
+> -----------
+> The reset signal on a hardware board is send either:
+>     - during machine initialization
+>     - during bus master's initialization
+>
+> In some hardware design, devices on bus need a non-standard and extra reset
+> signal after bus is initialied. Most reason is to wake up device from hanging
+> state.
+>
+> The board spefic reset code can not be put into machine init code, as it is
+> too early. This code can not also be put onto chip's driver, as it is board
+> specific and not suitable for a common chip driver.
+>
+
+If I understand correct, you need a per device reset functionality?
+And obviously the reset implementation is board/SoC specific.
+
+We have the "Reset Controller framework", drivers/reset. Could this help you?
+
+Kind regards
+Ulf Hansson
+
+> Defer Reset Object
+> ------------------
+> The defer reset object is to resolve this issue, developer can put a defer-
+> reset device on the board's dts file and enable DEFER RESET OBJECT CONFIG.
+> During driver init-calls, a defer-reset object is created and issue reset signal
+> after the enclosing device is initialized.
+>
+> This eliminate the need to rewrite a driver module with only one purpose: sending
+> a board specific reset. This also allow mainstream kernel to support many boards
+> that modify the common drivers to send board specific reset. Configuring defer-reset
+> device in dts leave the board specific reset rules on board level and simple to
+> maintain.
+>
+> Example dts File
+> ----------------
+>     usb-ehci-chip@1211000{
+>         usb-phy = <&usb2_phy>;
+>         defer_reset_vbus {
+>             compatible = "defer-reset";
+>             reset-gpios = <&gpx3 5 1>;
+>             reset-init = <0>;
+>             reset-end = <1>;
+>             delay = <5>;
+>         };
+>     };
+>
+> Block Diagram of dts File
+> -------------------------
+>     +-------------------------------------+
+>     | usb-ehci-chip@1211000               |
+>     |   +-------------------------+       |
+>     |   | defer-reset(gpx3)       |       |
+>     |   +-------------------------+       |
+>     +-------------------------------------+
+>
+> Signed-off-by: Houcheng Lin <houcheng@gmail.com>
+> ---
+>  drivers/gpio/Kconfig            |   8 ++
+>  drivers/gpio/Makefile           |   1 +
+>  drivers/gpio/gpio-defer-reset.c | 179 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 188 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-defer-reset.c
+>
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index a86c49a..99aa0d6 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -851,6 +851,14 @@ config GPIO_BCM_KONA
+>         help
+>           Turn on GPIO support for Broadcom "Kona" chips.
+>
+> +config GPIO_DEFER_RESET
+> +       bool "Defer reset driver via gpio"
+> +       depends on OF_GPIO
+> +       help
+> +         Enable defer reset drvier
+> +         The reset signal would be issued after a device on USB or PCI bus is initialied.
+> +         The dependency of reset signal and device can be specified in board's dts file.
+> +
+>  comment "USB GPIO expanders:"
+>
+>  config GPIO_VIPERBOARD
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index 6309aff..0754758 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -101,3 +101,4 @@ obj-$(CONFIG_GPIO_WM8994)   += gpio-wm8994.o
+>  obj-$(CONFIG_GPIO_XILINX)      += gpio-xilinx.o
+>  obj-$(CONFIG_GPIO_XTENSA)      += gpio-xtensa.o
+>  obj-$(CONFIG_GPIO_ZEVIO)       += gpio-zevio.o
+> +obj-$(CONFIG_GPIO_DEFER_RESET) += gpio-defer-reset.o
+> diff --git a/drivers/gpio/gpio-defer-reset.c b/drivers/gpio/gpio-defer-reset.c
+> new file mode 100644
+> index 0000000..c6decab
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-defer-reset.c
+> @@ -0,0 +1,179 @@
+> +/*
+> + * GPIO Defer Reset Driver
+> + *
+> + * Copyright (C) 2014 Houcheng Lin
+> + * Author: Houcheng Lin <houcheng@gmail.com>
+> + *
+> + * This program is free software; you can redistribute  it and/or modify it
+> + * under  the terms of  the GNU General  Public License as published by the
+> + * Free Software Foundation;  either version 2 of the  License, or (at your
+> + * option) any later version.
+> + *
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/dma-mapping.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/slab.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/usb/phy.h>
+> +#include <linux/usb/samsung_usb_phy.h>
+> +#include <linux/usb.h>
+> +#include <linux/usb/hcd.h>
+> +#include <linux/usb/otg.h>
+> +
+> +
+> +#define DRIVER_DESC "GPIO Defer Reset Driver"
+> +#define GDR_MAX_DEV 32
+> +
+> +
+> +static DEFINE_MUTEX(deferred_reset_mutex);
+> +static LIST_HEAD(deferred_reset_list);
+> +
+> +
+> +struct defer_reset_private {
+> +       struct list_head next;
+> +       struct device_node *node;  /* defer_reset device */
+> +       int    issued;
+> +};
+> +
+> +static void gdr_issue_reset(
+> +       struct platform_device *pdev, struct device_node *dnode)
+> +{
+> +       int gpio;
+> +       int i;
+> +       int count = of_gpio_named_count(dnode, "reset-gpios");
+> +       u32 reset_init[GDR_MAX_DEV];
+> +       u32 reset_end[GDR_MAX_DEV];
+> +       u32 delay;
+> +
+> +       if (count != of_property_count_u32_elems(dnode, "reset-init")) {
+> +               dev_err(&pdev->dev, "should call std error here, number is wrong:%d\n",
+> +                       of_property_count_u32_elems(dnode, "reset-init"));
+> +               return;
+> +       }
+> +       if (count != of_property_count_u32_elems(dnode, "reset-end")) {
+> +               dev_err(&pdev->dev, "should call std error here, number is wrong:%d\n",
+> +                       of_property_count_u32_elems(dnode, "reset-end"));
+> +               return;
+> +       }
+> +       if (count > GDR_MAX_DEV) {
+> +               dev_err(&pdev->dev, "too large reset array!\n");
+> +               return;
+> +       }
+> +
+> +       /* setup parameters */
+> +       of_property_read_u32_array(dnode, "reset-init", reset_init, count);
+> +       of_property_read_u32_array(dnode, "reset-end", reset_end, count);
+> +       of_property_read_u32(dnode, "delay", &delay);
+> +
+> +       /* reset init */
+> +       for (i = 0; i < count; i++) {
+> +               gpio = of_get_named_gpio(dnode, "reset-gpios", i);
+> +               dev_info(&pdev->dev,
+> +                       "issue reset to gpio %d for device [%s]\n",
+> +                       gpio, dnode->parent->name);
+> +               if (!gpio_is_valid(gpio))
+> +                       continue;
+> +               __gpio_set_value(gpio, reset_init[i]);
+> +       }
+> +       if (delay == 0)
+> +               delay = 5;
+> +       mdelay(delay);
+> +       /* reset end */
+> +       for (i = 0; i < count; i++) {
+> +               gpio = of_get_named_gpio(dnode, "reset-gpios", i);
+> +               if (!gpio_is_valid(gpio))
+> +                       continue;
+> +               __gpio_set_value(gpio, reset_end[i]);
+> +       }
+> +}
+> +
+> +/**
+> +  * the pdev parameter is null as it is provided by register routine, platform_device_register_simple
+> +  **/
+> +static int gdr_probe(struct platform_device *pdev)
+> +{
+> +       struct list_head *pos;
+> +
+> +       pr_debug("gpio defer reset probe\n");
+> +       list_for_each(pos, &deferred_reset_list) {
+> +               struct platform_device *pd;
+> +               struct defer_reset_private *prv = list_entry(
+> +                       pos, struct defer_reset_private, next);
+> +               if (prv->issued)
+> +                       continue;
+> +               pd = of_find_device_by_node(
+> +                       prv->node->parent);
+> +               if (pd->dev.driver != 0) {
+> +                       gdr_issue_reset(pdev, prv->node);
+> +                       prv->issued = 1;
+> +               }
+> +       }
+> +       list_for_each(pos, &deferred_reset_list) {
+> +               struct defer_reset_private *prv = list_entry(pos,
+> +                       struct defer_reset_private, next);
+> +               if (!prv->issued)
+> +                       return -EPROBE_DEFER;
+> +       }
+> +       return 0;
+> +}
+> +
+> +static int gdr_remove(struct platform_device *pdev)
+> +{
+> +       return 0;
+> +}
+> +
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id gdr_match[] = {
+> +       { .compatible = "gpio-defer-reset" },
+> +       { .compatible = "defer-reset" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, gdr_match);
+> +#endif
+> +
+> +
+> +static struct platform_driver gdr_driver = {
+> +       .probe      = gdr_probe,
+> +       .remove     = gdr_remove,
+> +       .driver = {
+> +               .name   = "defer-reset",
+> +               .owner  = THIS_MODULE,
+> +               .of_match_table = of_match_ptr(gdr_match),
+> +       }
+> +};
+> +
+> +static int __init gdr_init(void)
+> +{
+> +       struct device_node *node;
+> +       pr_info("defer-reset-object initialied.\n");
+> +       platform_device_register_simple("defer-reset", -1, NULL, 0);
+> +       mutex_lock(&deferred_reset_mutex);
+> +       for_each_compatible_node(node, NULL, "defer-reset") {
+> +               struct defer_reset_private *prv = kmalloc(
+> +                       sizeof(struct defer_reset_private), GFP_KERNEL);
+> +               prv->node = node;
+> +               prv->issued = 0;
+> +               list_add_tail(&prv->next, &deferred_reset_list);
+> +       }
+> +       mutex_unlock(&deferred_reset_mutex);
+> +       return platform_driver_register(&gdr_driver);
+> +}
+> +module_init(gdr_init);
+> +
+> +static void __exit gdr_cleanup(void)
+> +{
+> +       platform_driver_unregister(&gdr_driver);
+> +}
+> +module_exit(gdr_cleanup);
+> +
+> +MODULE_DESCRIPTION(DRIVER_DESC);
+> +MODULE_ALIAS("platform:defer-reset");
+> +MODULE_AUTHOR("Houcheng Lin");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.9.1
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
