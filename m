@@ -1,104 +1,42 @@
-From: Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt: bindings: add bindings for
- Broadcom bcm43xx sdio devices
-Date: Mon, 16 Jun 2014 13:53:56 -0700
-Message-ID: <CAGVrzcZBzDTfnd6o0ib1FBvBK2VPNitS=rpb4jDkjF=T7Fy=DQ@mail.gmail.com>
-References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-2-git-send-email-hdegoede@redhat.com>
+From: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/2] touchscreen: sun4i-ts: A10 (sun4i) has
+ double the temperature precision
+Date: Mon, 16 Jun 2014 14:30:48 -0700
+Message-ID: <20140616213048.GA422@core.coreip.homeip.net>
+References: <1402943069-19420-1-git-send-email-hdegoede@redhat.com>
+ <1402943069-19420-2-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCH67JWTV4DBBDNT7WOAKGQEIZ2GLZA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402941407-8210-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDP6N55ZUYDRBDWE7WOAKGQEA2PRXCQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1402943069-19420-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
 To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ATHEROS ATH5K WIR..." <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tong Zhang <lovewilliam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LM Sensors <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-06-16 10:56 GMT-07:00 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
-> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->
-> The Broadcom bcm43xx sdio devices are fullmac devices that may be
-> integrated in ARM platforms. Currently, the brcmfmac driver for
-> these devices support use of platform data. This patch specifies
-> the bindings that allow this platform data to be expressed in the
-> devicetree.
->
-> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no consensus
->  on how to handle this yet]
-> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 29 ++++++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
->
-> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> new file mode 100644
-> index 0000000..6a0aaf2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> @@ -0,0 +1,29 @@
-> +Broadcom BCM43xx Fullmac wireless SDIO devices
-> +
-> +This node provides properties for controlling the Broadcom wireless device. The
-> +node is expected to be specified as a child node to the SDIO controller that
-> +connects the device to the system.
-> +
-> +Required properties:
-> +
-> + - compatible : Should be "brcm,bcm43xx-fmac".
+Hi Hans,
 
-In general, the use of a wildcard compatible string is discouraged
-over the use of a more descriptive compatible string. So you should
-find out what is the first chip that is compatible, and use that
-compatible string as long as that compatibility remains.
+On Mon, Jun 16, 2014 at 08:24:28PM +0200, Hans de Goede wrote:
+> Testing has revealed that the temperature in the rtp controller of the A10
+> (sun4i) SoC has a resolution of 50 milli degrees / step, where as the
+> A13 (sun5i) and later models have 100 milli degrees / step.
+> 
+> Add a new sun5i-a13-ts compatible to differentiate the newer models and
+> set the resolution based on the compatible string.
+> 
+> This fixes the temperature reported on the A10 being twice as high as expected.
 
-> +
-> +Optional properties:
-> + - brcm,drive-strength : drive strength used for SDIO pins on device.
-> +       (default = 6mA).
+Should we maybe add explicit temperature steps property so that we won;t
+need to patch again if they decided to change resolution again?
 
-It would not hurt if you did specify the unit of the
-"brcm,drive-strength" property here. Also, if the default is 6, maybe
-the example below should be fixed to reflect that so people do not
-think that writing 4 to a register = 6 mA.
-
-> + - interrupt-parent : the phandle for the interrupt controller to which the
-> +       device interrupts are connected.
-> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
-> +       When not specified the device will use in-band SDIO interrupts.
-> + - interrupt-names : name of the out-of-band interrupt, which must be set
-> +       to "host-wake".
-> +
-> +Example:
-> +
-> +bcm4335 {
-> +       compatible = "brcm,bcm43xx-fmac";
-> +       brcm,drive-strength = <4>;
-> +       interrupt-parent = <&gpx2>;
-> +       interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-> +       interrupt-names = "host-wake";
-> +};
-> --
-> 2.0.0
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
+Thanks.
 
 -- 
-Florian
+Dmitry
