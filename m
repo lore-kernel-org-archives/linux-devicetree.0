@@ -1,52 +1,64 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v8 2/7] clocksource: Add support for the Mediatek SoCs
-Date: Mon, 16 Jun 2014 09:43:47 +0200 (CEST)
-Message-ID: <alpine.DEB.2.10.1406160943370.5170@nanos>
-References: <1402490055-15197-1-git-send-email-matthias.bgg@gmail.com> <1402490055-15197-3-git-send-email-matthias.bgg@gmail.com> <alpine.DEB.2.10.1406112012460.5170@nanos> <539E116D.6030002@linaro.org>
+From: Jaehoon Chung <jh80.chung@samsung.com>
+Subject: Re: [PATCHv7 2/2] ARM: dts: unuse the slot-node and deprecated
+ supports-highspeed for dw-mmc.
+Date: Mon, 16 Jun 2014 16:47:05 +0900
+Message-ID: <539EA0F9.60508@samsung.com>
+References: <1402633867-25155-1-git-send-email-jh80.chung@samsung.com>
+ <1402633867-25155-3-git-send-email-jh80.chung@samsung.com>
+ <CAPDyKFr46gaAnZc34ELv4GYaK+XjuiAcewTmgJU=iyC3WgxWVg@mail.gmail.com>
+ <CAELcNGSOV2GD_uLO5HHuJgN2_pNoXtFrCmbPJh4RGc2pEaaYUA@mail.gmail.com>
+ <CAPDyKFo18wi-kZHsoF4k_U9G8jK9maRj0DNs=3ciqUuDfxAHcw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <539E116D.6030002@linaro.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, grant.likely@linaro.org, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-reply-to: <CAPDyKFo18wi-kZHsoF4k_U9G8jK9maRj0DNs=3ciqUuDfxAHcw@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Jaehoon Chung <jh80.chung@samsung.com>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "tgih.jun@samsung.com" <tgih.jun@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Heiko St.bner" <heiko@sntech.de>, dinguyen@altera.com, Mark Rutland <mark.rutland@arm.com>, Tushar Behera <tushar.behera@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 15 Jun 2014, Daniel Lezcano wrote:
-
-> On 06/11/2014 08:14 PM, Thomas Gleixner wrote:
-> > On Wed, 11 Jun 2014, Matthias Brugger wrote:
-> > > +static void mtk_clkevt_mode(enum clock_event_mode mode,
-> > > +				struct clock_event_device *clk)
-> > > +{
-> > > +	struct mtk_clock_event_device *evt = to_mtk_clk(clk);
-> > > +
-> > > +	mtk_clkevt_time_stop(evt, GPT_CLK_EVT);
-> > > +
-> > > +	switch (mode) {
-> > > +	case CLOCK_EVT_MODE_PERIODIC:
-> > > +		mtk_clkevt_time_setup(evt, evt->ticks_per_jiffy, GPT_CLK_EVT);
-> > > +		mtk_clkevt_time_start(evt, true, GPT_CLK_EVT);
-> > > +		break;
-> > > +	case CLOCK_EVT_MODE_ONESHOT:
-> > > +		mtk_clkevt_time_start(evt, false, GPT_CLK_EVT);
-> > 
-> > Why start the timer here? The code will call set next event right away.
-> > 
-> > > +		break;
-> > > +	case CLOCK_EVT_MODE_UNUSED:
-> > > +	case CLOCK_EVT_MODE_SHUTDOWN:
-> > > +	default:
-> > > +		/* No more interrupts will occur as source is disabled */
-> > > +		break;
-> > > +	}
-> > > +}
-> > 
-> > Looks good otherwise.
+On 06/16/2014 03:56 PM, Ulf Hansson wrote:
+> On 13 June 2014 15:31, Jae hoon Chung <jh80.chung@gmail.com> wrote:
+>> Hi, Ulf.
+>>
+>>
+>> 2014-06-13 20:14 GMT+09:00 Ulf Hansson <ulf.hansson@linaro.org>:
+>>
+>>> On 13 June 2014 06:31, Jaehoon Chung <jh80.chung@samsung.com> wrote:
+>>>> dw-mmc controller can support multiple slots.
+>>>> But, there are no use-cases anywhere. So we don't need to support the
+>>>> slot-node for dw-mmc controller.
+>>>> And "supports-highspeed" property in dw-mmc is deprecated.
+>>>> "supports-highspeed" property can be replaced to "cap-sd/mmc-highspeed".
+>>>
+>>> This looks good to me.
+>>>
+>>> Though, you need to help me understand how to handle this patch.
+>>>
+>>> 1) Is it to consider as a fix for 3.16?
+>>
+>> Right..It's related with "mmc: dw_mmc: use the mmc_of_parse() instead of
+>> local parser"
+>> DW-MMC didn't parse the subnode, so it didn't set to correct bus-width.
+>>
+>>> 2 ) I am not sure if there are a dependency to patch 1 - if not this
+>>> patch is better suited for ARM SoC.
+>>
+>> It's not a dependency on patch 1.
+>> Let me know how i do, plz.
 > 
-> Hi Thomas,
+> I would suggest you to re-send it to the ARM lits and the ARM SoC guys
+> and keeping the respective SoC maintainer on the to list of course.
 > 
-> Can I consider the 8.1 patch (the one taking into account your comment) as
-> acked-by ?
+> Add a note that it's intended as fix for 3.16 and you may also add my
+> reviewed by tag.
+Ok. I will resend the patch..Thanks
 
-Yes
+Best Regards,
+Jaehoon Chung
+> 
+> Kind regards
+> Uffe
+> 
+
