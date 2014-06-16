@@ -1,48 +1,62 @@
-From: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
-Subject: Re: [PATCH 00/21] add and use devm_irq_of_parse_and_map()
-Date: Mon, 16 Jun 2014 12:36:34 +0400
-Message-ID: <539EAC92.1040606@dev.rtsoft.ru>
-References: <53997AF6.1040003@gaisler.com> <5399AE1B.1080301@gaisler.com> <5399F92B.50406@dev.rtsoft.ru> <539EA986.1090501@gaisler.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 3/5] clk: Add driver for Maxim 77802 PMIC clocks
+Date: Mon, 16 Jun 2014 09:44:27 +0100
+Message-ID: <20140616084427.GG14323@lee--X1>
+References: <1402306670-17041-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1402306670-17041-4-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <539EA986.1090501-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andreas Larsson <andreas-FkzTOoA/JUlBDgjK7y7TUQ@public.gmane.org>
-Cc: lugovskoy-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, sparclinux-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402306670-17041-4-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
->>> SPARC does not use OF_IRQ and has a different implementation of
->>> irq_of_parse_and_map than the one in drivers/of/irq.c. All code
->>> converted from irq_of_parse_and_map to devm_irq_of_parse_and_map in this
->>> patch set will be unlinkable for SPARC. This includes SPI in general and
->>> many drivers that are used for SPARC (of which several are currently
->>> only used on SPARC platforms).
->>
->> Can this be fixed by adding a copy of devm_irq_of_parse_and_map() to
->> arch/sparc/kernel/of_device_common.c ?
-> 
-> Not a copy of the version in irq.c no. On SPARC, IRQ_DOMAIN is not
-> selected in general.
-> 
-> However, there is no technical problem that I can see with having a
-> SPARC version of devm_irq_of_parse_and_map that just calls
-> irq_of_parse_and_map as there are no mappings that needs to be disposed
-> of. (The empty dummy for irq_dispose_mapping is used if any
-> irq_dispose_mapping calls are made from drivers).
+> The MAX77802 PMIC has two 32.768kHz Buffered Clock Outputs with
+> Low Jitter Mode. This patch adds support for these two clocks.
+>=20
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
+=2Euk>
+> ---
+>  .../devicetree/bindings/clock/maxim,max77802.txt   |  40 ++++
+>  drivers/clk/Kconfig                                |   6 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/clk-max77802.c                         | 253 +++++++++++=
+++++++++++
+>  drivers/mfd/max77802.c                             |   3 +
+>  include/dt-bindings/clock/maxim,max77802.h         |  22 ++
+>  6 files changed, 325 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max=
+77802.txt
+>  create mode 100644 drivers/clk/clk-max77802.c
+>  create mode 100644 include/dt-bindings/clock/maxim,max77802.h
 
-Ok, I will post an updated patchset that adds sparc
-devm_irq_of_parse_and_map() that just calls irq_of_parse_and_map(), and
-devm_irq_dispose_mapping() that does nothing.
+[...]
 
-Also, you mentioned that some drivers that my original patchset touches
-are sparc-only?  Then, maybe better not convert these to devm_? Could
-you please give a list of such drivers?
+> diff --git a/drivers/mfd/max77802.c b/drivers/mfd/max77802.c
+> index 59696dd..33e8023 100644
+> --- a/drivers/mfd/max77802.c
+> +++ b/drivers/mfd/max77802.c
+> @@ -35,6 +35,9 @@
+> =20
+>  static const struct mfd_cell max77802_devs[] =3D {
+>  	{ .name =3D "max77802-pmic", },
+> +#if defined(CONFIG_COMMON_CLK_MAX77802)
 
-Nikita
+No, don't do that.  If COMMON_CLK_MAX77802 is not defined it just
+won't be matched, which is enough to ensure it won't be probed.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +	{ .name =3D "max77802-clk", },
+> +#endif
+>  };
+
+[...]
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
