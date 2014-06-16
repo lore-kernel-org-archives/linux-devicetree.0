@@ -1,103 +1,389 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Mon, 16 Jun 2014 21:19:35 +0900
-Message-ID: <539EE0D7.8000103@renesas.com>
-References: <539AEC8F.4030003@renesas.com> <20140613142525.GE8319@saruman.home> <539B3E17.6050607@codethink.co.uk>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 1/7] mfd: add atmel-hlcdc driver
+Date: Mon, 16 Jun 2014 13:50:30 +0100
+Message-ID: <20140616125030.GT14323@lee--X1>
+References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1402329860-27520-2-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <539B3E17.6050607@codethink.co.uk>
-Sender: linux-sh-owner@vger.kernel.org
-To: Ben Dooks <ben.dooks@codethink.co.uk>
-Cc: "balbi@ti.com" <balbi@ti.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402329860-27520-2-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> The HLCDC IP available on some Atmel SoCs (i.e. at91sam9n12, at91sam9=
+x5
+> family or sama5d3 family) exposes 2 subdevices:
+> - a display controller (controlled by a DRM driver)
+> - a PWM chip
+>=20
+> Add support for the MFD device which will just retrieve HLCDC clocks =
+and
+> create a regmap so that subdevices can access the HLCDC register rang=
+e
+> concurrently.
+>=20
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>  .../devicetree/bindings/mfd/atmel-hlcdc.txt        |  41 ++++++++
+>  drivers/mfd/Kconfig                                |  11 ++
+>  drivers/mfd/Makefile                               |   1 +
+>  drivers/mfd/atmel-hlcdc.c                          | 116 +++++++++++=
+++++++++++
+>  include/linux/mfd/atmel-hlcdc.h                    |  78 +++++++++++=
++++
+>  5 files changed, 247 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/atmel-hlcdc=
+=2Etxt
+>  create mode 100644 drivers/mfd/atmel-hlcdc.c
+>  create mode 100644 include/linux/mfd/atmel-hlcdc.h
+> diff --git a/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt b/=
+Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+> new file mode 100644
+> index 0000000..f5b69cb
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/atmel-hlcdc.txt
+> @@ -0,0 +1,41 @@
+> +Device-Tree bindings for Atmel's HLCDC (High LCD Controller) MFD dri=
+ver
+> +
+> +Required properties:
+> + - compatible: value should be one of the following:
+> +   "atmel,sama5d3-hlcdc"
+> + - reg: base address and size of the HLCDC device registers.
+> + - clock-names: the name of the 3 clocks requested by the HLCDC devi=
+ce.
+> +   Should contain "periph_clk", "sys_clk" and "slow_clk".
+> + - clocks: should contain the 3 clocks requested by the HLCDC device=
+=2E
+> +
+> +The HLCDC IP exposes two subdevices:
+> + - a PWM chip: see Documentation/devicetree/bindings/pwm/atmel-hlcdc=
+-pwm.txt
+> + - a Display Controller: see Documentation/devicetree/bindings/drm/a=
+tmel-hlcdc-dc.txt
+> +
+> +Example:
+> +
+> +	hlcdc: hlcdc@f0030000 {
+> +		compatible =3D "atmel,sama5d3-hlcdc";
+> +		reg =3D <0xf0030000 0x2000>;
+> +		clocks =3D <&lcdc_clk>, <&lcdck>, <&clk32k>;
+> +		clock-names =3D "periph_clk","sys_clk", "slow_clk";
+> +		status =3D "disabled";
 
-(2014/06/14 3:08), Ben Dooks wrote:
-> On 13/06/14 15:25, Felipe Balbi wrote:
->> Hi,
->>
->>> + +#define FIRMWARE_NAME		"r8a779x_usb3_v1.dlmem" 
->>> +MODULE_FIRMWARE(FIRMWARE_NAME);
-> 
-> Where can we get this from, it would be nice to test this.
+Not sure you really want to disable the the node in the example.
 
-I am submitting the firmware to upstream. It is not merged to linux-firmware.git yet,
-but you can get it from the marc.info / linux-usb ML:
-http://marc.info/?l=linux-usb&m=140263419006318&w=2
+> +		hlcdc-display-controller {
+> +			compatible =3D "atmel,hlcdc-dc";
+> +			interrupts =3D <36 IRQ_TYPE_LEVEL_HIGH 0>;
 
->>> +/*** Register Offset ***/ +#define RCAR_USB3_INT_ENA	0x224	/* 
->>> Interrupt Enable */ +#define RCAR_USB3_DL_CTRL	0x250	/* FW 
->>> Download Control & Status */ +#define RCAR_USB3_FW_DATA0	0x258
->>> /* FW Data0 */ + +#define RCAR_USB3_LCLK		0xa44	/* LCLK Select */
->>>  +#define RCAR_USB3_CONF1		0xa48	/* USB3.0 Configuration1 */ 
->>> +#define RCAR_USB3_CONF2		0xa5c	/* USB3.0 Configuration2 */ 
->>> +#define RCAR_USB3_CONF3		0xaa8	/* USB3.0 Configuration3 */ 
->>> +#define RCAR_USB3_RX_POL	0xab0	/* USB3.0 RX Polarity */
->>> +#define RCAR_USB3_TX_POL	0xab8	/* USB3.0 TX Polarity */ + +/***
->>> Register Settings ***/ +/* Interrupt Enable */ +#define 
->>> RCAR_USB3_INT_XHC_ENA	0x00000001 +#define RCAR_USB3_INT_PME_ENA 
->>> 0x00000002 +#define RCAR_USB3_INT_HSE_ENA	0x00000004 +#define 
->>> RCAR_USB3_INT_ENA_VAL	(RCAR_USB3_INT_XHC_ENA | \ + 
->>> RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA) + +/* FW Download 
->>> Control & Status */ +#define RCAR_USB3_DL_CTRL_ENABLE	0x00000001
->>>  +#define RCAR_USB3_DL_CTRL_FW_SUCCESS	0x00000010 +#define 
->>> RCAR_USB3_DL_CTRL_FW_SET_DATA0	0x00000100 + +/* LCLK Select */ 
->>> +#define RCAR_USB3_LCLK_ENA_VAL	0x01030001 + +/* USB3.0 
->>> Configuration */ +#define RCAR_USB3_CONF1_VAL	0x00030204
->>> +#define RCAR_USB3_CONF2_VAL	0x00030300 +#define
->>> RCAR_USB3_CONF3_VAL 0x13802007 + +/* USB3.0 Polarity */ +#define
->>> RCAR_USB3_RX_POL_VAL BIT(21) +#define RCAR_USB3_TX_POL_VAL	BIT(4)
->>> + +void xhci_rcar_start(struct usb_hcd *hcd) +{ +	u32 temp; + +
->>> if (hcd->regs != NULL) { +		/* Interrupt Enable */ +		temp = 
->>> readl(hcd->regs + RCAR_USB3_INT_ENA); +		temp |= 
->>> RCAR_USB3_INT_ENA_VAL; +		writel(temp, hcd->regs + 
->>> RCAR_USB3_INT_ENA); +		/* LCLK Select */ + 
->>> writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK); +
->>> /* USB3.0 Configuration */ +		writel(RCAR_USB3_CONF1_VAL,
->>> hcd->regs + RCAR_USB3_CONF1); +		writel(RCAR_USB3_CONF2_VAL,
->>> hcd->regs + RCAR_USB3_CONF2); +		writel(RCAR_USB3_CONF3_VAL,
->>> hcd->regs + RCAR_USB3_CONF3); +		/* USB3.0 Polarity */ + 
->>> writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL); + 
->>> writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL); +	} 
->>> +} + +static int xhci_rcar_download_firmware(struct device *dev, 
->>> void __iomem *regs) +{ +	const struct firmware *fw; +	int
->>> retval, index, j, time; +	int timeout = 10000; +	u32 data, val,
->>> temp; + + /* request R-Car USB3.0 firmware */ +	retval = 
->>> request_firmware(&fw, FIRMWARE_NAME, dev); +	if (retval) + return
->>> retval; + +	/* download R-Car USB3.0 firmware */ +	temp = 
->>> readl(regs + RCAR_USB3_DL_CTRL); +	temp |= 
->>> RCAR_USB3_DL_CTRL_ENABLE; +	writel(temp, regs + 
->>> RCAR_USB3_DL_CTRL); + +	for (index = 0; index < fw->size; index 
->>> += 4) { +		/* to avoid reading beyond the end of the buffer */ + 
->>> for (data = 0, j = 3; j >= 0; j--) { +			if ((j + index) < 
->>> fw->size) +				data |= fw->data[index + j] << (8 * j); +		} + 
->>> writel(data, regs + RCAR_USB3_FW_DATA0); +		temp = readl(regs + 
->>> RCAR_USB3_DL_CTRL); +		temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0; + 
->>> writel(temp, regs + RCAR_USB3_DL_CTRL); + +		for (time = 0; time 
->>> < timeout; time++) { +			val = readl(regs + RCAR_USB3_DL_CTRL);
->>> + if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0) +				break; + 
->>> udelay(1); +		} +		if (time == timeout) { +			retval = 
->>> -ETIMEDOUT; +			break; +		} +	} + +	temp = readl(regs + 
->>> RCAR_USB3_DL_CTRL); +	temp &= ~RCAR_USB3_DL_CTRL_ENABLE; + 
->>> writel(temp, regs + RCAR_USB3_DL_CTRL); + +	for (time = 0; time
->>> < timeout; time++) { +		val = readl(regs + RCAR_USB3_DL_CTRL); + 
->>> if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) { +			retval = 0; + 
->>> break; +		} +		udelay(1); +	} +	if (time == timeout) +		retval = 
->>> -ETIMEDOUT; + +	release_firmware(fw); + +	return retval; +} +
->>> +/* This function needs to initialize a "phy" of usb before */
->>
->> initializing a PHY looks like something that the PHY layer should 
->> do. Why don't you write a PHY driver and teach xhci-core about
->> PHYs ? Then, more people would benefit.
-> 
-> The rcar phy code should already do this, so I agree.
-> 
+I assume you're using the 3rd parameter for flags.  If so, please use
+the defines.
 
-I wrote my comment to Balbi.
+> +			pinctrl-names =3D "default", "rgb-444", "rgb-565", "rgb-666", "rg=
+b-888";
+> +			pinctrl-0 =3D <&pinctrl_lcd_base>;
+> +			pinctrl-1 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb444>;
+> +			pinctrl-2 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb565>;
+> +			pinctrl-3 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb666>;
+> +			pinctrl-4 =3D <&pinctrl_lcd_base &pinctrl_lcd_rgb888>;
+> +		};
+> +
+> +		hlcdc_pwm: hlcdc-pwm {
+> +			compatible =3D "atmel,hlcdc-pwm";
+> +			pinctrl-names =3D "default";
+> +			pinctrl-0 =3D <&pinctrl_lcd_pwm>;
+> +			#pwm-cells =3D <3>;
+> +		};
+> +	};
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index ee8204c..82777f6 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -59,6 +59,17 @@ config MFD_AAT2870_CORE
+>  	  additional drivers must be enabled in order to use the
+>  	  functionality of the device.
+> =20
+> +config MFD_ATMEL_HLCDC
+> +	tristate "Atmel HLCDC (High LCD Controller)"
 
-Best regards,
-Yoshihiro Shimoda
+What's the difference between a high and a low controller?
+
+> +	select MFD_CORE
+> +	select REGMAP_MMIO
+> +	help
+> +	  Choose this option if you have an ATMEL SoC with an HLCDC (High
+> +	  LCD Controller) IP (i.e. at91sam9n12, at91sam9x5 family or sama5d=
+3
+> +	  family).
+> +	  This MFD device exposes two subdevices: a PWM chip and a Display
+> +	  Controller.
+> +
+>  config MFD_BCM590XX
+>  	tristate "Broadcom BCM590xx PMUs"
+>  	select MFD_CORE
+> diff --git a/drivers/mfd/Makefile b/drivers/mfd/Makefile
+> index 8afedba..5f25b0d 100644
+> --- a/drivers/mfd/Makefile
+> +++ b/drivers/mfd/Makefile
+> @@ -156,6 +156,7 @@ obj-$(CONFIG_MFD_PM8921_CORE) 	+=3D pm8921-core.o=
+ ssbi.o
+>  obj-$(CONFIG_TPS65911_COMPARATOR)	+=3D tps65911-comparator.o
+>  obj-$(CONFIG_MFD_TPS65090)	+=3D tps65090.o
+>  obj-$(CONFIG_MFD_AAT2870_CORE)	+=3D aat2870-core.o
+> +obj-$(CONFIG_MFD_ATMEL_HLCDC)	+=3D atmel-hlcdc.o
+>  obj-$(CONFIG_MFD_INTEL_MSIC)	+=3D intel_msic.o
+>  obj-$(CONFIG_MFD_PALMAS)	+=3D palmas.o
+>  obj-$(CONFIG_MFD_VIPERBOARD)    +=3D viperboard.o
+> diff --git a/drivers/mfd/atmel-hlcdc.c b/drivers/mfd/atmel-hlcdc.c
+> new file mode 100644
+> index 0000000..e4636e8
+> --- /dev/null
+> +++ b/drivers/mfd/atmel-hlcdc.c
+> @@ -0,0 +1,116 @@
+> +/*
+> + * Copyright (C) 2014 Free Electrons
+> + * Copyright (C) 2014 Atmel
+> + *
+> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms of the GNU General Public License version 2 as pu=
+blished by
+> + * the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, b=
+ut WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
+Y or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
+ense for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License=
+ along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/mfd/atmel-hlcdc.h>
+> +#include <linux/mfd/core.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+
+Looks like you're inheriting the clk and regmap header files - don't
+do that.  Each source file which uses the interfaces should include
+them independently.
+
+> +static const struct mfd_cell atmel_hlcdc_cells[] =3D {
+> +	{
+> +		.name =3D "atmel-hlcdc-pwm",
+> +		.of_compatible =3D "atmel,hlcdc-pwm",
+> +	},
+> +	{
+> +		.name =3D "atmel-hlcdc-dc",
+> +		.of_compatible =3D "atmel,hlcdc-dc",
+> +	},
+> +};
+> +
+> +static int atmel_hlcdc_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct regmap_config config;
+> +	struct atmel_hlcdc *hlcdc;
+> +	struct resource *res;
+> +	void __iomem *regs;
+> +
+> +	hlcdc =3D devm_kzalloc(dev, sizeof(*hlcdc), GFP_KERNEL);
+> +	if (!hlcdc)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	regs =3D devm_ioremap_resource(dev, res);
+> +	if (IS_ERR(regs))
+> +		return PTR_ERR(regs);
+> +
+> +	hlcdc->periph_clk =3D devm_clk_get(dev, "periph_clk");
+> +	if (IS_ERR(hlcdc->periph_clk)) {
+> +		dev_err(dev, "failed to get functional clock\n");
+> +		return PTR_ERR(hlcdc->periph_clk);
+> +	}
+> +
+> +	hlcdc->sys_clk =3D devm_clk_get(dev, "sys_clk");
+> +	if (IS_ERR(hlcdc->sys_clk)) {
+> +		dev_err(dev, "failed to get functional clock\n");
+
+Can you be more descriptive?  This error message is the same as the
+one above.  How will a user know which one has failed?
+
+> +		return PTR_ERR(hlcdc->sys_clk);
+> +	}
+> +
+> +	hlcdc->slow_clk =3D devm_clk_get(dev, "slow_clk");
+> +	if (IS_ERR(hlcdc->slow_clk)) {
+> +		dev_err(dev, "failed to get slow clock\n");
+> +		return PTR_ERR(hlcdc->slow_clk);
+> +	}
+> +
+> +	memset(&config, 0, sizeof(config));
+> +	config.reg_bits =3D 32;
+> +	config.val_bits =3D 32;
+> +	config.reg_stride =3D 4;
+> +	config.max_register =3D (resource_size(res) / 4) - 1;
+
+I'd prefer you did this as a separate struct, like everyone else
+does.
+
+> +	hlcdc->regmap =3D devm_regmap_init_mmio_clk(dev, "periph_clk", regs=
+,
+> +						  &config);
+> +	if (IS_ERR(hlcdc->regmap))
+> +		return PTR_ERR(hlcdc->regmap);
+> +
+> +	dev_set_drvdata(dev, hlcdc);
+> +
+> +	return mfd_add_devices(dev, -1, atmel_hlcdc_cells,
+> +			       ARRAY_SIZE(atmel_hlcdc_cells),
+> +			       NULL, 0, NULL);
+> +}
+> +
+> +static int atmel_hlcdc_remove(struct platform_device *pdev)
+> +{
+> +	mfd_remove_devices(&pdev->dev);
+> +
+> +	dev_set_drvdata(&pdev->dev, NULL);
+
+This is done automatically for you - you can remove it.
+
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id atmel_hlcdc_match[] =3D {
+> +	{ .compatible =3D "atmel,sama5d3-hlcdc" },
+> +	{ },
+> +};
+> +
+> +static struct platform_driver atmel_hlcdc_driver =3D {
+> +	.probe =3D atmel_hlcdc_probe,
+> +	.remove =3D atmel_hlcdc_remove,
+> +	.driver =3D {
+> +		.name =3D "atmel-hlcdc",
+> +		.owner =3D THIS_MODULE,
+> +		.of_match_table =3D atmel_hlcdc_match,
+
+Is this driver DT only?
+
+> +	},
+> +};
+> +module_platform_driver(atmel_hlcdc_driver);
+> +
+> +MODULE_ALIAS("platform:atmel-hlcdc");
+> +MODULE_AUTHOR("Boris Brezillon <boris.brezillon@free-electrons.com>"=
+);
+> +MODULE_DESCRIPTION("Atmel HLCDC driver");
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/mfd/atmel-hlcdc.h b/include/linux/mfd/atme=
+l-hlcdc.h
+> new file mode 100644
+> index 0000000..d7a5589
+> --- /dev/null
+> +++ b/include/linux/mfd/atmel-hlcdc.h
+> @@ -0,0 +1,78 @@
+> +/*
+> + * Copyright (C) 2014 Free Electrons
+> + * Copyright (C) 2014 Atmel
+> + *
+> + * Author: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify it
+> + * under the terms of the GNU General Public License version 2 as pu=
+blished by
+> + * the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful, b=
+ut WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILIT=
+Y or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public Lic=
+ense for
+> + * more details.
+> + *
+> + * You should have received a copy of the GNU General Public License=
+ along with
+> + * this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#ifndef __LINUX_MFD_HLCDC_H
+> +#define __LINUX_MFD_HLCDC_H
+> +
+> +#include <linux/clk.h>
+> +#include <linux/regmap.h>
+> +
+> +#define ATMEL_HLCDC_CFG(i)		((i) * 0x4)
+> +#define ATMEL_HLCDC_SIG_CFG		LCDCFG(5)
+> +#define		ATMEL_HLCDC_HSPOL		BIT(0)
+> +#define		ATMEL_HLCDC_VSPOL		BIT(1)
+> +#define		ATMEL_HLCDC_VSPDLYS		BIT(2)
+> +#define		ATMEL_HLCDC_VSPDLYE		BIT(3)
+> +#define		ATMEL_HLCDC_DISPPOL		BIT(4)
+> +#define		ATMEL_HLCDC_DITHER		BIT(6)
+> +#define		ATMEL_HLCDC_DISPDLY		BIT(7)
+> +#define		ATMEL_HLCDC_MODE_MASK		0x300
+> +#define		ATMEL_HLCDC_PP			BIT(10)
+> +#define		ATMEL_HLCDC_VSPSU		BIT(12)
+> +#define		ATMEL_HLCDC_VSPHO		BIT(13)
+> +#define		ATMEL_HLCDC_GUARDTIME_MASK	0x1f0000
+
+There should only be one space after '#define'.
+
+> +#define ATMEL_HLCDC_EN			0x20
+> +#define ATMEL_HLCDC_DIS			0x24
+> +#define ATMEL_HLCDC_SR			0x28
+> +#define ATMEL_HLCDC_IER			0x2c
+> +#define ATMEL_HLCDC_IDR			0x30
+> +#define ATMEL_HLCDC_IMR			0x34
+> +#define ATMEL_HLCDC_ISR			0x38
+> +
+> +#define ATMEL_HLCDC_CLKPOL		BIT(0)
+> +#define ATMEL_HLCDC_CLKSEL		BIT(2)
+> +#define ATMEL_HLCDC_CLKPWMSEL		BIT(3)
+> +#define ATMEL_HLCDC_CGDIS(i)		BIT(8 + (i))
+> +#define ATMEL_HLCDC_CLKDIV_SHFT		16
+> +#define ATMEL_HLCDC_CLKDIV_MASK		(0xff << ATMEL_HLCDC_CLKDIV_SHFT)
+> +#define ATMEL_HLCDC_CLKDIV(div)		((div - 2) << ATMEL_HLCDC_CLKDIV_SH=
+=46T)
+> +
+> +#define ATMEL_HLCDC_PIXEL_CLK		BIT(0)
+> +#define ATMEL_HLCDC_SYNC		BIT(1)
+> +#define ATMEL_HLCDC_DISP		BIT(2)
+> +#define ATMEL_HLCDC_PWM			BIT(3)
+> +#define ATMEL_HLCDC_SIP			BIT(4)
+> +
+> +/**
+> + * Structure shared by the MFD device and its subdevices.
+> + *
+> + * @regmap: register map used to access HLCDC IP registers
+> + * @periph_clk: the hlcdc peripheral clock
+> + * @sys_clk: the hlcdc system clock
+> + * @slow_clk: the system slow clk
+> + */
+> +struct atmel_hlcdc {
+> +	struct regmap *regmap;
+> +	struct clk *periph_clk;
+> +	struct clk *sys_clk;
+> +	struct clk *slow_clk;
+> +};
+> +
+> +#endif /* __LINUX_MFD_HLCDC_H */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
