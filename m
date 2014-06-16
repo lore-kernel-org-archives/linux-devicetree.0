@@ -1,79 +1,140 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
-Date: Mon, 16 Jun 2014 16:49:28 +0530
-Message-ID: <539ED2C0.8030405@gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>	<1402464739-19044-4-git-send-email-tushar.b@samsung.com> <CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: berlin: add I2C nodes for BG2Q
+Date: Mon, 16 Jun 2014 13:22:50 +0200
+Message-ID: <539ED38A.3010205@gmail.com>
+References: <1401780790-17830-1-git-send-email-antoine.tenart@free-electrons.com> <1401780790-17830-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: TEXT/PLAIN; charset=ISO-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
+In-Reply-To: <1401780790-17830-2-git-send-email-antoine.tenart@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@google.com>, Tushar Behera <tushar.b@samsung.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@linaro.org>, Mark Brown <broonie@linaro.org>
+To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>
+Cc: alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2014 10:33 PM, Doug Anderson wrote:
-> Tushar,
-> 
-> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b@samsung.com> wrote:
->> Peach-pi board has MAX98090 audio codec connected on HSI2C-7 bus.
-> 
-> If you want to be a stickler about it, peach-pi actually has a
-> max98091.  That requires code changes to the i2c driver, though.
-> ...and unfortunately listing two compatible strings for i2c devices is
-> broken.  :(
-> 
-Hi Doug,
+On 06/03/2014 09:33 AM, Antoine T=C3=A9nart wrote:
+> The Marvell Berlin BG2Q has 4 TWSI compatible with the Synopsys
+> DesignWare I2C driver. Add the corresponding nodes.
+>
+> The pin-muxing setup is also done here, since there cannot be another
+> muxing setup if I2C{0,1,2,3} are enabled.
+>
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
+>
 
-You are right. I checked the boot logs, the detected codec type is
-MAX98091. Since both these CODECs are supported through a single driver
-and the detection of chip is done during runtime, I would suggest we go
-ahead with "max98090" compatible string. I will update the commit
-message accordingly.
+Applied to berlin/dt.
 
-Does that sound okay to you?
+Thanks!
 
-> 
->> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos5800-peach-pi.dts |   31 +++++++++++++++++++++++++++++
->>  1 file changed, 31 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> index f3af207..76f5966 100644
->> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
->> @@ -78,9 +78,27 @@
->>                 pinctrl-0 = <&usb301_vbus_en>;
->>                 enable-active-high;
->>         };
->> +
->> +       sound {
->> +               compatible = "google,snow-audio-max98090";
->> +
->> +               samsung,i2s-controller = <&i2s0>;
->> +               samsung,audio-codec = <&max98090>;
->> +       };
->> +};
->> +
->> +&i2s0 {
->> +       status = "okay";
-> 
-> It would be awfully nice to keep diffs between exynos5420-peach-pit
-> and exynos5800-peach-pi clean.  They're 99% the same.  I know this has
-> already gotten messed up with DP/HDMI were added, but there's no need
-> to make it worse.
-> 
-
-If you so desire, I will submit a patch to sort peach-pi device-tree
-nodes (w.r.t. peach-pit dts file).
-
-> Could you add these nodes in the same place within the dts they were
-> added in exynos5420-peach-pit?
-> 
-
-Okay, I will add it after watchdog node.
-
--- 
-Tushar Behera
+> ---
+>   arch/arm/boot/dts/berlin2q.dtsi | 72 ++++++++++++++++++++++++++++++=
++++++++++++
+>   1 file changed, 72 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berl=
+in2q.dtsi
+> index 635a16a64cb4..0624868e36e3 100644
+> --- a/arch/arm/boot/dts/berlin2q.dtsi
+> +++ b/arch/arm/boot/dts/berlin2q.dtsi
+> @@ -191,6 +191,32 @@
+>   				};
+>   			};
+>
+> +			i2c0: i2c@1400 {
+> +				compatible =3D "snps,designware-i2c";
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +				reg =3D <0x1400 0x100>;
+> +				interrupt-parent =3D <&aic>;
+> +				interrupts =3D <4>;
+> +				clocks =3D <&chip CLKID_CFG>;
+> +				pinctrl-0 =3D <&twsi0_pmux>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "disabled";
+> +			};
+> +
+> +			i2c1: i2c@1800 {
+> +				compatible =3D "snps,designware-i2c";
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +				reg =3D <0x1800 0x100>;
+> +				interrupt-parent =3D <&aic>;
+> +				interrupts =3D <5>;
+> +				clocks =3D <&chip CLKID_CFG>;
+> +				pinctrl-0 =3D <&twsi1_pmux>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "disabled";
+> +			};
+> +
+>   			timer0: timer@2c00 {
+>   				compatible =3D "snps,dw-apb-timer";
+>   				reg =3D <0x2c00 0x14>;
+> @@ -301,6 +327,16 @@
+>   			reg =3D <0xea0000 0x400>, <0xdd0170 0x10>;
+>   			clocks =3D <&refclk>;
+>   			clock-names =3D "refclk";
+> +
+> +			twsi0_pmux: twsi0-pmux {
+> +				groups =3D "G6";
+> +				function =3D "twsi0";
+> +			};
+> +
+> +			twsi1_pmux: twsi1-pmux {
+> +				groups =3D "G7";
+> +				function =3D "twsi1";
+> +			};
+>   		};
+>
+>   		apb@fc0000 {
+> @@ -311,6 +347,32 @@
+>   			ranges =3D <0 0xfc0000 0x10000>;
+>   			interrupt-parent =3D <&sic>;
+>
+> +			i2c2: i2c@7000 {
+> +				compatible =3D "snps,designware-i2c";
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +				reg =3D <0x7000 0x100>;
+> +				interrupt-parent =3D <&sic>;
+> +				interrupts =3D <6>;
+> +				clocks =3D <&refclk>;
+> +				pinctrl-0 =3D <&twsi2_pmux>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "disabled";
+> +			};
+> +
+> +			i2c3: i2c@8000 {
+> +				compatible =3D "snps,designware-i2c";
+> +				#address-cells =3D <1>;
+> +				#size-cells =3D <0>;
+> +				reg =3D <0x8000 0x100>;
+> +				interrupt-parent =3D <&sic>;
+> +				interrupts =3D <7>;
+> +				clocks =3D <&refclk>;
+> +				pinctrl-0 =3D <&twsi3_pmux>;
+> +				pinctrl-names =3D "default";
+> +				status =3D "disabled";
+> +			};
+> +
+>   			uart0: uart@9000 {
+>   				compatible =3D "snps,dw-apb-uart";
+>   				reg =3D <0x9000 0x100>;
+> @@ -348,6 +410,16 @@
+>   					groups =3D "GSM14";
+>   					function =3D "uart1";
+>   				};
+> +
+> +				twsi2_pmux: twsi2-pmux {
+> +					groups =3D "GSM13";
+> +					function =3D "twsi2";
+> +				};
+> +
+> +				twsi3_pmux: twsi3-pmux {
+> +					groups =3D "GSM14";
+> +					function =3D "twsi3";
+> +				};
+>   			};
+>
+>   			sic: interrupt-controller@e000 {
+>
