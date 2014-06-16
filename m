@@ -1,27 +1,41 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] ARM: tegra: jetson-tk1: Add XUSB pad controller
-Date: Mon, 16 Jun 2014 15:39:00 -0600
-Message-ID: <539F63F4.8030800@wwwdotorg.org>
-References: <1402930623-28886-1-git-send-email-thierry.reding@gmail.com> <1402930623-28886-4-git-send-email-thierry.reding@gmail.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH 1/9] of: Add NVIDIA Tegra SATA controller binding
+Date: Mon, 16 Jun 2014 15:55:14 -0600
+Message-ID: <539F67C2.9080303@wwwdotorg.org>
+References: <1401881559-18469-1-git-send-email-mperttunen@nvidia.com> <1401881559-18469-2-git-send-email-mperttunen@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402930623-28886-4-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401881559-18469-2-git-send-email-mperttunen@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mikko Perttunen <mperttunen@nvidia.com>, thierry.reding@gmail.com, tj@kernel.org, pdeschrijver@nvidia.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/16/2014 08:57 AM, Thierry Reding wrote:
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> 
-> Assign lanes to the XUSB pads as used on the Jetson TK1.
+On 06/04/2014 05:32 AM, Mikko Perttunen wrote:
+> This patch adds device tree binding documentation for the SATA
+> controller found on NVIDIA Tegra SoCs.
 
-This series looks OK to me.
+Just one nit below:
 
-Linus, are you OK with my taking it through the Tegra tree? If so, an
-ack on patch 2/4 would be great. I expect there will be other series
-(PCIe, SATA, XUSB drivers) that depend on this, so whichever tree it
-goes through, we'll need to put it into a standalone topic branch for
-various other trees to merge, or for other series to be applied on top of.
+> diff --git a/Documentation/devicetree/bindings/ata/tegra-sata.txt b/Documentation/devicetree/bindings/ata/tegra-sata.txt
+
+> + - clocks : Defines the clocks listed in the clock-names property.
+> + - clock-names : The following clock names must be present:
+> +   - sata
+...
+
+It would be nice if the binding could use the exact same wording as all
+the other Tegra bindings, i.e.:
+
+==========
+- clocks : Must contain an entry for each entry in clock-names.
+  See ../clocks/clock-bindings.txt for details.
+- clock-names : Must include the following entries:
+  - pll_a
+  - pll_a_out0
+  - mclk (The Tegra cdev1/extern1 clock, which feeds the CODEC's mclk)
+==========
+
+Same for the resets property.
