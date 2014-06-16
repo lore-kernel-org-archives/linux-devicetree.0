@@ -1,152 +1,126 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH] serial: 8250_dw: add ability to handle the peripheral clock
-Date: Mon, 16 Jun 2014 15:25:17 +0200
-Message-ID: <3755576.qE86Ikox0a@diego>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 6/8] power: Add support for DA9150 Charger
+Date: Mon, 16 Jun 2014 14:27:49 +0100
+Message-ID: <20140616132749.GW14323@lee--X1>
+References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
+ <d4ef0d7ce2d6a2919d528ed75e82d2b99ec8d962.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-serial@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Jiri Slaby <jslaby@suse.cz>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <d4ef0d7ce2d6a2919d528ed75e82d2b99ec8d962.1402484954.git.Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, support.opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-First try to find the named clock variants then fall back to the already
-existing handling of a nameless declared baudclk.
+On Wed, 11 Jun 2014, Adam Thomson wrote:
 
-This also adds the missing documentation for this already existing variant.
+> This patch adds support for DA9150 Charger & Fuel-Guage IC Charger.
+>=20
+> Signed-off-by: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  drivers/power/Kconfig              |  23 ++
+>  drivers/power/Makefile             |   1 +
+>  drivers/power/da9150-charger.c     | 790 +++++++++++++++++++++++++++=
+++++++++++
+>  include/linux/mfd/da9150/charger.h |  58 +++
+>  4 files changed, 872 insertions(+)
+>  create mode 100644 drivers/power/da9150-charger.c
+>  create mode 100644 include/linux/mfd/da9150/charger.h
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../bindings/serial/snps-dw-apb-uart.txt           | 31 ++++++++++++++++++++++
- drivers/tty/serial/8250/8250_dw.c                  | 31 +++++++++++++++++++---
- 2 files changed, 59 insertions(+), 3 deletions(-)
+[...]
 
-diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-index f13f1c5..3601399 100644
---- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-+++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-@@ -4,7 +4,15 @@ Required properties:
- - compatible : "snps,dw-apb-uart"
- - reg : offset and length of the register set for the device.
- - interrupts : should contain uart interrupt.
-+
-+Clock handling:
-+The clock rate of the input clock needs to be supplied by one of
- - clock-frequency : the input clock frequency for the UART.
-+- clocks : phandle to the input clock
-+
-+The supplying peripheral clock can also be handled, needing a second property
-+- clock-names: tuple listing input clock names.
-+	Required elements: "baudclk", "apb_pclk"
- 
- Optional properties:
- - reg-shift : quantity to shift the register offsets by.  If this property is
-@@ -23,3 +31,26 @@ Example:
- 		reg-shift = <2>;
- 		reg-io-width = <4>;
- 	};
-+
-+Example with one clock:
-+
-+	uart@80230000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x80230000 0x100>;
-+		clocks = <&baudclk>;
-+		interrupts = <10>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-+
-+Example with two clocks:
-+
-+	uart@80230000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x80230000 0x100>;
-+		clocks = <&baudclk>, <&apb_pclk>;
-+		clock-names = "baudclk", "apb_pclk";
-+		interrupts = <10>;
-+		reg-shift = <2>;
-+		reg-io-width = <4>;
-+	};
-diff --git a/drivers/tty/serial/8250/8250_dw.c b/drivers/tty/serial/8250/8250_dw.c
-index 51b307a..024cd58 100644
---- a/drivers/tty/serial/8250/8250_dw.c
-+++ b/drivers/tty/serial/8250/8250_dw.c
-@@ -59,6 +59,7 @@ struct dw8250_data {
- 	int			last_mcr;
- 	int			line;
- 	struct clk		*clk;
-+	struct clk		*pclk;
- 	struct uart_8250_dma	dma;
- };
- 
-@@ -402,10 +403,25 @@ static int dw8250_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	data->usr_reg = DW_UART_USR;
--	data->clk = devm_clk_get(&pdev->dev, NULL);
-+	data->clk = devm_clk_get(&pdev->dev, "baudclk");
-+	if (IS_ERR(data->clk))
-+		data->clk = devm_clk_get(&pdev->dev, NULL);
- 	if (!IS_ERR(data->clk)) {
--		clk_prepare_enable(data->clk);
--		uart.port.uartclk = clk_get_rate(data->clk);
-+		err = clk_prepare_enable(data->clk);
-+		if (err)
-+			dev_warn(&pdev->dev, "could not enable optional baudclk: %d\n",
-+				 err);
-+		else
-+			uart.port.uartclk = clk_get_rate(data->clk);
-+	}
-+
-+	data->pclk = devm_clk_get(&pdev->dev, "apb_pclk");
-+	if (!IS_ERR(data->pclk)) {
-+		err = clk_prepare_enable(data->pclk);
-+		if (err) {
-+			dev_err(&pdev->dev, "could not enable apb_pclk\n");
-+			return err;
-+		}
- 	}
- 
- 	data->dma.rx_chan_id = -1;
-@@ -451,6 +467,9 @@ static int dw8250_remove(struct platform_device *pdev)
- 
- 	serial8250_unregister_port(data->line);
- 
-+	if (!IS_ERR(data->pclk))
-+		clk_disable_unprepare(data->pclk);
-+
- 	if (!IS_ERR(data->clk))
- 		clk_disable_unprepare(data->clk);
- 
-@@ -488,6 +507,9 @@ static int dw8250_runtime_suspend(struct device *dev)
- 	if (!IS_ERR(data->clk))
- 		clk_disable_unprepare(data->clk);
- 
-+	if (!IS_ERR(data->pclk))
-+		clk_disable_unprepare(data->pclk);
-+
- 	return 0;
- }
- 
-@@ -495,6 +517,9 @@ static int dw8250_runtime_resume(struct device *dev)
- {
- 	struct dw8250_data *data = dev_get_drvdata(dev);
- 
-+	if (!IS_ERR(data->pclk))
-+		clk_prepare_enable(data->pclk);
-+
- 	if (!IS_ERR(data->clk))
- 		clk_prepare_enable(data->clk);
- 
--- 
-1.9.0
+> diff --git a/include/linux/mfd/da9150/charger.h b/include/linux/mfd/d=
+a9150/charger.h
+> new file mode 100644
+> index 0000000..73c41b3
+> --- /dev/null
+> +++ b/include/linux/mfd/da9150/charger.h
+> @@ -0,0 +1,58 @@
+> +/*
+> + * DA9150 MFD Driver - Charger Data
+> + *
+> + * Copyright (c) 2014 Dialog Semiconductor
+> + *
+> + * Author: Adam Thomson <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute  it and/or mo=
+dify it
+> + * under  the terms of  the GNU General  Public License as published=
+ by the
+> + * Free Software Foundation;  either version 2 of the  License, or (=
+at your
+> + * option) any later version.
+> + */
+> +
+> +#ifndef _DA9150_CHARGER_H
+> +#define _DA9150_CHARGER_H
+
+Two '_'s are normally preferred.
+
+> +#include <linux/device.h>
+> +#include <linux/i2c.h>
+
+What are you using this for?
+
+> +#include <linux/power_supply.h>
+> +#include <linux/notifier.h>
+> +#include <linux/usb/otg.h>
+> +#include <linux/timer.h>
+> +#include <linux/iio/consumer.h>
+> +
+> +#include <linux/mfd/da9150/core.h>
+> +
+> +
+
+Extra '\n' here.
+
+> +struct da9150_charger_attr_map {
+> +	struct device_attribute attr;
+> +	u16 reg;
+> +	u8 shift;
+> +	u8 mask;
+> +};
+> +
+> +/* Private data */
+> +struct da9150_charger {
+> +	struct da9150 *da9150;
+> +	struct device *dev;
+> +
+> +	struct power_supply ac;
+> +	struct power_supply usb;
+> +	struct power_supply battery;
+
+Do you want these (or pointers to these) here?
+
+How much space do they take up?
+
+> +	struct power_supply *supply_online;
+> +
+> +	struct usb_phy *usb_phy;
+> +	struct notifier_block otg_nb;
+> +	struct work_struct otg_work;
+> +	unsigned long usb_event;
+> +
+> +	struct iio_channel *ibus_chan;
+> +	struct iio_channel *vbus_chan;
+> +	struct iio_channel *tjunc_chan;
+> +	struct iio_channel *vbat_chan;
+> +
+> +	bool invalid_tbat;
+> +};
+> +
+> +#endif /* _DA9150_CHARGER_H */
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
