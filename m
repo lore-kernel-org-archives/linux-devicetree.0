@@ -1,52 +1,83 @@
-From: Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] mmc: core: Fix DT documentation of eMMC high-speed DDR
- 1.8/1.2V bindings.
-Date: Mon, 16 Jun 2014 14:58:01 +0200
-Message-ID: <CAPDyKFr01qP26kEr3-3BwXoPFjU_E842mrFvFL_MHKAotNSO8Q@mail.gmail.com>
-References: <1402916796-1450-1-git-send-email-peter.griffin@linaro.org>
+From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: [PATCH 1/8] mfd: Add support for DA9150 combined charger &
+ fuel-gauge device
+Date: Mon, 16 Jun 2014 13:12:10 +0000
+Message-ID: <2E89032DDAA8B9408CB92943514A0337AB4FD95E@SW-EX-MBX01.diasemi.com>
+References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
+ <bf472aa7fddd1e67a3d5b9024b5b621744146a27.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
+ <539DF8C6.8030009@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402916796-1450-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Jaehoon Chung <jh80.chung-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <539DF8C6.8030009-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 16 June 2014 13:06, Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Currently the documentation doesn't match the code in mmc_of_parse. This
-> patch rectifies this.
->
-> Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Thanks! Applied to my mmc tree for next.
-
-Kind regards
-Uffe
-
-> ---
->  Documentation/devicetree/bindings/mmc/mmc.txt | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 9dce540..9c96033 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -34,8 +34,8 @@ Optional properties:
->  - cap-power-off-card: powering off the card is safe
->  - cap-sdio-irq: enable SDIO IRQ signalling on this interface
->  - full-pwr-cycle: full power cycle of the card is supported
-> -- mmc-highspeed-ddr-1_8v: eMMC high-speed DDR mode(1.8V I/O) is supported
-> -- mmc-highspeed-ddr-1_2v: eMMC high-speed DDR mode(1.2V I/O) is supported
-> +- mmc-ddr-1_8v: eMMC high-speed DDR mode(1.8V I/O) is supported
-> +- mmc-ddr-1_2v: eMMC high-speed DDR mode(1.2V I/O) is supported
->  - mmc-hs200-1_8v: eMMC HS200 mode(1.8V I/O) is supported
->  - mmc-hs200-1_2v: eMMC HS200 mode(1.2V I/O) is supported
->
-> --
-> 1.9.1
->
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+T24gU3VuLCBKdW4gMTUsIDIwMTQgYXQgMjA6NDksIEpvbmF0aGFuIENhbWVyb24gd3JvdGU6IA0K
+DQo+IEhpIEFkYW0sDQo+IA0KPiBTb21lIGdlbmVyYWwgY29tbWVudHMgaW5saW5lLg0KPiANCj4g
+SXQncyBiZWVuIGEgd2hpbGUgc2luY2UgSSd2ZSBsb29rZWQgYXQgYW55IHBhcnRpY3VsYXJseSBz
+aW1pbGFyIHBhcnRzLA0KPiBidXQgaXQgc2VlbXMgdG8gbWUgdGhhdCBhIGxvdCBvZiBpbmRpcmVj
+dGlvbiBnZXRzIGFkZGVkIGhlcmUgdGhhdA0KPiBpZiBhbnl0aGluZyBtYWtlcyB0aGUgY29kZXMg
+c2xpZ2h0bHkgaGFyZGVyIHRvIGZvbGxvdy4uLg0KPiANCj4gRmVlbCBmcmVlIHRvIGRpc2FncmVl
+IHdpdGggbWUgdGhvdWdoIQ0KDQpXaWxsIGRvIDopDQoNCj4gVG8gbXkgbWluZCBhbGwgdGhlc2Ug
+d3JhcHBlcnMgYWRkIG5vdGhpbmcgc2lnbmlmaWNhbnQgc28geW91IG1pZ2h0IGFzIHdlbGwNCj4g
+anVzdCBjYWxsIGRhOTE1MC0+cmVhZF9kZXYgZXRjIGRpcmVjdGx5Lg0KPiANCj4gQWxzbywgd2hh
+dCBhcmUgdGhlIHJlYWRfcWlmIGFuZCB3cml0ZV9xaWYgZm9yPyAgVGhleSBkb24ndCBzZWVtIHRv
+IGJlIHVzZWQNCj4gYW55d2hlcmUuDQoNCnJlYWRfcWlmIGFuZCB3cml0ZV9xaWYgYXJlIGZvciB0
+aGUgRnVlbC1HYXVnZSBmdW5jdGlvbmFsaXR5IG9mIHRoZSBjaGlwLiBUaGUNCmFzc29jaWF0ZWQg
+ZHJpdmVyIHdpbGwgYmUgc3VibWl0dGVkIGFmdGVyIGFjY2VwdGFuY2Ugb2YgaW5pdGlhbCBkcml2
+ZXIgY29kZSwNCmFuZCB3aWxsIG1ha2UgdXNlIG9mIHRoZXNlIGZ1bmN0aW9ucy4NCg0KVGhlIHdy
+YXBwZXJzIGF1dG9tYXRpY2FsbHkgY2hvb3NlIHRoZSBjb3JyZWN0IGNsaWVudCB0byB1c2UgKFFJ
+RiB1c2VzIGENCmRpZmZlcmVudCBzbGF2ZSBhZGRyZXNzIHRvIHRoZSBtYWluIGNoaXAgb25lKS4g
+TWVhbnMgdGhlIGNoaWxkIGRyaXZlcnMgb25seSBuZWVkDQp0byBwYXNzIHRocm91Z2ggdGhlIGRh
+OTE1MCBzdHJ1Y3QgYW5kIHRoZSByZXN0IGlzIGRlYWx0IHdpdGggdW5kZXJuZWF0aC4NCg0KPiBU
+aGUgb25seSByZWFsIHJlYXNvbiBJIGNhbiBzZWUgZm9yIHRoZXNlIHdyYXBwZXJzIGlzIGJlY2F1
+c2UgeW91IHdhbnQNCj4gdG8gaGlkZSB0aGUgc3RydWN0IGRhOTE1MCBjb250ZW50cyBmcm9tIHRo
+ZSBjaGlsZHJlbiBvZiB0aGUgbWZkLiBBcyB5b3UNCj4gYXJlbid0IGRvaW5nIHRoYXQsIHlvdSBt
+aWdodCBhcyB3ZWxsIGRyb3AgdGhlc2UgaW4gZmF2b3VyIG9mIGRpcmVjdA0KPiBjYWxscyB0byBy
+ZWdtYXBfcmVhZCBhbmQgZnJpZW5kcy4NCg0KQXMgSSBoYXZlIGEgbmVlZCB0byBwYXNzIHRocm91
+Z2ggdGhlIG1haW4gZGE5MTUwIHN0cnVjdCBwb2ludCBmb3IgdGhlDQphZm9yZW1lbnRpb25lZCB3
+cmFwcGVycywgaXQgc2VlbWVkIGNsZWFuZXIgYW5kIG1vcmUgY29uc2lzdGVudCB0byBoYXZlIHdy
+YXBwZXJzDQpmb3IgdGhlc2UgYXMgd2VsbCwgd2hpY2ggZGlkIHRoZSBqb2Igb2YgcmVnbWFwIGFj
+Y2Vzcy4gTWVhbnMgYWxsIEhXIGFjY2Vzcw0KdXNlcyB0aGUgc2FtZSBraW5kIG9mIGFwcHJvYWNo
+LCBhbmQgYWxsIHN1Yi1kZXZpY2VzIGp1c3QgbmVlZCBhIHBvaW50IHRvIHRoZQ0KbWFpbiBkYTkx
+NTAgc3RydWN0IHRvIGJlIGFibGUgdG8gdXNlIHRoZSBmdW5jdGlvbnMuDQoNCj4gSSdsbCBjb250
+aW51ZSBteSB0aXJhZGUgYWdhaW5zdCBvYnZpb3VzIGNvbW1lbnRzLiBXcm9uZyBmb3JtYXQgYW5k
+DQo+IGFkZHMgbm90aGluZyB0byB3aGF0IGlzIGhlcmUgYXMgaW5pdCBhbmQgZXhpdCBmdW5jdGlv
+bnMgYXJlIGNsZWFybHkNCj4gZG9pbmcgd2hhdCB0aGVpciBuYW1lIHN1Z2dlc3RzIChpdCdzIG9u
+ZSBvZiBteSBwZXQgaGF0ZXMgOykNCg0KSSBhZ3JlZSB0aGUgY29tbWVudCBkb2Vzbid0IGFkZCBt
+dWNoIGluIHRlcm1zIG9mIGRlc2NyaXB0aW9uIGJ1dCBmb3IgbWUgaXQNCmJyZWFrcyB1cCB0aGUg
+Y29kZSB0byBtYWtlIGl0IGVhc2llciB0byBmb2xsb3cuIEhvd2V2ZXIgaWYgSSBnZXQgYW4gb3Zl
+cndoZWxtaW5nDQpoYXRyZWQgZm9yIHRoaXMgSSBjYW4gY2hhbmdlIGl0LiBBbHNvLCBJIGtub3cg
+dGhlIHJ1bGUgcmVnYXJkaW5nIHNpbmdsZS9tdWx0aXBsZQ0KbGluZSBjb21tZW50cyBidXQgaGVy
+ZSBhZ2FpbiBJIGZlZWwgaXQgaGVscHMgc2VwYXJhdGUgdGhlIGNvZGUgYW5kIG1ha2VzIGl0DQpl
+YXNpZXIgdG8gcmVhZC4NCg0KPiBBcyBhIGdlbmVyYWwgZ29vZCBwcmFjdGljZSBwb2ludCwgSSdk
+IHJhdGhlciB0aGF0IHRoZSBkcml2ZXIgc3VwcG9ydGVkDQo+IG1vcmUgdGhhbiBvbmUgaW5zdGFu
+Y2Ugb2YgdGhlIGNoaXAuLiBIZW5jZSB5b3UnZCB0YWtlIGEgY29weSBvZiBkYTkxNTBfZGV2cw0K
+PiB0byB1c2UgaGVyZS4gIEkgZ3Vlc3MgaXQgaXMgcmVsYXRpdmVseSB1bmxpa2VseSB3aXRoIG9u
+ZSBvZiB0aGVzZSwgYnV0DQo+IHlvdSBuZXZlciBrbm93IDspDQoNCkhhdmUgZm9sbG93ZWQgdGhl
+IGdlbmVyYWwgbWV0aG9kcyBmb3IgTUZEIGhlcmUsIGFuZCBhIG51bWJlciBvZiBkcml2ZXJzIHRh
+a2UgdGhlDQpzYW1lIGFwcHJvYWNoLiBBbHNvLCBJIHRoaW5rIGl0IHdvdWxkIGJlIHVuZGVzaXJh
+YmxlIHRvIGhhdmUgbXVsdGlwbGUgY2hhcmdlcg0KY2hpcHMgb2YgdGhlIHNhbWUgdHlwZSBpbiBv
+bmUgcGxhdGZvcm0uIEkgYWdyZWUgZ2VuZXJhbGx5IGl0J3MgYmVzdCB0byBzdXBwb3J0DQptdWx0
+aXBsZSBpbnN0YW5jZXMsIGJ1dCBoZXJlIEkgZG9uJ3QgdGhpbmsgd2Ugc2hvdWxkLg0KDQo+IFdo
+eSBkb2VzIHRoaXMgbmVlZCBpdCdzIG93biBmaWxlPyAgRG9lcyB0aGUgREE5MTUwIHN1cHBvcnQg
+YW55IG90aGVyDQo+IGludGVyZmFjZXM/DQoNClllcywgdGhlIERBOTE1MCBhbHNvIGhhcyBhIFNQ
+SSBpbnRlcmZhY2UuIEF0IHByZXNlbnQgdGhlIHBsYW4gaXMgdG8ganVzdCBhZGQgSTJDDQpzdXBw
+b3J0IGZvciBub3csIGJ1dCBpbiB0aGUgZnV0dXJlIHdlIG1heSBhZGQgU1BJIHN1cHBvcnQsIHNv
+IGhhdmUgd3JpdHRlbiB0aGUNCmNvZGUgd2l0aCB0aGlzIGluIG1pbmQuDQoNCj4gV2h5IHRoZSBp
+bmRpcmVjdGlvbj8gIFRoZSBkYTkxNTAgb25seSBzdXBwb3J0cyBpMmMgYXMgZmFyIGFzIEkgY2Fu
+IHNlZS4NCg0KQXMgcGVyIG15IGxhc3QgY29tbWVudC4gDQoNCj4gSSdkIHJvbGwgdGhpcyBpbnRv
+IG9uZSBsaW5lIGFuZCBub3QgYm90aGVyIHdpdGggdGhlIGxvY2FsIHZhcmlhYmxlLi4uDQoNCkZh
+aXIgZW5vdWdoIGJ1dCBJIHRoaW5rIHRoaXMga2VlcHMgdGhlIGNvZGUgY2xlYW5lciwgYW5kIHRv
+IG1lIGl0IG1ha2VzIHNlbnNlDQpmb3IgdGhlIGFjdHVhbCBsb2dpYyB0byBiZSBpbiBjb3JlIGZp
+bGUgYXMgdGhhdCdzIGludGVyZmFjZSBhZ25vc3RpYy4NCg0KPiBEcm9wIGNvbW1lbnRzIG9uIHRo
+aW5ncyB0aGF0IGFyZSBzZWxmLWV2aWRlbnQuICBBbHNvIHRoZXNlIGFyZSBvbmUNCj4gbGluZSBj
+b21tZW50cyBzbyBzaG91bGQgYmUgdXNpbmcgdGhlIHNpbmdsZSBsaW5lIGNvbW1lbnQgc3ludGF4
+Lg0KDQpBcyBwZXIgbXkgcHJldmlvdXMgY29tbWVudCBJIHRoaW5rIGl0IGp1c3QgaGVscHMgdG8g
+YnJlYWsgdXAgdGhlIGNvZGUgYW5kIG1ha2VzDQppdCBtb3JlIHJlYWRhYmxlLiBXaWxsIGNoYW5n
+ZSBpdCB0aG91Z2ggaWYgdGhlIGdlbmVyYWwgY29uc2Vuc3VzIGlzIHRvIHJlbW92ZQ0KaXQuDQo=
