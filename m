@@ -1,232 +1,69 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 1/2] phy: qcom: Add driver for QCOM IPQ806x SATA PHY
-Date: Mon, 16 Jun 2014 15:34:28 +0530
-Message-ID: <539EC12C.6080504@ti.com>
-References: <1402600724-20651-1-git-send-email-galak@codeaurora.org>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [GIT PULL] mfd: Immutable branch between MFD and OMAP, due for
+ v3.16
+Date: Mon, 16 Jun 2014 11:17:43 +0100
+Message-ID: <20140616101743.GO14323@lee--X1>
+References: <1401214140-9828-1-git-send-email-tony@atomide.com>
+ <20140528071313.GH4227@lee--X1>
+ <20140528180607.GB4707@atomide.com>
+ <20140602163841.GC11004@atomide.com>
+ <20140603080632.GC3060@lee--X1>
+ <20140612054348.GC17845@atomide.com>
+ <20140612074705.GB11421@lee--X1>
+ <20140612080030.GD17845@atomide.com>
+ <20140612083357.GB14323@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1402600724-20651-1-git-send-email-galak@codeaurora.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: linux-ide@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140612083357.GB14323@lee--X1>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+> > > > Still not seeing this branch being merged..
+> > >=20
+> > > Oh crap, I see what's happened and it's completely my fault.
+> > >=20
+> > > If you read the final merge commit carefully:
+> > >=20
+> > > 28fee3f: ("Merge branches 'ib-from-asoc-3.16', 'ib-from-pm-3.16',
+> > > 'ib-from-regulator-3.16', 'ib-mfd-gpio-3.16' and
+> > > 'ib-mfd-mmc-memstick-3.16', tags 'ib-mfd-extcon-3.16',
+> > > 'ib-mfd-omap-3.16' and 'ib-mfd-regulator-3.16' into
+> > > ibs-for-mfd-merged")
+> > >=20
+> > > I appear to have a _branch_ AND a _tag_ called ib-mfd-omap-3.16 a=
+nd it
+> > > looks like Git has taken the tag as a preference. heads/ib-mfd-om=
+ap-3.16
+> > > is actually at tag/ib-mfd-omap-3.16-1 (notice the appended '-1'),
+> > > which contains your most recent patches.  Since I created the MFD=
+-OMAP
+> > > shared branch I have changed the naming convention to avoid this =
+sort
+> > > of ambiguity.  I'll send a second MFD pull-request to Linus today=
+=2E
+> >=20
+> > Heh OK yeah I've hit that also at some point :)
+> > =20
+> > > Sorry Tony.
+> >=20
+> > No problem, good to hear you got it figured out.
+>=20
+> Pull-request sent.  Hopefully it's sorted now.
 
-On Friday 13 June 2014 12:48 AM, Kumar Gala wrote:
-> Add a PHY driver for uses with AHCI based SATA controller driver on the
-> IPQ806x family of SoCs.
-> 
-> Signed-off-by: Kumar Gala <galak@codeaurora.org>
-> ---
->  drivers/phy/Kconfig                 |   6 ++
->  drivers/phy/Makefile                |   1 +
->  drivers/phy/phy-qcom-ipq806x-sata.c | 204 ++++++++++++++++++++++++++++++++++++
->  3 files changed, 211 insertions(+)
->  create mode 100644 drivers/phy/phy-qcom-ipq806x-sata.c
-> 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 16a2f06..52bfb93 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -178,4 +178,10 @@ config PHY_XGENE
->  	help
->  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
->  
-> +config PHY_QCOM_IPQ806X_SATA
-> +	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
-> +	depends on ARCH_QCOM
-> +	depends on OF
-depends on HAS_IOMEM?
-> +	select GENERIC_PHY
-> +
->  endmenu
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index b4f1d57..d950317 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
->  phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
->  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
->  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
-> +obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
-> diff --git a/drivers/phy/phy-qcom-ipq806x-sata.c b/drivers/phy/phy-qcom-ipq806x-sata.c
-> new file mode 100644
-> index 0000000..fc57340
-> --- /dev/null
-> +++ b/drivers/phy/phy-qcom-ipq806x-sata.c
-> @@ -0,0 +1,204 @@
-> +/*
-> + * Copyright (c) 2014, The Linux Foundation. All rights reserved.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 and
-> + * only version 2 as published by the Free Software Foundation.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +
-> +#include <linux/io.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_address.h>
-> +#include <linux/time.h>
-> +#include <linux/delay.h>
-> +#include <linux/clk.h>
-> +#include <linux/slab.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/phy/phy.h>
-> +
-> +struct qcom_ipq806x_sata_phy {
-> +	struct device *dev;
+bae14e7a2dcb726476b5020396923a24ccc4c40b
 
-dev is not used anywhere. remove it.
-> +	void __iomem *mmio;
-> +	struct clk *cfg_clk;
-> +};
-> +
-> +#define __set(v, a, b)	(((v) << (b)) & GENMASK(a, b))
-> +
-> +#define SATA_PHY_P0_PARAM0		0x200
-> +#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3(x)	__set(x, 17, 12)
-> +#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3_MASK	GENMASK(17, 12)
-> +#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN2(x)	__set(x, 11, 6)
-> +#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN2_MASK	GENMASK(11, 6)
-> +#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN1(x)	__set(x, 5, 0)
-> +#define SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN1_MASK	GENMASK(5, 0)
-> +
-> +#define SATA_PHY_P0_PARAM1		0x204
-> +#define SATA_PHY_P0_PARAM1_RESERVED_BITS31_21(x)	__set(x, 31, 21)
-> +#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3(x)	__set(x, 20, 14)
-> +#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3_MASK	GENMASK(20, 14)
-> +#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2(x)	__set(x, 13, 7)
-> +#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2_MASK	GENMASK(13, 7)
-> +#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1(x)	__set(x, 6, 0)
-> +#define SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1_MASK	GENMASK(6, 0)
-> +
-> +#define SATA_PHY_P0_PARAM2		0x208
-> +#define SATA_PHY_P0_PARAM2_RX_EQ(x)	__set(x, 20, 18)
-> +#define SATA_PHY_P0_PARAM2_RX_EQ_MASK	GENMASK(20, 18)
-> +
-> +#define SATA_PHY_P0_PARAM3		0x20C
-> +#define SATA_PHY_SSC_EN			0x8
-> +#define SATA_PHY_P0_PARAM4		0x210
-> +#define SATA_PHY_REF_SSP_EN		0x2
-> +#define SATA_PHY_RESET			0x1
-> +
-> +static inline void qcom_ipq806x_sata_delay_us(unsigned int delay)
-> +{
-> +	/* sleep for max. 50us more to combine processor wakeups */
-> +	usleep_range(delay, delay + 50);
-> +}
-> +
-> +static int qcom_ipq806x_sata_phy_init(struct phy *generic_phy)
-> +{
-> +	struct qcom_ipq806x_sata_phy *phy = phy_get_drvdata(generic_phy);
-> +	u32 reg = 0;
-> +
-> +	/* Setting SSC_EN to 1 */
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM3);
-
-Why readl_relaxed?
-> +	reg = reg | SATA_PHY_SSC_EN;
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM3);
-> +
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM0) &
-> +			~(SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3_MASK |
-> +			  SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN2_MASK |
-> +			  SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN1_MASK);
-> +	reg |= SATA_PHY_P0_PARAM0_P0_TX_PREEMPH_GEN3(0xf);
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM0);
-> +
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM1) &
-> +			~(SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3_MASK |
-> +			  SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2_MASK |
-> +			  SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1_MASK);
-> +	reg |= SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN3(0x55) |
-> +		SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN2(0x55) |
-> +		SATA_PHY_P0_PARAM1_P0_TX_AMPLITUDE_GEN1(0x55);
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM1);
-> +
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM2) &
-> +		~SATA_PHY_P0_PARAM2_RX_EQ_MASK;
-> +	reg |= SATA_PHY_P0_PARAM2_RX_EQ(0x3);
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM2);
-> +
-> +	/* Setting PHY_RESET to 1 */
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
-> +	reg = reg | SATA_PHY_RESET;
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
-> +
-> +	/* Setting REF_SSP_EN to 1 */
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
-> +	reg = reg | SATA_PHY_REF_SSP_EN | SATA_PHY_RESET;
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
-> +	mb();
-> +	qcom_ipq806x_sata_delay_us(20);
-> +
-> +	/* Clearing PHY_RESET to 0 */
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
-> +	reg = reg & ~SATA_PHY_RESET;
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
-> +
-> +	return 0;
-> +}
-> +
-> +static int qcom_ipq806x_sata_phy_exit(struct phy *generic_phy)
-> +{
-> +	struct qcom_ipq806x_sata_phy *phy = phy_get_drvdata(generic_phy);
-> +	u32 reg = 0;
-> +
-> +	/* Setting PHY_RESET to 1 */
-> +	reg = readl_relaxed(phy->mmio + SATA_PHY_P0_PARAM4);
-> +	reg = reg | SATA_PHY_RESET;
-> +	writel_relaxed(reg, phy->mmio + SATA_PHY_P0_PARAM4);
-> +
-> +	return 0;
-> +}
-> +
-> +static struct phy_ops qcom_ipq806x_sata_phy_ops = {
-> +	.init		= qcom_ipq806x_sata_phy_init,
-> +	.exit		= qcom_ipq806x_sata_phy_exit,
-> +	.owner		= THIS_MODULE,
-> +};
-> +
-> +static int qcom_ipq806x_sata_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct qcom_ipq806x_sata_phy *phy;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct phy_provider *phy_provider;
-> +	struct phy *generic_phy;
-> +	int ret;
-> +
-> +	phy = devm_kzalloc(dev, sizeof(*phy), GFP_KERNEL);
-> +	if (!phy) {
-> +		dev_err(dev, "%s: failed to allocate phy\n", __func__);
-> +		return -ENOMEM;
-> +	}
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	phy->mmio = devm_ioremap_resource(dev, res);
-> +	if (IS_ERR(phy->mmio)) {
-> +		dev_err(dev, "%s: phy mmio get resource failed\n", __func__);
-> +		return PTR_ERR(phy->mmio);
-> +	}
-> +
-> +	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-> +	if (IS_ERR(phy_provider)) {
-> +		dev_err(dev, "%s: failed to register phy\n", __func__);
-> +		return PTR_ERR(phy_provider);
-> +	}
-
-phy_provider_register should be the last step. Move it after phy_set_drvdata().
-
-Thanks
-Kishon
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe linux-omap" i=
+n
+the body of a message to majordomo@vger.kernel.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
