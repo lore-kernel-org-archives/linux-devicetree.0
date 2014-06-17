@@ -1,73 +1,180 @@
-From: Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: [3.13.y.z extended stable] Patch "arm: dts: Fix missing device_type="memory" for ste-ccu8540" has been added to staging queue
-Date: Tue, 17 Jun 2014 14:42:25 -0700
-Message-ID: <1403041345-10016-1-git-send-email-kamal@canonical.com>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 1/3] pwm: add Rockchip SoC PWM support
+Date: Tue, 17 Jun 2014 23:42:58 +0200
+Message-ID: <20140617214253.GA24743@mithrandir>
+References: <1399504115-16257-1-git-send-email-b.galvani@gmail.com>
+ <1399504115-16257-2-git-send-email-b.galvani@gmail.com>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="n8g4imXOkfNTN/H1"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1399504115-16257-2-git-send-email-b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, kernel-team-nLRlyDuq1AZFpShjVBNYrg@public.gmane.org
+To: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This is a note to let you know that I have just added a patch titled
 
-    arm: dts: Fix missing device_type="memory" for ste-ccu8540
+--n8g4imXOkfNTN/H1
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-to the linux-3.13.y-queue branch of the 3.13.y.z extended stable tree 
-which can be found at:
+On Thu, May 08, 2014 at 01:08:33AM +0200, Beniamino Galvani wrote:
+> This commit adds a driver for the PWM controller found on Rockchip
+> RK29, RK30 and RK31 SoCs.
+>=20
+> Signed-off-by: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  drivers/pwm/Kconfig        |    8 ++
+>  drivers/pwm/Makefile       |    1 +
+>  drivers/pwm/pwm-rockchip.c |  180 ++++++++++++++++++++++++++++++++++++++=
+++++++
+>  3 files changed, 189 insertions(+)
+>  create mode 100644 drivers/pwm/pwm-rockchip.c
+>=20
+> diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> index 5b34ff2..2e92245 100644
+> --- a/drivers/pwm/Kconfig
+> +++ b/drivers/pwm/Kconfig
+> @@ -197,6 +197,14 @@ config PWM_RENESAS_TPU
+>  	  To compile this driver as a module, choose M here: the module
+>  	  will be called pwm-renesas-tpu.
+> =20
+> +config PWM_ROCKCHIP
+> +	tristate "Rockchip PWM support"
+> +	depends on ARCH_ROCKCHIP
+> +	depends on OF
 
- http://kernel.ubuntu.com/git?p=ubuntu/linux.git;a=shortlog;h=refs/heads/linux-3.13.y-queue
+It seems like ARCH_ROCKCHIP depends on OF already (via ARCH_MULTI_V7 and
+ARCH_MULTIPLATFORM), so having the dependency explicitly here seems
+redundant.
 
-This patch is scheduled to be released in version 3.13.11.4.
+> diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+[...]
+> +#define PRESCALER		2
+> +#define NSECS_PER_SEC		1000000000
 
-If you, or anyone else, feels it should not be added to this tree, please 
-reply to this email.
+You should use NSEC_PER_SEC from include/linux/time.h.
 
-For more information about the 3.13.y.z tree, see
-https://wiki.ubuntu.com/Kernel/Dev/ExtendedStable
+> +struct rockchip_pwm_chip {
+> +	struct pwm_chip	chip;
+> +	struct clk	*clk;
+> +	void __iomem	*base;
+> +};
 
-Thanks.
--Kamal
+I prefer no artificial padding within structure definitions.
 
-------
+> +static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device =
+*pwm,
+> +			       int duty_ns, int period_ns)
+> +{
+> +	struct rockchip_pwm_chip *pc =3D to_rockchip_pwm_chip(chip);
+> +	unsigned long clk_rate, period, duty;
+> +	u64 div;
+> +	int ret;
+> +
+> +	clk_rate =3D clk_get_rate(pc->clk);
+> +
+> +	/*
+> +	 * Since period and duty cycle registers have a width of 32
+> +	 * bits, every possible input period can be obtained using the
+> +	 * default prescaler value for all practical clock rate values.
+> +	 */
+> +	div =3D clk_rate;
+> +	div *=3D period_ns;
 
->From 9be0219d7a880ddfb91221f7f70a6aa5fdfae125 Mon Sep 17 00:00:00 2001
-From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Date: Thu, 17 Apr 2014 18:41:59 +0100
-Subject: arm: dts: Fix missing device_type="memory" for ste-ccu8540
+Perhaps shorten this to "div =3D clk_rate * period_ns;"?
 
-commit bfaed5abad998bfc88a66e6e71c7b08dcf82f04e upstream.
+> +	do_div(div, PRESCALER * NSECS_PER_SEC);
+> +	period =3D div;
+> +
+> +	div =3D clk_rate;
+> +	div *=3D duty_ns;
 
-The current .dts for ste-ccu8540 lacks a 'device_type = "memory"' for
-its memory node, relying on an old ppc quirk in order to discover its
-memory. Fix the data so that all parsing code can handle it correctly.
+And this to "div =3D clk_rate * duty_ns;"?
 
-Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Acked-by: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Signed-off-by: Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
----
- arch/arm/boot/dts/ste-ccu8540.dts | 1 +
- 1 file changed, 1 insertion(+)
+> +	do_div(div, PRESCALER * NSECS_PER_SEC);
+> +	duty =3D div;
+> +
+> +	ret =3D clk_enable(pc->clk);
+> +	if (ret)
+> +		return ret;
+> +
+> +	writel(period, pc->base + PWM_LRC);
+> +	writel(duty, pc->base + PWM_HRC);
+> +	writel(0, pc->base + PWM_CNTR);
+> +
+> +	clk_disable(pc->clk);
+> +
+> +	return 0;
+> +}
+[...]
+> +static struct pwm_ops rockchip_pwm_ops =3D {
 
-diff --git a/arch/arm/boot/dts/ste-ccu8540.dts b/arch/arm/boot/dts/ste-ccu8540.dts
-index 7f3baf5..32dd55e 100644
---- a/arch/arm/boot/dts/ste-ccu8540.dts
-+++ b/arch/arm/boot/dts/ste-ccu8540.dts
-@@ -18,6 +18,7 @@
- 	compatible = "st-ericsson,ccu8540", "st-ericsson,u8540";
+static const please.
 
- 	memory@0 {
-+		device_type = "memory";
- 		reg = <0x20000000 0x1f000000>, <0xc0000000 0x3f000000>;
- 	};
+> +	.config	=3D rockchip_pwm_config,
 
---
-1.9.1
+There's a tab between .config and =3D above. It should be a space.
 
+> +static const struct of_device_id rockchip_pwm_dt_ids[] =3D {
+> +	{ .compatible =3D "rockchip,rk2928-pwm" },
+> +	{ /* sentinel */ }
+> +};
+> +MODULE_DEVICE_TABLE(of, rockchip_pwm_id_ids);
+
+The name in the MODULE_DEVICE_TABLE doesn't match the array name above.
+Does this even build?
+
+> +static struct platform_driver rockchip_pwm_driver =3D {
+> +	.driver =3D {
+> +		.name =3D "rockchip-pwm",
+> +		.owner =3D THIS_MODULE,
+
+You no longer need to initialize this explicitly, module_platform_driver
+does it for you.
+
+> +		.of_match_table =3D rockchip_pwm_dt_ids,
+> +	},
+> +	.probe	=3D rockchip_pwm_probe,
+
+There's another tab instead of space here.
+
+> +	.remove =3D rockchip_pwm_remove,
+> +};
+> +module_platform_driver(rockchip_pwm_driver);
+> +
+> +MODULE_AUTHOR("Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>");
+> +MODULE_DESCRIPTION("Rockchip PWM driver");
+
+Perhaps "Rockchip SoC PWM driver"?
+
+Thierry
+
+--n8g4imXOkfNTN/H1
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJToLZdAAoJEN0jrNd/PrOhq1AP/3tlStBOsWJeLvDe0FIdvHHL
+iXDNQoWeNdgvfafrkbsdYfAYrOMPaREjvmsIAudLS9C7VmXKDobRjQfffYJlBgFG
+pAwBFfRiMsclXISmHWLTZygBLRvelH+q2AE/GAlzJ2G4kzXIK+rbU0CPJoVJ3hOr
+mctNhJ97SINjkWS6/iwL/pqE97NRTvcgfCctM2eo+6u6lum1ZSN1Ql1u/r24EAEM
+F2wH4OQQhkRKGW0Rpiu+sB/+/813Ekt06bU0XII6YgM6GpGgZVHoOA5wj3sOdnMd
+DRYPzXGXtpyiiJLBoLB5PKuHENytFEnNVwH1gRnWS6qWjihTZ7PIW/xRzadCccsH
+zkDwGEelbDSp4/z2AHlfHj1rhc+WcHDLqyLKYPIXJFQamnQeMC6jXF847Qjah2oh
+83iSfcsrRLJ6sKQHY0Fk8YVwzQgDpJtgh+cAkErtBcUTyJ0A+HrMPx4LDeDwACtx
+psPPMVArT4EStwx2zGeZKH88yWzn+7qhA6POYXikN16PbRN+u8k4ClFswSfdJ6bc
+0++hTYBJQlJrZu3GJ3Rg8GhylcgPyNfjBjlKb1H4yvuy857VZay4iOzirhpnumUW
+6NrNO04fpCyHRpDTVFH4inJsaVOgPVcJ99jfX402NPw3h6VIRSO4mMhx5trEQwy5
+of/yBVYQqjChhFBHyodW
+=Trpz
+-----END PGP SIGNATURE-----
+
+--n8g4imXOkfNTN/H1--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
