@@ -1,41 +1,73 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org
-	boards
-Date: Tue, 17 Jun 2014 17:01:19 +0100
-Message-ID: <20140617160119.GE3705@n2100.arm.linux.org.uk>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com> <20140617090931.GB3705@n2100.arm.linux.org.uk> <20140617125831.GI4173@beef> <20140617131522.GD3705@n2100.arm.linux.org.uk> <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v2 07/10] regulator: Add driver for Maxim 77802 PMIC regulators
+Date: Tue, 17 Jun 2014 18:05:29 +0200
+Message-ID: <53A06749.1010606@collabora.co.uk>
+References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk> <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk> <20140616192500.GJ5099@sirena.org.uk> <53A01D54.10506@collabora.co.uk> <20140617141254.GP5099@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Pantelis Antoniou <panto@antoniou-consulting.com>
-Cc: Matt Porter <mporter@linaro.org>, Jason Kridner <jkridner@gmail.com>, beagleboard@googlegroups.com, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, OMAP List <linux-omap@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140617141254.GP5099@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 04:32:11PM +0300, Pantelis Antoniou wrote:
-> The complexity is absolutely required, and it has nothing to do with
-> beaglebone capes.
+Hello Mark,
+
+On 06/17/2014 04:12 PM, Mark Brown wrote:
+> On Tue, Jun 17, 2014 at 12:49:56PM +0200, Javier Martinez Canillas wrote:
+>> On 06/16/2014 09:25 PM, Mark Brown wrote:
 > 
-> The fact of the matter is that reconfigurable hardware is here, on
-> shipping system, and we, as the linux kernel community have to make
-> sure it works, and that it works in a sane way.
+>> >> +	config.dev = &pdev->dev;
+> 
+>> > Are you sure this shouldn't be the MFD?
+> 
+>> I just looked at regulator_register() and saw that it does rdev->dev.parent =
+>> dev, so yes this has to be the MFD.
+>
 
-Right, so looking back in the git history, this project has been going
-on for... at least four years?  Probably longer than the length of time
-that we've been converting ARM to DT.  At no point during that has anyone
-brought up the issue of DT being dynamic, so none of the drivers which
-we have been converting caters for this.
+I noticed that many drivers set config.dev = &pdev->dev. The original Chrome OS
+max77xxx driver and max77686 are two examples but others drivers do the same:
 
-Isn't this a bit of a missed opportunity, if this is a direction that
-OF wishes to head towards?
+$ git grep "config.dev = &pdev->dev" drivers/regulator/ | wc -l
+35
+$ git grep "config.dev = pdev->dev.parent" drivers/regulator/ | wc -l
+11
 
-Wouldn't it have been relevant to the discussion at kernel summit too,
-concerning DRM/v4l2/componentised systems?  What if someone comes along
-tomorrow with part of their multimedia based system inside a FPGA
-which they program up at runtime?
+And also I see that mfd_add_device() calls
+devm_regulator_bulk_register_supply_alias(&pdev->dev,...) so I'm confused now
+about what the correct device should be...
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+> Do the regulators manage to get their supplies?
+> 
+
+There are no current support in mainline for the devices that use the regulators
+in this PMIC so I can't tell you if consumers manage to get their supplies
+correctly (e.g: if regulator_dev_lookup succeeds).
+
+But I see in the kernel log that the regulators are registered and configured as
+expected [0] and also the driver in the Chrome OS 3.8 kernel is working for sure
+and sets config.dev to &pdev->dev instead of the MFD.
+
+>> So, for now I thought it made sense to set the operating mode to normal on
+>> probe() but I'll change it to read from the hardware if that is better.
+> 
+> Yes, otherwise if the device is configured otherwise then when we change
+> the configuration we may break something.
+> 
+>> I guess I should check in the datasheet if a sane default operating mode for
+>> LDOs is expected when the chip is reseted or if this is left undefined and also
+>> if the bootloader already set this.
+> 
+> You can't do anything based on the particular bootloader you're using in
+> your current system, this has to work in other systems.
+> 
+
+Yes, that's why I thought it was a good idea to set to a default operational
+mode but I'll change it to read from the hardware instead.
+
+Thanks a lot and best regards,
+Javier
+
+[0]: http://pastebin.com/raw.php?i=8yyMXcGD
