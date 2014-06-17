@@ -1,55 +1,97 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/2] phy: add hix5hd2-sata-phy driver
-Date: Tue, 17 Jun 2014 18:23:02 +0100
-Message-ID: <20140617172302.GI8930@leverpostej>
-References: <1402991881-27676-1-git-send-email-zhangfei.gao@linaro.org>
- <1402991881-27676-3-git-send-email-zhangfei.gao@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] firmware: Add device tree binding for coreboot
+Date: Tue, 17 Jun 2014 12:30:09 -0500
+Message-ID: <CAL_JsqJ1eMb9CprhuzzhKyN0PYVjxviWjoefR_9ypxhFT0FgBg@mail.gmail.com>
+References: <1402689965-19397-1-git-send-email-jwerner@chromium.org>
+ <CAL_JsqL-K4i54ysugCKSw-aO-9pvnYgZfJ=NdBAot=mwffxmyA@mail.gmail.com>
+ <CAODwPW9tRM8kxBVg3apkec2K1rahuENk_b_BD_0jvXON7JzeaA@mail.gmail.com>
+ <CAL_Jsq+rGLFcOcs8Rmr8NntbPhGBG+F7yAF0YQ-Rm-UsmmTLSA@mail.gmail.com> <539F570C.2000507@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402991881-27676-3-git-send-email-zhangfei.gao@linaro.org>
+In-Reply-To: <539F570C.2000507@wwwdotorg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jiancheng Xue <xuejiancheng@huawei.com>
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: Julius Werner <jwerner@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Stephen Warren <stephen.r.warren@gmail.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olofj@chromium.org>, Stefan Reinauer <stefan.reinauer@coreboot.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 08:58:01AM +0100, Zhangfei Gao wrote:
-> From: Jiancheng Xue <xuejiancheng@huawei.com>
-> 
-> Add hix5hd2-sata-phy driver on Hisilicon hix5hd2 soc.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  drivers/phy/Kconfig            |    8 ++
->  drivers/phy/Makefile           |    1 +
->  drivers/phy/phy-hix5hd2-sata.c |  192 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 201 insertions(+)
->  create mode 100644 drivers/phy/phy-hix5hd2-sata.c
- 
-[...]
+On Mon, Jun 16, 2014 at 3:43 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 06/16/2014 07:30 AM, Rob Herring wrote:
+>> On Fri, Jun 13, 2014 at 4:58 PM, Julius Werner <jwerner@chromium.org> wrote:
+> ...
+>>> Rob Herring wrote:
+>>>> Don't you need need to keep the kernel from allocating this memory by
+>>>> using one of the reserved memory mechanisms? The recently added one
+>>>> should be able to specific what the memory is reserved for IIRC.
+>>>
+>>> Our bootloader is carving the location out of the /memory node and
+>>> adding it to the device tree reserve map. As far as I know, that only
+>>> contains a list of raw start and size entries. At any rate, I think
+>>> it's useful (and in line with other bindings) to add a more explicit
+>>> node like this (if only to make it easier accessible through
+>>> /proc/device-tree).
+>>
+>> Understand there are 3 different memory reservation bindings. The
+>> original "/memreserve/" method is indeed limited. What I think you
+>> should use is the binding documented in
+>> Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt.
+>> So you could do something like this:
+>>
+>>         reserved-memory {
+>>                 #address-cells = <1>;
+>>                 #size-cells = <1>;
+>>                 ranges;
+>>
+>>                 /* global autoconfigured region for contiguous allocations */
+>>                 linux,cma {
+>>                         compatible = "shared-dma-pool";
+>>                         reusable;
+>>                         size = <0x4000000>;
+>>                         alignment = <0x2000>;
+>>                         linux,cma-default;
+>>                 };
+>>
+>>                 coreboot_reserved: coreboot@fdfea000 {
+>>                       compatible = "coreboot";
+>>                       reg = <0xfdfea000 0x264>,
+>>                           <0xfdfea000 0x16000>;
+>>                 };
+>>
+>
+> I thought that the /reserved-memory node was more so that the
+> (preferred?) location of firmware images or data buffers used by HW
+> accelerators could be communicated to the kernel. This feels like pure data.
 
-> +	paddr = of_get_property(phy->dev.of_node, "hisilicon,reg-init", &lenp);
-> +	if (!paddr || lenp < 4 * sizeof(*paddr))
-> +		return 0;
-> +
-> +	lenp /= sizeof(*paddr);
-> +	for (i = 0; i < lenp - 3; i += 4) {
-> +		offset = be32_to_cpup(paddr + i);
-> +		shift = be32_to_cpup(paddr + i + 1);
-> +		width = be32_to_cpup(paddr + i + 2);
-> +		value = be32_to_cpup(paddr + i + 3);
-> +		hix5hd2_sata_phy_write(priv->base + offset,
-> +				       shift, width, value);
-> +	}
+That was the initial use, but I think this case fits well. PPC may
+have some other uses already. I haven't looked.
 
-There is absolutely no reason to use of_get_property and be32 values
-here, we have of_property_count_u32_elems and
-of_property_read_u32_index.
+> The coreboot binding seems to be more about defining an interface to a
+> particular firmware (this feels like semantics), which as a side-effect
+> needs to communicate the location of certain data.
 
-That said I would like to see a compelling reason for why we need to
-have this at all; I'm not a fan of DT becoming a shoddy bytecode format.
+The DT is only defining it's presence and location. Knowledge of what
+the data is is (optionally) in the kernel.
 
-Cheers,
-Mark.
+> If /reserved-memory is used to communicate the address of the memory
+> regions, I think we still need a /firmware/coreboot node to indicate the
+> semantics of the reserved memory region, and point at the phandle of the
+> region. As such, it seems simpler just to put the addresses in the
+> coreboot node's reg property. The only exception I see to that argument
+> is if putting the region in /reserved-memory automatically carves that
+> region out of the memory the kernel will allocate from. That would
+> simplify the bootloader, since it wouldn't have to fiddle with the
+> /memory node and do the carveout itself.
+
+The semantics are defined by a compatible property which the
+/reserved-memory binding has. Knowledge of what is in that range is in
+the kernel, not the DT. And yes, either /memreserve/ or
+/reserved-memory is needed to prevent kernel allocations.
+
+I'm not tied to /reserved-memory, but I just want a consistent way to
+describe random blocks of static data in memory. DMI tables are
+another similar example. We've already got some scattered usage of
+/firmware. There's also /psci for PSCI. UEFI is using /chosen for its
+tables (probably for good reason since the tables are needed early and
+need to be simple to parse).
+
+Rob
