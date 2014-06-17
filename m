@@ -1,25 +1,78 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH RFC 5/5] ahci_imx: add disable for spread-spectrum
-Date: Tue, 17 Jun 2014 10:47:05 +0100
-Message-ID: <20140617094705.GD23430@n2100.arm.linux.org.uk>
-References: <20140416084227.GD24070@n2100.arm.linux.org.uk> <E1WaLRa-0002yX-7L@rmk-PC.arm.linux.org.uk> <CAL_JsqK_BbhXs0gcn=w=1KPKOD0HZzmYx5zAaS5_z=UvQDPNjw@mail.gmail.com> <20140416225721.GP24070@n2100.arm.linux.org.uk> <20140416230226.GQ24070@n2100.arm.linux.org.uk> <20140606164027.GA22986@n2100.arm.linux.org.uk> <CAL_JsqKmEXcO4rDELiLGZ4kJSEhmSFhJWh5XRjUfj8xNi0eFJw@mail.gmail.com>
+From: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>
+Subject: Re: [PATCH 1/2] I2C: EMMA Mobile I2C master driver
+Date: Tue, 17 Jun 2014 11:57:24 +0200
+Message-ID: <20140617095724.GJ2638@katana>
+References: <1377688911-10911-1-git-send-email-ian.molton@codethink.co.uk>
+ <1378226969-18722-1-git-send-email-ian.molton@codethink.co.uk>
+ <1378226969-18722-2-git-send-email-ian.molton@codethink.co.uk>
+ <20140218173843.GB18768@katana>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="T4IYkFBVPN84tP7K"
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKmEXcO4rDELiLGZ4kJSEhmSFhJWh5XRjUfj8xNi0eFJw@mail.gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-ide@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawn.guo@freescale.com>, Sascha Hauer <kernel@pengutronix.de>, Kumar Gala <galak@codeaurora.org>, Tejun Heo <tj@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20140218173843.GB18768@katana>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+Cc: magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 06, 2014 at 02:50:38PM -0500, Rob Herring wrote:
-> Yes, they are okay. I'll ack the documentation once that is done.
 
-When someone documents the existing implmentation, then I'll add to
-it - I've not really looked into what the differences are between
-the compatible strings, so that's something I can't document.
+--T4IYkFBVPN84tP7K
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+On Tue, Feb 18, 2014 at 06:38:43PM +0100, Wolfram Sang wrote:
+> On Tue, Sep 03, 2013 at 05:49:29PM +0100, Ian Molton wrote:
+> > Add a driver for the EMMA mobile I2C block.
+> >=20
+> > The driver supports low and high-speed interrupt driven PIO transfers.
+> >=20
+> > Signed-off-by: Ian Molton <ian.molton-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>
+>=20
+> > --- a/drivers/i2c/busses/Kconfig
+> > +++ b/drivers/i2c/busses/Kconfig
+> > @@ -777,6 +777,16 @@ config I2C_RCAR
+> >  	  This driver can also be built as a module.  If so, the module
+> >  	  will be called i2c-rcar.
+> > =20
+> > +config I2C_EM
+> > +	tristate "EMMA Mobile series I2C adapter"
+> > +	depends on I2C && HAVE_CLK
+> > +	help
+> > +	  If you say yes to this option, support will be included for the
+> > +	  I2C interface on the Renesas Electronics EM/EV family of processors.
+> > +
+> > +	  This driver can also be built as a module.  If so, the module
+> > +	  will be called i2c-em
+> > +
+>=20
+> Please keep it sorted.
+
+Ping. Still any interest in this one?
+
+
+--T4IYkFBVPN84tP7K
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJToBEEAAoJEBQN5MwUoCm2SUwP/1EErRQhPdkB7QcsPQ3yCiI4
+SCWyY+LsZVRUOT2VMz+i35TXXMSZM1klfSsf7JFAo1FBjKD+nHT64JKPxnNFPhd+
+01om1iaabNQN2tIhI+udayvyqfsKgUhIEiRcZMKCo7NGoGFfBYTxzEXCikehTOLc
+yxLJHaaUkAMbQi1AXlfm+4acFmjEUVVroF2PP9gr0JssOQs6umztzOfSlVfc7rix
+eQ42Kfrofr9yIfFXqZggqLulzO5gNjlKa/EoKCPU5khz5hIUrEllsF3gKps/gRmC
+Cs8ckfm/5cQHHKIcjD7nxZhdGDBjfiTJcRH2dpSybWobYOBxb1fg4G90erlUenV9
+ODLCA45Y3+rIhu+8vqA4p1aLCawfpaZsG1245uqL5/DOGez9csGFIzJ3PPpsLl5o
+W8WkVMDlro+0/VdshD1LO3zoIrY+63nDsX28+k+wAk5WxOaTiik5heks+jg6wpuP
+RWg9sics9yLDxJyIRMZnWuwuFMjJSTfZmuaZ3B8sJv3f26WrdBc3F069l/EJ9VU8
+np8G+5p+Pabg0RjOGaf3kzwBQ/k4mvXIbO+Ve9bHh9EmP0bv5GBLNpzR9NPoZ14a
+4kMztFutj62aoBvS8+HwkbYsufSAwYyS2iWCKGxug3cU1QoRo0J2fYKDPJ8Kh36v
+Ast0lUpdmFSzwZdTV0Ls
+=QnXc
+-----END PGP SIGNATURE-----
+
+--T4IYkFBVPN84tP7K--
