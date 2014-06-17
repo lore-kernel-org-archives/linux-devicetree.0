@@ -1,44 +1,61 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v3 0/3] Qualcomm Resource Power Manager driver
-Date: Tue, 17 Jun 2014 10:07:57 -0700
-Message-ID: <7hvbrzbh1u.fsf@paris.lan>
-References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
-	(Bjorn Andersson's message of "Mon, 16 Jun 2014 11:46:09 -0700")
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+From: Pantelis Antoniou <panto@antoniou-consulting.com>
+Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org boards
+Date: Tue, 17 Jun 2014 20:10:46 +0300
+Message-ID: <FA75104C-9D36-4EB6-BE5C-862D71E1877B@antoniou-consulting.com>
+References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com> <20140617090931.GB3705@n2100.arm.linux.org.uk> <20140617125831.GI4173@beef> <20140617131522.GD3705@n2100.arm.linux.org.uk> <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com> <20140617160119.GE3705@n2100.arm.linux.org.uk> <317D412E-B455-4B9D-95B3-F010C68744A3@antoniou-consulting.com> <20140617170531.GF3705@n2100.arm.linux.org.uk>
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140617170531.GF3705@n2100.arm.linux.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Matt Porter <mporter@linaro.org>, Jason Kridner <jkridner@gmail.com>, beagleboard@googlegroups.com, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, OMAP List <linux-omap@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-+Paul Walmsley
+Hi Russell,
 
-Bjorn Andersson <bjorn.andersson@sonymobile.com> writes:
+On Jun 17, 2014, at 8:05 PM, Russell King - ARM Linux wrote:
 
-> This series adds a regulator driver for the Resource Power Manager found in
-> Qualcomm 8660, 8960 and 8064 based devices.
->
-> The RPM driver exposes resources to its child devices, that can be accessed to
-> implement drivers for the regulators, clocks and bus frequency control that's
-> owned by the RPM in these devices.
->
-> Changes since v2:
->   - Fix copy-paste error in dt binding
->   - Correct incomplete move from mfd to soc
->   - Correct const mistake in regulator driver
->
-> Changes since v1:
->   - Moved rpm driver to drivers/soc
+> On Tue, Jun 17, 2014 at 07:59:21PM +0300, Pantelis Antoniou wrote:
+>> That case might already work on FPGA people's trees. I know Altera for sure
+>> uses overlays, and some xilinx guys popped up on past discussions.
+>> Their vendor trees probably use an older revision of the patches.
+>> 
+>> BTW, there is nothing special about DRM/v4l2 that can't be handled by
+>> a generic DT mechanism. What makes this such a big problem?
+> 
+> Really?
+> 
+> DRM is not hotpluggable in any shape or form, and David Airlie has
+> indicated that he does strongly opposes moving it in that direction.
+> 
+> DRM follows the "card" model, where, at probe time, the hardware is
+> known and never changes until the "card" is torn down.  No new
+> connectors can be added once the "card" is initialised, and no
+> connectors can be removed.  Any changes must be done by tearing down
+> the entire card and reconstructing it (if reconstructing it with a
+> reduced set of hardware is appropriate.)
+> 
 
-I'm not sure I follow the motivation for having this under drivers/soc?
+That is a limitation of the current DRM implementation.
 
-In fact, my (possibly incorrect) understanding of this Resource Power
-Manager is that it's actually to manage communication/control of
-resources that are actually handled off the SoC by a microcontroller.
+I seems to be this is born out of some kind of misunderstanding about how
+DT can (and does) support dynamic changes.
 
-I added Paul W. to Cc so he can correct me, but I think this is a ways
-off from the goal of what drivers/soc was for.
+I admit that I haven't done much work on DRM (besides some tinkering with
+Rob Clark's ti_lcdc DRM driver), but knowing what DT does have a dynamic
+change notifier support, perhaps it can be made to work.
 
-Kevin
+As I said, the next thing coming is transactional DT support, perhaps you
+can share the DT fragment describing your use-case (before/after) and 
+I'll try to accommodate in the next patch series.
+
+Regards
+
+-- Pantelis
+
+> -- 
+> FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+> improving, and getting towards what was expected from it.
+
