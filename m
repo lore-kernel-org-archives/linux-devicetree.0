@@ -1,74 +1,62 @@
-From: "Javi Merino" <javi.merino@arm.com>
-Subject: [RFC PATCH v4 7/7] of: thermal: Introduce sustainable power for a thermal zone
-Date: Tue, 17 Jun 2014 10:14:53 +0100
-Message-ID: <1402996493-3578-8-git-send-email-javi.merino@arm.com>
-References: <1402996493-3578-1-git-send-email-javi.merino@arm.com>
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1402996493-3578-1-git-send-email-javi.merino@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: punit.agrawal@arm.com, broonie@kernel.org, devicetree@vger.kernel.org, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v3 0/3] Add ES8328 audio codec
+Date: Tue, 17 Jun 2014 17:32:49 +0800
+Message-ID: <1402997571-1255-1-git-send-email-xobs@kosagi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Punit Agrawal <punit.agrawal@arm.com>
+This patchset adds support for the Everest Semi ES8328 audio codec.  It also
+adds support for using the es8328 on IMX boards.
 
-Introduce an optional property called, sustainable-power, which
-represents the power (in mW) which the thermal zone can safely
-dissipate.
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the codec itself and speaker amps,
+have headphone support, and must supply an unusual frequency to the codec chip.
 
-If provided the property is parsed and associated with the thermal
-zone via the thermal zone parameters.
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
 
-Cc: Zhang Rui <rui.zhang@intel.com>
-Cc: Eduardo Valentin <edubezval@gmail.com>
-Signed-off-by: Punit Agrawal <punit.agrawal@arm.com>
----
- Documentation/devicetree/bindings/thermal/thermal.txt | 4 ++++
- drivers/thermal/of-thermal.c                          | 4 ++++
- 2 files changed, 8 insertions(+)
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
 
-diff --git a/Documentation/devicetree/bindings/thermal/thermal.txt b/Docume=
-ntation/devicetree/bindings/thermal/thermal.txt
-index f5db6b72a36f..c6eb9a8d2aed 100644
---- a/Documentation/devicetree/bindings/thermal/thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/thermal.txt
-@@ -167,6 +167,10 @@ Optional property:
- =09=09=09by means of sensor ID. Additional coefficients are
- =09=09=09interpreted as constant offset.
-=20
-+- sustainable-power:=09An estimate of the sustainable power (in mW) that t=
-he
-+  Type: unsigned=09thermal zone can dissipate.
-+  Size: one cell
-+
- Note: The delay properties are bound to the maximum dT/dt (temperature
- derivative over time) in two situations for a thermal zone:
- (i)  - when passive cooling is activated (polling-delay-passive); and
-diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-thermal.c
-index 04b1be7fa018..eaf81ea654b9 100644
---- a/drivers/thermal/of-thermal.c
-+++ b/drivers/thermal/of-thermal.c
-@@ -769,6 +769,7 @@ int __init of_parse_thermal_zones(void)
- =09for_each_child_of_node(np, child) {
- =09=09struct thermal_zone_device *zone;
- =09=09struct thermal_zone_params *tzp;
-+=09=09u32 prop;
-=20
- =09=09tz =3D thermal_of_build_thermal_zone(child);
- =09=09if (IS_ERR(tz)) {
-@@ -791,6 +792,9 @@ int __init of_parse_thermal_zones(void)
- =09=09/* No hwmon because there might be hwmon drivers registering */
- =09=09tzp->no_hwmon =3D true;
-=20
-+=09=09if (!of_property_read_u32(child, "sustainable-power", &prop))
-+=09=09=09tzp->sustainable_power =3D prop;
-+
- =09=09zone =3D thermal_zone_device_register(child->name, tz->ntrips,
- =09=09=09=09=09=09    0, tz,
- =09=09=09=09=09=09    ops, tzp,
---=20
-1.9.1
+*** BLURB HERE ***
 
+Sean Cross (2):
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
 
+ Documentation/devicetree/bindings/sound/es8328.txt |  18 +
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  60 ++
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  55 ++
+ sound/soc/codecs/es8328-spi.c                      |  44 ++
+ sound/soc/codecs/es8328.c                          | 625 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 313 +++++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 359 ++++++++++++
+ 11 files changed, 1509 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
+
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
