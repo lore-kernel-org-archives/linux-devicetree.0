@@ -1,61 +1,63 @@
-From: Pantelis Antoniou <panto@antoniou-consulting.com>
-Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org boards
-Date: Tue, 17 Jun 2014 20:10:46 +0300
-Message-ID: <FA75104C-9D36-4EB6-BE5C-862D71E1877B@antoniou-consulting.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com> <20140617090931.GB3705@n2100.arm.linux.org.uk> <20140617125831.GI4173@beef> <20140617131522.GD3705@n2100.arm.linux.org.uk> <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com> <20140617160119.GE3705@n2100.arm.linux.org.uk> <317D412E-B455-4B9D-95B3-F010C68744A3@antoniou-consulting.com> <20140617170531.GF3705@n2100.arm.linux.org.uk>
-Mime-Version: 1.0 (Apple Message framework v1085)
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH 1/2] Documentation: Document Hisilicon hix5hd2 sata PHY
+Date: Tue, 17 Jun 2014 18:13:57 +0100
+Message-ID: <20140617171357.GH8930@leverpostej>
+References: <1402991881-27676-1-git-send-email-zhangfei.gao@linaro.org>
+ <1402991881-27676-2-git-send-email-zhangfei.gao@linaro.org>
+Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140617170531.GF3705@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: Matt Porter <mporter@linaro.org>, Jason Kridner <jkridner@gmail.com>, beagleboard@googlegroups.com, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, OMAP List <linux-omap@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1402991881-27676-2-git-send-email-zhangfei.gao@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, "arnd@arndb.de" <arnd@arndb.de>, "haifeng.yan@linaro.org" <haifeng.yan@linaro.org>, "jchxue@gmail.com" <jchxue@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Russell,
-
-On Jun 17, 2014, at 8:05 PM, Russell King - ARM Linux wrote:
-
-> On Tue, Jun 17, 2014 at 07:59:21PM +0300, Pantelis Antoniou wrote:
->> That case might already work on FPGA people's trees. I know Altera for sure
->> uses overlays, and some xilinx guys popped up on past discussions.
->> Their vendor trees probably use an older revision of the patches.
->> 
->> BTW, there is nothing special about DRM/v4l2 that can't be handled by
->> a generic DT mechanism. What makes this such a big problem?
+On Tue, Jun 17, 2014 at 08:58:00AM +0100, Zhangfei Gao wrote:
+> From: Jiancheng Xue <xuejiancheng@huawei.com>
 > 
-> Really?
+> Add necessary binding documentation SATA PHY on Hisilicon hix5hd2 soc.
 > 
-> DRM is not hotpluggable in any shape or form, and David Airlie has
-> indicated that he does strongly opposes moving it in that direction.
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+> ---
+>  .../devicetree/bindings/phy/hix5hd2-sata-phy.txt   |   26 ++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/hix5hd2-sata-phy.txt
 > 
-> DRM follows the "card" model, where, at probe time, the hardware is
-> known and never changes until the "card" is torn down.  No new
-> connectors can be added once the "card" is initialised, and no
-> connectors can be removed.  Any changes must be done by tearing down
-> the entire card and reconstructing it (if reconstructing it with a
-> reduced set of hardware is appropriate.)
-> 
+> diff --git a/Documentation/devicetree/bindings/phy/hix5hd2-sata-phy.txt b/Documentation/devicetree/bindings/phy/hix5hd2-sata-phy.txt
+> new file mode 100644
+> index 0000000..ed15123
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/phy/hix5hd2-sata-phy.txt
+> @@ -0,0 +1,26 @@
+> +Hisilicon hix5hd2 SATA PHY
+> +-----------------------
+> +
+> +Required properties:
+> +- compatible: should be "hisilicon,hix5hd2-sata-phy"
+> +- reg: offset and length of the PHY registers
+> +- #phy-cells: must be 0
+> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +
+> +Optional Properties:
+> +- hisilicon,peri-syscon: phandle of syscon used to control peripheral.
 
-That is a limitation of the current DRM implementation.
+"peri" is a rather strange contraction of "peripheral".
 
-I seems to be this is born out of some kind of misunderstanding about how
-DT can (and does) support dynamic changes.
+> +- hisilicon,power-reg: offset and bit number of the sata power supply register.
+> +  Only effective when hisilicon,peri-syscon is supplied.
 
-I admit that I haven't done much work on DRM (besides some tinkering with
-Rob Clark's ti_lcdc DRM driver), but knowing what DT does have a dynamic
-change notifier support, perhaps it can be made to work.
+This is the offset within the system controller? It would be good to
+state that.
 
-As I said, the next thing coming is transactional DT support, perhaps you
-can share the DT fragment describing your use-case (before/after) and 
-I'll try to accommodate in the next patch series.
+> +- hisilicon,reg-init: one of more sets of 4 cells.  The first cell
+> +  is the register offset address, the second cell is the start bit in register,
+> +  the third cell means the bit width, and the fourth cell is the value to set.
 
-Regards
+Which registers is this meant to be initialising?
 
--- Pantelis
+Why does this need to be in the DT? How much is this expected to vary?
 
-> -- 
-> FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-> improving, and getting towards what was expected from it.
-
+Mark.
