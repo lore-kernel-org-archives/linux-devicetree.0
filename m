@@ -1,184 +1,124 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v4 10/19] clocksource: sh_tmu: Add DT support
-Date: Tue, 17 Jun 2014 10:11:54 +0900
-Message-ID: <20140617011154.GA32454@verge.net.au>
-References: <1402931251-22581-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1402931251-22581-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
+From: Abhilash Kesavan <kesavan.abhilash-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] arm: exynos: Add MCPM call-back functions
+Date: Tue, 17 Jun 2014 08:08:29 +0530
+Message-ID: <CAM4voa=Lv3xpHfHVcua1jpajEY1XPrXKK=vS4-_3r+etmB4DDQ@mail.gmail.com>
+References: <1397239311-27717-6-git-send-email-a.kesavan@samsung.com>
+	<1398147435-3122-1-git-send-email-a.kesavan@samsung.com>
+	<535650AE.90501@linaro.org>
+	<alpine.LFD.2.11.1404221129150.980@knanqh.ubzr>
+	<5356C134.8070707@linaro.org>
+	<alpine.LFD.2.11.1404221540540.980@knanqh.ubzr>
+	<20140423161325.GB1243@e102568-lin.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402931251-22581-11-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
-Cc: linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140423161325.GB1243-7AyDDHkRsp3ZROr8t4l/smS4ubULX0JqMm0uRHvK7Nw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
+Cc: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <inderpal.s-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org" <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <thomas.ab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Laurent,
+Hi Lorenzo,
 
-This version looks good to me.
+On Wed, Apr 23, 2014 at 9:43 PM, Lorenzo Pieralisi
+<lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org> wrote:
+> On Tue, Apr 22, 2014 at 08:56:23PM +0100, Nicolas Pitre wrote:
+>>
+>> [ Moved Lorenzo up in the addressee list to get his attention ]
+>
+> Sorry for the delay in replying.
+>
+>> On Tue, 22 Apr 2014, Daniel Lezcano wrote:
+>>
+>> > On 04/22/2014 05:40 PM, Nicolas Pitre wrote:
+>> > > On Tue, 22 Apr 2014, Daniel Lezcano wrote:
+>> > >
+>> > > > On 04/22/2014 08:17 AM, Abhilash Kesavan wrote:
+>> > > > > +/*
+>> > > > > + * The common v7_exit_coherency_flush API could not be used because of the
+>> > > > > + * Erratum 799270 workaround. This macro is the same as the common one (in
+>> > > > > + * arch/arm/include/asm/cacheflush.h) except for the erratum handling.
+>> > > > > + */
+>> > > > > +#define exynos_v7_exit_coherency_flush(level) \
+>> > > > > +     asm volatile( \
+>> > > > > +     "stmfd  sp!, {fp, ip}\n\t"\
+>> > > > > +     "mrc    p15, 0, r0, c1, c0, 0   @ get SCTLR\n\t" \
+>> > > > > +     "bic    r0, r0, #"__stringify(CR_C)"\n\t" \
+>> > > > > +     "mcr    p15, 0, r0, c1, c0, 0   @ set SCTLR\n\t" \
+>> > > > > +     "isb\n\t"\
+>> > > > > +     "bl     v7_flush_dcache_"__stringify(level)"\n\t" \
+>> > > > > +     "clrex\n\t"\
+>> > > > > +     "mrc    p15, 0, r0, c1, c0, 1   @ get ACTLR\n\t" \
+>> > > > > +     "bic    r0, r0, #(1 << 6)       @ disable local coherency\n\t" \
+>> > > > > +     /* Dummy Load of a device register to avoid Erratum 799270 */ \
+>> > > >
+>> > > > Wouldn't make sense to add the erratum in the Kconfig and re-use it in the
+>> > > > generic v7_exit_coherency_flush macro instead of redefining it ?
+>> > >
+>> > > The implementation of the erratum (the dummy device register load) is
+>> > > platform specific I'm afraid.
+>> > >
+>> > > Is TC2 also concerned by this erratum, or is this Samsung specific?
+>> >
+>> > Sounds like it is ARM Cortex-A15MP specific:
+>> >
+>> > http://infocenter.arm.com/help/topic/com.arm.doc.epm028090/cortex_a15_mpcore_software_developers_errata_notice_r2_v12.pdf
+>> >
+>> > Page 31.
+>>
+>> The condition for hitting the erratum is: "The L2 cache block has been
+>> idle for 256 or more cycles with no memory requests from any core, no
+>> external snoops, and no ACP requests".
+>>
+>> Given that the operation that almost immediately precedes the
+>> problematic mcr is a call to v7_flush_dcache_louis or
+>> v7_flush_dcache_all, is this possible that the condition for the erratum
+>> could ever be met?
+>
+> Yes, if we execute out of the I-cache (no-data accesses) I think this might be
+> triggered.
+>
+> On a side note, the errata affects also the setting of SMP bit
+> (__v7_ca15mp_setup and cpu_v7_do_resume) but we do nothing there (it
+> is a different situation though, MMU there is off and D-cache off...but
+> I-cache is allowed to be on, so I am actually checking if we should be doing
+> something there too).
+>
+>> If no then we should document that v7_exit_coherency_flush(() is safe
+>> against erratum 799270 and use it here.
+>
+> Eh, I wish we could use it safely, I am currently investigating and will get
+> back to you asap.
 
-On Mon, Jun 16, 2014 at 05:07:22PM +0200, Laurent Pinchart wrote:
-> Document DT bindings and parse them in the TMU driver.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>
+Have you been able to come to a conclusion regarding the necessity of
+the erratum workaround ? We are currently carrying the workaround in
+the merged exynos back-end.
 
-Tested-by: Simon Horman <horms+renesas@verge.net.au>
-
-> ---
->  .../devicetree/bindings/timer/renesas,tmu.txt      | 39 +++++++++++++++++
->  drivers/clocksource/sh_tmu.c                       | 51 +++++++++++++++++-----
->  2 files changed, 80 insertions(+), 10 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/renesas,tmu.txt b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> new file mode 100644
-> index 0000000..425d0c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/timer/renesas,tmu.txt
-> @@ -0,0 +1,39 @@
-> +* Renesas R-Car Timer Unit (TMU)
-> +
-> +The TMU is a 32-bit timer/counter with configurable clock inputs and
-> +programmable compare match.
-> +
-> +Channels share hardware resources but their counter and compare match value
-> +are independent. The TMU hardware supports up to three channels.
-> +
-> +Required Properties:
-> +
-> +  - compatible: must contain "renesas,tmu"
-> +
-> +  - reg: base address and length of the registers block for the timer module.
-> +
-> +  - interrupts: interrupt-specifier for the timer, one per channel.
-> +
-> +  - clocks: a list of phandle + clock-specifier pairs, one for each entry
-> +    in clock-names.
-> +  - clock-names: must contain "fck" for the functional clock.
-> +
-> +Optional Properties:
-> +
-> +  - #renesas,channels: number of channels implemented by the timer, must be 2
-> +    or 3 (if not specified the value defaults to 3).
-> +
-> +
-> +Example: R8A7779 (R-Car H1) TMU0 node
-> +
-> +	tmu0: timer@ffd80000 {
-> +		compatible = "renesas,tmu";
-> +		reg = <0xffd80000 0x30>;
-> +		interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 33 IRQ_TYPE_LEVEL_HIGH>,
-> +			     <0 34 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-> +		clock-names = "fck";
-> +
-> +		#renesas,channels = <3>;
-> +	};
-> diff --git a/drivers/clocksource/sh_tmu.c b/drivers/clocksource/sh_tmu.c
-> index ef8fb0b..ed61ed2 100644
-> --- a/drivers/clocksource/sh_tmu.c
-> +++ b/drivers/clocksource/sh_tmu.c
-> @@ -24,6 +24,7 @@
->  #include <linux/ioport.h>
->  #include <linux/irq.h>
->  #include <linux/module.h>
-> +#include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_domain.h>
->  #include <linux/pm_runtime.h>
-> @@ -509,23 +510,48 @@ static int sh_tmu_map_memory(struct sh_tmu_device *tmu)
->  	return 0;
->  }
->  
-> +static int sh_tmu_parse_dt(struct sh_tmu_device *tmu)
-> +{
-> +	struct device_node *np = tmu->pdev->dev.of_node;
-> +
-> +	tmu->model = SH_TMU;
-> +	tmu->num_channels = 3;
-> +
-> +	of_property_read_u32(np, "#renesas,channels", &tmu->num_channels);
-> +
-> +	if (tmu->num_channels != 2 && tmu->num_channels != 3) {
-> +		dev_err(&tmu->pdev->dev, "invalid number of channels %u\n",
-> +			tmu->num_channels);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static int sh_tmu_setup(struct sh_tmu_device *tmu, struct platform_device *pdev)
->  {
-> -	struct sh_timer_config *cfg = pdev->dev.platform_data;
-> -	const struct platform_device_id *id = pdev->id_entry;
->  	unsigned int i;
->  	int ret;
->  
-> -	if (!cfg) {
-> -		dev_err(&tmu->pdev->dev, "missing platform data\n");
-> -		return -ENXIO;
-> -	}
-> -
->  	tmu->pdev = pdev;
-> -	tmu->model = id->driver_data;
->  
->  	raw_spin_lock_init(&tmu->lock);
->  
-> +	if (IS_ENABLED(CONFIG_OF) && pdev->dev.of_node) {
-> +		ret = sh_tmu_parse_dt(tmu);
-> +		if (ret < 0)
-> +			return ret;
-> +	} else if (pdev->dev.platform_data) {
-> +		const struct platform_device_id *id = pdev->id_entry;
-> +		struct sh_timer_config *cfg = pdev->dev.platform_data;
-> +
-> +		tmu->model = id->driver_data;
-> +		tmu->num_channels = hweight8(cfg->channels_mask);
-> +	} else {
-> +		dev_err(&tmu->pdev->dev, "missing platform data\n");
-> +		return -ENXIO;
-> +	}
-> +
->  	/* Get hold of clock. */
->  	tmu->clk = clk_get(&tmu->pdev->dev, "fck");
->  	if (IS_ERR(tmu->clk)) {
-> @@ -545,8 +571,6 @@ static int sh_tmu_setup(struct sh_tmu_device *tmu, struct platform_device *pdev)
->  	}
->  
->  	/* Allocate and setup the channels. */
-> -	tmu->num_channels = hweight8(cfg->channels_mask);
-> -
->  	tmu->channels = kzalloc(sizeof(*tmu->channels) * tmu->num_channels,
->  				GFP_KERNEL);
->  	if (tmu->channels == NULL) {
-> @@ -630,11 +654,18 @@ static const struct platform_device_id sh_tmu_id_table[] = {
->  };
->  MODULE_DEVICE_TABLE(platform, sh_tmu_id_table);
->  
-> +static const struct of_device_id sh_tmu_of_table[] __maybe_unused = {
-> +	{ .compatible = "renesas,tmu" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, sh_tmu_of_table);
-> +
->  static struct platform_driver sh_tmu_device_driver = {
->  	.probe		= sh_tmu_probe,
->  	.remove		= sh_tmu_remove,
->  	.driver		= {
->  		.name	= "sh_tmu",
-> +		.of_match_table = of_match_ptr(sh_tmu_of_table),
->  	},
->  	.id_table	= sh_tmu_id_table,
->  };
-> -- 
-> 1.8.5.5
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-sh" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+Regards,
+Abhilash
+>
+> Lorenzo
+>
+>> > > > > +     "ldr    r4, [%0]\n\t" \
+>> > > > > +     "and    r4, r4, #0\n\t" \
+>> > > > > +     "orr    r0, r0, r4\n\t" \
+>> > > > > +     "mcr    p15, 0, r0, c1, c0, 1   @ set ACTLR\n\t" \
+>> > > > > +     "isb\n\t" \
+>> > > > > +     "dsb\n\t" \
+>> > > > > +     "ldmfd  sp!, {fp, ip}" \
+>> > > > > +     : \
+>> > > > > +     : "Ir" (S5P_INFORM0) \
+>> > > > > +     : "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7", \
+>> > > > > +       "r9", "r10", "lr", "memory")
+>> > > >
+>>
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
