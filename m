@@ -1,57 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 07/10] regulator: Add driver for Maxim 77802 PMIC
- regulators
-Date: Tue, 17 Jun 2014 22:17:47 +0100
-Message-ID: <20140617211747.GY29841@lee--X1>
-References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>
- <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v2 05/20] clk: sunxi: Support factor clocks
+ with N multiplier factor starting from 1
+Date: Tue, 17 Jun 2014 16:23:02 -0500
+Message-ID: <CAL_JsqLyXwQzd9Oxj9pb49fWqzMjV9=1Nx3i+9bN-rwfEMqwcQ@mail.gmail.com>
+References: <1403016777-15121-1-git-send-email-wens@csie.org> <1403016777-15121-6-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, linux-arm-kernel@lists.infradead.org, Daniel Stone <daniels@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBD62P6P6EQIMXY4CTUCRUBA4RSHJG-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1403016777-15121-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBUaGUgTUFYNzc4MDIgUE1JQyBoYXMgMTAgaGlnaC1lZmZpY2llbmN5IEJ1Y2sgYW5kIDMyIExv
-dy1kcm9wb3V0Cj4gKExETykgcmVndWxhdG9ycy4gVGhpcyBwYXRjaCBhZGRzIHN1cHBvcnQgZm9y
-IGFsbCB0aGVzZSByZWd1bGF0b3JzCj4gZm91bmQgb24gdGhlIE1BWDc3ODAyIFBNSUMgYW5kIGlz
-IGJhc2VkIG9uIGEgZHJpdmVyIGFkZGVkIGJ5IFNpbW9uCj4gR2xhc3MgdG8gdGhlIENocm9tZSBP
-UyBrZXJuZWwgMy44IHRyZWUuCj4gCj4gU2lnbmVkLW9mZi1ieTogSmF2aWVyIE1hcnRpbmV6IENh
-bmlsbGFzIDxqYXZpZXIubWFydGluZXpAY29sbGFib3JhLmNvLnVrPgo+IC0tLQo+IAo+IENoYW5n
-ZXMgc2luY2UgdjE6Cj4gIC0gUmVtb3ZlIHVubmVlZGVkIGNoZWNrIGlmIG51bV9yZWd1bGF0b3Jz
-ICE9IE1BWDc3ODAyX01BWF9SRUdVTEFUT1JTLgo+ICAtIEZpeCAuc2V0X3N1c3BlbmRfbW9kZSBo
-YW5kbGVyIGNvbW1lbnQgYW5kIHNwbGl0IHJlZ3VsYXRvcnMgb3BzIGZvcgo+ICAgIHJlZ3VsYXRv
-cnMgdGhhdCBiZWhhdmUgZGlmZmVyZW50bHkuIFN1Z2dlc3RlZCBieSBNYXJrIEJyb3duLgo+ICAt
-IFVzZSBtb2R1bGVfcGxhdGZvcm1fZHJpdmVyKCkgaW5zdGVhZCBvZiBoYXZpbmcgaW5pdC9leGl0
-IGZ1bmN0aW9ucy4KPiAgICBTdWdnZXN0ZWQgYnkgTWFyayBCcm93bi4KPiAgLSBVc2UgdGhlIG5l
-dyBkZXNjcmlwdG9yLWJhc2VkIEdQSU8gaW50ZXJmYWNlIGluc3RlYWQgb2YgdGhlIGRlcHJlY2F0
-ZWQKPiAgICBpbnRlZ2VyIGJhc2VkIEdQSU8gb25lLiBTdWdnZXN0ZWQgYnkgTWFyayBCcm93bi4K
-PiAgLSBMb29rIGZvciAicmVndWxhdG9ycyIgY2hpbGQgbm9kZSBpbnN0ZWFkIG9mICJ2b2x0YWdl
-LXJlZ3VsYXRvcnMiIHRvIGJlCj4gICAgY29uc2lzdGVudCB3aXRoIG90aGVyIFBNSUMgZHJpdmVy
-cy4gU3VnZ2VzdGVkIGJ5IE1hcmsgQnJvd24uCj4gCj4gIGRyaXZlcnMvbWZkL21heDc3ODAyLmMg
-ICAgICAgfCAgIDEgKwoKQ2FuIHlvdSByZW1vdmUgYWxsIG9mIHRoZSBNRkQgY2hhbmdlcyBmcm9t
-IHBhdGNoZXMgNywgOCBhbmQgOSBhbmQKY3JlYXRlIG5ldyBvbmUuICBUaGF0IHdheSB0aGVyZSdz
-IG5vIHJlcXVpcmVtZW50IGZvciBhbnkgY3Jvc3MKc3Vic3lzdGVtIG1lc3NpbmVzcy4KCj4gIGRy
-aXZlcnMvcmVndWxhdG9yL0tjb25maWcgICAgfCAgIDkgKwo+ICBkcml2ZXJzL3JlZ3VsYXRvci9N
-YWtlZmlsZSAgIHwgICAxICsKPiAgZHJpdmVycy9yZWd1bGF0b3IvbWF4Nzc4MDIuYyB8IDcwMSAr
-KysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDQgZmlsZXMgY2hh
-bmdlZCwgNzEyIGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcmVn
-dWxhdG9yL21heDc3ODAyLmMKCi0tIApMZWUgSm9uZXMKTGluYXJvIFNUTWljcm9lbGVjdHJvbmlj
-cyBMYW5kaW5nIFRlYW0gTGVhZApMaW5hcm8ub3JnIOKUgiBPcGVuIHNvdXJjZSBzb2Z0d2FyZSBm
-b3IgQVJNIFNvQ3MKRm9sbG93IExpbmFybzogRmFjZWJvb2sgfCBUd2l0dGVyIHwgQmxvZwoKX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtl
-cm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0
-dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5l
-bAo=
+On Tue, Jun 17, 2014 at 9:52 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> The PLLs on newer Allwinner SoC's, such as the A31 and A23, have a
+> N multiplier factor that starts from 1, not 0.
+>
+> This patch adds an option to the clock driver's config data structures
+> to define the difference.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/clk/sunxi/clk-factors.c | 5 ++++-
+>  drivers/clk/sunxi/clk-factors.h | 1 +
+>  2 files changed, 5 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/clk/sunxi/clk-factors.c b/drivers/clk/sunxi/clk-factors.c
+> index 3806d97..399cf4d 100644
+> --- a/drivers/clk/sunxi/clk-factors.c
+> +++ b/drivers/clk/sunxi/clk-factors.c
+> @@ -62,7 +62,10 @@ static unsigned long clk_factors_recalc_rate(struct clk_hw *hw,
+>                 p = FACTOR_GET(config->pshift, config->pwidth, reg);
+>
+>         /* Calculate the rate */
+> -       rate = (parent_rate * n * (k + 1) >> p) / (m + 1);
+> +       if (config->n_from_one)
+> +               rate = (parent_rate * (n + 1) * (k + 1) >> p) / (m + 1);
+> +       else
+> +               rate = (parent_rate * n * (k + 1) >> p) / (m + 1);
+
+This can be simplified and support any base with:
+
+rate = (parent_rate * (n + config->n_base) * (k + 1) >> p) / (m + 1);
