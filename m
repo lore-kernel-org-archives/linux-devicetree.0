@@ -1,73 +1,47 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
-Date: Tue, 17 Jun 2014 11:19:56 +0530
-Message-ID: <CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
-References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 1/2] touchscreen: sun4i-ts: A10 (sun4i) has
+ double the temperature precision
+Date: Tue, 17 Jun 2014 08:31:27 +0200
+Message-ID: <539FE0BF.7030708@redhat.com>
+References: <1402943069-19420-1-git-send-email-hdegoede@redhat.com> <1402943069-19420-2-git-send-email-hdegoede@redhat.com> <20140616213048.GA422@core.coreip.homeip.net>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>, Rahul Sharma <rahul.sharma@samsung.com>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBSGB76OAKGQEPVDD4PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140616213048.GA422-WlK9ik9hQGAhIp7JRqBPierSzoNAToWh@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tong Zhang <lovewilliam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, LM Sensors <lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+Hi,
 
-Please review this patch.
+On 06/16/2014 11:30 PM, Dmitry Torokhov wrote:
+> Hi Hans,
+> 
+> On Mon, Jun 16, 2014 at 08:24:28PM +0200, Hans de Goede wrote:
+>> Testing has revealed that the temperature in the rtp controller of the A10
+>> (sun4i) SoC has a resolution of 50 milli degrees / step, where as the
+>> A13 (sun5i) and later models have 100 milli degrees / step.
+>>
+>> Add a new sun5i-a13-ts compatible to differentiate the newer models and
+>> set the resolution based on the compatible string.
+>>
+>> This fixes the temperature reported on the A10 being twice as high as expected.
+> 
+> Should we maybe add explicit temperature steps property so that we won;t
+> need to patch again if they decided to change resolution again?
+
+I can understand where your coming from, but in general the rule for
+devicetree bindings is to not add properties for things which are purely
+dependent on the SoC generation. Those must be deferred from the compatible
+string.
 
 Regards,
-Rahul Sharma
 
-On 9 June 2014 16:58, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> Display domain is removed due to instability issues. Explaining
-> the problem below:
->
-> exynos_init_late triggers the pm_genpd_poweroff_unused which
-> powers off the unused power domains. This call hits before
-> the trigger to deferred probes.
->
-> DRM DP Panel defers the probe due to supply get failure. By the
-> time, deferred probe is scheduled again, Display Power Domain is
-> powered off by pm_genpd_poweroff_unused.
->
-> FIMD and DP drivers are accessing registers during Probe and Bind
-> callbacks. If display domain is enabled/disabled around register
-> accesses, display domain gets unstable and we are getting Power
-> Domain Disable fail notification. Increasing the Timeout also
-> didn't help.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
-> based on Kukjin's for-next branch.
->
->  arch/arm/boot/dts/exynos5420.dtsi |    6 ------
->  1 file changed, 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
-> index e385322..3d528cf 100644
-> --- a/arch/arm/boot/dts/exynos5420.dtsi
-> +++ b/arch/arm/boot/dts/exynos5420.dtsi
-> @@ -262,11 +262,6 @@
->                 reg = <0x10044060 0x20>;
->         };
->
-> -       disp_pd: power-domain@100440C0 {
-> -               compatible = "samsung,exynos4210-pd";
-> -               reg = <0x100440C0 0x20>;
-> -       };
-> -
->         msc_pd: power-domain@10044120 {
->                 compatible = "samsung,exynos4210-pd";
->                 reg = <0x10044120 0x20>;
-> @@ -518,7 +513,6 @@
->         };
->
->         fimd: fimd@14400000 {
-> -               samsung,power-domain = <&disp_pd>;
->                 clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
->                 clock-names = "sclk_fimd", "fimd";
->         };
-> --
-> 1.7.9.5
->
+Hans
