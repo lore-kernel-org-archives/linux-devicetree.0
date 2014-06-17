@@ -1,17 +1,16 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 4/7] regulator: axp20x: reset probe data
- before each probe
-Date: Tue, 17 Jun 2014 22:44:49 +0200
-Message-ID: <20140617204449.GD19730@lukather>
+Subject: Re: [PATCH v4 6/7] regulator: axp20x: make use of devm_regulator_set_register
+Date: Tue, 17 Jun 2014 22:46:57 +0200
+Message-ID: <20140617204657.GE19730@lukather>
 References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com>
- <1402990723-28138-5-git-send-email-boris.brezillon@free-electrons.com>
+ <1402990723-28138-7-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zS7rBR6csb6tI2e1"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBUGRQKOQKGQE32NLPHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="C94crkcyjafcjHxo"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB66TQKOQKGQEYYJSCUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1402990723-28138-5-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <1402990723-28138-7-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -23,50 +22,128 @@ Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee
 List-Id: devicetree@vger.kernel.org
 
 
---zS7rBR6csb6tI2e1
+--C94crkcyjafcjHxo
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2014 at 09:38:40AM +0200, Boris BREZILLON wrote:
-> The init_data and of_node fields of the axp2xx_matches tables are filled
-> at each device probe by the axp20x_regulator_parse_dt function (which then
-> calls the of_regulator_match function).
-> This means we can probe a new device and consider data initialized during
-> the probe of another device as valid.
+On Tue, Jun 17, 2014 at 09:38:42AM +0200, Boris BREZILLON wrote:
+> Make use of the devm_regulator_set_register instead of registering each
+> regulator provided by the PMIC.
 >=20
-> Reset init_data and of_node field to NULL before each probe in order to
-> avoid this kind of issue.
+> This also solves a self dependency issue where one regulator of the PMIC
+> is used as a supply for anoher regulator provided by the same PMIC.
 >=20
 > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
->  drivers/regulator/axp20x-regulator.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
+>  drivers/regulator/axp20x-regulator.c | 59 ++++++++++++++----------------=
+------
+>  1 file changed, 23 insertions(+), 36 deletions(-)
 >=20
 > diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp=
 20x-regulator.c
-> index 7a30f49..d42bf6d 100644
+> index d42bf6d..e8f0df7 100644
 > --- a/drivers/regulator/axp20x-regulator.c
 > +++ b/drivers/regulator/axp20x-regulator.c
-> @@ -324,6 +324,15 @@ static int axp20x_regulator_probe(struct platform_de=
-vice *pdev)
->  		nregulators =3D AXP20X_REG_ID_MAX;
+> @@ -301,66 +301,53 @@ static int axp20x_set_dcdc_workmode(struct regulato=
+r_dev *rdev, int id, u32 work
+> =20
+>  static int axp20x_regulator_probe(struct platform_device *pdev)
+>  {
+> -	struct regulator_dev *rdev;
+> +	struct regulator_set *rset;
+>  	struct axp20x_dev *axp20x =3D dev_get_drvdata(pdev->dev.parent);
+> -	struct regulator_config config =3D { };
+> -	struct regulator_init_data *init_data;
+> +	struct regulator_set_config config;
+>  	struct of_regulator_match *matches;
+> -	int nmatches;
+> -	const struct regulator_desc *regulators;
+> -	int nregulators;
+>  	int ret, i;
+>  	u32 workmode;
+> =20
+> +	memset(&config, 0, sizeof(config));
+> +	config.dev =3D &pdev->dev;
+> +	config.regmap =3D axp20x->regmap;
+>  	if (axp20x->variant =3D=3D AXP221_ID) {
+>  		matches =3D axp22x_matches;
+> -		nmatches =3D ARRAY_SIZE(axp22x_matches);
+> -		regulators =3D axp22x_regulators;
+> -		nregulators =3D AXP22X_REG_ID_MAX;
+> +		config.descs =3D axp22x_regulators;
+> +		config.nregulators =3D AXP22X_REG_ID_MAX;
+>  	} else {
+>  		matches =3D axp20x_matches;
+> -		nmatches =3D ARRAY_SIZE(axp20x_matches);
+> -		regulators =3D axp20x_regulators;
+> -		nregulators =3D AXP20X_REG_ID_MAX;
+> +		config.descs =3D axp20x_regulators;
+> +		config.nregulators =3D AXP20X_REG_ID_MAX;
+>  	}
+> +	config.matches =3D matches;
+> =20
+>  	/*
+>  	 * Reset matches table (this table might have been modified by a
+>  	 * previous AXP2xx device probe).
+>  	 */
+> -	for (i =3D 0; i < nmatches; i++) {
+> +	for (i =3D 0; i < config.nregulators; i++) {
+>  		matches[i].init_data =3D NULL;
+>  		matches[i].of_node =3D NULL;
 >  	}
 > =20
-> +	/*
-> +	 * Reset matches table (this table might have been modified by a
-> +	 * previous AXP2xx device probe).
-> +	 */
-> +	for (i =3D 0; i < nmatches; i++) {
-> +		matches[i].init_data =3D NULL;
-> +		matches[i].of_node =3D NULL;
-> +	}
-> +
+> -	ret =3D axp20x_regulator_parse_dt(pdev, matches, nmatches);
+> +	ret =3D axp20x_regulator_parse_dt(pdev, matches,
+> +					config.nregulators);
+>  	if (ret)
+>  		return ret;
+> =20
+> -	for (i =3D 0; i < AXP20X_REG_ID_MAX; i++) {
+> -		init_data =3D matches[i].init_data;
+> +	rset =3D devm_regulator_set_register(&pdev->dev, &config);
+> +	if (IS_ERR(rset))
+> +		return PTR_ERR(rset);
+> =20
+> -		config.dev =3D &pdev->dev;
+> -		config.init_data =3D init_data;
+> -		config.regmap =3D axp20x->regmap;
+> -		config.of_node =3D matches[i].of_node;
+> -
+> -		rdev =3D devm_regulator_register(&pdev->dev, &regulators[i],
+> -					       &config);
+> -		if (IS_ERR(rdev)) {
+> -			dev_err(&pdev->dev, "Failed to register %s\n",
+> -				regulators[i].name);
+> -
+> -			return PTR_ERR(rdev);
+> -		}
+> -
+> -		ret =3D of_property_read_u32(matches[i].of_node, "x-powers,dcdc-workmo=
+de",
+> +	for (i =3D 0; i < rset->nregulators; i++) {
+> +		ret =3D of_property_read_u32(config.matches[i].of_node,
+> +					   "x-powers,dcdc-workmode",
+>  					   &workmode);
+> -		if (!ret) {
+> -			if (axp20x_set_dcdc_workmode(rdev, i, workmode))
+> -				dev_err(&pdev->dev, "Failed to set workmode on %s\n",
+> -					regulators[i].name);
+> -		}
+> +		if (!ret &&
+> +		    axp20x_set_dcdc_workmode(rset->regulators[i], i, workmode))
+> +			dev_err(&pdev->dev, "Failed to set workmode on %s\n",
+> +				config.descs[i].name);
+>  	}
+> =20
+>  	return 0;
+> --=20
+> 1.8.3.2
+>=20
 
-That looks rather hackish, especially since we've never been in such a
-case yet, since we have a single PMIC in our system.
-
-Can't you just use memzero here?
+It looks like you're modifying code you just introduced. You should
+probably move this patch earlier on, so that you don't have to patch
+your patch.
 
 Maxime
 
@@ -75,26 +152,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---zS7rBR6csb6tI2e1
+--C94crkcyjafcjHxo
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJToKjBAAoJEBx+YmzsjxAgaE0QALRZXOtHAcI0agtdQEWQzDxM
-u6FH4Losb5rSuPwzGpY5cOphisdfGJnkY3nVpD/IDSXrMXRLDxwjv2VBHYPbU5ai
-+pvlyLX3GKyUpW4wHP3jl0rcY2y7rW9ofenKEekKAfoXKCFDOC/oqaT1vT1MpQRA
-TDUir/JiosdSkLZ2wPOI5BuQGgCiw7YSSbBzuXRZKCYOUEHjWoLfKqy8pbQL2SKF
-7HoDr5ll7ZrYzjQQz0qS8vW6Jjw11CAqMWh84lEkeP7nh7Jf0AeyCSEZjMsmAWdf
-ojEA4DAVtg9D4334fgWCjj654riQ2+pd/R06fqjB/04Nu5/ZxWqB4gXNf+VPTomU
-tvdWYU9W6fz2p28xg96x2uM3Nq9IX/l2GLWTpnyUX4CVL0pdL/q6vuH2D/1Bps8c
-vRvp7EEDEXVkvJgCNODi8B5B34KCyV8B05L/QraJG/nit5utanwtZi4sG6hfIwWR
-Aep/WgrHjhPkwkPM7wMmJm9VEWlGmdQO1/N8F3xrq9Rq+yje6sjBVBqbefo2osnj
-eDDm5XVAVdsLlgGayseN1tDzGGjkdIbVESJ14dqlUUheinaAJ+JSAEXRpaXXBOS7
-CfX2gVFw4Js4mwbuCvLZfjJS0+YjCNdxtHi0Rb5OVMDy2iLhCYIlZt29TE7LgMem
-4xB2t2tKtJQHaFrAqCjR
-=D+Cb
+iQIcBAEBAgAGBQJToKlBAAoJEBx+YmzsjxAgSYEQALLMmqnxfDnM3AqFDAMLCECW
+XZXu2UQS/d6DAIq2lb58wwtrATXSm1nZ3hQJBkhbSfWpgUqYkd6UsZ0RSKRtZv1H
+8rVUf69ZNJTWpfHXD2UQ5NF/AkYrgnOzHf8Bj4+6xq3x7JtkH1aiwaMwuHC6omba
+ZVOOwHBs0GDbdYv8Un9Ks1C9e31WxXOaQaditGF/jNicVepYhjFXUDjlu5sy+bjr
+VyTFdudAZLMdDoeaR7xrJCCXpVTxqVUw75J2lpQnJVlcBjwWxOM8t1biSsm94TA1
+yjbqqNpyNbnFXQzRpVVdN1kbqsxHcSvaaX3sXC7K3/DemJAhTqAxx6pbFrC2X6ZY
+qjZW09znTSOcJ6ts5qw9abVBEdRZ3yuKa2CbJPRtFE1kYPBksLrDmrOVNEGNS0o/
+076R3wdG3oggvMR/kn6/oLWLpdOyH0SMdWuSHOt4wiPLyz5t+OhAp2ZaeX4yQrrV
+k/1EqIkQiU+gwSaeBNSy8PdQLWjpL1PHYhQNs/JvSaMwcSxpuDrxUEXPow6r++0P
+Actyj0mOefmJO+THcHQUABvOKYJMV0WTP94puSqyZlit6K1Kx3yWbCAVHsQ56iUX
+HtseMU4qeRAJ1bYK4imncy0u224YedtSGY4l0EvFq+42w2b34bwjdfo6T0m1HQoS
+16Egk9NEZptbClVOBgZ7
+=4Utz
 -----END PGP SIGNATURE-----
 
---zS7rBR6csb6tI2e1--
+--C94crkcyjafcjHxo--
