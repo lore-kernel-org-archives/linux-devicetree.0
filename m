@@ -1,40 +1,39 @@
-From: Mikko Perttunen <mikko.perttunen@kapsi.fi>
-Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
-Date: Tue, 17 Jun 2014 19:59:35 +0300
-Message-ID: <53A073F7.20700@kapsi.fi>
-References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com> <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com> <539F4D44.3070309@wwwdotorg.org> <53A03186.3040703@collabora.com> <53A069B6.6070902@wwwdotorg.org>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org
+	boards
+Date: Tue, 17 Jun 2014 18:05:31 +0100
+Message-ID: <20140617170531.GF3705@n2100.arm.linux.org.uk>
+References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com> <20140617090931.GB3705@n2100.arm.linux.org.uk> <20140617125831.GI4173@beef> <20140617131522.GD3705@n2100.arm.linux.org.uk> <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com> <20140617160119.GE3705@n2100.arm.linux.org.uk> <317D412E-B455-4B9D-95B3-F010C68744A3@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53A069B6.6070902@wwwdotorg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Warren <swarren@wwwdotorg.org>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Thierry Reding <thierry.reding@gmail.com>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, David Airlie <airlied@linux.ie>, Mike Turquette <mturquette@linaro.org>, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <317D412E-B455-4B9D-95B3-F010C68744A3@antoniou-consulting.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Matt Porter <mporter@linaro.org>, Jason Kridner <jkridner@gmail.com>, beagleboard@googlegroups.com, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, OMAP List <linux-omap@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2014 07:15 PM, Stephen Warren wrote:
-> On 06/17/2014 06:16 AM, Tomeu Vizoso wrote:
->> On 06/16/2014 10:02 PM, Stephen Warren wrote:
->>> On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
->
->>> This binding looks quite anaemic vs.
->>> Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt; I
->>> would expect that this binding needs all the EMC register data from the
->>> tegra20-emc binding too. Can the two bindings be identical?
->>
->> There's even less stuff needed right now, as all what ultimately the EMC
->> driver does is call clk_set_rate on the EMC clock. As the T124 EMC
->> driver gains more features, they should get more similar.
->
-> IIRC, even changing the EMC clock rate requires modifying the memory
-> controller's programming (e.g. delays/taps/tuning etc.). That's exactly
-> what the more complex stuff in the nvidia,tegra20-emc.txt is all about.
-> I not convinced that a driver that just modifies the clock rate without
-> adjusting the EMC programming will work reliably.
+On Tue, Jun 17, 2014 at 07:59:21PM +0300, Pantelis Antoniou wrote:
+> That case might already work on FPGA people's trees. I know Altera for sure
+> uses overlays, and some xilinx guys popped up on past discussions.
+> Their vendor trees probably use an older revision of the patches.
+> 
+> BTW, there is nothing special about DRM/v4l2 that can't be handled by
+> a generic DT mechanism. What makes this such a big problem?
 
-Indeed, changing the EMC clock rate is a somewhat complicated sequence 
-of ~10 steps. The kernel even won't let one the rate be change directly, 
-as the change would be propagated to PLL_M which cannot have its rate 
-changed while it is enabled. I suppose the sequence should be hidden in 
-the EMC clk's set_rate implementation, which I guess would leave just 
-the rate policy to this driver.
+Really?
+
+DRM is not hotpluggable in any shape or form, and David Airlie has
+indicated that he does strongly opposes moving it in that direction.
+
+DRM follows the "card" model, where, at probe time, the hardware is
+known and never changes until the "card" is torn down.  No new
+connectors can be added once the "card" is initialised, and no
+connectors can be removed.  Any changes must be done by tearing down
+the entire card and reconstructing it (if reconstructing it with a
+reduced set of hardware is appropriate.)
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
