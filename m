@@ -1,84 +1,365 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] ASoC: fsl: add imx-es8328 machine driver
-Date: Tue, 17 Jun 2014 17:07:00 +0100
-Message-ID: <20140617160700.GE8930@leverpostej>
-References: <1402997571-1255-1-git-send-email-xobs@kosagi.com>
- <1402997571-1255-3-git-send-email-xobs@kosagi.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v4] hwmon: Driver for TI TMP103 temperature sensor
+Date: Tue, 17 Jun 2014 17:11:05 +0100
+Message-ID: <20140617161105.GF8930@leverpostej>
+References: <1402992713-22711-1-git-send-email-hs@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1402997571-1255-3-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org" <bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <1402992713-22711-1-git-send-email-hs@denx.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Heiko Schocher <hs@denx.de>
+Cc: "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 10:32:51AM +0100, Sean Cross wrote:
-> This adds an initial machine driver for the ES8328 audio codec.  The
-> driver supports headphones, an audio regulator for both the codec itself
-> and a speaker amp, and supports reparenting and adjusting clocks to supply
-> the audio codec with the unusual frequency it requires.
-> 
-> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+On Tue, Jun 17, 2014 at 09:11:53AM +0100, Heiko Schocher wrote:
+> Driver for the TI TMP103.
+>=20
+> The TI TMP103 is similar to the TMP102.  It differs from the TMP102
+> by having only 8 bit registers.
+>=20
+> Signed-off-by: Heiko Schocher <hs@denx.de>
+>=20
 > ---
->  .../devicetree/bindings/sound/imx-audio-es8328.txt |  60 ++++
->  sound/soc/fsl/Kconfig                              |  14 +
->  sound/soc/fsl/Makefile                             |   2 +
->  sound/soc/fsl/imx-es8328.c                         | 359 +++++++++++++++++++++
->  4 files changed, 435 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
->  create mode 100644 sound/soc/fsl/imx-es8328.c
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+>=20
+> Cc: Jean Delvare <khali@linux-fr.org>
+> Cc: Guenter Roeck <linux@roeck-us.net>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Cc: linux-doc@vger.kernel.org
+>=20
+> - change for v2:
+>   - add comments from GuenterRoeck:
+>     - remove Cc from commit subject
+>     - add devicetree maintainer
+>     - move Documentation to Documentation/hwmon/tmp103
+>     - remove devicetree bindings from Documentation
+>     - add compatible string to
+>       "Documentation/devicetree/bindings/i2c/trivial-devices.txt"
+>     - remove CamelCase
+>     - fix Codingstyle issues
+>     - use ATTRIBUTE_GROUPS and devm_hwmon_device_register_with_groups=
+()
+>     - remove unsused define TMP103_CONFIG_RD_ONLY
+>     - restore config register when exit()
+>     - use regmap
+> - changes for v3:
+>   again a lot of fantastic tips how to use regmap efficiently
+>   from Guenter Roeck:
+>   - get rid of "struct tmp103"
+>   - get rid of "static const u8 tmp103_reg[]"
+>   - get rid of mutex lock
+>   - drop config_orig entirely
+>   - use regmap_update_bits()
+> - changes for v4:
+>   - add comment from Guenter Roeck:
+>     define TMP103_CONFIG_MASK and TMP103_CONF_SD_MASK
+>     separately to ensure you catch all the to-be-cleared bits.
+>=20
+>  .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+>  Documentation/hwmon/tmp103                         |  28 +++
+>  drivers/hwmon/Kconfig                              |  10 +
+>  drivers/hwmon/Makefile                             |   1 +
+>  drivers/hwmon/tmp103.c                             | 207 +++++++++++=
+++++++++++
+>  5 files changed, 247 insertions(+)
+>  create mode 100644 Documentation/hwmon/tmp103
+>  create mode 100644 drivers/hwmon/tmp103.c
+>=20
+> diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.tx=
+t b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> index bef86e5..fc944e0 100644
+> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+> @@ -83,5 +83,6 @@ stm,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
+>  taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interf=
+ace
+>  ti,tsc2003		I2C Touch-Screen Controller
+>  ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire =
+Serial Interface
+> +ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire =
+Serial Interface
+>  ti,tmp275		Digital Temperature Sensor
+>  winbond,wpct301		i2c trusted platform module (TPM)
+> diff --git a/Documentation/hwmon/tmp103 b/Documentation/hwmon/tmp103
 > new file mode 100644
-> index 0000000..bd614a6
+> index 0000000..ec00a15
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
-> @@ -0,0 +1,60 @@
-> +Freescale i.MX audio complex with ES8328 codec
+> +++ b/Documentation/hwmon/tmp103
+> @@ -0,0 +1,28 @@
+> +Kernel driver tmp103
+> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
 > +
-> +Required properties:
-> +- compatible : "fsl,imx-audio-es8328"
-> +- model : The user-visible name of this sound complex
-> +- clocks : A list of clocks required to run the codec at 22.5792 MHz
-
-The driver seems to acquire these by name.
-
-Please document the names you expect.
-
-[...]
-
-> +static int imx_es8328_probe(struct platform_device *pdev)
+> +Supported chips:
+> +  * Texas Instruments TMP103
+> +    Prefix: 'tmp103'
+> +    Addresses scanned: none
+> +    Product info and datasheet: http://www.ti.com/product/tmp103
+> +
+> +Author:
+> +	Heiko Schocher <hs@denx.de>
+> +
+> +Description
+> +-----------
+> +
+> +The TMP103 is a digital output temperature sensor in a four-ball
+> +wafer chip-scale package (WCSP). The TMP103 is capable of reading
+> +temperatures to a resolution of 1=C2=B0C. The TMP103 is specified fo=
+r
+> +operation over a temperature range of =E2=80=9340=C2=B0C to +125=C2=B0=
+C.
+> +
+> +Resolution: 8 Bits
+> +Accuracy: =C2=B11=C2=B0C Typ (=E2=80=9310=C2=B0C to +100=C2=B0C)
+> +
+> +The driver provides the common sysfs-interface for temperatures (see
+> +Documentation/hwmon/sysfs-interface under Temperatures).
+> +
+> +Please refer how to instantiate this driver:
+> +Documentation/i2c/instantiating-devices
+> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+> index 08531a1..c882d4b 100644
+> --- a/drivers/hwmon/Kconfig
+> +++ b/drivers/hwmon/Kconfig
+> @@ -1391,6 +1391,16 @@ config SENSORS_TMP102
+>  	  This driver can also be built as a module.  If so, the module
+>  	  will be called tmp102.
+> =20
+> +config SENSORS_TMP103
+> +	tristate "Texas Instruments TMP103"
+> +	depends on I2C
+> +	help
+> +	  If you say yes here you get support for Texas Instruments TMP103
+> +	  sensor chips.
+> +
+> +	  This driver can also be built as a module.  If so, the module
+> +	  will be called tmp103.
+> +
+>  config SENSORS_TMP401
+>  	tristate "Texas Instruments TMP401 and compatibles"
+>  	depends on I2C
+> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+> index 3dc0f02..cc0df1ef 100644
+> --- a/drivers/hwmon/Makefile
+> +++ b/drivers/hwmon/Makefile
+> @@ -135,6 +135,7 @@ obj-$(CONFIG_SENSORS_SMSC47M192)+=3D smsc47m192.o
+>  obj-$(CONFIG_SENSORS_AMC6821)	+=3D amc6821.o
+>  obj-$(CONFIG_SENSORS_THMC50)	+=3D thmc50.o
+>  obj-$(CONFIG_SENSORS_TMP102)	+=3D tmp102.o
+> +obj-$(CONFIG_SENSORS_TMP103)	+=3D tmp103.o
+>  obj-$(CONFIG_SENSORS_TMP401)	+=3D tmp401.o
+>  obj-$(CONFIG_SENSORS_TMP421)	+=3D tmp421.o
+>  obj-$(CONFIG_SENSORS_TWL4030_MADC)+=3D twl4030-madc-hwmon.o
+> diff --git a/drivers/hwmon/tmp103.c b/drivers/hwmon/tmp103.c
+> new file mode 100644
+> index 0000000..d133d09
+> --- /dev/null
+> +++ b/drivers/hwmon/tmp103.c
+> @@ -0,0 +1,207 @@
+> +/*
+> + * Texas Instruments TMP103 SMBus temperature sensor driver
+> + * Copyright (C) 2014 Heiko Schocher <hs@denx.de>
+> + *
+> + * Based on:
+> + * Texas Instruments TMP102 SMBus temperature sensor driver
+> + *
+> + * Copyright (C) 2010 Steven King <sfking@fdwdc.com>
+> + *
+> + * This program is free software; you can redistribute it and/or mod=
+ify
+> + * it under the terms of the GNU General Public License as published=
+ by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/init.h>
+> +#include <linux/slab.h>
+> +#include <linux/i2c.h>
+> +#include <linux/hwmon.h>
+> +#include <linux/hwmon-sysfs.h>
+> +#include <linux/err.h>
+> +#include <linux/mutex.h>
+> +#include <linux/device.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/regmap.h>
+> +
+> +#define	DRIVER_NAME "tmp103"
+> +
+> +#define TMP103_TEMP_REG		0x00
+> +#define TMP103_CONF_REG		0x01
+> +#define TMP103_TLOW_REG		0x02
+> +#define TMP103_THIGH_REG	0x03
+> +
+> +#define TMP103_CONF_M0		0x01
+> +#define TMP103_CONF_M1		0x02
+> +#define TMP103_CONF_LC		0x04
+> +#define TMP103_CONF_FL		0x08
+> +#define TMP103_CONF_FH		0x10
+> +#define TMP103_CONF_CR0		0x20
+> +#define TMP103_CONF_CR1		0x40
+> +#define TMP103_CONF_ID		0x80
+> +#define TMP103_CONF_SD		(TMP103_CONF_M0 | TMP103_CONF_M1)
+> +#define TMP103_CONF_SD_MASK	(TMP103_CONF_M0 | TMP103_CONF_M1)
+> +
+> +#define TMP103_CONFIG		(TMP103_CONF_CR1 | TMP103_CONF_M1)
+> +#define TMP103_CONFIG_MASK	(TMP103_CONF_CR0 | TMP103_CONF_CR1 | \
+> +				 TMP103_CONF_M0 | TMP103_CONF_M1)
+> +
+> +static inline int tmp103_reg_to_mc(s8 val)
 > +{
-> +       struct device_node *np = pdev->dev.of_node;
-> +       struct device_node *ssi_np, *codec_np;
-> +       struct platform_device *ssi_pdev;
-> +       struct imx_es8328_data *data;
-> +       int int_port, ext_port;
-> +       int ret;
-> +       struct device *dev = &pdev->dev;
+> +	return val * 1000;
+> +}
 > +
-> +       ret = of_property_read_u32(np, "mux-int-port", &int_port);
+> +static inline u8 tmp103_mc_to_reg(int val)
+> +{
+> +	return DIV_ROUND_CLOSEST(val, 1000);
+> +}
+> +
+> +static ssize_t tmp103_show_temp(struct device *dev,
+> +				struct device_attribute *attr,
+> +				char *buf)
+> +{
+> +	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
+> +	struct regmap *regmap =3D dev_get_drvdata(dev);
+> +	unsigned int regval;
+> +	int ret;
+> +
+> +	ret =3D regmap_read(regmap, sda->index, &regval);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return sprintf(buf, "%d\n", tmp103_reg_to_mc(regval));
+> +}
+> +
+> +static ssize_t tmp103_set_temp(struct device *dev,
+> +			       struct device_attribute *attr,
+> +			       const char *buf, size_t count)
+> +{
+> +	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
+> +	struct regmap *regmap =3D dev_get_drvdata(dev);
+> +	long val;
+> +	int ret;
+> +
+> +	if (kstrtol(buf, 10, &val) < 0)
+> +		return -EINVAL;
+> +
+> +	val =3D clamp_val(val, -55000, 127000);
+> +	ret =3D regmap_write(regmap, sda->index, tmp103_mc_to_reg(val));
+> +	return ret ? ret : count;
+> +}
+> +
+> +static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, tmp103_show_temp, NU=
+LL ,
+> +			  TMP103_TEMP_REG);
+> +
+> +static SENSOR_DEVICE_ATTR(temp1_min, S_IWUSR | S_IRUGO, tmp103_show_=
+temp,
+> +			  tmp103_set_temp, TMP103_TLOW_REG);
+> +
+> +static SENSOR_DEVICE_ATTR(temp1_max, S_IWUSR | S_IRUGO, tmp103_show_=
+temp,
+> +			  tmp103_set_temp, TMP103_THIGH_REG);
+> +
+> +static struct attribute *tmp103_attrs[] =3D {
+> +	&sensor_dev_attr_temp1_input.dev_attr.attr,
+> +	&sensor_dev_attr_temp1_min.dev_attr.attr,
+> +	&sensor_dev_attr_temp1_max.dev_attr.attr,
+> +	NULL
+> +};
+> +ATTRIBUTE_GROUPS(tmp103);
+> +
+> +static bool tmp103_regmap_is_volatile(struct device *dev, unsigned i=
+nt reg)
+> +{
+> +	return reg =3D=3D TMP103_TEMP_REG;
+> +}
+> +
+> +static struct regmap_config tmp103_regmap_config =3D {
+> +	.reg_bits =3D 8,
+> +	.val_bits =3D 8,
+> +	.max_register =3D TMP103_THIGH_REG,
+> +	.volatile_reg =3D tmp103_regmap_is_volatile,
+> +};
+> +
+> +static int tmp103_probe(struct i2c_client *client,
+> +			const struct i2c_device_id *id)
+> +{
+> +	struct device *dev =3D &client->dev;
+> +	struct device *hwmon_dev;
+> +	struct regmap *regmap;
+> +	int ret;
+> +
+> +	if (!i2c_check_functionality(client->adapter,
+> +				     I2C_FUNC_SMBUS_BYTE_DATA)) {
+> +		dev_err(&client->dev,
+> +			"adapter doesn't support SMBus byte transactions\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	regmap =3D devm_regmap_init_i2c(client, &tmp103_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		dev_err(dev, "failed to allocate register map\n");
+> +		return PTR_ERR(regmap);
+> +	}
+> +
+> +	ret =3D regmap_update_bits(regmap, TMP103_CONF_REG, TMP103_CONFIG_M=
+ASK,
+> +				 TMP103_CONFIG);
+> +	if (ret < 0) {
+> +		dev_err(&client->dev, "error writing config register\n");
+> +		return ret;
+> +	}
+> +
+> +	hwmon_dev =3D hwmon_device_register_with_groups(dev, client->name,
+> +						      regmap, tmp103_groups);
+> +	return PTR_ERR_OR_ZERO(hwmon_dev);
+> +}
+> +
+> +#ifdef CONFIG_PM
+> +static int tmp103_suspend(struct device *dev)
+> +{
+> +	struct regmap *regmap =3D dev_get_drvdata(dev);
+> +
+> +	return regmap_update_bits(regmap, TMP103_CONF_REG,
+> +				  TMP103_CONF_SD_MASK, 0);
+> +}
+> +
+> +static int tmp103_resume(struct device *dev)
+> +{
+> +	struct regmap *regmap =3D dev_get_drvdata(dev);
+> +
+> +	return regmap_update_bits(regmap, TMP103_CONF_REG,
+> +				  TMP103_CONF_SD_MASK, TMP103_CONF_SD);
+> +}
+> +
+> +static const struct dev_pm_ops tmp103_dev_pm_ops =3D {
+> +	.suspend	=3D tmp103_suspend,
+> +	.resume		=3D tmp103_resume,
+> +};
+> +
+> +#define TMP103_DEV_PM_OPS (&tmp103_dev_pm_ops)
+> +#else
+> +#define	TMP103_DEV_PM_OPS NULL
+> +#endif /* CONFIG_PM */
+> +
+> +static const struct i2c_device_id tmp103_id[] =3D {
+> +	{ DRIVER_NAME, 0 },
 
-I see int_port is defined as an int; please make it a u32 to match the
-prototype of of_property_read_u32.
+This seems to be used for compatible string matching. As such, I think
+it would make more sense to have the string in full here so as to
+discourage it from being changed arbitrarily in future.
 
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "mux-int-port missing or invalid\n");
-> +               return ret;
-> +       }
-> +       ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
-> +       if (ret) {
-> +               dev_err(&pdev->dev, "mux-ext-port missing or invalid\n");
-> +               return ret;
-> +       }
-
-As with int_port, please define ext_port as a u32.
+Otherwise, the dt part looks fine by me.
 
 Cheers,
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
