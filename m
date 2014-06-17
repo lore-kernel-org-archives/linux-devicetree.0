@@ -1,41 +1,41 @@
-From: Houcheng Lin <houcheng@gmail.com>
-Subject: Re: [RFC PATCH] gpio: Add a defer reset object to send board specific reset
-Date: Wed, 18 Jun 2014 00:01:08 +0800
-Message-ID: <CAL8JtxB3DoWRwox4zn5mkP6UjejPWUYxzmuxZMLPxyMmPW8MNg@mail.gmail.com>
-References: <1402189798-7665-1-git-send-email-houcheng@gmail.com>
-	<CAPDyKFpqb=pSR0ZKXdgqJOAWioC+x2OqA7nVR4Q74iVQPfqXMg@mail.gmail.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org
+	boards
+Date: Tue, 17 Jun 2014 17:01:19 +0100
+Message-ID: <20140617160119.GE3705@n2100.arm.linux.org.uk>
+References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com> <20140617090931.GB3705@n2100.arm.linux.org.uk> <20140617125831.GI4173@beef> <20140617131522.GD3705@n2100.arm.linux.org.uk> <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFpqb=pSR0ZKXdgqJOAWioC+x2OqA7nVR4Q74iVQPfqXMg@mail.gmail.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Matt Porter <mporter@linaro.org>, Jason Kridner <jkridner@gmail.com>, beagleboard@googlegroups.com, Robert Nelson <robertcnelson@gmail.com>, devicetree@vger.kernel.org, OMAP List <linux-omap@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@secretlab.ca>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, Jun 17, 2014 at 04:32:11PM +0300, Pantelis Antoniou wrote:
+> The complexity is absolutely required, and it has nothing to do with
+> beaglebone capes.
+> 
+> The fact of the matter is that reconfigurable hardware is here, on
+> shipping system, and we, as the linux kernel community have to make
+> sure it works, and that it works in a sane way.
 
-2014-06-16 21:18 GMT+08:00 Ulf Hansson <ulf.hansson@linaro.org>:
->
-> If I understand correct, you need a per device reset functionality?
-> And obviously the reset implementation is board/SoC specific.
->
-> We have the "Reset Controller framework", drivers/reset. Could this help you?
->
-> Kind regards
-> Ulf Hansson
->
+Right, so looking back in the git history, this project has been going
+on for... at least four years?  Probably longer than the length of time
+that we've been converting ARM to DT.  At no point during that has anyone
+brought up the issue of DT being dynamic, so none of the drivers which
+we have been converting caters for this.
 
-Thanks for your information. The defer reset object is to send
-board specific reset signal and this signal has to be sent after
-some device is intialized. For example, a USB device may need extra
-reset signal after root hub is initialized.
+Isn't this a bit of a missed opportunity, if this is a direction that
+OF wishes to head towards?
 
-As machine init code is run before driver init-call, can not add reset
-sending here if it depends on a specific device's initialization.
+Wouldn't it have been relevant to the discussion at kernel summit too,
+concerning DRM/v4l2/componentised systems?  What if someone comes along
+tomorrow with part of their multimedia based system inside a FPGA
+which they program up at runtime?
 
-Also it provides a DT node that helps both HW/SW developer to use this
-feature.
-
-Best regards,
-Houcheng Lin
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
