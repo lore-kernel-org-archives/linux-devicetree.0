@@ -1,77 +1,71 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v2 2/2] ata: Fix the dma state machine lockup for the
- IDENTIFY DEVICE PIO mode command.
-Date: Tue, 17 Jun 2014 12:31:44 -0400
-Message-ID: <20140617163144.GJ31819@htj.dyndns.org>
-References: <1402911336-31788-1-git-send-email-stripathi@apm.com>
- <1402911336-31788-3-git-send-email-stripathi@apm.com>
+From: Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Unifying cape overlays into boot .dtb for
+ BeagleBoard.org boards
+Date: Tue, 17 Jun 2014 12:33:01 -0400
+Message-ID: <CA+T6QP=wShk2pT+znmucF54qseF78MewYaY09UR0qsHv26eVWA@mail.gmail.com>
+References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
+	<CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com>
+	<20140617090931.GB3705@n2100.arm.linux.org.uk>
+	<20140617125831.GI4173@beef>
+	<20140617131522.GD3705@n2100.arm.linux.org.uk>
+	<C3DA6AFC-2784-4A41-BC72-EF25B2B03B41@antoniou-consulting.com>
+	<20140617160119.GE3705@n2100.arm.linux.org.uk>
+Reply-To: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402911336-31788-3-git-send-email-stripathi@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <beagleboard+bncBDELZWNUYMHBBPO3QGOQKGQEJ76QVVA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140617160119.GE3705-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+List-Post: <http://groups.google.com/group/beagleboard/post>, <mailto:beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:beagleboard+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/beagleboard>
+Sender: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:beagleboard+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:googlegroups-manage+1035534660134+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 16, 2014 at 03:05:36PM +0530, Suman Tripathi wrote:
-> This patch fixes the dma state machine lockup due to the IDENTIFY DEVICE PIO mode command. The controller is unable to clear the BSY bit after receiving the PIO setup FIS and results the dma state machine to go into the CMFatalErrorUpdate state resulting in the dma state machine lockup.
+On Tue, Jun 17, 2014 at 12:01 PM, Russell King - ARM Linux
+<linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
+> On Tue, Jun 17, 2014 at 04:32:11PM +0300, Pantelis Antoniou wrote:
+>> The complexity is absolutely required, and it has nothing to do with
+>> beaglebone capes.
+>>
+>> The fact of the matter is that reconfigurable hardware is here, on
+>> shipping system, and we, as the linux kernel community have to make
+>> sure it works, and that it works in a sane way.
+>
+> Right, so looking back in the git history, this project has been going
+> on for... at least four years?  Probably longer than the length of time
+> that we've been converting ARM to DT.  At no point during that has anyone
+> brought up the issue of DT being dynamic, so none of the drivers which
+> we have been converting caters for this.
+>
+> Isn't this a bit of a missed opportunity, if this is a direction that
+> OF wishes to head towards?
 
-Ditto on description formatting and SOB.  Also, please describe why
-this patch is removing the restart from read_id.
+I believe it absolutely is a missed opportunity, but that doesn't mean
+it isn't still needed moving forward. We've been using overlays
+successfully in the BeagleBoard.org community on BeagleBone Black for
+over a year now. It is just a shame we're still shipping a 3.8 kernel.
+This universal overlay provides hope to support most add-ons, but it
+doesn't address the dynamic nature of some add-on hardware. It is
+certainly my hope that this effort doesn't derail the overlay
+development work.
 
-> +int ahci_complete_pio_cmd(struct ata_port *ap, u32 cmd_done)
-> +{
-> +	struct ata_queued_cmd *qc;
-> +
-> +	while (cmd_done) {
-> +		unsigned int tag = __ffs(cmd_done);
-> +
-> +		qc = ata_qc_from_tag(ap, tag);
-> +		if (qc) {
-> +			/*
-> +			 * For the IDENTIFY DEVICE PIO command,
-> +			 * some controller's unable to clear the BSY bit after
-> +			 * receiving the PIO Setup FIS from device resulting
-> +			 * the DMA state to go into CMFatalErrorUpdate state.
-> +			 * So need to restart the dma engine to get the
-> +			 * controller out of this state.
-> +			 */
-> +			if (qc->tf.command == ATA_CMD_ID_ATA)
-> +				ahci_restart_engine(ap);
-> +		}
-> +		cmd_done &= ~(1 << tag);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static void ahci_error_intr(struct ata_port *ap, u32 irq_stat)
->  {
->  	struct ahci_host_priv *hpriv = ap->host->private_data;
-> @@ -1778,6 +1804,14 @@ static void ahci_handle_port_interrupt(struct ata_port *ap,
->  	}
-> 
-> 
-> +	/* Due to HW errata, some controllers need special handling
-> +	 * of the completion of some PIO commands.
-> +	 */
-> +	if (hpriv->flags & AHCI_HFLAG_BROKEN_PIO_CMD) {
-> +		u32 cmd_done = ap->qc_active ^ qc_active;
-> +		ahci_complete_pio_cmd(ap, cmd_done);
-> +	}
-
-Heh, I feel this is a bit too specific to bury in libahci.c and don't
-really like adding this sort workaround in the hot path for everybody.
-Then again, ahci interrupt handler isn't exactly structured in a way
-which is easy to wrap and create a custom one.
-
-Does this have to happen from interrupt path tho?  Can't you just
-record the last protocol executed and restart the engine on the next
-qc_issue?
-
-Thanks.
+>
+> Wouldn't it have been relevant to the discussion at kernel summit too,
+> concerning DRM/v4l2/componentised systems?  What if someone comes along
+> tomorrow with part of their multimedia based system inside a FPGA
+> which they program up at runtime?
+>
+> --
+> FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+> improving, and getting towards what was expected from it.
 
 -- 
-tejun
+For more options, visit http://beagleboard.org/discuss
+--- 
+You received this message because you are subscribed to the Google Groups "BeagleBoard" group.
+To unsubscribe from this group and stop receiving emails from it, send an email to beagleboard+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
