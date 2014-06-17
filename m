@@ -1,102 +1,59 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: [PATCH v6 2/4] Documentation: dts: Add bindings for APM X-Gene SoC ethernet driver
-Date: Mon, 16 Jun 2014 17:18:44 -0700
-Message-ID: <1402964326-11147-3-git-send-email-isubramanian@apm.com>
-References: <1402964326-11147-1-git-send-email-isubramanian@apm.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1402964326-11147-1-git-send-email-isubramanian@apm.com>
-Sender: netdev-owner@vger.kernel.org
-To: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jcm@redhat.com, patches@apm.com, Iyappan Subramanian <isubramanian@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCHv6 0/3] mfd: sec-core: Add support S2MPU02 PMIC device
+Date: Tue, 17 Jun 2014 09:27:07 +0900
+Message-ID: <1402964830-24890-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org
+Cc: sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds documentation for APM X-Gene SoC ethernet DTS binding.
+This patchset add Samsung S2MPU02 PMIC device driver in exiting S2MPS11 PMIC
+driver because S2MPU02 has a little different between S2MPU02 and S2MPS1x.
+The S2MPU02 PMIC has LDO[1-28] and BUCK[1-7] regulators.
 
-Signed-off-by: Iyappan Subramanian <isubramanian@apm.com>
-Signed-off-by: Ravi Patel <rapatel@apm.com>
-Signed-off-by: Keyur Chudgar <kchudgar@apm.com>
----
- .../devicetree/bindings/net/apm-xgene-enet.txt     | 72 ++++++++++++++++++++++
- 1 file changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+Changes from v5:
+- Remove the duplicate code about mfd_add_devices() and regmap_add_irq_chip()
+- Add acked message by Lee Jones for mfd patch on patch2
 
-diff --git a/Documentation/devicetree/bindings/net/apm-xgene-enet.txt b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-new file mode 100644
-index 0000000..3e2a295
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/apm-xgene-enet.txt
-@@ -0,0 +1,72 @@
-+APM X-Gene SoC Ethernet nodes
-+
-+Ethernet nodes are defined to describe on-chip ethernet interfaces in
-+APM X-Gene SoC.
-+
-+Required properties:
-+- compatible:		Should be "apm,xgene-enet"
-+- reg: Address and length of the register set for the device. It contains the
-+       information of registers in the same order as described by reg-names
-+- reg-names: Should contain the register set names
-+  "enet_csr":		Ethernet control and status register address space
-+  "ring_csr":		Descriptor ring control and status register address space
-+  "ring_cmd":		Descriptor ring command register address space
-+- interrupts:		Ethernet main interrupt
-+- clocks:		Reference to the clock entry.
-+- local-mac-address:	MAC address assigned to this device
-+- phy-connection-type:	Interface type between ethernet device and PHY device
-+- phy-handle:		Reference to a PHY node connected to this device
-+
-+- mdio: 		Device tree subnode with the following required
-+			properties:
-+
-+	- compatible: Must be "apm,xgene-mdio".
-+	- #address-cells: Must be <1>.
-+	- #size-cells: Must be <0>.
-+
-+	For the phy on the mdio bus, there must be a node with the following
-+	fields:
-+
-+	- compatible: PHY identifier.  Please refer ./phy.txt for the format.
-+	- reg: The ID number for the phy.
-+
-+Optional properties:
-+- status		: Should be "ok" or "disabled" for enabled/disabled.
-+			  Default is "ok".
-+
-+
-+Example:
-+	menetclk: menetclk {
-+		compatible = "apm,xgene-device-clock";
-+		clock-output-names = "menetclk";
-+		status = "ok";
-+	};
-+
-+	menet: ethernet@17020000 {
-+		compatible = "apm,xgene-enet";
-+		status = "disabled";
-+		reg = <0x0 0x17020000 0x0 0xd100>,
-+		      <0x0 0X17030000 0x0 0X400>,
-+		      <0x0 0X10000000 0x0 0X200>;
-+		reg-names = "enet_csr", "ring_csr", "ring_cmd";
-+		interrupts = <0x0 0x3c 0x4>;
-+		clocks = <&menetclk 0>;
-+		local-mac-address = [00 01 73 00 00 01];
-+		phy-connection-type = "rgmii";
-+		phy-handle = <&menetphy>;
-+		mdio {
-+			compatible = "apm,xgene-mdio";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			menetphy: menetphy@3 {
-+				compatible = "ethernet-phy-id001c.c915";
-+				reg = <0x3>;
-+			};
-+
-+		};
-+	};
-+
-+/* Board-specific peripheral configurations */
-+&menet {
-+        status = "ok";
-+};
+Changes from v4:
+- This patchset is rebased on 'Linux 3.16-rc1'.
+
+Changes from v3:
+- Fix bug of s2mps14_regulator_set_suspend_disable()
+
+Changes from v2:
+- Change patchset name
+- Remove un-necessary switch statement
+- Add acked message by Mark Brown for regulator patch
+- Add reviewed message by Krzysztof Kozlowski for all patchs
+
+Changes from v1:
+- Fix typo about patch description
+- Use existing suspend_state variable instead of defining new variable for S2MPU02
+- Remove unnecessary parameter of s2mps11_pmic_dt_parse()
+- Remove unfit comment of s2mpu02.h file
+- Both patch2 and patch3 should be squashed on patch2
+
+Chanwoo Choi (3):
+  mfd: sec-core: Add support for S2MPU02 device
+  regulator: s2mps11: Add support S2MPU02 regulator device
+  dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
+
+ Documentation/devicetree/bindings/mfd/s2mps11.txt |   7 +-
+ drivers/mfd/sec-core.c                            |  71 ++++-
+ drivers/mfd/sec-irq.c                             | 110 ++++++--
+ drivers/regulator/s2mps11.c                       | 321 ++++++++++++++++++++--
+ include/linux/mfd/samsung/core.h                  |   1 +
+ include/linux/mfd/samsung/irq.h                   |  24 ++
+ include/linux/mfd/samsung/s2mpu02.h               | 201 ++++++++++++++
+ 7 files changed, 682 insertions(+), 53 deletions(-)
+ create mode 100644 include/linux/mfd/samsung/s2mpu02.h
+
 -- 
-1.9.1
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
