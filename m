@@ -1,52 +1,126 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v2 05/20] clk: sunxi: Support factor clocks
- with N multiplier factor starting from 1
-Date: Tue, 17 Jun 2014 16:23:02 -0500
-Message-ID: <CAL_JsqLyXwQzd9Oxj9pb49fWqzMjV9=1Nx3i+9bN-rwfEMqwcQ@mail.gmail.com>
-References: <1403016777-15121-1-git-send-email-wens@csie.org> <1403016777-15121-6-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBD62P6P6EQIMXY4CTUCRUBA4RSHJG-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1403016777-15121-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+From: Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Subject: [3.13.y.z extended stable] Patch "mips: dts: Fix missing device_type="memory" property in memory nodes" has been added to staging queue
+Date: Tue, 17 Jun 2014 14:42:25 -0700
+Message-ID: <1403041345-10057-1-git-send-email-kamal@canonical.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, kernel-team-nLRlyDuq1AZFpShjVBNYrg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 9:52 AM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> The PLLs on newer Allwinner SoC's, such as the A31 and A23, have a
-> N multiplier factor that starts from 1, not 0.
->
-> This patch adds an option to the clock driver's config data structures
-> to define the difference.
->
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/clk/sunxi/clk-factors.c | 5 ++++-
->  drivers/clk/sunxi/clk-factors.h | 1 +
->  2 files changed, 5 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/clk/sunxi/clk-factors.c b/drivers/clk/sunxi/clk-factors.c
-> index 3806d97..399cf4d 100644
-> --- a/drivers/clk/sunxi/clk-factors.c
-> +++ b/drivers/clk/sunxi/clk-factors.c
-> @@ -62,7 +62,10 @@ static unsigned long clk_factors_recalc_rate(struct clk_hw *hw,
->                 p = FACTOR_GET(config->pshift, config->pwidth, reg);
->
->         /* Calculate the rate */
-> -       rate = (parent_rate * n * (k + 1) >> p) / (m + 1);
-> +       if (config->n_from_one)
-> +               rate = (parent_rate * (n + 1) * (k + 1) >> p) / (m + 1);
-> +       else
-> +               rate = (parent_rate * n * (k + 1) >> p) / (m + 1);
+This is a note to let you know that I have just added a patch titled
 
-This can be simplified and support any base with:
+    mips: dts: Fix missing device_type="memory" property in memory nodes
 
-rate = (parent_rate * (n + config->n_base) * (k + 1) >> p) / (m + 1);
+to the linux-3.13.y-queue branch of the 3.13.y.z extended stable tree 
+which can be found at:
+
+ http://kernel.ubuntu.com/git?p=ubuntu/linux.git;a=shortlog;h=refs/heads/linux-3.13.y-queue
+
+This patch is scheduled to be released in version 3.13.11.4.
+
+If you, or anyone else, feels it should not be added to this tree, please 
+reply to this email.
+
+For more information about the 3.13.y.z tree, see
+https://wiki.ubuntu.com/Kernel/Dev/ExtendedStable
+
+Thanks.
+-Kamal
+
+------
+
+>From c76970fa697ab9fd26534932a7a59c3a1b2a766f Mon Sep 17 00:00:00 2001
+From: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date: Thu, 17 Apr 2014 18:42:00 +0100
+Subject: mips: dts: Fix missing device_type="memory" property in memory nodes
+
+commit dfc44f8030653b345fc6fb337558c3a07536823f upstream.
+
+A few platforms lack a 'device_type = "memory"' for their memory
+nodes, relying on an old ppc quirk in order to discover its memory.
+Add the missing data so that all parsing code can find memory nodes
+correctly.
+
+Signed-off-by: Leif Lindholm <leif.lindholm-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-mips-6z/3iImG2C8G8FEW9MqTrA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Acked-by: John Crispin <blogic-p3rKhJxN3npAfugRpC6u6w@public.gmane.org>
+Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Signed-off-by: Kamal Mostafa <kamal-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+---
+ arch/mips/lantiq/dts/easy50712.dts    | 1 +
+ arch/mips/ralink/dts/mt7620a_eval.dts | 1 +
+ arch/mips/ralink/dts/rt2880_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3052_eval.dts  | 1 +
+ arch/mips/ralink/dts/rt3883_eval.dts  | 1 +
+ 5 files changed, 5 insertions(+)
+
+diff --git a/arch/mips/lantiq/dts/easy50712.dts b/arch/mips/lantiq/dts/easy50712.dts
+index fac1f5b..143b8a3 100644
+--- a/arch/mips/lantiq/dts/easy50712.dts
++++ b/arch/mips/lantiq/dts/easy50712.dts
+@@ -8,6 +8,7 @@
+ 	};
+
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+
+diff --git a/arch/mips/ralink/dts/mt7620a_eval.dts b/arch/mips/ralink/dts/mt7620a_eval.dts
+index 35eb874..709f581 100644
+--- a/arch/mips/ralink/dts/mt7620a_eval.dts
++++ b/arch/mips/ralink/dts/mt7620a_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink MT7620A evaluation board";
+
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+
+diff --git a/arch/mips/ralink/dts/rt2880_eval.dts b/arch/mips/ralink/dts/rt2880_eval.dts
+index 322d700..0a685db 100644
+--- a/arch/mips/ralink/dts/rt2880_eval.dts
++++ b/arch/mips/ralink/dts/rt2880_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT2880 evaluation board";
+
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x8000000 0x2000000>;
+ 	};
+
+diff --git a/arch/mips/ralink/dts/rt3052_eval.dts b/arch/mips/ralink/dts/rt3052_eval.dts
+index 0ac73ea..ec9e9a0 100644
+--- a/arch/mips/ralink/dts/rt3052_eval.dts
++++ b/arch/mips/ralink/dts/rt3052_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3052 evaluation board";
+
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+
+diff --git a/arch/mips/ralink/dts/rt3883_eval.dts b/arch/mips/ralink/dts/rt3883_eval.dts
+index 2fa6b33..e8df21a 100644
+--- a/arch/mips/ralink/dts/rt3883_eval.dts
++++ b/arch/mips/ralink/dts/rt3883_eval.dts
+@@ -7,6 +7,7 @@
+ 	model = "Ralink RT3883 evaluation board";
+
+ 	memory@0 {
++		device_type = "memory";
+ 		reg = <0x0 0x2000000>;
+ 	};
+
+--
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
