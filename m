@@ -1,60 +1,55 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v2 4/4] brcmfmac: Fix OOB interrupt not
- working for BCM43362
-Date: Tue, 17 Jun 2014 18:37:05 +0200
-Message-ID: <53A06EB1.4040805@broadcom.com>
-References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-5-git-send-email-hdegoede@redhat.com> <53A02B5A.3070409@broadcom.com> <53A05168.9010604@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH 2/2] ARM: dts: Add cros_ec to exynos5420-peach-pit and
+ exynos5800-peach-pi
+Date: Tue, 17 Jun 2014 18:37:04 +0200
+Message-ID: <53A06EB0.909@collabora.co.uk>
+References: <1402683213-23120-1-git-send-email-dianders@chromium.org> <1402683213-23120-2-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Return-path: <linux-sunxi+bncBCKLZOXH5AIBBOO5QGOQKGQEDYH564Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <53A05168.9010604-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402683213-23120-2-git-send-email-dianders@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, broonie@kernel.org, sjg@chromium.org, olof@lixom.net, ch.naveen@samsung.com, swarren@wwwdotorg.org, khilman@linaro.org, ajaynumb@gmail.com, rahul.sharma@samsung.com, tushar.b@samsung.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 17-06-14 16:32, Hans de Goede wrote:
-> Hi,
->
-> On 06/17/2014 01:49 PM, Arend van Spriel wrote:
->> On 16-06-14 19:56, Hans de Goede wrote:
->>> It has taken me a long long time to get the OOB interrupt working on the
->>> AP6210 sdio wifi/bt module found on various Allwinner A20 boards. In the
->>> end I found these magic register pokes in the cubietruck kernel tree:
->>> https://github.com/cubieboard2/linux-sunxi/commit/7f08ba395617d17e7a711507503d89a50406fe7a
->>>
->>> I'm not entirely sure if this specific to the AP6210 module, or if this
->>> should be done for all BCM43362 sdio devices.
->>
->> Hi Hans,
->>
->> I was still not sure about this one so I asked around. Apart from the nvram settings I emailed earlier one more is needed:
->>
->> sd_gpout=1
->> sd_oobonly=1
->> sd_gpval=1
->> *muxenab=0x11*
->>
->> Could you give that a try?
->
-> I seriously doubt that is going to do anything at all, all 4 these keywords do not
-> show up when running strings on brcmfmac43362-sdio.bin, where as all the
-> keywords used in the brcmfmac43362-sdio.txt shipped with the android on ap6210
-> equipped boards do show up, confirming that the keywords are encoded in plain text
-> in the firmware file.
->
-> Let me know if want me to give it a try anyways and I'll do so.
->
-> Perhaps these keywords need a newer firmware version then the one in the
-> linux-firmware repository ?
+On 06/13/2014 08:13 PM, Doug Anderson wrote:
+> This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
+> including:
+> * The keyboard
+> * The i2c tunnel
+> * The tps65090 under the i2c tunnel
+> * The battery under the i2c tunnel
+> 
+> To add extra motivation, it should be noted that tps65090 is one of
+> the things needed to get display-related FETs turned on for pit and
+> pi.
+> 
+> Note that this relies on a few outstanding changes:
+> * Needs "cros-ec-keyboard.dtsi" in order to compile properly.  See
+>   (ARM: dts: Create a cros-ec-keyboard fragment) at
+>   <https://patchwork.kernel.org/patch/4297451/>.
+> * Needs (mfd: cros_ec: spi: Fix end of transfer on devices with no
+>   spi-msg-delay) from this series to work properly.
+> * Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
+>   (spi: s3c64xx: for DT platofrms always get the chipselect info from
+>   DT node) to work properly and match the documented bindings.  See
+>   <https://patchwork.kernel.org/patch/4346701/> and
+>   <https://patchwork.kernel.org/patch/4346711/>
+> 
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> ---
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 146 +++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 146 +++++++++++++++++++++++++++++
+>  2 files changed, 292 insertions(+)
+> 
 
-I will checkout the firmware release and see what is built there.
+After applying all the dependencies and this patch, I see that cros-ec-spi
+driver is probed and also the keyboard is working on my Peach pit when testing
+with: $ evtest /dev/input/event0
 
-Thanks,
-Arend
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+
+Best regards,
+Javier
