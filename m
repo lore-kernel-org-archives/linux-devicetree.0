@@ -1,87 +1,248 @@
-From: Varun Sethi <Varun.Sethi-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: RE: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Tue, 17 Jun 2014 11:21:43 +0000
-Message-ID: <32165315f0b84be9948f489fd87bf6a9@BL2PR03MB468.namprd03.prod.outlook.com>
-References: <5288123.eXagyPAxNq@wuerfel>
-	<20140602104104.GD3855@e103592.cambridge.arm.com>
-	<20140604143509.GF28484@ulmo> <20140604164132.GF6644@arm.com>
-	<07321368d15d4ad9928ebb83af87e401@DM2PR03MB479.namprd03.prod.outlook.com>
-	<20140616152739.GS16758@arm.com>
-	<8b0492b4697943a0b1f276ef42cc8223@DM2PR03MB352.namprd03.prod.outlook.com>
-	<20140616170416.GA16758@arm.com>
-	<419e67f783524d208ab3be16bcd94bd9@DM2PR03MB352.namprd03.prod.outlook.com>
-	<0587e1f4894546398be0798d2bc2c84f@BL2PR03MB468.namprd03.prod.outlook.com>
-	<20140617104304.GD13808@arm.com>
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v3 1/2] ASoC: add es8328 codec driver
+Date: Tue, 17 Jun 2014 19:36:36 +0800
+Message-ID: <53A02844.9050701@kosagi.com>
+References: <1402997571-1255-1-git-send-email-xobs@kosagi.com> <1402997571-1255-2-git-send-email-xobs@kosagi.com> <20140617104639.GD26741@opensource.wolfsonmicro.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140617104304.GD13808-5wv7dgnIgG8@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Stuart Yoder <stuart.yoder-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140617104639.GD26741-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/17/14 18:46, Charles Keepax wrote:
+> On Tue, Jun 17, 2014 at 05:32:50PM +0800, Sean Cross wrote:
+>> Add a codec driver for the Everest ES8328.  It supports two separate audio
+>> outputs and two separate audio inputs.
+>>
+>> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/sound/es8328.txt |  18 +
+>>  sound/soc/codecs/Kconfig                           |  13 +
+>>  sound/soc/codecs/Makefile                          |   6 +
+>>  sound/soc/codecs/es8328-i2c.c                      |  55 ++
+>>  sound/soc/codecs/es8328-spi.c                      |  44 ++
+>>  sound/soc/codecs/es8328.c                          | 625 +++++++++++++++++++++
+>>  sound/soc/codecs/es8328.h                          | 313 +++++++++++
+>>  7 files changed, 1074 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+>>  create mode 100644 sound/soc/codecs/es8328-i2c.c
+>>  create mode 100644 sound/soc/codecs/es8328-spi.c
+>>  create mode 100644 sound/soc/codecs/es8328.c
+>>  create mode 100644 sound/soc/codecs/es8328.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/sound/es8328.txt b/Documentation/devicetree/bindings/sound/es8328.txt
+>> new file mode 100644
+>> index 0000000..488bc32
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/sound/es8328.txt
+>> @@ -0,0 +1,18 @@
+>> +Everest ES8328 audio CODEC
+>> +
+>> +This device supports both I2C and SPI (configured with pin strapping
+>> +on the board).
+>> +
+>> +Required properties:
+>> +
+>> +  - compatible : "es8328"
+> I suspect the vendor prefix will be mandatory.
+>
+>> +
+>> +  - reg : the I2C address of the device for I2C, the chip select
+>> +          number for SPI.
+>> +
+>> +Example:
+>> +
+>> +codec: es8328@11 {
+>> +	compatible = "es8328";
+>> +	reg = <0x11>;
+>> +};
+>> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
+>> index cbfa1e1..6a509e3 100644
+>> --- a/sound/soc/codecs/Kconfig
+>> +++ b/sound/soc/codecs/Kconfig
+>> @@ -56,6 +56,8 @@ config SND_SOC_ALL_CODECS
+>>  	select SND_SOC_DA732X if I2C
+>>  	select SND_SOC_DA9055 if I2C
+>>  	select SND_SOC_BT_SCO
+>> +	select SND_SOC_ES8328_SPI if SPI_MASTER
+>> +	select SND_SOC_ES8328_I2C if I2C
+>>  	select SND_SOC_ISABELLE if I2C
+>>  	select SND_SOC_JZ4740_CODEC
+>>  	select SND_SOC_LM4857 if I2C
+>> @@ -396,6 +398,17 @@ config SND_SOC_DMIC
+>>  config SND_SOC_HDMI_CODEC
+>>         tristate "HDMI stub CODEC"
+>>  
+>> +config SND_SOC_ES8328
+>> +	tristate "Everest Semi ES8328 CODEC"
+>> +
+>> +config SND_SOC_ES8328_I2C
+>> +	tristate
+>> +	select SND_SOC_ES8328
+>> +
+>> +config SND_SOC_ES8328_SPI
+>> +	tristate
+>> +	select SND_SOC_ES8328
+>> +
+>>  config SND_SOC_ISABELLE
+>>          tristate
+>>  
+>> diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
+>> index be3377b..66e7859 100644
+>> --- a/sound/soc/codecs/Makefile
+>> +++ b/sound/soc/codecs/Makefile
+>> @@ -48,6 +48,9 @@ snd-soc-da732x-objs := da732x.o
+>>  snd-soc-da9055-objs := da9055.o
+>>  snd-soc-bt-sco-objs := bt-sco.o
+>>  snd-soc-dmic-objs := dmic.o
+>> +snd-soc-es8328-objs := es8328.o
+>> +snd-soc-es8328-i2c-objs := es8328-i2c.o
+>> +snd-soc-es8328-spi-objs := es8328-spi.o
+>>  snd-soc-isabelle-objs := isabelle.o
+>>  snd-soc-jz4740-codec-objs := jz4740.o
+>>  snd-soc-l3-objs := l3.o
+>> @@ -213,6 +216,9 @@ obj-$(CONFIG_SND_SOC_DA732X)	+= snd-soc-da732x.o
+>>  obj-$(CONFIG_SND_SOC_DA9055)	+= snd-soc-da9055.o
+>>  obj-$(CONFIG_SND_SOC_BT_SCO)	+= snd-soc-bt-sco.o
+>>  obj-$(CONFIG_SND_SOC_DMIC)	+= snd-soc-dmic.o
+>> +obj-$(CONFIG_SND_SOC_ES8328)	+= snd-soc-es8328.o
+>> +obj-$(CONFIG_SND_SOC_ES8328_I2C)+= snd-soc-es8328-i2c.o
+>> +obj-$(CONFIG_SND_SOC_ES8328_SPI)+= snd-soc-es8328-spi.o
+>>  obj-$(CONFIG_SND_SOC_ISABELLE)	+= snd-soc-isabelle.o
+>>  obj-$(CONFIG_SND_SOC_JZ4740_CODEC)	+= snd-soc-jz4740-codec.o
+>>  obj-$(CONFIG_SND_SOC_L3)	+= snd-soc-l3.o
+>> diff --git a/sound/soc/codecs/es8328-i2c.c b/sound/soc/codecs/es8328-i2c.c
+>> new file mode 100644
+>> index 0000000..0bb02d3
+>> --- /dev/null
+>> +++ b/sound/soc/codecs/es8328-i2c.c
+>> @@ -0,0 +1,55 @@
+>> +/*
+>> + * es8328-i2c.c  --  ES8328 ALSA SoC I2C Audio driver
+>> + *
+>> + * Copyright 2014 Sutajio Ko-Usagi PTE LTD
+>> + *
+>> + * Author: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/i2c.h>
+>> +#include <linux/regmap.h>
+>> +
+>> +#include <sound/soc.h>
+>> +
+>> +#include "es8328.h"
+>> +
+>> +static const struct i2c_device_id es8328_id[] = {
+>> +	{ "es8328", 0 },
+>> +	{ }
+>> +};
+>> +MODULE_DEVICE_TABLE(i2c, es8328_id);
+>> +
+>> +static int es8328_i2c_probe(struct i2c_client *i2c,
+>> +			    const struct i2c_device_id *id)
+>> +{
+>> +	struct regmap_config config;
+>> +
+>> +	config = es8328_regmap_config;
+>> +	return es8328_probe(&i2c->dev, devm_regmap_init_i2c(i2c, &config));
+>> +}
+>> +
+>> +static int es8328_i2c_remove(struct i2c_client *i2c)
+>> +{
+>> +	snd_soc_unregister_codec(&i2c->dev);
+>> +	return 0;
+>> +}
+>> +
+>> +static struct i2c_driver es8328_i2c_driver = {
+>> +	.driver = {
+>> +		.name = "es8328",
+>> +	},
+>> +	.probe    = es8328_i2c_probe,
+>> +	.remove   = es8328_i2c_remove,
+>> +	.id_table = es8328_id,
+>> +};
+>> +
+>> +module_i2c_driver(es8328_i2c_driver);
+>> +
+>> +MODULE_DESCRIPTION("ASoC ES8328 audio CODEC I2C driver");
+>> +MODULE_AUTHOR("Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>");
+>> +MODULE_LICENSE("GPL");
+>> diff --git a/sound/soc/codecs/es8328-spi.c b/sound/soc/codecs/es8328-spi.c
+>> new file mode 100644
+>> index 0000000..28433e7
+>> --- /dev/null
+>> +++ b/sound/soc/codecs/es8328-spi.c
+>> @@ -0,0 +1,44 @@
+>> +/*
+>> + * es8328.c  --  ES8328 ALSA SoC SPI Audio driver
+>> + *
+>> + * Copyright 2014 Sutajio Ko-Usagi PTE LTD
+>> + *
+>> + * Author: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include <linux/module.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/spi/spi.h>
+>> +#include <sound/soc.h>
+>> +#include "es8328.h"
+>> +
+>> +static int es8328_spi_probe(struct spi_device *spi)
+>> +{
+>> +	struct regmap_config config;
+>> +
+>> +	config = es8328_regmap_config;
+>> +	return es8328_probe(&spi->dev, devm_regmap_init_spi(spi, &config));
+>> +}
+>> +
+>> +static int es8328_spi_remove(struct spi_device *spi)
+>> +{
+>> +	snd_soc_unregister_codec(&spi->dev);
+>> +	return 0;
+>> +}
+>> +
+>> +static struct spi_driver es8328_spi_driver = {
+>> +	.driver = {
+>> +		.name	= "es8328",
+>> +	},
+>> +	.probe	= es8328_spi_probe,
+>> +	.remove	= es8328_spi_remove,
+>> +};
+> Your of_match_table seems to have gone missing since the last
+> version I suspect that is why you had trouble with the vendor
+> prefix. Ditto for the I2C as well.
+I was basing the driver off the 6c3d713e6d32706999689e379a9098afb4cd8a2c
+commit mentioned in the previous comment.  In that commit, there is an
+id_table in ad193x-i2c.c.  ad193x.c doesn't have an of_match_table,
+which makes sense because I'm trying to load the I2C device.
+
+I see now that of_match_table is distinct from the id_table.  I assumed
+the I2C bus would walk the i2c_driver's id_table and load it that way.
+
+How should this work, then?  Should I specify the same "everest,es8328"
+compatible array to both the I2C and the SPI driver, and let the
+different buses sort it out?  Or should I rename one to, say,
+"everest,es8328-i2c" and the other to "everest,es8328-spi"?
+
+Also, for my own curiosity, what is the difference between the I2C
+id_table and the generic driver of_match_table?
 
 
-> -----Original Message-----
-> From: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org [mailto:iommu-
-> bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org] On Behalf Of Will Deacon
-> Sent: Tuesday, June 17, 2014 4:13 PM
-> To: Sethi Varun-B16395
-> Cc: Mark Rutland; devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-samsung-
-> soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Arnd Bergmann; Pawel Moll; Ian Campbell; Grant
-> Grundler; Stephen Warren; Yoder Stuart-B08248; Rob Herring; linux-
-> kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Marc Zyngier; Linux IOMMU; Thierry Reding; Kumar
-> Gala; linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Cho KyongHo; Dave P Martin; linux-arm-
-> kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree
-> bindings
-> 
-> On Tue, Jun 17, 2014 at 11:26:48AM +0100, Varun Sethi wrote:
-> > > The way we generally thought it would work was something like
-> > > this:
-> > >    -u-boot/bootloader makes any static streamID allocation if needed,
-> > >     sets a default streamID  (e.g. 0x0) in device and expresses
-> > >     that in the device tree
-> > >    -device tree would express relationship between devices
-> > >     (including bus controllers) and the SMMU through mmu-masters
-> > >     property
-> > >    -u-boot would express the range of unused (or used) streamIDs via
-> > > a new
-> > >     device tree property so the kernel SMMU driver knows what
-> > > streamIDs are
-> > >     free
-> > >    -in the SMMU driver a different vendor specific 'add_device'
-> callback
-> > >     could be used to handle our special cases where we need to
-> set/change
-> > >     the stream ID for devices added to a domain
-> >
-> > Another possibility, could be to program the stream Id in the device
-> > registers (reference for the stream ID register can be obtained from
-> > the device tree) during device attach. This could be relevant in case
-> > of VFIO, when we are assigning multiple devices to a single VM. All
-> > the devices can share the same stream ID.
-> 
-> I think for simple masters (i.e. those that have all their StreamIDs
-> under control of one driver), then setting something during attach (or
-> add?) based on the DT could work pretty well. The other case is when we
-> have masters behind a bridge (such as a PCI RC). In this case, it might
-> actually be better to ask the bridge for the IDs and let it sort out the
-> allocation itself. That would also move the RequesterID -> StreamID
-> mapping out of the SMMU code.
-> 
-> What do you think?
-The PCI bus iommu group creation code would be part of the SMMU driver (it is handled by other IOMMU drivers as well). My understanding is that there would be one is to one correspondence between the requestor ID and the iommu group. May be, we can have an API provided by the PCI bridge (architecture specific) for setting the stream ID.
-
--Varun
+Sean
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
