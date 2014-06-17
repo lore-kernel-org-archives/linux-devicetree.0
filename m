@@ -1,61 +1,49 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2 06/10] mfd: Add driver for Maxim 77802 Power Management
- IC
-Date: Tue, 17 Jun 2014 12:57:13 +0200
-Message-ID: <53A01F09.5070106@collabora.co.uk>
-References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk> <1402941758-11216-7-git-send-email-javier.martinez@collabora.co.uk> <20140616192720.GK5099@sirena.org.uk>
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH v4] hwmon: Driver for TI TMP103 temperature sensor
+Date: Tue, 17 Jun 2014 13:01:39 +0200
+Message-ID: <53A02013.1060403@denx.de>
+References: <1402992713-22711-1-git-send-email-hs@denx.de> <53A01CE6.4010608@roeck-us.net>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140616192720.GK5099@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53A01CE6.4010608-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+Hello Guenter
 
-On 06/16/2014 09:27 PM, Mark Brown wrote:
-> On Mon, Jun 16, 2014 at 08:02:34PM +0200, Javier Martinez Canillas wrote:
-> 
->> +- max77802,pmic-buck-dvs-gpios: The DVS GPIOs. We'll try to set these GPIOs
->> +  to match pmic-buck-default-dvs-idx at probe time if they are defined. If
->> +  some or all of these GPIOs are not defined it's assumed that the board has
->> +  any missing GPIOs hardwired to match pmic-buck-default-dvs-idx.
-> 
-> I can't tell from reading this what the property means exactly - I
-> expect it is an array of the GPIOs in some order but that order isn't
-> specified.
-> 
+Am 17.06.2014 12:48, schrieb Guenter Roeck:
+> On 06/17/2014 01:11 AM, Heiko Schocher wrote:
+>> Driver for the TI TMP103.
+>>
+>> The TI TMP103 is similar to the TMP102. It differs from the TMP102
+>> by having only 8 bit registers.
+>>
+>> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+>>
+> [ ... ]
+>> +#define TMP103_CONF_SD (TMP103_CONF_M0 | TMP103_CONF_M1)
+>
+> Hello Heiko,
+>
+> I thought this needs to be TMP103_CONF_M1, but from the datasheet it looks
+> like it does not matter if M0 is set if M1 is set as well. Did you test it,
+> though, to make sure that it works ? I feel slightly uncomfortable with it.
 
-Ok, I'll improve this property documentation.
+Yes, i tested it on an imx6 based board. I see no issues ... but I can
+test it with "#define TMP103_CONF_SD TMP103_CONF_M1" and post a v5 with
+this setting if it works ...
 
->> +config MFD_MAX77802
->> +	tristate "Maxim Integrated MAX77802 PMIC Support"
->> +	depends on I2C=y
->> +	select MFD_CORE
->> +	select REGMAP_I2C
->> +	select REGMAP_IRQ
->> +	select IRQ_DOMAIN
->> +	help
->> +	  Say yes here to support for Maxim Integrated MAX77802.
->> +	  This is a Power Management IC with RTC on chip.
->> +	  This driver provides common support for accessing the device;
->> +	  additional drivers must be enabled in order to use the functionality
->> +	  of the device.
->> +
-> 
-> It is a bit unorthodox to put the build infrastructure in the same patch
-> as the DT binding...
-> 
-
-I thought it was the opposite. That a DT binding document has to be added along
-with the first user of the binding but I'll separate the DT doc in another patch
-then if that is the right thing to do.
-
-Thanks a lot for all your suggestions, I'll wait a little to see if there is
-more feedback and repost a v3 addressing all the issues you pointed out.
-
-Best regards,
-Javier
+bye,
+Heiko
+-- 
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
