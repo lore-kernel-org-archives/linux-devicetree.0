@@ -1,141 +1,49 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [PATCH 15/22] pinctrl: sunxi: Add A23 PIO controller support
-Date: Tue, 17 Jun 2014 16:18:25 +0200
-Message-ID: <20140617141825.GA3665@lukather>
-References: <1400831485-28576-1-git-send-email-wens@csie.org>
- <1400831485-28576-16-git-send-email-wens@csie.org>
- <20140525190827.GV10768@lukather>
- <CAGb2v670r+imY1PPKXOvLGjHOTzgXaaUqP6SstsvrXFhMozAzA@mail.gmail.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v4] hwmon: Driver for TI TMP103 temperature sensor
+Date: Tue, 17 Jun 2014 07:22:34 -0700
+Message-ID: <53A04F2A.80104@roeck-us.net>
+References: <1402992713-22711-1-git-send-email-hs@denx.de> <53A01CE6.4010608@roeck-us.net> <53A02013.1060403@denx.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NzB8fVQJ5HfG6fxh"
-Return-path: <linux-serial-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v670r+imY1PPKXOvLGjHOTzgXaaUqP6SstsvrXFhMozAzA@mail.gmail.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mike Turquette <mturquette@linaro.org>, Emilio Lopez <emilio@elopez.com.ar>, Linus Walleij <linus.walleij@linaro.org>, linux-serial@vger.kernel.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Hans de Goede <hdegoede@redhat.com>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Luc Verhaegen <libv@skynet.be>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53A02013.1060403@denx.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: hs@denx.de
+Cc: lm-sensors@lm-sensors.org, Jean Delvare <khali@linux-fr.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/17/2014 04:01 AM, Heiko Schocher wrote:
+> Hello Guenter
+>
+> Am 17.06.2014 12:48, schrieb Guenter Roeck:
+>> On 06/17/2014 01:11 AM, Heiko Schocher wrote:
+>>> Driver for the TI TMP103.
+>>>
+>>> The TI TMP103 is similar to the TMP102. It differs from the TMP102
+>>> by having only 8 bit registers.
+>>>
+>>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>>>
+>> [ ... ]
+>>> +#define TMP103_CONF_SD (TMP103_CONF_M0 | TMP103_CONF_M1)
+>>
+>> Hello Heiko,
+>>
+>> I thought this needs to be TMP103_CONF_M1, but from the datasheet it looks
+>> like it does not matter if M0 is set if M1 is set as well. Did you test it,
+>> though, to make sure that it works ? I feel slightly uncomfortable with it.
+>
+> Yes, i tested it on an imx6 based board. I see no issues ... but I can
+> test it with "#define TMP103_CONF_SD TMP103_CONF_M1" and post a v5 with
+> this setting if it works ...
+>
 
---NzB8fVQJ5HfG6fxh
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello Heiko,
 
-Hi,
+I would appreciate that.
 
-On Tue, Jun 17, 2014 at 06:25:14PM +0800, Chen-Yu Tsai wrote:
-> Hi,
->=20
-> On Mon, May 26, 2014 at 3:08 AM, Maxime Ripard
-> <maxime.ripard@free-electrons.com> wrote:
-> > On Fri, May 23, 2014 at 03:51:18PM +0800, Chen-Yu Tsai wrote:
-> >> The A23 uses the same pin controller as previous SoC's from Allwinner.
-> >> Add support for the pins controlled by the main PIO controller.
-> >>
-> >> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> >> ---
-> >>  .../bindings/pinctrl/allwinner,sunxi-pinctrl.txt   |   2 +
-> >>  drivers/pinctrl/sunxi/Kconfig                      |   4 +
-> >>  drivers/pinctrl/sunxi/Makefile                     |   1 +
-> >>  drivers/pinctrl/sunxi/pinctrl-sun8i-a23.c          | 562 ++++++++++++=
-+++++++++
-> >>  4 files changed, 569 insertions(+)
-> >>  create mode 100644 drivers/pinctrl/sunxi/pinctrl-sun8i-a23.c
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi=
--pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pi=
-nctrl.txt
-> >> index d8d0656..93ce12e 100644
-> >> --- a/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctr=
-l.txt
-> >> +++ b/Documentation/devicetree/bindings/pinctrl/allwinner,sunxi-pinctr=
-l.txt
-> >> @@ -13,6 +13,8 @@ Required properties:
-> >>    "allwinner,sun6i-a31-pinctrl"
-> >>    "allwinner,sun6i-a31-r-pinctrl"
-> >>    "allwinner,sun7i-a20-pinctrl"
-> >> +  "allwinner,sun8i-a23-pinctrl"
-> >> +  "allwinner,sun8i-a23-r-pinctrl"
-> >
-> > This last line belongs in the R_PIO patch :)
-> >
-> >>  - reg: Should contain the register physical address and length for the
-> >>    pin controller.
-> >>
-> >> diff --git a/drivers/pinctrl/sunxi/Kconfig b/drivers/pinctrl/sunxi/Kco=
-nfig
-> >> index da1e830..17a4281 100644
-> >> --- a/drivers/pinctrl/sunxi/Kconfig
-> >> +++ b/drivers/pinctrl/sunxi/Kconfig
-> >> @@ -32,4 +32,8 @@ config PINCTRL_SUN7I_A20
-> >>       def_bool PINCTRL_SUNXI || MACH_SUN7I
-> >>       select PINCTRL_SUNXI_COMMON
-> >>
-> >> +config PINCTRL_SUN8I_A23
-> >> +       def_bool PINCTRL_SUNXI || MACH_SUN8I
-> >> +       select PINCTRL_SUNXI_COMMON
-> >
-> > Since it's going to be merged in 3.16, you can just depend on MACH_SUN8=
-I.
->=20
-> Just want to make sure before I send v2 of the whole series, this should =
-be
->=20
->         def_bool MACH_SUN8I
->         select PINCTRL_SUNXI_COMMON
->=20
-> correct?
->=20
-> Or should it be
->=20
->         bool
->         depends on MACH_SUN8I
->         select PINCTRL_SUNXI_COMMON
->=20
-> and MACH_SUN8I selects PINCTRL_SUN8I_A23
->=20
-> I'm not sure what the transition plan was.
+Thanks,
+Guenter
 
-The former.
 
->=20
-> >>  endif
->=20
-> [...]
->=20
-> v2 will also have EINT support.
-
-Cool :)
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---NzB8fVQJ5HfG6fxh
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJToE4xAAoJEBx+YmzsjxAgZT0P/0bJcWdX4ZIW+xz/TMpkc7D1
-c/TEvhDSBnu/qgj4VtzsYQ6kccb75zxV9vvp8v/lUnuHyeJ538orJoDzSaoDQWB7
-A1a4mT5IH/mer5Sc2+Ij/DlKPIyLwsTSmOh6GRzvC7AjqZyu7uHmCR+6FLrN1b18
-oYWeCPFstT/0r0vchWLg/y3vO6jmCOjqXpc6EQHfslApZXthTEKSRX+lho4etbp9
-b1ZG/zTC80aAzJwqYkzP/WarqSSRyGZLFzRQ7grCERzjU86MxP/7RFrReR+2pLl/
-ix9ZlPVlE+opaFD8TVexXf9Lz7ZrwMq+vHelU0KCFdYJUZ4nRxAbLr7F1zYY4kA2
-ldrR41RHmuI8x0i2nEyjM0uh/SGh7O8dGp5f5HKmmHzoNanFMlY2HoMHtp/uVxzT
-db0u22QwQNITacgvfRX0X7lGhqFzYQJeN3ivyVAnIBsAgcESRMqcN8Oq4oHtdl2+
-LlVW/3tF+vu+K7tvC8tkUU8eGTkPL6ixkak/AK35HkvVOqejzEaDYmei5cfSCowW
-788KaEZtrG0BxdTN7EERZYIa/ZMG2OkK0kGDrdBKV6WkeDvz2NzA3VfX2g8OXOlR
-VCLTymYgjT9CRVCC1E4k/gUOCTujKPzsdeP3PtoVblpljRm8VM5N2q3oX7CexB2d
-Kz9Y4kGaxmTQASW87TS4
-=p4vj
------END PGP SIGNATURE-----
-
---NzB8fVQJ5HfG6fxh--
