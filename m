@@ -1,34 +1,60 @@
-From: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Subject: RE: [PATCH 6/8] power: Add support for DA9150 Charger
-Date: Tue, 17 Jun 2014 08:21:39 +0000
-Message-ID: <2E89032DDAA8B9408CB92943514A0337AB4FDA47@SW-EX-MBX01.diasemi.com>
-References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <d4ef0d7ce2d6a2919d528ed75e82d2b99ec8d962.1402484954.git.Adam.Thomson.Opensource@diasemi.com>
- <20140616132749.GW14323@lee--X1>
+From: Sricharan R <r.sricharan@ti.com>
+Subject: Re: [PATCH V3 00/16] irqchip: crossbar: driver fixes
+Date: Tue, 17 Jun 2014 14:24:21 +0530
+Message-ID: <53A0023D.9010407@ti.com>
+References: <1402917796-31574-1-git-send-email-r.sricharan@ti.com> <539EF985.3080705@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140616132749.GW14323@lee--X1>
-Content-Language: en-US
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <539EF985.3080705@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tony@atomide.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, joe@perches.com
 List-Id: devicetree@vger.kernel.org
 
-T24gSnVuZSAxNiwgMjAxNCAxNDoyOCwgTGVlIEpvbmVzIHdyb3RlOg0KDQo+ID4gKyNpZm5kZWYg
-X0RBOTE1MF9DSEFSR0VSX0gNCj4gPiArI2RlZmluZSBfREE5MTUwX0NIQVJHRVJfSA0KPiANCj4g
-VHdvICdfJ3MgYXJlIG5vcm1hbGx5IHByZWZlcnJlZC4NCg0KT2ssIGNhbiBjaGFuZ2UgaXQgYWNj
-b3JkaW5nbHkuDQoNCj4gDQo+ID4gKyNpbmNsdWRlIDxsaW51eC9kZXZpY2UuaD4NCj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2kyYy5oPg0KPiANCj4gV2hhdCBhcmUgeW91IHVzaW5nIHRoaXMgZm9yPw0K
-DQpOb3RoaW5nLiBXaWxsIHJlbW92ZSB0aGVtLiBUaGFua3MuDQoNCj4gPiArI2luY2x1ZGUgPGxp
-bnV4L21mZC9kYTkxNTAvY29yZS5oPg0KPiA+ICsNCj4gPiArDQo+IA0KPiBFeHRyYSAnXG4nIGhl
-cmUuDQoNClllcywganVzdCBzZXBhcmF0ZSBpbmNsdWRlcyBmcm9tIHRoZSByZXN0IG9mIHRoZSBm
-aWxlLiBGaW5kIGl0IG1vcmUgcmVhZGFibGUuDQpJZiBpdCdzIGFuIGlzc3VlIHRob3VnaCBJIGNh
-biByZW1vdmUgaXQuDQoNCj4gPiArCXN0cnVjdCBwb3dlcl9zdXBwbHkgYWM7DQo+ID4gKwlzdHJ1
-Y3QgcG93ZXJfc3VwcGx5IHVzYjsNCj4gPiArCXN0cnVjdCBwb3dlcl9zdXBwbHkgYmF0dGVyeTsN
-Cj4gDQo+IERvIHlvdSB3YW50IHRoZXNlIChvciBwb2ludGVycyB0byB0aGVzZSkgaGVyZT8NCj4g
-DQo+IEhvdyBtdWNoIHNwYWNlIGRvIHRoZXkgdGFrZSB1cD8NCg0KWWVzIHRoZXNlIGFyZSByZXF1
-aXJlZCBpbiB0aGF0IHN0cnVjdHVyZS4gVGhpcyBpcyB0aGUgY29tbW9uIGFwcHJvYWNoIGZvcg0K
-cG93ZXJfc3VwcGx5IGRyaXZlcnMuIFRoZSBzdHJ1Y3R1cmVzLCBoYXZpbmcgaGFkIGEgdmVyeSBx
-dWljayBsb29rLCBhcmUgYXJvdW5kDQptYXliZSA3MCBieXRlcyBlYWNoLg0K
+On Monday 16 June 2014 07:34 PM, Santosh Shilimkar wrote:
+> Sricharan,
+>
+> On Monday 16 June 2014 07:23 AM, Sricharan R wrote:
+>> This series does some cleanups, fixes for handling two interrupts
+>> getting mapped twice to same crossbar and provides support for
+>> hardwired IRQ and crossbar definitions.
+>>
+>> On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
+>> 131, 132, 133 are direct wired to hardware blocks bypassing
+>> crossbar. This quirky implementation is *NOT* supposed to be the
+>> expectation of crossbar hardware usage. This series adds support
+>> to represent such hard-wired irqs through DT and avoid generic
+>> allocation/programming of crossbar in the driver.
+>>
+>> This way of supporting hard-wired irqs was a result of
+>> the below discussions.
+>> http://www.spinics.net/lists/arm-kernel/msg329946.html
+>>
+>> Based on 3.15 mainline.
+>>
+>> All the patches are available here
+>>  git@github.com:Sricharanti/sricharan.git crossbar_updates
+>>
+>> The fixes series[1] earlier posted is merged in to this.
+>> [1] http://www.spinics.net/lists/arm-kernel/msg328273.html
+>>
+>> [V2] Merged the above series and rebased on 3.15 mainline
+>>
+>> [V3] Modified patch#3 to get irqs-skip properties from DT,
+>>      merged path#8 for checkpatch warning to other relevant
+>>      patches and fixed comments for other patches.
+>>
+> I scanned entire series again including your updates on Jason's
+> comments. All look good to my eyes.
+>
+> Hopefully after this series now, we can actually enable the crossbar
+> support on those machines.
+>
+> FWIW,
+> Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Thanks Santosh.
+
+Regards,
+ Sricharan
