@@ -1,58 +1,35 @@
-From: Grant Likely <grant.likely@secretlab.ca>
-Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org
- boards
-Date: Tue, 17 Jun 2014 14:50:35 +0100
-Message-ID: <20140617135035.F3FE0C40B3B@trevor.secretlab.ca>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
-	<CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com>
-	<20140617090931.GB3705@n2100.arm.linux.org.uk>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140617090931.GB3705@n2100.arm.linux.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>, Jason Kridner <jkridner@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "beagleboard@googlegroups.com" <beagleboard@googlegroups.com>, OMAP List <linux-omap@vger.kernel.org>, Robert Nelson <robertcnelson@gmail.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 0/2] DT updates for Cubox-i
+Date: Tue, 17 Jun 2014 21:59:20 +0800
+Message-ID: <20140617135919.GG8860@dragon>
+References: <20140617134016.GK23430@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140617134016.GK23430-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Jun 2014 10:09:31 +0100, Russell King - ARM Linux <linux@arm.linux.org.uk> wrote:
-> On Mon, Jun 16, 2014 at 09:22:50AM -0400, Jason Kridner wrote:
-> > Adding devicetree and linux-arm-kernel lists based on feedback on IRC...
-> > 
-> > On Tue, Jun 10, 2014 at 12:46 PM, Jason Kridner <jkridner@gmail.com> wrote:
-> > > I'd like to discuss moving our current library of cape devicetree
-> > > overlay sources into a single tree, including the boot .dtb files for
-> > > BeagleBoard.org boards and moving towards enabling as much of the cape
-> > > support into a single boot-time .dtb file with an approach similar to
-> > > the cape-universal overlay
-> > > (https://github.com/cdsteinkuehler/beaglebone-universal-io), but not
-> > > in an overlay.
-> > >
-> > > First of all, I want to note this doesn't change my view on the
-> > > importance of mainline support for devicetree overlays. They are still
-> > > absolutely critical and highly useful, solving problems that cannot be
-> > > solved through boot-time devicetrees. I'm simply looking for an
-> > > approach that will complement the availability of overlays and provide
-> > > the best user experience.
+On Tue, Jun 17, 2014 at 02:40:16PM +0100, Russell King - ARM Linux wrote:
+> Shawn,
 > 
-> Here's the most obvious question in the world on this topic.  Are capes
-> hot-pluggable?
+> These are two updates to the Cubox-i which I'd prefer to get into -rc.
+> They were omitted from the merge window because their dependent changes
+> were not merged, but have now been merged.
 > 
-> Looking at the posts on google+ from David Anders, they're using pin
-> headers for connectivity, with no additional protection against hot-
-> plugging, and no sequencing of pin connection.  In other words, they are
-> not hot-pluggable.
+> The only real functional change for the Cubox-i in this set is that it
+> is now possible to control the front panel LED.  The other patch is
+> solely about moving some DT configuration to where it belongs.
 > 
-> So, why do we need to add a load of infrastructure to the kernel to allow
-> the device tree to be modified at run time?  At present, the way the
-> entire DT infrastructure works is that it assumes the DT remains static
-> and never changes - this applies not only to the core DT code, but also
-> to all the drivers which have been converted.
+> Can we please get these in?
 
-As others have pointed out, capes aren't the only use case. pseries
-already modifies the tree at runtime, and the FPGA users want the
-ability to add/remove additional DT blocks. I've also heard from
-hobbiest/maker developers that by deferring the load of additional data
-to userspace means they don't need to mess with the boot path once it is
-working. The feature is coming.
+Okay, I will send them together with the fixes I queued for -rc.
 
-g.
-
+Shawn
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
