@@ -1,65 +1,75 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH 2/3] pwm: rockchip: document device tree bindings
-Date: Tue, 17 Jun 2014 23:45:32 +0200
-Message-ID: <20140617214529.GB24743@mithrandir>
-References: <1399504115-16257-1-git-send-email-b.galvani@gmail.com>
- <1399504115-16257-3-git-send-email-b.galvani@gmail.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 0/3] Qualcomm Resource Power Manager driver
+Date: Tue, 17 Jun 2014 22:49:33 +0100
+Message-ID: <53A0B7ED.9050806@linaro.org>
+References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="dc+cDN39EJAMEtIO"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1399504115-16257-3-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, Josh Cartwright <joshc@codeaurora.org>, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Bjorn,
 
---dc+cDN39EJAMEtIO
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Thankyou for the patches, these were handy for testing USB on APQ8064.
 
-On Thu, May 08, 2014 at 01:08:34AM +0200, Beniamino Galvani wrote:
-[...]
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-> new file mode 100644
-> index 0000000..35deba4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-> @@ -0,0 +1,17 @@
-> +Rockchip PWM controller
-> +
-> +Required properties:
-> + - compatible: should be "rockchip,rk2928-pwm"
-> + - reg: physical base address and length of the controller's registers
-> + - clocks: phandle and clock specifier of the PWM reference clock
-> + - #pwm-cells: should be 2. See pwm.txt in this directory for a
-> +   description of the cell format
+Tested-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-Nit: this sentence should have a full stop at the end.
+--srini
 
-Thierry
-
---dc+cDN39EJAMEtIO
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
-
-iQIcBAEBAgAGBQJToLb5AAoJEN0jrNd/PrOhWZQQAIqrRizkqAgQMAEwTZHQR15Z
-qPByCxXAnJWqrGt6bbA9d7C3x2u/ztoZhy7D3gClrImL+wsB3ygbBKonHTEHG7Bq
-Wp5Eu+Uu6LPleSOMkVfV7tyXVm87q1eoh/A29XwOiElsNaX50uHcZk8vnGRTS/Wg
-mHGNJCj1z1oFMnvhIij2EPgXxp9QhePo3dujIm7n7zzaIckiVGGvo180MAiL3xyq
-nnIQPpQFWZq8t3FxkzR6thcd+MuozUqaMysDn36tzjDCna2637FcfyQCQEKmEmbv
-bdrKtXVDutaLDJLVIQWlvIOT3FCCgqZ/moQH/j6x2U25Fme8RT1iLEesZNbKSl1s
-+vaKOC5crtIn2xNn9xES77pwWHaW6xNzXumVDOhaOjoXFdt3M5QaCv0caGBZfvKa
-8+TPH6z61GtlVvvZd9Gv/mIeNeo5mMALpkOpMIKR0PPuNsLeT2/8jj3lVQhDM+8B
-B7CwlPScV5E22xiRtAMqAxYKMiz9grrdCt/WCtKlkwRBm2UNeKnHiOGmoGlcIekn
-zSdd2UW9JxO50z9CrrPWhe24P8VmtJPaZ4IIQjuLrFglHytvKf5nA/pTYWW94mtq
-HIfHpbx/TOPhbji8c4CgHlUXCGmfpXTaZxCJAoTspHiJDZoFtdS4jEdk1Xh32T/3
-OFS5xdLhvE1q4uDGC5Lg
-=Tgdh
------END PGP SIGNATURE-----
-
---dc+cDN39EJAMEtIO--
+On 16/06/14 19:46, Bjorn Andersson wrote:
+> This series adds a regulator driver for the Resource Power Manager found in
+> Qualcomm 8660, 8960 and 8064 based devices.
+>
+> The RPM driver exposes resources to its child devices, that can be accessed to
+> implement drivers for the regulators, clocks and bus frequency control that's
+> owned by the RPM in these devices.
+>
+> Changes since v2:
+>    - Fix copy-paste error in dt binding
+>    - Correct incomplete move from mfd to soc
+>    - Correct const mistake in regulator driver
+>
+> Changes since v1:
+>    - Moved rpm driver to drivers/soc
+>    - Extracted resource table structs from rpm struct, as per Srinivas request
+>    - Dropped mode setting support for the regulators for now. Unsure if we need
+>      it and it requires some rework from the codeaurora solution.
+>    - Using set_voltage_sel instead of rolling my own "snapping", as per Marks
+>      request
+>    - Split regulator ops in mV, uV and swtich versions as per Marks request.
+>    - Added devicetree property to enable pull down.
+>
+> Bjorn Andersson (3):
+>    soc: devicetree: bindings: Add Qualcomm RPM DT binding
+>    soc: qcom-rpm: Driver for the Qualcomm RPM
+>    regulator: qcom-rpm: Regulator driver for the Qualcomm RPM
+>
+>   .../devicetree/bindings/soc/qcom/qcom,rpm.txt      | 261 +++++++
+>   drivers/regulator/Kconfig                          |  12 +
+>   drivers/regulator/Makefile                         |   1 +
+>   drivers/regulator/qcom_rpm-regulator.c             | 787 +++++++++++++++++++++
+>   drivers/soc/qcom/Kconfig                           |  14 +
+>   drivers/soc/qcom/Makefile                          |   1 +
+>   drivers/soc/qcom/qcom_rpm.c                        | 573 +++++++++++++++
+>   include/dt-bindings/soc/qcom,rpm.h                 | 142 ++++
+>   include/linux/soc/qcom_rpm.h                       |  12 +
+>   9 files changed, 1803 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>   create mode 100644 drivers/regulator/qcom_rpm-regulator.c
+>   create mode 100644 drivers/soc/qcom/qcom_rpm.c
+>   create mode 100644 include/dt-bindings/soc/qcom,rpm.h
+>   create mode 100644 include/linux/soc/qcom_rpm.h
+>
