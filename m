@@ -1,133 +1,70 @@
-From: George Cherian <george.cherian@ti.com>
-Subject: [PATCH 2/2] extcon: gpio: Add dt support for the driver.
-Date: Tue, 17 Jun 2014 09:28:20 +0530
-Message-ID: <1402977500-19987-3-git-send-email-george.cherian@ti.com>
-References: <1402977500-19987-1-git-send-email-george.cherian@ti.com>
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH 3/3] ARM: dts: Enable audio support for Peach-pi board
+Date: Mon, 16 Jun 2014 21:07:44 -0700
+Message-ID: <CAD=FV=U51f+sL_hSGdzusthC3OEgv3kbQ9t1G28JRgXueFYQEQ@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-4-git-send-email-tushar.b@samsung.com>
+	<CAD=FV=XqqP7+xDOAKCixivzgaO0xvJX7L+CCN+unAEuf-6aUbQ@mail.gmail.com>
+	<539ED2C0.8030405@gmail.com>
+	<CAD=FV=UaaRQVq3TmXMTv9OkER+zORC89YfPNjwZwfCQKmuavrw@mail.gmail.com>
+	<CAC5m3Byeu5zdM=PeK5MkgsEOFRjrPd1Vrk1a3FaM7VPTOFyYOg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402977500-19987-1-git-send-email-george.cherian@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: cw00.choi@samsung.com, myungjoo.ham@samsung.com, grant.likely@linaro.org, rdunlap@infradead.org, galak@codeaurora.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, linux@roeck-us.net
-Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, george.cherian@ti.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAC5m3Byeu5zdM=PeK5MkgsEOFRjrPd1Vrk1a3FaM7VPTOFyYOg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <trblinux@gmail.com>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Kevin Hilman <khilman@linaro.org>, Mark Brown <broonie@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Add device tree support to extcon-gpio driver.
-Add devicetree binding documentation
+Tushar,
 
-Signed-off-by: George Cherian <george.cherian@ti.com>
----
- .../devicetree/bindings/extcon/extcon-gpio.txt     | 34 ++++++++++++++++++++++
- drivers/extcon/extcon-gpio.c                       | 29 ++++++++++++++++++
- 2 files changed, 63 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/extcon/extcon-gpio.txt
+On Mon, Jun 16, 2014 at 8:36 PM, Tushar Behera <trblinux@gmail.com> wrote:
+> On Mon, Jun 16, 2014 at 10:19 PM, Doug Anderson <dianders@google.com> wrote:
+>> Tushar,
+>>
+>> On Mon, Jun 16, 2014 at 4:19 AM, Tushar Behera <trblinux@gmail.com> wrote:
+>>> On 06/13/2014 10:33 PM, Doug Anderson wrote:
+>>>> Tushar,
+>>>>
+>>>> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b@samsung.com> wrote:
+>>>>> Peach-pi board has MAX98090 audio codec connected on HSI2C-7 bus.
+>>>>
+>>>> If you want to be a stickler about it, peach-pi actually has a
+>>>> max98091.  That requires code changes to the i2c driver, though.
+>>>> ...and unfortunately listing two compatible strings for i2c devices is
+>>>> broken.  :(
+>>>>
+>>> Hi Doug,
+>>>
+>>> You are right. I checked the boot logs, the detected codec type is
+>>> MAX98091. Since both these CODECs are supported through a single driver
+>>> and the detection of chip is done during runtime, I would suggest we go
+>>> ahead with "max98090" compatible string. I will update the commit
+>>> message accordingly.
+>>>
+>>> Does that sound okay to you?
+>>
+>> As per my understanding you shouldn't do this.  You should have two patches:
+>>
+>> 1. Add "max98091".  You could simply post Wonjoon's patch from
+>> <https://chromium-review.googlesource.com/184091>
+>>
+>> 2. Change the device tree to refer to "max98091"
+>>
+>> The argument that the "current kernel driver has a single driver" is
+>> an argument that you're not supposed to make for device tree.  The
+>> same device tree is supposed to work for U-Boot, BSD, or any other
+>> platform.  On those platforms it might not be a shared driver.
+>>
+>
+> My argument is that the device type is getting detected during
+> runtime, hence there is no need to differentiate between these two.
+>
+> But if you prefer that way, I will repost.
 
-diff --git a/Documentation/devicetree/bindings/extcon/extcon-gpio.txt b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-new file mode 100644
-index 0000000..80b791b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/extcon/extcon-gpio.txt
-@@ -0,0 +1,34 @@
-+GPIO based EXTCON
-+
-+EXTCON GPIO
-+-----------
-+
-+Required Properties:
-+ - compatible: should be:
-+   * "ti,extcon-gpio"
-+ - gpios: specifies the gpio pin used.
-+ - debounce: Debounce time for GPIO IRQ in ms
-+ - irq-flags: IRQ flag to be used ( eg: IRQ_TYPE_EDGE_FALLING)
-+
-+Optional Properties:
-+ - gpio-active-low: Property describing whether gpio active state is 1 or 0
-+		    If defined , low state of gpio means active.
-+ - check-on-resume: Property describing whether to check the gpio state
-+		    while resuming from SLEEP.
-+ - state-on: print_state is overriden with state_on string if provided.
-+	     If NULL, default method of extcon class is used.
-+ - state_off: print_state is overriden with state_off string  if provided.
-+	      If NUll, default method of extcon class is used.
-+
-+Eg:
-+
-+        extcon1: am43_usbid_extcon1 {
-+                compatible = "ti,extcon-gpio";
-+                gpios = <&gpio3 12 GPIO_ACTIVE_HIGH>;
-+                gpio-active-low;
-+                debounce = <20>;
-+                irq-flags = <IRQ_TYPE_EDGE_FALLING>;
-+                state-on = "USB ID FLOAT";
-+                state-off = "USB ID GND";
-+
-+        };
-diff --git a/drivers/extcon/extcon-gpio.c b/drivers/extcon/extcon-gpio.c
-index 6c268b4..14d999d 100644
---- a/drivers/extcon/extcon-gpio.c
-+++ b/drivers/extcon/extcon-gpio.c
-@@ -27,6 +27,7 @@
- #include <linux/interrupt.h>
- #include <linux/kernel.h>
- #include <linux/module.h>
-+#include <linux/of_gpio.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- #include <linux/workqueue.h>
-@@ -83,12 +84,34 @@ static ssize_t extcon_gpio_print_state(struct extcon_dev *edev, char *buf)
- 
- static int gpio_extcon_probe(struct platform_device *pdev)
- {
-+	struct device_node *np = pdev->dev.of_node;
- 	struct gpio_extcon_platform_data *pdata = dev_get_platdata(&pdev->dev);
- 	struct gpio_extcon_data *extcon_data;
- 	int ret;
- 
-+	if (np) {
-+		pdata = devm_kzalloc(&pdev->dev, sizeof(*pdata), GFP_KERNEL);
-+		if (!pdata)
-+			return -ENOMEM;
-+
-+		pdata->gpio = of_get_gpio(np, 0);
-+		if (!gpio_is_valid(pdata->gpio))
-+			return -EPROBE_DEFER;
-+
-+		pdata->name = np->name;
-+		pdata->gpio_active_low = of_property_read_bool(np,
-+						"gpio-active-low");
-+		pdata->check_on_resume = of_property_read_bool(np,
-+						"check-on-resume");
-+		of_property_read_u32(np, "debounce", (u32 *)&pdata->debounce);
-+		of_property_read_u32(np, "irq-flags", (u32 *)&pdata->irq_flags);
-+		of_property_read_string(np, "state-on", &pdata->state_on);
-+		of_property_read_string(np, "state-off", &pdata->state_off);
-+	}
-+
- 	if (!pdata)
- 		return -EBUSY;
-+
- 	if (!pdata->irq_flags) {
- 		dev_err(&pdev->dev, "IRQ flag is not specified.\n");
- 		return -EINVAL;
-@@ -177,6 +200,11 @@ static int gpio_extcon_resume(struct device *dev)
- 
- static SIMPLE_DEV_PM_OPS(gpio_extcon_pm_ops, NULL, gpio_extcon_resume);
- 
-+static struct of_device_id of_extcon_gpio_match_tbl[] = {
-+	{ .compatible = "ti,extcon-gpio", },
-+	{ /* end */ }
-+};
-+
- static struct platform_driver gpio_extcon_driver = {
- 	.probe		= gpio_extcon_probe,
- 	.remove		= gpio_extcon_remove,
-@@ -184,6 +212,7 @@ static struct platform_driver gpio_extcon_driver = {
- 		.name	= "extcon-gpio",
- 		.owner	= THIS_MODULE,
- 		.pm	= &gpio_extcon_pm_ops,
-+		.of_match_table = of_extcon_gpio_match_tbl,
- 	},
- };
- 
--- 
-1.8.3.1
+Yes please.
+
+True that it is possible to detect 98090 vs. 98091.  ...but it's also
+possible to detect exynos5250 vs. exynos5420 vs. exynos5800.  ...yet
+they have different compatible strings.
