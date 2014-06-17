@@ -1,62 +1,53 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: Re: [PATCH v6 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
-Date: Tue, 17 Jun 2014 13:07:42 -0700
-Message-ID: <CAKh23F=AexThFD8Oqt-UxyBU1Ai9AfZfP4KpPTzQLXa0WE8Vwg@mail.gmail.com>
-References: <1402964326-11147-1-git-send-email-isubramanian@apm.com>
-	<1402964326-11147-5-git-send-email-isubramanian@apm.com>
-	<20140616.214247.1154200670003936158.davem@davemloft.net>
-	<CAKh23F=2undAW=nWibOreAM8DJiQKpLx=OboCX=fNZE+OU=AbA@mail.gmail.com>
-	<CAGVrzcYWecdwSmHux6yz1M5Nz849BV-sBe8DmnJWV+T8PetTvw@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH] dt-binding: mfd: as3722: correct macro name
+Date: Tue, 17 Jun 2014 21:11:15 +0100
+Message-ID: <20140617201115.GV29841@lee--X1>
+References: <1402302719-9766-1-git-send-email-ldewangan@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAGVrzcYWecdwSmHux6yz1M5Nz849BV-sBe8DmnJWV+T8PetTvw@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1402302719-9766-1-git-send-email-ldewangan@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: David Miller <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, netdev <netdev@vger.kernel.org>, patches <patches@apm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "jcm@redhat.com" <jcm@redhat.com>, Keyur Chudgar <kchudgar@apm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Ravi Patel <rapatel@apm.com>
+To: Laxman Dewangan <ldewangan@nvidia.com>
+Cc: swarren@nvidia.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dwillemsen@nvidia.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 12:24 PM, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> 2014-06-17 12:21 GMT-07:00 Iyappan Subramanian <isubramanian@apm.com>:
->> On Mon, Jun 16, 2014 at 9:42 PM, David Miller <davem@davemloft.net> wrote:
->>> From: Iyappan Subramanian <isubramanian@apm.com>
->>> Date: Mon, 16 Jun 2014 17:18:46 -0700
->>>
->>>> +static netdev_tx_t xgene_enet_start_xmit(struct sk_buff *skb,
->>>> +                                      struct net_device *ndev)
->>>> +{
->>>> +     struct xgene_enet_pdata *pdata = netdev_priv(ndev);
->>>> +     struct xgene_enet_desc_ring *tx_ring = pdata->tx_ring;
->>>> +     struct xgene_enet_desc_ring *cp_ring = tx_ring->cp_ring;
->>>> +     u32 tx_level, cq_level;
->>>> +
->>>> +     tx_level = xgene_enet_ring_len(tx_ring);
->>>> +     cq_level = xgene_enet_ring_len(cp_ring);
->>>> +     if (unlikely(tx_level > pdata->tx_qcnt_hi ||
->>>> +                  cq_level > pdata->cp_qcnt_hi)) {
->>>> +             netif_stop_queue(ndev);
->>>> +             return NETDEV_TX_BUSY;
->>>> +     }
->>>> +
->>>> +     if (xgene_enet_setup_tx_desc(tx_ring, skb))
->>>> +             return NETDEV_TX_OK;
->>>
->>> If you return NETDEV_TX_OK, it is your responsibility to deal with the
->>> SKB, because you own it.
->>>
->>> In particular, you have to free the packet.
->>
->> skb freeing happens in xgene_enet_tx_completion().
->
-> I have not looked at what xgenet_enet_setup_tx_desc() does, but
-> David's point is that, if this function fails and has not yet been
-> able to queue the SKB for transmission at the HW, you should make sure
-> that you free the SKB. Is xgene_enet_tx_completion() called if the
-> driver failed to prepare a descriptor for a SKB?
+On Mon, 09 Jun 2014, Laxman Dewangan wrote:
 
-Thanks for the explanation.  I will free up skb when
-xgene_enet_setup_tx_desc() fails
-and submit the next patch shortly.
+> The macro name for enable3 pin is named as AS3722_EXT_CONTROL_PIN_ENA=
+BLE2
+> which is conflict with the enable2 pin.
+>=20
+> Correct this macro name to correctly reflect the enable pin i.e.
+> AS3722_EXT_CONTROL_PIN_ENABLE3.
+>=20
+> Signed-off-by: Laxman Dewangan <ldewangan@nvidia.com>
+> Reported-by: Dan Willemsen <dwillemsen@nvidia.com>
+> ---
+>  include/dt-bindings/mfd/as3722.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-> --
-> Florian
+Applied, thanks.
+
+> diff --git a/include/dt-bindings/mfd/as3722.h b/include/dt-bindings/m=
+fd/as3722.h
+> index 0e69256..e66c089 100644
+> --- a/include/dt-bindings/mfd/as3722.h
+> +++ b/include/dt-bindings/mfd/as3722.h
+> @@ -13,7 +13,7 @@
+>  /* External control pins */
+>  #define AS3722_EXT_CONTROL_PIN_ENABLE1 1
+>  #define AS3722_EXT_CONTROL_PIN_ENABLE2 2
+> -#define AS3722_EXT_CONTROL_PIN_ENABLE2 3
+> +#define AS3722_EXT_CONTROL_PIN_ENABLE3 3
+> =20
+>  /* Interrupt numbers for AS3722 */
+>  #define AS3722_IRQ_LID			0
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
