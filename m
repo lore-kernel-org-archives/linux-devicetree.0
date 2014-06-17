@@ -1,44 +1,125 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 7/7] mfd: AXP20x: add "x-powers,axp221"
- compatible string to DT bindings doc
-Date: Tue, 17 Jun 2014 09:38:43 +0200
-Message-ID: <1402990723-28138-8-git-send-email-boris.brezillon@free-electrons.com>
-References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] dt: bindings: add bindings for
+ Broadcom bcm43xx sdio devices
+Date: Tue, 17 Jun 2014 09:49:14 +0200
+Message-ID: <539FF2FA.8050304@broadcom.com>
+References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-2-git-send-email-hdegoede@redhat.com> <CAGVrzcZBzDTfnd6o0ib1FBvBK2VPNitS=rpb4jDkjF=T7Fy=DQ@mail.gmail.com> <539FE0EC.5090003@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBHXB76OAKGQEEKPXHKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1402990723-28138-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Return-path: <linux-sunxi+bncBCKLZOXH5AIBB7XF76OAKGQE5YTPLWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <539FE0EC.5090003-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ATHEROS ATH5K WIR..." <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add "x-powers,axp221" compatible string to the AXP20x DT bindings
-documentation.
+On 17-06-14 08:32, Hans de Goede wrote:
+> Hi,
+>
+> On 06/16/2014 10:53 PM, Florian Fainelli wrote:
+>> 2014-06-16 10:56 GMT-07:00 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
+>>> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>>
+>>> The Broadcom bcm43xx sdio devices are fullmac devices that may be
+>>> integrated in ARM platforms. Currently, the brcmfmac driver for
+>>> these devices support use of platform data. This patch specifies
+>>> the bindings that allow this platform data to be expressed in the
+>>> devicetree.
+>>>
+>>> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+>>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no consensus
+>>>   on how to handle this yet]
+>>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
+>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>>> ---
+>>>   .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 29 ++++++++++++++++++++++
+>>>   1 file changed, 29 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>> new file mode 100644
+>>> index 0000000..6a0aaf2
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
+>>> @@ -0,0 +1,29 @@
+>>> +Broadcom BCM43xx Fullmac wireless SDIO devices
+>>> +
+>>> +This node provides properties for controlling the Broadcom wireless device. The
+>>> +node is expected to be specified as a child node to the SDIO controller that
+>>> +connects the device to the system.
+>>> +
+>>> +Required properties:
+>>> +
+>>> + - compatible : Should be "brcm,bcm43xx-fmac".
+>>
+>> In general, the use of a wildcard compatible string is discouraged
+>> over the use of a more descriptive compatible string. So you should
+>> find out what is the first chip that is compatible, and use that
+>> compatible string as long as that compatibility remains.
+>
+> Right, Arend, what should we use then ?
 
-Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/mfd/axp20x.txt | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In earlier discussions, we ended up with this compatible string. The 
+properties are generic enough to be covered by this 'wildcard' string. 
+However, I am not religious about it so if you feel strongly for an 
+explicit string it could be brcm,bcm4329-fmac, but it does not have my 
+preference.
 
-diff --git a/Documentation/devicetree/bindings/mfd/axp20x.txt b/Documentation/devicetree/bindings/mfd/axp20x.txt
-index cc9e01b..f22a169 100644
---- a/Documentation/devicetree/bindings/mfd/axp20x.txt
-+++ b/Documentation/devicetree/bindings/mfd/axp20x.txt
-@@ -5,7 +5,7 @@ axp202 (X-Powers)
- axp209 (X-Powers)
- 
- Required properties:
--- compatible: "x-powers,axp202" or "x-powers,axp209"
-+- compatible: "x-powers,axp202", "x-powers,axp209" or "x-powers,axp221"
- - reg: The I2C slave address for the AXP chip
- - interrupt-parent: The parent interrupt controller
- - interrupts: Interrupt specifiers for interrupt sources
--- 
-1.8.3.2
+>>> +
+>>> +Optional properties:
+>>> + - brcm,drive-strength : drive strength used for SDIO pins on device.
+>>> +       (default = 6mA).
+>>
+>> It would not hurt if you did specify the unit of the
+>> "brcm,drive-strength" property here. Also, if the default is 6, maybe
+>> the example below should be fixed to reflect that so people do not
+>> think that writing 4 to a register = 6 mA.
+>
+> Ok will fix in the next version.
+>
+
+I agree that explicitly specifying the unit of the property is a good 
+addition. If that is done I don't think it is necessary to change the 
+value used in the example.
+
+Regards,
+Arend
+
+>>
+>>> + - interrupt-parent : the phandle for the interrupt controller to which the
+>>> +       device interrupts are connected.
+>>> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
+>>> +       When not specified the device will use in-band SDIO interrupts.
+>>> + - interrupt-names : name of the out-of-band interrupt, which must be set
+>>> +       to "host-wake".
+>>> +
+>>> +Example:
+>>> +
+>>> +bcm4335 {
+>>> +       compatible = "brcm,bcm43xx-fmac";
+>>> +       brcm,drive-strength = <4>;
+>>> +       interrupt-parent = <&gpx2>;
+>>> +       interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
+>>> +       interrupt-names = "host-wake";
+>>> +};
+>>> --
+>>> 2.0.0
+>>>
+>>>
+>>> _______________________________________________
+>>> linux-arm-kernel mailing list
+>>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+>>
+>>
+>>
