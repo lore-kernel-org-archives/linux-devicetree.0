@@ -1,22 +1,20 @@
 From: George Cherian <george.cherian@ti.com>
 Subject: Re: [PATCH] extcon: extcon-dra7xx: Add Extcon driver for DRA7xx
-Date: Tue, 17 Jun 2014 17:56:07 +0530
-Message-ID: <53A033DF.7030305@ti.com>
-References: <1402886548-22765-1-git-send-email-george.cherian@ti.com> <539E79A1.50208@roeck-us.net> <539E8399.80902@ti.com> <539E852C.7040402@samsung.com>
+Date: Tue, 17 Jun 2014 17:58:33 +0530
+Message-ID: <53A03471.3070007@ti.com>
+References: <1402886548-22765-1-git-send-email-george.cherian@ti.com> <539E79A1.50208@roeck-us.net> <539E8399.80902@ti.com> <539EFC15.8000304@roeck-us.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <539E852C.7040402@samsung.com>
+In-Reply-To: <539EFC15.8000304@roeck-us.net>
 Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Guenter Roeck <linux@roeck-us.net>, myungjoo.ham@samsung.com, grant.likely@linaro.org, rdunlap@infradead.org, galak@codeaurora.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, cw00.choi@samsung.com, myungjoo.ham@samsung.com, grant.likely@linaro.org, rdunlap@infradead.org, galak@codeaurora.org, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, robh+dt@kernel.org, pawel.moll@arm.com
+Cc: linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 6/16/2014 11:18 AM, Chanwoo Choi wrote:
-> Hi George,
->
-> On 06/16/2014 02:41 PM, George Cherian wrote:
+On 6/16/2014 7:45 PM, Guenter Roeck wrote:
+> On 06/15/2014 10:41 PM, George Cherian wrote:
 >> On 6/16/2014 10:29 AM, Guenter Roeck wrote:
 >>> On 06/15/2014 07:42 PM, George Cherian wrote:
 >>>> This is the driver for the USB ID pin detection. This driver
@@ -24,17 +22,32 @@ On 6/16/2014 11:18 AM, Chanwoo Choi wrote:
 >>>> insertion/removal.
 >>>>
 >>>> Signed-off-by: George Cherian <george.cherian@ti.com>
+>>>
 >>> Hi George,
 >>>
 >>> Curious: Why can't you use extcon-gpio ?
 >> Main reason being missing dt support.
-> I'd like you to use extcon-gpio for DRA7xx driver.
-> This patch has just one gpio control to wheter USB-HOST is attached or detached.
-Okay I will do that.
-
 >
-> Thanks,
-> Chanwoo Choi
+> Then why not add dt support to it ?
+Yes, I did sent a patch for the same.
+http://marc.info/?l=linux-kernel&m=140297766828100&w=2
+http://marc.info/?l=linux-kernel&m=140297771028124&w=2
+http://marc.info/?l=linux-kernel&m=140297768828109&w=2
+>
+>>>
+>>> Also, I thought that Linux specific bindings would be unacceptable.
+>>> "ti,dra7xx-extcon" looks very linux specific to me. Did the rules 
+>>> change ?
+>>>
+>> Then how about "ti,extcon-usbid" ?
+>
+> "extcon" seems very linux specific to me.
+>
+> Anyway, not arguing, just asking, since I wondered. If the extcon 
+> maintainer
+> and the dt folks are happy with your driver, so am I.
+>
+> Guenter
 >
 
 
