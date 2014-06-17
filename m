@@ -1,88 +1,88 @@
-From: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
-Subject: Re: Unifying cape overlays into boot .dtb for
- BeagleBoard.org boards
-Date: Tue, 17 Jun 2014 08:37:09 -0400
-Message-ID: <53A03675.1000908@ti.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QPmCk9GzHPHqCKG4vHDvUGirgGaizH-V9bsHT4V=8=gCaA@mail.gmail.com> <20140617090931.GB3705@n2100.arm.linux.org.uk>
-Reply-To: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Subject: Re: [PATCH v3 1/2] phy: qcom: Add driver for QCOM IPQ806x SATA PHY
+Date: Tue, 17 Jun 2014 14:39:14 +0200
+Message-ID: <25056551.7rd4nhvM6K@amdc1032>
+References: <1402948477-12347-1-git-send-email-galak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <beagleboard+bncBCF77LUSWAKRBA7NQCOQKGQEJS6TTHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140617090931.GB3705-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-List-Post: <http://groups.google.com/group/beagleboard/post>, <mailto:beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:beagleboard+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/beagleboard>
-Sender: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:beagleboard+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:googlegroups-manage+1035534660134+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1402948477-12347-1-git-send-email-galak@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-ide@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, sboyd@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2014 05:09 AM, Russell King - ARM Linux wrote:
-> On Mon, Jun 16, 2014 at 09:22:50AM -0400, Jason Kridner wrote:
->> Adding devicetree and linux-arm-kernel lists based on feedback on IRC...
->>
->> On Tue, Jun 10, 2014 at 12:46 PM, Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
->>> I'd like to discuss moving our current library of cape devicetree
->>> overlay sources into a single tree, including the boot .dtb files for
->>> BeagleBoard.org boards and moving towards enabling as much of the cape
->>> support into a single boot-time .dtb file with an approach similar to
->>> the cape-universal overlay
->>> (https://github.com/cdsteinkuehler/beaglebone-universal-io), but not
->>> in an overlay.
->>>
->>> First of all, I want to note this doesn't change my view on the
->>> importance of mainline support for devicetree overlays. They are still
->>> absolutely critical and highly useful, solving problems that cannot be
->>> solved through boot-time devicetrees. I'm simply looking for an
->>> approach that will complement the availability of overlays and provide
->>> the best user experience.
-> 
-> Here's the most obvious question in the world on this topic.  Are capes
-> hot-pluggable?
-> 
-> Looking at the posts on google+ from David Anders, they're using pin
-> headers for connectivity, with no additional protection against hot-
-> plugging, and no sequencing of pin connection.  In other words, they are
-> not hot-pluggable.
-> 
-> So, why do we need to add a load of infrastructure to the kernel to allow
-> the device tree to be modified at run time?  At present, the way the
-> entire DT infrastructure works is that it assumes the DT remains static
-> and never changes - this applies not only to the core DT code, but also
-> to all the drivers which have been converted.
-> 
-> So, you're asking for a feature which is impossible to really make use
-> of on the hardware which you want to use it.
-> 
-> Why should kernel developers go to the extent of adding support for DT
-> modification at runtime when the platform you want this for doesn't even
-> support hotplugging of these capes?
-> 
-> The logical way to deal with this is to have the boot loader merge DT
-> fragments together before it calls the kernel, so the kernel sees a single
-> DT blob which describes the whole hardware.
 
-Frankly, if we're going to push device tree merging to be someone elses
-problem, I'd like to push it out to userspace.
+Hi,
 
-> A good way that this could have been done is to put an I2C EEPROM on
-> each cape, and have that store the DT fragment.  The boot loader could
-> have then read that from each cape, and used that information to build
-> up the final DT.  Why this hasn't been thought of, considering that the
-> kernel has been moving towards DT for years, is quite unbelievable.
+On Monday, June 16, 2014 02:54:37 PM Kumar Gala wrote:
+> 
+> Add a PHY driver for uses with AHCI based SATA controller driver on the
+> IPQ806x family of SoCs.
+> 
+> Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> ---
+> v3:
+> * Added Kconfig HAS_IOMEM dep
+> * re-ordered probe function so phy_provider_register is last
+>  
+> v2:
+> * dropped unused dev pointer in struct qcom_ipq806x_sata_phy
+> * remove unnecessary reg initializaiton
+> * Removed unneeded error message
+> * Added remove function to disable the clock
+> 
+>  drivers/phy/Kconfig                 |   7 ++
+>  drivers/phy/Makefile                |   1 +
+>  drivers/phy/phy-qcom-ipq806x-sata.c | 211 ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 219 insertions(+)
+>  create mode 100644 drivers/phy/phy-qcom-ipq806x-sata.c
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 16a2f06..b7b6bce 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -178,4 +178,11 @@ config PHY_XGENE
+>  	help
+>  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
+>  
+> +config PHY_QCOM_IPQ806X_SATA
+> +	tristate "Qualcomm IPQ806x SATA SerDes/PHY driver"
+> +	depends on ARCH_QCOM
+> +	depends on HAS_IOMEM
+> +	depends on OF
+> +	select GENERIC_PHY
+> +
+>  endmenu
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index b4f1d57..d950317 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
+>  phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>  obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+> +obj-$(CONFIG_PHY_QCOM_IPQ806X_SATA)	+= phy-qcom-ipq806x-sata.o
+> diff --git a/drivers/phy/phy-qcom-ipq806x-sata.c b/drivers/phy/phy-qcom-ipq806x-sata.c
+> new file mode 100644
+> index 0000000..e931aee
+> --- /dev/null
+> +++ b/drivers/phy/phy-qcom-ipq806x-sata.c
 
-I had actually talked about this a long while back (face to face) with
-people, but the problem was (and still kind of is) the bindings
-changing, etc.
+[...]
 
--- 
-Tom
+> +static inline void qcom_ipq806x_sata_delay_us(unsigned int delay)
+> +{
+> +	/* sleep for max. 50us more to combine processor wakeups */
+> +	usleep_range(delay, delay + 50);
+> +}
 
--- 
-For more options, visit http://beagleboard.org/discuss
---- 
-You received this message because you are subscribed to the Google Groups "BeagleBoard" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to beagleboard+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+This is used only once in the driver so there is no need to make it
+into static inline helper.
+
+Best regards,
+--
+Bartlomiej Zolnierkiewicz
+Samsung R&D Institute Poland
+Samsung Electronics
