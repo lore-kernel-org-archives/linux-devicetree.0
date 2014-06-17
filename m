@@ -1,73 +1,84 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2 07/10] regulator: Add driver for Maxim 77802 PMIC regulators
-Date: Tue, 17 Jun 2014 18:05:29 +0200
-Message-ID: <53A06749.1010606@collabora.co.uk>
-References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk> <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk> <20140616192500.GJ5099@sirena.org.uk> <53A01D54.10506@collabora.co.uk> <20140617141254.GP5099@sirena.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v3 2/2] ASoC: fsl: add imx-es8328 machine driver
+Date: Tue, 17 Jun 2014 17:07:00 +0100
+Message-ID: <20140617160700.GE8930@leverpostej>
+References: <1402997571-1255-1-git-send-email-xobs@kosagi.com>
+ <1402997571-1255-3-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140617141254.GP5099@sirena.org.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402997571-1255-3-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org" <bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
-
-On 06/17/2014 04:12 PM, Mark Brown wrote:
-> On Tue, Jun 17, 2014 at 12:49:56PM +0200, Javier Martinez Canillas wrote:
->> On 06/16/2014 09:25 PM, Mark Brown wrote:
+On Tue, Jun 17, 2014 at 10:32:51AM +0100, Sean Cross wrote:
+> This adds an initial machine driver for the ES8328 audio codec.  The
+> driver supports headphones, an audio regulator for both the codec itself
+> and a speaker amp, and supports reparenting and adjusting clocks to supply
+> the audio codec with the unusual frequency it requires.
 > 
->> >> +	config.dev = &pdev->dev;
+> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/imx-audio-es8328.txt |  60 ++++
+>  sound/soc/fsl/Kconfig                              |  14 +
+>  sound/soc/fsl/Makefile                             |   2 +
+>  sound/soc/fsl/imx-es8328.c                         | 359 +++++++++++++++++++++
+>  4 files changed, 435 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+>  create mode 100644 sound/soc/fsl/imx-es8328.c
 > 
->> > Are you sure this shouldn't be the MFD?
-> 
->> I just looked at regulator_register() and saw that it does rdev->dev.parent =
->> dev, so yes this has to be the MFD.
->
+> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+> new file mode 100644
+> index 0000000..bd614a6
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+> @@ -0,0 +1,60 @@
+> +Freescale i.MX audio complex with ES8328 codec
+> +
+> +Required properties:
+> +- compatible : "fsl,imx-audio-es8328"
+> +- model : The user-visible name of this sound complex
+> +- clocks : A list of clocks required to run the codec at 22.5792 MHz
 
-I noticed that many drivers set config.dev = &pdev->dev. The original Chrome OS
-max77xxx driver and max77686 are two examples but others drivers do the same:
+The driver seems to acquire these by name.
 
-$ git grep "config.dev = &pdev->dev" drivers/regulator/ | wc -l
-35
-$ git grep "config.dev = pdev->dev.parent" drivers/regulator/ | wc -l
-11
+Please document the names you expect.
 
-And also I see that mfd_add_device() calls
-devm_regulator_bulk_register_supply_alias(&pdev->dev,...) so I'm confused now
-about what the correct device should be...
+[...]
 
-> Do the regulators manage to get their supplies?
-> 
+> +static int imx_es8328_probe(struct platform_device *pdev)
+> +{
+> +       struct device_node *np = pdev->dev.of_node;
+> +       struct device_node *ssi_np, *codec_np;
+> +       struct platform_device *ssi_pdev;
+> +       struct imx_es8328_data *data;
+> +       int int_port, ext_port;
+> +       int ret;
+> +       struct device *dev = &pdev->dev;
+> +
+> +       ret = of_property_read_u32(np, "mux-int-port", &int_port);
 
-There are no current support in mainline for the devices that use the regulators
-in this PMIC so I can't tell you if consumers manage to get their supplies
-correctly (e.g: if regulator_dev_lookup succeeds).
+I see int_port is defined as an int; please make it a u32 to match the
+prototype of of_property_read_u32.
 
-But I see in the kernel log that the regulators are registered and configured as
-expected [0] and also the driver in the Chrome OS 3.8 kernel is working for sure
-and sets config.dev to &pdev->dev instead of the MFD.
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "mux-int-port missing or invalid\n");
+> +               return ret;
+> +       }
+> +       ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
+> +       if (ret) {
+> +               dev_err(&pdev->dev, "mux-ext-port missing or invalid\n");
+> +               return ret;
+> +       }
 
->> So, for now I thought it made sense to set the operating mode to normal on
->> probe() but I'll change it to read from the hardware if that is better.
-> 
-> Yes, otherwise if the device is configured otherwise then when we change
-> the configuration we may break something.
-> 
->> I guess I should check in the datasheet if a sane default operating mode for
->> LDOs is expected when the chip is reseted or if this is left undefined and also
->> if the bootloader already set this.
-> 
-> You can't do anything based on the particular bootloader you're using in
-> your current system, this has to work in other systems.
-> 
+As with int_port, please define ext_port as a u32.
 
-Yes, that's why I thought it was a good idea to set to a default operational
-mode but I'll change it to read from the hardware instead.
-
-Thanks a lot and best regards,
-Javier
-
-[0]: http://pastebin.com/raw.php?i=8yyMXcGD
+Cheers,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
