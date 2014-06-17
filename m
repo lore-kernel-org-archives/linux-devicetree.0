@@ -1,40 +1,45 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4] hwmon: Driver for TI TMP103 temperature sensor
-Date: Tue, 17 Jun 2014 09:21:14 -0700
-Message-ID: <20140617162114.GA23451@roeck-us.net>
-References: <1402992713-22711-1-git-send-email-hs@denx.de>
- <20140617161105.GF8930@leverpostej>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v2 1/2] libahci: Implement the function
+ ahci_restart_engine to restart the port dma engine.
+Date: Tue, 17 Jun 2014 12:21:56 -0400
+Message-ID: <20140617162156.GI31819@htj.dyndns.org>
+References: <1402911336-31788-1-git-send-email-stripathi@apm.com>
+ <1402911336-31788-2-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <linux-scsi-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140617161105.GF8930@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Heiko Schocher <hs@denx.de>, "lm-sensors@lm-sensors.org" <lm-sensors@lm-sensors.org>, Jean Delvare <khali@linux-fr.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+In-Reply-To: <1402911336-31788-2-git-send-email-stripathi@apm.com>
+Sender: linux-scsi-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 05:11:05PM +0100, Mark Rutland wrote:
-> On Tue, Jun 17, 2014 at 09:11:53AM +0100, Heiko Schocher wrote:
-> > Driver for the TI TMP103.
-> > 
-> > The TI TMP103 is similar to the TMP102.  It differs from the TMP102
-> > by having only 8 bit registers.
-> > 
-> > Signed-off-by: Heiko Schocher <hs@denx.de>
-> > 
-[ ... ]
-> > +
-> > +static const struct i2c_device_id tmp103_id[] = {
-> > +	{ DRIVER_NAME, 0 },
-> 
-> This seems to be used for compatible string matching. As such, I think
-> it would make more sense to have the string in full here so as to
-> discourage it from being changed arbitrarily in future.
-> 
-Makes sense. Heiko, can you change that as well in v5 ?
-It also simplifies adding another chip to the driver, should that
-ever happen.
+Hello,
 
-Thanks,
-Guenter
+On Mon, Jun 16, 2014 at 03:05:35PM +0530, Suman Tripathi wrote:
+> This patch implements the function ahci_restart_engine function to restart the port dma engine.
+
+Please fit the text under 80 column.
+
+> ---
+
+I can't apply w/o your SOB.
+
+> +int ahci_restart_engine(struct ata_port *ap)
+> +{
+> +	ahci_stop_engine(ap);
+> +	ahci_start_fis_rx(ap);
+> +	ahci_start_engine(ap);
+> +
+> +	return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(ahci_restart_engine);
+
+Why is this exported?  The next patch doesn't seem to use the function
+outside libahci.c proper.
+
+Thanks.
+
+-- 
+tejun
