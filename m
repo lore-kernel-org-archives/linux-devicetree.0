@@ -1,96 +1,61 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: Unifying cape overlays into boot .dtb for BeagleBoard.org boards
-Date: Tue, 17 Jun 2014 07:11:05 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAF59A7@DBDE04.ent.ti.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
- <CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v4 0/7] mfd: axp20x: add AXP221 PMIC support
+Date: Tue, 17 Jun 2014 09:38:36 +0200
+Message-ID: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-omap-owner@vger.kernel.org
-To: Jason Kridner <jkridner@gmail.com>
-Cc: OMAP List <linux-omap@vger.kernel.org>, "beagleboard@googlegroups.com" <beagleboard@googlegroups.com>, Robert Nelson <robertcnelson@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBEXB76OAKGQEQBEVZCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFzb24sDQoNCj5Gcm9tOiBKYXNvbiBLcmlkbmVyDQo+DQo+QWRkaW5nIGRldmljZXRyZWUg
-YW5kIGxpbnV4LWFybS1rZXJuZWwgbGlzdHMgYmFzZWQgb24gZmVlZGJhY2sgb24gSVJDLi4uDQo+
-DQo+T24gVHVlLCBKdW4gMTAsIDIwMTQgYXQgMTI6NDYgUE0sIEphc29uIEtyaWRuZXIgPGprcmlk
-bmVyQGdtYWlsLmNvbT4gd3JvdGU6DQo+PiBJJ2QgbGlrZSB0byBkaXNjdXNzIG1vdmluZyBvdXIg
-Y3VycmVudCBsaWJyYXJ5IG9mIGNhcGUgZGV2aWNldHJlZQ0KPj4gb3ZlcmxheSBzb3VyY2VzIGlu
-dG8gYSBzaW5nbGUgdHJlZSwgaW5jbHVkaW5nIHRoZSBib290IC5kdGIgZmlsZXMgZm9yDQo+PiBC
-ZWFnbGVCb2FyZC5vcmcgYm9hcmRzIGFuZCBtb3ZpbmcgdG93YXJkcyBlbmFibGluZyBhcyBtdWNo
-IG9mIHRoZSBjYXBlDQo+PiBzdXBwb3J0IGludG8gYSBzaW5nbGUgYm9vdC10aW1lIC5kdGIgZmls
-ZSB3aXRoIGFuIGFwcHJvYWNoIHNpbWlsYXIgdG8NCj4+IHRoZSBjYXBlLXVuaXZlcnNhbCBvdmVy
-bGF5DQo+PiAoaHR0cHM6Ly9naXRodWIuY29tL2Nkc3RlaW5rdWVobGVyL2JlYWdsZWJvbmUtdW5p
-dmVyc2FsLWlvKSwgYnV0IG5vdA0KPj4gaW4gYW4gb3ZlcmxheS4NCj4+DQo+PiBGaXJzdCBvZiBh
-bGwsIEkgd2FudCB0byBub3RlIHRoaXMgZG9lc24ndCBjaGFuZ2UgbXkgdmlldyBvbiB0aGUNCj4+
-IGltcG9ydGFuY2Ugb2YgbWFpbmxpbmUgc3VwcG9ydCBmb3IgZGV2aWNldHJlZSBvdmVybGF5cy4g
-VGhleSBhcmUgc3RpbGwNCj4+IGFic29sdXRlbHkgY3JpdGljYWwgYW5kIGhpZ2hseSB1c2VmdWws
-IHNvbHZpbmcgcHJvYmxlbXMgdGhhdCBjYW5ub3QgYmUNCj4+IHNvbHZlZCB0aHJvdWdoIGJvb3Qt
-dGltZSBkZXZpY2V0cmVlcy4gSSdtIHNpbXBseSBsb29raW5nIGZvciBhbg0KPj4gYXBwcm9hY2gg
-dGhhdCB3aWxsIGNvbXBsZW1lbnQgdGhlIGF2YWlsYWJpbGl0eSBvZiBvdmVybGF5cyBhbmQgcHJv
-dmlkZQ0KPj4gdGhlIGJlc3QgdXNlciBleHBlcmllbmNlLg0KPj4NCj4+IFJvYmVydCBoYXMgYmVl
-biB0YWxraW5nIGFib3V0IHRoZSBhY3Rpb25zIHJlcXVpcmVkIHRvIGNsZWFuLXVwIERlYmlhbg0K
-Pj4gSmVzc2llIHN1cHBvcnQgaW4gYW5vdGhlciB0aHJlYWQNCj4+IChodHRwczovL2dyb3Vwcy5n
-b29nbGUuY29tL2QvbXNnL2JlYWdsZWJvYXJkLzJiOHJBcnRmQUJZL0E4ZDFKem1KYTRJSikNCj4+
-IGFuZCBJIHN1Z2dlc3RlZCB3ZSBzaG91bGQgYWRkIGEgYml0IG9mIGEgZGV0b3VyIGJ5IGNsZWFu
-aW5nIHVwIHRoZQ0KPj4gY2FwZSBzdXBwb3J0IGZvciB0aGUgbWFpbmxpbmUga2VybmVsIGFuZCBz
-d2l0Y2hpbmcgYXdheSBvdXIgcHJpbWFyeQ0KPj4gcHJvY2VzcyBvZiBzdXBwb3J0aW5nIGNhcGVz
-IGZyb20gdXNpbmcgb3ZlcmxheXMgdG8gdXNpbmcgYSBzaW5nbGUNCj4+IGRldmljZXRyZWUgZmls
-ZSBwcm92aWRlZCBhdCBib290LiBJIHByb21pc2VkIGEgcHVsbC1yZXF1ZXN0IGFuZCBoYWRuJ3QN
-Cj4+IGdvdHRlbiBhcm91bmQgdG8gc2VuZGluZyBpdCB1bnRpbCBub3cgKGJlbG93KS4gTm8gYXJj
-aGl0ZWN0dXJlIGNoYW5nZXMNCj4+IGhhdmUgYmVlbiBtYWRlIGluIG15IHB1bGwtcmVxdWVzdCwg
-anVzdCBicmluZ2luZyBpbiB0aGUga2VybmVsDQo+PiBkZXZpY2V0cmVlIHNvdXJjZSBoaXN0b3J5
-LiBUaGlzIHN1Z2dlc3Rpb24gaXMgYmFzZWQgb24gc2V2ZXJhbA0KPj4gYXNzdW1wdGlvbnMsIGFu
-eSBudW1iZXIgb2Ygd2hpY2ggbWlnaHQgYmUgd3JvbmcuDQo+Pg0KPj4gVGhlIGFzc3VtcHRpb25z
-IChmb3Igd2hpY2ggSSdtIGxvb2tpbmcgZm9yIGZlZWRiYWNrL2NvcnJlY3Rpb25zKToNCj4+ICog
-VGhlIG92ZXJsYXlzIHByZXR0eSBtdWNoIGFsbCBuZWVkIHRvIGJlIGNvbXBpbGVkIGludG8gdGhl
-IGtlcm5lbCBpZg0KPj4gdGhleSBhcmUgZ29pbmcgdG8gYmUgbG9hZGVkIHVzaW5nIGtlcm5lbCBj
-b21tYW5kLWxpbmUgYXJndW1lbnRzIG9yDQo+PiAvZXRjL2NhcGVtZ3IgZm9yIHRoZSBtYWpvcml0
-eSBvZiBkaXN0cm9zLiBXaGlsZSBtYW55IGNhcGUgZGV2aWNldHJlZQ0KPj4gdXNlIGNhc2VzIGFy
-ZSBwZXJmZWN0bHkgaGFwcHkgd2l0aCBsb2FkaW5nIGF0IHJ1bi10aW1lIHJhdGhlciB0aGFuDQo+
-PiBib290LXRpbWUsIGl0IHNlZW1zIHRoZXJlIHNob3VsZCBiZSBhIG1lY2hhbmlzbSBmb3IgcHVz
-aGluZyBjYXBlDQo+PiBzdXBwb3J0IGludG8gdGhlIGNhdGVnb3J5IG9mIGJlaW5nIGF2YWlsYWJs
-ZSBhdCBib290LXRpbWUgYWNyb3NzDQo+PiBkaXN0cmlidXRpb25zLg0KPj4gKiBUaGUgZGV2aWNl
-dHJlZSBzb3VyY2VzLCBpbmNsdWRpbmcgdGhlIHByaW1hcnkgYm9vdCAuZHRzIGZpbGVzLCB3aWxs
-DQo+PiBldmVudHVhbGx5IGJlIHJlbW92ZWQgZnJvbSB0aGUga2VybmVsIHNvdXJjZSB0cmVlLiBJ
-J20gbm90IHRvbyBzdXJlIGlmDQo+PiBhbmQgd2hlbiBpdCdsbCByZWFsbHkgaGFwcGVuLCBidXQg
-c3RhcnRpbmcgdXAgYSBwcm9qZWN0IHRvIG1haW50YWluDQo+PiB0aGUgZGVmaW5pdGl2ZSBiZWFn
-bGVib2FyZC5vcmcgYm9hcmQgZGV2aWNldHJlZSBmaWxlcyBvdXRzaWRlIHRoZQ0KPj4ga2VybmVs
-IHNlZW1zIHRvIG1ha2Ugc2Vuc2UuIEdpdmVuIHRoZSBpbnRlcmRlcGVuZGVuY3kgb2YgdGhlIGJv
-b3QgLmR0Yg0KPj4gYW5kIHRoZSBvdmVybGF5IC5kdGJvIGZpbGVzLCBjb21iaW5pbmcgdGhlbSBp
-bnRvIGEgc2luZ2xlIHJlcG9zaXRvcnkNCj4+IHdoZXJlIGV2ZXJ5IGRpc3RyaWJ1dGlvbiBjYW4g
-cGljayB0aGVtIHVwIHNlZW1zIGxpa2UgYSBuYXR1cmFsIGFuZA0KPj4gb2J2aW91cyBjaG9pY2Uu
-IFRoZXJlIGFyZSBvZiBjb3Vyc2Ugc29tZSBkZXBlbmRlbmNpZXMgb24ga2VybmVsDQo+PiB2ZXJz
-aW9ucywgYnV0IEkgYmVsaWV2ZSBtb3N0IG9mIHRob3NlIGhhdmUgc2V0dGxlZCBvdXQgYnkgbm93
-IGFuZCB3ZQ0KPj4gc2hvdWxkIGJlIE9LIG1vdmluZyBmb3J3YXJkLg0KDQorMQ0KWWVzLCBtb3Zp
-bmcgY2FwZSBEVFMgb3V0IG9mIGtlcm5lbCB0cmVlIHNob3VsZCBoZWxwIGRldmVsb3BlcnMuDQpU
-aGVyZSBhcmUgcXVpdGUgYSBmZXcgY2FwZSBwYXRjaGVzIGZsb2F0aW5nIGluIG1haWwtbGlzdHMs
-IGJ1dCBhcyBjYXBlDQpEVFMgaXMgc3RpbGwgbm90IGFjY2VwdGVkIGluIG1haW5saW5lIHNvIHRo
-ZXkgZ2V0IGxvc3QgYW5kIGZvcmdvdHRlbi4NClNvIG9uZSBwbGFjZSBmb3IgY29sbGVjdGluZyBh
-bGwgdGhpcyBpcyBhIGdvb2QgaWRlYS4NCg0KDQpIb3dldmVyLCBzb21laG93IHRoZSB1bml2ZXJz
-YWwgSS9PIERUUyBsb29rZWQgc2VlbWVkIGNvbXBsaWNhdGVkOg0KKDEpDQpBbGwgY2FwZXMgd29y
-ayBzdGFuZGFsb25lLCBidXQgZHVlIHRvIHNoYXJlIHBpbi1tdXggc29tZSBjYXBlDQpjb21iaW5h
-dGlvbnMgY2Fubm90IGJlIHVzZWQgc2ltdWx0YW5lb3VzbHkuIEJ1dCBtb3N0IHVzZXJzIG9mDQpC
-ZWFnbGVCb25lIGFyZSBhbHJlYWR5IHdlbGwtdmVyc2VkIHdpdGggRFQgYW5kIGtlcm5lbCBpbmZy
-YXN0cnVjdHVyZSwNCnNvIHRoZXkgbmVlZCBub3QgYmUgc3Bvb24gZmVkIHRvIGdldCBhIG91dC1v
-Zi1ib3ggd29ya2luZyBzb2x1dGlvbg0KZm9yIGVhY2ggY29tYmluYXRpb24uIElmIHRoZXJlIGlz
-IHByb3BlciBkb2N1bWVudGF0aW9uIGlzIGF2YWlsYWJsZQ0KYWJvdXQgY29tcGF0aWJpbGl0eSBv
-ZiBjYXBlcyB3aXRoIGVhY2ggb3RoZXIsIHRoZW4gdXNlcnMgd2lsbCBmaWd1cmUNCm91dCB0aGVt
-c2VsdmVzLg0KDQooMikNCkFsc28sIHRoZXJlIHdhcyBhIHRhbGsgb2YgZW5hYmxpbmcgYW5kIGRp
-c2FibGluZyBEVCBmcmFnbWVudHMgdmlhIHUtYm9vdC4NClRoYXQgc2hvdWxkIGFsc28gYmUgZXhw
-bG9yZWQgaW5zdGVhZCBvZiBjb21wbGljYXRpbmcgY2FwZSBEVFMuDQoNCigzKQ0KQmVhZ2xlQm9u
-ZSBjb21tdW5pdHkgYW5kIG91dHNpZGUgYXJlIGNvbWluZyBvdXQgd2l0aCBuZXcgZmVhdHVyZWQN
-CmNhcGVzLCB3aGljaCBtaWdodCBwb3NzZXNzIGEgY2hhbGxlbmdlIHRvIGdldCBhIGFic29sdXRl
-IG5vbi1jb25mbGljdGluZw0KdW5pdmVyc2FsIEkvTyBEVFMuIFdoYXQgbWlnaHQgYmUgd29ya2lu
-ZyB0b2RheSBtaWdodCBoYXZlIGNvbmZsaWN0cw0KdG9tb3Jyb3cgd2l0aCBpbnRyb2R1Y3Rpb24g
-b2YgbmV3IGNhcGVzLg0KV2Ugc2hvdWxkIGJlIG9wZW4gdG8gYmUgY29tcGF0aWJsZSB0byBjYXBl
-cyBkZXZlbG9wZWQgb3V0c2lkZQ0KQmVhZ2xlYm9uZS5vcmcuIEluIG15IHZpZXcgdGhpcyBpcyBp
-bXBvcnRhbnQgZm9yIGxvbmdlciB0ZXJtLg0KRXhhbXBsZTogaHR0cDovL3ZhbGVudGZ4LmNvbS9s
-b2dpLWJvbmUvDQoNClNvLCBwbHogcmV2aWV3IG15IGZlZWRiYWNrIGFuZCBpZiB5b3UgcGxhbiB0
-byBjcmVhdGUgYW4gZXh0ZXJuYWwgdHJlZQ0KZm9yIGJlYWdsZWJvbmUgQ2FwZXMsIEkgd291bGQg
-YmUgaGFwcHkgdG8gc3VibWl0IHNvbWUgY2FwZSBwYXRjaGVzLg0KDQoNCndpdGggcmVnYXJkcywg
-cGVrb24NCg==
+Hello,
+
+This patch series adds basic support for X-Powers' AXP221 PMIC.
+
+At the moment the MFD device only exposes AXP221 regulators but other
+subdevices might be added later.
+
+Best Regards,
+
+Boris
+
+Changes since v3:
+ - rework mfd probe to avoid multiple AXP variant tests
+ - add new compatible string to the DT bindings doc
+
+Changes since v2:
+ - add helper functions for regulator set registration
+ - fix a copy/paste error in the axp20x mfd driver
+
+Changes since v1:
+ - merge code with the axp20x driver
+
+Boris BREZILLON (7):
+  mfd: axp20x: add AXP221 PMIC support
+  regulator: axp20x: prepare support for multiple AXP chip families
+  regulator: axp20x: add support for AXP221 regulators
+  regulator: axp20x: reset probe data before each probe
+  regulator: add support for regulator set registration
+  regulator: axp20x: make use of devm_regulator_set_register
+  mfd: AXP20x: add "x-powers,axp221" compatible string to DT bindings
+    doc
+
+ Documentation/devicetree/bindings/mfd/axp20x.txt |   2 +-
+ drivers/mfd/axp20x.c                             |  64 ++++++-
+ drivers/regulator/axp20x-regulator.c             | 202 ++++++++++++++++-------
+ drivers/regulator/core.c                         | 106 ++++++++++++
+ drivers/regulator/devres.c                       |  68 ++++++++
+ include/linux/mfd/axp20x.h                       |  56 +++++++
+ include/linux/regulator/driver.h                 |  51 ++++++
+ 7 files changed, 483 insertions(+), 66 deletions(-)
+
+-- 
+1.8.3.2
