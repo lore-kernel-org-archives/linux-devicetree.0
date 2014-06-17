@@ -1,49 +1,89 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v4] hwmon: Driver for TI TMP103 temperature sensor
-Date: Tue, 17 Jun 2014 07:22:34 -0700
-Message-ID: <53A04F2A.80104@roeck-us.net>
-References: <1402992713-22711-1-git-send-email-hs@denx.de> <53A01CE6.4010608@roeck-us.net> <53A02013.1060403@denx.de>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH] mfd: syscon: add child device support
+Date: Tue, 17 Jun 2014 15:25:06 +0100
+Message-ID: <20140617142506.GA29841@lee--X1>
+References: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53A02013.1060403@denx.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: hs@denx.de
-Cc: lm-sensors@lm-sensors.org, Jean Delvare <khali@linux-fr.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2014 04:01 AM, Heiko Schocher wrote:
-> Hello Guenter
->
-> Am 17.06.2014 12:48, schrieb Guenter Roeck:
->> On 06/17/2014 01:11 AM, Heiko Schocher wrote:
->>> Driver for the TI TMP103.
->>>
->>> The TI TMP103 is similar to the TMP102. It differs from the TMP102
->>> by having only 8 bit registers.
->>>
->>> Signed-off-by: Heiko Schocher <hs@denx.de>
->>>
->> [ ... ]
->>> +#define TMP103_CONF_SD (TMP103_CONF_M0 | TMP103_CONF_M1)
->>
->> Hello Heiko,
->>
->> I thought this needs to be TMP103_CONF_M1, but from the datasheet it looks
->> like it does not matter if M0 is set if M1 is set as well. Did you test it,
->> though, to make sure that it works ? I feel slightly uncomfortable with it.
->
-> Yes, i tested it on an imx6 based board. I see no issues ... but I can
-> test it with "#define TMP103_CONF_SD TMP103_CONF_M1" and post a v5 with
-> this setting if it works ...
->
+=46AO DT chaps,
 
-Hello Heiko,
+I'd be interested to hear your opinion about this.
 
-I would appreciate that.
+> For devices which have a complete register for themselves, it is poss=
+ible to
+> place them next to the syscon device with overlapping reg ranges. The=
+ same is
+> not possible for devices which only occupy bitfields in registers sha=
+red with
+> other users.
+> For devices that are completely controlled by bitfields in the syscon=
+ address
+> range, such as multiplexers or voltage regulators, allow to put child=
+ devices
+> into the syscon device node.
+>=20
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
+> ---
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 11 +++++++++++
+>  drivers/mfd/syscon.c                             |  2 ++
+>  2 files changed, 13 insertions(+)
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Docum=
+entation/devicetree/bindings/mfd/syscon.txt
+> index fe8150b..a7e11d5 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -9,10 +9,21 @@ using a specific compatible value), interrogate the=
+ node (or associated
+>  OS driver) to determine the location of the registers, and access th=
+e
+>  registers directly.
+> =20
+> +Optionally, devices that are only controlled through single syscon
+> +registers or bitfields can also be added as child nodes to the sysco=
+n
+> +device node. These devices can implicitly assume their parent node
+> +as syscon provider without referencing it explicitly via phandle.
+> +In this case, the syscon node should have #address-cells =3D <1> and
+> +#size-cells =3D <0> and no ranges property.
+> +
+>  Required properties:
+>  - compatible: Should contain "syscon".
+>  - reg: the register region can be accessed from syscon
+> =20
+> +Optional properties:
+> +- #address-cells: Should be 1.
+> +- #size-cells: Should be 0.
+> +
+>  Examples:
+>  gpr: iomuxc-gpr@020e0000 {
+>  	compatible =3D "fsl,imx6q-iomuxc-gpr", "syscon";
+> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+> index dbea55d..1dde475 100644
+> --- a/drivers/mfd/syscon.c
+> +++ b/drivers/mfd/syscon.c
+> @@ -147,6 +147,8 @@ static int syscon_probe(struct platform_device *p=
+dev)
+> =20
+>  	dev_dbg(dev, "regmap %pR registered\n", res);
+> =20
+> +	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
+> +
+>  	return 0;
+>  }
+> =20
 
-Thanks,
-Guenter
-
-
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
