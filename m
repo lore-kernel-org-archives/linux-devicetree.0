@@ -1,13 +1,12 @@
 From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v4 2/7] regulator: axp20x: prepare support for
- multiple AXP chip families
-Date: Tue, 17 Jun 2014 09:38:38 +0200
-Message-ID: <1402990723-28138-3-git-send-email-boris.brezillon@free-electrons.com>
+Subject: [PATCH v4 5/7] regulator: add support for regulator set registration
+Date: Tue, 17 Jun 2014 09:38:41 +0200
+Message-ID: <1402990723-28138-6-git-send-email-boris.brezillon@free-electrons.com>
 References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBE7B76OAKGQESSRNNEY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBG7B76OAKGQEOHZBFWQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1402990723-28138-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,174 +18,287 @@ To: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee
 Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Rework the AXP20X_ macros to support the several chip families, so that
-each family can define it's own set of regulators, and regulator matches.
+PMIC devices often provide several regulators, and these regulators are
+all using the same regmap and are all attached to the same device (the
+PMIC device).
 
-Pass a match table to the axp20x_regulator_parse_dt function instead of
-statically using the axp20x match table.
+Add helper functions (both simple and resource managed versions) to
+register and unregister such kind of regulator set.
+
+This implementation handles self dependency issues where one regulator
+provided the PMIC depends on another one provided by the same PMIC.
 
 Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- drivers/regulator/axp20x-regulator.c | 74 +++++++++++++++++++-----------------
- 1 file changed, 39 insertions(+), 35 deletions(-)
+ drivers/regulator/core.c         | 106 +++++++++++++++++++++++++++++++++++++++
+ drivers/regulator/devres.c       |  68 +++++++++++++++++++++++++
+ include/linux/regulator/driver.h |  51 +++++++++++++++++++
+ 3 files changed, 225 insertions(+)
 
-diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
-index 004aadb..9716f8e 100644
---- a/drivers/regulator/axp20x-regulator.c
-+++ b/drivers/regulator/axp20x-regulator.c
-@@ -32,13 +32,13 @@
+diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
+index 4c1f999..f37a604 100644
+--- a/drivers/regulator/core.c
++++ b/drivers/regulator/core.c
+@@ -3607,6 +3607,112 @@ void regulator_unregister(struct regulator_dev *rdev)
+ EXPORT_SYMBOL_GPL(regulator_unregister);
  
- #define AXP20X_FREQ_DCDC_MASK		0x0f
- 
--#define AXP20X_DESC_IO(_id, _supply, _min, _max, _step, _vreg, _vmask, _ereg,   \
--		       _emask, _enable_val, _disable_val)			\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC_IO(_family, _id, _supply, _min, _max, _step, _vreg, _vmask,	\
-+		    _ereg, _emask, _enable_val, _disable_val)			\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= (((_max) - (_min)) / (_step) + 1),		\
- 		.owner		= THIS_MODULE,					\
- 		.min_uV		= (_min) * 1000,				\
-@@ -52,13 +52,13 @@
- 		.ops		= &axp20x_ops,					\
- 	}
- 
--#define AXP20X_DESC(_id, _supply, _min, _max, _step, _vreg, _vmask, _ereg,	\
--		    _emask) 							\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC(_family, _id, _supply, _min, _max, _step, _vreg, _vmask, 	\
-+		 _ereg, _emask) 						\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= (((_max) - (_min)) / (_step) + 1),		\
- 		.owner		= THIS_MODULE,					\
- 		.min_uV		= (_min) * 1000,				\
-@@ -70,24 +70,25 @@
- 		.ops		= &axp20x_ops,					\
- 	}
- 
--#define AXP20X_DESC_FIXED(_id, _supply, _volt)					\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC_FIXED(_family, _id, _supply, _volt)				\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= 1,						\
- 		.owner		= THIS_MODULE,					\
- 		.min_uV		= (_volt) * 1000,				\
- 		.ops		= &axp20x_ops_fixed				\
- 	}
- 
--#define AXP20X_DESC_TABLE(_id, _supply, _table, _vreg, _vmask, _ereg, _emask)	\
--	[AXP20X_##_id] = {							\
-+#define AXP_DESC_TABLE(_family, _id, _supply, _table, _vreg, _vmask, _ereg,	\
-+		       _emask)							\
-+	[_family##_##_id] = {							\
- 		.name		= #_id,						\
- 		.supply_name	= (_supply),					\
- 		.type		= REGULATOR_VOLTAGE,				\
--		.id		= AXP20X_##_id,					\
-+		.id		= _family##_##_id,				\
- 		.n_voltages	= ARRAY_SIZE(_table),				\
- 		.owner		= THIS_MODULE,					\
- 		.vsel_reg	= (_vreg),					\
-@@ -127,36 +128,36 @@ static struct regulator_ops axp20x_ops = {
- };
- 
- static const struct regulator_desc axp20x_regulators[] = {
--	AXP20X_DESC(DCDC2, "vin2", 700, 2275, 25, AXP20X_DCDC2_V_OUT, 0x3f,
-+	AXP_DESC(AXP20X, DCDC2, "vin2", 700, 2275, 25, AXP20X_DCDC2_V_OUT, 0x3f,
- 		    AXP20X_PWR_OUT_CTRL, 0x10),
--	AXP20X_DESC(DCDC3, "vin3", 700, 3500, 25, AXP20X_DCDC3_V_OUT, 0x7f,
-+	AXP_DESC(AXP20X, DCDC3, "vin3", 700, 3500, 25, AXP20X_DCDC3_V_OUT, 0x7f,
- 		    AXP20X_PWR_OUT_CTRL, 0x02),
--	AXP20X_DESC_FIXED(LDO1, "acin", 1300),
--	AXP20X_DESC(LDO2, "ldo24in", 1800, 3300, 100, AXP20X_LDO24_V_OUT, 0xf0,
-+	AXP_DESC_FIXED(AXP20X, LDO1, "acin", 1300),
-+	AXP_DESC(AXP20X, LDO2, "ldo24in", 1800, 3300, 100, AXP20X_LDO24_V_OUT, 0xf0,
- 		    AXP20X_PWR_OUT_CTRL, 0x04),
--	AXP20X_DESC(LDO3, "ldo3in", 700, 3500, 25, AXP20X_LDO3_V_OUT, 0x7f,
-+	AXP_DESC(AXP20X, LDO3, "ldo3in", 700, 3500, 25, AXP20X_LDO3_V_OUT, 0x7f,
- 		    AXP20X_PWR_OUT_CTRL, 0x40),
--	AXP20X_DESC_TABLE(LDO4, "ldo24in", axp20x_ldo4_data, AXP20X_LDO24_V_OUT, 0x0f,
-+	AXP_DESC_TABLE(AXP20X, LDO4, "ldo24in", axp20x_ldo4_data, AXP20X_LDO24_V_OUT, 0x0f,
- 			  AXP20X_PWR_OUT_CTRL, 0x08),
--	AXP20X_DESC_IO(LDO5, "ldo5in", 1800, 3300, 100, AXP20X_LDO5_V_OUT, 0xf0,
-+	AXP_DESC_IO(AXP20X, LDO5, "ldo5in", 1800, 3300, 100, AXP20X_LDO5_V_OUT, 0xf0,
- 		       AXP20X_GPIO0_CTRL, 0x07, AXP20X_IO_ENABLED,
- 		       AXP20X_IO_DISABLED),
- };
- 
--#define AXP_MATCH(_name, _id) \
--	[AXP20X_##_id] = { \
-+#define AXP_MATCH(_family, _name, _id) \
-+	[_family##_##_id] = { \
- 		.name		= #_name, \
--		.driver_data	= (void *) &axp20x_regulators[AXP20X_##_id], \
-+		.driver_data	= (void *) &axp20x_regulators[_family##_##_id], \
- 	}
- 
- static struct of_regulator_match axp20x_matches[] = {
--	AXP_MATCH(dcdc2, DCDC2),
--	AXP_MATCH(dcdc3, DCDC3),
--	AXP_MATCH(ldo1, LDO1),
--	AXP_MATCH(ldo2, LDO2),
--	AXP_MATCH(ldo3, LDO3),
--	AXP_MATCH(ldo4, LDO4),
--	AXP_MATCH(ldo5, LDO5),
-+	AXP_MATCH(AXP20X, dcdc2, DCDC2),
-+	AXP_MATCH(AXP20X, dcdc3, DCDC3),
-+	AXP_MATCH(AXP20X, ldo1, LDO1),
-+	AXP_MATCH(AXP20X, ldo2, LDO2),
-+	AXP_MATCH(AXP20X, ldo3, LDO3),
-+	AXP_MATCH(AXP20X, ldo4, LDO4),
-+	AXP_MATCH(AXP20X, ldo5, LDO5),
- };
- 
- static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
-@@ -179,7 +180,9 @@ static int axp20x_set_dcdc_freq(struct platform_device *pdev, u32 dcdcfreq)
- 				  AXP20X_FREQ_DCDC_MASK, dcdcfreq);
+ /**
++ * regulator_set_register - register a set of regulators
++ * @config: runtime configuration for regulator set
++ *
++ * Called by regulator drivers to register a set of regulators.
++ * Returns a valid pointer to struct regulator_set on success
++ * or an ERR_PTR() on error.
++ */
++struct regulator_set *
++regulator_set_register(const struct regulator_set_config *config)
++{
++	struct regulator_set *rset;
++	int prev_nregistered = -1;
++	int nregistered = 0;
++	int ret;
++	int i;
++
++	if (!config->descs || !config->nregulators)
++		return ERR_PTR(-EINVAL);
++
++	rset = kzalloc(sizeof(*rset) +
++		       (config->nregulators * sizeof(struct regulator_dev *)),
++		       GFP_KERNEL);
++	if (!rset)
++		return ERR_PTR(-ENOMEM);
++
++	rset->nregulators = config->nregulators;
++
++	while (nregistered < config->nregulators &&
++	       prev_nregistered < nregistered) {
++
++		prev_nregistered = nregistered;
++
++		for (i = 0; i < config->nregulators; i++) {
++			struct regulator_config conf;
++			struct regulator_dev *regulator;
++
++			if (rset->regulators[i])
++				continue;
++
++			memset(&conf, 0, sizeof(conf));
++
++			conf.dev = config->dev;
++			conf.regmap = config->regmap;
++			conf.driver_data = config->driver_data;
++			if (config->matches && config->matches[i].init_data)
++				conf.init_data = config->matches[i].init_data;
++			else if (config->init_data)
++				conf.init_data = config->init_data[i];
++
++			if (config->matches)
++				conf.of_node = config->matches[i].of_node;
++
++			regulator = regulator_register(&config->descs[i],
++						       &conf);
++			if (IS_ERR(regulator)) {
++				ret = PTR_ERR(regulator);
++				if (ret == -EPROBE_DEFER)
++					continue;
++
++				goto err;
++			}
++
++			rset->regulators[i] = regulator;
++			nregistered++;
++		}
++	}
++
++	if (nregistered < config->nregulators) {
++		ret = -EPROBE_DEFER;
++		goto err;
++	}
++
++	return rset;
++
++err:
++	for (i = 0; i < config->nregulators; i++) {
++		if (rset->regulators[i])
++			regulator_unregister(rset->regulators[i]);
++	}
++
++	kfree(rset);
++
++	return ERR_PTR(ret);
++}
++EXPORT_SYMBOL_GPL(regulator_set_register);
++
++/**
++ * regulator_set_unregister - unregister regulator set
++ * @rset: regulator set to unregister
++ *
++ * Called by regulator drivers to unregister a regulator set.
++ */
++void regulator_set_unregister(struct regulator_set *rset)
++{
++	int i;
++
++	for (i = 0; i < rset->nregulators; i++) {
++		if (rset->regulators[i])
++			regulator_unregister(rset->regulators[i]);
++	}
++
++	kfree(rset);
++}
++EXPORT_SYMBOL_GPL(regulator_set_unregister);
++
++/**
+  * regulator_suspend_prepare - prepare regulators for system wide suspend
+  * @state: system suspend state
+  *
+diff --git a/drivers/regulator/devres.c b/drivers/regulator/devres.c
+index 8f785bc..36ac40a 100644
+--- a/drivers/regulator/devres.c
++++ b/drivers/regulator/devres.c
+@@ -251,6 +251,74 @@ void devm_regulator_unregister(struct device *dev, struct regulator_dev *rdev)
  }
+ EXPORT_SYMBOL_GPL(devm_regulator_unregister);
  
--static int axp20x_regulator_parse_dt(struct platform_device *pdev)
-+static int axp20x_regulator_parse_dt(struct platform_device *pdev,
-+				     struct of_regulator_match *matches,
-+				     int nmatches)
- {
- 	struct device_node *np, *regulators;
- 	int ret;
-@@ -193,8 +196,8 @@ static int axp20x_regulator_parse_dt(struct platform_device *pdev)
- 	if (!regulators) {
- 		dev_warn(&pdev->dev, "regulators node not found\n");
- 	} else {
--		ret = of_regulator_match(&pdev->dev, regulators, axp20x_matches,
--					 ARRAY_SIZE(axp20x_matches));
-+		ret = of_regulator_match(&pdev->dev, regulators, matches,
-+					 nmatches);
- 		if (ret < 0) {
- 			dev_err(&pdev->dev, "Error parsing regulator init data: %d\n", ret);
- 			return ret;
-@@ -238,7 +241,8 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
- 	int ret, i;
- 	u32 workmode;
++static void devm_rset_release(struct device *dev, void *res)
++{
++	regulator_set_unregister(*(struct regulator_set **)res);
++}
++
++/**
++ * devm_regulator_set_register - Resource managed regulator_set_register()
++ * @dev: device registering the regulator set
++ * @config: runtime configuration for regulator set
++ *
++ * Called by regulator drivers to register a set of regulators.  Returns a
++ * valid pointer to struct regulator_set on success or an ERR_PTR() on
++ * error.  The regulator will automatically be released when the device
++ * is unbound.
++ */
++struct regulator_set *
++devm_regulator_set_register(struct device *dev,
++			    const struct regulator_set_config *config)
++{
++	struct regulator_set **ptr, *rset;
++
++	ptr = devres_alloc(devm_rset_release, sizeof(*ptr),
++			   GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++
++	rset = regulator_set_register(config);
++	if (!IS_ERR(rset)) {
++		*ptr = rset;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return rset;
++}
++EXPORT_SYMBOL_GPL(devm_regulator_set_register);
++
++static int devm_rset_match(struct device *dev, void *res, void *data)
++{
++	struct regulator_set **r = res;
++	if (!r || !*r) {
++		WARN_ON(!r || !*r);
++		return 0;
++	}
++	return *r == data;
++}
++
++/**
++ * devm_regulator_set_unregister - Resource managed regulator_set_unregister()
++ * @dev: device unregistering the regulator set
++ * @rset: regulator set to release
++ *
++ * Unregister a regulator set registered with devm_regulator_set_register().
++ * Normally this function will not need to be called and the resource
++ * management code will ensure that the resource is freed.
++ */
++void devm_regulator_set_unregister(struct device *dev,
++				   struct regulator_set *rset)
++{
++	int rc;
++
++	rc = devres_release(dev, devm_rdev_release, devm_rset_match, rset);
++	if (rc != 0)
++		WARN_ON(rc);
++}
++EXPORT_SYMBOL_GPL(devm_regulator_unregister);
++
+ struct regulator_supply_alias_match {
+ 	struct device *dev;
+ 	const char *id;
+diff --git a/include/linux/regulator/driver.h b/include/linux/regulator/driver.h
+index bbe03a1..b683f68 100644
+--- a/include/linux/regulator/driver.h
++++ b/include/linux/regulator/driver.h
+@@ -350,6 +350,48 @@ struct regulator_dev {
+ 	unsigned int ena_gpio_state:1;
+ };
  
--	ret = axp20x_regulator_parse_dt(pdev);
-+	ret = axp20x_regulator_parse_dt(pdev, axp20x_matches,
-+					ARRAY_SIZE(axp20x_matches));
- 	if (ret)
- 		return ret;
++/**
++ * struct regulator_set_config - Dynamic regulator set descriptor
++ *
++ * This structure describe a regulator and each regulator in this set
++ * will be registered using informations passed through regulator_desc
++ * and of_regulator_match tables.
++ *
++ * @dev: struct device providing the regulator set.
++ * @driver_data: private driver data for this regulator set.
++ * @regmap: regmap to use for core regmap helpers if dev_get_regulator() is
++ *          insufficient.
++ * @descs: table of regulator descriptors.
++ * @matches: table of DT regulator descriptors. This table should have
++ *           been filled by the of_regulator_match function.
++ * @init_data: a table of init_data in case matches is NULL or the init_data
++ *             of the match entry is NULL.
++ * @nregulators: number of regulators in the regulator set.
++ */
++struct regulator_set_config {
++	struct device *dev;
++	void *driver_data;
++	struct regmap *regmap;
++	const struct regulator_desc *descs;
++	const struct of_regulator_match *matches;
++	const struct regulator_init_data **init_data;
++	int nregulators;
++};
++
++/*
++ * struct regulator_set - Regulator set
++ *
++ * This structure stores a set of regulator devices provided by a single
++ * device (e.g. a PMIC device).
++ *
++ * @nregulators: number of regulators in the set
++ * @regulators: regulators table
++ */
++struct regulator_set {
++	int nregulators;
++	struct regulator_dev *regulators[0];
++};
++
+ struct regulator_dev *
+ regulator_register(const struct regulator_desc *regulator_desc,
+ 		   const struct regulator_config *config);
+@@ -360,6 +402,15 @@ devm_regulator_register(struct device *dev,
+ void regulator_unregister(struct regulator_dev *rdev);
+ void devm_regulator_unregister(struct device *dev, struct regulator_dev *rdev);
+ 
++struct regulator_set *
++regulator_set_register(const struct regulator_set_config *config);
++struct regulator_set *
++devm_regulator_set_register(struct device *dev,
++			    const struct regulator_set_config *config);
++void regulator_set_unregister(struct regulator_set *rset);
++void devm_regulator_set_unregister(struct device *dev,
++				   struct regulator_set *rset);
++
+ int regulator_notifier_call_chain(struct regulator_dev *rdev,
+ 				  unsigned long event, void *data);
  
 -- 
 1.8.3.2
