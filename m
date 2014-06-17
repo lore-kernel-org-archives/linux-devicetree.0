@@ -1,89 +1,58 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [RFC PATCH] mfd: syscon: add child device support
-Date: Tue, 17 Jun 2014 15:25:06 +0100
-Message-ID: <20140617142506.GA29841@lee--X1>
-References: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] brcmfmac: Fix OOB interrupt not
+ working for BCM43362
+Date: Tue, 17 Jun 2014 16:32:08 +0200
+Message-ID: <53A05168.9010604@redhat.com>
+References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-5-git-send-email-hdegoede@redhat.com> <53A02B5A.3070409@broadcom.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORB4NCQGOQKGQEKX2Y2XA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <53A02B5A.3070409-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-=46AO DT chaps,
+Hi,
 
-I'd be interested to hear your opinion about this.
+On 06/17/2014 01:49 PM, Arend van Spriel wrote:
+> On 16-06-14 19:56, Hans de Goede wrote:
+>> It has taken me a long long time to get the OOB interrupt working on the
+>> AP6210 sdio wifi/bt module found on various Allwinner A20 boards. In the
+>> end I found these magic register pokes in the cubietruck kernel tree:
+>> https://github.com/cubieboard2/linux-sunxi/commit/7f08ba395617d17e7a711507503d89a50406fe7a
+>>
+>> I'm not entirely sure if this specific to the AP6210 module, or if this
+>> should be done for all BCM43362 sdio devices.
+> 
+> Hi Hans,
+> 
+> I was still not sure about this one so I asked around. Apart from the nvram settings I emailed earlier one more is needed:
+> 
+> sd_gpout=1
+> sd_oobonly=1
+> sd_gpval=1
+> *muxenab=0x11*
+> 
+> Could you give that a try?
 
-> For devices which have a complete register for themselves, it is poss=
-ible to
-> place them next to the syscon device with overlapping reg ranges. The=
- same is
-> not possible for devices which only occupy bitfields in registers sha=
-red with
-> other users.
-> For devices that are completely controlled by bitfields in the syscon=
- address
-> range, such as multiplexers or voltage regulators, allow to put child=
- devices
-> into the syscon device node.
->=20
-> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
-> ---
->  Documentation/devicetree/bindings/mfd/syscon.txt | 11 +++++++++++
->  drivers/mfd/syscon.c                             |  2 ++
->  2 files changed, 13 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Docum=
-entation/devicetree/bindings/mfd/syscon.txt
-> index fe8150b..a7e11d5 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-> @@ -9,10 +9,21 @@ using a specific compatible value), interrogate the=
- node (or associated
->  OS driver) to determine the location of the registers, and access th=
-e
->  registers directly.
-> =20
-> +Optionally, devices that are only controlled through single syscon
-> +registers or bitfields can also be added as child nodes to the sysco=
-n
-> +device node. These devices can implicitly assume their parent node
-> +as syscon provider without referencing it explicitly via phandle.
-> +In this case, the syscon node should have #address-cells =3D <1> and
-> +#size-cells =3D <0> and no ranges property.
-> +
->  Required properties:
->  - compatible: Should contain "syscon".
->  - reg: the register region can be accessed from syscon
-> =20
-> +Optional properties:
-> +- #address-cells: Should be 1.
-> +- #size-cells: Should be 0.
-> +
->  Examples:
->  gpr: iomuxc-gpr@020e0000 {
->  	compatible =3D "fsl,imx6q-iomuxc-gpr", "syscon";
-> diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-> index dbea55d..1dde475 100644
-> --- a/drivers/mfd/syscon.c
-> +++ b/drivers/mfd/syscon.c
-> @@ -147,6 +147,8 @@ static int syscon_probe(struct platform_device *p=
-dev)
-> =20
->  	dev_dbg(dev, "regmap %pR registered\n", res);
-> =20
-> +	of_platform_populate(pdev->dev.of_node, NULL, NULL, &pdev->dev);
-> +
->  	return 0;
->  }
-> =20
+I seriously doubt that is going to do anything at all, all 4 these keywords do not
+show up when running strings on brcmfmac43362-sdio.bin, where as all the
+keywords used in the brcmfmac43362-sdio.txt shipped with the android on ap6210
+equipped boards do show up, confirming that the keywords are encoded in plain text
+in the firmware file.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Let me know if want me to give it a try anyways and I'll do so.
+
+Perhaps these keywords need a newer firmware version then the one in the
+linux-firmware repository ?
+
+Regards,
+
+Hans
