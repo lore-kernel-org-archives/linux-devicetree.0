@@ -1,256 +1,372 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH 2/2] phy: add hix5hd2-sata-phy driver
-Date: Tue, 17 Jun 2014 15:58:01 +0800
-Message-ID: <1402991881-27676-3-git-send-email-zhangfei.gao@linaro.org>
-References: <1402991881-27676-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402991881-27676-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, arnd@arndb.de, mark.rutland@arm.com, haifeng.yan@linaro.org, jchxue@gmail.com, zhangfei.gao@linaro.org
-Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jiancheng Xue <xuejiancheng@huawei.com>
+From: Heiko Schocher <hs@denx.de>
+Subject: [PATCH v4] hwmon: Driver for TI TMP103 temperature sensor
+Date: Tue, 17 Jun 2014 10:11:53 +0200
+Message-ID: <1402992713-22711-1-git-send-email-hs@denx.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: lm-sensors@lm-sensors.org
+Cc: Heiko Schocher <hs@denx.de>, Jean Delvare <khali@linux-fr.org>, Guenter Roeck <linux@roeck-us.net>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jiancheng Xue <xuejiancheng@huawei.com>
+Driver for the TI TMP103.
 
-Add hix5hd2-sata-phy driver on Hisilicon hix5hd2 soc.
+The TI TMP103 is similar to the TMP102.  It differs from the TMP102
+by having only 8 bit registers.
 
-Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Heiko Schocher <hs@denx.de>
+
 ---
- drivers/phy/Kconfig            |    8 ++
- drivers/phy/Makefile           |    1 +
- drivers/phy/phy-hix5hd2-sata.c |  192 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 201 insertions(+)
- create mode 100644 drivers/phy/phy-hix5hd2-sata.c
 
-diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-index 16a2f06..782953d 100644
---- a/drivers/phy/Kconfig
-+++ b/drivers/phy/Kconfig
-@@ -109,6 +109,14 @@ config PHY_EXYNOS5250_SATA
- 	  SATA 3.0 Gb/s, SATA 6.0 Gb/s speeds. It supports one SATA host
- 	  port to accept one SATA device.
- 
-+config PHY_HIX5HD2_SATA
-+	tristate "HIX5HD2 SATA PHY Driver"
-+	depends on ARCH_HIX5HD2 && OF
-+	select GENERIC_PHY
-+	select MFD_SYSCON
-+	help
-+	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
-+
- config PHY_SUN4I_USB
- 	tristate "Allwinner sunxi SoC USB PHY driver"
- 	depends on ARCH_SUNXI && HAS_IOMEM && OF
-diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-index b4f1d57..54f04d0 100644
---- a/drivers/phy/Makefile
-+++ b/drivers/phy/Makefile
-@@ -12,6 +12,7 @@ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
- obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
- obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
- obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
-+obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
- obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
- obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
- phy-exynos-usb2-y			+= phy-samsung-usb2.o
-diff --git a/drivers/phy/phy-hix5hd2-sata.c b/drivers/phy/phy-hix5hd2-sata.c
+Cc: Jean Delvare <khali@linux-fr.org>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: linux-doc@vger.kernel.org
+
+- change for v2:
+  - add comments from GuenterRoeck:
+    - remove Cc from commit subject
+    - add devicetree maintainer
+    - move Documentation to Documentation/hwmon/tmp103
+    - remove devicetree bindings from Documentation
+    - add compatible string to
+      "Documentation/devicetree/bindings/i2c/trivial-devices.txt"
+    - remove CamelCase
+    - fix Codingstyle issues
+    - use ATTRIBUTE_GROUPS and devm_hwmon_device_register_with_groups()
+    - remove unsused define TMP103_CONFIG_RD_ONLY
+    - restore config register when exit()
+    - use regmap
+- changes for v3:
+  again a lot of fantastic tips how to use regmap efficiently
+  from Guenter Roeck:
+  - get rid of "struct tmp103"
+  - get rid of "static const u8 tmp103_reg[]"
+  - get rid of mutex lock
+  - drop config_orig entirely
+  - use regmap_update_bits()
+- changes for v4:
+  - add comment from Guenter Roeck:
+    define TMP103_CONFIG_MASK and TMP103_CONF_SD_MASK
+    separately to ensure you catch all the to-be-cleared bits.
+
+ .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+ Documentation/hwmon/tmp103                         |  28 +++
+ drivers/hwmon/Kconfig                              |  10 +
+ drivers/hwmon/Makefile                             |   1 +
+ drivers/hwmon/tmp103.c                             | 207 +++++++++++++=
+++++++++
+ 5 files changed, 247 insertions(+)
+ create mode 100644 Documentation/hwmon/tmp103
+ create mode 100644 drivers/hwmon/tmp103.c
+
+diff --git a/Documentation/devicetree/bindings/i2c/trivial-devices.txt =
+b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+index bef86e5..fc944e0 100644
+--- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
++++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+@@ -83,5 +83,6 @@ stm,m41t80		M41T80 - SERIAL ACCESS RTC WITH ALARMS
+ taos,tsl2550		Ambient Light Sensor with SMBUS/Two Wire Serial Interfac=
+e
+ ti,tsc2003		I2C Touch-Screen Controller
+ ti,tmp102		Low Power Digital Temperature Sensor with SMBUS/Two Wire Se=
+rial Interface
++ti,tmp103		Low Power Digital Temperature Sensor with SMBUS/Two Wire Se=
+rial Interface
+ ti,tmp275		Digital Temperature Sensor
+ winbond,wpct301		i2c trusted platform module (TPM)
+diff --git a/Documentation/hwmon/tmp103 b/Documentation/hwmon/tmp103
 new file mode 100644
-index 0000000..107804b4
+index 0000000..ec00a15
 --- /dev/null
-+++ b/drivers/phy/phy-hix5hd2-sata.c
-@@ -0,0 +1,192 @@
++++ b/Documentation/hwmon/tmp103
+@@ -0,0 +1,28 @@
++Kernel driver tmp103
++=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
++
++Supported chips:
++  * Texas Instruments TMP103
++    Prefix: 'tmp103'
++    Addresses scanned: none
++    Product info and datasheet: http://www.ti.com/product/tmp103
++
++Author:
++	Heiko Schocher <hs@denx.de>
++
++Description
++-----------
++
++The TMP103 is a digital output temperature sensor in a four-ball
++wafer chip-scale package (WCSP). The TMP103 is capable of reading
++temperatures to a resolution of 1=C2=B0C. The TMP103 is specified for
++operation over a temperature range of =E2=80=9340=C2=B0C to +125=C2=B0=
+C.
++
++Resolution: 8 Bits
++Accuracy: =C2=B11=C2=B0C Typ (=E2=80=9310=C2=B0C to +100=C2=B0C)
++
++The driver provides the common sysfs-interface for temperatures (see
++Documentation/hwmon/sysfs-interface under Temperatures).
++
++Please refer how to instantiate this driver:
++Documentation/i2c/instantiating-devices
+diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+index 08531a1..c882d4b 100644
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1391,6 +1391,16 @@ config SENSORS_TMP102
+ 	  This driver can also be built as a module.  If so, the module
+ 	  will be called tmp102.
+=20
++config SENSORS_TMP103
++	tristate "Texas Instruments TMP103"
++	depends on I2C
++	help
++	  If you say yes here you get support for Texas Instruments TMP103
++	  sensor chips.
++
++	  This driver can also be built as a module.  If so, the module
++	  will be called tmp103.
++
+ config SENSORS_TMP401
+ 	tristate "Texas Instruments TMP401 and compatibles"
+ 	depends on I2C
+diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+index 3dc0f02..cc0df1ef 100644
+--- a/drivers/hwmon/Makefile
++++ b/drivers/hwmon/Makefile
+@@ -135,6 +135,7 @@ obj-$(CONFIG_SENSORS_SMSC47M192)+=3D smsc47m192.o
+ obj-$(CONFIG_SENSORS_AMC6821)	+=3D amc6821.o
+ obj-$(CONFIG_SENSORS_THMC50)	+=3D thmc50.o
+ obj-$(CONFIG_SENSORS_TMP102)	+=3D tmp102.o
++obj-$(CONFIG_SENSORS_TMP103)	+=3D tmp103.o
+ obj-$(CONFIG_SENSORS_TMP401)	+=3D tmp401.o
+ obj-$(CONFIG_SENSORS_TMP421)	+=3D tmp421.o
+ obj-$(CONFIG_SENSORS_TWL4030_MADC)+=3D twl4030-madc-hwmon.o
+diff --git a/drivers/hwmon/tmp103.c b/drivers/hwmon/tmp103.c
+new file mode 100644
+index 0000000..d133d09
+--- /dev/null
++++ b/drivers/hwmon/tmp103.c
+@@ -0,0 +1,207 @@
 +/*
-+ * Copyright (c) 2014 Linaro Ltd.
-+ * Copyright (c) 2014 Hisilicon Limited.
++ * Texas Instruments TMP103 SMBus temperature sensor driver
++ * Copyright (C) 2014 Heiko Schocher <hs@denx.de>
 + *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
++ * Based on:
++ * Texas Instruments TMP102 SMBus temperature sensor driver
++ *
++ * Copyright (C) 2010 Steven King <sfking@fdwdc.com>
++ *
++ * This program is free software; you can redistribute it and/or modif=
+y
++ * it under the terms of the GNU General Public License as published b=
+y
 + * the Free Software Foundation; either version 2 of the License, or
 + * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
 + */
 +
 +#include <linux/module.h>
-+#include <linux/mfd/syscon.h>
++#include <linux/init.h>
++#include <linux/slab.h>
++#include <linux/i2c.h>
++#include <linux/hwmon.h>
++#include <linux/hwmon-sysfs.h>
++#include <linux/err.h>
++#include <linux/mutex.h>
++#include <linux/device.h>
++#include <linux/jiffies.h>
 +#include <linux/regmap.h>
-+#include <linux/phy/phy.h>
-+#include <linux/io.h>
-+#include <linux/platform_device.h>
-+#include <linux/delay.h>
 +
-+#define SATA_PHY0_CTLL		0xa0
-+#define MPLL_MULTIPLIER_SHIFT	1
-+#define MPLL_MULTIPLIER_WIDTH	7
-+#define MPLL_MULTIPLIER_50M	0x3c
-+#define MPLL_MULTIPLIER_100M	0x1e
-+#define PHY_RESET		BIT(0)
-+#define REF_SSP_EN		BIT(9)
-+#define SSC_EN			BIT(10)
-+#define REF_USE_PAD		BIT(23)
++#define	DRIVER_NAME "tmp103"
 +
-+#define SATA_PORT_PHYCTL	0x174
-+#define HALF_RATE_SHIFT		16
-+#define HALF_RATE_WIDTH		2
-+#define PHY_CONFIG_SHIFT	18
-+#define PHY_CONFIG_WIDTH	2
-+#define GEN2_EN_SHIFT		21
-+#define GEN2_EN_WIDTH		2
-+#define SPEED_CTRL		BIT(20)
++#define TMP103_TEMP_REG		0x00
++#define TMP103_CONF_REG		0x01
++#define TMP103_TLOW_REG		0x02
++#define TMP103_THIGH_REG	0x03
 +
-+struct hix5hd2_priv {
-+	void __iomem	*base;
-+	struct regmap	*peri_ctrl;
-+	struct phy	*phy;
-+};
++#define TMP103_CONF_M0		0x01
++#define TMP103_CONF_M1		0x02
++#define TMP103_CONF_LC		0x04
++#define TMP103_CONF_FL		0x08
++#define TMP103_CONF_FH		0x10
++#define TMP103_CONF_CR0		0x20
++#define TMP103_CONF_CR1		0x40
++#define TMP103_CONF_ID		0x80
++#define TMP103_CONF_SD		(TMP103_CONF_M0 | TMP103_CONF_M1)
++#define TMP103_CONF_SD_MASK	(TMP103_CONF_M0 | TMP103_CONF_M1)
 +
-+enum phy_speed_mode {
-+	SPEED_MODE_GEN1 = 0,
-+	SPEED_MODE_GEN2	= 1,
-+	SPEED_MODE_GEN3	= 2,
-+};
++#define TMP103_CONFIG		(TMP103_CONF_CR1 | TMP103_CONF_M1)
++#define TMP103_CONFIG_MASK	(TMP103_CONF_CR0 | TMP103_CONF_CR1 | \
++				 TMP103_CONF_M0 | TMP103_CONF_M1)
 +
-+static void hix5hd2_sata_phy_write(void __iomem *addr, int shift,
-+				   int width, int value)
++static inline int tmp103_reg_to_mc(s8 val)
 +{
-+	int reg, mask;
-+
-+	mask = BIT(width) - 1;
-+	reg = readl_relaxed(addr);
-+	reg &= ~(mask << shift);
-+	reg |= (value & mask) << shift;
-+	writel_relaxed(reg, addr);
++	return val * 1000;
 +}
 +
-+static void hix5hd2_sata_phy_setspeed(struct hix5hd2_priv *priv,
-+				      enum phy_speed_mode mode)
++static inline u8 tmp103_mc_to_reg(int val)
 +{
-+	hix5hd2_sata_phy_write(priv->base + SATA_PORT_PHYCTL, HALF_RATE_SHIFT,
-+			       HALF_RATE_WIDTH, mode);
-+	hix5hd2_sata_phy_write(priv->base + SATA_PORT_PHYCTL, PHY_CONFIG_SHIFT,
-+			       PHY_CONFIG_WIDTH, mode);
-+	hix5hd2_sata_phy_write(priv->base + SATA_PORT_PHYCTL, GEN2_EN_SHIFT,
-+			       GEN2_EN_WIDTH, mode);
++	return DIV_ROUND_CLOSEST(val, 1000);
 +}
 +
-+static int hix5hd2_sata_phy_init(struct phy *phy)
++static ssize_t tmp103_show_temp(struct device *dev,
++				struct device_attribute *attr,
++				char *buf)
 +{
-+	struct hix5hd2_priv *priv = phy_get_drvdata(phy);
-+	u32 offset, shift, width, value, data[2];
-+	const __be32 *paddr;
-+	int i, lenp, ret;
++	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
++	struct regmap *regmap =3D dev_get_drvdata(dev);
++	unsigned int regval;
++	int ret;
 +
-+	if (priv->peri_ctrl) {
-+		ret = of_property_read_u32_array(phy->dev.of_node,
-+						 "hisilicon,power-reg",
-+						 &data[0], 2);
-+		if (ret)
-+			dev_warn(&phy->dev, "Fail read hisilicon,power-reg\n");
++	ret =3D regmap_read(regmap, sda->index, &regval);
++	if (ret < 0)
++		return ret;
 +
-+		regmap_update_bits(priv->peri_ctrl, data[0],
-+				   BIT(data[1]), BIT(data[1]));
-+	}
-+
-+	/* reset phy */
-+	hix5hd2_sata_phy_write(priv->base + SATA_PHY0_CTLL,
-+			       MPLL_MULTIPLIER_SHIFT, MPLL_MULTIPLIER_WIDTH,
-+			       MPLL_MULTIPLIER_50M);
-+	value = readl_relaxed(priv->base + SATA_PHY0_CTLL);
-+	value &= ~(REF_USE_PAD);
-+	value |= (REF_SSP_EN | PHY_RESET);
-+	writel_relaxed(value, priv->base + SATA_PHY0_CTLL);
-+	msleep(20);
-+	value &= ~(PHY_RESET);
-+	writel_relaxed(value, priv->base + SATA_PHY0_CTLL);
-+
-+	paddr = of_get_property(phy->dev.of_node, "hisilicon,reg-init", &lenp);
-+	if (!paddr || lenp < 4 * sizeof(*paddr))
-+		return 0;
-+
-+	lenp /= sizeof(*paddr);
-+	for (i = 0; i < lenp - 3; i += 4) {
-+		offset = be32_to_cpup(paddr + i);
-+		shift = be32_to_cpup(paddr + i + 1);
-+		width = be32_to_cpup(paddr + i + 2);
-+		value = be32_to_cpup(paddr + i + 3);
-+		hix5hd2_sata_phy_write(priv->base + offset,
-+				       shift, width, value);
-+	}
-+
-+	/* ensure reg-init takes effect */
-+	value = readl_relaxed(priv->base + SATA_PORT_PHYCTL);
-+	value |= SPEED_CTRL;
-+	writel_relaxed(value, priv->base + SATA_PORT_PHYCTL);
-+	hix5hd2_sata_phy_setspeed(priv, SPEED_MODE_GEN1);
-+	msleep(20);
-+	hix5hd2_sata_phy_setspeed(priv, SPEED_MODE_GEN3);
-+	value = readl_relaxed(priv->base + SATA_PORT_PHYCTL);
-+	value &= ~(SPEED_CTRL);
-+	writel_relaxed(value, priv->base + SATA_PORT_PHYCTL);
-+	hix5hd2_sata_phy_setspeed(priv, SPEED_MODE_GEN2);
-+
-+	return 0;
++	return sprintf(buf, "%d\n", tmp103_reg_to_mc(regval));
 +}
 +
-+static struct phy_ops hix5hd2_sata_phy_ops = {
-+	.init		= hix5hd2_sata_phy_init,
-+	.owner		= THIS_MODULE,
-+};
-+
-+static int hix5hd2_sata_phy_probe(struct platform_device *pdev)
++static ssize_t tmp103_set_temp(struct device *dev,
++			       struct device_attribute *attr,
++			       const char *buf, size_t count)
 +{
-+	struct phy_provider *phy_provider;
-+	struct device *dev = &pdev->dev;
-+	struct resource *res;
-+	struct hix5hd2_priv *priv;
++	struct sensor_device_attribute *sda =3D to_sensor_dev_attr(attr);
++	struct regmap *regmap =3D dev_get_drvdata(dev);
++	long val;
++	int ret;
 +
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
++	if (kstrtol(buf, 10, &val) < 0)
++		return -EINVAL;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	priv->base = devm_ioremap(dev, res->start, resource_size(res));
-+	if (!priv->base)
-+		return -ENOMEM;
-+
-+	priv->peri_ctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-+						"hisilicon,peri-syscon");
-+	if (IS_ERR(priv->peri_ctrl))
-+		priv->peri_ctrl = NULL;
-+
-+	priv->phy = devm_phy_create(dev, &hix5hd2_sata_phy_ops, NULL);
-+	if (IS_ERR(priv->phy)) {
-+		dev_err(dev, "failed to create PHY\n");
-+		return PTR_ERR(priv->phy);
-+	}
-+
-+	phy_set_drvdata(priv->phy, priv);
-+
-+	phy_provider = devm_of_phy_provider_register(dev, of_phy_simple_xlate);
-+	if (IS_ERR(phy_provider))
-+		return PTR_ERR(phy_provider);
-+
-+	return 0;
++	val =3D clamp_val(val, -55000, 127000);
++	ret =3D regmap_write(regmap, sda->index, tmp103_mc_to_reg(val));
++	return ret ? ret : count;
 +}
 +
-+static const struct of_device_id hix5hd2_sata_phy_of_match[] = {
-+	{.compatible = "hisilicon,hix5hd2-sata-phy",},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, hix5hd2_sata_phy_of_match);
++static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, tmp103_show_temp, NULL=
+ ,
++			  TMP103_TEMP_REG);
 +
-+static struct platform_driver hix5hd2_sata_phy_driver = {
-+	.probe	= hix5hd2_sata_phy_probe,
-+	.driver = {
-+		.name	= "hix5hd2-sata-phy",
-+		.owner	= THIS_MODULE,
-+		.of_match_table	= hix5hd2_sata_phy_of_match,
++static SENSOR_DEVICE_ATTR(temp1_min, S_IWUSR | S_IRUGO, tmp103_show_te=
+mp,
++			  tmp103_set_temp, TMP103_TLOW_REG);
++
++static SENSOR_DEVICE_ATTR(temp1_max, S_IWUSR | S_IRUGO, tmp103_show_te=
+mp,
++			  tmp103_set_temp, TMP103_THIGH_REG);
++
++static struct attribute *tmp103_attrs[] =3D {
++	&sensor_dev_attr_temp1_input.dev_attr.attr,
++	&sensor_dev_attr_temp1_min.dev_attr.attr,
++	&sensor_dev_attr_temp1_max.dev_attr.attr,
++	NULL
++};
++ATTRIBUTE_GROUPS(tmp103);
++
++static bool tmp103_regmap_is_volatile(struct device *dev, unsigned int=
+ reg)
++{
++	return reg =3D=3D TMP103_TEMP_REG;
++}
++
++static struct regmap_config tmp103_regmap_config =3D {
++	.reg_bits =3D 8,
++	.val_bits =3D 8,
++	.max_register =3D TMP103_THIGH_REG,
++	.volatile_reg =3D tmp103_regmap_is_volatile,
++};
++
++static int tmp103_probe(struct i2c_client *client,
++			const struct i2c_device_id *id)
++{
++	struct device *dev =3D &client->dev;
++	struct device *hwmon_dev;
++	struct regmap *regmap;
++	int ret;
++
++	if (!i2c_check_functionality(client->adapter,
++				     I2C_FUNC_SMBUS_BYTE_DATA)) {
++		dev_err(&client->dev,
++			"adapter doesn't support SMBus byte transactions\n");
++		return -ENODEV;
 +	}
-+};
-+module_platform_driver(hix5hd2_sata_phy_driver);
 +
-+MODULE_AUTHOR("Jiancheng Xue <xuejiancheng@huawei.com>");
-+MODULE_DESCRIPTION("HISILICON HIX5HD2 SATA PHY driver");
-+MODULE_ALIAS("platform:hix5hd2-sata-phy");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.9.5
++	regmap =3D devm_regmap_init_i2c(client, &tmp103_regmap_config);
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "failed to allocate register map\n");
++		return PTR_ERR(regmap);
++	}
++
++	ret =3D regmap_update_bits(regmap, TMP103_CONF_REG, TMP103_CONFIG_MAS=
+K,
++				 TMP103_CONFIG);
++	if (ret < 0) {
++		dev_err(&client->dev, "error writing config register\n");
++		return ret;
++	}
++
++	hwmon_dev =3D hwmon_device_register_with_groups(dev, client->name,
++						      regmap, tmp103_groups);
++	return PTR_ERR_OR_ZERO(hwmon_dev);
++}
++
++#ifdef CONFIG_PM
++static int tmp103_suspend(struct device *dev)
++{
++	struct regmap *regmap =3D dev_get_drvdata(dev);
++
++	return regmap_update_bits(regmap, TMP103_CONF_REG,
++				  TMP103_CONF_SD_MASK, 0);
++}
++
++static int tmp103_resume(struct device *dev)
++{
++	struct regmap *regmap =3D dev_get_drvdata(dev);
++
++	return regmap_update_bits(regmap, TMP103_CONF_REG,
++				  TMP103_CONF_SD_MASK, TMP103_CONF_SD);
++}
++
++static const struct dev_pm_ops tmp103_dev_pm_ops =3D {
++	.suspend	=3D tmp103_suspend,
++	.resume		=3D tmp103_resume,
++};
++
++#define TMP103_DEV_PM_OPS (&tmp103_dev_pm_ops)
++#else
++#define	TMP103_DEV_PM_OPS NULL
++#endif /* CONFIG_PM */
++
++static const struct i2c_device_id tmp103_id[] =3D {
++	{ DRIVER_NAME, 0 },
++	{ }
++};
++MODULE_DEVICE_TABLE(i2c, tmp103_id);
++
++static struct i2c_driver tmp103_driver =3D {
++	.driver =3D {
++		.name	=3D DRIVER_NAME,
++		.pm	=3D TMP103_DEV_PM_OPS,
++	},
++	.probe		=3D tmp103_probe,
++	.id_table	=3D tmp103_id,
++};
++
++module_i2c_driver(tmp103_driver);
++
++MODULE_AUTHOR("Heiko Schocher <hs@denx.de>");
++MODULE_DESCRIPTION("Texas Instruments TMP103 temperature sensor driver=
+");
++MODULE_LICENSE("GPL");
+--=20
+1.8.3.1
+
