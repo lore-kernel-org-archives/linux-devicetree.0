@@ -1,55 +1,60 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH 2/2] ARM: dts: Add cros_ec to exynos5420-peach-pit and
- exynos5800-peach-pi
-Date: Tue, 17 Jun 2014 18:37:04 +0200
-Message-ID: <53A06EB0.909@collabora.co.uk>
-References: <1402683213-23120-1-git-send-email-dianders@chromium.org> <1402683213-23120-2-git-send-email-dianders@chromium.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [RFC PATCH] mfd: syscon: add child device support
+Date: Tue, 17 Jun 2014 11:57:55 -0500
+Message-ID: <CAL_JsqLjyNQfjs4cDf8Eh1WeVGauym=qbF_pEAMu7ASVMqaccg@mail.gmail.com>
+References: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1402683213-23120-2-git-send-email-dianders@chromium.org>
+In-Reply-To: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, broonie@kernel.org, sjg@chromium.org, olof@lixom.net, ch.naveen@samsung.com, swarren@wwwdotorg.org, khilman@linaro.org, ajaynumb@gmail.com, rahul.sharma@samsung.com, tushar.b@samsung.com, linux-samsung-soc@vger.kernel.org, ben-linux@fluff.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Lee Jones <lee.jones@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "kernel@pengutronix.de" <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/13/2014 08:13 PM, Doug Anderson wrote:
-> This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
-> including:
-> * The keyboard
-> * The i2c tunnel
-> * The tps65090 under the i2c tunnel
-> * The battery under the i2c tunnel
-> 
-> To add extra motivation, it should be noted that tps65090 is one of
-> the things needed to get display-related FETs turned on for pit and
-> pi.
-> 
-> Note that this relies on a few outstanding changes:
-> * Needs "cros-ec-keyboard.dtsi" in order to compile properly.  See
->   (ARM: dts: Create a cros-ec-keyboard fragment) at
->   <https://patchwork.kernel.org/patch/4297451/>.
-> * Needs (mfd: cros_ec: spi: Fix end of transfer on devices with no
->   spi-msg-delay) from this series to work properly.
-> * Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
->   (spi: s3c64xx: for DT platofrms always get the chipselect info from
->   DT node) to work properly and match the documented bindings.  See
->   <https://patchwork.kernel.org/patch/4346701/> and
->   <https://patchwork.kernel.org/patch/4346711/>
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
+On Tue, May 27, 2014 at 8:55 AM, Philipp Zabel <p.zabel@pengutronix.de> wrote:
+> For devices which have a complete register for themselves, it is possible to
+> place them next to the syscon device with overlapping reg ranges. The same is
+
+We want to avoid overlapping ranges.
+
+> not possible for devices which only occupy bitfields in registers shared with
+> other users.
+
+You are addressing the latter case here?
+
+> For devices that are completely controlled by bitfields in the syscon address
+> range, such as multiplexers or voltage regulators, allow to put child devices
+> into the syscon device node.
+>
+> Signed-off-by: Philipp Zabel <p.zabel@pengutronix.de>
 > ---
->  arch/arm/boot/dts/exynos5420-peach-pit.dts | 146 +++++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 146 +++++++++++++++++++++++++++++
->  2 files changed, 292 insertions(+)
-> 
+>  Documentation/devicetree/bindings/mfd/syscon.txt | 11 +++++++++++
+>  drivers/mfd/syscon.c                             |  2 ++
+>  2 files changed, 13 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> index fe8150b..a7e11d5 100644
+> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> @@ -9,10 +9,21 @@ using a specific compatible value), interrogate the node (or associated
+>  OS driver) to determine the location of the registers, and access the
+>  registers directly.
+>
+> +Optionally, devices that are only controlled through single syscon
+> +registers or bitfields can also be added as child nodes to the syscon
+> +device node. These devices can implicitly assume their parent node
+> +as syscon provider without referencing it explicitly via phandle.
+> +In this case, the syscon node should have #address-cells = <1> and
+> +#size-cells = <0> and no ranges property.
+> +
 
-After applying all the dependencies and this patch, I see that cros-ec-spi
-driver is probed and also the keyboard is working on my Peach pit when testing
-with: $ evtest /dev/input/event0
+I'd like to see an example. What does reg in the child contain? The
+register address?
 
-Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+What if the child device needs 3 bitfields from 3 different registers?
+It seems to me that you could then want to describe every single
+bitfield of a block in the DT. That seems like too much information in
+DT much like trying to describe every single clock in DT.
 
-Best regards,
-Javier
+Rob
