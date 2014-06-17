@@ -1,172 +1,110 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 14/19] ARM: shmobile: r8a7779: Add TMU devices to DT
-Date: Tue, 17 Jun 2014 08:34:34 +0900
-Message-ID: <20140616233433.GC24011@verge.net.au>
-References: <1402763021-4067-1-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <1402763021-4067-15-git-send-email-laurent.pinchart+renesas@ideasonboard.com>
- <20140616084707.GF11582@verge.net.au>
- <1462083.WMstm6aRc1@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1462083.WMstm6aRc1@avalon>
-Sender: linux-sh-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>, linux-sh@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org
+From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v6 0/4] net: Add APM X-Gene SoC Ethernet driver support
+Date: Mon, 16 Jun 2014 17:18:42 -0700
+Message-ID: <1402964326-11147-1-git-send-email-isubramanian@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 16, 2014 at 04:22:11PM +0200, Laurent Pinchart wrote:
-> Hi Simon,
-> 
-> On Monday 16 June 2014 17:47:07 Simon Horman wrote:
-> > On Sat, Jun 14, 2014 at 06:23:36PM +0200, Laurent Pinchart wrote:
-> > > Add the TMU0, TMU1 and TMU2 counters to the r8a7779 device tree and make
-> > > them disabled by default.
-> > > 
-> > > Signed-off-by: Laurent Pinchart
-> > > <laurent.pinchart+renesas@ideasonboard.com>
-> > > ---
-> > > 
-> > >  arch/arm/boot/dts/r8a7779.dtsi | 42 +++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 42 insertions(+)
-> > > 
-> > > diff --git a/arch/arm/boot/dts/r8a7779.dtsi
-> > > b/arch/arm/boot/dts/r8a7779.dtsi index 94e2fc8..bf716ce 100644
-> > > --- a/arch/arm/boot/dts/r8a7779.dtsi
-> > > +++ b/arch/arm/boot/dts/r8a7779.dtsi
-> > > @@ -266,6 +266,48 @@
-> > >  		reg = <0xffc48000 0x38>;
-> > >  	};
-> > > 
-> > > +	tmu0: timer@ffd80000 {
-> > > +		compatible = "renesas,tmu";
-> > > +		reg = <0xffd80000 0x30>;
-> > > +		interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
-> > > +			     <0 41 IRQ_TYPE_LEVEL_HIGH>,
-> > > +			     <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-> > > +		clock-names = "fck";
-> > > +
-> > > +		#renesas,channels = <3>;
-> > > +
-> > > +		status = "disabled";
-> > > +	};
-> > > +
-> > > +	tmu1: timer@ffd81000 {
-> > > +		compatible = "renesas,tmu";
-> > > +		reg = <0xffd81000 0x30>;
-> > > +		interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>,
-> > > +			     <0 45 IRQ_TYPE_LEVEL_HIGH>,
-> > > +			     <0 46 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
-> > > +		clock-names = "fck";
-> > > +
-> > > +		#renesas,channels = <3>;
-> > > +
-> > > +		status = "disabled";
-> > > +	};
-> > > +
-> > > +	tmu2: timer@ffd82000 {
-> > > +		compatible = "renesas,tmu";
-> > > +		reg = <0xffd82000 0x30>;
-> > > +		interrupts = <0 48 IRQ_TYPE_LEVEL_HIGH>,
-> > > +			     <0 49 IRQ_TYPE_LEVEL_HIGH>,
-> > > +			     <0 50 IRQ_TYPE_LEVEL_HIGH>;
-> > > +		clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
-> > > +		clock-names = "fck";
-> > > +
-> > > +		#renesas,channels = <3>;
-> > > +
-> > > +		status = "disabled";
-> > > +	};
-> > > +
-> > >  	sata: sata@fc600000 {
-> > >  		compatible = "renesas,rcar-sata";
-> > >  		reg = <0xfc600000 0x2000>;
-> > 
-> > There are no interrupt-parents in in the nodes above nodes
-> > although the documentation of the binding has one in the example.
-> > Is it just an oversight in this patch?
-> 
-> Not really.
-> 
-> The interrupt-parent property is required but can be inherited. Furthermore, 
-> the interrupts-extended property can be used to replace the interrupts and 
-> interrupt-parent properties. This should all be documented in the DT bindings, 
-> but not by duplicating the full explanation in dozens of different flavours in 
-> all bindings. We need standard wordings for common properties such as 
-> interrupts, clocks or reg.
+Adding APM X-Gene SoC Ethernet driver.
 
-Thanks for the clarification, I'm fine with that.
+v6: Address comments from v5 review
+* added basic ethtool support
+* added ndo_get_stats64 call back
+* deleted priting Rx error messages
+* renamed set_bits to xgene_set_bits to fix kbuild error (make ARCH=powerpc)
 
-> > I believe that the IRQ numbers are not correct.
-> > 
-> > In setup-r8a7779.c I see gic_iid(0x40). But above I see 40.
-> > I think the correct value is 0x40 - 32 = 32. Likewise
-> > for the other IRQs of tmu0. And looking at the documentaiton
-> > this seems true for tmu1 and tmu2 too.
-> >
-> > I have successfully booted a marzen board with the following incremental
-> > patch to the DT nodes.
-> 
-> You're right, sorry about that. I'll fix the interrupt numbers and resubmit. 
-> The interrupt-parent is specified at the top level so there's no need to add 
-> it to the TMU nodes.
-> 
-> > diff --git a/arch/arm/boot/dts/r8a7779.dtsi b/arch/arm/boot/dts/r8a7779.dtsi
-> > index bf716ce..81714ce 100644
-> > --- a/arch/arm/boot/dts/r8a7779.dtsi
-> > +++ b/arch/arm/boot/dts/r8a7779.dtsi
-> > @@ -269,9 +269,10 @@
-> >  	tmu0: timer@ffd80000 {
-> >  		compatible = "renesas,tmu";
-> >  		reg = <0xffd80000 0x30>;
-> > -		interrupts = <0 40 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 41 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 42 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 32 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 33 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 34 IRQ_TYPE_LEVEL_HIGH>;
-> >  		clocks = <&mstp0_clks R8A7779_CLK_TMU0>;
-> >  		clock-names = "fck";
-> > 
-> > @@ -283,9 +284,10 @@
-> >  	tmu1: timer@ffd81000 {
-> >  		compatible = "renesas,tmu";
-> >  		reg = <0xffd81000 0x30>;
-> > -		interrupts = <0 44 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 45 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 46 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupt-parent = <&gic>;
-> > +		interrupts = <0 35 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 36 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 37 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> If I'm not mistaken the interrupts should be 36, 37 and 38.
+v5: Address comments from v4 review
+* Documentation: Added phy-handle, reg-names and changed mdio part
+* dtb: Added reg-names supplemental property
+* changed platform_get_resource to platform_get_resource_byname
+* added separate tx/rx set_desc/get_desc functions to do raw_write/raw_read
+* removed set_desc/get_desc table lookup logic
+* added error handling logic based on per packet descriptor bits
+* added software managed Rx packet and error counters
+* added busy wait for register read/writes
+* changed mdio_bus->id to avoid conflict
+* fixed mdio_bus leak in case of mdio_config error
+* changed phy reg hard coded value to MII_BMSR
+* changed phy addr hard coded value to phy_device->addr
+* added paranthesis around macro arguments
+* converted helper macros to inline functions
+* changed use of goto's only to common work such as cleanup
 
-Yes, sorry about that.
+v4: Address comments from v3 review
+* MAINTAINERS: changed status to supported
+* Kconfig: made default to no
+* changed to bool data type wherever applicable
+* cleaned up single bit set and masking code
+* removed statistics counters masking
+* removed unnecessary OOM message printing
+* fixed dma_map_single and dma_unmap_single size parameter
+* changed set bits macro body using new set_bits function
 
-> >  		clocks = <&mstp0_clks R8A7779_CLK_TMU1>;
-> >  		clock-names = "fck";
-> > 
-> > @@ -296,10 +298,11 @@
-> > 
-> >  	tmu2: timer@ffd82000 {
-> >  		compatible = "renesas,tmu";
-> > +		interrupt-parent = <&gic>;
-> >  		reg = <0xffd82000 0x30>;
-> > -		interrupts = <0 48 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 49 IRQ_TYPE_LEVEL_HIGH>,
-> > -			     <0 50 IRQ_TYPE_LEVEL_HIGH>;
-> > +		interrupts = <0 38 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 39 IRQ_TYPE_LEVEL_HIGH>,
-> > +			     <0 40 IRQ_TYPE_LEVEL_HIGH>;
-> 
-> And 40, 41 and 42 here.
+v3: Address comments from v2 review
+* cleaned up set_desc and get_desc functions
+* added dtb mdio node and phy-handle subnode
+* renamed dtb phy-mode to phy-connection-type
+* added of_phy_connect call to connec to PHY
+* added empty line after last local variable declaration
+* removed type casting when not required
+* removed inline keyword from source files
+* removed CONFIG_CPU_BIG_ENDIAN ifdef
 
-Yes. I wonder how I managed to mess these up.
+v2
+* Completely redesigned ethernet driver
+* Added support to work with big endian kernel
+* Renamed dtb phyid entry to phy_addr
+* Changed dtb local-mac-address entry to byte string format
+* Renamed dtb eth8clk entry to menetclk
 
-> >  		clocks = <&mstp0_clks R8A7779_CLK_TMU2>;
-> >  		clock-names = "fck";
+v1
+* Initial version
+
+Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+---
+
+Iyappan Subramanian (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC ethernet driver
+  Documentation: dts: Add bindings for APM X-Gene SoC ethernet driver
+  dts: Add bindings for APM X-Gene SoC ethernet driver
+  drivers: net: Add APM X-Gene SoC ethernet driver support.
+
+ .../devicetree/bindings/net/apm-xgene-enet.txt     |  72 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/apm-mustang.dts                |   4 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  30 +-
+ drivers/net/ethernet/Kconfig                       |   1 +
+ drivers/net/ethernet/Makefile                      |   1 +
+ drivers/net/ethernet/apm/Kconfig                   |   1 +
+ drivers/net/ethernet/apm/Makefile                  |   5 +
+ drivers/net/ethernet/apm/xgene/Kconfig             |   9 +
+ drivers/net/ethernet/apm/xgene/Makefile            |   6 +
+ .../net/ethernet/apm/xgene/xgene_enet_ethtool.c    | 125 +++
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     | 848 +++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     | 394 +++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c   | 937 +++++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h   | 109 +++
+ 15 files changed, 2547 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+ create mode 100644 drivers/net/ethernet/apm/Kconfig
+ create mode 100644 drivers/net/ethernet/apm/Makefile
+ create mode 100644 drivers/net/ethernet/apm/xgene/Kconfig
+ create mode 100644 drivers/net/ethernet/apm/xgene/Makefile
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
