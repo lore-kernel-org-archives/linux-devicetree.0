@@ -1,74 +1,64 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mfd: axp20x: add AXP221 PMIC support
-Date: Wed, 18 Jun 2014 10:28:06 +0100
-Message-ID: <20140618092806.GI23945@lee--X1>
-References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com>
- <1402990723-28138-2-git-send-email-boris.brezillon@free-electrons.com>
- <20140618083605.GQ21030@lee--X1>
- <53A15202.1070908@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
+Date: Wed, 18 Jun 2014 10:29:06 +0100
+Message-ID: <20140618092906.GA32699@arm.com>
+References: <20140604164132.GF6644@arm.com>
+ <07321368d15d4ad9928ebb83af87e401@DM2PR03MB479.namprd03.prod.outlook.com>
+ <20140616152739.GS16758@arm.com>
+ <8b0492b4697943a0b1f276ef42cc8223@DM2PR03MB352.namprd03.prod.outlook.com>
+ <20140616170416.GA16758@arm.com>
+ <419e67f783524d208ab3be16bcd94bd9@DM2PR03MB352.namprd03.prod.outlook.com>
+ <0587e1f4894546398be0798d2bc2c84f@BL2PR03MB468.namprd03.prod.outlook.com>
+ <20140617104304.GD13808@arm.com>
+ <32165315f0b84be9948f489fd87bf6a9@BL2PR03MB468.namprd03.prod.outlook.com>
+ <7c03c5cffa174b20962bff3b09de0eb8@DM2PR03MB352.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBMFXQWOQKGQEUKYK5JY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <53A15202.1070908-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+In-Reply-To: <7c03c5cffa174b20962bff3b09de0eb8@DM2PR03MB352.namprd03.prod.outlook.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Stuart Yoder <stuart.yoder@freescale.com>
+Cc: Varun Sethi <Varun.Sethi@freescale.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Grundler <grundler@chromium.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jun 2014, Boris BREZILLON wrote:
-> On 18/06/2014 10:36, Lee Jones wrote:
-> > On Tue, 17 Jun 2014, Boris BREZILLON wrote:
-> >
-> >> Add support for the AXP221 PMIC device to the existing AXP20x driver.
-> >>
-> >> The AXP221 defines a new set of registers, power supplies and regulato=
-rs,
-> >> but most of the API is similar to the AXP20x ones.
-> >> The AXP20x irq chip definition is reused, though some interrupts are n=
-ot
-> >> available in the AXP221.
-> >>
-> >> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> ---
-> >>  drivers/mfd/axp20x.c       | 64 +++++++++++++++++++++++++++++++++++++=
-+++++----
-> >>  include/linux/mfd/axp20x.h | 56 +++++++++++++++++++++++++++++++++++++=
-+++
-> >>  2 files changed, 115 insertions(+), 5 deletions(-)
-> > Looks good to me now.
-> >   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >
-> > Can this go in independently to the other patches in the set?
->=20
-> Yes, as long as no one define an axp221 node in his DT.
-> In this case axp221 regulators would be considered as axp20x ones (which
-> might be a bit problematic), because axp20x-regulator driver does not
-> test the axp variant before probing its regulators (this test is
-> introduced in patch 3).
+On Tue, Jun 17, 2014 at 03:50:25PM +0100, Stuart Yoder wrote:
+> > > I think for simple masters (i.e. those that have all their StreamIDs
+> > > under control of one driver), then setting something during attach (or
+> > > add?) based on the DT could work pretty well. The other case is when we
+> > > have masters behind a bridge (such as a PCI RC). In this case, it might
+> > > actually be better to ask the bridge for the IDs and let it sort out
+> > the
+> > > allocation itself. That would also move the RequesterID -> StreamID
+> > > mapping out of the SMMU code.
+> > >
+> > > What do you think?
+> > The PCI bus iommu group creation code would be part of the SMMU driver
+> > (it is handled by other IOMMU drivers as well). My understanding is that
+> > there would be one is to one correspondence between the requestor ID and
+> > the iommu group. May be, we can have an API provided by the PCI bridge
+> > (architecture specific) for setting the stream ID.
+> 
+> I think Will is suggesting something along those lines-- I think it's a
+> question of where the streamID allocation happens.  You could
+> either do something like the following in the SMMU driver when attaching
+> a PCI device:
+> 
+>     id = alloc_stream_id(...);
+>     pci_set_streamid(pci-dev, id);
+> 
+>     or
+> 
+>     id = pci_get_streamid(pci-dev);
+> 
+> ...i.e the PCI RC could allocate (from some TBD
+> allocator) and set the stream ID itself.
+> 
+> Not sure how big a deal it is to extend PCI RC interfaces for 
+> something like that.
 
-Then I'd prefer to wait and have the dependencies go in at the same
-time.
+I think both interfaces have their place; the latter for hotpluggable buses
+and the former for static allocation (i.e. set once). The only way to see
+how well it works is to try implementing it, I guess.
 
-Mark,
-  As normal, I'm happy to create a shared branch between us.
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Will
