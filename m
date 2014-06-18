@@ -1,119 +1,68 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2 01/10] mfd: max77686: Convert to use regmap_irq
-Date: Wed, 18 Jun 2014 11:21:56 +0200
-Message-ID: <53A15A34.10805@collabora.co.uk>
-References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>	<1402941758-11216-2-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=VUPwr6GbR7O-t0q-GaCttZ5vGzLeFqHckzkk-dZYfCFw@mail.gmail.com>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should be
+ specified in 'reg'
+Date: Wed, 18 Jun 2014 18:27:05 +0900
+Message-ID: <000001cf8ad7$784e1aa0$68ea4fe0$%han@samsung.com>
+References: <1401345500-20188-1-git-send-email-kishon@ti.com>
+ <1401345500-20188-4-git-send-email-kishon@ti.com> <53876116.90504@ti.com>
+ <3E54258959B69E4282D79E01AB1F32B70477D2A4@DFLE11.ent.ti.com>
+ <53A15879.7030302@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=VUPwr6GbR7O-t0q-GaCttZ5vGzLeFqHckzkk-dZYfCFw@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-reply-to: <53A15879.7030302@ti.com>
+Content-language: ko
+Sender: linux-pci-owner@vger.kernel.org
+To: 'Kishon Vijay Abraham I' <kishon@ti.com>, "'Karicheri, Muralidharan'" <m-karicheri2@ti.com>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, arnd@arndb.de, tony@atomide.com, 'Jason Gunthorpe' <jgunthorpe@obsidianresearch.com>, 'Bjorn Helgaas' <bhelgaas@google.com>, 'Mohit Kumar' <mohit.kumar@st.com>, 'Marek Vasut' <marex@denx.de>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
+On Wednesday, June 18, 2014 6:15 PM, Kishon Vijay Abraham I wrote:
+> On Friday 30 May 2014 07:45 PM, Karicheri, Muralidharan wrote:
+> >> On 5/29/2014 2:38 AM, ABRAHAM, KISHON VIJAY wrote:
+> >>> The configuration address space has so far been specified in *ranges*,
+> >>> however it should be specified in *reg* making it a platform MEM resource.
+> >>> Hence used 'platform_get_resource_*' API to get configuration address
+> >>> space in the designware driver.
+> >>>
+> >>> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+> >>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> >>> Cc: Mohit Kumar <mohit.kumar@st.com>
+> >>> Cc: Jingoo Han <jg1.han@samsung.com>
+> >>> Cc: Marek Vasut <marex@denx.de>
+> >>> Cc: Arnd Bergmann <arnd@arndb.de>
+> >>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+> >>> ---
+> >>>   .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+> >>>   drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+> >>>   2 files changed, 16 insertions(+), 2 deletions(-)
 
-On 06/17/2014 10:57 PM, Doug Anderson wrote:
-> Javier,
-> 
-> On Mon, Jun 16, 2014 at 11:02 AM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->> @@ -127,15 +175,48 @@ static int max77686_i2c_probe(struct i2c_client *i2c,
->>         }
->>         i2c_set_clientdata(max77686->rtc, max77686);
->>
->> -       max77686_irq_init(max77686);
->> +       max77686->rtc_regmap = devm_regmap_init_i2c(max77686->rtc,
->> +                                                   &max77686_rtc_regmap_config);
->> +       if (IS_ERR(max77686->rtc_regmap)) {
->> +               ret = PTR_ERR(max77686->rtc_regmap);
->> +               dev_err(max77686->dev, "failed to allocate RTC regmap: %d\n",
->> +                       ret);
->> +               goto err_unregister_i2c;
->> +       }
->> +
->> +       ret = regmap_add_irq_chip(max77686->regmap, max77686->irq,
->> +                                 IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
->> +                                 IRQF_SHARED, 0, &max77686_irq_chip,
->> +                                 &max77686->irq_data);
->> +       if (ret != 0) {
->> +               dev_err(&i2c->dev, "failed to add PMIC irq chip: %d\n", ret);
->> +               goto err_unregister_i2c;
->> +       }
->> +       ret = regmap_add_irq_chip(max77686->rtc_regmap, max77686->irq,
->> +                                 IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
->> +                                 IRQF_SHARED, 0, &max77686_rtc_irq_chip,
->> +                                 &max77686->rtc_irq_data);
->> +       if (ret != 0) {
->> +               dev_err(&i2c->dev, "failed to add RTC irq chip: %d\n", ret);
->> +               goto err_del_irqc;
->> +       }
->>
->>         ret = mfd_add_devices(max77686->dev, -1, max77686_devs,
->>                               ARRAY_SIZE(max77686_devs), NULL, 0, NULL);
->>         if (ret < 0) {
->> -               mfd_remove_devices(max77686->dev);
->> -               i2c_unregister_device(max77686->rtc);
->> +               dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
->> +               goto err_del_rtc_irqc;
->>         }
->>
->> +       return 0;
->> +
->> +err_del_rtc_irqc:
->> +       regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
->> +err_del_irqc:
->> +       regmap_del_irq_chip(max77686->irq, max77686->irq_data);
-> 
-> I would imagine you either don't need these regmap_del_irq_chip() here
-> or that you _do_ need them in max77686_i2c_remove().
-> 
-> ...from looking at other drivers I think the answer is to add them to
-> max77686_i2c_remove().
-> 
->
+[...]
 
-Yes, I forgot to do the regmap irqchip cleanup in the driver .remove function.
-The same issue is in the max77802 driver btw so I'll fix both on v3.
-
-Thanks a lot for pointing this out.
-
->> diff --git a/include/linux/mfd/max77686-private.h b/include/linux/mfd/max77686-private.h
->> index 8c75a9c..3a810b1 100644
->> --- a/include/linux/mfd/max77686-private.h
->> +++ b/include/linux/mfd/max77686-private.h
->> @@ -205,7 +205,7 @@ enum max77686_irq {
->>         MAX77686_PMICIRQ_140C,
->>         MAX77686_PMICIRQ_120C,
->>
->> -       MAX77686_RTCIRQ_RTC60S,
->> +       MAX77686_RTCIRQ_RTC60S = 0,
->>         MAX77686_RTCIRQ_RTCA1,
->>         MAX77686_RTCIRQ_RTCA2,
->>         MAX77686_RTCIRQ_SMPL,
->> @@ -215,6 +215,25 @@ enum max77686_irq {
->>         MAX77686_IRQ_NR,
+> >>> +	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> >>> +	if (cfg_res) {
+> >>> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+> >>> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+> >>> +		pp->cfg0_base = cfg_res->start;
+> >>> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+> >>> +	} else {
+> >>> +		dev_err(pp->dev, "missing *config* reg space\n");
+> >> This should return error -EINVAL.
 > 
-> Maybe remove MAX77686_IRQ_NR which no longer makes any sense now that
-> you start over at 0 partway through.
-> 
-> 
+> Just read the other thread and Grant Likely suggested the host controller
+> driver should be backward compatible [1]. So we can't return -EINVAL here.
+> So I'd assume this patch is fine as is? Arnd? Jingoo?
 
-Right, it is not needed anymore. I'll remove it when re-spin.
-
-> Overall this looks good to me, so once nits above are fixed feel to
-> add my Reviewed-by.  I've also built and booted this patch on
-> exynos5250-snow and tested that the RTC wakealarm fires and can even
-> wake the system up (with some additional work that I'll email you
-> about).
->
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> Tested-by: Doug Anderson <dianders@chromium.org>
-> 
-
-Great! thanks a lot for testing.
+Yes, you're right. The driver should keep backward compatibility for
+legacy DT binding. However, after enough time goes by, these legacy
+DT handling can be removed.
 
 Best regards,
-Javier
+Jingoo Han
+
+> 
+> [1] -> https://lkml.org/lkml/2014/6/3/124
+> 
+> Thanks
+> Kishon
