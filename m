@@ -1,80 +1,137 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 1/2] arm: dts: am4372: let boards enable RTC and Watchdog
-Date: Wed, 18 Jun 2014 16:55:33 -0500
-Message-ID: <53A20AD5.7080207@ti.com>
-References: <1403106200-777-1-git-send-email-balbi@ti.com> <1403106200-777-2-git-send-email-balbi@ti.com> <53A1B677.9010909@ti.com> <20140618192553.GB4570@saruman.home> <53A20800.3070301@ti.com> <20140618215143.GA8181@saruman.home>
-Reply-To: nm@ti.com
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
+Date: Thu, 19 Jun 2014 00:00:09 +0200
+Message-ID: <20140618220008.GC26514@mithrandir>
+References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com>
+ <539F4D44.3070309@wwwdotorg.org> <53A03186.3040703@collabora.com>
+ <53A069B6.6070902@wwwdotorg.org> <53A1CB23.5090307@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140618215143.GA8181@saruman.home>
-Sender: linux-omap-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, r.sricharan@ti.com, robh+dt@kernel.org, Benoit Cousson <bcousson@baylibre.com>, galak@codeaurora.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Type: multipart/mixed; boundary="===============1918013067=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53A1CB23.5090307@collabora.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc: devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, Stephen Warren <swarren@wwwdotorg.org>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, kyungmin.park@samsung.com, myungjoo.ham@samsung.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2014 04:51 PM, Felipe Balbi wrote:
-> Hi,
->
-> On Wed, Jun 18, 2014 at 04:43:28PM -0500, Nishanth Menon wrote:
->> On 06/18/2014 02:25 PM, Felipe Balbi wrote:
->>> Hi,
->>>
->>> On Wed, Jun 18, 2014 at 10:55:35AM -0500, Nishanth Menon wrote:
->>>> $subject - ARM: dts:
->>>>
->>>> On 06/18/2014 10:43 AM, Felipe Balbi wrote:
->>>>> by providing phandles to rtc and wdt nodes, we can
->>>>> let boards enable rtc and wdt as necessary.
->>>>>
->>>>> Signed-off-by: Felipe Balbi <balbi@ti.com>
->>>>> ---
->>>>>   arch/arm/boot/dts/am4372.dtsi | 4 ++--
->>>>>   1 file changed, 2 insertions(+), 2 deletions(-)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
->>>>> index 49fa596..e3830d4 100644
->>>>> --- a/arch/arm/boot/dts/am4372.dtsi
->>>>> +++ b/arch/arm/boot/dts/am4372.dtsi
->>>>> @@ -270,7 +270,7 @@
->>>>>   			ti,hwmods = "counter_32k";
->>>>>   		};
->>>>>
->>>>> -		rtc@44e3e000 {
->>>>> +		rtc: rtc@44e3e000 {
->>>>>   			compatible = "ti,am4372-rtc","ti,da830-rtc";
->>>>>   			reg = <0x44e3e000 0x1000>;
->>>>>   			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH
->>>>> @@ -279,7 +279,7 @@
->>>>>   			status = "disabled";
->>>>>   		};
->>>>>
->>>>> -		wdt@44e35000 {
->>>>> +		wdt: wdt@44e35000 {
->>>>>   			compatible = "ti,am4372-wdt","ti,omap3-wdt";
->>>>>   			reg = <0x44e35000 0x1000>;
->>>>>   			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
->>>>>
->>>> we might want to fix up any other similar nodes in dtsi as well, no?
->>>>
->>>> examples:
->>>> cpu@0
->>>
->>> and why would you want boards to mess with the cpu node ?
->>>
->> cpu-supply = <&regulator>;
->>
->> for cpufreq.
->
-> good point, but does thqt even work with AM437x devices in mainline?
 
-it will once we are done adding a node. context here being - if you are 
-fixing phandles, please fix them all up.. that is a little nice to do.
+--===============1918013067==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="LwW0XdcUbUexiWVK"
+Content-Disposition: inline
 
-I wont argue more on this. I will leave it to maintainers.
 
---
-Regards,
-Nishanth Menon
+--LwW0XdcUbUexiWVK
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Wed, Jun 18, 2014 at 07:23:47PM +0200, Tomeu Vizoso wrote:
+> On 06/17/2014 06:15 PM, Stephen Warren wrote:
+> >On 06/17/2014 06:16 AM, Tomeu Vizoso wrote:
+> >>On 06/16/2014 10:02 PM, Stephen Warren wrote:
+> >>>On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
+> >>>>+#ifdef CONFIG_TEGRA124_EMC
+> >>>>+int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsigned
+> >>>>long rate);
+> >>>>+void tegra124_emc_set_floor(unsigned long freq);
+> >>>>+void tegra124_emc_set_ceiling(unsigned long freq);
+> >>>>+#else
+> >>>>+int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsigned
+> >>>>long rate)
+> >>>>+{ return -ENODEV; }
+> >>>>+void tegra124_emc_set_floor(unsigned long freq)
+> >>>>+{ return; }
+> >>>>+void tegra124_emc_set_ceiling(unsigned long freq)
+> >>>>+{ return; }
+> >>>>+#endif
+> >>>
+> >>>I'll repeat what I said off-list so that we can have the whole
+> >>>conversation on the list:
+> >>>
+> >>>That looks like a custom Tegra-specific API. I think it'd be much bett=
+er
+> >>>to integrate this into the common clock framework as a standard clock
+> >>>constraints API. There are other use-cases for clock constraints besid=
+es
+> >>>EMC scaling (e.g. some in audio on Tegra, and I'm sure many on other
+> >>>SoCs too).
+> >>
+> >>Yes, I wrote a bit in the cover letter about our requirements and how
+> >>they map to the CCF. Could you please comment on that?
+> >
+> >My comments remain the same. I believe this is something that belongs in
+> >the clock driver, or at the least, some API that takes a struct clock as
+> >its parameter, so that drivers can use the existing DT clock lookup
+> >mechanism.
+>=20
+> Ok, let me put this strawman here to see if I have gotten close to what y=
+ou
+> have in mind:
+>=20
+> * add per-client accounting (Rabin's patches referenced before)
+>=20
+> * add clk_set_floor, to be used by cpufreq, load stats, etc.
+>=20
+> * add clk_set_ceiling, to be used by battery drivers, thermal, etc.
+>=20
+> * an EMC driver would collect bandwidth and latency requests from consume=
+rs
+> and call clk_set_floor on the EMC clock.
+>=20
+> * the EMC driver would also register for rate change notifications in the
+> EMC clock and would update the latency allowance registers at that point.
+
+Latency allowance registers are part of the MC rather than the EMC. So I
+think we have two options: a) have a unified driver for MC and EMC or b)
+provide two parts of the API in two drivers.
+
+Or perhaps c), create a generic framework that both MC and EMC can
+register with (bandwidth for EMC, latency for MC).
+
+Thierry
+
+--LwW0XdcUbUexiWVK
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTogvoAAoJEN0jrNd/PrOhMf4QAKKMXnLhZIJ6WU1MXERj6DoH
+PamUhHa6MlEhXjygSdRiPJ5xMCdmEzwY/ZZfj1Tz+FmBELxbVdb0WrPbrzXmkE5v
+VDYTurEEV+yaaYBemZv1oRa/GjJwzgi9rYmKOBaMlO6ldLlsxsTYnVIPa5mWXnBO
+WVUGsOohbC05iVyL2tInJhyT0+GXmABsCNhFpPQ+xc8aqTHwT+bJcP/f37pSzxF2
+jzrVMXHCQtMSSyEBkbHQE9uVEbZY8SpF+YsZ7Fozzw7uMseL5LUpLWhuWPKJIcnq
+xSVEGXHGfOUu8DuSHohWcypgCulW9+ZcFxobhbnsvZFPCK4JGD6YYDt/Q6kWTypz
+AVD6te2pXYCGZHPfEuBkGDn4xY17AGpizMAgqMSKrLwB0My1JRfGqW/lNkJDu2JL
+TTQAJmlS3eClqwfx4hNnymVAvzI8TBiE6kpcQT2i8vg9d7PASEajh1ZOF/yUnSiB
+jVcqP3eJu5AujzLUKPTRrje5gjvnx5kIYFdELdP1s9W/ePwZ6K9cDbEIPhewuZbR
+cQ9C8bNWn+t7+xg53W73mZk/J/jTB6rN7tveLfAw9rWMKYK5SsYDWQ5nOkVIhbl8
+G4Vq1QZntqrpOvG1rxpq5hWHjhKfJKrrzBm34E5+SalexPuk1fEwPlIR8Jxz3BVf
+2b9lc5PRE4PG7qtBVE1n
+=CRS8
+-----END PGP SIGNATURE-----
+
+--LwW0XdcUbUexiWVK--
+
+--===============1918013067==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============1918013067==--
