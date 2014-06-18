@@ -1,70 +1,119 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 03/20] clk: sunxi: move "ahb_sdram" to
- protected clock list
-Date: Wed, 18 Jun 2014 11:10:06 +0200
-Message-ID: <20140618091006.GI19730@lukather>
-References: <1403016777-15121-1-git-send-email-wens@csie.org>
- <1403016777-15121-4-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v2 01/10] mfd: max77686: Convert to use regmap_irq
+Date: Wed, 18 Jun 2014 11:21:56 +0200
+Message-ID: <53A15A34.10805@collabora.co.uk>
+References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>	<1402941758-11216-2-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=VUPwr6GbR7O-t0q-GaCttZ5vGzLeFqHckzkk-dZYfCFw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="yzvKDKJiLNESc64M"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBRFRQWOQKGQESEUZNLI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403016777-15121-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=VUPwr6GbR7O-t0q-GaCttZ5vGzLeFqHckzkk-dZYfCFw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello Doug,
 
---yzvKDKJiLNESc64M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/17/2014 10:57 PM, Doug Anderson wrote:
+> Javier,
+> 
+> On Mon, Jun 16, 2014 at 11:02 AM, Javier Martinez Canillas
+> <javier.martinez@collabora.co.uk> wrote:
+>> @@ -127,15 +175,48 @@ static int max77686_i2c_probe(struct i2c_client *i2c,
+>>         }
+>>         i2c_set_clientdata(max77686->rtc, max77686);
+>>
+>> -       max77686_irq_init(max77686);
+>> +       max77686->rtc_regmap = devm_regmap_init_i2c(max77686->rtc,
+>> +                                                   &max77686_rtc_regmap_config);
+>> +       if (IS_ERR(max77686->rtc_regmap)) {
+>> +               ret = PTR_ERR(max77686->rtc_regmap);
+>> +               dev_err(max77686->dev, "failed to allocate RTC regmap: %d\n",
+>> +                       ret);
+>> +               goto err_unregister_i2c;
+>> +       }
+>> +
+>> +       ret = regmap_add_irq_chip(max77686->regmap, max77686->irq,
+>> +                                 IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
+>> +                                 IRQF_SHARED, 0, &max77686_irq_chip,
+>> +                                 &max77686->irq_data);
+>> +       if (ret != 0) {
+>> +               dev_err(&i2c->dev, "failed to add PMIC irq chip: %d\n", ret);
+>> +               goto err_unregister_i2c;
+>> +       }
+>> +       ret = regmap_add_irq_chip(max77686->rtc_regmap, max77686->irq,
+>> +                                 IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
+>> +                                 IRQF_SHARED, 0, &max77686_rtc_irq_chip,
+>> +                                 &max77686->rtc_irq_data);
+>> +       if (ret != 0) {
+>> +               dev_err(&i2c->dev, "failed to add RTC irq chip: %d\n", ret);
+>> +               goto err_del_irqc;
+>> +       }
+>>
+>>         ret = mfd_add_devices(max77686->dev, -1, max77686_devs,
+>>                               ARRAY_SIZE(max77686_devs), NULL, 0, NULL);
+>>         if (ret < 0) {
+>> -               mfd_remove_devices(max77686->dev);
+>> -               i2c_unregister_device(max77686->rtc);
+>> +               dev_err(&i2c->dev, "failed to add MFD devices: %d\n", ret);
+>> +               goto err_del_rtc_irqc;
+>>         }
+>>
+>> +       return 0;
+>> +
+>> +err_del_rtc_irqc:
+>> +       regmap_del_irq_chip(max77686->irq, max77686->rtc_irq_data);
+>> +err_del_irqc:
+>> +       regmap_del_irq_chip(max77686->irq, max77686->irq_data);
+> 
+> I would imagine you either don't need these regmap_del_irq_chip() here
+> or that you _do_ need them in max77686_i2c_remove().
+> 
+> ...from looking at other drivers I think the answer is to add them to
+> max77686_i2c_remove().
+> 
+>
 
-On Tue, Jun 17, 2014 at 10:52:40PM +0800, Chen-Yu Tsai wrote:
-> With sunxi_gates clocks registered with clkdev, we can use the
-> protected clocks list to enable the "ahb_sdram" clock, instead
-> of looking for it and adding CLK_IGNORE_UNUSED inline in the
-> clock setup code.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Yes, I forgot to do the regmap irqchip cleanup in the driver .remove function.
+The same issue is in the max77802 driver btw so I'll fix both on v3.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Thanks a lot for pointing this out.
 
-Maxime
+>> diff --git a/include/linux/mfd/max77686-private.h b/include/linux/mfd/max77686-private.h
+>> index 8c75a9c..3a810b1 100644
+>> --- a/include/linux/mfd/max77686-private.h
+>> +++ b/include/linux/mfd/max77686-private.h
+>> @@ -205,7 +205,7 @@ enum max77686_irq {
+>>         MAX77686_PMICIRQ_140C,
+>>         MAX77686_PMICIRQ_120C,
+>>
+>> -       MAX77686_RTCIRQ_RTC60S,
+>> +       MAX77686_RTCIRQ_RTC60S = 0,
+>>         MAX77686_RTCIRQ_RTCA1,
+>>         MAX77686_RTCIRQ_RTCA2,
+>>         MAX77686_RTCIRQ_SMPL,
+>> @@ -215,6 +215,25 @@ enum max77686_irq {
+>>         MAX77686_IRQ_NR,
+> 
+> Maybe remove MAX77686_IRQ_NR which no longer makes any sense now that
+> you start over at 0 partway through.
+> 
+> 
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Right, it is not needed anymore. I'll remove it when re-spin.
 
---yzvKDKJiLNESc64M
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Overall this looks good to me, so once nits above are fixed feel to
+> add my Reviewed-by.  I've also built and booted this patch on
+> exynos5250-snow and tested that the RTC wakealarm fires and can even
+> wake the system up (with some additional work that I'll email you
+> about).
+>
+> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> Tested-by: Doug Anderson <dianders@chromium.org>
+> 
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Great! thanks a lot for testing.
 
-iQIcBAEBAgAGBQJToVduAAoJEBx+YmzsjxAgtaMP/jYzR7hHj+anXBPwRlYhm2iZ
-ld/VmhxkOZnOKfeElrXRyZeV9Ks3PiplhHxhOyAFZG7Ep95jlgfvXoT7P4cUgp6F
-vwtxDsFdjLUtuwRw9uutphn51IzKOc9tiqBUC8wwcLnvkLw7y5aJkRkPB++LEf0h
-5PSwCybbCjFcCKJ6W0u0P5d/ECMRbioOMxRqbwz4tmL01EGq5Gw8xtAjY5cQzN7T
-twJGtsPIsxh9okTAw6VRq3OhNRp8C0t53lWBRlgPoiXJMIy4OEdWuVZBD405g3Vh
-hHky5SW2wKDBFstDB/XWueb24rDH30LYWGseeOL+CImPktfBEyHSfqLrKYzreEfT
-/MDOkke5uJ4aSAb1HdQNe/F2V4VfqKamhkqoEF4E8+c7WQxXvwA7fRgjQwgCUyO3
-B/9sa6NNVZlMq3Ceom8G5nokb5vWOAaPnmWkmcLIgTIhRVE9taxeLtBuazIqegZ+
-/Xi1sDh6STgBn8KE5Cm/W97WS3tvqVyDDFTlYmozTFBsjR7xFO1Z8Ny/XZYxcX/K
-LJFyJVFzvL4J6x4vnSIh59Glp8IDZLaR9+D1sOgvWVs/FYMUXeT3EC0o4SlST7FA
-alOOaGq1W2UlwYv9fok28vVCN+t4mwHMmoNG4PtinM+Ph0Z3Y1hpjtxHvRdZCXYG
-VNcKO+52NA/6J7a1231i
-=2KR7
------END PGP SIGNATURE-----
-
---yzvKDKJiLNESc64M--
+Best regards,
+Javier
