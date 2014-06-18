@@ -1,114 +1,127 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 05/20] clk: sunxi: Support factor clocks
- with N multiplier factor starting from 1
-Date: Wed, 18 Jun 2014 11:42:51 +0200
-Message-ID: <20140618094251.GK19730@lukather>
-References: <1403016777-15121-1-git-send-email-wens@csie.org>
- <1403016777-15121-6-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] ASoC: add es8328 codec driver
+Date: Wed, 18 Jun 2014 10:45:05 +0100
+Message-ID: <20140618094505.GD5099@sirena.org.uk>
+References: <1403063242-20840-1-git-send-email-xobs@kosagi.com>
+ <1403063242-20840-3-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="8kI7hWEHMS8Z+7/0"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBPF7QWOQKGQEDWFHTOQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="3IUuVPBxFdaU0JwQ"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403016777-15121-6-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1403063242-20840-3-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---8kI7hWEHMS8Z+7/0
+--3IUuVPBxFdaU0JwQ
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2014 at 10:52:42PM +0800, Chen-Yu Tsai wrote:
-> The PLLs on newer Allwinner SoC's, such as the A31 and A23, have a
-> N multiplier factor that starts from 1, not 0.
->=20
-> This patch adds an option to the clock driver's config data structures
-> to define the difference.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  drivers/clk/sunxi/clk-factors.c | 5 ++++-
->  drivers/clk/sunxi/clk-factors.h | 1 +
->  2 files changed, 5 insertions(+), 1 deletion(-)
->=20
-> diff --git a/drivers/clk/sunxi/clk-factors.c b/drivers/clk/sunxi/clk-fact=
-ors.c
-> index 3806d97..399cf4d 100644
-> --- a/drivers/clk/sunxi/clk-factors.c
-> +++ b/drivers/clk/sunxi/clk-factors.c
-> @@ -62,7 +62,10 @@ static unsigned long clk_factors_recalc_rate(struct cl=
-k_hw *hw,
->  		p =3D FACTOR_GET(config->pshift, config->pwidth, reg);
-> =20
->  	/* Calculate the rate */
-> -	rate =3D (parent_rate * n * (k + 1) >> p) / (m + 1);
-> +	if (config->n_from_one)
-> +		rate =3D (parent_rate * (n + 1) * (k + 1) >> p) / (m + 1);
-> +	else
-> +		rate =3D (parent_rate * n * (k + 1) >> p) / (m + 1);
+On Wed, Jun 18, 2014 at 11:47:20AM +0800, Sean Cross wrote:
 
-Thinking a bit more about this, I wonder wether it wouldn't be better
-to just have a n_start variable or something, and just use (n +
-n_start) instead.
+> +Required properties:
+> +
+> +  - compatible : "es8328"
 
-That would avoid having to declare twice the same function.
+This needs the prefix, as does the example.
 
-Maxime
+> +static int es8328_i2c_probe(struct i2c_client *i2c,
+> +			    const struct i2c_device_id *id)
+> +{
+> +	struct regmap_config config;
+> +
+> +	config = es8328_regmap_config;
+> +	return es8328_probe(&i2c->dev, devm_regmap_init_i2c(i2c, &config));
+> +}
 
-> =20
->  	return rate;
->  }
-> diff --git a/drivers/clk/sunxi/clk-factors.h b/drivers/clk/sunxi/clk-fact=
-ors.h
-> index 02e1a43..0484a48 100644
-> --- a/drivers/clk/sunxi/clk-factors.h
-> +++ b/drivers/clk/sunxi/clk-factors.h
-> @@ -15,6 +15,7 @@ struct clk_factors_config {
->  	u8 mwidth;
->  	u8 pshift;
->  	u8 pwidth;
-> +	u8 n_from_one;
+config appears to serve no purpose here.
 
-Especially when you declare it as an u8, and not a bool.
+> +/* Run the codec at 22.5792 MHz to support these rates */
+> +enum es8328_rate {
+> +	ES8328_RATE_8019,
+> +	ES8328_RATE_11025,
+> +	ES8328_RATE_22050,
+> +	ES8328_RATE_44100,
+> +};
 
-Maxime
+The driver should be enforcing constraints based on the clock it's got
+then.  Not everything does though so it's a bit optional.
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +static int es8328_put_deemph(struct snd_kcontrol *kcontrol,
+> +			     struct snd_ctl_elem_value *ucontrol)
+> +{
+> +	struct snd_soc_codec *codec = snd_soc_kcontrol_codec(kcontrol);
+> +	struct es8328_priv *es8328 = snd_soc_codec_get_drvdata(codec);
+> +	int deemph = ucontrol->value.enumerated.item[0];
+> +
+> +	if (deemph > 1)
+> +		return -EINVAL;
+> +
+> +	es8328->deemph = deemph;
+> +
+> +	return es8328_set_deemph(codec);
+> +}
 
---8kI7hWEHMS8Z+7/0
+This will unconditionally store the new deemphasis setting even if we
+failed to set it.  That should never happen but still...
+
+> +	SOC_DOUBLE_TLV("Mic PGA Gain", ES8328_ADCCONTROL1, 4, 0, 8, 0, mic_tlv),
+
+Mic PGA Volume.
+
+> +	SND_SOC_DAPM_MICBIAS("Mic Bias", ES8328_ADCPOWER,
+> +			ES8328_ADCPOWER_MIC_BIAS_OFF, 1),
+
+Represent this as a suply, MICBIAS widgets are legacy.
+
+> +	case SND_SOC_BIAS_PREPARE:
+> +		/* VREF, VMID=2x50k, digital enabled */
+> +		snd_soc_write(codec, ES8328_CHIPPOWER, pwr_reg);
+> +		snd_soc_write(codec, ES8328_CONTROL1,
+> +				cc1_reg |
+> +				ES8328_CONTROL1_VMIDSEL_50k |
+> +				ES8328_CONTROL1_ENREF);
+
+snd_soc_update_bits().
+
+> +const struct regmap_config es8328_regmap_config = {
+> +	.reg_bits = 8,
+> +	.val_bits = 8,
+> +	.max_register = ES8328_REG_MAX,
+> +	.cache_type = REGCACHE_NONE,
+> +};
+> +EXPORT_SYMBOL_GPL(es8328_regmap_config);
+
+No need to specify no cache, it's the default - though a cache is
+better, it's faster and allows for suspend/resume.
+
+--3IUuVPBxFdaU0JwQ
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJToV8bAAoJEBx+YmzsjxAgbYgP/29N2qaoTZgDspG2y/ONavEK
-J2+gHRXZj3kfAWPv7yKhieB/E10O/1k/ww0r8iFPsOoarIlRkBM+G2Hm3ntosN50
-IxzjbJz9vuBQgMhIobF4NAmo7IVJ0BoGiJ1kN6a5SFLGlg7RbmNVhpX57dM+VsUB
-nOXIyAMWLnsuOSGyS1Jn22AeUXEZ/hnentjkGPNEryvqKvU/0CuDefXvuBTyIHyR
-rhKefTQOrIl25YUUMgy/nHt51kQD16CrDJ2mFcyL6LaUy7RgXmjVZzGbXn1ysmot
-z6y/2cx+LUnvYjx0AhMeIZ8cdt+X6/8DsIiQCOVkg1DsBvLNILA463FnwIXAl7V9
-kmlnq8VRSnusG65cP4CgOln/RX+XpHKSnRFR4q5CVVMtdl4QClxQIDRJ6zwBxwJp
-+3pyGhML6BtMuw0x/Gu/cD9nxLt3wep2yHOtXvDncMDeAUVvPdB51yusHYvIPoAn
-KMZ5nQ4yPUrEtK5yzZgdhiLXpPwtkuRcqCSgxGVT+cxYCD9QVZ8AxlFMcQ/Cl4YP
-++WuhCwhNWjf3ISxDAUYb5V+u5UFuR86ri1t/6sUiX9mYD7xE951IOttgCqUfFx0
-IDjyiD9g6W4muuAFdCDFkVPA8BkMo4Pi42F/d8KYcjafbvnfR0ZvAmlYs4rCkx9h
-qnTNudYVOA9BesBmREwj
-=7aXV
+iQIcBAEBAgAGBQJToV+eAAoJELSic+t+oim9DkgP/juZs/PCVZL39ecU5kQtafwW
+lamYA72xdWX0TOQ/gHDpc80H4U9lK0ObpHwhbBK3cNIoZuBluGdIiZaB0E6qxUOQ
+VpD9v0C9eZYVTKSQ1RIO3cylrx4O/nAaWcUd1fHnGygZBBvNOJmt4pzLaTTlL72s
+acs5UYL9PpQG9vyr6hkLaoFSWFvgxbWHYwMvf501LJpSMMLtE712xx4cZgH2q6Do
+oYEz7aT96Yr7AGdxCNnH8Yx5ho10iKVHEjQKHNzm4d9aJP/gTNB163sPeZ64zz9d
+M6y6F25nUHtNyhGBtDn4zvi2u2j3tU+dklC693ug+5ZjHbSrmZ/PEIGr8O4sGPJv
+05D/xtJWKVxQA31Swlq+rNhiY1/wFgBcFgyYFeGucZBJ/1NEpd/5QJi1RzQsEiYx
+pMqDsVvrb7/zJtPQrKiHRvoZlC9m1bUWi+LM+OkW4hx+nnH2un8mlCzqKuvte1kx
+zue8tTtw6V5O9nmjucjxvvUAhxqVAtryvBugCMJcddNLiKlt71oW7fMVsk9xuLK2
+hGINFCNqSJXzzDRMj0ogbB77DfHYrEZaPbQMHAiFQ+8di51jE8QB2UZJPpul1owR
+7v9GMgZP3hS1scfG7hntyzpoUrVurimnlPtvhF8l1xzvqZaEfK/0kSpiwSsB3Gkk
+CMcFeeC65JOnQ+iZSq/H
+=v9HQ
 -----END PGP SIGNATURE-----
 
---8kI7hWEHMS8Z+7/0--
+--3IUuVPBxFdaU0JwQ--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
