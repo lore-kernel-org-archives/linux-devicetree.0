@@ -1,136 +1,107 @@
-From: Rajendra Nayak <rnayak@ti.com>
-Subject: Re: [PATCH v4 3/4] ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
-Date: Wed, 18 Jun 2014 15:59:16 +0530
-Message-ID: <53A169FC.70907@ti.com>
-References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274559-24777-1-git-send-email-rogerq@ti.com> <53A14784.1030008@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v4 3/3] ASoC: fsl: add imx-es8328 machine
+	driver
+Date: Wed, 18 Jun 2014 11:31:11 +0100
+Message-ID: <20140618103111.GH5099@sirena.org.uk>
+References: <1403063242-20840-1-git-send-email-xobs@kosagi.com>
+ <1403063242-20840-4-git-send-email-xobs@kosagi.com>
+ <20140618100233.GE5099@sirena.org.uk> <53A1687C.9010705@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <53A14784.1030008@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: tony@atomide.com, "Menon, Nishanth" <nm@ti.com>, kishon@ti.com, george.cherian@ti.com, balbi@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nikhil Devshatwar <nikhil.nd@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>
+Content-Type: multipart/mixed; boundary="===============0569274379198145310=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <53A1687C.9010705@kosagi.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Sean Cross <xobs@kosagi.com>
+Cc: mark.rutland@arm.com, Fabio Estevam <fabio.estevam@freescale.com>, alsa-devel@alsa-project.org, lars@metafoo.de, devicetree@vger.kernel.org, Takashi Iwai <tiwai@suse.de>, Nicolin Chen <b42378@freescale.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, bunnie@kosagi.com, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 June 2014 01:32 PM, Roger Quadros wrote:
-> On 04/23/2014 08:35 PM, Roger Quadros wrote:
->> From: Nikhil Devshatwar <nikhil.nd@ti.com>
->>
->> Add hwmods for ocp2scp3 and sata modules.
 
->From what I see this is actually adding the ocp2scp3 data and fixing up some
-of the sata data which is already added and erroneous.
+--===============0569274379198145310==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="MVwEilv/pzU3ooWF"
+Content-Disposition: inline
 
-It would help if this is split up and the changelog explains whats fixed up for
-sata and why. Like for instance I see the opt clock data being removed but no
-mention of why.
- 
->>
->> [Roger Q] Clean up.
->>
->> CC: Benoit Cousson <bcousson@baylibre.com>
->> CC: Paul Walmsley <paul@pwsan.com>
->> Signed-off-by: Balaji T K <balajitk@ti.com>
->> Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
->> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> 
-> Tested-by: Roger Quadros <rogerq@ti.com>
-> against 3.16-rc1, no dependency patches needed.
-> 
-> Nishant/Rajendra,
-> 
-> Could you please review this? We need this for 3.16 SATA support and
-> Paul won't take this in without your reviewed-by tag. Thanks.
-> 
-> cheers,
-> -roger
-> 
->> ---
->>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 31 ++++++++++++++++++++++++++-----
->>  1 file changed, 26 insertions(+), 5 deletions(-)
->>
->> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> index 810c205..b02a4ab 100644
->> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
->> @@ -1215,6 +1215,30 @@ static struct omap_hwmod dra7xx_ocp2scp1_hwmod = {
->>  	},
->>  };
->>  
->> +/* ocp2scp3 */
->> +static struct omap_hwmod dra7xx_ocp2scp3_hwmod;
->> +
->> +/* l4_cfg -> ocp2scp3 */
->> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__ocp2scp3 = {
->> +	.master		= &dra7xx_l4_cfg_hwmod,
->> +	.slave		= &dra7xx_ocp2scp3_hwmod,
->> +	.clk		= "l4_root_clk_div",
->> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
->> +};
 
-All hwmod data files are organized in a certain way with all the hwmod/IP block info on top
-and Interface structs at the bottom. Can we follow the same for ocp2scp3? It helps with better
-readability.
- 
->> +
->> +static struct omap_hwmod dra7xx_ocp2scp3_hwmod = {
->> +	.name		= "ocp2scp3",
->> +	.class		= &dra7xx_ocp2scp_hwmod_class,
->> +	.clkdm_name	= "l3init_clkdm",
+--MVwEilv/pzU3ooWF
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-No main_clk?
+On Wed, Jun 18, 2014 at 06:22:52PM +0800, Sean Cross wrote:
+> On 06/18/14 18:02, Mark Brown wrote:
 
-regards,
-Rajendra
+> > This should be handled by the clock bindings not open coded in the
+> > driver - leaving this here most likely won't play nicely when the clock
+> > API can configure the defaults for the tree.  There is supposed to be
+> > support for setting default clock trees going in (or perhaps already in)
+> > the clock bindings.
 
->> +	.prcm = {
->> +		.omap4 = {
->> +			.clkctrl_offs = DRA7XX_CM_L3INIT_OCP2SCP3_CLKCTRL_OFFSET,
->> +			.context_offs = DRA7XX_RM_L3INIT_OCP2SCP3_CONTEXT_OFFSET,
->> +			.modulemode   = MODULEMODE_HWCTRL,
->> +		},
->> +	},
->> +};
->> +
->>  /*
->>   * 'qspi' class
->>   *
->> @@ -1268,9 +1292,6 @@ static struct omap_hwmod_class dra7xx_sata_hwmod_class = {
->>  };
->>  
->>  /* sata */
->> -static struct omap_hwmod_opt_clk sata_opt_clks[] = {
->> -	{ .role = "ref_clk", .clk = "sata_ref_clk" },
->> -};
->>  
->>  static struct omap_hwmod dra7xx_sata_hwmod = {
->>  	.name		= "sata",
->> @@ -1278,6 +1299,7 @@ static struct omap_hwmod dra7xx_sata_hwmod = {
->>  	.clkdm_name	= "l3init_clkdm",
->>  	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
->>  	.main_clk	= "func_48m_fclk",
->> +	.mpu_rt_idx	= 1,
->>  	.prcm = {
->>  		.omap4 = {
->>  			.clkctrl_offs = DRA7XX_CM_L3INIT_SATA_CLKCTRL_OFFSET,
->> @@ -1285,8 +1307,6 @@ static struct omap_hwmod dra7xx_sata_hwmod = {
->>  			.modulemode   = MODULEMODE_SWCTRL,
->>  		},
->>  	},
->> -	.opt_clks	= sata_opt_clks,
->> -	.opt_clks_cnt	= ARRAY_SIZE(sata_opt_clks),
->>  };
->>  
->>  /*
->> @@ -2682,6 +2702,7 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
->>  	&dra7xx_l4_per1__mmc4,
->>  	&dra7xx_l4_cfg__mpu,
->>  	&dra7xx_l4_cfg__ocp2scp1,
->> +	&dra7xx_l4_cfg__ocp2scp3,
->>  	&dra7xx_l3_main_1__qspi,
->>  	&dra7xx_l4_cfg__sata,
->>  	&dra7xx_l4_cfg__smartreflex_core,
->>
-> 
+> Can you give me more information on it?  Currently, it looks like most
+> boards use a 24 MHz clock, judging from this comment in
+> mach-imx/clk-imx6q.c:
 
+Look at the clock API, this stuff was introduced in the last merge
+window if it's there yet at all.
+
+> This codec requires the more unusual 22.5792 MHz clock.  What is the
+> appropriate method of obtaining this particular frequency?
+
+clk_set_rate() on the directly connected clock, the problem is fiddling
+about with the parenting rather than setting the rate.
+
+> > No, this is broken.  The CODEC should request its own supplies which
+> > need to correspond to the supplies the physical device has and failing
+> > to get the supplies should be a fatal error unless the device works
+> > without power (in which case why bother enablin them at all?).
+
+> Not all codecs have power supplies.  Most don't, in fact, it's just this
+
+The manufactuers of those that don't are being awfully quiet about what
+sounds like a rather impressive feature...
+
+> Additionally, since the regulator is external to the codec (as it
+> physically cuts 3.3V from the power supply), it doesn't make sense to
+> put it in the codec driver.
+
+I'm not sure you've quite understood what the regulator API is there
+for.
+
+--MVwEilv/pzU3ooWF
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJToWpsAAoJELSic+t+oim9EpEP/Rf8o/5hNCF37Y8+ibsBUMtv
+R1+9YAH8QKzfW/yAfQjMtXE4pdi8qHvPW3NVJ8HDdPU9VLzW/O9VM6WigaPEgNKy
+Lu0c8IxMpldbjO0dGwoHTrAKQv+l2Z6kMpIbCzezLBQE46EYukYTEP2p5jPmauyl
+7PU1XJWnUukx2FSV/a5qEGDyheMff0lunFCjCXEo7J3nutDG6W556n951ydD937/
+wHmMSRRM3lEKksi6CfOKHuGkHaPSFZK7gKGHrlKc/0ceXfmmhM3kahhdTQHtb/nB
+gzY+PSLICs8P3//Q6QQYAnV78QYZUHaHJV7clxWEhoA9SJ6/SPdNgrTUmWDQ+dCj
+QldxPKvA4fOCPeHJaOt1ljpQvV0k59W5OyMg56B7+mLSjowRGX3i6k23VzK88pZJ
+qFgVrrVjIgD5uHl4y2O8NZSceyfXbkx/lSkboStX1gxanbJIm6F6CZvQ1J/KF27A
+GlaeaPhk2kIFtKvG92sRpVgMqCrUU26CRb8M9p5kryZmE/qtc5ynP3WTck8y6p1X
+QrsLqb+K1i2QaVzWlaT3QZLp3ULxW4mz2T/lsWn8cP89fZVpQcHx9QGO9Qhz7jHV
+ACCtf4NLBh9QUGh9MOCMEv1yeHoea2jt3f6X6a4jSRKTS2LDZqtRBvzqvH2bsnG8
+dMvX9s+ds04Pz5E50ZkP
+=TBhh
+-----END PGP SIGNATURE-----
+
+--MVwEilv/pzU3ooWF--
+
+--===============0569274379198145310==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0569274379198145310==--
