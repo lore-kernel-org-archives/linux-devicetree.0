@@ -1,143 +1,131 @@
-From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-Date: Wed, 18 Jun 2014 09:31:31 +0900
-Message-ID: <003f01cf8a8c$a6f3be00$f4db3a00$%han@samsung.com>
-References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com>
- <CAErSpo6=vi0SR0A3u5BCLgiGxoH48N5R=e8VAnFDG=K61qLxnw@mail.gmail.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm: dts: add support for AM437x StarterKit
+Date: Tue, 17 Jun 2014 20:30:05 -0500
+Message-ID: <20140618013004.GA16868@saruman.home>
+References: <1402676147-3711-1-git-send-email-balbi@ti.com>
+ <1402676147-3711-3-git-send-email-balbi@ti.com>
+ <20140613162334.GI8319@saruman.home>
+ <20140613163118.GJ8319@saruman.home>
+ <20140616072720.GX17845@atomide.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <CAErSpo6=vi0SR0A3u5BCLgiGxoH48N5R=e8VAnFDG=K61qLxnw@mail.gmail.com>
-Content-language: ko
-Sender: linux-doc-owner@vger.kernel.org
-To: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Murali Karicheri' <m-karicheri2@ti.com>
-Cc: 'linux-arm' <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, 'Russell King' <linux@arm.linux.org.uk>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Mohit Kumar' <mohit.kumar@st.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Richard Zhu' <r65037@freescale.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="X1bOJ3K7DJ5YkBrT"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140616072720.GX17845-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Paul Walmsley <paul-DWxLp4Yu+b8AvxtiuMwx3w@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Josh Elliot <jelliott-l0cyMroinI0@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday, June 18, 2014 9:09 AM, Bjorn Helgaas wrote:
-> 
-> On Tue, Jun 10, 2014 at 02:51:19PM -0400, Murali Karicheri wrote:
-> > This patch adds a PCIe controller driver for Keystone SoCs. This
-> > is based on v1 of the series posted to the mailing list.
-> >
-> > CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> > CC: Russell King <linux@arm.linux.org.uk>
-> > CC: Grant Likely <grant.likely@linaro.org>
-> > CC: Rob Herring <robh+dt@kernel.org>
-> > CC: Mohit Kumar <mohit.kumar@st.com>
-> > CC: Jingoo Han <jg1.han@samsung.com>
-> > CC: Bjorn Helgaas <bhelgaas@google.com>
-> > CC: Pratyush Anand <pratyush.anand@st.com>
-> > CC: Richard Zhu <r65037@freescale.com>
-> > CC: Kishon Vijay Abraham I <kishon@ti.com>
-> > CC: Marek Vasut <marex@denx.de>
-> > CC: Arnd Bergmann <arnd@arndb.de>
-> > CC: Pawel Moll <pawel.moll@arm.com>
-> > CC: Mark Rutland <mark.rutland@arm.com>
-> > CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> > CC: Kumar Gala <galak@codeaurora.org>
-> > CC: Randy Dunlap <rdunlap@infradead.org>
-> > CC: Grant Likely <grant.likely@linaro.org>
-> >
-> >
-> > Changelog:
-> >
-> > V2
-> >  - Split the designware pcie enhancement patch to multiple
-> >    patches based on functionality added
-> >  - Remove the quirk code and add a patch to fix mps/mrss
-> >    tuning for ARM. Use kernel command line parameter
-> >    pci=pcie_bus_perf to work with Keystone PCI Controller.
-> >    Following patch addressed this.
-> >      [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
-> >  - Add documentation for device tree bindings
-> >  - Add separate interrupt controller nodes for MSI and Legacy
-> >    IRQs and use irq map for legacy IRQ
-> >  - Use compatibility to identify v3.65 version of the DW hardware
-> >    and use it to customize the designware common code.
-> >  - Use reg property for configuration space instead of range
-> >  - Other minor updates based on code inspection.
-> >
-> > V1
-> >  - Add an interrupt controller node for Legacy irq chip and use
-> >    interrupt map/map-mask property to map legacy IRQs A/B/C/D
-> >  - Add a Phy driver to replace the original serdes driver
-> >  - Move common application register handling code to a separate
-> >    file to allow re-use across other platforms that use older
-> >    DW PCIe h/w
-> >  - PCI quirk for maximum read request size. Check and override only
-> >    if the maximum is higher than what controller can handle.
-> >  - Converted to a module platform driver.
-> >
-> >
-> > Murali Karicheri (8):
-> >   PCI: designware: add rd[wr]_other_conf API
-> >   PCI: designware: refactor host init code to re-use on v3.65 DW pci hw
-> >   PCI: designware: update pcie core driver to work with dw hw version
-> >     3.65
-> >   PCI: designware: add msi controller functions for v3.65 hw
-> >   PCI: designware: add PCI controller functions for v3.65 DW hw
-> >   phy: Add serdes phy driver for keystone
-> >   PCI: keystone: add pcie driver based on designware core driver
-> >   ARM: keystone: add pcie related options
-> >
-> >  .../devicetree/bindings/pci/designware-pcie.txt    |   42 ++
-> >  .../devicetree/bindings/pci/pci-keystone.txt       |   56 +++
-> >  .../bindings/phy/phy-keystone-serdes.txt           |   25 ++
-> >  arch/arm/mach-keystone/Kconfig                     |    1 +
-> >  drivers/pci/host/Kconfig                           |   12 +
-> >  drivers/pci/host/Makefile                          |    2 +
-> >  drivers/pci/host/pci-dw-v3_65-msi.c                |  149 +++++++
-> >  drivers/pci/host/pci-dw-v3_65.c                    |  390 ++++++++++++++++++
-> >  drivers/pci/host/pci-dw-v3_65.h                    |   34 ++
-> >  drivers/pci/host/pci-keystone.c                    |  418 ++++++++++++++++++++
-> >  drivers/pci/host/pcie-designware.c                 |  175 +++++---
-> >  drivers/pci/host/pcie-designware.h                 |   42 +-
-> >  drivers/phy/Kconfig                                |    6 +
-> >  drivers/phy/Makefile                               |    1 +
-> >  drivers/phy/phy-keystone-serdes.c                  |  230 +++++++++++
-> >  15 files changed, 1531 insertions(+), 52 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/pci/pci-keystone.txt
-> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-keystone-serdes.txt
-> >  create mode 100644 drivers/pci/host/pci-dw-v3_65-msi.c
-> >  create mode 100644 drivers/pci/host/pci-dw-v3_65.c
-> >  create mode 100644 drivers/pci/host/pci-dw-v3_65.h
-> >  create mode 100644 drivers/pci/host/pci-keystone.c
-> >  create mode 100644 drivers/phy/phy-keystone-serdes.c
-> 
-> I'm not willing to merge phy-keystone-serdes.c because I don't
-> maintain drivers/phy and because of the binary blob of register values
-> it contains, but maybe somebody else will.  I assume it could be
-> merged by itself before the rest of this.
+--X1bOJ3K7DJ5YkBrT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think so, too.
+Hi,
 
-DT maintainers and arch maintainers should review the following
-dt bindings.
-  .../devicetree/bindings/pci/designware-pcie.txt    |   42 ++
-  .../devicetree/bindings/pci/pci-keystone.txt       |   56 +++
+On Mon, Jun 16, 2014 at 12:27:21AM -0700, Tony Lindgren wrote:
+> * Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> [140613 09:33]:
+> > On Fri, Jun 13, 2014 at 11:23:34AM -0500, Felipe Balbi wrote:
+> > > On Fri, Jun 13, 2014 at 11:15:47AM -0500, Felipe Balbi wrote:
+> > > > --- /dev/null
+> > > > +++ b/arch/arm/boot/dts/am437x-sk-evm.dts
+> > > > @@ -0,0 +1,539 @@
+> > > > +/*
+> > > > + * Copyright (C) 2014 Texas Instruments Incorporated - http://www.=
+ti.com/
+> > > > + *
+> > > > + * This program is free software; you can redistribute it and/or m=
+odify
+> > > > + * it under the terms of the GNU General Public License version 2 =
+as
+> > > > + * published by the Free Software Foundation.
+> > > > + */
+> > > > +
+> > > > +/* AM437x SK EVM */
+> > > > +
+> > > > +/dts-v1/;
+> > > > +
+> > > > +#include "am4372.dtsi"
+> > > > +#include <dt-bindings/pinctrl/am43xx.h>
+> > > > +#include <dt-bindings/pwm/pwm.h>
+> > > > +#include <dt-bindings/gpio/gpio.h>
+> > > > +#include <dt-bindings/input/input.h>
+> > > > +
+> > > > +/ {
+> > > > +	model =3D "TI AM437x SK EVM";
+> > > > +	compatible =3D "ti,am437x-sk-evm","ti,am4372","ti,am43";
+> > > > +
+> > > > +	aliases {
+> > > > +		display0 =3D &lcd0;
+> > > > +	};
+> > > > +
+> > > > +	vmmcsd_fixed: fixedregulator-sd {
+> > > > +		compatible =3D "regulator-fixed";
+> > > > +		regulator-name =3D "vmmcsd_fixed";
+> > > > +		regulator-min-microvolt =3D <3300000>;
+> > > > +		regulator-max-microvolt =3D <3300000>;
+> > > > +		enable-active-high;
+> > > > +	};
+> > > > +
+> > > > +	v33_fixed: fixedregulator-v33 {
+> > > > +		compatible =3D "regulator-fixed";
+> > > > +		regulator-name =3D "v33_fixed";
+> > > > +		regulator-min-microvolt =3D <3300000>;
+> > > > +		regulator-max-microvolt =3D <3300000>;
+> > > > +		enable-active-high;
+> > > > +	};
+> > > > +
+> > > > +	v18_fixed: fixedregulator-v18 {
+> > > > +		compatible =3D "regulator-fixed";
+> > > > +		regulator-name =3D "v18_fixed";
+> > > > +		regulator-min-microvolt =3D <1800000>;
+> > > > +		regulator-max-microvolt =3D <1800000>;
+> > > > +		enable-active-high;
+> > > > +	};
+>=20
+> Chances are these are not fixed regulators.. Typically the these
+> come from external regulators controlled by GPIO pins. Sounds
+> like you have the schematics so it would be best to verify it.
+> If they come from something not yet supported, let's at least
+> document it with comments.
 
-Generic PHY maintainer (Kishon Vijay Abraham I) should review the
-following phy driver.
-  drivers/phy/phy-keystone-serdes.c
+sure, let me just make sure of it.
 
-> 
-> I'm looking for acks from Mohit and/or Jingoo for the pci/host
-> changes, and from Arnd for the devicetree/bindings changes.
-> 
-> Adding these "-dw-3_64" files is sort of ugly.  If that code is only
-> used by keystone, maybe it could just be moved to pci-keystone.c?  But
-> I'll defer to Mohit and Jingoo on that and the way you modify
-> pcie-designware.c.
+> Also looks like all the am43xx boards are using vmmcsd_fixed,
+> might be worth checking those as well while at it.
 
-I agree with Bjorn Helgaas's opinion. These three "-dw-3_64" files
-look terrible! I don't have a good way to handle this; however,
-moving this code to pci-keystone.c looks better.
+I'll need help testing, but sure thing.
 
-Best regards,
-Jingoo Han
+--=20
+balbi
 
-> 
-> Bjorn
+--X1bOJ3K7DJ5YkBrT
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJToOucAAoJEIaOsuA1yqRE28wP/A0XxCLETw2Krn8BZNr6u1du
+Vn3Pk37/u0FTs28UQd0pvO8aKF8EEO0DtIdd4iJE4i0TF3gZcyu6lh1iDM3MjOXL
+a+3GXdODd1JC9rQm6E1LyWS+Tq/czDvbGYEoWlaTJiZF0ucW52PjfRusHbHG5aq4
++2riU/bxo8Xvdnfp1RKoA3lz62kdkzLq7vztf8j9UbVcyu4LKysKP6B7Uq//Sv/R
+pwOZwiAIC9ikli/zkJNwuSvDHxQbISIFNJ+wNsUbEtZLRwDqXWt+RbmsBiIpKulN
+oXzHAzgeNUF/zxiue/JyoduJj/Gey0vRUeBwipmCSdaIe3gCYMVvuDM3RgxGTzsP
+/S3rDP3gp1oMbsaJdV+oCsPFoipclzsgYUNML2mTDBR/ffu6S1AsE8j/33Kzngvo
+bwclCGHgcPLIbGICLwHei+XpPAuZvL5pJmd1ja8sL0JGrkQ1f4xzwkg+vuTD2ym6
+BZEhGmB7XEkOPHJQgw+wVxveEi5qK05Df9kAwto1uPJHLV8UxocZGgUvkdFf7Qp4
+XJI3wiiUQfWY3EXkw4soIROy1LU9s6IAHe6jwtCiBwfGQMe72JObK1Ljz3ftVLFY
+fcCAPWnXwlZQHiORFImurVgtBQyUKGV4KmvuN04u2xsIF0t8UT9nklBH4sumlEqW
+GVzWmBpcR1Z15EFbbCSg
+=SETu
+-----END PGP SIGNATURE-----
+
+--X1bOJ3K7DJ5YkBrT--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
