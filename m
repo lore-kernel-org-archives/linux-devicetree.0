@@ -1,73 +1,66 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCHv4 3/4] iio: devicetree: Add DT binding documentation for
- Exynos3250 ADC
-Date: Wed, 18 Jun 2014 11:21:00 +0900
-Message-ID: <1403058061-24271-4-git-send-email-cw00.choi@samsung.com>
-References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com>
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v4 0/3] Add ES8328 audio codec
+Date: Wed, 18 Jun 2014 11:47:18 +0800
+Message-ID: <1403063242-20840-1-git-send-email-xobs@kosagi.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1403058061-24271-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+To: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch add DT binding documentation for Exynos3250 ADC IP. Exynos3250 has
-special clock ('sclk_tsadc') for ADC which provide clock to internal ADC.
+This patchset adds support for the Everest Semi ES8328 audio codec.  It also
+adds support for using the es8328 on IMX boards.
 
-Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
----
- .../devicetree/bindings/arm/samsung/exynos-adc.txt   | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the codec itself and speaker amps,
+have headphone support, and must supply an unusual frequency to the codec chip.
 
-diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-index 5d49f2b..3a5af82 100644
---- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-+++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
-@@ -14,6 +14,8 @@ Required properties:
- 				for exynos4412/5250 controllers.
- 			Must be "samsung,exynos-adc-v2" for
- 				future controllers.
-+			Must be "samsung,exynos3250-adc-v2" for
-+				for exynos3250 controllers.
- - reg:			Contains ADC register address range (base address and
- 			length) and the address of the phy enable register.
- - interrupts: 		Contains the interrupt information for the timer. The
-@@ -21,7 +23,11 @@ Required properties:
- 			the Samsung device uses.
- - #io-channel-cells = <1>; As ADC has multiple outputs
- - clocks		From common clock binding: handle to adc clock.
-+			From common clock binding: handle to sclk_tsadc clock
-+			if using Exynos3250.
- - clock-names		From common clock binding: Shall be "adc".
-+			From common clock binding: Shall be "sclk_tsadc"
-+			if using Exynos3250.
- - vdd-supply		VDD input supply.
- 
- Note: child nodes can be added for auto probing from device tree.
-@@ -41,6 +47,20 @@ adc: adc@12D10000 {
- 	vdd-supply = <&buck5_reg>;
- };
- 
-+Example: adding device info in dtsi file for Exynos3250 with additional sclk
-+
-+adc: adc@126C0000 {
-+	compatible = "samsung,exynos3250-adc-v2";
-+	reg = <0x126C0000 0x100>, <0x10020718 0x4>;
-+	interrupts = <0 137 0>;
-+	#io-channel-cells = <1>;
-+	io-channel-ranges;
-+
-+	clocks = <&cmu CLK_TSADC>, <&cmu CLK_SCLK_TSADC>;
-+	clock-names = "adc", "sclk_adc";
-+
-+	vdd-supply = <&buck5_reg>;
-+};
- 
- Example: Adding child nodes in dts file
- 
+Changes since v3:
+    - Add OF bindings for everest,es8328
+    - Add back in patch to add everest as a vendor prefix
+    - Give clocks more generic names
+    - Document required clocks in DT bindings document
+
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
+
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
+
+Sean Cross (3):
+  devicetree: bindings: Add Everest Semicodunctor
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
+
+ Documentation/devicetree/bindings/sound/es8328.txt |  18 +
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  68 +++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  62 ++
+ sound/soc/codecs/es8328-spi.c                      |  51 ++
+ sound/soc/codecs/es8328.c                          | 625 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 313 +++++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 359 ++++++++++++
+ 12 files changed, 1532 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
+
 -- 
-1.8.0
+2.0.0
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
