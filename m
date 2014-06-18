@@ -1,103 +1,104 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v2 08/20] ARM: sun6i: DT: Rename PLL6 to
- PLL6x2 and add fixed-factor-clock for PLL6
-Date: Wed, 18 Jun 2014 11:57:59 +0200
-Message-ID: <20140618095759.GL19730@lukather>
-References: <1403016777-15121-1-git-send-email-wens@csie.org>
- <1403016777-15121-9-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 3/3] ASoC: fsl: add imx-es8328 machine driver
+Date: Wed, 18 Jun 2014 11:02:33 +0100
+Message-ID: <20140618100233.GE5099@sirena.org.uk>
+References: <1403063242-20840-1-git-send-email-xobs@kosagi.com>
+ <1403063242-20840-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="pFej7zHSL6C5fFIz"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBLGGQWOQKGQEWFPBKBA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="HhaQrpaE6DOVGqQz"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403016777-15121-9-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <1403063242-20840-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---pFej7zHSL6C5fFIz
+--HhaQrpaE6DOVGqQz
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jun 17, 2014 at 10:52:45PM +0800, Chen-Yu Tsai wrote:
-> The PLL6 clock driver actually manages the PLL6x2 output of PLL6, so
-> rename the node accordingly, and add a halved fixed-factor-clock for
-> normal PLL6 output used by most modules.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  arch/arm/boot/dts/sun6i-a31.dtsi | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a=
-31.dtsi
-> index a9dfa12..12d558b 100644
-> --- a/arch/arm/boot/dts/sun6i-a31.dtsi
-> +++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-> @@ -94,11 +94,20 @@
->  			clock-output-names =3D "pll1";
->  		};
-> =20
-> -		pll6: clk@01c20028 {
-> +		pll6x2: clk@01c20028 {
->  			#clock-cells =3D <0>;
->  			compatible =3D "allwinner,sun6i-a31-pll6-clk";
->  			reg =3D <0x01c20028 0x4>;
->  			clocks =3D <&osc24M>;
-> +			clock-output-names =3D "pll6x2";
-> +		};
+On Wed, Jun 18, 2014 at 11:47:21AM +0800, Sean Cross wrote:
+
+> +config SND_SOC_IMX_ES8328
+> +	tristate "SoC Audio support for i.MX boards with the ES8328 codec"
+> +	depends on OF && (I2C || SPI)
+> +	select SND_SOC_ES8328_I2C if I2C
+> +	select SND_SOC_ES8328_SPI if SPI_MASTER
+
+I expect this is going to break configurations where I2C is modular and
+SPI is enabled since it'll try to build in the I2C bus interface.
+
+> +static int imx_set_frequency(struct imx_es8328_data *data, int freq)
+> +{
+> +	int ret;
 > +
-> +		pll6: pll6_clk {
-> +			#clock-cells =3D <0>;
-> +			compatible =3D "fixed-factor-clock";
-> +			clock-div =3D <2>;
-> +			clock-mult =3D <1>;
-> +			clocks =3D <&pll6x2>;
->  			clock-output-names =3D "pll6";
->  		};
+> +	ret = clk_set_parent(data->output_clk, data->codec_clk);
+> +	if (ret) {
+> +		dev_err(data->dev, "unable to set clk output");
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_set_parent(data->codec_clk_sel, data->codec_clk_post_div);
+> +	if (ret) {
+> +		dev_err(data->dev, "unable to set clk parent");
+> +		return ret;
+> +	}
 
-Hmm, nope. The output of PLL6 is 24M * N * K / 2, and this is what we
-support in the driver.
+This should be handled by the clock bindings not open coded in the
+driver - leaving this here most likely won't play nicely when the clock
+API can configure the defaults for the tree.  There is supposed to be
+support for setting default clock trees going in (or perhaps already in)
+the clock bindings.
 
-This change is backward, and should be the other way around. Have PLL6
-running at it's usual speed, and then have PLL62X be a fixed-factor.
+> +	data->codec_regulator = devm_regulator_get(dev, "codec");
+> +	if (IS_ERR(data->codec_regulator)) {
+> +		dev_err(dev, "No codec regulator\n");
+> +		data->codec_regulator = NULL;
+> +	} else {
+> +		ret = regulator_enable(data->codec_regulator);
+> +		if (ret)
+> +			dev_err(dev,
+> +				"Unable to enable codec regulator: %d\n", ret);
+> +	}
 
-Maxime
+No, this is broken.  The CODEC should request its own supplies which
+need to correspond to the supplies the physical device has and failing
+to get the supplies should be a fatal error unless the device works
+without power (in which case why bother enablin them at all?).
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+> +	ret = snd_soc_register_card(&data->card);
+> +	if (ret)
+> +		goto fail;
 
---pFej7zHSL6C5fFIz
+devm_snd_soc_register_card().
+
+--HhaQrpaE6DOVGqQz
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJToWKmAAoJEBx+YmzsjxAgkckP+wer6Qink/KWyr0pU+No7aAg
-fLWZ4xU7VVMWcrUHgj7Iv2L2Yb8kPlhv24+YtlNsBG0RnTUijtYfRL6YT7T/EE/U
-jRoq2oCPM+zFl4h1JQ5PAITIqMkCpHP5Oa1Vo5drFRZZc57I19ugKZxgZQe8rif6
-Jrp1uhGZuZ4IpelSpgfCqnqdXiiuj73Unn1hl4x5Fxthq1LjOm6+rywai+9ex5Z1
-CBrCRpEAfffV94ewAQsj2/Wa/APChkW1RLhnKxG7jFG0GMu/dscKy/p9ppEld3gb
-+j2Q/V1j6o6KAJkKidWckC1ok/NHmzlTO8cDSYQGAZ3D+ZSiZnutODQluP63zCwr
-ydYWJqnACiwZh6EkolAsf5zZlLhIf33nehdlSd24GDdYfeMLoTC0kY5VWIvIi3Uz
-WsIPdlA81c6Zc244JC7Tww24fVygx7oVT0uDUhLMqKzApiNimA6RSAoQYfsTSbcH
-9e66R+qlpndn4TJg5BSQS7ASSBEA4+VI4JJ/Mz6KZwgJ2MJF+CzXP1BfKhjWlZfJ
-EAc+7aps+yqPVd+XR/3DXjdlUrjsjyZ1+jTK/F5gCpI2H19WM+xBwOFTD/1yIEER
-frGvpvoHOR1ttzWeby/QTIao3H6SqOADDKZ8/lss784PMEfNFk+DKH50bST7DQmd
-WKEDWrdNMDye25i5BV3z
-=TEtl
+iQIcBAEBAgAGBQJToWO2AAoJELSic+t+oim9ZT0P/1ZvxbCnrhs5KM9wbzdHChln
+oxBhfsB6MGybo+7SGxTXBVqo2tm43SlzaH1YYhRsA7hKbkpIelXEcyeN0yYGzXWn
+yx4OczymMBWrigBQMI+ToikxFSIE3FqSAm1BtL83ZIgyXnBxbuy0D4tO6N0Mz+Kr
+yvSD7Gs74bcpHEhsiG15a9vUXygPxixNxqGKdxsvMcZpjqgjgu8mHtgirLxxVJzf
+LnLyTelqNS88a+YYP5ERmSEpSZDh3VJy6aFA2bGqIQfFgNCJGVPaFjAa0dRKOo3X
+vDUxbdWVhqCbft8kijewVF/2kCTm0XpSDO4ENHAAyAnIcDIYc4L2yy+7vUWd9pfY
+oW1RaGO/pLv9D39hajmZSo4NJ28sFFx6li91LJnNPOswWvWA8dqZiFjw5cptUkwe
+Tcuk34mFNz4hSYdCphBEnPNAvwj8UDZJiiwUo8u9rZc+eImA7FoJSgo2urY+rK7Y
+UzPcLdsWHmw83+zUtYzP9IabkA/gmcTy4BgGTB4z3vX6oIrohzmZVuh18zBjzIZG
+67RqD7Qw0OjkQx4OtI6s5v5QXVWGssvELxDiKJSMFnV86Vy3o1XdfMcxlOMIekvl
+vF+YMw0CQ3z6/XA0ZtdqGNhYAWJfD1HHOCcQkHiJZQ29SPRj9m8BtNPnhG7xtasw
+bgdLSLboOYnye4+HMKhh
+=jXNn
 -----END PGP SIGNATURE-----
 
---pFej7zHSL6C5fFIz--
+--HhaQrpaE6DOVGqQz--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
