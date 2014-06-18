@@ -1,54 +1,42 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v3 5/7] ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
-Date: Wed, 18 Jun 2014 14:10:29 +0300
-Message-ID: <53A173A5.7020509@ti.com>
-References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <1399283686-6127-6-git-send-email-rogerq@ti.com>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH net-next v2 1/3] ieee802154: cc2520: adds driver for TI
+ CC2520 radio
+Date: Wed, 18 Jun 2014 16:43:06 +0530
+Message-ID: <53A17442.8010009@gmail.com>
+References: <1403068565-32224-1-git-send-email-varkab@cdac.in> <1403068565-32224-2-git-send-email-varkab@cdac.in> <20140618091010.GB26461@leverpostej> <53A15B38.6060404@gmail.com> <20140618095519.GE26461@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1399283686-6127-6-git-send-email-rogerq@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: kishon@ti.com, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com, Rajendra Nayak <rnayak@ti.com>
-Cc: george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, nm@ti.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset=windows-1252;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140618095519.GE26461@leverpostej>
+Sender: netdev-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "alex.bluesman.smirnov@gmail.com" <alex.bluesman.smirnov@gmail.com>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "linux-zigbee-devel@lists.sourceforge.net" <linux-zigbee-devel@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Varka Bhadram <varkab@cdac.in>
 List-Id: devicetree@vger.kernel.org
 
-+ Nishant and Rajendra for review.
+On 06/18/2014 03:25 PM, Mark Rutland wrote:
+> On Wed, Jun 18, 2014 at 10:26:16AM +0100, Varka Bhadram wrote:
+>> +static int cc2520_probe(struct spi_device *spi)
+>> +{
+>> +       struct cc2520_private *priv;
+>> +       struct pinctrl *pinctrl;
+>> +       struct cc2520_platform_data *pdata;
+>> +       struct device_node __maybe_unused *np =3D spi->dev.of_node;
+>>
+>> This looks to be definitely unused rather than __maybe_unused. There=
+ are
+>> no other occuences of "np" in this function.
+>>
+>> This macro defined like this.
+>> #define __maybe_unused  __attribute__((unused))
+> Sure, but that's irrelevant. There's absolutely no point in this
+> variable existing at all, and it can simply disappear.
+>
+> Mark.
 
-On 05/05/2014 12:54 PM, Roger Quadros wrote:
-> Add the sysconfig class bits for the Super Speed USB
-> controllers
-> 
-> CC: Paul Walmsley <paul@pwsan.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
-> ---
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
-> 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> index 810c205..067d322 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> @@ -1731,8 +1731,20 @@ static struct omap_hwmod dra7xx_uart6_hwmod = {
->   *
->   */
->  
-> +static struct omap_hwmod_class_sysconfig dra7xx_usb_otg_ss_sysc = {
-> +	.rev_offs	= 0x0000,
-> +	.sysc_offs	= 0x0010,
-> +	.sysc_flags	= (SYSC_HAS_DMADISABLE | SYSC_HAS_MIDLEMODE |
-> +			   SYSC_HAS_SIDLEMODE),
-> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
-> +			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
-> +			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
-> +	.sysc_fields	= &omap_hwmod_sysc_type2,
-> +};
-> +
->  static struct omap_hwmod_class dra7xx_usb_otg_ss_hwmod_class = {
->  	.name	= "usb_otg_ss",
-> +	.sysc	= &dra7xx_usb_otg_ss_sysc,
->  };
->  
->  /* usb_otg_ss1 */
-> 
+If we don't use that macro the compiler triggers warnings saying that: =
+ warning: unused variable =91np=92 [-Wunused-variable]
 
+
+Varka Bhadram
