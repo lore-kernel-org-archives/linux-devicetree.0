@@ -1,86 +1,67 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH RFC 1/2] libahci_platform: add
- ahci_platform_get_of_property
-Date: Wed, 18 Jun 2014 15:03:52 +0100
-Message-ID: <20140618140352.GD11895@leverpostej>
-References: <xuwei5@hisilicon.com,kefeng.wang@linaro.org,>
- <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org>
- <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH net-next v4 0/3] Driver for TI CC2520
+	Radio
+Date: Wed, 18 Jun 2014 19:36:40 +0530
+Message-ID: <1403100403-6429-1-git-send-email-varkab@cdac.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org>
-Content-Language: en-US
-Sender: linux-ide-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: "tj@kernel.org" <tj@kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-zigbee-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/linux-zigbee-devel>,
+	<mailto:linux-zigbee-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=linux-zigbee-devel>
+List-Post: <mailto:linux-zigbee-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:linux-zigbee-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/linux-zigbee-devel>,
+	<mailto:linux-zigbee-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: linux-zigbee-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-zigbee-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 05:54:08AM +0100, Zhangfei Gao wrote:
-> Instead of setting hflags in different files,
-> ahci_platform_get_of_property set hpriv->flags when ahci_platform_init_host
-> according to property in dts.
+This series adds the driver support for TI cc2520 radio.
+also devicetree bindings for the driver.
 
-The AHCI_HFLAGS are a Linux implementation detail, so it would be nice
-to have a good justification for each of these being turned into DT
-properties.
+changes since v3:
+	-drop the unused varible.
 
-> 
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
-> ---
->  .../devicetree/bindings/ata/ahci-platform.txt      |    9 +++++
->  drivers/ata/libahci_platform.c                     |   39 ++++++++++++++++++++
->  2 files changed, 48 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> index c96d8dcf98fd..c0b9f6e76ba4 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> @@ -26,6 +26,15 @@ Optional properties:
->  - clocks            : must contain the sata, sata_ref and ahb clocks
->  - clock-names       : must contain "ahb" for the ahb clock
->  
-> +- no-ncq: when present, controller can't do NCQ, turning off CAP_NCQ
-> +- 32bit-only: when present, controller can't do 64bit DMA, forcing 32bit
-> +- no-msi: when present, no PCI MSI
-> +- no-pmp: when present, controller can't do PMP, turning off CAP_PMP
-> +- yes-ncq: when present,controller can do NCQ, turning on CAP_NCQ
-> +- no-suspend: when present, controller can't do suspend
-> +- yes-fbs: when present, controller can do FBS, turning on CAP_FBS
-> +- no-fbs: when present, controller can't do FBS, turning off CAP_FBS
+changes since v2:
+	- drop spi mode dt binding
 
-There is absolutely no reason to mention CAP_* here; the DT should
-describe the HW, not Linux internals.
+changes since v1:
+	- improverment in gpio setup
+	- changed len pointer to len variable
 
-Do these all make sense to be placed in DT?
+changes for v1:
+	- improvements in the locking mechanism in Tx and SFD ISR.
+	- proper checkings for GPIO pins.
+	- avoids the memory leak for priv.
+	- used devm_* APIs.
+	- moved the code from header file to .c file
+	- removed cc2520_unregister()
 
-I worry that for other quirks we may need more flags in future. For that
-reason I'd rather figure this out in the driver based on the compatible
-string.
+Varka Bhadram (3):
+  ieee802154: cc2520: adds driver for TI CC2520 radio
+  ieee802154: cc2520: add driver to kernel build system
+  devicetree: add device tree bindings for cc2520 driver
 
-> +
->  Examples:
->          sata@ffe08000 {
->  		compatible = "snps,spear-ahci";
-> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
-> index 3a5b4ed25a4f..880b9f360056 100644
-> --- a/drivers/ata/libahci_platform.c
-> +++ b/drivers/ata/libahci_platform.c
-> @@ -278,6 +278,44 @@ err_out:
->  }
->  EXPORT_SYMBOL_GPL(ahci_platform_get_resources);
->  
-> +#ifdef CONFIG_OF
-> +static void ahci_platform_get_of_property(struct platform_device *pdev,
-> +					  struct ahci_host_priv *hpriv)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +
-> +	if (of_device_is_available(np)) {
-> +		if (of_get_property(np, "no-ncq", NULL))
-> +			hpriv->flags |= AHCI_HFLAG_NO_NCQ;
+ .../devicetree/bindings/net/ieee802154/cc2520.txt  |   29 +
+ drivers/net/ieee802154/Kconfig                     |   11 +
+ drivers/net/ieee802154/Makefile                    |    1 +
+ drivers/net/ieee802154/cc2520.c                    |  967 ++++++++++++++++++++
+ include/linux/spi/cc2520.h                         |   26 +
+ 5 files changed, 1034 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+ create mode 100644 drivers/net/ieee802154/cc2520.c
+ create mode 100644 include/linux/spi/cc2520.h
 
-For boolean flags please use of_property_read_bool.
+-- 
+1.7.9.5
 
-Mark.
+
+------------------------------------------------------------------------------
+HPCC Systems Open Source Big Data Platform from LexisNexis Risk Solutions
+Find What Matters Most in Your Big Data with HPCC Systems
+Open Source. Fast. Scalable. Simple. Ideal for Dirty Data.
+Leverages Graph Analysis for Fast Processing & Easy Data Exploration
+http://p.sf.net/sfu/hpccsystems
