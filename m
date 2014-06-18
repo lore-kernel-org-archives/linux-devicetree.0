@@ -1,117 +1,92 @@
-From: "Gupta, Pekon" <pekon@ti.com>
-Subject: RE: Unifying cape overlays into boot .dtb for BeagleBoard.org boards
-Date: Wed, 18 Jun 2014 08:51:24 +0000
-Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAF5DD0@DBDE04.ent.ti.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
- <CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EAF59A7@DBDE04.ent.ti.com>
- <CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv4 3/4] iio: devicetree: Add DT binding documentation for
+ Exynos3250 ADC
+Date: Wed, 18 Jun 2014 17:54:30 +0900
+Message-ID: <53A153C6.1030703@samsung.com>
+References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com>
+ <1403058061-24271-4-git-send-email-cw00.choi@samsung.com>
+ <53A14F4D.7080204@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Kridner <jkridner@gmail.com>, "Tony Lindgren (tony@atomide.com)" <tony@atomide.com>, "Rini, Tom" <trini@ti.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "beagleboard@googlegroups.com" <beagleboard@googlegroups.com>, OMAP List <linux-omap@vger.kernel.org>, Robert Nelson <robertcnelson@gmail.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <53A14F4D.7080204@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Tomasz,
 
->From: Jason Kridner [mailto:jkridner@gmail.com]
->>On Tue, Jun 17, 2014 at 3:11 AM, Gupta, Pekon <pekon@ti.com> wrote:
->>>From: Jason Kridner
-[...]
->>>> * The devicetree sources, including the primary boot .dts files, will
->>>> eventually be removed from the kernel source tree. I'm not too sure if
->>>> and when it'll really happen, but starting up a project to maintain
->>>> the definitive beagleboard.org board devicetree files outside the
->>>> kernel seems to make sense. Given the interdependency of the boot .dtb
->>>> and the overlay .dtbo files, combining them into a single repository
->>>> where every distribution can pick them up seems like a natural and
->>>> obvious choice. There are of course some dependencies on kernel
->>>> versions, but I believe most of those have settled out by now and we
->>>> should be OK moving forward.
+On 06/18/2014 05:35 PM, Tomasz Figa wrote:
+> Hi Chanwoo,
+> 
+> On 18.06.2014 04:21, Chanwoo Choi wrote:
+>> This patch add DT binding documentation for Exynos3250 ADC IP. Exynos3250 has
+>> special clock ('sclk_tsadc') for ADC which provide clock to internal ADC.
 >>
->> +1
->> Yes, moving cape DTS out of kernel tree should help developers.
->> There are quite a few cape patches floating in mail-lists, but as cape
->> DTS is still not accepted in mainline so they get lost and forgotten.
->> So one place for collecting all this is a good idea.
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  .../devicetree/bindings/arm/samsung/exynos-adc.txt   | 20 ++++++++++++++++++++
+>>  1 file changed, 20 insertions(+)
 >>
->>
->> However, somehow the universal I/O DTS looked seemed complicated:
->> (1)
->> All capes work standalone, but due to share pin-mux some cape
->> combinations cannot be used simultaneously. But most users of
->> BeagleBone are already well-versed with DT and kernel infrastructure,
->> so they need not be spoon fed to get a out-of-box working solution
->> for each combination. If there is proper documentation is available
->> about compatibility of capes with each other, then users will figure
->> out themselves.
->
->I think you have too much confidence in users. If this doesn't hurt
->power users, then why is it bad have an option to spoon feed? This
->doesn't prevent anyone with knowledge of DT from doing their own
->thing.
->
-Fair enough.
-But plz give a try to u-boot alternative below. It works at my end.
+>> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> index 5d49f2b..3a5af82 100644
+>> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> @@ -14,6 +14,8 @@ Required properties:
+>>  				for exynos4412/5250 controllers.
+>>  			Must be "samsung,exynos-adc-v2" for
+>>  				future controllers.
+>> +			Must be "samsung,exynos3250-adc-v2" for
+>> +				for exynos3250 controllers.
+> 
+> You might change the last line for:
+> 
+> for controllers compatible with ADC of Exynos3250.
+> 
+> This is to make it also account for possible future SoCs which need
+> exactly the same handling.
 
->>
->> (2)
->> Also, there was a talk of enabling and disabling DT fragments via u-boot.
->> That should also be explored instead of complicating cape DTS.
->
->Link? Relevance?
->
-we can modify DT from u-boot itself [1].
-Example:  "MMC2" pin-mux conflicts with "NAND" and "NOR" capes.
-But using following sequence of commands, you can modify DTB via
-u-boot and make NAND cape work _without_any_hack_ in patch [2].
+OK, I'll modify it as folloiwng according to your comment:
 
-/* load DTB */
-u-boot> tftp 0x81000000 am335x-boneblack.dtb
-u-boot> fdt addr 0x81000000
-/* disable MMC2 node */
-u-boot> fdt list /ocp/mmc@481d8000
-u-boot> fdt set  /ocp/mmc@481d8000 status \d\i\s\a\b\l\e\d
-u-boot> fdt list /ocp/mmc@481d8000 status
-/* enable GPMC node */
-u-boot> fdt list /ocp/gpmc
-u-boot> fdt set  /ocp/gpmc status \o\k\a\y
-u-boot> fdt list /ocp/gpmc status
-/* enable ELM node */
-u-boot> fdt list /ocp/elm
-u-boot> fdt set  /ocp/elm status \o\k\a\y
-u-boot> fdt list /ocp/elm status
-/* boot uImage */
-tftp 0x82000000 uImage
-bootm 0x82000000 - 0x81000000
+>> +			Must be "samsung,exynos3250-adc-v2" for
+>> +				for controllers compatible with ADC of Exynos3250.
 
-Note: "fdt set" command does not accept string literals
-as binding values, it internally converts them to string, so
-escape sequenced characters were used here..
-"okay" == \o\k\a\y
-"disabled" == \d\i\s\a\b\l\e\d"
+> 
+> 
+>>  - reg:			Contains ADC register address range (base address and
+>>  			length) and the address of the phy enable register.
+>>  - interrupts: 		Contains the interrupt information for the timer. The
+>> @@ -21,7 +23,11 @@ Required properties:
+>>  			the Samsung device uses.
+>>  - #io-channel-cells = <1>; As ADC has multiple outputs
+>>  - clocks		From common clock binding: handle to adc clock.
+>> +			From common clock binding: handle to sclk_tsadc clock
+>> +			if using Exynos3250.
+> 
+> This is not clear. It might sound like the "sclk_tsadc" clock is used on
+> Exynos3250 and "adc" on remaining SoCs. I'd write this simply as:
+> 
+>>From common clock bindings: handles to clocks specified in "clock-names"
+> property, in the same order.
 
+I'll modify it.
 
-Hope above solves the pre-requisite because of which 'Tony Lindgren <tony@atomide.com>'
-was unable to accept cape related DTS into his tree [3]
+> 
+>>  - clock-names		From common clock binding: Shall be "adc".
+>> +			From common clock binding: Shall be "sclk_tsadc"
+>> +			if using Exynos3250.
+> 
+> This is also not clear. I'd recommend something like:
+> 
+>>From common clock bindings: list of clock input names used by ADC block:
+>     - "adc" : ADC bus clock,
+>     - "sclk_tsadc" : ADC special clock (only for Exynos3250 and
+> compatible ADC blocks).
 
+I'll modify it.
 
-[1] http://www.denx.de/wiki/view/DULG/UBootCmdFDT
-[2] http://www.spinics.net/lists/linux-omap/msg107307.html
-[3] http://www.spinics.net/lists/linux-omap/msg107354.html
-
-
-with regards, pekon
+Best Regards,
+Chanwoo Choi
