@@ -1,1315 +1,402 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v1 4/9] pinctrl: tegra-xusb: Add USB PHY support
-Date: Tue, 17 Jun 2014 23:16:15 -0700
-Message-ID: <1403072180-4944-5-git-send-email-abrestic@chromium.org>
-References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403072180-4944-1-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+From: Varka Bhadram <varkabhadram@gmail.com>
+Subject: Re: [PATCH v5] hwmon: Driver for TI TMP103 temperature sensor
+Date: Wed, 18 Jun 2014 11:48:31 +0530
+Message-ID: <53A12F37.8020206@gmail.com>
+References: <1403069837-15651-1-git-send-email-hs@denx.de> <53A127BB.7090802@gmail.com> <53A12DBB.50704@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53A12DBB.50704@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, Heiko Schocher <hs@denx.de>, lm-sensors@lm-sensors.org
+Cc: Jean Delvare <khali@linux-fr.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-In addition to the PCIe and SATA PHYs, the XUSB pad controller also
-supports 3 UTMI, 2 HSIC, and 2 USB3 PHYs.  Each USB3 PHY uses a single
-PCIe or SATA lane and is mapped to one of the three UTMI ports.
-
-Signed-off-by: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
----
- drivers/pinctrl/pinctrl-tegra-xusb.c | 1106 +++++++++++++++++++++++++++++++++-
- 1 file changed, 1089 insertions(+), 17 deletions(-)
-
-diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c b/drivers/pinctrl/pinctrl-tegra-xusb.c
-index 2405646..67056ab 100644
---- a/drivers/pinctrl/pinctrl-tegra-xusb.c
-+++ b/drivers/pinctrl/pinctrl-tegra-xusb.c
-@@ -14,22 +14,55 @@
- #include <linux/delay.h>
- #include <linux/io.h>
- #include <linux/module.h>
-+#include <linux/notifier.h>
- #include <linux/of.h>
- #include <linux/phy/phy.h>
- #include <linux/pinctrl/pinctrl.h>
- #include <linux/pinctrl/pinmux.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/reset.h>
-+#include <linux/tegra-soc.h>
-+#include <linux/tegra-xusb-mbox.h>
- 
- #include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
- 
- #include "core.h"
- #include "pinctrl-utils.h"
- 
-+#define TEGRA_XUSB_PADCTL_USB3_PORTS 2
-+#define TEGRA_XUSB_PADCTL_UTMI_PORTS 3
-+#define TEGRA_XUSB_PADCTL_HSIC_PORTS 2
-+
-+#define FUSE_SKU_CALIB_HS_CURR_LEVEL_PADX_SHIFT(x) ((x) ? 15 : 0)
-+#define FUSE_SKU_CALIB_HS_CURR_LEVEL_PAD_MASK 0x3f
-+#define FUSE_SKU_CALIB_HS_IREF_CAP_SHIFT 13
-+#define FUSE_SKU_CALIB_HS_IREF_CAP_MASK 0x3
-+#define FUSE_SKU_CALIB_HS_SQUELCH_LEVEL_SHIFT 11
-+#define FUSE_SKU_CALIB_HS_SQUELCH_LEVEL_MASK 0x3
-+#define FUSE_SKU_CALIB_HS_TERM_RANGE_ADJ_SHIFT 7
-+#define FUSE_SKU_CALIB_HS_TERM_RANGE_ADJ_MASK 0xf
-+
-+#define XUSB_PADCTL_USB2_PORT_CAP 0x008
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_SHIFT(x) ((x) * 4)
-+#define XUSB_PADCTL_USB2_PORT_CAP_PORT_CAP_MASK 0x3
-+#define XUSB_PADCTL_USB2_PORT_CAP_DISABLED 0x0
-+#define XUSB_PADCTL_USB2_PORT_CAP_HOST 0x1
-+#define XUSB_PADCTL_USB2_PORT_CAP_DEVICE 0x2
-+#define XUSB_PADCTL_USB2_PORT_CAP_OTG 0x3
-+
-+#define XUSB_PADCTL_SS_PORT_MAP 0x014
-+#define XUSB_PADCTL_SS_PORT_MAP_PORTX_SHIFT(x) ((x) * 4)
-+#define XUSB_PADCTL_SS_PORT_MAP_PORT_MASK 0x7
-+
- #define XUSB_PADCTL_ELPG_PROGRAM 0x01c
- #define XUSB_PADCTL_ELPG_PROGRAM_AUX_MUX_LP0_VCORE_DOWN (1 << 26)
- #define XUSB_PADCTL_ELPG_PROGRAM_AUX_MUX_LP0_CLAMP_EN_EARLY (1 << 25)
- #define XUSB_PADCTL_ELPG_PROGRAM_AUX_MUX_LP0_CLAMP_EN (1 << 24)
-+#define XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_VCORE_DOWN(x) (1 << (18 + (x) * 4))
-+#define XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_CLAMP_EN_EARLY(x) \
-+							(1 << (17 + (x) * 4))
-+#define XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_CLAMP_EN(x) (1 << (16 + (x) * 4))
- 
- #define XUSB_PADCTL_IOPHY_PLL_P0_CTL1 0x040
- #define XUSB_PADCTL_IOPHY_PLL_P0_CTL1_PLL0_LOCKDET (1 << 19)
-@@ -41,6 +74,104 @@
- #define XUSB_PADCTL_IOPHY_PLL_P0_CTL2_TXCLKREF_EN (1 << 5)
- #define XUSB_PADCTL_IOPHY_PLL_P0_CTL2_TXCLKREF_SEL (1 << 4)
- 
-+#define XUSB_PADCTL_IOPHY_USB3_PADX_CTL2(x) (0x058 + (x) * 4)
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_SHIFT 24
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_MASK 0xff
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_SHIFT 16
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_MASK 0x3f
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_SHIFT 8
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_MASK 0x3f
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_SHIFT 8
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_MASK 0xffff
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_SHIFT 4
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_MASK 0x7
-+
-+#define XUSB_PADCTL_IOPHY_USB3_PADX_CTL4(x) (0x068 + (x) * 4)
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_SHIFT 24
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_MASK 0x1f
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_SHIFT 16
-+#define XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_MASK 0x7f
-+
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_PX_CTL2(x) ((x) < 2 ? 0x078 + (x) * 4 : \
-+					       0x0f8 + (x) * 4)
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL2_SPARE_IN_SHIFT 28
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL2_SPARE_IN_MASK 0x3
-+
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_PX_CTL5(x) ((x) < 2 ? 0x090 + (x) * 4 : \
-+					       0x11c + (x) * 4)
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL5_RX_QEYE_EN (1 << 8)
-+
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_PX_CTL6(x) ((x) < 2 ? 0x098 + (x) * 4 : \
-+					       0x128 + (x) * 4)
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SHIFT 24
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_G_Z_MASK 0x3f
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_TAP_MASK 0x1f
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_AMP_MASK 0x7f
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT 16
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_MASK 0xff
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_G_Z 0x21
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_TAP 0x32
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_AMP 0x33
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_CTLE_Z 0x48
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_LATCH_G_Z 0xa1
-+
-+#define XUSB_PADCTL_USB2_OTG_PADX_CTL0(x) (0x0a0 + (x) * 4)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD_ZI (1 << 21)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD2 (1 << 20)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD (1 << 19)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_LS_RSLEW_SHIFT 14
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_LS_RSLEW_MASK 0x3
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_SLEW_SHIFT 6
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_SLEW_MASK 0x3f
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_CURR_LEVEL_SHIFT 0
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_CURR_LEVEL_MASK 0x3f
-+
-+#define XUSB_PADCTL_USB2_OTG_PADX_CTL1(x) (0x0ac + (x) * 4)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_HS_IREF_CAP_SHIFT 9
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_HS_IREF_CAP_MASK 0x3
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_TERM_RANGE_ADJ_SHIFT 3
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_TERM_RANGE_ADJ_MASK 0x7
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR (1 << 2)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DISC_FORCE_POWERUP (1 << 1)
-+#define XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_CHRP_FORCE_POWERUP (1 << 0)
-+
-+#define XUSB_PADCTL_USB2_BIAS_PAD_CTL0 0x0b8
-+#define XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD (1 << 12)
-+#define XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_DISCON_LEVEL_SHIFT 2
-+#define XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_DISCON_LEVEL_MASK 0x7
-+#define XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_SHIFT 0
-+#define XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_MASK 0x3
-+
-+#define XUSB_PADCTL_HSIC_PADX_CTL0(x) (0x0c0 + (x) * 4)
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_SHIFT 12
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_MASK 0x7
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_SHIFT 8
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_MASK 0x7
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_SHIFT 4
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_MASK 0x7
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_SHIFT 0
-+#define XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_MASK 0x7
-+
-+#define XUSB_PADCTL_HSIC_PADX_CTL1(x) (0x0c8 + (x) * 4)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_RPU_STROBE (1 << 10)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_RPU_DATA (1 << 9)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_RPD_STROBE (1 << 8)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_RPD_DATA (1 << 7)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_PD_ZI (1 << 5)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_PD_RX (1 << 4)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_PD_TRX (1 << 3)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_PD_TX (1 << 2)
-+#define XUSB_PADCTL_HSIC_PAD_CTL1_AUTO_TERM_EN (1 << 0)
-+
-+#define XUSB_PADCTL_HSIC_PADX_CTL2(x) (0x0d0 + (x) * 4)
-+#define XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_SHIFT 4
-+#define XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_MASK 0x7
-+#define XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_SHIFT 0
-+#define XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_MASK 0x7
-+
-+#define XUSB_PADCTL_HSIC_STRB_TRIM_CONTROL 0x0e0
-+#define XUSB_PADCTL_HSIC_STRB_TRIM_CONTROL_STRB_TRIM_MASK 0x1f
-+
- #define XUSB_PADCTL_IOPHY_PLL_S0_CTL1 0x138
- #define XUSB_PADCTL_IOPHY_PLL_S0_CTL1_PLL1_LOCKDET (1 << 27)
- #define XUSB_PADCTL_IOPHY_PLL_S0_CTL1_PLL1_MODE (1 << 24)
-@@ -52,6 +183,12 @@
- #define XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL1_IDDQ_OVRD (1 << 1)
- #define XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL1_IDDQ (1 << 0)
- 
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL2 0x14c
-+
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL5 0x158
-+
-+#define XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL6 0x15c
-+
- struct tegra_xusb_padctl_function {
- 	const char *name;
- 	const char * const *groups;
-@@ -72,6 +209,16 @@ struct tegra_xusb_padctl_soc {
- 
- 	const struct tegra_xusb_padctl_lane *lanes;
- 	unsigned int num_lanes;
-+
-+	u32 rx_wander;
-+	u32 rx_eq;
-+	u32 cdr_cntl;
-+	u32 dfe_cntl;
-+	u32 hs_slew;
-+	u32 ls_rslew[TEGRA_XUSB_PADCTL_UTMI_PORTS];
-+	u32 hs_discon_level;
-+	u32 spare_in;
-+	int hsic_port_offset;
- };
- 
- struct tegra_xusb_padctl_lane {
-@@ -86,6 +233,22 @@ struct tegra_xusb_padctl_lane {
- 	unsigned int num_funcs;
- };
- 
-+struct tegra_xusb_fuse_calibration {
-+	u32 hs_curr_level[TEGRA_XUSB_PADCTL_UTMI_PORTS];
-+	u32 hs_iref_cap;
-+	u32 hs_term_range_adj;
-+	u32 hs_squelch_level;
-+};
-+
-+struct tegra_xusb_usb3_port {
-+	unsigned int lane;
-+	bool context_saved;
-+	u32 tap1_val;
-+	u32 amp_val;
-+	u32 ctle_z_val;
-+	u32 ctle_g_val;
-+};
-+
- struct tegra_xusb_padctl {
- 	struct device *dev;
- 	void __iomem *regs;
-@@ -93,13 +256,22 @@ struct tegra_xusb_padctl {
- 	struct reset_control *rst;
- 
- 	const struct tegra_xusb_padctl_soc *soc;
-+	struct tegra_xusb_fuse_calibration calib;
- 	struct pinctrl_dev *pinctrl;
- 	struct pinctrl_desc desc;
- 
- 	struct phy_provider *provider;
--	struct phy *phys[2];
-+	struct phy *phys[9];
- 
- 	unsigned int enable;
-+
-+	struct tegra_xusb_mbox *mbox;
-+	struct notifier_block mbox_nb;
-+
-+	struct tegra_xusb_usb3_port usb3_ports[TEGRA_XUSB_PADCTL_USB3_PORTS];
-+	unsigned int utmi_enable;
-+	struct regulator *vbus[TEGRA_XUSB_PADCTL_UTMI_PORTS];
-+	struct regulator *vddio_hsic;
- };
- 
- static inline void padctl_writel(struct tegra_xusb_padctl *padctl, u32 value,
-@@ -114,6 +286,42 @@ static inline u32 padctl_readl(struct tegra_xusb_padctl *padctl,
- 	return readl(padctl->regs + offset);
- }
- 
-+#define PIN_OTG_0   0
-+#define PIN_OTG_1   1
-+#define PIN_OTG_2   2
-+#define PIN_ULPI_0  3
-+#define PIN_HSIC_0  4
-+#define PIN_HSIC_1  5
-+#define PIN_PCIE_0  6
-+#define PIN_PCIE_1  7
-+#define PIN_PCIE_2  8
-+#define PIN_PCIE_3  9
-+#define PIN_PCIE_4 10
-+#define PIN_SATA_0 11
-+
-+static inline bool is_hsic_lane(unsigned int lane)
-+{
-+	return lane >= PIN_HSIC_0 && lane <= PIN_HSIC_1;
-+}
-+
-+static inline bool is_pcie_sata_lane(unsigned int lane)
-+{
-+	return lane >= PIN_PCIE_0 && lane <= PIN_SATA_0;
-+}
-+
-+static int lane_to_usb3_port(struct tegra_xusb_padctl *padctl,
-+			     unsigned int lane)
-+{
-+	int i;
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_USB3_PORTS; i++) {
-+		if (padctl->usb3_ports[i].lane == lane)
-+			return i;
-+	}
-+
-+	return -1;
-+}
-+
- static int tegra_xusb_padctl_get_groups_count(struct pinctrl_dev *pinctrl)
- {
- 	struct tegra_xusb_padctl *padctl = pinctrl_dev_get_drvdata(pinctrl);
-@@ -131,6 +339,16 @@ static const char *tegra_xusb_padctl_get_group_name(struct pinctrl_dev *pinctrl,
- 
- enum tegra_xusb_padctl_param {
- 	TEGRA_XUSB_PADCTL_IDDQ,
-+	TEGRA_XUSB_PADCTL_USB3_PORT_NUM,
-+	TEGRA_XUSB_PADCTL_USB2_PORT_NUM,
-+	TEGRA_XUSB_PADCTL_HSIC_STROBE_TRIM,
-+	TEGRA_XUSB_PADCTL_HSIC_RX_STROBE_TRIM,
-+	TEGRA_XUSB_PADCTL_HSIC_RX_DATA_TRIM,
-+	TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEN,
-+	TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEP,
-+	TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWN,
-+	TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWP,
-+	TEGRA_XUSB_PADCTL_HSIC_AUTO_TERM,
- };
- 
- static const struct tegra_xusb_padctl_property {
-@@ -138,6 +356,16 @@ static const struct tegra_xusb_padctl_property {
- 	enum tegra_xusb_padctl_param param;
- } properties[] = {
- 	{ "nvidia,iddq", TEGRA_XUSB_PADCTL_IDDQ },
-+	{ "nvidia,usb3-port-num", TEGRA_XUSB_PADCTL_USB3_PORT_NUM },
-+	{ "nvidia,usb2-port-num", TEGRA_XUSB_PADCTL_USB2_PORT_NUM },
-+	{ "nvidia,hsic-strobe-trim", TEGRA_XUSB_PADCTL_HSIC_STROBE_TRIM },
-+	{ "nvidia,hsic-rx-strobe-trim", TEGRA_XUSB_PADCTL_HSIC_RX_STROBE_TRIM },
-+	{ "nvidia,hsic-rx-data-trim", TEGRA_XUSB_PADCTL_HSIC_RX_DATA_TRIM },
-+	{ "nvidia,hsic-tx-rtune-n", TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEN },
-+	{ "nvidia,hsic-tx-rtune-p", TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEP },
-+	{ "nvidia,hsic-tx-rslew-n", TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWN },
-+	{ "nvidia,hsic-tx-rslew-p", TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWP },
-+	{ "nvidia,hsic-auto-term", TEGRA_XUSB_PADCTL_HSIC_AUTO_TERM },
- };
- 
- #define TEGRA_XUSB_PADCTL_PACK(param, value) ((param) << 16 | (value))
-@@ -321,6 +549,7 @@ static int tegra_xusb_padctl_pinconf_group_get(struct pinctrl_dev *pinctrl,
- 	struct tegra_xusb_padctl *padctl = pinctrl_dev_get_drvdata(pinctrl);
- 	const struct tegra_xusb_padctl_lane *lane;
- 	enum tegra_xusb_padctl_param param;
-+	int port;
- 	u32 value;
- 
- 	param = TEGRA_XUSB_PADCTL_UNPACK_PARAM(*config);
-@@ -330,7 +559,125 @@ static int tegra_xusb_padctl_pinconf_group_get(struct pinctrl_dev *pinctrl,
- 	case TEGRA_XUSB_PADCTL_IDDQ:
- 		value = padctl_readl(padctl, lane->offset);
- 		value = (value >> lane->iddq) & 0x1;
--		*config = TEGRA_XUSB_PADCTL_PACK(param, value);
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_USB3_PORT_NUM:
-+		value = lane_to_usb3_port(padctl, group);
-+		if (value < 0) {
-+			dev_err(padctl->dev,
-+				"Lane %d not mapped to USB3 port\n", group);
-+			return -EINVAL;
-+		}
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_USB2_PORT_NUM:
-+		port = lane_to_usb3_port(padctl, group);
-+		if (port < 0) {
-+			dev_err(padctl->dev,
-+				"Lane %d not mapped to USB2 port\n", group);
-+			return -EINVAL;
-+		}
-+
-+		value = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP) >>
-+			XUSB_PADCTL_SS_PORT_MAP_PORTX_SHIFT(port);
-+		value &= XUSB_PADCTL_SS_PORT_MAP_PORT_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_STROBE_TRIM:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		value = padctl_readl(padctl,
-+				     XUSB_PADCTL_HSIC_STRB_TRIM_CONTROL);
-+		value &= XUSB_PADCTL_HSIC_STRB_TRIM_CONTROL_STRB_TRIM_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_RX_STROBE_TRIM:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL2(port)) >>
-+			XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_SHIFT;
-+		value &= XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_RX_DATA_TRIM:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL2(port)) >>
-+			XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_SHIFT;
-+		value &= XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEN:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL0(port)) >>
-+			XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_SHIFT;
-+		value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEP:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL0(port)) >>
-+			XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_SHIFT;
-+		value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWN:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL0(port)) >>
-+			XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_SHIFT;
-+		value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWP:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL0(port)) >>
-+			XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_SHIFT;
-+		value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_MASK;
-+		break;
-+
-+	case TEGRA_XUSB_PADCTL_HSIC_AUTO_TERM:
-+		if (!is_hsic_lane(group)) {
-+			dev_err(padctl->dev, "Pin %d not an HSIC\n", group);
-+			return -EINVAL;
-+		}
-+
-+		port = group - PIN_HSIC_0;
-+		value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+		if (value & XUSB_PADCTL_HSIC_PAD_CTL1_AUTO_TERM_EN)
-+			value = 1;
-+		else
-+			value = 0;
- 		break;
- 
- 	default:
-@@ -339,6 +686,7 @@ static int tegra_xusb_padctl_pinconf_group_get(struct pinctrl_dev *pinctrl,
- 		return -ENOTSUPP;
- 	}
- 
-+	*config = TEGRA_XUSB_PADCTL_PACK(param, value);
- 	return 0;
- }
- 
-@@ -351,7 +699,7 @@ static int tegra_xusb_padctl_pinconf_group_set(struct pinctrl_dev *pinctrl,
- 	const struct tegra_xusb_padctl_lane *lane;
- 	enum tegra_xusb_padctl_param param;
- 	unsigned long value;
--	unsigned int i;
-+	unsigned int i, port;
- 	u32 regval;
- 
- 	lane = &padctl->soc->lanes[group];
-@@ -372,6 +720,193 @@ static int tegra_xusb_padctl_pinconf_group_set(struct pinctrl_dev *pinctrl,
- 			padctl_writel(padctl, regval, lane->offset);
- 			break;
- 
-+		case TEGRA_XUSB_PADCTL_USB3_PORT_NUM:
-+			if (value >= TEGRA_XUSB_PADCTL_USB3_PORTS) {
-+				dev_err(padctl->dev, "Invalid USB3 port: %lu\n",
-+					value);
-+				return -EINVAL;
-+			}
-+			if (!is_pcie_sata_lane(group)) {
-+				dev_err(padctl->dev,
-+					"USB3 port not applicable for pin %d\n",
-+					group);
-+				return -EINVAL;
-+			}
-+			padctl->usb3_ports[value].lane = group;
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_USB2_PORT_NUM:
-+			if (value >= TEGRA_XUSB_PADCTL_UTMI_PORTS) {
-+				dev_err(padctl->dev, "Invalid USB2 port: %lu\n",
-+					value);
-+				return -EINVAL;
-+			}
-+			if (!is_pcie_sata_lane(group)) {
-+				dev_err(padctl->dev,
-+					"USB2 port not applicable for pin %d\n",
-+					group);
-+				return -EINVAL;
-+			}
-+			port = lane_to_usb3_port(padctl, group);
-+			if (port < 0) {
-+				dev_err(padctl->dev,
-+					"Pin %d not mapped to USB3 port\n",
-+					group);
-+				break;
-+			}
-+
-+			regval = padctl_readl(padctl, XUSB_PADCTL_SS_PORT_MAP);
-+			regval &= ~(XUSB_PADCTL_SS_PORT_MAP_PORT_MASK <<
-+				    XUSB_PADCTL_SS_PORT_MAP_PORTX_SHIFT(port));
-+			regval |= value <<
-+				XUSB_PADCTL_SS_PORT_MAP_PORTX_SHIFT(port);
-+			padctl_writel(padctl, regval, XUSB_PADCTL_SS_PORT_MAP);
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_STROBE_TRIM:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			value &= XUSB_PADCTL_HSIC_STRB_TRIM_CONTROL_STRB_TRIM_MASK;
-+			padctl_writel(padctl, value,
-+				      XUSB_PADCTL_HSIC_STRB_TRIM_CONTROL);
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_RX_STROBE_TRIM:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			value &= XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_MASK;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL2(port));
-+			regval &= ~(XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_MASK <<
-+				    XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_SHIFT);
-+			regval |= value <<
-+				XUSB_PADCTL_HSIC_PAD_CTL2_RX_STROBE_TRIM_SHIFT;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL2(port));
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_RX_DATA_TRIM:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			value &= XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_MASK;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL2(port));
-+			regval &= ~(XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_MASK <<
-+				    XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_SHIFT);
-+			regval |= value <<
-+				XUSB_PADCTL_HSIC_PAD_CTL2_RX_DATA_TRIM_SHIFT;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL2(port));
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEN:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_MASK;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			regval &= ~(XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_MASK <<
-+				    XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_SHIFT);
-+			regval |= value <<
-+				XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEN_SHIFT;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_TX_RTUNEP:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_MASK;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			regval &= ~(XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_MASK <<
-+				    XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_SHIFT);
-+			regval |= value <<
-+				XUSB_PADCTL_HSIC_PAD_CTL0_TX_RTUNEP_SHIFT;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWN:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_MASK;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			regval &= ~(XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_MASK <<
-+				    XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_SHIFT);
-+			regval |= value <<
-+				XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWN_SHIFT;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_TX_RSLEWP:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			value &= XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_MASK;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			regval &= ~(XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_MASK <<
-+				    XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_SHIFT);
-+			regval |= value <<
-+				XUSB_PADCTL_HSIC_PAD_CTL0_TX_RSLEWP_SHIFT;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL0(port));
-+			break;
-+
-+		case TEGRA_XUSB_PADCTL_HSIC_AUTO_TERM:
-+			if (!is_hsic_lane(group)) {
-+				dev_err(padctl->dev, "Pin %d not an HSIC\n",
-+					group);
-+				return -EINVAL;
-+			}
-+
-+			port = group - PIN_HSIC_0;
-+			regval = padctl_readl(padctl,
-+					      XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+			if (!value)
-+				regval &= ~XUSB_PADCTL_HSIC_PAD_CTL1_AUTO_TERM_EN;
-+			else
-+				regval |= XUSB_PADCTL_HSIC_PAD_CTL1_AUTO_TERM_EN;
-+			padctl_writel(padctl, regval,
-+				      XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+			break;
-+
- 		default:
- 			dev_err(padctl->dev,
- 				"invalid configuration parameter: %04x\n",
-@@ -595,6 +1130,459 @@ static const struct phy_ops sata_phy_ops = {
- 	.owner = THIS_MODULE,
- };
- 
-+static int usb3_phy_to_port(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int i;
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_USB3_PORTS; i++) {
-+		if (phy == padctl->phys[TEGRA_XUSB_PADCTL_USB3_P0 + i])
-+			break;
-+	}
-+	BUG_ON(i == TEGRA_XUSB_PADCTL_USB3_PORTS);
-+
-+	return i;
-+}
-+
-+static int usb3_phy_power_on(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int port = usb3_phy_to_port(phy);
-+	int lane = padctl->usb3_ports[port].lane;
-+	u32 value, offset;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_IOPHY_USB3_PADX_CTL2(port));
-+	value &= ~((XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_SHIFT) |
-+		   (XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_SHIFT) |
-+		   (XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_SHIFT));
-+	value |= (padctl->soc->rx_wander <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_SHIFT) |
-+		 (padctl->soc->cdr_cntl <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_SHIFT) |
-+		 (padctl->soc->rx_eq <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_SHIFT);
-+	if (padctl->usb3_ports[port].context_saved) {
-+		value &= ~((XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_MASK <<
-+			    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_SHIFT) |
-+			   (XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_MASK <<
-+			    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_SHIFT));
-+		value |= (padctl->usb3_ports[port].ctle_g_val <<
-+			  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_SHIFT) |
-+			 (padctl->usb3_ports[port].ctle_z_val <<
-+			  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_SHIFT);
-+	}
-+	padctl_writel(padctl, value, XUSB_PADCTL_IOPHY_USB3_PADX_CTL2(port));
-+
-+	value = padctl->soc->dfe_cntl;
-+	if (padctl->usb3_ports[port].context_saved) {
-+		value &= ~((XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_MASK <<
-+			    XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_SHIFT) |
-+			   (XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_MASK <<
-+			    XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_SHIFT));
-+		value |= (padctl->usb3_ports[port].tap1_val <<
-+			  XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_SHIFT) |
-+			 (padctl->usb3_ports[port].amp_val <<
-+			  XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_SHIFT);
-+	}
-+	padctl_writel(padctl, value, XUSB_PADCTL_IOPHY_USB3_PADX_CTL4(port));
-+
-+	offset = (lane == PIN_SATA_0) ? XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL2 :
-+		XUSB_PADCTL_IOPHY_MISC_PAD_PX_CTL2(lane - PIN_PCIE_0);
-+	value = padctl_readl(padctl, offset);
-+	value &= ~(XUSB_PADCTL_IOPHY_MISC_PAD_CTL2_SPARE_IN_MASK <<
-+		   XUSB_PADCTL_IOPHY_MISC_PAD_CTL2_SPARE_IN_SHIFT);
-+	value |= padctl->soc->spare_in <<
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL2_SPARE_IN_SHIFT;
-+	padctl_writel(padctl, value, offset);
-+
-+	offset = (lane == PIN_SATA_0) ? XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL5 :
-+		XUSB_PADCTL_IOPHY_MISC_PAD_PX_CTL5(lane - PIN_PCIE_0);
-+	value = padctl_readl(padctl, offset);
-+	value |= XUSB_PADCTL_IOPHY_MISC_PAD_CTL5_RX_QEYE_EN;
-+	padctl_writel(padctl, value, offset);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM);
-+	value &= ~XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_CLAMP_EN_EARLY(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM);
-+
-+	usleep_range(100, 200);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM);
-+	value &= ~XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_CLAMP_EN_EARLY(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM);
-+	value &= ~XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_VCORE_DOWN(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM);
-+
-+	return 0;
-+}
-+
-+static int usb3_phy_power_off(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int port = usb3_phy_to_port(phy);
-+	u32 value;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM);
-+	value |= XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_CLAMP_EN_EARLY(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM);
-+
-+	usleep_range(100, 200);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM);
-+	value |= XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_CLAMP_EN_EARLY(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM);
-+
-+	usleep_range(250, 350);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_ELPG_PROGRAM);
-+	value |= XUSB_PADCTL_ELPG_PROGRAM_SSPX_ELPG_VCORE_DOWN(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_ELPG_PROGRAM);
-+
-+	return 0;
-+}
-+
-+static void usb3_phy_save_context(struct tegra_xusb_padctl *padctl, int port)
-+{
-+	int lane = padctl->usb3_ports[port].lane;
-+	u32 value, offset;
-+
-+	padctl->usb3_ports[port].context_saved = true;
-+
-+	offset = (lane == PIN_SATA_0) ? XUSB_PADCTL_IOPHY_MISC_PAD_S0_CTL6 :
-+		XUSB_PADCTL_IOPHY_MISC_PAD_PX_CTL6(lane - PIN_PCIE_0);
-+
-+	value = padctl_readl(padctl, offset);
-+	value &= ~(XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_MASK <<
-+		   XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT);
-+	value |= XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_TAP <<
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT;
-+	padctl_writel(padctl, value, offset);
-+
-+	value = padctl_readl(padctl, offset) >>
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SHIFT;
-+	padctl->usb3_ports[port].tap1_val = value &
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_TAP_MASK;
-+
-+	value = padctl_readl(padctl, offset);
-+	value &= ~(XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_MASK <<
-+		   XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT);
-+	value |= XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_AMP <<
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT;
-+	padctl_writel(padctl, value, offset);
-+
-+	value = padctl_readl(padctl, offset) >>
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SHIFT;
-+	padctl->usb3_ports[port].amp_val = value &
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_AMP_MASK;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_IOPHY_USB3_PADX_CTL4(port));
-+	value &= ~((XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_SHIFT) |
-+		   (XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_SHIFT));
-+	value |= (padctl->usb3_ports[port].tap1_val <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_TAP_SHIFT) |
-+		 (padctl->usb3_ports[port].amp_val <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL4_DFE_CNTL_AMP_SHIFT);
-+	padctl_writel(padctl, value, XUSB_PADCTL_IOPHY_USB3_PADX_CTL4(port));
-+
-+	value = padctl_readl(padctl, offset);
-+	value &= ~(XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_MASK <<
-+		   XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT);
-+	value |= XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_LATCH_G_Z <<
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT;
-+	padctl_writel(padctl, value, offset);
-+
-+	value = padctl_readl(padctl, offset);
-+	value &= ~(XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_MASK <<
-+		   XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT);
-+	value |= XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_G_Z <<
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT;
-+	padctl_writel(padctl, value, offset);
-+
-+	value = padctl_readl(padctl, offset) >>
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SHIFT;
-+	padctl->usb3_ports[port].ctle_g_val = value &
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_G_Z_MASK;
-+
-+	value = padctl_readl(padctl, offset);
-+	value &= ~(XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_MASK <<
-+		   XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT);
-+	value |= XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_CTLE_Z <<
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SEL_SHIFT;
-+	padctl_writel(padctl, value, offset);
-+
-+	value = padctl_readl(padctl, offset) >>
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_SHIFT;
-+	padctl->usb3_ports[port].ctle_z_val = value &
-+		XUSB_PADCTL_IOPHY_MISC_PAD_CTL6_MISC_OUT_G_Z_MASK;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_IOPHY_USB3_PADX_CTL2(port));
-+	value &= ~((XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_SHIFT) |
-+		   (XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_MASK <<
-+		    XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_SHIFT));
-+	value |= (padctl->usb3_ports[port].ctle_g_val <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_G_SHIFT) |
-+		 (padctl->usb3_ports[port].ctle_z_val <<
-+		  XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_Z_SHIFT);
-+	padctl_writel(padctl, value, XUSB_PADCTL_IOPHY_USB3_PADX_CTL2(port));
-+}
-+
-+static const struct phy_ops usb3_phy_ops = {
-+	.init = tegra_xusb_phy_init,
-+	.exit = tegra_xusb_phy_exit,
-+	.power_on = usb3_phy_power_on,
-+	.power_off = usb3_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int utmi_phy_to_port(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int i;
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_UTMI_PORTS; i++) {
-+		if (phy == padctl->phys[TEGRA_XUSB_PADCTL_UTMI_P0 + i])
-+			break;
-+	}
-+	BUG_ON(i == TEGRA_XUSB_PADCTL_UTMI_PORTS);
-+
-+	return i;
-+}
-+
-+static int utmi_phy_power_on(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int port = utmi_phy_to_port(phy);
-+	int ret;
-+	u32 value;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value &= ~((XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_MASK <<
-+		    XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_SHIFT) |
-+		   (XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_DISCON_LEVEL_MASK <<
-+		    XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_DISCON_LEVEL_SHIFT));
-+	value |= (padctl->calib.hs_squelch_level <<
-+		  XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_SQUELCH_LEVEL_SHIFT) |
-+		 (padctl->soc->hs_discon_level <<
-+		  XUSB_PADCTL_USB2_BIAS_PAD_CTL0_HS_DISCON_LEVEL_SHIFT);
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_PORT_CAP);
-+	value &= ~(XUSB_PADCTL_USB2_PORT_CAP_PORT_CAP_MASK <<
-+		   XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_SHIFT(port));
-+	value |= XUSB_PADCTL_USB2_PORT_CAP_HOST <<
-+		XUSB_PADCTL_USB2_PORT_CAP_PORTX_CAP_SHIFT(port);
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_PORT_CAP);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL0(port));
-+	value &= ~((XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_CURR_LEVEL_MASK <<
-+		    XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_CURR_LEVEL_SHIFT) |
-+		   (XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_SLEW_MASK <<
-+		    XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_SLEW_SHIFT) |
-+		   (XUSB_PADCTL_USB2_OTG_PAD_CTL0_LS_RSLEW_MASK <<
-+		    XUSB_PADCTL_USB2_OTG_PAD_CTL0_LS_RSLEW_SHIFT) |
-+		   XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD |
-+		   XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD2 |
-+		   XUSB_PADCTL_USB2_OTG_PAD_CTL0_PD_ZI);
-+	value |= padctl->calib.hs_curr_level[port] <<
-+		XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_CURR_LEVEL_SHIFT;
-+	value |= padctl->soc->hs_slew <<
-+		XUSB_PADCTL_USB2_OTG_PAD_CTL0_HS_SLEW_SHIFT;
-+	value |= padctl->soc->ls_rslew[port] <<
-+		XUSB_PADCTL_USB2_OTG_PAD_CTL0_LS_RSLEW_SHIFT;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL0(port));
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_OTG_PADX_CTL1(port));
-+	value &= ~((XUSB_PADCTL_USB2_OTG_PAD_CTL1_TERM_RANGE_ADJ_MASK <<
-+		    XUSB_PADCTL_USB2_OTG_PAD_CTL1_TERM_RANGE_ADJ_SHIFT) |
-+		   (XUSB_PADCTL_USB2_OTG_PAD_CTL1_HS_IREF_CAP_MASK <<
-+		    XUSB_PADCTL_USB2_OTG_PAD_CTL1_HS_IREF_CAP_SHIFT) |
-+		   XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DR |
-+		   XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_CHRP_FORCE_POWERUP |
-+		   XUSB_PADCTL_USB2_OTG_PAD_CTL1_PD_DISC_FORCE_POWERUP);
-+	value |= (padctl->calib.hs_term_range_adj <<
-+		  XUSB_PADCTL_USB2_OTG_PAD_CTL1_TERM_RANGE_ADJ_SHIFT) |
-+		 (padctl->calib.hs_iref_cap <<
-+		  XUSB_PADCTL_USB2_OTG_PAD_CTL1_HS_IREF_CAP_SHIFT);
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_OTG_PADX_CTL1(port));
-+
-+	ret = regulator_enable(padctl->vbus[port]);
-+	if (ret)
-+		return ret;
-+
-+	mutex_lock(&padctl->lock);
-+
-+	if (padctl->utmi_enable++ > 0)
-+		goto out;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value &= ~XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+out:
-+	mutex_unlock(&padctl->lock);
-+	return 0;
-+}
-+
-+static int utmi_phy_power_off(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int port = utmi_phy_to_port(phy);
-+	u32 value;
-+
-+	regulator_disable(padctl->vbus[port]);
-+
-+	mutex_lock(&padctl->lock);
-+
-+	if (WARN_ON(padctl->utmi_enable == 0))
-+		goto out;
-+
-+	if (--padctl->utmi_enable > 0)
-+		goto out;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+	value |= XUSB_PADCTL_USB2_BIAS_PAD_CTL0_PD;
-+	padctl_writel(padctl, value, XUSB_PADCTL_USB2_BIAS_PAD_CTL0);
-+
-+out:
-+	mutex_unlock(&padctl->lock);
-+	return 0;
-+}
-+
-+static const struct phy_ops utmi_phy_ops = {
-+	.init = tegra_xusb_phy_init,
-+	.exit = tegra_xusb_phy_exit,
-+	.power_on = utmi_phy_power_on,
-+	.power_off = utmi_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int hsic_phy_to_port(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int i;
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_HSIC_PORTS; i++) {
-+		if (phy == padctl->phys[TEGRA_XUSB_PADCTL_HSIC_P0 + i])
-+			break;
-+	}
-+	BUG_ON(i == TEGRA_XUSB_PADCTL_HSIC_PORTS);
-+
-+	return i;
-+}
-+
-+static int hsic_phy_power_on(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int port = hsic_phy_to_port(phy);
-+	int ret;
-+	u32 value;
-+
-+	ret = regulator_enable(padctl->vddio_hsic);
-+	if (ret)
-+		return ret;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+	value &= ~(XUSB_PADCTL_HSIC_PAD_CTL1_RPD_STROBE |
-+		   XUSB_PADCTL_HSIC_PAD_CTL1_RPU_DATA |
-+		   XUSB_PADCTL_HSIC_PAD_CTL1_PD_RX |
-+		   XUSB_PADCTL_HSIC_PAD_CTL1_PD_ZI |
-+		   XUSB_PADCTL_HSIC_PAD_CTL1_PD_TRX |
-+		   XUSB_PADCTL_HSIC_PAD_CTL1_PD_TX);
-+	value |= XUSB_PADCTL_HSIC_PAD_CTL1_RPD_DATA |
-+		 XUSB_PADCTL_HSIC_PAD_CTL1_RPU_STROBE;
-+	padctl_writel(padctl, value, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+
-+	return 0;
-+}
-+
-+static int hsic_phy_power_off(struct phy *phy)
-+{
-+	struct tegra_xusb_padctl *padctl = phy_get_drvdata(phy);
-+	int port = hsic_phy_to_port(phy);
-+	u32 value;
-+
-+	regulator_disable(padctl->vddio_hsic);
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+	value |= XUSB_PADCTL_HSIC_PAD_CTL1_PD_RX |
-+		 XUSB_PADCTL_HSIC_PAD_CTL1_PD_ZI |
-+		 XUSB_PADCTL_HSIC_PAD_CTL1_PD_TRX |
-+		 XUSB_PADCTL_HSIC_PAD_CTL1_PD_TX;
-+	padctl_writel(padctl, value, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+
-+	return 0;
-+}
-+
-+static void hsic_phy_set_idle(struct tegra_xusb_padctl *padctl, int port,
-+			      bool set)
-+{
-+	u32 value;
-+
-+	value = padctl_readl(padctl, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+	if (set)
-+		value |= XUSB_PADCTL_HSIC_PAD_CTL1_RPD_DATA |
-+			 XUSB_PADCTL_HSIC_PAD_CTL1_RPU_STROBE;
-+	else
-+		value &= ~(XUSB_PADCTL_HSIC_PAD_CTL1_RPD_DATA |
-+			   XUSB_PADCTL_HSIC_PAD_CTL1_RPU_STROBE);
-+	padctl_writel(padctl, value, XUSB_PADCTL_HSIC_PADX_CTL1(port));
-+}
-+
-+static const struct phy_ops hsic_phy_ops = {
-+	.init = tegra_xusb_phy_init,
-+	.exit = tegra_xusb_phy_exit,
-+	.power_on = hsic_phy_power_on,
-+	.power_off = hsic_phy_power_off,
-+	.owner = THIS_MODULE,
-+};
-+
-+static int tegra_xusb_phy_mbox_notifier(struct notifier_block *nb,
-+					unsigned long event, void *p)
-+{
-+	struct tegra_xusb_padctl *padctl = container_of(nb,
-+						struct tegra_xusb_padctl,
-+						mbox_nb);
-+	struct tegra_xusb_mbox_msg *msg = (struct tegra_xusb_mbox_msg *)p;
-+	u32 ports;
-+	int i;
-+
-+	switch (event) {
-+	case MBOX_CMD_SAVE_DFE_CTLE_CTX:
-+		msg->data_out = msg->data_in;
-+		if (msg->data_in > TEGRA_XUSB_PADCTL_USB3_PORTS) {
-+			msg->cmd_out = MBOX_CMD_NAK;
-+		} else {
-+			usb3_phy_save_context(padctl, msg->data_in);
-+			msg->cmd_out = MBOX_CMD_ACK;
-+		}
-+		return NOTIFY_STOP;
-+	case MBOX_CMD_START_HSIC_IDLE:
-+	case MBOX_CMD_STOP_HSIC_IDLE:
-+		ports = msg->data_in >> (padctl->soc->hsic_port_offset + 1);
-+		msg->data_out = msg->data_in;
-+		for (i = 0; i < TEGRA_XUSB_PADCTL_HSIC_PORTS; i++) {
-+			if (!(ports & BIT(i)))
-+				continue;
-+			if (event == MBOX_CMD_START_HSIC_IDLE)
-+				hsic_phy_set_idle(padctl, i, true);
-+			else
-+				hsic_phy_set_idle(padctl, i, false);
-+		}
-+		msg->cmd_out = MBOX_CMD_ACK;
-+		return NOTIFY_STOP;
-+	default:
-+		return NOTIFY_DONE;
-+	}
-+}
-+
- static struct phy *tegra_xusb_padctl_xlate(struct device *dev,
- 					   struct of_phandle_args *args)
- {
-@@ -610,19 +1598,6 @@ static struct phy *tegra_xusb_padctl_xlate(struct device *dev,
- 	return padctl->phys[index];
- }
- 
--#define PIN_OTG_0   0
--#define PIN_OTG_1   1
--#define PIN_OTG_2   2
--#define PIN_ULPI_0  3
--#define PIN_HSIC_0  4
--#define PIN_HSIC_1  5
--#define PIN_PCIE_0  6
--#define PIN_PCIE_1  7
--#define PIN_PCIE_2  8
--#define PIN_PCIE_3  9
--#define PIN_PCIE_4 10
--#define PIN_SATA_0 11
--
- static const struct pinctrl_pin_desc tegra124_pins[] = {
- 	PINCTRL_PIN(PIN_OTG_0,  "otg-0"),
- 	PINCTRL_PIN(PIN_OTG_1,  "otg-1"),
-@@ -780,6 +1755,15 @@ static const struct tegra_xusb_padctl_soc tegra124_soc = {
- 	.functions = tegra124_functions,
- 	.num_lanes = ARRAY_SIZE(tegra124_lanes),
- 	.lanes = tegra124_lanes,
-+	.rx_wander = 0xf,
-+	.rx_eq = 0xf070,
-+	.cdr_cntl = 0x24,
-+	.dfe_cntl = 0x002008ee,
-+	.hs_slew = 0xe,
-+	.ls_rslew = {0x3, 0x0, 0x0},
-+	.hs_discon_level = 0x5,
-+	.spare_in = 0x1,
-+	.hsic_port_offset = 6,
- };
- 
- static const struct of_device_id tegra_xusb_padctl_of_match[] = {
-@@ -788,13 +1772,40 @@ static const struct of_device_id tegra_xusb_padctl_of_match[] = {
- };
- MODULE_DEVICE_TABLE(of, tegra_xusb_padctl_of_match);
- 
-+static int tegra_xusb_read_fuse_calibration(struct tegra_xusb_padctl *padctl)
-+{
-+	int i, ret;
-+	u32 value;
-+
-+	ret = tegra_fuse_readl(TEGRA_FUSE_SKU_CALIB_0, &value);
-+	if (ret < 0)
-+		return ret;
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_UTMI_PORTS; i++) {
-+		padctl->calib.hs_curr_level[i] =
-+			(value >> FUSE_SKU_CALIB_HS_CURR_LEVEL_PADX_SHIFT(i)) &
-+			FUSE_SKU_CALIB_HS_CURR_LEVEL_PAD_MASK;
-+	}
-+	padctl->calib.hs_iref_cap =
-+		(value >> FUSE_SKU_CALIB_HS_IREF_CAP_SHIFT) &
-+		FUSE_SKU_CALIB_HS_IREF_CAP_MASK;
-+	padctl->calib.hs_term_range_adj =
-+		(value >> FUSE_SKU_CALIB_HS_TERM_RANGE_ADJ_SHIFT) &
-+		FUSE_SKU_CALIB_HS_TERM_RANGE_ADJ_MASK;
-+	padctl->calib.hs_squelch_level =
-+		(value >> FUSE_SKU_CALIB_HS_SQUELCH_LEVEL_SHIFT) &
-+		FUSE_SKU_CALIB_HS_SQUELCH_LEVEL_MASK;
-+
-+	return 0;
-+}
-+
- static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- {
- 	struct tegra_xusb_padctl *padctl;
- 	const struct of_device_id *match;
- 	struct resource *res;
- 	struct phy *phy;
--	int err;
-+	int err, i;
- 
- 	padctl = devm_kzalloc(&pdev->dev, sizeof(*padctl), GFP_KERNEL);
- 	if (!padctl)
-@@ -812,6 +1823,10 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 	if (IS_ERR(padctl->regs))
- 		return PTR_ERR(padctl->regs);
- 
-+	err = tegra_xusb_read_fuse_calibration(padctl);
-+	if (err < 0)
-+		return err;
-+
- 	padctl->rst = devm_reset_control_get(&pdev->dev, NULL);
- 	if (IS_ERR(padctl->rst))
- 		return PTR_ERR(padctl->rst);
-@@ -852,6 +1867,54 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 	padctl->phys[TEGRA_XUSB_PADCTL_SATA] = phy;
- 	phy_set_drvdata(phy, padctl);
- 
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_USB3_PORTS; i++) {
-+		phy = devm_phy_create(&pdev->dev, &usb3_phy_ops, NULL);
-+		if (IS_ERR(phy)) {
-+			err = PTR_ERR(phy);
-+			goto unregister;
-+		}
-+
-+		padctl->phys[TEGRA_XUSB_PADCTL_USB3_P0 + i] = phy;
-+		phy_set_drvdata(phy, padctl);
-+	}
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_UTMI_PORTS; i++) {
-+		char reg_name[sizeof("vbus-otg-N")];
-+
-+		sprintf(reg_name, "vbus-otg-%d", i);
-+		padctl->vbus[i] = devm_regulator_get(&pdev->dev, reg_name);
-+		if (IS_ERR(padctl->vbus[i])) {
-+			err = PTR_ERR(padctl->vbus[i]);
-+			goto unregister;
-+		}
-+
-+		phy = devm_phy_create(&pdev->dev, &utmi_phy_ops, NULL);
-+		if (IS_ERR(phy)) {
-+			err = PTR_ERR(phy);
-+			goto unregister;
-+		}
-+
-+		padctl->phys[TEGRA_XUSB_PADCTL_UTMI_P0 + i] = phy;
-+		phy_set_drvdata(phy, padctl);
-+	}
-+
-+	padctl->vddio_hsic = devm_regulator_get(&pdev->dev, "vddio-hsic");
-+	if (IS_ERR(padctl->vddio_hsic)) {
-+		err = PTR_ERR(padctl->vddio_hsic);
-+		goto unregister;
-+	}
-+
-+	for (i = 0; i < TEGRA_XUSB_PADCTL_HSIC_PORTS; i++) {
-+		phy = devm_phy_create(&pdev->dev, &hsic_phy_ops, NULL);
-+		if (IS_ERR(phy)) {
-+			err = PTR_ERR(phy);
-+			goto unregister;
-+		}
-+
-+		padctl->phys[TEGRA_XUSB_PADCTL_HSIC_P0 + i] = phy;
-+		phy_set_drvdata(phy, padctl);
-+	}
-+
- 	padctl->provider = devm_of_phy_provider_register(&pdev->dev,
- 							 tegra_xusb_padctl_xlate);
- 	if (err < 0) {
-@@ -859,6 +1922,13 @@ static int tegra_xusb_padctl_probe(struct platform_device *pdev)
- 		goto unregister;
- 	}
- 
-+	padctl->mbox = tegra_xusb_mbox_lookup_by_phandle(pdev->dev.of_node,
-+							 "nvidia,xusb-mbox");
-+	if (IS_ERR(padctl->mbox))
-+		return PTR_ERR(padctl->mbox);
-+	padctl->mbox_nb.notifier_call = tegra_xusb_phy_mbox_notifier;
-+	tegra_xusb_mbox_register_notifier(padctl->mbox, &padctl->mbox_nb);
-+
- 	return 0;
- 
- unregister:
-@@ -873,6 +1943,8 @@ static int tegra_xusb_padctl_remove(struct platform_device *pdev)
- 	struct tegra_xusb_padctl *padctl = platform_get_drvdata(pdev);
- 	int err;
- 
-+	tegra_xusb_mbox_unregister_notifier(padctl->mbox, &padctl->mbox_nb);
-+
- 	pinctrl_unregister(padctl->pinctrl);
- 
- 	err = reset_control_assert(padctl->rst);
--- 
-2.0.0.526.g5318336
+On 06/18/2014 11:42 AM, Guenter Roeck wrote:
+> On 06/17/2014 10:46 PM, Varka Bhadram wrote:
+>> Hi,
+>>
+>> On 06/18/2014 11:07 AM, Heiko Schocher wrote:
+>>> Driver for the TI TMP103.
+>>>
+>>> The TI TMP103 is similar to the TMP102.  It differs from the TMP102
+>>> by having only 8 bit registers.
+>>>
+>>> Signed-off-by: Heiko Schocher <hs@denx.de>
+>>>
+>>> ---
+>>>
+>>> Cc: Jean Delvare <khali@linux-fr.org>
+>>> Cc: Guenter Roeck <linux@roeck-us.net>
+>>> Cc: linux-kernel@vger.kernel.org
+>>> Cc: devicetree@vger.kernel.org
+>>> Cc: linux-doc@vger.kernel.org
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>
+>>> - change for v2:
+>>>    - add comments from GuenterRoeck:
+>>>      - remove Cc from commit subject
+>>>      - add devicetree maintainer
+>>>      - move Documentation to Documentation/hwmon/tmp103
+>>>      - remove devicetree bindings from Documentation
+>>>      - add compatible string to
+>>> "Documentation/devicetree/bindings/i2c/trivial-devices.txt"
+>>>      - remove CamelCase
+>>>      - fix Codingstyle issues
+>>>      - use ATTRIBUTE_GROUPS and=20
+>>> devm_hwmon_device_register_with_groups()
+>>>      - remove unsused define TMP103_CONFIG_RD_ONLY
+>>>      - restore config register when exit()
+>>>      - use regmap
+>>> - changes for v3:
+>>>    again a lot of fantastic tips how to use regmap efficiently
+>>>    from Guenter Roeck:
+>>>    - get rid of "struct tmp103"
+>>>    - get rid of "static const u8 tmp103_reg[]"
+>>>    - get rid of mutex lock
+>>>    - drop config_orig entirely
+>>>    - use regmap_update_bits()
+>>> - changes for v4:
+>>>    - add comment from Guenter Roeck:
+>>>      define TMP103_CONFIG_MASK and TMP103_CONF_SD_MASK
+>>>      separately to ensure you catch all the to-be-cleared bits.
+>>> - changes for v5:
+>>>    add comment from Guenter Roeck:
+>>>    - use "#define TMP103_CONF_SD TMP103_CONF_M1"
+>>>    add comment from Mark Rutland:
+>>>    - use full string for DT compatible string matching, instead of
+>>>      DRIVER_NAME. Get rid complete of DRIVER_NAME define.
+>>>
+>>>   .../devicetree/bindings/i2c/trivial-devices.txt    |   1 +
+>>>   Documentation/hwmon/tmp103                         |  28 +++
+>>>   drivers/hwmon/Kconfig                              |  10 +
+>>>   drivers/hwmon/Makefile                             |   1 +
+>>>   drivers/hwmon/tmp103.c                             | 205=20
+>>> +++++++++++++++++++++
+>>>   5 files changed, 245 insertions(+)
+>>>   create mode 100644 Documentation/hwmon/tmp103
+>>>   create mode 100644 drivers/hwmon/tmp103.c
+>>>
+>>> diff --git=20
+>>> a/Documentation/devicetree/bindings/i2c/trivial-devices.txt=20
+>>> b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>>> index bef86e5..fc944e0 100644
+>>> --- a/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>>> +++ b/Documentation/devicetree/bindings/i2c/trivial-devices.txt
+>>> @@ -83,5 +83,6 @@ stm,m41t80        M41T80 - SERIAL ACCESS RTC WITH=
+=20
+>>> ALARMS
+>>>   taos,tsl2550        Ambient Light Sensor with SMBUS/Two Wire=20
+>>> Serial Interface
+>>>   ti,tsc2003        I2C Touch-Screen Controller
+>>>   ti,tmp102        Low Power Digital Temperature Sensor with=20
+>>> SMBUS/Two Wire Serial Interface
+>>> +ti,tmp103        Low Power Digital Temperature Sensor with=20
+>>> SMBUS/Two Wire Serial Interface
+May i know about this binding compatible property ?
+>>>   ti,tmp275        Digital Temperature Sensor
+>>>   winbond,wpct301        i2c trusted platform module (TPM)
+>>> diff --git a/Documentation/hwmon/tmp103 b/Documentation/hwmon/tmp10=
+3
+>>> new file mode 100644
+>>> index 0000000..ec00a15
+>>> --- /dev/null
+>>> +++ b/Documentation/hwmon/tmp103
+>>> @@ -0,0 +1,28 @@
+>>> +Kernel driver tmp103
+>>> +=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+>>> +
+>>> +Supported chips:
+>>> +  * Texas Instruments TMP103
+>>> +    Prefix: 'tmp103'
+>>> +    Addresses scanned: none
+>>> +    Product info and datasheet: http://www.ti.com/product/tmp103
+>>> +
+>>> +Author:
+>>> +    Heiko Schocher <hs@denx.de>
+>>> +
+>>> +Description
+>>> +-----------
+>>> +
+>>> +The TMP103 is a digital output temperature sensor in a four-ball
+>>> +wafer chip-scale package (WCSP). The TMP103 is capable of reading
+>>> +temperatures to a resolution of 1=C2=B0C. The TMP103 is specified =
+for
+>>> +operation over a temperature range of =E2=80=9340=C2=B0C to +125=C2=
+=B0C.
+>>> +
+>>> +Resolution: 8 Bits
+>>> +Accuracy: =C2=B11=C2=B0C Typ (=E2=80=9310=C2=B0C to +100=C2=B0C)
+>>> +
+>>> +The driver provides the common sysfs-interface for temperatures (s=
+ee
+>>> +Documentation/hwmon/sysfs-interface under Temperatures).
+>>> +
+>>> +Please refer how to instantiate this driver:
+>>> +Documentation/i2c/instantiating-devices
+>>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>>> index 08531a1..c882d4b 100644
+>>> --- a/drivers/hwmon/Kconfig
+>>> +++ b/drivers/hwmon/Kconfig
+>>> @@ -1391,6 +1391,16 @@ config SENSORS_TMP102
+>>>         This driver can also be built as a module.  If so, the modu=
+le
+>>>         will be called tmp102.
+>>> +config SENSORS_TMP103
+>>> +    tristate "Texas Instruments TMP103"
+>>> +    depends on I2C
+>>> +    help
+>>> +      If you say yes here you get support for Texas Instruments TM=
+P103
+>>> +      sensor chips.
+>>> +
+>>> +      This driver can also be built as a module.  If so, the modul=
+e
+>>> +      will be called tmp103.
+>>> +
+>>>   config SENSORS_TMP401
+>>>       tristate "Texas Instruments TMP401 and compatibles"
+>>>       depends on I2C
+>>> diff --git a/drivers/hwmon/Makefile b/drivers/hwmon/Makefile
+>>> index 3dc0f02..cc0df1ef 100644
+>>> --- a/drivers/hwmon/Makefile
+>>> +++ b/drivers/hwmon/Makefile
+>>> @@ -135,6 +135,7 @@ obj-$(CONFIG_SENSORS_SMSC47M192)+=3D smsc47m192=
+=2Eo
+>>>   obj-$(CONFIG_SENSORS_AMC6821)    +=3D amc6821.o
+>>>   obj-$(CONFIG_SENSORS_THMC50)    +=3D thmc50.o
+>>>   obj-$(CONFIG_SENSORS_TMP102)    +=3D tmp102.o
+>>> +obj-$(CONFIG_SENSORS_TMP103)    +=3D tmp103.o
+>>>   obj-$(CONFIG_SENSORS_TMP401)    +=3D tmp401.o
+>>>   obj-$(CONFIG_SENSORS_TMP421)    +=3D tmp421.o
+>>>   obj-$(CONFIG_SENSORS_TWL4030_MADC)+=3D twl4030-madc-hwmon.o
+>>> diff --git a/drivers/hwmon/tmp103.c b/drivers/hwmon/tmp103.c
+>>> new file mode 100644
+>>> index 0000000..e69dbca
+>>> --- /dev/null
+>>> +++ b/drivers/hwmon/tmp103.c
+>>> @@ -0,0 +1,205 @@
+>>> +/*
+>>> + * Texas Instruments TMP103 SMBus temperature sensor driver
+>>> + * Copyright (C) 2014 Heiko Schocher <hs@denx.de>
+>>> + *
+>>> + * Based on:
+>>> + * Texas Instruments TMP102 SMBus temperature sensor driver
+>>> + *
+>>> + * Copyright (C) 2010 Steven King <sfking@fdwdc.com>
+>>> + *
+>>> + * This program is free software; you can redistribute it and/or=20
+>>> modify
+>>> + * it under the terms of the GNU General Public License as=20
+>>> published by
+>>> + * the Free Software Foundation; either version 2 of the License, =
+or
+>>> + * (at your option) any later version.
+>>> + *
+>>> + * This program is distributed in the hope that it will be useful,
+>>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>>> + * GNU General Public License for more details.
+>>> + *
+>>> + */
+>>> +
+>>> +#include <linux/module.h>
+>>> +#include <linux/init.h>
+>>> +#include <linux/slab.h>
+>>> +#include <linux/i2c.h>
+>>> +#include <linux/hwmon.h>
+>>> +#include <linux/hwmon-sysfs.h>
+>>> +#include <linux/err.h>
+>>> +#include <linux/mutex.h>
+>>> +#include <linux/device.h>
+>>> +#include <linux/jiffies.h>
+>>> +#include <linux/regmap.h>
+>>> +
+>>> +#define TMP103_TEMP_REG        0x00
+>>> +#define TMP103_CONF_REG        0x01
+>>> +#define TMP103_TLOW_REG        0x02
+>>> +#define TMP103_THIGH_REG    0x03
+>>> +
+>>> +#define TMP103_CONF_M0        0x01
+>>> +#define TMP103_CONF_M1        0x02
+>>> +#define TMP103_CONF_LC        0x04
+>>> +#define TMP103_CONF_FL        0x08
+>>> +#define TMP103_CONF_FH        0x10
+>>> +#define TMP103_CONF_CR0        0x20
+>>> +#define TMP103_CONF_CR1        0x40
+>>> +#define TMP103_CONF_ID        0x80
+>>> +#define TMP103_CONF_SD        (TMP103_CONF_M1)
+>>> +#define TMP103_CONF_SD_MASK    (TMP103_CONF_M0 | TMP103_CONF_M1)
+>>> +
+>>> +#define TMP103_CONFIG        (TMP103_CONF_CR1 | TMP103_CONF_M1)
+>>> +#define TMP103_CONFIG_MASK    (TMP103_CONF_CR0 | TMP103_CONF_CR1 |=
+ \
+>>> +                 TMP103_CONF_M0 | TMP103_CONF_M1)
+>>> +
+>>> +static inline int tmp103_reg_to_mc(s8 val)
+>>> +{
+>>> +    return val * 1000;
+>>> +}
+>>> +
+>>> +static inline u8 tmp103_mc_to_reg(int val)
+>>> +{
+>>> +    return DIV_ROUND_CLOSEST(val, 1000);
+>>> +}
+>>> +
+>>> +static ssize_t tmp103_show_temp(struct device *dev,
+>>> +                struct device_attribute *attr,
+>>> +                char *buf)
+>>> +{
+>>> +    struct sensor_device_attribute *sda =3D to_sensor_dev_attr(att=
+r);
+>>> +    struct regmap *regmap =3D dev_get_drvdata(dev);
+>>> +    unsigned int regval;
+>>> +    int ret;
+>>> +
+>>> +    ret =3D regmap_read(regmap, sda->index, &regval);
+>>> +    if (ret < 0)
+>>> +        return ret;
+>>> +
+>>> +    return sprintf(buf, "%d\n", tmp103_reg_to_mc(regval));
+>>> +}
+>>> +
+>>> +static ssize_t tmp103_set_temp(struct device *dev,
+>>> +                   struct device_attribute *attr,
+>>> +                   const char *buf, size_t count)
+>>> +{
+>>> +    struct sensor_device_attribute *sda =3D to_sensor_dev_attr(att=
+r);
+>>> +    struct regmap *regmap =3D dev_get_drvdata(dev);
+>>> +    long val;
+>>> +    int ret;
+>>> +
+>>> +    if (kstrtol(buf, 10, &val) < 0)
+>>> +        return -EINVAL;
+>>> +
+>>> +    val =3D clamp_val(val, -55000, 127000);
+>>> +    ret =3D regmap_write(regmap, sda->index, tmp103_mc_to_reg(val)=
+);
+>>> +    return ret ? ret : count;
+>>> +}
+>>> +
+>>> +static SENSOR_DEVICE_ATTR(temp1_input, S_IRUGO, tmp103_show_temp,=20
+>>> NULL ,
+>>> +              TMP103_TEMP_REG);
+>>> +
+>>> +static SENSOR_DEVICE_ATTR(temp1_min, S_IWUSR | S_IRUGO,=20
+>>> tmp103_show_temp,
+>>> +              tmp103_set_temp, TMP103_TLOW_REG);
+>>> +
+>>> +static SENSOR_DEVICE_ATTR(temp1_max, S_IWUSR | S_IRUGO,=20
+>>> tmp103_show_temp,
+>>> +              tmp103_set_temp, TMP103_THIGH_REG);
+>>> +
+>>> +static struct attribute *tmp103_attrs[] =3D {
+>>> +    &sensor_dev_attr_temp1_input.dev_attr.attr,
+>>> +    &sensor_dev_attr_temp1_min.dev_attr.attr,
+>>> +    &sensor_dev_attr_temp1_max.dev_attr.attr,
+>>> +    NULL
+>>> +};
+>>> +ATTRIBUTE_GROUPS(tmp103);
+>>> +
+>>> +static bool tmp103_regmap_is_volatile(struct device *dev, unsigned=
+=20
+>>> int reg)
+>>> +{
+>>> +    return reg =3D=3D TMP103_TEMP_REG;
+>>> +}
+>>> +
+>>> +static struct regmap_config tmp103_regmap_config =3D {
+>>> +    .reg_bits =3D 8,
+>>> +    .val_bits =3D 8,
+>>> +    .max_register =3D TMP103_THIGH_REG,
+>>> +    .volatile_reg =3D tmp103_regmap_is_volatile,
+>>> +};
+>>> +
+>>> +static int tmp103_probe(struct i2c_client *client,
+>>> +            const struct i2c_device_id *id)
+>>> +{
+>>> +    struct device *dev =3D &client->dev;
+>>> +    struct device *hwmon_dev;
+>>> +    struct regmap *regmap;
+>>> +    int ret;
+>>> +
+>>> +    if (!i2c_check_functionality(client->adapter,
+>>> +                     I2C_FUNC_SMBUS_BYTE_DATA)) {
+>>> +        dev_err(&client->dev,
+>>> +            "adapter doesn't support SMBus byte transactions\n");
+>>> +        return -ENODEV;
+>>> +    }
+>>> +
+>>> +    regmap =3D devm_regmap_init_i2c(client, &tmp103_regmap_config)=
+;
+>>> +    if (IS_ERR(regmap)) {
+>>> +        dev_err(dev, "failed to allocate register map\n");
+>>> +        return PTR_ERR(regmap);
+>>> +    }
+>>> +
+>>> +    ret =3D regmap_update_bits(regmap, TMP103_CONF_REG,=20
+>>> TMP103_CONFIG_MASK,
+>>> +                 TMP103_CONFIG);
+>>> +    if (ret < 0) {
+>>> +        dev_err(&client->dev, "error writing config register\n");
+>>> +        return ret;
+>>> +    }
+>>> +
+>>> +    hwmon_dev =3D hwmon_device_register_with_groups(dev, client->n=
+ame,
+>>> +                              regmap, tmp103_groups);
+>>> +    return PTR_ERR_OR_ZERO(hwmon_dev);
+>>> +}
+>>> +
+>>> +#ifdef CONFIG_PM
+>>> +static int tmp103_suspend(struct device *dev)
+>>> +{
+>>> +    struct regmap *regmap =3D dev_get_drvdata(dev);
+>>> +
+>>> +    return regmap_update_bits(regmap, TMP103_CONF_REG,
+>>> +                  TMP103_CONF_SD_MASK, 0);
+>>> +}
+>>> +
+>>> +static int tmp103_resume(struct device *dev)
+>>> +{
+>>> +    struct regmap *regmap =3D dev_get_drvdata(dev);
+>>> +
+>>> +    return regmap_update_bits(regmap, TMP103_CONF_REG,
+>>> +                  TMP103_CONF_SD_MASK, TMP103_CONF_SD);
+>>> +}
+>>> +
+>>> +static const struct dev_pm_ops tmp103_dev_pm_ops =3D {
+>>> +    .suspend    =3D tmp103_suspend,
+>>> +    .resume        =3D tmp103_resume,
+>>> +};
+>>> +
+>>> +#define TMP103_DEV_PM_OPS (&tmp103_dev_pm_ops)
+>>> +#else
+>>> +#define    TMP103_DEV_PM_OPS NULL
+>>> +#endif /* CONFIG_PM */
+>>> +
+>>> +static const struct i2c_device_id tmp103_id[] =3D {
+>>> +    { "tmp103", 0 },
+>>> +    { }
+>>> +};
+>>
+>> In the bindings you are giving the compatible property as :=20
+>> ti,tmp103, but here only tmp103.
+>>
+>> Instead of using the i2c_device_id struct , use of_device_id struct=20
+>> for giving the
+>> compatible property value.
+>> compatble =3D "<manufacturer>,<model>"
+>>
+>
+> No. We don't do that for other i2c drivers, and the i2c subsystem han=
+dles
+> this case, so it does not sense to start that with this driver just
+> for the sake of making the code more complicated than it has to be.
+>
+> Thanks,
+> Guenter
+>
