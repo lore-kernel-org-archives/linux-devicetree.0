@@ -1,24 +1,53 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH 0/4] of Automatic console registration cleanups
-Date: Wed, 18 Jun 2014 21:54:30 +0100
-Message-ID: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
+Subject: [PATCH 2/4] of: Enable console on serial ports specified by /chosen/stdout-path
+Date: Wed, 18 Jun 2014 21:54:32 +0100
+Message-ID: <1403124874-19929-3-git-send-email-grant.likely@linaro.org>
+References: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, olof@lixom.net, benh@kernel.crashing.org
+Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-I posted this series a 1.5 months ago as an RFC. I'm going to put it in
-my tree for merging in v3.17.
+If the devicetree specifies a serial port as a stdout device, then the
+kernel can use it as the default console if nothing else was selected on
+the command line. For any serial port that uses the uart_add_one_port()
+feature, the uart_add_one_port() has all the information needed to
+automatically enable the console device, which is what this patch does.
 
-This series cleans up the selection of default console devices when
-using the device tree. The device tree defines a way of specifying the
-console by using a "stdout-path" property in the /chosen node, but very
-few drivers actually attempt to use that data, and so for most platforms
-there needs to be a "console=" line in the command line if a serial port
-is intended to be used as the console.
+With this change applied, a device tree platform can be booted without
+any console= parameters on the command line and the kernel will still be
+able to determine its console.
 
-With this series, if there is a /chosen/stdout-path property, and that
-property points to a serial port node, then when the serial driver
-registers he port, the core uart_add_one_port() function will notice
-and if no console= argument was provided then add it as a preferred
-console.
+Tested on QEMU Versatile model and i.MX
+
+Signed-off-by: Grant Likely <grant.likely@linaro.org>
+Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
+---
+ drivers/tty/serial/serial_core.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/drivers/tty/serial/serial_core.c b/drivers/tty/serial/serial_core.c
+index fbf6c5ad222f..3ce68f962c92 100644
+--- a/drivers/tty/serial/serial_core.c
++++ b/drivers/tty/serial/serial_core.c
+@@ -26,6 +26,7 @@
+ #include <linux/slab.h>
+ #include <linux/init.h>
+ #include <linux/console.h>
++#include <linux/of.h>
+ #include <linux/proc_fs.h>
+ #include <linux/seq_file.h>
+ #include <linux/device.h>
+@@ -2615,6 +2616,8 @@ int uart_add_one_port(struct uart_driver *drv, struct uart_port *uport)
+ 		spin_lock_init(&uport->lock);
+ 		lockdep_set_class(&uport->lock, &port_lock_key);
+ 	}
++	if (uport->cons && uport->dev)
++		of_console_check(uport->dev->of_node, uport->cons->name, uport->line);
+ 
+ 	uart_configure_port(drv, state, uport);
+ 
+-- 
+1.9.1
