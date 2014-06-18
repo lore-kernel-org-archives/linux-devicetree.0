@@ -1,97 +1,36 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH v2 1/8] PCI: designware: add rd[wr]_other_conf API
-Date: Wed, 18 Jun 2014 12:07:07 +0530
-Message-ID: <20140618063706.GA6098@pratyush-vbox>
-References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com>
- <1402426287-31157-2-git-send-email-m-karicheri2@ti.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v5] hwmon: Driver for TI TMP103 temperature sensor
+Date: Tue, 17 Jun 2014 23:41:41 -0700
+Message-ID: <53A134A5.9020308@roeck-us.net>
+References: <1403069837-15651-1-git-send-email-hs@denx.de> <53A127BB.7090802@gmail.com> <53A12DBB.50704@roeck-us.net> <53A12F37.8020206@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402426287-31157-2-git-send-email-m-karicheri2@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Murali Karicheri <m-karicheri2@ti.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, Kishon Vijay Abraham I <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53A12F37.8020206@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>, Heiko Schocher <hs@denx.de>, lm-sensors@lm-sensors.org
+Cc: Jean Delvare <khali@linux-fr.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 11, 2014 at 02:51:20AM +0800, Murali Karicheri wrote:
-> v3.65 version of the designware h/w, requires application space
-> registers to be configured to access the remote EP config space.
-> To support this, add rd[wr]_other_conf API in the pcie_host_opts
-> 
-> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
-> 
-> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
-> CC: Russell King <linux@arm.linux.org.uk>
-> CC: Grant Likely <grant.likely@linaro.org>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mohit Kumar <mohit.kumar@st.com>
-> CC: Jingoo Han <jg1.han@samsung.com>
-> CC: Bjorn Helgaas <bhelgaas@google.com>
-> CC: Pratyush Anand <pratyush.anand@st.com>
-> CC: Richard Zhu <r65037@freescale.com>
-> CC: Kishon Vijay Abraham I <kishon@ti.com>
-> CC: Marek Vasut <marex@denx.de>
-> CC: Arnd Bergmann <arnd@arndb.de>
-> CC: Pawel Moll <pawel.moll@arm.com>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
-> CC: Kumar Gala <galak@codeaurora.org>
-> CC: Randy Dunlap <rdunlap@infradead.org>
-> CC: Grant Likely <grant.likely@linaro.org> 
-> 
-> ---
->  drivers/pci/host/pcie-designware.c |   12 ++++++++++--
->  drivers/pci/host/pcie-designware.h |    4 ++++
->  2 files changed, 14 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
-> index c4e3732..e8f5d8d 100644
-> --- a/drivers/pci/host/pcie-designware.c
-> +++ b/drivers/pci/host/pcie-designware.c
-> @@ -654,7 +654,11 @@ static int dw_pcie_rd_conf(struct pci_bus *bus, u32 devfn, int where,
->  
->  	spin_lock_irqsave(&pp->conf_lock, flags);
->  	if (bus->number != pp->root_bus_nr)
-> -		ret = dw_pcie_rd_other_conf(pp, bus, devfn,
-> +		if (pp->ops->rd_other_conf)
-> +			ret = pp->ops->rd_other_conf(pp, bus, devfn,
-> +						where, size, val);
-> +		else
-> +			ret = dw_pcie_rd_other_conf(pp, bus, devfn,
->  						where, size, val);
->  	else
->  		ret = dw_pcie_rd_own_conf(pp, where, size, val);
-> @@ -680,7 +684,11 @@ static int dw_pcie_wr_conf(struct pci_bus *bus, u32 devfn,
->  
->  	spin_lock_irqsave(&pp->conf_lock, flags);
->  	if (bus->number != pp->root_bus_nr)
-> -		ret = dw_pcie_wr_other_conf(pp, bus, devfn,
-> +		if (pp->ops->wr_other_conf)
-> +			ret = pp->ops->wr_other_conf(pp, bus, devfn,
-> +						where, size, val);
-> +		else
-> +			ret = dw_pcie_wr_other_conf(pp, bus, devfn,
->  						where, size, val);
->  	else
->  		ret = dw_pcie_wr_own_conf(pp, where, size, val);
-> diff --git a/drivers/pci/host/pcie-designware.h b/drivers/pci/host/pcie-designware.h
-> index 3063b35..2d6dd66 100644
-> --- a/drivers/pci/host/pcie-designware.h
-> +++ b/drivers/pci/host/pcie-designware.h
-> @@ -62,6 +62,10 @@ struct pcie_host_ops {
->  			u32 val, void __iomem *dbi_base);
->  	int (*rd_own_conf)(struct pcie_port *pp, int where, int size, u32 *val);
->  	int (*wr_own_conf)(struct pcie_port *pp, int where, int size, u32 val);
-> +	int (*rd_other_conf)(struct pcie_port *pp, struct pci_bus *bus,
-> +			unsigned int devfn, int where, int size, u32 *val);
-> +	int (*wr_other_conf)(struct pcie_port *pp, struct pci_bus *bus,
-> +			unsigned int devfn, int where, int size, u32 val);
->  	int (*link_up)(struct pcie_port *pp);
->  	void (*host_init)(struct pcie_port *pp);
->  };
+On 06/17/2014 11:18 PM, Varka Bhadram wrote:
 
-Reviewed-by: Pratyush Anand <pratyush.anand@st.com> 
+>>>>   ti,tmp102        Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+>>>> +ti,tmp103        Low Power Digital Temperature Sensor with SMBUS/Two Wire Serial Interface
+> May i know about this binding compatible property ?
 
-> -- 
-> 1.7.9.5
+At some point someone will have to document how trivial i2c device mappings
+work in detail. Every other time another trivial i2c device is added
+to this file, the same argument starts all over again.
+
+An attempt to document the trivial i2c device mappings implementation
+was rejected with the argument that it would be implementation (Linux)
+specific. The proposed patch [1] may however help understanding how
+it works.
+
+Hope that helps,
+Guenter
+
+---
+
+[1] http://patchwork.ozlabs.org/patch/301938/
