@@ -1,248 +1,169 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 2/2] arm: dts: add support for AM437x StarterKit
-Date: Wed, 18 Jun 2014 18:19:23 -0500
-Message-ID: <20140618231923.GA9855@saruman.home>
-References: <1403106200-777-1-git-send-email-balbi@ti.com>
- <1403106200-777-3-git-send-email-balbi@ti.com>
- <53A1BADD.7050309@ti.com>
- <20140618193113.GC4570@saruman.home>
- <53A20A7D.3060508@ti.com>
-Reply-To: <balbi@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
+Date: Thu, 19 Jun 2014 01:20:53 +0200
+Message-ID: <20140618232049.GH26514@mithrandir>
+References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com>
+ <539F4D44.3070309@wwwdotorg.org>
+ <53A03186.3040703@collabora.com>
+ <53A069B6.6070902@wwwdotorg.org>
+ <53A1CB23.5090307@collabora.com>
+ <20140618220008.GC26514@mithrandir>
+ <CACP_E+Jr5QyYm92Mc2=WVhKMbk=9Ty1fvJuH+fqOmDnYmdqFRg@mail.gmail.com>
+ <53A213C3.2020207@wwwdotorg.org>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="y0ulUmNC+osPPQO6"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="fd5uyaI9j6xoeUBo"
+Return-path: <linux-pm-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53A20A7D.3060508@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: balbi@ti.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, Josh Elliot <jelliott@ti.com>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Etheridge <detheridge@ti.com>, r.sricharan@ti.com, robh+dt@kernel.org, Benoit Cousson <bcousson@baylibre.com>, galak@codeaurora.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <53A213C3.2020207@wwwdotorg.org>
+Sender: linux-pm-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: =?utf-8?B?U3TDqXBoYW5l?= Marchesin <stephane.marchesin@gmail.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Mike Turquette <mturquette@linaro.org>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Linux Kernel list <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Kyungmin Park <kyungmin.park@samsung.com>, myungjoo.ham@samsung.com, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---y0ulUmNC+osPPQO6
-Content-Type: text/plain; charset=us-ascii
+
+--fd5uyaI9j6xoeUBo
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi,
-
-On Wed, Jun 18, 2014 at 04:54:05PM -0500, Nishanth Menon wrote:
-> On 06/18/2014 02:31 PM, Felipe Balbi wrote:
-> >On Wed, Jun 18, 2014 at 11:14:21AM -0500, Nishanth Menon wrote:
-> >>On 06/18/2014 10:43 AM, Felipe Balbi wrote:
-> >>>Add support for TI's AM437x StarterKit Evaluation
-> >>>Module.
+On Wed, Jun 18, 2014 at 04:33:39PM -0600, Stephen Warren wrote:
+> On 06/18/2014 04:19 PM, St=C3=A9phane Marchesin wrote:
+> > On Wed, Jun 18, 2014 at 3:00 PM, Thierry Reding
+> > <thierry.reding@gmail.com> wrote:
+> >> On Wed, Jun 18, 2014 at 07:23:47PM +0200, Tomeu Vizoso wrote:
+> >>> On 06/17/2014 06:15 PM, Stephen Warren wrote:
+> >>>> On 06/17/2014 06:16 AM, Tomeu Vizoso wrote:
+> >>>>> On 06/16/2014 10:02 PM, Stephen Warren wrote:
+> >>>>>> On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
+> >>>>>>> +#ifdef CONFIG_TEGRA124_EMC
+> >>>>>>> +int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsign=
+ed
+> >>>>>>> long rate);
+> >>>>>>> +void tegra124_emc_set_floor(unsigned long freq);
+> >>>>>>> +void tegra124_emc_set_ceiling(unsigned long freq);
+> >>>>>>> +#else
+> >>>>>>> +int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsign=
+ed
+> >>>>>>> long rate)
+> >>>>>>> +{ return -ENODEV; }
+> >>>>>>> +void tegra124_emc_set_floor(unsigned long freq)
+> >>>>>>> +{ return; }
+> >>>>>>> +void tegra124_emc_set_ceiling(unsigned long freq)
+> >>>>>>> +{ return; }
+> >>>>>>> +#endif
+> >>>>>>
+> >>>>>> I'll repeat what I said off-list so that we can have the whole
+> >>>>>> conversation on the list:
+> >>>>>>
+> >>>>>> That looks like a custom Tegra-specific API. I think it'd be much =
+better
+> >>>>>> to integrate this into the common clock framework as a standard cl=
+ock
+> >>>>>> constraints API. There are other use-cases for clock constraints b=
+esides
+> >>>>>> EMC scaling (e.g. some in audio on Tegra, and I'm sure many on oth=
+er
+> >>>>>> SoCs too).
+> >>>>>
+> >>>>> Yes, I wrote a bit in the cover letter about our requirements and h=
+ow
+> >>>>> they map to the CCF. Could you please comment on that?
+> >>>>
+> >>>> My comments remain the same. I believe this is something that belong=
+s in
+> >>>> the clock driver, or at the least, some API that takes a struct cloc=
+k as
+> >>>> its parameter, so that drivers can use the existing DT clock lookup
+> >>>> mechanism.
+> >>>
+> >>> Ok, let me put this strawman here to see if I have gotten close to wh=
+at you
+> >>> have in mind:
+> >>>
+> >>> * add per-client accounting (Rabin's patches referenced before)
+> >>>
+> >>> * add clk_set_floor, to be used by cpufreq, load stats, etc.
+> >>>
+> >>> * add clk_set_ceiling, to be used by battery drivers, thermal, etc.
+> >>>
+> >>> * an EMC driver would collect bandwidth and latency requests from con=
+sumers
+> >>> and call clk_set_floor on the EMC clock.
+> >>>
+> >>> * the EMC driver would also register for rate change notifications in=
+ the
+> >>> EMC clock and would update the latency allowance registers at that po=
+int.
 > >>
-> >>is there a link for this platform?
-> >
-> >internal only
->=20
-> but will eventually be sold externally? I assume this is not an TI
-
-probably, but there's nothing public yet.
-
-> internal only board.
-
-correct assumption for all I know.
-
-> [...]
-> >>>+
-> >>>+	matrix_keypad: matrix_keypad@0 {
-> >>>+		compatible =3D "gpio-matrix-keypad";
+> >> Latency allowance registers are part of the MC rather than the EMC. So=
+ I
+> >> think we have two options: a) have a unified driver for MC and EMC or =
+b)
+> >> provide two parts of the API in two drivers.
 > >>
-> >>no pinctrl needed?
-> >
-> >pins are gpio by default
+> >> Or perhaps c), create a generic framework that both MC and EMC can
+> >> register with (bandwidth for EMC, latency for MC).
+> >=20
+> > Is there any motivation for keeping MC and EMC separate? In my mind,
+> > the solution was always to handle those together.
 >=20
-> Might be good to explicitly configure it - no strong opinions though
-> -> GPIOs are always good to pinctrl up esp if bootloader screws up at
-> a later date.
-
-I find that very unlikely and don't quite like the idea of accessing
-registers unnecessarily. OTOH, I don't quite care, to be frank.
-
-> >>>+&i2c0 {
-> >>>+        status =3D "okay";
-> >>>+        pinctrl-names =3D "default";
-> >>>+        pinctrl-0 =3D <&i2c0_pins>;
-> >>
-> >>what speed are you running this on? -> also can you align these to 1
-> >
-> >100kHz ?
+> Well, they are documented as being separate HW modules in the TRM.
 >=20
-> Rule of thumb is to do the following: MIN(MAX_FREQ(D1),
-> MAX_FREQ(D2).... MAX_FREQ(Dn)); where D1..n are all the peripherals on
-> this i2c bus.
-
-hehe, right.
-
-> >>>+		interrupt-controller;
-> >>>+		#interrupt-cells =3D <2>;
-> >>>+
-> >>>+		dcdc1: regulator-dcdc1 {
-> >>>+			compatible =3D "ti,tps65218-dcdc1";
-> >>>+			/* VDD_CORE limits min of OPP50 and max of OPP100 */
-> >>>+			regulator-name =3D "vdd_core";
-> >>>+			regulator-min-microvolt =3D <912000>;
-> >>>+			regulator-max-microvolt =3D <1144000>;
-> >>>+			regulator-boot-on;
-> >>>+			regulator-always-on;
-> >>>+		};
-> >>>+
-> >>>+		dcdc2: regulator-dcdc2 {
-> >>>+			compatible =3D "ti,tps65218-dcdc2";
-> >>>+			/* VDD_MPU limits min of OPP50 and max of OPP_NITRO */
-> >>>+			regulator-name =3D "vdd_mpu";
-> >>>+			regulator-min-microvolt =3D <912000>;
-> >>>+			regulator-max-microvolt =3D <1378000>;
-> >>>+			regulator-boot-on;
-> >>>+			regulator-always-on;
-> >>>+		};
-> >>>+
-> >>>+		dcdc3: regulator-dcdc3 {
-> >>>+			compatible =3D "ti,tps65218-dcdc3";
-> >>>+			regulator-name =3D "vdds_ddr";
-> >>no voltage ?
-> >
-> >has no users in kernel. Also, it comes out with default, and correct,
-> >voltage.
+> I know there's an interlock in HW so that when the EMC clock is changed,
+> the EMC registers can flip atomically to a new configuration.
 >=20
-> Device tree is description of hardware, not just who uses what in OS
-> of interest.
-
-then we should start "fixing" every single DTS in the kernel because I'm
-sure even LEDs and keypads are tied to some sort of supply, as is the
-case with this board. No driver will use it though.
-
-Also, I couldn't find anywhere which voltage is dcdc3 outputing and
-there's no shunt anywhere (other than a 0 ohm resistor) to measure
-voltage. So I kinda have my hands tied here.
-
-(goes review schematics)
-
-actually there's 0.05 ohm sense resistor. Hopefully it's easy to access.
-
-> you might consider u-boot to use the same device tree at a later date and
-> having complete details about the hardware is always the norm.
+> I'm not aware of any similar HW interlock between MC and EMC registers.
+> That would imply that very tight co-ordination shouldn't be required.
 >=20
-> I suggest setting the voltage here to be complete even if there are no
-> current users.
->=20
-> >>>+	edt-ft5306@38 {
-> >>>+		status =3D "okay";
-> >>>+		compatible =3D "edt,edt-ft5306", "edt,edt-ft5x06";
-> >>>+		pinctrl-names =3D "default";
-> >>>+		pinctrl-0 =3D <&edt_ft5306_ts_pins>;
-> >>>+		reg =3D <0x38>;
-> >>>+		interrupt-parent =3D <&gpio0>;
-> >>>+		interrupts =3D <31 0>;
-> >>>+
-> >>>+		wake-gpios =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> >>
-> >>why wake-gpios? we should be using pinctrl with interrupt-extended to
-> >>do wakeup sequence, no?
-> >
-> >sure, can you patch the edt driver ? I'll fix the DTS after that gets
-> >merged
->=20
-> If you really want to go down that road, so you could probably help
-> review the pinctrl patches I posted to enable pinctrl wakeup[1]?
->=20
-> Come on, as of today, there is no ability to suspend AM437x without
-> doing [1], let alone talk about wakeup gpio vs interrupt-extended. and
-> do we really want to wakeup from suspend when touch screen is touched?
->=20
-> Do you expect wake-gpio to work even after doing interrupt based
-> solution? I am no edt driver expert... maybe you can help me here.
+> Do the MC latency allowance registers /really/ need to be *very tightly*
+> managed whenever the EMC clock is changed, or is it just a matter of it
+> being a good idea to update EMC clock and MC latency allowance registers
+> at roughly the same time?
 
-you missed the point entirely. This pin is not used for the touchscreen
-to wake SoC up, it's the other way around, see how the pin is an
-*output*. Pull it low and the touchscreen won't generate IRQs, won't
-respond to i2c accesses, etc. Pull it high, and the thing wakes up.
+I guess depending on the timing you could get FIFO underflows if the
+registers aren't updated promptly enough. Once the programming takes
+effect things should be able to catch up again, but it's possible that
+there could be glitches.
 
-> >>>+&mmc1 {
-> >>>+	status =3D "okay";
-> >>>+	vmmc-supply =3D <&dcdc4>;
-> >>>+	bus-width =3D <4>;
-> >>>+	pinctrl-names =3D "default";
-> >>>+	pinctrl-0 =3D <&mmc1_pins>;
-> >>
-> >>just for style, wonder if moving the pinctrl just after status is bette=
-r?
-> >
-> >why ? makes no difference.
->=20
-> it does not - I agree, except, when you look at all other nodes:
-> status=3D"okay"
-> pinctrl
-> other things..
->=20
-> it is just a symmetry thing, I guess..
+> Even if there's some co-ordination required,
+> maybe it can be handled rather like cpufreq notifications; use clock
+> pre-rate change notifications to set MC up in a way that'll work at both
+> old/new EMC clocks, and then clock post-rate notifications to the final
+> MC configuration?
 
-little bit of ocd, but sure.
+Yes, I think something like that should work. As I understand it, the
+latency allowance is dependent on the EMC frequency, so in case where
+the EMC frequency is increased, adjusting in a post-rate notifier should
+be fine. When the EMC frequency is decreased, then programming the
+latency allowance registers in a pre-rate notifier should allow glitch-
+free transition.
 
-> >>>+	cd-gpios =3D <&gpio0 6 GPIO_ACTIVE_HIGH>;
-> >>>+};
-> >>>+
-> >>>+&usb2_phy1 {
-> >>>+	status =3D "okay";
-> >>>+};
-> >>>+
-> >>>+&usb1 {
-> >>>+	dr_mode =3D "peripheral";
-> >>>+	status =3D "okay";
-> >>>+};
-> >>>+
-> >>>+&usb2_phy2 {
-> >>>+	status =3D "okay";
-> >>>+};
-> >>>+
-> >>>+&usb2 {
-> >>>+	dr_mode =3D "host";
-> >>>+	status =3D "okay";
-> >>>+};
-> >>none of the above need pinctrl? no regulator supplies?
-> >
-> >pins in default states, drivers don't use regulators.
->=20
-> USB works without a supply? even a fixed voltage supply? that is
-> weird.
+Note that this is all purely theoretical knowledge, so I have no idea if
+it'll actually work like that in practice.
 
-take a look at the minicom output I posted if you don't believe. Well,
-to be exact, tps63010 [1] is the one which generates the regulated V5_0D
-which is used as VBUS_USB. The enable pin in that device is tied to the
-3v3 rail (dcdc4 regulator in the PMIC as most everything else) but
-there's no way (otherwise) to control that thing. There's no control
-bus, no way to write a driver.
+Thierry
 
-Since the board will anyways turn off if you disable the 3v3 rail, it's
-pretty much pointless to figure out a hack just to add this to DTS.
-
-[1] http://www.ti.com/product/TPS63010
-
---=20
-balbi
-
---y0ulUmNC+osPPQO6
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+--fd5uyaI9j6xoeUBo
+Content-Type: application/pgp-signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2.0.22 (GNU/Linux)
 
-iQIcBAEBAgAGBQJToh57AAoJEIaOsuA1yqRE+LMP/jpd74wkm1V6wonBsbIH997y
-MWhlmZPtB2WLLDwLnqNXimtcPaWGVw/T5RaW0SsANGIJ0VT+we4Nw6nWGZguYSTu
-yi3y4TSNhLvl34/p5EkjRuv6uNAGVXt3yiaDY9/w77yojTVzlOmRMMDQa+eQJyGG
-EGZVWdOhRtqoW+9fJ/xqr+5opMIZ0FaUL2k2+txYnUrXpSIiGxmoW8QGpCh1pKW3
-KBufFcAn3bxT9xT+hBuOVpth5wGVIBlKUzLzUHVkT/a/dWGEPMmwXO5B7p95jT9d
-q+leLZVcOoO7eT2lN9JbQgkHmDCqX4dHE7lsfq3ptT37/jtxL+8uJsbg9LL9N7ro
-WYlpaC2VBcuS8uTnVAw8sPhCtlHf01tazxY2iJsNX6mLUdHbIEQ3/zok6ZmhbtCL
-qoJWD0Dyfz2jmvcTcvJJmKdSzGXGP4ALxPLubM6hRSTywUBrqBmslA/DPe6AuuRs
-rwO1AXJdt5IGld8tuHiaTbSB1R/0DFeySMefwPaeKf5NsWNGnNd/dYupbasUkKHD
-GR0iFTSILl0stQR/ZWsN5E8c2RimnUkp2u1FYBBix1P/9PcSMTnXJeK6e8FulO73
-9CzCK05lIpCREGOrmxNaQ0sHtYMkVIr6+Mfmd0VO5Tx2aJyru1nOnumRzJOu3VzH
-9SftZTHQTWFsDbgyZFLk
-=jEvi
+iQIcBAEBAgAGBQJToh7RAAoJEN0jrNd/PrOh54IQAKiTeCaIPral/GyzTMU3lq7N
+V4/msk3/27OFIIx2jEKBP1Lg62gEAcGH8ZQjjd/PXcE4ZVk72XolR6H9yrhRIMyr
+DilCFET9yik3vYyOoAL8aMRf6OHYyFw3owCWyV+s4P7ZFFKv3YWVRJ2ATD2l081G
+BbFVelm5uiarfMWLkUtqIGuN26MSl8Ynego8hYubZsgcDmU2y+KGW+JylQHyVL+k
+WSrMLDu/os8m2GK0q5XAeltfY24BSpE6DOTctjaE5ktqUzlTSjfh3AKZpHKbYucS
+1+0qdJrTJL8LWZjBvZMwO6kUdHmMMQTm1tWc+lNcxQmUANf4Yjv0TP0CV9zxLzmm
+czcHqBqevXvc6+Il/LYj4FbzVUJ2rovHLSTWcsq3K4Q6lxLPJFsZUZ0zQ9ravweu
+LHWxj2p8YRNFBmAUjSgBHSthAOvU4kFjwfv2e5FUHYRMHblrFODwdk5/OykfFujG
+g++sFoEWXslKk1zM2A+KUp8TNnBds0Iai+SyneTSxL3ULSw4zawO4BbmE2+xu4YD
+Fa78oGMMQTj+kI6IKOC2Tq0sNdZe8MigE6rdpKYtMFVSCQ6L7jl/D37UouKdYLvc
+cohbB4UqXPiVBHdyhbUyVWBCdvopI7MNG53JVbdB9VCMMAHqL6u7d/FrCn5Bfpq0
+cRIa9FnIdb3fmwjwM4zl
+=gKEi
 -----END PGP SIGNATURE-----
 
---y0ulUmNC+osPPQO6--
+--fd5uyaI9j6xoeUBo--
