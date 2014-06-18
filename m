@@ -1,86 +1,124 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv6 3/3] dt-bindings: mfd: s2mps11: Add support S2MPU02 PMIC
-Date: Wed, 18 Jun 2014 10:14:49 +0100
-Message-ID: <20140618091449.GE23945@lee--X1>
-References: <1402964830-24890-1-git-send-email-cw00.choi@samsung.com>
- <1402964830-24890-4-git-send-email-cw00.choi@samsung.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should
+ be specified in 'reg'
+Date: Wed, 18 Jun 2014 14:44:33 +0530
+Message-ID: <53A15879.7030302@ti.com>
+References: <1401345500-20188-1-git-send-email-kishon@ti.com> <1401345500-20188-4-git-send-email-kishon@ti.com> <53876116.90504@ti.com> <3E54258959B69E4282D79E01AB1F32B70477D2A4@DFLE11.ent.ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1402964830-24890-4-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, sbkim73-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <3E54258959B69E4282D79E01AB1F32B70477D2A4@DFLE11.ent.ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: "Karicheri, Muralidharan" <m-karicheri2@ti.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "tony@atomide.com" <tony@atomide.com>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit Kumar <mohit.kumar@st.com>, Marek Vasut <marex@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Jun 2014, Chanwoo Choi wrote:
+Hi,
 
-> This patch add documentation for S2MPU02 PMIC device. S2MPU02 has a l=
-ittle
-> difference from S2MPS11/S2MPS14 PMIC and has LDO[1-28]/Buck[1-7].
->=20
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt | 7 +++++--
->  1 file changed, 5 insertions(+), 2 deletions(-)
+On Friday 30 May 2014 07:45 PM, Karicheri, Muralidharan wrote:
+>> -----Original Message-----
+>> From: Murali Karicheri [mailto:m-karicheri2@ti.com]
+>> Sent: Thursday, May 29, 2014 12:32 PM
+>> To: ABRAHAM, KISHON VIJAY
+>> Cc: devicetree@vger.kernel.org; linux-doc@vger.kernel.org; linux-arm-
+>> kernel@lists.infradead.org; linux-omap@vger.kernel.org; linux-pci@vger.kernel.org; linux-
+>> kernel@vger.kernel.org; arnd@arndb.de; tony@atomide.com; jg1.han@samsung.com;
+>> Jason Gunthorpe; Bjorn Helgaas; Mohit Kumar; Marek Vasut
+>> Subject: Re: [PATCH v2 03/18] PCI: designware: Configuration space should be specified
+>> in 'reg'
+>>
+>> On 5/29/2014 2:38 AM, ABRAHAM, KISHON VIJAY wrote:
+>>> The configuration address space has so far been specified in *ranges*,
+>>> however it should be specified in *reg* making it a platform MEM resource.
+>>> Hence used 'platform_get_resource_*' API to get configuration address
+>>> space in the designware driver.
+>>>
+>>> Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
+>>> Cc: Bjorn Helgaas <bhelgaas@google.com>
+>>> Cc: Mohit Kumar <mohit.kumar@st.com>
+>>> Cc: Jingoo Han <jg1.han@samsung.com>
+>>> Cc: Marek Vasut <marex@denx.de>
+>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>> ---
+>>>   .../devicetree/bindings/pci/designware-pcie.txt    |    1 +
+>>>   drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+>>>   2 files changed, 16 insertions(+), 2 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>> b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>> index d6fae13..8314360 100644
+>>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>>> @@ -6,6 +6,7 @@ Required properties:
+>>>   	as "samsung,exynos5440-pcie" or "fsl,imx6q-pcie".
+>>>   - reg: base addresses and lengths of the pcie controller,
+>>>   	the phy controller, additional register for the phy controller.
+>>> +	The configuration address space should also be specified here.
+>> Kishon,
+>>
+>> I am working on the Keystone PCI driver for which v1 is already posted.
+>> Want to clarify
+>> following.
+>> 1. Original text for reg states "base addresses and lengths of the pcie controller,
+>>         the phy controller, additional register for the phy controller"
+>> and you added
+>>         "The configuration address space should also be specified here"
+>>
+>>    and the code below added resource name "config"
+>>
+>> Does PCI designware follow some convention? Does it mean after applying this patch
+>> config name is mandatory or optional? Below code you are not returning error. Can you or
+>> author of PCI designware clarify what is expected to be present as mandatory and what is
+>> optional.
+>>
+>> Does config refers to RC's config space or EP's config space or both?
+>> The code below divide
+>> the size by 2. So it appears to be RC's + EP's config space. Please clarify.
+>>
+>>>   - interrupts: interrupt values for level interrupt,
+>>>   	pulse interrupt, special interrupt.
+>>>   - clocks: from common clock binding: handle to pci clock.
+>>> diff --git a/drivers/pci/host/pcie-designware.c
+>>> b/drivers/pci/host/pcie-designware.c
+>>> index c4e3732..603b386 100644
+>>> --- a/drivers/pci/host/pcie-designware.c
+>>> +++ b/drivers/pci/host/pcie-designware.c
+>>> @@ -20,6 +20,7 @@
+>>>   #include <linux/of_pci.h>
+>>>   #include <linux/pci.h>
+>>>   #include <linux/pci_regs.h>
+>>> +#include <linux/platform_device.h>
+>>>   #include <linux/types.h>
+>>>
+>>>   #include "pcie-designware.h"
+>>> @@ -392,11 +393,23 @@ static const struct irq_domain_ops msi_domain_ops = {
+>>>   int __init dw_pcie_host_init(struct pcie_port *pp)
+>>>   {
+>>>   	struct device_node *np = pp->dev->of_node;
+>>> +	struct platform_device *pdev = to_platform_device(pp->dev);
+>>>   	struct of_pci_range range;
+>>>   	struct of_pci_range_parser parser;
+>>> +	struct resource *cfg_res;
+>>>   	u32 val;
+>>>   	int i;
+>>>
+>>> +	cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+>>> +	if (cfg_res) {
+>>> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+>>> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+>>> +		pp->cfg0_base = cfg_res->start;
+>>> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+>>> +	} else {
+>>> +		dev_err(pp->dev, "missing *config* reg space\n");
+>> This should return error -EINVAL.
 
-Nothing controversial here me thinks.
+Just read the other thread and Grant Likely suggested the host controller
+driver should be backward compatible [1]. So we can't return -EINVAL here.
+So I'd assume this patch is fine as is? Arnd? Jingoo?
 
-Applied, thanks.
+[1] -> https://lkml.org/lkml/2014/6/3/124
 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mps11.txt
-> index d81ba30..f7c9180 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -1,5 +1,5 @@
-> =20
-> -* Samsung S2MPS11 and S2MPS14 Voltage and Current Regulator
-> +* Samsung S2MPS11, S2MPS14 and S2MPU02 Voltage and Current Regulator
-> =20
->  The Samsung S2MPS11 is a multi-function device which includes voltag=
-e and
->  current regulators, RTC, charger controller and other sub-blocks. It=
- is
-> @@ -7,7 +7,8 @@ interfaced to the host controller using an I2C interf=
-ace. Each sub-block is
->  addressed by the host system using different I2C slave addresses.
-> =20
->  Required properties:
-> -- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-p=
-mic".
-> +- compatible: Should be "samsung,s2mps11-pmic" or "samsung,s2mps14-p=
-mic"
-> +              or "samsung,s2mpu02-pmic".
->  - reg: Specifies the I2C slave address of the pmic block. It should =
-be 0x66.
-> =20
->  Optional properties:
-> @@ -81,11 +82,13 @@ as per the datasheet of s2mps11.
->  		  - valid values for n are:
->  			- S2MPS11: 1 to 38
->  			- S2MPS14: 1 to 25
-> +			- S2MPU02: 1 to 28
->  		  - Example: LDO1, LD02, LDO28
->  	- BUCKn
->  		  - valid values for n are:
->  			- S2MPS11: 1 to 10
->  			- S2MPS14: 1 to 5
-> +			- S2MPU02: 1 to 7
->  		  - Example: BUCK1, BUCK2, BUCK9
-> =20
->  Example:
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks
+Kishon
