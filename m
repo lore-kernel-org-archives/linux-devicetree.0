@@ -1,33 +1,88 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH v5] hwmon: Driver for TI TMP103 temperature sensor
-Date: Tue, 17 Jun 2014 23:15:24 -0700
-Message-ID: <53A12E7C.6040202@roeck-us.net>
-References: <1403069837-15651-1-git-send-email-hs@denx.de>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH] ARM: dts: remove display power domain for exynos5420
+Date: Wed, 18 Jun 2014 08:16:03 +0200
+Message-ID: <53A12EA3.5010007@samsung.com>
+References: <1402313299-18885-1-git-send-email-rahul.sharma@samsung.com>
+ <CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403069837-15651-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org
-Cc: Jean Delvare <khali-PUYAD+kWke1g9hUCZPvPmw@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAPdUM4OVjRSqVdQDUJZR7vGm1uUEYr31s-tx7Oxs8tM_xc2v7g@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, Rahul Sharma <r.sh.open@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2014 10:37 PM, Heiko Schocher wrote:
-> Driver for the TI TMP103.
->
-> The TI TMP103 is similar to the TMP102.  It differs from the TMP102
-> by having only 8 bit registers.
->
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
->
+On 06/17/2014 07:49 AM, Rahul Sharma wrote:
+> Hi All,
+> 
+> Please review this patch.
+> 
+> Regards,
+> Rahul Sharma
+> 
+> On 9 June 2014 16:58, Rahul Sharma <rahul.sharma@samsung.com> wrote:
+>> Display domain is removed due to instability issues. Explaining
+>> the problem below:
+>>
+>> exynos_init_late triggers the pm_genpd_poweroff_unused which
+>> powers off the unused power domains. This call hits before
+>> the trigger to deferred probes.
+>>
+>> DRM DP Panel defers the probe due to supply get failure. By the
+>> time, deferred probe is scheduled again, Display Power Domain is
+>> powered off by pm_genpd_poweroff_unused.
+>>
+>> FIMD and DP drivers are accessing registers during Probe and Bind
+>> callbacks. If display domain is enabled/disabled around register
+>> accesses, display domain gets unstable and we are getting Power
+>> Domain Disable fail notification. Increasing the Timeout also
+>> didn't help.
 
-Looks pretty good now. Applied.
+As I understand the problem is that fimd and dp drivers access hw
+registers without enabling power domain. So the proper solution is to
+fix these drivers.
 
-Thanks,
-Guenter
+Btw. there are already patches removing hw access from probe/bind of
+fimd. I guess removing also hw access from dp probe/bind could be a good
+solution.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards
+Andrzej
+
+>>
+>> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+>> ---
+>> based on Kukjin's for-next branch.
+>>
+>>  arch/arm/boot/dts/exynos5420.dtsi |    6 ------
+>>  1 file changed, 6 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
+>> index e385322..3d528cf 100644
+>> --- a/arch/arm/boot/dts/exynos5420.dtsi
+>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
+>> @@ -262,11 +262,6 @@
+>>                 reg = <0x10044060 0x20>;
+>>         };
+>>
+>> -       disp_pd: power-domain@100440C0 {
+>> -               compatible = "samsung,exynos4210-pd";
+>> -               reg = <0x100440C0 0x20>;
+>> -       };
+>> -
+>>         msc_pd: power-domain@10044120 {
+>>                 compatible = "samsung,exynos4210-pd";
+>>                 reg = <0x10044120 0x20>;
+>> @@ -518,7 +513,6 @@
+>>         };
+>>
+>>         fimd: fimd@14400000 {
+>> -               samsung,power-domain = <&disp_pd>;
+>>                 clocks = <&clock CLK_SCLK_FIMD1>, <&clock CLK_FIMD1>;
+>>                 clock-names = "sclk_fimd", "fimd";
+>>         };
+>> --
+>> 1.7.9.5
+>>
