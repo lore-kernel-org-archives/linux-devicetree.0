@@ -1,69 +1,78 @@
-From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
-Date: Wed, 18 Jun 2014 11:57:25 +0300
-Message-ID: <20140618085725.GI3407@tbergstrom-lnx.Nvidia.com>
-References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com>
- <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com>
- <539F4D44.3070309@wwwdotorg.org> <53A03186.3040703@collabora.com>
- <20140617223518.GA25309@mithrandir>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH net-next v2 3/3] devicetree: add devicetree bindings for
+ cc2520 driver
+Date: Wed, 18 Jun 2014 10:05:00 +0100
+Message-ID: <20140618090500.GA26461@leverpostej>
+References: <1403068565-32224-1-git-send-email-varkab@cdac.in>
+ <1403068565-32224-4-git-send-email-varkab@cdac.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20140617223518.GA25309@mithrandir>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1403068565-32224-4-git-send-email-varkab@cdac.in>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "alex.bluesman.smirnov@gmail.com" <alex.bluesman.smirnov@gmail.com>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "linux-zigbee-devel@lists.sourceforge.net" <linux-zigbee-devel@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Varka Bhadram <varkab@cdac.in>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 12:35:27AM +0200, Thierry Reding wrote:
-> * PGP Signed by an unknown key
+On Wed, Jun 18, 2014 at 06:16:05AM +0100, Varka Bhadram wrote:
+> devicetree bindings for cc2520 radio driver.
 > 
-> On Tue, Jun 17, 2014 at 02:16:06PM +0200, Tomeu Vizoso wrote:
-> > On 06/16/2014 10:02 PM, Stephen Warren wrote:
-> > >On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
-> > >>+
-> > >>+Child device nodes describe the memory settings for different configurations and
-> > >>+clock rates.
-> > >
-> > >How do the child nodes do that? The binding needs to specify the format
-> > >of the child node.
-> > 
-> > Sorry, that file was sent before I had finished removing the bits from
-> > downstream that aren't needed yet. There's no current need for any child
-> > nodes.
-> > 
-> > >This binding looks quite anaemic vs.
-> > >Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt; I
-> > >would expect that this binding needs all the EMC register data from the
-> > >tegra20-emc binding too. Can the two bindings be identical?
-> > 
-> > There's even less stuff needed right now, as all what ultimately the EMC
-> > driver does is call clk_set_rate on the EMC clock. As the T124 EMC driver
-> > gains more features, they should get more similar.
-> > 
-> > >Can you explain what the nvidia,mc and nvidia,pmc references are needed
-> > >for? Hopefully, this driver isn't going to reach into those devices and
-> > >touch their registers directly.
-> > 
-> > Not really needed, see above.
+> Signed-off-by: Varka Bhadram <varkab@cdac.in>
+> ---
+>  .../devicetree/bindings/net/ieee802154/cc2520.txt  |   26 ++++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
 > 
-> I've been working on a prototype driver for the memory controller. Part
-> of what I've added is programming of the latency allowance registers (it
-> doesn't yet expose an API to do so yet, though). I think that needs to
-> eventually take into account the EMC frequency (and needs to be notified
-> of changes to the same).
-> 
-> Without having thought this through very thoroughly, I suspect that
-> rather than referencing the MC from the EMC it might be better to have
-> the MC register with the EMC for notifications.
-> 
-> But perhaps there are other services from MC that EMC needs to work?
-> 
+> diff --git a/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt b/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+> new file mode 100644
+> index 0000000..f0a749d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+> @@ -0,0 +1,26 @@
+> +CC2520 IEEE 802.15.4 Compatible Radio
+> +
+> +Required properties:
+> +	- compatible:		should be "ti,cc2520"
+> +	- spi-max-frequency:	maximal bus speed (8000000), should be set to 4000000 depends
+> +				sync or async operation mode
+> +	- reg:			the chipselect index
+> +	- mode:			SPI mode
 
-If the emc frequency change is modelled as a clock, you could use CCF
-notifications for this?
+What exactly is this property? It doesn't seem to be used by the driver,
+the example is opaque, and this doesn't seem to match any existing
+bindings (a grep for "mode" in Documentation/devicetree/bindings/spi
+only found me a string "mode" property).
 
-Cheers,
+The example has several properties (the GPIOs and pinctrl) not listed
+here...
 
-Peter.
+Mark.
+
+> +Example:
+> +
+> +	cc2520@0 {
+> +		compatible = "ti,cc2520";
+> +		reg = <0>;
+> +		spi-max-frequency = <4000000>;
+> +		mode = <1>;
+> +
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&cc2520_cape_pins>;	/*GPIO pin muxing details*/
+> +
+> +		fifo-gpio = <&gpio1 18 0>;
+> +		fifop-gpio = <&gpio1 19 0>;
+> +		sfd-gpio = <&gpio1 13 0>;
+> +		cca-gpio = <&gpio1 16 0>;
+> +		vreg-gpio = <&gpio0 31 0>;
+> +		reset-gpio = <&gpio1 12 0>;
+> +	};
+> -- 
+> 1.7.9.5
+> 
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
