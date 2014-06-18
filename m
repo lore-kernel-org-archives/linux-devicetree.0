@@ -1,71 +1,252 @@
-From: Lothar =?UTF-8?B?V2HDn21hbm4=?= <LW@KARO-electronics.de>
-Subject: Re: [PATCH RFC 1/2] libahci_platform: add
- ahci_platform_get_of_property
-Date: Wed, 18 Jun 2014 09:37:25 +0200
-Message-ID: <20140618093725.0f381633@ipc1.ka-ro>
-References: <xuwei5@hisilicon.com, kefeng.wang@linaro.org,>
-	<1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org>
-	<1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCHv4 1/4] iio: adc: exynos_adc: Add exynos_adc_ops structure
+ to improve readability
+Date: Wed, 18 Jun 2014 09:55:35 +0200
+Message-ID: <53A145F7.8080000@gmail.com>
+References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com> <1403058061-24271-2-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: tj@kernel.org, hdegoede@redhat.com, arnd@arndb.de, mark.rutland@arm.com, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1403058061-24271-2-git-send-email-cw00.choi@samsung.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Chanwoo Choi <cw00.choi@samsung.com>, jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Chanwoo,
 
-Zhangfei Gao wrote:
-> Instead of setting hflags in different files,
-> ahci_platform_get_of_property set hpriv->flags when ahci_platform_ini=
-t_host
-> according to property in dts.
->=20
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+On 18.06.2014 04:20, Chanwoo Choi wrote:
+> This patchset add 'exynos_adc_ops' structure which includes some functions
+> to control ADC operation according to ADC version (v1 or v2).
+> 
+> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
 > ---
->  .../devicetree/bindings/ata/ahci-platform.txt      |    9 +++++
->  drivers/ata/libahci_platform.c                     |   39 ++++++++++=
-++++++++++
->  2 files changed, 48 insertions(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt =
-b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> index c96d8dcf98fd..c0b9f6e76ba4 100644
-> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-> @@ -26,6 +26,15 @@ Optional properties:
->  - clocks            : must contain the sata, sata_ref and ahb clocks
->  - clock-names       : must contain "ahb" for the ahb clock
-> =20
-> +- no-ncq: when present, controller can't do NCQ, turning off CAP_NCQ
-> +- 32bit-only: when present, controller can't do 64bit DMA, forcing 3=
-2bit
-> +- no-msi: when present, no PCI MSI
-> +- no-pmp: when present, controller can't do PMP, turning off CAP_PMP
-> +- yes-ncq: when present,controller can do NCQ, turning on CAP_NCQ
-> +- no-suspend: when present, controller can't do suspend
-> +- yes-fbs: when present, controller can do FBS, turning on CAP_FBS
-> +- no-fbs: when present, controller can't do FBS, turning off CAP_FBS
+>  drivers/iio/adc/exynos_adc.c | 174 +++++++++++++++++++++++++++++--------------
+>  1 file changed, 120 insertions(+), 54 deletions(-)
+> 
+> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
+> index 010578f..c30def6 100644
+> --- a/drivers/iio/adc/exynos_adc.c
+> +++ b/drivers/iio/adc/exynos_adc.c
+> @@ -90,6 +90,7 @@ struct exynos_adc {
+>  	struct clk		*clk;
+>  	unsigned int		irq;
+>  	struct regulator	*vdd;
+> +	struct exynos_adc_ops	*ops;
+>  
+>  	struct completion	completion;
+>  
+> @@ -97,6 +98,13 @@ struct exynos_adc {
+>  	unsigned int            version;
+>  };
+>  
+> +struct exynos_adc_ops {
+> +	void (*init_hw)(struct exynos_adc *info);
+> +	void (*clear_irq)(struct exynos_adc *info);
+> +	void (*start_conv)(struct exynos_adc *info, unsigned long addr);
+> +	void (*stop_conv)(struct exynos_adc *info);
+> +};
 > +
-'yes-...' sounds a bit silly to me.
-What about 'force-...'?
-That's also what the comment to the flag definitions in
-drivers/ata/ahci.h says:
-|AHCI_HFLAG_YES_NCQ              =3D (1 << 9), /* force NCQ cap on */
-|AHCI_HFLAG_YES_FBS              =3D (1 << 14), /* force FBS cap on */
+>  static const struct of_device_id exynos_adc_match[] = {
+>  	{ .compatible = "samsung,exynos-adc-v1", .data = (void *)ADC_V1 },
+>  	{ .compatible = "samsung,exynos-adc-v2", .data = (void *)ADC_V2 },
+> @@ -112,30 +120,98 @@ static inline unsigned int exynos_adc_get_version(struct platform_device *pdev)
+>  	return (unsigned int)match->data;
+>  }
+>  
+> -static void exynos_adc_hw_init(struct exynos_adc *info)
+> +static void exynos_adc_v1_init_hw(struct exynos_adc *info)
+> +{
+> +	u32 con1;
+> +
+> +	/* set default prescaler values and Enable prescaler */
+> +	con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
+> +
+> +	/* Enable 12-bit ADC resolution */
+> +	con1 |= ADC_V1_CON_RES;
+> +	writel(con1, ADC_V1_CON(info->regs));
+> +}
+> +
+> +static void exynos_adc_v1_start_conv(struct exynos_adc *info, unsigned long addr)
+> +{
+> +	u32 con1;
+> +
+> +	writel(addr, ADC_V1_MUX(info->regs));
+> +
+> +	con1 = readl(ADC_V1_CON(info->regs));
+> +	writel(con1 | ADC_CON_EN_START, ADC_V1_CON(info->regs));
+> +}
+> +
+> +static void exynos_adc_v1_clear_irq(struct exynos_adc *info)
+> +{
+> +	writel(1, ADC_V1_INTCLR(info->regs));
+> +}
+> +
+> +static void exynos_adc_v1_stop_conv(struct exynos_adc *info)
+> +{
+> +	u32 con;
+> +
+> +	con = readl(ADC_V1_CON(info->regs));
+> +	con |= ADC_V1_CON_STANDBY;
+> +	writel(con, ADC_V1_CON(info->regs));
+> +}
+> +
+> +static struct exynos_adc_ops exynos_adc_v1_ops = {
+> +	.init_hw	= exynos_adc_v1_init_hw,
+> +	.clear_irq	= exynos_adc_v1_clear_irq,
+> +	.start_conv	= exynos_adc_v1_start_conv,
+> +	.stop_conv	= exynos_adc_v1_stop_conv,
+> +};
+> +
+> +static void exynos_adc_v2_init_hw(struct exynos_adc *info)
+>  {
+>  	u32 con1, con2;
+>  
+> -	if (info->version == ADC_V2) {
+> -		con1 = ADC_V2_CON1_SOFT_RESET;
+> -		writel(con1, ADC_V2_CON1(info->regs));
+> +	con1 = ADC_V2_CON1_SOFT_RESET;
+> +	writel(con1, ADC_V2_CON1(info->regs));
+>  
+> -		con2 = ADC_V2_CON2_OSEL | ADC_V2_CON2_ESEL |
+> -			ADC_V2_CON2_HIGHF | ADC_V2_CON2_C_TIME(0);
+> -		writel(con2, ADC_V2_CON2(info->regs));
+> +	con2 = ADC_V2_CON2_OSEL | ADC_V2_CON2_ESEL |
+> +		ADC_V2_CON2_HIGHF | ADC_V2_CON2_C_TIME(0);
+> +	writel(con2, ADC_V2_CON2(info->regs));
+>  
+> -		/* Enable interrupts */
+> -		writel(1, ADC_V2_INT_EN(info->regs));
+> -	} else {
+> -		/* set default prescaler values and Enable prescaler */
+> -		con1 =  ADC_V1_CON_PRSCLV(49) | ADC_V1_CON_PRSCEN;
+> +	/* Enable interrupts */
+> +	writel(1, ADC_V2_INT_EN(info->regs));
+> +}
+>  
+> -		/* Enable 12-bit ADC resolution */
+> -		con1 |= ADC_V1_CON_RES;
+> -		writel(con1, ADC_V1_CON(info->regs));
+> -	}
+> +static void exynos_adc_v2_start_conv(struct exynos_adc *info, unsigned long addr)
+> +{
+> +	u32 con1, con2;
+> +
+> +	con2 = readl(ADC_V2_CON2(info->regs));
+> +	con2 &= ~ADC_V2_CON2_ACH_MASK;
+> +	con2 |= ADC_V2_CON2_ACH_SEL(addr);
+> +	writel(con2, ADC_V2_CON2(info->regs));
+> +
+> +	con1 = readl(ADC_V2_CON1(info->regs));
+> +	writel(con1 | ADC_CON_EN_START, ADC_V2_CON1(info->regs));
+> +}
+> +
+> +static void exynos_adc_v2_clear_irq(struct exynos_adc *info)
+> +{
+> +	writel(1, ADC_V2_INT_ST(info->regs));
+> +}
+> +
+> +static void exynos_adc_v2_stop_conv(struct exynos_adc *info)
+> +{
+> +	u32 con;
+> +
+> +	con = readl(ADC_V2_CON1(info->regs));
+> +	con &= ~ADC_CON_EN_START;
+> +	writel(con, ADC_V2_CON1(info->regs));
+>  }
+>  
+> +static struct exynos_adc_ops exynos_adc_v2_ops = {
+> +	.init_hw	= exynos_adc_v2_init_hw,
+> +	.start_conv	= exynos_adc_v2_start_conv,
+> +	.clear_irq	= exynos_adc_v2_clear_irq,
+> +	.stop_conv	= exynos_adc_v2_stop_conv,
+> +};
+> +
+>  static int exynos_read_raw(struct iio_dev *indio_dev,
+>  				struct iio_chan_spec const *chan,
+>  				int *val,
+> @@ -144,7 +220,6 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
+>  {
+>  	struct exynos_adc *info = iio_priv(indio_dev);
+>  	unsigned long timeout;
+> -	u32 con1, con2;
+>  	int ret;
+>  
+>  	if (mask != IIO_CHAN_INFO_RAW)
+> @@ -154,28 +229,15 @@ static int exynos_read_raw(struct iio_dev *indio_dev,
+>  	reinit_completion(&info->completion);
+>  
+>  	/* Select the channel to be used and Trigger conversion */
+> -	if (info->version == ADC_V2) {
+> -		con2 = readl(ADC_V2_CON2(info->regs));
+> -		con2 &= ~ADC_V2_CON2_ACH_MASK;
+> -		con2 |= ADC_V2_CON2_ACH_SEL(chan->address);
+> -		writel(con2, ADC_V2_CON2(info->regs));
+> -
+> -		con1 = readl(ADC_V2_CON1(info->regs));
+> -		writel(con1 | ADC_CON_EN_START,
+> -				ADC_V2_CON1(info->regs));
+> -	} else {
+> -		writel(chan->address, ADC_V1_MUX(info->regs));
+> -
+> -		con1 = readl(ADC_V1_CON(info->regs));
+> -		writel(con1 | ADC_CON_EN_START,
+> -				ADC_V1_CON(info->regs));
+> -	}
+> +	if (info->ops->start_conv)
+> +		info->ops->start_conv(info, chan->address);
+>  
+>  	timeout = wait_for_completion_timeout
+>  			(&info->completion, EXYNOS_ADC_TIMEOUT);
+>  	if (timeout == 0) {
+>  		dev_warn(&indio_dev->dev, "Conversion timed out! Resetting\n");
+> -		exynos_adc_hw_init(info);
+> +		if (info->ops->init_hw)
+> +			info->ops->init_hw(info);
+>  		ret = -ETIMEDOUT;
+>  	} else {
+>  		*val = info->value;
+> @@ -193,13 +255,11 @@ static irqreturn_t exynos_adc_isr(int irq, void *dev_id)
+>  	struct exynos_adc *info = (struct exynos_adc *)dev_id;
+>  
+>  	/* Read value */
+> -	info->value = readl(ADC_V1_DATX(info->regs)) &
+> -						ADC_DATX_MASK;
+> +	info->value = readl(ADC_V1_DATX(info->regs)) & ADC_DATX_MASK;
+> +
+>  	/* clear irq */
+> -	if (info->version == ADC_V2)
+> -		writel(1, ADC_V2_INT_ST(info->regs));
+> -	else
+> -		writel(1, ADC_V1_INTCLR(info->regs));
+> +	if (info->ops->clear_irq)
+> +		info->ops->clear_irq(info);
+>  
+>  	complete(&info->completion);
+>  
+> @@ -277,6 +337,19 @@ static int exynos_adc_probe(struct platform_device *pdev)
+>  
+>  	info = iio_priv(indio_dev);
+>  
+> +	info->version = exynos_adc_get_version(pdev);
+> +	switch (info->version) {
+> +	case ADC_V1:
+> +		info->ops = &exynos_adc_v1_ops;
+> +		break;
+> +	case ADC_V2:
+> +		info->ops = &exynos_adc_v2_ops;
+> +		break;
+> +	default:
+> +		dev_err(&pdev->dev, "failed to identify ADC version\n");
+> +		return -EINVAL;
+> +	};
 
+Just drop the enum completely and assign the struct pointer directly to
+driver data fields in match tables. I also suspect that the struct
+should be "variant" not "ops", because it will also require other data
+than function pointers, e.g. "needs_sclk".
 
-Lothar Wa=C3=9Fmann
---=20
-___________________________________________________________
-
-Ka-Ro electronics GmbH | Pascalstra=C3=9Fe 22 | D - 52076 Aachen
-Phone: +49 2408 1402-0 | Fax: +49 2408 1402-10
-Gesch=C3=A4ftsf=C3=BChrer: Matthias Kaussen
-Handelsregistereintrag: Amtsgericht Aachen, HRB 4996
-
-www.karo-electronics.de | info@karo-electronics.de
-___________________________________________________________
+Best regards,
+Tomasz
