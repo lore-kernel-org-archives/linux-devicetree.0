@@ -1,96 +1,31 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v2 07/10] regulator: Add driver for Maxim 77802 PMIC
- regulators
-Date: Wed, 18 Jun 2014 15:10:48 +0100
-Message-ID: <20140618141048.GA15956@lee--X1>
-References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>
- <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk>
- <20140617211747.GY29841@lee--X1>
- <53A16047.7010409@collabora.co.uk>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCHv2] ARM: dts: imx6: add support for Ka-Ro TX6 modules
+Date: Wed, 18 Jun 2014 22:28:46 +0800
+Message-ID: <20140618142845.GN8860@dragon>
+References: <1402578317-12566-1-git-send-email-LW@KARO-electronics.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53A16047.7010409@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1402578317-12566-1-git-send-email-LW@KARO-electronics.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jun 2014, Javier Martinez Canillas wrote:
-
-> Hello Lee,
+On Thu, Jun 12, 2014 at 03:05:17PM +0200, Lothar Wa=DFmann wrote:
+> This patch adds support for the Ka-Ro electronics GmbH TX6 modules.
+> There are five distinct module types with either i.MX6Q or i.MX6DL an=
+d
+> LVDS or LCD display interface and one DTS file for a complete system
+> with an i.MX6DL based TX6 module and a baseboard mounted on the back
+> of a display (imx6dl-tx6dl-comtft.dts).
 >=20
-> Thanks a lot for your feedback.
+> Changes wrt. v1
+> - addressed comments by Shawn Guo
 >=20
-> On 06/17/2014 11:17 PM, Lee Jones wrote:
-> >> The MAX77802 PMIC has 10 high-efficiency Buck and 32 Low-dropout
-> >> (LDO) regulators. This patch adds support for all these regulators
-> >> found on the MAX77802 PMIC and is based on a driver added by Simon
-> >> Glass to the Chrome OS kernel 3.8 tree.
-> >>=20
-> >> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora=
-=2Eco.uk>
-> >> ---
-> >>=20
-> >> Changes since v1:
-> >>  - Remove unneeded check if num_regulators !=3D MAX77802_MAX_REGUL=
-ATORS.
-> >>  - Fix .set_suspend_mode handler comment and split regulators ops =
-for
-> >>    regulators that behave differently. Suggested by Mark Brown.
-> >>  - Use module_platform_driver() instead of having init/exit functi=
-ons.
-> >>    Suggested by Mark Brown.
-> >>  - Use the new descriptor-based GPIO interface instead of the depr=
-ecated
-> >>    integer based GPIO one. Suggested by Mark Brown.
-> >>  - Look for "regulators" child node instead of "voltage-regulators=
-" to be
-> >>    consistent with other PMIC drivers. Suggested by Mark Brown.
-> >>=20
-> >>  drivers/mfd/max77802.c       |   1 +
-> >=20
-> > Can you remove all of the MFD changes from patches 7, 8 and 9 and
-> > create new one.  That way there's no requirement for any cross
-> > subsystem messiness.
-> >=20
 >=20
-> Sure, Mark already suggested the same and I'll do it on the next vers=
-ion.
->=20
-> But there still be some cross-subsystem dependency/messiness since th=
-e
-> regulator, clk and rtc drivers include the mfd max77802 headers that =
-are added
-> in Patch 6.
+> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
 
-What I should have said was _avoidable_ or _unnecessary_ messiness.
-
-> So I guess you should either a) take the whole patch-set through your=
- mfd tree
-> or b) merge the mfd patches and create an immutable branch that can b=
-e pulled by
-> Mark, Mike and Alessandro.
->=20
-> I don't know what's the preferred workflow in these cases...
-
-That's fine.  I'm happy to create shared branches when required.
-
-> >>  drivers/regulator/Kconfig    |   9 +
-> >>  drivers/regulator/Makefile   |   1 +
-> >>  drivers/regulator/max77802.c | 701 ++++++++++++++++++++++++++++++=
-+++++++++++++
-> >>  4 files changed, 712 insertions(+)
-> >>  create mode 100644 drivers/regulator/max77802.c
-> >=20
->=20
-> Best regards,
-> Javier
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Applied, thanks.
