@@ -1,45 +1,78 @@
-From: "S. Fricke" <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v11 2/8] ASoC: core: Generic ac97 link reset functions
-Date: Wed, 18 Jun 2014 20:42:34 +0200
-Message-ID: <20140618184234.GA27312@sfrouter>
-References: <1376924761-4054-1-git-send-email-mpa@pengutronix.de>
- <1376924761-4054-3-git-send-email-mpa@pengutronix.de>
+From: Stephen Boyd <sboyd@codeaurora.org>
+Subject: Re: [PATCH v3 1/3] soc: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Wed, 18 Jun 2014 12:16:17 -0700
+Message-ID: <53A1E581.7010004@codeaurora.org>
+References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com> <1402944372-31901-2-git-send-email-bjorn.andersson@sonymobile.com> <53A0D651.20605@codeaurora.org> <53A14F00.9010904@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1376924761-4054-3-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <53A14F00.9010904@linaro.org>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 06/18/14 01:34, Srinivas Kandagatla wrote:
+>
+>
+> On 18/06/14 00:59, Stephen Boyd wrote:
+>> On 06/16/14 11:46, Bjorn Andersson wrote:
+>>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>>> b/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>>> new file mode 100644
+>>> index 0000000..0366533
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>>> @@ -0,0 +1,260 @@
+>>> +Qualcomm Resource Power Manager (RPM)
+>>> +
+>> [...]
+>>> +
+>>> +- reg:
+>>> +    Usage: required
+>>> +    Value type: <prop-encoded-array>
+>>> +    Definition: two entries specifying the RPM's message ram and
+>>> ipc register
+>>> +
+>>> +- reg-names:
+>>> +    Usage: required
+>>> +    Value type: <string-array>
+>>> +    Definition: must contain the following, in order:
+>>> +            "msg_ram"
+>>> +            "ipc"
+>>
+>> ipc is concerning....
+>>
+>>> +    rpm@108000 {
+>>> +        compatible = "qcom,rpm-msm8960";
+>>> +        reg = <0x108000 0x1000 0x2011008 0x4>;
+>>> +
+>>
+>> (reg-names is missing from the example)
+>>
+>> because ipc is actually a register inside the Krait complex's global
+>> clock control/distribution hardware block (it's located at 0x2011000).
+>>  From what I can tell, this is the only non-clock/power register inside
+>> there. I plan to send out a driver for this hardware block so that I can
+>> switch the L2 aux source mux over to PLL8 instead of PXO (done with a
+>> single register write to 0x2011028) and this mapping/use here is going
+>> to conflict with that unless I only map the single register like is done
+>> here.
+>>
+>> I wonder if we'd be better off making this region a separate node and
+>> having some phandle to it here in the RPM node? That way we have a
+>
+> Can't we use syscon based on regmap here?  syscon is a better way to
+> share a common register space across multiple drivers.
 
-Hi Markus,
-
-I'm fighting with your ac97 pinctrl configuration per dts. 
-
-> [...]
-> +ssi {
-> +	...
-> +
-> +	pinctrl-names = "default", "ac97-running", "ac97-reset", "ac97-warm-reset";
-> +	pinctrl-0 = <&ac97link_running>;
-> +	pinctrl-1 = <&ac97link_running>;
-> +	pinctrl-2 = <&ac97link_reset>;
-> +	pinctrl-3 = <&ac97link_warm_reset>;
-> +	ac97-gpios = <&gpio3 20 0 &gpio3 22 0 &gpio3 28 0>;
-
-I see here the gpios for sync, sdata and reset. On my board I have two sdata
-lines (sdata-in and sdata-out) which line should I specify here for this setting?
-
-Thanks for a short answer and
-Cheers, Silvio
-
+How would the mux clock be registered? I'd like it to be registered by
+the driver associated with this device with something like
+devm_clk_register(). From what I can tell syscon wouldn't allow that
+unless we extend the syscon driver to handle more specific compatible
+strings.
 
 -- 
--- S. Fricke ---------------------------------------- silvio-lOxvEG+uzzjk1uMJSBkQmQ@public.gmane.org --
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
