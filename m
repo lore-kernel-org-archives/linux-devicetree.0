@@ -1,114 +1,108 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH v4 3/4] ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
-Date: Wed, 18 Jun 2014 11:02:12 +0300
-Message-ID: <53A14784.1030008@ti.com>
-References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274559-24777-1-git-send-email-rogerq@ti.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: CPU revision IDs
+Date: Wed, 18 Jun 2014 10:07:48 +0200
+Message-ID: <20140618080748.GF19730@lukather>
+References: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com>
+ <4285095.l6sVUI20tQ@wuerfel>
+ <CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ@mail.gmail.com>
+ <5045739.TmqqIG2CDG@wuerfel>
+ <CAKON4Ox+tCgiu6N988ds7ED2KbECw=60Y6BRqV_2UcM+vshw4Q@mail.gmail.com>
+ <20140613132022.GJ3448@lukather>
+ <CAKON4OxZLaL9sJFPjnUhec_LMZKGvGXrKyUjW-whHzY6byVUxw@mail.gmail.com>
+ <20140613135817.GK3448@lukather>
+ <CAKON4Oz44X7G+yM2R-XX_D_6FV4ekWiOKY2t_p0Y3+gUXJ17iw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1398274559-24777-1-git-send-email-rogerq@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tony@atomide.com, "Menon, Nishanth" <nm@ti.com>, Rajendra Nayak <rnayak@ti.com>
-Cc: kishon@ti.com, george.cherian@ti.com, balbi@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nikhil Devshatwar <nikhil.nd@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="m1UC1K4AOz1Ywdkx"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <CAKON4Oz44X7G+yM2R-XX_D_6FV4ekWiOKY2t_p0Y3+gUXJ17iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 04/23/2014 08:35 PM, Roger Quadros wrote:
-> From: Nikhil Devshatwar <nikhil.nd@ti.com>
-> 
-> Add hwmods for ocp2scp3 and sata modules.
-> 
-> [Roger Q] Clean up.
-> 
-> CC: Benoit Cousson <bcousson@baylibre.com>
-> CC: Paul Walmsley <paul@pwsan.com>
-> Signed-off-by: Balaji T K <balajitk@ti.com>
-> Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
 
-Tested-by: Roger Quadros <rogerq@ti.com>
-against 3.16-rc1, no dependency patches needed.
+--m1UC1K4AOz1Ywdkx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Nishant/Rajendra,
+On Fri, Jun 13, 2014 at 10:37:37AM -0400, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
+> >> Then I end up with code in the machine file like this...
+> >>
+> >> find SOC revision
+> >> if revision =3D=3D A
+> >>     fix up codec and i2s driver compatible
+> >> if revision =3D=3D B
+> >>     fix up HDMI compatible
+> >> if revision =3D=3D C
+> >>     fix up whatever
+> >> I've seen chips with revision levels of J
+> >>
+> >> Why do you want this knowledge in the machine file? Why not just add
+> >> the test for SOC revision inside the device driver?
+> >
+> > Because it's going to be a mess anyway. No matter if it's in the
+> > driver or the machine code. So at least, that way, we're having it
+> > centralized and isolated from the driver's code.
+>=20
+> The mess is always going to be in the driver code. You are just
+> changing the the string the driver code selects on...
+>=20
+> if (of_machine_is_compatible("allwinner,sun7i-codec-rev-a")) {
+>       fix bug
+> }
+>=20
+> if (of_machine_is_compatible("allwinner,sun7i-a20a")) {
+>       fix bug
+> }
 
-Could you please review this? We need this for 3.16 SATA support and
-Paul won't take this in without your reviewed-by tag. Thanks.
+What? Hmmm, nope. Look at how we're doing this for the i2c driver
+(drivers/i2c/busses/i2c-mv64xxx.c).
 
-cheers,
--roger
+> The mess is not required in the machine file.  Init time code can
+> always modify the machine compatible string like this with no side
+> effects. It would add 'a'-'j' as appropriate for the CPU.
+>=20
+> Code changes this:
+>  compatible =3D "cubietech,cubietruck", "allwinner,sun7i-a20"
+> to:
+>  compatible =3D "cubietech,cubietruck",  "allwinner,sun7i-a20-a",
+> "allwinner,sun7i-a20"
 
-> ---
->  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 31 ++++++++++++++++++++++++++-----
->  1 file changed, 26 insertions(+), 5 deletions(-)
-> 
-> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> index 810c205..b02a4ab 100644
-> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
-> @@ -1215,6 +1215,30 @@ static struct omap_hwmod dra7xx_ocp2scp1_hwmod = {
->  	},
->  };
->  
-> +/* ocp2scp3 */
-> +static struct omap_hwmod dra7xx_ocp2scp3_hwmod;
-> +
-> +/* l4_cfg -> ocp2scp3 */
-> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__ocp2scp3 = {
-> +	.master		= &dra7xx_l4_cfg_hwmod,
-> +	.slave		= &dra7xx_ocp2scp3_hwmod,
-> +	.clk		= "l4_root_clk_div",
-> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
-> +};
-> +
-> +static struct omap_hwmod dra7xx_ocp2scp3_hwmod = {
-> +	.name		= "ocp2scp3",
-> +	.class		= &dra7xx_ocp2scp_hwmod_class,
-> +	.clkdm_name	= "l3init_clkdm",
-> +	.prcm = {
-> +		.omap4 = {
-> +			.clkctrl_offs = DRA7XX_CM_L3INIT_OCP2SCP3_CLKCTRL_OFFSET,
-> +			.context_offs = DRA7XX_RM_L3INIT_OCP2SCP3_CONTEXT_OFFSET,
-> +			.modulemode   = MODULEMODE_HWCTRL,
-> +		},
-> +	},
-> +};
-> +
->  /*
->   * 'qspi' class
->   *
-> @@ -1268,9 +1292,6 @@ static struct omap_hwmod_class dra7xx_sata_hwmod_class = {
->  };
->  
->  /* sata */
-> -static struct omap_hwmod_opt_clk sata_opt_clks[] = {
-> -	{ .role = "ref_clk", .clk = "sata_ref_clk" },
-> -};
->  
->  static struct omap_hwmod dra7xx_sata_hwmod = {
->  	.name		= "sata",
-> @@ -1278,6 +1299,7 @@ static struct omap_hwmod dra7xx_sata_hwmod = {
->  	.clkdm_name	= "l3init_clkdm",
->  	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
->  	.main_clk	= "func_48m_fclk",
-> +	.mpu_rt_idx	= 1,
->  	.prcm = {
->  		.omap4 = {
->  			.clkctrl_offs = DRA7XX_CM_L3INIT_SATA_CLKCTRL_OFFSET,
-> @@ -1285,8 +1307,6 @@ static struct omap_hwmod dra7xx_sata_hwmod = {
->  			.modulemode   = MODULEMODE_SWCTRL,
->  		},
->  	},
-> -	.opt_clks	= sata_opt_clks,
-> -	.opt_clks_cnt	= ARRAY_SIZE(sata_opt_clks),
->  };
->  
->  /*
-> @@ -2682,6 +2702,7 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
->  	&dra7xx_l4_per1__mmc4,
->  	&dra7xx_l4_cfg__mpu,
->  	&dra7xx_l4_cfg__ocp2scp1,
-> +	&dra7xx_l4_cfg__ocp2scp3,
->  	&dra7xx_l3_main_1__qspi,
->  	&dra7xx_l4_cfg__sata,
->  	&dra7xx_l4_cfg__smartreflex_core,
-> 
+Again, this is the machine compatible, and this is orthogonal to the
+issue. You should have a different compatible string for the *codec*.
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--m1UC1K4AOz1Ywdkx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJToUjUAAoJEBx+YmzsjxAgT3UQAJT7AFJsWwPZV3uIXAe3NgRV
+JT2fVG0SM2WQAg9L7QeANO+iqA3pTtDFrbmtj9JgCKd6sY8ebKuPyiIuWRVVoZDQ
+ak79jnL/C+BeWBMVVhx1iryFg7UgPITLqDzs65dgabdZpfs6q314qLCOVCvPt3aU
+LGDhXMHrf6DAjCsjV+WAVBpcRqeDQ/+zr4GwMX1nKzem8yu0yJGnOWSXtxkoGlHE
+rMTa7NYsJru5ODRQh3yGVS7sRcgGT7HYmTtabABkxv2+g0BVLZQYuhvotDTv/TCg
+Zz5qlhmqYSRyLVpGjSwSue4IvyhbLajaICUihJ9za0Hai5N+R9N0R78v0wXCziQO
++XjjjbSXhLoWj8iqzSjaGDKKCCj5HmPzeX3am7HwhHEe/qW8VczEo79ksAG/kyT6
+ZFAqtI1+7hYmhZaCbetAUgqjofqx3J1rQHpYKpmk0H93fR/8vy2rGp9z334n50p6
+1DpA46HjOGfB7tBd9o1ebYMAPL6SUMylphjHbp/Iz04+ptxOn7jfMWnWGxjBSDB5
+IKY8RsoKENXHKMt6r16yfcvtlWGmPqEC3gXOG+JkL8L624dazlI32o2NKLSy6/Kn
+SCh/a6K2xX41s+224MWte851y6REoeywHcBivikFL3cJO7oAzNnDAMnA0X/nAlR+
+lUrGz+zpgddpoTtIkpXX
+=an7G
+-----END PGP SIGNATURE-----
+
+--m1UC1K4AOz1Ywdkx--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
