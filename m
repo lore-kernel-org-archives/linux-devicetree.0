@@ -1,87 +1,60 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: stih41x: Rename stih416-b2020-revE.dts to
- stih416-b2020e.dts
-Date: Wed, 18 Jun 2014 12:21:32 +0100
-Message-ID: <20140618112132.GE8300@lee--X1>
-References: <1403087508-6710-1-git-send-email-lee.jones@linaro.org>
- <20140618105438.GC8300@lee--X1>
- <53A1734D.7000606@st.com>
+From: Rajendra Nayak <rnayak@ti.com>
+Subject: Re: [PATCH v3 5/7] ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
+Date: Wed, 18 Jun 2014 16:49:56 +0530
+Message-ID: <53A175DC.8080709@ti.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <1399283686-6127-6-git-send-email-rogerq@ti.com> <53A173A5.7020509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53A1734D.7000606-qxv4g6HH51o@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53A173A5.7020509@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: kishon@ti.com, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com, "Menon, Nishanth" <nm@ti.com>, george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jun 2014, Maxime Coquelin wrote:
+On Wednesday 18 June 2014 04:40 PM, Roger Quadros wrote:
+> + Nishant and Rajendra for review.
+> 
+> On 05/05/2014 12:54 PM, Roger Quadros wrote:
+>> Add the sysconfig class bits for the Super Speed USB
+>> controllers
+>>
+>> CC: Paul Walmsley <paul@pwsan.com>
+>> Signed-off-by: Roger Quadros <rogerq@ti.com>
 
-> Hi Lee,
->=20
-> On 06/18/2014 12:54 PM, Lee Jones wrote:
-> >Two reasons for this rename.  Firstly, it removes the camel case
-> >convention which isn't used by any other platform and secondly it
-> >matches the naming convention for the internal kernel, which can
-> >become annoying when flipping between the two.
-> >
-> >Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->=20
-> Acked-by: Maxime Coquelin <maxime.coquelin-qxv4g6HH51o@public.gmane.org>
->=20
-> It will be part of the STi pull-request for 3.16 fixes.
+verified against TRM version vP, looks good to me.
+Reviewed-by: Rajendra Nayak <rnayak@ti.com>
 
-Thanks for taking the patch. :)
+>> ---
+>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 12 ++++++++++++
+>>  1 file changed, 12 insertions(+)
+>>
+>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> index 810c205..067d322 100644
+>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>> @@ -1731,8 +1731,20 @@ static struct omap_hwmod dra7xx_uart6_hwmod = {
+>>   *
+>>   */
+>>  
+>> +static struct omap_hwmod_class_sysconfig dra7xx_usb_otg_ss_sysc = {
+>> +	.rev_offs	= 0x0000,
+>> +	.sysc_offs	= 0x0010,
+>> +	.sysc_flags	= (SYSC_HAS_DMADISABLE | SYSC_HAS_MIDLEMODE |
+>> +			   SYSC_HAS_SIDLEMODE),
+>> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+>> +			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
+>> +			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
+>> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+>> +};
+>> +
+>>  static struct omap_hwmod_class dra7xx_usb_otg_ss_hwmod_class = {
+>>  	.name	= "usb_otg_ss",
+>> +	.sysc	= &dra7xx_usb_otg_ss_sysc,
+>>  };
+>>  
+>>  /* usb_otg_ss1 */
+>>
+> 
 
-Just a quick side note.  As a maintainer, if you're going to take the
-patch there's no requirement to publicly Ack it.  Just let the
-submitter know that you've applied it to your tree.
-
-I use Acks for 2 things; when a patch touches code that I maintain,
-but is going in via a different tree, or as a marker if there is some
-reason I can't apply it to my tree right away (waiting on dependencies
-etc), but equally do not wish to review the same patch twice.
-
-> >---
-> >v1 -> v2: Appropriate change to the Makefile.
-> >---
-> >  arch/arm/boot/dts/Makefile                                       |=
- 2 +-
-> >  arch/arm/boot/dts/{stih416-b2020-revE.dts =3D> stih416-b2020e.dts}=
- | 0
-> >  2 files changed, 1 insertion(+), 1 deletion(-)
-> >  rename arch/arm/boot/dts/{stih416-b2020-revE.dts =3D> stih416-b202=
-0e.dts} (100%)
-> >
-> >diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> >index 5986ff6..adb5ed9 100644
-> >--- a/arch/arm/boot/dts/Makefile
-> >+++ b/arch/arm/boot/dts/Makefile
-> >@@ -357,7 +357,7 @@ dtb-$(CONFIG_ARCH_STI)+=3D stih407-b2120.dtb \
-> >         stih415-b2020.dtb \
-> >         stih416-b2000.dtb \
-> >         stih416-b2020.dtb \
-> >-       stih416-b2020-revE.dtb
-> >+       stih416-b2020e.dtb
-> >  dtb-$(CONFIG_MACH_SUN4I) +=3D \
-> >         sun4i-a10-a1000.dtb \
-> >         sun4i-a10-cubieboard.dtb \
-> >diff --git a/arch/arm/boot/dts/stih416-b2020-revE.dts b/arch/arm/boo=
-t/dts/stih416-b2020e.dts
-> >similarity index 100%
-> >rename from arch/arm/boot/dts/stih416-b2020-revE.dts
-> >rename to arch/arm/boot/dts/stih416-b2020e.dts
-> >
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
