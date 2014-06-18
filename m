@@ -1,70 +1,89 @@
-From: Nicolas Pitre <nicolas.pitre@linaro.org>
-Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states
- bindings
-Date: Wed, 18 Jun 2014 17:09:48 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1406181704240.16842@knanqh.ubzr>
-References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com> <1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com> <alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr> <20140613164954.GA16745@e102568-lin.cambridge.arm.com>
- <alpine.LFD.2.11.1406131306160.25775@knanqh.ubzr> <20140618173648.GB31573@e102568-lin.cambridge.arm.com> <53A1E818.6030400@ti.com> <alpine.LFD.2.11.1406181641290.16842@knanqh.ubzr> <53A1FCD1.8070703@ti.com>
+From: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [PATCH v11 2/8] ASoC: core: Generic ac97 link reset functions
+Date: Wed, 18 Jun 2014 23:19:33 +0200
+Message-ID: <20140618211933.GD32450@pengutronix.de>
+References: <1376924761-4054-1-git-send-email-mpa@pengutronix.de>
+ <1376924761-4054-3-git-send-email-mpa@pengutronix.de>
+ <20140618184234.GA27312@sfrouter>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <53A1FCD1.8070703@ti.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Santosh Shilimkar <santosh.shilimkar@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@k>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="pZs/OQEoSSbxGlYw"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140618184234.GA27312@sfrouter>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "S. Fricke" <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 18 Jun 2014, Santosh Shilimkar wrote:
 
-> On Wednesday 18 June 2014 04:51 PM, Nicolas Pitre wrote:
-> > On Wed, 18 Jun 2014, Santosh Shilimkar wrote:
-> > 
-> >> On Wednesday 18 June 2014 01:36 PM, Lorenzo Pieralisi wrote:
-> >> [..]
-> >>> +	To correctly specify idle states timing and energy related properties,
-> >>> +	the following definitions identify the different execution phases
-> >>> +	a CPU goes through to enter and exit idle states and the implied
-> >>> +	energy metrics:
-> >>> +
-> >>> +	..__[EXEC]__|__[PREP]__|__[ENTRY]__|__[IDLE]__|__[EXIT]__|__[EXEC]__..
-> >>> +		    |          |           |          |          |
-> >>> +
-> >>> +		    |<------ entry ------->|
-> >>> +		    |       latency        |
-> >>> +						      |<- exit ->|
-> >>> +						      |  latency |
-> >>> +		    |<-------- min-residency -------->|
-> >>> +			       |<-------  wakeup-latency ------->|
-> >>> +
-> >> I don't know the wakeup latency makes much sense and also correct.
-> >> Hardware wakeup latency is actually exit latency. Is it for failed
-> >> or abort-able ilde case ? We are adding this as a new parameter
-> >> at least from idle states perspective. I think we should just
-> >> avoid it.
-> > 
-> > I explained the rationale for this parameter in a previous email but 
-> > Lorenzo didn't carry it over. To be clearer, this should be "worst case 
-> > wake-up latency".  It is of interest for PMQOS.  This is the maximum 
-> > delay that can be expected from the moment a wake-up event is signaled 
-> > and the moment the CPU is back operational.  This is more than just exit 
-> > latency.  By default this is entry_latency + exit_latency but when there 
-> > is an abortable PREP phase then it may be shorter than that.
-> > 
-> PMQOS angle is right. It is just that the idle code is not
-> going to do anything with this value. But I see a value adding it
-> instead of some one doing calculation.
+--pZs/OQEoSSbxGlYw
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The idle code should take it into account when a PMQOS restriction is in 
-effect i.e. avoid using those modes whose worst case wake-up latency is 
-too large.
+Hi Silvio,
 
-And cpuidle is being migrated into the scheduler as we speak.  So some 
-of the values there, namely entry_latency and exit_latency (taken 
-separately for timing purposes) will be directly used by the scheduler 
-to decide which CPU to wake up for example.
+On Wed, Jun 18, 2014 at 08:42:34PM +0200, S. Fricke wrote:
+>=20
+> Hi Markus,
+>=20
+> I'm fighting with your ac97 pinctrl configuration per dts.=20
+>=20
+> > [...]
+> > +ssi {
+> > +	...
+> > +
+> > +	pinctrl-names =3D "default", "ac97-running", "ac97-reset", "ac97-warm=
+-reset";
+> > +	pinctrl-0 =3D <&ac97link_running>;
+> > +	pinctrl-1 =3D <&ac97link_running>;
+> > +	pinctrl-2 =3D <&ac97link_reset>;
+> > +	pinctrl-3 =3D <&ac97link_warm_reset>;
+> > +	ac97-gpios =3D <&gpio3 20 0 &gpio3 22 0 &gpio3 28 0>;
+>=20
+> I see here the gpios for sync, sdata and reset. On my board I have two sd=
+ata
+> lines (sdata-in and sdata-out) which line should I specify here for this =
+setting?
 
-So there is fundamentally 4 parameters if we want to comprehensively 
-support all pertinent use cases.
+Try to use sdata-out. This is the only data output line. sdata-in is the
+input to the SoC so we don't have to use this for an AC97 reset.
 
+Regards,
 
-Nicolas
+Markus
+
+--=20
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+
+--pZs/OQEoSSbxGlYw
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTogJlAAoJEEpcgKtcEGQQ5X4P/jqJ87EWIJxGcJQzUq1zUe0Q
+NN+4nttrjLst+QfkBGVxEvGBIcJKhNxuSzs19koB9iA9irzcZQpC1iHTXLGOikxx
+z3rYmkbBn2WwHnNypt8nHzr4pVikv8n6C+q9y2cXIr1Z4yBmanQ/0+FPe0onc7Mc
+ECNmQAogMcbtkPEhFFLOYAwtFbA0haqjcOYbC8J8uFLCTvagcMPO/VZ2sMcERc4B
+VZtCDivDEqhTphq8hsFJEw40OG9trwYriNTAkIl6EVdrkyZ2DCeDmhlEQ5vnxU5u
+axUWbe5qUWn1XTmEIjRP0GSkbPXJJI3MHTQ+6WbrPkObv6IZWe1KuDnbIQjuMCj1
+BNm7Zs0iAmYji+kL6dkvbkgtuH2eC1yL3hxsCj70AZF45zPuRy7qGS8gRFaFEyPt
+E3Jd+k6y8DNUhf0ivfp3vY7eibnMUReziPN2rVh5DFrpAlObZPN+CKdNLfmItEc+
+y4K88y9T/LTfjvEkPvqlfmUILnpeR2PsAuXsSKjJlQLgKKVvPD00QmE8U132jjir
+L+z3U8pzm/OxnzHpT7RiZIrYBJ7hfcWExgPIw62sN10g7I8+oi8CDFX3UfllVtSU
+z1N2u2Iaxl+UgylSkdMKuZEI8IMswpArzE8vmthIkvnfm73tThEbMJEXoIJY6a8l
+i8dSkVo6cbS6vMaSEghA
+=+4wK
+-----END PGP SIGNATURE-----
+
+--pZs/OQEoSSbxGlYw--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
