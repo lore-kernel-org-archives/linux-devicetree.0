@@ -1,55 +1,45 @@
-From: Sebastian Capella <sebcape@gmail.com>
-Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states bindings
-Date: Wed, 18 Jun 2014 11:20:11 -0700
-Message-ID: <CAPd3N-9J7m_cqLgG0PgkGaZvnqSr9WrdOtWAC5_gA4_9qjSOfQ@mail.gmail.com>
-References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com>
-	<1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com>
-	<alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr>
-	<20140613164954.GA16745@e102568-lin.cambridge.arm.com>
-	<alpine.LFD.2.11.1406131306160.25775@knanqh.ubzr>
-	<20140618173648.GB31573@e102568-lin.cambridge.arm.com>
+From: "S. Fricke" <silvio.fricke-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v11 2/8] ASoC: core: Generic ac97 link reset functions
+Date: Wed, 18 Jun 2014 20:42:34 +0200
+Message-ID: <20140618184234.GA27312@sfrouter>
+References: <1376924761-4054-1-git-send-email-mpa@pengutronix.de>
+ <1376924761-4054-3-git-send-email-mpa@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140618173648.GB31573@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Nicolas Pitre <nicolas.pitre@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1376924761-4054-3-git-send-email-mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Markus Pargmann <mpa-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Timur Tabi <timur-N01EOCouUvQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 10:36 AM, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Fri, Jun 13, 2014 at 06:33:35PM +0100, Nicolas Pitre wrote:
->> On Fri, 13 Jun 2014, Lorenzo Pieralisi wrote:
->>
->> > On Wed, Jun 11, 2014 at 07:15:16PM +0100, Nicolas Pitre wrote:
->> > >
->> > > ...__[EXEC]__|__[PREP]--|__[ENTRY]__|__[IDLE]__|___[EXIT]_--|__[EXEC]__...
->> > >              |          |           |          |            |
->> > >              |<-- entry-latency --->|
->> > >                                                |<- exit-  ->|
->> > >                                                |  latency   |
->> > >              |<-------------- min-residency --------------->|
->> > >                         |<----- worst_wakeup_latency ------>|
->> > >
->> > > entry-latency: Worst case latency required to enter the idle state.  The
->> > > exit_latency may be guaranteed only after entry-latency has passed.
->> > >
->> > > min-residency: Minimum period, including preparation, entry and exit,
->> > > for a given power mode to be worthwhile energy wise.  It must be at
->> > > least equal to entry_latency + exit_latency.
->
-> Ok, a minor tweak to the diagram above, min-residency should include
-> energy costs related to idle entry and exit, but not the exit-latency
-> itself, as long as the energy costs implied by exiting the state are
-> factored out in the min-residency-us property.
 
-This makes sense to me..
+Hi Markus,
 
-It includes accounting for the energy cost vs WFI of prep/entry/exit,
-but timing is from the end of the previous exec, until the event is
-expected to trigger.
+I'm fighting with your ac97 pinctrl configuration per dts. 
 
-Thanks!
+> [...]
+> +ssi {
+> +	...
+> +
+> +	pinctrl-names = "default", "ac97-running", "ac97-reset", "ac97-warm-reset";
+> +	pinctrl-0 = <&ac97link_running>;
+> +	pinctrl-1 = <&ac97link_running>;
+> +	pinctrl-2 = <&ac97link_reset>;
+> +	pinctrl-3 = <&ac97link_warm_reset>;
+> +	ac97-gpios = <&gpio3 20 0 &gpio3 22 0 &gpio3 28 0>;
 
-Sebastian
+I see here the gpios for sync, sdata and reset. On my board I have two sdata
+lines (sdata-in and sdata-out) which line should I specify here for this setting?
+
+Thanks for a short answer and
+Cheers, Silvio
+
+
+-- 
+-- S. Fricke ---------------------------------------- silvio-lOxvEG+uzzjk1uMJSBkQmQ@public.gmane.org --
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
