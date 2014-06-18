@@ -1,45 +1,143 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
-Date: Tue, 17 Jun 2014 17:27:09 -0700
-Message-ID: <7hionz9i5e.fsf@paris.lan>
-References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>
-	<1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
+Date: Wed, 18 Jun 2014 09:31:31 +0900
+Message-ID: <003f01cf8a8c$a6f3be00$f4db3a00$%han@samsung.com>
+References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com>
+ <CAErSpo6=vi0SR0A3u5BCLgiGxoH48N5R=e8VAnFDG=K61qLxnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1402592479-7244-1-git-send-email-jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-	(Jassi Brar's message of "Thu, 12 Jun 2014 22:31:19 +0530")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bjorn-UYDU3/A3LUY@public.gmane.org, ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, s-anna-l0cyMroinI0@public.gmane.org, loic.pallardy-qxv4g6HH51o@public.gmane.org, lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org, courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-reply-to: <CAErSpo6=vi0SR0A3u5BCLgiGxoH48N5R=e8VAnFDG=K61qLxnw@mail.gmail.com>
+Content-language: ko
+Sender: linux-doc-owner@vger.kernel.org
+To: 'Bjorn Helgaas' <bhelgaas@google.com>, 'Murali Karicheri' <m-karicheri2@ti.com>
+Cc: 'linux-arm' <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, 'Santosh Shilimkar' <santosh.shilimkar@ti.com>, 'Russell King' <linux@arm.linux.org.uk>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Mohit Kumar' <mohit.kumar@st.com>, 'Pratyush Anand' <pratyush.anand@st.com>, 'Richard Zhu' <r65037@freescale.com>, 'Kishon Vijay Abraham I' <kishon@ti.com>, 'Marek Vasut' <marex@denx.de>, 'Arnd Bergmann' <arnd@arndb.de>, 'Pawel Moll' <pawel.moll@arm.com>, 'Mark Rutland' <mark.rutland@arm.com>, 'Ian Campbell' <ijc+devicetree@hellion.org.uk>, 'Kumar Gala' <galak@codeaurora.org>, 'Randy Dunlap' <rdunlap@infradead.org>, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
+On Wednesday, June 18, 2014 9:09 AM, Bjorn Helgaas wrote:
+> 
+> On Tue, Jun 10, 2014 at 02:51:19PM -0400, Murali Karicheri wrote:
+> > This patch adds a PCIe controller driver for Keystone SoCs. This
+> > is based on v1 of the series posted to the mailing list.
+> >
+> > CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> > CC: Russell King <linux@arm.linux.org.uk>
+> > CC: Grant Likely <grant.likely@linaro.org>
+> > CC: Rob Herring <robh+dt@kernel.org>
+> > CC: Mohit Kumar <mohit.kumar@st.com>
+> > CC: Jingoo Han <jg1.han@samsung.com>
+> > CC: Bjorn Helgaas <bhelgaas@google.com>
+> > CC: Pratyush Anand <pratyush.anand@st.com>
+> > CC: Richard Zhu <r65037@freescale.com>
+> > CC: Kishon Vijay Abraham I <kishon@ti.com>
+> > CC: Marek Vasut <marex@denx.de>
+> > CC: Arnd Bergmann <arnd@arndb.de>
+> > CC: Pawel Moll <pawel.moll@arm.com>
+> > CC: Mark Rutland <mark.rutland@arm.com>
+> > CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> > CC: Kumar Gala <galak@codeaurora.org>
+> > CC: Randy Dunlap <rdunlap@infradead.org>
+> > CC: Grant Likely <grant.likely@linaro.org>
+> >
+> >
+> > Changelog:
+> >
+> > V2
+> >  - Split the designware pcie enhancement patch to multiple
+> >    patches based on functionality added
+> >  - Remove the quirk code and add a patch to fix mps/mrss
+> >    tuning for ARM. Use kernel command line parameter
+> >    pci=pcie_bus_perf to work with Keystone PCI Controller.
+> >    Following patch addressed this.
+> >      [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
+> >  - Add documentation for device tree bindings
+> >  - Add separate interrupt controller nodes for MSI and Legacy
+> >    IRQs and use irq map for legacy IRQ
+> >  - Use compatibility to identify v3.65 version of the DW hardware
+> >    and use it to customize the designware common code.
+> >  - Use reg property for configuration space instead of range
+> >  - Other minor updates based on code inspection.
+> >
+> > V1
+> >  - Add an interrupt controller node for Legacy irq chip and use
+> >    interrupt map/map-mask property to map legacy IRQs A/B/C/D
+> >  - Add a Phy driver to replace the original serdes driver
+> >  - Move common application register handling code to a separate
+> >    file to allow re-use across other platforms that use older
+> >    DW PCIe h/w
+> >  - PCI quirk for maximum read request size. Check and override only
+> >    if the maximum is higher than what controller can handle.
+> >  - Converted to a module platform driver.
+> >
+> >
+> > Murali Karicheri (8):
+> >   PCI: designware: add rd[wr]_other_conf API
+> >   PCI: designware: refactor host init code to re-use on v3.65 DW pci hw
+> >   PCI: designware: update pcie core driver to work with dw hw version
+> >     3.65
+> >   PCI: designware: add msi controller functions for v3.65 hw
+> >   PCI: designware: add PCI controller functions for v3.65 DW hw
+> >   phy: Add serdes phy driver for keystone
+> >   PCI: keystone: add pcie driver based on designware core driver
+> >   ARM: keystone: add pcie related options
+> >
+> >  .../devicetree/bindings/pci/designware-pcie.txt    |   42 ++
+> >  .../devicetree/bindings/pci/pci-keystone.txt       |   56 +++
+> >  .../bindings/phy/phy-keystone-serdes.txt           |   25 ++
+> >  arch/arm/mach-keystone/Kconfig                     |    1 +
+> >  drivers/pci/host/Kconfig                           |   12 +
+> >  drivers/pci/host/Makefile                          |    2 +
+> >  drivers/pci/host/pci-dw-v3_65-msi.c                |  149 +++++++
+> >  drivers/pci/host/pci-dw-v3_65.c                    |  390 ++++++++++++++++++
+> >  drivers/pci/host/pci-dw-v3_65.h                    |   34 ++
+> >  drivers/pci/host/pci-keystone.c                    |  418 ++++++++++++++++++++
+> >  drivers/pci/host/pcie-designware.c                 |  175 +++++---
+> >  drivers/pci/host/pcie-designware.h                 |   42 +-
+> >  drivers/phy/Kconfig                                |    6 +
+> >  drivers/phy/Makefile                               |    1 +
+> >  drivers/phy/phy-keystone-serdes.c                  |  230 +++++++++++
+> >  15 files changed, 1531 insertions(+), 52 deletions(-)
+> >  create mode 100644 Documentation/devicetree/bindings/pci/pci-keystone.txt
+> >  create mode 100644 Documentation/devicetree/bindings/phy/phy-keystone-serdes.txt
+> >  create mode 100644 drivers/pci/host/pci-dw-v3_65-msi.c
+> >  create mode 100644 drivers/pci/host/pci-dw-v3_65.c
+> >  create mode 100644 drivers/pci/host/pci-dw-v3_65.h
+> >  create mode 100644 drivers/pci/host/pci-keystone.c
+> >  create mode 100644 drivers/phy/phy-keystone-serdes.c
+> 
+> I'm not willing to merge phy-keystone-serdes.c because I don't
+> maintain drivers/phy and because of the binary blob of register values
+> it contains, but maybe somebody else will.  I assume it could be
+> merged by itself before the rest of this.
 
-> Introduce common framework for client/protocol drivers and
-> controller drivers of Inter-Processor-Communication (IPC).
->
-> Client driver developers should have a look at
->  include/linux/mailbox_client.h to understand the part of
-> the API exposed to client drivers.
-> Similarly controller driver developers should have a look
-> at include/linux/mailbox_controller.h
->
-> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+I think so, too.
 
-This series is shaping up nicely.  The one thing I think it would
-benefit from, being a new common framework is something under
-Documentation giving a brief overview, but more importantly some 
-example code snippets of a mailbox client using the API, and maybe an
-example usage of the controller API as well.
+DT maintainers and arch maintainers should review the following
+dt bindings.
+  .../devicetree/bindings/pci/designware-pcie.txt    |   42 ++
+  .../devicetree/bindings/pci/pci-keystone.txt       |   56 +++
 
-Not only will that guide developers who want to use/implement this API
-on their platforms, it will also aid reviewers.
+Generic PHY maintainer (Kishon Vijay Abraham I) should review the
+following phy driver.
+  drivers/phy/phy-keystone-serdes.c
 
-Thanks,
+> 
+> I'm looking for acks from Mohit and/or Jingoo for the pci/host
+> changes, and from Arnd for the devicetree/bindings changes.
+> 
+> Adding these "-dw-3_64" files is sort of ugly.  If that code is only
+> used by keystone, maybe it could just be moved to pci-keystone.c?  But
+> I'll defer to Mohit and Jingoo on that and the way you modify
+> pcie-designware.c.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I agree with Bjorn Helgaas's opinion. These three "-dw-3_64" files
+look terrible! I don't have a good way to handle this; however,
+moving this code to pci-keystone.c looks better.
+
+Best regards,
+Jingoo Han
+
+> 
+> Bjorn
+
