@@ -1,7 +1,7 @@
 From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH 1/4] of: Create of_console_check() for selecting a console specified in /chosen
-Date: Wed, 18 Jun 2014 21:54:31 +0100
-Message-ID: <1403124874-19929-2-git-send-email-grant.likely@linaro.org>
+Subject: [PATCH 4/4] tty: Update hypervisor tty drivers to use core stdout parsing code.
+Date: Wed, 18 Jun 2014 21:54:34 +0100
+Message-ID: <1403124874-19929-5-git-send-email-grant.likely@linaro.org>
 References: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
@@ -10,90 +10,243 @@ To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, o
 Cc: Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The devicetree has a binding for specifying the console device in the
-/chosen node, but the kernel doesn't use it consistently. This change
-adds an API for testing if a device node is a console, and adds a
-preferred console entry if it is.
-
-At the same time this patch removes the of_device_is_stdout_path() API
-since it is unused.
+The evh_bytechan, hvc_opal and hvc_vio drivers all open code the parsing
+of the stdout node in the device tree. This patch simplifies the driver
+by removing the duplicated functionality.
 
 Signed-off-by: Grant Likely <grant.likely@linaro.org>
-Tested-by: Sascha Hauer <s.hauer@pengutronix.de>
 ---
- drivers/of/base.c  | 23 +++++++++++++----------
- include/linux/of.h |  6 +++---
- 2 files changed, 16 insertions(+), 13 deletions(-)
+ drivers/of/base.c          |  5 ++++-
+ drivers/tty/ehv_bytechan.c | 43 ++++---------------------------------------
+ drivers/tty/hvc/hvc_opal.c | 15 +++------------
+ drivers/tty/hvc/hvc_vio.c  | 29 ++++++++++-------------------
+ include/linux/of.h         |  1 +
+ 5 files changed, 22 insertions(+), 71 deletions(-)
 
 diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 8368d96ae7b4..ed037ae7eefe 100644
+index ed037ae7eefe..af3d8722064a 100644
 --- a/drivers/of/base.c
 +++ b/drivers/of/base.c
-@@ -17,6 +17,7 @@
-  *      as published by the Free Software Foundation; either version
-  *      2 of the License, or (at your option) any later version.
-  */
-+#include <linux/console.h>
- #include <linux/ctype.h>
- #include <linux/cpu.h>
- #include <linux/module.h>
-@@ -2179,20 +2180,22 @@ const char *of_prop_next_string(struct property *prop, const char *cur)
- EXPORT_SYMBOL_GPL(of_prop_next_string);
+@@ -36,7 +36,7 @@ struct device_node *of_allnodes;
+ EXPORT_SYMBOL(of_allnodes);
+ struct device_node *of_chosen;
+ struct device_node *of_aliases;
+-static struct device_node *of_stdout;
++struct device_node *of_stdout;
  
- /**
-- * of_device_is_stdout_path - check if a device node matches the
-- *                            linux,stdout-path property
+ static struct kset *of_kset;
+ 
+@@ -2062,9 +2062,12 @@ void of_alias_scan(void * (*dt_alloc)(u64 size, u64 align))
+ 		of_chosen = of_find_node_by_path("/chosen@0");
+ 
+ 	if (of_chosen) {
++		/* linux,stdout-path and /aliases/stdout are for legacy compatibility */
+ 		const char *name = of_get_property(of_chosen, "stdout-path", NULL);
+ 		if (!name)
+ 			name = of_get_property(of_chosen, "linux,stdout-path", NULL);
++		if (IS_ENABLED(CONFIG_PPC) && !name)
++			name = of_get_property(of_aliases, "stdout", NULL);
+ 		if (name)
+ 			of_stdout = of_find_node_by_path(name);
+ 	}
+diff --git a/drivers/tty/ehv_bytechan.c b/drivers/tty/ehv_bytechan.c
+index 0419b69e270f..4f485e88f60c 100644
+--- a/drivers/tty/ehv_bytechan.c
++++ b/drivers/tty/ehv_bytechan.c
+@@ -108,55 +108,23 @@ static void disable_tx_interrupt(struct ehv_bc_data *bc)
+  *
+  * The byte channel to be used for the console is specified via a "stdout"
+  * property in the /chosen node.
 - *
-- * Check if this device node matches the linux,stdout-path property
-- * in the chosen node. return true if yes, false otherwise.
-+ * of_console_check() - Test and setup console for DT setup
-+ * @dn - Pointer to device node
-+ * @name - Name to use for preferred console without index. ex. "ttyS"
-+ * @index - Index to use for preferred console.
-+ *
-+ * Check if the given device node matches the stdout-path property in the
-+ * /chosen node. If it does then register it as the preferred console and return
-+ * TRUE. Otherwise return FALSE.
+- * For compatible with legacy device trees, we also look for a "stdout" alias.
   */
--int of_device_is_stdout_path(struct device_node *dn)
-+bool of_console_check(struct device_node *dn, char *name, int index)
+ static int find_console_handle(void)
  {
--	if (!of_stdout)
-+	if (!dn || dn != of_stdout || console_set_on_cmdline)
- 		return false;
--
--	return of_stdout == dn;
-+	return add_preferred_console(name, index, NULL);
- }
--EXPORT_SYMBOL_GPL(of_device_is_stdout_path);
-+EXPORT_SYMBOL_GPL(of_console_check);
+-	struct device_node *np, *np2;
++	struct device_node *np = of_stdout;
+ 	const char *sprop = NULL;
+ 	const uint32_t *iprop;
  
- /**
-  *	of_find_next_cache_node - Find a node's subsidiary cache
+-	np = of_find_node_by_path("/chosen");
+-	if (np)
+-		sprop = of_get_property(np, "stdout-path", NULL);
+-
+-	if (!np || !sprop) {
+-		of_node_put(np);
+-		np = of_find_node_by_name(NULL, "aliases");
+-		if (np)
+-			sprop = of_get_property(np, "stdout", NULL);
+-	}
+-
+-	if (!sprop) {
+-		of_node_put(np);
+-		return 0;
+-	}
+-
+ 	/* We don't care what the aliased node is actually called.  We only
+ 	 * care if it's compatible with "epapr,hv-byte-channel", because that
+-	 * indicates that it's a byte channel node.  We use a temporary
+-	 * variable, 'np2', because we can't release 'np' until we're done with
+-	 * 'sprop'.
++	 * indicates that it's a byte channel node.
+ 	 */
+-	np2 = of_find_node_by_path(sprop);
+-	of_node_put(np);
+-	np = np2;
+-	if (!np) {
+-		pr_warning("ehv-bc: stdout node '%s' does not exist\n", sprop);
+-		return 0;
+-	}
+-
+-	/* Is it a byte channel? */
+-	if (!of_device_is_compatible(np, "epapr,hv-byte-channel")) {
+-		of_node_put(np);
++	if (!np || !of_device_is_compatible(np, "epapr,hv-byte-channel"))
+ 		return 0;
+-	}
+ 
+ 	stdout_irq = irq_of_parse_and_map(np, 0);
+ 	if (stdout_irq == NO_IRQ) {
+-		pr_err("ehv-bc: no 'interrupts' property in %s node\n", sprop);
+-		of_node_put(np);
++		pr_err("ehv-bc: no 'interrupts' property in %s node\n", np->full_name);
+ 		return 0;
+ 	}
+ 
+@@ -167,12 +135,9 @@ static int find_console_handle(void)
+ 	if (!iprop) {
+ 		pr_err("ehv-bc: no 'hv-handle' property in %s node\n",
+ 		       np->name);
+-		of_node_put(np);
+ 		return 0;
+ 	}
+ 	stdout_bc = be32_to_cpu(*iprop);
+-
+-	of_node_put(np);
+ 	return 1;
+ }
+ 
+diff --git a/drivers/tty/hvc/hvc_opal.c b/drivers/tty/hvc/hvc_opal.c
+index a585079b4b38..a2cc5f834c63 100644
+--- a/drivers/tty/hvc/hvc_opal.c
++++ b/drivers/tty/hvc/hvc_opal.c
+@@ -342,22 +342,13 @@ static void udbg_init_opal_common(void)
+ 
+ void __init hvc_opal_init_early(void)
+ {
+-	struct device_node *stdout_node = NULL;
++	struct device_node *stdout_node = of_node_get(of_stdout);
+ 	const __be32 *termno;
+-	const char *name = NULL;
+ 	const struct hv_ops *ops;
+ 	u32 index;
+ 
+-	/* find the boot console from /chosen/stdout */
+-	if (of_chosen)
+-		name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+-	if (name) {
+-		stdout_node = of_find_node_by_path(name);
+-		if (!stdout_node) {
+-			pr_err("hvc_opal: Failed to locate default console!\n");
+-			return;
+-		}
+-	} else {
++	/* If the console wasn't in /chosen, try /ibm,opal */
++	if (!stdout_node) {
+ 		struct device_node *opal, *np;
+ 
+ 		/* Current OPAL takeover doesn't provide the stdout
+diff --git a/drivers/tty/hvc/hvc_vio.c b/drivers/tty/hvc/hvc_vio.c
+index b594abfbf21e..5618b5fc7500 100644
+--- a/drivers/tty/hvc/hvc_vio.c
++++ b/drivers/tty/hvc/hvc_vio.c
+@@ -404,42 +404,35 @@ module_exit(hvc_vio_exit);
+ 
+ void __init hvc_vio_init_early(void)
+ {
+-	struct device_node *stdout_node;
+ 	const __be32 *termno;
+ 	const char *name;
+ 	const struct hv_ops *ops;
+ 
+ 	/* find the boot console from /chosen/stdout */
+-	if (!of_chosen)
++	if (!of_stdout)
+ 		return;
+-	name = of_get_property(of_chosen, "linux,stdout-path", NULL);
+-	if (name == NULL)
+-		return;
+-	stdout_node = of_find_node_by_path(name);
+-	if (!stdout_node)
+-		return;
+-	name = of_get_property(stdout_node, "name", NULL);
++	name = of_get_property(of_stdout, "name", NULL);
+ 	if (!name) {
+ 		printk(KERN_WARNING "stdout node missing 'name' property!\n");
+-		goto out;
++		return;
+ 	}
+ 
+ 	/* Check if it's a virtual terminal */
+ 	if (strncmp(name, "vty", 3) != 0)
+-		goto out;
+-	termno = of_get_property(stdout_node, "reg", NULL);
++		return;
++	termno = of_get_property(of_stdout, "reg", NULL);
+ 	if (termno == NULL)
+-		goto out;
++		return;
+ 	hvterm_priv0.termno = of_read_number(termno, 1);
+ 	spin_lock_init(&hvterm_priv0.buf_lock);
+ 	hvterm_privs[0] = &hvterm_priv0;
+ 
+ 	/* Check the protocol */
+-	if (of_device_is_compatible(stdout_node, "hvterm1")) {
++	if (of_device_is_compatible(of_stdout, "hvterm1")) {
+ 		hvterm_priv0.proto = HV_PROTOCOL_RAW;
+ 		ops = &hvterm_raw_ops;
+ 	}
+-	else if (of_device_is_compatible(stdout_node, "hvterm-protocol")) {
++	else if (of_device_is_compatible(of_stdout, "hvterm-protocol")) {
+ 		hvterm_priv0.proto = HV_PROTOCOL_HVSI;
+ 		ops = &hvterm_hvsi_ops;
+ 		hvsilib_init(&hvterm_priv0.hvsi, hvc_get_chars, hvc_put_chars,
+@@ -447,7 +440,7 @@ void __init hvc_vio_init_early(void)
+ 		/* HVSI, perform the handshake now */
+ 		hvsilib_establish(&hvterm_priv0.hvsi);
+ 	} else
+-		goto out;
++		return;
+ 	udbg_putc = udbg_hvc_putc;
+ 	udbg_getc = udbg_hvc_getc;
+ 	udbg_getc_poll = udbg_hvc_getc_poll;
+@@ -456,14 +449,12 @@ void __init hvc_vio_init_early(void)
+ 	 * backend for HVSI, only do udbg
+ 	 */
+ 	if (hvterm_priv0.proto == HV_PROTOCOL_HVSI)
+-		goto out;
++		return;
+ #endif
+ 	/* Check whether the user has requested a different console. */
+ 	if (!strstr(cmd_line, "console="))
+ 		add_preferred_console("hvc", 0, NULL);
+ 	hvc_instantiate(0, 0, ops);
+-out:
+-	of_node_put(stdout_node);
+ }
+ 
+ /* call this from early_init() for a working debug console on
 diff --git a/include/linux/of.h b/include/linux/of.h
-index 196b34c1ef4e..9d9734056e39 100644
+index 9d9734056e39..f0d256273c83 100644
 --- a/include/linux/of.h
 +++ b/include/linux/of.h
-@@ -352,7 +352,7 @@ const __be32 *of_prop_next_u32(struct property *prop, const __be32 *cur,
-  */
- const char *of_prop_next_string(struct property *prop, const char *cur);
+@@ -113,6 +113,7 @@ static inline void of_node_put(struct device_node *node) { }
+ extern struct device_node *of_allnodes;
+ extern struct device_node *of_chosen;
+ extern struct device_node *of_aliases;
++extern struct device_node *of_stdout;
+ extern raw_spinlock_t devtree_lock;
  
--int of_device_is_stdout_path(struct device_node *dn);
-+bool of_console_check(struct device_node *dn, char *name, int index);
- 
- #else /* CONFIG_OF */
- 
-@@ -564,9 +564,9 @@ static inline int of_machine_is_compatible(const char *compat)
- 	return 0;
- }
- 
--static inline int of_device_is_stdout_path(struct device_node *dn)
-+static inline bool of_console_check(const struct device_node *dn, const char *name, int index)
- {
--	return 0;
-+	return false;
- }
- 
- static inline const __be32 *of_prop_next_u32(struct property *prop,
+ static inline bool of_have_populated_dt(void)
 -- 
 1.9.1
