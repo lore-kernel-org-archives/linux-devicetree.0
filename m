@@ -1,68 +1,95 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [PATCH v2 7/7] pwm: st: Supply Device Tree binding documentation for
- ST's PWM IP
-Date: Wed, 18 Jun 2014 16:29:32 +0100
-Message-ID: <20140618152932.GG15956@lee--X1>
-References: <1403103172-19856-1-git-send-email-lee.jones@linaro.org>
- <1403103172-19856-7-git-send-email-lee.jones@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pwm-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403103172-19856-7-git-send-email-lee.jones@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: kernel@stlinux.com, thierry.reding@gmail.com, linux-pwm@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com, srinivas.kandagatla@gmail.com, devicetree@vger.kernel.org, ajitpal.singh@st.com
+From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH/RFC V8 0/1] clk: Default clock parents and rates assigned from
+ DT
+Date: Wed, 18 Jun 2014 17:29:31 +0200
+Message-ID: <1403105372-30403-1-git-send-email-s.nawrocki@samsung.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-pwm: st: Supply Device Tree binding documentation for ST's PWM IP
-    
-Signed-off-by: Lee Jones <lee.jones@linaro.org>
+This patch adds DT binding documentation for a set of properties
+allowing to specify default parent clocks and clock rates in the device
+tree.  It also adds a helper function to parse the 'assigned-clocks',
+'assigned-clock-parents' and 'assigned-clock-rates' DT properties and
+to set the specified clocks configuration.  The configuration is now
+being done by the platform, I2C and SPI bus before driver probing and
+in the clock core after registering a clock provider.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-new file mode 100644
-index 0000000..84d2fb8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-@@ -0,0 +1,41 @@
-+STMicroelectronics PWM driver bindings
-+--------------------------------------
-+
-+Required parameters:
-+- compatible :		"st,pwm"
-+- #pwm-cells : 		Number of cells used to specify a PWM. First cell
-+			specifies the per-chip index of the PWM to use and the
-+			second cell is the period in nanoseconds - fixed to 2
-+			for STiH41x.
-+- reg :			Physical base address and length of the controller's
-+			registers.
-+- pinctrl-names: 	Set to "default".
-+- pinctrl-0: 		List of phandles pointing to pin configuration nodes
-+			for PWM module.
-+			For Pinctrl properties, please refer to [1].
-+- clock-names: 		Set to "pwm".
-+- clocks: 		phandle of the clock used by the PWM module.
-+			For Clk properties, please refer to [2].
-+
-+Optional properties:
-+- st,pwm-num-chan:	Number of available channels. If not passed, the driver
-+			will consider single channel by default.
-+
-+[1] Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt
-+[2] Documentation/devicetree/bindings/clock/clock-bindings.txt
-+
-+Example:
-+
-+pwm1: pwm@fe510000 {
-+	compatible = "st,pwm";
-+	reg = <0xfe510000 0x68>;
-+	#pwm-cells = <2>;
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pinctrl_pwm1_chan0_default
-+		     &pinctrl_pwm1_chan1_default
-+		     &pinctrl_pwm1_chan2_default
-+		     &pinctrl_pwm1_chan3_default>;
-+	clocks = <&clk_sysin>;
-+	clock-names = "pwm";
-+	st,pwm-num-chan = <4>;
-+};
+Changes since v6:
+ - use a set of separate DT properties to specify the default parent
+   clocks and rates;
+ - the clock defaults setting extended to the I2C and SPI busses;
+ - skipped the first patch from the series already merged upstream.
+
+Changes since v5:
+ - reverted to the DT binding as sugested by Grant, it should now work
+   for both clock suppliers and consumers, similarly as pinctrl hogging;
+ - fixed detecting of null phandles (ENOENT error handling);
+ - the clocks will now also be attempted to be configured right after
+   registering the clock provider, this allows to avoid a call to
+   of_clk_set_defaults() in multiple clock provider drivers;
+ - dropped of_clk_get_by_property() helper, added of_clk_get_by_clkspec.
+
+Changes since v4:
+ - added note explaining how to skip setting parent and rate of a clock,
+ - added missing call to of_node_put(),
+ - moved of_clk_dev_init() calls to the platform bus,
+ - dropped debug traces.
+
+Changes since v3:
+ - improved documentation of the DT binding,
+ - fixed build errors for !CONFIG_OF, the parsing helpers are only
+   compiled in if CONFIG_OF is set.
+
+Changes since v2:
+ - code reordering to ensure there is no build errors, the clock
+   configuration code moved to a separate file,
+ - introduced an 'assigned-clocks' DT node which is supposed to contain
+   clocks, clock-parents, clock-rates properties and be child node
+   a clock provider node, and a code parsing it called from of_clk_init();
+   It's for clocks which are not directly connected to consumer devices.
+   An alternative would be to list such assigned clocks in 'clocks'
+   property, along with "proper" parent clocks, but then there would
+   be phandles in clocks property of a node pointing to itself and it
+   would require proper handling in of_clock_init().
+   I actually tried it but it looked a bit ugly and chose this time to
+   use an extra subnode.
+
+Changes since v1:
+ - updated DT binding documentation,
+ - dropped the platform bus notifier, the clock setup routine is now
+   being called directly from the driver core before a driver probe() call;
+   this has an advantage such as all bus types are handled and any errors
+   are propagated, so that, for instance a driver probe() can be deferred
+   also when resources specified by clock-parents/clock-rates properties
+   are not yet available; an alternative would be to let drivers call
+   of_clk_device_setup() directly,
+ - dropped the patch adding a macro definition for maximum DT property
+   name length for now.
+
+This series has been tested on ARM, on Exynos4412 Odroid U3 board.
+The full git tree can be found at:
+ git://linuxtv.org/snawrocki/samsung.git v3.16-rc1-odroid-sound-clk
+
+and browsed at
+ http://git.linuxtv.org/cgit.cgi/snawrocki/samsung.git/log/?h=v3.16-rc1-odroid-sound-clk
+
+Sylwester Nawrocki (1):
+  clk: Support for clock parents and rates assigned from device tree
+
+ .../devicetree/bindings/clock/clock-bindings.txt   |   36 +++++
+ drivers/base/platform.c                            |    5 +
+ drivers/clk/Makefile                               |    3 +
+ drivers/clk/clk-conf.c                             |  143 ++++++++++++++++++++
+ drivers/clk/clk.c                                  |   12 +-
+ drivers/i2c/i2c-core.c                             |    5 +
+ drivers/spi/spi.c                                  |    5 +
+ include/linux/clk/clk-conf.h                       |   20 +++
+ 8 files changed, 227 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/clk/clk-conf.c
+ create mode 100644 include/linux/clk/clk-conf.h
+
+--
+1.7.9.5
