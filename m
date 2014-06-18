@@ -1,86 +1,70 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: Re: [PATCH v4 4/7] regulator: axp20x: reset probe
- data before each probe
-Date: Wed, 18 Jun 2014 10:32:49 +0200
-Message-ID: <53A14EB1.9090600@redhat.com>
-References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com> <1402990723-28138-5-git-send-email-boris.brezillon@free-electrons.com> <20140617204449.GD19730@lukather> <53A13BBF.7090202@free-electrons.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: Re: [PATCH v3 1/3] soc: devicetree: bindings: Add Qualcomm RPM DT
+ binding
+Date: Wed, 18 Jun 2014 09:34:08 +0100
+Message-ID: <53A14F00.9010904@linaro.org>
+References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com> <1402944372-31901-2-git-send-email-bjorn.andersson@sonymobile.com> <53A0D651.20605@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBYM5QWOQKGQEVPZW3NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <53A13BBF.7090202-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53A0D651.20605@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@codeaurora.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 06/18/2014 09:11 AM, Boris BREZILLON wrote:
-> 
-> On 17/06/2014 22:44, Maxime Ripard wrote:
->> On Tue, Jun 17, 2014 at 09:38:40AM +0200, Boris BREZILLON wrote:
->>> The init_data and of_node fields of the axp2xx_matches tables are filled
->>> at each device probe by the axp20x_regulator_parse_dt function (which then
->>> calls the of_regulator_match function).
->>> This means we can probe a new device and consider data initialized during
->>> the probe of another device as valid.
->>>
->>> Reset init_data and of_node field to NULL before each probe in order to
->>> avoid this kind of issue.
->>>
->>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>  drivers/regulator/axp20x-regulator.c | 9 +++++++++
->>>  1 file changed, 9 insertions(+)
->>>
->>> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
->>> index 7a30f49..d42bf6d 100644
->>> --- a/drivers/regulator/axp20x-regulator.c
->>> +++ b/drivers/regulator/axp20x-regulator.c
->>> @@ -324,6 +324,15 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
->>>  		nregulators = AXP20X_REG_ID_MAX;
->>>  	}
->>>  
->>> +	/*
->>> +	 * Reset matches table (this table might have been modified by a
->>> +	 * previous AXP2xx device probe).
->>> +	 */
->>> +	for (i = 0; i < nmatches; i++) {
->>> +		matches[i].init_data = NULL;
->>> +		matches[i].of_node = NULL;
->>> +	}
->>> +
->> That looks rather hackish, especially since we've never been in such a
->> case yet, since we have a single PMIC in our system.
-> 
-> Even if something is unlikely to happen, it doesn't mean it's impossible.
-> I'm pretty sure there are (or will be) some systems containing several
-> identical PMICs in the wild, and fixing this possible bug now prevents
-> us (or other developers) from having a big headache debugging this in
-> the future.
 
-If you're really worried about this, you should also be worried
-about 2 probes running at the same time racing against each other
-(I know the bus level code will not do that now, but what about the
- future).
+On 18/06/14 00:59, Stephen Boyd wrote:
+> On 06/16/14 11:46, Bjorn Andersson wrote:
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>> new file mode 100644
+>> index 0000000..0366533
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,rpm.txt
+>> @@ -0,0 +1,260 @@
+>> +Qualcomm Resource Power Manager (RPM)
+>> +
+> [...]
+>> +
+>> +- reg:
+>> +	Usage: required
+>> +	Value type: <prop-encoded-array>
+>> +	Definition: two entries specifying the RPM's message ram and ipc register
+>> +
+>> +- reg-names:
+>> +	Usage: required
+>> +	Value type: <string-array>
+>> +	Definition: must contain the following, in order:
+>> +		    "msg_ram"
+>> +		    "ipc"
+>
+> ipc is concerning....
+>
+>> +	rpm@108000 {
+>> +		compatible = "qcom,rpm-msm8960";
+>> +		reg = <0x108000 0x1000 0x2011008 0x4>;
+>> +
+>
+> (reg-names is missing from the example)
+>
+> because ipc is actually a register inside the Krait complex's global
+> clock control/distribution hardware block (it's located at 0x2011000).
+>  From what I can tell, this is the only non-clock/power register inside
+> there. I plan to send out a driver for this hardware block so that I can
+> switch the L2 aux source mux over to PLL8 instead of PXO (done with a
+> single register write to 0x2011028) and this mapping/use here is going
+> to conflict with that unless I only map the single register like is done
+> here.
+>
+> I wonder if we'd be better off making this region a separate node and
+> having some phandle to it here in the RPM node? That way we have a
 
-If you cannot treat / use the global struct as const, then you really should
-have a local copy, and const-ify the global version and use it as a template
-to initialize the local copy.
+Can't we use syscon based on regmap here?  syscon is a better way to 
+share a common register space across multiple drivers.
 
-> BTW, what is hackish in this code ?
-
-See above, changing a global struct, and then re-initializing it on the
-next probe just is not pretty. TBH this raised my eyebrows the first time
-you posted it already, but I decided to let it be. But since we're discussing
-this now anyways I have to agree with Maxime.
-
-Regards,
-
-Hans
+> driver that provides a clock and some IPC handle the RPM driver can get.
+> The SMD driver also uses the same register to kick other processors so
+> having some generic IPC handle may be useful there too.
+>
