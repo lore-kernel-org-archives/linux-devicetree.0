@@ -1,61 +1,50 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] dmaengine: mpc512x: add device tree binding
- document
-Date: Wed, 18 Jun 2014 14:37:30 +0100
-Message-ID: <20140618133730.GB11895@leverpostej>
-References: <1403088492-15241-1-git-send-email-a13xp0p0v88@gmail.com>
- <1403088492-15241-2-git-send-email-a13xp0p0v88@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH net-next v2 1/3] ieee802154: cc2520: adds driver for TI
+ CC2520 radio
+Date: Wed, 18 Jun 2014 14:39:58 +0100
+Message-ID: <20140618133958.GC11895@leverpostej>
+References: <1403068565-32224-1-git-send-email-varkab@cdac.in>
+ <1403068565-32224-2-git-send-email-varkab@cdac.in>
+ <20140618091010.GB26461@leverpostej>
+ <53A15B38.6060404@gmail.com>
+ <20140618095519.GE26461@leverpostej>
+ <53A17442.8010009@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1403088492-15241-2-git-send-email-a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org" <linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org>, "dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53A17442.8010009@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "alex.bluesman.smirnov@gmail.com" <alex.bluesman.smirnov@gmail.com>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "linux-zigbee-devel@lists.sourceforge.net" <linux-zigbee-devel@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Varka Bhadram <varkab@cdac.in>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 11:48:10AM +0100, Alexander Popov wrote:
-> Introduce a device tree binding document for the MPC512x DMA controller
-> 
-> Signed-off-by: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  .../devicetree/bindings/dma/mpc512x-dma.txt        | 31 ++++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/mpc512x-dma.txt b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> new file mode 100644
-> index 0000000..95e2ca0
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mpc512x-dma.txt
-> @@ -0,0 +1,31 @@
-> +* Freescale MPC512x and MPC8308 DMA Controller
-> +
-> +The DMA controller in Freescale MPC512x and MPC8308 SoCs can move
-> +blocks of memory contents between memory and peripherals or
-> +from memory to memory.
-> +
-> +Refer to "Generic DMA Controller and DMA request bindings" in
-> +the dma/dma.txt file for a more detailed description of binding.
-> +
-> +Required properties:
-> +- compatible: should be "fsl,mpc5121-dma" or "fsl,mpc8308-dma";
-> +- reg: should contain the DMA controller registers location and length;
-> +- interrupt for the DMA controller: syntax of interrupt client node
-> +	is described in interrupt-controller/interrupts.txt file.
-> +
-> +Optional properties:
-> +- #dma-cells: the length of the DMA specifier, must be <1>.
-> +	Each channel of this DMA controller has a peripheral request line,
-> +	the assignment is fixed in hardware. This one cell
-> +	in dmas property of a client device represents the channel number.
+On Wed, Jun 18, 2014 at 12:13:06PM +0100, Varka Bhadram wrote:
+> On 06/18/2014 03:25 PM, Mark Rutland wrote:
+> > On Wed, Jun 18, 2014 at 10:26:16AM +0100, Varka Bhadram wrote:
+> >> +static int cc2520_probe(struct spi_device *spi)
+> >> +{
+> >> +       struct cc2520_private *priv;
+> >> +       struct pinctrl *pinctrl;
+> >> +       struct cc2520_platform_data *pdata;
+> >> +       struct device_node __maybe_unused *np =3D spi->dev.of_node=
+;
+> >>
+> >> This looks to be definitely unused rather than __maybe_unused. The=
+re are
+> >> no other occuences of "np" in this function.
+> >>
+> >> This macro defined like this.
+> >> #define __maybe_unused  __attribute__((unused))
+> > Sure, but that's irrelevant. There's absolutely no point in this
+> > variable existing at all, and it can simply disappear.
+> >
+> > Mark.
+>=20
+> If we don't use that macro the compiler triggers warnings saying that=
+:  warning: unused variable =E2=80=98np=E2=80=99 [-Wunused-variable]
 
-Surely this is required to be able to refer to DMA channels on the
-device?
+Then drop the _variable_, not just the annotation.
 
 Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
