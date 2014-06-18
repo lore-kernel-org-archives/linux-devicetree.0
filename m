@@ -1,83 +1,86 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH] mmc: core: Add DT bindings for card detect debounce time
-Date: Wed, 18 Jun 2014 15:47:31 +0200
-Message-ID: <CAPDyKFoZ=zjKg5bUMnK_X2XOatT=XSAnBDpYqu0Q2VOkM7hOOA@mail.gmail.com>
-References: <1399649837-27286-1-git-send-email-balajitk@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH RFC 1/2] libahci_platform: add
+ ahci_platform_get_of_property
+Date: Wed, 18 Jun 2014 15:03:52 +0100
+Message-ID: <20140618140352.GD11895@leverpostej>
+References: <xuwei5@hisilicon.com,kefeng.wang@linaro.org,>
+ <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org>
+ <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1399649837-27286-1-git-send-email-balajitk@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Balaji T K <balajitk@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
-Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org>
+Content-Language: en-US
+Sender: linux-ide-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: "tj@kernel.org" <tj@kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 9 May 2014 17:37, Balaji T K <balajitk@ti.com> wrote:
-> Provide an option to get CD debounce time from DT
->
-> Signed-off-by: Balaji T K <balajitk@ti.com>
+On Wed, Jun 18, 2014 at 05:54:08AM +0100, Zhangfei Gao wrote:
+> Instead of setting hflags in different files,
+> ahci_platform_get_of_property set hpriv->flags when ahci_platform_init_host
+> according to property in dts.
+
+The AHCI_HFLAGS are a Linux implementation detail, so it would be nice
+to have a good justification for each of these being turned into DT
+properties.
+
+> 
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 > ---
->  Documentation/devicetree/bindings/mmc/mmc.txt |    1 +
->  drivers/mmc/core/host.c                       |    6 +++++-
->  2 files changed, 6 insertions(+), 1 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-> index 9dce540..fae590b 100644
-> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
-> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-> @@ -17,6 +17,7 @@ Optional properties:
->  - bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
->    will be <1> if the property is absent.
->  - wp-gpios: Specify GPIOs for write protection, see gpio binding
-> +- cd-debounce-us: debounce time in microseconds for card detect gpio.
->  - cd-inverted: when present, polarity on the CD line is inverted. See the note
->    below for the case, when a GPIO is used for the CD line
->  - wp-inverted: when present, polarity on the WP line is inverted. See the note
-> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
-> index fdea825..59cd3a0 100644
-> --- a/drivers/mmc/core/host.c
-> +++ b/drivers/mmc/core/host.c
-> @@ -313,6 +313,7 @@ int mmc_of_parse(struct mmc_host *host)
->         bool explicit_inv_wp, gpio_inv_wp = false;
->         enum of_gpio_flags flags;
->         int len, ret, gpio;
-> +       unsigned int debounce;
->
->         if (!host->parent || !host->parent->of_node)
->                 return 0;
-> @@ -367,6 +368,9 @@ int mmc_of_parse(struct mmc_host *host)
->                 if (of_find_property(np, "broken-cd", &len))
->                         host->caps |= MMC_CAP_NEEDS_POLL;
->
-> +               if (of_property_read_u32(np, "cd-debounce-us", &debounce) < 0)
-> +                       debounce = 0;
+>  .../devicetree/bindings/ata/ahci-platform.txt      |    9 +++++
+>  drivers/ata/libahci_platform.c                     |   39 ++++++++++++++++++++
+>  2 files changed, 48 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> index c96d8dcf98fd..c0b9f6e76ba4 100644
+> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+> @@ -26,6 +26,15 @@ Optional properties:
+>  - clocks            : must contain the sata, sata_ref and ahb clocks
+>  - clock-names       : must contain "ahb" for the ahb clock
+>  
+> +- no-ncq: when present, controller can't do NCQ, turning off CAP_NCQ
+> +- 32bit-only: when present, controller can't do 64bit DMA, forcing 32bit
+> +- no-msi: when present, no PCI MSI
+> +- no-pmp: when present, controller can't do PMP, turning off CAP_PMP
+> +- yes-ncq: when present,controller can do NCQ, turning on CAP_NCQ
+> +- no-suspend: when present, controller can't do suspend
+> +- yes-fbs: when present, controller can do FBS, turning on CAP_FBS
+> +- no-fbs: when present, controller can't do FBS, turning off CAP_FBS
+
+There is absolutely no reason to mention CAP_* here; the DT should
+describe the HW, not Linux internals.
+
+Do these all make sense to be placed in DT?
+
+I worry that for other quirks we may need more flags in future. For that
+reason I'd rather figure this out in the driver based on the compatible
+string.
+
 > +
+>  Examples:
+>          sata@ffe08000 {
+>  		compatible = "snps,spear-ahci";
+> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+> index 3a5b4ed25a4f..880b9f360056 100644
+> --- a/drivers/ata/libahci_platform.c
+> +++ b/drivers/ata/libahci_platform.c
+> @@ -278,6 +278,44 @@ err_out:
+>  }
+>  EXPORT_SYMBOL_GPL(ahci_platform_get_resources);
+>  
+> +#ifdef CONFIG_OF
+> +static void ahci_platform_get_of_property(struct platform_device *pdev,
+> +					  struct ahci_host_priv *hpriv)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +
+> +	if (of_device_is_available(np)) {
+> +		if (of_get_property(np, "no-ncq", NULL))
+> +			hpriv->flags |= AHCI_HFLAG_NO_NCQ;
 
-Hi Balaji,
+For boolean flags please use of_property_read_bool.
 
-Sorry for a late reply.
-
-I am wondering whether this should be a generic gpio of property,
-instead of a mmc specific thing.
-
-I have added Linus Walleij and Alexandre Courbot, the maintainers of
-gpio. Let's see if they can point us in a direction.
-
->                 gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
->                 if (gpio == -EPROBE_DEFER)
->                         return gpio;
-> @@ -374,7 +378,7 @@ int mmc_of_parse(struct mmc_host *host)
->                         if (!(flags & OF_GPIO_ACTIVE_LOW))
->                                 gpio_inv_cd = true;
->
-> -                       ret = mmc_gpio_request_cd(host, gpio, 0);
-> +                       ret = mmc_gpio_request_cd(host, gpio, debounce);
->                         if (ret < 0) {
->                                 dev_err(host->parent,
->                                         "Failed to request CD GPIO #%d: %d!\n",
-> --
-> 1.7.5.4
->
-
-Kind regards
-Uffe
+Mark.
