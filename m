@@ -1,57 +1,30 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: OF_DYNAMIC node lifecycle
-Date: Wed, 18 Jun 2014 21:07:26 +0100
-Message-ID: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>
+From: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
+Subject: Re: [PATCH] omap3-n900.dts: Rename model name to "Nokia RX-51 board"
+Date: Wed, 18 Jun 2014 23:12:41 +0300
+Message-ID: <20140618201241.GB558@drone.musicnaut.iki.fi>
+References: <1403110635-29696-1-git-send-email-pali.rohar@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403110635-29696-1-git-send-email-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Pali =?iso-8859-1?Q?Roh=E1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: =?iso-8859-1?Q?Beno=EEt?= Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Nathan and Tyrel,
+On Wed, Jun 18, 2014 at 06:57:15PM +0200, Pali Roh=E1r wrote:
+> Use same name as in legacy board code. There are lot of userspace
+> applications which using machine/model name for determinating device =
+type.
 
-I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
-I'm hoping you can help me. Right now, pseries seems to be the only
-user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
-the entire kernel because it requires all DT code to manage reference
-counting with iterating over nodes. Most users simply get it wrong.
-Pantelis did some investigation and found that the reference counts on
-a running kernel are all over the place. I have my doubts that any
-code really gets it right.
+Can you clarify this? Nokia kernel or userspace never had DT, so they
+cannot see e.g. /proc/device-tree/model. What other APIs expose model?
 
-The problem is that users need to know when it is appropriate to call
-of_node_get()/of_node_put(). All list traversals that exit early need
-an extra call to of_node_put(), and code that is searching for a node
-in the tree and holding a reference to it needs to call of_node_get().
-
-I've got a few pseries questions:
-- What are the changes being requested by pseries firmware? Is it only
-CPUs and memory nodes, or does it manipulate things all over the tree?
-- How frequent are the changes? How many changes would be likely over
-the runtime of the system?
-- Are you able to verify that removed nodes are actually able to be
-freed correctly? Do you have any testcases for node removal?
-
-I'm thinking very seriously about changing the locking semantics of DT
-code entirely so that most users never have to worry about
-of_node_get/put at all. If the DT code is switched to use rcu
-primitives for tree iteration (which also means making DT code use
-list_head, something I'm already investigating), then instead of
-trying to figure out of_node_get/put rules, callers could use
-rcu_read_lock()/rcu_read_unlock() to protect the region that is
-searching over nodes, and only call of_node_get() if the node pointer
-is needed outside the rcu read-side lock.
-
-I'd really like to be rid of the node reference counting entirely, but
-I can't figure out a way of doing that safely, so I'd settle for
-making it a lot easier to get correct.
-
-Thoughts?
-
-g.
+A.
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
