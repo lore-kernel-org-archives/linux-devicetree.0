@@ -1,108 +1,57 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: CPU revision IDs
-Date: Wed, 18 Jun 2014 10:07:48 +0200
-Message-ID: <20140618080748.GF19730@lukather>
-References: <CAKON4OwNULPeQFHwRhRfri86yexMvvKfrw_dthim4_oPWvMD3g@mail.gmail.com>
- <4285095.l6sVUI20tQ@wuerfel>
- <CAKON4OxzJ7UoKnMgf+sckksjG-rx8NG1tUvPj2qaHNsda0j3jQ@mail.gmail.com>
- <5045739.TmqqIG2CDG@wuerfel>
- <CAKON4Ox+tCgiu6N988ds7ED2KbECw=60Y6BRqV_2UcM+vshw4Q@mail.gmail.com>
- <20140613132022.GJ3448@lukather>
- <CAKON4OxZLaL9sJFPjnUhec_LMZKGvGXrKyUjW-whHzY6byVUxw@mail.gmail.com>
- <20140613135817.GK3448@lukather>
- <CAKON4Oz44X7G+yM2R-XX_D_6FV4ekWiOKY2t_p0Y3+gUXJ17iw@mail.gmail.com>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 16/20] mfd: sun6i-prcm: Add support for
+ Allwinner A23 PRCM
+Date: Wed, 18 Jun 2014 09:29:53 +0100
+Message-ID: <20140618082953.GO21030@lee--X1>
+References: <1403016777-15121-1-git-send-email-wens@csie.org>
+ <1403016777-15121-17-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="m1UC1K4AOz1Ywdkx"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBB44QWOQKGQEMCJUP5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1403016777-15121-17-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAKON4Oz44X7G+yM2R-XX_D_6FV4ekWiOKY2t_p0Y3+gUXJ17iw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: "jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
---m1UC1K4AOz1Ywdkx
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 13, 2014 at 10:37:37AM -0400, jonsmirl-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org wrote:
-> >> Then I end up with code in the machine file like this...
-> >>
-> >> find SOC revision
-> >> if revision =3D=3D A
-> >>     fix up codec and i2s driver compatible
-> >> if revision =3D=3D B
-> >>     fix up HDMI compatible
-> >> if revision =3D=3D C
-> >>     fix up whatever
-> >> I've seen chips with revision levels of J
-> >>
-> >> Why do you want this knowledge in the machine file? Why not just add
-> >> the test for SOC revision inside the device driver?
-> >
-> > Because it's going to be a mess anyway. No matter if it's in the
-> > driver or the machine code. So at least, that way, we're having it
-> > centralized and isolated from the driver's code.
+> The Allwinner A23 SoC has a PRCM unit like the previous A31 SoC.
+> The differences are the AR100 clock can no longer be modified,
+> the APB0 clock has different divisors, and some clock gates are
+> gone.
 >=20
-> The mess is always going to be in the driver code. You are just
-> changing the the string the driver code selects on...
+> This patch adds a compatible with a modified subdevice list for
+> the A23.
 >=20
-> if (of_machine_is_compatible("allwinner,sun7i-codec-rev-a")) {
->       fix bug
-> }
->=20
-> if (of_machine_is_compatible("allwinner,sun7i-a20a")) {
->       fix bug
-> }
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  .../devicetree/bindings/mfd/sun6i-prcm.txt         |  2 +-
+>  drivers/mfd/sun6i-prcm.c                           | 30 ++++++++++++++++=
+++++++
+>  2 files changed, 31 insertions(+), 1 deletion(-)
 
-What? Hmmm, nope. Look at how we're doing this for the i2c driver
-(drivers/i2c/busses/i2c-mv64xxx.c).
+The patch looks fine to me, but I'm concerned about the size of the
+patch set and the amount of subsystems it touches.
 
-> The mess is not required in the machine file.  Init time code can
-> always modify the machine compatible string like this with no side
-> effects. It would add 'a'-'j' as appropriate for the CPU.
->=20
-> Code changes this:
->  compatible =3D "cubietech,cubietruck", "allwinner,sun7i-a20"
-> to:
->  compatible =3D "cubietech,cubietruck",  "allwinner,sun7i-a20-a",
-> "allwinner,sun7i-a20"
-
-Again, this is the machine compatible, and this is orthogonal to the
-issue. You should have a different compatible string for the *codec*.
+I am guessing that this patch can just be taken independently though.
+Please correct me if I'm wrong.
 
 --=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
---m1UC1K4AOz1Ywdkx
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJToUjUAAoJEBx+YmzsjxAgT3UQAJT7AFJsWwPZV3uIXAe3NgRV
-JT2fVG0SM2WQAg9L7QeANO+iqA3pTtDFrbmtj9JgCKd6sY8ebKuPyiIuWRVVoZDQ
-ak79jnL/C+BeWBMVVhx1iryFg7UgPITLqDzs65dgabdZpfs6q314qLCOVCvPt3aU
-LGDhXMHrf6DAjCsjV+WAVBpcRqeDQ/+zr4GwMX1nKzem8yu0yJGnOWSXtxkoGlHE
-rMTa7NYsJru5ODRQh3yGVS7sRcgGT7HYmTtabABkxv2+g0BVLZQYuhvotDTv/TCg
-Zz5qlhmqYSRyLVpGjSwSue4IvyhbLajaICUihJ9za0Hai5N+R9N0R78v0wXCziQO
-+XjjjbSXhLoWj8iqzSjaGDKKCCj5HmPzeX3am7HwhHEe/qW8VczEo79ksAG/kyT6
-ZFAqtI1+7hYmhZaCbetAUgqjofqx3J1rQHpYKpmk0H93fR/8vy2rGp9z334n50p6
-1DpA46HjOGfB7tBd9o1ebYMAPL6SUMylphjHbp/Iz04+ptxOn7jfMWnWGxjBSDB5
-IKY8RsoKENXHKMt6r16yfcvtlWGmPqEC3gXOG+JkL8L624dazlI32o2NKLSy6/Kn
-SCh/a6K2xX41s+224MWte851y6REoeywHcBivikFL3cJO7oAzNnDAMnA0X/nAlR+
-lUrGz+zpgddpoTtIkpXX
-=an7G
------END PGP SIGNATURE-----
-
---m1UC1K4AOz1Ywdkx--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
