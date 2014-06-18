@@ -1,60 +1,94 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH 7/7] pwm: st: Supply Device Tree binding documentation for
- ST's PWM IP
-Date: Wed, 18 Jun 2014 17:08:31 +0200
-Message-ID: <CAG374jBJpmgv+X_ZT-Q6kj89p8BvVLb3sUsBHmD7GHF=jLQ=Ew@mail.gmail.com>
-References: <1403103172-19856-1-git-send-email-lee.jones@linaro.org>
-	<1403103172-19856-7-git-send-email-lee.jones@linaro.org>
+From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: dts: imx6qdl: Enable CODA960 VPU
+Date: Wed, 18 Jun 2014 23:12:30 +0800
+Message-ID: <20140618151229.GR8860@dragon>
+References: <1402679641-868-1-git-send-email-p.zabel@pengutronix.de>
+ <1402679641-868-4-git-send-email-p.zabel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pwm-owner@vger.kernel.org>
-In-Reply-To: <1403103172-19856-7-git-send-email-lee.jones@linaro.org>
-Sender: linux-pwm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pwm@vger.kernel.org, "kernel@stlinux.com" <kernel@stlinux.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Patrice Chotard <patrice.chotard@st.com>, ajitpal.singh@st.com, thierry.reding@gmail.com, Maxime Coquelin <maxime.coquelin@st.com>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402679641-868-4-git-send-email-p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
-minor remark below..
+On Fri, Jun 13, 2014 at 07:14:01PM +0200, Philipp Zabel wrote:
+> This patch adds links to the on-chip SRAM and reset controller nodes
+> and switches the interrupts. Make the BIT processor interrupt, which exists on
+> all variants, the first one. The JPEG unit interrupt, which does not exist on
+> i.MX27 and i.MX5 thus is an optional second interrupt.
+> Use different compatible strings for i.MX6Q/D and i.MX6S/DL, as they have to
+> load separate firmware images for some reason.
+> 
+> Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 
-On 18 June 2014 16:52, Lee Jones <lee.jones@linaro.org> wrote:
-> Signed-off-by: Lee Jones <lee.jones@linaro.org>
+The whole series looks good to me.
+
+Rob,
+
+Do you want to apply the first patch through DT tree, or may I have your
+ACK to take the whole series via IMX tree?
+
+Shawn
+
 > ---
->  Documentation/devicetree/bindings/pwm/pwm-st.txt | 41 ++++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-st.txt
->
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-st.txt b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> new file mode 100644
-> index 0000000..ea88c5c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-st.txt
-> @@ -0,0 +1,41 @@
-> +STMicroelectronics PWM driver bindings
-> +--------------------------------------
-
-> +Example:
+>  arch/arm/boot/dts/imx6dl.dtsi  |  4 ++++
+>  arch/arm/boot/dts/imx6q.dtsi   |  4 ++++
+>  arch/arm/boot/dts/imx6qdl.dtsi | 10 ++++++++--
+>  3 files changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6dl.dtsi b/arch/arm/boot/dts/imx6dl.dtsi
+> index 5c5f574..fbbdfca 100644
+> --- a/arch/arm/boot/dts/imx6dl.dtsi
+> +++ b/arch/arm/boot/dts/imx6dl.dtsi
+> @@ -110,3 +110,7 @@
+>  		      "di0_sel", "di1_sel",
+>  		      "di0", "di1";
+>  };
 > +
-> +pwm1: pwm@fe510000 {
-> +       compatible = "st,pwm";
-> +       reg = <0xfe510000 0x68>;
-> +       #pwm-cells = <2>;
-> +       pinctrl-names = "default";
-> +       pinctrl-0 = <&pinctrl_pwm1_chan0_default
-> +                    &pinctrl_pwm1_chan1_default
-> +                    &pinctrl_pwm1_chan2_default
-> +                    &pinctrl_pwm1_chan3_default>;
-> +       clocks = <&CLK_SYSIN>;
-clock name in lower case
-
-> +       clock-names = "pwm";
-> +       st,pwm-num-chan = <4>;
+> +&vpu {
+> +	compatible = "fsl,imx6dl-vpu", "cnm,coda960";
 > +};
-> --
-> 1.8.3.2
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> diff --git a/arch/arm/boot/dts/imx6q.dtsi b/arch/arm/boot/dts/imx6q.dtsi
+> index addd3f8..2c1dbf8 100644
+> --- a/arch/arm/boot/dts/imx6q.dtsi
+> +++ b/arch/arm/boot/dts/imx6q.dtsi
+> @@ -291,3 +291,7 @@
+>  		};
+>  	};
+>  };
+> +
+> +&vpu {
+> +	compatible = "fsl,imx6q-vpu", "cnm,coda960";
+> +};
+> diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
+> index eca0971..2052303 100644
+> --- a/arch/arm/boot/dts/imx6qdl.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl.dtsi
+> @@ -315,9 +315,15 @@
+>  			};
+>  
+>  			vpu: vpu@02040000 {
+> +				compatible = "cnm,coda960";
+>  				reg = <0x02040000 0x3c000>;
+> -				interrupts = <0 3 IRQ_TYPE_LEVEL_HIGH>,
+> -				             <0 12 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupts = <0 12 IRQ_TYPE_LEVEL_HIGH>,
+> +				             <0 3 IRQ_TYPE_LEVEL_HIGH>;
+> +				interrupt-names = "bit", "jpeg";
+> +				clocks = <&clks 168>, <&clks 168>;
+> +				clock-names = "per", "ahb";
+> +				resets = <&src 1>;
+> +				iram = <&ocram>;
+>  			};
+>  
+>  			aipstz@0207c000 { /* AIPSTZ1 */
+> -- 
+> 2.0.0
+> 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
