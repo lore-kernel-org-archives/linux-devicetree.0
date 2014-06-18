@@ -1,50 +1,45 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH net-next v2 1/3] ieee802154: cc2520: adds driver for TI
- CC2520 radio
-Date: Wed, 18 Jun 2014 14:39:58 +0100
-Message-ID: <20140618133958.GC11895@leverpostej>
-References: <1403068565-32224-1-git-send-email-varkab@cdac.in>
- <1403068565-32224-2-git-send-email-varkab@cdac.in>
- <20140618091010.GB26461@leverpostej>
- <53A15B38.6060404@gmail.com>
- <20140618095519.GE26461@leverpostej>
- <53A17442.8010009@gmail.com>
+From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Subject: Re: [PATCH 1/2] ARM: dts: hummingboard: add support for BT/wifi
+	where fitted
+Date: Wed, 18 Jun 2014 14:44:59 +0100
+Message-ID: <20140618134459.GD32514@n2100.arm.linux.org.uk>
+References: <E1WufIK-0007yl-2k@rmk-PC.arm.linux.org.uk> <20140618133345.GL8860@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53A17442.8010009@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "alex.bluesman.smirnov@gmail.com" <alex.bluesman.smirnov@gmail.com>, "dbaryshkov@gmail.com" <dbaryshkov@gmail.com>, "linux-zigbee-devel@lists.sourceforge.net" <linux-zigbee-devel@lists.sourceforge.net>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Varka Bhadram <varkab@cdac.in>
+In-Reply-To: <20140618133345.GL8860@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 12:13:06PM +0100, Varka Bhadram wrote:
-> On 06/18/2014 03:25 PM, Mark Rutland wrote:
-> > On Wed, Jun 18, 2014 at 10:26:16AM +0100, Varka Bhadram wrote:
-> >> +static int cc2520_probe(struct spi_device *spi)
-> >> +{
-> >> +       struct cc2520_private *priv;
-> >> +       struct pinctrl *pinctrl;
-> >> +       struct cc2520_platform_data *pdata;
-> >> +       struct device_node __maybe_unused *np =3D spi->dev.of_node=
-;
-> >>
-> >> This looks to be definitely unused rather than __maybe_unused. The=
-re are
-> >> no other occuences of "np" in this function.
-> >>
-> >> This macro defined like this.
-> >> #define __maybe_unused  __attribute__((unused))
-> > Sure, but that's irrelevant. There's absolutely no point in this
-> > variable existing at all, and it can simply disappear.
-> >
-> > Mark.
->=20
-> If we don't use that macro the compiler triggers warnings saying that=
-:  warning: unused variable =E2=80=98np=E2=80=99 [-Wunused-variable]
+On Wed, Jun 18, 2014 at 09:33:46PM +0800, Shawn Guo wrote:
+> On Wed, Jun 11, 2014 at 10:58:12AM +0100, Russell King wrote:
+> > Some microsom modules have BT/Wifi fitted for the Hummingboard.  Enable
+> > support for this additional hardware; where it isn't present, the SDIO
+> > BT/Wifi will not be detected, and no harm will come from having these
+> > additional devices enabled.
+> > 
+> > Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> 
+> Applied this one, thanks.
 
-Then drop the _variable_, not just the annotation.
+Probably not a good idea - which is why I didn't re-send it with my
+recent set.  As we /still/ don't have the story sorted six months down
+the line for handling the power and reset signals for the module, we
+still don't know what the final bindings are going to look like.
 
-Mark.
+I've more or less given up any hope of that situation being resolved;
+I'm intending to maintain Olof's patches locally, publishing them for
+Cubox-i users.  At this point, I really couldn't care less what the
+dysfunctional mainline kernel community does in respect of this very
+necessary feature.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
