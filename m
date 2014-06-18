@@ -1,97 +1,35 @@
-From: Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: [PATCH/RFC V7] clk: Default clock parents and rates assigned from DT
-Date: Wed, 18 Jun 2014 12:47:15 +0200
-Message-ID: <1403088436-29956-1-git-send-email-s.nawrocki@samsung.com>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sylwester Nawrocki <s.nawrocki-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+From: Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 0/3] dmaengine: mpc512x: add device tree binding document and DMA channel lookup
+Date: Wed, 18 Jun 2014 14:48:09 +0400
+Message-ID: <1403088492-15241-1-git-send-email-a13xp0p0v88@gmail.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gerhard Sittig <gsi-ynQEQJNshbs@public.gmane.org>, Dan Williams <dan.j.williams-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Vinod Koul <vinod.koul-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Anatolij Gustschin <agust-ynQEQJNshbs@public.gmane.org>, Andy Shevchenko <andriy.shevchenko-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Alexander Popov <a13xp0p0v88-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds DT binding documentation for a set of properties
-allowing to specify default parent clocks and clock rates in the device
-tree.  It also adds a helper function to parse the 'assigned-clocks',
-'assigned-clock-parents' and 'assigned-clock-rates' DT properties and
-to set the specified clocks configuration.  The configuration is now
-being done by the platform, I2C and SPI bus before driver probing and
-in the clock core after registering a clock provider.
+This patch series introduces a device tree binding document for
+the MPC512x DMA controller and adds device tree based DMA channel lookup
+for it.
 
-Changes since v6:
- - use a set of separate DT properties to specify the default parent
-   clocks and rates;
- - the clock defaults setting extended to the I2C and SPI busses;
- - added struct dev_clk_info to struct device so we can prevent multiple
-   calls to clk_dev_set_defaults() in case of deferred probing;
- - skipped the first patch from the series already merged upstream.
+This version has improved device tree binding document.
 
-Changes since v5:
- - reverted to the DT binding as sugested by Grant, it should now work
-   for both clock suppliers and consumers, similarly as pinctrl hogging;
- - fixed detecting of null phandles (ENOENT error handling);
- - the clocks will now also be attempted to be configured right after
-   registering the clock provider, this allows to avoid a call to
-   of_clk_set_defaults() in multiple clock provider drivers;
- - dropped of_clk_get_by_property() helper, added of_clk_get_by_clkspec.
+Alexander Popov (3):
+  dmaengine: mpc512x: add device tree binding document
+  dmaengine: of: add common xlate function for matching by channel id
+  dmaengine: mpc512x: register for device tree channel lookup
 
-Changes since v4:
- - added note explaining how to skip setting parent and rate of a clock,
- - added missing call to of_node_put(),
- - moved of_clk_dev_init() calls to the platform bus,
- - dropped debug traces.
+ .../devicetree/bindings/dma/mpc512x-dma.txt        | 31 +++++++++++++++++++
+ arch/powerpc/boot/dts/mpc5121.dtsi                 |  1 +
+ drivers/dma/mpc512x_dma.c                          | 13 +++++++-
+ drivers/dma/of-dma.c                               | 35 ++++++++++++++++++++++
+ include/linux/of_dma.h                             |  4 +++
+ 5 files changed, 83 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mpc512x-dma.txt
 
-Changes since v3:
- - improved documentation of the DT binding,
- - fixed build errors for !CONFIG_OF, the parsing helpers are only
-   compiled in if CONFIG_OF is set.
-
-Changes since v2:
- - code reordering to ensure there is no build errors, the clock
-   configuration code moved to a separate file,
- - introduced an 'assigned-clocks' DT node which is supposed to contain
-   clocks, clock-parents, clock-rates properties and be child node
-   a clock provider node, and a code parsing it called from of_clk_init();
-   It's for clocks which are not directly connected to consumer devices.
-   An alternative would be to list such assigned clocks in 'clocks'
-   property, along with "proper" parent clocks, but then there would
-   be phandles in clocks property of a node pointing to itself and it
-   would require proper handling in of_clock_init().
-   I actually tried it but it looked a bit ugly and chose this time to
-   use an extra subnode.
-
-Changes since v1:
- - updated DT binding documentation,
- - dropped the platform bus notifier, the clock setup routine is now
-   being called directly from the driver core before a driver probe() call;
-   this has an advantage such as all bus types are handled and any errors
-   are propagated, so that, for instance a driver probe() can be deferred
-   also when resources specified by clock-parents/clock-rates properties
-   are not yet available; an alternative would be to let drivers call
-   of_clk_device_setup() directly,
- - dropped the patch adding a macro definition for maximum DT property
-   name length for now.
-
-This series has been tested on ARM, on Exynos4412 Odroid U3 board.
-The full git tree can be found at:
- git://linuxtv.org/snawrocki/samsung.git v3.16-rc1-odroid-sound-clk
-
-and browsed at
- http://git.linuxtv.org/cgit.cgi/snawrocki/samsung.git/log/?h=v3.16-rc1-odroid-sound-clk
-
-Sylwester Nawrocki (1):
-  clk: Support for clock parents and rates assigned from device tree
-
- .../devicetree/bindings/clock/clock-bindings.txt   |   36 +++++
- drivers/base/platform.c                            |    5 +
- drivers/clk/Makefile                               |    3 +
- drivers/clk/clk-conf.c                             |  154 ++++++++++++++++++++
- drivers/clk/clk.c                                  |   12 +-
- drivers/i2c/i2c-core.c                             |    5 +
- drivers/spi/spi.c                                  |    5 +
- include/linux/clk/clk-conf.h                       |   33 +++++
- include/linux/device.h                             |    4 +
- 9 files changed, 255 insertions(+), 2 deletions(-)
- create mode 100644 drivers/clk/clk-conf.c
- create mode 100644 include/linux/clk/clk-conf.h
+-- 
+1.8.4.2
 
 --
-1.7.9.5
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
