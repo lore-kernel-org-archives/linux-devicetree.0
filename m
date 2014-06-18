@@ -1,41 +1,83 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: [PATCH] ARM: dts: add hdmi regulators for exynos5420 based peach-pit
- board
-Date: Wed, 18 Jun 2014 19:14:59 +0530
-Message-ID: <1403099099-6599-1-git-send-email-rahul.sharma@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
-Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH] mmc: core: Add DT bindings for card detect debounce time
+Date: Wed, 18 Jun 2014 15:47:31 +0200
+Message-ID: <CAPDyKFoZ=zjKg5bUMnK_X2XOatT=XSAnBDpYqu0Q2VOkM7hOOA@mail.gmail.com>
+References: <1399649837-27286-1-git-send-email-balajitk@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1399649837-27286-1-git-send-email-balajitk@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Balaji T K <balajitk@ti.com>, Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Adding regulators for hdmi for peach-pit board.
+On 9 May 2014 17:37, Balaji T K <balajitk@ti.com> wrote:
+> Provide an option to get CD debounce time from DT
+>
+> Signed-off-by: Balaji T K <balajitk@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/mmc.txt |    1 +
+>  drivers/mmc/core/host.c                       |    6 +++++-
+>  2 files changed, 6 insertions(+), 1 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 9dce540..fae590b 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -17,6 +17,7 @@ Optional properties:
+>  - bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
+>    will be <1> if the property is absent.
+>  - wp-gpios: Specify GPIOs for write protection, see gpio binding
+> +- cd-debounce-us: debounce time in microseconds for card detect gpio.
+>  - cd-inverted: when present, polarity on the CD line is inverted. See the note
+>    below for the case, when a GPIO is used for the CD line
+>  - wp-inverted: when present, polarity on the WP line is inverted. See the note
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index fdea825..59cd3a0 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -313,6 +313,7 @@ int mmc_of_parse(struct mmc_host *host)
+>         bool explicit_inv_wp, gpio_inv_wp = false;
+>         enum of_gpio_flags flags;
+>         int len, ret, gpio;
+> +       unsigned int debounce;
+>
+>         if (!host->parent || !host->parent->of_node)
+>                 return 0;
+> @@ -367,6 +368,9 @@ int mmc_of_parse(struct mmc_host *host)
+>                 if (of_find_property(np, "broken-cd", &len))
+>                         host->caps |= MMC_CAP_NEEDS_POLL;
+>
+> +               if (of_property_read_u32(np, "cd-debounce-us", &debounce) < 0)
+> +                       debounce = 0;
+> +
 
-Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
----
-Based on for-next branch in Kukjin's tree.
-Dependent on:
-1) PMIC DT patch at http://www.gossamer-threads.com/lists/linux/kernel/1945703
-2) tps65090 DT patch at https://lkml.org/lkml/2014/6/13/483
+Hi Balaji,
 
- arch/arm/boot/dts/exynos5420-peach-pit.dts |    5 +++++
- 1 file changed, 5 insertions(+)
+Sorry for a late reply.
 
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 1c5b8f9..0a6a1cb 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -229,6 +229,11 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&hdmi_hpd_irq>;
- 	ddc = <&i2c_2>;
-+
-+	hdmi-en-supply = <&tps65090_fet7>;
-+	vdd-supply = <&ldo8_reg>;
-+	vdd_osc-supply = <&ldo10_reg>;
-+	vdd_pll-supply = <&ldo8_reg>;
- };
- 
- &usbdrd_phy0 {
--- 
-1.7.9.5
+I am wondering whether this should be a generic gpio of property,
+instead of a mmc specific thing.
+
+I have added Linus Walleij and Alexandre Courbot, the maintainers of
+gpio. Let's see if they can point us in a direction.
+
+>                 gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
+>                 if (gpio == -EPROBE_DEFER)
+>                         return gpio;
+> @@ -374,7 +378,7 @@ int mmc_of_parse(struct mmc_host *host)
+>                         if (!(flags & OF_GPIO_ACTIVE_LOW))
+>                                 gpio_inv_cd = true;
+>
+> -                       ret = mmc_gpio_request_cd(host, gpio, 0);
+> +                       ret = mmc_gpio_request_cd(host, gpio, debounce);
+>                         if (ret < 0) {
+>                                 dev_err(host->parent,
+>                                         "Failed to request CD GPIO #%d: %d!\n",
+> --
+> 1.7.5.4
+>
+
+Kind regards
+Uffe
