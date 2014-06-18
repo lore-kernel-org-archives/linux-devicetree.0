@@ -1,38 +1,58 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: [PATCH 3/4] arm/versatile: Add the uart as the stdout device.
-Date: Wed, 18 Jun 2014 21:54:33 +0100
-Message-ID: <1403124874-19929-4-git-send-email-grant.likely@linaro.org>
-References: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403124874-19929-1-git-send-email-grant.likely@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh@kernel.org, olof@lixom.net, benh@kernel.crashing.org
-Cc: Grant Likely <grant.likely@linaro.org>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states bindings
+Date: Wed, 18 Jun 2014 16:55:45 -0400
+Message-ID: <53A1FCD1.8070703@ti.com>
+References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com> <1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com> <alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr> <20140613164954.GA16745@e102568-lin.cambridge.arm.com> <alpine.LFD.2.11.1406131306160.25775@knanqh.ubzr> <20140618173648.GB31573@e102568-lin.cambridge.arm.com> <53A1E818.6030400@ti.com> <alpine.LFD.2.11.1406181641290.16842@knanqh.ubzr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <alpine.LFD.2.11.1406181641290.16842@knanqh.ubzr>
+Sender: linux-pm-owner@vger.kernel.org
+To: Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@k>
 List-Id: devicetree@vger.kernel.org
 
-Add a stdout-path property to the Versatile devicetree so that automatic
-console selection works without needing a console= line on the kernel
-command line.
+On Wednesday 18 June 2014 04:51 PM, Nicolas Pitre wrote:
+> On Wed, 18 Jun 2014, Santosh Shilimkar wrote:
+> 
+>> On Wednesday 18 June 2014 01:36 PM, Lorenzo Pieralisi wrote:
+>> [..]
+>>> +	To correctly specify idle states timing and energy related properties,
+>>> +	the following definitions identify the different execution phases
+>>> +	a CPU goes through to enter and exit idle states and the implied
+>>> +	energy metrics:
+>>> +
+>>> +	..__[EXEC]__|__[PREP]__|__[ENTRY]__|__[IDLE]__|__[EXIT]__|__[EXEC]__..
+>>> +		    |          |           |          |          |
+>>> +
+>>> +		    |<------ entry ------->|
+>>> +		    |       latency        |
+>>> +						      |<- exit ->|
+>>> +						      |  latency |
+>>> +		    |<-------- min-residency -------->|
+>>> +			       |<-------  wakeup-latency ------->|
+>>> +
+>> I don't know the wakeup latency makes much sense and also correct.
+>> Hardware wakeup latency is actually exit latency. Is it for failed
+>> or abort-able ilde case ? We are adding this as a new parameter
+>> at least from idle states perspective. I think we should just
+>> avoid it.
+> 
+> I explained the rationale for this parameter in a previous email but 
+> Lorenzo didn't carry it over. To be clearer, this should be "worst case 
+> wake-up latency".  It is of interest for PMQOS.  This is the maximum 
+> delay that can be expected from the moment a wake-up event is signaled 
+> and the moment the CPU is back operational.  This is more than just exit 
+> latency.  By default this is entry_latency + exit_latency but when there 
+> is an abortable PREP phase then it may be shorter than that.
+> 
+PMQOS angle is right. It is just that the idle code is not
+going to do anything with this value. But I see a value adding it
+instead of some one doing calculation.
 
-Signed-off-by: Grant Likely <grant.likely@linaro.org>
----
- arch/arm/boot/dts/versatile-ab.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Thanks for clarity Nico !!
 
-diff --git a/arch/arm/boot/dts/versatile-ab.dts b/arch/arm/boot/dts/versatile-ab.dts
-index e01e5a081def..88e94c5506a1 100644
---- a/arch/arm/boot/dts/versatile-ab.dts
-+++ b/arch/arm/boot/dts/versatile-ab.dts
-@@ -15,6 +15,10 @@
- 		i2c0 = &i2c0;
- 	};
- 
-+	chosen {
-+		stdout-path = &uart0;
-+	};
-+
- 	memory {
- 		reg = <0x0 0x08000000>;
- 	};
--- 
-1.9.1
+regards,
+Santosh
+
