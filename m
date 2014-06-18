@@ -1,50 +1,56 @@
-From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv4 4/4] ARM: dts: Fix wrong compatible string for Exynos3250
- ADC
-Date: Wed, 18 Jun 2014 10:37:00 +0200
-Message-ID: <53A14FAC.3050700@gmail.com>
-References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com> <1403058061-24271-5-git-send-email-cw00.choi@samsung.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v4 1/7] mfd: axp20x: add AXP221 PMIC support
+Date: Wed, 18 Jun 2014 10:46:58 +0200
+Message-ID: <53A15202.1070908@free-electrons.com>
+References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com> <1402990723-28138-2-git-send-email-boris.brezillon@free-electrons.com> <20140618083605.GQ21030@lee--X1>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403058061-24271-5-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBBFEQWOQKGQEUYHSK2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140618083605.GQ21030@lee--X1>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
 
-On 18.06.2014 04:21, Chanwoo Choi wrote:
-> This patchset fix wrong compatible string for Exynos3250 ADC. Exynos3250 SoC
-> need to control only special clock for ADC. Exynos SoC except for Exynos3250
-> has not included special clock for ADC. The exynos ADC driver can control
-> special clock if compatible string is 'exynos3250-adc-v2'.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> ---
->  arch/arm/boot/dts/exynos3250.dtsi | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
-> index 6c1fb67..107dc44 100644
-> --- a/arch/arm/boot/dts/exynos3250.dtsi
-> +++ b/arch/arm/boot/dts/exynos3250.dtsi
-> @@ -414,10 +414,10 @@
->  		};
->  
->  		adc: adc@126C0000 {
-> -			compatible = "samsung,exynos-adc-v3";
-> +			compatible = "samsung,exynos3250-adc-v2";
->  			reg = <0x126C0000 0x100>, <0x10020718 0x4>;
->  			interrupts = <0 137 0>;
-> -			clock-names = "adc", "sclk_tsadc";
-> +			clock-names = "adc", "sclk_adc";
+On 18/06/2014 10:36, Lee Jones wrote:
+> On Tue, 17 Jun 2014, Boris BREZILLON wrote:
+>
+>> Add support for the AXP221 PMIC device to the existing AXP20x driver.
+>>
+>> The AXP221 defines a new set of registers, power supplies and regulators,
+>> but most of the API is similar to the AXP20x ones.
+>> The AXP20x irq chip definition is reused, though some interrupts are not
+>> available in the AXP221.
+>>
+>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>>  drivers/mfd/axp20x.c       | 64 ++++++++++++++++++++++++++++++++++++++++++----
+>>  include/linux/mfd/axp20x.h | 56 ++++++++++++++++++++++++++++++++++++++++
+>>  2 files changed, 115 insertions(+), 5 deletions(-)
+> Looks good to me now.
+>   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>
+> Can this go in independently to the other patches in the set?
 
-So, is it "sclk_adc" or "sclk_tsadc"? The code uses the former, while
-the documentation mentions the latter. Please fix this.
+Yes, as long as no one define an axp221 node in his DT.
+In this case axp221 regulators would be considered as axp20x ones (which
+might be a bit problematic), because axp20x-regulator driver does not
+test the axp variant before probing its regulators (this test is
+introduced in patch 3).
 
-Best regards,
-Tomasz
+Best Regards,
+
+Boris
+
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
