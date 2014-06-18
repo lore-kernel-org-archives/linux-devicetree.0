@@ -1,92 +1,69 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv4 3/4] iio: devicetree: Add DT binding documentation for
- Exynos3250 ADC
-Date: Wed, 18 Jun 2014 17:54:30 +0900
-Message-ID: <53A153C6.1030703@samsung.com>
-References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com>
- <1403058061-24271-4-git-send-email-cw00.choi@samsung.com>
- <53A14F4D.7080204@gmail.com>
+From: Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
+Date: Wed, 18 Jun 2014 11:57:25 +0300
+Message-ID: <20140618085725.GI3407@tbergstrom-lnx.Nvidia.com>
+References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com>
+ <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com>
+ <539F4D44.3070309@wwwdotorg.org> <53A03186.3040703@collabora.com>
+ <20140617223518.GA25309@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-reply-to: <53A14F4D.7080204@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140617223518.GA25309@mithrandir>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org" <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On Wed, Jun 18, 2014 at 12:35:27AM +0200, Thierry Reding wrote:
+> * PGP Signed by an unknown key
+> 
+> On Tue, Jun 17, 2014 at 02:16:06PM +0200, Tomeu Vizoso wrote:
+> > On 06/16/2014 10:02 PM, Stephen Warren wrote:
+> > >On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
+> > >>+
+> > >>+Child device nodes describe the memory settings for different configurations and
+> > >>+clock rates.
+> > >
+> > >How do the child nodes do that? The binding needs to specify the format
+> > >of the child node.
+> > 
+> > Sorry, that file was sent before I had finished removing the bits from
+> > downstream that aren't needed yet. There's no current need for any child
+> > nodes.
+> > 
+> > >This binding looks quite anaemic vs.
+> > >Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-emc.txt; I
+> > >would expect that this binding needs all the EMC register data from the
+> > >tegra20-emc binding too. Can the two bindings be identical?
+> > 
+> > There's even less stuff needed right now, as all what ultimately the EMC
+> > driver does is call clk_set_rate on the EMC clock. As the T124 EMC driver
+> > gains more features, they should get more similar.
+> > 
+> > >Can you explain what the nvidia,mc and nvidia,pmc references are needed
+> > >for? Hopefully, this driver isn't going to reach into those devices and
+> > >touch their registers directly.
+> > 
+> > Not really needed, see above.
+> 
+> I've been working on a prototype driver for the memory controller. Part
+> of what I've added is programming of the latency allowance registers (it
+> doesn't yet expose an API to do so yet, though). I think that needs to
+> eventually take into account the EMC frequency (and needs to be notified
+> of changes to the same).
+> 
+> Without having thought this through very thoroughly, I suspect that
+> rather than referencing the MC from the EMC it might be better to have
+> the MC register with the EMC for notifications.
+> 
+> But perhaps there are other services from MC that EMC needs to work?
+> 
 
-On 06/18/2014 05:35 PM, Tomasz Figa wrote:
-> Hi Chanwoo,
-> 
-> On 18.06.2014 04:21, Chanwoo Choi wrote:
->> This patch add DT binding documentation for Exynos3250 ADC IP. Exynos3250 has
->> special clock ('sclk_tsadc') for ADC which provide clock to internal ADC.
->>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>  .../devicetree/bindings/arm/samsung/exynos-adc.txt   | 20 ++++++++++++++++++++
->>  1 file changed, 20 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> index 5d49f2b..3a5af82 100644
->> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
->> @@ -14,6 +14,8 @@ Required properties:
->>  				for exynos4412/5250 controllers.
->>  			Must be "samsung,exynos-adc-v2" for
->>  				future controllers.
->> +			Must be "samsung,exynos3250-adc-v2" for
->> +				for exynos3250 controllers.
-> 
-> You might change the last line for:
-> 
-> for controllers compatible with ADC of Exynos3250.
-> 
-> This is to make it also account for possible future SoCs which need
-> exactly the same handling.
+If the emc frequency change is modelled as a clock, you could use CCF
+notifications for this?
 
-OK, I'll modify it as folloiwng according to your comment:
+Cheers,
 
->> +			Must be "samsung,exynos3250-adc-v2" for
->> +				for controllers compatible with ADC of Exynos3250.
-
-> 
-> 
->>  - reg:			Contains ADC register address range (base address and
->>  			length) and the address of the phy enable register.
->>  - interrupts: 		Contains the interrupt information for the timer. The
->> @@ -21,7 +23,11 @@ Required properties:
->>  			the Samsung device uses.
->>  - #io-channel-cells = <1>; As ADC has multiple outputs
->>  - clocks		From common clock binding: handle to adc clock.
->> +			From common clock binding: handle to sclk_tsadc clock
->> +			if using Exynos3250.
-> 
-> This is not clear. It might sound like the "sclk_tsadc" clock is used on
-> Exynos3250 and "adc" on remaining SoCs. I'd write this simply as:
-> 
->>From common clock bindings: handles to clocks specified in "clock-names"
-> property, in the same order.
-
-I'll modify it.
-
-> 
->>  - clock-names		From common clock binding: Shall be "adc".
->> +			From common clock binding: Shall be "sclk_tsadc"
->> +			if using Exynos3250.
-> 
-> This is also not clear. I'd recommend something like:
-> 
->>From common clock bindings: list of clock input names used by ADC block:
->     - "adc" : ADC bus clock,
->     - "sclk_tsadc" : ADC special clock (only for Exynos3250 and
-> compatible ADC blocks).
-
-I'll modify it.
-
-Best Regards,
-Chanwoo Choi
+Peter.
