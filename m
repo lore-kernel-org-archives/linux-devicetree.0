@@ -1,57 +1,117 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv4 4/4] ARM: dts: Fix wrong compatible string for Exynos3250
- ADC
-Date: Wed, 18 Jun 2014 17:51:33 +0900
-Message-ID: <53A15315.6060304@samsung.com>
-References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com>
- <1403058061-24271-5-git-send-email-cw00.choi@samsung.com>
- <53A14FAC.3050700@gmail.com>
+From: "Gupta, Pekon" <pekon@ti.com>
+Subject: RE: Unifying cape overlays into boot .dtb for BeagleBoard.org boards
+Date: Wed, 18 Jun 2014 08:51:24 +0000
+Message-ID: <20980858CB6D3A4BAE95CA194937D5E73EAF5DD0@DBDE04.ent.ti.com>
+References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
+ <CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EAF59A7@DBDE04.ent.ti.com>
+ <CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <53A14FAC.3050700@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Kridner <jkridner@gmail.com>, "Tony Lindgren (tony@atomide.com)" <tony@atomide.com>, "Rini, Tom" <trini@ti.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "beagleboard@googlegroups.com" <beagleboard@googlegroups.com>, OMAP List <linux-omap@vger.kernel.org>, Robert Nelson <robertcnelson@gmail.com>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi,
 
-On 06/18/2014 05:37 PM, Tomasz Figa wrote:
-> Hi Chanwoo,
-> 
-> On 18.06.2014 04:21, Chanwoo Choi wrote:
->> This patchset fix wrong compatible string for Exynos3250 ADC. Exynos3250 SoC
->> need to control only special clock for ADC. Exynos SoC except for Exynos3250
->> has not included special clock for ADC. The exynos ADC driver can control
->> special clock if compatible string is 'exynos3250-adc-v2'.
+>From: Jason Kridner [mailto:jkridner@gmail.com]
+>>On Tue, Jun 17, 2014 at 3:11 AM, Gupta, Pekon <pekon@ti.com> wrote:
+>>>From: Jason Kridner
+[...]
+>>>> * The devicetree sources, including the primary boot .dts files, will
+>>>> eventually be removed from the kernel source tree. I'm not too sure if
+>>>> and when it'll really happen, but starting up a project to maintain
+>>>> the definitive beagleboard.org board devicetree files outside the
+>>>> kernel seems to make sense. Given the interdependency of the boot .dtb
+>>>> and the overlay .dtbo files, combining them into a single repository
+>>>> where every distribution can pick them up seems like a natural and
+>>>> obvious choice. There are of course some dependencies on kernel
+>>>> versions, but I believe most of those have settled out by now and we
+>>>> should be OK moving forward.
 >>
->> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->> ---
->>  arch/arm/boot/dts/exynos3250.dtsi | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
+>> +1
+>> Yes, moving cape DTS out of kernel tree should help developers.
+>> There are quite a few cape patches floating in mail-lists, but as cape
+>> DTS is still not accepted in mainline so they get lost and forgotten.
+>> So one place for collecting all this is a good idea.
 >>
->> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->> index 6c1fb67..107dc44 100644
->> --- a/arch/arm/boot/dts/exynos3250.dtsi
->> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->> @@ -414,10 +414,10 @@
->>  		};
->>  
->>  		adc: adc@126C0000 {
->> -			compatible = "samsung,exynos-adc-v3";
->> +			compatible = "samsung,exynos3250-adc-v2";
->>  			reg = <0x126C0000 0x100>, <0x10020718 0x4>;
->>  			interrupts = <0 137 0>;
->> -			clock-names = "adc", "sclk_tsadc";
->> +			clock-names = "adc", "sclk_adc";
-> 
-> So, is it "sclk_adc" or "sclk_tsadc"? The code uses the former, while
-> the documentation mentions the latter. Please fix this.
+>>
+>> However, somehow the universal I/O DTS looked seemed complicated:
+>> (1)
+>> All capes work standalone, but due to share pin-mux some cape
+>> combinations cannot be used simultaneously. But most users of
+>> BeagleBone are already well-versed with DT and kernel infrastructure,
+>> so they need not be spoon fed to get a out-of-box working solution
+>> for each combination. If there is proper documentation is available
+>> about compatibility of capes with each other, then users will figure
+>> out themselves.
+>
+>I think you have too much confidence in users. If this doesn't hurt
+>power users, then why is it bad have an option to spoon feed? This
+>doesn't prevent anyone with knowledge of DT from doing their own
+>thing.
+>
+Fair enough.
+But plz give a try to u-boot alternative below. It works at my end.
 
-OK, I'll fix it by using 'sclk_adc' clock name.
+>>
+>> (2)
+>> Also, there was a talk of enabling and disabling DT fragments via u-boot.
+>> That should also be explored instead of complicating cape DTS.
+>
+>Link? Relevance?
+>
+we can modify DT from u-boot itself [1].
+Example:  "MMC2" pin-mux conflicts with "NAND" and "NOR" capes.
+But using following sequence of commands, you can modify DTB via
+u-boot and make NAND cape work _without_any_hack_ in patch [2].
 
-Best Regards,
-Chanwoo Choi
+/* load DTB */
+u-boot> tftp 0x81000000 am335x-boneblack.dtb
+u-boot> fdt addr 0x81000000
+/* disable MMC2 node */
+u-boot> fdt list /ocp/mmc@481d8000
+u-boot> fdt set  /ocp/mmc@481d8000 status \d\i\s\a\b\l\e\d
+u-boot> fdt list /ocp/mmc@481d8000 status
+/* enable GPMC node */
+u-boot> fdt list /ocp/gpmc
+u-boot> fdt set  /ocp/gpmc status \o\k\a\y
+u-boot> fdt list /ocp/gpmc status
+/* enable ELM node */
+u-boot> fdt list /ocp/elm
+u-boot> fdt set  /ocp/elm status \o\k\a\y
+u-boot> fdt list /ocp/elm status
+/* boot uImage */
+tftp 0x82000000 uImage
+bootm 0x82000000 - 0x81000000
+
+Note: "fdt set" command does not accept string literals
+as binding values, it internally converts them to string, so
+escape sequenced characters were used here..
+"okay" == \o\k\a\y
+"disabled" == \d\i\s\a\b\l\e\d"
+
+
+Hope above solves the pre-requisite because of which 'Tony Lindgren <tony@atomide.com>'
+was unable to accept cape related DTS into his tree [3]
+
+
+[1] http://www.denx.de/wiki/view/DULG/UBootCmdFDT
+[2] http://www.spinics.net/lists/linux-omap/msg107307.html
+[3] http://www.spinics.net/lists/linux-omap/msg107354.html
+
+
+with regards, pekon
