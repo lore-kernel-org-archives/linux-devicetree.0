@@ -1,62 +1,57 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 11/21] mfd: use devm_irq_of_parse_and_map() where
- appropriate
-Date: Wed, 18 Jun 2014 09:48:38 +0100
-Message-ID: <20140618084838.GR21030@lee--X1>
-References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
- <1401880402-30091-12-git-send-email-nyushchenko@dev.rtsoft.ru>
- <20140617151226.GM29841@lee--X1>
- <53A0606C.6030400@dev.rtsoft.ru>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCHv4 4/4] ARM: dts: Fix wrong compatible string for Exynos3250
+ ADC
+Date: Wed, 18 Jun 2014 17:51:33 +0900
+Message-ID: <53A15315.6060304@samsung.com>
+References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com>
+ <1403058061-24271-5-git-send-email-cw00.choi@samsung.com>
+ <53A14FAC.3050700@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53A0606C.6030400@dev.rtsoft.ru>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <53A14FAC.3050700@gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tomasz Figa <tomasz.figa@gmail.com>
+Cc: jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 17 Jun 2014, Nikita Yushchenko wrote:
-> 17.06.2014 19:12, Lee Jones =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
-> >>From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
-> >>
-> >>This avoids leak of IRQ mapping on error paths, and makes it possib=
-le
-> >>to use devm_request_irq() without facing unmap-while-handler-instal=
-led
-> >>issues.
-> >>
-> >>Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
-> >>---
-> >>  drivers/mfd/max8997.c |    4 +++-
-> >>  drivers/mfd/max8998.c |    4 +++-
-> >>  2 files changed, 6 insertions(+), 2 deletions(-)
-> >
-> >Applied, thanks.
->=20
-> Hmm...  probably it was too early to apply this?  I was just going
-> to prepare v2, based on discussion...
+Hi Tomasz,
 
-Which discussion?
+On 06/18/2014 05:37 PM, Tomasz Figa wrote:
+> Hi Chanwoo,
+> 
+> On 18.06.2014 04:21, Chanwoo Choi wrote:
+>> This patchset fix wrong compatible string for Exynos3250 ADC. Exynos3250 SoC
+>> need to control only special clock for ADC. Exynos SoC except for Exynos3250
+>> has not included special clock for ADC. The exynos ADC driver can control
+>> special clock if compatible string is 'exynos3250-adc-v2'.
+>>
+>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>> ---
+>>  arch/arm/boot/dts/exynos3250.dtsi | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+>> index 6c1fb67..107dc44 100644
+>> --- a/arch/arm/boot/dts/exynos3250.dtsi
+>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+>> @@ -414,10 +414,10 @@
+>>  		};
+>>  
+>>  		adc: adc@126C0000 {
+>> -			compatible = "samsung,exynos-adc-v3";
+>> +			compatible = "samsung,exynos3250-adc-v2";
+>>  			reg = <0x126C0000 0x100>, <0x10020718 0x4>;
+>>  			interrupts = <0 137 0>;
+>> -			clock-names = "adc", "sclk_tsadc";
+>> +			clock-names = "adc", "sclk_adc";
+> 
+> So, is it "sclk_adc" or "sclk_tsadc"? The code uses the former, while
+> the documentation mentions the latter. Please fix this.
 
-> Also, applying only 11/21, without 01/21, will just cause build error=
-s ...
+OK, I'll fix it by using 'sclk_adc' clock name.
 
-CC'ing me on this patch alone when you know you have build
-dependencies on other patches in the set is a bad idea.  Failing to
-mention that you wanted the patch to be handled in a special and/or
-unconventional way is an even worse idea.
-
-How are you expecting this patch(-set) to be handled?
-
-> Confused.
-
-Likewise!
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Best Regards,
+Chanwoo Choi
