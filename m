@@ -1,54 +1,61 @@
-From: Kevin Hilman <khilman@linaro.org>
-Subject: Re: [PATCH v3 0/3] Qualcomm Resource Power Manager driver
-Date: Wed, 18 Jun 2014 08:53:40 -0700
-Message-ID: <7hzjha8b97.fsf@paris.lan>
-References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
-	<7hvbrzbh1u.fsf@paris.lan>
-	<CAJAp7OhHr4Cgcp9pvQ3=MAie_zSnFJxG28Vf37qJ98BK7P1jaQ@mail.gmail.com>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 1/2] arm: dts: am4372: let boards enable RTC and Watchdog
+Date: Wed, 18 Jun 2014 10:55:35 -0500
+Message-ID: <53A1B677.9010909@ti.com>
+References: <1403106200-777-1-git-send-email-balbi@ti.com> <1403106200-777-2-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <CAJAp7OhHr4Cgcp9pvQ3=MAie_zSnFJxG28Vf37qJ98BK7P1jaQ@mail.gmail.com>
-	(Bjorn Andersson's message of "Tue, 17 Jun 2014 10:15:10 -0700")
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn@kryo.se>
-Cc: Lee Jones <lee.jones@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Kumar Gala <galak@codeaurora.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403106200-777-2-git-send-email-balbi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Felipe Balbi <balbi@ti.com>, Benoit Cousson <bcousson@baylibre.com>
+Cc: robh+dt@kernel.org, galak@codeaurora.org, Tony Lindgren <tony@atomide.com>, linux@arm.linux.org.uk, Rajendra Nayak <rnayak@ti.com>, r.sricharan@ti.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Bjorn Andersson <bjorn@kryo.se> writes:
+$subject - ARM: dts:
 
-> On Tue, Jun 17, 2014 at 10:07 AM, Kevin Hilman <khilman@linaro.org> wrote:
->> +Paul Walmsley
->>
->> Bjorn Andersson <bjorn.andersson@sonymobile.com> writes:
->>
->>> This series adds a regulator driver for the Resource Power Manager found in
->>> Qualcomm 8660, 8960 and 8064 based devices.
->>>
->>> The RPM driver exposes resources to its child devices, that can be accessed to
->>> implement drivers for the regulators, clocks and bus frequency control that's
->>> owned by the RPM in these devices.
->>>
->>> Changes since v2:
->>>   - Fix copy-paste error in dt binding
->>>   - Correct incomplete move from mfd to soc
->>>   - Correct const mistake in regulator driver
->>>
->>> Changes since v1:
->>>   - Moved rpm driver to drivers/soc
->>
->> I'm not sure I follow the motivation for having this under drivers/soc?
->>
-> Hi Kevin,
->
-> I've made the argument that to me this is conceptually a black box
-> handling regulators, clocks and other stuff; hence similar to a PMIC,
-> which would fit nicely into drivers/mfd.
->
-> I still think this is the case and now that I look back I didn't get
-> any pushback from Lee Jones so maybe the move was premature?
+On 06/18/2014 10:43 AM, Felipe Balbi wrote:
+> by providing phandles to rtc and wdt nodes, we can
+> let boards enable rtc and wdt as necessary.
+> 
+> Signed-off-by: Felipe Balbi <balbi@ti.com>
+> ---
+>  arch/arm/boot/dts/am4372.dtsi | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index 49fa596..e3830d4 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -270,7 +270,7 @@
+>  			ti,hwmods = "counter_32k";
+>  		};
+>  
+> -		rtc@44e3e000 {
+> +		rtc: rtc@44e3e000 {
+>  			compatible = "ti,am4372-rtc","ti,da830-rtc";
+>  			reg = <0x44e3e000 0x1000>;
+>  			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH
+> @@ -279,7 +279,7 @@
+>  			status = "disabled";
+>  		};
+>  
+> -		wdt@44e35000 {
+> +		wdt: wdt@44e35000 {
+>  			compatible = "ti,am4372-wdt","ti,omap3-wdt";
+>  			reg = <0x44e35000 0x1000>;
+>  			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+> 
+we might want to fix up any other similar nodes in dtsi as well, no?
 
-Yes, IMO, the move was premature, but hopefully the drivers/soc folks
-can chime in an clarify the criteria for inclusion there.
+examples:
+cpu@0
+dispc@4832a400
 
-Kevin
+Might also be nice to have Fixes: to point out which commit was being
+fixed, no?
+
+-- 
+Regards,
+Nishanth Menon
