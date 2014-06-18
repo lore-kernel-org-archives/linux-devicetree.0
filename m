@@ -1,56 +1,62 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v4 1/7] mfd: axp20x: add AXP221 PMIC support
-Date: Wed, 18 Jun 2014 10:46:58 +0200
-Message-ID: <53A15202.1070908@free-electrons.com>
-References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com> <1402990723-28138-2-git-send-email-boris.brezillon@free-electrons.com> <20140618083605.GQ21030@lee--X1>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 11/21] mfd: use devm_irq_of_parse_and_map() where
+ appropriate
+Date: Wed, 18 Jun 2014 09:48:38 +0100
+Message-ID: <20140618084838.GR21030@lee--X1>
+References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru>
+ <1401880402-30091-12-git-send-email-nyushchenko@dev.rtsoft.ru>
+ <20140617151226.GM29841@lee--X1>
+ <53A0606C.6030400@dev.rtsoft.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCIPJ6FA2QLBBBFEQWOQKGQEUYHSK2Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140618083605.GQ21030@lee--X1>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53A0606C.6030400@dev.rtsoft.ru>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, lugovskoy@dev.rtsoft.ru
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 17 Jun 2014, Nikita Yushchenko wrote:
+> 17.06.2014 19:12, Lee Jones =D0=BF=D0=B8=D1=88=D0=B5=D1=82:
+> >>From: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+> >>
+> >>This avoids leak of IRQ mapping on error paths, and makes it possib=
+le
+> >>to use devm_request_irq() without facing unmap-while-handler-instal=
+led
+> >>issues.
+> >>
+> >>Signed-off-by: Nikita Yushchenko <nyushchenko@dev.rtsoft.ru>
+> >>---
+> >>  drivers/mfd/max8997.c |    4 +++-
+> >>  drivers/mfd/max8998.c |    4 +++-
+> >>  2 files changed, 6 insertions(+), 2 deletions(-)
+> >
+> >Applied, thanks.
+>=20
+> Hmm...  probably it was too early to apply this?  I was just going
+> to prepare v2, based on discussion...
 
-On 18/06/2014 10:36, Lee Jones wrote:
-> On Tue, 17 Jun 2014, Boris BREZILLON wrote:
->
->> Add support for the AXP221 PMIC device to the existing AXP20x driver.
->>
->> The AXP221 defines a new set of registers, power supplies and regulators,
->> but most of the API is similar to the AXP20x ones.
->> The AXP20x irq chip definition is reused, though some interrupts are not
->> available in the AXP221.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> ---
->>  drivers/mfd/axp20x.c       | 64 ++++++++++++++++++++++++++++++++++++++++++----
->>  include/linux/mfd/axp20x.h | 56 ++++++++++++++++++++++++++++++++++++++++
->>  2 files changed, 115 insertions(+), 5 deletions(-)
-> Looks good to me now.
->   Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> Can this go in independently to the other patches in the set?
+Which discussion?
 
-Yes, as long as no one define an axp221 node in his DT.
-In this case axp221 regulators would be considered as axp20x ones (which
-might be a bit problematic), because axp20x-regulator driver does not
-test the axp variant before probing its regulators (this test is
-introduced in patch 3).
+> Also, applying only 11/21, without 01/21, will just cause build error=
+s ...
 
-Best Regards,
+CC'ing me on this patch alone when you know you have build
+dependencies on other patches in the set is a bad idea.  Failing to
+mention that you wanted the patch to be handled in a special and/or
+unconventional way is an even worse idea.
 
-Boris
+How are you expecting this patch(-set) to be handled?
 
+> Confused.
 
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
+Likewise!
+
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
