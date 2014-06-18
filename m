@@ -1,65 +1,92 @@
-From: Pali =?utf-8?q?Roh=C3=A1r?= <pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] omap3-n900.dts: Rename model name to "Nokia RX-51 board"
-Date: Wed, 18 Jun 2014 22:23:03 +0200
-Message-ID: <201406182223.03420@pali>
-References: <1403110635-29696-1-git-send-email-pali.rohar@gmail.com> <20140618201241.GB558@drone.musicnaut.iki.fi>
+From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v2 4/4] brcmfmac: Fix OOB interrupt not
+ working for BCM43362
+Date: Wed, 18 Jun 2014 22:38:41 +0200
+Message-ID: <53A1F8D1.1050204@broadcom.com>
+References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-5-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed;
-  boundary="nextPart7054152.P5ARp0I99L";
-  protocol="application/pgp-signature";
-  micalg=pgp-sha1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140618201241.GB558-7n+jfq1IuBl13aiSOxckUV9wdVTlxKpd@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Aaro Koskinen <aaro.koskinen-X3B1VOXEql0@public.gmane.org>
-Cc: =?utf-8?q?Beno=C3=AEt_Cousson?= <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Ivaylo Dimitrov <ivo.g.dimitrov.75-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sebastian Reichel <sre-8fiUuRrzOP0dnm+yROfE0A@public.gmane.org>, Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Return-path: <linux-sunxi+bncBCKLZOXH5AIBBVPRQ6OQKGQE5XZFECY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1402941407-8210-5-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---nextPart7054152.P5ARp0I99L
-Content-Type: Text/Plain;
-  charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+On 16-06-14 19:56, Hans de Goede wrote:
+> It has taken me a long long time to get the OOB interrupt working on the
+> AP6210 sdio wifi/bt module found on various Allwinner A20 boards. In the
+> end I found these magic register pokes in the cubietruck kernel tree:
+> https://github.com/cubieboard2/linux-sunxi/commit/7f08ba395617d17e7a711507503d89a50406fe7a
+>
+> I'm not entirely sure if this specific to the AP6210 module, or if this
+> should be done for all BCM43362 sdio devices.
 
-On Wednesday 18 June 2014 22:12:41 Aaro Koskinen wrote:
-> On Wed, Jun 18, 2014 at 06:57:15PM +0200, Pali Roh=C3=A1r wrote:
-> > Use same name as in legacy board code. There are lot of
-> > userspace applications which using machine/model name for
-> > determinating device type.
->=20
-> Can you clarify this? Nokia kernel or userspace never had DT,
-> so they cannot see e.g. /proc/device-tree/model. What other
-> APIs expose model?
->=20
-> A.
+Bit late response but it took some digging. It turns out this is done 
+for all bcm43362 in internal/proprietary driver.
 
-Hi Aaro,
++Reviewed-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+> ---
+>   drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c | 16 ++++++++++++++++
+>   1 file changed, 16 insertions(+)
+>
+> diff --git a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+> index 0fc707c..58e86a5 100644
+> --- a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+> +++ b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+> @@ -39,7 +39,9 @@
+>   #include <brcm_hw_ids.h>
+>   #include <brcmu_utils.h>
+>   #include <brcmu_wifi.h>
+> +#include <chipcommon.h>
+>   #include <soc.h>
+> +#include "chip.h"
 
-look at email discussion about my previous patch with subject:
-[PATCH] ARM: /proc/cpuinfo: Use DT machine name when possible
+Not sure why chip.h is needed here.
 
-Basically that patch export model name in Hardware /proc/cpuinfo=20
-instead generic DT name. And this patch change name to what=20
-legacy board code reported.
+>   #include "dhd_bus.h"
+>   #include "dhd_dbg.h"
+>   #include "sdio_host.h"
+> @@ -119,6 +121,7 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+>   {
+>   	int ret = 0;
+>   	u8 data;
+> +	u32 addr, gpiocontrol;
+>   	unsigned long flags;
+>
+>   	if ((sdiodev->pdata) && (sdiodev->pdata->oob_irq_supported)) {
+> @@ -148,6 +151,19 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+>
+>   		sdio_claim_host(sdiodev->func[1]);
+>
+> +		if (sdiodev->bus_if->chip == BCM43362_CHIP_ID) {
+> +			/* assign GPIO to SDIO core */
+> +			addr = CORE_CC_REG(SI_ENUM_BASE, gpiocontrol);
 
-=2D-=20
-Pali Roh=C3=A1r
-pali.rohar-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+I don't like the assumption that chipcommon core register space is 
+always at SI_ENUM_BASE although it is for BCM43362. Let's keep it for now.
 
---nextPart7054152.P5ARp0I99L
-Content-Type: application/pgp-signature; name=signature.asc 
-Content-Description: This is a digitally signed message part.
+> +			gpiocontrol = brcmf_sdiod_regrl(sdiodev, addr, &ret);
+> +			gpiocontrol |= 0x2;
+> +			brcmf_sdiod_regwl(sdiodev, addr, gpiocontrol, &ret);
+> +
+> +			brcmf_sdiod_regwb(sdiodev, SBSDIO_GPIO_SELECT, 0xf,
+> +					  &ret);
+> +			brcmf_sdiod_regwb(sdiodev, SBSDIO_GPIO_OUT, 0, &ret);
+> +			brcmf_sdiod_regwb(sdiodev, SBSDIO_GPIO_EN, 0x2, &ret);
+> +		}
+> +
+>   		/* must configure SDIO_CCCR_IENx to enable irq */
+>   		data = brcmf_sdiod_regrb(sdiodev, SDIO_CCCR_IENx, &ret);
+>   		data |= 1 << SDIO_FUNC_1 | 1 << SDIO_FUNC_2 | 1;
+>
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iEYEABECAAYFAlOh9ScACgkQi/DJPQPkQ1K92wCfWPzfOnXVAXT31aaaGYEpuewG
-r1gAoLoEGLEPGM6gOJb/FllP211HjRj8
-=93Eg
------END PGP SIGNATURE-----
-
---nextPart7054152.P5ARp0I99L--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Arend
