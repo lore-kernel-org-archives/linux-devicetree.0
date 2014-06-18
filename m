@@ -1,158 +1,114 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv4 2/4] iio: adc: exynos_adc: Control special clock of
- ADC to support Exynos3250 ADC
-Date: Wed, 18 Jun 2014 09:58:32 +0200
-Message-ID: <53A146A8.7050501@gmail.com>
-References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com> <1403058061-24271-3-git-send-email-cw00.choi@samsung.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v4 3/4] ARM: DRA7: hwmod: Add ocp2scp3 and sata hwmods
+Date: Wed, 18 Jun 2014 11:02:12 +0300
+Message-ID: <53A14784.1030008@ti.com>
+References: <1398274237-24510-1-git-send-email-rogerq@ti.com> <1398274559-24777-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1403058061-24271-3-git-send-email-cw00.choi@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>, jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1398274559-24777-1-git-send-email-rogerq@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: tony@atomide.com, "Menon, Nishanth" <nm@ti.com>, Rajendra Nayak <rnayak@ti.com>
+Cc: kishon@ti.com, george.cherian@ti.com, balbi@ti.com, balajitk@ti.com, hdegoede@redhat.com, linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Nikhil Devshatwar <nikhil.nd@ti.com>, Benoit Cousson <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
+On 04/23/2014 08:35 PM, Roger Quadros wrote:
+> From: Nikhil Devshatwar <nikhil.nd@ti.com>
+> 
+> Add hwmods for ocp2scp3 and sata modules.
+> 
+> [Roger Q] Clean up.
+> 
+> CC: Benoit Cousson <bcousson@baylibre.com>
+> CC: Paul Walmsley <paul@pwsan.com>
+> Signed-off-by: Balaji T K <balajitk@ti.com>
+> Signed-off-by: Nikhil Devshatwar <nikhil.nd@ti.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 
-On 18.06.2014 04:20, Chanwoo Choi wrote:
-> This patch control special clock for ADC in Exynos series's FSYS block.
-> If special clock of ADC is registerd on clock list of common clk framework,
-> Exynos ADC drvier have to control this clock.
-> 
-> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
-> - 'adc' clock: bus clock for ADC
-> 
-> Exynos3250 has additional 'sclk_adc' clock as following:
-> - 'sclk_adc' clock: special clock for ADC which provide clock to internal ADC
-> 
-> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_adc' clock
-> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_adc'
-> clock in FSYS_BLK.
-> 
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+Tested-by: Roger Quadros <rogerq@ti.com>
+against 3.16-rc1, no dependency patches needed.
+
+Nishant/Rajendra,
+
+Could you please review this? We need this for 3.16 SATA support and
+Paul won't take this in without your reviewed-by tag. Thanks.
+
+cheers,
+-roger
+
 > ---
->  drivers/iio/adc/exynos_adc.c | 93 ++++++++++++++++++++++++++++++++++++++------
->  1 file changed, 81 insertions(+), 12 deletions(-)
+>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 31 ++++++++++++++++++++++++++-----
+>  1 file changed, 26 insertions(+), 5 deletions(-)
 > 
-> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
-> index c30def6..6b026ac 100644
-> --- a/drivers/iio/adc/exynos_adc.c
-> +++ b/drivers/iio/adc/exynos_adc.c
-> @@ -41,7 +41,8 @@
->  
->  enum adc_version {
->  	ADC_V1,
-> -	ADC_V2
-> +	ADC_V2,
-> +	ADC_V2_EXYNOS3250,
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> index 810c205..b02a4ab 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+> @@ -1215,6 +1215,30 @@ static struct omap_hwmod dra7xx_ocp2scp1_hwmod = {
+>  	},
 >  };
 >  
->  /* EXYNOS4412/5250 ADC_V1 registers definitions */
-> @@ -85,9 +86,11 @@ enum adc_version {
->  #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
->  
->  struct exynos_adc {
-> +	struct device		*dev;
->  	void __iomem		*regs;
->  	void __iomem		*enable_reg;
->  	struct clk		*clk;
-> +	struct clk		*sclk;
->  	unsigned int		irq;
->  	struct regulator	*vdd;
->  	struct exynos_adc_ops	*ops;
-> @@ -96,6 +99,7 @@ struct exynos_adc {
->  
->  	u32			value;
->  	unsigned int            version;
-> +	bool			needs_sclk;
-
-This should be rather a part of the variant struct. See my comments to
-patch 1/4.
-
->  };
->  
->  struct exynos_adc_ops {
-> @@ -103,11 +107,21 @@ struct exynos_adc_ops {
->  	void (*clear_irq)(struct exynos_adc *info);
->  	void (*start_conv)(struct exynos_adc *info, unsigned long addr);
->  	void (*stop_conv)(struct exynos_adc *info);
-> +	void (*disable_clk)(struct exynos_adc *info);
-> +	int (*enable_clk)(struct exynos_adc *info);
->  };
->  
->  static const struct of_device_id exynos_adc_match[] = {
-> -	{ .compatible = "samsung,exynos-adc-v1", .data = (void *)ADC_V1 },
-> -	{ .compatible = "samsung,exynos-adc-v2", .data = (void *)ADC_V2 },
-> +	{
-> +		.compatible = "samsung,exynos-adc-v1",
-> +		.data = (void *)ADC_V1,
-> +	}, {
-> +		.compatible = "samsung,exynos-adc-v2",
-> +		.data = (void *)ADC_V2,
-> +	}, {
-> +		.compatible = "samsung,exynos3250-adc-v2",
-> +		.data = (void *)ADC_V2_EXYNOS3250,
+> +/* ocp2scp3 */
+> +static struct omap_hwmod dra7xx_ocp2scp3_hwmod;
+> +
+> +/* l4_cfg -> ocp2scp3 */
+> +static struct omap_hwmod_ocp_if dra7xx_l4_cfg__ocp2scp3 = {
+> +	.master		= &dra7xx_l4_cfg_hwmod,
+> +	.slave		= &dra7xx_ocp2scp3_hwmod,
+> +	.clk		= "l4_root_clk_div",
+> +	.user		= OCP_USER_MPU | OCP_USER_SDMA,
+> +};
+> +
+> +static struct omap_hwmod dra7xx_ocp2scp3_hwmod = {
+> +	.name		= "ocp2scp3",
+> +	.class		= &dra7xx_ocp2scp_hwmod_class,
+> +	.clkdm_name	= "l3init_clkdm",
+> +	.prcm = {
+> +		.omap4 = {
+> +			.clkctrl_offs = DRA7XX_CM_L3INIT_OCP2SCP3_CLKCTRL_OFFSET,
+> +			.context_offs = DRA7XX_RM_L3INIT_OCP2SCP3_CONTEXT_OFFSET,
+> +			.modulemode   = MODULEMODE_HWCTRL,
+> +		},
 > +	},
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, exynos_adc_match);
-> @@ -156,11 +170,42 @@ static void exynos_adc_v1_stop_conv(struct exynos_adc *info)
->  	writel(con, ADC_V1_CON(info->regs));
->  }
->  
-> +static void exynos_adc_disable_clk(struct exynos_adc *info)
-> +{
-> +	if (info->needs_sclk)
-> +		clk_disable_unprepare(info->sclk);
-> +	clk_disable_unprepare(info->clk);
-> +}
+> +};
 > +
-> +static int exynos_adc_enable_clk(struct exynos_adc *info)
-> +{
-> +	int ret;
-> +
-> +	ret = clk_prepare_enable(info->clk);
-> +	if (ret) {
-> +		dev_err(info->dev, "failed enabling adc clock: %d\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	if (info->needs_sclk) {
-> +		ret = clk_prepare_enable(info->sclk);
-> +		if (ret) {
-> +			clk_disable_unprepare(info->clk);
-> +			dev_err(info->dev,
-> +				"failed enabling sclk_tsadc clock: %d\n", ret);
-> +		}
-> +	}
-> +
-> +	return 0;
-> +}
-> +
->  static struct exynos_adc_ops exynos_adc_v1_ops = {
->  	.init_hw	= exynos_adc_v1_init_hw,
->  	.clear_irq	= exynos_adc_v1_clear_irq,
->  	.start_conv	= exynos_adc_v1_start_conv,
->  	.stop_conv	= exynos_adc_v1_stop_conv,
-> +	.disable_clk	= exynos_adc_disable_clk,
-> +	.enable_clk	= exynos_adc_enable_clk,
+>  /*
+>   * 'qspi' class
+>   *
+> @@ -1268,9 +1292,6 @@ static struct omap_hwmod_class dra7xx_sata_hwmod_class = {
 >  };
 >  
->  static void exynos_adc_v2_init_hw(struct exynos_adc *info)
-> @@ -210,6 +255,8 @@ static struct exynos_adc_ops exynos_adc_v2_ops = {
->  	.start_conv	= exynos_adc_v2_start_conv,
->  	.clear_irq	= exynos_adc_v2_clear_irq,
->  	.stop_conv	= exynos_adc_v2_stop_conv,
-> +	.disable_clk	= exynos_adc_disable_clk,
-> +	.enable_clk	= exynos_adc_enable_clk,
-
-Based on the fact that all variants use the same function, I don't think
-there is a reason to add .{disable,enable}_clk in the ops struct. If
-they diverge in future, they could be added later, but right now it
-doesn't have any value.
-
-Best regards,
-Tomasz
+>  /* sata */
+> -static struct omap_hwmod_opt_clk sata_opt_clks[] = {
+> -	{ .role = "ref_clk", .clk = "sata_ref_clk" },
+> -};
+>  
+>  static struct omap_hwmod dra7xx_sata_hwmod = {
+>  	.name		= "sata",
+> @@ -1278,6 +1299,7 @@ static struct omap_hwmod dra7xx_sata_hwmod = {
+>  	.clkdm_name	= "l3init_clkdm",
+>  	.flags		= HWMOD_SWSUP_SIDLE | HWMOD_SWSUP_MSTANDBY,
+>  	.main_clk	= "func_48m_fclk",
+> +	.mpu_rt_idx	= 1,
+>  	.prcm = {
+>  		.omap4 = {
+>  			.clkctrl_offs = DRA7XX_CM_L3INIT_SATA_CLKCTRL_OFFSET,
+> @@ -1285,8 +1307,6 @@ static struct omap_hwmod dra7xx_sata_hwmod = {
+>  			.modulemode   = MODULEMODE_SWCTRL,
+>  		},
+>  	},
+> -	.opt_clks	= sata_opt_clks,
+> -	.opt_clks_cnt	= ARRAY_SIZE(sata_opt_clks),
+>  };
+>  
+>  /*
+> @@ -2682,6 +2702,7 @@ static struct omap_hwmod_ocp_if *dra7xx_hwmod_ocp_ifs[] __initdata = {
+>  	&dra7xx_l4_per1__mmc4,
+>  	&dra7xx_l4_cfg__mpu,
+>  	&dra7xx_l4_cfg__ocp2scp1,
+> +	&dra7xx_l4_cfg__ocp2scp3,
+>  	&dra7xx_l3_main_1__qspi,
+>  	&dra7xx_l4_cfg__sata,
+>  	&dra7xx_l4_cfg__smartreflex_core,
+> 
