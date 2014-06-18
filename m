@@ -1,89 +1,160 @@
-From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v4 3/3] ASoC: fsl: add imx-es8328 machine driver
-Date: Wed, 18 Jun 2014 18:22:52 +0800
-Message-ID: <53A1687C.9010705@kosagi.com>
-References: <1403063242-20840-1-git-send-email-xobs@kosagi.com> <1403063242-20840-4-git-send-email-xobs@kosagi.com> <20140618100233.GE5099@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 12/20] clk: sunxi: Add A23 APB0 support
+ to sun6i-a31-apb0-clk
+Date: Wed, 18 Jun 2014 12:26:23 +0200
+Message-ID: <20140618102623.GQ19730@lukather>
+References: <1403016777-15121-1-git-send-email-wens@csie.org>
+ <1403016777-15121-13-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140618100233.GE5099-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="R4+lwT0Y15rLnKR0"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBKWUQWOQKGQEBFDLLII-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403016777-15121-13-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/14 18:02, Mark Brown wrote:
-> On Wed, Jun 18, 2014 at 11:47:21AM +0800, Sean Cross wrote:
->
->> +config SND_SOC_IMX_ES8328
->> +	tristate "SoC Audio support for i.MX boards with the ES8328 codec"
->> +	depends on OF && (I2C || SPI)
->> +	select SND_SOC_ES8328_I2C if I2C
->> +	select SND_SOC_ES8328_SPI if SPI_MASTER
-> I expect this is going to break configurations where I2C is modular and
-> SPI is enabled since it'll try to build in the I2C bus interface.
-I see this pattern used frequently in the blackfin tree.  Is there a way
-to achieve this without breaking configuration?
->> +static int imx_set_frequency(struct imx_es8328_data *data, int freq)
->> +{
->> +	int ret;
->> +
->> +	ret = clk_set_parent(data->output_clk, data->codec_clk);
->> +	if (ret) {
->> +		dev_err(data->dev, "unable to set clk output");
->> +		return ret;
->> +	}
->> +
->> +	ret = clk_set_parent(data->codec_clk_sel, data->codec_clk_post_div);
->> +	if (ret) {
->> +		dev_err(data->dev, "unable to set clk parent");
->> +		return ret;
->> +	}
-> This should be handled by the clock bindings not open coded in the
-> driver - leaving this here most likely won't play nicely when the clock
-> API can configure the defaults for the tree.  There is supposed to be
-> support for setting default clock trees going in (or perhaps already in)
-> the clock bindings.
-Can you give me more information on it?  Currently, it looks like most
-boards use a 24 MHz clock, judging from this comment in
-mach-imx/clk-imx6q.c:
 
-        /*
-         * Let's initially set up CLKO with OSC24M, since this configuration
-         * is widely used by imx6q board designs to clock audio codec.
-         */
+--R4+lwT0Y15rLnKR0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-This codec requires the more unusual 22.5792 MHz clock.  What is the
-appropriate method of obtaining this particular frequency?
+On Tue, Jun 17, 2014 at 10:52:49PM +0800, Chen-Yu Tsai wrote:
+> The A23 has an almost identical PRCM clock tree. The difference in
+> the APB0 clock is the smallest divisor is 1, instead of 2.
+>=20
+> This patch extends the sun6i-a31-apb0-clk driver to take divider
+> tables associated to compatibles, and adds a compatible for the A23
+> variant.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
+>  drivers/clk/sunxi/clk-sun6i-apb0.c                | 28 +++++++++++++++++=
++-----
+>  2 files changed, 23 insertions(+), 6 deletions(-)
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Document=
+ation/devicetree/bindings/clock/sunxi.txt
+> index af9e47d..e3a47ec 100644
+> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
+> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
+> @@ -28,6 +28,7 @@ Required properties:
+>  	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
+>  	"allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
+>  	"allwinner,sun6i-a31-apb0-clk" - for the APB0 clock on A31
+> +	"allwinner,sun8i-a23-apb0-clk" - for the APB0 clock on A23
+>  	"allwinner,sun4i-a10-apb0-gates-clk" - for the APB0 gates on A10
+>  	"allwinner,sun5i-a13-apb0-gates-clk" - for the APB0 gates on A13
+>  	"allwinner,sun5i-a10s-apb0-gates-clk" - for the APB0 gates on A10s
+> diff --git a/drivers/clk/sunxi/clk-sun6i-apb0.c b/drivers/clk/sunxi/clk-s=
+un6i-apb0.c
+> index 11f17c3..2197ac7 100644
+> --- a/drivers/clk/sunxi/clk-sun6i-apb0.c
+> +++ b/drivers/clk/sunxi/clk-sun6i-apb0.c
+> @@ -11,6 +11,7 @@
+>  #include <linux/clk-provider.h>
+>  #include <linux/module.h>
+>  #include <linux/of.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> =20
+>  /*
+> @@ -28,6 +29,21 @@ static const struct clk_div_table sun6i_a31_apb0_divs[=
+] =3D {
+>  	{ /* sentinel */ },
+>  };
+> =20
+> +/* The A23 APB0 clock has a standard power of 2 divisor */
 
->> +	data->codec_regulator = devm_regulator_get(dev, "codec");
->> +	if (IS_ERR(data->codec_regulator)) {
->> +		dev_err(dev, "No codec regulator\n");
->> +		data->codec_regulator = NULL;
->> +	} else {
->> +		ret = regulator_enable(data->codec_regulator);
->> +		if (ret)
->> +			dev_err(dev,
->> +				"Unable to enable codec regulator: %d\n", ret);
->> +	}
-> No, this is broken.  The CODEC should request its own supplies which
-> need to correspond to the supplies the physical device has and failing
-> to get the supplies should be a fatal error unless the device works
-> without power (in which case why bother enablin them at all?).
-Not all codecs have power supplies.  Most don't, in fact, it's just this
-board where a switch was added to reset the codec in case it gets
-wedged.  Boards might use this codec but omit the power switch to save
-cost, because they are confident the codec won't get stuck, in which
-case they would be forced to use a dummy regulator.
+Why not just pass CLK_DIVIDER_POWER_OF_TWO then, instead of a table?
 
-Additionally, since the regulator is external to the codec (as it
-physically cuts 3.3V from the power supply), it doesn't make sense to
-put it in the codec driver.
+> +static const struct clk_div_table sun8i_a23_apb0_divs[] =3D {
+> +	{ .val =3D 0, .div =3D 1, },
+> +	{ .val =3D 1, .div =3D 2, },
+> +	{ .val =3D 2, .div =3D 4, },
+> +	{ .val =3D 3, .div =3D 8, },
+> +	{ /* sentinel */ },
+> +};
+> +
+> +const struct of_device_id sun6i_a31_apb0_clk_dt_ids[] =3D {
+> +	{ .compatible =3D "allwinner,sun6i-a31-apb0-clk", .data =3D &sun6i_a31_=
+apb0_divs },
+> +	{ .compatible =3D "allwinner,sun8i-a23-apb0-clk", .data =3D &sun8i_a23_=
+apb0_divs },
+> +	{ /* sentinel */ }
+> +};
+> +
+>  static int sun6i_a31_apb0_clk_probe(struct platform_device *pdev)
+>  {
+>  	struct device_node *np =3D pdev->dev.of_node;
+> @@ -36,12 +52,17 @@ static int sun6i_a31_apb0_clk_probe(struct platform_d=
+evice *pdev)
+>  	struct resource *r;
+>  	void __iomem *reg;
+>  	struct clk *clk;
+> +	const struct of_device_id *device;
+> =20
+>  	r =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	reg =3D devm_ioremap_resource(&pdev->dev, r);
+>  	if (IS_ERR(reg))
+>  		return PTR_ERR(reg);
+> =20
+> +	device =3D of_match_device(sun6i_a31_apb0_clk_dt_ids, &pdev->dev);
+> +	if (!device)
+> +		return -EINVAL;
+> +
+>  	clk_parent =3D of_clk_get_parent_name(np, 0);
+>  	if (!clk_parent)
+>  		return -EINVAL;
+> @@ -49,7 +70,7 @@ static int sun6i_a31_apb0_clk_probe(struct platform_dev=
+ice *pdev)
+>  	of_property_read_string(np, "clock-output-names", &clk_name);
+> =20
+>  	clk =3D clk_register_divider_table(&pdev->dev, clk_name, clk_parent,
+> -					 0, reg, 0, 2, 0, sun6i_a31_apb0_divs,
+> +					 0, reg, 0, 2, 0, device->data,
 
+I'm not sure that it will actually work for the A31, since it does
+define some dividers anyway, and the divider table is !NULL, even
+though there's actually no dividers defined.
 
-Sean
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--R4+lwT0Y15rLnKR0
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJToWlPAAoJEBx+YmzsjxAgwVEP/3tdU3z7xESNhDgdVFZHoQJ6
+wGutWyCvHqGT7mM1crhr9aIskJV22hUM5sNjNMfq5+VMXpmaL0mKy74ASsLC1aAN
+Eh+OvQz7NSJMp8je+aCHWfBuqshRD5hzQFcrXDkli3xOJ7tqOtXbSZd4xCB6anBd
+N56OEYbtYUGjvu05BSauXJWx8x9hjuGChs9Zxmjyz1AkUOpsNROwH9y9B2KMQKlc
+IM/9z+Yn/rz6eF64/SKPbxyF+VG26KZZeg1m4lA2kZrDxBoC4iPGbRUXBZTfFFfX
+yA4UzweZQfYj3T+dSFE6ud6V3T7brKTCK/T9y8EP/YNADR6bdLTIjspwpnPQEhdh
+cE/khIh7+PnLmSDvN7njtLcYxREEK/V/+UYLyGtkvl4pxU7YyZFuG7XNEtBOad4O
+2KYsqh0/cpMv3UurbpmSObmui9JdL4JKmswYAVuUpxbjWWD/uAJiBqH3mhvQhKN/
+sF32AxCRhSyW5cL9v2E51UtWO9evGC4uOWRc1oBtia4a0TfOHxcYJE/sDlBaKSdO
+DIbDbE78BuwPuZ1Dp0pTD5DcfI0S58dXQ89lRbv/9vbX7BHJ+Ac4ZLCoqaKz3AZE
+gGGxf+QpqO3ihFBzMQhfnZJaYtETjtwiHBtadVeqtYGoEC2qqoUJvgmwmxi9hxWb
+1uzDMJ90rG8BWfIT39sM
+=15ZY
+-----END PGP SIGNATURE-----
+
+--R4+lwT0Y15rLnKR0--
