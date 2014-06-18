@@ -1,69 +1,72 @@
-From: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
-Date: Wed, 18 Jun 2014 10:03:25 -0700
-Message-ID: <7hzjha5ew2.fsf@paris.lan>
-References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>
-	<1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
-	<7hionz9i5e.fsf@paris.lan>
-	<CAJe_ZhcuOa39Db_tE4JupY74aze02=v1FWzduFD0sO15nMrKvw@mail.gmail.com>
+From: Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>
+Subject: Re: [RFC PATCH 1/4] memory: tegra124-emc: Add EMC driver
+Date: Wed, 18 Jun 2014 19:23:47 +0200
+Message-ID: <53A1CB23.5090307@collabora.com>
+References: <1402925713-25426-1-git-send-email-tomeu.vizoso@collabora.com> <1402925713-25426-2-git-send-email-tomeu.vizoso@collabora.com> <539F4D44.3070309@wwwdotorg.org> <53A03186.3040703@collabora.com> <53A069B6.6070902@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAJe_ZhcuOa39Db_tE4JupY74aze02=v1FWzduFD0sO15nMrKvw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Jassi Brar's message of "Wed, 18 Jun 2014 14:03:08 +0530")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ks.giri@samsung.com" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII;
+	format=flowed
+Content-Transfer-Encoding: 7BIT
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53A069B6.6070902-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, myungjoo.ham-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
-
-> On 18 June 2014 05:57, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
->> Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
->>
->>> Introduce common framework for client/protocol drivers and
->>> controller drivers of Inter-Processor-Communication (IPC).
+On 06/17/2014 06:15 PM, Stephen Warren wrote:
+> On 06/17/2014 06:16 AM, Tomeu Vizoso wrote:
+>> On 06/16/2014 10:02 PM, Stephen Warren wrote:
+>>> On 06/16/2014 07:35 AM, Tomeu Vizoso wrote:
+>>>> +#ifdef CONFIG_TEGRA124_EMC
+>>>> +int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsigned
+>>>> long rate);
+>>>> +void tegra124_emc_set_floor(unsigned long freq);
+>>>> +void tegra124_emc_set_ceiling(unsigned long freq);
+>>>> +#else
+>>>> +int tegra124_emc_reserve_bandwidth(unsigned int consumer, unsigned
+>>>> long rate)
+>>>> +{ return -ENODEV; }
+>>>> +void tegra124_emc_set_floor(unsigned long freq)
+>>>> +{ return; }
+>>>> +void tegra124_emc_set_ceiling(unsigned long freq)
+>>>> +{ return; }
+>>>> +#endif
 >>>
->>> Client driver developers should have a look at
->>>  include/linux/mailbox_client.h to understand the part of
->>> the API exposed to client drivers.
->>> Similarly controller driver developers should have a look
->>> at include/linux/mailbox_controller.h
+>>> I'll repeat what I said off-list so that we can have the whole
+>>> conversation on the list:
 >>>
->>> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> That looks like a custom Tegra-specific API. I think it'd be much better
+>>> to integrate this into the common clock framework as a standard clock
+>>> constraints API. There are other use-cases for clock constraints besides
+>>> EMC scaling (e.g. some in audio on Tegra, and I'm sure many on other
+>>> SoCs too).
 >>
->> This series is shaping up nicely.  The one thing I think it would
->> benefit from, being a new common framework is something under
->> Documentation giving a brief overview, but more importantly some
->> example code snippets of a mailbox client using the API, and maybe an
->> example usage of the controller API as well.
->>
->> Not only will that guide developers who want to use/implement this API
->> on their platforms, it will also aid reviewers.
->>
-> I have been trying to get it upstream for quite some time now because
-> my platform depends upon it. I am planning to submit my platform
-> support which should have a client and controller side of the mailbox
-> API. 
+>> Yes, I wrote a bit in the cover letter about our requirements and how
+>> they map to the CCF. Could you please comment on that?
+>
+> My comments remain the same. I believe this is something that belongs in
+> the clock driver, or at the least, some API that takes a struct clock as
+> its parameter, so that drivers can use the existing DT clock lookup
+> mechanism.
 
-Having a reference implementation is great, but I don't think that
-removes the need for a bit of Documentation when introducing a new
-framework.  
+Ok, let me put this strawman here to see if I have gotten close to what 
+you have in mind:
 
-It's pretty common to see new IPC mechanisms posted and being able to
-point somone to this framework and something under Documentation/* would
-be a great help in getting more users of the framework.
+* add per-client accounting (Rabin's patches referenced before)
 
-> Though I am told the API (until v4 at least) supported usecases for 5
-> different platforms.
+* add clk_set_floor, to be used by cpufreq, load stats, etc.
 
-That's great.
+* add clk_set_ceiling, to be used by battery drivers, thermal, etc.
 
-I sure would like to see some more Reviewed-by tags from those folks to
-confirm that those starting to use it think it's on the right track.
+* an EMC driver would collect bandwidth and latency requests from 
+consumers and call clk_set_floor on the EMC clock.
 
-Kevin
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+* the EMC driver would also register for rate change notifications in 
+the EMC clock and would update the latency allowance registers at that 
+point.
+
+How does it sound?
+
+Regards,
+
+Tomeu
