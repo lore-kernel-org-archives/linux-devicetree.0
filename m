@@ -1,31 +1,64 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: Re: [PATCHv2] ARM: dts: imx6: add support for Ka-Ro TX6 modules
-Date: Wed, 18 Jun 2014 22:28:46 +0800
-Message-ID: <20140618142845.GN8860@dragon>
-References: <1402578317-12566-1-git-send-email-LW@KARO-electronics.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402578317-12566-1-git-send-email-LW@KARO-electronics.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@KARO-electronics.de>
-Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@arm.linux.org.uk>, Sascha Hauer <kernel@pengutronix.de>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH 1/7] ARM: stih407: Add DT nodes for for PWM
+Date: Wed, 18 Jun 2014 15:52:46 +0100
+Message-ID: <1403103172-19856-1-git-send-email-lee.jones@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kernel-F5mvAk5X5gdBDgjK7y7TUQ@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-pwm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, ajitpal.singh-qxv4g6HH51o@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 12, 2014 at 03:05:17PM +0200, Lothar Wa=DFmann wrote:
-> This patch adds support for the Ka-Ro electronics GmbH TX6 modules.
-> There are five distinct module types with either i.MX6Q or i.MX6DL an=
-d
-> LVDS or LCD display interface and one DTS file for a complete system
-> with an i.MX6DL based TX6 module and a baseboard mounted on the back
-> of a display (imx6dl-tx6dl-comtft.dts).
->=20
-> Changes wrt. v1
-> - addressed comments by Shawn Guo
->=20
->=20
-> Signed-off-by: Lothar Wa=DFmann <LW@KARO-electronics.de>
+Supply top level nodes for the STiH407 based development boards.
+The Pinctrl configuration has already been applied, so the only
+missing piece of the DT puzzle is for a board's DTB to enable
+the nodes.
 
-Applied, thanks.
+Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+ arch/arm/boot/dts/stih407.dtsi | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+
+diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
+index 4f9024f..6b43ba2 100644
+--- a/arch/arm/boot/dts/stih407.dtsi
++++ b/arch/arm/boot/dts/stih407.dtsi
+@@ -259,5 +259,32 @@
+ 
+ 			status = "disabled";
+ 		};
++
++		/* COMMS PWM Module */
++		pwm0: pwm@9810000 {
++			compatible      = "st,sti-pwm";
++			status		= "disabled";
++			#pwm-cells	= <2>;
++			reg		= <0x9810000 0x68>;
++			pinctrl-names	= "default";
++                        pinctrl-0	= <&pinctrl_pwm0_chan0_default>;
++			clock-names	= "pwm";
++			clocks          = <&clk_sysin>;
++		};
++
++		/* SBC PWM Module */
++		pwm1: pwm@9510000 {
++			compatible	= "st,sti-pwm";
++			status		= "disabled";
++			#pwm-cells	= <2>;
++			reg		= <0x9510000 0x68>;
++			pinctrl-names	= "default";
++		        pinctrl-0	= <&pinctrl_pwm1_chan0_default
++					&pinctrl_pwm1_chan1_default
++					&pinctrl_pwm1_chan2_default
++					&pinctrl_pwm1_chan3_default>;
++			clock-names	= "pwm";
++			clocks          = <&clk_sysin>;
++		};
+ 	};
+ };
+-- 
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
