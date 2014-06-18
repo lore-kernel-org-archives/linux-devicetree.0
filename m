@@ -1,54 +1,58 @@
-From: Loc Ho <lho-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v3 3/4] edac: Add APM X-Gene SoC EDAC driver
-Date: Wed, 18 Jun 2014 16:30:50 -0700
-Message-ID: <CAPw-ZTmqEuXCZGPGXBJAe4+_L+4LZfrPUp=JFKHjnGXqADr0zQ@mail.gmail.com>
-References: <1401761660-11515-1-git-send-email-lho@apm.com>
-	<1401761660-11515-2-git-send-email-lho@apm.com>
-	<1401761660-11515-3-git-send-email-lho@apm.com>
-	<1401761660-11515-4-git-send-email-lho@apm.com>
-	<20140618221046.GL24024@pd.tnic>
-	<CAPw-ZT=k=27NY5OgV2Tp4gsjf3wSTmgN3FM46qJq8HEQWHTYDw@mail.gmail.com>
-	<20140618223112.GM24024@pd.tnic>
+From: Iyappan Subramanian <isubramanian@apm.com>
+Subject: Re: [PATCH v6 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
+Date: Wed, 18 Jun 2014 16:46:11 -0700
+Message-ID: <CAKh23FmnZqZkDaGYPfnKRrvCYQ4_6W_RRKbqEbc4nbD6jqQaLA@mail.gmail.com>
+References: <1402964326-11147-5-git-send-email-isubramanian@apm.com>
+	<20140616.214247.1154200670003936158.davem@davemloft.net>
+	<CAKh23F=2undAW=nWibOreAM8DJiQKpLx=OboCX=fNZE+OU=AbA@mail.gmail.com>
+	<20140617.132024.1213369771856463527.davem@davemloft.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140618223112.GM24024-fF5Pk5pvG8Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
-Cc: dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "patches-qTEPVZfXA3Y@public.gmane.org" <patches-qTEPVZfXA3Y@public.gmane.org>, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20140617.132024.1213369771856463527.davem@davemloft.net>
+Sender: netdev-owner@vger.kernel.org
+To: David Miller <davem@davemloft.net>
+Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, patches <patches@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
->> One more thing, if you going to pull this in, please use version 4 as
->> that fixes the PMD (CPU L1/L2) error report and clearing.
+On Tue, Jun 17, 2014 at 1:20 PM, David Miller <davem@davemloft.net> wrote:
+> From: Iyappan Subramanian <isubramanian@apm.com>
+> Date: Tue, 17 Jun 2014 12:21:08 -0700
 >
-> Ah, I have a v4 too in my mbox. cool.
+>> On Mon, Jun 16, 2014 at 9:42 PM, David Miller <davem@davemloft.net> wrote:
+>>> From: Iyappan Subramanian <isubramanian@apm.com>
+>>> Date: Mon, 16 Jun 2014 17:18:46 -0700
+>>>
+>>>> +static netdev_tx_t xgene_enet_start_xmit(struct sk_buff *skb,
+>>>> +                                      struct net_device *ndev)
+>>>> +{
+>>>> +     struct xgene_enet_pdata *pdata = netdev_priv(ndev);
+>>>> +     struct xgene_enet_desc_ring *tx_ring = pdata->tx_ring;
+>>>> +     struct xgene_enet_desc_ring *cp_ring = tx_ring->cp_ring;
+>>>> +     u32 tx_level, cq_level;
+>>>> +
+>>>> +     tx_level = xgene_enet_ring_len(tx_ring);
+>>>> +     cq_level = xgene_enet_ring_len(cp_ring);
+>>>> +     if (unlikely(tx_level > pdata->tx_qcnt_hi ||
+>>>> +                  cq_level > pdata->cp_qcnt_hi)) {
+>>>> +             netif_stop_queue(ndev);
+>>>> +             return NETDEV_TX_BUSY;
+>>>> +     }
+>>>> +
+>>>> +     if (xgene_enet_setup_tx_desc(tx_ring, skb))
+>>>> +             return NETDEV_TX_OK;
+>>>
+>>> If you return NETDEV_TX_OK, it is your responsibility to deal with the
+>>> SKB, because you own it.
+>>>
+>>> In particular, you have to free the packet.
+>>
+>> skb freeing happens in xgene_enet_tx_completion().
 >
-> Please ping me when the atomic scrub lands in some maintainers tree so
-> that we can track it/point to it.
-
-Did the EDAC support for ARM64 made to any GIT tree yet?
-
->> Should I ping a device tree maintainer? If so, who would that be?
+> You're not queueing up the packet when DMA mapping the packet fails,
+> which is the only condition that causes xgene_enet_setup_tx_desc() to
+> return an error, so xgene_enet_tx_completion() will not be called.
 >
-> $ ./scripts/get_maintainer.pl -f Documentation/devicetree/
-> Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
-> Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
-> Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
-> Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> (maintainer:OPEN FIRMWARE AND...)
-> Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org> (maintainer:DOCUMENTATION)
-> devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:OPEN FIRMWARE AND...)
-> linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list:DOCUMENTATION)
-> linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org (open list)
+> Can you really not see this?
 
-Also, can you review the DT node of this EDAC driver as you seems to
-review the GPIO DT node as well? Please review version 4 of the
-posting.
-
--Loc
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I am sorry I missed that.  I will fix this.
