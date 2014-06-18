@@ -1,51 +1,86 @@
-From: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
-Date: Wed, 18 Jun 2014 14:03:08 +0530
-Message-ID: <CAJe_ZhcuOa39Db_tE4JupY74aze02=v1FWzduFD0sO15nMrKvw@mail.gmail.com>
-References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>
-	<1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
-	<7hionz9i5e.fsf@paris.lan>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: Re: [PATCH v4 4/7] regulator: axp20x: reset probe
+ data before each probe
+Date: Wed, 18 Jun 2014 10:32:49 +0200
+Message-ID: <53A14EB1.9090600@redhat.com>
+References: <1402990723-28138-1-git-send-email-boris.brezillon@free-electrons.com> <1402990723-28138-5-git-send-email-boris.brezillon@free-electrons.com> <20140617204449.GD19730@lukather> <53A13BBF.7090202@free-electrons.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7hionz9i5e.fsf-4poPxKt068f/PtFMR13I2A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Devicetree List <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Matt Porter <mporter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Patch Tracking <patches-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn-UYDU3/A3LUY@public.gmane.org>, Ashwin Chaugule <ashwin.chaugule-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "Anna, Suman" <s-anna-l0cyMroinI0@public.gmane.org>, Loic Pallardy <loic.pallardy-qxv4g6HH51o@public.gmane.org>, LeyFoon Tan <lftan.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Craig McGeachie <slapdau-/E1597aS9LT0CCvOHzKKcA@public.gmane.org>, Courtney Cavin <courtney.cavin-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Josh Cartwright <joshc-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <ks.giri-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBYM5QWOQKGQEVPZW3NY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <53A13BBF.7090202-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Shuge <shuge-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org>, kevin-0TFLnhJekD6UEPyfVivIlAC/G2K4zDHf@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dev-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 18 June 2014 05:57, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> writes:
->
->> Introduce common framework for client/protocol drivers and
->> controller drivers of Inter-Processor-Communication (IPC).
->>
->> Client driver developers should have a look at
->>  include/linux/mailbox_client.h to understand the part of
->> the API exposed to client drivers.
->> Similarly controller driver developers should have a look
->> at include/linux/mailbox_controller.h
->>
->> Signed-off-by: Jassi Brar <jaswinder.singh-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
->
-> This series is shaping up nicely.  The one thing I think it would
-> benefit from, being a new common framework is something under
-> Documentation giving a brief overview, but more importantly some
-> example code snippets of a mailbox client using the API, and maybe an
-> example usage of the controller API as well.
->
-> Not only will that guide developers who want to use/implement this API
-> on their platforms, it will also aid reviewers.
->
-I have been trying to get it upstream for quite some time now because
-my platform depends upon it. I am planning to submit my platform
-support which should have a client and controller side of the mailbox
-API. Though I am told the API (until v4 at least) supported usecases
-for 5 different platforms.
+Hi,
 
-Thanks,
-Jassi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On 06/18/2014 09:11 AM, Boris BREZILLON wrote:
+> 
+> On 17/06/2014 22:44, Maxime Ripard wrote:
+>> On Tue, Jun 17, 2014 at 09:38:40AM +0200, Boris BREZILLON wrote:
+>>> The init_data and of_node fields of the axp2xx_matches tables are filled
+>>> at each device probe by the axp20x_regulator_parse_dt function (which then
+>>> calls the of_regulator_match function).
+>>> This means we can probe a new device and consider data initialized during
+>>> the probe of another device as valid.
+>>>
+>>> Reset init_data and of_node field to NULL before each probe in order to
+>>> avoid this kind of issue.
+>>>
+>>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  drivers/regulator/axp20x-regulator.c | 9 +++++++++
+>>>  1 file changed, 9 insertions(+)
+>>>
+>>> diff --git a/drivers/regulator/axp20x-regulator.c b/drivers/regulator/axp20x-regulator.c
+>>> index 7a30f49..d42bf6d 100644
+>>> --- a/drivers/regulator/axp20x-regulator.c
+>>> +++ b/drivers/regulator/axp20x-regulator.c
+>>> @@ -324,6 +324,15 @@ static int axp20x_regulator_probe(struct platform_device *pdev)
+>>>  		nregulators = AXP20X_REG_ID_MAX;
+>>>  	}
+>>>  
+>>> +	/*
+>>> +	 * Reset matches table (this table might have been modified by a
+>>> +	 * previous AXP2xx device probe).
+>>> +	 */
+>>> +	for (i = 0; i < nmatches; i++) {
+>>> +		matches[i].init_data = NULL;
+>>> +		matches[i].of_node = NULL;
+>>> +	}
+>>> +
+>> That looks rather hackish, especially since we've never been in such a
+>> case yet, since we have a single PMIC in our system.
+> 
+> Even if something is unlikely to happen, it doesn't mean it's impossible.
+> I'm pretty sure there are (or will be) some systems containing several
+> identical PMICs in the wild, and fixing this possible bug now prevents
+> us (or other developers) from having a big headache debugging this in
+> the future.
+
+If you're really worried about this, you should also be worried
+about 2 probes running at the same time racing against each other
+(I know the bus level code will not do that now, but what about the
+ future).
+
+If you cannot treat / use the global struct as const, then you really should
+have a local copy, and const-ify the global version and use it as a template
+to initialize the local copy.
+
+> BTW, what is hackish in this code ?
+
+See above, changing a global struct, and then re-initializing it on the
+next probe just is not pretty. TBH this raised my eyebrows the first time
+you posted it already, but I decided to let it be. But since we're discussing
+this now anyways I have to agree with Maxime.
+
+Regards,
+
+Hans
