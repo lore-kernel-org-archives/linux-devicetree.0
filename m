@@ -1,64 +1,76 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 18 Jun 2014 10:29:06 +0100
-Message-ID: <20140618092906.GA32699@arm.com>
-References: <20140604164132.GF6644@arm.com>
- <07321368d15d4ad9928ebb83af87e401@DM2PR03MB479.namprd03.prod.outlook.com>
- <20140616152739.GS16758@arm.com>
- <8b0492b4697943a0b1f276ef42cc8223@DM2PR03MB352.namprd03.prod.outlook.com>
- <20140616170416.GA16758@arm.com>
- <419e67f783524d208ab3be16bcd94bd9@DM2PR03MB352.namprd03.prod.outlook.com>
- <0587e1f4894546398be0798d2bc2c84f@BL2PR03MB468.namprd03.prod.outlook.com>
- <20140617104304.GD13808@arm.com>
- <32165315f0b84be9948f489fd87bf6a9@BL2PR03MB468.namprd03.prod.outlook.com>
- <7c03c5cffa174b20962bff3b09de0eb8@DM2PR03MB352.namprd03.prod.outlook.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 04/20] clk: sunxi: Fix gate indexing for sun6i-a31-apb0-gates
+Date: Wed, 18 Jun 2014 11:38:50 +0200
+Message-ID: <20140618093850.GJ19730@lukather>
+References: <1403016777-15121-1-git-send-email-wens@csie.org>
+ <1403016777-15121-5-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="tKy6e3LXpfmanBFM"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7V4QWOQKGQE5OFJBUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <7c03c5cffa174b20962bff3b09de0eb8@DM2PR03MB352.namprd03.prod.outlook.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Stuart Yoder <stuart.yoder@freescale.com>
-Cc: Varun Sethi <Varun.Sethi@freescale.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Grundler <grundler@chromium.org>, Stephen Warren <swarren@wwwdotorg.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1403016777-15121-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 03:50:25PM +0100, Stuart Yoder wrote:
-> > > I think for simple masters (i.e. those that have all their StreamIDs
-> > > under control of one driver), then setting something during attach (or
-> > > add?) based on the DT could work pretty well. The other case is when we
-> > > have masters behind a bridge (such as a PCI RC). In this case, it might
-> > > actually be better to ask the bridge for the IDs and let it sort out
-> > the
-> > > allocation itself. That would also move the RequesterID -> StreamID
-> > > mapping out of the SMMU code.
-> > >
-> > > What do you think?
-> > The PCI bus iommu group creation code would be part of the SMMU driver
-> > (it is handled by other IOMMU drivers as well). My understanding is that
-> > there would be one is to one correspondence between the requestor ID and
-> > the iommu group. May be, we can have an API provided by the PCI bridge
-> > (architecture specific) for setting the stream ID.
-> 
-> I think Will is suggesting something along those lines-- I think it's a
-> question of where the streamID allocation happens.  You could
-> either do something like the following in the SMMU driver when attaching
-> a PCI device:
-> 
->     id = alloc_stream_id(...);
->     pci_set_streamid(pci-dev, id);
-> 
->     or
-> 
->     id = pci_get_streamid(pci-dev);
-> 
-> ...i.e the PCI RC could allocate (from some TBD
-> allocator) and set the stream ID itself.
-> 
-> Not sure how big a deal it is to extend PCI RC interfaces for 
-> something like that.
 
-I think both interfaces have their place; the latter for hotpluggable buses
-and the former for static allocation (i.e. set once). The only way to see
-how well it works is to try implementing it, I guess.
+--tKy6e3LXpfmanBFM
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will
+On Tue, Jun 17, 2014 at 10:52:41PM +0800, Chen-Yu Tsai wrote:
+> sun6i-a31-apb0-gates supports using clock-indices for holes between
+> individual gates. However, the driver passes the number of gates
+> registered in clk_data->clk_num, which of_clk_src_onecell_get uses
+> to recognize the range of valid indices a consumer can use.
+>=20
+> This patch makes the driver pass the maximum gate index + 1, so
+> of_clk_src_onecell_get does not complain about indices greater
+> than gates registered.
+>=20
+> This was tested on the A23 SoC, which has a similar APB0 clock,
+> but has holes for gates to removed IP blocks.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--tKy6e3LXpfmanBFM
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJToV4qAAoJEBx+YmzsjxAgLb4P+wRQ/AAQw6rsywCFTZY8xj5Z
+e9shBl7/VbZXetPPo40yuk9QS4H2Fy6iYyx9SBYM22ToQvtyXtIQXpoRgOQnY/2i
+l2rf8C7II7qlSZklSQsYTEr+0WtPjQPp7i7t0i2mqp3xWII8wP66pLmKJ8RH3XU4
+5hmkZZJ+1ViR1MPHbtA3RY6GlIZ43+tYFJiEvzyKVJ0WzpIEcSShyb6DWUxM8Y/6
+GEIlFslFJds9oDRqy/paFsgW5EyfiPm4O4kgA/C2JV4KHB5Zs8hOnREE+3Bjw67m
+exirHbAjUVaLda9bv/6JS6s8DrmjAlJYdAY/LnzUkea+sR2O61O8sN7+BNjaDXKN
+zo65CDf3G/tdjF0c2sZ0SH0SO6MS+1LXmOB7fOQttEOnFzipVZtHYb5y84TLEi5k
+SWaip6Csy2eRiTD/P6GAXDsLoQLVzelCXLJuOtowshD72uMuA6qGC8B8L+zv+CjQ
+zX5T1SsNfXPEHCLyRoeUTsUYZPueR26BKstTVvfiaCqfETCCsHygNpTI4qI/wP+b
+RxT7CT93QlU/S98lln/M23o6CTWbXMTu6ui2E1gehxBH+BxznZGd8Y8Ftc5a23Be
+3f7soY8nmuaR3hcPE/onOq8iq/geJ5wuR5ffksemQRGNdIBWMDCMHormXLm5l+DP
+rVKmBl8rdbYL8t6GkVYM
+=SWQl
+-----END PGP SIGNATURE-----
+
+--tKy6e3LXpfmanBFM--
