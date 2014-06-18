@@ -1,43 +1,53 @@
-From: Zhangfei Gao <zhangfei.gao@linaro.org>
-Subject: [PATCH RFC 2/2] ahci: remove AHCI_HFLAG_NO_FBS setting
-Date: Wed, 18 Jun 2014 12:54:09 +0800
-Message-ID: <1403067249-8021-3-git-send-email-zhangfei.gao@linaro.org>
-References: <xuwei5@hisilicon.com, kefeng.wang@linaro.org,>
- <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org>
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: tj@kernel.org, hdegoede@redhat.com, arnd@arndb.de, mark.rutland@arm.com
-Cc: linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Zhangfei Gao <zhangfei.gao@linaro.org>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: [RESEND PATCH] dt-bindings: extcon: Add support for SM5502 MUIC device
+Date: Wed, 18 Jun 2014 14:03:36 +0900
+Message-ID: <1403067816-32535-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-AHCI_HFLAG can be set directly in dts.
+This patch add documentation for binding of SM5502 MUIC (Micro-USB Interface
+Controller) device which is using EXTCON subsystem. The SM5502 MUIC device
+can detect various external accessories when external accessories is attached
+or detached.
 
-For example
-ahci:sata@f9900000 {
-	no-fbs;
-	no-ncq;
-};
-
-Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
 ---
- drivers/ata/ahci_platform.c |    3 ---
- 1 file changed, 3 deletions(-)
+ .../devicetree/bindings/extcon/extcon-sm5502.txt   | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/extcon/extcon-sm5502.txt
 
-diff --git a/drivers/ata/ahci_platform.c b/drivers/ata/ahci_platform.c
-index ebe505c17763..d6dedaa94280 100644
---- a/drivers/ata/ahci_platform.c
-+++ b/drivers/ata/ahci_platform.c
-@@ -57,9 +57,6 @@ static int ahci_probe(struct platform_device *pdev)
- 			goto disable_resources;
- 	}
- 
--	if (of_device_is_compatible(dev->of_node, "hisilicon,hisi-ahci"))
--		hflags |= AHCI_HFLAG_NO_FBS;
--
- 	rc = ahci_platform_init_host(pdev, hpriv, &ahci_port_info,
- 				     hflags, 0, 0);
- 	if (rc)
+diff --git a/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt b/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt
+new file mode 100644
+index 0000000..4ecda22
+--- /dev/null
++++ b/Documentation/devicetree/bindings/extcon/extcon-sm5502.txt
+@@ -0,0 +1,23 @@
++
++* SM5502 MUIC (Micro-USB Interface Controller) device
++
++The Silicon Mitus SM5502 is a MUIC (Micro-USB Interface Controller) device
++which can detect the state of external accessory when external accessory is
++attached or detached and button is pressed or released. It is interfaced to
++the host controller using an I2C interface.
++
++Required properties:
++- compatible: Should be "siliconmitus,sm5502-muic"
++- reg: Specifies the I2C slave address of the MUIC block. It should be 0x25
++- interrupt-parent: Specifies the phandle of the interrupt controller to which
++  the interrupts from sm5502 are delivered to.
++- interrupts: Interrupt specifiers for detection interrupt sources.
++
++Example:
++
++	sm5502@25 {
++		compatible = "siliconmitus,sm5502-muic";
++		interrupt-parent = <&gpx1>;
++		interrupts = <5 0>;
++		reg = <0x25>;
++	};
 -- 
-1.7.9.5
+1.8.0
 
