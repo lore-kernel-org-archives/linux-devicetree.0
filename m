@@ -1,57 +1,61 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 16/20] mfd: sun6i-prcm: Add support for
- Allwinner A23 PRCM
-Date: Wed, 18 Jun 2014 09:29:53 +0100
-Message-ID: <20140618082953.GO21030@lee--X1>
-References: <1403016777-15121-1-git-send-email-wens@csie.org>
- <1403016777-15121-17-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v2 06/10] mfd: Add driver for Maxim 77802 Power
+ Management IC
+Date: Wed, 18 Jun 2014 09:32:04 +0100
+Message-ID: <20140618083204.GP21030@lee--X1>
+References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1402941758-11216-7-git-send-email-javier.martinez@collabora.co.uk>
+ <20140616192720.GK5099@sirena.org.uk>
+ <53A01F09.5070106@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBB44QWOQKGQEMCJUP5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1403016777-15121-17-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+In-Reply-To: <53A01F09.5070106@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Mark Brown <broonie@kernel.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> The Allwinner A23 SoC has a PRCM unit like the previous A31 SoC.
-> The differences are the AR100 clock can no longer be modified,
-> the APB0 clock has different divisors, and some clock gates are
-> gone.
+> >> +config MFD_MAX77802
+> >> +	tristate "Maxim Integrated MAX77802 PMIC Support"
+> >> +	depends on I2C=3Dy
+> >> +	select MFD_CORE
+> >> +	select REGMAP_I2C
+> >> +	select REGMAP_IRQ
+> >> +	select IRQ_DOMAIN
+> >> +	help
+> >> +	  Say yes here to support for Maxim Integrated MAX77802.
+> >> +	  This is a Power Management IC with RTC on chip.
+> >> +	  This driver provides common support for accessing the device;
+> >> +	  additional drivers must be enabled in order to use the functio=
+nality
+> >> +	  of the device.
+> >> +
+> >=20
+> > It is a bit unorthodox to put the build infrastructure in the same =
+patch
+> > as the DT binding...
+> >=20
 >=20
-> This patch adds a compatible with a modified subdevice list for
-> the A23.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-> ---
->  .../devicetree/bindings/mfd/sun6i-prcm.txt         |  2 +-
->  drivers/mfd/sun6i-prcm.c                           | 30 ++++++++++++++++=
-++++++
->  2 files changed, 31 insertions(+), 1 deletion(-)
+> I thought it was the opposite. That a DT binding document has to be a=
+dded along
+> with the first user of the binding but I'll separate the DT doc in an=
+other patch
+> then if that is the right thing to do.
 
-The patch looks fine to me, but I'm concerned about the size of the
-patch set and the amount of subsystems it touches.
+This was the 'old' method, but changed a little over a year ago.
 
-I am guessing that this patch can just be taken independently though.
-Please correct me if I'm wrong.
+> Thanks a lot for all your suggestions, I'll wait a little to see if t=
+here is
+> more feedback and repost a v3 addressing all the issues you pointed o=
+ut.
+
+Just re-post it.  I'll review the next version.
 
 --=20
 Lee Jones
 Linaro STMicroelectronics Landing Team Lead
 Linaro.org =E2=94=82 Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+=46ollow Linaro: Facebook | Twitter | Blog
