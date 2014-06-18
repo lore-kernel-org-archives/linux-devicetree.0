@@ -1,54 +1,57 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: Re: [RFC v3 1/9] arm: fiq: arbitrary mappings from IRQ to FIQ virqs
-Date: Wed, 18 Jun 2014 12:24:04 +0100
-Message-ID: <53A176D4.90002@linaro.org>
-References: <1400853478-5824-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
- <1401961994-18033-2-git-send-email-daniel.thompson@linaro.org>
- <CAL_JsqK-jCQjCCw4qfJOCfNKLVRDTAYSYsGpmYLDzoSVsBaHrA@mail.gmail.com>
+From: Nikita Yushchenko <nyushchenko-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org>
+Subject: Re: [PATCH 11/21] mfd: use devm_irq_of_parse_and_map() where appropriate
+Date: Wed, 18 Jun 2014 15:31:57 +0400
+Message-ID: <53A178AD.3060003@dev.rtsoft.ru>
+References: <1401880402-30091-1-git-send-email-nyushchenko@dev.rtsoft.ru> <1401880402-30091-12-git-send-email-nyushchenko@dev.rtsoft.ru> <20140617151226.GM29841@lee--X1> <53A0606C.6030400@dev.rtsoft.ru> <20140618084838.GR21030@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqK-jCQjCCw4qfJOCfNKLVRDTAYSYsGpmYLDzoSVsBaHrA@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Fabio Estevam <festevam@gmail.com>, Linaro Patches <patches@linaro.org>, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140618084838.GR21030@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lugovskoy-jFhMxQ4mL6a2X5qOxWx28w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 13/06/14 15:29, Rob Herring wrote:
-> On Thu, Jun 5, 2014 at 4:53 AM, Daniel Thompson
-> <daniel.thompson@linaro.org> wrote:
->> Currently enable_fiq/disable_fiq use a simple offset to convert an IRQ
->> virq into a FIQ virq. This is too inflexible for multi-platform kernels
->> and makes runtime error checking impossible.
->>
->> We solve this by introducing a flexible mapping that allows interrupt
->> controllers that support FIQ to register those mappings. This, in turn,
->> makes it much possible for drivers in DT kernels to gain access to
->> FIQ virqs.
-> 
-> I don't get why you need a separate linux irq numbers for FIQ. Isn't
-> enabling FIQ simply a property of an irq like edge vs. level trigger?
-> Also, given the constraints on FIQ, we can't really have more that 1
-> IRQ assigned to FIQ.
+>> Hmm...  probably it was too early to apply this?  I was just going
+>> to prepare v2, based on discussion...
+>
+> Which discussion?
 
-No particular reason. I mostly went that way because it mimics the
-effect of fiq_start on enable_fiq/disable_fiq whilst supporting
-multi-platform.
+One you are replying in?
 
-I'm tempted to keep the radix tree in the FIQ infrastructure but rather
-than messing about with shadow virqs use it to lookup a fiq_chip
-structure. I think this would keep a clean separation between the ARM
-centric (and slightly weird) FIQ from the generic irq code.
+https://lkml.org/lkml/2014/6/4/136
 
+>> Also, applying only 11/21, without 01/21, will just cause build errors ...
+>
+> CC'ing me on this patch alone when you know you have build
+> dependencies on other patches in the set is a bad idea.  Failing to
+> mention that you wanted the patch to be handled in a special and/or
+> unconventional way is an even worse idea.
+>
+> How are you expecting this patch(-set) to be handled?
 
-Daniel.
+Sorry but I did not CC you this patch.
+
+I sent entire patchset to mailing lists and to maintainers of IRQ and 
+device tree subsystems.
+I used git send-email, and all mails went out to the same recipients.
+Recipient addresses extracted using scripts/get_maintainer.pl applied to 
+the "main" patch of the patchset.
+I did not sent entire patchset to maintainers of individual changed 
+drivers because this makes recipient address too big and too much looks 
+like spamming.
+I did not send individual patches to individual addresses to avoid cases 
+of partially-applied patchset that will just break things (actually this 
+is what happened with 11/21)
+
+I'm quite sorry if I did things wrong, it was my first attempt to sent 
+patchset with tree-wide fixes. However, I don't see what I've done 
+wrong... any hints on that will be appreciated.
+
+Nikita
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
