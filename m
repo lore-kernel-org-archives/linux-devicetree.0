@@ -1,44 +1,73 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v5] hwmon: Driver for TI TMP103 temperature sensor
-Date: Wed, 18 Jun 2014 06:02:28 -0700
-Message-ID: <53A18DE4.8030107@roeck-us.net>
-References: <1403069837-15651-1-git-send-email-hs@denx.de> <53A127BB.7090802@gmail.com> <53A12ED2.4080004@denx.de> <53A138A0.4010704@gmail.com>
+From: Balaji T K <balajitk@ti.com>
+Subject: Re: [PATCH] mmc: core: Add DT bindings for card detect debounce time
+Date: Wed, 18 Jun 2014 18:34:44 +0530
+Message-ID: <53A18E6C.9030500@ti.com>
+References: <1399649837-27286-1-git-send-email-balajitk@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53A138A0.4010704@gmail.com>
+In-Reply-To: <1399649837-27286-1-git-send-email-balajitk@ti.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Varka Bhadram <varkabhadram@gmail.com>, hs@denx.de
-Cc: lm-sensors@lm-sensors.org, Jean Delvare <khali@linux-fr.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Balaji T K <balajitk@ti.com>
+Cc: linux-mmc@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/17/2014 11:58 PM, Varka Bhadram wrote:
-> On 06/18/2014 11:46 AM, Heiko Schocher wrote:
-...
->>>
->>> In the bindings you are giving the compatible property as : ti,tmp103, but here only tmp103.
->>>
->>> Instead of using the i2c_device_id struct , use of_device_id struct for giving the
->>> compatible property value.
->>> compatble = "<manufacturer>,<model>"
->>
->> There are a lot of drivers in drivers/hwmon which use "i2c_device_id struct",
->> and for them only "model" is necessary ...
->>
->> As this is not a platform driver, I do not know, if "of_device_id struct"
->> is possible to use. For that, it must be converted to a platform
->> device driver ...
->>
-> I thought your are using the devicetree source to load the driver. In that case it need not to be platform driver.
-> we can use "of_device_id struct" which matches the bindings in your trivial-devices.txt
+On Friday 09 May 2014 09:07 PM, Balaji T K wrote:
+> Provide an option to get CD debounce time from DT
 >
+> Signed-off-by: Balaji T K <balajitk@ti.com>
+Hi Chris/Ulf,
 
-This would be unnecessary. The bindings will work just fine as-is.
+Any comments on this patch ?
 
-I am starting to repeat myself, as do you. May I kindly suggest that you
-spend some time educating yourself ?
-
-Thanks,
-Guenter
+> ---
+>   Documentation/devicetree/bindings/mmc/mmc.txt |    1 +
+>   drivers/mmc/core/host.c                       |    6 +++++-
+>   2 files changed, 6 insertions(+), 1 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
+> index 9dce540..fae590b 100644
+> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
+> @@ -17,6 +17,7 @@ Optional properties:
+>   - bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
+>     will be <1> if the property is absent.
+>   - wp-gpios: Specify GPIOs for write protection, see gpio binding
+> +- cd-debounce-us: debounce time in microseconds for card detect gpio.
+>   - cd-inverted: when present, polarity on the CD line is inverted. See the note
+>     below for the case, when a GPIO is used for the CD line
+>   - wp-inverted: when present, polarity on the WP line is inverted. See the note
+> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
+> index fdea825..59cd3a0 100644
+> --- a/drivers/mmc/core/host.c
+> +++ b/drivers/mmc/core/host.c
+> @@ -313,6 +313,7 @@ int mmc_of_parse(struct mmc_host *host)
+>   	bool explicit_inv_wp, gpio_inv_wp = false;
+>   	enum of_gpio_flags flags;
+>   	int len, ret, gpio;
+> +	unsigned int debounce;
+>
+>   	if (!host->parent || !host->parent->of_node)
+>   		return 0;
+> @@ -367,6 +368,9 @@ int mmc_of_parse(struct mmc_host *host)
+>   		if (of_find_property(np, "broken-cd", &len))
+>   			host->caps |= MMC_CAP_NEEDS_POLL;
+>
+> +		if (of_property_read_u32(np, "cd-debounce-us", &debounce) < 0)
+> +			debounce = 0;
+> +
+>   		gpio = of_get_named_gpio_flags(np, "cd-gpios", 0, &flags);
+>   		if (gpio == -EPROBE_DEFER)
+>   			return gpio;
+> @@ -374,7 +378,7 @@ int mmc_of_parse(struct mmc_host *host)
+>   			if (!(flags & OF_GPIO_ACTIVE_LOW))
+>   				gpio_inv_cd = true;
+>
+> -			ret = mmc_gpio_request_cd(host, gpio, 0);
+> +			ret = mmc_gpio_request_cd(host, gpio, debounce);
+>   			if (ret < 0) {
+>   				dev_err(host->parent,
+>   					"Failed to request CD GPIO #%d: %d!\n",
+>
 
