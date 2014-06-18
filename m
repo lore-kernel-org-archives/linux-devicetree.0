@@ -1,354 +1,103 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCHv6 1/3] mfd: sec-core: Add support for S2MPU02 device
-Date: Wed, 18 Jun 2014 10:11:32 +0100
-Message-ID: <20140618091132.GB23945@lee--X1>
-References: <1402964830-24890-1-git-send-email-cw00.choi@samsung.com>
- <1402964830-24890-2-git-send-email-cw00.choi@samsung.com>
+From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH net-next v2 3/3] devicetree: add
+ devicetree bindings for cc2520 driver
+Date: Wed, 18 Jun 2014 14:41:10 +0530
+Message-ID: <53A157AE.8070606@gmail.com>
+References: <1403068565-32224-1-git-send-email-varkab@cdac.in>
+	<1403068565-32224-4-git-send-email-varkab@cdac.in>
+	<20140618090500.GA26461@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402964830-24890-2-git-send-email-cw00.choi@samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: broonie@kernel.org, sameo@linux.intel.com, sbkim73@samsung.com, k.kozlowski@samsung.com, myungjoo.ham@samsung.com, kyungmin.park@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, t.figa@samsung.com, sachin.kamat@linaro.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-zigbee-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+In-Reply-To: <20140618090500.GA26461@leverpostej>
+List-Unsubscribe: <https://lists.sourceforge.net/lists/listinfo/linux-zigbee-devel>,
+	<mailto:linux-zigbee-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://sourceforge.net/mailarchive/forum.php?forum_name=linux-zigbee-devel>
+List-Post: <mailto:linux-zigbee-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>
+List-Help: <mailto:linux-zigbee-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.sourceforge.net/lists/listinfo/linux-zigbee-devel>,
+	<mailto:linux-zigbee-devel-request-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org?subject=subscribe>
+Errors-To: linux-zigbee-devel-bounces-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-zigbee-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org" <linux-zigbee-devel-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-> Add support for Samsung S2MPU02 PMIC device to the MFD sec-core drive=
-r.
-> The S2MPU02 device includes PMIC/RTC/Clock devices.
->=20
-> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> ---
->  drivers/mfd/sec-core.c           |  46 +++++++++++-----
->  drivers/mfd/sec-irq.c            | 110 +++++++++++++++++++++++++++++=
-++++------
->  include/linux/mfd/samsung/core.h |   1 +
->  include/linux/mfd/samsung/irq.h  |  24 +++++++++
->  4 files changed, 151 insertions(+), 30 deletions(-)
+Hi,
 
-Looks good now:
-  Acked-by: Lee Jones <lee.jones@linaro.org>
+On 06/18/2014 02:35 PM, Mark Rutland wrote:
+> On Wed, Jun 18, 2014 at 06:16:05AM +0100, Varka Bhadram wrote:
+>> devicetree bindings for cc2520 radio driver.
+>>
+>> Signed-off-by: Varka Bhadram <varkab-If5XQcfNmg0@public.gmane.org>
+>> ---
+>>   .../devicetree/bindings/net/ieee802154/cc2520.txt  |   26 ++++++++++++++++++++
+>>   1 file changed, 26 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt b/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+>> new file mode 100644
+>> index 0000000..f0a749d
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
+>> @@ -0,0 +1,26 @@
+>> +CC2520 IEEE 802.15.4 Compatible Radio
+>> +
+>> +Required properties:
+>> +	- compatible:		should be "ti,cc2520"
+>> +	- spi-max-frequency:	maximal bus speed (8000000), should be set to 4000000 depends
+>> +				sync or async operation mode
+>> +	- reg:			the chipselect index
+>> +	- mode:			SPI mode
+> What exactly is this property? It doesn't seem to be used by the driver,
+> the example is opaque, and this doesn't seem to match any existing
+> bindings (a grep for "mode" in Documentation/devicetree/bindings/spi
+> only found me a string "mode" property).
+>
+> The example has several properties (the GPIOs and pinctrl) not listed
+> here...
 
-Can I just apply this on its own?
+Previously is used this 'mode' property to set the SPI mode. but i am not using now. I will remove it.
+And also i will add the optional properties GPIO and pinctrl in next version.
 
-> diff --git a/drivers/mfd/sec-core.c b/drivers/mfd/sec-core.c
-> index be06d0a..15ba847 100644
-> --- a/drivers/mfd/sec-core.c
-> +++ b/drivers/mfd/sec-core.c
-> @@ -89,6 +89,15 @@ static const struct mfd_cell s2mpa01_devs[] =3D {
->  	},
->  };
-> =20
-> +static const struct mfd_cell s2mpu02_devs[] =3D {
-> +	{ .name =3D "s2mpu02-pmic", },
-> +	{ .name =3D "s2mpu02-rtc", },
-> +	{
-> +		.name =3D "s2mpu02-clk",
-> +		.of_compatible =3D "samsung,s2mpu02-clk",
-> +	}
-> +};
-> +
->  #ifdef CONFIG_OF
->  static const struct of_device_id sec_dt_match[] =3D {
->  	{	.compatible =3D "samsung,s5m8767-pmic",
-> @@ -103,6 +112,9 @@ static const struct of_device_id sec_dt_match[] =3D=
- {
->  		.compatible =3D "samsung,s2mpa01-pmic",
->  		.data =3D (void *)S2MPA01,
->  	}, {
-> +		.compatible =3D "samsung,s2mpu02-pmic",
-> +		.data =3D (void *)S2MPU02,
-> +	}, {
->  		/* Sentinel */
->  	},
->  };
-> @@ -250,9 +262,10 @@ static int sec_pmic_probe(struct i2c_client *i2c=
-,
->  {
->  	struct sec_platform_data *pdata =3D dev_get_platdata(&i2c->dev);
->  	const struct regmap_config *regmap;
-> +	const struct mfd_cell *sec_devs;
->  	struct sec_pmic_dev *sec_pmic;
->  	unsigned long device_type;
-> -	int ret;
-> +	int ret, num_sec_devs;
-> =20
->  	sec_pmic =3D devm_kzalloc(&i2c->dev, sizeof(struct sec_pmic_dev),
->  				GFP_KERNEL);
-> @@ -319,34 +332,39 @@ static int sec_pmic_probe(struct i2c_client *i2=
-c,
-> =20
->  	switch (sec_pmic->device_type) {
->  	case S5M8751X:
-> -		ret =3D mfd_add_devices(sec_pmic->dev, -1, s5m8751_devs,
-> -				      ARRAY_SIZE(s5m8751_devs), NULL, 0, NULL);
-> +		sec_devs =3D s5m8751_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s5m8751_devs);
->  		break;
->  	case S5M8763X:
-> -		ret =3D mfd_add_devices(sec_pmic->dev, -1, s5m8763_devs,
-> -				      ARRAY_SIZE(s5m8763_devs), NULL, 0, NULL);
-> +		sec_devs =3D s5m8763_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s5m8763_devs);
->  		break;
->  	case S5M8767X:
-> -		ret =3D mfd_add_devices(sec_pmic->dev, -1, s5m8767_devs,
-> -				      ARRAY_SIZE(s5m8767_devs), NULL, 0, NULL);
-> +		sec_devs =3D s5m8767_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s5m8767_devs);
->  		break;
->  	case S2MPA01:
-> -		ret =3D mfd_add_devices(sec_pmic->dev, -1, s2mpa01_devs,
-> -				      ARRAY_SIZE(s2mpa01_devs), NULL, 0, NULL);
-> +		sec_devs =3D s2mpa01_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s2mpa01_devs);
->  		break;
->  	case S2MPS11X:
-> -		ret =3D mfd_add_devices(sec_pmic->dev, -1, s2mps11_devs,
-> -				      ARRAY_SIZE(s2mps11_devs), NULL, 0, NULL);
-> +		sec_devs =3D s2mps11_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s2mps11_devs);
->  		break;
->  	case S2MPS14X:
-> -		ret =3D mfd_add_devices(sec_pmic->dev, -1, s2mps14_devs,
-> -				      ARRAY_SIZE(s2mps14_devs), NULL, 0, NULL);
-> +		sec_devs =3D s2mps14_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s2mps14_devs);
-> +		break;
-> +	case S2MPU02:
-> +		sec_devs =3D s2mpu02_devs;
-> +		num_sec_devs =3D ARRAY_SIZE(s2mpu02_devs);
->  		break;
->  	default:
->  		/* If this happens the probe function is problem */
->  		BUG();
->  	}
-> -
-> +	ret =3D mfd_add_devices(sec_pmic->dev, -1, sec_devs, num_sec_devs, =
-NULL,
-> +			      0, NULL);
->  	if (ret)
->  		goto err_mfd;
-> =20
-> diff --git a/drivers/mfd/sec-irq.c b/drivers/mfd/sec-irq.c
-> index 654e2c1..f9a5786 100644
-> --- a/drivers/mfd/sec-irq.c
-> +++ b/drivers/mfd/sec-irq.c
-> @@ -20,6 +20,7 @@
->  #include <linux/mfd/samsung/irq.h>
->  #include <linux/mfd/samsung/s2mps11.h>
->  #include <linux/mfd/samsung/s2mps14.h>
-> +#include <linux/mfd/samsung/s2mpu02.h>
->  #include <linux/mfd/samsung/s5m8763.h>
->  #include <linux/mfd/samsung/s5m8767.h>
-> =20
-> @@ -161,6 +162,77 @@ static const struct regmap_irq s2mps14_irqs[] =3D=
- {
->  	},
->  };
-> =20
-> +static const struct regmap_irq s2mpu02_irqs[] =3D {
-> +	[S2MPU02_IRQ_PWRONF] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_PWRONF_MASK,
-> +	},
-> +	[S2MPU02_IRQ_PWRONR] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_PWRONR_MASK,
-> +	},
-> +	[S2MPU02_IRQ_JIGONBF] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_JIGONBF_MASK,
-> +	},
-> +	[S2MPU02_IRQ_JIGONBR] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_JIGONBR_MASK,
-> +	},
-> +	[S2MPU02_IRQ_ACOKBF] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_ACOKBF_MASK,
-> +	},
-> +	[S2MPU02_IRQ_ACOKBR] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_ACOKBR_MASK,
-> +	},
-> +	[S2MPU02_IRQ_PWRON1S] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_PWRON1S_MASK,
-> +	},
-> +	[S2MPU02_IRQ_MRB] =3D {
-> +		.reg_offset =3D 0,
-> +		.mask =3D S2MPS11_IRQ_MRB_MASK,
-> +	},
-> +	[S2MPU02_IRQ_RTC60S] =3D {
-> +		.reg_offset =3D 1,
-> +		.mask =3D S2MPS11_IRQ_RTC60S_MASK,
-> +	},
-> +	[S2MPU02_IRQ_RTCA1] =3D {
-> +		.reg_offset =3D 1,
-> +		.mask =3D S2MPS11_IRQ_RTCA1_MASK,
-> +	},
-> +	[S2MPU02_IRQ_RTCA0] =3D {
-> +		.reg_offset =3D 1,
-> +		.mask =3D S2MPS11_IRQ_RTCA0_MASK,
-> +	},
-> +	[S2MPU02_IRQ_SMPL] =3D {
-> +		.reg_offset =3D 1,
-> +		.mask =3D S2MPS11_IRQ_SMPL_MASK,
-> +	},
-> +	[S2MPU02_IRQ_RTC1S] =3D {
-> +		.reg_offset =3D 1,
-> +		.mask =3D S2MPS11_IRQ_RTC1S_MASK,
-> +	},
-> +	[S2MPU02_IRQ_WTSR] =3D {
-> +		.reg_offset =3D 1,
-> +		.mask =3D S2MPS11_IRQ_WTSR_MASK,
-> +	},
-> +	[S2MPU02_IRQ_INT120C] =3D {
-> +		.reg_offset =3D 2,
-> +		.mask =3D S2MPS11_IRQ_INT120C_MASK,
-> +	},
-> +	[S2MPU02_IRQ_INT140C] =3D {
-> +		.reg_offset =3D 2,
-> +		.mask =3D S2MPS11_IRQ_INT140C_MASK,
-> +	},
-> +	[S2MPU02_IRQ_TSD] =3D {
-> +		.reg_offset =3D 2,
-> +		.mask =3D S2MPS14_IRQ_TSD_MASK,
-> +	},
-> +};
-> +
->  static const struct regmap_irq s5m8767_irqs[] =3D {
->  	[S5M8767_IRQ_PWRR] =3D {
->  		.reg_offset =3D 0,
-> @@ -327,6 +399,16 @@ static const struct regmap_irq_chip s2mps14_irq_=
-chip =3D {
->  	.ack_base =3D S2MPS14_REG_INT1,
->  };
-> =20
-> +static const struct regmap_irq_chip s2mpu02_irq_chip =3D {
-> +	.name =3D "s2mpu02",
-> +	.irqs =3D s2mpu02_irqs,
-> +	.num_irqs =3D ARRAY_SIZE(s2mpu02_irqs),
-> +	.num_regs =3D 3,
-> +	.status_base =3D S2MPU02_REG_INT1,
-> +	.mask_base =3D S2MPU02_REG_INT1M,
-> +	.ack_base =3D S2MPU02_REG_INT1,
-> +};
-> +
->  static const struct regmap_irq_chip s5m8767_irq_chip =3D {
->  	.name =3D "s5m8767",
->  	.irqs =3D s5m8767_irqs,
-> @@ -351,6 +433,7 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
->  {
->  	int ret =3D 0;
->  	int type =3D sec_pmic->device_type;
-> +	const struct regmap_irq_chip *sec_irq_chip;
-> =20
->  	if (!sec_pmic->irq) {
->  		dev_warn(sec_pmic->dev,
-> @@ -361,28 +444,19 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
-> =20
->  	switch (type) {
->  	case S5M8763X:
-> -		ret =3D regmap_add_irq_chip(sec_pmic->regmap_pmic, sec_pmic->irq,
-> -				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> -				  sec_pmic->irq_base, &s5m8763_irq_chip,
-> -				  &sec_pmic->irq_data);
-> +		sec_irq_chip =3D &s5m8763_irq_chip;
->  		break;
->  	case S5M8767X:
-> -		ret =3D regmap_add_irq_chip(sec_pmic->regmap_pmic, sec_pmic->irq,
-> -				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> -				  sec_pmic->irq_base, &s5m8767_irq_chip,
-> -				  &sec_pmic->irq_data);
-> +		sec_irq_chip =3D &s5m8767_irq_chip;
->  		break;
->  	case S2MPS11X:
-> -		ret =3D regmap_add_irq_chip(sec_pmic->regmap_pmic, sec_pmic->irq,
-> -				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> -				  sec_pmic->irq_base, &s2mps11_irq_chip,
-> -				  &sec_pmic->irq_data);
-> +		sec_irq_chip =3D &s2mps11_irq_chip;
->  		break;
->  	case S2MPS14X:
-> -		ret =3D regmap_add_irq_chip(sec_pmic->regmap_pmic, sec_pmic->irq,
-> -				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> -				  sec_pmic->irq_base, &s2mps14_irq_chip,
-> -				  &sec_pmic->irq_data);
-> +		sec_irq_chip =3D &s2mps14_irq_chip;
-> +		break;
-> +	case S2MPU02:
-> +		sec_irq_chip =3D &s2mpu02_irq_chip;
->  		break;
->  	default:
->  		dev_err(sec_pmic->dev, "Unknown device type %lu\n",
-> @@ -390,6 +464,10 @@ int sec_irq_init(struct sec_pmic_dev *sec_pmic)
->  		return -EINVAL;
->  	}
-> =20
-> +	ret =3D regmap_add_irq_chip(sec_pmic->regmap_pmic, sec_pmic->irq,
-> +			  IRQF_TRIGGER_FALLING | IRQF_ONESHOT,
-> +			  sec_pmic->irq_base, sec_irq_chip,
-> +			  &sec_pmic->irq_data);
->  	if (ret !=3D 0) {
->  		dev_err(sec_pmic->dev, "Failed to register IRQ chip: %d\n", ret);
->  		return ret;
-> diff --git a/include/linux/mfd/samsung/core.h b/include/linux/mfd/sam=
-sung/core.h
-> index 47d8424..b5f73de 100644
-> --- a/include/linux/mfd/samsung/core.h
-> +++ b/include/linux/mfd/samsung/core.h
-> @@ -21,6 +21,7 @@ enum sec_device_type {
->  	S2MPA01,
->  	S2MPS11X,
->  	S2MPS14X,
-> +	S2MPU02,
->  };
-> =20
->  /**
-> diff --git a/include/linux/mfd/samsung/irq.h b/include/linux/mfd/sams=
-ung/irq.h
-> index 1224f44..f35af73 100644
-> --- a/include/linux/mfd/samsung/irq.h
-> +++ b/include/linux/mfd/samsung/irq.h
-> @@ -129,6 +129,30 @@ enum s2mps14_irq {
->  	S2MPS14_IRQ_NR,
->  };
-> =20
-> +enum s2mpu02_irq {
-> +	S2MPU02_IRQ_PWRONF,
-> +	S2MPU02_IRQ_PWRONR,
-> +	S2MPU02_IRQ_JIGONBF,
-> +	S2MPU02_IRQ_JIGONBR,
-> +	S2MPU02_IRQ_ACOKBF,
-> +	S2MPU02_IRQ_ACOKBR,
-> +	S2MPU02_IRQ_PWRON1S,
-> +	S2MPU02_IRQ_MRB,
-> +
-> +	S2MPU02_IRQ_RTC60S,
-> +	S2MPU02_IRQ_RTCA1,
-> +	S2MPU02_IRQ_RTCA0,
-> +	S2MPU02_IRQ_SMPL,
-> +	S2MPU02_IRQ_RTC1S,
-> +	S2MPU02_IRQ_WTSR,
-> +
-> +	S2MPU02_IRQ_INT120C,
-> +	S2MPU02_IRQ_INT140C,
-> +	S2MPU02_IRQ_TSD,
-> +
-> +	S2MPU02_IRQ_NR,
-> +};
-> +
->  /* Masks for interrupts are the same as in s2mps11 */
->  #define S2MPS14_IRQ_TSD_MASK		(1 << 2)
-> =20
+Thanks for comments.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+-Varka Bhadram.
+
+>
+> Mark.
+>
+>> +Example:
+>> +
+>> +	cc2520@0 {
+>> +		compatible = "ti,cc2520";
+>> +		reg = <0>;
+>> +		spi-max-frequency = <4000000>;
+>> +		mode = <1>;
+>> +
+>> +		pinctrl-names = "default";
+>> +		pinctrl-0 = <&cc2520_cape_pins>;	/*GPIO pin muxing details*/
+>> +
+>> +		fifo-gpio = <&gpio1 18 0>;
+>> +		fifop-gpio = <&gpio1 19 0>;
+>> +		sfd-gpio = <&gpio1 13 0>;
+>> +		cca-gpio = <&gpio1 16 0>;
+>> +		vreg-gpio = <&gpio0 31 0>;
+>> +		reset-gpio = <&gpio1 12 0>;
+>> +	};
+>> -- 
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+>> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+
+
+------------------------------------------------------------------------------
+HPCC Systems Open Source Big Data Platform from LexisNexis Risk Solutions
+Find What Matters Most in Your Big Data with HPCC Systems
+Open Source. Fast. Scalable. Simple. Ideal for Dirty Data.
+Leverages Graph Analysis for Fast Processing & Easy Data Exploration
+http://p.sf.net/sfu/hpccsystems
