@@ -1,826 +1,768 @@
-From: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v1] clk: qcom: Add APQ8084 clocks for SATA, PCIe and UFS
-Date: Thu, 19 Jun 2014 21:07:19 +0300
-Message-ID: <1403201239-7609-1-git-send-email-gdjakov@mm-sol.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
+Date: Thu, 19 Jun 2014 19:17:11 +0100
+Message-ID: <53A32927.4060004@arm.com>
+References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org> <1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jassi Brar <jaswinder.singh@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mporter@linaro.org" <mporter@linaro.org>, "patches@linaro.org" <patches@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-anna@ti.com" <s-anna@ti.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, Pawel Moll <Pawel.Moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "joshc@codeaurora.org" <joshc@codeaurora.org>, "linus.walleij@linaro.org" <linus.walleij@lina>
 List-Id: devicetree@vger.kernel.org
 
-Add the necessary clocks for SATA, PCIe and UFS to the
-APQ8084 global clock controller (GCC). This will allow
-the above device drivers to control their clocks.
+Hi Jassi,
 
-Signed-off-by: Georgi Djakov <gdjakov-NEYub+7Iv8PQT0dZR+AlfA@public.gmane.org>
----
+I started using this from v5 and tried briefly to follow previous versions
+and discussion. Please forgive me if I ask questions that are already answered.
 
-Patch applies to clk-next + https://lkml.org/lkml/2014/6/3/443
+On 12/06/14 18:01, Jassi Brar wrote:
+> Introduce common framework for client/protocol drivers and
+> controller drivers of Inter-Processor-Communication (IPC).
+>
+> Client driver developers should have a look at
+>   include/linux/mailbox_client.h to understand the part of
+> the API exposed to client drivers.
+> Similarly controller driver developers should have a look
+> at include/linux/mailbox_controller.h
+>
+> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
+> ---
+>   drivers/mailbox/Makefile           |   4 +
+>   drivers/mailbox/mailbox.c          | 487 +++++++++++++++++++++++++++++++++++++
+>   include/linux/mailbox_client.h     |  45 ++++
+>   include/linux/mailbox_controller.h | 121 +++++++++
+>   4 files changed, 657 insertions(+)
+>   create mode 100644 drivers/mailbox/mailbox.c
+>   create mode 100644 include/linux/mailbox_client.h
+>   create mode 100644 include/linux/mailbox_controller.h
+>
+> diff --git a/drivers/mailbox/Makefile b/drivers/mailbox/Makefile
+> index e0facb3..2fa343a 100644
+> --- a/drivers/mailbox/Makefile
+> +++ b/drivers/mailbox/Makefile
+> @@ -1,3 +1,7 @@
+> +# Generic MAILBOX API
+> +
+> +obj-$(CONFIG_MAILBOX)          += mailbox.o
+> +
+>   obj-$(CONFIG_PL320_MBOX)       += pl320-ipc.o
+>
+>   obj-$(CONFIG_OMAP_MBOX)                += omap-mailbox.o
+> diff --git a/drivers/mailbox/mailbox.c b/drivers/mailbox/mailbox.c
+> new file mode 100644
+> index 0000000..336fa10
+> --- /dev/null
+> +++ b/drivers/mailbox/mailbox.c
+> @@ -0,0 +1,487 @@
+> +/*
+> + * Mailbox: Common code for Mailbox controllers and users
+> + *
+> + * Copyright (C) 2014 Linaro Ltd.
+> + * Author: Jassi Brar <jassisinghbrar@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/interrupt.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/mutex.h>
+> +#include <linux/delay.h>
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +#include <linux/module.h>
+> +#include <linux/device.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/mailbox_controller.h>
+> +
+> +#define TXDONE_BY_IRQ  (1 << 0) /* controller has remote RTR irq */
+> +#define TXDONE_BY_POLL (1 << 1) /* controller can read status of last TX */
+> +#define TXDONE_BY_ACK  (1 << 2) /* S/W ACK recevied by Client ticks the TX */
+> +
+> +static LIST_HEAD(mbox_cons);
+> +static DEFINE_MUTEX(con_mutex);
+> +
+> +static int _add_to_rbuf(struct mbox_chan *chan, void *mssg)
+> +{
+> +       int idx;
+> +       unsigned long flags;
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +
+> +       /* See if there is any space left */
+> +       if (chan->msg_count == MBOX_TX_QUEUE_LEN) {
+> +               spin_unlock_irqrestore(&chan->lock, flags);
+> +               return -ENOMEM;
+> +       }
+> +
 
- drivers/clk/qcom/gcc-apq8084.c               |  667 ++++++++++++++++++++++++++
- include/dt-bindings/clock/qcom,gcc-apq8084.h |   14 +
- 2 files changed, 681 insertions(+)
+Any particular reason why the standard list implementation can't be used
+instead of this. It eliminates limitation of MBOX_TX_QUEUE_LEN and would
+remove msg_free/count
 
-diff --git a/drivers/clk/qcom/gcc-apq8084.c b/drivers/clk/qcom/gcc-apq8084.c
-index b9e6140..ee52eb1 100644
---- a/drivers/clk/qcom/gcc-apq8084.c
-+++ b/drivers/clk/qcom/gcc-apq8084.c
-@@ -36,6 +36,10 @@
- #define P_GPLL0	1
- #define P_GPLL1	1
- #define P_GPLL4	2
-+#define P_PCIE_0_1_PIPE_CLK 1
-+#define P_SATA_ASIC0_CLK 1
-+#define P_SATA_RX_CLK 1
-+#define P_SLEEP_CLK 1
- 
- static const u8 gcc_xo_gpll0_map[] = {
- 	[P_XO]		= 0,
-@@ -59,6 +63,46 @@ static const char *gcc_xo_gpll0_gpll4[] = {
- 	"gpll4_vote",
- };
- 
-+static const u8 gcc_xo_sata_asic0_map[] = {
-+	[P_XO]			= 0,
-+	[P_SATA_ASIC0_CLK]	= 2,
-+};
-+
-+static const char *gcc_xo_sata_asic0[] = {
-+	"xo",
-+	"sata_asic0_clk",
-+};
-+
-+static const u8 gcc_xo_sata_rx_map[] = {
-+	[P_XO]			= 0,
-+	[P_SATA_RX_CLK]		= 2,
-+};
-+
-+static const char *gcc_xo_sata_rx[] = {
-+	"xo",
-+	"sata_rx_clk",
-+};
-+
-+static const u8 gcc_xo_pcie_map[] = {
-+	[P_XO]			= 0,
-+	[P_PCIE_0_1_PIPE_CLK]	= 2,
-+};
-+
-+static const char *gcc_xo_pcie[] = {
-+	"xo",
-+	"pcie_pipe",
-+};
-+
-+static const u8 gcc_xo_pcie_sleep_map[] = {
-+	[P_XO]			= 0,
-+	[P_SLEEP_CLK]		= 6,
-+};
-+
-+static const char *gcc_xo_pcie_sleep[] = {
-+	"xo",
-+	"sleep_clk_src",
-+};
-+
- #define F(f, s, h, m, n) { (f), (s), (2 * (h) - 1), (m), (n) }
- 
- static struct clk_pll gpll0 = {
-@@ -178,6 +222,27 @@ static struct clk_regmap gpll4_vote = {
- 	},
- };
- 
-+static const struct freq_tbl ftbl_gcc_ufs_axi_clk[] = {
-+	F(100000000, P_GPLL0, 6, 0, 0),
-+	F(200000000, P_GPLL0, 3, 0, 0),
-+	F(240000000, P_GPLL0, 2.5, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 ufs_axi_clk_src = {
-+	.cmd_rcgr = 0x1d64,
-+	.mnd_width = 8,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_gpll0_map,
-+	.freq_tbl = ftbl_gcc_ufs_axi_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "ufs_axi_clk_src",
-+		.parent_names = gcc_xo_gpll0,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
- static const struct freq_tbl ftbl_gcc_usb30_master_clk[] = {
- 	F(125000000, P_GPLL0, 1, 5, 24),
- 	{ }
-@@ -890,6 +955,71 @@ static struct clk_rcg2 gp3_clk_src = {
- 	},
- };
- 
-+static const struct freq_tbl ftbl_gcc_pcie_0_1_aux_clk[] = {
-+	F(1010000, P_XO, 1, 1, 19),
-+	{ }
-+};
-+
-+static struct clk_rcg2 pcie_0_aux_clk_src = {
-+	.cmd_rcgr = 0x1b2c,
-+	.mnd_width = 16,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_pcie_sleep_map,
-+	.freq_tbl = ftbl_gcc_pcie_0_1_aux_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "pcie_0_aux_clk_src",
-+		.parent_names = gcc_xo_pcie_sleep,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 pcie_1_aux_clk_src = {
-+	.cmd_rcgr = 0x1bac,
-+	.mnd_width = 16,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_pcie_sleep_map,
-+	.freq_tbl = ftbl_gcc_pcie_0_1_aux_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "pcie_1_aux_clk_src",
-+		.parent_names = gcc_xo_pcie_sleep,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_gcc_pcie_0_1_pipe_clk[] = {
-+	F(125000000, P_PCIE_0_1_PIPE_CLK, 1, 0, 0),
-+	F(250000000, P_PCIE_0_1_PIPE_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 pcie_0_pipe_clk_src = {
-+	.cmd_rcgr = 0x1b18,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_pcie_map,
-+	.freq_tbl = ftbl_gcc_pcie_0_1_pipe_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "pcie_0_pipe_clk_src",
-+		.parent_names = gcc_xo_pcie,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static struct clk_rcg2 pcie_1_pipe_clk_src = {
-+	.cmd_rcgr = 0x1b98,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_pcie_map,
-+	.freq_tbl = ftbl_gcc_pcie_0_1_pipe_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "pcie_1_pipe_clk_src",
-+		.parent_names = gcc_xo_pcie,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
- static const struct freq_tbl ftbl_gcc_pdm2_clk[] = {
- 	F(60000000, P_GPLL0, 10, 0, 0),
- 	{ }
-@@ -908,6 +1038,84 @@ static struct clk_rcg2 pdm2_clk_src = {
- 	},
- };
- 
-+static const struct freq_tbl ftbl_gcc_sata_asic0_clk[] = {
-+	F(75000000, P_SATA_ASIC0_CLK, 1, 0, 0),
-+	F(150000000, P_SATA_ASIC0_CLK, 1, 0, 0),
-+	F(300000000, P_SATA_ASIC0_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 sata_asic0_clk_src = {
-+	.cmd_rcgr = 0x1c94,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_sata_asic0_map,
-+	.freq_tbl = ftbl_gcc_sata_asic0_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "sata_asic0_clk_src",
-+		.parent_names = gcc_xo_sata_asic0,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_gcc_sata_pmalive_clk[] = {
-+	F(19200000, P_XO, 1, 0, 0),
-+	F(50000000, P_GPLL0, 12, 0, 0),
-+	F(100000000, P_GPLL0, 6, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 sata_pmalive_clk_src = {
-+	.cmd_rcgr = 0x1c80,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_gpll0_map,
-+	.freq_tbl = ftbl_gcc_sata_pmalive_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "sata_pmalive_clk_src",
-+		.parent_names = gcc_xo_gpll0,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_gcc_sata_rx_clk[] = {
-+	F(75000000, P_SATA_RX_CLK, 1, 0, 0),
-+	F(150000000, P_SATA_RX_CLK, 1, 0, 0),
-+	F(300000000, P_SATA_RX_CLK, 1, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 sata_rx_clk_src = {
-+	.cmd_rcgr = 0x1ca8,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_sata_rx_map,
-+	.freq_tbl = ftbl_gcc_sata_rx_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "sata_rx_clk_src",
-+		.parent_names = gcc_xo_sata_rx,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
-+static const struct freq_tbl ftbl_gcc_sata_rx_oob_clk[] = {
-+	F(100000000, P_GPLL0, 6, 0, 0),
-+	{ }
-+};
-+
-+static struct clk_rcg2 sata_rx_oob_clk_src = {
-+	.cmd_rcgr = 0x1c5c,
-+	.hid_width = 5,
-+	.parent_map = gcc_xo_gpll0_map,
-+	.freq_tbl = ftbl_gcc_sata_rx_oob_clk,
-+	.clkr.hw.init = &(struct clk_init_data){
-+		.name = "sata_rx_oob_clk_src",
-+		.parent_names = gcc_xo_gpll0,
-+		.num_parents = 2,
-+		.ops = &clk_rcg2_ops,
-+	},
-+};
-+
- static const struct freq_tbl ftbl_gcc_sdcc1_4_apps_clk[] = {
- 	F(144000, P_XO, 16, 3, 25),
- 	F(400000, P_XO, 12, 1, 4),
-@@ -2071,6 +2279,176 @@ static struct clk_branch gcc_ocmem_noc_cfg_ahb_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_pcie_0_aux_clk = {
-+	.halt_reg = 0x1b10,
-+	.clkr = {
-+		.enable_reg = 0x1b10,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_0_aux_clk",
-+			.parent_names = (const char *[]){
-+				"pcie_0_aux_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_0_cfg_ahb_clk = {
-+	.halt_reg = 0x1b0c,
-+	.clkr = {
-+		.enable_reg = 0x1b0c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_0_cfg_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_0_mstr_axi_clk = {
-+	.halt_reg = 0x1b08,
-+	.clkr = {
-+		.enable_reg = 0x1b08,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_0_mstr_axi_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_0_pipe_clk = {
-+	.halt_reg = 0x1b14,
-+	.clkr = {
-+		.enable_reg = 0x1b14,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_0_pipe_clk",
-+			.parent_names = (const char *[]){
-+				"pcie_0_pipe_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_0_slv_axi_clk = {
-+	.halt_reg = 0x1b04,
-+	.clkr = {
-+		.enable_reg = 0x1b04,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_0_slv_axi_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_1_aux_clk = {
-+	.halt_reg = 0x1b90,
-+	.clkr = {
-+		.enable_reg = 0x1b90,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_1_aux_clk",
-+			.parent_names = (const char *[]){
-+				"pcie_1_aux_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_1_cfg_ahb_clk = {
-+	.halt_reg = 0x1b8c,
-+	.clkr = {
-+		.enable_reg = 0x1b8c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_1_cfg_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_1_mstr_axi_clk = {
-+	.halt_reg = 0x1b88,
-+	.clkr = {
-+		.enable_reg = 0x1b88,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_1_mstr_axi_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_1_pipe_clk = {
-+	.halt_reg = 0x1b94,
-+	.clkr = {
-+		.enable_reg = 0x1b94,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_1_pipe_clk",
-+			.parent_names = (const char *[]){
-+				"pcie_1_pipe_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_pcie_1_slv_axi_clk = {
-+	.halt_reg = 0x1b84,
-+	.clkr = {
-+		.enable_reg = 0x1b84,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_pcie_1_slv_axi_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_pdm2_clk = {
- 	.halt_reg = 0x0ccc,
- 	.clkr = {
-@@ -2138,6 +2516,108 @@ static struct clk_branch gcc_prng_ahb_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_sata_asic0_clk = {
-+	.halt_reg = 0x1c54,
-+	.clkr = {
-+		.enable_reg = 0x1c54,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sata_asic0_clk",
-+			.parent_names = (const char *[]){
-+				"sata_asic0_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_sata_axi_clk = {
-+	.halt_reg = 0x1c44,
-+	.clkr = {
-+		.enable_reg = 0x1c44,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sata_axi_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_sata_cfg_ahb_clk = {
-+	.halt_reg = 0x1c48,
-+	.clkr = {
-+		.enable_reg = 0x1c48,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sata_cfg_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_sata_pmalive_clk = {
-+	.halt_reg = 0x1c50,
-+	.clkr = {
-+		.enable_reg = 0x1c50,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sata_pmalive_clk",
-+			.parent_names = (const char *[]){
-+				"sata_pmalive_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_sata_rx_clk = {
-+	.halt_reg = 0x1c58,
-+	.clkr = {
-+		.enable_reg = 0x1c58,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sata_rx_clk",
-+			.parent_names = (const char *[]){
-+				"sata_rx_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_sata_rx_oob_clk = {
-+	.halt_reg = 0x1c4c,
-+	.clkr = {
-+		.enable_reg = 0x1c4c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sata_rx_oob_clk",
-+			.parent_names = (const char *[]){
-+				"sata_rx_oob_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_sdcc1_ahb_clk = {
- 	.halt_reg = 0x04c8,
- 	.clkr = {
-@@ -2302,6 +2782,23 @@ static struct clk_branch gcc_sdcc4_apps_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_sys_noc_ufs_axi_clk = {
-+	.halt_reg = 0x013c,
-+	.clkr = {
-+		.enable_reg = 0x013c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_sys_noc_ufs_axi_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_axi_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_sys_noc_usb3_axi_clk = {
- 	.halt_reg = 0x0108,
- 	.clkr = {
-@@ -2386,6 +2883,142 @@ static struct clk_branch gcc_tsif_ref_clk = {
- 	},
- };
- 
-+static struct clk_branch gcc_ufs_ahb_clk = {
-+	.halt_reg = 0x1d48,
-+	.clkr = {
-+		.enable_reg = 0x1d48,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_ahb_clk",
-+			.parent_names = (const char *[]){
-+				"config_noc_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_axi_clk = {
-+	.halt_reg = 0x1d44,
-+	.clkr = {
-+		.enable_reg = 0x1d44,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_axi_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_axi_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_rx_cfg_clk = {
-+	.halt_reg = 0x1d50,
-+	.clkr = {
-+		.enable_reg = 0x1d50,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_rx_cfg_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_axi_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_rx_symbol_0_clk = {
-+	.halt_reg = 0x1d5c,
-+	.clkr = {
-+		.enable_reg = 0x1d5c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_rx_symbol_0_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_rx_symbol_0_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_rx_symbol_1_clk = {
-+	.halt_reg = 0x1d60,
-+	.clkr = {
-+		.enable_reg = 0x1d60,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_rx_symbol_1_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_rx_symbol_1_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_tx_cfg_clk = {
-+	.halt_reg = 0x1d4c,
-+	.clkr = {
-+		.enable_reg = 0x1d4c,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_tx_cfg_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_axi_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_tx_symbol_0_clk = {
-+	.halt_reg = 0x1d54,
-+	.clkr = {
-+		.enable_reg = 0x1d54,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_tx_symbol_0_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_tx_symbol_0_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
-+static struct clk_branch gcc_ufs_tx_symbol_1_clk = {
-+	.halt_reg = 0x1d58,
-+	.clkr = {
-+		.enable_reg = 0x1d58,
-+		.enable_mask = BIT(0),
-+		.hw.init = &(struct clk_init_data){
-+			.name = "gcc_ufs_tx_symbol_1_clk",
-+			.parent_names = (const char *[]){
-+				"ufs_tx_symbol_1_clk_src",
-+			},
-+			.num_parents = 1,
-+			.flags = CLK_SET_RATE_PARENT,
-+			.ops = &clk_branch2_ops,
-+		},
-+	},
-+};
-+
- static struct clk_branch gcc_usb2a_phy_sleep_clk = {
- 	.halt_reg = 0x04ac,
- 	.clkr = {
-@@ -2628,6 +3261,7 @@ static struct clk_regmap *gcc_apq8084_clocks[] = {
- 	[CONFIG_NOC_CLK_SRC] = &config_noc_clk_src.clkr,
- 	[PERIPH_NOC_CLK_SRC] = &periph_noc_clk_src.clkr,
- 	[SYSTEM_NOC_CLK_SRC] = &system_noc_clk_src.clkr,
-+	[UFS_AXI_CLK_SRC] = &ufs_axi_clk_src.clkr,
- 	[USB30_MASTER_CLK_SRC] = &usb30_master_clk_src.clkr,
- 	[USB30_SEC_MASTER_CLK_SRC] = &usb30_sec_master_clk_src.clkr,
- 	[USB_HSIC_AHB_CLK_SRC] = &usb_hsic_ahb_clk_src.clkr,
-@@ -2673,7 +3307,15 @@ static struct clk_regmap *gcc_apq8084_clocks[] = {
- 	[GP1_CLK_SRC] = &gp1_clk_src.clkr,
- 	[GP2_CLK_SRC] = &gp2_clk_src.clkr,
- 	[GP3_CLK_SRC] = &gp3_clk_src.clkr,
-+	[PCIE_0_AUX_CLK_SRC] = &pcie_0_aux_clk_src.clkr,
-+	[PCIE_0_PIPE_CLK_SRC] = &pcie_0_pipe_clk_src.clkr,
-+	[PCIE_1_AUX_CLK_SRC] = &pcie_1_aux_clk_src.clkr,
-+	[PCIE_1_PIPE_CLK_SRC] = &pcie_1_pipe_clk_src.clkr,
- 	[PDM2_CLK_SRC] = &pdm2_clk_src.clkr,
-+	[SATA_ASIC0_CLK_SRC] = &sata_asic0_clk_src.clkr,
-+	[SATA_PMALIVE_CLK_SRC] = &sata_pmalive_clk_src.clkr,
-+	[SATA_RX_CLK_SRC] = &sata_rx_clk_src.clkr,
-+	[SATA_RX_OOB_CLK_SRC] = &sata_rx_oob_clk_src.clkr,
- 	[SDCC1_APPS_CLK_SRC] = &sdcc1_apps_clk_src.clkr,
- 	[SDCC2_APPS_CLK_SRC] = &sdcc2_apps_clk_src.clkr,
- 	[SDCC3_APPS_CLK_SRC] = &sdcc3_apps_clk_src.clkr,
-@@ -2739,10 +3381,26 @@ static struct clk_regmap *gcc_apq8084_clocks[] = {
- 	[GCC_GP2_CLK] = &gcc_gp2_clk.clkr,
- 	[GCC_GP3_CLK] = &gcc_gp3_clk.clkr,
- 	[GCC_OCMEM_NOC_CFG_AHB_CLK] = &gcc_ocmem_noc_cfg_ahb_clk.clkr,
-+	[GCC_PCIE_0_AUX_CLK] = &gcc_pcie_0_aux_clk.clkr,
-+	[GCC_PCIE_0_CFG_AHB_CLK] = &gcc_pcie_0_cfg_ahb_clk.clkr,
-+	[GCC_PCIE_0_MSTR_AXI_CLK] = &gcc_pcie_0_mstr_axi_clk.clkr,
-+	[GCC_PCIE_0_PIPE_CLK] = &gcc_pcie_0_pipe_clk.clkr,
-+	[GCC_PCIE_0_SLV_AXI_CLK] = &gcc_pcie_0_slv_axi_clk.clkr,
-+	[GCC_PCIE_1_AUX_CLK] = &gcc_pcie_1_aux_clk.clkr,
-+	[GCC_PCIE_1_CFG_AHB_CLK] = &gcc_pcie_1_cfg_ahb_clk.clkr,
-+	[GCC_PCIE_1_MSTR_AXI_CLK] = &gcc_pcie_1_mstr_axi_clk.clkr,
-+	[GCC_PCIE_1_PIPE_CLK] = &gcc_pcie_1_pipe_clk.clkr,
-+	[GCC_PCIE_1_SLV_AXI_CLK] = &gcc_pcie_1_slv_axi_clk.clkr,
- 	[GCC_PDM2_CLK] = &gcc_pdm2_clk.clkr,
- 	[GCC_PDM_AHB_CLK] = &gcc_pdm_ahb_clk.clkr,
- 	[GCC_PERIPH_NOC_USB_HSIC_AHB_CLK] = &gcc_periph_noc_usb_hsic_ahb_clk.clkr,
- 	[GCC_PRNG_AHB_CLK] = &gcc_prng_ahb_clk.clkr,
-+	[GCC_SATA_ASIC0_CLK] = &gcc_sata_asic0_clk.clkr,
-+	[GCC_SATA_AXI_CLK] = &gcc_sata_axi_clk.clkr,
-+	[GCC_SATA_CFG_AHB_CLK] = &gcc_sata_cfg_ahb_clk.clkr,
-+	[GCC_SATA_PMALIVE_CLK] = &gcc_sata_pmalive_clk.clkr,
-+	[GCC_SATA_RX_CLK] = &gcc_sata_rx_clk.clkr,
-+	[GCC_SATA_RX_OOB_CLK] = &gcc_sata_rx_oob_clk.clkr,
- 	[GCC_SDCC1_AHB_CLK] = &gcc_sdcc1_ahb_clk.clkr,
- 	[GCC_SDCC1_APPS_CLK] = &gcc_sdcc1_apps_clk.clkr,
- 	[GCC_SDCC1_CDCCAL_FF_CLK] = &gcc_sdcc1_cdccal_ff_clk.clkr,
-@@ -2753,11 +3411,20 @@ static struct clk_regmap *gcc_apq8084_clocks[] = {
- 	[GCC_SDCC3_APPS_CLK] = &gcc_sdcc3_apps_clk.clkr,
- 	[GCC_SDCC4_AHB_CLK] = &gcc_sdcc4_ahb_clk.clkr,
- 	[GCC_SDCC4_APPS_CLK] = &gcc_sdcc4_apps_clk.clkr,
-+	[GCC_SYS_NOC_UFS_AXI_CLK] = &gcc_sys_noc_ufs_axi_clk.clkr,
- 	[GCC_SYS_NOC_USB3_AXI_CLK] = &gcc_sys_noc_usb3_axi_clk.clkr,
- 	[GCC_SYS_NOC_USB3_SEC_AXI_CLK] = &gcc_sys_noc_usb3_sec_axi_clk.clkr,
- 	[GCC_TSIF_AHB_CLK] = &gcc_tsif_ahb_clk.clkr,
- 	[GCC_TSIF_INACTIVITY_TIMERS_CLK] = &gcc_tsif_inactivity_timers_clk.clkr,
- 	[GCC_TSIF_REF_CLK] = &gcc_tsif_ref_clk.clkr,
-+	[GCC_UFS_AHB_CLK] = &gcc_ufs_ahb_clk.clkr,
-+	[GCC_UFS_AXI_CLK] = &gcc_ufs_axi_clk.clkr,
-+	[GCC_UFS_RX_CFG_CLK] = &gcc_ufs_rx_cfg_clk.clkr,
-+	[GCC_UFS_RX_SYMBOL_0_CLK] = &gcc_ufs_rx_symbol_0_clk.clkr,
-+	[GCC_UFS_RX_SYMBOL_1_CLK] = &gcc_ufs_rx_symbol_1_clk.clkr,
-+	[GCC_UFS_TX_CFG_CLK] = &gcc_ufs_tx_cfg_clk.clkr,
-+	[GCC_UFS_TX_SYMBOL_0_CLK] = &gcc_ufs_tx_symbol_0_clk.clkr,
-+	[GCC_UFS_TX_SYMBOL_1_CLK] = &gcc_ufs_tx_symbol_1_clk.clkr,
- 	[GCC_USB2A_PHY_SLEEP_CLK] = &gcc_usb2a_phy_sleep_clk.clkr,
- 	[GCC_USB2B_PHY_SLEEP_CLK] = &gcc_usb2b_phy_sleep_clk.clkr,
- 	[GCC_USB30_MASTER_CLK] = &gcc_usb30_master_clk.clkr,
-diff --git a/include/dt-bindings/clock/qcom,gcc-apq8084.h b/include/dt-bindings/clock/qcom,gcc-apq8084.h
-index ce5bc0f..2c0da56 100644
---- a/include/dt-bindings/clock/qcom,gcc-apq8084.h
-+++ b/include/dt-bindings/clock/qcom,gcc-apq8084.h
-@@ -333,5 +333,19 @@
- #define GCC_USB_HSIC_IO_CAL_SLEEP_CLK			316
- #define GCC_USB_HSIC_MOCK_UTMI_CLK			317
- #define GCC_USB_HSIC_SYSTEM_CLK				318
-+#define PCIE_0_AUX_CLK_SRC				319
-+#define PCIE_0_PIPE_CLK_SRC				320
-+#define PCIE_1_AUX_CLK_SRC				321
-+#define PCIE_1_PIPE_CLK_SRC				322
-+#define GCC_PCIE_0_AUX_CLK				323
-+#define GCC_PCIE_0_CFG_AHB_CLK				324
-+#define GCC_PCIE_0_MSTR_AXI_CLK				325
-+#define GCC_PCIE_0_PIPE_CLK				326
-+#define GCC_PCIE_0_SLV_AXI_CLK				327
-+#define GCC_PCIE_1_AUX_CLK				328
-+#define GCC_PCIE_1_CFG_AHB_CLK				329
-+#define GCC_PCIE_1_MSTR_AXI_CLK				330
-+#define GCC_PCIE_1_PIPE_CLK				331
-+#define GCC_PCIE_1_SLV_AXI_CLK				332
- 
- #endif
--- 
-1.7.9.5
+> +       idx = chan->msg_free;
+> +       chan->msg_data[idx] = mssg;
+> +       chan->msg_count++;
+> +
+> +       if (idx == MBOX_TX_QUEUE_LEN - 1)
+> +               chan->msg_free = 0;
+> +       else
+> +               chan->msg_free++;
+> +
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +
+> +       return idx;
+> +}
+> +
+> +static void _msg_submit(struct mbox_chan *chan)
+> +{
+> +       unsigned count, idx;
+> +       unsigned long flags;
+> +       void *data;
+> +       int err;
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +
+> +       if (!chan->msg_count || chan->active_req) {
+> +               spin_unlock_irqrestore(&chan->lock, flags);
+> +               return;
+> +       }
+> +
+> +       count = chan->msg_count;
+> +       idx = chan->msg_free;
+> +       if (idx >= count)
+> +               idx -= count;
+> +       else
+> +               idx += MBOX_TX_QUEUE_LEN - count;
+> +
+> +       data = chan->msg_data[idx];
+> +
+> +       /* Try to submit a message to the MBOX controller */
+> +       err = chan->mbox->ops->send_data(chan, data);
+> +       if (!err) {
+> +               chan->active_req = data;
+> +               chan->msg_count--;
+> +       }
+> +
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +}
+> +
+> +static void tx_tick(struct mbox_chan *chan, int r)
+> +{
+> +       unsigned long flags;
+> +       void *mssg;
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +       mssg = chan->active_req;
+> +       chan->active_req = NULL;
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +
+> +       /* Submit next message */
+> +       _msg_submit(chan);
+> +
+> +       /* Notify the client */
+> +       if (chan->cl->tx_block)
+> +               complete(&chan->tx_complete);
+> +       else if (mssg && chan->cl->tx_done)
+> +               chan->cl->tx_done(chan->cl, mssg, r);
+> +}
+> +
+> +static void poll_txdone(unsigned long data)
+> +{
+> +       struct mbox_controller *mbox = (struct mbox_controller *)data;
+> +       bool txdone, resched = false;
+> +       int i;
+> +
+> +       for (i = 0; i < mbox->num_chans; i++) {
+> +               struct mbox_chan *chan = &mbox->chans[i];
+> +
+> +               if (chan->active_req && chan->cl) {
+> +                       resched = true;
+> +                       txdone = chan->mbox->ops->last_tx_done(chan);
+> +                       if (txdone)
+> +                               tx_tick(chan, 0);
+> +               }
+> +       }
+> +
+> +       if (resched)
+> +               mod_timer(&mbox->poll,
+> +                       jiffies + msecs_to_jiffies(mbox->period));
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+[Nit] Alignment here and few other places to '('
+
+> +}
+> +
+> +/**
+> + * mbox_chan_received_data - A way for controller driver to push data
+> + *                             received from remote to the upper layer.
+> + * @chan: Pointer to the mailbox channel on which RX happened.
+> + * @data: Client specific message typecasted as void *
+> + *
+
+[Nit] 'data' needs to be changed to 'mssg' or vice-versa
+
+> + * After startup and before shutdown any data received on the chan
+> + * is passed on to the API via atomic mbox_chan_received_data().
+> + * The controller should ACK the RX only after this call returns.
+
+Does this mean we can't support asynchronous messages from the remote.
+One possible scenario I can think is if the remote system power controller
+has feature to configure the bounds for thermal sensors and it can send
+async interrupt when the bounds are crossed. We can't just block one channel
+for this always. Again this might have been discussed before and you might have
+solution, I could not gather it with my brief look at older discussions.
+
+> + */
+> +void mbox_chan_received_data(struct mbox_chan *chan, void *mssg)
+> +{
+> +       /* No buffering the received data */
+> +       if (chan->cl->rx_callback)
+> +               chan->cl->rx_callback(chan->cl, mssg);
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_chan_received_data);
+> +
+> +/**
+> + * mbox_chan_txdone - A way for controller driver to notify the
+> + *                     framework that the last TX has completed.
+> + * @chan: Pointer to the mailbox chan on which TX happened.
+> + * @r: Status of last TX - OK or ERROR
+> + *
+> + * The controller that has IRQ for TX ACK calls this atomic API
+> + * to tick the TX state machine. It works only if txdone_irq
+> + * is set by the controller.
+> + */
+> +void mbox_chan_txdone(struct mbox_chan *chan, int r)
+> +{
+> +       if (unlikely(!(chan->txdone_method & TXDONE_BY_IRQ))) {
+> +               pr_err("Controller can't run the TX ticker\n");
+> +               return;
+> +       }
+> +
+> +       tx_tick(chan, r);
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_chan_txdone);
+> +
+> +/**
+> + * mbox_client_txdone - The way for a client to run the TX state machine.
+> + * @chan: Mailbox channel assigned to this client.
+> + * @r: Success status of last transmission.
+> + *
+> + * The client/protocol had received some 'ACK' packet and it notifies
+> + * the API that the last packet was sent successfully. This only works
+> + * if the controller can't sense TX-Done.
+> + */
+> +void mbox_client_txdone(struct mbox_chan *chan, int r)
+> +{
+> +       if (unlikely(!(chan->txdone_method & TXDONE_BY_ACK))) {
+> +               pr_err("Client can't run the TX ticker\n");
+> +               return;
+> +       }
+> +
+> +       tx_tick(chan, r);
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_client_txdone);
+> +
+> +/**
+> + * mbox_client_peek_data - A way for client driver to pull data
+> + *                     received from remote by the controller.
+> + * @chan: Mailbox channel assigned to this client.
+> + *
+> + * A poke to controller driver for any received data.
+> + * The data is actually passed onto client via the
+> + * mbox_chan_received_data()
+> + * The call can be made from atomic context, so the controller's
+> + * implementation of peek_data() must not sleep.
+> + *
+> + * Return: True, if controller has, and is going to push after this,
+> + *          some data.
+> + *         False, if controller doesn't have any data to be read.
+> + */
+> +bool mbox_client_peek_data(struct mbox_chan *chan)
+> +{
+> +       if (chan->mbox->ops->peek_data)
+> +               return chan->mbox->ops->peek_data(chan);
+> +
+> +       return false;
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_client_peek_data);
+
+I am unable to understand how this API will be used. IIUC when the controller
+receives any data from remote, it calls mbox_chan_received_data to push data to
+client.
+
+> +
+> +/**
+> + * mbox_send_message - For client to submit a message to be
+> + *                             sent to the remote.
+> + * @chan: Mailbox channel assigned to this client.
+> + * @mssg: Client specific message typecasted.
+> + *
+> + * For client to submit data to the controller destined for a remote
+> + * processor. If the client had set 'tx_block', the call will return
+> + * either when the remote receives the data or when 'tx_tout' millisecs
+> + * run out.
+> + *  In non-blocking mode, the requests are buffered by the API and a
+> + * non-negative token is returned for each queued request. If the request
+> + * is not queued, a negative token is returned. Upon failure or successful
+> + * TX, the API calls 'tx_done' from atomic context, from which the client
+> + * could submit yet another request.
+> + *  In blocking mode, 'tx_done' is not called, effectively making the
+> + * queue length 1.
+> + * The pointer to message should be preserved until it is sent
+> + * over the chan, i.e, tx_done() is made.
+> + * This function could be called from atomic context as it simply
+> + * queues the data and returns a token against the request.
+> + *
+> + * Return: Non-negative integer for successful submission (non-blocking mode)
+> + *     or transmission over chan (blocking mode).
+> + *     Negative value denotes failure.
+> + */
+> +int mbox_send_message(struct mbox_chan *chan, void *mssg)
+> +{
+> +       int t;
+> +
+> +       if (!chan || !chan->cl)
+> +               return -EINVAL;
+> +
+> +       t = _add_to_rbuf(chan, mssg);
+> +       if (t < 0) {
+> +               pr_err("Try increasing MBOX_TX_QUEUE_LEN\n");
+> +               return t;
+> +       }
+> +
+> +       _msg_submit(chan);
+> +
+> +       reinit_completion(&chan->tx_complete);
+> +
+> +       if (chan->txdone_method == TXDONE_BY_POLL)
+> +               poll_txdone((unsigned long)chan->mbox);
+> +
+> +       if (chan->cl->tx_block && chan->active_req) {
+> +               unsigned long wait;
+> +               int ret;
+> +
+> +               if (!chan->cl->tx_tout) /* wait for ever */
+> +                       wait = msecs_to_jiffies(3600000);
+> +               else
+> +                       wait = msecs_to_jiffies(chan->cl->tx_tout);
+> +
+> +               ret = wait_for_completion_timeout(&chan->tx_complete, wait);
+> +               if (ret == 0) {
+> +                       t = -EIO;
+> +                       tx_tick(chan, -EIO);
+> +               }
+> +       }
+> +
+> +       return t;
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_send_message);
+> +
+> +/**
+> + * mbox_request_channel - Request a mailbox channel.
+> + * @cl: Identity of the client requesting the channel.
+> + *
+> + * The Client specifies its requirements and capabilities while asking for
+> + * a mailbox channel. It can't be called from atomic context.
+> + * The channel is exclusively allocated and can't be used by another
+> + * client before the owner calls mbox_free_channel.
+> + * After assignment, any packet received on this channel will be
+> + * handed over to the client via the 'rx_callback'.
+> + * The framework holds reference to the client, so the mbox_client
+> + * structure shouldn't be modified until the mbox_free_channel returns.
+> + *
+> + * Return: Pointer to the channel assigned to the client if successful.
+> + *             ERR_PTR for request failure.
+> + */
+> +struct mbox_chan *mbox_request_channel(const struct mbox_client *cl)
+> +{
+> +       struct device *dev = cl->dev;
+> +       struct mbox_controller *mbox;
+> +       struct of_phandle_args spec;
+> +       struct mbox_chan *chan;
+> +       unsigned long flags;
+> +       int count, i, ret;
+> +
+> +       if (!dev || !dev->of_node) {
+> +               pr_err("%s: No owner device node\n", __func__);
+> +               return ERR_PTR(-ENODEV);
+> +       }
+> +
+> +       count = of_property_count_strings(dev->of_node, "mbox-names");
+> +       if (count < 0) {
+> +               pr_err("%s: mbox-names property of node '%s' missing\n",
+> +                       __func__, dev->of_node->full_name);
+> +               return ERR_PTR(-ENODEV);
+> +       }
+> +
+> +       mutex_lock(&con_mutex);
+> +
+> +       ret = -ENODEV;
+> +       for (i = 0; i < count; i++) {
+> +               const char *s;
+> +
+> +               if (of_property_read_string_index(dev->of_node,
+> +                                               "mbox-names", i, &s))
+> +                       continue;
+> +
+> +               if (strcmp(cl->chan_name, s))
+> +                       continue;
+> +
+> +               if (of_parse_phandle_with_args(dev->of_node,
+> +                                        "mbox", "#mbox-cells", i, &spec))
+> +                       continue;
+> +
+> +               chan = NULL;
+> +               list_for_each_entry(mbox, &mbox_cons, node)
+> +                       if (mbox->dev->of_node == spec.np) {
+> +                               chan = mbox->of_xlate(mbox, &spec);
+> +                               break;
+> +                       }
+> +
+> +               of_node_put(spec.np);
+> +
+> +               if (!chan)
+> +                       continue;
+> +
+> +               ret = -EBUSY;
+> +               if (!chan->cl && try_module_get(mbox->dev->driver->owner))
+> +                       break;
+> +       }
+> +
+> +       if (i == count) {
+> +               mutex_unlock(&con_mutex);
+> +               return ERR_PTR(ret);
+> +       }
+> +
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +       chan->msg_free = 0;
+> +       chan->msg_count = 0;
+> +       chan->active_req = NULL;
+> +       chan->cl = cl;
+> +       init_completion(&chan->tx_complete);
+> +
+> +       if (chan->txdone_method == TXDONE_BY_POLL
+> +                       && cl->knows_txdone)
+> +               chan->txdone_method |= TXDONE_BY_ACK;
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +
+> +       ret = chan->mbox->ops->startup(chan);
+> +       if (ret) {
+> +               pr_err("Unable to startup the chan (%d)\n", ret);
+> +               mbox_free_channel(chan);
+> +               chan = ERR_PTR(ret);
+> +       }
+> +
+> +       mutex_unlock(&con_mutex);
+> +       return chan;
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_request_channel);
+> +
+> +/**
+> + * mbox_free_channel - The client relinquishes control of a mailbox
+> + *                     channel by this call.
+> + * @chan: The mailbox channel to be freed.
+> + */
+> +void mbox_free_channel(struct mbox_chan *chan)
+> +{
+> +       unsigned long flags;
+> +
+> +       if (!chan || !chan->cl)
+> +               return;
+> +
+> +       chan->mbox->ops->shutdown(chan);
+> +
+> +       /* The queued TX requests are simply aborted, no callbacks are made */
+> +       spin_lock_irqsave(&chan->lock, flags);
+> +       chan->cl = NULL;
+> +       chan->active_req = NULL;
+> +       if (chan->txdone_method == (TXDONE_BY_POLL | TXDONE_BY_ACK))
+> +               chan->txdone_method = TXDONE_BY_POLL;
+> +
+> +       module_put(chan->mbox->dev->driver->owner);
+> +       spin_unlock_irqrestore(&chan->lock, flags);
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_free_channel);
+> +
+> +static struct mbox_chan *
+> +of_mbox_index_xlate(struct mbox_controller *mbox,
+> +                               const struct of_phandle_args *sp)
+> +{
+> +       int ind = sp->args[0];
+> +
+> +       if (ind >= mbox->num_chans)
+> +               return NULL;
+> +
+> +       return &mbox->chans[ind];
+> +}
+> +
+> +/**
+> + * mbox_controller_register - Register the mailbox controller
+> + * @mbox:      Pointer to the mailbox controller.
+> + *
+> + * The controller driver registers its communication chans
+> + */
+> +int mbox_controller_register(struct mbox_controller *mbox)
+> +{
+> +       int i, txdone;
+> +
+> +       /* Sanity check */
+> +       if (!mbox || !mbox->dev || !mbox->ops || !mbox->num_chans)
+> +               return -EINVAL;
+> +
+> +       if (mbox->txdone_irq)
+> +               txdone = TXDONE_BY_IRQ;
+> +       else if (mbox->txdone_poll)
+> +               txdone = TXDONE_BY_POLL;
+> +       else /* It has to be ACK then */
+> +               txdone = TXDONE_BY_ACK;
+> +
+> +       if (txdone == TXDONE_BY_POLL) {
+> +               mbox->poll.function = &poll_txdone;
+> +               mbox->poll.data = (unsigned long)mbox;
+> +               init_timer(&mbox->poll);
+> +       }
+> +
+> +       for (i = 0; i < mbox->num_chans; i++) {
+> +               struct mbox_chan *chan = &mbox->chans[i];
+
+[Nit] Newline to separate declarations
+
+> +               chan->cl = NULL;
+> +               chan->mbox = mbox;
+> +               chan->txdone_method = txdone;
+> +               spin_lock_init(&chan->lock);
+> +       }
+> +
+> +       if (!mbox->of_xlate)
+> +               mbox->of_xlate = of_mbox_index_xlate;
+> +
+> +       mutex_lock(&con_mutex);
+> +       list_add_tail(&mbox->node, &mbox_cons);
+> +       mutex_unlock(&con_mutex);
+> +
+> +       return 0;
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_controller_register);
+> +
+> +/**
+> + * mbox_controller_unregister - UnRegister the mailbox controller
+> + * @mbox:      Pointer to the mailbox controller.
+> + */
+> +void mbox_controller_unregister(struct mbox_controller *mbox)
+> +{
+> +       int i;
+> +
+> +       if (!mbox)
+> +               return;
+> +
+> +       mutex_lock(&con_mutex);
+> +
+> +       list_del(&mbox->node);
+> +
+> +       for (i = 0; i < mbox->num_chans; i++)
+> +               mbox_free_channel(&mbox->chans[i]);
+> +
+> +       del_timer_sync(&mbox->poll);
+> +
+> +       mutex_unlock(&con_mutex);
+> +}
+> +EXPORT_SYMBOL_GPL(mbox_controller_unregister);
+> diff --git a/include/linux/mailbox_client.h b/include/linux/mailbox_client.h
+> new file mode 100644
+> index 0000000..53eb078
+> --- /dev/null
+> +++ b/include/linux/mailbox_client.h
+> @@ -0,0 +1,45 @@
+> +/*
+> + * Copyright (C) 2014 Linaro Ltd.
+> + * Author: Jassi Brar <jassisinghbrar@gmail.com>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef __MAILBOX_CLIENT_H
+> +#define __MAILBOX_CLIENT_H
+> +
+> +#include <linux/of.h>
+> +
+> +struct mbox_chan;
+> +
+> +/**
+> + * struct mbox_client - User of a mailbox
+> + * @dev:               The client device
+> + * @chan_name:         The "controller:channel" this client wants
+> + * @rx_callback:       Atomic callback to provide client the data received
+> + * @tx_done:           Atomic callback to tell client of data transmission
+> + * @tx_block:          If the mbox_send_message should block until data is
+> + *                     transmitted.
+> + * @tx_tout:           Max block period in ms before TX is assumed failure
+> + * @knows_txdone:      if the client could run the TX state machine. Usually
+> + *                     if the client receives some ACK packet for transmission.
+> + *                     Unused if the controller already has TX_Done/RTR IRQ.
+> + */
+> +struct mbox_client {
+> +       struct device *dev;
+> +       const char *chan_name;
+> +       void (*rx_callback)(struct mbox_client *cl, void *mssg);
+> +       void (*tx_done)(struct mbox_client *cl, void *mssg, int r);
+> +       bool tx_block;
+> +       unsigned long tx_tout;
+> +       bool knows_txdone;
+> +};
+> +
+> +struct mbox_chan *mbox_request_channel(const struct mbox_client *cl);
+> +int mbox_send_message(struct mbox_chan *chan, void *mssg);
+> +void mbox_client_txdone(struct mbox_chan *chan, int r);
+> +void mbox_free_channel(struct mbox_chan *chan);
+> +
+> +#endif /* __MAILBOX_CLIENT_H */
+> diff --git a/include/linux/mailbox_controller.h b/include/linux/mailbox_controller.h
+> new file mode 100644
+> index 0000000..5d1915b
+> --- /dev/null
+> +++ b/include/linux/mailbox_controller.h
+> @@ -0,0 +1,121 @@
+> +/*
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#ifndef __MAILBOX_CONTROLLER_H
+> +#define __MAILBOX_CONTROLLER_H
+> +
+> +#include <linux/of.h>
+> +
+> +struct mbox_chan;
+> +
+> +/**
+> + * struct mbox_chan_ops - s/w representation of a communication chan
+> + * @send_data: The API asks the MBOX controller driver, in atomic
+> + *             context try to transmit a message on the bus. Returns 0 if
+> + *             data is accepted for transmission, -EBUSY while rejecting
+> + *             if the remote hasn't yet read the last data sent. Actual
+> + *             transmission of data is reported by the controller via
+> + *             mbox_chan_txdone (if it has some TX ACK irq). It must not
+> + *             block.
+> + * @startup:   Called when a client requests the chan. The controller
+> + *             could ask clients for additional parameters of communication
+> + *             to be provided via client's chan_data. This call may
+> + *             block. After this call the Controller must forward any
+> + *             data received on the chan by calling mbox_chan_received_data.
+> + * @shutdown:  Called when a client relinquishes control of a chan.
+> + *             This call may block too. The controller must not forwared
+> + *             any received data anymore.
+> + * @last_tx_done: If the controller sets 'txdone_poll', the API calls
+> + *               this to poll status of last TX. The controller must
+> + *               give priority to IRQ method over polling and never
+> + *               set both txdone_poll and txdone_irq. Only in polling
+> + *               mode 'send_data' is expected to return -EBUSY.
+> + *               Used only if txdone_poll:=true && txdone_irq:=false
+> + * @peek_data: Atomic check for any received data. Return true if controller
+> + *               has some data to push to the client. False otherwise.
+> + */
+> +struct mbox_chan_ops {
+> +       int (*send_data)(struct mbox_chan *chan, void *data);
+> +       int (*startup)(struct mbox_chan *chan);
+> +       void (*shutdown)(struct mbox_chan *chan);
+> +       bool (*last_tx_done)(struct mbox_chan *chan);
+> +       bool (*peek_data)(struct mbox_chan *chan);
+> +};
+> +
+> +/**
+> + * struct mbox_controller - Controller of a class of communication chans
+> + * @dev:               Device backing this controller
+> + * @controller_name:   Literal name of the controller.
+
+Looks like this is gone now
+
+> + * @ops:               Operators that work on each communication chan
+> + * @chans:             Null terminated array of chans.
+> + * @txdone_irq:                Indicates if the controller can report to API when
+> + *                     the last transmitted data was read by the remote.
+> + *                     Eg, if it has some TX ACK irq.
+> + * @txdone_poll:       If the controller can read but not report the TX
+> + *                     done. Ex, some register shows the TX status but
+> + *                     no interrupt rises. Ignored if 'txdone_irq' is set.
+> + * @txpoll_period:     If 'txdone_poll' is in effect, the API polls for
+> + *                     last TX's status after these many millisecs
+
+Does it makes sense to add description for of_xlate and num_chans ?
+
+> + */
+> +struct mbox_controller {
+> +       struct device *dev;
+> +       struct mbox_chan_ops *ops;
+> +       struct mbox_chan *chans;
+> +       int num_chans;
+> +       bool txdone_irq;
+> +       bool txdone_poll;
+> +       unsigned txpoll_period;
+> +       struct mbox_chan *(*of_xlate)(struct mbox_controller *mbox,
+> +                                       const struct of_phandle_args *sp);
+> +       /*
+> +        * If the controller supports only TXDONE_BY_POLL,
+> +        * this timer polls all the links for txdone.
+> +        */
+> +       struct timer_list poll;
+> +       unsigned period;
+> +       /* Hook to add to the global controller list */
+> +       struct list_head node;
+> +};
+> +
+> +/*
+> + * The length of circular buffer for queuing messages from a client.
+> + * 'msg_count' tracks the number of buffered messages while 'msg_free'
+> + * is the index where the next message would be buffered.
+> + * We shouldn't need it too big because every transferr is interrupt
+> + * triggered and if we have lots of data to transfer, the interrupt
+> + * latencies are going to be the bottleneck, not the buffer length.
+> + * Besides, mbox_send_message could be called from atomic context and
+> + * the client could also queue another message from the notifier 'tx_done'
+> + * of the last transfer done.
+> + * REVIST: If too many platforms see the "Try increasing MBOX_TX_QUEUE_LEN"
+> + * print, it needs to be taken from config option or somesuch.
+> + */
+> +#define MBOX_TX_QUEUE_LEN      20
+> +
+
+As mentioned before IMO using std list might eliminate this.
+
+> +struct mbox_chan {
+> +       struct mbox_controller *mbox; /* Parent Controller */
+> +       unsigned txdone_method;
+> +
+> +       /* client */
+> +       struct mbox_client *cl;
+> +       struct completion tx_complete;
+> +
+> +       void *active_req;
+> +       unsigned msg_count, msg_free;
+> +       void *msg_data[MBOX_TX_QUEUE_LEN];
+> +       /* Access to the channel */
+> +       spinlock_t lock;
+> +
+> +       /* Private data for controller */
+> +       void *con_priv;
+> +};
+> +
+> +int mbox_controller_register(struct mbox_controller *mbox);
+> +void mbox_chan_received_data(struct mbox_chan *chan, void *data);
+> +void mbox_chan_txdone(struct mbox_chan *chan, int r);
+> +void mbox_controller_unregister(struct mbox_controller *mbox);
+> +
+> +#endif /* __MAILBOX_CONTROLLER_H */
+> --
+> 1.8.1.2
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe devicetree" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>
