@@ -1,60 +1,54 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v5 3/4] ARM: tegra: tegra124: Add XUSB pad controller
-Date: Thu, 19 Jun 2014 13:37:09 +0200
-Message-ID: <1403177830-28595-3-git-send-email-thierry.reding@gmail.com>
-References: <1403177830-28595-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403177830-28595-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Subject: Re: [PATCH v2 4/7] ARM: at91/dt: split sama5d3 lcd pin definitions
+ to match RGB mode configs
+Date: Thu, 19 Jun 2014 13:42:10 +0200
+Message-ID: <53A2CC92.6050508@free-electrons.com>
+References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com> <1402329860-27520-5-git-send-email-boris.brezillon@free-electrons.com> <53A28C2C.1010001@atmel.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53A28C2C.1010001@atmel.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bo Shen <voice.shen@atmel.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-The device tree node in the SoC file contains only the resources (such
-as registers, resets, ...) but none of the lane assignment information
-since that's board specific and belongs in the board file.
+On 19/06/2014 09:07, Bo Shen wrote:
+> Hi Boris,
+>
+> On 06/10/2014 12:04 AM, Boris BREZILLON wrote:
+>> The HLCDC (High LCD Controller) IP supports 4 different output mode
+>> (RGB444, RGB565, RGB666 and RGB888) and the pin muxing depends on the
+>> chosen RGB mode.
+>>
+>> Split the pin definition to be able to set the pin config according
+>> to the
+>> selected mode.
+>>
+>> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+>> ---
+>>   arch/arm/boot/dts/sama5d3_lcd.dtsi | 127
+>> ++++++++++++++++++++++++++++---------
+>>   1 file changed, 96 insertions(+), 31 deletions(-)
+>
+> On sama5d3xek board, it only works in 24bits output mode. And it
+> depends on the hardware design. So, I think only keep only one pinctrl
+> configuration.
 
-Tested-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
-- include dt-bindings/pinctrl/pinctrl-tegra-xusb.h so that board files
-  don't have to include it explicitly
-- remove unneeded #address-cells/#size-cells = <0>
-- add padctl label for XUSB pad controller node
+As you pointed out (during our discussion on IRC) sama5d3 SoCs support
+several pin muxing for LCDDAT pins.
+I'll take care to define all these pin mux here and select the
+appropriate ones in sama5d3xdm.dtsi (patch 6) instead of
+sama5d3_lcd.dtsi (patch 5).
 
- arch/arm/boot/dts/tegra124.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/tegra124.dtsi b/arch/arm/boot/dts/tegra124.dtsi
-index 6e6bc4e8185c..b7cb944b2faa 100644
---- a/arch/arm/boot/dts/tegra124.dtsi
-+++ b/arch/arm/boot/dts/tegra124.dtsi
-@@ -1,6 +1,7 @@
- #include <dt-bindings/clock/tegra124-car.h>
- #include <dt-bindings/gpio/tegra-gpio.h>
- #include <dt-bindings/pinctrl/pinctrl-tegra.h>
-+#include <dt-bindings/pinctrl/pinctrl-tegra-xusb.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- 
- #include "skeleton.dtsi"
-@@ -449,6 +450,15 @@
- 		clock-names = "pclk", "clk32k_in";
- 	};
- 
-+	padctl: padctl@0,7009f000 {
-+		compatible = "nvidia,tegra124-xusb-padctl";
-+		reg = <0x0 0x7009f000 0x0 0x1000>;
-+		resets = <&tegra_car 142>;
-+		reset-names = "padctl";
-+
-+		#phy-cells = <1>;
-+	};
-+
- 	sdhci@0,700b0000 {
- 		compatible = "nvidia,tegra124-sdhci";
- 		reg = <0x0 0x700b0000 0x0 0x200>;
+Best Regards,
+
+Boris
+
 -- 
-1.9.2
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
