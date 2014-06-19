@@ -1,112 +1,111 @@
-From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v4 3/3] ASoC: fsl: add imx-es8328 machine
- driver
-Date: Thu, 19 Jun 2014 09:34:19 +0800
-Message-ID: <53A23E1B.3070008@kosagi.com>
-References: <1403063242-20840-1-git-send-email-xobs@kosagi.com> <1403063242-20840-4-git-send-email-xobs@kosagi.com> <20140618100233.GE5099@sirena.org.uk> <53A1687C.9010705@kosagi.com> <20140618103111.GH5099@sirena.org.uk>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH RFC 1/2] libahci_platform: add ahci_platform_get_of_property
+Date: Thu, 19 Jun 2014 10:22:08 +0800
+Message-ID: <53A24950.2020300@linaro.org>
+References: <xuwei5@hisilicon.com,kefeng.wang@linaro.org,> <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org> <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org> <20140618140352.GD11895@leverpostej>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="M9VNTpH1FtAf5oGVeIv9gahJ8fWfi3DT8"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140618103111.GH5099-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140618140352.GD11895@leverpostej>
+Sender: linux-ide-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "tj@kernel.org" <tj@kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---M9VNTpH1FtAf5oGVeIv9gahJ8fWfi3DT8
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hi Mark,
 
-On 06/18/14 18:31, Mark Brown wrote:
-> On Wed, Jun 18, 2014 at 06:22:52PM +0800, Sean Cross wrote:
->> On 06/18/14 18:02, Mark Brown wrote:
->>> This should be handled by the clock bindings not open coded in the
->>> driver - leaving this here most likely won't play nicely when the clo=
-ck
->>> API can configure the defaults for the tree.  There is supposed to be=
-
->>> support for setting default clock trees going in (or perhaps already =
-in)
->>> the clock bindings.
->> Can you give me more information on it?  Currently, it looks like most=
-
->> boards use a 24 MHz clock, judging from this comment in
->> mach-imx/clk-imx6q.c:
-> Look at the clock API, this stuff was introduced in the last merge
-> window if it's there yet at all.
-I don't see anything mentioning it.  If I remove the parenting calls
-then the es8328 will refuse to run as its clock is at 66 MHz rather than
-the requested 22.5792 MHz.  But since you say the default clock tree
-support is going to be merged, I'd like to try using that code.  Is this
-the "assigned-clock-parents" patch you're referring to, or is there a
-patchset that will automatically reparent as necessary?
-
->> This codec requires the more unusual 22.5792 MHz clock.  What is the
->> appropriate method of obtaining this particular frequency?
-> clk_set_rate() on the directly connected clock, the problem is fiddling=
-
-> about with the parenting rather than setting the rate.
+On 06/18/2014 10:03 PM, Mark Rutland wrote:
+> On Wed, Jun 18, 2014 at 05:54:08AM +0100, Zhangfei Gao wrote:
+>> Instead of setting hflags in different files,
+>> ahci_platform_get_of_property set hpriv->flags when ahci_platform_init_host
+>> according to property in dts.
 >
->>> No, this is broken.  The CODEC should request its own supplies which
->>> need to correspond to the supplies the physical device has and failin=
-g
->>> to get the supplies should be a fatal error unless the device works
->>> without power (in which case why bother enablin them at all?).
->> Not all codecs have power supplies.  Most don't, in fact, it's just th=
-is
-> The manufactuers of those that don't are being awfully quiet about what=
+> The AHCI_HFLAGS are a Linux implementation detail, so it would be nice
+> to have a good justification for each of these being turned into DT
+> properties.
 
-> sounds like a rather impressive feature...
+Do you mean only add required property now?
+
+Add ahci_platform_get_of_property is considering sharing 
+drivers/ata/ahci_platform.c, refering sdhci_get_of_property in 
+drivers/mmc/host/sdhci-pltfm.c.
+
+The problem we met is different AHCI_HFLAGS required even in one soc 
+series, for example, current version of "hisilicon,hisi-ahci" requires 
+AHCI_HFLAG_NO_FBS | AHCI_HFLAG_NO_NCQ, while next version solve the 
+limitation, and no HFLAG required.
+We may need different compatible, or it may simplier just state in dts.
+What's more,  one common compatible can be used instead of adding 
+specific compatible string.
+
 >
->> Additionally, since the regulator is external to the codec (as it
->> physically cuts 3.3V from the power supply), it doesn't make sense to
->> put it in the codec driver.
-> I'm not sure you've quite understood what the regulator API is there
-> for.
-I'm having trouble understanding where the separating line is between
-machine drivers and codec drivers.  A random sampling of codec drivers
-doesn't yield any drivers grabbing their own power switches.  Is that an
-oversight?  Should every codec driver include at least one regulator to
-describe its power source?
+>>
+>> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+>> ---
+>>   .../devicetree/bindings/ata/ahci-platform.txt      |    9 +++++
+>>   drivers/ata/libahci_platform.c                     |   39 ++++++++++++++++++++
+>>   2 files changed, 48 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> index c96d8dcf98fd..c0b9f6e76ba4 100644
+>> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+>> @@ -26,6 +26,15 @@ Optional properties:
+>>   - clocks            : must contain the sata, sata_ref and ahb clocks
+>>   - clock-names       : must contain "ahb" for the ahb clock
+>>
+>> +- no-ncq: when present, controller can't do NCQ, turning off CAP_NCQ
+>> +- 32bit-only: when present, controller can't do 64bit DMA, forcing 32bit
+>> +- no-msi: when present, no PCI MSI
+>> +- no-pmp: when present, controller can't do PMP, turning off CAP_PMP
+>> +- yes-ncq: when present,controller can do NCQ, turning on CAP_NCQ
+>> +- no-suspend: when present, controller can't do suspend
+>> +- yes-fbs: when present, controller can do FBS, turning on CAP_FBS
+>> +- no-fbs: when present, controller can't do FBS, turning off CAP_FBS
+>
+> There is absolutely no reason to mention CAP_* here; the DT should
+> describe the HW, not Linux internals.
+Yes, got it, will remove CAP*.
 
-If you like, I can move the regulator from the machine driver to the
-codec driver, and make it non-optional.  But we've done designs in the
-past where it just hangs off the 3.3V rail where it's non-switchable,
-and the concept of describing a regulator seemed overkill.
+>
+> Do these all make sense to be placed in DT?
+Currently, "hisilicon,hisi-ahci" only need AHCI_HFLAG_NO_FBS | 
+AHCI_HFLAG_NO_NCQ.
+Just grep AHCI_HFLAG under ata.
 
+>
+> I worry that for other quirks we may need more flags in future. For that
+> reason I'd rather figure this out in the driver based on the compatible
+> string.
+So do we just add no-ncq & no-fbs now?
+>
+>> +
+>>   Examples:
+>>           sata@ffe08000 {
+>>   		compatible = "snps,spear-ahci";
+>> diff --git a/drivers/ata/libahci_platform.c b/drivers/ata/libahci_platform.c
+>> index 3a5b4ed25a4f..880b9f360056 100644
+>> --- a/drivers/ata/libahci_platform.c
+>> +++ b/drivers/ata/libahci_platform.c
+>> @@ -278,6 +278,44 @@ err_out:
+>>   }
+>>   EXPORT_SYMBOL_GPL(ahci_platform_get_resources);
+>>
+>> +#ifdef CONFIG_OF
+>> +static void ahci_platform_get_of_property(struct platform_device *pdev,
+>> +					  struct ahci_host_priv *hpriv)
+>> +{
+>> +	struct device_node *np = pdev->dev.of_node;
+>> +
+>> +	if (of_device_is_available(np)) {
+>> +		if (of_get_property(np, "no-ncq", NULL))
+>> +			hpriv->flags |= AHCI_HFLAG_NO_NCQ;
+>
+> For boolean flags please use of_property_read_bool.
+Yes, it's more accurate.
 
-Sean
-
-
---M9VNTpH1FtAf5oGVeIv9gahJ8fWfi3DT8
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iQIcBAEBAgAGBQJToj4cAAoJEKuwFcVr1hraCCIQAIvzT/GlLJwReQ0nNc08RxqS
-wW6yjKCTOetwMxvPhQGcpiCB737g/ophMDS/qslWQuUe8d7iW7B9C7brQCpdaW4h
-yGPwuujtFMUa0HZ1+Z2Gfm2bhuCU8HJPAC54qsI14fc+GNbDtX1kQTYx/o4cpXu/
-BaXw1+IiaXu8D7MEehEFRl8o/3aqrtHejFlVrcxQkF2/vqt91JGB8EPOrFhwkCNz
-OkduJzZU4f/cCoUPihotojjBEjh64T4XobB6S4OBlfxBanvq+5ghdH+X6fw6Hjko
-iVDe8MuEtSC4rX7XjdMeR7zjTd6gq3oJNWMMuEKC/HK7yDG2jtcZxSxdnWEhe2Gb
-dzEIIMmE9sz57pnyh0KEhg+jPj9n4+qt/rZhrWdR0r8ErjoZmXsrNi8XXxfzvxpR
-SrGWeuh74U2TbxRoLx34qiwq2HYSKwpUfjTw/JdQHqvJGLZllgIZUncRIhG1/fz4
-vIV803q0DIhEyRvx+xRX3ujE7XGpSijHfTTq/6xaY29JIx30DBqhvIyvHQZBh3pZ
-RY8JfTVnoYHcUDBDgniZGNar4C/pXAPor9Mpc2/in4PCtEVoIwtGwaKuS7soUoqc
-giKj5DZwpM0/92lLP2OFQixUkWkWyJjuYjTHoF6CpdVJ++8DdjUXCbzlw53jFJpX
-hghnR4GeEEo1Zvu9Zsvh
-=RlcT
------END PGP SIGNATURE-----
-
---M9VNTpH1FtAf5oGVeIv9gahJ8fWfi3DT8--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Thanks for advices.
+>
+> Mark.
+>
