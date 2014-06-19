@@ -1,167 +1,92 @@
-From: Daniel Thompson <daniel.thompson@linaro.org>
-Subject: [PATCH v4 13/13] serial: imx: Add support for KGDB's FIQ/NMI mode
-Date: Thu, 19 Jun 2014 11:38:23 +0100
-Message-ID: <1403174303-25456-14-git-send-email-daniel.thompson@linaro.org>
-References: <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
- <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
+From: Maxime Coquelin <maxime.coquelin@st.com>
+Subject: Re: [STLinux Kernel] [PATCH 4/7] ARM: stih416-b2020e: Enable PWM
+ on the B2020 Rev-E
+Date: Thu, 19 Jun 2014 12:59:27 +0200
+Message-ID: <53A2C28F.1080007@st.com>
+References: <1403103172-19856-1-git-send-email-lee.jones@linaro.org>	<1403103172-19856-4-git-send-email-lee.jones@linaro.org>	<20140619090546.GB2131@griffinp-ThinkPad-X1-Carbon-2nd>	<20140619092042.GB26560@lee--X1> <20140619101236.GA7390@griffinp-ThinkPad-X1-Carbon-2nd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Wessel <jason.wessel@windriver.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Daniel Thompson <daniel.thompson@linaro.org>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, patches@linaro.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfou>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature";
+	boundary="pqjER9VX6Q2lQG3rsnDrcg9HRWeE28jtA"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140619101236.GA7390@griffinp-ThinkPad-X1-Carbon-2nd>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>, Lee Jones <lee.jones@linaro.org>
+Cc: linux-pwm@vger.kernel.org, kernel@stlinux.com, devicetree@vger.kernel.org, srinivas.kandagatla@gmail.com, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch makes it possible to use the imx uart with KGDB's FIQ/NMI
-mode.
+--pqjER9VX6Q2lQG3rsnDrcg9HRWeE28jtA
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: quoted-printable
 
-Main changes are:
+Hi Peter,
 
-.poll_init() will, if KGDB+FIQ are enabled, perform deeper hardware
-initialization to ensure the serial port is always active (required
-otherwise FIQ is not triggered by UART activity). This has an impact on
-power usage so it is conservatively enabled.
+On 06/19/2014 12:12 PM, Peter Griffin wrote:
+> Hi Lee,
+>=20
+>>> Why are you only enabling this for rev-E board?
+>>
+>> Purely for testing purposes, as it's the only board I have.  If
+>> anyone has the other revisions and would be happy to test the driver
+>> for me then great.
+>=20
+> Ok that's what I suspected.
+>=20
+> If you tell me how, I can test on a Rev C board. But as there are sever=
+al other=20
+> revisions I think checking the board schematics would be the quickest w=
+ay forward.
 
-imx_put_poll_char() has been simplified to remove the code to disable
-interrupts. The present code can corrupt register state when re-entered
-from FIQ handler.
+Only Rev C & E are in the wild now, so checking these two boards will
+be enough.
 
-Both imx_put_poll_char() and imx_get_poll_char() adopt _relaxed()
-MMIO functions (which are safe for polled I/O and needed to avoid taking
-spin locks).
+Thanks,
+Maxime
 
-Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Jiri Slaby <jslaby@suse.cz>
-Cc: linux-serial@vger.kernel.org
----
- drivers/tty/serial/imx.c | 71 +++++++++++++++++++++++++++++++++++-------------
- 1 file changed, 52 insertions(+), 19 deletions(-)
+>=20
+>>> If you make the stih415 DT PWM nodes part of this series as well, the=
+n=20
+>>> assuming there is no good reason to the contary, the PWM could=20
+>>> be enabled for both stih415/6 in the common stih41x-b2020 DTS file wh=
+ich
+>>> is also included by rev-E (assuming that PWM wiring is not some rev-E=
+ specific
+>>> thing).
+>=20
+> Can you add the stih415 bindings in V2 as well?
+>=20
+> regards,
+>=20
+> Peter
+>=20
+> _______________________________________________
+> Kernel mailing list
+> Kernel@stlinux.com
+> http://www.stlinux.com/mailman/listinfo/kernel
+>=20
 
-diff --git a/drivers/tty/serial/imx.c b/drivers/tty/serial/imx.c
-index 25ed1d2..a2baf7e 100644
---- a/drivers/tty/serial/imx.c
-+++ b/drivers/tty/serial/imx.c
-@@ -49,6 +49,7 @@
- #include <linux/of_device.h>
- #include <linux/io.h>
- #include <linux/dma-mapping.h>
-+#include <linux/kgdb.h>
- 
- #include <asm/irq.h>
- #include <linux/platform_data/serial-imx.h>
-@@ -1502,44 +1503,73 @@ imx_verify_port(struct uart_port *port, struct serial_struct *ser)
- }
- 
- #if defined(CONFIG_CONSOLE_POLL)
-+
-+#if defined(CONFIG_KGDB_FIQ)
-+/*
-+ * Prepare the UART to be used from kgdb's NMI support.
-+ */
-+static int imx_poll_init(struct uart_port *port)
-+{
-+	struct imx_port *sport = (struct imx_port *)port;
-+	unsigned long flags;
-+	unsigned long temp;
-+	int retval;
-+
-+	retval = clk_prepare_enable(sport->clk_ipg);
-+	if (retval)
-+		return retval;
-+	retval = clk_prepare_enable(sport->clk_per);
-+	if (retval)
-+		clk_disable_unprepare(sport->clk_ipg);
-+
-+	imx_setup_ufcr(sport, 0);
-+
-+	spin_lock_irqsave(&sport->port.lock, flags);
-+
-+	temp = readl(sport->port.membase + UCR1);
-+	if (is_imx1_uart(sport))
-+		temp |= IMX1_UCR1_UARTCLKEN;
-+	temp |= UCR1_UARTEN | UCR1_RRDYEN;
-+	temp &= ~(UCR1_TXMPTYEN | UCR1_RTSDEN);
-+	writel(temp, sport->port.membase + UCR1);
-+
-+	temp = readl(sport->port.membase + UCR2);
-+	temp |= UCR2_RXEN;
-+	writel(temp, sport->port.membase + UCR2);
-+
-+	spin_unlock_irqrestore(&sport->port.lock, flags);
-+
-+	/* register the FIQ with kgdb */
-+	kgdb_register_fiq(sport->port.irq);
-+
-+	return 0;
-+}
-+#endif /* CONFIG_KGDB_FIQ */
-+
- static int imx_poll_get_char(struct uart_port *port)
- {
--	if (!(readl(port->membase + USR2) & USR2_RDR))
-+	if (!(readl_relaxed(port->membase + USR2) & USR2_RDR))
- 		return NO_POLL_CHAR;
- 
--	return readl(port->membase + URXD0) & URXD_RX_DATA;
-+	return readl_relaxed(port->membase + URXD0) & URXD_RX_DATA;
- }
- 
- static void imx_poll_put_char(struct uart_port *port, unsigned char c)
- {
--	struct imx_port_ucrs old_ucr;
- 	unsigned int status;
- 
--	/* save control registers */
--	imx_port_ucrs_save(port, &old_ucr);
--
--	/* disable interrupts */
--	writel(UCR1_UARTEN, port->membase + UCR1);
--	writel(old_ucr.ucr2 & ~(UCR2_ATEN | UCR2_RTSEN | UCR2_ESCI),
--	       port->membase + UCR2);
--	writel(old_ucr.ucr3 & ~(UCR3_DCD | UCR3_RI | UCR3_DTREN),
--	       port->membase + UCR3);
--
- 	/* drain */
- 	do {
--		status = readl(port->membase + USR1);
-+		status = readl_relaxed(port->membase + USR1);
- 	} while (~status & USR1_TRDY);
- 
- 	/* write */
--	writel(c, port->membase + URTX0);
-+	writel_relaxed(c, port->membase + URTX0);
- 
- 	/* flush */
- 	do {
--		status = readl(port->membase + USR2);
-+		status = readl_relaxed(port->membase + USR2);
- 	} while (~status & USR2_TXDC);
--
--	/* restore control registers */
--	imx_port_ucrs_restore(port, &old_ucr);
- }
- #endif
- 
-@@ -1560,6 +1590,9 @@ static struct uart_ops imx_pops = {
- 	.config_port	= imx_config_port,
- 	.verify_port	= imx_verify_port,
- #if defined(CONFIG_CONSOLE_POLL)
-+#if defined(CONFIG_KGDB_FIQ)
-+	.poll_init      = imx_poll_init,
-+#endif
- 	.poll_get_char  = imx_poll_get_char,
- 	.poll_put_char  = imx_poll_put_char,
- #endif
--- 
-1.9.3
+
+--pqjER9VX6Q2lQG3rsnDrcg9HRWeE28jtA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.11 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTosKPAAoJEMo4jShGhw+JX7QP/0Fk44XXnazRCpk2cbDCbtZd
+2LRmSwbys3M0Re22DoMqxj7aoct9Gt6KfwMCf7AJqa+0qNO+6QEGC3oTTweEGa3y
+Way6+zd7vy1o9NklPgsm00yD5GzhwM5IW7Gz5AplnStvGLzMb37BTquggaE7e6Wg
+zsJYOkylfIODpZA8i8s7th7IebLFsmd5HAZdrvnvHji2DOpxr58bnV1ZPK7Qvweb
+mChY+BjiR02PfSaRh1heleMvV7raU9f+o3EvND3aZUF171UIMv6TrRmZ/2GP1Zp7
+xpT3bIg9xhZ/K6yo5PugTIbaUD2o9+nTcnSJV62EhEmvGkGD5wVhnoNavOlU5x6r
+G4znapR31t/06yCB3qubNK6YNPkgBqE/P6AjH3clRI6flwAFGjDEB9XzXmBir1DZ
+4p8qsO2Vwdg1/ZuDrdQg/bKBe4rSIHj0EykiH102DPaPIi2I2O2fqDpvOyUqG3dg
+QGGnQFqVRQf+jeCrXBz8kO7sqtARN4YDYA3GLP+UeCeY9W5Bq2Zx0QQPw7I36naH
+xgeZ+T1co8wStRAsluHSNDdRLiHQztxmQctcFXhj70w30ZiSWduYPlWT+tK9PFgy
+YGBfGRibwoxyrl5Dd+rM+2dL9Hlz4yk5nLTNULyc1mVoFN/rlZ9SULwQM6kertBl
+aGuCktPG26r4p90S2+g/
+=B8eR
+-----END PGP SIGNATURE-----
+
+--pqjER9VX6Q2lQG3rsnDrcg9HRWeE28jtA--
