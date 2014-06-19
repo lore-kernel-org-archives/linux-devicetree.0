@@ -1,40 +1,36 @@
-From: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Subject: [patch 1/2] dts: spear: Fix sdhci compatible
-Date: Thu, 19 Jun 2014 21:56:29 -0000
-Message-ID: <20140619215557.784621009@linutronix.de>
-References: <20140619215347.139324048@linutronix.de>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] staging: imx-drm: ipu-v3: ipu-common.c: Cleaning up
+ return of uninitialized variable
+Date: Thu, 19 Jun 2014 15:51:00 -0700
+Message-ID: <20140619225100.GA15258@kroah.com>
+References: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline; filename=spear-dts-fix-sdhci-compatible.patch
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, spear-devel-nkJGhpqTU55BDgjK7y7TUQ@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Disposition: inline
+In-Reply-To: <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Valentina Manea <valentina.manea.m@gmail.com>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-Make it match the bindings and the implementation.
+On Sun, Jun 15, 2014 at 01:35:21AM +0200, Rickard Strandqvist wrote:
+> Before when there was an error a uninitialized variable would be returnd.
+> Now it returns -ENODEV
+> 
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+> ---
+>  drivers/staging/imx-drm/ipu-v3/ipu-common.c |    4 ++--
 
-Signed-off-by: Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
----
- arch/arm/boot/dts/spear320.dtsi |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Index: linux/arch/arm/boot/dts/spear320.dtsi
-===================================================================
---- linux.orig/arch/arm/boot/dts/spear320.dtsi
-+++ linux/arch/arm/boot/dts/spear320.dtsi
-@@ -48,7 +48,7 @@
- 		};
- 
- 		sdhci@70000000 {
--			compatible = "st,sdhci-spear";
-+			compatible = "st,spear300-sdhci";
- 			reg = <0x70000000 0x100>;
- 			interrupts = <10>;
- 			interrupt-parent = <&shirq>;
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+This file isn't even in the tree anymore, what did you make this patch
+against?
