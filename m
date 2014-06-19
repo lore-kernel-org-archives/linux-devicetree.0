@@ -1,165 +1,90 @@
-From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH v7 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
-Date: Thu, 19 Jun 2014 11:26:43 -0700
-Message-ID: <CAKh23FmrHPeBF_QvMrrUngQXbP4LBRdEj+hbbx77LKy1FJfgGw@mail.gmail.com>
-References: <1403140634-27104-1-git-send-email-isubramanian@apm.com>
-	<1403140634-27104-5-git-send-email-isubramanian@apm.com>
-	<CACVXFVNx4gCGuE9=4Z8iaY+hhy6b3db-vAQuKFoA4spY4s_QmQ@mail.gmail.com>
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: Re: [PATCH 2/2] media: soc_camera: pxa_camera device-tree support
+Date: Thu, 19 Jun 2014 21:12:19 +0200
+Message-ID: <87fvj0soh8.fsf@free.fr>
+References: <1402863436-30311-1-git-send-email-robert.jarzmik@free.fr>
+	<1402863436-30311-2-git-send-email-robert.jarzmik@free.fr>
+	<Pine.LNX.4.64.1406190939470.22703@axis700.grange>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACVXFVNx4gCGuE9=4Z8iaY+hhy6b3db-vAQuKFoA4spY4s_QmQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: David Miller <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Network Development <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <Pine.LNX.4.64.1406190939470.22703@axis700.grange> (Guennadi
+	Liakhovetski's message of "Thu, 19 Jun 2014 10:16:59 +0200 (CEST)")
+Sender: linux-media-owner@vger.kernel.org
+To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 19, 2014 at 1:46 AM, Ming Lei <tom.leiming-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> On Thu, Jun 19, 2014 at 9:17 AM, Iyappan Subramanian
-> <isubramanian-qTEPVZfXA3Y@public.gmane.org> wrote:
->> This patch adds network driver for APM X-Gene SoC ethernet.
->>
->> Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
->> Signed-off-by: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
->> Signed-off-by: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
->> ---
->>  drivers/net/ethernet/Kconfig                       |   1 +
->>  drivers/net/ethernet/Makefile                      |   1 +
->>  drivers/net/ethernet/apm/Kconfig                   |   1 +
->>  drivers/net/ethernet/apm/Makefile                  |   5 +
->>  drivers/net/ethernet/apm/xgene/Kconfig             |   9 +
->>  drivers/net/ethernet/apm/xgene/Makefile            |   6 +
->>  .../net/ethernet/apm/xgene/xgene_enet_ethtool.c    | 125 +++
->>  drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     | 848 +++++++++++++++++++
->>  drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     | 394 +++++++++
->>  drivers/net/ethernet/apm/xgene/xgene_enet_main.c   | 939 +++++++++++++++++++++
->>  drivers/net/ethernet/apm/xgene/xgene_enet_main.h   | 109 +++
->>  11 files changed, 2438 insertions(+)
->>  create mode 100644 drivers/net/ethernet/apm/Kconfig
->>  create mode 100644 drivers/net/ethernet/apm/Makefile
->>  create mode 100644 drivers/net/ethernet/apm/xgene/Kconfig
->>  create mode 100644 drivers/net/ethernet/apm/xgene/Makefile
->>  create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c
->>  create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
->>  create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
->>  create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.c
->>  create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.h
->>
->> diff --git a/drivers/net/ethernet/Kconfig b/drivers/net/ethernet/Kconfig
->> index edb7186..dc7406c 100644
->> --- a/drivers/net/ethernet/Kconfig
->> +++ b/drivers/net/ethernet/Kconfig
->> @@ -24,6 +24,7 @@ source "drivers/net/ethernet/allwinner/Kconfig"
->>  source "drivers/net/ethernet/alteon/Kconfig"
->>  source "drivers/net/ethernet/altera/Kconfig"
->>  source "drivers/net/ethernet/amd/Kconfig"
->> +source "drivers/net/ethernet/apm/Kconfig"
->>  source "drivers/net/ethernet/apple/Kconfig"
->>  source "drivers/net/ethernet/arc/Kconfig"
->>  source "drivers/net/ethernet/atheros/Kconfig"
->> diff --git a/drivers/net/ethernet/Makefile b/drivers/net/ethernet/Makefile
->> index 58de333..224a018 100644
->> --- a/drivers/net/ethernet/Makefile
->> +++ b/drivers/net/ethernet/Makefile
->> @@ -10,6 +10,7 @@ obj-$(CONFIG_NET_VENDOR_ALLWINNER) += allwinner/
->>  obj-$(CONFIG_NET_VENDOR_ALTEON) += alteon/
->>  obj-$(CONFIG_ALTERA_TSE) += altera/
->>  obj-$(CONFIG_NET_VENDOR_AMD) += amd/
->> +obj-$(CONFIG_NET_XGENE) += apm/
->>  obj-$(CONFIG_NET_VENDOR_APPLE) += apple/
->>  obj-$(CONFIG_NET_VENDOR_ARC) += arc/
->>  obj-$(CONFIG_NET_VENDOR_ATHEROS) += atheros/
->> diff --git a/drivers/net/ethernet/apm/Kconfig b/drivers/net/ethernet/apm/Kconfig
->> new file mode 100644
->> index 0000000..ec63d70
->> --- /dev/null
->> +++ b/drivers/net/ethernet/apm/Kconfig
->> @@ -0,0 +1 @@
->> +source "drivers/net/ethernet/apm/xgene/Kconfig"
->> diff --git a/drivers/net/ethernet/apm/Makefile b/drivers/net/ethernet/apm/Makefile
->> new file mode 100644
->> index 0000000..65ce32a
->> --- /dev/null
->> +++ b/drivers/net/ethernet/apm/Makefile
->> @@ -0,0 +1,5 @@
->> +#
->> +# Makefile for APM X-GENE Ethernet driver.
->> +#
->> +
->> +obj-$(CONFIG_NET_XGENE) += xgene/
->> diff --git a/drivers/net/ethernet/apm/xgene/Kconfig b/drivers/net/ethernet/apm/xgene/Kconfig
->> new file mode 100644
->> index 0000000..616dff6
->> --- /dev/null
->> +++ b/drivers/net/ethernet/apm/xgene/Kconfig
->> @@ -0,0 +1,9 @@
->> +config NET_XGENE
->> +       tristate "APM X-Gene SoC Ethernet Driver"
->> +       select PHYLIB
->> +       help
->> +         This is the Ethernet driver for the on-chip ethernet interface on the
->> +         APM X-Gene SoC.
->> +
->> +         To compile this driver as a module, choose M here. This module will
->> +         be called xgene_enet.
->> diff --git a/drivers/net/ethernet/apm/xgene/Makefile b/drivers/net/ethernet/apm/xgene/Makefile
->> new file mode 100644
->> index 0000000..c643e8a
->> --- /dev/null
->> +++ b/drivers/net/ethernet/apm/xgene/Makefile
->> @@ -0,0 +1,6 @@
->> +#
->> +# Makefile for APM X-Gene Ethernet Driver.
->> +#
->> +
->> +xgene-enet-objs := xgene_enet_hw.o xgene_enet_main.o xgene_enet_ethtool.o
->> +obj-$(CONFIG_NET_XGENE) += xgene-enet.o
->> diff --git a/drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c b/drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c
->> new file mode 100644
->> index 0000000..bac097e
->> --- /dev/null
->> +++ b/drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c
->> @@ -0,0 +1,125 @@
->> +/* Applied Micro X-Gene SoC Ethernet Driver
->> + *
->> + * Copyright (c) 2014, Applied Micro Circuits Corporation
->> + * Authors: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute  it and/or modify it
->> + * under  the terms of  the GNU General  Public License as published by the
->> + * Free Software Foundation;  either version 2 of the  License, or (at your
->> + * option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
->> + * GNU General Public License for more details.
->> + *
->> + * You should have received a copy of the GNU General Public License
->> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
->> + */
->> +
->> +#include <linux/ethtool.h>
->> +#include <xgene_enet_main.h>
->
-> drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c:21:29: fatal
-> error: xgene_enet_main.h: No such file or directory
->  #include <xgene_enet_main.h>
->                              ^
-> compilation terminated.
+Guennadi Liakhovetski <g.liakhovetski@gmx.de> writes:
 
-I should have used "xgene_enet_main.h" instead.  I will fix it.
+> On Sun, 15 Jun 2014, Robert Jarzmik wrote:
+>> +static const struct of_device_id pxacamera_dt_ids[] = {
+>> +	{ .compatible = "mrvl,pxa_camera", },
+>
+> as Documentation/devicetree/bindings/vendor-prefixes.txt defines, it 
+> should be "marvell."
+OK, I'll ask for confirmation to Haojian and Grant, as marvell and mrvl are both
+used, and I have many pending patches. So I'd like to be sure, and then amend
+all my patches at once.
+
+>> +	dev_info(dev, "RJK: %s()\n", __func__);
+>
+> I have nothing against attributing work to respective authors, but I don't 
+> think this makes a lot of sense in the long run in the above form :) Once 
+> you've verified that your binding is working and this function is working, 
+> either remove this or make it more informative - maybe at the end of this 
+> function, also listing a couple of important parameters, that you obtained 
+> from DT.
+Ah, debug leftover. RJK is my "special mark" for "remove me before
+submitting". See how well it worked :)
+
 
 >
-> Thanks,
-> --
-> Ming Lei
+>> +	err = of_property_read_u32(np, "mclk_10khz",
+>> +				   (u32 *)&pdata->mclk_10khz);
 >
+> I think we'll be frowned upon for this :) PXA270 doesn't support CCF, does 
+> it? Even if it doesn't we probably should use the standard 
+> "clock-frequency" property in any case. Actually, I missed to mention on 
+> this in my comments to your bindings documentation.
+
+You're right. This should be the normal Hz clock stuff. For V2.
+>>  	pcdev->pdata = pdev->dev.platform_data;
+>> +	if (&pdev->dev.of_node && !pcdev->pdata)
+>> +		err = pxa_camera_pdata_from_dt(&pdev->dev, &pdata_dt);
+>> +	if (err < 0)
+>> +		return err;
+>> +	else
+>> +		pcdev->pdata = &pdata_dt;
 >
+> This will Oops, if someone decides to dereference pcdev->pdata outside of 
+> this function. pdata_dt is on stack and you store a pointer to it in your 
+> device data... But since ->pdata doesn't seem to be used anywhere else in 
+> this driver, maybe remove that struct member completely?
+Yep, obliteration, good for me.
+There is indeed no purpose in keeping this pdata in pcdev, its only purpose was
+to get mclk and platform_flags. For V2 also.
+
+>> +
+>>  	pcdev->platform_flags = pcdev->pdata->flags;
+>>  	if (!(pcdev->platform_flags & (PXA_CAMERA_DATAWIDTH_8 |
+>>  			PXA_CAMERA_DATAWIDTH_9 | PXA_CAMERA_DATAWIDTH_10))) {
+>> @@ -1799,10 +1872,17 @@ static const struct dev_pm_ops pxa_camera_pm = {
+>>  	.resume		= pxa_camera_resume,
+>>  };
+>>  
+>> +static const struct of_device_id pxa_camera_of_match[] = {
+>> +	{ .compatible = "mrvl,pxa_camera", },
 >
-> --
-> Ming Lei
+> Another thing I failed to comment upon: I think DT should contain only 
+> hardware descriptions, nothing driver specific, and "pxa_camera" is more a 
+> name of the driver, than the hardware? Maybe something like 
+> "marvell,pxa27x-cif" would be suitable?
+Yeah, sure, whatever you like.
+
+Thanks for the review.
+
+Cheers.
+
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Robert
