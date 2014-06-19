@@ -1,73 +1,120 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v4 1/4] of: Add NVIDIA Tegra XUSB pad controller binding
-Date: Thu, 19 Jun 2014 13:39:21 +0200
-Message-ID: <20140619113919.GA28111@ulmo>
-References: <1403006877-19850-1-git-send-email-thierry.reding@gmail.com>
- <53A06BD6.40608@wwwdotorg.org>
- <53A164E2.7050407@nvidia.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: Re: [PATCH v4 11/13] serial: asc: Adopt readl_/writel_relaxed()
+Date: Thu, 19 Jun 2014 12:46:21 +0100
+Message-ID: <53A2CD8D.1050106@linaro.org>
+References: <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
+ <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
+ <1403174303-25456-12-git-send-email-daniel.thompson@linaro.org>
+ <53A2C9A3.9090507@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="LZvS9be/3tNcYl/X"
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53A164E2.7050407-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <53A2C9A3.9090507@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Jason Wessel <jason.wessel@windriver.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Colin Cross <ccross@android.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, Maxime Coquelin <maxime.coquelin@st.com>, Greg
 List-Id: devicetree@vger.kernel.org
 
+On 19/06/14 12:29, Srinivas Kandagatla wrote:
+> Hi Dan,
+> 
+> On 19/06/14 11:38, Daniel Thompson wrote:
+>> The architectures supported by this driver have expensive
+>> implementations of writel(), reliant on spin locks and explicit L2 cache
+>> management. These architectures provide a cheaper writel_relaxed() which
+>> is much better suited to peripherals that do not perform DMA. The
+>> situation with readl()/readl_relaxed()is similar although less acute.
+>>
+>> This driver does not use DMA and will be more power efficient and more
+>> robust (due to absense of spin locks during console I/O) if it uses the
+>> relaxed variants.
+>>
+>> This driver is cross compilable for testing purposes and remains
+>> compilable on all architectures by falling back to writel() when
+>> writel_relaxed() does not exist. We also include explicit compiler
+>> barriers. There are redundant on ARM and SH but important on
+>> x86 because it defines "relaxed" differently.
+>>
+> Why are we concern about x86 for this driver?
+> As per my understanding this IP is only seen on ARM and SH based CPUs so
+> why cant we just use relaxed versions, why ifdefs?
+> I think, this would involve fixing the kconfig and make it depend on SH
+> and ARM based platforms only.
 
---LZvS9be/3tNcYl/X
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+You mean just drop the COMPILE_TEST?
 
-On Wed, Jun 18, 2014 at 01:07:30PM +0300, Mikko Perttunen wrote:
-> On 17/06/14 19:24, Stephen Warren wrote:
-> >On 06/17/2014 06:07 AM, Thierry Reding wrote:
-> >>From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >>
-> >>This patch adds the device tree binding documentation for the XUSB pad
-> >>controller found on NVIDIA Tegra SoCs. It exposes both pinmuxing and PHY
-> >>capabilities.
-> >
-> >Thanks. I'll wait for a Tested-by from Mikko and an Acked-by from Linus
-> >before taking this series.
-> >
->=20
-> With or without negation added to group_get (see reply to 2/4), the serie=
-s:
->=20
-> Tested-by: Mikko Perttunen <mperttunen-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+In generally I like as much code as possible to compile on x86. Its
+worthwhile protection against the excessive/accidental ARMisms which
+could easily impact less common architectures (such as SH).
 
-Thanks. I just sent out another series which addresses the missing
-negation in group_get() and the missing BIT() around lane->iddq in
-various places as discussed on IRC.
 
-I've also added debugfs support which helps verifying that group_get()
-now behaves properly.
+> On the other hand, This patch looks more generic and applicable to most
+> of the drivers. Am not sure which way is the right one.
 
-Thierry
+I'm particularly keen on doing the right thing where readl_relaxed() is
+concerned because this function has a compiler barrier on ARM but not on
+x86.
 
---LZvS9be/3tNcYl/X
-Content-Type: application/pgp-signature
+Since having asc_in/asc_out made it easy to portably make these changes
+I decided is was better to be redundantly exemplary than conceal secret
+portability issues.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2.0.22 (GNU/Linux)
+Don't feel that strongly though. Can easily change it if you're unconvinced.
 
-iQIcBAEBAgAGBQJTosvnAAoJEN0jrNd/PrOh8wMQAJVPAF8yzxuiezVk5c8NmNJt
-D1+raqSzLPjY3MnAtVN0m+y41KkOUizdgE5ZQF+sbuh9kfbhOVX5T8f0B4KbMv9Y
-vYwkuD5XZuehj3nPvw1Cl6Bjly7/iq574cqzPMOw63JqPS3mEg4u+SQw/zxKFJnT
-I+RYSx5xaKNyuGKsPgOj4Ne10YW86pDsurxmTH6VaKTnrwGmdSYl/NUnLgRtju7n
-Gxi4oXLJ0maa/zMP6Qu4L8zlnjZpXExaIMkfqjRiG+cVzl6d2qCYbsLUeg87iMSx
-3+8emdDwKFZiNZ3p+LGYLkznHCrYqpFNW7sU4ZklI8w54Ynsrmg1k9MNIYMK4bJq
-Yfy1ai3W9mW61thzvLce0uOpaaJkkJX1S6NeWBxWewA1pN3qUR8nVElWyCLiKfLr
-qoJxQSeJw3EsNRqTU/u6YM7pdsBtgcs4IpC0G+5GRI+KxBPheOuG5Hwtf8RIDpLF
-V/EpPO4IfNFiuvhswoE9XaBRVb5dGzFllZulewLC4G8QX2JD4WsOWh2k6i4K+5XS
-ar6zwAKJ19ZOnpowmdA4dCuvkbB9oPiGlmsPiyTn8HrAe07odnYN42XEhvMhE4cQ
-8pwyYNlc9135vQuKjuWfDm19qLv3Jz0WppiRTGWmjCu1+proIjslVMhv5Dm9Fpmo
-lwPKJSnrk4WZH2I2KGLr
-=BW/H
------END PGP SIGNATURE-----
 
---LZvS9be/3tNcYl/X--
+
+> 
+> 
+> --srini
+> 
+>> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+>> Cc: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
+>> Cc: Maxime Coquelin <maxime.coquelin@st.com>
+>> Cc: Patrice Chotard <patrice.chotard@st.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Jiri Slaby <jslaby@suse.cz>
+>> Cc: kernel@stlinux.com
+>> Cc: linux-serial@vger.kernel.org
+>> ---
+>>   drivers/tty/serial/st-asc.c | 11 ++++++++++-
+>>   1 file changed, 10 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/tty/serial/st-asc.c b/drivers/tty/serial/st-asc.c
+>> index 4f376d8..58aa1c6 100644
+>> --- a/drivers/tty/serial/st-asc.c
+>> +++ b/drivers/tty/serial/st-asc.c
+>> @@ -152,12 +152,21 @@ static inline struct asc_port
+>> *to_asc_port(struct uart_port *port)
+>>
+>>   static inline u32 asc_in(struct uart_port *port, u32 offset)
+>>   {
+>> -    return readl(port->membase + offset);
+>> +    u32 r;
+>> +
+>> +    r = readl_relaxed(port->membase + offset);
+>> +    barrier();
+>> +    return r;
+>>   }
+>>
+>>   static inline void asc_out(struct uart_port *port, u32 offset, u32
+>> value)
+>>   {
+>> +#ifdef writel_relaxed
+>> +    writel_relaxed(value, port->membase + offset);
+>> +    barrier();
+>> +#else
+>>       writel(value, port->membase + offset);
+>> +#endif
+>>   }
+>>
+>>   /*
+>>
