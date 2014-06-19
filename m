@@ -1,40 +1,65 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
-Date: Thu, 19 Jun 2014 13:36:04 +0100
-Message-ID: <53A2D934.6060401@arm.com>
-References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>	<1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>	<7hionz9i5e.fsf@paris.lan>	<CAJe_ZhcuOa39Db_tE4JupY74aze02=v1FWzduFD0sO15nMrKvw@mail.gmail.com>	<7hzjha5ew2.fsf@paris.lan> <CAJe_ZhfTCw3OHNeSTW71bc6U2g_d=5hYknu+dwhBkuZvPg=D6w@mail.gmail.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v2 06/18] ARM: dts: DRA7: Add divider table to optfclk_pciephy_div
+ clock
+Date: Thu, 19 Jun 2014 18:15:53 +0530
+Message-ID: <53A2DB81.5070105@ti.com>
+References: <1401345500-20188-1-git-send-email-kishon@ti.com> <1401345500-20188-7-git-send-email-kishon@ti.com> <53A2C52C.6020606@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJe_ZhfTCw3OHNeSTW71bc6U2g_d=5hYknu+dwhBkuZvPg=D6w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jaswinder.singh@linaro.org>, Kevin Hilman <khilman@linaro.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Patch Tracking <patches@linaro.org>, Bjorn Andersson <bjorn@kryo.se>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Anna, Suman" <s-anna@ti.com>, Loic Pallardy <loic.pallardy@st.com>, LeyFoon Tan <lftan.linux@gmail.com>, Craig McGeachie <slapdau@yahoo.com.au>, Courtney Cavin <courtney.cavin@sonymobile.com>, Pawel Moll <Pawel.Moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <53A2C52C.6020606@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Tero Kristo <t-kristo@ti.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: arnd@arndb.de, tony@atomide.com, jg1.han@samsung.com, Keerthy <j-keerthy@ti.com>, Rajendra Nayak <rnayak@ti.com>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jassi,
+Hi Tero,
 
-On 19/06/14 03:55, Jassi Brar wrote:
-> On 18 June 2014 22:33, Kevin Hilman <khilman@linaro.org> wrote:
-
-[...]
+On Thursday 19 June 2014 04:40 PM, Tero Kristo wrote:
+> On 05/29/2014 09:38 AM, Kishon Vijay Abraham I wrote:
+>> From: Keerthy <j-keerthy@ti.com>
 >>
->> That's great.
->>
->> I sure would like to see some more Reviewed-by tags from those folks to
->> confirm that those starting to use it think it's on the right track.
->>
-> The upstreaming attempts have been going on for months now, and via
-> non-public interactions with developers I understand it last worked
-> before the revision mandating DT support and ipc->mailbox symbol
-> renaming. So basic working should still remain the same.
->     Suman(TI), Loic(ST), Girish(Samsung), Ashwin (PCC+ACPI).... guys,
-> any word for v7?
->
+>> Add divider table to optfclk_pciephy_div clock. The Documentation
+>> for divider clock can be found at ../clock/ti/divider.txt
+> 
+> This patch requires a better changelog. Why is the change done, any TRM refs etc.?
 
-I have been using v6 on ARM64 development platform and in the process of moving
-to v7. I will respond with my comments/queries separately.
+The 8th bit of CM_CLKMODE_APLL_PCIE can be programmed to either 0x0 or 0x1
+based on if the divider value is 0x2 or 0x1.
 
-Regards,
-Sudeep
+Figure 26-21. PCIe PHY Clock Generator Overview in vE of DRA7xx ES1.0 shows the
+block diagram of Clock Generator Subsystem of PCIe PHY module. We have to do a
+bypass (divided by 1) in order to get the correct PCIE_PHY_DIV_GCLK
+frequency.
+
+Thanks
+Kishon
+> 
+> -Tero
+> 
+>>
+>> Cc: Rajendra Nayak <rnayak@ti.com>
+>> Cc: Tero Kristo <t-kristo@ti.com>
+>> Cc: Paul Walmsley <paul@pwsan.com>
+>> Signed-off-by: Keerthy <j-keerthy@ti.com>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>   arch/arm/boot/dts/dra7xx-clocks.dtsi |    1 +
+>>   1 file changed, 1 insertion(+)
+>>
+>> diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>> b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>> index c767687..55e95c5 100644
+>> --- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>> +++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+>> @@ -1170,6 +1170,7 @@
+>>           clocks = <&apll_pcie_ck>;
+>>           #clock-cells = <0>;
+>>           reg = <0x021c>;
+>> +        ti,dividers = <2>, <1>;
+>>           ti,bit-shift = <8>;
+>>           ti,max-div = <2>;
+>>       };
+>>
+> 
