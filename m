@@ -1,66 +1,47 @@
-From: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Subject: [PATCH] mfd: syscon: Make it possible to mark syscon as read only
-Date: Thu, 19 Jun 2014 13:43:46 -0700
-Message-ID: <1403210626-4845-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-doc-owner@vger.kernel.org>
-Sender: linux-doc-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Richard Retanubun <rretanubun.work@gmail.com>
+Subject: [PATCH v2] of: mdio: fixup of_phy_register_fixed_link parsing of new bindings
+Date: Thu, 19 Jun 2014 17:28:57 -0400
+Message-ID: <1403213337-14303-1-git-send-email-rretanubun.work@gmail.com>
+References: <53A33AD0.2060200@cogentembedded.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <53A33AD0.2060200@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Make it possible to mark syscon as read only, so that it can be used to
-expose pieces of hardware that is read only.
+Fixes commit 3be2a49e5c08 ("of: provide a binding for fixed link PHYs")
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@sonymobile.com>
+Fix the parsing of the new fixed link dts bindings for duplex,
+pause, and asym_pause by using the correct device node pointer.
+
+Signed-off-by: Richard Retanubun <rretanubun.work@gmail.com>
 ---
- Documentation/devicetree/bindings/mfd/syscon.txt |  3 +++
- drivers/mfd/syscon.c                             | 10 ++++++++++
- 2 files changed, 13 insertions(+)
+v2: Clean up code indentation. Thanks Sergei!
 
-diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-index fe8150b..163325af0 100644
---- a/Documentation/devicetree/bindings/mfd/syscon.txt
-+++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-@@ -13,6 +13,9 @@ Required properties:
- - compatible: Should contain "syscon".
- - reg: the register region can be accessed from syscon
- 
-+Optional properties:
-+- read-only: the register region is read only
-+
- Examples:
- gpr: iomuxc-gpr@020e0000 {
- 	compatible = "fsl,imx6q-iomuxc-gpr", "syscon";
-diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
-index ca15878..902579d 100644
---- a/drivers/mfd/syscon.c
-+++ b/drivers/mfd/syscon.c
-@@ -110,6 +110,11 @@ struct regmap *syscon_regmap_lookup_by_phandle(struct device_node *np,
- }
- EXPORT_SYMBOL_GPL(syscon_regmap_lookup_by_phandle);
- 
-+static bool syscon_readonly_writable(struct device *dev, unsigned int reg)
-+{
-+	return false;
-+}
-+
- static const struct of_device_id of_syscon_match[] = {
- 	{ .compatible = "syscon", },
- 	{ },
-@@ -141,6 +146,11 @@ static int syscon_probe(struct platform_device *pdev)
- 	if (!base)
- 		return -ENOMEM;
- 
-+	if (of_property_read_bool(dev->of_node, "read-only"))
-+		syscon_regmap_config.writeable_reg = syscon_readonly_writable;
-+	else
-+		syscon_regmap_config.writeable_reg = NULL;
-+
- 	syscon_regmap_config.max_register = res->end - res->start - 3;
- 	if (pdata)
- 		syscon_regmap_config.name = pdata->label;
+ drivers/of/of_mdio.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 7700ddc..b5f7817 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -290,11 +290,13 @@ int of_phy_register_fixed_link(struct device_node *np)
+ 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+ 	if (fixed_link_node) {
+ 		status.link = 1;
+-		status.duplex = of_property_read_bool(np, "full-duplex");
++		status.duplex = of_property_read_bool(fixed_link_node,
++							"full-duplex");
+ 		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
+ 			return -EINVAL;
+-		status.pause = of_property_read_bool(np, "pause");
+-		status.asym_pause = of_property_read_bool(np, "asym-pause");
++		status.pause = of_property_read_bool(fixed_link_node, "pause");
++		status.asym_pause = of_property_read_bool(fixed_link_node,
++								"asym-pause");
+ 		of_node_put(fixed_link_node);
+ 		return fixed_phy_register(PHY_POLL, &status, np);
+ 	}
 -- 
-1.8.2.2
-
+1.8.5.1
