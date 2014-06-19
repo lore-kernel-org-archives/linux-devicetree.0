@@ -1,46 +1,55 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v3 2/2] ata: Fix the dma state machine lockup for the
- IDENTIFY DEVICE PIO mode command.
-Date: Thu, 19 Jun 2014 10:33:51 -0400
-Message-ID: <20140619143351.GE26904@htj.dyndns.org>
-References: <1403160654-31612-1-git-send-email-stripathi@apm.com>
- <20140619141047.GA26904@htj.dyndns.org>
- <CAOHikRAX1NfeCRWVJtv_FTHHheYxU5uKVk_hytdEmb_j-5_wnA@mail.gmail.com>
- <20140619142148.GD26904@htj.dyndns.org>
- <CAOHikRAaMaMc1zHU3B_Qqg8fRndCqHQTDR7wpCoaS_kafkgzdw@mail.gmail.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] ARM: mvebu: Fix missing binding documentation for Armada 38x
+Date: Thu, 19 Jun 2014 09:54:31 -0500
+Message-ID: <CAL_Jsq+JyngWXvk6ZzV8LPfGqVMDPyouJsADaokAGzgHv=gphQ@mail.gmail.com>
+References: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAOHikRAaMaMc1zHU3B_Qqg8fRndCqHQTDR7wpCoaS_kafkgzdw@mail.gmail.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com, Loc Ho <lho@apm.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Thu, Jun 19, 2014 at 9:07 AM, Gregory CLEMENT
+<gregory.clement@free-electrons.com> wrote:
+> For the Armada 380 and Armada 385 SoCs, the common bindings for those
+> 2 SoCs, was forgotten. This patch add the documentation for the
+> marvell,aramda38x property.
+>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> ---
+> Hi,
+>
+> This fix should be merged in 3.16. For 3.15 I am not sure as it is not
+> a regression.
+>
+> Thanks,
+> Gregory
+>
+>  Documentation/devicetree/bindings/arm/armada-38x.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
+> index 11f2330a6554..b68bcb80d2de 100644
+> --- a/Documentation/devicetree/bindings/arm/armada-38x.txt
+> +++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
+> @@ -6,5 +6,9 @@ following property:
+>
+>  Required root node property:
+>
+> +compatible: must contain "marvell,armada38x"
+> +
+> +Required root node property:
+> +
+>   - compatible: must contain either "marvell,armada380" or
+>     "marvell,armada385" depending on the variant of the SoC being used.
 
-On Thu, Jun 19, 2014 at 07:57:33PM +0530, Suman Tripathi wrote:
-> [suman] : Are you ok if I make ahci_qc_issue in the ahci.h as not static
-> and make it as EXPORT_SYMBOL_GPL ? Currenty ahci_qc_issue is static.
-> If you take the current case , I only had to make  ahci_sw_activity as non
-> static and use it. So both the intention is same.
+This looks a bit strange. How about something like this:
 
-Yeah, sure.  We end up having to export a function anyway.  Better to
-avoid duplicating the function body.
+   - compatible: must contain either "marvell,armada380" or
+     "marvell,armada385" depending on the variant of the SoC being
+used and contain "marvell,armada38x".
 
-> So, it's just ATA_CMD_ID_ATA and ATA_CMD_ID_ATAPI is okay?  That's
-> kinda weird.
-> 
-> [suman] : Not tested for ATA_CMD_ID_ATAPI. It's just for ATA_CMD_ID_ATA for
-> now.
-
-Can you give it a test?  The two commands are really similar, so it'd
-be surprising if the controller only chokes on one of them.  Another
-thing worthwhile testing is "libata.force=noncq,pio0" so that you can
-be sure other pio commands are okay.
-
-Thanks.
-
--- 
-tejun
+Rob
