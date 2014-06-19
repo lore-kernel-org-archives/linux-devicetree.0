@@ -1,48 +1,78 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] ARM: mvebu: Fix missing binding documentation for Armada
- 38x
-Date: Thu, 19 Jun 2014 20:34:00 +0400
-Message-ID: <53A310F8.8090207@cogentembedded.com>
-References: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+From: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+Subject: [PATCH v2 2/2] video: clps711x: Add bindings documentation for CLPS711X framebuffer
+Date: Thu, 19 Jun 2014 20:21:17 +0400
+Message-ID: <1403194877-32616-1-git-send-email-shc_work@mail.ru>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/19/2014 06:07 PM, Gregory CLEMENT wrote:
+Add OF document for Cirrus Logic CLPS711X framebuffer driver.
 
-> For the Armada 380 and Armada 385 SoCs, the common bindings for those
-> 2 SoCs, was forgotten. This patch add the documentation for the
-> marvell,aramda38x property.
+Signed-off-by: Alexander Shiyan <shc_work-JGs/UdohzUI@public.gmane.org>
+---
+ .../bindings/video/cirrus,clps711x-fb.txt          | 47 ++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> ---
-> Hi,
+diff --git a/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
+new file mode 100644
+index 0000000..6fc3c6a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/video/cirrus,clps711x-fb.txt
+@@ -0,0 +1,47 @@
++* Currus Logic CLPS711X Framebuffer
++
++Required properties:
++- compatible: Shall contain "cirrus,clps711x-fb".
++- reg       : Physical base address and length of the controller's registers +
++              location and size of the framebuffer memory.
++- clocks    : phandle + clock specifier pair of the FB reference clock.
++- display   : phandle to a display node as described in
++              Documentation/devicetree/bindings/video/display-timing.txt.
++              Additionally, the display node has to define properties:
++  - bits-per-pixel: Bits per pixel.
++  - ac-prescale   : LCD AC bias frequency. This frequency is the required
++                    AC bias frequency for a given manufacturer's LCD plate.
++  - cmap-invert   : Invert the color levels (Optional).
++
++Optional properties:
++- lcd-supply: Regulator for LCD supply voltage.
++
++Example:
++	fb: fb@800002c0 {
++		compatible = "cirrus,ep7312-fb", "cirrus,clps711x-fb";
++		reg = <0x800002c0 0xd44>, <0x60000000 0xc000>;
++		clocks = <&clks 2>;
++		lcd-supply = <&reg5v0>;
++		display = <&display>;
++	};
++
++	display: display {
++		model = "320x240x4";
++		native-mode = <&timing0>;
++		bits-per-pixel = <4>;
++		ac-prescale = <17>;
++
++		display-timings {
++			timing0: 320x240 {
++				hactive = <320>;
++				hback-porch = <0>;
++				hfront-porch = <0>;
++				hsync-len = <0>;
++				vactive = <240>;
++				vback-porch = <0>;
++				vfront-porch = <0>;
++				vsync-len = <0>;
++				clock-frequency = <6500000>;
++			};
++		};
++	};
+-- 
+1.8.5.5
 
-> This fix should be merged in 3.16. For 3.15 I am not sure as it is not
-> a regression.
-
-> Thanks,
-> Gregory
-
->   Documentation/devicetree/bindings/arm/armada-38x.txt | 4 ++++
->   1 file changed, 4 insertions(+)
-
-> diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
-> index 11f2330a6554..b68bcb80d2de 100644
-> --- a/Documentation/devicetree/bindings/arm/armada-38x.txt
-> +++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
-> @@ -6,5 +6,9 @@ following property:
->
->   Required root node property:
->
-> +compatible: must contain "marvell,armada38x"
-
-    Oh, and the wildcards are a no-no in the "compatible" prop.
-
-WBR, Sergei
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
