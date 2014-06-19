@@ -1,41 +1,36 @@
-From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 1/2] media: mt9m111: add device-tree suppport
-Date: Thu, 19 Jun 2014 21:15:22 +0200
-Message-ID: <877g4csoc5.fsf@free.fr>
-References: <1402863452-30365-1-git-send-email-robert.jarzmik@free.fr>
-	<Pine.LNX.4.64.1406190929380.22703@axis700.grange>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Device-tree and Marvell vendor prefix
+Date: Thu, 19 Jun 2014 21:22:17 +0200
+Message-ID: <8738f0so0m.fsf@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1406190929380.22703@axis700.grange> (Guennadi
-	Liakhovetski's message of "Thu, 19 Jun 2014 09:36:48 +0200 (CEST)")
-Sender: linux-media-owner@vger.kernel.org
-To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Guennadi Liakhovetski <g.liakhovetski@gmx.de> writes:
 
-> Hi Robert,
->> +static int of_get_mt9m111_platform_data(struct device *dev,
->> +					struct soc_camera_subdev_desc *desc)
->> +{
->> +	return 0;
->> +}
->
-> Why do you need this function? I would just drop it.
-Yeah, drop it sounds good. I wrote it at the beginning to have a clear
-structure, and then didn't use it.
+Hi Haojian, Grant and Rob,
 
+I'm submitting various patches for Marvell PXA27x architecture to support
+device-tree.
 
->> +static const struct of_device_id mt9m111_of_match[] = {
->> +	{ .compatible = "micron,mt9m111", },
->
-> Not a flaw in this patch, but someone might want to add "micron" to 
-> Documentation/devicetree/bindings/vendor-prefixes.txt
-OK, I'll see what I can submit, it should be doable :)
+In a review from Guennadi, he made me a comment that the official prefix for
+Marvell is "marvell" (according to
+Documentation/devicetree/bindings/vendor-prefixes.txt).
+
+As a matter of fact, there are 2 prefixes used :
+ - "marvell" : 264 uses in *.c files
+ - "mrvl" : 64 uses in *.c files
+
+So which one should I use ?
 
 Cheers.
 
 -- 
 Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
