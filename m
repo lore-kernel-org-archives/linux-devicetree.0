@@ -1,60 +1,45 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: Re: [PATCH v2 4/7] ARM: at91/dt: split sama5d3 lcd pin definitions
- to match RGB mode configs
-Date: Thu, 19 Jun 2014 09:40:19 +0200
-Message-ID: <53A293E3.6000707@free-electrons.com>
-References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com> <1402329860-27520-5-git-send-email-boris.brezillon@free-electrons.com> <53A28C2C.1010001@atmel.com>
+From: Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH RFC 1/2] libahci_platform: add ahci_platform_get_of_property
+Date: Thu, 19 Jun 2014 09:39:55 +0200
+Message-ID: <53A293CB.3040704@redhat.com>
+References: <xuwei5@hisilicon.com,kefeng.wang@linaro.org,> <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org> <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org> <20140618140352.GD11895@leverpostej> <53A24950.2020300@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53A28C2C.1010001@atmel.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <53A24950.2020300@linaro.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: zhangfei <zhangfei.gao@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Bo,
+Hi,
 
-On 19/06/2014 09:07, Bo Shen wrote:
-> Hi Boris,
->
-> On 06/10/2014 12:04 AM, Boris BREZILLON wrote:
->> The HLCDC (High LCD Controller) IP supports 4 different output mode
->> (RGB444, RGB565, RGB666 and RGB888) and the pin muxing depends on the
->> chosen RGB mode.
+On 06/19/2014 04:22 AM, zhangfei wrote:
+> Hi Mark,
+> 
+> On 06/18/2014 10:03 PM, Mark Rutland wrote:
+>> On Wed, Jun 18, 2014 at 05:54:08AM +0100, Zhangfei Gao wrote:
+>>> Instead of setting hflags in different files,
+>>> ahci_platform_get_of_property set hpriv->flags when ahci_platform_init_host
+>>> according to property in dts.
 >>
->> Split the pin definition to be able to set the pin config according
->> to the
->> selected mode.
->>
->> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
->> ---
->>   arch/arm/boot/dts/sama5d3_lcd.dtsi | 127
->> ++++++++++++++++++++++++++++---------
->>   1 file changed, 96 insertions(+), 31 deletions(-)
->
-> On sama5d3xek board, it only works in 24bits output mode. And it
-> depends on the hardware design. So, I think only keep only one pinctrl
-> configuration.
+>> The AHCI_HFLAGS are a Linux implementation detail, so it would be nice
+>> to have a good justification for each of these being turned into DT
+>> properties.
+> 
+> Do you mean only add required property now?
 
-I'm not describing a specific board design but rather SoC capabilities
-(this dtsi is SoC related not board related), and the sama5d3 SoC
-supports 4 different RGB output modes through the RGB connector.
+No you should not add any properties at all using properties to set SoC specific quirks
+is just wrong, if a device is not 100% ahci compatible you should use a SoC specific
+compatible string for it, and set quirks in the kernel driver based on that.
 
-If you take a look at patch 7, you'll see that I chose mode 3 (which is
-RGB888), and given this mode the HLCDC driver (atmel_hlcdc_panel.c) will
-request the appropriate pin state:
+Devicetree is supposed to describe hardware, in this case the quirks are a property
+of the specific model of the hardware, so this should be expressed through the
+compatible string. Extra properties in devicetree are meant to be used for board
+specific things, like having a gpio to enable power to the sata target device.
+Extra properties should not be used in the way you are proposing to use them now.
 
-atmel,panel = <&panel 3 0>;
+Regards,
 
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
+Hans
