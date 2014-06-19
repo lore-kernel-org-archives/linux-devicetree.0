@@ -1,36 +1,58 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] staging: imx-drm: ipu-v3: ipu-common.c: Cleaning up
- return of uninitialized variable
-Date: Thu, 19 Jun 2014 15:51:00 -0700
-Message-ID: <20140619225100.GA15258@kroah.com>
-References: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-Content-Disposition: inline
-In-Reply-To: <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Valentina Manea <valentina.manea.m@gmail.com>, linux-kernel@vger.kernel.org, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH] of/irq: lookup 'interrupts-extended' property first
+Date: Thu, 19 Jun 2014 16:33:43 -0700
+Message-ID: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: grant.likely@linaro.org, robh+dt@kernel.org, computersforpeace@gmail.com, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 15, 2014 at 01:35:21AM +0200, Rickard Strandqvist wrote:
-> Before when there was an error a uninitialized variable would be returnd.
-> Now it returns -ENODEV
-> 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-> ---
->  drivers/staging/imx-drm/ipu-v3/ipu-common.c |    4 ++--
+In case the Device Tree blob passed by the boot agent supplies both an
+'interrupts-extended' and an 'interrupts' property in order to allow for
+older kernels to be usable, prefer the new-style 'interrupts-extended'
+property which convey a lot more information.
 
-This file isn't even in the tree anymore, what did you make this patch
-against?
+This allows us to have bootloaders willingly maintaining backwards
+compatibility with older kernels without entirely deprecating the
+'interrupts' property (although that is a clear violation of the binding
+specified at
+Documentation/devicetree/bindings/interrupt-controller/interrupts.txt)
+
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+---
+ drivers/of/irq.c | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/of/irq.c b/drivers/of/irq.c
+index 3e06a699352d..1af3be2396db 100644
+--- a/drivers/of/irq.c
++++ b/drivers/of/irq.c
+@@ -301,16 +301,17 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
+ 	/* Get the reg property (if any) */
+ 	addr = of_get_property(device, "reg", NULL);
+ 
++	/* Try the new-style interrupts-extended */
++	res = of_parse_phandle_with_args(device, "interrupts-extended",
++					"#interrupt-cells", index, out_irq);
++	if (!res)
++		return of_irq_parse_raw(addr, out_irq);
++
+ 	/* Get the interrupts property */
+ 	intspec = of_get_property(device, "interrupts", &intlen);
+-	if (intspec == NULL) {
+-		/* Try the new-style interrupts-extended */
+-		res = of_parse_phandle_with_args(device, "interrupts-extended",
+-						"#interrupt-cells", index, out_irq);
+-		if (res)
+-			return -EINVAL;
+-		return of_irq_parse_raw(addr, out_irq);
+-	}
++	if (intspec == NULL)
++		return -EINVAL;
++
+ 	intlen /= sizeof(*intspec);
+ 
+ 	pr_debug(" intspec=%d intlen=%d\n", be32_to_cpup(intspec), intlen);
+-- 
+1.9.1
