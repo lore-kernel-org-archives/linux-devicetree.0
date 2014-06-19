@@ -1,17 +1,17 @@
-From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 Subject: Re: [PATCH] ARM: mvebu: Fix missing binding documentation for Armada
  38x
-Date: Thu, 19 Jun 2014 20:32:00 +0400
-Message-ID: <53A31080.40707@cogentembedded.com>
+Date: Thu, 19 Jun 2014 20:34:00 +0400
+Message-ID: <53A310F8.8090207@cogentembedded.com>
 References: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403186871-28204-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 On 06/19/2014 06:07 PM, Gregory CLEMENT wrote:
@@ -20,7 +20,7 @@ On 06/19/2014 06:07 PM, Gregory CLEMENT wrote:
 > 2 SoCs, was forgotten. This patch add the documentation for the
 > marvell,aramda38x property.
 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
 > ---
 > Hi,
 
@@ -42,18 +42,7 @@ On 06/19/2014 06:07 PM, Gregory CLEMENT wrote:
 >   Required root node property:
 >
 > +compatible: must contain "marvell,armada38x"
-> +
-> +Required root node property:
 
-    Duplicate statement with the above?
-
-> +
->    - compatible: must contain either "marvell,armada380" or
->      "marvell,armada385" depending on the variant of the SoC being used.
+    Oh, and the wildcards are a no-no in the "compatible" prop.
 
 WBR, Sergei
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
