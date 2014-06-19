@@ -1,36 +1,56 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Device-tree and Marvell vendor prefix
-Date: Thu, 19 Jun 2014 21:22:17 +0200
-Message-ID: <8738f0so0m.fsf@free.fr>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] of: mdio: fixup of_phy_register_fixed_link parsing of
+ new bindings
+Date: Thu, 19 Jun 2014 23:32:32 +0400
+Message-ID: <53A33AD0.2060200@cogentembedded.com>
+References: <1403199334-13212-1-git-send-email-rretanubun.work@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1403199334-13212-1-git-send-email-rretanubun.work@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Richard Retanubun <rretanubun.work@gmail.com>, davem@davemloft.net
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
-Hi Haojian, Grant and Rob,
+On 06/19/2014 09:35 PM, Richard Retanubun wrote:
 
-I'm submitting various patches for Marvell PXA27x architecture to support
-device-tree.
+> Fixes commit 3be2a49e5c08 ("of: provide a binding for fixed link PHYs")
 
-In a review from Guennadi, he made me a comment that the official prefix for
-Marvell is "marvell" (according to
-Documentation/devicetree/bindings/vendor-prefixes.txt).
+> Fix the parsing of the new fixed link dts bindings for duplex,
+> pause, and asym_pause by using the correct device node pointer.
 
-As a matter of fact, there are 2 prefixes used :
- - "marvell" : 264 uses in *.c files
- - "mrvl" : 64 uses in *.c files
+> Signed-off-by: Richard Retanubun <rretanubun.work@gmail.com>
+> ---
+>   drivers/of/of_mdio.c | 8 +++++---
+>   1 file changed, 5 insertions(+), 3 deletions(-)
 
-So which one should I use ?
+> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+> index 7700ddc..c389e7b 100644
+> --- a/drivers/of/of_mdio.c
+> +++ b/drivers/of/of_mdio.c
+> @@ -290,11 +290,13 @@ int of_phy_register_fixed_link(struct device_node *np)
+>   	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+>   	if (fixed_link_node) {
+>   		status.link = 1;
+> -		status.duplex = of_property_read_bool(np, "full-duplex");
+> +		status.duplex = of_property_read_bool(fixed_link_node,
+> +					"full-duplex");
 
-Cheers.
+    The continuation line should start under 'fixed_link_node', according to 
+the networking coding style.
 
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>   		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
+>   			return -EINVAL;
+> -		status.pause = of_property_read_bool(np, "pause");
+> -		status.asym_pause = of_property_read_bool(np, "asym-pause");
+> +		status.pause = of_property_read_bool(fixed_link_node, "pause");
+> +		status.asym_pause = of_property_read_bool(fixed_link_node,
+> +						"asym-pause");
+
+    Same here...
+
+WBR, Sergei
