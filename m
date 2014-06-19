@@ -1,71 +1,124 @@
-From: zhangfei <zhangfei.gao@linaro.org>
-Subject: Re: [PATCH RFC 1/2] libahci_platform: add ahci_platform_get_of_property
-Date: Thu, 19 Jun 2014 10:23:35 +0800
-Message-ID: <53A249A7.2030807@linaro.org>
-References: <xuwei5@hisilicon.com, kefeng.wang@linaro.org,>	<1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org>	<1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org> <20140618093725.0f381633@ipc1.ka-ro>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 2/2] arm: dts: add support for AM437x StarterKit
+Date: Wed, 18 Jun 2014 21:26:01 -0500
+Message-ID: <53A24A39.4080100@ti.com>
+References: <1403106200-777-1-git-send-email-balbi@ti.com> <1403106200-777-3-git-send-email-balbi@ti.com> <53A1BADD.7050309@ti.com> <20140618193113.GC4570@saruman.home> <53A20A7D.3060508@ti.com> <20140618231923.GA9855@saruman.home>
+Reply-To: nm@ti.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140618093725.0f381633@ipc1.ka-ro>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?UTF-8?B?TG90aGFyIFdhw59tYW5u?= <LW@KARO-electronics.de>
-Cc: tj@kernel.org, hdegoede@redhat.com, arnd@arndb.de, mark.rutland@arm.com, linux-ide@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140618231923.GA9855@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Etheridge <detheridge@ti.com>, r.sricharan@ti.com, robh+dt@kernel.org, Josh Elliot <jelliott@ti.com>, galak@codeaurora.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 06/18/2014 03:37 PM, Lothar Wa=C3=9Fmann wrote:
-> Hi,
->
-> Zhangfei Gao wrote:
->> Instead of setting hflags in different files,
->> ahci_platform_get_of_property set hpriv->flags when ahci_platform_in=
-it_host
->> according to property in dts.
+On 06/18/2014 06:19 PM, Felipe Balbi wrote:
+[...]
+>>>>> Add support for TI's AM437x StarterKit Evaluation
+>>>>> Module.
+>>>>
+>>>> is there a link for this platform?
+>>>
+>>> internal only
 >>
->> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
->> ---
->>   .../devicetree/bindings/ata/ahci-platform.txt      |    9 +++++
->>   drivers/ata/libahci_platform.c                     |   39 ++++++++=
-++++++++++++
->>   2 files changed, 48 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt=
- b/Documentation/devicetree/bindings/ata/ahci-platform.txt
->> index c96d8dcf98fd..c0b9f6e76ba4 100644
->> --- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
->> +++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
->> @@ -26,6 +26,15 @@ Optional properties:
->>   - clocks            : must contain the sata, sata_ref and ahb cloc=
-ks
->>   - clock-names       : must contain "ahb" for the ahb clock
->>
->> +- no-ncq: when present, controller can't do NCQ, turning off CAP_NC=
-Q
->> +- 32bit-only: when present, controller can't do 64bit DMA, forcing =
-32bit
->> +- no-msi: when present, no PCI MSI
->> +- no-pmp: when present, controller can't do PMP, turning off CAP_PM=
-P
->> +- yes-ncq: when present,controller can do NCQ, turning on CAP_NCQ
->> +- no-suspend: when present, controller can't do suspend
->> +- yes-fbs: when present, controller can do FBS, turning on CAP_FBS
->> +- no-fbs: when present, controller can't do FBS, turning off CAP_FB=
-S
->> +
-> 'yes-...' sounds a bit silly to me.
-> What about 'force-...'?
+>> but will eventually be sold externally? I assume this is not an TI
+>
+> probably, but there's nothing public yet.
+>
+>> internal only board.
+>
+> correct assumption for all I know.
 
-Yes, good idea, thanks for the suggestion.
+Yikes.. ok.. I'd let Tony et.al make the call on this, I guess.
 
-> That's also what the comment to the flag definitions in
-> drivers/ata/ahci.h says:
-> |AHCI_HFLAG_YES_NCQ              =3D (1 << 9), /* force NCQ cap on */
-> |AHCI_HFLAG_YES_FBS              =3D (1 << 14), /* force FBS cap on *=
-/
+[...]
+>>>>> +	edt-ft5306@38 {
+>>>>> +		status = "okay";
+>>>>> +		compatible = "edt,edt-ft5306", "edt,edt-ft5x06";
+>>>>> +		pinctrl-names = "default";
+>>>>> +		pinctrl-0 = <&edt_ft5306_ts_pins>;
+>>>>> +		reg = <0x38>;
+>>>>> +		interrupt-parent = <&gpio0>;
+>>>>> +		interrupts = <31 0>;
+>>>>> +
+>>>>> +		wake-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>>>>
+>>>> why wake-gpios? we should be using pinctrl with interrupt-extended to
+>>>> do wakeup sequence, no?
+>>>
+>>> sure, can you patch the edt driver ? I'll fix the DTS after that gets
+>>> merged
+>>
+>> If you really want to go down that road, so you could probably help
+>> review the pinctrl patches I posted to enable pinctrl wakeup[1]?
+>>
+>> Come on, as of today, there is no ability to suspend AM437x without
+>> doing [1], let alone talk about wakeup gpio vs interrupt-extended. and
+>> do we really want to wakeup from suspend when touch screen is touched?
+>>
+>> Do you expect wake-gpio to work even after doing interrupt based
+>> solution? I am no edt driver expert... maybe you can help me here.
 >
+> you missed the point entirely. This pin is not used for the touchscreen
+> to wake SoC up, it's the other way around, see how the pin is an
+> *output*. Pull it low and the touchscreen won't generate IRQs, won't
+> respond to i2c accesses, etc. Pull it high, and the thing wakes up.
+
+Aaah.. My apologies.. I was confused. Thanks for clarifying.
+
+[...]
+>>>>> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
+>>>>> +};
+>>>>> +
+>>>>> +&usb2_phy1 {
+>>>>> +	status = "okay";
+>>>>> +};
+>>>>> +
+>>>>> +&usb1 {
+>>>>> +	dr_mode = "peripheral";
+>>>>> +	status = "okay";
+>>>>> +};
+>>>>> +
+>>>>> +&usb2_phy2 {
+>>>>> +	status = "okay";
+>>>>> +};
+>>>>> +
+>>>>> +&usb2 {
+>>>>> +	dr_mode = "host";
+>>>>> +	status = "okay";
+>>>>> +};
+>>>> none of the above need pinctrl? no regulator supplies?
+>>>
+>>> pins in default states, drivers don't use regulators.
+>>
+>> USB works without a supply? even a fixed voltage supply? that is
+>> weird.
 >
-> Lothar Wa=C3=9Fmann
+> take a look at the minicom output I posted if you don't believe. Well,
+> to be exact, tps63010 [1] is the one which generates the regulated V5_0D
+> which is used as VBUS_USB. The enable pin in that device is tied to the
+> 3v3 rail (dcdc4 regulator in the PMIC as most everything else) but
+> there's no way (otherwise) to control that thing. There's no control
+> bus, no way to write a driver.
 >
+> Since the board will anyways turn off if you disable the 3v3 rail, it's
+> pretty much pointless to figure out a hack just to add this to DTS.
+>
+> [1] http://www.ti.com/product/TPS63010
+
+I am sure to trust you on the test log :) ->  but then from dts 
+description perspective, it is good if we describe the supplies, even as 
+a always on fixed-regulator. We had instances like 2430SDP ethernet 
+where... umm... we originally missed describing ethernet supply and 
+boom, one fine morning, no more nfs filesystem - I mean, it is a one off 
+scenario there, but describing regulators helps us atleast understand 
+the power tree of the board a little better.
+
+Again, no strong opinions on my side, it is a good thing to do is all I 
+feel about it.
+
+--
+Regards,
+Nishanth Menon
