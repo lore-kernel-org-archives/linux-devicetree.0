@@ -1,281 +1,203 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v4 5/6] drivers: cpuidle: CPU idle ARM64 driver
-Date: Wed, 18 Jun 2014 22:02:18 -0500
-Message-ID: <CAL_JsqK_sRuns3sTnLXEfb9wC02q13wtDm4ZgXR8isWtQCxJ0A@mail.gmail.com>
-References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com> <1402503520-8611-6-git-send-email-lorenzo.pieralisi@arm.com>
+From: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH v2 2/2] arm: dts: add support for AM437x StarterKit
+Date: Wed, 18 Jun 2014 22:05:20 -0500
+Message-ID: <20140619030520.GA13805@saruman.home>
+References: <1403106200-777-1-git-send-email-balbi@ti.com>
+ <1403106200-777-3-git-send-email-balbi@ti.com>
+ <53A1BADD.7050309@ti.com>
+ <20140618193113.GC4570@saruman.home>
+ <53A20A7D.3060508@ti.com>
+ <20140618231923.GA9855@saruman.home>
+ <53A24A39.4080100@ti.com>
+Reply-To: <balbi-l0cyMroinI0@public.gmane.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1402503520-8611-6-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>M
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Kj7319i9nmIyA2yE"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53A24A39.4080100-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: balbi-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>, r.sricharan-l0cyMroinI0@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Josh Elliot <jelliott-l0cyMroinI0@public.gmane.org>, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 11, 2014 at 11:18 AM, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> This patch implements a generic CPU idle driver for ARM64 machines.
+--Kj7319i9nmIyA2yE
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I fail to see anything arm64 specific here. The idle states binding is
-for both arm32 and arm64, right? If not, please make it for both.
-Otherwise, I'm okay with the binding for the most part. I need to take
-another pass at it though.
+Hi,
 
-Rob
+On Wed, Jun 18, 2014 at 09:26:01PM -0500, Nishanth Menon wrote:
+> On 06/18/2014 06:19 PM, Felipe Balbi wrote:
+> [...]
+> >>>>>Add support for TI's AM437x StarterKit Evaluation
+> >>>>>Module.
+> >>>>
+> >>>>is there a link for this platform?
+> >>>
+> >>>internal only
+> >>
+> >>but will eventually be sold externally? I assume this is not an TI
+> >
+> >probably, but there's nothing public yet.
+> >
+> >>internal only board.
+> >
+> >correct assumption for all I know.
+>=20
+> Yikes.. ok.. I'd let Tony et.al make the call on this, I guess.
 
-> It relies on the DT idle states infrastructure to initialize idle
-> states count and respective parameters. Current code assumes the driver
-> is managing idle states on all possible CPUs but can be easily
-> generalized to support heterogenous systems and build cpumasks at
-> runtime using MIDRs or DT cpu nodes compatible properties.
->
-> Suspend back-ends (eg PSCI) must register a suspend initializer with
-> the CPU idle driver so that the suspend backend call can be detected,
-> and the driver code can call the back-end infrastructure to complete the
-> suspend backend initialization.
->
-> Idle state index 0 is always initialized as a simple wfi state, ie always
-> considered present and functional on all ARM64 platforms.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
->  drivers/cpuidle/Kconfig         |   5 ++
->  drivers/cpuidle/Kconfig.arm64   |  13 ++++
->  drivers/cpuidle/Makefile        |   4 +
->  drivers/cpuidle/cpuidle-arm64.c | 168 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 190 insertions(+)
->  create mode 100644 drivers/cpuidle/Kconfig.arm64
->  create mode 100644 drivers/cpuidle/cpuidle-arm64.c
->
-> diff --git a/drivers/cpuidle/Kconfig b/drivers/cpuidle/Kconfig
-> index 760ce20..360c086 100644
-> --- a/drivers/cpuidle/Kconfig
-> +++ b/drivers/cpuidle/Kconfig
-> @@ -44,6 +44,11 @@ depends on ARM
->  source "drivers/cpuidle/Kconfig.arm"
->  endmenu
->
-> +menu "ARM64 CPU Idle Drivers"
-> +depends on ARM64
-> +source "drivers/cpuidle/Kconfig.arm64"
-> +endmenu
-> +
->  menu "MIPS CPU Idle Drivers"
->  depends on MIPS
->  source "drivers/cpuidle/Kconfig.mips"
-> diff --git a/drivers/cpuidle/Kconfig.arm64 b/drivers/cpuidle/Kconfig.arm64
-> new file mode 100644
-> index 0000000..b83612c
-> --- /dev/null
-> +++ b/drivers/cpuidle/Kconfig.arm64
-> @@ -0,0 +1,13 @@
-> +#
-> +# ARM64 CPU Idle drivers
-> +#
-> +
-> +config ARM64_CPUIDLE
-> +       bool "Generic ARM64 CPU idle Driver"
-> +       select OF_IDLE_STATES
-> +       help
-> +         Select this to enable generic cpuidle driver for ARM v8.
-> +         It provides a generic idle driver whose idle states are configured
-> +         at run-time through DT nodes. The CPUidle suspend backend is
-> +         initialized by the device tree parsing code on matching the entry
-> +         method to the respective CPU operations.
-> diff --git a/drivers/cpuidle/Makefile b/drivers/cpuidle/Makefile
-> index d5ebf4b..e496242 100644
-> --- a/drivers/cpuidle/Makefile
-> +++ b/drivers/cpuidle/Makefile
-> @@ -23,6 +23,10 @@ obj-$(CONFIG_ARM_EXYNOS_CPUIDLE)        += cpuidle-exynos.o
->  obj-$(CONFIG_MIPS_CPS_CPUIDLE)         += cpuidle-cps.o
->
->  ###############################################################################
-> +# ARM64 drivers
-> +obj-$(CONFIG_ARM64_CPUIDLE)            += cpuidle-arm64.o
-> +
-> +###############################################################################
->  # POWERPC drivers
->  obj-$(CONFIG_PSERIES_CPUIDLE)          += cpuidle-pseries.o
->  obj-$(CONFIG_POWERNV_CPUIDLE)          += cpuidle-powernv.o
-> diff --git a/drivers/cpuidle/cpuidle-arm64.c b/drivers/cpuidle/cpuidle-arm64.c
-> new file mode 100644
-> index 0000000..4c932f8
-> --- /dev/null
-> +++ b/drivers/cpuidle/cpuidle-arm64.c
-> @@ -0,0 +1,168 @@
-> +/*
-> + * ARM64 generic CPU idle driver.
-> + *
-> + * Copyright (C) 2014 ARM Ltd.
-> + * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
-> +
-> +#define pr_fmt(fmt) "CPUidle arm64: " fmt
-> +
-> +#include <linux/cpuidle.h>
-> +#include <linux/cpumask.h>
-> +#include <linux/cpu_pm.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +
-> +#include <asm/psci.h>
-> +#include <asm/suspend.h>
-> +
-> +#include "of_idle_states.h"
-> +
-> +typedef int (*suspend_init_fn)(struct cpuidle_driver *,
-> +                              struct device_node *[]);
-> +
-> +struct cpu_suspend_ops {
-> +       const char *id;
-> +       suspend_init_fn init_fn;
-> +};
-> +
-> +static const struct cpu_suspend_ops suspend_operations[] __initconst = {
-> +       {"arm,psci", psci_dt_register_idle_states},
-> +       {}
-> +};
-> +
-> +static __init const struct cpu_suspend_ops *get_suspend_ops(const char *str)
-> +{
-> +       int i;
-> +
-> +       if (!str)
-> +               return NULL;
-> +
-> +       for (i = 0; suspend_operations[i].id; i++)
-> +               if (!strcmp(suspend_operations[i].id, str))
-> +                       return &suspend_operations[i];
-> +
-> +       return NULL;
-> +}
-> +
-> +/*
-> + * arm_enter_idle_state - Programs CPU to enter the specified state
-> + *
-> + * dev: cpuidle device
-> + * drv: cpuidle driver
-> + * idx: state index
-> + *
-> + * Called from the CPUidle framework to program the device to the
-> + * specified target state selected by the governor.
-> + */
-> +static int arm_enter_idle_state(struct cpuidle_device *dev,
-> +                               struct cpuidle_driver *drv, int idx)
-> +{
-> +       int ret;
-> +
-> +       if (!idx) {
-> +               cpu_do_idle();
-> +               return idx;
-> +       }
-> +
-> +       cpu_pm_enter();
-> +       /*
-> +        * Pass idle state index to cpu_suspend which in turn will call
-> +        * the CPU ops suspend protocol with idle index as a parameter.
-> +        *
-> +        * Some states would not require context to be saved and flushed
-> +        * to DRAM, so calling cpu_suspend would not be stricly necessary.
-> +        * When power domains specifications for ARM CPUs are finalized then
-> +        * this code can be optimized to prevent saving registers if not
-> +        * needed.
-> +        */
-> +       ret = cpu_suspend(idx);
-> +
-> +       cpu_pm_exit();
-> +
-> +       return ret ? -1 : idx;
-> +}
-> +
-> +struct cpuidle_driver arm64_idle_driver = {
-> +       .name = "arm64_idle",
-> +       .owner = THIS_MODULE,
-> +};
-> +
-> +static struct device_node *state_nodes[CPUIDLE_STATE_MAX] __initdata;
-> +
-> +/*
-> + * arm64_idle_init
-> + *
-> + * Registers the arm64 specific cpuidle driver with the cpuidle
-> + * framework. It relies on core code to parse the idle states
-> + * and initialize them using driver data structures accordingly.
-> + */
-> +static int __init arm64_idle_init(void)
-> +{
-> +       int i, ret;
-> +       const char *entry_method;
-> +       struct device_node *idle_states_node;
-> +       const struct cpu_suspend_ops *suspend_init;
-> +       struct cpuidle_driver *drv = &arm64_idle_driver;
-> +
-> +       idle_states_node = of_find_node_by_path("/cpus/idle-states");
-> +       if (!idle_states_node)
-> +               return -ENOENT;
-> +
-> +       if (of_property_read_string(idle_states_node, "entry-method",
-> +                                   &entry_method)) {
-> +               pr_warn(" * %s missing entry-method property\n",
-> +                           idle_states_node->full_name);
-> +               of_node_put(idle_states_node);
-> +               ret = -EOPNOTSUPP;
-> +               goto put_node;
-> +       }
-> +
-> +       suspend_init = get_suspend_ops(entry_method);
-> +       if (!suspend_init) {
-> +               pr_warn("Missing suspend initializer\n");
-> +               ret = -EOPNOTSUPP;
-> +               goto put_node;
-> +       }
-> +
-> +       /*
-> +        * State at index 0 is standby wfi and considered standard
-> +        * on all ARM platforms. If in some platforms simple wfi
-> +        * can't be used as "state 0", DT bindings must be implemented
-> +        * to work around this issue and allow installing a special
-> +        * handler for idle state index 0.
-> +        */
-> +       drv->states[0].exit_latency = 1;
-> +       drv->states[0].target_residency = 1;
-> +       drv->states[0].flags = CPUIDLE_FLAG_TIME_VALID;
-> +       strncpy(drv->states[0].name, "ARM WFI", CPUIDLE_NAME_LEN);
-> +       strncpy(drv->states[0].desc, "ARM WFI", CPUIDLE_DESC_LEN);
-> +
-> +       drv->cpumask = (struct cpumask *) cpu_possible_mask;
-> +       /*
-> +        * Start at index 1, request idle state nodes to be filled
-> +        */
-> +       ret = of_init_idle_driver(drv, state_nodes, 1, true);
-> +       if (ret)
-> +               goto put_node;
-> +
-> +       if (suspend_init->init_fn(drv, state_nodes)) {
-> +               ret = -EOPNOTSUPP;
-> +               goto put_node;
-> +       }
-> +
-> +       for (i = 0; i < drv->state_count; i++)
-> +               drv->states[i].enter = arm_enter_idle_state;
-> +
-> +       ret = cpuidle_register(drv, NULL);
-> +
-> +put_node:
-> +       of_node_put(idle_states_node);
-> +       return ret;
-> +}
-> +device_initcall(arm64_idle_init);
-> --
-> 1.8.4
->
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+would we really block a DTS just because there's no public wiki page
+available (yet) ?
+
+Sounds a bit extreme to me.
+
+> >>>>>+	edt-ft5306@38 {
+> >>>>>+		status =3D "okay";
+> >>>>>+		compatible =3D "edt,edt-ft5306", "edt,edt-ft5x06";
+> >>>>>+		pinctrl-names =3D "default";
+> >>>>>+		pinctrl-0 =3D <&edt_ft5306_ts_pins>;
+> >>>>>+		reg =3D <0x38>;
+> >>>>>+		interrupt-parent =3D <&gpio0>;
+> >>>>>+		interrupts =3D <31 0>;
+> >>>>>+
+> >>>>>+		wake-gpios =3D <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> >>>>
+> >>>>why wake-gpios? we should be using pinctrl with interrupt-extended to
+> >>>>do wakeup sequence, no?
+> >>>
+> >>>sure, can you patch the edt driver ? I'll fix the DTS after that gets
+> >>>merged
+> >>
+> >>If you really want to go down that road, so you could probably help
+> >>review the pinctrl patches I posted to enable pinctrl wakeup[1]?
+> >>
+> >>Come on, as of today, there is no ability to suspend AM437x without
+> >>doing [1], let alone talk about wakeup gpio vs interrupt-extended. and
+> >>do we really want to wakeup from suspend when touch screen is touched?
+> >>
+> >>Do you expect wake-gpio to work even after doing interrupt based
+> >>solution? I am no edt driver expert... maybe you can help me here.
+> >
+> >you missed the point entirely. This pin is not used for the touchscreen
+> >to wake SoC up, it's the other way around, see how the pin is an
+> >*output*. Pull it low and the touchscreen won't generate IRQs, won't
+> >respond to i2c accesses, etc. Pull it high, and the thing wakes up.
+>=20
+> Aaah.. My apologies.. I was confused. Thanks for clarifying.
+
+np
+
+> [...]
+> >>>>>+	cd-gpios =3D <&gpio0 6 GPIO_ACTIVE_HIGH>;
+> >>>>>+};
+> >>>>>+
+> >>>>>+&usb2_phy1 {
+> >>>>>+	status =3D "okay";
+> >>>>>+};
+> >>>>>+
+> >>>>>+&usb1 {
+> >>>>>+	dr_mode =3D "peripheral";
+> >>>>>+	status =3D "okay";
+> >>>>>+};
+> >>>>>+
+> >>>>>+&usb2_phy2 {
+> >>>>>+	status =3D "okay";
+> >>>>>+};
+> >>>>>+
+> >>>>>+&usb2 {
+> >>>>>+	dr_mode =3D "host";
+> >>>>>+	status =3D "okay";
+> >>>>>+};
+> >>>>none of the above need pinctrl? no regulator supplies?
+> >>>
+> >>>pins in default states, drivers don't use regulators.
+> >>
+> >>USB works without a supply? even a fixed voltage supply? that is
+> >>weird.
+> >
+> >take a look at the minicom output I posted if you don't believe. Well,
+> >to be exact, tps63010 [1] is the one which generates the regulated V5_0D
+> >which is used as VBUS_USB. The enable pin in that device is tied to the
+> >3v3 rail (dcdc4 regulator in the PMIC as most everything else) but
+> >there's no way (otherwise) to control that thing. There's no control
+> >bus, no way to write a driver.
+> >
+> >Since the board will anyways turn off if you disable the 3v3 rail, it's
+> >pretty much pointless to figure out a hack just to add this to DTS.
+> >
+> >[1] http://www.ti.com/product/TPS63010
+>=20
+> I am sure to trust you on the test log :) ->  but then from dts descripti=
+on
+> perspective, it is good if we describe the supplies, even as a always on
+> fixed-regulator. We had instances like 2430SDP ethernet where... umm... we
+> originally missed describing ethernet supply and boom, one fine morning, =
+no
+> more nfs filesystem - I mean, it is a one off scenario there, but describ=
+ing
+> regulators helps us atleast understand the power tree of the board a litt=
+le
+> better.
+>=20
+> Again, no strong opinions on my side, it is a good thing to do is all
+> I feel about it.
+
+you mean something like:
+
+	V5_0D: fixedregulator@0 {
+		compatible =3D "regulator-fixed";
+		regulator-name =3D "V5_0D";
+		regulator-min-microvolt =3D <5000000>;
+		regulator-max-microvolt =3D <5000000>;
+		regulator-boot-on;
+		regulator-always-on;
+		vin-supply =3D <&dcdc4>;
+	};
+
+	VBUS_USB: fixedregulator@1 {
+		compatible =3D "regulator-fixed";
+		regulator-name =3D "VBUS_USB";
+		regulator-min-microvolt =3D <5000000>;
+		regulator-max-microvolt =3D <5000000>;
+		regulator-boot-on;
+		regulator-always-on;
+		vin-supply =3D <&V5_0D>;
+	};
+
+I can add that, but note that it's *solely* to make sysfs look nice. And
+if that's the case, most likely *every* DTS file in tree today as
+incomplete. OTOH, I really consider this to be hugely unnecessary
+because of the fact that board will turn off if 3v3 (dcdc4) is disabled.
+
+--=20
+balbi
+
+--Kj7319i9nmIyA2yE
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTolNvAAoJEIaOsuA1yqREVG4P/1gK7gnUW7jimJzUc0fmGabk
+e80I8zSYsAl+JoUARINpqeKSg/6X5Clg7pQttaIqUOxGfBL7L/LBL9UbUu34XJto
+pK1feddh98mTEPlCDsMELV6W2OSg9mcksX0g0MmerHeUx/biRUQBPkJzCGXU91Z8
+Td/wH/6in9hY47o+WJx9A2dCP+am/ibr9QsUsx7Rf5vFuWyMdZgM9PGtTjEjFnZN
+POc1IMUzX61cMGV2ttq8cF3R3vYrS9qq2QPVPO6prBXI7QQYhcbwEMg1FggtB037
+vK4H3ER9IoAvLg8DYppQs/aZ3HbwcCOUbDyu50VFpvf3rt0GRcn0wkhjq8gexu0J
+ErootrLTJrBzqjMYDg263bIkUuWEv0m4QD4dwNq3S7s4Ob0OtYw04kUZMhzwQ9YI
+reJU71ocQkXuvOoyaqwyQ6LByO+CfHEj9Eu4Vb2yElIuTyjMCjrJPR6mMRax+hwg
+HdBBhIkJ5XsE0wtxeCxeFGCEhchdf2BjQpOPMGuViVdHMz6dHm67T8c1+0bdi0/2
+afMHN85sAXwEnLx9KYeKhhRsZY45cgk5/qriH2LE0c1wKX7kCXJqC8cY40r/KGsV
+pnPW+K3ZCaKyJCuXZnmZx9tgwVq7RDmeKnZLNqZVDvfBpbMf73D28nopfYDA2/Xk
+MOVAzdSvbZ12DVdL897b
+=nDt4
+-----END PGP SIGNATURE-----
+
+--Kj7319i9nmIyA2yE--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
