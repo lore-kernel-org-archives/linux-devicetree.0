@@ -1,63 +1,21 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH v2] ARM: mvebu: Fix missing binding documentation for Armada 38x
-Date: Thu, 19 Jun 2014 18:40:43 +0200
-Message-ID: <1403196043-6317-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCHv2 1/2] ARM: tegra: tamonten: add the base board regulators
+Date: Thu, 19 Jun 2014 11:10:54 -0600
+Message-ID: <53A3199E.6030409@wwwdotorg.org>
+References: <1403184350-25403-1-git-send-email-alban.bedel@avionic-design.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403184350-25403-1-git-send-email-alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Alban Bedel <alban.bedel-RM9K5IK7kjKj5M59NBduVrNAH6kLmebB@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-For the Armada 380 and Armada 385 SoCs, the common bindings for those
-2 SoCs, was forgotten. This patch add the documentation for the
-marvell,aramda38x property.
+On 06/19/2014 07:25 AM, Alban Bedel wrote:
+> Currently the Tamonten DTS define a fixed regulator for the 5V supply.
+> However this regulator is in fact on the base board. Fix this by
+> properly defining the regulators found on the base boards.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
---
-Hi,
-
-This fix should be merged in 3.16. For 3.15 I am not sure as it is not
-a regression.
-
-Changelog:
-v1->v2
-
-- Reformulate to make clear that we will need marvell,armada38x _and_ a
-SoC specific string. For consistency I duplicated what we have done in
-armada-370-xp.txt
-
-
-Thanks,
-Gregory
-
-
- Documentation/devicetree/bindings/arm/armada-38x.txt | 17 +++++++++++++++--
- 1 file changed, 15 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
-index 11f2330a6554..fa08760046df 100644
---- a/Documentation/devicetree/bindings/arm/armada-38x.txt
-+++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
-@@ -6,5 +6,18 @@ following property:
- 
- Required root node property:
- 
-- - compatible: must contain either "marvell,armada380" or
--   "marvell,armada385" depending on the variant of the SoC being used.
-+compatible: must contain "marvell,armada38x"
-+
-+In addition, boards using the Marvell Armada 380 SoC shall have the
-+following property:
-+
-+Required root node property:
-+
-+compatible: must contain "marvell,armada380"
-+
-+In addition, boards using the Marvell Armada 385 SoC shall have the
-+following property:
-+
-+Required root node property:
-+
-+compatible: must contain "marvell,armada385"
--- 
-1.8.1.2
+I've applied the series to Tegra's for-3.17/dt branch.
