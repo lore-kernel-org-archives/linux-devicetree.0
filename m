@@ -1,26 +1,24 @@
 From: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Subject: Re: [PATCH 2/2] media: mt9m111: add device-tree documentation
-Date: Thu, 19 Jun 2014 09:38:14 +0200 (CEST)
-Message-ID: <Pine.LNX.4.64.1406190937290.22703@axis700.grange>
-References: <1402863452-30365-1-git-send-email-robert.jarzmik@free.fr>
- <1402863452-30365-2-git-send-email-robert.jarzmik@free.fr>
+Subject: Re: [PATCH 1/2] media: soc_camera: pxa_camera documentation device-tree
+ support
+Date: Thu, 19 Jun 2014 09:39:22 +0200 (CEST)
+Message-ID: <Pine.LNX.4.64.1406190938280.22703@axis700.grange>
+References: <1402863436-30311-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
 Content-Type: TEXT/PLAIN; charset=US-ASCII
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <1402863452-30365-2-git-send-email-robert.jarzmik@free.fr>
+In-Reply-To: <1402863436-30311-1-git-send-email-robert.jarzmik@free.fr>
 Sender: linux-media-owner@vger.kernel.org
 To: Robert Jarzmik <robert.jarzmik@free.fr>
 Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Robert,
-
 On Sun, 15 Jun 2014, Robert Jarzmik wrote:
 
-> Add documentation for the Micron mt9m111 image sensor.
+> Add documentation for pxa_camera host interface.
 
-A nitpick: this isn't documentation for the sensor:) This is driver DT 
-bindings' documentation.
+As mentioned in another comment: this is driver DT bindings description, 
+not interface documentation.
 
 Thanks
 Guennadi
@@ -28,41 +26,53 @@ Guennadi
 > 
 > Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 > ---
->  .../devicetree/bindings/media/i2c/mt9m111.txt      | 28 ++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+>  .../devicetree/bindings/media/pxa-camera.txt       | 40 ++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/pxa-camera.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+> diff --git a/Documentation/devicetree/bindings/media/pxa-camera.txt b/Documentation/devicetree/bindings/media/pxa-camera.txt
 > new file mode 100644
-> index 0000000..ed5a334
+> index 0000000..568b63b
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
-> @@ -0,0 +1,28 @@
-> +Micron 1.3Mp CMOS Digital Image Sensor
+> +++ b/Documentation/devicetree/bindings/media/pxa-camera.txt
+> @@ -0,0 +1,40 @@
+> +Marvell PXA camera host interface
 > +
-> +The Micron MT9M111 is a CMOS active pixel digital image sensor with an active
-> +array size of 1280H x 1024V. It is programmable through a simple two-wire serial
-> +interface.
+> +Required properties:
+> + - compatible: Should be "mrvl,pxa_camera"
+> + - reg: register base and size
+> + - interrupts: the interrupt number
+> + - any required generic properties defined in video-interfaces.txt
 > +
-> +Required Properties:
-> +- compatible: value should be "micron,mt9m111"
-> +
-> +For further reading on port node refer to
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+> +Optional properties:
+> + - mclk_10khz: host interface is driving MCLK, and MCLK rate is mclk_10khz *
+> +   10000 Hz.
 > +
 > +Example:
 > +
-> +	i2c_master {
-> +		mt9m111@5d {
-> +			compatible = "micron,mt9m111";
-> +			reg = <0x5d>;
+> +	pxa_camera: pxa_camera@50000000 {
+> +		compatible = "mrvl,pxa_camera";
+> +		reg = <0x50000000 0x1000>;
+> +		interrupts = <33>;
 > +
-> +			remote = <&pxa_camera>;
-> +			port {
-> +				mt9m111_1: endpoint {
-> +					bus-width = <8>;
-> +					remote-endpoint = <&pxa_camera>;
-> +				};
+> +		clocks = <&pxa2xx_clks 24>;
+> +		clock-names = "camera";
+> +		status = "okay";
+> +
+> +		mclk_10khz = <5000>;
+> +
+> +		port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			/* Parallel bus endpoint */
+> +			qci: endpoint@0 {
+> +				reg = <0>;		/* Local endpoint # */
+> +				remote-endpoint = <&mt9m111_1>;
+> +				bus-width = <8>;	/* Used data lines */
+> +				hsync-active = <0>;	/* Active low */
+> +				vsync-active = <0>;	/* Active low */
+> +				pclk-sample = <1>;	/* Rising */
 > +			};
 > +		};
 > +	};
