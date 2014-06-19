@@ -1,58 +1,113 @@
-From: Iyappan Subramanian <isubramanian@apm.com>
-Subject: Re: [PATCH v6 4/4] drivers: net: Add APM X-Gene SoC ethernet driver support.
-Date: Wed, 18 Jun 2014 16:46:11 -0700
-Message-ID: <CAKh23FmnZqZkDaGYPfnKRrvCYQ4_6W_RRKbqEbc4nbD6jqQaLA@mail.gmail.com>
-References: <1402964326-11147-5-git-send-email-isubramanian@apm.com>
-	<20140616.214247.1154200670003936158.davem@davemloft.net>
-	<CAKh23F=2undAW=nWibOreAM8DJiQKpLx=OboCX=fNZE+OU=AbA@mail.gmail.com>
-	<20140617.132024.1213369771856463527.davem@davemloft.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140617.132024.1213369771856463527.davem@davemloft.net>
-Sender: netdev-owner@vger.kernel.org
-To: David Miller <davem@davemloft.net>
-Cc: netdev <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "jcm@redhat.com" <jcm@redhat.com>, patches <patches@apm.com>, Ravi Patel <rapatel@apm.com>, Keyur Chudgar <kchudgar@apm.com>
+From: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH v7 0/4] net: Add APM X-Gene SoC Ethernet driver support
+Date: Wed, 18 Jun 2014 18:17:10 -0700
+Message-ID: <1403140634-27104-1-git-send-email-isubramanian@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 17, 2014 at 1:20 PM, David Miller <davem@davemloft.net> wrote:
-> From: Iyappan Subramanian <isubramanian@apm.com>
-> Date: Tue, 17 Jun 2014 12:21:08 -0700
->
->> On Mon, Jun 16, 2014 at 9:42 PM, David Miller <davem@davemloft.net> wrote:
->>> From: Iyappan Subramanian <isubramanian@apm.com>
->>> Date: Mon, 16 Jun 2014 17:18:46 -0700
->>>
->>>> +static netdev_tx_t xgene_enet_start_xmit(struct sk_buff *skb,
->>>> +                                      struct net_device *ndev)
->>>> +{
->>>> +     struct xgene_enet_pdata *pdata = netdev_priv(ndev);
->>>> +     struct xgene_enet_desc_ring *tx_ring = pdata->tx_ring;
->>>> +     struct xgene_enet_desc_ring *cp_ring = tx_ring->cp_ring;
->>>> +     u32 tx_level, cq_level;
->>>> +
->>>> +     tx_level = xgene_enet_ring_len(tx_ring);
->>>> +     cq_level = xgene_enet_ring_len(cp_ring);
->>>> +     if (unlikely(tx_level > pdata->tx_qcnt_hi ||
->>>> +                  cq_level > pdata->cp_qcnt_hi)) {
->>>> +             netif_stop_queue(ndev);
->>>> +             return NETDEV_TX_BUSY;
->>>> +     }
->>>> +
->>>> +     if (xgene_enet_setup_tx_desc(tx_ring, skb))
->>>> +             return NETDEV_TX_OK;
->>>
->>> If you return NETDEV_TX_OK, it is your responsibility to deal with the
->>> SKB, because you own it.
->>>
->>> In particular, you have to free the packet.
->>
->> skb freeing happens in xgene_enet_tx_completion().
->
-> You're not queueing up the packet when DMA mapping the packet fails,
-> which is the only condition that causes xgene_enet_setup_tx_desc() to
-> return an error, so xgene_enet_tx_completion() will not be called.
->
-> Can you really not see this?
+Adding APM X-Gene SoC Ethernet driver.
 
-I am sorry I missed that.  I will fix this.
+v7: Address comments from v6 review
+* fixed skb memory leak when dma_map_single fails in xmit.
+
+v6: Address comments from v5 review
+* added basic ethtool support
+* added ndo_get_stats64 call back
+* deleted priting Rx error messages
+* renamed set_bits to xgene_set_bits to fix kbuild error (make ARCH=powerpc)
+
+v5: Address comments from v4 review
+* Documentation: Added phy-handle, reg-names and changed mdio part
+* dtb: Added reg-names supplemental property
+* changed platform_get_resource to platform_get_resource_byname
+* added separate tx/rx set_desc/get_desc functions to do raw_write/raw_read
+* removed set_desc/get_desc table lookup logic
+* added error handling logic based on per packet descriptor bits
+* added software managed Rx packet and error counters
+* added busy wait for register read/writes
+* changed mdio_bus->id to avoid conflict
+* fixed mdio_bus leak in case of mdio_config error
+* changed phy reg hard coded value to MII_BMSR
+* changed phy addr hard coded value to phy_device->addr
+* added paranthesis around macro arguments
+* converted helper macros to inline functions
+* changed use of goto's only to common work such as cleanup
+
+v4: Address comments from v3 review
+* MAINTAINERS: changed status to supported
+* Kconfig: made default to no
+* changed to bool data type wherever applicable
+* cleaned up single bit set and masking code
+* removed statistics counters masking
+* removed unnecessary OOM message printing
+* fixed dma_map_single and dma_unmap_single size parameter
+* changed set bits macro body using new set_bits function
+
+v3: Address comments from v2 review
+* cleaned up set_desc and get_desc functions
+* added dtb mdio node and phy-handle subnode
+* renamed dtb phy-mode to phy-connection-type
+* added of_phy_connect call to connec to PHY
+* added empty line after last local variable declaration
+* removed type casting when not required
+* removed inline keyword from source files
+* removed CONFIG_CPU_BIG_ENDIAN ifdef
+
+v2
+* Completely redesigned ethernet driver
+* Added support to work with big endian kernel
+* Renamed dtb phyid entry to phy_addr
+* Changed dtb local-mac-address entry to byte string format
+* Renamed dtb eth8clk entry to menetclk
+
+v1
+* Initial version
+
+Signed-off-by: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>
+---
+
+Iyappan Subramanian (4):
+  MAINTAINERS: Add entry for APM X-Gene SoC ethernet driver
+  Documentation: dts: Add bindings for APM X-Gene SoC ethernet driver
+  dts: Add bindings for APM X-Gene SoC ethernet driver
+  drivers: net: Add APM X-Gene SoC ethernet driver support.
+
+ .../devicetree/bindings/net/apm-xgene-enet.txt     |  72 ++
+ MAINTAINERS                                        |   8 +
+ arch/arm64/boot/dts/apm-mustang.dts                |   4 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  30 +-
+ drivers/net/ethernet/Kconfig                       |   1 +
+ drivers/net/ethernet/Makefile                      |   1 +
+ drivers/net/ethernet/apm/Kconfig                   |   1 +
+ drivers/net/ethernet/apm/Makefile                  |   5 +
+ drivers/net/ethernet/apm/xgene/Kconfig             |   9 +
+ drivers/net/ethernet/apm/xgene/Makefile            |   6 +
+ .../net/ethernet/apm/xgene/xgene_enet_ethtool.c    | 125 +++
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.c     | 848 +++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_hw.h     | 394 +++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.c   | 939 +++++++++++++++++++++
+ drivers/net/ethernet/apm/xgene/xgene_enet_main.h   | 109 +++
+ 15 files changed, 2549 insertions(+), 3 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/apm-xgene-enet.txt
+ create mode 100644 drivers/net/ethernet/apm/Kconfig
+ create mode 100644 drivers/net/ethernet/apm/Makefile
+ create mode 100644 drivers/net/ethernet/apm/xgene/Kconfig
+ create mode 100644 drivers/net/ethernet/apm/xgene/Makefile
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_ethtool.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_hw.h
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.c
+ create mode 100644 drivers/net/ethernet/apm/xgene/xgene_enet_main.h
+
+-- 
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
