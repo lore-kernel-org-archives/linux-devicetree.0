@@ -1,80 +1,218 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v4 3/3] ASoC: fsl: add imx-es8328 machine
- driver
-Date: Thu, 19 Jun 2014 11:39:22 +0100
-Message-ID: <20140619103922.GO5099@sirena.org.uk>
-References: <1403063242-20840-1-git-send-email-xobs@kosagi.com>
- <1403063242-20840-4-git-send-email-xobs@kosagi.com>
- <20140618100233.GE5099@sirena.org.uk>
- <53A1687C.9010705@kosagi.com>
- <20140618103111.GH5099@sirena.org.uk>
- <53A23E1B.3070008@kosagi.com>
+From: Daniel Thompson <daniel.thompson@linaro.org>
+Subject: [PATCH v4 01/13] arm: fiq: Add callbacks to manage FIQ routings
+Date: Thu, 19 Jun 2014 11:38:11 +0100
+Message-ID: <1403174303-25456-2-git-send-email-daniel.thompson@linaro.org>
+References: <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
+ <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ewiTub5oIxhQg78Q"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53A23E1B.3070008-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jason Wessel <jason.wessel@windriver.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Daniel Thompson <daniel.thompson@linaro.org>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, Fabio Estevam <festevam@gmail.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Anton Vorontsov <anton.vorontsov@linaro.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, patches@linaro.org, Kumar Gala <galak@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Currently enable_fiq/disable_fiq use a simple offset to convert an IRQ
+virq into a FIQ virq. This is too inflexible for multi-platform kernels
+and makes runtime error checking impossible.
 
---ewiTub5oIxhQg78Q
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+We solve this by introducing a flexible mapping that allows interrupt
+controllers that support FIQ to register those mappings. This, in turn,
+makes it much possible for drivers in DT kernels to install FIQ handlers
+without knowing anything about the interrupt controller.
 
-On Thu, Jun 19, 2014 at 09:34:19AM +0800, Sean Cross wrote:
-> On 06/18/14 18:31, Mark Brown wrote:
+Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Fabio Estevam <festevam@gmail.com>
+Cc: Nicolas Pitre <nico@linaro.org>
+---
+ arch/arm/include/asm/fiq.h |   7 +++
+ arch/arm/kernel/fiq.c      | 103 ++++++++++++++++++++++++++++++++++++++++++++-
+ 2 files changed, 108 insertions(+), 2 deletions(-)
 
-> > Look at the clock API, this stuff was introduced in the last merge
-> > window if it's there yet at all.
-
-> support is going to be merged, I'd like to try using that code.  Is this
-> the "assigned-clock-parents" patch you're referring to, or is there a
-> patchset that will automatically reparent as necessary?
-
-assigned-clock-parents sounds like it's what I was thinking of.
-
-> machine drivers and codec drivers.  A random sampling of codec drivers
-> doesn't yield any drivers grabbing their own power switches.  Is that an
-
-$ grep regulator_get sound/soc/codecs/*.c | wc -l=20
-19
-$ grep regulator_bulk_get sound/soc/codecs/*.c | wc -l
-32
-
-Please put a bit more effort into trying to understand what you're
-doing, the common patterns, the terminology and so on - people will
-be much more willing to help if it appears that there is active
-engagement on your part.
-
---ewiTub5oIxhQg78Q
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTor3XAAoJELSic+t+oim9wXoP/RVhyBPtZ7t+qVRNPtWQ/RjR
-ZdWe3/v5NNrOLZDv2liJYdrvwHmEaIvEPUrgBrBmQdI6EnrSJVKcjlD7wSl9Jjxr
-ed5CPrAUvqLReGGyg9+bBPXuMFznUvJFp+oFFG05xPXR+iKbLfW0U61iWiC6oQDy
-1Asn+1Ai8N6I3r1i+em01M22lIoiSxftqEsz4QCIx/j/b1JmTYc/A4ARME7ebC0X
-TfgFgUY0wzsDeRpgRNntOws81p+LMkVDbMA9daeiNneZ6Rr9FHNZwiGC+8ci8mMY
-dI634k+KNty46hKXSfFaSe31zWDxkzbpnoJguITjXOzVyp3+RoH8ZoSST1/ys83N
-fQTUWhxwm2p2kzhL3nwVE2Vh4Lg6JWZMwL5gwM98/77r5LBSRVBD5WIgfQj+hy63
-J65j9UJ4lif9JyL50mpoMKycxJD8n3vRLmmawnrz4/fQmaryRvqMYMZAQ6BUZY9m
-3USXXVdAEXc44/RIAwPl2AvPRY2vor8Sa5aji3DDD6FGQsPoP1gaMycTDyyawG5t
-D8l4ioUqwZQb0XXTV9F8e3U6vQMMvFKcLy3gwLkFQmW9hg7MCd0hQrb41idl7DPv
-YyvZPsmz1klGUaSsRatbdxfO5WW/4/dcnr2utR0MwqN8lr1ZIyg8JRki7D/ywJzL
-9pEK73sjftb6fVIT2jON
-=eGzc
------END PGP SIGNATURE-----
-
---ewiTub5oIxhQg78Q--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/arch/arm/include/asm/fiq.h b/arch/arm/include/asm/fiq.h
+index d493d0b..a7806ef 100644
+--- a/arch/arm/include/asm/fiq.h
++++ b/arch/arm/include/asm/fiq.h
+@@ -18,6 +18,11 @@
+ 
+ #include <asm/ptrace.h>
+ 
++struct fiq_chip {
++	void (*fiq_enable)(struct irq_data *data);
++	void (*fiq_disable)(struct irq_data *data);
++};
++
+ struct fiq_handler {
+ 	struct fiq_handler *next;
+ 	/* Name
+@@ -38,6 +43,8 @@ extern void release_fiq(struct fiq_handler *f);
+ extern void set_fiq_handler(void *start, unsigned int length);
+ extern void enable_fiq(int fiq);
+ extern void disable_fiq(int fiq);
++extern bool has_fiq(int fiq);
++extern void fiq_register_mapping(int irq, struct fiq_chip *chip);
+ 
+ /* helpers defined in fiqasm.S: */
+ extern void __set_fiq_regs(unsigned long const *regs);
+diff --git a/arch/arm/kernel/fiq.c b/arch/arm/kernel/fiq.c
+index 918875d..567f8fd 100644
+--- a/arch/arm/kernel/fiq.c
++++ b/arch/arm/kernel/fiq.c
+@@ -40,6 +40,9 @@
+ #include <linux/init.h>
+ #include <linux/interrupt.h>
+ #include <linux/seq_file.h>
++#include <linux/irq.h>
++#include <linux/radix-tree.h>
++#include <linux/slab.h>
+ 
+ #include <asm/cacheflush.h>
+ #include <asm/cp15.h>
+@@ -52,7 +55,15 @@
+ 		(unsigned)&vector_fiq_offset;		\
+ 	})
+ 
++struct fiq_data {
++	struct fiq_chip *fiq_chip;
++	struct irq_data *irq_data;
++};
++
+ static unsigned long no_fiq_insn;
++static int fiq_start = -1;
++static RADIX_TREE(fiq_data_tree, GFP_KERNEL);
++static DEFINE_MUTEX(fiq_data_mutex);
+ 
+ /* Default reacquire function
+  * - we always relinquish FIQ control
+@@ -127,18 +138,65 @@ void release_fiq(struct fiq_handler *f)
+ 	while (current_fiq->fiq_op(current_fiq->dev_id, 0));
+ }
+ 
+-static int fiq_start;
++static struct fiq_data *lookup_fiq_data(int fiq)
++{
++	struct fiq_data *data;
++
++	rcu_read_lock();
++	data = radix_tree_lookup(&fiq_data_tree, fiq);
++	rcu_read_unlock();
++
++	return data;
++}
+ 
+ void enable_fiq(int fiq)
+ {
++	struct fiq_data *data = lookup_fiq_data(fiq);
++
++	if (data) {
++		if (data->fiq_chip->fiq_enable)
++			data->fiq_chip->fiq_enable(data->irq_data);
++		enable_irq(fiq);
++		return;
++	}
++
++	if (WARN_ON(fiq_start == -1))
++		return;
++
+ 	enable_irq(fiq + fiq_start);
+ }
+ 
+ void disable_fiq(int fiq)
+ {
++	struct fiq_data *data = lookup_fiq_data(fiq);
++
++	if (data) {
++		if (data->fiq_chip->fiq_disable)
++			data->fiq_chip->fiq_disable(data->irq_data);
++		disable_irq(fiq);
++		return;
++	}
++
++	if (WARN_ON(fiq_start == -1))
++		return;
++
+ 	disable_irq(fiq + fiq_start);
+ }
+ 
++bool has_fiq(int fiq)
++{
++	struct fiq_data *data = lookup_fiq_data(fiq);
++
++	if (data)
++		return true;
++
++	if (fiq_start == -1)
++		return false;
++
++	return fiq > fiq_start;
++}
++EXPORT_SYMBOL(has_fiq);
++
+ EXPORT_SYMBOL(set_fiq_handler);
+ EXPORT_SYMBOL(__set_fiq_regs);	/* defined in fiqasm.S */
+ EXPORT_SYMBOL(__get_fiq_regs);	/* defined in fiqasm.S */
+@@ -147,9 +205,50 @@ EXPORT_SYMBOL(release_fiq);
+ EXPORT_SYMBOL(enable_fiq);
+ EXPORT_SYMBOL(disable_fiq);
+ 
++/*
++ * Add a mapping from a Linux irq to the fiq data.
++ */
++void fiq_register_mapping(int irq, struct fiq_chip *chip)
++{
++	struct fiq_data *fiq_data = NULL;
++	int res;
++
++	/* fiq_register_mapping can't be mixed with init_FIQ */
++	BUG_ON(fiq_start != -1);
++
++	fiq_data = kmalloc(sizeof(*fiq_data), GFP_KERNEL);
++	if (!fiq_data)
++		goto err;
++
++	fiq_data->fiq_chip = chip;
++	fiq_data->irq_data = irq_get_irq_data(irq);
++	BUG_ON(!fiq_data->irq_data);
++
++	mutex_lock(&fiq_data_mutex);
++	res = radix_tree_insert(&fiq_data_tree, irq, fiq_data);
++	mutex_unlock(&fiq_data_mutex);
++	if (res)
++		goto err;
++
++	return;
++
++err:
++	kfree(fiq_data);
++	pr_err("fiq: Cannot register mapping %d\n", irq);
++}
++
++/*
++ * Set the offset between normal IRQs and their FIQ shadows.
++ */
+ void __init init_FIQ(int start)
+ {
++	fiq_start = start;
++}
++
++static int __init init_default_fiq_handler(void)
++{
+ 	unsigned offset = FIQ_OFFSET;
+ 	no_fiq_insn = *(unsigned long *)(0xffff0000 + offset);
+-	fiq_start = start;
++	return 0;
+ }
++pure_initcall(init_default_fiq_handler);
+-- 
+1.9.3
