@@ -1,124 +1,78 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 2/2] arm: dts: add support for AM437x StarterKit
-Date: Wed, 18 Jun 2014 21:26:01 -0500
-Message-ID: <53A24A39.4080100@ti.com>
-References: <1403106200-777-1-git-send-email-balbi@ti.com> <1403106200-777-3-git-send-email-balbi@ti.com> <53A1BADD.7050309@ti.com> <20140618193113.GC4570@saruman.home> <53A20A7D.3060508@ti.com> <20140618231923.GA9855@saruman.home>
-Reply-To: nm@ti.com
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
+Date: Thu, 19 Jun 2014 08:25:30 +0530
+Message-ID: <CAJe_ZhfTCw3OHNeSTW71bc6U2g_d=5hYknu+dwhBkuZvPg=D6w@mail.gmail.com>
+References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>
+	<1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
+	<7hionz9i5e.fsf@paris.lan>
+	<CAJe_ZhcuOa39Db_tE4JupY74aze02=v1FWzduFD0sO15nMrKvw@mail.gmail.com>
+	<7hzjha5ew2.fsf@paris.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140618231923.GA9855@saruman.home>
+In-Reply-To: <7hzjha5ew2.fsf@paris.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: balbi@ti.com
-Cc: devicetree@vger.kernel.org, linux@arm.linux.org.uk, Benoit Cousson <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Rajendra Nayak <rnayak@ti.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Darren Etheridge <detheridge@ti.com>, r.sricharan@ti.com, robh+dt@kernel.org, Josh Elliot <jelliott@ti.com>, galak@codeaurora.org, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Kevin Hilman <khilman@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Matt Porter <mporter@linaro.org>, Patch Tracking <patches@linaro.org>, Bjorn Andersson <bjorn@kryo.se>, Ashwin Chaugule <ashwin.chaugule@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "Anna, Suman" <s-anna@ti.com>, Loic Pallardy <loic.pallardy@st.com>, LeyFoon Tan <lftan.linux@gmail.com>, Craig McGeachie <slapdau@yahoo.com.au>, Courtney Cavin <courtney.cavin@sonymobile.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Linus Walleij <linus.walleij@linaro.org>, Kumar Gala <galak@codeaurora.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2014 06:19 PM, Felipe Balbi wrote:
-[...]
->>>>> Add support for TI's AM437x StarterKit Evaluation
->>>>> Module.
+On 18 June 2014 22:33, Kevin Hilman <khilman@linaro.org> wrote:
+> Jassi Brar <jaswinder.singh@linaro.org> writes:
+>
+>> On 18 June 2014 05:57, Kevin Hilman <khilman@linaro.org> wrote:
+>>> Jassi Brar <jaswinder.singh@linaro.org> writes:
+>>>
+>>>> Introduce common framework for client/protocol drivers and
+>>>> controller drivers of Inter-Processor-Communication (IPC).
 >>>>
->>>> is there a link for this platform?
->>>
->>> internal only
->>
->> but will eventually be sold externally? I assume this is not an TI
->
-> probably, but there's nothing public yet.
->
->> internal only board.
->
-> correct assumption for all I know.
-
-Yikes.. ok.. I'd let Tony et.al make the call on this, I guess.
-
-[...]
->>>>> +	edt-ft5306@38 {
->>>>> +		status = "okay";
->>>>> +		compatible = "edt,edt-ft5306", "edt,edt-ft5x06";
->>>>> +		pinctrl-names = "default";
->>>>> +		pinctrl-0 = <&edt_ft5306_ts_pins>;
->>>>> +		reg = <0x38>;
->>>>> +		interrupt-parent = <&gpio0>;
->>>>> +		interrupts = <31 0>;
->>>>> +
->>>>> +		wake-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>>>> Client driver developers should have a look at
+>>>>  include/linux/mailbox_client.h to understand the part of
+>>>> the API exposed to client drivers.
+>>>> Similarly controller driver developers should have a look
+>>>> at include/linux/mailbox_controller.h
 >>>>
->>>> why wake-gpios? we should be using pinctrl with interrupt-extended to
->>>> do wakeup sequence, no?
+>>>> Signed-off-by: Jassi Brar <jaswinder.singh@linaro.org>
 >>>
->>> sure, can you patch the edt driver ? I'll fix the DTS after that gets
->>> merged
->>
->> If you really want to go down that road, so you could probably help
->> review the pinctrl patches I posted to enable pinctrl wakeup[1]?
->>
->> Come on, as of today, there is no ability to suspend AM437x without
->> doing [1], let alone talk about wakeup gpio vs interrupt-extended. and
->> do we really want to wakeup from suspend when touch screen is touched?
->>
->> Do you expect wake-gpio to work even after doing interrupt based
->> solution? I am no edt driver expert... maybe you can help me here.
->
-> you missed the point entirely. This pin is not used for the touchscreen
-> to wake SoC up, it's the other way around, see how the pin is an
-> *output*. Pull it low and the touchscreen won't generate IRQs, won't
-> respond to i2c accesses, etc. Pull it high, and the thing wakes up.
-
-Aaah.. My apologies.. I was confused. Thanks for clarifying.
-
-[...]
->>>>> +	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
->>>>> +};
->>>>> +
->>>>> +&usb2_phy1 {
->>>>> +	status = "okay";
->>>>> +};
->>>>> +
->>>>> +&usb1 {
->>>>> +	dr_mode = "peripheral";
->>>>> +	status = "okay";
->>>>> +};
->>>>> +
->>>>> +&usb2_phy2 {
->>>>> +	status = "okay";
->>>>> +};
->>>>> +
->>>>> +&usb2 {
->>>>> +	dr_mode = "host";
->>>>> +	status = "okay";
->>>>> +};
->>>> none of the above need pinctrl? no regulator supplies?
+>>> This series is shaping up nicely.  The one thing I think it would
+>>> benefit from, being a new common framework is something under
+>>> Documentation giving a brief overview, but more importantly some
+>>> example code snippets of a mailbox client using the API, and maybe an
+>>> example usage of the controller API as well.
 >>>
->>> pins in default states, drivers don't use regulators.
->>
->> USB works without a supply? even a fixed voltage supply? that is
->> weird.
+>>> Not only will that guide developers who want to use/implement this API
+>>> on their platforms, it will also aid reviewers.
+>>>
+>> I have been trying to get it upstream for quite some time now because
+>> my platform depends upon it. I am planning to submit my platform
+>> support which should have a client and controller side of the mailbox
+>> API.
 >
-> take a look at the minicom output I posted if you don't believe. Well,
-> to be exact, tps63010 [1] is the one which generates the regulated V5_0D
-> which is used as VBUS_USB. The enable pin in that device is tied to the
-> 3v3 rail (dcdc4 regulator in the PMIC as most everything else) but
-> there's no way (otherwise) to control that thing. There's no control
-> bus, no way to write a driver.
+> Having a reference implementation is great, but I don't think that
+> removes the need for a bit of Documentation when introducing a new
+> framework.
 >
-> Since the board will anyways turn off if you disable the 3v3 rail, it's
-> pretty much pointless to figure out a hack just to add this to DTS.
+> It's pretty common to see new IPC mechanisms posted and being able to
+> point somone to this framework and something under Documentation/* would
+> be a great help in getting more users of the framework.
 >
-> [1] http://www.ti.com/product/TPS63010
+Of course. I didn't mean I won't add Documentation.
 
-I am sure to trust you on the test log :) ->  but then from dts 
-description perspective, it is good if we describe the supplies, even as 
-a always on fixed-regulator. We had instances like 2430SDP ethernet 
-where... umm... we originally missed describing ethernet supply and 
-boom, one fine morning, no more nfs filesystem - I mean, it is a one off 
-scenario there, but describing regulators helps us atleast understand 
-the power tree of the board a little better.
+>> Though I am told the API (until v4 at least) supported usecases for 5
+>> different platforms.
+>
+> That's great.
+>
+> I sure would like to see some more Reviewed-by tags from those folks to
+> confirm that those starting to use it think it's on the right track.
+>
+The upstreaming attempts have been going on for months now, and via
+non-public interactions with developers I understand it last worked
+before the revision mandating DT support and ipc->mailbox symbol
+renaming. So basic working should still remain the same.
+   Suman(TI), Loic(ST), Girish(Samsung), Ashwin (PCC+ACPI).... guys,
+any word for v7?
 
-Again, no strong opinions on my side, it is a good thing to do is all I 
-feel about it.
+LFTan(Intel) and Craig(Broadcom) seem unresponsive now, unfortunately :(
 
---
-Regards,
-Nishanth Menon
+Thanks
+-Jassi
