@@ -1,178 +1,179 @@
-From: Suman Tripathi <stripathi@apm.com>
-Subject: [PATCH v3 2/2] ata: Fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode command.
-Date: Thu, 19 Jun 2014 12:20:54 +0530
-Message-ID: <1403160654-31612-1-git-send-email-stripathi@apm.com>
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
+From: Bo Shen <voice.shen@atmel.com>
+Subject: Re: [PATCH v2 4/7] ARM: at91/dt: split sama5d3 lcd pin definitions
+ to match RGB mode configs
+Date: Thu, 19 Jun 2014 15:07:24 +0800
+Message-ID: <53A28C2C.1010001@atmel.com>
+References: <1402329860-27520-1-git-send-email-boris.brezillon@free-electrons.com> <1402329860-27520-5-git-send-email-boris.brezillon@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1402329860-27520-5-git-send-email-boris.brezillon@free-electrons.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Nicolas Ferre <nicolas.ferre@atmel.com>, David Airlie <airlied@linux.ie>, Samuel Ortiz <sameo@linux.intel.com>, Lee Jones <lee.jones@linaro.org>, devicetree@vger.kernel.org, Jean-Jacques Hiblot <jjhiblot@traphandler.com>, linux-doc@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch fixes the dma state machine lockup due to the processing
-of IDENTIFY DEVICE PIO mode command. The X-Gene AHCI controller
-has an errata in which it cannot clear the BSY bit after
-receiving the PIO setup FIS and results the dma state machine to go
-into the CMFatalErrorUpdate state resulting in the dma state
-machine lockup. This patch also removes the dma restart workaround
-from the read_id function as the read_id function is only called by
-libata layer for ATA_INTERNAL commands. But for somecases eg:
-PORT MULTIPLIER and udev, the framework will enumerate using SCSI
-commands and it will not call read_id function.
+Hi Boris,
 
-Signed-off-by: Loc Ho <lho@apm.com>
-Signed-off-by: Suman Tripathi <stripathi@apm.com>
----
- drivers/ata/ahci.h       |  1 +
- drivers/ata/ahci_xgene.c | 70 +++++++++++++++++++++++++++++++++++++++---------
- drivers/ata/libahci.c    |  3 ++-
- 3 files changed, 60 insertions(+), 14 deletions(-)
+On 06/10/2014 12:04 AM, Boris BREZILLON wrote:
+> The HLCDC (High LCD Controller) IP supports 4 different output mode
+> (RGB444, RGB565, RGB666 and RGB888) and the pin muxing depends on the
+> chosen RGB mode.
+>
+> Split the pin definition to be able to set the pin config according to the
+> selected mode.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+> ---
+>   arch/arm/boot/dts/sama5d3_lcd.dtsi | 127 ++++++++++++++++++++++++++++---------
+>   1 file changed, 96 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
-index 3c1760e..011d1ea 100644
---- a/drivers/ata/ahci.h
-+++ b/drivers/ata/ahci.h
-@@ -373,6 +373,7 @@ int ahci_do_softreset(struct ata_link *link, unsigned int *class,
- int ahci_stop_engine(struct ata_port *ap);
- void ahci_start_engine(struct ata_port *ap);
- int ahci_restart_engine(struct ata_port *ap);
-+void ahci_sw_activity(struct ata_link *link);
- int ahci_check_ready(struct ata_link *link);
- int ahci_kick_engine(struct ata_port *ap);
- int ahci_port_resume(struct ata_port *ap);
-diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-index 77c89bf..4b074d5 100644
---- a/drivers/ata/ahci_xgene.c
-+++ b/drivers/ata/ahci_xgene.c
-@@ -78,6 +78,7 @@
- struct xgene_ahci_context {
- 	struct ahci_host_priv *hpriv;
- 	struct device *dev;
-+	u8 last_cmd[MAX_AHCI_CHN_PERCTR]; /* tracking the last command */
- 	void __iomem *csr_core;		/* Core CSR address of IP */
- 	void __iomem *csr_diag;		/* Diag CSR address of IP */
- 	void __iomem *csr_axi;		/* AXI CSR address of IP */
-@@ -98,20 +99,72 @@ static int xgene_ahci_init_memram(struct xgene_ahci_context *ctx)
- }
+On sama5d3xek board, it only works in 24bits output mode. And it depends 
+on the hardware design. So, I think only keep only one pinctrl 
+configuration.
 
- /**
-+ * xgene_ahci_qc_issue - Issue commands to the device
-+ * @qc: Command to issue
-+ *
-+ * Due to H/W errata, for the IENTIFY DEVICE command
-+ * controller is unable to clear the BSY bit after
-+ * receiving the PIO setup FIS and results the dma
-+ * state machine to go into the CMFatalErrorUpdate
-+ * state resulting in the dma state machine lockup.
-+ * By restarting the dma engine to move it removes
-+ * the controller out of lock up state.
-+ */
-+static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
-+{
-+	struct ata_port *ap = qc->ap;
-+	void __iomem *port_mmio = ahci_port_base(ap);
-+	struct ahci_port_priv *pp = ap->private_data;
-+	struct ahci_host_priv *hpriv = ap->host->private_data;
-+	struct xgene_ahci_context *ctx = hpriv->plat_data;
-+
-+	/* Keep track of the currently active link.  It will be used
-+	 * in completion path to determine whether NCQ phase is in
-+	 * progress.
-+	 */
-+	pp->active_link = qc->dev->link;
-+
-+	/*
-+	 * Restart the dma engine if the last cmd issued
-+	 * is IDENTIFY DEVICE command
-+	 */
-+	if (unlikely(ctx->last_cmd[ap->port_no] == ATA_CMD_ID_ATA))
-+		ahci_restart_engine(ap);
-+
-+	if (qc->tf.protocol == ATA_PROT_NCQ)
-+		writel(1 << qc->tag, port_mmio + PORT_SCR_ACT);
-+
-+	if (pp->fbs_enabled && pp->fbs_last_dev != qc->dev->link->pmp) {
-+		u32 fbs = readl(port_mmio + PORT_FBS);
-+		fbs &= ~(PORT_FBS_DEV_MASK | PORT_FBS_DEC);
-+		fbs |= qc->dev->link->pmp << PORT_FBS_DEV_OFFSET;
-+		writel(fbs, port_mmio + PORT_FBS);
-+		pp->fbs_last_dev = qc->dev->link->pmp;
-+	}
-+
-+	writel(1 << qc->tag, port_mmio + PORT_CMD_ISSUE);
-+
-+	/* Save the last command issued */
-+	ctx->last_cmd[ap->port_no] = qc->tf.command;
-+
-+	ahci_sw_activity(qc->dev->link);
-+
-+	return 0;
-+}
-+
-+/**
-  * xgene_ahci_read_id - Read ID data from the specified device
-  * @dev: device
-  * @tf: proposed taskfile
-  * @id: data buffer
-  *
-  * This custom read ID function is required due to the fact that the HW
-- * does not support DEVSLP and the controller state machine may get stuck
-- * after processing the ID query command.
-+ * does not support DEVSLP.
-  */
- static unsigned int xgene_ahci_read_id(struct ata_device *dev,
- 				       struct ata_taskfile *tf, u16 *id)
- {
- 	u32 err_mask;
--	void __iomem *port_mmio = ahci_port_base(dev->link->ap);
+Best Regards,
+Bo Shen
 
- 	err_mask = ata_do_dev_read_id(dev, tf, id);
- 	if (err_mask)
-@@ -133,16 +186,6 @@ static unsigned int xgene_ahci_read_id(struct ata_device *dev,
- 	 */
- 	id[ATA_ID_FEATURE_SUPP] &= ~(1 << 8);
-
--	/*
--	 * Due to HW errata, restart the port if no other command active.
--	 * Otherwise the controller may get stuck.
--	 */
--	if (!readl(port_mmio + PORT_CMD_ISSUE)) {
--		writel(PORT_CMD_FIS_RX, port_mmio + PORT_CMD);
--		readl(port_mmio + PORT_CMD);	/* Force a barrier */
--		writel(PORT_CMD_FIS_RX | PORT_CMD_START, port_mmio + PORT_CMD);
--		readl(port_mmio + PORT_CMD);	/* Force a barrier */
--	}
- 	return 0;
- }
-
-@@ -300,6 +343,7 @@ static struct ata_port_operations xgene_ahci_ops = {
- 	.host_stop = xgene_ahci_host_stop,
- 	.hardreset = xgene_ahci_hardreset,
- 	.read_id = xgene_ahci_read_id,
-+	.qc_issue = xgene_ahci_qc_issue,
- };
-
- static const struct ata_port_info xgene_ahci_port_info = {
-diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-index d1c9122..7605ff8 100644
---- a/drivers/ata/libahci.c
-+++ b/drivers/ata/libahci.c
-@@ -893,7 +893,7 @@ int ahci_reset_controller(struct ata_host *host)
- }
- EXPORT_SYMBOL_GPL(ahci_reset_controller);
-
--static void ahci_sw_activity(struct ata_link *link)
-+void ahci_sw_activity(struct ata_link *link)
- {
- 	struct ata_port *ap = link->ap;
- 	struct ahci_port_priv *pp = ap->private_data;
-@@ -906,6 +906,7 @@ static void ahci_sw_activity(struct ata_link *link)
- 	if (!timer_pending(&emp->timer))
- 		mod_timer(&emp->timer, jiffies + msecs_to_jiffies(10));
- }
-+EXPORT_SYMBOL_GPL(ahci_sw_activity);
-
- static void ahci_sw_activity_blink(unsigned long arg)
- {
---
-1.8.2.1
+> diff --git a/arch/arm/boot/dts/sama5d3_lcd.dtsi b/arch/arm/boot/dts/sama5d3_lcd.dtsi
+> index 85d3027..2186b89 100644
+> --- a/arch/arm/boot/dts/sama5d3_lcd.dtsi
+> +++ b/arch/arm/boot/dts/sama5d3_lcd.dtsi
+> @@ -15,38 +15,103 @@
+>   		apb {
+>   			pinctrl@fffff200 {
+>   				lcd {
+> -					pinctrl_lcd: lcd-0 {
+> +					pinctrl_lcd_pwm: lcd-pwm-0 {
+> +						atmel,pins = <AT91_PIOA 24 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* LCDPWM */
+> +					};
+> +
+> +					pinctrl_lcd_base: lcd-base-0 {
+> +						atmel,pins =
+> +							<AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDVSYNC */
+> +							 AT91_PIOA 27 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDHSYNC */
+> +							 AT91_PIOA 25 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDDISP */
+> +							 AT91_PIOA 29 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDDEN */
+> +							 AT91_PIOA 28 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* LCDPCK */
+> +					};
+> +
+> +					pinctrl_lcd_rgb444: lcd-rgb-0 {
+> +						atmel,pins =
+> +							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD0 pin */
+> +							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD1 pin */
+> +							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD2 pin */
+> +							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD3 pin */
+> +							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD4 pin */
+> +							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD5 pin */
+> +							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD6 pin */
+> +							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD7 pin */
+> +							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD8 pin */
+> +							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD9 pin */
+> +							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD10 pin */
+> +							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* LCDD11 pin */
+> +					};
+> +
+> +					pinctrl_lcd_rgb565: lcd-rgb-1 {
+> +						atmel,pins =
+> +							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD0 pin */
+> +							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD1 pin */
+> +							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD2 pin */
+> +							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD3 pin */
+> +							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD4 pin */
+> +							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD5 pin */
+> +							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD6 pin */
+> +							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD7 pin */
+> +							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD8 pin */
+> +							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD9 pin */
+> +							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD10 pin */
+> +							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD11 pin */
+> +							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD12 pin */
+> +							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
+> +							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
+> +							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE>;	/* LCDD15 pin */
+> +					};
+> +
+> +					pinctrl_lcd_rgb666: lcd-rgb-2 {
+> +						atmel,pins =
+> +							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD0 pin */
+> +							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD1 pin */
+> +							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD2 pin */
+> +							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD3 pin */
+> +							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD4 pin */
+> +							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD5 pin */
+> +							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD6 pin */
+> +							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD7 pin */
+> +							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD8 pin */
+> +							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD9 pin */
+> +							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD10 pin */
+> +							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD11 pin */
+> +							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD12 pin */
+> +							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
+> +							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
+> +							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD15 pin */
+> +							 AT91_PIOC 14 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD16 pin */
+> +							 AT91_PIOC 13 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* LCDD17 pin */
+> +					};
+> +
+> +					pinctrl_lcd_rgb888: lcd-rgb-3 {
+>   						atmel,pins =
+> -							<AT91_PIOA 24 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA24 periph A LCDPWM */
+> -							 AT91_PIOA 26 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA26 periph A LCDVSYNC */
+> -							 AT91_PIOA 27 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA27 periph A LCDHSYNC */
+> -							 AT91_PIOA 25 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA25 periph A LCDDISP */
+> -							 AT91_PIOA 29 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA29 periph A LCDDEN */
+> -							 AT91_PIOA 28 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA28 periph A LCDPCK */
+> -							 AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA0 periph A LCDD0 pin */
+> -							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA1 periph A LCDD1 pin */
+> -							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA2 periph A LCDD2 pin */
+> -							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA3 periph A LCDD3 pin */
+> -							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA4 periph A LCDD4 pin */
+> -							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA5 periph A LCDD5 pin */
+> -							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA6 periph A LCDD6 pin */
+> -							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA7 periph A LCDD7 pin */
+> -							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA8 periph A LCDD8 pin */
+> -							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA9 periph A LCDD9 pin */
+> -							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA10 periph A LCDD10 pin */
+> -							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA11 periph A LCDD11 pin */
+> -							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA12 periph A LCDD12 pin */
+> -							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA13 periph A LCDD13 pin */
+> -							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA14 periph A LCDD14 pin */
+> -							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* PA15 periph A LCDD15 pin */
+> -							 AT91_PIOC 14 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC14 periph C LCDD16 pin */
+> -							 AT91_PIOC 13 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC13 periph C LCDD17 pin */
+> -							 AT91_PIOC 12 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC12 periph C LCDD18 pin */
+> -							 AT91_PIOC 11 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC11 periph C LCDD19 pin */
+> -							 AT91_PIOC 10 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC10 periph C LCDD20 pin */
+> -							 AT91_PIOC 15 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PC15 periph C LCDD21 pin */
+> -							 AT91_PIOE 27 AT91_PERIPH_C AT91_PINCTRL_NONE	/* PE27 periph C LCDD22 pin */
+> -							 AT91_PIOE 28 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* PE28 periph C LCDD23 pin */
+> +							<AT91_PIOA 0 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD0 pin */
+> +							 AT91_PIOA 1 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD1 pin */
+> +							 AT91_PIOA 2 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD2 pin */
+> +							 AT91_PIOA 3 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD3 pin */
+> +							 AT91_PIOA 4 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD4 pin */
+> +							 AT91_PIOA 5 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD5 pin */
+> +							 AT91_PIOA 6 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD6 pin */
+> +							 AT91_PIOA 7 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD7 pin */
+> +							 AT91_PIOA 8 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD8 pin */
+> +							 AT91_PIOA 9 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD9 pin */
+> +							 AT91_PIOA 10 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD10 pin */
+> +							 AT91_PIOA 11 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD11 pin */
+> +							 AT91_PIOA 12 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD12 pin */
+> +							 AT91_PIOA 13 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD13 pin */
+> +							 AT91_PIOA 14 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD14 pin */
+> +							 AT91_PIOA 15 AT91_PERIPH_A AT91_PINCTRL_NONE	/* LCDD15 pin */
+> +							 AT91_PIOC 14 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD16 pin */
+> +							 AT91_PIOC 13 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD17 pin */
+> +							 AT91_PIOC 12 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD18 pin */
+> +							 AT91_PIOC 11 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD19 pin */
+> +							 AT91_PIOC 10 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD20 pin */
+> +							 AT91_PIOC 15 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD21 pin */
+> +							 AT91_PIOE 27 AT91_PERIPH_C AT91_PINCTRL_NONE	/* LCDD22 pin */
+> +							 AT91_PIOE 28 AT91_PERIPH_C AT91_PINCTRL_NONE>;	/* LCDD23 pin */
+>   					};
+>   				};
+>   			};
+>
 
