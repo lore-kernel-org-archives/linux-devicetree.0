@@ -1,15 +1,14 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Re: [PATCH 2/2] media: mt9m111: add device-tree documentation
-Date: Thu, 19 Jun 2014 21:13:20 +0200
-Message-ID: <87bntosofj.fsf@free.fr>
+Subject: Re: [PATCH 1/2] media: mt9m111: add device-tree suppport
+Date: Thu, 19 Jun 2014 21:15:22 +0200
+Message-ID: <877g4csoc5.fsf@free.fr>
 References: <1402863452-30365-1-git-send-email-robert.jarzmik@free.fr>
-	<1402863452-30365-2-git-send-email-robert.jarzmik@free.fr>
-	<Pine.LNX.4.64.1406190937290.22703@axis700.grange>
+	<Pine.LNX.4.64.1406190929380.22703@axis700.grange>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-media-owner@vger.kernel.org>
-In-Reply-To: <Pine.LNX.4.64.1406190937290.22703@axis700.grange> (Guennadi
-	Liakhovetski's message of "Thu, 19 Jun 2014 09:38:14 +0200 (CEST)")
+In-Reply-To: <Pine.LNX.4.64.1406190929380.22703@axis700.grange> (Guennadi
+	Liakhovetski's message of "Thu, 19 Jun 2014 09:36:48 +0200 (CEST)")
 Sender: linux-media-owner@vger.kernel.org
 To: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 Cc: devicetree@vger.kernel.org, linux-media@vger.kernel.org
@@ -18,16 +17,25 @@ List-Id: devicetree@vger.kernel.org
 Guennadi Liakhovetski <g.liakhovetski@gmx.de> writes:
 
 > Hi Robert,
+>> +static int of_get_mt9m111_platform_data(struct device *dev,
+>> +					struct soc_camera_subdev_desc *desc)
+>> +{
+>> +	return 0;
+>> +}
 >
-> On Sun, 15 Jun 2014, Robert Jarzmik wrote:
+> Why do you need this function? I would just drop it.
+Yeah, drop it sounds good. I wrote it at the beginning to have a clear
+structure, and then didn't use it.
+
+
+>> +static const struct of_device_id mt9m111_of_match[] = {
+>> +	{ .compatible = "micron,mt9m111", },
 >
->> Add documentation for the Micron mt9m111 image sensor.
->
-> A nitpick: this isn't documentation for the sensor:) This is driver DT 
-> bindings' documentation.
-OK, for V2 (as its twin in pxa_camera).
+> Not a flaw in this patch, but someone might want to add "micron" to 
+> Documentation/devicetree/bindings/vendor-prefixes.txt
+OK, I'll see what I can submit, it should be doable :)
 
 Cheers.
 
---
+-- 
 Robert
