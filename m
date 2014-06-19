@@ -1,108 +1,80 @@
-From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-Subject: Re: OF_DYNAMIC node lifecycle
-Date: Thu, 19 Jun 2014 10:26:15 -0500
-Message-ID: <53A30117.3010100@austin.ibm.com>
-References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Fix missing binding documentation for Armada
+ 38x
+Date: Thu, 19 Jun 2014 18:24:58 +0200
+Message-ID: <53A30EDA.7050407@free-electrons.com>
+References: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com> <CAL_Jsq+JyngWXvk6ZzV8LPfGqVMDPyouJsADaokAGzgHv=gphQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <CAL_Jsq+JyngWXvk6ZzV8LPfGqVMDPyouJsADaokAGzgHv=gphQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2014 03:07 PM, Grant Likely wrote:
-> Hi Nathan and Tyrel,
+Hi Rob,
+
+On 19/06/2014 16:54, Rob Herring wrote:
+> On Thu, Jun 19, 2014 at 9:07 AM, Gregory CLEMENT
+> <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> For the Armada 380 and Armada 385 SoCs, the common bindings for those
+>> 2 SoCs, was forgotten. This patch add the documentation for the
+>> marvell,aramda38x property.
+>>
+>> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>> ---
+>> Hi,
+>>
+>> This fix should be merged in 3.16. For 3.15 I am not sure as it is not
+>> a regression.
+>>
+>> Thanks,
+>> Gregory
+>>
+>>  Documentation/devicetree/bindings/arm/armada-38x.txt | 4 ++++
+>>  1 file changed, 4 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
+>> index 11f2330a6554..b68bcb80d2de 100644
+>> --- a/Documentation/devicetree/bindings/arm/armada-38x.txt
+>> +++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
+>> @@ -6,5 +6,9 @@ following property:
+>>
+>>  Required root node property:
+>>
+>> +compatible: must contain "marvell,armada38x"
+>> +
+>> +Required root node property:
+>> +
+>>   - compatible: must contain either "marvell,armada380" or
+>>     "marvell,armada385" depending on the variant of the SoC being used.
 > 
-> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
-> I'm hoping you can help me. Right now, pseries seems to be the only
-> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
-> the entire kernel because it requires all DT code to manage reference
-> counting with iterating over nodes. Most users simply get it wrong.
-> Pantelis did some investigation and found that the reference counts on
-> a running kernel are all over the place. I have my doubts that any
-> code really gets it right.
+> This looks a bit strange. How about something like this:
 > 
-> The problem is that users need to know when it is appropriate to call
-> of_node_get()/of_node_put(). All list traversals that exit early need
-> an extra call to of_node_put(), and code that is searching for a node
-> in the tree and holding a reference to it needs to call of_node_get().
-> 
-> I've got a few pseries questions:
-> - What are the changes being requested by pseries firmware? Is it only
-> CPUs and memory nodes, or does it manipulate things all over the tree?
+>    - compatible: must contain either "marvell,armada380" or
+>      "marvell,armada385" depending on the variant of the SoC being
+> used and contain "marvell,armada38x".
 
-The short answer, everything.
+Indeed it will be more clear written in this way.
 
-For pseries the two big actions that can change the device tree are
-adding/removing resources and partition migration.
 
-The most frequent updates to the device tree happen during resource
-(cpu, memory, and pci/phb) add and remove. During this process we add
-and remove the node and its properties from the device tree.
-- For memory on newer systems this just involves updating the
-  ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory property. Older
-  firmware levels add and remove the memroy@XXX nodes and their properties.
-- For cpus the cpus/PowerPC,POWERXXXX nodes and its properties are added
-  or removed
-- For pci/phb the pci@XXXXX nodes and properties are added/removed.
+Thanks,
 
-The less frequent operation of live partition migration (and suspend/resume)
-can update just about anything in the device tree. When this occurs and the
-systems starts after being migrated (or waking up after a suspend) we make
-a call to firmware to get updates to the device tree for the new hardware
-we are running on.
- 
-> - How frequent are the changes? How many changes would be likely over
-> the runtime of the system?
+Gregory
 
-This can happen frequently.
-
-> - Are you able to verify that removed nodes are actually able to be
-> freed correctly? Do you have any testcases for node removal?
-
-I have always tested this by doing resource add/remove, usually cpu and memory
-since it is the easiest.
 
 > 
-> I'm thinking very seriously about changing the locking semantics of DT
-> code entirely so that most users never have to worry about
-> of_node_get/put at all. If the DT code is switched to use rcu
-> primitives for tree iteration (which also means making DT code use
-> list_head, something I'm already investigating), then instead of
-> trying to figure out of_node_get/put rules, callers could use
-> rcu_read_lock()/rcu_read_unlock() to protect the region that is
-> searching over nodes, and only call of_node_get() if the node pointer
-> is needed outside the rcu read-side lock.
+> Rob
 > 
 
-This sounds good. I like just taking the rcu lock around accessing the DT.
-Do we have many places where DT node pointers are held that require
-keeping the of_node_get/put calls? If this did exist perhaps we could
-update those places to look up the DT node every time instead of
-holding on to the pointer. We could just get rid of the reference counting
-altogether then.
 
-> I'd really like to be rid of the node reference counting entirely, but
-> I can't figure out a way of doing that safely, so I'd settle for
-> making it a lot easier to get correct.
-> 
-
-heh! I have often thought about adding reference counting to device tree
-properties. I don't really want to but there are some properties that can
-get updated frequently (namely the one mentioned above for memory) that
-can also get pretty big, especially on systems with a lot of memory. We
-never free the memory for old versions of a device tree property. This is
-a pretty minor issue though and probably best suited for a separate
-discussion after resolving this. 
-
-Other than pseries, who else does dynamic device tree updating? Are we the
-only ones?
-
--Nathan
-
+-- 
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
