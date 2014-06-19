@@ -1,65 +1,108 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v4 3/3] ASoC: fsl: add imx-es8328 machine
- driver
-Date: Thu, 19 Jun 2014 16:13:00 +0100
-Message-ID: <20140619151300.GP5099@sirena.org.uk>
-References: <1403063242-20840-1-git-send-email-xobs@kosagi.com>
- <1403063242-20840-4-git-send-email-xobs@kosagi.com>
- <20140618100233.GE5099@sirena.org.uk>
- <53A1687C.9010705@kosagi.com>
- <20140618103111.GH5099@sirena.org.uk>
- <53A23E1B.3070008@kosagi.com>
- <20140619142737.GD3412@opensource.wolfsonmicro.com>
+From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+Subject: Re: OF_DYNAMIC node lifecycle
+Date: Thu, 19 Jun 2014 10:26:15 -0500
+Message-ID: <53A30117.3010100@austin.ibm.com>
+References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cQx5fYD6zrLPRXWY"
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140619142737.GD3412-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+In-Reply-To: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Cc: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
+Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On 06/18/2014 03:07 PM, Grant Likely wrote:
+> Hi Nathan and Tyrel,
+> 
+> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
+> I'm hoping you can help me. Right now, pseries seems to be the only
+> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
+> the entire kernel because it requires all DT code to manage reference
+> counting with iterating over nodes. Most users simply get it wrong.
+> Pantelis did some investigation and found that the reference counts on
+> a running kernel are all over the place. I have my doubts that any
+> code really gets it right.
+> 
+> The problem is that users need to know when it is appropriate to call
+> of_node_get()/of_node_put(). All list traversals that exit early need
+> an extra call to of_node_put(), and code that is searching for a node
+> in the tree and holding a reference to it needs to call of_node_get().
+> 
+> I've got a few pseries questions:
+> - What are the changes being requested by pseries firmware? Is it only
+> CPUs and memory nodes, or does it manipulate things all over the tree?
 
---cQx5fYD6zrLPRXWY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+The short answer, everything.
 
-On Thu, Jun 19, 2014 at 03:27:37PM +0100, Charles Keepax wrote:
+For pseries the two big actions that can change the device tree are
+adding/removing resources and partition migration.
 
-> You mention that your power gate might only exist on some
-> hardware. This hardware differences are what device tree is there
-> to describe. So lets say your CODEC has a main power supply called
-> AVDD as in my example above:
+The most frequent updates to the device tree happen during resource
+(cpu, memory, and pci/phb) add and remove. During this process we add
+and remove the node and its properties from the device tree.
+- For memory on newer systems this just involves updating the
+  ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory property. Older
+  firmware levels add and remove the memroy@XXX nodes and their properties.
+- For cpus the cpus/PowerPC,POWERXXXX nodes and its properties are added
+  or removed
+- For pci/phb the pci@XXXXX nodes and properties are added/removed.
 
-FWIW the datasheet I just googled appears to say there are power
-supplies AVDD, DVDD, PVDD and HPVDD - all four of them should appear in
-the driver.
+The less frequent operation of live partition migration (and suspend/resume)
+can update just about anything in the device tree. When this occurs and the
+systems starts after being migrated (or waking up after a suspend) we make
+a call to firmware to get updates to the device tree for the new hardware
+we are running on.
+ 
+> - How frequent are the changes? How many changes would be likely over
+> the runtime of the system?
 
---cQx5fYD6zrLPRXWY
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+This can happen frequently.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+> - Are you able to verify that removed nodes are actually able to be
+> freed correctly? Do you have any testcases for node removal?
 
-iQIcBAEBAgAGBQJTov35AAoJELSic+t+oim9jsEQAIIye70TYli1ZpaQbXkZqAVe
-mzerDDtrjl0TGjjka+gb0HIMVGt8tLwWNqOa63EPBGKodhEe7tUwjjQOrqaJVAt6
-bQin/ajMmaGjKngsULqzZZ/sLRUNvTRSB7KJBAIiOMiUOW+KJ8e0obVsilkgoRPs
-32lUGs5+Re5LkoVELLVKYhFb6iJ4HMkIory0W+8fJ67RHfz1Gco2p2E+Ir6kuX6O
-9PNBfzOG5HmoVfImPWRBt7HXIimODy/g3INAPZIDMOBdD2+aMrZmtJKJht51lCi0
-1FpxnX3N4e8cisedI4jAqjenS3BTkScJMU+rTz6F3XHC2QrqP7EqMuz/Pe+tyDlX
-uym7F8Je//reoBfoRzzO+vlMrkf0HPUCDjuuf/FoKcZqStD8zQZAxjSS3pcRMnmE
-rT148ubnS/S/o9dlhX6hT2uxG+i1YBFdvLmqD4RXiKKRwGK2Nsh+OU6qKKiITgpE
-Wlo81KwQDIQVJUM30pDLYC/lyIBIVoEQlaHDUDoeWlLo2g4L4E5JivFOEbHY4RpO
-QX9PDRUTjzqxyG7A47r4Jh8Py98uxgX5rp0XLXUZc1GpcGct+rJX8gj+0P06Lpq4
-mxCgh5zXBq1XGELEhISucdzQge0+rD2BnxiSplmKroE+cw8Op5wLN5OhxvlKEdun
-R/JZ1hpzD8Uyzc2kEZBr
-=3UnD
------END PGP SIGNATURE-----
+I have always tested this by doing resource add/remove, usually cpu and memory
+since it is the easiest.
 
---cQx5fYD6zrLPRXWY--
+> 
+> I'm thinking very seriously about changing the locking semantics of DT
+> code entirely so that most users never have to worry about
+> of_node_get/put at all. If the DT code is switched to use rcu
+> primitives for tree iteration (which also means making DT code use
+> list_head, something I'm already investigating), then instead of
+> trying to figure out of_node_get/put rules, callers could use
+> rcu_read_lock()/rcu_read_unlock() to protect the region that is
+> searching over nodes, and only call of_node_get() if the node pointer
+> is needed outside the rcu read-side lock.
+> 
+
+This sounds good. I like just taking the rcu lock around accessing the DT.
+Do we have many places where DT node pointers are held that require
+keeping the of_node_get/put calls? If this did exist perhaps we could
+update those places to look up the DT node every time instead of
+holding on to the pointer. We could just get rid of the reference counting
+altogether then.
+
+> I'd really like to be rid of the node reference counting entirely, but
+> I can't figure out a way of doing that safely, so I'd settle for
+> making it a lot easier to get correct.
+> 
+
+heh! I have often thought about adding reference counting to device tree
+properties. I don't really want to but there are some properties that can
+get updated frequently (namely the one mentioned above for memory) that
+can also get pretty big, especially on systems with a lot of memory. We
+never free the memory for old versions of a device tree property. This is
+a pretty minor issue though and probably best suited for a separate
+discussion after resolving this. 
+
+Other than pseries, who else does dynamic device tree updating? Are we the
+only ones?
+
+-Nathan
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
