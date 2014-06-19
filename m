@@ -1,48 +1,105 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] ARM: mvebu: Fix missing binding documentation for Armada 38x
-Date: Thu, 19 Jun 2014 16:07:51 +0200
-Message-ID: <1403186871-28204-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH v4 1/6] Documentation: arm: define DT idle states bindings
+Date: Thu, 19 Jun 2014 10:08:31 -0400
+Message-ID: <53A2EEDF.4030403@ti.com>
+References: <1402503520-8611-1-git-send-email-lorenzo.pieralisi@arm.com> <1402503520-8611-2-git-send-email-lorenzo.pieralisi@arm.com> <alpine.LFD.2.11.1406111240010.25775@knanqh.ubzr> <20140613164954.GA16745@e102568-lin.cambridge.arm.com> <alpine.LFD.2.11.1406131306160.25775@knanqh.ubzr> <20140618173648.GB31573@e102568-lin.cambridge.arm.com> <53A1E818.6030400@ti.com> <000001cf8b90$d6a6f090$83f4d1b0$@arm.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <000001cf8b90$d6a6f090$83f4d1b0$@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Charles Garcia-Tobin <charles.garcia-tobin@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Nicolas Pitre <nicolas.pitre@linaro.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Chander Kashyap <chander.kashyap@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-For the Armada 380 and Armada 385 SoCs, the common bindings for those
-2 SoCs, was forgotten. This patch add the documentation for the
-marvell,aramda38x property.
+Charles,
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Hi,
+On Thursday 19 June 2014 03:33 AM, Charles Garcia-Tobin wrote:
+> 
+> 
+>> -----Original Message-----
+>> From: Santosh Shilimkar [mailto:santosh.shilimkar@ti.com]
+>> Sent: 18 June 2014 20:27
+>> To: Lorenzo Pieralisi; Nicolas Pitre
 
-This fix should be merged in 3.16. For 3.15 I am not sure as it is not
-a regression.
+[..]
 
-Thanks,
-Gregory
+>>> +===========================================
+>>> +3 - state node
+>>> +===========================================
+>>> +
+>>> +A state node represents an idle state description and must be
+>> defined as
+>>> +follows:
+>>> +
+>>> +- state node
+>>> +
+>>> +	Description: must be child of the idle-states node
+>>> +
+>>> +	The state node name shall follow standard device tree naming
+>>> +	rules ([5], 2.2.1 "Node names"), in particular state nodes which
+>>> +	are siblings within a single common parent must be given a unique
+>> name.
+>>> +
+>>> +	The idle state entered by executing the wfi instruction
+>> (idle_standby
+>>> +	SBSA,[3][4]) is considered standard on all ARM platforms and
+>> therefore
+>>> +	must not be listed.
+>>> +
+>>> +	To correctly specify idle states timing and energy related
+>> properties,
+>>> +	the following definitions identify the different execution phases
+>>> +	a CPU goes through to enter and exit idle states and the implied
+>>> +	energy metrics:
+>>> +
+>>> +
+>> 	..__[EXEC]__|__[PREP]__|__[ENTRY]__|__[IDLE]__|__[EXIT]__|__[EXEC]
+>> __..
+>>> +		    |          |           |          |          |
+>>> +
+>>> +		    |<------ entry ------->|
+>>> +		    |       latency        |
+>>> +						      |<- exit ->|
+>>> +						      |  latency |
+>>> +		    |<-------- min-residency -------->|
+>>> +			       |<-------  wakeup-latency ------->|
+>>> +
+>> I don't know the wakeup latency makes much sense and also correct.
+>> Hardware wakeup latency is actually exit latency. Is it for failed
+>> or abort-able ilde case ? We are adding this as a new parameter
+>> at least from idle states perspective. I think we should just
+>> avoid it.
+>>
+> 
+> Hi Santosh, 
+> 
+> To me wake up latency makes up a lot of sense. It is not always the same as
+> exit latency, it will depend on your system, and just how smart it is. In
+> some cases the [ENTRY] period may not be negligible in which case exit
+> latency will be less than the wake up latency. 
+> In addition, it will generally always be shorter than entry+exit which is
+> the default value if omitted, this assumes the PREP time is not abortable,
+> but this is the safer assumption to make.
+> Wake up latency is really the number that folk have in their head for what
+> you'd stick into the pm_qos to veto entry into states when you are latency
+> constrained. 
+> The one thing that really is an optimisation here is having a separate exit
+> latency, which is being proposed for use in core selection for the
+> scheduler.
+> So if anything was going to be made optional pending new scheduler patches
+> should that not be entry/exit latency? 
+>  
+PM QOS angle Nico pointed out and its clear. The wakeup latency as such is a
+worst case wakeup latency from QOS perspective so considering the aborted idle
+case it makes sense to have conservative number which includes entry + exit.
 
- Documentation/devicetree/bindings/arm/armada-38x.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+If you look at current idle governors, only exit latency and target residency
+is being used. No matter how we represent it, as long idle governor or idle
+C-state selection logic gets that information, things should be fine. So
+from that view your point of entry/exit optional makes sense considering
+wakeup latency can convey that information indirectly.
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
-index 11f2330a6554..b68bcb80d2de 100644
---- a/Documentation/devicetree/bindings/arm/armada-38x.txt
-+++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
-@@ -6,5 +6,9 @@ following property:
- 
- Required root node property:
- 
-+compatible: must contain "marvell,armada38x"
-+
-+Required root node property:
-+
-  - compatible: must contain either "marvell,armada380" or
-    "marvell,armada385" depending on the variant of the SoC being used.
--- 
-1.8.1.2
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Santosh
