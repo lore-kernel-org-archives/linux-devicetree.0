@@ -1,56 +1,64 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] of: mdio: fixup of_phy_register_fixed_link parsing of
- new bindings
-Date: Thu, 19 Jun 2014 23:32:32 +0400
-Message-ID: <53A33AD0.2060200@cogentembedded.com>
-References: <1403199334-13212-1-git-send-email-rretanubun.work@gmail.com>
+From: Jassi Brar <jaswinder.singh@linaro.org>
+Subject: Re: [PATCH v3 0/3] Qualcomm Resource Power Manager driver
+Date: Fri, 20 Jun 2014 01:31:21 +0530
+Message-ID: <CAJe_ZhcSMrN6OeRjo7cG7CMobjEPMMB7o0eUD9HAFskravSQ3w@mail.gmail.com>
+References: <1402944372-31901-1-git-send-email-bjorn.andersson@sonymobile.com>
+	<7hvbrzbh1u.fsf@paris.lan>
+	<CAJAp7OhHr4Cgcp9pvQ3=MAie_zSnFJxG28Vf37qJ98BK7P1jaQ@mail.gmail.com>
+	<7hzjha8b97.fsf@paris.lan>
+	<842A7147-A2CC-42BD-9947-CBADF738DC92@codeaurora.org>
+	<7hegym6uca.fsf@paris.lan>
+	<CAJe_ZhfmsgvnVu-VgN63LaZ-522HuAY_EVfB6ujQjdzBE+u=zA@mail.gmail.com>
+	<CAJAp7OgfsVs9C0RNrDnQ5g7heba7JjaYFrj7wVUqT_m+wu-A3A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1403199334-13212-1-git-send-email-rretanubun.work@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Richard Retanubun <rretanubun.work@gmail.com>, davem@davemloft.net
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thomas.petazzoni@free-electrons.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAJAp7OgfsVs9C0RNrDnQ5g7heba7JjaYFrj7wVUqT_m+wu-A3A@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn@kryo.se>
+Cc: Kevin Hilman <khilman@linaro.org>, Kumar Gala <galak@codeaurora.org>, Lee Jones <lee.jones@linaro.org>, Bjorn Andersson <bjorn.andersson@sonymobile.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Josh Cartwright <joshc@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On 19 June 2014 23:52, Bjorn Andersson <bjorn@kryo.se> wrote:
+> On Wed, Jun 18, 2014 at 8:55 PM, Jassi Brar <jaswinder.singh@linaro.org> wrote:
+>> On 18 June 2014 22:14, Kevin Hilman <khilman@linaro.org> wrote:
+> [...]
+>>> Thinking more about what this RPM driver actually does, and since you
+>>> mentioned patterns across SoCs, it seems to me the RPM driver bascially
+>>> just doing the IPC.
+>>>
+>>> So, rather than MFD or drivers/soc, it seems to me that it should be
+>>> implmented as a controller in the new common mailbox framwork[1] being
+>>> worked on by Jassi Brar (added to Cc.)
+>>>
+>>> IIUC, RPM is actually only doing one-way IPC (it only exposes a write()
+>>> interface to clients) so it seems like a rather simple implementation of
+>>> a mailbox controller.
+>>>
+>> Yup, qcom_rpm.c is exactly what drivers/mailbox/ is meant for.
+>>
+>
+> The RPM provides a register file with 80ish registers of variable size, to
+> program the hardware you write to these registers. Then you write to a register
+> selector register and then signal an outgoing interrupt.
+>
+For mailbox_request_channel(), you have dev_get_qcom_rpm()  and
+qcom_rpm_write() for mbox_send_message()
+Rest all is what you need to fire off a message to remote or register
+for interrupts. So nothing new to me.
 
-On 06/19/2014 09:35 PM, Richard Retanubun wrote:
+> That is, the interface exposed to the kernel by the SoC is not an mailbox like
+> interface.
+>
+ I don't understand how having to program 80 registers makes it "not
+like mailbox"?
+ I have used mailbox api to pass messages between CPUs (using PPI)
+under same instance of Linux and otoh I think it could also support
+IPC over gpio (if someone gets that desperate).
+Mailbox isn't about how you program the h/w. Do whatever is needed to
+send a message across.
 
-> Fixes commit 3be2a49e5c08 ("of: provide a binding for fixed link PHYs")
+BTW I haven't looked closely, but probably you could push the data tables in DT?
 
-> Fix the parsing of the new fixed link dts bindings for duplex,
-> pause, and asym_pause by using the correct device node pointer.
-
-> Signed-off-by: Richard Retanubun <rretanubun.work@gmail.com>
-> ---
->   drivers/of/of_mdio.c | 8 +++++---
->   1 file changed, 5 insertions(+), 3 deletions(-)
-
-> diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-> index 7700ddc..c389e7b 100644
-> --- a/drivers/of/of_mdio.c
-> +++ b/drivers/of/of_mdio.c
-> @@ -290,11 +290,13 @@ int of_phy_register_fixed_link(struct device_node *np)
->   	fixed_link_node = of_get_child_by_name(np, "fixed-link");
->   	if (fixed_link_node) {
->   		status.link = 1;
-> -		status.duplex = of_property_read_bool(np, "full-duplex");
-> +		status.duplex = of_property_read_bool(fixed_link_node,
-> +					"full-duplex");
-
-    The continuation line should start under 'fixed_link_node', according to 
-the networking coding style.
-
->   		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
->   			return -EINVAL;
-> -		status.pause = of_property_read_bool(np, "pause");
-> -		status.asym_pause = of_property_read_bool(np, "asym-pause");
-> +		status.pause = of_property_read_bool(fixed_link_node, "pause");
-> +		status.asym_pause = of_property_read_bool(fixed_link_node,
-> +						"asym-pause");
-
-    Same here...
-
-WBR, Sergei
+Cheers
+-Jassi
