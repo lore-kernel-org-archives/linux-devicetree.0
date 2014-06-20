@@ -1,107 +1,107 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] dt: bindings: add bindings for
- Broadcom bcm43xx sdio devices
-Date: Fri, 20 Jun 2014 16:27:24 +0200
-Message-ID: <53A444CC.2080203@redhat.com>
-References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-2-git-send-email-hdegoede@redhat.com> <CAGVrzcZBzDTfnd6o0ib1FBvBK2VPNitS=rpb4jDkjF=T7Fy=DQ@mail.gmail.com> <539FE0EC.5090003@redhat.com> <539FF2FA.8050304@broadcom.com>
+Subject: Re: [PATCH v2 4/4] brcmfmac: Fix OOB interrupt not
+ working for BCM43362
+Date: Fri, 20 Jun 2014 16:28:39 +0200
+Message-ID: <53A44517.4070001@redhat.com>
+References: <1402941407-8210-1-git-send-email-hdegoede@redhat.com> <1402941407-8210-5-git-send-email-hdegoede@redhat.com> <53A1F8D1.1050204@broadcom.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBWMJSGOQKGQEMMTJHRY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <539FF2FA.8050304-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBIMKSGOQKGQENSLA3SQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <53A1F8D1.1050204-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Florian Fainelli <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ATHEROS ATH5K WIR..." <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+To: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 06/17/2014 09:49 AM, Arend van Spriel wrote:
-> On 17-06-14 08:32, Hans de Goede wrote:
->> Hi,
+On 06/18/2014 10:38 PM, Arend van Spriel wrote:
+> On 16-06-14 19:56, Hans de Goede wrote:
+>> It has taken me a long long time to get the OOB interrupt working on the
+>> AP6210 sdio wifi/bt module found on various Allwinner A20 boards. In the
+>> end I found these magic register pokes in the cubietruck kernel tree:
+>> https://github.com/cubieboard2/linux-sunxi/commit/7f08ba395617d17e7a711507503d89a50406fe7a
 >>
->> On 06/16/2014 10:53 PM, Florian Fainelli wrote:
->>> 2014-06-16 10:56 GMT-07:00 Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>:
->>>> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>>
->>>> The Broadcom bcm43xx sdio devices are fullmac devices that may be
->>>> integrated in ARM platforms. Currently, the brcmfmac driver for
->>>> these devices support use of platform data. This patch specifies
->>>> the bindings that allow this platform data to be expressed in the
->>>> devicetree.
->>>>
->>>> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
->>>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no =
-consensus
->>>>   on how to handle this yet]
->>>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>> ---
->>>>   .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 29 ++++++++++++=
-++++++++++
->>>>   1 file changed, 29 insertions(+)
->>>>   create mode 100644 Documentation/devicetree/bindings/net/wireless/br=
-cm,bcm43xx-fmac.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43=
-xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-f=
-mac.txt
->>>> new file mode 100644
->>>> index 0000000..6a0aaf2
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac=
-.txt
->>>> @@ -0,0 +1,29 @@
->>>> +Broadcom BCM43xx Fullmac wireless SDIO devices
->>>> +
->>>> +This node provides properties for controlling the Broadcom wireless d=
-evice. The
->>>> +node is expected to be specified as a child node to the SDIO controll=
-er that
->>>> +connects the device to the system.
->>>> +
->>>> +Required properties:
->>>> +
->>>> + - compatible : Should be "brcm,bcm43xx-fmac".
->>>
->>> In general, the use of a wildcard compatible string is discouraged
->>> over the use of a more descriptive compatible string. So you should
->>> find out what is the first chip that is compatible, and use that
->>> compatible string as long as that compatibility remains.
+>> I'm not entirely sure if this specific to the AP6210 module, or if this
+>> should be done for all BCM43362 sdio devices.
+> 
+> Bit late response but it took some digging. It turns out this is done for all bcm43362 in internal/proprietary driver.
+> 
+> +Reviewed-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+
+Thanks, I've updated the commit msg with this info and added
+your Reviewed-by for v3 of this patch-set.
+
+>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+>> ---
+>>   drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c | 16 ++++++++++++++++
+>>   1 file changed, 16 insertions(+)
 >>
->> Right, Arend, what should we use then ?
->=20
-> In earlier discussions, we ended up with this compatible string. The prop=
-erties are generic enough to be covered by this 'wildcard' string. However,=
- I am not religious about it so if you feel strongly for an explicit string=
- it could be brcm,bcm4329-fmac, but it does not have my preference.
+>> diff --git a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+>> index 0fc707c..58e86a5 100644
+>> --- a/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+>> +++ b/drivers/net/wireless/brcm80211/brcmfmac/bcmsdh.c
+>> @@ -39,7 +39,9 @@
+>>   #include <brcm_hw_ids.h>
+>>   #include <brcmu_utils.h>
+>>   #include <brcmu_wifi.h>
+>> +#include <chipcommon.h>
+>>   #include <soc.h>
+>> +#include "chip.h"
+> 
+> Not sure why chip.h is needed here.
 
-It is not something I really feel strong about, but as Florian
-rightfully points out using wildcard strings is something which
-is more or less not done in devicetree land, the idea being that
-just using the lowest model, makes it easier to later add different
-bindings for later models if that turns out to be necessary.
+For the CORE_CC_REG macro used below.
 
-So I've changed the compatibility string to brcm,bcm4329-fmac for v3
-of this patch-set.
+> 
+>>   #include "dhd_bus.h"
+>>   #include "dhd_dbg.h"
+>>   #include "sdio_host.h"
+>> @@ -119,6 +121,7 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+>>   {
+>>       int ret = 0;
+>>       u8 data;
+>> +    u32 addr, gpiocontrol;
+>>       unsigned long flags;
+>>
+>>       if ((sdiodev->pdata) && (sdiodev->pdata->oob_irq_supported)) {
+>> @@ -148,6 +151,19 @@ int brcmf_sdiod_intr_register(struct brcmf_sdio_dev *sdiodev)
+>>
+>>           sdio_claim_host(sdiodev->func[1]);
+>>
+>> +        if (sdiodev->bus_if->chip == BCM43362_CHIP_ID) {
+>> +            /* assign GPIO to SDIO core */
+>> +            addr = CORE_CC_REG(SI_ENUM_BASE, gpiocontrol);
+> 
+> I don't like the assumption that chipcommon core register space is always at SI_ENUM_BASE although it is for BCM43362. Let's keep it for now.
+
+Ok.
+
+> 
+>> +            gpiocontrol = brcmf_sdiod_regrl(sdiodev, addr, &ret);
+>> +            gpiocontrol |= 0x2;
+>> +            brcmf_sdiod_regwl(sdiodev, addr, gpiocontrol, &ret);
+>> +
+>> +            brcmf_sdiod_regwb(sdiodev, SBSDIO_GPIO_SELECT, 0xf,
+>> +                      &ret);
+>> +            brcmf_sdiod_regwb(sdiodev, SBSDIO_GPIO_OUT, 0, &ret);
+>> +            brcmf_sdiod_regwb(sdiodev, SBSDIO_GPIO_EN, 0x2, &ret);
+>> +        }
+>> +
+>>           /* must configure SDIO_CCCR_IENx to enable irq */
+>>           data = brcmf_sdiod_regrb(sdiodev, SDIO_CCCR_IENx, &ret);
+>>           data |= 1 << SDIO_FUNC_1 | 1 << SDIO_FUNC_2 | 1;
+>>
+> 
+> Regards,
+> Arend
 
 Regards,
 
 Hans
-
---=20
-You received this message because you are subscribed to the Google Groups "=
-linux-sunxi" group.
-To unsubscribe from this group and stop receiving emails from it, send an e=
-mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
