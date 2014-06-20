@@ -1,7 +1,8 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 3/4] ARM: sunxi: Add Allwinner A23 dtsi
-Date: Fri, 20 Jun 2014 22:52:52 +0800
-Message-ID: <1403275973-24259-4-git-send-email-wens@csie.org>
+Subject: [PATCH v3 2/4] ARM: sunxi: Add earlyprintk support
+ using R_UART (sun6i/sun8i)
+Date: Fri, 20 Jun 2014 22:52:51 +0800
+Message-ID: <1403275973-24259-3-git-send-email-wens@csie.org>
 References: <1403275973-24259-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -18,180 +19,50 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A23 is a tablet oriented SoC with 2 Cortex-A7 cores
-and a Mali-400MP2 GPU.
+sun6i/sun8i have a UART in the RTC block group, which can be used
+as an early console. This is most useful on sun8i as UART0 is muxed
+with MMC0, which is not available if we boot from MMC.
 
 Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/boot/dts/sun8i-a23.dtsi | 160 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 160 insertions(+)
- create mode 100644 arch/arm/boot/dts/sun8i-a23.dtsi
+ arch/arm/Kconfig.debug | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-new file mode 100644
-index 0000000..ac5f69a
---- /dev/null
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -0,0 +1,160 @@
-+/*
-+ * Copyright 2014 Chen-Yu Tsai
-+ *
-+ * Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-+ *
-+ * The code contained herein is licensed under the GNU General Public
-+ * License. You may obtain a copy of the GNU General Public License
-+ * Version 2 or later at the following locations:
-+ *
-+ * http://www.opensource.org/licenses/gpl-license.html
-+ * http://www.gnu.org/copyleft/gpl.html
-+ */
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index 8f90595..3548612 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -715,6 +715,14 @@ choice
+ 		  Say Y here if you want kernel low-level debugging support
+ 		  on Allwinner A1X based platforms on the UART1.
+ 
++	config DEBUG_SUNXI_R_UART
++		bool "Kernel low-level debugging messages via sunXi R_UART"
++		depends on MACH_SUN6I || MACH_SUN8I
++		select DEBUG_UART_8250
++		help
++		  Say Y here if you want kernel low-level debugging support
++		  on Allwinner A31/A23 based platforms on the R_UART.
 +
-+/include/ "skeleton.dtsi"
-+
-+/ {
-+	interrupt-parent = <&gic>;
-+
-+	aliases {
-+		serial0 = &uart0;
-+		serial1 = &uart1;
-+		serial2 = &uart2;
-+		serial3 = &uart3;
-+		serial4 = &uart4;
-+		serial5 = &r_uart;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <0>;
-+		};
-+
-+		cpu@1 {
-+			compatible = "arm,cortex-a7";
-+			device_type = "cpu";
-+			reg = <1>;
-+		};
-+	};
-+
-+	memory {
-+		reg = <0x40000000 0x40000000>;
-+	};
-+
-+	clocks {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		osc24M: osc24M_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <24000000>;
-+			clock-output-names = "osc24M";
-+		};
-+
-+		osc32k: osc32k_clk {
-+			#clock-cells = <0>;
-+			compatible = "fixed-clock";
-+			clock-frequency = <32768>;
-+			clock-output-names = "osc32k";
-+		};
-+	};
-+
-+	soc@01c00000 {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		timer@01c20c00 {
-+			compatible = "allwinner,sun4i-a10-timer";
-+			reg = <0x01c20c00 0xa0>;
-+			interrupts = <0 18 4>,
-+				     <0 19 4>;
-+			clocks = <&osc24M>;
-+		};
-+
-+		wdt0: watchdog@01c20ca0 {
-+			compatible = "allwinner,sun6i-a31-wdt";
-+			reg = <0x01c20ca0 0x20>;
-+			interrupts = <0 25 4>;
-+		};
-+
-+		uart0: serial@01c28000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28000 0x400>;
-+			interrupts = <0 0 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart1: serial@01c28400 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28400 0x400>;
-+			interrupts = <0 1 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart2: serial@01c28800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28800 0x400>;
-+			interrupts = <0 2 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart3: serial@01c28c00 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c28c00 0x400>;
-+			interrupts = <0 3 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		uart4: serial@01c29000 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01c29000 0x400>;
-+			interrupts = <0 4 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@01c81000 {
-+			compatible = "arm,cortex-a7-gic", "arm,cortex-a15-gic";
-+			reg = <0x01c81000 0x1000>,
-+			      <0x01c82000 0x1000>,
-+			      <0x01c84000 0x2000>,
-+			      <0x01c86000 0x2000>;
-+			interrupt-controller;
-+			#interrupt-cells = <3>;
-+			interrupts = <1 9 0xf04>;
-+		};
-+
-+		r_uart: serial@01f02800 {
-+			compatible = "snps,dw-apb-uart";
-+			reg = <0x01f02800 0x400>;
-+			interrupts = <0 38 4>;
-+			reg-shift = <2>;
-+			reg-io-width = <4>;
-+			clocks = <&osc24M>;
-+			status = "disabled";
-+		};
-+	};
-+};
+ 	config TEGRA_DEBUG_UART_AUTO_ODMDATA
+ 		bool "Kernel low-level debugging messages via Tegra UART via ODMDATA"
+ 		depends on ARCH_TEGRA
+@@ -1043,6 +1051,7 @@ config DEBUG_UART_PHYS
+ 	default 0x01c28400 if DEBUG_SUNXI_UART1
+ 	default 0x01d0c000 if DEBUG_DAVINCI_DA8XX_UART1
+ 	default 0x01d0d000 if DEBUG_DAVINCI_DA8XX_UART2
++	default 0x01f02800 if DEBUG_SUNXI_R_UART
+ 	default 0x02530c00 if DEBUG_KEYSTONE_UART0
+ 	default 0x02531000 if DEBUG_KEYSTONE_UART1
+ 	default 0x03010fe0 if ARCH_RPC
+@@ -1118,6 +1127,7 @@ config DEBUG_UART_VIRT
+ 	default 0xf1600000 if ARCH_INTEGRATOR
+ 	default 0xf1c28000 if DEBUG_SUNXI_UART0
+ 	default 0xf1c28400 if DEBUG_SUNXI_UART1
++	default 0xf1f02800 if DEBUG_SUNXI_R_UART
+ 	default 0xf2100000 if DEBUG_PXA_UART1
+ 	default 0xf4090000 if ARCH_LPC32XX
+ 	default 0xf4200000 if ARCH_GEMINI
 -- 
 2.0.0
