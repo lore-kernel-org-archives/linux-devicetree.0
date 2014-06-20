@@ -1,62 +1,169 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 1/4] ARM: sunxi: Introduce Allwinner A23 support
-Date: Fri, 20 Jun 2014 22:52:50 +0800
-Message-ID: <1403275973-24259-2-git-send-email-wens@csie.org>
-References: <1403275973-24259-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVEVSGOQKGQEBLY23BQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1403275973-24259-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v3 4/7] ARM: at91: introduce OLD_IRQ_AT91 Kconfig option
+Date: Fri, 20 Jun 2014 17:01:24 +0200
+Message-ID: <1403276487-8792-5-git-send-email-boris.brezillon@free-electrons.com>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403276487-8792-1-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Allwinner A23 is a dual-core Cortex-A7-based SoC. It re-uses most of
-the IPs found in previous SoCs, notably the A31.
+Introduce the OLD_IRQ_AT91 Kconfig option to prepare migration to the
+new AIC driver.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Select this option for all at91 SoCs and all available boards so that we
+can later move DT enabled boards to the new irq driver and keep the old
+implementation when legacy boards are selected.
+
+Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/mach-sunxi/Kconfig | 5 +++++
- arch/arm/mach-sunxi/sunxi.c | 9 +++++++++
- 2 files changed, 14 insertions(+)
+ arch/arm/mach-at91/Kconfig        | 17 +++++++++--------
+ arch/arm/mach-at91/Kconfig.non_dt |  6 ++++++
+ arch/arm/mach-at91/Makefile       |  3 ++-
+ 3 files changed, 17 insertions(+), 9 deletions(-)
 
-diff --git a/arch/arm/mach-sunxi/Kconfig b/arch/arm/mach-sunxi/Kconfig
-index 0fbd4f1..f776c5f 100644
---- a/arch/arm/mach-sunxi/Kconfig
-+++ b/arch/arm/mach-sunxi/Kconfig
-@@ -35,4 +35,9 @@ config MACH_SUN7I
- 	select HAVE_ARM_ARCH_TIMER
- 	select SUN5I_HSTIMER
+diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
+index 45b55e0..fbc1b68 100644
+--- a/arch/arm/mach-at91/Kconfig
++++ b/arch/arm/mach-at91/Kconfig
+@@ -28,6 +28,11 @@ config OLD_CLK_AT91
+ 	bool
+ 	default AT91_PMC_UNIT && AT91_USE_OLD_CLK
  
-+config MACH_SUN8I
-+	bool "Allwinner A23 (sun8i) SoCs support"
-+	default ARCH_SUNXI
-+	select ARM_GIC
++config OLD_IRQ_AT91
++	bool
++	select MULTI_IRQ_HANDLER
++	select SPARSE_IRQ
 +
- endif
-diff --git a/arch/arm/mach-sunxi/sunxi.c b/arch/arm/mach-sunxi/sunxi.c
-index 3f9587b..4d09469 100644
---- a/arch/arm/mach-sunxi/sunxi.c
-+++ b/arch/arm/mach-sunxi/sunxi.c
-@@ -53,3 +53,12 @@ static const char * const sun7i_board_dt_compat[] = {
- DT_MACHINE_START(SUN7I_DT, "Allwinner sun7i (A20) Family")
- 	.dt_compat	= sun7i_board_dt_compat,
- MACHINE_END
-+
-+static const char * const sun8i_board_dt_compat[] = {
-+	"allwinner,sun8i-a23",
-+	NULL,
-+};
-+
-+DT_MACHINE_START(SUN8I_DT, "Allwinner sun8i (A23) Family")
-+	.dt_compat	= sun8i_board_dt_compat,
-+MACHINE_END
+ config AT91_SAM9_ALT_RESET
+ 	bool
+ 	default !ARCH_AT91X40
+@@ -47,16 +52,12 @@ config SOC_AT91SAM9
+ 	select AT91_SAM9_TIME
+ 	select CPU_ARM926T
+ 	select GENERIC_CLOCKEVENTS
+-	select MULTI_IRQ_HANDLER
+-	select SPARSE_IRQ
+ 
+ config SOC_SAMA5
+ 	bool
+ 	select AT91_SAM9_TIME
+ 	select CPU_V7
+ 	select GENERIC_CLOCKEVENTS
+-	select MULTI_IRQ_HANDLER
+-	select SPARSE_IRQ
+ 	select USE_OF
+ 
+ menu "Atmel AT91 System-on-Chip"
+@@ -70,8 +71,7 @@ config ARCH_AT91X40
+ 	depends on !MMU
+ 	select CPU_ARM7TDMI
+ 	select ARCH_USES_GETTIMEOFFSET
+-	select MULTI_IRQ_HANDLER
+-	select SPARSE_IRQ
++	select OLD_IRQ_AT91
+ 
+ 	help
+ 	  Select this if you are using one of Atmel's AT91X40 SoC.
+@@ -111,8 +111,6 @@ config SOC_AT91RM9200
+ 	select CPU_ARM920T
+ 	select GENERIC_CLOCKEVENTS
+ 	select HAVE_AT91_DBGU0
+-	select MULTI_IRQ_HANDLER
+-	select SPARSE_IRQ
+ 	select AT91_USE_OLD_CLK
+ 	select HAVE_AT91_USB_CLK
+ 
+@@ -200,6 +198,7 @@ config MACH_AT91RM9200_DT
+ 	bool "Atmel AT91RM9200 Evaluation Kits with device-tree support"
+ 	depends on SOC_AT91RM9200
+ 	select USE_OF
++	select OLD_IRQ_AT91
+ 	help
+ 	  Select this if you want to experiment device-tree with
+ 	  an Atmel RM9200 Evaluation Kit.
+@@ -208,6 +207,7 @@ config MACH_AT91SAM9_DT
+ 	bool "Atmel AT91SAM Evaluation Kits with device-tree support"
+ 	depends on SOC_AT91SAM9
+ 	select USE_OF
++	select OLD_IRQ_AT91
+ 	help
+ 	  Select this if you want to experiment device-tree with
+ 	  an Atmel Evaluation Kit.
+@@ -216,6 +216,7 @@ config MACH_SAMA5_DT
+ 	bool "Atmel SAMA5 Evaluation Kits with device-tree support"
+ 	depends on SOC_SAMA5
+ 	select USE_OF
++	select OLD_IRQ_AT91
+ 	select PHYLIB if NETDEVICES
+ 	help
+ 	  Select this if you want to experiment device-tree with
+diff --git a/arch/arm/mach-at91/Kconfig.non_dt b/arch/arm/mach-at91/Kconfig.non_dt
+index 44ace32..b774c3d 100644
+--- a/arch/arm/mach-at91/Kconfig.non_dt
++++ b/arch/arm/mach-at91/Kconfig.non_dt
+@@ -14,31 +14,37 @@ config ARCH_AT91RM9200
+ 	bool "AT91RM9200"
+ 	select SOC_AT91RM9200
+ 	select AT91_USE_OLD_CLK
++	select OLD_IRQ_AT91
+ 
+ config ARCH_AT91SAM9260
+ 	bool "AT91SAM9260 or AT91SAM9XE or AT91SAM9G20"
+ 	select SOC_AT91SAM9260
+ 	select AT91_USE_OLD_CLK
++	select OLD_IRQ_AT91
+ 
+ config ARCH_AT91SAM9261
+ 	bool "AT91SAM9261 or AT91SAM9G10"
+ 	select SOC_AT91SAM9261
+ 	select AT91_USE_OLD_CLK
++	select OLD_IRQ_AT91
+ 
+ config ARCH_AT91SAM9263
+ 	bool "AT91SAM9263"
+ 	select SOC_AT91SAM9263
+ 	select AT91_USE_OLD_CLK
++	select OLD_IRQ_AT91
+ 
+ config ARCH_AT91SAM9RL
+ 	bool "AT91SAM9RL"
+ 	select SOC_AT91SAM9RL
+ 	select AT91_USE_OLD_CLK
++	select OLD_IRQ_AT91
+ 
+ config ARCH_AT91SAM9G45
+ 	bool "AT91SAM9G45"
+ 	select SOC_AT91SAM9G45
+ 	select AT91_USE_OLD_CLK
++	select OLD_IRQ_AT91
+ 
+ endchoice
+ 
+diff --git a/arch/arm/mach-at91/Makefile b/arch/arm/mach-at91/Makefile
+index 78e9cec..d972fd6 100644
+--- a/arch/arm/mach-at91/Makefile
++++ b/arch/arm/mach-at91/Makefile
+@@ -2,11 +2,12 @@
+ # Makefile for the linux kernel.
+ #
+ 
+-obj-y		:= irq.o gpio.o setup.o sysirq_mask.o
++obj-y		:= gpio.o setup.o sysirq_mask.o
+ obj-m		:=
+ obj-n		:=
+ obj-		:=
+ 
++obj-$(CONFIG_OLD_IRQ_AT91)	+= irq.o
+ obj-$(CONFIG_OLD_CLK_AT91)	+= clock.o
+ obj-$(CONFIG_AT91_SAM9_ALT_RESET) += at91sam9_alt_reset.o
+ obj-$(CONFIG_AT91_SAM9G45_RESET) += at91sam9g45_reset.o
 -- 
-2.0.0
+1.8.3.2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
