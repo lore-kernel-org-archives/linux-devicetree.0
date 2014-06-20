@@ -1,89 +1,27 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 2/2] ARM: shmobile: lager: enable internal PCI
-Date: Sat, 21 Jun 2014 00:38:48 +0400
-Message-ID: <201406210038.49541.sergei.shtylyov@cogentembedded.com>
-References: <201406210034.57784.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 0/3] Add R8A7791/Koelsch/Henninger board PCI DT support
+Date: Sat, 21 Jun 2014 00:44:50 +0400
+Message-ID: <201406210044.51620.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
   charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201406210034.57784.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
 To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Dooks <ben.dooks@codethink.co.uk>
+Hello.
 
-Enable internal AHB-PCI bridges for the USB EHCI/OHCI controllers attached to
-them.
+   Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-v3.16-rc1-20140618' tag. Here we add PCI USB device tree support
+for the R8A7791-based Koelsch and Henninger boards. As the 'pci-rcar-gen2'
+driver device tree support has been merged for 3.16, this patchset can now be
+merged too... 
 
-Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
-[Sergei: enabled PCI0]
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+[1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
+[2/3] ARM: shmobile: koelsch: enable internal PCI
+[3/3] ARM: shmobile: henninger: enable internal PCI
 
----
-Changes in version 4:
-- refreshed the patch.
-
-Changes in version 3:
-- refreshed the patch.
-
-Changes in version 2:
-- enabled PCI0 device;
-- reworded summary and changelog;
-- refreshed the patch.
-
- arch/arm/boot/dts/r8a7790-lager.dts |   33 +++++++++++++++++++++++++++++++++
- 1 file changed, 33 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
-+++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
-@@ -219,6 +219,21 @@
- 		renesas,groups = "i2c3";
- 		renesas,function = "i2c3";
- 	};
-+
-+	usb0_pins: usb0 {
-+		renesas,groups = "usb0";
-+		renesas,function = "usb0";
-+	};
-+
-+	usb1_pins: usb1 {
-+		renesas,groups = "usb1";
-+		renesas,function = "usb1";
-+	};
-+
-+	usb2_pins: usb2 {
-+		renesas,groups = "usb2";
-+		renesas,function = "usb2";
-+	};
- };
- 
- &ether {
-@@ -368,3 +383,21 @@
- 		regulator-always-on;
- 	};
- };
-+
-+&pci0 {
-+	status = "okay";
-+	pinctrl-0 = <&usb0_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&pci1 {
-+	status = "okay";
-+	pinctrl-0 = <&usb1_pins>;
-+	pinctrl-names = "default";
-+};
-+
-+&pci2 {
-+	status = "okay";
-+	pinctrl-0 = <&usb2_pins>;
-+	pinctrl-names = "default";
-+};
+WBR, Sergei
