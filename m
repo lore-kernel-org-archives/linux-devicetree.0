@@ -1,54 +1,90 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: Re: [PATCH] staging: imx-drm: ipu-v3: ipu-common.c: Cleaning up
- return of uninitialized variable
-Date: Fri, 20 Jun 2014 13:20:43 +0200
-Message-ID: <CAFo99gZKXEVVxZX12pqiaPuD2RqN=qxkKezSoP09ECSj37waSA@mail.gmail.com>
-References: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <20140619225100.GA15258@kroah.com>
+From: Alexander Aring <alex.aring@gmail.com>
+Subject: Re: [PATCH net-next v6 1/3] ieee802154: cc2520: adds driver for TI
+ CC2520 radio
+Date: Fri, 20 Jun 2014 13:24:34 +0200
+Message-ID: <20140620112432.GA5013@omega>
+References: <1403243294-15400-1-git-send-email-varkab@cdac.in>
+ <1403243294-15400-2-git-send-email-varkab@cdac.in>
+ <20140620083218.GA4116@omega>
+ <53A40CB0.4080308@cdac.in>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20140619225100.GA15258@kroah.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Valentina Manea <valentina.manea.m@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Russell King <rmk+kernel@arm.linux.org.uk>
+Content-Type: text/plain; charset=utf-8
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53A40CB0.4080308@cdac.in>
+Sender: netdev-owner@vger.kernel.org
+To: Varka Bhadram <varkab@cdac.in>
+Cc: Varka Bhadram <varkabhadram@gmail.com>, netdev@vger.kernel.org, alex.bluesman.smirnov@gmail.com, dbaryshkov@gmail.com, linux-zigbee-devel@lists.sourceforge.net, davem@davemloft.net, devicetree@vger.kernel.org, sowjanyap@cdac.in, venkatas@cdac.in, santoshk@cdac.in
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Fri, Jun 20, 2014 at 03:58:00PM +0530, Varka Bhadram wrote:
+> Hi Alex,
+> 
+> On 06/20/2014 02:02 PM, Alexander Aring wrote:
+> >Hi Varka,
+> >
+> >sorry for my careful reviewing...,, but I had also some patch series
+> >which was at v8 or something like that. :-)
+> 
+> mhhh.. More careful review produces the best code ...
+> 
+> >On Fri, Jun 20, 2014 at 11:18:12AM +0530, Varka Bhadram wrote:
+> >>This patch adds the driver support for the cc2520 radio.
+> >>
+> >>Driver support:
+> >>         - Tx and Rx of IEEE-802.15.4 packets.
+> >>         - Energy Detection on channel.
+> >>         - Setting the Channel for the radio. [b/w 11 - 26 channels]
+> >>         - Start and Stop the radio
+> >>         - h/w address filtering.
+> >>
+> >>Signed-off-by: Varka Bhadram <varkab@cdac.in>
+> >>---
+> >>  drivers/net/ieee802154/cc2520.c | 1045 +++++++++++++++++++++++++++++++++++++++
+> >>  include/linux/spi/cc2520.h      |   26 +
+> >>  2 files changed, 1071 insertions(+)
+> >>  create mode 100644 drivers/net/ieee802154/cc2520.c
+> >>  create mode 100644 include/linux/spi/cc2520.h
+> >>
+> >>diff --git a/drivers/net/ieee802154/cc2520.c b/drivers/net/ieee802154/cc2520.c
+> >>new file mode 100644
+> >>index 0000000..fff7fd2
+> >>--- /dev/null
+> >>+++ b/drivers/net/ieee802154/cc2520.c
+> >>@@ -0,0 +1,1045 @@
+> >>+/* Driver for TI CC2520 802.15.4 Wireless-PAN Networking controller
+> >>+ *
+> >>+ * Copyright (C) 2014 Varka Bhadram <varkab@cdac.in>
+> >>+ *		      Md.Jamal Mohiuddin <mjmohiuddin@cdac.in>
+> >>+ *		      P Sowjanya <sowjanyap@cdac.in>
+> >>+ *
+> >>+ * This program is free software; you can redistribute it and/or modify
+> >>+ * it under the terms of the GNU General Public License as published by
+> >>+ * the Free Software Foundation; either version 2 of the License, or
+> >>+ * (at your option) any later version.
+> >>+ *
+> >>+ */
+> >>+
+> >...
+> >
+> >>+
+> >>+/* Driver private information */
+> >>+struct cc2520_private {
+> >>+	struct spi_device *spi;		/* spi device structure */
+> >>+	struct ieee802154_dev *dev;	/* Ieee802.15.4 device */
+> >why lowercase IEEE in the comment? :-)
+> 
+> Ok.
+> 
+> >>+	u8 *buf;			/* SPI TX/Rx data buffer */
+> >>+	struct mutex buffer_mutex;	/* SPI buffer mutex */
+> >>+	unsigned is_tx:1;		/* Flag for sync b/w Tx and Rx */
+> >bool/int?
+> 
+> I think there is no difference b/w 'unsigned' and 'unsigned int'. But it will be clear if we use 'unsigned int'
+> 
 
-The mainline form about Jun 6.
-And now it is in  drivers/gpu/ipu-v3/ipu-common.c
-Still with the same error.
+I meant the bitfield here. I only see bitfields if we they use that for
+more than one bitfield. is_tx:1 is more a bool.
 
-Sorry, I have started to compare to linux-next, but I do it as:
-diff `find . ../linux-next/ -name ipu-common.c`
-So missed that the file had moved :-/
-
-Ok, I send a new patch then..
-
-
-Kind regards
-Rickard Strandqvist
-
-
-2014-06-20 0:51 GMT+02:00 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
-> On Sun, Jun 15, 2014 at 01:35:21AM +0200, Rickard Strandqvist wrote:
->> Before when there was an error a uninitialized variable would be returnd.
->> Now it returns -ENODEV
->>
->> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
->> ---
->>  drivers/staging/imx-drm/ipu-v3/ipu-common.c |    4 ++--
->
-> This file isn't even in the tree anymore, what did you make this patch
-> against?
+- Alex
