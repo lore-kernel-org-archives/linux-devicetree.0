@@ -1,56 +1,47 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v9 3/3] dt-bindings: add mtk-timer bindings
-Date: Fri, 20 Jun 2014 13:48:49 +0200
-Message-ID: <1403264929-21325-4-git-send-email-matthias.bgg@gmail.com>
-References: <1403264929-21325-1-git-send-email-matthias.bgg@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [PATCH v3 0/7] i2c: Relax mandatory I2C ID table passing
+Date: Fri, 20 Jun 2014 13:02:23 +0100
+Message-ID: <1403265753-25851-1-git-send-email-lee.jones@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403264929-21325-1-git-send-email-matthias.bgg@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: wsa@the-dreams.de, grant.likely@linaro.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linus.walleij@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding documentation for the General Porpose Timer driver of
-the Mediatek SoCs.
+Hi Wolfram,
+ 
+As previously discussed I believe it should be okay for an I2C device
+driver _not_ supply an I2C ID table to match to.  The I2C subsystem
+should be able to match via other means, such as via OF tables.  The
+blocking factor during our previous conversation was to keep
+registering via sysfs up and running.  This set does that.
 
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Acked-by: S=C3=B6ren Brinkmann <soren.brinkmann@xilinx.com>
-Acked-by: Rob Herring <robh@kernel.org>
----
- .../bindings/timer/mediatek,mtk-timer.txt          |   18 ++++++++++++=
-++++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/mediatek,mt=
-k-timer.txt
+After thinking more deeply about the problem, it occurred to me that
+any I2C device driver which uses the sysfs method and issues an
+of_match_device() would also fail their probe().  Bolted on to this
+set is a new, more generic way for these devices to match against
+either of the I2C/OF tables.
 
-diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer=
-=2Etxt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-new file mode 100644
-index 0000000..10b7e09
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-@@ -0,0 +1,18 @@
-+Mediatek MT6577, MT6572 and MT6589 Timers
-+---------------------------------------
-+
-+Required properties:
-+- compatible: Should be "mediatek,mt6577-timer"
-+- reg: Should contain location and length for timers register.
-+- clocks: Clocks driving the timer hardware. This list should include =
-two
-+	clocks. The order is system clock and as second clock the RTC clock.
-+
-+Examples:
-+
-+	timer@10008000 {
-+		compatible =3D "mediatek,mt6577-timer";
-+		reg =3D <0x10008000 0x80>;
-+		interrupts =3D <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>;
-+		clocks =3D <&system_clk>, <&rtc_clk>;
-+		clock-names =3D "system-clk", "rtc-clk";
-+	};
---=20
-1.7.9.5
+I hope this ticks all of your boxes.
+
+v3:
+  - Insist on passing 'struct i2c_client' instead of 'struct device'
+  - Remove hook from of_match_device()
+
+v2:
+  - Removal of ACPI support (this is really an OF issue).
+  - Add a new .probe2( with will seamlessly replace
+  - Supply a warning on devices matching via OF without a suitable compatible
+  - Remove unified match_device() - bad idea as it subverts type-safe behaviour
+  - Provide examples of the kind of clean-up possible after this set.
+    - I already have the full support from the maintainer of these drivers =;-)
+
+Kind regards,
+Lee
+
+ arch/arm/configs/multi_v7_defconfig |  1 +
+ drivers/i2c/i2c-core.c              | 72 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++---------
+ drivers/mfd/88pm860x-core.c         |  5 ++---
+ drivers/mfd/as3722.c                | 12 ++----------
+ include/linux/i2c.h                 | 22 +++++++++++++++++++++-
+ 5 files changed, 89 insertions(+), 23 deletions(-)
