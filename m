@@ -1,46 +1,61 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Device-tree and Marvell vendor prefix
-Date: Fri, 20 Jun 2014 08:36:40 +0800
-Message-ID: <CAN1soZztOAJv1TRAt1roOASeU1Lm5C+YiL-+BQ+D_QuyJxmQ0g@mail.gmail.com>
-References: <8738f0so0m.fsf@free.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+From: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCHv2] of: Check for phys_addr_t overflows in early_init_dt_add_memory_arch
+Date: Thu, 19 Jun 2014 20:13:38 -0700
+Message-ID: <1403234018-10942-1-git-send-email-lauraa@codeaurora.org>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <8738f0so0m.fsf-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
+To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 3:22 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
->
-> Hi Haojian, Grant and Rob,
->
-> I'm submitting various patches for Marvell PXA27x architecture to support
-> device-tree.
->
-> In a review from Guennadi, he made me a comment that the official prefix for
-> Marvell is "marvell" (according to
-> Documentation/devicetree/bindings/vendor-prefixes.txt).
->
-> As a matter of fact, there are 2 prefixes used :
->  - "marvell" : 264 uses in *.c files
->  - "mrvl" : 64 uses in *.c files
->
-> So which one should I use ?
->
-> Cheers.
->
-> --
-> Robert
+The common early_init_dt_add_memory_arch takes the base and size
+of a memory region as u64 types. The function never checks if
+the base and size can actually fit in a phys_addr_t which may
+be smaller than 64-bits. This may result in incorrect memory
+being passed to memblock_add if the memory falls outside the
+range of phys_addr_t. Add range checks for the base and size if
+phys_addr_t is smaller than u64.
 
-Please use "marvell" instead since it's preferred. We can't replace
-"mrvl" by "marvell" roughly.
-It may cause incompatible in other's tree. We can add "marvell" for
-all "mrvl" entries.
+Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Tested-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+---
+v2: Switched to sizeof(phys_addr_t) < sizeof(u64) instead of macros.
+Sending to right e-mails/mailing lists this time.
 
-Regards
-Haojian
+ drivers/of/fdt.c | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
+
+diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+index c4cddf0..b777d8f 100644
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -880,6 +880,21 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
+ 	const u64 phys_offset = __pa(PAGE_OFFSET);
+ 	base &= PAGE_MASK;
+ 	size &= PAGE_MASK;
++
++	if (sizeof(phys_addr_t) < sizeof(u64)) {
++		if (base > ULONG_MAX) {
++			pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
++					base, base + size);
++			return;
++		}
++
++		if (base + size > ULONG_MAX) {
++			pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
++					ULONG_MAX, base + size);
++			size = ULONG_MAX - base;
++		}
++	}
++
+ 	if (base + size < phys_offset) {
+ 		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
+ 			   base, base + size);
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+hosted by The Linux Foundation
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
