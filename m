@@ -1,244 +1,53 @@
-Return-Path: <pantelis.antoniou@konsulko.com>
-Return-Path: <pantelis.antoniou@konsulko.com>
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH 6/6] of: Introduce tree change __foo_post methods.
-Date: Sun, 22 Jun 2014 12:40:39 +0300
-Message-Id: <1403430039-15085-7-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Return-Path: <sudeep.holla@arm.com>
+Message-ID: <53A46827.9000400@arm.com>
+Date: Fri, 20 Jun 2014 17:58:15 +0100
+From: Sudeep Holla <sudeep.holla@arm.com>
+MIME-Version: 1.0
+Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
+References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>	<1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>	<53A32927.4060004@arm.com>	<CAJe_ZhdRr-9D2uvC9U9_7+N1nKeHPSS7OKocFt6Kq-Gjquokag@mail.gmail.com>	<53A45C54.2010103@arm.com> <CAJe_Zhciv-twFB1ntSCRi7uaF5wZRS9ZQrW-fAP1oj2_BPjAcw@mail.gmail.com>
+In-Reply-To: <CAJe_Zhciv-twFB1ntSCRi7uaF5wZRS9ZQrW-fAP1oj2_BPjAcw@mail.gmail.com>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: quoted-printable
+To: Jassi Brar <jaswinder.singh@linaro.org>
+Cc: Sudeep Holla <sudeep.holla@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mporter@linaro.org" <mporter@linaro.org>, "patches@linaro.org" <patches@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-anna@ti.com" <s-anna@ti.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, Pawel Moll <Pawel.Moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "joshc@codeaurora.org" <joshc@codeaurora.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-As part of transactional DT support there needs to be a clearer
-definition of how each dynamic tree change method works.
 
-Let's take for example the of_add_property method. There are
-discrete steps taken in sequence.
 
-1. The OF_RECONFIG_ADD_PROPERTY notifier will be fired.
-2. The devtree lock will be taken.
-3. Insertion of the property in the live tree.
-4. The devtree lock will be released.
-5. The property will be inserted in the sysfs tree.
+On 20/06/14 17:30, Jassi Brar wrote:
+> On 20 June 2014 21:37, Sudeep Holla <sudeep.holla@arm.com> wrote:
+>>
+>> As I mentioned in the other mail, suppose there's one channel and multip=
+le
+>> users
+>> of it. Each have to acquire the channel, and from then any data received
+>> will
+>> be sent to the client. But what is the async data from remote is not for=
+ the
+>> client currently holding the channel. I also gave the example.
+>>
+>> If the remote is the process that controls power managements and allows =
+you
+>> to
+>> set the thermal bounds. If those limits are crossed, it sends any interr=
+upt
+>> to
+>> notify that, while the controller can be busy handling some other
+>> request(say
+>> DVFS).
+>>
+> Multiple clients of a single mailbox channel asks for a single
+> 'server' type shim client that simply forwards requests to remote on
+> behalf of clients but filter out async notifications from replies
+> coming in from remote. In your case, your 'thermal' client driver will
+> register itself with the shim server for 'thermal' type async
+> notifications. The shim server holds the mailbox channel for whole of
+> its lifetime so you never miss the thermal event.
+>
 
-For each of the of_attach_node, of_detach_node, of_add_property,
-of_remove_property and of_update_property methods we export (and
-introduce if not available), their counterparts of
-__of_attach_node, __of_attach_node_post, __of_detach_node,
-__of_detach_node_post, __of_add_property, __of_add_property_post,
-__of_remove_property, __of_remove_property_post, __of_update_property
-and __of_update_property post.
+OK thanks for clarifying this. I too had same understanding, just wanted to=
+=20
+cross check and convince myself the need of shim layer.
 
-So each of the tree modification methods is following the same
-pattern, i.e. for method foo we have:
-
-Firing of the notifer, lock, __foo, unlock, __foo_post
-
-This breakdown is required when we introduce transaction.
-
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/of/base.c  | 74 ++++++++++++++++++++++++++++++++++++++++--------------
- include/linux/of.h |  7 ++++++
- 2 files changed, 62 insertions(+), 19 deletions(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 42c735d..b5d854d 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -213,13 +213,24 @@ static const char *safe_name(struct kobject *kobj, const char *orig_name)
- 	return name;
- }
- 
--static int __of_add_property_sysfs(struct device_node *np, struct property *pp)
-+static int __of_add_property_sysfs(struct device_node *np, struct property *pp,
-+		int ignore_dup_name)
- {
- 	int rc;
- 
- 	/* Important: Don't leak passwords */
- 	bool secure = strncmp(pp->name, "security-", 9) == 0;
- 
-+	/* ignore duplicate name (transaction case) */
-+	if (ignore_dup_name) {
-+		struct kernfs_node *kn = sysfs_get_dirent(np->kobj.sd,
-+				pp->name);
-+		if (kn) {
-+			sysfs_put(kn);
-+			return 0;
-+		}
-+	}
-+
- 	sysfs_bin_attr_init(&pp->attr);
- 	pp->attr.attr.name = safe_name(&np->kobj, pp->name);
- 	pp->attr.attr.mode = secure ? S_IRUSR : S_IRUGO;
-@@ -253,7 +264,7 @@ static int __of_node_add(struct device_node *np)
- 		return rc;
- 
- 	for_each_property_of_node(np, pp)
--		__of_add_property_sysfs(np, pp);
-+		__of_add_property_sysfs(np, pp, 1);
- 
- 	return 0;
- }
-@@ -1858,6 +1869,13 @@ int __of_add_property(struct device_node *np, struct property *prop)
- 	return 0;
- }
- 
-+void __of_add_property_post(struct device_node *np, struct property *prop,
-+		int ignore_dup_name)
-+{
-+	if (of_node_is_attached(np))
-+		__of_add_property_sysfs(np, prop, ignore_dup_name);
-+}
-+
- /**
-  * of_add_property - Add a property to a node
-  */
-@@ -1876,8 +1894,7 @@ int of_add_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
--	if (of_node_is_attached(np))
--		__of_add_property_sysfs(np, prop);
-+	__of_add_property_post(np, prop, 0);
- 
- 	return rc;
- }
-@@ -1901,6 +1918,13 @@ int __of_remove_property(struct device_node *np, struct property *prop)
- 	return 0;
- }
- 
-+void __of_remove_property_post(struct device_node *np, struct property *prop)
-+{
-+	/* at early boot, bail here and defer setup to of_init() */
-+	if (of_kset)
-+		sysfs_remove_bin_file(&np->kobj, &prop->attr);
-+}
-+
- /**
-  * of_remove_property - Remove a property from a node.
-  *
-@@ -1925,11 +1949,7 @@ int of_remove_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
--	/* at early boot, bail hear and defer setup to of_init() */
--	if (!of_kset)
--		return 0;
--
--	sysfs_remove_bin_file(&np->kobj, &prop->attr);
-+	__of_remove_property_post(np, prop);
- 
- 	return 0;
- }
-@@ -1960,6 +1980,19 @@ int __of_update_property(struct device_node *np, struct property *newprop,
- 	return 0;
- }
- 
-+void __of_update_property_post(struct device_node *np, struct property *newprop,
-+		struct property *oldprop)
-+{
-+	/* At early boot, bail out and defer setup to of_init() */
-+	if (!of_kset)
-+		return;
-+
-+	/* Update the sysfs attribute */
-+	if (oldprop)
-+		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
-+	__of_add_property_sysfs(np, newprop, 0);
-+}
-+
- /*
-  * of_update_property - Update a property in a node, if the property does
-  * not exist, add it.
-@@ -1988,14 +2021,7 @@ int of_update_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
--	/* At early boot, bail out and defer setup to of_init() */
--	if (!of_kset)
--		return 0;
--
--	/* Update the sysfs attribute */
--	if (oldprop)
--		sysfs_remove_bin_file(&np->kobj, &oldprop->attr);
--	__of_add_property_sysfs(np, prop);
-+	__of_update_property_post(np, prop, oldprop);
- 
- 	return 0;
- }
-@@ -2040,6 +2066,11 @@ void __of_attach_node(struct device_node *np)
- 	of_node_clear_flag(np, OF_DETACHED);
- }
- 
-+void __of_attach_node_post(struct device_node *np)
-+{
-+	of_node_add(np);
-+}
-+
- /**
-  * of_attach_node - Plug a device node into the tree and global list.
-  */
-@@ -2056,7 +2087,7 @@ int of_attach_node(struct device_node *np)
- 	__of_attach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	of_node_add(np);
-+	__of_attach_node_post(np);
- 	return 0;
- }
- 
-@@ -2096,6 +2127,11 @@ void __of_detach_node(struct device_node *np)
- 	of_node_set_flag(np, OF_DETACHED);
- }
- 
-+void __of_detach_node_post(struct device_node *np)
-+{
-+	of_node_remove(np);
-+}
-+
- /**
-  * of_detach_node - "Unplug" a node from the device tree.
-  *
-@@ -2115,7 +2151,7 @@ int of_detach_node(struct device_node *np)
- 	__of_detach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	of_node_remove(np);
-+	__of_detach_node_post(np);
- 	return rc;
- }
- #endif /* defined(CONFIG_OF_DYNAMIC) */
-diff --git a/include/linux/of.h b/include/linux/of.h
-index d381eb5..60e9f3b 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -339,9 +339,14 @@ extern int of_alias_get_id(struct device_node *np, const char *stem);
- extern int of_machine_is_compatible(const char *compat);
- 
- int __of_add_property(struct device_node *np, struct property *prop);
-+void __of_add_property_post(struct device_node *np, struct property *prop,
-+		int ignore_dup_name);
- int __of_remove_property(struct device_node *np, struct property *prop);
-+void __of_remove_property_post(struct device_node *np, struct property *prop);
- int __of_update_property(struct device_node *np, struct property *newprop,
- 		struct property **oldprop);
-+void __of_update_property_post(struct device_node *np, struct property *newprop,
-+		struct property *oldprop);
- 
- extern int of_add_property(struct device_node *np, struct property *prop);
- extern int of_remove_property(struct device_node *np, struct property *prop);
-@@ -364,7 +369,9 @@ extern int of_reconfig_notifier_unregister(struct notifier_block *);
- extern int of_reconfig_notify(unsigned long, void *);
- 
- void __of_attach_node(struct device_node *np);
-+void __of_attach_node_post(struct device_node *np);
- void __of_detach_node(struct device_node *np);
-+void __of_detach_node_post(struct device_node *np);
- 
- extern int of_attach_node(struct device_node *);
- extern int of_detach_node(struct device_node *);
--- 
-1.7.12
+Regards,
+Sudeep
