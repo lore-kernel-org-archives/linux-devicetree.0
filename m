@@ -1,7 +1,7 @@
 From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v3 1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
-Date: Sat, 21 Jun 2014 00:48:31 +0400
-Message-ID: <201406210048.31877.sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v3 2/3] ARM: shmobile: koelsch: enable internal PCI
+Date: Sat, 21 Jun 2014 00:50:07 +0400
+Message-ID: <201406210050.08413.sergei.shtylyov@cogentembedded.com>
 References: <201406210044.51620.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: Text/Plain;
@@ -14,7 +14,8 @@ To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll
 Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the R8A7791 internal PCI bridge devices.
+Enable internal AHB-PCI bridges for the USB EHCI/OHCI controllers attached to
+them.
 
 Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
@@ -23,56 +24,48 @@ Changes in version 3:
 - refreshed the patch.
 
 Changes in version 2:
-- added interrupt-related properties to the PCI device nodes;
 - refreshed the patch.
 
- arch/arm/boot/dts/r8a7791.dtsi |   36 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ arch/arm/boot/dts/r8a7791-koelsch.dts |   22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
 
-Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
+Index: renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
 ===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-@@ -961,6 +961,42 @@
- 		status = "disabled";
+--- renesas.orig/arch/arm/boot/dts/r8a7791-koelsch.dts
++++ renesas/arch/arm/boot/dts/r8a7791-koelsch.dts
+@@ -279,6 +279,16 @@
+ 		renesas,groups = "i2c6";
+ 		renesas,function = "i2c6";
  	};
++
++	usb0_pins: usb0 {
++		renesas,groups = "usb0";
++		renesas,function = "usb0";
++	};
++
++	usb1_pins: usb1 {
++		renesas,groups = "usb1";
++		renesas,function = "usb1";
++	};
+ };
  
-+	pci0: pci@ee090000 {
-+		compatible = "renesas,pci-r8a7791";
-+		clocks = <&mstp7_clks R8A7791_CLK_EHCI>;
-+		reg = <0x0 0xee090000 0x0 0xc00>,
-+		      <0x0 0xee080000 0x0 0x1100>;
-+		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
+ &ether {
+@@ -426,6 +436,18 @@
+ 	};
+ };
+ 
++&pci0 {
++	status = "okay";
++	pinctrl-0 = <&usb0_pins>;
++	pinctrl-names = "default";
++};
 +
-+		bus-range = <0 0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0xff00 0 0 0x7>;
-+		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
-+	};
++&pci1 {
++	status = "okay";
++	pinctrl-0 = <&usb1_pins>;
++	pinctrl-names = "default";
++};
 +
-+	pci1: pci@ee0d0000 {
-+		compatible = "renesas,pci-r8a7791";
-+		clocks = <&mstp7_clks R8A7791_CLK_EHCI>;
-+		reg = <0x0 0xee0d0000 0x0 0xc00>,
-+		      <0x0 0xee0c0000 0x0 0x1100>;
-+		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <1 1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		interrupt-map-mask = <0xff00 0 0 0x7>;
-+		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	pciec: pcie@fe000000 {
- 		compatible = "renesas,pcie-r8a7791";
- 		reg = <0 0xfe000000 0 0x80000>;
+ &pcie_bus_clk {
+ 	status = "okay";
+ };
