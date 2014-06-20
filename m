@@ -1,76 +1,54 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] dt/documentation: add specification of dma bus information
-Date: Fri, 20 Jun 2014 14:46:17 -0500
-Message-ID: <CAL_JsqLYho6dRA=-ovKqF7H4EGHJcH_aN3ywd+76oXSprfTMbQ@mail.gmail.com>
-References: <1401981720-6946-1-git-send-email-santosh.shilimkar@ti.com>
- <CAL_JsqJAtWnHKPVpDsdOOzT_X=npc3hroLNTGqULM2SJr=1OEg@mail.gmail.com>
- <53A46CB7.1030109@ti.com> <4193075.zZSpRTFEYz@wuerfel> <53A48553.2080504@ti.com>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: Device-tree and Marvell vendor prefix
+Date: Fri, 20 Jun 2014 15:53:38 -0400
+Message-ID: <20140620195338.GF21711@titan.lakedaemon.net>
+References: <8738f0so0m.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53A48553.2080504-l0cyMroinI0@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <8738f0so0m.fsf-GANU6spQydw@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grygorii Strashko <grygorii.strashko-l0cyMroinI0@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Fabio Estevam <festevam-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 2:02 PM, Santosh Shilimkar
-<santosh.shilimkar-l0cyMroinI0@public.gmane.org> wrote:
-> On Friday 20 June 2014 02:56 PM, Arnd Bergmann wrote:
->> On Friday 20 June 2014 13:17:43 Santosh Shilimkar wrote:
->>>>> +                       dma-coherent;
->>>>> +                       dma-ranges;
->>>>> +
->>>>> +                       dwc3@2690000 {
->>>>> +                               compatible = "synopsys,dwc3";
->>>>> +                               [...]
->>>>> +                       };
->>>>
->>>> This example is a bit strange. I don't understand the relationship
->>>> between keystone-dwc3 and synopsys,dwc3, nor do I want to. I'd prefer
->>>> to see a simple example here.
->>
->>
->>>> dma-ranges is a property of the parent which you show, but
->>>> dma-coherent originally was a property of the bus master itself. While
->>>> we need to support that, are we changing that? We need to be clear on
->>>> where the property belongs even if the kernel is more lax.
->>>>
->>> I don't think we are changing it fundamentally but may be I missing
->>> your point. The dma-coherent as is now a per-device property.
->>> USB is one of the bus master supports coherency and hence showed
->>> up in above example.
->>
->> I think it's enough if you just drop the "synopsys,dwc3" node and the
->> intermediate dma-ranges property from the example, leaving the
->> dma-coherent property in the "ti,keystone-dwc3" node.
->>
-> Thanks Arnd. That should avoid the confusion. Just to see if Rob is
-> fine by it, the example will look like below.
+On Thu, Jun 19, 2014 at 09:22:17PM +0200, Robert Jarzmik wrote:
+> 
+> Hi Haojian, Grant and Rob,
+> 
+> I'm submitting various patches for Marvell PXA27x architecture to support
+> device-tree.
+> 
+> In a review from Guennadi, he made me a comment that the official prefix for
+> Marvell is "marvell" (according to
+> Documentation/devicetree/bindings/vendor-prefixes.txt).
+> 
+> As a matter of fact, there are 2 prefixes used :
+>  - "marvell" : 264 uses in *.c files
+>  - "mrvl" : 64 uses in *.c files
 
-Yes. Looks fine.
+Yes, that's unfortunate.  When we first started converting the Marvell
+legacy platforms (kirwkood, etc) to DT, there was discussion on which
+one to use.  We chose to stay with 'marvell', despite 'mrvl' being the
+official stock ticker symbol.  This was to maintain reverse
+compatibility with the binding for the marvell ethernet driver,
+mv643xx_eth, which had been is use on powerpc for years before us.
 
-Rob
+So, my preference is to use 'marvell'.  I've attempted to correct any
+new bindings I see that use 'mrvl', but apparently I didn't catch them
+all. :(
 
->
-> Example:
-> soc {
->                 compatible = "ti,keystone","simple-bus";
->                 ranges = <0x0 0x0 0x0 0xc0000000>;
->                 dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
->
->                 [...]
->
->                 usb: usb@2680000 {
->                         compatible = "ti,keystone-dwc3";
->
->                         [...]
->                         dma-coherent;
->                 };
-> };
->
-> Regards,
-> Santosh
+> So which one should I use ?
+
+I say 'marvell', but apparently there are others who think differently.
+
+A check of the bindings docs and arch/*/boot/dts/ would be more telling
+than the C files.
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
