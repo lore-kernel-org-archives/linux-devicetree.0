@@ -1,57 +1,82 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
- nodes
-Date: Sat, 21 Jun 2014 01:16:55 +0400
-Message-ID: <53A4A4C7.6080203@cogentembedded.com>
-References: <201406210034.57784.sergei.shtylyov@cogentembedded.com> <201406210036.59693.sergei.shtylyov@cogentembedded.com> <4637423.jWRbL1GbCK@wuerfel> <53A4A0E5.50904@cogentembedded.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
+Date: Fri, 20 Jun 2014 14:18:08 -0700
+Message-ID: <CAD=FV=Ua+P0CBAfNj4SWWMWRKcEFdmh=akwy1-ZWoGOt2P9=cQ@mail.gmail.com>
+References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53A4A0E5.50904@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: "broonie@kernel.org" <broonie@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Mark or Kukjin,
 
-On 06/21/2014 01:00 AM, Sergei Shtylyov wrote:
+On Thu, Jun 12, 2014 at 8:59 PM, Naveen Krishna Chatradhi
+<ch.naveen@samsung.com> wrote:
+> Since, (3146bee spi: s3c64xx: Added provision for dedicated cs pin)
+>
+> spi-s3c64xx.c driver expects
+> 1. chip select gpios from "cs-gpio"(singular) under the
+>    "controller-data" node of the client/slave device of the SPI.
+>
+> 2. "cs-gpio"(singular) entry to be present in the SPI device node.
+>
+> Eg of current broken usage:
+> &spi_1 {
+>         cs-gpio <>;     /* this entry is checked during probe */
+>         ...
+>         slave_node {
+>                 controller-data {
+>                         cs-gpio <&gpioa2 5 0>;
+>                         /* This field is parsed during .setup() */
+>                 }
+>         };
+> };
+>
+> The following dts files which were using this driver. But,
+> din't have the "cs-gpio" entry under SPI node.
+> -- arch/arm/boot/dts/exynos4210-smdkv310.dts
+> -- arch/arm/boot/dts/exynos4412-trats2.dts
+> -- arch/arm/boot/dts/exynos5250-smdk5250.dts
+>
+> Also, the SPI core and many drivers moved on to using "cs-gpios"
+> from SPI node and removed the gpio handling code from drivers
+> (including spi-s3c64xx.c).
+>
+> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
+> considering the time with no compliants about the breakage.
+>
+> We are assuming it is safe to remove the "cs-gpio"(singular) usage
+> from device tree binding of spi-samsung.txt and makes appropriate
+> changes in the driver to use "cs-gpios"(plural) from
+> SPI device node.
+>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> Acked-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Tested-by: Doug Anderson <dianders@chromium.org>
+> Cc: Tomasz Figa <t.figa@samsung.com>
+> ---
+> Changes since v4:
+> 1. Added reviewed by from Javier and Tested by from Doug
+>
+> Changes since v3:
+> 1. Remove the sdd->cs_gpio and use gpio_is_valid(spi->cs_gpio) instead
+> 2. Keep cs->line only for Non-DT platforms and use spi->cs_gpio
+>    for DT platforms
+>
+>  .../devicetree/bindings/spi/spi-samsung.txt        |    8 ++--
+>  drivers/spi/spi-s3c64xx.c                          |   41 ++++++++------------
+>  2 files changed, 20 insertions(+), 29 deletions(-)
 
->>> +       pci0: pci@ee090000 {
->>> +               compatible = "renesas,pci-r8a7790";
->>> +               clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
->>> +               reg = <0x0 0xee090000 0x0 0xc00>,
->>> +                     <0x0 0xee080000 0x0 0x1100>;
->>> +               interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
->>> +               status = "disabled";
->>> +
->>> +               bus-range = <0 0>;
->>> +               #address-cells = >;
->>> +               #size-cells = <2>;
->>> +               #interrupt-cells = <1>;
->>> +               interrupt-map-mask = <0xff00 0 0 0x7>;
->>> +               interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->>> +                                0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->>> +                                0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
->>> +       };
+Is one of you two planning to apply (parts 1 and 2)?  I know that
+Kukjin needs to handle the part 3 (the .dts files)...
 
->> Hmm, this device node is not actually compliant to the PCI binding,
->> it needs a "ranges" property that can be used to look up the memory
->> and I/O space windows.
+Ideally it seems like it could go to 3.16 since it is a bugfix...
 
->     The PCI driver doesn't support I/O space.
+Thanks!
 
-    Meaning that the hardware doesn't support it...
-
->> It also needs a device_type property.
-
->     Hm, are you sure about that? I thought only PCI devices should have it...
-
-    Seeing it now in 'bus.pci.pdf'. However, it's strange that the PCI devices 
-also seem to need that...
-
->>     Arnd
-
-WBR, Sergei
-
+-Doug
