@@ -1,15 +1,15 @@
 From: Murali Karicheri <m-karicheri2@ti.com>
 Subject: Re: [PATCH v2 2/8] PCI: designware: refactor host init code to re-use
  on v3.65 DW pci hw
-Date: Fri, 20 Jun 2014 14:47:27 -0400
-Message-ID: <53A481BF.8010404@ti.com>
+Date: Fri, 20 Jun 2014 14:47:58 -0400
+Message-ID: <53A481DE.4010608@ti.com>
 References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com> <1402426287-31157-3-git-send-email-m-karicheri2@ti.com> <20140618070500.GB6098@pratyush-vbox>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20140618070500.GB6098@pratyush-vbox>
-Sender: linux-doc-owner@vger.kernel.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Pratyush Anand <pratyush.anand@st.com>
 Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>R
 List-Id: devicetree@vger.kernel.org
@@ -297,4 +297,3 @@ Murali
 >
 >> -- 
 >> 1.7.9.5
-
