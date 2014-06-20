@@ -1,34 +1,94 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH] mfd: syscon: Make it possible to mark syscon as read only
-Date: Fri, 20 Jun 2014 14:17:58 +0200
-Message-ID: <8049148.CC5WjPCMxf@wuerfel>
-References: <1403210626-4845-1-git-send-email-bjorn.andersson@sonymobile.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: [PATCH v9.1] of: Provide function to request and map memory
+Date: Fri, 20 Jun 2014 14:28:48 +0200
+Message-ID: <1403267328-23085-1-git-send-email-matthias.bgg@gmail.com>
+References: <1403264929-21325-2-git-send-email-matthias.bgg@gmail.com>
 Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1403210626-4845-1-git-send-email-bjorn.andersson@sonymobile.com>
+In-Reply-To: <1403264929-21325-2-git-send-email-matthias.bgg@gmail.com>
 Sender: linux-doc-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 19 June 2014 13:43:46 Bjorn Andersson wrote:
-> diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
-> index fe8150b..163325af0 100644
-> --- a/Documentation/devicetree/bindings/mfd/syscon.txt
-> +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
-> @@ -13,6 +13,9 @@ Required properties:
->  - compatible: Should contain "syscon".
->  - reg: the register region can be accessed from syscon
->  
-> +Optional properties:
-> +- read-only: the register region is read only
-> +
+A call to of_iomap does not request the memory region.
+This patch adds the function of_io_request_and_map which requests
+the memory region before mapping it.
 
-We've been discussing devices that are simultaneously a
-syscon and a more specific device. I'd suggest naming the
-new property "syscon,read-only" here, so it becomes clearer
-that this is a generic syscon property in that case.
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
+Suggested-by: Thomas Gleixner <tglx@linutronix.de>
+Suggested-by: Rob Herring <robh@kernel.org>
+Acked-by: Grant Likely <grant.likely@linaro.org>
+---
+Changes for v9.1:
+- fixed the Author email address
 
-	Arnd
+ drivers/of/address.c       |   29 +++++++++++++++++++++++++++++
+ include/linux/of_address.h |    8 ++++++++
+ 2 files changed, 37 insertions(+)
+
+diff --git a/drivers/of/address.c b/drivers/of/address.c
+index cb4242a..09074ba 100644
+--- a/drivers/of/address.c
++++ b/drivers/of/address.c
+@@ -721,3 +721,32 @@ void __iomem *of_iomap(struct device_node *np, int index)
+ 	return ioremap(res.start, resource_size(&res));
+ }
+ EXPORT_SYMBOL(of_iomap);
++
++/*
++ * of_io_request_and_map - Requests a resource and maps the memory mapped IO
++ *			   for a given device_node
++ * @device:	the device whose io range will be mapped
++ * @index:	index of the io range
++ * @name:	name of the resource
++ *
++ * Returns a pointer to the requested and mapped memory
++ */
++void __iomem *of_io_request_and_map(struct device_node *np, int index,
++					char *name)
++{
++	struct resource res;
++	void __iomem *mem;
++
++	if (of_address_to_resource(np, index, &res))
++		return NULL;
++
++	if (!request_mem_region(res.start, resource_size(&res), name))
++		return NULL;
++
++	mem = ioremap(res.start, resource_size(&res));
++	if (!mem)
++		release_mem_region(res.start, resource_size(&res));
++
++	return mem;
++}
++EXPORT_SYMBOL(of_io_request_and_map);
+diff --git a/include/linux/of_address.h b/include/linux/of_address.h
+index 5f6ed6b..725b875 100644
+--- a/include/linux/of_address.h
++++ b/include/linux/of_address.h
+@@ -96,6 +96,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
+ extern int of_address_to_resource(struct device_node *dev, int index,
+ 				  struct resource *r);
+ void __iomem *of_iomap(struct device_node *node, int index);
++void __iomem *of_io_request_and_map(struct device_node *device,
++					int index, char *name);
+ #else
+ static inline int of_address_to_resource(struct device_node *dev, int index,
+ 					 struct resource *r)
+@@ -107,6 +109,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
+ {
+ 	return NULL;
+ }
++
++static inline void __iomem *of_io_request_and_map(struct device_node *device,
++					int index, char *name)
++{
++	return NULL;
++}
+ #endif
+ 
+ #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
+-- 
+1.7.9.5
+
