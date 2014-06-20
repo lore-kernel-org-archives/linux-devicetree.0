@@ -1,57 +1,57 @@
-From: Varka Bhadram <varkabhadram@gmail.com>
-Subject: [PATCH net-next v6 3/3] devicetree: add device tree bindings for cc2520 driver
-Date: Fri, 20 Jun 2014 11:18:14 +0530
-Message-ID: <1403243294-15400-4-git-send-email-varkab@cdac.in>
-References: <1403243294-15400-1-git-send-email-varkab@cdac.in>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1403243294-15400-1-git-send-email-varkab@cdac.in>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org
-Cc: alex.bluesman.smirnov@gmail.com, dbaryshkov@gmail.com, linux-zigbee-devel@lists.sourceforge.net, davem@davemloft.net, devicetree@vger.kernel.org, sowjanyap@cdac.in, venkatas@cdac.in, santoshk@cdac.in, Varka Bhadram <varkab@cdac.in>
+From: zhangfei <zhangfei.gao@linaro.org>
+Subject: Re: [PATCH RFC 1/2] libahci_platform: add ahci_platform_get_of_property
+Date: Fri, 20 Jun 2014 13:56:54 +0800
+Message-ID: <53A3CD26.3070001@linaro.org>
+References: <xuwei5@hisilicon.com,kefeng.wang@linaro.org,> <1403067249-8021-1-git-send-email-zhangfei.gao@linaro.org> <1403067249-8021-2-git-send-email-zhangfei.gao@linaro.org> <20140618140352.GD11895@leverpostej> <53A24950.2020300@linaro.org> <53A293CB.3040704@redhat.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <53A293CB.3040704@redhat.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Hans de Goede <hdegoede@redhat.com>, Mark Rutland <mark.rutland@arm.com>
+Cc: "tj@kernel.org" <tj@kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DT bindings for cc2520 radio driver
 
-Signed-off-by: Varka Bhadram <varkab@cdac.in>
----
- .../devicetree/bindings/net/ieee802154/cc2520.txt  |   29 ++++++++++++++++++++
- 1 file changed, 29 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
 
-diff --git a/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt b/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
-new file mode 100644
-index 0000000..6b41f78
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/ieee802154/cc2520.txt
-@@ -0,0 +1,29 @@
-+*CC2520 IEEE 802.15.4 Compatible Radio*
-+
-+Required properties:
-+	- compatible: 		should be "ti,cc2520"
-+	- spi-max-frequency:	maximal bus speed (8000000), should be set to 4000000 depends
-+			     	sync or async operation mode
-+	- reg:			the chipselect index
-+	- pinctrl-0: 		pin control group to be used for this controller.
-+	- pinctrl-names: 	must contain a "default" entry.
-+	- fifo-gpio:		GPIO spec for the FIFO pin
-+	- fifop-gpio:		GPIO spec for the FIFOP pin
-+	- sfd-gpio:		GPIO spec for the SFD pin
-+	- cca-gpio:		GPIO spec for the CCA pin
-+	- vreg-gpio:		GPIO spec for the VREG pin
-+	- reset-gpio:		GPIO spec for the RESET pin
-+Example:
-+	cc2520@0 {
-+		compatible = "ti,cc2520";
-+		reg = <0>;
-+		spi-max-frequency = <4000000>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&cc2520_cape_pins>;
-+		fifo-gpio = <&gpio1 18 0>;
-+		fifop-gpio = <&gpio1 19 0>;
-+		sfd-gpio = <&gpio1 13 0>;
-+		cca-gpio = <&gpio1 16 0>;
-+		vreg-gpio = <&gpio0 31 0>;
-+		reset-gpio = <&gpio1 12 0>;
-+	};
--- 
-1.7.9.5
+On 06/19/2014 03:39 PM, Hans de Goede wrote:
+> Hi,
+>
+> On 06/19/2014 04:22 AM, zhangfei wrote:
+>> Hi Mark,
+>>
+>> On 06/18/2014 10:03 PM, Mark Rutland wrote:
+>>> On Wed, Jun 18, 2014 at 05:54:08AM +0100, Zhangfei Gao wrote:
+>>>> Instead of setting hflags in different files,
+>>>> ahci_platform_get_of_property set hpriv->flags when ahci_platform_init_host
+>>>> according to property in dts.
+>>>
+>>> The AHCI_HFLAGS are a Linux implementation detail, so it would be nice
+>>> to have a good justification for each of these being turned into DT
+>>> properties.
+>>
+>> Do you mean only add required property now?
+>
+> No you should not add any properties at all using properties to set SoC specific quirks
+> is just wrong, if a device is not 100% ahci compatible you should use a SoC specific
+> compatible string for it, and set quirks in the kernel driver based on that.
+>
+> Devicetree is supposed to describe hardware, in this case the quirks are a property
+> of the specific model of the hardware, so this should be expressed through the
+> compatible string. Extra properties in devicetree are meant to be used for board
+> specific things, like having a gpio to enable power to the sata target device.
+> Extra properties should not be used in the way you are proposing to use them now.
+>
+
+OK, got it.
+
+What I thoutht is using ahci_platform_get_of_property could make 
+ahci_platform.c more shareable, adding the chance of removing specific 
+compatible.
+Just refer mmc_of_parse and sdhci_get_of_property, they are parsing 
+property directly from dts.
+
+Anyway, it is fine, here is not so many cases like mmc.
+
+Thanks
