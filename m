@@ -1,47 +1,59 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH 1/2] dt-binding: add vendor prefix for SolidRun
-Date: Fri, 20 Jun 2014 16:58:10 -0400
-Message-ID: <20140620205810.GO21711@titan.lakedaemon.net>
-References: <1401140009-31505-1-git-send-email-sebastian.hesselbarth@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
+ nodes
+Date: Sat, 21 Jun 2014 01:00:21 +0400
+Message-ID: <53A4A0E5.50904@cogentembedded.com>
+References: <201406210034.57784.sergei.shtylyov@cogentembedded.com> <201406210036.59693.sergei.shtylyov@cogentembedded.com> <4637423.jWRbL1GbCK@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1401140009-31505-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <4637423.jWRbL1GbCK@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Mon, May 26, 2014 at 11:33:28PM +0200, Sebastian Hesselbarth wrote:
-> SolidRun is a company from Israel producing small-sized home-media
-> computers like the Marvell Dove based CuBox and Freescale IMX based
-> CuBox-i. Document the missing vendor prefix.
-> 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+Hello.
 
-Applied to mvebu/dt with Rob's Ack.
+On 06/21/2014 12:51 AM, Arnd Bergmann wrote:
 
-v2 of patch 2/2 also applied to mvebu/dt.
+>> +       pci0: pci@ee090000 {
+>> +               compatible = "renesas,pci-r8a7790";
+>> +               clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
+>> +               reg = <0x0 0xee090000 0x0 0xc00>,
+>> +                     <0x0 0xee080000 0x0 0x1100>;
+>> +               interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+>> +               status = "disabled";
+>> +
+>> +               bus-range = <0 0>;
+>> +               #address-cells = >;
+>> +               #size-cells = <2>;
+>> +               #interrupt-cells = <1>;
+>> +               interrupt-map-mask = <0xff00 0 0 0x7>;
+>> +               interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>> +                                0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>> +                                0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+>> +       };
 
-thx,
+> Hmm, this device node is not actually compliant to the PCI binding,
+> it needs a "ranges" property that can be used to look up the memory
+> and I/O space windows.
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    The PCI driver doesn't support I/O space.
+
+> It also needs a device_type property.
+
+    Hm, are you sure about that? I thought only PCI devices should have it...
+
+> I realize that the driver doesn't currently use them, but you should
+> adhere to the binding anyway, so we can fix the driver at some point.
+
+    Sigh, agreed about the need to fix the driver. Too bad you've spoken up 
+only now though. And you've ACKed the DT bindings without those properties 
+documented or even present in an example... :-(
+
+> 	Arnd
+
+WBR, Sergei
+
