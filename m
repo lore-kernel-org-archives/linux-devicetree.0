@@ -1,40 +1,54 @@
-From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
-Subject: Re: [alsa-devel] [PATCH v5 3/3] ASoC: fsl: add imx-es8328 machine
-	driver
-Date: Fri, 20 Jun 2014 11:57:00 +0100
-Message-ID: <20140620105700.GE3412@opensource.wolfsonmicro.com>
-References: <1403244859-22236-1-git-send-email-xobs@kosagi.com> <1403244859-22236-4-git-send-email-xobs@kosagi.com>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH] staging: imx-drm: ipu-v3: ipu-common.c: Cleaning up
+ return of uninitialized variable
+Date: Fri, 20 Jun 2014 13:20:43 +0200
+Message-ID: <CAFo99gZKXEVVxZX12pqiaPuD2RqN=qxkKezSoP09ECSj37waSA@mail.gmail.com>
+References: <1402788921-15458-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <1402788921-15458-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <20140619225100.GA15258@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403244859-22236-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20140619225100.GA15258@kroah.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Fabio Estevam <fabio.estevam@freescale.com>, devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Valentina Manea <valentina.manea.m@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Paul Gortmaker <paul.gortmaker@windriver.com>, Rob Herring <robh+dt@kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, Grant Likely <grant.likely@linaro.org>, Russell King <rmk+kernel@arm.linux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 02:14:19PM +0800, Sean Cross wrote:
-> This adds an initial machine driver for the ES8328 audio codec on Freescale
-> boards.  The driver supports headphones and an audio regulator for an onboard
-> speaker amp.
-> 
-> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-> ---
-<snip>
-> +static int imx_set_frequency(struct imx_es8328_data *data, int freq)
-> +{
-> +	int ret;
-> +
-> +	return ret;
-> +}
+Hi
 
-This function returns an uninitialised variable and is not used
-anywhere, so I assume can be removed.
+The mainline form about Jun 6.
+And now it is in  drivers/gpu/ipu-v3/ipu-common.c
+Still with the same error.
 
-Thanks,
-Charles
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Sorry, I have started to compare to linux-next, but I do it as:
+diff `find . ../linux-next/ -name ipu-common.c`
+So missed that the file had moved :-/
+
+Ok, I send a new patch then..
+
+
+Kind regards
+Rickard Strandqvist
+
+
+2014-06-20 0:51 GMT+02:00 Greg Kroah-Hartman <gregkh@linuxfoundation.org>:
+> On Sun, Jun 15, 2014 at 01:35:21AM +0200, Rickard Strandqvist wrote:
+>> Before when there was an error a uninitialized variable would be returnd.
+>> Now it returns -ENODEV
+>>
+>> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+>> ---
+>>  drivers/staging/imx-drm/ipu-v3/ipu-common.c |    4 ++--
+>
+> This file isn't even in the tree anymore, what did you make this patch
+> against?
