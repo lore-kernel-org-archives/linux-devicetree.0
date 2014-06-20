@@ -1,94 +1,56 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: [PATCH v9.1] of: Provide function to request and map memory
-Date: Fri, 20 Jun 2014 14:28:48 +0200
-Message-ID: <1403267328-23085-1-git-send-email-matthias.bgg@gmail.com>
-References: <1403264929-21325-2-git-send-email-matthias.bgg@gmail.com>
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1403264929-21325-2-git-send-email-matthias.bgg@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, linux@arm.linux.org.uk, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, matthias.bgg@gmail.com, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v9 3/3] dt-bindings: add mtk-timer bindings
+Date: Fri, 20 Jun 2014 13:36:02 +0100
+Message-ID: <20140620123602.GK30188@leverpostej>
+References: <1403264929-21325-1-git-send-email-matthias.bgg@gmail.com>
+ <1403264929-21325-4-git-send-email-matthias.bgg@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1403264929-21325-4-git-send-email-matthias.bgg@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "shawn.guo@freescale.com" <shawn.guo@freescale.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Marc
 List-Id: devicetree@vger.kernel.org
 
-A call to of_iomap does not request the memory region.
-This patch adds the function of_io_request_and_map which requests
-the memory region before mapping it.
-
-Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
-Suggested-by: Thomas Gleixner <tglx@linutronix.de>
-Suggested-by: Rob Herring <robh@kernel.org>
-Acked-by: Grant Likely <grant.likely@linaro.org>
----
-Changes for v9.1:
-- fixed the Author email address
-
- drivers/of/address.c       |   29 +++++++++++++++++++++++++++++
- include/linux/of_address.h |    8 ++++++++
- 2 files changed, 37 insertions(+)
-
-diff --git a/drivers/of/address.c b/drivers/of/address.c
-index cb4242a..09074ba 100644
---- a/drivers/of/address.c
-+++ b/drivers/of/address.c
-@@ -721,3 +721,32 @@ void __iomem *of_iomap(struct device_node *np, int index)
- 	return ioremap(res.start, resource_size(&res));
- }
- EXPORT_SYMBOL(of_iomap);
-+
-+/*
-+ * of_io_request_and_map - Requests a resource and maps the memory mapped IO
-+ *			   for a given device_node
-+ * @device:	the device whose io range will be mapped
-+ * @index:	index of the io range
-+ * @name:	name of the resource
-+ *
-+ * Returns a pointer to the requested and mapped memory
-+ */
-+void __iomem *of_io_request_and_map(struct device_node *np, int index,
-+					char *name)
-+{
-+	struct resource res;
-+	void __iomem *mem;
-+
-+	if (of_address_to_resource(np, index, &res))
-+		return NULL;
-+
-+	if (!request_mem_region(res.start, resource_size(&res), name))
-+		return NULL;
-+
-+	mem = ioremap(res.start, resource_size(&res));
-+	if (!mem)
-+		release_mem_region(res.start, resource_size(&res));
-+
-+	return mem;
-+}
-+EXPORT_SYMBOL(of_io_request_and_map);
-diff --git a/include/linux/of_address.h b/include/linux/of_address.h
-index 5f6ed6b..725b875 100644
---- a/include/linux/of_address.h
-+++ b/include/linux/of_address.h
-@@ -96,6 +96,8 @@ static inline struct of_pci_range *of_pci_range_parser_one(
- extern int of_address_to_resource(struct device_node *dev, int index,
- 				  struct resource *r);
- void __iomem *of_iomap(struct device_node *node, int index);
-+void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, char *name);
- #else
- static inline int of_address_to_resource(struct device_node *dev, int index,
- 					 struct resource *r)
-@@ -107,6 +109,12 @@ static inline void __iomem *of_iomap(struct device_node *device, int index)
- {
- 	return NULL;
- }
-+
-+static inline void __iomem *of_io_request_and_map(struct device_node *device,
-+					int index, char *name)
-+{
-+	return NULL;
-+}
- #endif
- 
- #if defined(CONFIG_OF_ADDRESS) && defined(CONFIG_PCI)
--- 
-1.7.9.5
-
+T24gRnJpLCBKdW4gMjAsIDIwMTQgYXQgMTI6NDg6NDlQTSArMDEwMCwgTWF0dGhpYXMgQnJ1Z2dl
+ciB3cm90ZToKPiBBZGQgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGUgR2VuZXJhbCBQb3Jw
+b3NlIFRpbWVyIGRyaXZlciBvZgo+IHRoZSBNZWRpYXRlayBTb0NzLgo+IAo+IFNpZ25lZC1vZmYt
+Ynk6IE1hdHRoaWFzIEJydWdnZXIgPG1hdHRoaWFzLmJnZ0BnbWFpbC5jb20+Cj4gQWNrZWQtYnk6
+IFPDtnJlbiBCcmlua21hbm4gPHNvcmVuLmJyaW5rbWFubkB4aWxpbnguY29tPgo+IEFja2VkLWJ5
+OiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvdGlt
+ZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dCAgICAgICAgICB8ICAgMTggKysrKysrKysrKysrKysr
+KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCAxOCBpbnNlcnRpb25zKCspCj4gIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRr
+LXRpbWVyLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvdGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4gbmV3IGZpbGUgbW9k
+ZSAxMDA2NDQKPiBpbmRleCAwMDAwMDAwLi4xMGI3ZTA5Cj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGlt
+ZXIudHh0Cj4gQEAgLTAsMCArMSwxOCBAQAo+ICtNZWRpYXRlayBNVDY1NzcsIE1UNjU3MiBhbmQg
+TVQ2NTg5IFRpbWVycwo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0K
+PiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJt
+ZWRpYXRlayxtdDY1NzctdGltZXIiCj4gKy0gcmVnOiBTaG91bGQgY29udGFpbiBsb2NhdGlvbiBh
+bmQgbGVuZ3RoIGZvciB0aW1lcnMgcmVnaXN0ZXIuCj4gKy0gY2xvY2tzOiBDbG9ja3MgZHJpdmlu
+ZyB0aGUgdGltZXIgaGFyZHdhcmUuIFRoaXMgbGlzdCBzaG91bGQgaW5jbHVkZSB0d28KPiArCWNs
+b2Nrcy4gVGhlIG9yZGVyIGlzIHN5c3RlbSBjbG9jayBhbmQgYXMgc2Vjb25kIGNsb2NrIHRoZSBS
+VEMgY2xvY2suCj4gKwo+ICtFeGFtcGxlczoKPiArCj4gKwl0aW1lckAxMDAwODAwMCB7Cj4gKwkJ
+Y29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY1NzctdGltZXIiOwo+ICsJCXJlZyA9IDwweDEwMDA4
+MDAwIDB4ODA+Owo+ICsJCWludGVycnVwdHMgPSA8R0lDX1NQSSAxMTMgSVJRX1RZUEVfTEVWRUxf
+TE9XPjsKPiArCQljbG9ja3MgPSA8JnN5c3RlbV9jbGs+LCA8JnJ0Y19jbGs+Owo+ICsJCWNsb2Nr
+LW5hbWVzID0gInN5c3RlbS1jbGsiLCAicnRjLWNsayI7CgpUaGVzZSBuYW1lcyBzaG91bGQgYmUg
+bWVudGlvbmVkIGFib3ZlLCBvciByZW1vdmVkLgoKVGhpcyBsb29rcyBmaW5lIG90aGVyd2lzZS4K
+Ck1hcmsuCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
+aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
+ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
+eC1hcm0ta2VybmVsCg==
