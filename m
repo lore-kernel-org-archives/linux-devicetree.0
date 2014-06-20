@@ -1,47 +1,44 @@
-From: Richard Retanubun <rretanubun.work@gmail.com>
-Subject: [PATCH v3] of: mdio: fixup of_phy_register_fixed_link parsing of new bindings
-Date: Fri, 20 Jun 2014 10:11:07 -0400
-Message-ID: <1403273467-16974-1-git-send-email-rretanubun.work@gmail.com>
-References: <53A35763.4020904@cogentembedded.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <53A35763.4020904@cogentembedded.com>
-Sender: netdev-owner@vger.kernel.org
-To: sergei.shtylyov@cogentembedded.com
-Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thomas.petazzoni@free-electrons.com
+From: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Subject: Re: [PATCH] arm, imx6, dts: add aristainetos board support
+Date: Fri, 20 Jun 2014 16:24:32 +0200
+Message-ID: <53A44420.6010106@denx.de>
+References: <1402468548-17539-1-git-send-email-hs@denx.de> <20140618132915.GK8860@dragon> <53A2C8DD.7000601@denx.de> <20140620130628.GK28225@dragon>
+Reply-To: hs-ynQEQJNshbs@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140620130628.GK28225@dragon>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fixes commit 3be2a49e5c08 ("of: provide a binding for fixed link PHYs")
+Hello Shwan,
 
-Fix the parsing of the new fixed link dts bindings for duplex,
-pause, and asym_pause by using the correct device node pointer.
+Am 20.06.2014 15:06, schrieb Shawn Guo:
+> On Thu, Jun 19, 2014 at 01:26:21PM +0200, Heiko Schocher wrote:
+>>>> +	pinctrl-names = "default";
+>>>> +	pinctrl-0 =<&pinctrl_hog&pinctrl_backlight&pinctrl_gpio>;
+>>>
+>>> pinctrl_backlight and pinctrl_gpio shouldn't be in there.
+>>
+>> removed&pinctrl_backlight, removed device specific gpios to
+>> device nodes ... but there are some gpios only used with GPIO API ...
+>>
+>> Where to move this pinctrls ?
+>
+> For GPIO that do not have a clear client device owing, it's fine to have
+> it in hog group.
 
-Signed-off-by: Richard Retanubun <rretanubun.work@gmail.com>
----
-v3: New and improved code indent.
+Ok, so I put them back to the DTS.
 
- drivers/of/of_mdio.c | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
-index 7700ddc..3812596 100644
---- a/drivers/of/of_mdio.c
-+++ b/drivers/of/of_mdio.c
-@@ -290,11 +290,13 @@ int of_phy_register_fixed_link(struct device_node *np)
- 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
- 	if (fixed_link_node) {
- 		status.link = 1;
--		status.duplex = of_property_read_bool(np, "full-duplex");
-+		status.duplex = of_property_read_bool(fixed_link_node,
-+						      "full-duplex");
- 		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
- 			return -EINVAL;
--		status.pause = of_property_read_bool(np, "pause");
--		status.asym_pause = of_property_read_bool(np, "asym-pause");
-+		status.pause = of_property_read_bool(fixed_link_node, "pause");
-+		status.asym_pause = of_property_read_bool(fixed_link_node,
-+							  "asym-pause");
- 		of_node_put(fixed_link_node);
- 		return fixed_phy_register(PHY_POLL, &status, np);
- 	}
+bye,
+Heiko
 -- 
-1.8.5.1
+DENX Software Engineering GmbH,     MD: Wolfgang Denk & Detlev Zundel
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
