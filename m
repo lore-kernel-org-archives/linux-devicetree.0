@@ -1,44 +1,47 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] gpu: ipu-v3: ipu-common.c:  Cleaning up return of uninitialized variable
-Date: Fri, 20 Jun 2014 15:38:46 +0200
-Message-ID: <1403271526-16947-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <fabio.estevam@freescale.com>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Richard Retanubun <rretanubun.work@gmail.com>
+Subject: [PATCH v3] of: mdio: fixup of_phy_register_fixed_link parsing of new bindings
+Date: Fri, 20 Jun 2014 10:11:07 -0400
+Message-ID: <1403273467-16974-1-git-send-email-rretanubun.work@gmail.com>
+References: <53A35763.4020904@cogentembedded.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <53A35763.4020904@cogentembedded.com>
+Sender: netdev-owner@vger.kernel.org
+To: sergei.shtylyov@cogentembedded.com
+Cc: davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, thomas.petazzoni@free-electrons.com
 List-Id: devicetree@vger.kernel.org
 
-Before when there was an error a uninitialized variable would be returnd.
-Now it returns -ENODEV
+Fixes commit 3be2a49e5c08 ("of: provide a binding for fixed link PHYs")
 
-This was found using a static code analysis program called cppcheck.
+Fix the parsing of the new fixed link dts bindings for duplex,
+pause, and asym_pause by using the correct device node pointer.
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Signed-off-by: Richard Retanubun <rretanubun.work@gmail.com>
 ---
- drivers/gpu/ipu-v3/ipu-common.c |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+v3: New and improved code indent.
 
-diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
-index 04e7b2e..d01c77d 100644
---- a/drivers/gpu/ipu-v3/ipu-common.c
-+++ b/drivers/gpu/ipu-v3/ipu-common.c
-@@ -1092,7 +1092,7 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
- {
- 	struct device *dev = ipu->dev;
- 	unsigned i;
--	int id, ret;
-+	int id;
- 
- 	mutex_lock(&ipu_client_id_mutex);
- 	id = ipu_client_id;
-@@ -1125,7 +1125,7 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
- err_register:
- 	platform_device_unregister_children(to_platform_device(dev));
- 
--	return ret;
-+	return -ENODEV;
- }
- 
- 
+ drivers/of/of_mdio.c | 8 +++++---
+ 1 file changed, 5 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/of/of_mdio.c b/drivers/of/of_mdio.c
+index 7700ddc..3812596 100644
+--- a/drivers/of/of_mdio.c
++++ b/drivers/of/of_mdio.c
+@@ -290,11 +290,13 @@ int of_phy_register_fixed_link(struct device_node *np)
+ 	fixed_link_node = of_get_child_by_name(np, "fixed-link");
+ 	if (fixed_link_node) {
+ 		status.link = 1;
+-		status.duplex = of_property_read_bool(np, "full-duplex");
++		status.duplex = of_property_read_bool(fixed_link_node,
++						      "full-duplex");
+ 		if (of_property_read_u32(fixed_link_node, "speed", &status.speed))
+ 			return -EINVAL;
+-		status.pause = of_property_read_bool(np, "pause");
+-		status.asym_pause = of_property_read_bool(np, "asym-pause");
++		status.pause = of_property_read_bool(fixed_link_node, "pause");
++		status.asym_pause = of_property_read_bool(fixed_link_node,
++							  "asym-pause");
+ 		of_node_put(fixed_link_node);
+ 		return fixed_phy_register(PHY_POLL, &status, np);
+ 	}
 -- 
-1.7.10.4
+1.8.5.1
