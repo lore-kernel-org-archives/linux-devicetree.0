@@ -1,207 +1,47 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCHv4 2/4] iio: adc: exynos_adc: Control special clock of
- ADC to support Exynos3250 ADC
-Date: Fri, 20 Jun 2014 02:30:37 +0200
-Message-ID: <53A380AD.3090307@gmail.com>
-References: <1403058061-24271-1-git-send-email-cw00.choi@samsung.com> <1403058061-24271-3-git-send-email-cw00.choi@samsung.com> <53A146A8.7050501@gmail.com> <53A37EDA.2030403@samsung.com> <53A37F34.1010808@gmail.com> <53A38016.1000308@samsung.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v4 10/13] serial: asc: Add support for KGDB's FIQ/NMI mode
+Date: Thu, 19 Jun 2014 17:36:09 -0700
+Message-ID: <20140620003609.GB30850@kroah.com>
+References: <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
+ <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
+ <1403174303-25456-11-git-send-email-daniel.thompson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53A38016.1000308@samsung.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: jic23@kernel.org, ch.naveen@samsung.com, t.figa@samsung.com, kgene.kim@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1403174303-25456-11-git-send-email-daniel.thompson@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Daniel Thompson <daniel.thompson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Patrice Chotard <patrice.chotard@st.com>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.o
 List-Id: devicetree@vger.kernel.org
 
-On 20.06.2014 02:28, Chanwoo Choi wrote:
-> On 06/20/2014 09:24 AM, Tomasz Figa wrote:
->> On 20.06.2014 02:22, Chanwoo Choi wrote:
->>> Hi Tomasz,
->>>
->>> On 06/18/2014 04:58 PM, Tomasz Figa wrote:
->>>> Hi Chanwoo,
->>>>
->>>> On 18.06.2014 04:20, Chanwoo Choi wrote:
->>>>> This patch control special clock for ADC in Exynos series's FSYS block.
->>>>> If special clock of ADC is registerd on clock list of common clk framework,
->>>>> Exynos ADC drvier have to control this clock.
->>>>>
->>>>> Exynos3250/Exynos4/Exynos5 has 'adc' clock as following:
->>>>> - 'adc' clock: bus clock for ADC
->>>>>
->>>>> Exynos3250 has additional 'sclk_adc' clock as following:
->>>>> - 'sclk_adc' clock: special clock for ADC which provide clock to internal ADC
->>>>>
->>>>> Exynos 4210/4212/4412 and Exynos5250/5420 has not included 'sclk_adc' clock
->>>>> in FSYS_BLK. But, Exynos3250 based on Cortex-A7 has only included 'sclk_adc'
->>>>> clock in FSYS_BLK.
->>>>>
->>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>>> ---
->>>>>  drivers/iio/adc/exynos_adc.c | 93 ++++++++++++++++++++++++++++++++++++++------
->>>>>  1 file changed, 81 insertions(+), 12 deletions(-)
->>>>>
->>>>> diff --git a/drivers/iio/adc/exynos_adc.c b/drivers/iio/adc/exynos_adc.c
->>>>> index c30def6..6b026ac 100644
->>>>> --- a/drivers/iio/adc/exynos_adc.c
->>>>> +++ b/drivers/iio/adc/exynos_adc.c
->>>>> @@ -41,7 +41,8 @@
->>>>>  
->>>>>  enum adc_version {
->>>>>  	ADC_V1,
->>>>> -	ADC_V2
->>>>> +	ADC_V2,
->>>>> +	ADC_V2_EXYNOS3250,
->>>>>  };
->>>>>  
->>>>>  /* EXYNOS4412/5250 ADC_V1 registers definitions */
->>>>> @@ -85,9 +86,11 @@ enum adc_version {
->>>>>  #define EXYNOS_ADC_TIMEOUT	(msecs_to_jiffies(100))
->>>>>  
->>>>>  struct exynos_adc {
->>>>> +	struct device		*dev;
->>>>>  	void __iomem		*regs;
->>>>>  	void __iomem		*enable_reg;
->>>>>  	struct clk		*clk;
->>>>> +	struct clk		*sclk;
->>>>>  	unsigned int		irq;
->>>>>  	struct regulator	*vdd;
->>>>>  	struct exynos_adc_ops	*ops;
->>>>> @@ -96,6 +99,7 @@ struct exynos_adc {
->>>>>  
->>>>>  	u32			value;
->>>>>  	unsigned int            version;
->>>>> +	bool			needs_sclk;
->>>>
->>>> This should be rather a part of the variant struct. See my comments to
->>>> patch 1/4.
->>>
->>> OK, I'll include 'needs_sclk' in "variant" structure.
->>>
->>>>
->>>>>  };
->>>>>  
->>>>>  struct exynos_adc_ops {
->>>>> @@ -103,11 +107,21 @@ struct exynos_adc_ops {
->>>>>  	void (*clear_irq)(struct exynos_adc *info);
->>>>>  	void (*start_conv)(struct exynos_adc *info, unsigned long addr);
->>>>>  	void (*stop_conv)(struct exynos_adc *info);
->>>>> +	void (*disable_clk)(struct exynos_adc *info);
->>>>> +	int (*enable_clk)(struct exynos_adc *info);
->>>>>  };
->>>>>  
->>>>>  static const struct of_device_id exynos_adc_match[] = {
->>>>> -	{ .compatible = "samsung,exynos-adc-v1", .data = (void *)ADC_V1 },
->>>>> -	{ .compatible = "samsung,exynos-adc-v2", .data = (void *)ADC_V2 },
->>>>> +	{
->>>>> +		.compatible = "samsung,exynos-adc-v1",
->>>>> +		.data = (void *)ADC_V1,
->>>>> +	}, {
->>>>> +		.compatible = "samsung,exynos-adc-v2",
->>>>> +		.data = (void *)ADC_V2,
->>>>> +	}, {
->>>>> +		.compatible = "samsung,exynos3250-adc-v2",
->>>>> +		.data = (void *)ADC_V2_EXYNOS3250,
->>>>> +	},
->>>>>  	{},
->>>>>  };
->>>>>  MODULE_DEVICE_TABLE(of, exynos_adc_match);
->>>>> @@ -156,11 +170,42 @@ static void exynos_adc_v1_stop_conv(struct exynos_adc *info)
->>>>>  	writel(con, ADC_V1_CON(info->regs));
->>>>>  }
->>>>>  
->>>>> +static void exynos_adc_disable_clk(struct exynos_adc *info)
->>>>> +{
->>>>> +	if (info->needs_sclk)
->>>>> +		clk_disable_unprepare(info->sclk);
->>>>> +	clk_disable_unprepare(info->clk);
->>>>> +}
->>>>> +
->>>>> +static int exynos_adc_enable_clk(struct exynos_adc *info)
->>>>> +{
->>>>> +	int ret;
->>>>> +
->>>>> +	ret = clk_prepare_enable(info->clk);
->>>>> +	if (ret) {
->>>>> +		dev_err(info->dev, "failed enabling adc clock: %d\n", ret);
->>>>> +		return ret;
->>>>> +	}
->>>>> +
->>>>> +	if (info->needs_sclk) {
->>>>> +		ret = clk_prepare_enable(info->sclk);
->>>>> +		if (ret) {
->>>>> +			clk_disable_unprepare(info->clk);
->>>>> +			dev_err(info->dev,
->>>>> +				"failed enabling sclk_tsadc clock: %d\n", ret);
->>>>> +		}
->>>>> +	}
->>>>> +
->>>>> +	return 0;
->>>>> +}
->>>>> +
->>>>>  static struct exynos_adc_ops exynos_adc_v1_ops = {
->>>>>  	.init_hw	= exynos_adc_v1_init_hw,
->>>>>  	.clear_irq	= exynos_adc_v1_clear_irq,
->>>>>  	.start_conv	= exynos_adc_v1_start_conv,
->>>>>  	.stop_conv	= exynos_adc_v1_stop_conv,
->>>>> +	.disable_clk	= exynos_adc_disable_clk,
->>>>> +	.enable_clk	= exynos_adc_enable_clk,
->>>>>  };
->>>>>  
->>>>>  static void exynos_adc_v2_init_hw(struct exynos_adc *info)
->>>>> @@ -210,6 +255,8 @@ static struct exynos_adc_ops exynos_adc_v2_ops = {
->>>>>  	.start_conv	= exynos_adc_v2_start_conv,
->>>>>  	.clear_irq	= exynos_adc_v2_clear_irq,
->>>>>  	.stop_conv	= exynos_adc_v2_stop_conv,
->>>>> +	.disable_clk	= exynos_adc_disable_clk,
->>>>> +	.enable_clk	= exynos_adc_enable_clk,
->>>>
->>>> Based on the fact that all variants use the same function, I don't think
->>>> there is a reason to add .{disable,enable}_clk in the ops struct. If
->>>> they diverge in future, they could be added later, but right now it
->>>> doesn't have any value.
->>>
->>> OK, I'll not add .{disable,enable}_clk and then just use following functions for clock control:
->>> - exynos_adc_prepare_clk() : once execute this function in _probe()
->>> - exynos_adc_unprepare_clk() : once execute this function in _remove()
->>> - exynos_adc_enable_clk()
->>> - exynos_adc_disable_clk()
->>
->> Is there any need to separate prepare/unprepare from enable/disable?
->> Otherwise sounds good, thanks.
+On Thu, Jun 19, 2014 at 11:38:20AM +0100, Daniel Thompson wrote:
+> Add a .poll_init() function that enables UART RX and registers the
+> UART's irq with KGDB. By providing this information to KGDB the serial
+> driver offers "permission" for KGDB to route the UART interrupt signal
+> from the drivers own handler to KGDBs FIQ handler (which will eventually
+> use the UART's polled I/O callbacks to interact with the user).
 > 
-> Naveen Krishna Chatradhi want to execute once prepare/unpreare in probe/remove function.
+> Note that the RX is not only enabled but also unmasked. This is required
+> because otherwise the FIQ handler could never trigger. This unmask is
+> copied from similar code in amba-pl011.c .
 > 
-> - Following comment of Naveen Krishna Chatradhi
->> +static void exynos_adc_disable_clk(struct exynos_adc *info)
->> +{
->> +       if (info->needs_sclk)
->> +               clk_disable_unprepare(info->sclk);
->> +       clk_disable_unprepare(info->clk);
-> 
-> (Just a nit pick) As a part of cleanup can we also change to use
-> clk_disable() here and clk_unprepare() once and for all at the end.
-> 
->> +}
->> +
->> +static int exynos_adc_enable_clk(struct exynos_adc *info)
->> +{
->> +       int ret;
->> +
->> +       ret = clk_prepare_enable(info->clk);
->> +       if (ret) {
->> +               dev_err(info->dev, "failed enabling adc clock: %d\n", ret);
->> +               return ret;
->> +       }
->> +
->> +       if (info->needs_sclk) {
->> +               ret = clk_prepare_enable(info->sclk);
-> Can we use clk_enable() here and clk_prepare() some where during the probe.
-
-I still don't see any reason to do it. Naveen, what's the motivation for
-this change? For me, it only complicates the code, without any added value.
-
-Best regards,
-Tomasz
+> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
+> Cc: Srinivas Kandagatla <srinivas.kandagatla@gmail.com>
+> Cc: Maxime Coquelin <maxime.coquelin@st.com>
+> Cc: Patrice Chotard <patrice.chotard@st.com>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jiri Slaby <jslaby@suse.cz>
+> Cc: kernel@stlinux.com
+> Cc: linux-serial@vger.kernel.org
+> ---
+Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
