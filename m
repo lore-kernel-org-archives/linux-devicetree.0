@@ -1,137 +1,48 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: Re: [RFC PATCH v3] reset: Add a defer reset object to send board
- specific reset
-Date: Fri, 20 Jun 2014 11:35:20 +0200
-Message-ID: <20140620093520.GZ19730@lukather>
-References: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="lBP+FhBL9XXtPs84"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403098673-3058-1-git-send-email-houcheng@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Houcheng Lin <houcheng@gmail.com>
-Cc: linus.walleij@linaro.org, gnurou@gmail.com, grant.likely@linaro.org, robh+dt@kernel.org, dbaryshkov@gmail.com, dwmw2@infradead.org, p.zabel@pengutronix.de, stephen.gallimore@st.com, srinivas.kandagatla@st.com, ulf.hansson@linaro.org, sre@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH/RFC 0/2] spi: sh-msiof: Add DT DMA support on r8a7791
+Date: Fri, 20 Jun 2014 12:20:36 +0200
+Message-ID: <1403259638-13774-1-git-send-email-geert+renesas@glider.be>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This preliminary patch series add DT support to the Renesas MSIOF SPI
+driver, and enables DMA support for MSIOF on r8a7791.
 
---lBP+FhBL9XXtPs84
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+It's independent from the series "[PATCH/POC 0/2] ARM: shmobile: koelsch
+legacy: Enable DMA for MSIOF", but it depends on the SHDMA work for r8a7790
+by Ben Dooks (still v2, cfr. "[PATCH v2 0/9] Updates Renesas OF-DMA code"),
+and my series "[PATCH v2 0/7] ARM: shmobile: koelsch reference: Enable DMA
+for QSPI".
 
-On Wed, Jun 18, 2014 at 09:37:53PM +0800, Houcheng Lin wrote:
-> The Problem
-> -----------
-> The reset signal on a hardware board is send either:
->     - during machine initialization
->     - during bus master's initialization
->=20
-> In some hardware design, devices on bus need a non-standard and extra res=
-et
-> signal after bus is initialied. Most reason is to wake up device from han=
-ging
-> state.
->=20
-> The board spefic reset code can not be put into machine init code, as it =
-is
-> too early. This code can not also be put onto chip's driver, as it is boa=
-rd
-> specific and not suitable for a common chip driver.
+This was tested on r8a7791/koelsch.
 
-I don't see why not. I don't get the difference with an optional
-regulator, or an optional GPIO, or whatever. And there's already some
-support for such a case, with reset_control_get_optional.
+  [1/2] spi: sh-msiof: Add DT support to DMA setup
+  [2/2] ARM: shmobile: r8a7791 dtsi: Enable DMA for MSIOF
 
->=20
-> Defer Reset Object
-> ------------------
-> The defer reset object is to resolve this issue, developer can put a defe=
-r-
-> reset device on the board's dts file and enable DEFER RESET OBJECT CONFIG.
-> During driver init-calls, a defer-reset object is created and issue reset=
- signal
-> after the enclosing device is initialized.
->=20
-> This eliminate the need to rewrite a driver module with only one purpose:=
- sending
-> a board specific reset. This also allow mainstream kernel to support many=
- boards
-> that modify the common drivers to send board specific reset. Configuring =
-defer-reset
-> device in dts leave the board specific reset rules on board level and sim=
-ple to
-> maintain.
->=20
-> Example dts File
-> ----------------
-> Example 1:
->     defer_reset_vbus {
->         compatible =3D "defer-reset";
->         reset-gpios =3D <&gpx3 5 GPIO_ACTIVE_LOW>;
+ Documentation/devicetree/bindings/spi/sh-msiof.txt | 17 +++++++++++++--
+ arch/arm/boot/dts/r8a7791.dtsi                     | 15 ++++++++++---
+ drivers/spi/spi-sh-msiof.c                         | 25 ++++++++++++++++------
+ 3 files changed, 45 insertions(+), 12 deletions(-)
 
-This doesn't follow the generic reset bindings.
+As the DT bindings for SHDMA are still under development, I don't expect
+this to be applied yet.
 
->         duration =3D <5>;
->     };
->=20
-> Example 2:
->     defer_reset_vbus {
->         compatible =3D "defer-reset";
->         reset-gpios =3D <&gpx3 5 GPIO_ACTIVE_HIGH>;
->         duration =3D <0>;
->     };
->=20
-> Block Diagram of dts File
-> -------------------------
->     +-------------------------------------+
->     | usb-ehci-chip@1211000               |
->     |   +-------------------------+       |
->     |   | defer-reset(gpx3)       |       |
->     |   +-------------------------+       |
->     +-------------------------------------+
+Thanks for your comments!
 
-And this goes against the current way of doing things, with the resets
-property holding a phandle.
+Gr{oetje,eeting}s,
 
-Why not just having something like:
+						Geert
 
-usb {
-    compatible =3D "whatever";
-    resets =3D <&rst_gpio <duration>>;
-}
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
-Which uses the generic bindings, and doesn't require anything fancy
-either in the driver or the DT.
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---lBP+FhBL9XXtPs84
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTpABYAAoJEBx+YmzsjxAgkxwP/jplfibS2D69Nwqr6BTOo5Xi
-IShKBbKEVz6PzH54yKWorvSoc478H9hMzYo5uHqBMyvkol3jXibGKsEk58/c6lli
-9lbnBLzJ90uRZm/hRZ1XULmtezX8qsdxcaDd6DK2gw1KYUomKQwxdl6vDshJxXCh
-7Wg5dU62ycq8oZhr84B00lxiY2iIXI2wEbHtbBQpqIehcnhqL5L4tJQ6gKeFVxLo
-CuXImxFuRudN9E20ZWvq9HLGAYN+N1nO2x6+ljlHR1vGdrwkmaMAuclfjUrSLZPE
-Vf3x6/LMZCkpFM7fkpK5REDGoAsFfDBfb4I2bqwanY/AE9/kRbmCsSlKCEWfiPCj
-YptHk/ZqxX8fBg3lJxEqpj8exdfOHbPnx6MTsz7DxbYdoSOOfRiOb3f3ce3HLlIY
-VIlkx4ZcUk+sj/jJidziAJy9Nf+gzTQW8vLTSBkYLqTNkd3Ne7fsnmVLxzxJ7UzN
-f25lj1bOJW7FryDuDgYASGi9QccGoXRzdmQWV/w/NrSpyDDtEiJoWJWoVNzbxi74
-uLVQp6kuiwdxFxcWGlO64dgOW0OmVbR6xpxJzBnZoiOYz/z5zkpOyheAG7Vl5XqQ
-2URZ/wAJqeKcH9gEGc4Hyqilzzae9Qzvl5wLIXwMYqW7/WngUizHV68KJCA7kyIr
-XYnreTo5IGk++Zo5VM1Q
-=a8uA
------END PGP SIGNATURE-----
-
---lBP+FhBL9XXtPs84--
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+							    -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
