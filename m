@@ -1,71 +1,50 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH 0/4] Add support for Exynos clock output configuration
-Date: Fri, 20 Jun 2014 12:33:13 +0200
-Message-ID: <53A40DE9.4030100@gmail.com>
-References: <CAD8Lp46pFGWSA6c1r-xGUbNDkcACyZZkru+m7+xH+BQRr7ULPg@mail.gmail.com>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 0/2] clocksource: add rockchip rk3288 specific armv7-timer
+Date: Fri, 20 Jun 2014 12:43:31 +0200
+Message-ID: <70167479.zcs3JF0luJ@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD8Lp46pFGWSA6c1r-xGUbNDkcACyZZkru+m7+xH+BQRr7ULPg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Drake <drake@endlessm.com>, Tomasz Figa <t.figa@samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Pankaj Dubey <pankaj.dubey@samsung.com>, Rahul Sharma <rahul.sharma@samsung.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>, Tushar Behera <tushar.behera@linaro.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Daniel,
+The architected timer on Rockchip's RK3288 SoCs needs a bit of special handling
+to start.
 
-On 18.06.2014 18:17, Daniel Drake wrote:
-> Hi Tomasz,
-> 
-> On Tue, May 20, 2014 at 5:43 PM, Tomasz Figa <t.figa@samsung.com> wrote:
->> Since the block responsible for handling the pin is PMU, not CMU,
->> a separate driver, that binds to PMU node is required and acquires
->> all input clocks by standard DT clock look-up. This way we don't need
->> any cross-IP block drivers and cross-driver register sharing or
->> nodes for fake devices.
->>
->> To represent the PMU mux/gate clock, generic composite clock is registered.
->>
->> Tested on Odroid U3, with HSIC/USB hub using CLKOUT as reference clock,
->> with some additional patches.
->>
->> Depends on:
->> [PATCHv5 0/4] Enable usbphy and hsotg for exynos4
->> (No link, sorry, I could not find it in any archive yet...)
->> for Exynos4210/4x12 PMU binding and DT nodes.
-> 
-> This isn't working for me.
-> Testing linus master e99cfa2d0634881b8a41d56c48b5956b9a3ba162 plus:
->     ARM: dts: exynos4: add port sub-nodes to exynos usb host modules
->     ARM: dts: exynos4412-odroidx: enable common hardware blocks
->     ARM: dts: exynos4412-odroidx: add support for USB (phy, host, device)
->     ARM: dts: refactor Odroid DTS file and add support for Odroid X2 and U2/U3
-> 
-> Testing on ODROID-U2.
-> 
-> I apply the first patch here (clk: samsung: exynos4: Add missing
-> CPU/DMC clock hierarchy) and things continue to work. Now when I add
-> the second patch "clk: samsung: exynos4: Add CLKOUT clock hierarchy"
-> boot hangs at:
-> 
-> [    4.753740] s3c-rtc 10070000.rtc: setting system clock to
-> 2000-01-01 02:43:30 UTC (946694610)
-> [    4.753809] ### dt-test ### No testcase data in device tree; not
-> running tests
-> [    4.791155] gps-power-domain: Power-off latency e
-> 
-> Any ideas?
+This seems to be similar to a recent discussion about the Exynos arch-timer
+that also seems to need similar special handling (and mct timer running).
 
-Thanks for testing.
+And, the arch-timer on recent Mediatek SoCs also uses this pattern of a
+supplying timer below the arch-timer.
 
-It's most likely an issue with ISP power domain. Certain clock
-controller registers are located there and there is no proper handling
-of this in the clock driver yet. You can test things by skipping patch 3
-and this should give you a working clkout, just limited to clocks not
-going through clkout hierarchies of clock domains, e.g. xxti and xusbxti.
+Therefore follow a suggestion from Arnd Bergmann and implement a separate
+clocksource for it that does the setup and then initializes the arch-timer.
 
-I'm aware of the problem and will fix it in next version.
+This series uses "of: Provide function to request and map memory" from
+Matthias Brugger.
 
-Best regards,
-Tomasz
+Heiko Stuebner (2):
+  clocksource: arm_arch_timer: remove static from arch_timer_init
+  clocksource: add rockchip-specific armv7-timer setup
+
+ .../bindings/arm/rockchip/armv7-timer.txt          | 22 +++++++++
+ drivers/clocksource/Makefile                       |  1 +
+ drivers/clocksource/arm_arch_timer.c               |  2 +-
+ drivers/clocksource/arm_arch_timer.h               |  7 +++
+ drivers/clocksource/rockchip_timer.c               | 57 ++++++++++++++++++++++
+ 5 files changed, 88 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/rockchip/armv7-timer.txt
+ create mode 100644 drivers/clocksource/arm_arch_timer.h
+ create mode 100644 drivers/clocksource/rockchip_timer.c
+
+-- 
+1.9.0
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
