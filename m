@@ -1,59 +1,164 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v0 2/3] ata: Fix the link down in first attempt for the
- APM X-Gene SoC AHCI SATA host controller driver.
-Date: Fri, 20 Jun 2014 19:25:58 +0400
-Message-ID: <53A45286.2040000@cogentembedded.com>
-References: <1403253147-14341-1-git-send-email-stripathi@apm.com> <1403253147-14341-3-git-send-email-stripathi@apm.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
+Date: Fri, 20 Jun 2014 11:31:29 -0400
+Message-ID: <53A453D1.4040308@ti.com>
+References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com> <CAErSpo6=vi0SR0A3u5BCLgiGxoH48N5R=e8VAnFDG=K61qLxnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Type: text/plain; charset="UTF-8"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <1403253147-14341-3-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>, olof@lixom.net, tj@kernel.org, arnd@arndb.de
-Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAErSpo6=vi0SR0A3u5BCLgiGxoH48N5R=e8VAnFDG=K61qLxnw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: linux-arm <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mohit Kumar <mohit.kumar@st.com>, Jingoo Han <jg1.han@samsung.com>, Pratyush Anand <pratyush.anand@st.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.o>
 List-Id: devicetree@vger.kernel.org
 
-On 06/20/2014 12:32 PM, Suman Tripathi wrote:
-
-> This patch fixes the link down issue by retry for the APM X-Gene SoC
-> SATA host controller driver. Due to board design issue and short margin
-> limitation, it is observed that once out of many thousands power cycle
-> test, the sata link may not link up.
-
-> Signed-off-by: Loc Ho <lho@apm.com>
-> Signed-off-by: Suman Tripathi <stripathi@apm.com>
-> ---
->   drivers/ata/ahci_xgene.c | 9 +++++++++
->   1 file changed, 9 insertions(+)
-
-> diff --git a/drivers/ata/ahci_xgene.c b/drivers/ata/ahci_xgene.c
-> index 5f0f750..d43b6ce 100644
-> --- a/drivers/ata/ahci_xgene.c
-> +++ b/drivers/ata/ahci_xgene.c
-[...]
-> @@ -235,15 +238,21 @@ static int xgene_ahci_do_hardreset(struct ata_link *link,
->   	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
->   	void __iomem *port_mmio = ahci_port_base(ap);
->   	struct ata_taskfile tf;
-> +	int link_down_retry = 0;
->   	int rc;
->   	u32 val;
+On 6/17/2014 8:08 PM, Bjorn Helgaas wrote:
+> On Tue, Jun 10, 2014 at 02:51:19PM -0400, Murali Karicheri wrote:
+>> This patch adds a PCIe controller driver for Keystone SoCs. This
+>> is based on v1 of the series posted to the mailing list.
+>>
+>> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>> CC: Russell King <linux@arm.linux.org.uk>
+>> CC: Grant Likely <grant.likely@linaro.org>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> CC: Mohit Kumar <mohit.kumar@st.com>
+>> CC: Jingoo Han <jg1.han@samsung.com>
+>> CC: Bjorn Helgaas <bhelgaas@google.com>
+>> CC: Pratyush Anand <pratyush.anand@st.com>
+>> CC: Richard Zhu <r65037@freescale.com>
+>> CC: Kishon Vijay Abraham I <kishon@ti.com>
+>> CC: Marek Vasut <marex@denx.de>
+>> CC: Arnd Bergmann <arnd@arndb.de>
+>> CC: Pawel Moll <pawel.moll@arm.com>
+>> CC: Mark Rutland <mark.rutland@arm.com>
+>> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>> CC: Kumar Gala <galak@codeaurora.org>
+>> CC: Randy Dunlap <rdunlap@infradead.org>
+>> CC: Grant Likely <grant.likely@linaro.org>
+>>
+>>
+>> Changelog:
+>>
+>> V2
+>>   - Split the designware pcie enhancement patch to multiple
+>>     patches based on functionality added
+>>   - Remove the quirk code and add a patch to fix mps/mrss
+>>     tuning for ARM. Use kernel command line parameter
+>>     pci=pcie_bus_perf to work with Keystone PCI Controller.
+>>     Following patch addressed this.
+>>       [PATCH v1] ARM: pci: add call to pcie_bus_configure_settings()
+>>   - Add documentation for device tree bindings
+>>   - Add separate interrupt controller nodes for MSI and Legacy
+>>     IRQs and use irq map for legacy IRQ
+>>   - Use compatibility to identify v3.65 version of the DW hardware
+>>     and use it to customize the designware common code.
+>>   - Use reg property for configuration space instead of range
+>>   - Other minor updates based on code inspection.
+>>
+>> V1
+>>   - Add an interrupt controller node for Legacy irq chip and use
+>>     interrupt map/map-mask property to map legacy IRQs A/B/C/D
+>>   - Add a Phy driver to replace the original serdes driver
+>>   - Move common application register handling code to a separate
+>>     file to allow re-use across other platforms that use older
+>>     DW PCIe h/w
+>>   - PCI quirk for maximum read request size. Check and override only
+>>     if the maximum is higher than what controller can handle.
+>>   - Converted to a module platform driver.
+>>
+>>
+>> Murali Karicheri (8):
+>>    PCI: designware: add rd[wr]_other_conf API
+>>    PCI: designware: refactor host init code to re-use on v3.65 DW pci hw
+>>    PCI: designware: update pcie core driver to work with dw hw version
+>>      3.65
+>>    PCI: designware: add msi controller functions for v3.65 hw
+>>    PCI: designware: add PCI controller functions for v3.65 DW hw
+>>    phy: Add serdes phy driver for keystone
+>>    PCI: keystone: add pcie driver based on designware core driver
+>>    ARM: keystone: add pcie related options
+>>
+>>   .../devicetree/bindings/pci/designware-pcie.txt    |   42 ++
+>>   .../devicetree/bindings/pci/pci-keystone.txt       |   56 +++
+>>   .../bindings/phy/phy-keystone-serdes.txt           |   25 ++
+>>   arch/arm/mach-keystone/Kconfig                     |    1 +
+>>   drivers/pci/host/Kconfig                           |   12 +
+>>   drivers/pci/host/Makefile                          |    2 +
+>>   drivers/pci/host/pci-dw-v3_65-msi.c                |  149 +++++++
+>>   drivers/pci/host/pci-dw-v3_65.c                    |  390 ++++++++++++++++++
+>>   drivers/pci/host/pci-dw-v3_65.h                    |   34 ++
+>>   drivers/pci/host/pci-keystone.c                    |  418 ++++++++++++++++++++
+>>   drivers/pci/host/pcie-designware.c                 |  175 +++++---
+>>   drivers/pci/host/pcie-designware.h                 |   42 +-
+>>   drivers/phy/Kconfig                                |    6 +
+>>   drivers/phy/Makefile                               |    1 +
+>>   drivers/phy/phy-keystone-serdes.c                  |  230 +++++++++++
+>>   15 files changed, 1531 insertions(+), 52 deletions(-)
+>>   create mode 100644 Documentation/devicetree/bindings/pci/pci-keystone.txt
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-keystone-serdes.txt
+>>   create mode 100644 drivers/pci/host/pci-dw-v3_65-msi.c
+>>   create mode 100644 drivers/pci/host/pci-dw-v3_65.c
+>>   create mode 100644 drivers/pci/host/pci-dw-v3_65.h
+>>   create mode 100644 drivers/pci/host/pci-keystone.c
+>>   create mode 100644 drivers/phy/phy-keystone-serdes.c
+> I'm not willing to merge phy-keystone-serdes.c because I don't
+> maintain drivers/phy and because of the binary blob of register values
+> it contains, but maybe somebody else will.  I assume it could be
+> merged by itself before the rest of this.
 >
-> +hardreset_retry:
->   	/* clear D2H reception area to properly wait for D2H FIS */
->   	ata_tf_init(link->device, &tf);
->   	tf.command = ATA_BUSY;
->   	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
->   	rc = sata_link_hardreset(link, timing, deadline, online,
->   				 ahci_check_ready);
-> +
-> +	if (!*online)
-> +		if (link_down_retry++ < MAX_LINK_DOWN_RETRY)
+> I'm looking for acks from Mohit and/or Jingoo for the pci/host
+> changes, and from Arnd for the devicetree/bindings changes.
+>
+> Adding these "-dw-3_64" files is sort of ugly.  If that code is only
+> used by keystone, maybe it could just be moved to pci-keystone.c?  But
+> I'll defer to Mohit and Jingoo on that and the way you modify
+> pcie-designware.c.
+>
+> Bjorn
+Bjorn, Jingoo,
 
-    Could be folded into single *if* (and so indentation decreased).
+Unfortunately I lost Jingoo's email from my Inbox. So I cut-n-paste the 
+comment from
+internet and respond.
 
-> +			goto hardreset_retry;
+Jingoo Han wrote:-
+=============================================================================
+I think so, too.
 
-WBR, Sergei
+DT maintainers and arch maintainers should review the following
+dt bindings.
+   .../devicetree/bindings/pci/designware-pcie.txt    |   42 ++
+   .../devicetree/bindings/pci/pci-keystone.txt       |   56 +++
+Generic PHY maintainer (Kishon Vijay Abraham I) should review the
+following phy driver.
+   drivers/phy/phy-keystone-serdes.c
 
+ >
+ > I'm looking for acks from Mohit and/or Jingoo for the pci/host
+ > changes, and from Arnd for the devicetree/bindings changes.
+ >
+ > Adding these "-dw-3_64" files is sort of ugly.  If that code is only
+ > used by keystone, maybe it could just be moved to pci-keystone.c?  But
+ > I'll defer to Mohit and Jingoo on that and the way you modify
+ > pcie-designware.c.
+
+I agree with Bjorn Helgaas's opinion. These three "-dw-3_64" files
+look terrible! I don't have a good way to handle this; however,
+moving this code to pci-keystone.c looks better.
+======================================================================
+
+The original RFC I had submitted had all of the application space register
+handling code as part of the Keystone PCI driver. As per Arnd's comment 
+(See
+my change log against v1), the code was moved to a separate file so that
+the next driver that has same version of the DW hw could re-use this code.
+I agree with Arnd and moved the code to v_3_65 specific files.  What is
+your proposal?  Do you have objection to the file name? or it's content?
+
+If objection is on the file name,  please suggest alternate names. If you
+are okay with the file name, and doesn't like the code, it will be helpful
+to review the code and provide specific comments against the patch itself
+so that I can address the same.
+
+Murali
