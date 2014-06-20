@@ -1,79 +1,166 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
- nodes
-Date: Sat, 21 Jun 2014 01:25:26 +0400
-Message-ID: <53A4A6C6.9000703@cogentembedded.com>
-References: <201406210034.57784.sergei.shtylyov@cogentembedded.com> <4637423.jWRbL1GbCK@wuerfel> <53A4A0E5.50904@cogentembedded.com> <4490558.0d3xbrzEgW@wuerfel>
+From: Beniamino Galvani <b.galvani@gmail.com>
+Subject: Re: [PATCH 1/3] pwm: add Rockchip SoC PWM support
+Date: Sat, 21 Jun 2014 00:00:36 +0200
+Message-ID: <20140620220034.GA927@gmail.com>
+References: <1399504115-16257-1-git-send-email-b.galvani@gmail.com>
+ <1399504115-16257-2-git-send-email-b.galvani@gmail.com>
+ <20140617214253.GA24743@mithrandir>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <4490558.0d3xbrzEgW@wuerfel>
-Sender: linux-sh-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140617214253.GA24743@mithrandir>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2014 01:10 AM, Arnd Bergmann wrote:
+On Tue, Jun 17, 2014 at 11:42:58PM +0200, Thierry Reding wrote:
+> On Thu, May 08, 2014 at 01:08:33AM +0200, Beniamino Galvani wrote:
+> > This commit adds a driver for the PWM controller found on Rockchip
+> > RK29, RK30 and RK31 SoCs.
+> > 
+> > Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
+> > ---
+> >  drivers/pwm/Kconfig        |    8 ++
+> >  drivers/pwm/Makefile       |    1 +
+> >  drivers/pwm/pwm-rockchip.c |  180 ++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 189 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-rockchip.c
+> > 
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index 5b34ff2..2e92245 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -197,6 +197,14 @@ config PWM_RENESAS_TPU
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called pwm-renesas-tpu.
+> >  
+> > +config PWM_ROCKCHIP
+> > +	tristate "Rockchip PWM support"
+> > +	depends on ARCH_ROCKCHIP
+> > +	depends on OF
+> 
+> It seems like ARCH_ROCKCHIP depends on OF already (via ARCH_MULTI_V7 and
+> ARCH_MULTIPLATFORM), so having the dependency explicitly here seems
+> redundant.
 
->>>> +       pci0: pci@ee090000 {
->>>> +               compatible = "renesas,pci-r8a7790";
->>>> +               clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
->>>> +               reg = <0x0 0xee090000 0x0 0xc00>,
->>>> +                     <0x0 0xee080000 0x0 0x1100>;
->>>> +               interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
->>>> +               status = "disabled";
->>>> +
->>>> +               bus-range = <0 0>;
->>>> +               #address-cells = >;
->>>> +               #size-cells = <2>;
->>>> +               #interrupt-cells = <1>;
->>>> +               interrupt-map-mask = <0xff00 0 0 0x7>;
->>>> +               interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->>>> +                                0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
->>>> +                                0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
->>>> +       };
+Right, I will remove the dependency.
 
->>> Hmm, this device node is not actually compliant to the PCI binding,
->>> it needs a "ranges" property that can be used to look up the memory
->>> and I/O space windows.
+> 
+> > diff --git a/drivers/pwm/pwm-rockchip.c b/drivers/pwm/pwm-rockchip.c
+> [...]
+> > +#define PRESCALER		2
+> > +#define NSECS_PER_SEC		1000000000
+> 
+> You should use NSEC_PER_SEC from include/linux/time.h.
 
->>      The PCI driver doesn't support I/O space.
+Ok.
 
-> Well, whichever windows are registered by the driver should come
-> from the ranges property.
+> 
+> > +struct rockchip_pwm_chip {
+> > +	struct pwm_chip	chip;
+> > +	struct clk	*clk;
+> > +	void __iomem	*base;
+> > +};
+> 
+> I prefer no artificial padding within structure definitions.
+> 
+> > +static int rockchip_pwm_config(struct pwm_chip *chip, struct pwm_device *pwm,
+> > +			       int duty_ns, int period_ns)
+> > +{
+> > +	struct rockchip_pwm_chip *pc = to_rockchip_pwm_chip(chip);
+> > +	unsigned long clk_rate, period, duty;
+> > +	u64 div;
+> > +	int ret;
+> > +
+> > +	clk_rate = clk_get_rate(pc->clk);
+> > +
+> > +	/*
+> > +	 * Since period and duty cycle registers have a width of 32
+> > +	 * bits, every possible input period can be obtained using the
+> > +	 * default prescaler value for all practical clock rate values.
+> > +	 */
+> > +	div = clk_rate;
+> > +	div *= period_ns;
+> 
+> Perhaps shorten this to "div = clk_rate * period_ns;"?
 
-    I know. Too bad the driver's original author managed to misunderstand that...
+I will change this, adding a cast to avoid the truncation of the
+result to 32 bits: "div = (u64)clk_rate * period_ns;"
 
->>> It also needs a device_type property.
+> 
+> > +	do_div(div, PRESCALER * NSECS_PER_SEC);
+> > +	period = div;
+> > +
+> > +	div = clk_rate;
+> > +	div *= duty_ns;
+> 
+> And this to "div = clk_rate * duty_ns;"?
 
->>      Hm, are you sure about that? I thought only PCI devices should have it...
+Ditto.
 
-> Yes, pretty sure it's needed in both the host controller and the
-> devices.
+> 
+> > +	do_div(div, PRESCALER * NSECS_PER_SEC);
+> > +	duty = div;
+> > +
+> > +	ret = clk_enable(pc->clk);
+> > +	if (ret)
+> > +		return ret;
+> > +
+> > +	writel(period, pc->base + PWM_LRC);
+> > +	writel(duty, pc->base + PWM_HRC);
+> > +	writel(0, pc->base + PWM_CNTR);
+> > +
+> > +	clk_disable(pc->clk);
+> > +
+> > +	return 0;
+> > +}
+> [...]
+> > +static struct pwm_ops rockchip_pwm_ops = {
+> 
+> static const please.
+> 
+> > +	.config	= rockchip_pwm_config,
+> 
+> There's a tab between .config and = above. It should be a space.
+> 
+> > +static const struct of_device_id rockchip_pwm_dt_ids[] = {
+> > +	{ .compatible = "rockchip,rk2928-pwm" },
+> > +	{ /* sentinel */ }
+> > +};
+> > +MODULE_DEVICE_TABLE(of, rockchip_pwm_id_ids);
+> 
+> The name in the MODULE_DEVICE_TABLE doesn't match the array name above.
+> Does this even build?
 
-     I don't understand the case of the PCI devices, honestly. Shouldn't the 
-"device_type" prop reflect the device's functionality rather than the bus 
-where it's located?
+Sorry, I didn't test the driver as a module, which indeed doesn't
+compile.
 
->>> I realize that the driver doesn't currently use them, but you should
->>> adhere to the binding anyway, so we can fix the driver at some point.
+> 
+> > +static struct platform_driver rockchip_pwm_driver = {
+> > +	.driver = {
+> > +		.name = "rockchip-pwm",
+> > +		.owner = THIS_MODULE,
+> 
+> You no longer need to initialize this explicitly, module_platform_driver
+> does it for you.
+> 
+> > +		.of_match_table = rockchip_pwm_dt_ids,
+> > +	},
+> > +	.probe	= rockchip_pwm_probe,
+> 
+> There's another tab instead of space here.
+> 
+> > +	.remove = rockchip_pwm_remove,
+> > +};
+> > +module_platform_driver(rockchip_pwm_driver);
+> > +
+> > +MODULE_AUTHOR("Beniamino Galvani <b.galvani@gmail.com>");
+> > +MODULE_DESCRIPTION("Rockchip PWM driver");
+> 
+> Perhaps "Rockchip SoC PWM driver"?
 
->>      Sigh, agreed about the need to fix the driver. Too bad you've spoken up
->> only now though. And you've ACKed the DT bindings without those properties
->> documented or even present in an example...
+Seems reasonable; I will fix this and the other issues in v2, thanks.
 
-> Yes, I realized that too late as well, sorry about it. For some reason
-> I only looked at the interrupt-map being done right and forgot to
-> check the ranges.
-
-> We definitely need to move the code handling the ranges into a common
-> location to avoid this mistake in the future.
-
-    It is already in the common location, AFAIK; what's lacking there is the 
-code that parses "dma-ranges" as well but that should be pretty easy to add...
-
-> 	Arnd
-
-WBR, Sergei
-
+Beniamino
