@@ -1,46 +1,47 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v4 09/13] serial: amba-pl011: Pass FIQ information to KGDB.
-Date: Thu, 19 Jun 2014 17:36:03 -0700
-Message-ID: <20140620003603.GA30850@kroah.com>
-References: <1401961994-18033-1-git-send-email-daniel.thompson@linaro.org>
- <1403174303-25456-1-git-send-email-daniel.thompson@linaro.org>
- <1403174303-25456-10-git-send-email-daniel.thompson@linaro.org>
+From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: Device-tree and Marvell vendor prefix
+Date: Fri, 20 Jun 2014 08:36:40 +0800
+Message-ID: <CAN1soZztOAJv1TRAt1roOASeU1Lm5C+YiL-+BQ+D_QuyJxmQ0g@mail.gmail.com>
+References: <8738f0so0m.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1403174303-25456-10-git-send-email-daniel.thompson@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Daniel Thompson <daniel.thompson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, kernel@stlinux.com, kgdb-bugreport@lists.sourceforge.net, Linus Walleij <linus.walleij@linaro.org>, Jiri Slaby <jslaby@suse.cz>, Dirk Behme <dirk.behme@de.bosch.com>, Russell King <linux@arm.linux.org.uk>, Nicolas Pitre <nico@linaro.org>, patches@linaro.org, Anton Vorontsov <anton.vorontsov@linaro.org>, Kumar Gala <galak@codeaurora.org>, "David A. Long" <dave.long@linaro.org>, linux-serial@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, kernel-team@android.com, devicetree@vger.kernel.org, linaro-kernel@lists.linaro.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Jason Wessel <jason.wessel@windriver.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Colin
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <8738f0so0m.fsf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Guennadi Liakhovetski <g.liakhovetski-Mmb7MZpHnFY@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 19, 2014 at 11:38:19AM +0100, Daniel Thompson wrote:
-> If the AMBA bus has provided the pl011 with a FIQ resource (i.e. a
-> second IRQ) then speculatively register it with KGDB when the polling
-> driver is initialized.
-> 
-> By providing this information to KGDB the serial driver offers
-> "permission" for KGDB to route the UART interrupt signal from the
-> drivers own handler to KGDBs FIQ handler (which will eventually use the
-> UART's polled I/O callbacks to interact with the user). This permission
-> also implies the amba-pl011 driver has already unmasked RX interrupts
-> (otherwise the FIQ handler will never trigger).
-> 
-> Signed-off-by: Daniel Thompson <daniel.thompson@linaro.org>
-> Cc: Russell King <linux@arm.linux.org.uk>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Jiri Slaby <jslaby@suse.cz>
-> Cc: linux-serial@vger.kernel.org
-> ---
+On Fri, Jun 20, 2014 at 3:22 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+>
+> Hi Haojian, Grant and Rob,
+>
+> I'm submitting various patches for Marvell PXA27x architecture to support
+> device-tree.
+>
+> In a review from Guennadi, he made me a comment that the official prefix for
+> Marvell is "marvell" (according to
+> Documentation/devicetree/bindings/vendor-prefixes.txt).
+>
+> As a matter of fact, there are 2 prefixes used :
+>  - "marvell" : 264 uses in *.c files
+>  - "mrvl" : 64 uses in *.c files
+>
+> So which one should I use ?
+>
+> Cheers.
+>
+> --
+> Robert
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Please use "marvell" instead since it's preferred. We can't replace
+"mrvl" by "marvell" roughly.
+It may cause incompatible in other's tree. We can add "marvell" for
+all "mrvl" entries.
+
+Regards
+Haojian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
