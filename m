@@ -1,66 +1,40 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 1/2] clocksource: arm_arch_timer: remove static from
- arch_timer_init
-Date: Fri, 20 Jun 2014 11:52:17 +0100
-Message-ID: <20140620105217.GI30188@leverpostej>
-References: <70167479.zcs3JF0luJ@diego>
- <3602534.r5eJA8RqrN@diego>
+From: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH v5 3/3] ASoC: fsl: add imx-es8328 machine
+	driver
+Date: Fri, 20 Jun 2014 11:57:00 +0100
+Message-ID: <20140620105700.GE3412@opensource.wolfsonmicro.com>
+References: <1403244859-22236-1-git-send-email-xobs@kosagi.com> <1403244859-22236-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <3602534.r5eJA8RqrN@diego>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko =?utf-8?Q?St=C3=BCbner?= <heiko@sntech.de>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Arnd Bergmann <arnd@arndb.de>, Matthias Brugger <matthias.bgg@gmail.com>
+In-Reply-To: <1403244859-22236-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 11:44:11AM +0100, Heiko St=C3=BCbner wrote:
-> There exist SoCs that need some special setup procedure for their arc=
-hitected-timer
-> to work. Therefore allow arch_timer_init to be called from such speci=
-alized
-> clocksources.
->=20
-> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+On Fri, Jun 20, 2014 at 02:14:19PM +0800, Sean Cross wrote:
+> This adds an initial machine driver for the ES8328 audio codec on Freescale
+> boards.  The driver supports headphones and an audio regulator for an onboard
+> speaker amp.
+> 
+> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 > ---
->  drivers/clocksource/arm_arch_timer.c | 2 +-
->  drivers/clocksource/arm_arch_timer.h | 7 +++++++
->  2 files changed, 8 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/clocksource/arm_arch_timer.h
->=20
-> diff --git a/drivers/clocksource/arm_arch_timer.c b/drivers/clocksour=
-ce/arm_arch_timer.c
-> index 5163ec1..55116d6 100644
-> --- a/drivers/clocksource/arm_arch_timer.c
-> +++ b/drivers/clocksource/arm_arch_timer.c
-> @@ -635,7 +635,7 @@ static void __init arch_timer_common_init(void)
->  	arch_timer_arch_init();
->  }
-> =20
-> -static void __init arch_timer_init(struct device_node *np)
-> +void __init arch_timer_init(struct device_node *np)
->  {
->  	int i;
-> =20
-> diff --git a/drivers/clocksource/arm_arch_timer.h b/drivers/clocksour=
-ce/arm_arch_timer.h
-> new file mode 100644
-> index 0000000..af3974d
-> --- /dev/null
-> +++ b/drivers/clocksource/arm_arch_timer.h
-> @@ -0,0 +1,7 @@
-> +/*
-> + * This program is free software; you can redistribute it and/or mod=
-ify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + */
+<snip>
+> +static int imx_set_frequency(struct imx_es8328_data *data, int freq)
+> +{
+> +	int ret;
 > +
-> +void __init arch_timer_init(struct device_node *np);
+> +	return ret;
+> +}
 
-If we _really_ need this (which I hope we don't), we already have
-include/clocksource/arm_arch_timer.h.
+This function returns an uninitialised variable and is not used
+anywhere, so I assume can be removed.
 
-Mark.
+Thanks,
+Charles
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
