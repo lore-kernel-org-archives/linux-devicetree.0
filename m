@@ -1,76 +1,44 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH/RFC 1/2] spi: sh-msiof: Add DT support to DMA setup
-Date: Fri, 20 Jun 2014 14:32:14 +0100
-Message-ID: <20140620133214.GM30188@leverpostej>
-References: <1403259638-13774-1-git-send-email-geert+renesas@glider.be>
- <1403259638-13774-2-git-send-email-geert+renesas@glider.be>
- <20140620125259.GL30188@leverpostej>
- <CAMuHMdV97sXuS6JyPTwgv7i73F4fupQkamAyuQfG78SrihoiKQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdV97sXuS6JyPTwgv7i73F4fupQkamAyuQfG78SrihoiKQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] gpu: ipu-v3: ipu-common.c:  Cleaning up return of uninitialized variable
+Date: Fri, 20 Jun 2014 15:38:46 +0200
+Message-ID: <1403271526-16947-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Sascha Hauer <s.hauer@pengutronix.de>, Fabio Estevam <fabio.estevam@freescale.com>, Russell King <rmk+kernel@arm.linux.org.uk>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 02:18:31PM +0100, Geert Uytterhoeven wrote:
-> Hi Mark,
-> 
-> On Fri, Jun 20, 2014 at 2:52 PM, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> wrote:
-> > On Fri, Jun 20, 2014 at 11:20:37AM +0100, Geert Uytterhoeven wrote:
-> >> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
-> >> ---
-> >> The format of the DMA specifiers depends on the DT bindings for SHDMA,
-> >> which are still under development.
-> >>
-> >>  Documentation/devicetree/bindings/spi/sh-msiof.txt | 17 +++++++++++++--
-> >>  drivers/spi/spi-sh-msiof.c                         | 25 ++++++++++++++++------
-> >>  2 files changed, 33 insertions(+), 9 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/spi/sh-msiof.txt b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> >> index f24baf3b6cc1..fc56e312c0bc 100644
-> >> --- a/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> >> +++ b/Documentation/devicetree/bindings/spi/sh-msiof.txt
-> >> @@ -7,7 +7,13 @@ Required properties:
-> >>                        Examples with soctypes are:
-> >>                        "renesas,msiof-r8a7790" (R-Car H2)
-> >>                        "renesas,msiof-r8a7791" (R-Car M2)
-> >> -- reg                  : Offset and length of the register set for the device
-> >> +- reg                  : A list of offsets and lengths of the register sets for
-> >> +                      the device.
-> >> +                      If only one register set is present, it is to be used
-> >> +                      by both the CPU and the DMA engine.
-> >> +                      If two register sets are present, the first is to be
-> >> +                      used by the CPU, and the second is to be used by the
-> >> +                      DMA engine.
-> >
-> > I'm missing something here. I'm we're providing the DMA engines through
-> > DMA specifiers below, then why do we need the DMA engine address here?
-> > Surely they're separate device nodes?
-> 
-> It's not the DMA engine address, but the second bank of MSIOF addresses.
-> 
-> The MSIOF has two (identical) sets of register banks: the first one is to
-> be accessed by the CPU, the second one (actually only the Transmit FIFO
-> and Receive FIFO Data Registers) is to be accessed by the DMA engine.
+Before when there was an error a uninitialized variable would be returnd.
+Now it returns -ENODEV
 
-Ah, I see. Thanks for the clarification.
+This was found using a static code analysis program called cppcheck.
 
-> > The code update doesn't seem to do anything with the additional reg
-> > entry.
-> 
-> Indeed, as the second bank of registers is already used by spi-sh-msiof.c
-> for the non-DT DMA case. Register banks are resources, so they're
-> already present in non-DT platform devices.
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+---
+ drivers/gpu/ipu-v3/ipu-common.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Ok. That makes sense then.
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/gpu/ipu-v3/ipu-common.c b/drivers/gpu/ipu-v3/ipu-common.c
+index 04e7b2e..d01c77d 100644
+--- a/drivers/gpu/ipu-v3/ipu-common.c
++++ b/drivers/gpu/ipu-v3/ipu-common.c
+@@ -1092,7 +1092,7 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
+ {
+ 	struct device *dev = ipu->dev;
+ 	unsigned i;
+-	int id, ret;
++	int id;
+ 
+ 	mutex_lock(&ipu_client_id_mutex);
+ 	id = ipu_client_id;
+@@ -1125,7 +1125,7 @@ static int ipu_add_client_devices(struct ipu_soc *ipu, unsigned long ipu_base)
+ err_register:
+ 	platform_device_unregister_children(to_platform_device(dev));
+ 
+-	return ret;
++	return -ENODEV;
+ }
+ 
+ 
+-- 
+1.7.10.4
