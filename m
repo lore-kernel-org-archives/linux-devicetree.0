@@ -1,165 +1,79 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-Date: Fri, 20 Jun 2014 17:17:07 -0400
-Message-ID: <53A4A4D3.1000908@ti.com>
-References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com> <2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
+ nodes
+Date: Sat, 21 Jun 2014 01:25:26 +0400
+Message-ID: <53A4A6C6.9000703@cogentembedded.com>
+References: <201406210034.57784.sergei.shtylyov@cogentembedded.com> <4637423.jWRbL1GbCK@wuerfel> <53A4A0E5.50904@cogentembedded.com> <4490558.0d3xbrzEgW@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pratyush ANAND <pratyush.anand@st.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <4490558.0d3xbrzEgW@wuerfel>
+Sender: linux-sh-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
+On 06/21/2014 01:10 AM, Arnd Bergmann wrote:
 
-Sorry, my previous response was in html and not sure it has made to the 
-list. I did
-get an error as well. So resending my response.
+>>>> +       pci0: pci@ee090000 {
+>>>> +               compatible = "renesas,pci-r8a7790";
+>>>> +               clocks = <&mstp7_clks R8A7790_CLK_EHCI>;
+>>>> +               reg = <0x0 0xee090000 0x0 0xc00>,
+>>>> +                     <0x0 0xee080000 0x0 0x1100>;
+>>>> +               interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +               status = "disabled";
+>>>> +
+>>>> +               bus-range = <0 0>;
+>>>> +               #address-cells = >;
+>>>> +               #size-cells = <2>;
+>>>> +               #interrupt-cells = <1>;
+>>>> +               interrupt-map-mask = <0xff00 0 0 0x7>;
+>>>> +               interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>>>> +                                0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
+>>>> +                                0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
+>>>> +       };
 
-On 6/18/2014 6:14 AM, Mohit KUMAR DCG wrote:
-> Hello Murali,
->
->> -----Original Message-----
->> From: Murali Karicheri [mailto:m-karicheri2@ti.com]
->> Sent: Wednesday, June 11, 2014 12:21 AM
->> To:linux-arm-kernel@lists.infradead.org;linux-kernel@vger.kernel.org;
->> linux-pci@vger.kernel.org;devicetree@vger.kernel.org; linux-
->> doc@vger.kernel.org
->> Cc: Murali Karicheri; Santosh Shilimkar; Russell King; Grant Likely; Rob Herring;
->> Mohit KUMAR DCG; Jingoo Han; Bjorn Helgaas; Pratyush ANAND; Richard
->> Zhu; Kishon Vijay Abraham I; Marek Vasut; Arnd Bergmann; Pawel Moll;
->> Mark Rutland; Ian Campbell; Kumar Gala; Randy Dunlap
->> Subject: [PATCH v2 0/8] Add Keystone PCIe controller driver
->>
->> This patch adds a PCIe controller driver for Keystone SoCs. This is based on v1
->> of the series posted to the mailing list.
->>
-> 1. I think your first patch is OK which handles platform specific ATU implementation.
->
-> 2. For MSI part, I think you just need to add two new callbacks with pp-ops, something similar to:
-> pp->ops->msi_set
->
-> pp->ops->msi_clear
->
-> With these two platform specific callbacks you should be able to manage MSI handling.
-> So idea is that dw_msi code uses pp->ops->msi_set/clear if platform define these,
-> otherwise use dw_msi_set/clear (which you need to refactor from existing code)
->
-> So other than your keystone changes we expect 3 patches:
-> --  1st same as you sent 1/8: for ATU handeling
-> -- 2nd to refactor dw_msi_set/clear: refactor from existing code
-Mohit,
+>>> Hmm, this device node is not actually compliant to the PCI binding,
+>>> it needs a "ranges" property that can be used to look up the memory
+>>> and I/O space windows.
 
-Thanks for your comments.
+>>      The PCI driver doesn't support I/O space.
 
-Just want to be on the same page
+> Well, whichever windows are registered by the driver should come
+> from the ranges property.
 
-1. In my original patch [PATCH v2 3/8] PCI: designware: update pcie core 
-driver to work with dw hw version 3.65.
-  I had following changes:-
+    I know. Too bad the driver's original author managed to misunderstand that...
 
-diff --git a/drivers/pci/host/pcie-designware.c 
-b/drivers/pci/host/pcie-designware.c
+>>> It also needs a device_type property.
 
-index e4bd19a..f985811 100644
+>>      Hm, are you sure about that? I thought only PCI devices should have it...
 
---- a/drivers/pci/host/pcie-designware.c
+> Yes, pretty sure it's needed in both the host controller and the
+> devices.
 
-+++ b/drivers/pci/host/pcie-designware.c
+     I don't understand the case of the PCI devices, honestly. Shouldn't the 
+"device_type" prop reflect the device's functionality rather than the bus 
+where it's located?
 
-@@ -277,11 +277,15 @@ static int assign_irq(int no_irqs, struct msi_desc 
-*desc, int *pos)
+>>> I realize that the driver doesn't currently use them, but you should
+>>> adhere to the binding anyway, so we can fix the driver at some point.
 
-}
+>>      Sigh, agreed about the need to fix the driver. Too bad you've spoken up
+>> only now though. And you've ACKed the DT bindings without those properties
+>> documented or even present in an example...
 
-set_bit(pos0 + i, pp->msi_irq_in_use);
+> Yes, I realized that too late as well, sorry about it. For some reason
+> I only looked at the interrupt-map being done right and forgot to
+> check the ranges.
 
-/*Enable corresponding interrupt in MSI interrupt controller */
+> We definitely need to move the code handling the ranges into a common
+> location to avoid this mistake in the future.
 
--res = ((pos0 + i) / 32) * 12;
+    It is already in the common location, AFAIK; what's lacking there is the 
+code that parses "dma-ranges" as well but that should be pretty easy to add...
 
--bit = (pos0 + i) % 32;
+> 	Arnd
 
--dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
+WBR, Sergei
 
--val |= 1 << bit;
-
--dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
-
-+if (!(pp->version & DW_V3_65)) {
-
-+res = ((pos0 + i) / 32) * 12;
-
-+bit = (pos0 + i) % 32;
-
-+dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-
-+4, &val);
-
-+val |= 1 << bit;
-
-+dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-
-+4, val);
-
-+}
-
-}
-
-
-I assume you are referring to the above code for msi_set().  I missed to 
-add similar code change to clear_irq().
-
-So in assign_irq()
-
-             if (pp->ops->msi_set)
-                        pp->ops->msi_set()
-
-Similarly in clear_irq()
-
-             if (pp->ops->msi_clear)
-                         pp->ops->msi_clear()
-
-
-*pos = pos0;
-
-@@ -349,7 +353,10 @@ static int dw_msi_setup_irq(struct msi_chip *chip, 
-struct pci_dev *pdev,
-
-*/
-
-desc->msi_attrib.multiple = msgvec;
-
--msg.address_lo = virt_to_phys((void *)pp->msi_data);
-
-+if (pp->ops->get_msi_data)
-
-+msg.address_lo = pp->ops->get_msi_data(pp);
-
-+else
-
-+msg.address_lo = virt_to_phys((void *)pp->msi_data);
-
-msg.address_hi = 0x0;
-
-msg.data = pos;
-
-
-What about this code? This requires get_msi_data() as well
-
-> -- 3rd to use pp->ops->msi_set/clear if defined.
-Why not API enhancement and refactor the code in a single patch?
-
-Murali
-> Pls let us know for any issue or have different opinion.
->
-> Regards
-> Mohit
->
->
->
->   
->> --
->> 1.7.9.5
