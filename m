@@ -1,58 +1,65 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH] of/irq: lookup 'interrupts-extended' property first
-Date: Thu, 19 Jun 2014 16:33:43 -0700
-Message-ID: <1403220823-19444-1-git-send-email-f.fainelli@gmail.com>
+From: Alistair Popple <alistair@popple.id.au>
+Subject: Re: [PATCH] IBM Akebono: Remove obsolete config select
+Date: Fri, 20 Jun 2014 10:10 +1000
+Message-ID: <1774195.a1B25gz7RT@mexican>
+References: <1398998002.2925.15.camel@pasglop> <1399018005-23136-1-git-send-email-alistair@popple.id.au> <1402660592.28881.22.camel@x220>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1402660592.28881.22.camel@x220>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: grant.likely@linaro.org, robh+dt@kernel.org, computersforpeace@gmail.com, linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>
+To: benh@kernel.crashing.org
+Cc: Paul Bolle <pebolle@tiscali.nl>, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-In case the Device Tree blob passed by the boot agent supplies both an
-'interrupts-extended' and an 'interrupts' property in order to allow for
-older kernels to be usable, prefer the new-style 'interrupts-extended'
-property which convey a lot more information.
+Hi Ben,
 
-This allows us to have bootloaders willingly maintaining backwards
-compatibility with older kernels without entirely deprecating the
-'interrupts' property (although that is a clear violation of the binding
-specified at
-Documentation/devicetree/bindings/interrupt-controller/interrupts.txt)
+It looks like we may have missed this trivial fix? Can you please apply it to 
+your tree?
 
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/of/irq.c | 17 +++++++++--------
- 1 file changed, 9 insertions(+), 8 deletions(-)
+Regards,
 
-diff --git a/drivers/of/irq.c b/drivers/of/irq.c
-index 3e06a699352d..1af3be2396db 100644
---- a/drivers/of/irq.c
-+++ b/drivers/of/irq.c
-@@ -301,16 +301,17 @@ int of_irq_parse_one(struct device_node *device, int index, struct of_phandle_ar
- 	/* Get the reg property (if any) */
- 	addr = of_get_property(device, "reg", NULL);
- 
-+	/* Try the new-style interrupts-extended */
-+	res = of_parse_phandle_with_args(device, "interrupts-extended",
-+					"#interrupt-cells", index, out_irq);
-+	if (!res)
-+		return of_irq_parse_raw(addr, out_irq);
-+
- 	/* Get the interrupts property */
- 	intspec = of_get_property(device, "interrupts", &intlen);
--	if (intspec == NULL) {
--		/* Try the new-style interrupts-extended */
--		res = of_parse_phandle_with_args(device, "interrupts-extended",
--						"#interrupt-cells", index, out_irq);
--		if (res)
--			return -EINVAL;
--		return of_irq_parse_raw(addr, out_irq);
--	}
-+	if (intspec == NULL)
-+		return -EINVAL;
-+
- 	intlen /= sizeof(*intspec);
- 
- 	pr_debug(" intspec=%d intlen=%d\n", be32_to_cpup(intspec), intlen);
--- 
-1.9.1
+Alistair
+
+On Fri, 13 Jun 2014 13:56:32 Paul Bolle wrote:
+> On Fri, 2014-05-02 at 18:06 +1000, Alistair Popple wrote:
+> > The original implementation of MMC support for Akebono introduced a
+> > new configuration symbol (MMC_SDHCI_OF_476GTR). This symbol has been
+> > dropped in favour of using the generic platform driver however the
+> > select for this symbol was mistakenly left in the platform
+> > configuration.
+> > 
+> > This patch removes the obsolete symbol selection.
+> > 
+> > Signed-off-by: Alistair Popple <alistair@popple.id.au>
+> 
+> This patch hasn't yet entered linux-next nor Linus' tree. Is it queued
+> somewhere? If not, would a
+>     Acked-by: Paul Bolle <pebolle@tiscali.nl>
+> 
+> help to get this trivial patch queued for either of those trees?
+> 
+> 
+> Paul Bolle
+> 
+> > ---
+> > 
+> >  arch/powerpc/platforms/44x/Kconfig | 1 -
+> >  1 file changed, 1 deletion(-)
+> > 
+> > diff --git a/arch/powerpc/platforms/44x/Kconfig
+> > b/arch/powerpc/platforms/44x/Kconfig index 8beec7d..908bf11 100644
+> > --- a/arch/powerpc/platforms/44x/Kconfig
+> > +++ b/arch/powerpc/platforms/44x/Kconfig
+> > @@ -220,7 +220,6 @@ config AKEBONO
+> > 
+> >  	select USB_EHCI_HCD_PLATFORM
+> >  	select MMC_SDHCI
+> >  	select MMC_SDHCI_PLTFM
+> > 
+> > -	select MMC_SDHCI_OF_476GTR
+> > 
+> >  	select ATA
+> >  	select SATA_AHCI_PLATFORM
+> >  	help
