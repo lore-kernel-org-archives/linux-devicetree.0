@@ -1,148 +1,67 @@
-From: Olof Johansson <olof@lixom.net>
-Subject: Re: [RFC 1/2] pwrseq: Add subsystem to handle complex power sequences
-Date: Fri, 20 Jun 2014 01:02:48 -0700
-Message-ID: <CAOesGMgRw_=ppC3zhDtuYBUsrnd9wwsu26az=4kMXJDBmNgmjw@mail.gmail.com>
-References: <1403183091-27876-1-git-send-email-ulf.hansson@linaro.org>
-	<1403183091-27876-2-git-send-email-ulf.hansson@linaro.org>
-	<CAOesGMj6xp_cXZRuqL5HOPX4AeDuCkj69E32xuPVgGk4xABLbQ@mail.gmail.com>
-	<53A3E256.8090307@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <53A3E256.8090307@redhat.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Hans de Goede <hdegoede@redhat.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, linux-pm@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Arend van Spriel <arend@broadcom.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+From: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH 1/2] ASoC: max98090: Add max98091 compatible string
+Date: Fri, 20 Jun 2014 13:33:15 +0530
+Message-ID: <1403251396-17487-1-git-send-email-tushar.b@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, trblinux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Wonjoon Lee <woojoo.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 12:27 AM, Hans de Goede <hdegoede@redhat.com> wrote:
-> Hi,
->
-> On 06/19/2014 07:18 PM, Olof Johansson wrote:
->> Hi,
->>
->>
->>
->> On Thu, Jun 19, 2014 at 6:04 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>> The pwrseq subsystem handles complex power sequences, typically useful
->>> for subsystems that makes use of discoverable buses, like for example
->>> MMC and I2C.
->>>
->>> The pwrseq subsystem is dependant on CONFIG_OF to be able to parse a DT
->>> childnode to find out what power sequence method to bind for a device.
->>>
->>> From the DT childnode, the pwrseq DT parser tries to locate a
->>> "power-method" property, which string is matched towards the list of
->>> supported pwrseq methods.
->>>
->>> Each pwrseq method implements it's own power sequence and interfaces
->>> the pwrseq core through a few callback functions.
->>>
->>> To instantiate a pwrseq method, clients shall use the devm_pwrseq_get()
->>> API. If needed, clients can explicity drop the references to a pwrseq
->>> method using devm_pwrseq_put() API.
->>>
->>> Besides instantiation, the pwrseq API provides clients opportunity to
->>> select a certain power state. In this intial version, PWRSEQ_POWER_ON
->>> and PWRSEQ_POWER_OFF are supported. Those are also mandatory for each
->>> pwrseq method to support.
->>>
->>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>> ---
->>>  .../devicetree/bindings/pwrseq/pwrseq.txt          |   48 ++++++
->>>  drivers/Makefile                                   |    2 +-
->>>  drivers/pwrseq/Makefile                            |    2 +
->>>  drivers/pwrseq/core.c                              |  175 ++++++++++++++++++++
->>>  drivers/pwrseq/core.h                              |   37 +++++
->>>  drivers/pwrseq/method.c                            |   38 +++++
->>>  include/linux/pwrseq.h                             |   50 ++++++
->>>  7 files changed, 351 insertions(+), 1 deletion(-)
->>>  create mode 100644 Documentation/devicetree/bindings/pwrseq/pwrseq.txt
->>>  create mode 100644 drivers/pwrseq/Makefile
->>>  create mode 100644 drivers/pwrseq/core.c
->>>  create mode 100644 drivers/pwrseq/core.h
->>>  create mode 100644 drivers/pwrseq/method.c
->>>  create mode 100644 include/linux/pwrseq.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/pwrseq/pwrseq.txt b/Documentation/devicetree/bindings/pwrseq/pwrseq.txt
->>> new file mode 100644
->>> index 0000000..80848ae
->>> --- /dev/null
->>> +++ b/Documentation/devicetree/bindings/pwrseq/pwrseq.txt
->>> @@ -0,0 +1,48 @@
->>> +Power sequence DT bindings
->>> +
->>> +Each power sequence method has a corresponding "power-method" property string.
->>> +This property shall be set in a subnode for a device. That subnode should also
->>> +describe resourses which are specific to that power method.
->>> +
->>> +Do note, power sequences as such isn't encoded through DT. Instead those are
->>> +implemented by each power method.
->>> +
->>> +Required subnode properties:
->>> +- power-method: should contain the string for the power method to bind.
->>> +
->>> +       Supported power methods: None.
->>> +
->>> +Example:
->>> +
->>> +Note, the "clock" power method in this example isn't actually supported, but
->>> +used to visualize how a childnode could be described.
->>> +
->>> +// WLAN SDIO channel
->>> +sdi1_per2@80118000 {
->>> +       compatible = "arm,pl18x", "arm,primecell";
->>> +       reg = <0x80118000 0x1000>;
->>> +       interrupts = <0 50 IRQ_TYPE_LEVEL_HIGH>;
->>> +
->>> +       dmas = <&dma 32 0 0x2>, /* Logical - DevToMem */
->>> +              <&dma 32 0 0x0>; /* Logical - MemToDev */
->>> +       dma-names = "rx", "tx";
->>> +
->>> +       clocks = <&prcc_kclk 2 4>, <&prcc_pclk 2 6>;
->>> +       clock-names = "sdi", "apb_pclk";
->>> +
->>> +       arm,primecell-periphid = <0x10480180>;
->>> +       max-frequency = <100000000>;
->>> +       bus-width = <4>;
->>> +       non-removable;
->>> +       pinctrl-names = "default", "sleep";
->>> +       pinctrl-0 = <&sdi1_default_mode>;
->>> +       pinctrl-1 = <&sdi1_sleep_mode>;
->>> +
->>> +       status = "okay";
->>> +
->>> +       pwrseq: pwrseq1 {
->>> +               power-method = "clock";
->>> +               clocks = <&someclk 1 2>, <&someclk 3 4>;
->>> +               clock-names = "pwrseq1", "pwrseq2";
->>> +       };
->>
->> I am strongly against the subnode approach as a general framework. We
->> don't have a subnode for interrupts, nor for clocks or pinctrl. So why
->> should we have it for the power sequencing?
->>
->> Sure, that fits the linux driver model better, but that's irrelevant
->> w.r.t. describing the hardware.
->
-> Actually this is about describing the hardware, when you have e.g. an
-> mmc device which needs pwrseq, there will be 2 sets of certain
-> resources, ie clocks for the host controller and clocks going directly
-> to the mmc device. I think putting those both in the same subnode is
-> a BAD idea, so we really do need a subnode to group the pwrseq resources
-> together.
+From: Wonjoon Lee <woojoo.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-I disagree.
+The MAX98091 CODEC is the same as MAX98090 CODEC, but with an extra
+microphone. Existing driver for MAX98090 CODEC already has support
+for MAX98091 CODEC. Adding proper compatible string so that MAX98091
+CODEC can be specified from device tree.
 
-The clock is the input to the module, and it is what needs to be
-enabled for the module to work. It's not the input to some
-power-sequence component on the module, or next to the module on the
-bus.
+Signed-off-by: Wonjoon Lee <woojoo.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Signed-off-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Signed-off-by: Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
 
-It probably makes sense to not use the standard names for the new
-resources. I.e. I'm OK with using new property names that are needed
-for the device vs what's needed for the MMC controller, but not with a
-subnode. I.e. we don't need to use "clocks" for the clocks, we can use
-something else.
+Picked from https://chromium-review.googlesource.com/#/c/184091/
 
--Olof
+ .../devicetree/bindings/sound/max98090.txt         |    2 +-
+ sound/soc/codecs/max98090.c                        |    2 ++
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/sound/max98090.txt b/Documentation/devicetree/bindings/sound/max98090.txt
+index a5e63fa..c454e67 100644
+--- a/Documentation/devicetree/bindings/sound/max98090.txt
++++ b/Documentation/devicetree/bindings/sound/max98090.txt
+@@ -4,7 +4,7 @@ This device supports I2C only.
+ 
+ Required properties:
+ 
+-- compatible : "maxim,max98090".
++- compatible : "maxim,max98090" or "maxim,max98091".
+ 
+ - reg : The I2C address of the device.
+ 
+diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
+index f5fccc7..4f5534d 100644
+--- a/sound/soc/codecs/max98090.c
++++ b/sound/soc/codecs/max98090.c
+@@ -2460,12 +2460,14 @@ static const struct dev_pm_ops max98090_pm = {
+ 
+ static const struct i2c_device_id max98090_i2c_id[] = {
+ 	{ "max98090", MAX98090 },
++	{ "max98091", MAX98091 },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(i2c, max98090_i2c_id);
+ 
+ static const struct of_device_id max98090_of_match[] = {
+ 	{ .compatible = "maxim,max98090", },
++	{ .compatible = "maxim,max98091", },
+ 	{ }
+ };
+ MODULE_DEVICE_TABLE(of, max98090_of_match);
+-- 
+1.7.9.5
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
