@@ -1,55 +1,58 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 20 Jun 2014 17:53:08 +0200
-Message-ID: <39682213.otHMo6zoRf@wuerfel>
-References: <1400877395-4235-1-git-send-email-thierry.reding@gmail.com>
-	<20140617233714.GD25525@mithrandir>
-	<20140618101439.GF32699@arm.com>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH v9.1] of: Provide function to request and map memory
+Date: Fri, 20 Jun 2014 17:00:22 +0100
+Message-ID: <20140620160022.GV32514@n2100.arm.linux.org.uk>
+References: <1403264929-21325-2-git-send-email-matthias.bgg@gmail.com> <1403267328-23085-1-git-send-email-matthias.bgg@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140618101439.GF32699-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403267328-23085-1-git-send-email-matthias.bgg@gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: linux-kernel@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, daniel.lezcano@linaro.org, tglx@linutronix.de, grant.likely@linaro.org, thierry.reding@gmail.com, florian.vaussard@epfl.ch, jic23@kernel.org, jason@lakedaemon.net, andrew@lunn.ch, silvio.fricke@gmail.com, heiko.stuebner@bq.com, olof@lixom.net, sebastian.hesselbarth@gmail.com, sboyd@codeaurora.org, gregory.clement@free-electrons.com, arnd@arndb.de, robherring2@gmail.com, marc.zyngier@arm.com, maxime.ripard@free-electrons.com, soren.brinkmann@xilinx.com, shawn.guo@freescale.com, anders.berg@lsi.com, linus.walleij@linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 June 2014 11:14:39 Will Deacon wrote:
-> On Wed, Jun 18, 2014 at 12:37:16AM +0100, Thierry Reding wrote:
->   - Each master has a set of fixed StreamIDs
->   - StreamIDs can be remastered by adding a constant offset (this could also
->     be used to describe RequesterID -> StreamID mapping)
-> 
-> I'd hope this would be sufficient for most people. Dynamic ID assignment can
-> be worked out later (I'm not even sure it belongs in this binding) and any
-> mappings other than `add a constant offset' can be treated on a case-by-case
-> basis. We don't want to throw the kitchen sink at a language for describing
-> arbitrary transformations!
-> 
-> > We've had similar discussions before (power sequences anyone?) where we
-> > tried to come up with a generic way to describe something in device tree
-> > that just didn't work out too well. Some things are better done in code,
-> > so I think we should at least consider that possibility rather than
-> > blindly try and force everything into device tree.
-> 
-> If we can support 90% of SoCs with a simple DT-based description, we can
-> address the corner cases as they arise. I'm not ruling our hardcoding
-> topology if we have no choice, but I don't think that's a healthy place to
-> start from.
+On Fri, Jun 20, 2014 at 02:28:48PM +0200, Matthias Brugger wrote:
+> +/*
+> + * of_io_request_and_map - Requests a resource and maps the memory mapped IO
+> + *			   for a given device_node
+> + * @device:	the device whose io range will be mapped
+> + * @index:	index of the io range
+> + * @name:	name of the resource
+> + *
+> + * Returns a pointer to the requested and mapped memory
+> + */
+> +void __iomem *of_io_request_and_map(struct device_node *np, int index,
+> +					char *name)
+> +{
+> +	struct resource res;
+> +	void __iomem *mem;
+> +
+> +	if (of_address_to_resource(np, index, &res))
+> +		return NULL;
+> +
+> +	if (!request_mem_region(res.start, resource_size(&res), name))
+> +		return NULL;
+> +
+> +	mem = ioremap(res.start, resource_size(&res));
+> +	if (!mem)
+> +		release_mem_region(res.start, resource_size(&res));
 
-So we could use the "arm,gicv3" comaptible string for all those that
-have a relatively simple mapping, and describe that mapping entirely
-in DT properties, but use a different compatible string for those
-SoCs that have a mapping which we can't easily describe, and then
-put that into code?
+We did this "return NULL" approach for devm_request_and_ioremap(), and
+ended up not liking the number of drivers returning random error codes
+on failure (despite the proper return code being documented.)  It's
+worth reading the commit text for the commit introducing
+devm_ioremap_resource() which replaces devm_request_and_ioremap():
 
-	Arnd
+commit 75096579c3ac39ddc2f8b0d9a8924eba31f4d920
+Author: Thierry Reding <thierry.reding@avionic-design.de>
+Date:   Mon Jan 21 11:08:54 2013 +0100
+
+    lib: devres: Introduce devm_ioremap_resource()
+
+which may help avoid repeating the same mistakes here.
+
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
