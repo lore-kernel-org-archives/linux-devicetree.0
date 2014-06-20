@@ -1,72 +1,40 @@
-From: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2] of: Check for phys_addr_t overflows in
- early_init_dt_add_memory_arch
-Date: Thu, 19 Jun 2014 23:33:27 -0400 (EDT)
-Message-ID: <alpine.LFD.2.11.1406192329400.16842@knanqh.ubzr>
-References: <1403234018-10942-1-git-send-email-lauraa@codeaurora.org>
+From: Ming Lei <tom.leiming@gmail.com>
+Subject: Re: [PATCH v3 0/2]]ata: Fix the dma state machine lockup for APM
+ X-Gene SoC
+Date: Fri, 20 Jun 2014 11:59:01 +0800
+Message-ID: <CACVXFVPqhVSoxQQi4kS2+_Xmn9xAFcbRSpvoxU-yGJkxM7FUtw@mail.gmail.com>
+References: <1403160538-31565-1-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403234018-10942-1-git-send-email-lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1403160538-31565-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: Olof Johansson <olof@lixom.net>, Tejun Heo <tj@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Linux SCSI List <linux-scsi@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Don Dutile <ddutile@redhat.com>, Jon Masters <jcm@redhat.com>, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Jun 2014, Laura Abbott wrote:
+Hi Suman,
 
-> The common early_init_dt_add_memory_arch takes the base and size
-> of a memory region as u64 types. The function never checks if
-> the base and size can actually fit in a phys_addr_t which may
-> be smaller than 64-bits. This may result in incorrect memory
-> being passed to memblock_add if the memory falls outside the
-> range of phys_addr_t. Add range checks for the base and size if
-> phys_addr_t is smaller than u64.
-> 
-> Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Tested-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-
-Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
+On Thu, Jun 19, 2014 at 2:48 PM, Suman Tripathi <stripathi@apm.com> wrote:
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
 > ---
-> v2: Switched to sizeof(phys_addr_t) < sizeof(u64) instead of macros.
-> Sending to right e-mails/mailing lists this time.
-> 
->  drivers/of/fdt.c | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
-> 
-> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> index c4cddf0..b777d8f 100644
-> --- a/drivers/of/fdt.c
-> +++ b/drivers/of/fdt.c
-> @@ -880,6 +880,21 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
->  	const u64 phys_offset = __pa(PAGE_OFFSET);
->  	base &= PAGE_MASK;
->  	size &= PAGE_MASK;
-> +
-> +	if (sizeof(phys_addr_t) < sizeof(u64)) {
-> +		if (base > ULONG_MAX) {
-> +			pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> +					base, base + size);
-> +			return;
-> +		}
-> +
-> +		if (base + size > ULONG_MAX) {
-> +			pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
-> +					ULONG_MAX, base + size);
-> +			size = ULONG_MAX - base;
-> +		}
-> +	}
-> +
->  	if (base + size < phys_offset) {
->  		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
->  			   base, base + size);
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> hosted by The Linux Foundation
-> 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Suman Tripathi (2):
+>   libahci: Implement the function ahci_restart_engine to restart the
+>     port dma engine.
+>   ata: Fix the dma state machine lockup for the IDENTIFY DEVICE PIO mode
+>     command.
+>
+>  drivers/ata/ahci.h       |  2 ++
+>  drivers/ata/ahci_xgene.c | 70 +++++++++++++++++++++++++++++++++++++++---------
+>  drivers/ata/libahci.c    | 15 ++++++++++-
+>  3 files changed, 73 insertions(+), 14 deletions(-)
+
+These two patches does fix boot failure on our mustang board, thanks
+Suman!
+
+Reported-and-Tested-by: Ming Lei <ming.lei@canonical.com>
+
+Thanks,
+-- 
+Ming Lei
