@@ -1,190 +1,174 @@
-From: Boris BREZILLON <boris.brezillon@free-electrons.com>
-Subject: [PATCH v3 6/7] ARM: at91: make use of the new AIC driver for dt
- enabled boards
-Date: Fri, 20 Jun 2014 17:01:26 +0200
-Message-ID: <1403276487-8792-7-git-send-email-boris.brezillon@free-electrons.com>
-References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] dt/documentation: add specification of dma bus information
+Date: Fri, 20 Jun 2014 11:04:19 -0400
+Message-ID: <53A44D73.6080200@ti.com>
+References: <1401981720-6946-1-git-send-email-santosh.shilimkar@ti.com> <CAOMZO5Ceg9RpC8Lgt0BwGTuaz-Z2614Die2PrbtT_j4QYjL_sA@mail.gmail.com> <5395BDA7.3060507@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Boris BREZILLON <boris.brezillon@free-electrons.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5395BDA7.3060507@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Fabio Estevam <festevam@gmail.com>, linux-kernel <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, grygorii.strashko@ti.com, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Shawn Guo <shawn.guo@freescale.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Remove selection of OLD_IRQ_AT91 when selecting dt boards.
-Select ATMEL_AIC_IRQ for sama5 SoCs (a kernel compiled for this SoC will
-always use ATMEL_AIC_IRQ driver).
-Select ATMEL_AIC_IRQ for at91rm9200 and at91sam9 SoCs only if OLD_IRQ_AT91
-is not selected (which means we are compiling a pure DT kernel, without
-any legacy board support).
+On Monday 09 June 2014 09:59 AM, Santosh Shilimkar wrote:
+> On Sunday 08 June 2014 10:13 PM, Fabio Estevam wrote:
+>> On Thu, Jun 5, 2014 at 12:22 PM, Santosh Shilimkar
+>> <santosh.shilimkar@ti.com> wrote:
+>>> Recently we introduced the generic device tree infrastructure for couple of DMA
+>>> bus parameter, dma-ranges and dma-coherent. Update the documentation so that
+>>> its useful for future users.
+>>>
+>>> The "dma-ranges" property is intended to be used for describing the
+>>> configuration of DMA bus RAM addresses and its offset w.r.t CPU addresses.
+>>>
+>>> The "dma-coherent" property is intended to be used for identifying devices
+>>> supported coherent DMA operations.
+>>>
+>>> Cc: Arnd Bergmann <arnd@arndb.de>
+>>> Cc: Grant Likely <grant.likely@linaro.org>
+>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>> Cc: Pawel Moll <pawel.moll@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+>>> Cc: Shawn Guo <shawn.guo@freescale.com>
+>>> Cc: Kumar Gala <galak@codeaurora.org>
+>>> Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+>>> Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+>>> ---
+>>>  Documentation/devicetree/booting-without-of.txt |   60 +++++++++++++++++++++++
+>>>  1 file changed, 60 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+>>> index 1f013bd..f0120c1 100644
+>>> --- a/Documentation/devicetree/booting-without-of.txt
+>>> +++ b/Documentation/devicetree/booting-without-of.txt
+>>> @@ -51,6 +51,8 @@ Table of Contents
+>>>
+>>>    VIII - Specifying device power management information (sleep property)
+>>>
+>>> +  VIV - Specifying dma bus information
+>>
+>> "9" in Roman numeral is "IX"
+>>
+> Yeah.. Not sure what I was thinking...
+> 
+Updated patch end of the email with the typo fixed.
 
-Remove specific irq init code in all dt board files: this init procedure
-is automatically handled in of_irq_init which is called by the arm irq core
-code and is in charge of calling the appropriate aic init functions.
+Rob,
+Can you please pick this up if you are ok with the it.
 
-Signed-off-by: Boris BREZILLON <boris.brezillon@free-electrons.com>
+Regards,
+Santosh
+
+>From b72e949a194d766fe029fe6bb5939467f2fbe9b9 Mon Sep 17 00:00:00 2001
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Fri, 20 Jun 2014 11:01:54 -0400
+Subject: [PATCH] dt/documentation: add specification of dma bus information
+
+Recently we introduced the generic device tree infrastructure for couple of DMA
+bus parameter, dma-ranges and dma-coherent. Update the documentation so that
+its useful for future users.
+
+The "dma-ranges" property is intended to be used for describing the
+configuration of DMA bus RAM addresses and its offset w.r.t CPU addresses.
+
+The "dma-coherent" property is intended to be used for identifying devices
+supported coherent DMA operations.
+
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Acked-by: Shawn Guo <shawn.guo@freescale.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
 ---
- arch/arm/mach-at91/Kconfig           |  6 +++---
- arch/arm/mach-at91/board-dt-rm9200.c | 13 -------------
- arch/arm/mach-at91/board-dt-sam9.c   | 13 -------------
- arch/arm/mach-at91/board-dt-sama5.c  | 13 -------------
- 4 files changed, 3 insertions(+), 42 deletions(-)
+ Documentation/devicetree/booting-without-of.txt |   60 +++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index fbc1b68..7526a93 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -52,12 +52,14 @@ config SOC_AT91SAM9
- 	select AT91_SAM9_TIME
- 	select CPU_ARM926T
- 	select GENERIC_CLOCKEVENTS
-+	select ATMEL_AIC_IRQ if !OLD_IRQ_AT91
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 1f013bd..0b0928c 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -51,6 +51,8 @@ Table of Contents
  
- config SOC_SAMA5
- 	bool
- 	select AT91_SAM9_TIME
- 	select CPU_V7
- 	select GENERIC_CLOCKEVENTS
-+	select ATMEL_AIC_IRQ
- 	select USE_OF
+   VIII - Specifying device power management information (sleep property)
  
- menu "Atmel AT91 System-on-Chip"
-@@ -111,6 +113,7 @@ config SOC_AT91RM9200
- 	select CPU_ARM920T
- 	select GENERIC_CLOCKEVENTS
- 	select HAVE_AT91_DBGU0
-+	select ATMEL_AIC_IRQ if !OLD_IRQ_AT91
- 	select AT91_USE_OLD_CLK
- 	select HAVE_AT91_USB_CLK
++  IX - Specifying dma bus information
++
+   Appendix A - Sample SOC node for MPC8540
  
-@@ -198,7 +201,6 @@ config MACH_AT91RM9200_DT
- 	bool "Atmel AT91RM9200 Evaluation Kits with device-tree support"
- 	depends on SOC_AT91RM9200
- 	select USE_OF
--	select OLD_IRQ_AT91
- 	help
- 	  Select this if you want to experiment device-tree with
- 	  an Atmel RM9200 Evaluation Kit.
-@@ -207,7 +209,6 @@ config MACH_AT91SAM9_DT
- 	bool "Atmel AT91SAM Evaluation Kits with device-tree support"
- 	depends on SOC_AT91SAM9
- 	select USE_OF
--	select OLD_IRQ_AT91
- 	help
- 	  Select this if you want to experiment device-tree with
- 	  an Atmel Evaluation Kit.
-@@ -216,7 +217,6 @@ config MACH_SAMA5_DT
- 	bool "Atmel SAMA5 Evaluation Kits with device-tree support"
- 	depends on SOC_SAMA5
- 	select USE_OF
--	select OLD_IRQ_AT91
- 	select PHYLIB if NETDEVICES
- 	help
- 	  Select this if you want to experiment device-tree with
-diff --git a/arch/arm/mach-at91/board-dt-rm9200.c b/arch/arm/mach-at91/board-dt-rm9200.c
-index 3a185fa..61ea214 100644
---- a/arch/arm/mach-at91/board-dt-rm9200.c
-+++ b/arch/arm/mach-at91/board-dt-rm9200.c
-@@ -24,17 +24,6 @@
- #include "at91_aic.h"
- #include "generic.h"
  
--
--static const struct of_device_id irq_of_match[] __initconst = {
--	{ .compatible = "atmel,at91rm9200-aic", .data = at91_aic_of_init },
--	{ /*sentinel*/ }
--};
--
--static void __init at91rm9200_dt_init_irq(void)
--{
--	of_irq_init(irq_of_match);
--}
--
- static const char *at91rm9200_dt_board_compat[] __initdata = {
- 	"atmel,at91rm9200",
- 	NULL
-@@ -43,8 +32,6 @@ static const char *at91rm9200_dt_board_compat[] __initdata = {
- DT_MACHINE_START(at91rm9200_dt, "Atmel AT91RM9200 (Device Tree)")
- 	.init_time      = at91rm9200_timer_init,
- 	.map_io		= at91_map_io,
--	.handle_irq	= at91_aic_handle_irq,
- 	.init_early	= at91rm9200_dt_initialize,
--	.init_irq	= at91rm9200_dt_init_irq,
- 	.dt_compat	= at91rm9200_dt_board_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-at91/board-dt-sam9.c b/arch/arm/mach-at91/board-dt-sam9.c
-index 575b0be..dfa8d48 100644
---- a/arch/arm/mach-at91/board-dt-sam9.c
-+++ b/arch/arm/mach-at91/board-dt-sam9.c
-@@ -34,17 +34,6 @@ static void __init sam9_dt_timer_init(void)
- 	at91sam926x_pit_init();
- }
+@@ -1332,6 +1334,64 @@ reasonably grouped in this manner, then create a virtual sleep controller
+ (similar to an interrupt nexus, except that defining a standardized
+ sleep-map should wait until its necessity is demonstrated).
  
--static const struct of_device_id irq_of_match[] __initconst = {
--
--	{ .compatible = "atmel,at91rm9200-aic", .data = at91_aic_of_init },
--	{ /*sentinel*/ }
--};
--
--static void __init at91_dt_init_irq(void)
--{
--	of_irq_init(irq_of_match);
--}
--
- static const char *at91_dt_board_compat[] __initdata = {
- 	"atmel,at91sam9",
- 	NULL
-@@ -54,8 +43,6 @@ DT_MACHINE_START(at91sam_dt, "Atmel AT91SAM (Device Tree)")
- 	/* Maintainer: Atmel */
- 	.init_time	= sam9_dt_timer_init,
- 	.map_io		= at91_map_io,
--	.handle_irq	= at91_aic_handle_irq,
- 	.init_early	= at91_dt_initialize,
--	.init_irq	= at91_dt_init_irq,
- 	.dt_compat	= at91_dt_board_compat,
- MACHINE_END
-diff --git a/arch/arm/mach-at91/board-dt-sama5.c b/arch/arm/mach-at91/board-dt-sama5.c
-index 075ec05..d6fe04b 100644
---- a/arch/arm/mach-at91/board-dt-sama5.c
-+++ b/arch/arm/mach-at91/board-dt-sama5.c
-@@ -35,17 +35,6 @@ static void __init sama5_dt_timer_init(void)
- 	at91sam926x_pit_init();
- }
++IX - Specifying dma bus information
++
++Some devices may have DMA memory range shifted relatively to the beginning of
++RAM, or even placed outside of kernel RAM. For example, the Keystone 2 SoC
++worked in LPAE mode with 4G memory has:
++- RAM range: [0x8 0000 0000, 0x8 FFFF FFFF]
++- DMA range: [  0x8000 0000,   0xFFFF FFFF]
++and DMA range is aliased into first 2G of RAM in HW.
++
++In such cases, DMA addresses translation should be performed between CPU phys
++and DMA addresses. The "dma-ranges" property is intended to be used
++for describing the configuration of such system in DT.
++
++In addition, each DMA master device on the DMA bus may or may not support
++coherent DMA operations. The "dma-coherent" property is intended to be used
++for identifying devices supported coherent DMA operations in DT.
++
++* DMA Bus master
++Optional property:
++- dma-ranges: <prop-encoded-array> encoded as arbitrary number of triplets of
++	(child-bus-address, parent-bus-address, length). Each triplet specified
++	describes a contiguous DMA address range.
++	The dma-ranges property is used to describe the direct memory access (DMA)
++	structure of a memory-mapped bus whose device tree parent can be accessed
++	from DMA operations originating from the bus. It provides a means of
++	defining a mapping or translation between the physical address space of
++	the bus and the physical address space of the parent of the bus.
++	(for more information see ePAPR specification)
++
++* DMA Bus child
++Optional property:
++- dma-ranges: <empty> value. if present - It means that DMA addresses
++	translation has to be enabled for this device.
++- dma-coherent: Present if dma operations are coherent
++
++Example:
++soc {
++		compatible = "ti,keystone","simple-bus";
++		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
++
++		[...]
++
++		usb: usb@2680000 {
++			compatible = "ti,keystone-dwc3";
++
++			[...]
++
++			dma-coherent;
++			dma-ranges;
++
++			dwc3@2690000 {
++				compatible = "synopsys,dwc3";
++				[...]
++			};
++		};
++};
++
+ Appendix A - Sample SOC node for MPC8540
+ ========================================
  
--static const struct of_device_id irq_of_match[] __initconst = {
--
--	{ .compatible = "atmel,sama5d3-aic", .data = at91_aic5_of_init },
--	{ /*sentinel*/ }
--};
--
--static void __init at91_dt_init_irq(void)
--{
--	of_irq_init(irq_of_match);
--}
--
- static int ksz9021rn_phy_fixup(struct phy_device *phy)
- {
- 	int value;
-@@ -82,9 +71,7 @@ DT_MACHINE_START(sama5_dt, "Atmel SAMA5 (Device Tree)")
- 	/* Maintainer: Atmel */
- 	.init_time	= sama5_dt_timer_init,
- 	.map_io		= at91_map_io,
--	.handle_irq	= at91_aic5_handle_irq,
- 	.init_early	= at91_dt_initialize,
--	.init_irq	= at91_dt_init_irq,
- 	.init_machine	= sama5_dt_device_init,
- 	.dt_compat	= sama5_dt_board_compat,
- MACHINE_END
 -- 
-1.8.3.2
+1.7.9.5
