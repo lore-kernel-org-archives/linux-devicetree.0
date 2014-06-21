@@ -1,60 +1,52 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the
- driver
-Date: Sat, 21 Jun 2014 10:51:49 +0100
-Message-ID: <20140621095149.GY5099@sirena.org.uk>
-References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
- <CAD=FV=Ua+P0CBAfNj4SWWMWRKcEFdmh=akwy1-ZWoGOt2P9=cQ@mail.gmail.com>
+Subject: Re: [PATCH 1/3] ASoC: simple-card: Make u32 DT parameter handling
+ 64-bit proof
+Date: Sat, 21 Jun 2014 11:07:03 +0100
+Message-ID: <20140621100703.GB5099@sirena.org.uk>
+References: <cover.1402653217.git.jsarha@ti.com>
+ <ff985604371ff8afa35352db9d460b08760003e2.1402653217.git.jsarha@ti.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zf2GVRt1JP70ixMf"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="SaJ70UJ7F+qlPd18"
+Return-path: <linux-omap-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Ua+P0CBAfNj4SWWMWRKcEFdmh=akwy1-ZWoGOt2P9=cQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
+In-Reply-To: <ff985604371ff8afa35352db9d460b08760003e2.1402653217.git.jsarha@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Jyri Sarha <jsarha@ti.com>
+Cc: alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, detheridge@ti.com
 List-Id: devicetree@vger.kernel.org
 
 
---zf2GVRt1JP70ixMf
+--SaJ70UJ7F+qlPd18
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jun 20, 2014 at 02:18:08PM -0700, Doug Anderson wrote:
+On Fri, Jun 13, 2014 at 01:04:36PM +0300, Jyri Sarha wrote:
+> Passing unsigned int pointers as u32 ponters may be dangerous on 64-bit
+> system.
 
-> Is one of you two planning to apply (parts 1 and 2)?  I know that
-> Kukjin needs to handle the part 3 (the .dts files)...
+Applied, thanks.
 
-> Ideally it seems like it could go to 3.16 since it is a bugfix...
-
-Don't nag, it just means yet more mail to look at which makes things
-worse not better.  Given all the problems the DT code for this driver
-has I need to review carefully, and the fact that this has got to v5
-before I had a chance to look at it sets off alarm bells too.
-
-There's a couple of months to get bug fixes in yet.
-
---zf2GVRt1JP70ixMf
+--SaJ70UJ7F+qlPd18
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTpVWyAAoJELSic+t+oim9gQgP+wdFJ1qWZRFGMWZbep79ZPl+
-OQkGtvCSq6nAJ1pAZYo4YyVnRAfSsOkQLVtfMoqz1vuaueqxxjV3Ti7cix0uqZlR
-Bdq4KYVsaGMpf6YH6roUm0w1NKkrbdwchhVMP4HSmBII5UKZNzVxSgagtWeifsiQ
-FvXwrEW8Vj72UmrxJWhk28iF3lrhJ7Hhqq7RfFaOaN1Ezej8R7odY/0CHDuVMcTb
-zmVsPztVmGmXOaQbIgZ7ZxxZpixNl7L5kAcfH1T3tfpiE+yk9fOUAapsl4aNzJtA
-fuTaXrmcrtEzA3Xsr2RJOYezxncGtOThG4jiKrcXVbCaKfRlGXUl34lolGqJDXrM
-QJWk65gVHm51bGb46NtyWjr33Q+3AV7swg4Ym1RCvtqGOlv2FjLSgW+eN9aexidx
-z8i6UMFT02ddom2NzZvFQha5Qyu+56SSB2V7AgHw0aKPJTiHGStgf1rQiG8jzyXl
-b8YLNxvbVCfX9OV81FGEXPUHi0V16RfvRUZP6jhOL49dn8Y03S7/9gOUSBQ/BGJ4
-N+Qiss5xEdnElVhQ7JD3+POnBnVU4OQ6b0nD9ryuNuzA92blFsvdFHoBXi1cC1nO
-4do9/sPPaRpj3i/DaXyex/pI6Xdkxar75x2ajzmx6YcXVZ6AE9zoHCrmL3ZL7VHc
-mMVtLWn2aQtiDEkWMaQE
-=ax2N
+iQIcBAEBAgAGBQJTpVlEAAoJELSic+t+oim9P8cP/2Ek+a3MNrJOrvDWv4ECP783
+zmCQ+0ZN0GBu9UasEtrdfniIdEnckuK5W+A9QYeTuZ5b3eo9CJRc2DWj+f+iJh1I
+xIZrVHhByuxRSCmRmLNJS1IaTsR3DLBMK4fyJrkHP6BopIwBSizEgJ/VML6Rdr1l
+6XSq3eRzfu22lpTmewTSJ7Sd+35vM4qhnpxbE3UVHJJgz7WL6KuzVkXm9PHb8EF/
+5qDeDGt1P3J2eLgE4VxIuhxx4SzLK1ucLDcHZuv3tCJd1ri+RMN6LBlQoZ+ggvm2
+LBAhpw468QD7D3MgyfSgNt61x4+kFVbJf5JwUujAiZw37ypr6s/nH19iiff6xlJh
+CeJKyJ08VkUe0PUHljvFXgj0LpD0DMN+kp0igrvva3BdFgQ7hAQwSyRie/a8hHh3
+I9WbexGtsIBSatJ4yTvX+Ie1UKIDX4at97LYS2R9TAPh78TFgh1rCVYCx6KrpU1F
+BhaRkfutlEv1yLGY26l9i+u206r7dRXd0jObAG4JX1PGtx2VnkfSWFyBIcytr5s4
+4pY7UwIcVUFT8ycY0hEJk7EfJOC0taWr45bd0I9g0XzJjjfqlgG/ZX1MRm6HKpAz
+ymVbElaBd4sHrP0Xo11fa5Zdw5flhrXReClNnQ4DKIqIqc6ckyvG0zMh1BGIsK11
+gtCgBHiuERiJd+Xe0J8t
+=5ALn
 -----END PGP SIGNATURE-----
 
---zf2GVRt1JP70ixMf--
+--SaJ70UJ7F+qlPd18--
