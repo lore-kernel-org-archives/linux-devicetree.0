@@ -1,92 +1,66 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: imx6sx-sdb: add gpio key support
-Date: Sat, 21 Jun 2014 17:11:44 +0800
-Message-ID: <20140621091143.GC18165@dragon>
-References: <1403241449-31514-1-git-send-email-b20788@freescale.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+Date: Sat, 21 Jun 2014 11:15:39 +0200
+Message-ID: <4805472.0q1PyyoD4W@wuerfel>
+References: <201406210034.57784.sergei.shtylyov@cogentembedded.com> <4490558.0d3xbrzEgW@wuerfel> <53A4A6C6.9000703@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403241449-31514-1-git-send-email-b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <53A4A6C6.9000703@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-sh@vger.kernel.org, magnus.damm@gmail.com, robh+dt@kernel.org, horms@verge.net.au, galak@codeaurora.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 01:17:29PM +0800, Anson Huang wrote:
-> This patch adds support for imx6sx-sdb board's gpio keys:
-> 
-> SW4(FUNC1): KEY_VOLUMEUP
-> SW5(FUNC2): KEY_VOLUMEDOWN
-> 
-> Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/boot/dts/imx6sx-sdb.dts |   27 +++++++++++++++++++++++++++
->  1 file changed, 27 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/imx6sx-sdb.dts b/arch/arm/boot/dts/imx6sx-sdb.dts
-> index 9906f65..e082e84 100644
-> --- a/arch/arm/boot/dts/imx6sx-sdb.dts
-> +++ b/arch/arm/boot/dts/imx6sx-sdb.dts
-> @@ -8,6 +8,8 @@
->  
->  /dts-v1/;
->  
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
->  #include "imx6sx.dtsi"
->  
->  / {
-> @@ -18,6 +20,24 @@
->  		stdout-path = &uart1;
->  	};
->  
-> +	gpio-keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&pinctrl_gpio_keys>;
-> +
-> +		volume-up {
-> +			label = "Volume Up";
-> +			gpios = <&gpio1 18 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_VOLUMEUP>;
-> +		};
-> +
-> +		volume-down {
-> +			label = "Volume Down";
-> +			gpios = <&gpio1 19 GPIO_ACTIVE_LOW>;
-> +			linux,code = <KEY_VOLUMEDOWN>;
-> +		};
-> +	};
-> +
->  	memory {
->  		reg = <0x80000000 0x40000000>;
->  	};
+On Saturday 21 June 2014 01:25:26 Sergei Shtylyov wrote:
+> On 06/21/2014 01:10 AM, Arnd Bergmann wrote:
 
-We generally have 'chosen' and 'memory' at the top of the board dts.  So
-I applied the patch after switching the order between 'gpio-keys' and
-'memory'.
-
-Shawn
-
-> @@ -114,6 +134,13 @@
->  			>;
->  		};
->  
-> +		pinctrl_gpio_keys: gpio_keysgrp {
-> +			fsl,pins = <
-> +				MX6SX_PAD_CSI_DATA04__GPIO1_IO_18 0x17059
-> +				MX6SX_PAD_CSI_DATA05__GPIO1_IO_19 0x17059
-> +			>;
-> +		};
-> +
->  		pinctrl_vcc_sd3: vccsd3grp {
->  			fsl,pins = <
->  				MX6SX_PAD_KEY_COL1__GPIO2_IO_11		0x17059
-> -- 
-> 1.7.9.5
+> >>> It also needs a device_type property.
 > 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> >>      Hm, are you sure about that? I thought only PCI devices should have it...
+> 
+> > Yes, pretty sure it's needed in both the host controller and the
+> > devices.
+> 
+>      I don't understand the case of the PCI devices, honestly. Shouldn't the 
+> "device_type" prop reflect the device's functionality rather than the bus 
+> where it's located?
+
+It probably made more sense on real Open Firmware than it does on FDT, but
+we're trying to follow the bindings anyway.
+
+I believe the "device_type=pci" originally indicated a device that has
+a readable config space (through the OF client interface), which is true
+for both the host and the devices.
+
+> >>> I realize that the driver doesn't currently use them, but you should
+> >>> adhere to the binding anyway, so we can fix the driver at some point.
+> 
+> >>      Sigh, agreed about the need to fix the driver. Too bad you've spoken up
+> >> only now though. And you've ACKed the DT bindings without those properties
+> >> documented or even present in an example...
+> 
+> > Yes, I realized that too late as well, sorry about it. For some reason
+> > I only looked at the interrupt-map being done right and forgot to
+> > check the ranges.
+> 
+> > We definitely need to move the code handling the ranges into a common
+> > location to avoid this mistake in the future.
+> 
+>     It is already in the common location, AFAIK; what's lacking there is the 
+> code that parses "dma-ranges" as well but that should be pretty easy to add...
+
+We have some common helpers for "ranges" parsing already, but we should
+improve them so a driver has to do much less in the future.
+
+For "dma-ranges", we still to write need most of the code. For platform
+devices, we can now calculate the offset for the simple (no IOMMU) case,
+but we still need to calculate the dma mask correctly (that part should
+be simple, maybe you can help there as you have an immediate need),
+and we need to handle the IOMMU and swiotlb cases better.
+
+For PCI devices, we need to do all the same things we do for platform
+devices, and we can probably share most of the code.
+
+	Arnd
