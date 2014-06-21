@@ -1,82 +1,42 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v2] ARM: mvebu: Fix missing binding documentation for
- Armada 38x
-Date: Fri, 20 Jun 2014 19:57:53 -0400
-Message-ID: <20140620235753.GS21711@titan.lakedaemon.net>
-References: <1403196043-6317-1-git-send-email-gregory.clement@free-electrons.com>
- <20140620185241.GC21711@titan.lakedaemon.net>
- <CAL_JsqKinUvcJ+OOoD70zD6CH393cgZWC+4gRO=8XORyE6fVKA@mail.gmail.com>
+Subject: Re: [PATCHv5 2/3] ARM: mvebu: move Armada 375 external abort logic
+ as a quirk
+Date: Fri, 20 Jun 2014 20:55:14 -0400
+Message-ID: <20140621005514.GX21711@titan.lakedaemon.net>
+References: <1402585772-10405-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1402585772-10405-3-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKinUvcJ+OOoD70zD6CH393cgZWC+4gRO=8XORyE6fVKA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+In-Reply-To: <1402585772-10405-3-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Albin Tonnerre <albin.tonnerre-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 05:33:06PM -0500, Rob Herring wrote:
-> On Fri, Jun 20, 2014 at 1:52 PM, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org> wrote:
-> > On Thu, Jun 19, 2014 at 06:40:43PM +0200, Gregory CLEMENT wrote:
-> >> For the Armada 380 and Armada 385 SoCs, the common bindings for those
-> >> 2 SoCs, was forgotten. This patch add the documentation for the
-> >> marvell,aramda38x property.
-> >>
-> >> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> >> --
-> >> Hi,
-> >>
-> >> This fix should be merged in 3.16. For 3.15 I am not sure as it is not
-> >> a regression.
-> >>
-> >> Changelog:
-> >> v1->v2
-> >>
-> >> - Reformulate to make clear that we will need marvell,armada38x _and_ a
-> >> SoC specific string. For consistency I duplicated what we have done in
-> >> armada-370-xp.txt
-> >>
-> >>
-> >> Thanks,
-> >> Gregory
-> >>
-> >>
-> >>  Documentation/devicetree/bindings/arm/armada-38x.txt | 17 +++++++++++++++--
-> >>  1 file changed, 15 insertions(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
-> >> index 11f2330a6554..fa08760046df 100644
-> >> --- a/Documentation/devicetree/bindings/arm/armada-38x.txt
-> >> +++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
-> >> @@ -6,5 +6,18 @@ following property:
-> >>
-> >>  Required root node property:
-> >>
-> >> - - compatible: must contain either "marvell,armada380" or
-> >> -   "marvell,armada385" depending on the variant of the SoC being used.
-> >> +compatible: must contain "marvell,armada38x"
-> >
-> > I agree with Sergei on this one.  We generally avoid wildcards in
-> > compatible strings.  Is there a use case where specifying one of the
-> > below wouldn't be sufficient?
+On Thu, Jun 12, 2014 at 05:09:31PM +0200, Thomas Petazzoni wrote:
+> In preparation to a small re-organization of the initialization
+> sequence in board-v7.c, this commit moves the registration of the
+> custom external abort handler on Armada 375 later in the boot
+> sequence, and makes it more similar to the other quirks that we
+> already have. There is indeed no need to register this abort handler
+> particularly early, it simply needs to be registered before switching
+> to userspace.
 > 
-> Isn't this a case of just documenting what is already in use?
+> In addition to this, this commit makes the registration of the custom
+> abort handler conditional on Armada 375 Z1, because Armada 375 A0 and
+> later iterations are not affected by the issue.
+> 
+> This commit was tested on both Armada 375 Z1 and Armada 375 A0
+> platforms.
+> 
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  arch/arm/mach-mvebu/board-v7.c | 17 +++++++++++++----
+>  1 file changed, 13 insertions(+), 4 deletions(-)
 
-Technically, yes.  However, there are no products shipping with this SoC
-yet.  So there aren't any _real_ users other than the developers
-bringing in mainline support.
-
-> I agree wildcards alone are not good, but along with a specific
-> compatible is okay. But also there should be some need to have the
-> common property.
-
-I'm curious what you would consider to be a sufficient need?  This can
-be easily handled by a match table, but a match table could also be
-considered rather heavy for this task.
-
-I think any implementation-based justification is prone to opening a can
-of worms.  And I'm struggling to see a DT-only justification...
+Patches 2 and 3 applied to mvebu/soc
 
 thx,
 
