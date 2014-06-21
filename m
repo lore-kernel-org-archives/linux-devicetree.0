@@ -1,55 +1,100 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 2/4] ASoC: atmel_ssc_dai: enable fslen extension
- feature
-Date: Sat, 21 Jun 2014 11:37:56 +0100
-Message-ID: <20140621103756.GA5099@sirena.org.uk>
-References: <1402481682-9811-1-git-send-email-voice.shen@atmel.com>
- <1402481682-9811-3-git-send-email-voice.shen@atmel.com>
+From: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Subject: [PATCH v10 0/5] ARM: sunxi: Add support for consumer
+ infrared devices
+Date: Sat, 21 Jun 2014 17:04:01 +0600
+Message-ID: <1403348646-31091-1-git-send-email-bay@hackerdom.ru>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="FX1XXxwkuRo+XMsw"
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1402481682-9811-3-git-send-email-voice.shen@atmel.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Bo Shen <voice.shen@atmel.com>
-Cc: nicolas.ferre@atmel.com, linux-sound@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCLIFP6QZ4HRBO6NSWOQKGQERZY4P5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+This patch introduces Consumer IR(CIR) support for sunxi boards.
 
---FX1XXxwkuRo+XMsw
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is based on Alexsey Shestacov's work based on the original driver 
+supplied by Allwinner.
 
-On Wed, Jun 11, 2014 at 06:14:40PM +0800, Bo Shen wrote:
-> When SSC work as master, it will generate the frame sync signal.
-> On old SoCs, it only supports frame sync length less or equal to
-> 16bits, on newer SoCs, it supports frame sync length extension,
-> which can support frame size larger than 16 bits.
-> So, add this to make it supports playback 24/32 bits audio clips.
+Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
 
-Applied, thanks.
+---
+Changes since version 1: 
+ - Fix timer memory leaks 
+ - Fix race condition when driver unloads while interrupt handler is active
+ - Support Cubieboard 2(need testing)
 
---FX1XXxwkuRo+XMsw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Changes since version 2:
+- More reliable keydown events
+- Documentation fixes
+- Rename registers accurding to A20 user manual
+- Remove some includes, order includes alphabetically
+- Use BIT macro
+- Typo fixes
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+Changes since version 3:
+- Split the patch on smaller parts
+- More documentation fixes
+- Add clock-names in DT
+- Use devm_clk_get function to get the clocks
+- Removed gpios property from ir's DT
+- Changed compatible from allwinner,sunxi-ir to allwinner,sun7i-a20-ir in DT
+- Use spin_lock_irq instead spin_lock_irqsave in interrupt handler
+- Add myself in the copyright ;)
+- Coding style and indentation fixes
 
-iQIcBAEBAgAGBQJTpWCAAAoJELSic+t+oim9CmEP/iAR+yTB3stIbkoH5+DH8+6e
-xx2gRfd2VOuQiywZTPJtsjaGnRsKLaDDaey7hJoo8KKzzayDVm6EsYSKWJZ1heMM
-SGPZRON+BQJuTkdsWb/sqctmGzUWOEkW0p2Y/oAR1Q2YA70IthaA/fQxwhHegho+
-8eQc83KRgamJJ4ejHfcKzsk0Kk1cJu9T7qgmjWABursQUXyq+0WZvRZuhDOxJOCU
-Ts5iPhJwOjN4CRXLSn5K4MeZA+jXL/gfS7OyEszP8LezWR5DFNS//jPfI08VXldC
-EwMfZGBtvDQxPwNNgroKjQFNKZIJhj8iZAj9WXbB8jtdV2IoPgaYqp0NNOEjZS6P
-U6SU7wwIHhfAVTYsZFTeRcRf4K6FxkikVz52jk28phYYFMILq0WZQ0zMgQdsybPr
-26k1vbylahaocaq1xZoxOKIaFt9ilEoZcMpiIQy9Rrq/8wZUPcA7B7VG8JLCHSyP
-ApbQ7WaxQpW9PIpQAspqnz3qQGwDBAjXwjdrjTds1c5VtBIm735cYLCkqsmp+Twc
-KnpwmVxbCX0Z+rsP5ocEBku6Lb+ibsKEoI6UDp4JG6yt0Wcw+LkE7+QIzkYd4mAX
-1/77OOTjwof4kEiWTEFFxAOY2y2VFQG3v0CQZt+s6eXzbIOW9HcuIhzc5IqHYI54
-QJTLCDRQCqGkATM+gkR8
-=oqsX
------END PGP SIGNATURE-----
+Changes since version 4:
+- Try to fix indentation errors by sending patches with git send-mail
 
---FX1XXxwkuRo+XMsw--
+Changes since version 5:
+- More indentation fixes
+- Make patches pass checkpatch with --strict option
+- Replaced magic numbers with defines(patch by Priit Laes)
+- Fixed oops on loading(patch by Hans de Goede)
+
+Changes since version 6:
+- Removed constants from code
+- Better errrors handling on loading
+- Renamed sunxi-ir.c to sunxi-cir.c
+- Changed description of second commit
+- Order entries in dts and dtsi by register address
+- Code style fixes
+
+Changes since version 7:
+- Removed a couple of blank lines in code
+- Delay interrupts init until we are ready to handle them
+- Increased the reported duration of each pulse by one
+- Refactored defines
+
+Changes since version 8:
+- Split the DT patch to three
+- Code style fixes
+
+Changes since version 9:
+- Rebase patches on 3.16-rc1
+
+Alexander Bersenev (5):
+  ARM: sunxi: Add documentation for sunxi consumer infrared devices
+  [media] rc: add sunxi-ir driver
+  ARM: sunxi: Add pins for IR controller on A20 to dtsi
+  ARM: sunxi: Add IR controllers on A20 to dtsi
+  ARM: sunxi: Enable IR controller on cubieboard 2 and cubietruck in
+    dts
+
+ .../devicetree/bindings/media/sunxi-ir.txt         |   23 ++
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts        |    6 +
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts         |    6 +
+ arch/arm/boot/dts/sun7i-a20.dtsi                   |   32 ++
+ drivers/media/rc/Kconfig                           |   10 +
+ drivers/media/rc/Makefile                          |    1 +
+ drivers/media/rc/sunxi-cir.c                       |  318 ++++++++++++++++++++
+ 7 files changed, 396 insertions(+), 0 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/media/sunxi-ir.txt
+ create mode 100644 drivers/media/rc/sunxi-cir.c
