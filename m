@@ -1,76 +1,56 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 3/3] ASoC: fsl: add imx-es8328 machine driver
-Date: Sat, 21 Jun 2014 22:05:41 +0100
-Message-ID: <20140621210541.GG24291@sirena.org.uk>
-References: <1403244859-22236-1-git-send-email-xobs@kosagi.com>
- <1403244859-22236-4-git-send-email-xobs@kosagi.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="z9ECzHErBrwFF8sy"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403244859-22236-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
+From: Robert Jarzmik <robert.jarzmik@free.fr>
+Subject: [PATCH v2 1/2] media: mt8m111: add device-tree suppport
+Date: Sun, 22 Jun 2014 00:19:54 +0200
+Message-ID: <1403389195-17386-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <linux-media-owner@vger.kernel.org>
+Sender: linux-media-owner@vger.kernel.org
+To: g.liakhovetski@gmx.de, devicetree@vger.kernel.org
+Cc: linux-media@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
+Add device-tree support for mt9m111 camera sensor.
 
---z9ECzHErBrwFF8sy
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+---
+ drivers/media/i2c/soc_camera/mt9m111.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-On Fri, Jun 20, 2014 at 02:14:19PM +0800, Sean Cross wrote:
-
-> +  ES8328 pins:
-> +   * LOUT1
-> +   * LOUT2
-> +   * ROUT1
-> +   * ROUT2
-
-These should be covered in the binding document for the CODEC.
-
-> +	/* Setup clocks */
-> +	data->codec_clk = devm_clk_get(dev, NULL);
-> +	if (IS_ERR(data->codec_clk)) {
-> +		dev_err(dev,
-> +			"codec clock missing or invalid\n");
-> +		goto fail;
-> +	}
-> +
-> +	ret = clk_prepare_enable(data->codec_clk);
-> +	if (ret) {
-> +		dev_err(data->dev, "unable to prepare codec clk\n");
-> +		return ret;
-> +	}
-
-The CODEC driver should manage the clock for the CODEC, if it's mapped
-properly attempting to look it up using the card device should fail.
-
---z9ECzHErBrwFF8sy
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTpfOhAAoJELSic+t+oim9KnAP/jeO0J4uReezd9ErGoDoktBt
-7c1EIzj0kGGDszn+SQfbjYwzn/J/W3ZI6++oolip0rVzs7ee/w068c/Aygkf326a
-hUq3tkv0m4fLluDDiKD4Z35go+OZOTfYeq/5OeLHxefTJkO9YTAa+TgmvlsVwHZ/
-PF9hzHKIfWixtejipcvQogKJ3mg0eXdei9NjCnKvwZo8Fcx2QrtYgolT1OZvJyZX
-YfV7O/EQMVfAwvCIluW0JnQWeu6x1nBnrrgoDrHcrCKc2tB/xLfd2RH4msKi/oe+
-lxkyLhI3gzPc63RO3LU48EDDWutBNL3rSN0g4KQVjMNum83DT7Zx3c+6wxHPjJbu
-z8cU/zkASdgH4wiDKqY5U4S7tEz4cP/QNvTAjMJ73OTrVddVoxyj/lwJ8MzfmCE2
-/nOf9S+rO9TZ8WWecm+M1FvOHMQwMR0inUDFd5ZMEjRObVHYb4/b14oJ88E4DKu9
-xwlbJESj46XUVC0Pixv+9v0eTPbkWkL35jfvbwcSn758ueTw55yWeZQH2CNgHhEp
-LvoFL82PVuybBhCk2l740KEVF83Cf+JJYKMn2dulHdoFF1fe+tJBk5y70My7Ra/U
-XusqfCFL5KricMxbRWcM1UpCVD0aSD+E45ucm/iEYCBhKuZxzuBvBbohZaqIHfnV
-JkqMAAZpwa6qe5RTX6fF
-=iAVD
------END PGP SIGNATURE-----
-
---z9ECzHErBrwFF8sy--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/drivers/media/i2c/soc_camera/mt9m111.c b/drivers/media/i2c/soc_camera/mt9m111.c
+index ccf5940..b51e856 100644
+--- a/drivers/media/i2c/soc_camera/mt9m111.c
++++ b/drivers/media/i2c/soc_camera/mt9m111.c
+@@ -931,6 +931,12 @@ static int mt9m111_probe(struct i2c_client *client,
+ 	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+ 	int ret;
+ 
++	if (client->dev.of_node) {
++		ssdd = devm_kzalloc(&client->dev, sizeof(*ssdd), GFP_KERNEL);
++		if (!ssdd)
++			return -ENOMEM;
++		client->dev.platform_data = ssdd;
++	}
+ 	if (!ssdd) {
+ 		dev_err(&client->dev, "mt9m111: driver needs platform data\n");
+ 		return -EINVAL;
+@@ -1015,6 +1021,11 @@ static int mt9m111_remove(struct i2c_client *client)
+ 
+ 	return 0;
+ }
++static const struct of_device_id mt9m111_of_match[] = {
++	{ .compatible = "micron,mt9m111", },
++	{},
++};
++MODULE_DEVICE_TABLE(of, mt9m111_of_match);
+ 
+ static const struct i2c_device_id mt9m111_id[] = {
+ 	{ "mt9m111", 0 },
+@@ -1025,6 +1036,7 @@ MODULE_DEVICE_TABLE(i2c, mt9m111_id);
+ static struct i2c_driver mt9m111_i2c_driver = {
+ 	.driver = {
+ 		.name = "mt9m111",
++		.of_match_table = of_match_ptr(mt9m111_of_match),
+ 	},
+ 	.probe		= mt9m111_probe,
+ 	.remove		= mt9m111_remove,
+-- 
+2.0.0.rc2
