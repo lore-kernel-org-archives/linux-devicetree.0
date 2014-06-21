@@ -1,13 +1,13 @@
 From: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Subject: [PATCH v10 4/5] ARM: sunxi: Add IR controllers on A20
- to dtsi
-Date: Sat, 21 Jun 2014 17:04:05 +0600
-Message-ID: <1403348646-31091-5-git-send-email-bay@hackerdom.ru>
+Subject: [PATCH v10 5/5] ARM: sunxi: Enable IR controller on
+ cubieboard 2 and cubietruck in dts
+Date: Sat, 21 Jun 2014 17:04:06 +0600
+Message-ID: <1403348646-31091-6-git-send-email-bay@hackerdom.ru>
 References: <1403348646-31091-1-git-send-email-bay@hackerdom.ru>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCLIFP6QZ4HRBUWNSWOQKGQEJQX4XUA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCLIFP6QZ4HRBV6NSWOQKGQEGQ45ZMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1403348646-31091-1-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,42 +19,50 @@ To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc
 Cc: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds records for two IR controllers on A20
+This patch enables two IR devices in dts:
+- One IR device physically found on Cubieboard 2
+- One IR device physically found on Cubietruck
 
 Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
 Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
 ---
- arch/arm/boot/dts/sun7i-a20.dtsi |   18 ++++++++++++++++++
- 1 files changed, 18 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/sun7i-a20-cubieboard2.dts |    6 ++++++
+ arch/arm/boot/dts/sun7i-a20-cubietruck.dts  |    6 ++++++
+ 2 files changed, 12 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 656d7d3..1782375 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -785,6 +785,24 @@
- 			status = "disabled";
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+index a5ad945..a70f0b4 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
+@@ -66,6 +66,12 @@
+ 			};
  		};
  
 +		ir0: ir@01c21800 {
-+			compatible = "allwinner,sun7i-a20-ir";
-+			clocks = <&apb0_gates 6>, <&ir0_clk>;
-+			clock-names = "apb", "ir";
-+			interrupts = <0 5 4>;
-+			reg = <0x01c21800 0x40>;
-+			status = "disabled";
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
 +		};
 +
-+		ir1: ir@01c21c00 {
-+			compatible = "allwinner,sun7i-a20-ir";
-+			clocks = <&apb0_gates 7>, <&ir1_clk>;
-+			clock-names = "apb", "ir";
-+			interrupts = <0 6 4>;
-+			reg = <0x01c21c00 0x40>;
-+			status = "disabled";
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+index b87fea9..96639d5 100644
+--- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
++++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
+@@ -100,6 +100,12 @@
+ 			status = "okay";
+ 		};
+ 
++		ir0: ir@01c21800 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
 +		};
 +
- 		sid: eeprom@01c23800 {
- 			compatible = "allwinner,sun7i-a20-sid";
- 			reg = <0x01c23800 0x200>;
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
 -- 
 1.7.1
