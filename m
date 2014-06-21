@@ -1,56 +1,57 @@
 From: Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: [PATCH v2 1/2] media: mt8m111: add device-tree suppport
-Date: Sun, 22 Jun 2014 00:19:54 +0200
-Message-ID: <1403389195-17386-1-git-send-email-robert.jarzmik@free.fr>
+Subject: [PATCH v2 2/2] media: mt9m111: add device-tree documentation
+Date: Sun, 22 Jun 2014 00:19:55 +0200
+Message-ID: <1403389195-17386-2-git-send-email-robert.jarzmik@free.fr>
+References: <1403389195-17386-1-git-send-email-robert.jarzmik@free.fr>
 Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <1403389195-17386-1-git-send-email-robert.jarzmik@free.fr>
 Sender: linux-media-owner@vger.kernel.org
 To: g.liakhovetski@gmx.de, devicetree@vger.kernel.org
 Cc: linux-media@vger.kernel.org, Robert Jarzmik <robert.jarzmik@free.fr>
 List-Id: devicetree@vger.kernel.org
 
-Add device-tree support for mt9m111 camera sensor.
+Add device-tree bindings documentation for the Micron mt9m111 image
+sensor.
 
 Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
 ---
- drivers/media/i2c/soc_camera/mt9m111.c | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../devicetree/bindings/media/i2c/mt9m111.txt      | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9m111.txt
 
-diff --git a/drivers/media/i2c/soc_camera/mt9m111.c b/drivers/media/i2c/soc_camera/mt9m111.c
-index ccf5940..b51e856 100644
---- a/drivers/media/i2c/soc_camera/mt9m111.c
-+++ b/drivers/media/i2c/soc_camera/mt9m111.c
-@@ -931,6 +931,12 @@ static int mt9m111_probe(struct i2c_client *client,
- 	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
- 	int ret;
- 
-+	if (client->dev.of_node) {
-+		ssdd = devm_kzalloc(&client->dev, sizeof(*ssdd), GFP_KERNEL);
-+		if (!ssdd)
-+			return -ENOMEM;
-+		client->dev.platform_data = ssdd;
-+	}
- 	if (!ssdd) {
- 		dev_err(&client->dev, "mt9m111: driver needs platform data\n");
- 		return -EINVAL;
-@@ -1015,6 +1021,11 @@ static int mt9m111_remove(struct i2c_client *client)
- 
- 	return 0;
- }
-+static const struct of_device_id mt9m111_of_match[] = {
-+	{ .compatible = "micron,mt9m111", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, mt9m111_of_match);
- 
- static const struct i2c_device_id mt9m111_id[] = {
- 	{ "mt9m111", 0 },
-@@ -1025,6 +1036,7 @@ MODULE_DEVICE_TABLE(i2c, mt9m111_id);
- static struct i2c_driver mt9m111_i2c_driver = {
- 	.driver = {
- 		.name = "mt9m111",
-+		.of_match_table = of_match_ptr(mt9m111_of_match),
- 	},
- 	.probe		= mt9m111_probe,
- 	.remove		= mt9m111_remove,
+diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m111.txt b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+new file mode 100644
+index 0000000..ed5a334
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/mt9m111.txt
+@@ -0,0 +1,28 @@
++Micron 1.3Mp CMOS Digital Image Sensor
++
++The Micron MT9M111 is a CMOS active pixel digital image sensor with an active
++array size of 1280H x 1024V. It is programmable through a simple two-wire serial
++interface.
++
++Required Properties:
++- compatible: value should be "micron,mt9m111"
++
++For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	i2c_master {
++		mt9m111@5d {
++			compatible = "micron,mt9m111";
++			reg = <0x5d>;
++
++			remote = <&pxa_camera>;
++			port {
++				mt9m111_1: endpoint {
++					bus-width = <8>;
++					remote-endpoint = <&pxa_camera>;
++				};
++			};
++		};
++	};
 -- 
 2.0.0.rc2
