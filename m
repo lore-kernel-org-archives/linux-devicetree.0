@@ -1,55 +1,55 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/3] ASoC: simple-card: Add system-clock-id DT parameter
- to dai nodes
-Date: Sat, 21 Jun 2014 11:09:59 +0100
-Message-ID: <20140621100959.GC5099@sirena.org.uk>
-References: <cover.1402653217.git.jsarha@ti.com>
- <c0281e720e9ef2056d3460047cf5bc5e75684abf.1402653217.git.jsarha@ti.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH/RFC 0/2] spi: sh-msiof: Add DT DMA support on r8a7791
+Date: Sat, 21 Jun 2014 11:21:01 +0100
+Message-ID: <20140621102101.GN5099@sirena.org.uk>
+References: <1403259638-13774-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="TqC3aXMUZwuFAd9J"
-Return-path: <linux-omap-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="6F8T1i0Ve2X0M5tc"
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <c0281e720e9ef2056d3460047cf5bc5e75684abf.1402653217.git.jsarha@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Jyri Sarha <jsarha@ti.com>
-Cc: alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, peter.ujfalusi@ti.com, liam.r.girdwood@linux.intel.com, detheridge@ti.com
+In-Reply-To: <1403259638-13774-1-git-send-email-geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Cc: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ben Dooks <ben.dooks-4yDnlxn2s6sWdaTGBSpHTA@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sh-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---TqC3aXMUZwuFAd9J
+--6F8T1i0Ve2X0M5tc
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jun 13, 2014 at 01:04:38PM +0300, Jyri Sarha wrote:
-> Select clk_id parameters for set_sysclk calls in the card init phase.
+On Fri, Jun 20, 2014 at 12:20:36PM +0200, Geert Uytterhoeven wrote:
+> This preliminary patch series add DT support to the Renesas MSIOF SPI
+> driver, and enables DMA support for MSIOF on r8a7791.
 
-This is making the ID defined by the drivers into ABI.  It's not clear
-that this is something we want to do, and we certainly don't want to do
-it without updating the driver bindings.  In principle what we want to
-do here is have our clocks handled by the clock API, though that's not
-trivial work.
+These look good, can you please resend when the dependencies are
+resolved.
 
---TqC3aXMUZwuFAd9J
+--6F8T1i0Ve2X0M5tc
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTpVn0AAoJELSic+t+oim9+EEP/25rR605born/jSmY+2qeYj8
-cL5SnlKieAGOxngacwZDJwI2bIsh59FLHscwTlWUHgfiBcx/g9j2J5Gu6Z8SMA2g
-0hA/Lb1rcrcKu01XEfXHd3nJ8cvLrgea2EbUdE5PrtYARjX/abKoZKyHkhg97uEA
-FnroMsPKFXI/NSziSEdYl6CDvo7pSvjwhktO2UNvBGRR6xdY19ScA95biIXoQvMH
-AQa9blxky7dqE88v1LO8TO52lHjvoM62dBmqrmzMnYeQeWxaadsoZ9pwToWcwa64
-/bI3qSAW6TD501obJoZM1B2vSeXdgQ7KK8OoiiKerY8YcUvgAc36LMOZvibkeoct
-frtP/F7bMMZd5Bhh0e8n+MGFxXVjstKd/KqLcGmFCcmg9Crr/J8/2Irz6hR4sv20
-QVcREaggPjjUD+qPs4jSLe8mQNC6N3eUOcwTPGNty6t315etodw6nfrt8CkFYma5
-ot4QYvX6UvrpFfCR8oAvOAgtZbyYPrbf1Gx81GfwUZMeDH182MRDvpv69bgTb84U
-tAMp6OYWgmsCsZ8Rq9sjgHEu/aY/WMrnZjvoThjKRHW5xO51JwNpM8jakg06SAmh
-gm4GyhuTORD6MOj9EOHHIiLNoSM61EdkSjyEaQyITnc0vomyHx3XZQK2MHAlMdOE
-0ZSVYwvKs1fugnw8nAl9
-=pgtC
+iQIcBAEBAgAGBQJTpVyKAAoJELSic+t+oim9/McP+QFIc5DIignVH+qhtUu5R7jT
+oEEQ12roY/cMEmEAH2QznRhVAzlp8Pfbc7tmTK5O8bWWLbJ/AKGugz8X0dokQwio
+rz5gxuzdR0rX6T4aTkUL21Zr+6+wi1bsfD7ofueyTqy6GdI+zp1lpcyOH6OkMMxS
+dfyX228QBYWwQYp+RwaSXP8xiszj2hoqNc35GN23yvDAhZGxuuAZbulskwGg5k3l
+huhZB4FBkvNe+Qtj5+g/jKA7/xpxfqxJmq/NxHdRCwDH7oE1co+QfWEaPUdPyiC2
+tRwQag1PueULmKRhakEAW9hJ9eb62x9iPuSNym/QRgCqt/YP6IncD6JZoHNcG0/J
+5CjNdRDS0VlvKkOwll4WhM7hIMdRbTAxXjPJqDRAflzE0GAlul15x1efjjHYaW7N
+ol2Ju8/j56M3W+x5l1elt4V5T7Jyt2wGGkE58BvEhufVcdHrj/yps7L57fSCfcUD
+iSSoqMG1oKA4n3rI4LHoBqOaZ7dc8uAtt+i26LhasSZ8ThYfTPXP5aDmdVS3fjvw
+GFp1RgYoDl7m7IAlI9bidGkX7ocVWJyggSKlmDOlPNhgJLSmYQfKtTXomMkOxSHt
+7vyI6D5PVA+TBDzIMSLvP3kIyEf1yYSZZyok2Q09+irf35kr1WnzdMo3aQ1ctN/v
++kfkAQwh/6z5bl+AEi2Y
+=ZjSn
 -----END PGP SIGNATURE-----
 
---TqC3aXMUZwuFAd9J--
+--6F8T1i0Ve2X0M5tc--
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
