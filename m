@@ -1,81 +1,104 @@
 From: Alexandre Courbot <gnurou@gmail.com>
-Subject: Re: [PATCH] mmc: core: Add DT bindings for card detect debounce time
-Date: Sat, 21 Jun 2014 16:22:12 +0900
-Message-ID: <CAAVeFu+CW0DSbqc6k145APao2r907sAyMw0+W=hQXxO6LoQx-g@mail.gmail.com>
-References: <1399649837-27286-1-git-send-email-balajitk@ti.com> <CAPDyKFoZ=zjKg5bUMnK_X2XOatT=XSAnBDpYqu0Q2VOkM7hOOA@mail.gmail.com>
+Subject: Re: [PATCH V4 1/3] gpio: Add APM X-Gene SoC GPIO controller support
+Date: Sat, 21 Jun 2014 16:39:42 +0900
+Message-ID: <CAAVeFu+=VX-f9UrZN4WPihZY0KDGrue1ixofP9Kb+KVvpDCfuw@mail.gmail.com>
+References: <1403136531-20808-1-git-send-email-fkan@apm.com> <1403136531-20808-2-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFoZ=zjKg5bUMnK_X2XOatT=XSAnBDpYqu0Q2VOkM7hOOA@mail.gmail.com>
+In-Reply-To: <1403136531-20808-2-git-send-email-fkan@apm.com>
 Sender: linux-gpio-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Balaji T K <balajitk@ti.com>, Linus Walleij <linus.walleij@linaro.org>, linux-mmc <linux-mmc@vger.kernel.org>, Chris Ball <chris@printf.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>
+To: Feng Kan <fkan@apm.com>
+Cc: patches <patches@apm.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 10:47 PM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
-> On 9 May 2014 17:37, Balaji T K <balajitk@ti.com> wrote:
->> Provide an option to get CD debounce time from DT
->>
->> Signed-off-by: Balaji T K <balajitk@ti.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/mmc.txt |    1 +
->>  drivers/mmc/core/host.c                       |    6 +++++-
->>  2 files changed, 6 insertions(+), 1 deletions(-)
->>
->> diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
->> index 9dce540..fae590b 100644
->> --- a/Documentation/devicetree/bindings/mmc/mmc.txt
->> +++ b/Documentation/devicetree/bindings/mmc/mmc.txt
->> @@ -17,6 +17,7 @@ Optional properties:
->>  - bus-width: Number of data lines, can be <1>, <4>, or <8>.  The default
->>    will be <1> if the property is absent.
->>  - wp-gpios: Specify GPIOs for write protection, see gpio binding
->> +- cd-debounce-us: debounce time in microseconds for card detect gpio.
->>  - cd-inverted: when present, polarity on the CD line is inverted. See the note
->>    below for the case, when a GPIO is used for the CD line
->>  - wp-inverted: when present, polarity on the WP line is inverted. See the note
->> diff --git a/drivers/mmc/core/host.c b/drivers/mmc/core/host.c
->> index fdea825..59cd3a0 100644
->> --- a/drivers/mmc/core/host.c
->> +++ b/drivers/mmc/core/host.c
->> @@ -313,6 +313,7 @@ int mmc_of_parse(struct mmc_host *host)
->>         bool explicit_inv_wp, gpio_inv_wp = false;
->>         enum of_gpio_flags flags;
->>         int len, ret, gpio;
->> +       unsigned int debounce;
->>
->>         if (!host->parent || !host->parent->of_node)
->>                 return 0;
->> @@ -367,6 +368,9 @@ int mmc_of_parse(struct mmc_host *host)
->>                 if (of_find_property(np, "broken-cd", &len))
->>                         host->caps |= MMC_CAP_NEEDS_POLL;
->>
->> +               if (of_property_read_u32(np, "cd-debounce-us", &debounce) < 0)
->> +                       debounce = 0;
->> +
+On Thu, Jun 19, 2014 at 9:08 AM, Feng Kan <fkan@apm.com> wrote:
+> Add APM X-Gene SoC gpio controller driver.
 >
-> Hi Balaji,
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>  drivers/gpio/Kconfig      |   9 ++
+>  drivers/gpio/Makefile     |   1 +
+>  drivers/gpio/gpio-xgene.c | 252 ++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 262 insertions(+)
+>  create mode 100644 drivers/gpio/gpio-xgene.c
 >
-> Sorry for a late reply.
+> diff --git a/drivers/gpio/Kconfig b/drivers/gpio/Kconfig
+> index 4a1b511..833996a02 100644
+> --- a/drivers/gpio/Kconfig
+> +++ b/drivers/gpio/Kconfig
+> @@ -334,6 +334,15 @@ config GPIO_TZ1090_PDC
+>         help
+>           Say yes here to support Toumaz Xenif TZ1090 PDC GPIOs.
 >
-> I am wondering whether this should be a generic gpio of property,
-> instead of a mmc specific thing.
->
-> I have added Linus Walleij and Alexandre Courbot, the maintainers of
-> gpio. Let's see if they can point us in a direction.
+> +config GPIO_XGENE
+> +       bool "APM X-Gene GPIO controller support"
+> +       depends on ARM64 && OF_GPIO
+> +       help
+> +         This driver is to support the GPIO block within the APM X-Gene SoC
+> +         platform's generic flash controller. The GPIO pins are muxed with
+> +         the generic flash controller's address and data pins. Say yes
+> +         here to enable the GFC GPIO functionality.
+> +
+>  config GPIO_XILINX
+>         bool "Xilinx GPIO support"
+>         depends on PPC_OF || MICROBLAZE || ARCH_ZYNQ
+> diff --git a/drivers/gpio/Makefile b/drivers/gpio/Makefile
+> index d10f6a9..1bf5f82 100644
+> --- a/drivers/gpio/Makefile
+> +++ b/drivers/gpio/Makefile
+> @@ -98,6 +98,7 @@ obj-$(CONFIG_GPIO_VX855)      += gpio-vx855.o
+>  obj-$(CONFIG_GPIO_WM831X)      += gpio-wm831x.o
+>  obj-$(CONFIG_GPIO_WM8350)      += gpio-wm8350.o
+>  obj-$(CONFIG_GPIO_WM8994)      += gpio-wm8994.o
+> +obj-$(CONFIG_GPIO_XGENE)       += gpio-xgene.o
+>  obj-$(CONFIG_GPIO_XILINX)      += gpio-xilinx.o
+>  obj-$(CONFIG_GPIO_XTENSA)      += gpio-xtensa.o
+>  obj-$(CONFIG_GPIO_ZEVIO)       += gpio-zevio.o
+> diff --git a/drivers/gpio/gpio-xgene.c b/drivers/gpio/gpio-xgene.c
+> new file mode 100644
+> index 0000000..3a747cc
+> --- /dev/null
+> +++ b/drivers/gpio/gpio-xgene.c
+> @@ -0,0 +1,252 @@
+> +/*
+> + * AppliedMicro X-Gene SoC GPIO Driver
+> + *
+> + * Copyright (c) 2014, Applied Micro Circuits Corporation
+> + * Author: Feng Kan <fkan@apm.com>.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + *
+> + * You should have received a copy of the GNU General Public License
+> + * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+> + */
+> +
+> +#include <linux/module.h>
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/io.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of.h>
+> +#include <linux/gpio.h>
 
-I agree it would be nice if the debounce value could be handled by the
-GPIO framework. I just wonder what would be the correct way of doing
-it? Contrary to ACTIVE_LOW and other flags which can be specified with
-the GPIO phandle, debounce is a numeric value. Maybe using a different
-property, e.g.:
+Please use the new GPIO headers, linux/gpio/driver.h. I also don't
+think you will need of_gpio.h with it.
 
-cd-gpios = <&gpio 1 GPIO_ACTIVE_HIGH>;
-cd-gpios-debounce = <10>;
+> +#include <linux/types.h>
+> +#include <linux/clk.h>
 
-When looking up a GPIO through gpiod_get(), the GPIO framework could
-then check for -debounce property and set the debounce time
-accordingly. At first sight I'd say that would work and could be used
-for MMC and all other subsystems that need something similar.
+Why is clk.h needed here?
 
-Alex.
+Apart from these minor points I guess I have nothing to complain about
+for this version. :)
+
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
