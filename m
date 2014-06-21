@@ -1,36 +1,81 @@
-From: Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: Re: [PATCH v3] ARM: dts: imx6: add aristainetos board support
-Date: Sat, 21 Jun 2014 16:57:11 +0800
-Message-ID: <20140621085710.GA18165@dragon>
-References: <1403275967-22317-1-git-send-email-hs@denx.de>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv6 1/3] devicetree: Addition of the Altera SDRAM controller
+Date: Sat, 21 Jun 2014 11:04:46 +0200
+Message-ID: <20140621090446.GA8053@pengutronix.de>
+References: <1403306523-4174-2-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1403275967-22317-1-git-send-email-hs-ynQEQJNshbs@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403306523-4174-2-git-send-email-tthayer@altera.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: tthayer@altera.com
+Cc: robherring2@gmail.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, linux@arm.linux.org.uk, dinguyen@altera.com, dougthompson@xmission.com, grant.likely@linaro.org, bp@alien8.de, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, tthayer.linux@gmail.com, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 20, 2014 at 04:52:47PM +0200, Heiko Schocher wrote:
-> This patch add support for the imx6dl based aristainetos board
-> with following configuration:
-> 
-> CPU:   Freescale i.MX6DL rev1.1 at 792 MHz
-> DRAM:  1 GiB
-> NAND:  512 MiB
-> MMC:   FSL_SDHC: 0, FSL_SDHC: 1
-> SF: Detected N25Q128 with page size 256 Bytes, erase size 64 KiB, total 16 MiB
-> 
-> As this board can used with 2 different display types, the
-> differences between them are extracted into 2 DTS files, and
-> the common settings are collected in a common file.
-> 
-> Signed-off-by: Heiko Schocher <hs-ynQEQJNshbs@public.gmane.org>
+Hi!
 
-Applied, thanks.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Fri, Jun 20, 2014 at 06:22:01PM -0500, tthayer@altera.com wrote:
+> From: Thor Thayer <tthayer@altera.com>
+> 
+> Addition of the Altera SDRAM Controller bindings and device tree changes.
+> 
+> v2: Changes to SoC SDRAM EDAC code.
+> 
+> v3: Implement code suggestions for SDRAM EDAC code.
+> 
+> v4: Remove syscon from SDRAM controller bindings.
+> 
+> v5: No Change, bump version for consistency.
+> 
+> v6: Only map the ctrlcfg register as syscon.
+> 
+> Signed-off-by: Thor Thayer <tthayer@altera.com>
+> ---
+>  .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
+>  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+>  2 files changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> new file mode 100644
+> index 0000000..5027026
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> @@ -0,0 +1,11 @@
+> +Altera SOCFPGA SDRAM Controller
+> +
+> +Required properties:
+> +- compatible : "altr,sdr-ctl";
+> +- reg : Should contain 1 register ranges(address and length)
+> +
+> +Example:
+> +	sdrctl@ffc25000 {
+> +		compatible = "altr,sdr-ctl";
+> +		reg = <0xffc25000 0x4>;
+> +	};
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index 4676f25..310292e 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -682,6 +682,11 @@
+>  			clocks = <&l4_sp_clk>;
+>  		};
+>  
+> +		sdrctl@ffc25000 {
+> +			compatible = "altr,sdr-ctl", "syscon";
+
+Did you forget to add the syscon to the binding documentation?
+
+> +			reg = <0xffc25000 0x4>;
+> +		};
+> +
+>  		rst: rstmgr@ffd05000 {
+>  			compatible = "altr,rst-mgr";
+>  			reg = <0xffd05000 0x1000>;
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
