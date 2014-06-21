@@ -1,77 +1,102 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 07/10] regulator: Add driver for Maxim 77802 PMIC
- regulators
-Date: Sat, 21 Jun 2014 21:40:26 +0100
-Message-ID: <20140621204026.GH22657@sirena.org.uk>
-References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk>
- <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk>
- <20140616192500.GJ5099@sirena.org.uk>
- <53A01D54.10506@collabora.co.uk>
- <20140617141254.GP5099@sirena.org.uk>
- <53A06749.1010606@collabora.co.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v5 2/3] ASoC: add es8328 codec driver
+Date: Sat, 21 Jun 2014 22:02:54 +0100
+Message-ID: <20140621210254.GF24291@sirena.org.uk>
+References: <1403244859-22236-1-git-send-email-xobs@kosagi.com>
+ <1403244859-22236-3-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="WIIRZ1HQ6FgrlPgb"
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="z0eOaCaDLjvTGF2l"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53A06749.1010606@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <1403244859-22236-3-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---WIIRZ1HQ6FgrlPgb
+--z0eOaCaDLjvTGF2l
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Tue, Jun 17, 2014 at 06:05:29PM +0200, Javier Martinez Canillas wrote:
-> On 06/17/2014 04:12 PM, Mark Brown wrote:
+On Fri, Jun 20, 2014 at 02:14:18PM +0800, Sean Cross wrote:
 
-> >> I just looked at regulator_register() and saw that it does rdev->dev.parent =
-> >> dev, so yes this has to be the MFD.
+> +	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK)
+> +		reg = ES8328_DACCONTROL2;
+> +
+> +	else if (substream->stream == SNDRV_PCM_STREAM_CAPTURE)
+> +		reg = ES8328_ADCCONTROL5;
+> +	else
+> +		return -EINVAL;
 
-> I noticed that many drivers set config.dev = &pdev->dev. The original Chrome OS
-> max77xxx driver and max77686 are two examples but others drivers do the same:
+Idiomatically this is just a single if/else, if you weren't doing that
+then it ought to be a switch but really there's no need to do something
+non-idiomatic.
 
-Not all drivers are DT drivers that bother specifying supplies.
+> +	/* Master serial port mode */
+> +	snd_soc_write(codec, ES8328_MASTERMODE,
+> +			ES8328_MASTERMODE_MCLKDIV2 |
+> +			ES8328_MASTERMODE_MSC);
 
-> And also I see that mfd_add_device() calls
-> devm_regulator_bulk_register_supply_alias(&pdev->dev,...) so I'm confused now
-> about what the correct device should be...
+It seems a bit unfortunate that set_sysclk() doesn't manage MCLKDIV2 -
+if that isn't badly named the driver could easily support both the
+current fixed SYSCLK rate and twice that.
 
-Right, but to do that you need to set those aliases up - have you done
-so?
+> +	case SND_SOC_BIAS_PREPARE:
+> +		/* VREF, VMID=2x50k, digital enabled */
+> +		snd_soc_write(codec, ES8328_CHIPPOWER, pwr_reg);
+> +		snd_soc_write(codec, ES8328_CONTROL1,
+> +				cc1_reg |
+> +				ES8328_CONTROL1_VMIDSEL_50k |
+> +				ES8328_CONTROL1_ENREF);
 
-> > Do the regulators manage to get their supplies?
+snd_soc_update_bits() as I'm fairly sure I said last time.
 
-> There are no current support in mainline for the devices that use the regulators
-> in this PMIC so I can't tell you if consumers manage to get their supplies
-> correctly (e.g: if regulator_dev_lookup succeeds).
+> +static int es8328_suspend(struct snd_soc_codec *codec)
+> +{
+> +       es8328_set_bias_level(codec, SND_SOC_BIAS_OFF);
+> +       return 0;
+> +}
 
-That's not really relevant here - I'm asking if the regulators get their
-own supplies rather than if anything uses them.
+Neither this nor set_bias_level() restores the register cache after
+suspend - this will mean suspend and resume is broken in systems where
+power is removed from the device over suspend.
 
---WIIRZ1HQ6FgrlPgb
+> +	ret = devm_regulator_bulk_get(codec->dev, ARRAY_SIZE(es8328->supplies),
+> +				es8328->supplies);
+> +	if (ret) {
+> +		dev_err(codec->dev, "!!! Unable to get regulators\n");
+> +		return ret;
+> +	}
+
+Print the error code and format the messages normally - none of this
+!!! stuff please.
+
+--z0eOaCaDLjvTGF2l
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTpe23AAoJELSic+t+oim9ByMP+wYqiynHTb+Xzz0LdWDlo0u1
-Ybojhgpg93PB0jwTEijpHnFI3hDTyP1Ozn+EgvSrMkFFs9zd3yZrEUGZrpC8k8Rs
-CnCNzv9z+A7phmVIwzOH5cgO2lN7OOQIuQwmoozTFj+H/fpOVux+AaHhMRswx5HB
-5a48oHkbZT3CoJtY33wEBtcd31R34X4T5nwIrAik+myvFl27yFjQW7ofGCk3Fd6r
-Kj4evF+NbJFTZB2DzpRsyj2b+H6YA1WPC+3aJHCow0EU9dwL9TqPW5rXLvK22fAs
-/ulY2m3LFdK2gsugor4RSF0srkXITAkjsXPEjSkDT5gs38eyPFB4vlOSHuvzPd8b
-4sEWw9YsWPQHhTF9l5RkZKlvfxAnYyEUBSScAmBYYKtVqiSDJHPhLphKC5NLdDYT
-5txobNxpELaj1sTeuN7pzXM42OhxNT5P+Xn4jqip+N40PZPDIp6gAeHtdgrV3Bsz
-2+AfZnh+WO4PeD7nlMj5dG5YIh/jp0jKR6JFgZ62ZFWTsdIQ2+Wl3fkqlsYpD371
-oBYAQT83Zm7LNun1zwZeDLsRC1gU8cIXque1A/s7DS1HajrP4Hih5NoTvYTtQQjO
-7+/Tt0velX53qq2x2/fNmk3sbedfJm9NOmA9G9DMFPk34EfKW3N47FsoBf5Ax55t
-8CqmWZjvMm7cz6bXpCV/
-=Qdml
+iQIcBAEBAgAGBQJTpfL7AAoJELSic+t+oim9EDMP/2KK9j+MzzcByPpJiGbZqT6b
+HOZMw0fpBg6LJ2L0QtLcHnr7Ye9w6rkzlj/6LQJ9oxmQUGcwUwNh0lvOruv1K9Cy
+lC0uos0WsGBpc7y/UrutoChgh/f8ZdUBvgKdWwBDuJXGEkn3L0liI3Snt0DK5Mdr
+cGSIyM8i6fk+HCVEBqSrJ4kf1NF4IlkSbBwnJ6qqHACgitjlWkkeMCo9uyEGs7Et
+kKCjrDW7ke8/zST/T39YGM+gvyyj7py4ozQvX7ZwlK3QYA7NrwxFnFahqd5aApsx
+nHoS2sKOYF+HBKVKTsN1hkB2oYHAQIll7lpe1aBDYHDPQzpn7TQh9n+Yx1uLLufW
+XLNtKOSfBSoyZwyICMU7AEfbUEykmmDnSHCHiCBvS8NTL4r3QskpHNsOIT0YH2hP
+j7E1SGArqLFnQAGGPbmC5OStWiGTMi6PJQp+V4FZeCWe+aNxqwSQnEyiglHFhqQV
+UUlEDoPHxJlQojBXFFjBukOvN948qyuk76RfzX3rtL/+jjMAzsHGytP2NO/tmkTg
+QFm52nzC0zJXqeIBY+E7ofqKG0nkOQnSPseCUD8I0p+92NdYCL4yVkuY35lHQkSd
+4zUSQAMTnuJjFIfOlzMupZ0zF4U2U818/T6AC5eEabiXfY25tkWB44jF5wzf4hm0
+vqLpNE/r1RCoXIDmp6ka
+=cnJf
 -----END PGP SIGNATURE-----
 
---WIIRZ1HQ6FgrlPgb--
+--z0eOaCaDLjvTGF2l--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
