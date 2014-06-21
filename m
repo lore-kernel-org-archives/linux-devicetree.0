@@ -1,45 +1,54 @@
-From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH v2 2/3] pwm: rockchip: document device tree bindings
-Date: Sat, 21 Jun 2014 16:22:07 +0200
-Message-ID: <1403360528-12757-3-git-send-email-b.galvani@gmail.com>
-References: <1403360528-12757-1-git-send-email-b.galvani@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403360528-12757-1-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Heiko Stuebner <heiko@sntech.de>, linux-pwm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Beniamino Galvani <b.galvani@gmail.com>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the driver
+Date: Sat, 21 Jun 2014 22:53:14 +0530
+Message-ID: <CAHfPSqCvHRMxPAVgRDrP-BSwuwJRP5O8Z+xy5Xot8t8mASNyAA@mail.gmail.com>
+References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
+ <CAD=FV=Ua+P0CBAfNj4SWWMWRKcEFdmh=akwy1-ZWoGOt2P9=cQ@mail.gmail.com> <20140621095149.GY5099@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <20140621095149.GY5099@sirena.org.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Doug Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds binding documentation for Rockchip SoC PWM driver.
+Hello Mark,
 
-Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
----
- .../devicetree/bindings/pwm/pwm-rockchip.txt          |   17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
+On 21 June 2014 15:21, Mark Brown <broonie@kernel.org> wrote:
+> On Fri, Jun 20, 2014 at 02:18:08PM -0700, Doug Anderson wrote:
+>
+>> Is one of you two planning to apply (parts 1 and 2)?  I know that
+>> Kukjin needs to handle the part 3 (the .dts files)...
+>
+>> Ideally it seems like it could go to 3.16 since it is a bugfix...
+>
+> Don't nag, it just means yet more mail to look at which makes things
+> worse not better.  Given all the problems the DT code for this driver
+> has I need to review carefully, and the fact that this has got to v5
+> before I had a chance to look at it sets off alarm bells too.
 
-diff --git a/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-new file mode 100644
-index 0000000..3182126
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pwm/pwm-rockchip.txt
-@@ -0,0 +1,17 @@
-+Rockchip PWM controller
-+
-+Required properties:
-+ - compatible: should be "rockchip,rk2928-pwm"
-+ - reg: physical base address and length of the controller's registers
-+ - clocks: phandle and clock specifier of the PWM reference clock
-+ - #pwm-cells: should be 2. See pwm.txt in this directory for a
-+   description of the cell format.
-+
-+Example:
-+
-+	pwm0: pwm@20030000 {
-+		compatible = "rockchip,rk2928-pwm";
-+		reg = <0x20030000 0x10>;
-+		clocks = <&cru PCLK_PWM01>;
-+		#pwm-cells = <2>;
-+	};
+The revisions were pretty quick
+v1 to v2 : Updated DT Documentation for the change
+v2 to v3 : use spi->cs_gpio in the driver
+v3 to v4 : use gpio_is_valid() instead of using sdd->cs_gpio (local variable,
+              also remove sdd->cs_gpio)
+v4 to v5 : Added Acked-by and Revewied-by from Javier and Rob Herring
+
+Major discussion in this thread was about keeping the old DT bindings
+to support legacy or move on with the new bindings.
+
+Tomasz Figa, Javier Martinez Canillas, Doug Anderson and
+Rob Herring agreed with the latter.
+
+Kindly review and let us know your comments.
+
+Thanks
+>
+> There's a couple of months to get bug fixes in yet.
+
+
+
 -- 
-1.7.10.4
+Shine bright,
+(: Nav :)
