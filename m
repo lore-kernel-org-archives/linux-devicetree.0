@@ -1,68 +1,166 @@
-From: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Subject: [PATCH v10 5/5] ARM: sunxi: Enable IR controller on
- cubieboard 2 and cubietruck in dts
-Date: Sat, 21 Jun 2014 17:04:06 +0600
-Message-ID: <1403348646-31091-6-git-send-email-bay@hackerdom.ru>
-References: <1403348646-31091-1-git-send-email-bay@hackerdom.ru>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 4/8] iio: Add support for DA9150 GPADC
+Date: Sat, 21 Jun 2014 12:29:55 +0100
+Message-ID: <53A56CB3.3030207@kernel.org>
+References: <cover.1402484954.git.Adam.Thomson.Opensource@diasemi.com> <3c1a7551c7deaeccdca731fa95f4349c57e04249.1402484954.git.Adam.Thomson.Opensource@diasemi.com> <539DFFC8.3080406@kernel.org> <2E89032DDAA8B9408CB92943514A0337AB4FD9C7@SW-EX-MBX01.diasemi.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCLIFP6QZ4HRBV6NSWOQKGQEGQ45ZMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1403348646-31091-1-git-send-email-bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2E89032DDAA8B9408CB92943514A0337AB4FD9C7-68WUHU125fLLPO1uwJ3ImwLouzNaz+3S@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: "Opensource [Adam Thomson]" <Adam.Thomson.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, "linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Support Opensource <Support.Opensource-WBD+wuPFNBhBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables two IR devices in dts:
-- One IR device physically found on Cubieboard 2
-- One IR device physically found on Cubietruck
+On 16/06/14 16:58, Opensource [Adam Thomson] wrote:
+> On June 15, 2014 21:19, Jonathon Cameron wrote:
+>
+>> Hi Adam
+>>
+>> Reasonably clean code, but the _ channels stuff doesn't comply with the ABI
+>> and is rather confusing.
+>
+> To be honest I did debate this in my head for a while. The reason I went with
+> the current approach was to make the driver channel layout match that of the
+> datasheet for the device. Sounds like it wasn't the correct direction though.
+>
+>> If it really does make sense to allow reading these channels at different
+>> ranges (presumably to enhance the effective adc resolution) then we need
+>> to control this via existing ABIs. Controlling it via scale with a
+>> range attribute if required (read only but changes with whatever the
+>> scale attribute it set to).
+>
+> Yes, with smaller range then you get a better degree of accuracy. Ok, will have
+> a look at this and see if I can improve things based on your comments.
+>
+>> Often, for slow parts at least it makes little sense to have provide
+>> software support for variable input ranges.
+>>
+>> Looking at what is covered, is it the case that only one option will make
+>> sense for a given hardware setup? (cover the required range and nothing more).
+>>
+>> If so, perhaps this wants to go into the device tree or similar?
+>
+> Possibly. Having read your comments further on though, and given that
+> it seems reasonable to use the range/scale attribute to choose the resolution,
+> I'd prefer to opt for that approach (seems more flexible).
+Perhaps, but if the reason for these differing ranges is that they tend
+to be wired to lines that have well defined voltage ranges, then I'd move
+it into setup data.  Leads to a cleaner driver.  Flexibility is good, but
+only if actually helps anyone!
+>
+>> Please get rid of excess white space and comments that just tell you
+>> something obvious about the code following them.
+>
+> Preferably I'd like to keep it this way as I think it makes the code
+> easier to read, but if you're dead against it then I'll remove them.
+The issue here is about making kernel review as easy as possible.  That often
+involves making code (and particularly comments) conform to somewhat arbitrary
+rules and conventions.  Just makes the reviewer/maintainers life somewhat easier.
+You'll also probably get follow up patches removing all this stuff on the basis
+of kernel style soon after we merge the driver anyway and those just get
+irritating ;)
+>
+>> Linear in the coeeficients, so fine for raw output with a scale and offset.
+>
+> Ok will have a look at re-working this as per your comment.
+>
+>> Ah, so here is your reasoning behind the 'interesting' underscore channels.
+>> This is just doing different range checks on the channel?  If so allow one
+>> at a time and provide a writable scale info_mask element to control which
+>> is used..
+>>
+>> Looks like there are only thes two channels doing this, so shouldn't be
+>> too hard to support it via more conventional means.
+>
+> The GPIO, VBUS and VSYS related channels provide different ranges. I guess they
+> should all follow the same approach for implementing this alternate range. So I
+> will assume that for the 'repeat' channels where the same raw value is provided
+> on both the _ and non _ channels only one channel should be provided.
+Definitely.
+>
+>> Don't use the |=, just = and you can't avoid assigning reg above.
+>> Actually, it's not complex enough that you couldn't just do it directly into
+>> the write function and skip this local variable.
+>
+> Ok fine. Will update to tidy up.
+>
+>> Unlock first, then check for error.
+>
+> Yep. Makes sense. Will update.
+>
+>> The mixture of having defs here for the shift.
+>>> +	/* MSBs - 8 bits */
+>>> +	result |= result_regs[0] << 2;
+>> and not here is inconsistent.  I honestly don't mind which way, but
+>> just use one style.
+>>
+>> You could just use an endian conversion and shift the combined 16bit result
+>
+> Fair point. Will make this cleaner.
+>
+>> It very rarely makes sense to provide both raw and processed interfaces.
+>> If the transform is nasty and non linear then userspace won't have the info
+>> to do anything with it.  If the transform is linear, then provide scale
+>> and offset and let userspace perform the computation.
+>
+> The charger module uses certain channels for its readings, and to me it makes
+> more sense for that calculation to be done by the GPADC. However having looked
+> at the inkern.c framework code it looks like if you request a processed channel
+> and it's doesn't provide that feature, then the code drops to linear scaling if
+> possible to provide the processed value. I take it this is the preferred
+> approach then?
+Yup.  Saves on replicating code.  Mostly the raw access stuff is there for consistency
+with buffered access (where speed matters and we may or may not want to convert to
+real units).  So you should provide the information to do the scaling anyway, so
+just let the core code handle it for you.
+> Just thought it was more consistent to see the calculation using
+> dedicated functions (processed channel approach).
+>
+>> Get rid of this comment and any other ones that don't add any
+>> actual information.  Also this is single line comment, please
+>> check the comment syntax.
+>
+> As per previous comment on this topic.
+>
+>> Why a blank line here.
+>
+> Accidental. Will remove it.
+>
+>> The device register call is the one that exposes userspace interfaces. As
+>> a general rule it wants to be the last thing in probe as everything
+>> else should be setup first.
+>
+> Ok, that's something I missed. Will make the change.
+>
+>>> +#include <linux/iio/machine.h>
+>> This isn't used in the header, so should be included in the c file, not here.
+>
+> Yes, is something I meant to remove during development increments. Consider it
+> gone.
+>
+>>> +#include <linux/mfd/da9150/core.h>
+>> Having moved the struct definition into the c file
+>> this header include will not want to be here.
+>
+> I personally would prefer a separate header for the definitions as I believe
+> this is tidier. Have never really liked struct definitions in c files.
+Again, kernel coding style. Have everything as local as you can.
+Makes it obvious nothing else uses the structure and also ever so slightly
+cuts down on compile time (all helps!)
 
-Signed-off-by: Alexander Bersenev <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
-Signed-off-by: Alexsey Shestacov <wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org>
----
- arch/arm/boot/dts/sun7i-a20-cubieboard2.dts |    6 ++++++
- arch/arm/boot/dts/sun7i-a20-cubietruck.dts  |    6 ++++++
- 2 files changed, 12 insertions(+), 0 deletions(-)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-index a5ad945..a70f0b4 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubieboard2.dts
-@@ -66,6 +66,12 @@
- 			};
- 		};
- 
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
-diff --git a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-index b87fea9..96639d5 100644
---- a/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-cubietruck.dts
-@@ -100,6 +100,12 @@
- 			status = "okay";
- 		};
- 
-+		ir0: ir@01c21800 {
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&ir0_pins_a>;
-+			status = "okay";
-+		};
-+
- 		uart0: serial@01c28000 {
- 			pinctrl-names = "default";
- 			pinctrl-0 = <&uart0_pins_a>;
--- 
-1.7.1
+Anyhow, please bring them into the c code.   Have only stuff that is genuinely
+shared between different c files in headers.  If those c files are in the same
+directory then have the header within the directory as well.
+> I could
+> move this header to the same directory as the source file, if that is preferred.
+> As it stands this header is only related to DA9150 in its current location, so
+> is this a big issue? If not then I'd rather keep it as is.
+>
+>>> +/* Private data */
+>> Why is this in the header?  Should be defined directly in the c file
+>> as nothing outside the driver should be touching it.
+>
+> As per previous comment.
+>
