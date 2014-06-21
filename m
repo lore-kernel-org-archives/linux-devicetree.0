@@ -1,66 +1,60 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
-Date: Sat, 21 Jun 2014 11:15:39 +0200
-Message-ID: <4805472.0q1PyyoD4W@wuerfel>
-References: <201406210034.57784.sergei.shtylyov@cogentembedded.com> <4490558.0d3xbrzEgW@wuerfel> <53A4A6C6.9000703@cogentembedded.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the
+ driver
+Date: Sat, 21 Jun 2014 10:51:49 +0100
+Message-ID: <20140621095149.GY5099@sirena.org.uk>
+References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
+ <CAD=FV=Ua+P0CBAfNj4SWWMWRKcEFdmh=akwy1-ZWoGOt2P9=cQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53A4A6C6.9000703@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-sh@vger.kernel.org, magnus.damm@gmail.com, robh+dt@kernel.org, horms@verge.net.au, galak@codeaurora.org, ben.dooks@codethink.co.uk
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zf2GVRt1JP70ixMf"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Ua+P0CBAfNj4SWWMWRKcEFdmh=akwy1-ZWoGOt2P9=cQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, spi-devel-general@lists.sourceforge.net, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, Grant Likely <grant.likely@secretlab.ca>, Jaswinder Singh <jaswinder.singh@linaro.org>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Saturday 21 June 2014 01:25:26 Sergei Shtylyov wrote:
-> On 06/21/2014 01:10 AM, Arnd Bergmann wrote:
 
-> >>> It also needs a device_type property.
-> 
-> >>      Hm, are you sure about that? I thought only PCI devices should have it...
-> 
-> > Yes, pretty sure it's needed in both the host controller and the
-> > devices.
-> 
->      I don't understand the case of the PCI devices, honestly. Shouldn't the 
-> "device_type" prop reflect the device's functionality rather than the bus 
-> where it's located?
+--zf2GVRt1JP70ixMf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-It probably made more sense on real Open Firmware than it does on FDT, but
-we're trying to follow the bindings anyway.
+On Fri, Jun 20, 2014 at 02:18:08PM -0700, Doug Anderson wrote:
 
-I believe the "device_type=pci" originally indicated a device that has
-a readable config space (through the OF client interface), which is true
-for both the host and the devices.
+> Is one of you two planning to apply (parts 1 and 2)?  I know that
+> Kukjin needs to handle the part 3 (the .dts files)...
 
-> >>> I realize that the driver doesn't currently use them, but you should
-> >>> adhere to the binding anyway, so we can fix the driver at some point.
-> 
-> >>      Sigh, agreed about the need to fix the driver. Too bad you've spoken up
-> >> only now though. And you've ACKed the DT bindings without those properties
-> >> documented or even present in an example...
-> 
-> > Yes, I realized that too late as well, sorry about it. For some reason
-> > I only looked at the interrupt-map being done right and forgot to
-> > check the ranges.
-> 
-> > We definitely need to move the code handling the ranges into a common
-> > location to avoid this mistake in the future.
-> 
->     It is already in the common location, AFAIK; what's lacking there is the 
-> code that parses "dma-ranges" as well but that should be pretty easy to add...
+> Ideally it seems like it could go to 3.16 since it is a bugfix...
 
-We have some common helpers for "ranges" parsing already, but we should
-improve them so a driver has to do much less in the future.
+Don't nag, it just means yet more mail to look at which makes things
+worse not better.  Given all the problems the DT code for this driver
+has I need to review carefully, and the fact that this has got to v5
+before I had a chance to look at it sets off alarm bells too.
 
-For "dma-ranges", we still to write need most of the code. For platform
-devices, we can now calculate the offset for the simple (no IOMMU) case,
-but we still need to calculate the dma mask correctly (that part should
-be simple, maybe you can help there as you have an immediate need),
-and we need to handle the IOMMU and swiotlb cases better.
+There's a couple of months to get bug fixes in yet.
 
-For PCI devices, we need to do all the same things we do for platform
-devices, and we can probably share most of the code.
+--zf2GVRt1JP70ixMf
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-	Arnd
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTpVWyAAoJELSic+t+oim9gQgP+wdFJ1qWZRFGMWZbep79ZPl+
+OQkGtvCSq6nAJ1pAZYo4YyVnRAfSsOkQLVtfMoqz1vuaueqxxjV3Ti7cix0uqZlR
+Bdq4KYVsaGMpf6YH6roUm0w1NKkrbdwchhVMP4HSmBII5UKZNzVxSgagtWeifsiQ
+FvXwrEW8Vj72UmrxJWhk28iF3lrhJ7Hhqq7RfFaOaN1Ezej8R7odY/0CHDuVMcTb
+zmVsPztVmGmXOaQbIgZ7ZxxZpixNl7L5kAcfH1T3tfpiE+yk9fOUAapsl4aNzJtA
+fuTaXrmcrtEzA3Xsr2RJOYezxncGtOThG4jiKrcXVbCaKfRlGXUl34lolGqJDXrM
+QJWk65gVHm51bGb46NtyWjr33Q+3AV7swg4Ym1RCvtqGOlv2FjLSgW+eN9aexidx
+z8i6UMFT02ddom2NzZvFQha5Qyu+56SSB2V7AgHw0aKPJTiHGStgf1rQiG8jzyXl
+b8YLNxvbVCfX9OV81FGEXPUHi0V16RfvRUZP6jhOL49dn8Y03S7/9gOUSBQ/BGJ4
+N+Qiss5xEdnElVhQ7JD3+POnBnVU4OQ6b0nD9ryuNuzA92blFsvdFHoBXi1cC1nO
+4do9/sPPaRpj3i/DaXyex/pI6Xdkxar75x2ajzmx6YcXVZ6AE9zoHCrmL3ZL7VHc
+mMVtLWn2aQtiDEkWMaQE
+=ax2N
+-----END PGP SIGNATURE-----
+
+--zf2GVRt1JP70ixMf--
