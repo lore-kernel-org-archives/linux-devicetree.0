@@ -1,103 +1,156 @@
-From: =?ISO-8859-1?Q?Noralf_Tr=F8nnes?= <notro-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Subject: Re: Initial register settings in Device Tree?
-Date: Sun, 22 Jun 2014 21:27:52 +0200
-Message-ID: <53A72E38.8040307@tronnes.org>
-References: <53A71474.7030704@tronnes.org> <4560059.E2lhedgi9o@wuerfel>
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Subject: Re: [PATCH] dt/documentation: add specification of dma bus information
+Date: Sun, 22 Jun 2014 15:40:00 -0400
+Message-ID: <53A73110.60405@ti.com>
+References: <1401981720-6946-1-git-send-email-santosh.shilimkar@ti.com> <CAL_JsqJAtWnHKPVpDsdOOzT_X=npc3hroLNTGqULM2SJr=1OEg@mail.gmail.com> <53A46CB7.1030109@ti.com> <4193075.zZSpRTFEYz@wuerfel> <53A48553.2080504@ti.com> <CAL_JsqLYho6dRA=-ovKqF7H4EGHJcH_aN3ywd+76oXSprfTMbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <4560059.E2lhedgi9o@wuerfel>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqLYho6dRA=-ovKqF7H4EGHJcH_aN3ywd+76oXSprfTMbQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robherring2@gmail.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Grygorii Strashko <grygorii.strashko@ti.com>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawn.guo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-Den 22.06.2014 20:18, skrev Arnd Bergmann:
-> On Sunday 22 June 2014 19:37:56 Noralf Tr=F8nnes wrote:
->> I see two possibilities:
->> * add a special marker value to separate the registers, as I do now
->> * add a flag to indicate a register number. So far I've only seen 8 =
-and
->> 16-bit register number widths: register 20h could thus be written as
->> 10000020, 1000020, 100020 or 10020
->>
->> Example (skipped state changes from previous example):
->> <100B1 01 2C 2D
->>    100B2 01 2C 2D
->>    100B3 01 2C 2D 01 2C 2D
->>    100B4 07 C0 A2 02 84
->>    100C1 C5 C2 0A 00
->>    100C3 8A 2A
->>    100C4 8A EE
->>    100C5 0E
->>    10020
->>    10036 C0
->>    1003A 05
->>    100E0 0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07 02 10
->>    100E1 0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07 03 10>
->>
->> Is this a viable solution?
-> We normally use high-level descriptions of the timings that the drive=
-r
-> then converts into register-level settings. See
-> Documentation/devicetree/bindings/video/display-timing.txt and
-> other files in that directory for how existing drivers handle this.
->
-> 	Arnd
->
-OK, that takes care of the timings. But what about power control, and=20
-gamma registers?
+On Friday 20 June 2014 03:46 PM, Rob Herring wrote:
+> On Fri, Jun 20, 2014 at 2:02 PM, Santosh Shilimkar
+> <santosh.shilimkar@ti.com> wrote:
+>> On Friday 20 June 2014 02:56 PM, Arnd Bergmann wrote:
+>>> On Friday 20 June 2014 13:17:43 Santosh Shilimkar wrote:
+>>>>>> +                       dma-coherent;
+>>>>>> +                       dma-ranges;
+>>>>>> +
+>>>>>> +                       dwc3@2690000 {
+>>>>>> +                               compatible = "synopsys,dwc3";
+>>>>>> +                               [...]
+>>>>>> +                       };
+>>>>>
+>>>>> This example is a bit strange. I don't understand the relationship
+>>>>> between keystone-dwc3 and synopsys,dwc3, nor do I want to. I'd prefer
+>>>>> to see a simple example here.
+>>>
+>>>
+>>>>> dma-ranges is a property of the parent which you show, but
+>>>>> dma-coherent originally was a property of the bus master itself. While
+>>>>> we need to support that, are we changing that? We need to be clear on
+>>>>> where the property belongs even if the kernel is more lax.
+>>>>>
+>>>> I don't think we are changing it fundamentally but may be I missing
+>>>> your point. The dma-coherent as is now a per-device property.
+>>>> USB is one of the bus master supports coherency and hence showed
+>>>> up in above example.
+>>>
+>>> I think it's enough if you just drop the "synopsys,dwc3" node and the
+>>> intermediate dma-ranges property from the example, leaving the
+>>> dma-coherent property in the "ti,keystone-dwc3" node.
+>>>
+>> Thanks Arnd. That should avoid the confusion. Just to see if Rob is
+>> fine by it, the example will look like below.
+> 
+> Yes. Looks fine.
+> 
+Great. Updated version 2 below.
 
-The power registers usually have bitfields that map to voltages, factor=
-s=20
-(0.7x, 1x,..) and levels (low,medium,high).
+>From 7df26004fe11b7d3ef9592161205c69e1fb663be Mon Sep 17 00:00:00 2001
+From: Santosh Shilimkar <santosh.shilimkar@ti.com>
+Date: Fri, 20 Jun 2014 11:01:54 -0400
+Subject: [PATCH v2] dt/documentation: add specification of dma bus information
 
-Should all these bitfiels have their own property in DT?
-=46or some controllers this would be 20+ properties.
+Recently we introduced the generic device tree infrastructure for couple of DMA
+bus parameter, dma-ranges and dma-coherent. Update the documentation so that
+its useful for future users.
 
-Should the properties have the same name as the register and bitfield=20
-from the datasheet?
-st7735r,pwctr1-avdd
-st7735r,pwctr1-vrhp
-st7735r,pwctr1-vrhn
-st7735r,pwctr1-mode
+The "dma-ranges" property is intended to be used for describing the
+configuration of DMA bus RAM addresses and its offset w.r.t CPU addresses.
 
-Should the value map directly to the bitfield or should a string be use=
-d?
-st7735r,pwctr1-avdd =3D <6> /* 5.1v - Power pin for analog circuits */
-st7735r,pwctr1-avdd =3D "5.1"
+The "dma-coherent" property is intended to be used for identifying devices
+supported coherent DMA operations.
 
-Or should each register have it's own property?
-st7735r,pwctr1 =3D <C5 C2 0A 00>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Grant Likely <grant.likely@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Acked-by: Shawn Guo <shawn.guo@freescale.com>
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
+Signed-off-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+---
+ Documentation/devicetree/booting-without-of.txt |   53 +++++++++++++++++++++++
+ 1 file changed, 53 insertions(+)
 
-
-The gamma registers have several values that control a resistor network=
-=20
-that sets grayscale values.
-Would this suffice?
-st7735r,gamma-positive =3D <0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07 0=
-2 10>
-st7735r,gamma-negative =3D <0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07 0=
-3 10>
-
-
-Usually when buying these displays, they come with an initialization=20
-sequence.
-Having register values in the DT, a user will be up and running in=20
-minutes with a new display.
-If one has to read the datasheet and map the register values to=20
-bitfields and properties, it takes a lot of time and not the least, it'=
-s=20
-error prone.
-
-
-Noralf.
-
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/booting-without-of.txt b/Documentation/devicetree/booting-without-of.txt
+index 1f013bd..7768518 100644
+--- a/Documentation/devicetree/booting-without-of.txt
++++ b/Documentation/devicetree/booting-without-of.txt
+@@ -51,6 +51,8 @@ Table of Contents
+ 
+   VIII - Specifying device power management information (sleep property)
+ 
++  IX - Specifying dma bus information
++
+   Appendix A - Sample SOC node for MPC8540
+ 
+ 
+@@ -1332,6 +1334,57 @@ reasonably grouped in this manner, then create a virtual sleep controller
+ (similar to an interrupt nexus, except that defining a standardized
+ sleep-map should wait until its necessity is demonstrated).
+ 
++IX - Specifying dma bus information
++
++Some devices may have DMA memory range shifted relatively to the beginning of
++RAM, or even placed outside of kernel RAM. For example, the Keystone 2 SoC
++worked in LPAE mode with 4G memory has:
++- RAM range: [0x8 0000 0000, 0x8 FFFF FFFF]
++- DMA range: [  0x8000 0000,   0xFFFF FFFF]
++and DMA range is aliased into first 2G of RAM in HW.
++
++In such cases, DMA addresses translation should be performed between CPU phys
++and DMA addresses. The "dma-ranges" property is intended to be used
++for describing the configuration of such system in DT.
++
++In addition, each DMA master device on the DMA bus may or may not support
++coherent DMA operations. The "dma-coherent" property is intended to be used
++for identifying devices supported coherent DMA operations in DT.
++
++* DMA Bus master
++Optional property:
++- dma-ranges: <prop-encoded-array> encoded as arbitrary number of triplets of
++	(child-bus-address, parent-bus-address, length). Each triplet specified
++	describes a contiguous DMA address range.
++	The dma-ranges property is used to describe the direct memory access (DMA)
++	structure of a memory-mapped bus whose device tree parent can be accessed
++	from DMA operations originating from the bus. It provides a means of
++	defining a mapping or translation between the physical address space of
++	the bus and the physical address space of the parent of the bus.
++	(for more information see ePAPR specification)
++
++* DMA Bus child
++Optional property:
++- dma-ranges: <empty> value. if present - It means that DMA addresses
++	translation has to be enabled for this device.
++- dma-coherent: Present if dma operations are coherent
++
++Example:
++soc {
++		compatible = "ti,keystone","simple-bus";
++		ranges = <0x0 0x0 0x0 0xc0000000>;
++		dma-ranges = <0x80000000 0x8 0x00000000 0x80000000>;
++
++		[...]
++
++		usb: usb@2680000 {
++			compatible = "ti,keystone-dwc3";
++
++			[...]
++			dma-coherent;
++		};
++};
++
+ Appendix A - Sample SOC node for MPC8540
+ ========================================
+ 
+-- 
+1.7.9.5
