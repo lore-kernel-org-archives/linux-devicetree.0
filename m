@@ -1,101 +1,63 @@
-From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v4 13/13] dt-bindings: add documentation for rk3288 cru
-Date: Sun, 22 Jun 2014 22:50:53 +0200
-Message-ID: <7933694.40emL7M0jh@diego>
-References: <1808429.dNxms7FR7U@diego>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
+Date: Sun, 22 Jun 2014 22:56:54 +0200
+Message-ID: <53A74316.5080509@free-electrons.com>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com> <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1808429.dNxms7FR7U@diego>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Max Schwarz <max.schwarz@online.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403276487-8792-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the dt-binding documentation for the clock and reset unit found on
-Rockchip rk3288 SoCs.
 
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
----
- .../bindings/clock/rockchip,rk3288-cru.txt         | 61 ++++++++++++++++++++++
- 1 file changed, 61 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
+On 20/06/2014 17:01, Boris BREZILLON wrote:
+> Add new atmel AIC (Advanced Interrupt Controller) driver based on the
+> generic chip infrastructure.
+>
+> This driver is only compatible with dt enabled board and replaces the old
+> implementation found in arch/arm/mach-at91/irq.c.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/irqchip/Kconfig         |   7 +
+>  drivers/irqchip/Makefile        |   1 +
+>  drivers/irqchip/irq-atmel-aic.c | 700 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 708 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-atmel-aic.c
+>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index bbb746e..6a7ad81 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -30,6 +30,13 @@ config ARM_VIC_NR
+>  	  The maximum number of VICs available in the system, for
+>  	  power management.
+>  
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-new file mode 100644
-index 0000000..c9fbb76
---- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
-@@ -0,0 +1,61 @@
-+* Rockchip RK3288 Clock and Reset Unit
-+
-+The RK3288 clock controller generates and supplies clock to various
-+controllers within the SoC and also implements a reset controller for SoC
-+peripherals.
-+
-+Required Properties:
-+
-+- compatible: should be "rockchip,rk3288-cru"
-+- reg: physical base address of the controller and length of memory mapped
-+  region.
-+- #clock-cells: should be 1.
-+- #reset-cells: should be 1.
-+
-+Optional Properties:
-+
-+- rockchip,grf: phandle to the syscon managing the "general register files"
-+  If missing pll rates are not changable, due to the missing pll lock status.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3288-cru.h headers and can be
-+used in device tree sources. Similar macros exist for the reset sources in
-+these files.
-+
-+External clocks:
-+
-+There are several clocks that are generated outside the SoC. It is expected
-+that they are defined using standard clock bindings with following
-+clock-output-names:
-+ - "xin24m" - crystal input - required,
-+ - "xin32k" - rtc clock - optional,
-+ - "ext_i2s" - external I2S clock - optional,
-+ - "ext_hsadc" - external HSADC clock - optional,
-+ - "ext_edp_24m" - external display port clock - optional,
-+ - "ext_vip" - external VIP clock - optional,
-+ - "ext_isp" - external ISP clock - optional,
-+ - "ext_jtag" - external JTAG clock - optional
-+
-+Example: Clock controller node:
-+
-+	cru: cru@20000000 {
-+		compatible = "rockchip,rk3188-cru";
-+		reg = <0x20000000 0x1000>;
-+		rockchip,grf = <&grf>;
-+
-+		#clock-cells = <1>;
-+		#reset-cells = <1>;
-+	};
-+
-+Example: UART controller node that consumes the clock generated by the clock
-+  controller:
-+
-+	uart0: serial@10124000 {
-+		compatible = "snps,dw-apb-uart";
-+		reg = <0x10124000 0x400>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
-+		reg-shift = <2>;
-+		reg-io-width = <1>;
-+		clocks = <&cru SCLK_UART0>;
-+	};
+[...]
+
+> +
+> +static int at91_aic_common_irq_domain_xlate(struct irq_domain *d,
+
+This function should be named aic_common_irq_domain_xslate to be
+consistent with other function names.
+I'll fix that for the next version.
+
+
+Best Regards,
+
+Boris
+
 -- 
-1.9.0
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
