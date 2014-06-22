@@ -1,419 +1,996 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v6 4/9] OF: DT-Overlay configfs interface
-Date: Sun, 22 Jun 2014 12:41:48 +0300
-Message-Id: <1403430113-15171-5-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v6 2/9] OF: Introduce DT overlay support.
+Date: Sun, 22 Jun 2014 12:41:46 +0300
+Message-Id: <1403430113-15171-3-git-send-email-pantelis.antoniou@konsulko.com>
 In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
 References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
 To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add a runtime interface to using configfs for generic device tree overlay
-usage.
+Introduce DT overlay support.
 
-A device-tree configfs entry is created in /config/device-tree/overlays
+Makes it possible to dynamically overlay a part of the kernel's
+tree with another tree that's been dynamically loaded.
+Removal of nodes and properties is also possible.
 
-* To create an overlay you mkdir the directory:
+The hard part of applying and reverting the overlay is done
+using transactions.
 
-	# mkdir /config/device-tree/overlays/foo
-
-* Either you echo the overlay firmware file to the path property file.
-
-	# echo foo.dtbo >/config/device-tree/overlays/foo/path
-
-* Or you cat the contents of the overlay to the dtbo file
-
-	# cat foo.dtbo >/config/device-tree/overlays/foo/dtbo
-
-The overlay file will be applied.
-
-To remove it simply rmdir the directory.
-
-	# rmdir /config/device-tree/overlays/foo
+Documentation about internal and APIs is provided in
+	Documentation/devicetree/overlay-notes.txt
 
 Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 ---
- drivers/of/Kconfig    |   7 ++
- drivers/of/Makefile   |   1 +
- drivers/of/configfs.c | 340 ++++++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 348 insertions(+)
- create mode 100644 drivers/of/configfs.c
+ Documentation/devicetree/overlay-notes.txt | 137 ++++++
+ drivers/of/Kconfig                         |   7 +
+ drivers/of/Makefile                        |   1 +
+ drivers/of/overlay.c                       | 696 +++++++++++++++++++++++++++++
+ include/linux/of.h                         |  63 +++
+ 5 files changed, 904 insertions(+)
+ create mode 100644 Documentation/devicetree/overlay-notes.txt
+ create mode 100644 drivers/of/overlay.c
 
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
+new file mode 100644
+index 0000000..b060bd7
+--- /dev/null
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -0,0 +1,137 @@
++Device Tree Overlay Notes
++-------------------------
++
++This document describes the implementation of the in-kernel
++device tree overlay functionality residing in drivers/of/overlay.c and is a
++companion document to Documentation/devicetree/dt-object-internal.txt[1] &
++Documentation/devicetree/dynamic-resolution-notes.txt[2]
++
++How overlays work
++-----------------
++
++A Device Tree's overlay purpose is to modify the kernel's live tree, and
++have the modification affecting the state of the the kernel in a way that
++is reflecting the changes.
++Since the kernel mainly deals with devices, any new device node that result
++in an active device should have it created while if the device node is either
++disabled or removed all together, the affected device should be deregistered.
++
++Lets take an example where we have a foo board with the following base tree
++which is taken from [1].
++
++---- foo.dts -----------------------------------------------------------------
++	/* FOO platform */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++		}
++	};
++---- foo.dts -----------------------------------------------------------------
++
++The overlay bar.dts, when loaded (and resolved as described in [2]) should
++
++---- bar.dts -----------------------------------------------------------------
++/plugin/;	/* allow undefined label references and record them */
++/ {
++	....	/* various properties for loader use; i.e. part id etc. */
++	fragment@0 {
++		target = <&ocp>;
++		__overlay__ {
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		};
++	};
++};
++---- bar.dts -----------------------------------------------------------------
++
++result in foo+bar.dts
++
++---- foo+bar.dts -------------------------------------------------------------
++	/* FOO platform + bar peripheral */
++	/ {
++		compatible = "corp,foo";
++
++		/* shared resources */
++		res: res {
++		};
++
++		/* On chip peripherals */
++		ocp: ocp {
++			/* peripherals that are always instantiated */
++			peripheral1 { ... };
++
++			/* bar peripheral */
++			bar {
++				compatible = "corp,bar";
++				... /* various properties and child nodes */
++			}
++		}
++	};
++---- foo+bar.dts -------------------------------------------------------------
++
++As a result of the the overlay, a new device node (bar) has been created
++so a bar platform device will be registered and if a matching device driver
++is loaded the device will be created as expected.
++
++Overlay in-kernel API
++--------------------------------
++
++The API is quite easy to use.
++
++1. Call of_overlay_create() to create and apply an overlay. The return value
++is a cookie identifying this overlay.
++
++2. Call of_overlay_destroy() to remove and cleanup the overlay previously
++created via the call to of_overlay_create(). Removal of an overlay that
++is stacked by another will not be permitted.
++
++Finally, if you need to remove all overlays in one-go, just call
++of_overlay_destroy_all() which will remove every single one in the correct
++order.
++
++Overlay DTS Format
++------------------
++
++The DTS of an overlay should have the following format:
++
++{
++	/* ignored properties by the overlay */
++
++	fragment@0 {	/* first child node */
++
++		target=<phandle>;	/* phandle target of the overlay */
++	or
++		target-path="/path";	/* target path of the overlay */
++
++		__overlay__ {
++			property-a;	/* add property-a to the target */
++			-property-b;	/* remove property-b from target */
++			node-a {	/* add to an existing, or create a node-a */
++				...
++			};
++			-node-b {	/* remove an existing node-b */
++				...
++			};
++		};
++	}
++	fragment@1 {	/* second child node */
++		...
++	};
++	/* more fragments follow */
++}
++
++Using the non-phandle based target method allows one to use a base DT which does
++not contain a __symbols__ node, i.e. it was not compiled with the -@ option.
++The __symbols__ node is only required for the target=<phandle> method, since it
++contains the information required to map from a phandle to a tree location.
 diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 5ebde98..1a2ff48 100644
+index 0236a4e..5ebde98 100644
 --- a/drivers/of/Kconfig
 +++ b/drivers/of/Kconfig
-@@ -91,4 +91,11 @@ config OF_OVERLAY
+@@ -84,4 +84,11 @@ config OF_RESOLVE
+ 	select OF_DYNAMIC
  	select OF_DEVICE
- 	select OF_RESOLVE
  
-+config OF_CONFIGFS
-+	bool "OpenFirmware Overlay ConfigFS interface"
-+	select CONFIGFS_FS
-+	select OF_OVERLAY
-+	help
-+	  Enable a simple user-space driver DT overlay interface.
++config OF_OVERLAY
++	bool
++	depends on OF
++	select OF_DYNAMIC
++	select OF_DEVICE
++	select OF_RESOLVE
 +
  endmenu # OF
 diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index c24784e..744989a 100644
+index 57cd12f..c24784e 100644
 --- a/drivers/of/Makefile
 +++ b/drivers/of/Makefile
-@@ -13,6 +13,7 @@ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+@@ -12,6 +12,7 @@ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
  obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
  obj-$(CONFIG_OF_RESOLVE)  += resolver.o
- obj-$(CONFIG_OF_OVERLAY) += overlay.o
-+obj-$(CONFIG_OF_CONFIGFS) += configfs.o
++obj-$(CONFIG_OF_OVERLAY) += overlay.o
  
  CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
  CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
-diff --git a/drivers/of/configfs.c b/drivers/of/configfs.c
+diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
 new file mode 100644
-index 0000000..8af5c84
+index 0000000..67f343a
 --- /dev/null
-+++ b/drivers/of/configfs.c
-@@ -0,0 +1,340 @@
++++ b/drivers/of/overlay.c
+@@ -0,0 +1,696 @@
 +/*
-+ * Configfs entries for device-tree
++ * Functions for working with device tree overlays
 + *
-+ * Copyright (C) 2013 - Pantelis Antoniou <panto@antoniou-consulting.com>
++ * Copyright (C) 2012 Pantelis Antoniou <panto@antoniou-consulting.com>
++ * Copyright (C) 2012 Texas Instruments Inc.
 + *
 + * This program is free software; you can redistribute it and/or
 + * modify it under the terms of the GNU General Public License
-+ * as published by the Free Software Foundation; either version
-+ * 2 of the License, or (at your option) any later version.
++ * version 2 as published by the Free Software Foundation.
 + */
-+#include <linux/ctype.h>
-+#include <linux/cpu.h>
++#undef DEBUG
++#include <linux/kernel.h>
 +#include <linux/module.h>
 +#include <linux/of.h>
-+#include <linux/of_fdt.h>
-+#include <linux/spinlock.h>
++#include <linux/of_device.h>
++#include <linux/string.h>
++#include <linux/ctype.h>
++#include <linux/errno.h>
++#include <linux/string.h>
 +#include <linux/slab.h>
-+#include <linux/proc_fs.h>
-+#include <linux/configfs.h>
-+#include <linux/types.h>
-+#include <linux/stat.h>
-+#include <linux/limits.h>
-+#include <linux/file.h>
-+#include <linux/vmalloc.h>
-+#include <linux/firmware.h>
++#include <linux/err.h>
 +
-+#include "of_private.h"
-+
-+#ifdef CONFIG_OF_OVERLAY
-+
-+struct cfs_overlay_item {
-+	struct config_item	item;
-+
-+	char			path[PATH_MAX];
-+
-+	const struct firmware	*fw;
-+	struct device_node	*overlay;
-+	int			ov_id;
-+
-+	void			*dtbo;
-+	int			dtbo_size;
++/**
++ * struct of_overlay_info	- Holds a single overlay info
++ * @target:	target of the overlay operation
++ * @overlay:	pointer to the overlay contents node
++ *
++ * Holds a single overlay state, including all the overlay logs &
++ * records.
++ */
++struct of_overlay_info {
++	struct device_node *target;
++	struct device_node *overlay;
 +};
 +
-+static int create_overlay(struct cfs_overlay_item *overlay, void *blob)
-+{
-+	int err;
-+
-+	/* unflatten the tree */
-+	of_fdt_unflatten_tree((void *)blob, &overlay->overlay);
-+	if (overlay->overlay == NULL) {
-+		pr_err("%s: failed to unflatten tree\n", __func__);
-+		err = -EINVAL;
-+		goto out_err;
-+	}
-+	pr_debug("%s: unflattened OK\n", __func__);
-+
-+	/* mark it as detached */
-+	of_node_set_flag(overlay->overlay, OF_DETACHED);
-+
-+	/* perform resolution */
-+	err = of_resolve(overlay->overlay);
-+	if (err != 0) {
-+		pr_err("%s: Failed to resolve tree\n", __func__);
-+		goto out_err;
-+	}
-+	pr_debug("%s: resolved OK\n", __func__);
-+
-+	err = of_overlay_create(overlay->overlay);
-+	if (err < 0) {
-+		pr_err("%s: Failed to create overlay (err=%d)\n",
-+				__func__, err);
-+		goto out_err;
-+	}
-+	overlay->ov_id = err;
-+
-+out_err:
-+	return err;
-+}
-+
-+static inline struct cfs_overlay_item *to_cfs_overlay_item(
-+		struct config_item *item)
-+{
-+	return item ? container_of(item, struct cfs_overlay_item, item) : NULL;
-+}
-+
-+CONFIGFS_ATTR_STRUCT(cfs_overlay_item);
-+#define CFS_OVERLAY_ITEM_ATTR(_name, _mode, _show, _store)	\
-+struct cfs_overlay_item_attribute cfs_overlay_item_attr_##_name = \
-+	__CONFIGFS_ATTR(_name, _mode, _show, _store)
-+#define CFS_OVERLAY_ITEM_ATTR_RO(_name, _show)	\
-+struct cfs_overlay_item_attribute cfs_overlay_item_attr_##_name = \
-+	__CONFIGFS_ATTR_RO(_name, _show)
-+
-+CONFIGFS_BIN_ATTR_STRUCT(cfs_overlay_item);
-+#define CFS_OVERLAY_ITEM_BIN_ATTR(_name, _mode, _read, _write)	\
-+struct cfs_overlay_item_bin_attribute cfs_overlay_item_bin_attr_##_name = \
-+	__CONFIGFS_BIN_ATTR(_name, _mode, _read, _write)
-+#define CFS_OVERLAY_ITEM_BIN_ATTR_RO(_name, _show)	\
-+struct cfs_overlay_item_bin_attribute cfs_overlay_item_bin_attr_##_name = \
-+	__CONFIGFS_BIN_ATTR_RO(_name, _show)
-+
-+static ssize_t cfs_overlay_item_path_show(struct cfs_overlay_item *overlay,
-+		char *page)
-+{
-+	return sprintf(page, "%s\n", overlay->path);
-+}
-+
-+static ssize_t cfs_overlay_item_path_store(struct cfs_overlay_item *overlay,
-+		const char *page, size_t count)
-+{
-+	const char *p = page;
-+	char *s;
-+	int err;
-+
-+	/* if it's set do not allow changes */
-+	if (overlay->path[0] != '\0' || overlay->dtbo_size > 0)
-+		return -EPERM;
-+
-+	/* copy to path buffer (and make sure it's always zero terminated */
-+	count = snprintf(overlay->path, sizeof(overlay->path) - 1, "%s", p);
-+	overlay->path[sizeof(overlay->path) - 1] = '\0';
-+
-+	/* strip trailing newlines */
-+	s = overlay->path + strlen(overlay->path);
-+	while (s > overlay->path && *--s == '\n')
-+		*s = '\0';
-+
-+	pr_debug("%s: path is '%s'\n", __func__, overlay->path);
-+
-+	err = request_firmware(&overlay->fw, overlay->path, NULL);
-+	if (err != 0)
-+		goto out_err;
-+
-+	err = create_overlay(overlay, (void *)overlay->fw->data);
-+	if (err != 0)
-+		goto out_err;
-+
-+	return count;
-+
-+out_err:
-+
-+	release_firmware(overlay->fw);
-+	overlay->fw = NULL;
-+
-+	overlay->path[0] = '\0';
-+	return err;
-+}
-+
-+static ssize_t cfs_overlay_item_status_show(struct cfs_overlay_item *overlay,
-+		char *page)
-+{
-+	return sprintf(page, "%s\n",
-+			overlay->ov_id >= 0 ? "applied" : "unapplied");
-+}
-+
-+CFS_OVERLAY_ITEM_ATTR(path, S_IRUGO | S_IWUSR,
-+		cfs_overlay_item_path_show, cfs_overlay_item_path_store);
-+CFS_OVERLAY_ITEM_ATTR_RO(status, cfs_overlay_item_status_show);
-+
-+static struct configfs_attribute *cfs_overlay_attrs[] = {
-+	&cfs_overlay_item_attr_path.attr,
-+	&cfs_overlay_item_attr_status.attr,
-+	NULL,
++/**
++ * struct of_overlay - Holds a complete overlay transaction
++ * @node:	List on which we are located
++ * @count:	Count of ovinfo structures
++ * @ovinfo:	Overlay info array (count size)
++ * @le_list:	List of the overlay logs
++ *
++ * Holds a complete overlay transaction
++ */
++struct of_overlay {
++	int id;
++	struct list_head node;
++	int count;
++	struct of_overlay_info *ovinfo_tab;
++	struct of_transaction trans;
 +};
 +
-+ssize_t cfs_overlay_item_dtbo_read(struct cfs_overlay_item *overlay,
-+		void *buf, size_t max_count)
-+{
-+	pr_debug("%s: buf=%p max_count=%u\n", __func__,
-+			buf, max_count);
++static int of_overlay_apply_one(struct of_overlay *ov,
++		struct device_node *target, const struct device_node *overlay);
 +
-+	if (overlay->dtbo == NULL)
++static int of_overlay_apply_single_property(struct of_overlay *ov,
++		struct device_node *target, struct property *prop)
++{
++	const char *pname;
++	struct property *propn, *tprop;
++	int remove;
++
++	/* don't touch, 'name' */
++	if (of_prop_cmp(prop->name, "name") == 0)
 +		return 0;
 +
-+	/* copy if buffer provided */
-+	if (buf != NULL) {
-+		/* the buffer must be large enough */
-+		if (overlay->dtbo_size > max_count)
-+			return -ENOSPC;
-+
-+		memcpy(buf, overlay->dtbo, overlay->dtbo_size);
++	/* default is add */
++	remove = 0;
++	pname = prop->name;
++	if (*pname == '-') {	/* skip, - notes removal */
++		pname++;
++		remove = 1;
++		propn = NULL;
++	} else {
++		propn = __of_copy_property(prop, GFP_KERNEL,
++				OF_PROP_ALLOCALL);
++		if (propn == NULL)
++			return -ENOMEM;
 +	}
 +
-+	return overlay->dtbo_size;
++	tprop = of_find_property(target, pname, NULL);
++
++	/* found? */
++	if (tprop != NULL) {
++		if (propn != NULL)
++			return of_transaction_update_property(&ov->trans,
++					target, propn);
++		else
++			return of_transaction_remove_property(&ov->trans,
++					target, tprop);
++	}
++
++	if (propn != NULL)
++		return of_transaction_add_property(&ov->trans, target, propn);
++
++	return 0;
 +}
 +
-+ssize_t cfs_overlay_item_dtbo_write(struct cfs_overlay_item *overlay,
-+		const void *buf, size_t count)
++static int of_overlay_apply_single_device_node(struct of_overlay *ov,
++		struct device_node *target, struct device_node *child)
 +{
-+	int err;
++	const char *cname;
++	struct device_node *tchild;
++	int remove;
++	char *full_name;
++	const char *suffix;
++	int ret;
 +
-+	/* if it's set do not allow changes */
-+	if (overlay->path[0] != '\0' || overlay->dtbo_size > 0)
-+		return -EPERM;
++	/* default is add */
++	remove = 0;
++	cname = child->name;
++	if (*cname == '-') {	/* skip, - notes removal */
++		cname++;
++		remove = 1;
++	}
 +
-+	/* copy the contents */
-+	overlay->dtbo = kmemdup(buf, count, GFP_KERNEL);
-+	if (overlay->dtbo == NULL)
++	/* special case for nodes with a suffix */
++	suffix = strrchr(child->full_name, '@');
++	if (suffix != NULL) {
++		cname = kbasename(child->full_name);
++		if (cname == NULL)
++			return -ENOMEM;
++
++		if (*cname == '-')
++			cname++;
++	}
++
++	ret = 0;
++
++	tchild = of_get_child_by_name(target, cname);
++	if (tchild != NULL) {
++
++		if (!remove)
++			/* apply overlay recursively */
++			ret = of_overlay_apply_one(ov, tchild,
++					child);
++		else
++			ret = of_transaction_detach_node(&ov->trans, tchild);
++
++		of_node_put(tchild);
++
++	} else if (!remove) {
++		full_name = kasprintf(GFP_KERNEL, "%s/%s",
++				target->full_name, cname);
++		if (full_name == NULL)
++			return -ENOMEM;
++
++		/* create empty tree as a target */
++		tchild = __of_create_empty_node(cname,
++				child->type, full_name,
++				child->phandle, GFP_KERNEL,
++				OF_NODE_ALLOCALL);
++
++		/* free either way */
++		kfree(full_name);
++
++		if (tchild == NULL)
++			return -ENOMEM;
++
++		/* point to parent */
++		tchild->parent = target;
++
++		ret = of_transaction_attach_node(&ov->trans, tchild);
++		if (ret != 0)
++			return ret;
++
++		/* apply the overlay */
++		ret = of_overlay_apply_one(ov, tchild,
++				child);
++	}
++
++	return ret;
++}
++
++/*
++ * Apply a single overlay node recursively.
++ *
++ * Property or node names that start with '-' signal that
++ * the property/node is to be removed.
++ *
++ * Note that the in case of an error the target node is left
++ * in a inconsistent state. Error recovery should be performed
++ * by using the tree changes list.
++ */
++static int of_overlay_apply_one(struct of_overlay *ov,
++		struct device_node *target, const struct device_node *overlay)
++{
++	struct device_node *child;
++	struct property *prop;
++	int prev_avail, prop_avail, pass;
++	int ret;
++
++	/* both properties existing is wrong */
++	if (of_find_property(overlay, "status", NULL) &&
++			of_find_property(overlay, "-status", NULL)) {
++		pr_err("%s: Both status & -status properties exist\n",
++				__func__);
++		return -EINVAL;
++	}
++
++	/*
++	 * Special consideration for status properties
++	 *
++	 * In order to make status property changes work
++	 * we have the following cases:
++	 *
++	 * Enabled device with status change to 'disabled'
++	 *   -> Status property must be first on the record list
++	 *
++	 * Disabled device with status change to 'okay'
++	 *   -> Status property must be last in the record list
++	 *
++	 * That way we don't need a special notifier for
++	 * device status change, a simple notifier on the status
++	 * property is enough.
++	 *
++	 */
++
++	/* note that we require the existence of a status property */
++	prev_avail = of_device_is_available(target) &&
++		of_find_property(target, "compatible", NULL) &&
++		of_find_property(target, "status", NULL);
++
++	/* we make two passes */
++	for (pass = 1; pass <= 2; pass++) {
++
++		for_each_property_of_node(overlay, prop) {
++
++			prop_avail = -1;
++
++			if (of_prop_cmp(prop->name, "status") == 0)
++				prop_avail = strcmp(prop->value, "okay") == 0 ||
++						strcmp(prop->value, "ok") == 0;
++			else if (of_prop_cmp(prop->name, "-status") == 0)
++				prop_avail = 1;
++
++			/* skip activation property */
++			if (prev_avail == 0) {
++				/* 0 -> 1, pass #1, skip */
++				if (pass == 1) {
++					if (prop_avail == 1)
++						continue;
++				} else {
++					/* 0 -> 1, pass #2, process */
++					if (prop_avail != 1)
++						continue;
++				}
++			} else {
++				if (pass == 1) {
++					/* 1 -> 0, pass #1, process */
++					if (prop_avail != 0)
++						continue;
++				} else {
++					/* 1 -> 0, pass #2, skip */
++					if (prop_avail == 0)
++						continue;
++				}
++			}
++
++			ret = of_overlay_apply_single_property(ov,
++					target, prop);
++			if (ret != 0) {
++				pr_err("%s: Failed to apply prop @%s/%s\n",
++						__func__, target->full_name,
++						prop->name);
++				return ret;
++			}
++		}
++	}
++
++	__for_each_child_of_node(overlay, child) {
++		ret = of_overlay_apply_single_device_node(ov, target, child);
++		if (ret != 0) {
++			pr_err("%s: Failed to apply single node @%s/%s\n",
++					__func__, target->full_name,
++					child->name);
++			return ret;
++		}
++	}
++
++	return 0;
++}
++
++/**
++ * of_overlay_apply - Apply @count overlays pointed at by @ovinfo_tab
++ * @ov:		Overlay to apply
++ *
++ * Applies the overlays given, while handling all error conditions
++ * appropriately. Either the operation succeeds, or if it fails the
++ * live tree is reverted to the state before the attempt.
++ * Returns 0, or an error if the overlay attempt failed.
++ */
++static int of_overlay_apply(struct of_overlay *ov)
++{
++	struct of_overlay_info *ovinfo;
++	int i, err;
++
++	/* first we apply the overlays atomically */
++	for (i = 0; i < ov->count; i++) {
++
++		ovinfo = &ov->ovinfo_tab[i];
++
++		err = of_overlay_apply_one(ov, ovinfo->target,
++				ovinfo->overlay);
++		if (err != 0) {
++			pr_err("%s: overlay failed '%s'\n",
++				__func__, ovinfo->target->full_name);
++			return err;
++		}
++	}
++
++	return 0;
++}
++
++/*
++ * Find the target node using a number of different strategies
++ * in order of preference
++ *
++ * "target" property containing the phandle of the target
++ * "target-path" property containing the path of the target
++ *
++ */
++static struct device_node *find_target_node(struct device_node *info_node)
++{
++	const char *path;
++	u32 val;
++	int ret;
++
++	/* first try to go by using the target as a phandle */
++	ret = of_property_read_u32(info_node, "target", &val);
++	if (ret == 0)
++		return of_find_node_by_phandle(val);
++
++	/* now try to locate by path */
++	ret = of_property_read_string(info_node, "target-path", &path);
++	if (ret == 0)
++		return of_find_node_by_path(path);
++
++	pr_err("%s: Failed to find target for node %p (%s)\n", __func__,
++			info_node, info_node->name);
++
++	return NULL;
++}
++
++/**
++ * of_fill_overlay_info	- Fill an overlay info structure
++ * @ov		Overlay to fill
++ * @info_node:	Device node containing the overlay
++ * @ovinfo:	Pointer to the overlay info structure to fill
++ *
++ * Fills an overlay info structure with the overlay information
++ * from a device node. This device node must have a target property
++ * which contains a phandle of the overlay target node, and an
++ * __overlay__ child node which has the overlay contents.
++ * Both ovinfo->target & ovinfo->overlay have their references taken.
++ *
++ * Returns 0 on success, or a negative error value.
++ */
++static int of_fill_overlay_info(struct of_overlay *ov,
++		struct device_node *info_node, struct of_overlay_info *ovinfo)
++{
++	ovinfo->overlay = of_get_child_by_name(info_node, "__overlay__");
++	if (ovinfo->overlay == NULL)
++		goto err_fail;
++
++	ovinfo->target = find_target_node(info_node);
++	if (ovinfo->target == NULL)
++		goto err_fail;
++
++	return 0;
++
++err_fail:
++	of_node_put(ovinfo->target);
++	of_node_put(ovinfo->overlay);
++
++	memset(ovinfo, 0, sizeof(*ovinfo));
++	return -EINVAL;
++}
++
++/**
++ * of_build_overlay_info	- Build an overlay info array
++ * @ov		Overlay to build
++ * @tree:	Device node containing all the overlays
++ *
++ * Helper function that given a tree containing overlay information,
++ * allocates and builds an overlay info array containing it, ready
++ * for use using of_overlay_apply.
++ *
++ * Returns 0 on success with the @cntp @ovinfop pointers valid,
++ * while on error a negative error value is returned.
++ */
++static int of_build_overlay_info(struct of_overlay *ov,
++		struct device_node *tree)
++{
++	struct device_node *node;
++	struct of_overlay_info *ovinfo;
++	int cnt, err;
++
++	/* worst case; every child is a node */
++	cnt = 0;
++	for_each_child_of_node(tree, node)
++		cnt++;
++
++	ovinfo = kcalloc(cnt, sizeof(*ovinfo), GFP_KERNEL);
++	if (ovinfo == NULL)
 +		return -ENOMEM;
 +
-+	overlay->dtbo_size = count;
++	cnt = 0;
++	for_each_child_of_node(tree, node) {
 +
-+	err = create_overlay(overlay, overlay->dtbo);
-+	if (err != 0)
-+		goto out_err;
++		memset(&ovinfo[cnt], 0, sizeof(*ovinfo));
++		err = of_fill_overlay_info(ov, node, &ovinfo[cnt]);
++		if (err == 0)
++			cnt++;
++	}
 +
-+	return count;
++	/* if nothing filled, return error */
++	if (cnt == 0) {
++		kfree(ovinfo);
++		return -ENODEV;
++	}
 +
-+out_err:
-+	kfree(overlay->dtbo);
-+	overlay->dtbo = NULL;
-+	overlay->dtbo_size = 0;
++	ov->count = cnt;
++	ov->ovinfo_tab = ovinfo;
++
++	return 0;
++}
++
++/**
++ * of_free_overlay_info	- Free an overlay info array
++ * @ov		Overlay to free the overlay info from
++ * @ovinfo_tab:	Array of overlay_info's to free
++ *
++ * Releases the memory of a previously allocate ovinfo array
++ * by of_build_overlay_info.
++ * Returns 0, or an error if the arguments are bogus.
++ */
++static int of_free_overlay_info(struct of_overlay *ov)
++{
++	struct of_overlay_info *ovinfo;
++	int i;
++
++	/* do it in reverse */
++	for (i = ov->count - 1; i >= 0; i--) {
++		ovinfo = &ov->ovinfo_tab[i];
++
++		of_node_put(ovinfo->target);
++		of_node_put(ovinfo->overlay);
++	}
++	kfree(ov->ovinfo_tab);
++
++	return 0;
++}
++
++static LIST_HEAD(ov_list);
++static DEFINE_MUTEX(ov_lock);
++static DEFINE_IDR(ov_idr);
++
++/**
++ * of_overlay_create	- Create and apply an overlay
++ * @tree:	Device node containing all the overlays
++ *
++ * Creates and applies an overlay while also keeping track
++ * of the overlay in a list. This list can be use to prevent
++ * illegal overlay removals.
++ *
++ * Returns the id of the created overlay, or an negative error number
++ */
++int of_overlay_create(struct device_node *tree)
++{
++	struct of_overlay *ov;
++	int err, id;
++
++	/* allocate the overlay structure */
++	ov = kzalloc(sizeof(*ov), GFP_KERNEL);
++	if (ov == NULL)
++		return -ENOMEM;
++	ov->id = -1;
++
++	INIT_LIST_HEAD(&ov->node);
++	mutex_lock(&ov_lock);
++
++	err = of_transaction_init(&ov->trans);
++	if (err != 0) {
++		pr_err("%s: of_transaction_init() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_free_ov;
++	}
++
++	id = idr_alloc(&ov_idr, ov, 0, 0, GFP_KERNEL);
++	if (id < 0) {
++		pr_err("%s: idr_alloc() failed for tree@%s\n",
++				__func__, tree->full_name);
++		err = id;
++		goto err_destroy_trans;
++	}
++	ov->id = id;
++
++	/* build the overlay info structures */
++	err = of_build_overlay_info(ov, tree);
++	if (err) {
++		pr_err("%s: of_build_overlay_info() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_free_idr;
++	}
++
++	err = of_transaction_start(&ov->trans);
++	if (err) {
++		pr_err("%s: of_transaction_start() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_free_ovinfo;
++	}
++
++	/* apply the overlay */
++	err = of_overlay_apply(ov);
++	if (err) {
++		pr_err("%s: of_overlay_apply() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_abort_trans;
++	}
++
++	/* commit the transaction */
++	err = of_transaction_commit(&ov->trans);
++	if (err) {
++		pr_err("%s: of_transaction_commit() failed for tree@%s\n",
++				__func__, tree->full_name);
++		goto err_revert_overlay;
++	}
++
++	/* add to the tail of the overlay list */
++	list_add_tail(&ov->node, &ov_list);
++
++	mutex_unlock(&ov_lock);
++
++	return id;
++
++err_revert_overlay:
++err_abort_trans:
++	of_transaction_abort(&ov->trans);
++err_free_ovinfo:
++	of_free_overlay_info(ov);
++err_free_idr:
++	idr_remove(&ov_idr, ov->id);
++err_destroy_trans:
++	of_transaction_destroy(&ov->trans);
++	mutex_unlock(&ov_lock);
++err_free_ov:
++	kfree(ov);
 +
 +	return err;
 +}
++EXPORT_SYMBOL_GPL(of_overlay_create);
 +
-+CFS_OVERLAY_ITEM_BIN_ATTR(dtbo, S_IRUGO | S_IWUSR,
-+		cfs_overlay_item_dtbo_read,
-+		cfs_overlay_item_dtbo_write);
-+
-+static struct configfs_bin_attribute *cfs_overlay_bin_attrs[] = {
-+	&cfs_overlay_item_bin_attr_dtbo.bin_attr,
-+	NULL,
-+};
-+
-+static void cfs_overlay_release(struct config_item *item)
++/* check whether the given node, lies under the given tree */
++static int overlay_subtree_check(struct device_node *tree,
++		struct device_node *dn)
 +{
-+	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
++	struct device_node *child;
 +
-+	if (overlay->ov_id >= 0)
-+		of_overlay_destroy(overlay->ov_id);
-+	if (overlay->fw)
-+		release_firmware(overlay->fw);
-+	/* kfree with NULL is safe */
-+	kfree(overlay->dtbo);
-+	kfree(overlay);
++	/* match? */
++	if (tree == dn)
++		return 1;
++
++	__for_each_child_of_node(tree, child) {
++		if (overlay_subtree_check(child, dn))
++			return 1;
++	}
++
++	return 0;
 +}
 +
-+CONFIGFS_ATTR_OPS(cfs_overlay_item);
-+CONFIGFS_BIN_ATTR_OPS(cfs_overlay_item);
-+static struct configfs_item_operations cfs_overlay_item_ops = {
-+	.release		= cfs_overlay_release,
-+	.show_attribute		= cfs_overlay_item_attr_show,
-+	.store_attribute	= cfs_overlay_item_attr_store,
-+	.read_bin_attribute	= cfs_overlay_item_bin_attr_read,
-+	.write_bin_attribute	= cfs_overlay_item_bin_attr_write,
-+};
-+
-+static struct config_item_type cfs_overlay_type = {
-+	.ct_item_ops	= &cfs_overlay_item_ops,
-+	.ct_attrs	= cfs_overlay_attrs,
-+	.ct_bin_attrs	= cfs_overlay_bin_attrs,
-+	.ct_owner	= THIS_MODULE,
-+};
-+
-+static struct config_item *cfs_overlay_group_make_item(
-+		struct config_group *group, const char *name)
++/* check whether this overlay is the topmost */
++static int overlay_is_topmost(struct of_overlay *ov, struct device_node *dn)
 +{
-+	struct cfs_overlay_item *overlay;
++	struct of_overlay *ovt;
++	struct of_transaction_entry *te;
 +
-+	overlay = kzalloc(sizeof(*overlay), GFP_KERNEL);
-+	if (!overlay)
-+		return ERR_PTR(-ENOMEM);
-+	overlay->ov_id = -1;
++	list_for_each_entry_reverse(ovt, &ov_list, node) {
 +
-+	config_item_init_type_name(&overlay->item, name, &cfs_overlay_type);
-+	return &overlay->item;
++		/* if we hit ourselves, we're done */
++		if (ovt == ov)
++			break;
++
++		/* check against each subtree affected by this overlay */
++		for_each_transaction_entry(&ovt->trans, te) {
++			if (overlay_subtree_check(te->np, dn)) {
++				pr_err("%s: #%d clashes #%d @%s\n",
++					__func__, ov->id, ovt->id,
++					dn->full_name);
++				return 0;
++			}
++		}
++	}
++
++	/* overlay is topmost */
++	return 1;
 +}
 +
-+static void cfs_overlay_group_drop_item(struct config_group *group,
-+		struct config_item *item)
++/*
++ * We can safely remove the overlay only if it's the top-most one.
++ * Newly applied overlays are inserted at the tail of the overlay list,
++ * so a top most overlay is the one that is closest to the tail.
++ *
++ * The topmost check is done by exploiting this property. For each
++ * affected device node in the log list we check if this overlay is
++ * the one closest to the tail. If another overlay has affected this
++ * device node and is closest to the tail, then removal is not permited.
++ */
++static int overlay_removal_is_ok(struct of_overlay *ov)
 +{
-+	struct cfs_overlay_item *overlay = to_cfs_overlay_item(item);
++	struct of_transaction_entry *te;
 +
-+	config_item_put(&overlay->item);
++	for_each_transaction_entry(&ov->trans, te) {
++		if (!overlay_is_topmost(ov, te->np)) {
++			pr_err("%s: overlay #%d is not topmost\n",
++					__func__, ov->id);
++			return 0;
++		}
++	}
++
++	return 1;
 +}
 +
-+static struct configfs_group_operations overlays_ops = {
-+	.make_item	= cfs_overlay_group_make_item,
-+	.drop_item	= cfs_overlay_group_drop_item,
-+};
-+
-+static struct config_item_type overlays_type = {
-+	.ct_group_ops   = &overlays_ops,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+#endif /* CONFIG_OF_OVERLAY */
-+
-+static struct configfs_group_operations of_cfs_ops = {
-+	/* empty - we don't allow anything to be created */
-+};
-+
-+static struct config_item_type of_cfs_type = {
-+	.ct_group_ops   = &of_cfs_ops,
-+	.ct_owner       = THIS_MODULE,
-+};
-+
-+struct config_group of_cfs_overlay_group;
-+
-+struct config_group *of_cfs_def_groups[] = {
-+#ifdef CONFIG_OF_OVERLAY
-+	&of_cfs_overlay_group,
-+#endif
-+	NULL
-+};
-+
-+static struct configfs_subsystem of_cfs_subsys = {
-+	.su_group = {
-+		.cg_item = {
-+			.ci_namebuf = "device-tree",
-+			.ci_type = &of_cfs_type,
-+		},
-+		.default_groups = of_cfs_def_groups,
-+	},
-+	.su_mutex = __MUTEX_INITIALIZER(of_cfs_subsys.su_mutex),
-+};
-+
-+static int __init of_cfs_init(void)
++/**
++ * of_overlay_destroy	- Removes an overlay
++ * @id:	Overlay id number returned by a previous call to of_overlay_create
++ *
++ * Removes an overlay if it is permissible.
++ *
++ * Returns 0 on success, or an negative error number
++ */
++int of_overlay_destroy(int id)
 +{
-+	int ret;
++	struct of_overlay *ov;
++	int err;
 +
-+	pr_info("%s\n", __func__);
-+
-+	config_group_init(&of_cfs_subsys.su_group);
-+#ifdef CONFIG_OF_OVERLAY
-+	config_group_init_type_name(&of_cfs_overlay_group, "overlays",
-+			&overlays_type);
-+#endif
-+
-+	ret = configfs_register_subsystem(&of_cfs_subsys);
-+	if (ret != 0) {
-+		pr_err("%s: failed to register subsys\n", __func__);
++	mutex_lock(&ov_lock);
++	ov = idr_find(&ov_idr, id);
++	if (ov == NULL) {
++		err = -ENODEV;
++		pr_err("%s: Could not find overlay #%d\n",
++				__func__, id);
 +		goto out;
 +	}
-+	pr_info("%s: OK\n", __func__);
++
++	/* check whether the overlay is safe to remove */
++	if (!overlay_removal_is_ok(ov)) {
++		err = -EBUSY;
++		pr_err("%s: removal check failed for overlay #%d\n",
++				__func__, id);
++		goto out;
++	}
++
++	list_del(&ov->node);
++	of_transaction_revert(&ov->trans);
++	of_free_overlay_info(ov);
++	idr_remove(&ov_idr, id);
++	of_transaction_destroy(&ov->trans);
++	kfree(ov);
++
++	err = 0;
++
 +out:
-+	return ret;
++	mutex_unlock(&ov_lock);
++
++	return err;
 +}
-+late_initcall(of_cfs_init);
++EXPORT_SYMBOL_GPL(of_overlay_destroy);
++
++/**
++ * of_overlay_destroy_all	- Removes all overlays from the system
++ *
++ * Removes all overlays from the system in the correct order.
++ *
++ * Returns 0 on success, or an negative error number
++ */
++int of_overlay_destroy_all(void)
++{
++	struct of_overlay *ov, *ovn;
++
++	mutex_lock(&ov_lock);
++
++	/* the tail of list is guaranteed to be safe to remove */
++	list_for_each_entry_safe_reverse(ov, ovn, &ov_list, node) {
++		list_del(&ov->node);
++		of_transaction_revert(&ov->trans);
++		of_free_overlay_info(ov);
++		idr_remove(&ov_idr, ov->id);
++		kfree(ov);
++	}
++
++	mutex_unlock(&ov_lock);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(of_overlay_destroy_all);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index f37432b..0c7054c 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -23,6 +23,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/topology.h>
+ #include <linux/notifier.h>
++#include <linux/list.h>
+ 
+ #include <asm/byteorder.h>
+ #include <asm/errno.h>
+@@ -360,6 +361,8 @@ extern int of_update_property(struct device_node *np, struct property *newprop);
+ #define OF_RECONFIG_ADD_PROPERTY	0x0003
+ #define OF_RECONFIG_REMOVE_PROPERTY	0x0004
+ #define OF_RECONFIG_UPDATE_PROPERTY	0x0005
++#define OF_RECONFIG_DYNAMIC_CREATE_DEV	0x0006
++#define OF_RECONFIG_DYNAMIC_DESTROY_DEV	0x0007
+ 
+ struct of_prop_reconfig {
+ 	struct device_node	*dn;
+@@ -1126,4 +1129,64 @@ static inline int of_resolve(struct device_node *resolve)
+ 
+ #endif
+ 
++/**
++ * Overlay support
++ */
++
++#ifdef CONFIG_OF_OVERLAY
++
++/* ID based overlays; the API for external users */
++int of_overlay_create(struct device_node *tree);
++int of_overlay_destroy(int id);
++int of_overlay_destroy_all(void);
++
++#else
++
++static inline int of_overlay_apply(int count,
++		struct of_overlay_info *ovinfo_tab)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_overlay_revert(int count,
++		struct of_overlay_info *ovinfo_tab)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_fill_overlay_info(struct device_node *info_node,
++		struct of_overlay_info *ovinfo)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_build_overlay_info(struct device_node *tree,
++		int *cntp, struct of_overlay_info **ovinfop)
++{
++	return -ENOTSUPP;
++}
++
++static inline int of_free_overlay_info(int cnt,
++		struct of_overlay_info *ovinfo)
++{
++	return -ENOTSUPP;
++}
++
++int of_overlay_create(struct device_node *tree)
++{
++	return -ENOTSUPP;
++}
++
++int of_overlay_destroy(int id)
++{
++	return -ENOTSUPP;
++}
++
++int of_overlay_destroy_all(void)
++{
++	return -ENOTSUPP;
++}
++
++#endif
++
+ #endif /* _LINUX_OF_H */
 -- 
 1.7.12
