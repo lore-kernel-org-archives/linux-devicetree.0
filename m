@@ -1,139 +1,315 @@
-MIME-Version: 1.0
-In-Reply-To: <3915682.bldtqrJ6U5@avalon>
-References: <1397042790-10636-1-git-send-email-s.nawrocki@samsung.com>
-	<CAL_JsqKDJ_yFxFYnrTtmzMPoxO2rmypiujybwbhUh35y1LS-Mw@mail.gmail.com>
-	<5347DF4D.5000005@samsung.com>
-	<3915682.bldtqrJ6U5@avalon>
-Date: Fri, 13 Jun 2014 09:34:47 -0500
-Message-ID: <CAL_Jsq+G9M9OWmb4n5m3iL1SPh=jCyGFtm5Zyqd5J3ekhKE34Q@mail.gmail.com>
-Subject: Re: [PATCH RFC v5 2/2] clk: Add handling of clk parent and rate
- assigned from DT
-From: Rob Herring <robherring2@gmail.com>
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Sylwester Nawrocki <s.nawrocki@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mike Turquette <mturquette@linaro.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Sascha Hauer <s.hauer@pengutronix.de>, Ben Dooks <ben.dooks@codethink.co.uk>, Peter De Schrijver <pdeschrijver@nvidia.com>, Kyungmin Park <kyungmin.park@samsung.com>, Tero Kristo <t-kristo@ti.com>, sw0312.kim@samsung.com, Marek Szyprowski <m.szyprowski@samsung.com>, Tomasz Figa <t.figa@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Return-Path: <pantelis.antoniou@konsulko.com>
+Return-Path: <pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v6 8/9] of: spi: Export single device registration method and accessors
+Date: Sun, 22 Jun 2014 12:41:52 +0300
+Message-Id: <1403430113-15171-9-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Apr 11, 2014 at 8:08 AM, Laurent Pinchart <laurent.pinchart@ideason=
-board.com> wrote:
-> On Friday 11 April 2014 14:25:49 Sylwester Nawrocki wrote:
->> On 10/04/14 18:04, Rob Herring wrote:
->> > On Wed, Apr 9, 2014 at 6:26 AM, Sylwester Nawrocki wrote:
->> >> This patch adds a helper function to configure clock parents and
->> >> rates as specified in clock-parents, clock-rates DT properties
->> >> for a consumer device and a call to it before driver is bound to
->> >> a device.
->> >>
->> >> Signed-off-by: Sylwester Nawrocki <s.nawrocki@samsung.com>
->> >> ---
->>
->> [...]
->>
->> >> ---
->> >>
->> >>  .../devicetree/bindings/clock/clock-bindings.txt   |   44 ++++++++++
->> >>  drivers/base/platform.c                            |    5 ++
->> >>  drivers/clk/Makefile                               |    3 +
->> >>  drivers/clk/clk-conf.c                             |   85 ++++++++++=
-++++
->> >>  drivers/clk/clk.c                                  |   12 ++-
->> >>  include/linux/clk/clk-conf.h                       |   19 +++++
->> >>  6 files changed, 167 insertions(+), 1 deletion(-)
->> >>  create mode 100644 drivers/clk/clk-conf.c
->> >>  create mode 100644 include/linux/clk/clk-conf.h
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/clock/clock-bindings.t=
-xt
->> >> b/Documentation/devicetree/bindings/clock/clock-bindings.txt index
->> >> 700e7aa..93513fc 100644
->> >> --- a/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> >> +++ b/Documentation/devicetree/bindings/clock/clock-bindings.txt
->> >> @@ -132,3 +132,47 @@ clock signal, and a UART.
->> >>    ("pll" and "pll-switched").
->> >>  * The UART has its baud clock connected the external oscillator and =
-its
->> >>    register clock connected to the PLL clock (the "pll-switched" sign=
-al)
->> >> +
->> >> +=3D=3DAssigned clock parents and rates=3D=3D
->> >> +
->> >> +Some platforms require static initial configuration of parts of the
->> >> clocks
->> >> +controller. Such a configuration can be specified in a clock consume=
-r
->> >> node
->> >> +through clock-parents and clock-rates DT properties. The former shou=
-ld
->> >> +contain a list of parent clocks in form of phandle and clock specifi=
-er
->> >> pairs,
->> >> +the latter the list of assigned clock frequency values (one cell eac=
-h).
->> >> +To skip setting parent or rate of a clock its corresponding entry sh=
-ould
->> >> be
->> >> +set to 0, or can be omitted if it is not followed by any non-zero en=
-try.
->> >> +
->> >> +    uart@a000 {
->> >> +        compatible =3D "fsl,imx-uart";
->> >> +        reg =3D <0xa000 0x1000>;
->> >> +        ...
->> >> +        clocks =3D <&clkcon 0>, <&clkcon 3>;
->> >> +        clock-names =3D "baud", "mux";
->> >> +
->> >> +        clock-parents =3D <0>, <&pll 1>;
->> >> +        clock-rates =3D <460800>;
->> >
->> > Is this the input frequency or serial baud rate? Looks like a baud
->> > rate, but the clock framework needs input (to the uart) frequency. I
->> > would say this should be clock-frequency and specify the max baud rate
->> > as is being done with i2c bindings. The uart driver should know how to
->> > convert between input clock freq and baud rate.
->>
->> This UART example is not quite representative for the issues I have been
->> trying to address with this patch set. There is a need to set (an initia=
-l)
->> input clock frequency. E.g. in case of multimedia devices there may be
->> a need to set clock parent and frequency of an input clock to multiple I=
-P
->> blocks, so they are clocked synchronously and data is carried properly
->> across a whole processing chain. Thus there may not be even clock output
->> in an IP block, but still input clock needs to be set. IIUC there is
->> similar issue with audio, where it is difficult to calculate the clock
->> frequencies/determine parent clocks in individual drivers algorithmicall=
-y.
->
-> Just to be used as an example, this is how the SMIA++ sensor driver compu=
-tes
-> the PLL parameters automatically based on the input frequency, desired ou=
-tput
-> frequency and various hardware limits.
->
-> http://lxr.free-electrons.com/source/drivers/media/i2c/smiapp-pll.c
->
-> See the code complexity and keep in mind that it only handles a single de=
-vice
-> with a single set of constraints and a single parent. If we add several
-> devices to the mix, as well as selectable parents, there would indeed pro=
-bably
-> be no sane way to configure the clocks algorithmically.
+Dynamically inserting spi device nodes requires the use of a single
+device registration method. Rework and export it.
 
-How much of this complexity is PLL/clock constraints vs. consumer constrain=
-ts. From the consumer side, is it not just a problem of for a given resolut=
-ion and frame rate you need a minimum frequency of X and the maximum freque=
-ncy of Y that a sensor can handle? clk_round_rate has long needed to be ext=
-ended to be able to specify rounding criteria.
+Methods to lookup a device/master using a device node are added
+as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
 
-How many clocks really need to be configured? I would think it is only a ha=
-ndful (audio, display, camera). Trying to solve this generically may not be=
- worth it in terms of binding complexity. Both trying to configure things d=
-ynamically or parsing DT to get the configuration add a lot of complexity f=
-or what is going to boil down to a few clock controller register writes. Yo=
-u could just do all that in the bootloaders and be done with it. Perhaps it=
- would be simpler to just define clock controller node specific properties =
-which have enough information to do the configuration.
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/spi/spi.c | 256 +++++++++++++++++++++++++++++++++---------------------
+ 1 file changed, 158 insertions(+), 98 deletions(-)
 
-
-Rob
+diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+index d4f9670..cd98bf2 100644
+--- a/drivers/spi/spi.c
++++ b/drivers/spi/spi.c
+@@ -1200,6 +1200,123 @@ err_init_queue:
+ /*-------------------------------------------------------------------------*/
+ 
+ #if defined(CONFIG_OF)
++
++static struct spi_device *
++of_register_spi_device(struct spi_master *master, struct device_node *node)
++{
++	struct spi_device *spi;
++	struct device_node *nc;
++	int rc;
++	u32 value;
++
++	/* Alloc an spi_device */
++	spi = spi_alloc_device(master);
++	if (!spi) {
++		dev_err(&master->dev, "spi_device alloc error for %s\n",
++			nc->full_name);
++		rc = -ENOMEM;
++		goto err_out;
++	}
++
++	/* Select device driver */
++	rc = of_modalias_node(nc, spi->modalias,
++				sizeof(spi->modalias));
++	if (rc < 0) {
++		dev_err(&master->dev, "cannot find modalias for %s\n",
++			nc->full_name);
++		goto err_out;
++	}
++
++	/* Device address */
++	rc = of_property_read_u32(nc, "reg", &value);
++	if (rc) {
++		dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
++			nc->full_name, rc);
++		goto err_out;
++	}
++	spi->chip_select = value;
++
++	/* Mode (clock phase/polarity/etc.) */
++	if (of_find_property(nc, "spi-cpha", NULL))
++		spi->mode |= SPI_CPHA;
++	if (of_find_property(nc, "spi-cpol", NULL))
++		spi->mode |= SPI_CPOL;
++	if (of_find_property(nc, "spi-cs-high", NULL))
++		spi->mode |= SPI_CS_HIGH;
++	if (of_find_property(nc, "spi-3wire", NULL))
++		spi->mode |= SPI_3WIRE;
++	if (of_find_property(nc, "spi-lsb-first", NULL))
++		spi->mode |= SPI_LSB_FIRST;
++
++	/* Device DUAL/QUAD mode */
++	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
++		switch (value) {
++		case 1:
++			break;
++		case 2:
++			spi->mode |= SPI_TX_DUAL;
++			break;
++		case 4:
++			spi->mode |= SPI_TX_QUAD;
++			break;
++		default:
++			dev_warn(&master->dev,
++				"spi-tx-bus-width %d not supported\n",
++				value);
++			break;
++		}
++	}
++
++	if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
++		switch (value) {
++		case 1:
++			break;
++		case 2:
++			spi->mode |= SPI_RX_DUAL;
++			break;
++		case 4:
++			spi->mode |= SPI_RX_QUAD;
++			break;
++		default:
++			dev_warn(&master->dev,
++				"spi-rx-bus-width %d not supported\n",
++				value);
++			break;
++		}
++	}
++
++	/* Device speed */
++	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
++	if (rc) {
++		dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
++			nc->full_name, rc);
++		goto err_out;
++	}
++	spi->max_speed_hz = value;
++
++	/* IRQ */
++	spi->irq = irq_of_parse_and_map(nc, 0);
++
++	/* Store a pointer to the node in the device structure */
++	of_node_get(nc);
++	spi->dev.of_node = nc;
++
++	/* Register the new device */
++	request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
++	rc = spi_add_device(spi);
++	if (rc) {
++		dev_err(&master->dev, "spi_device register error %s\n",
++			nc->full_name);
++		goto err_out;
++	}
++
++	return spi;
++
++err_out:
++	spi_dev_put(spi);
++	return ERR_PTR(rc);
++}
++
+ /**
+  * of_register_spi_devices() - Register child devices onto the SPI bus
+  * @master:	Pointer to spi_master device
+@@ -1209,120 +1326,63 @@ err_init_queue:
+  */
+ static void of_register_spi_devices(struct spi_master *master)
+ {
+-	struct spi_device *spi;
+ 	struct device_node *nc;
+-	int rc;
+-	u32 value;
++	struct spi_device *spi;
+ 
+ 	if (!master->dev.of_node)
+ 		return;
+ 
+ 	for_each_available_child_of_node(master->dev.of_node, nc) {
+-		/* Alloc an spi_device */
+-		spi = spi_alloc_device(master);
+-		if (!spi) {
+-			dev_err(&master->dev, "spi_device alloc error for %s\n",
++		spi = of_register_spi_device(master, nc);
++		if (IS_ERR(spi))
++			dev_warn(&master->dev, "Failed to create SPI device for %s\n",
+ 				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
+-		}
++	}
++}
+ 
+-		/* Select device driver */
+-		if (of_modalias_node(nc, spi->modalias,
+-				     sizeof(spi->modalias)) < 0) {
+-			dev_err(&master->dev, "cannot find modalias for %s\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-			continue;
+-		}
++static int of_dev_node_match(struct device *dev, void *data)
++{
++	return dev->of_node == data;
++}
+ 
+-		/* Device address */
+-		rc = of_property_read_u32(nc, "reg", &value);
+-		if (rc) {
+-			dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
+-				nc->full_name, rc);
+-			spi_dev_put(spi);
+-			continue;
+-		}
+-		spi->chip_select = value;
+-
+-		/* Mode (clock phase/polarity/etc.) */
+-		if (of_find_property(nc, "spi-cpha", NULL))
+-			spi->mode |= SPI_CPHA;
+-		if (of_find_property(nc, "spi-cpol", NULL))
+-			spi->mode |= SPI_CPOL;
+-		if (of_find_property(nc, "spi-cs-high", NULL))
+-			spi->mode |= SPI_CS_HIGH;
+-		if (of_find_property(nc, "spi-3wire", NULL))
+-			spi->mode |= SPI_3WIRE;
+-		if (of_find_property(nc, "spi-lsb-first", NULL))
+-			spi->mode |= SPI_LSB_FIRST;
+-
+-		/* Device DUAL/QUAD mode */
+-		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
+-			switch (value) {
+-			case 1:
+-				break;
+-			case 2:
+-				spi->mode |= SPI_TX_DUAL;
+-				break;
+-			case 4:
+-				spi->mode |= SPI_TX_QUAD;
+-				break;
+-			default:
+-				dev_warn(&master->dev,
+-					 "spi-tx-bus-width %d not supported\n",
+-					 value);
+-				break;
+-			}
+-		}
++/* bah; the match functions differ just by const-ness */
++static int of_dev_node_match_const(struct device *dev, const void *data)
++{
++	return dev->of_node == data;
++}
+ 
+-		if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
+-			switch (value) {
+-			case 1:
+-				break;
+-			case 2:
+-				spi->mode |= SPI_RX_DUAL;
+-				break;
+-			case 4:
+-				spi->mode |= SPI_RX_QUAD;
+-				break;
+-			default:
+-				dev_warn(&master->dev,
+-					 "spi-rx-bus-width %d not supported\n",
+-					 value);
+-				break;
+-			}
+-		}
++/* must call put_device() when done with returned spi_device device */
++struct spi_device *of_find_spi_device_by_node(struct device_node *node)
++{
++	struct device *dev;
+ 
+-		/* Device speed */
+-		rc = of_property_read_u32(nc, "spi-max-frequency", &value);
+-		if (rc) {
+-			dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
+-				nc->full_name, rc);
+-			spi_dev_put(spi);
+-			continue;
+-		}
+-		spi->max_speed_hz = value;
++	dev = bus_find_device(&spi_bus_type, NULL, node,
++					 of_dev_node_match);
++	if (!dev)
++		return NULL;
+ 
+-		/* IRQ */
+-		spi->irq = irq_of_parse_and_map(nc, 0);
++	return to_spi_device(dev);
++}
++EXPORT_SYMBOL(of_find_spi_device_by_node);
+ 
+-		/* Store a pointer to the node in the device structure */
+-		of_node_get(nc);
+-		spi->dev.of_node = nc;
++/* forward decl */
++static struct class spi_master_class;
+ 
+-		/* Register the new device */
+-		request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
+-		rc = spi_add_device(spi);
+-		if (rc) {
+-			dev_err(&master->dev, "spi_device register error %s\n",
+-				nc->full_name);
+-			spi_dev_put(spi);
+-		}
++/* the spi masters are not using spi_bus, so we find it with another way */
++struct spi_master *of_find_spi_master_by_node(struct device_node *node)
++{
++	struct device *dev;
+ 
+-	}
++	dev = class_find_device(&spi_master_class, NULL, node,
++				of_dev_node_match_const);
++	if (!dev)
++		return NULL;
++
++	/* reference got in class_find_device */
++	return container_of(dev, struct spi_master, dev);
+ }
++EXPORT_SYMBOL(of_find_spi_master_by_node);
++
+ #else
+ static void of_register_spi_devices(struct spi_master *master) { }
+ #endif
+-- 
+1.7.12
