@@ -1,805 +1,500 @@
-Return-Path: <m-karicheri2@ti.com>
-Message-ID: <53A46963.5040305@ti.com>
-Date: Fri, 20 Jun 2014 13:03:31 -0400
-From: Murali Karicheri <m-karicheri2@ti.com>
-MIME-Version: 1.0
-Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com> <2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com>
-In-Reply-To: <2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com>
-Content-Type: multipart/alternative;
-	boundary="------------080103060405040804090805"
-To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Pratyush ANAND <pratyush.anand@st.com>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY  <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann" <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
+Return-Path: <pantelis.antoniou@konsulko.com>
+Return-Path: <pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v6 1/9] OF: Introduce Device Tree resolve support.
+Date: Sun, 22 Jun 2014 12:41:45 +0300
+Message-Id: <1403430113-15171-2-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
---------------080103060405040804090805
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Transfer-Encoding: 7bit
-
-On 6/18/2014 6:14 AM, Mohit KUMAR DCG wrote:
-> Hello Murali,
->
->> -----Original Message-----
->> From: Murali Karicheri [mailto:m-karicheri2@ti.com]
->> Sent: Wednesday, June 11, 2014 12:21 AM
->> To: linux-arm-kernel@lists.infradead.org; linux-kernel@vger.kernel.org;
->> linux-pci@vger.kernel.org; devicetree@vger.kernel.org; linux-
->> doc@vger.kernel.org
->> Cc: Murali Karicheri; Santosh Shilimkar; Russell King; Grant Likely; Rob Herring;
->> Mohit KUMAR DCG; Jingoo Han; Bjorn Helgaas; Pratyush ANAND; Richard
->> Zhu; Kishon Vijay Abraham I; Marek Vasut; Arnd Bergmann; Pawel Moll;
->> Mark Rutland; Ian Campbell; Kumar Gala; Randy Dunlap
->> Subject: [PATCH v2 0/8] Add Keystone PCIe controller driver
->>
->> This patch adds a PCIe controller driver for Keystone SoCs. This is based on v1
->> of the series posted to the mailing list.
->>
-> 1. I think your first patch is OK which handles platform specific ATU implementation.
->
-> 2. For MSI part, I think you just need to add two new callbacks with pp-ops, something similar to:
-> pp->ops->msi_set
->
-> pp->ops->msi_clear
->
-> With these two platform specific callbacks you should be able to manage MSI handling.
-> So idea is that dw_msi code uses pp->ops->msi_set/clear if platform define these,
-> otherwise use dw_msi_set/clear (which you need to refactor from existing code)
->
-> So other than your keystone changes we expect 3 patches:
-> --  1st same as you sent 1/8: for ATU handeling
-> -- 2nd to refactor dw_msi_set/clear: refactor from existing code
-Mohit,
-
-Thanks for your comments.
-
-Just want to be on the same page
-
-1. In my original patch [PATCH v2 3/8] PCI: designware: update pcie core 
-driver to work with dw hw version 3.65.
-  I had following changes:-
-
-diff --git a/drivers/pci/host/pcie-designware.c 
-b/drivers/pci/host/pcie-designware.c
-
-index e4bd19a..f985811 100644
-
---- a/drivers/pci/host/pcie-designware.c
-
-+++ b/drivers/pci/host/pcie-designware.c
-
-@@ -277,11 +277,15 @@ static int assign_irq(int no_irqs, struct msi_desc 
-*desc, int *pos)
-
-}
-
-set_bit(pos0 + i, pp->msi_irq_in_use);
-
-/*Enable corresponding interrupt in MSI interrupt controller */
-
--res = ((pos0 + i) / 32) * 12;
-
--bit = (pos0 + i) % 32;
-
--dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, &val);
-
--val |= 1 << bit;
-
--dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res, 4, val);
-
-+if (!(pp->version & DW_V3_65)) {
-
-+res = ((pos0 + i) / 32) * 12;
-
-+bit = (pos0 + i) % 32;
-
-+dw_pcie_rd_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-
-+4, &val);
-
-+val |= 1 << bit;
-
-+dw_pcie_wr_own_conf(pp, PCIE_MSI_INTR0_ENABLE + res,
-
-+4, val);
-
-+}
-
-}
-
-
-I assume you are referring to the above code for msi_set().  I missed to 
-add similar code change to clear_irq().
-
-So in assign_irq()
-
-             if (pp->ops->msi_set)
-                        pp->ops->msi_set()
-
-Similarly in clear_irq()
-
-             if (pp->ops->msi_clear)
-                         pp->ops->msi_clear()
-
-
-*pos = pos0;
-
-@@ -349,7 +353,10 @@ static int dw_msi_setup_irq(struct msi_chip *chip, 
-struct pci_dev *pdev,
-
-*/
-
-desc->msi_attrib.multiple = msgvec;
-
--msg.address_lo = virt_to_phys((void *)pp->msi_data);
-
-+if (pp->ops->get_msi_data)
-
-+msg.address_lo = pp->ops->get_msi_data(pp);
-
-+else
-
-+msg.address_lo = virt_to_phys((void *)pp->msi_data);
-
-msg.address_hi = 0x0;
-
-msg.data = pos;
-
-
-What about this code? This requires get_msi_data() as well
-
-> -- 3rd to use pp->ops->msi_set/clear if defined.
-Why not API enhancement and refactor the code in a single patch?
-
-Murali
->
-> Pls let us know for any issue or have different opinion.
->
-> Regards
-> Mohit
->
->
->
->   
->> --
->> 1.7.9.5
-
-
---------------080103060405040804090805
-Content-Type: text/html; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
-
-<html>
-  <head>
-    <meta content="text/html; charset=windows-1252"
-      http-equiv="Content-Type">
-  </head>
-  <body text="#000000" bgcolor="#FFFFFF">
-    <div class="moz-cite-prefix">On 6/18/2014 6:14 AM, Mohit KUMAR DCG
-      wrote:<br>
-    </div>
-    <blockquote
-      cite="mid:2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com"
-      type="cite">
-      <pre wrap="">Hello Murali,
-
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">-----Original Message-----
-From: Murali Karicheri [<a class="moz-txt-link-freetext" href="mailto:m-karicheri2@ti.com">mailto:m-karicheri2@ti.com</a>]
-Sent: Wednesday, June 11, 2014 12:21 AM
-To: <a class="moz-txt-link-abbreviated" href="mailto:linux-arm-kernel@lists.infradead.org">linux-arm-kernel@lists.infradead.org</a>; <a class="moz-txt-link-abbreviated" href="mailto:linux-kernel@vger.kernel.org">linux-kernel@vger.kernel.org</a>;
-<a class="moz-txt-link-abbreviated" href="mailto:linux-pci@vger.kernel.org">linux-pci@vger.kernel.org</a>; <a class="moz-txt-link-abbreviated" href="mailto:devicetree@vger.kernel.org">devicetree@vger.kernel.org</a>; linux-
-<a class="moz-txt-link-abbreviated" href="mailto:doc@vger.kernel.org">doc@vger.kernel.org</a>
-Cc: Murali Karicheri; Santosh Shilimkar; Russell King; Grant Likely; Rob Herring;
-Mohit KUMAR DCG; Jingoo Han; Bjorn Helgaas; Pratyush ANAND; Richard
-Zhu; Kishon Vijay Abraham I; Marek Vasut; Arnd Bergmann; Pawel Moll;
-Mark Rutland; Ian Campbell; Kumar Gala; Randy Dunlap
-Subject: [PATCH v2 0/8] Add Keystone PCIe controller driver
-
-This patch adds a PCIe controller driver for Keystone SoCs. This is based on v1
-of the series posted to the mailing list.
-
-</pre>
-      </blockquote>
-      <pre wrap="">
-1. I think your first patch is OK which handles platform specific ATU implementation.
-
-2. For MSI part, I think you just need to add two new callbacks with pp-ops, something similar to:
-pp-&gt;ops-&gt;msi_set
-
-pp-&gt;ops-&gt;msi_clear
-
-With these two platform specific callbacks you should be able to manage MSI handling.
-So idea is that dw_msi code uses pp-&gt;ops-&gt;msi_set/clear if platform define these,
-otherwise use dw_msi_set/clear (which you need to refactor from existing code)
-
-So other than your keystone changes we expect 3 patches:
---  1st same as you sent 1/8: for ATU handeling
--- 2nd to refactor dw_msi_set/clear: refactor from existing code</pre>
-    </blockquote>
-    Mohit,<br>
-    <br>
-    Thanks for your comments.<br>
-    <br>
-    Just want to be on the same page<br>
-    <br>
-    1. In my original patch [PATCH v2 3/8] PCI: designware: update pcie
-    core driver to work with dw hw version 3.65.<br>
-    �I had following changes:-<br>
-    <br>
-    <meta http-equiv="Content-Type" content="text/html;
-      charset=windows-1252">
-    <p class="MsoPlainText">diff --git
-      a/drivers/pci/host/pcie-designware.c
-      b/drivers/pci/host/pcie-designware.c</p>
-    <p class="MsoPlainText">index e4bd19a..f985811 100644</p>
-    <p class="MsoPlainText">--- a/drivers/pci/host/pcie-designware.c</p>
-    <p class="MsoPlainText">+++ b/drivers/pci/host/pcie-designware.c</p>
-    <p class="MsoPlainText">@@ -277,11 +277,15 @@ static int
-      assign_irq(int no_irqs,
-      struct msi_desc *desc, int *pos)</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:2">�������������� </span>}</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:2">�������������� </span>set_bit(pos0 + i,
-      pp-&gt;msi_irq_in_use);</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:2">�������������� </span>/*Enable
-      corresponding interrupt
-      in MSI interrupt controller */</p>
-    <p class="MsoPlainText">-<span style="mso-tab-count:2">��������������
-      </span>res
-      = ((pos0 + i) / 32) * 12;</p>
-    <p class="MsoPlainText">-<span style="mso-tab-count:2">��������������
-      </span>bit
-      = (pos0 + i) % 32;</p>
-    <p class="MsoPlainText">-<span style="mso-tab-count:2">��������������
-      </span>dw_pcie_rd_own_conf(pp,
-      PCIE_MSI_INTR0_ENABLE + res, 4, &amp;val);</p>
-    <p class="MsoPlainText">-<span style="mso-tab-count:2">��������������
-      </span>val
-      |= 1 &lt;&lt; bit;</p>
-    <p class="MsoPlainText">-<span style="mso-tab-count:2">��������������
-      </span>dw_pcie_wr_own_conf(pp,
-      PCIE_MSI_INTR0_ENABLE + res, 4, val);</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:2">�������������
-      </span>if
-      (!(pp-&gt;version &amp; DW_V3_65)) {</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:3">���������������������
-      </span>res
-      = ((pos0 + i) / 32) * 12;</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:3">���������������������
-      </span>bit
-      = (pos0 + i) % 32;</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:3">���������������������
-      </span>dw_pcie_rd_own_conf(pp,
-      PCIE_MSI_INTR0_ENABLE + res,</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:5">�������������������������������������
-      </span><span style="mso-spacerun:yes">��� </span>4, &amp;val);</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:3">���������������������
-      </span>val
-      |= 1 &lt;&lt; bit;</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:3">���������������������
-      </span>dw_pcie_wr_own_conf(pp,
-      PCIE_MSI_INTR0_ENABLE + res,</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:5">�������������������������������������
-      </span><span style="mso-spacerun:yes">��� </span>4, val);</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:2">�������������
-      </span>}</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:1">������ </span>}</p>
-    <br>
-    I assume you are referring to the above code for msi_set().� I
-    missed to add similar code change to clear_irq(). <br>
-    <br>
-    So in assign_irq()<br>
-    <br>
-    �� ��� ���� if (pp-&gt;ops-&gt;msi_set)<br>
-    ��� ��� ��� ��� ��� �� pp-&gt;ops-&gt;msi_set()<br>
-    <br>
-    Similarly in clear_irq()<br>
-    <br>
-    ��� ��� ��� if (pp-&gt;ops-&gt;msi_clear)<br>
-    ��� ��� ��� ��� ��� ��� pp-&gt;ops-&gt;msi_clear()<br>
-    <br>
-    <br>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:1">������ </span>*pos = pos0;</p>
-    <p class="MsoPlainText">@@ -349,7 +353,10 @@ static int
-      dw_msi_setup_irq(struct
-      msi_chip *chip, struct pci_dev *pdev,</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:1">������ </span><span
-        style="mso-spacerun:yes">�</span>*/</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:1">������ </span>desc-&gt;msi_attrib.multiple
-      = msgvec;</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span></p>
-    <p class="MsoPlainText">-<span style="mso-tab-count:1">������ </span>msg.address_lo
-=
-      virt_to_phys((void *)pp-&gt;msi_data);</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:1">����� </span>if
-      (pp-&gt;ops-&gt;get_msi_data)</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:2">�������������
-      </span>msg.address_lo
-      = pp-&gt;ops-&gt;get_msi_data(pp);</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:1">����� </span>else</p>
-    <p class="MsoPlainText">+<span style="mso-tab-count:2">�������������
-      </span>msg.address_lo
-      = virt_to_phys((void *)pp-&gt;msi_data);</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:1">������ </span>msg.address_hi = 0x0;</p>
-    <p class="MsoPlainText"><span style="mso-spacerun:yes">�</span><span
-        style="mso-tab-count:1">������ </span>msg.data = pos;</p>
-    <br>
-    What about this code? This requires get_msi_data() as well<br>
-    <meta name="ProgId" content="Word.Document">
-    <meta name="Generator" content="Microsoft Word 12">
-    <meta name="Originator" content="Microsoft Word 12">
-    <link rel="File-List"
-href="file:///C:%5CUsers%5Ca0868495%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_filelist.xml">
-    <link rel="themeData"
-href="file:///C:%5CUsers%5Ca0868495%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_themedata.thmx">
-    <link rel="colorSchemeMapping"
-href="file:///C:%5CUsers%5Ca0868495%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_colorschememapping.xml">
-    <!--[if gte mso 9]><xml>
- <w:WordDocument>
-  <w:View>Normal</w:View>
-  <w:Zoom>0</w:Zoom>
-  <w:TrackMoves/>
-  <w:TrackFormatting/>
-  <w:PunctuationKerning/>
-  <w:ValidateAgainstSchemas/>
-  <w:SaveIfXMLInvalid>false</w:SaveIfXMLInvalid>
-  <w:IgnoreMixedContent>false</w:IgnoreMixedContent>
-  <w:AlwaysShowPlaceholderText>false</w:AlwaysShowPlaceholderText>
-  <w:DoNotPromoteQF/>
-  <w:LidThemeOther>EN-US</w:LidThemeOther>
-  <w:LidThemeAsian>X-NONE</w:LidThemeAsian>
-  <w:LidThemeComplexScript>X-NONE</w:LidThemeComplexScript>
-  <w:Compatibility>
-   <w:BreakWrappedTables/>
-   <w:SnapToGridInCell/>
-   <w:WrapTextWithPunct/>
-   <w:UseAsianBreakRules/>
-   <w:DontGrowAutofit/>
-   <w:SplitPgBreakAndParaMark/>
-   <w:DontVertAlignCellWithSp/>
-   <w:DontBreakConstrainedForcedTables/>
-   <w:DontVertAlignInTxbx/>
-   <w:Word11KerningPairs/>
-   <w:CachedColBalance/>
-  </w:Compatibility>
-  <w:DoNotOptimizeForBrowser/>
-  <m:mathPr>
-   <m:mathFont m:val="Cambria Math"/>
-   <m:brkBin m:val="before"/>
-   <m:brkBinSub m:val="&#45;-"/>
-   <m:smallFrac m:val="off"/>
-   <m:dispDef/>
-   <m:lMargin m:val="0"/>
-   <m:rMargin m:val="0"/>
-   <m:defJc m:val="centerGroup"/>
-   <m:wrapIndent m:val="1440"/>
-   <m:intLim m:val="subSup"/>
-   <m:naryLim m:val="undOvr"/>
-  </m:mathPr></w:WordDocument>
-</xml><![endif]--><!--[if gte mso 9]><xml>
- <w:LatentStyles DefLockedState="false" DefUnhideWhenUsed="true"
-  DefSemiHidden="true" DefQFormat="false" DefPriority="99"
-  LatentStyleCount="267">
-  <w:LsdException Locked="false" Priority="0" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Normal"/>
-  <w:LsdException Locked="false" Priority="9" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="heading 1"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 2"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 3"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 4"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 5"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 6"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 7"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 8"/>
-  <w:LsdException Locked="false" Priority="9" QFormat="true" Name="heading 9"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 1"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 2"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 3"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 4"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 5"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 6"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 7"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 8"/>
-  <w:LsdException Locked="false" Priority="39" Name="toc 9"/>
-  <w:LsdException Locked="false" Priority="35" QFormat="true" Name="caption"/>
-  <w:LsdException Locked="false" Priority="10" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Title"/>
-  <w:LsdException Locked="false" Priority="1" Name="Default Paragraph Font"/>
-  <w:LsdException Locked="false" Priority="11" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Subtitle"/>
-  <w:LsdException Locked="false" Priority="22" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Strong"/>
-  <w:LsdException Locked="false" Priority="20" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Emphasis"/>
-  <w:LsdException Locked="false" Priority="59" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Table Grid"/>
-  <w:LsdException Locked="false" UnhideWhenUsed="false" Name="Placeholder Text"/>
-  <w:LsdException Locked="false" Priority="1" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="No Spacing"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading Accent 1"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List Accent 1"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid Accent 1"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 1"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 1"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1 Accent 1"/>
-  <w:LsdException Locked="false" UnhideWhenUsed="false" Name="Revision"/>
-  <w:LsdException Locked="false" Priority="34" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="List Paragraph"/>
-  <w:LsdException Locked="false" Priority="29" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Quote"/>
-  <w:LsdException Locked="false" Priority="30" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Intense Quote"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2 Accent 1"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 1"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 1"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 1"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List Accent 1"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading Accent 1"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List Accent 1"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid Accent 1"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading Accent 2"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List Accent 2"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid Accent 2"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 2"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 2"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1 Accent 2"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2 Accent 2"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 2"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 2"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 2"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List Accent 2"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading Accent 2"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List Accent 2"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid Accent 2"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading Accent 3"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List Accent 3"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid Accent 3"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 3"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 3"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1 Accent 3"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2 Accent 3"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 3"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 3"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 3"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List Accent 3"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading Accent 3"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List Accent 3"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid Accent 3"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading Accent 4"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List Accent 4"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid Accent 4"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 4"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 4"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1 Accent 4"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2 Accent 4"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 4"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 4"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 4"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List Accent 4"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading Accent 4"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List Accent 4"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid Accent 4"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading Accent 5"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List Accent 5"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid Accent 5"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 5"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 5"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1 Accent 5"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2 Accent 5"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 5"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 5"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 5"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List Accent 5"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading Accent 5"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List Accent 5"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid Accent 5"/>
-  <w:LsdException Locked="false" Priority="60" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Shading Accent 6"/>
-  <w:LsdException Locked="false" Priority="61" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light List Accent 6"/>
-  <w:LsdException Locked="false" Priority="62" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Light Grid Accent 6"/>
-  <w:LsdException Locked="false" Priority="63" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 1 Accent 6"/>
-  <w:LsdException Locked="false" Priority="64" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Shading 2 Accent 6"/>
-  <w:LsdException Locked="false" Priority="65" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 1 Accent 6"/>
-  <w:LsdException Locked="false" Priority="66" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium List 2 Accent 6"/>
-  <w:LsdException Locked="false" Priority="67" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 1 Accent 6"/>
-  <w:LsdException Locked="false" Priority="68" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 2 Accent 6"/>
-  <w:LsdException Locked="false" Priority="69" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Medium Grid 3 Accent 6"/>
-  <w:LsdException Locked="false" Priority="70" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Dark List Accent 6"/>
-  <w:LsdException Locked="false" Priority="71" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Shading Accent 6"/>
-  <w:LsdException Locked="false" Priority="72" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful List Accent 6"/>
-  <w:LsdException Locked="false" Priority="73" SemiHidden="false"
-   UnhideWhenUsed="false" Name="Colorful Grid Accent 6"/>
-  <w:LsdException Locked="false" Priority="19" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Subtle Emphasis"/>
-  <w:LsdException Locked="false" Priority="21" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Intense Emphasis"/>
-  <w:LsdException Locked="false" Priority="31" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Subtle Reference"/>
-  <w:LsdException Locked="false" Priority="32" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Intense Reference"/>
-  <w:LsdException Locked="false" Priority="33" SemiHidden="false"
-   UnhideWhenUsed="false" QFormat="true" Name="Book Title"/>
-  <w:LsdException Locked="false" Priority="37" Name="Bibliography"/>
-  <w:LsdException Locked="false" Priority="39" QFormat="true" Name="TOC Heading"/>
- </w:LatentStyles>
-</xml><![endif]-->
-    <style>
-<!--
- /* Font Definitions */
- @font-face
-	{font-family:"Cambria Math";
-	panose-1:2 4 5 3 5 4 6 3 2 4;
-	mso-font-charset:1;
-	mso-generic-font-family:roman;
-	mso-font-format:other;
-	mso-font-pitch:variable;
-	mso-font-signature:0 0 0 0 0 0;}
-@font-face
-	{font-family:Calibri;
-	panose-1:2 15 5 2 2 2 4 3 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:swiss;
-	mso-font-pitch:variable;
-	mso-font-signature:-520092929 1073786111 9 0 415 0;}
-@font-face
-	{font-family:Verdana;
-	panose-1:2 11 6 4 3 5 4 4 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:swiss;
-	mso-font-pitch:variable;
-	mso-font-signature:-1593833729 1073750107 16 0 415 0;}
-@font-face
-	{font-family:Consolas;
-	panose-1:2 11 6 9 2 2 4 3 2 4;
-	mso-font-charset:0;
-	mso-generic-font-family:modern;
-	mso-font-pitch:fixed;
-	mso-font-signature:-520092929 1073806591 9 0 415 0;}
- /* Style Definitions */
- p.MsoNormal, li.MsoNormal, div.MsoNormal
-	{mso-style-unhide:no;
-	mso-style-qformat:yes;
-	mso-style-parent:"";
-	margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";
-	mso-ascii-font-family:Calibri;
-	mso-ascii-theme-font:minor-latin;
-	mso-fareast-font-family:Calibri;
-	mso-fareast-theme-font:minor-latin;
-	mso-hansi-font-family:Calibri;
-	mso-hansi-theme-font:minor-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:minor-bidi;}
-p.MsoPlainText, li.MsoPlainText, div.MsoPlainText
-	{mso-style-noshow:yes;
-	mso-style-priority:99;
-	mso-style-link:"Plain Text Char";
-	margin:0in;
-	margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:12.0pt;
-	mso-bidi-font-size:10.5pt;
-	font-family:"Verdana","sans-serif";
-	mso-fareast-font-family:Calibri;
-	mso-fareast-theme-font:minor-latin;
-	mso-bidi-font-family:Consolas;
-	color:black;}
-span.PlainTextChar
-	{mso-style-name:"Plain Text Char";
-	mso-style-noshow:yes;
-	mso-style-priority:99;
-	mso-style-unhide:no;
-	mso-style-locked:yes;
-	mso-style-link:"Plain Text";
-	mso-ansi-font-size:12.0pt;
-	mso-bidi-font-size:10.5pt;
-	font-family:"Verdana","sans-serif";
-	mso-ascii-font-family:Verdana;
-	mso-hansi-font-family:Verdana;
-	mso-bidi-font-family:Consolas;
-	color:black;}
-.MsoChpDefault
-	{mso-style-type:export-only;
-	mso-default-props:yes;
-	mso-ascii-font-family:Calibri;
-	mso-ascii-theme-font:minor-latin;
-	mso-fareast-font-family:Calibri;
-	mso-fareast-theme-font:minor-latin;
-	mso-hansi-font-family:Calibri;
-	mso-hansi-theme-font:minor-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:minor-bidi;}
-@page WordSection1
-	{size:8.5in 11.0in;
-	margin:1.0in 1.0in 1.0in 1.0in;
-	mso-header-margin:.5in;
-	mso-footer-margin:.5in;
-	mso-paper-source:0;}
-div.WordSection1
-	{page:WordSection1;}
--->
-</style><!--[if gte mso 10]>
-<style>
- /* Style Definitions */
- table.MsoNormalTable
-	{mso-style-name:"Table Normal";
-	mso-tstyle-rowband-size:0;
-	mso-tstyle-colband-size:0;
-	mso-style-noshow:yes;
-	mso-style-priority:99;
-	mso-style-qformat:yes;
-	mso-style-parent:"";
-	mso-padding-alt:0in 5.4pt 0in 5.4pt;
-	mso-para-margin:0in;
-	mso-para-margin-bottom:.0001pt;
-	mso-pagination:widow-orphan;
-	font-size:11.0pt;
-	font-family:"Calibri","sans-serif";
-	mso-ascii-font-family:Calibri;
-	mso-ascii-theme-font:minor-latin;
-	mso-fareast-font-family:"Times New Roman";
-	mso-fareast-theme-font:minor-fareast;
-	mso-hansi-font-family:Calibri;
-	mso-hansi-theme-font:minor-latin;
-	mso-bidi-font-family:"Times New Roman";
-	mso-bidi-theme-font:minor-bidi;}
-</style>
-<![endif]--><br>
-    <blockquote
-      cite="mid:2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com"
-      type="cite">
-      <pre wrap="">
--- 3rd to use pp-&gt;ops-&gt;msi_set/clear if defined.</pre>
-    </blockquote>
-    Why not API enhancement and refactor the code in a single patch? <br>
-    <br>
-    Murali<br>
-    <blockquote
-      cite="mid:2CC2A0A4A178534D93D5159BF3BCB6619C5F8169D1@EAPEX1MAIL1.st.com"
-      type="cite">
-      <pre wrap="">
-
-Pls let us know for any issue or have different opinion.
-
-Regards
-Mohit
-
-
-
+Introduce support for dynamic device tree resolution.
+Using it, it is possible to prepare a device tree that's
+been loaded on runtime to be modified and inserted at the kernel
+live tree.
+
+Export of of_resolve and bug fix of double free by
+	Guenter Roeck <groeck@juniper.net>
+
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ .../devicetree/dynamic-resolution-notes.txt        |  25 ++
+ drivers/of/Kconfig                                 |   6 +
+ drivers/of/Makefile                                |   1 +
+ drivers/of/resolver.c                              | 378 +++++++++++++++++++++
+ include/linux/of.h                                 |  16 +
+ 5 files changed, 426 insertions(+)
+ create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+ create mode 100644 drivers/of/resolver.c
+
+diff --git a/Documentation/devicetree/dynamic-resolution-notes.txt b/Documentation/devicetree/dynamic-resolution-notes.txt
+new file mode 100644
+index 0000000..0b396c4
+--- /dev/null
++++ b/Documentation/devicetree/dynamic-resolution-notes.txt
+@@ -0,0 +1,25 @@
++Device Tree Dynamic Resolver Notes
++----------------------------------
++
++This document describes the implementation of the in-kernel
++Device Tree resolver, residing in drivers/of/resolver.c and is a
++companion document to Documentation/devicetree/dt-object-internal.txt[1]
++
++How the resolver works
++----------------------
++
++The resolver is given as an input an arbitrary tree compiled with the
++proper dtc option and having a /plugin/ tag. This generates the
++appropriate __fixups__ & __local_fixups__ nodes as described in [1].
++
++In sequence the resolver works by the following steps:
++
++1. Get the maximum device tree phandle value from the live tree + 1.
++2. Adjust all the local phandles of the tree to resolve by that amount.
++3. Using the __local__fixups__ node information adjust all local references
++   by the same amount.
++4. For each property in the __fixups__ node locate the node it references
++   in the live tree. This is the label used to tag the node.
++5. Retrieve the phandle of the target of the fixup.
++5. For each fixup in the property locate the node:property:offset location
++   and replace it with the phandle value.
+diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
+index 2dcb054..0236a4e 100644
+--- a/drivers/of/Kconfig
++++ b/drivers/of/Kconfig
+@@ -78,4 +78,10 @@ config OF_RESERVED_MEM
+ 	help
+ 	  Helpers to allow for reservation of memory regions
  
-</pre>
-      <blockquote type="cite">
-        <pre wrap="">
---
-1.7.9.5
-</pre>
-      </blockquote>
-      <pre wrap="">
-</pre>
-    </blockquote>
-    <br>
-  </body>
-</html>
-
---------------080103060405040804090805--
++config OF_RESOLVE
++	bool
++	depends on OF && !SPARC
++	select OF_DYNAMIC
++	select OF_DEVICE
++
+ endmenu # OF
+diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+index ae07348..57cd12f 100644
+--- a/drivers/of/Makefile
++++ b/drivers/of/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_OF_PCI)	+= of_pci.o
+ obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
+ obj-$(CONFIG_OF_MTD)	+= of_mtd.o
+ obj-$(CONFIG_OF_RESERVED_MEM) += of_reserved_mem.o
++obj-$(CONFIG_OF_RESOLVE)  += resolver.o
+ 
+ CFLAGS_fdt.o = -I$(src)/../../scripts/dtc/libfdt
+ CFLAGS_fdt_address.o = -I$(src)/../../scripts/dtc/libfdt
+diff --git a/drivers/of/resolver.c b/drivers/of/resolver.c
+new file mode 100644
+index 0000000..cbf4180
+--- /dev/null
++++ b/drivers/of/resolver.c
+@@ -0,0 +1,378 @@
++/*
++ * Functions for dealing with DT resolution
++ *
++ * Copyright (C) 2012 Pantelis Antoniou <panto@antoniou-consulting.com>
++ * Copyright (C) 2012 Texas Instruments Inc.
++ *
++ * This program is free software; you can redistribute it and/or
++ * modify it under the terms of the GNU General Public License
++ * version 2 as published by the Free Software Foundation.
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of.h>
++#include <linux/of_device.h>
++#include <linux/string.h>
++#include <linux/ctype.h>
++#include <linux/errno.h>
++#include <linux/string.h>
++#include <linux/slab.h>
++
++/*
++ * Find live tree's maximum phandle value.
++ */
++static phandle of_get_tree_max_phandle(void)
++{
++	struct device_node *node;
++	phandle phandle;
++	unsigned long flags;
++
++	/* now search recursively */
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++	phandle = 0;
++	for_each_of_allnodes(node) {
++		if (node->phandle != OF_PHANDLE_ILLEGAL &&
++				node->phandle > phandle)
++			phandle = node->phandle;
++	}
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	return phandle;
++}
++
++/*
++ * Adjust a subtree's phandle values by a given delta.
++ * Makes sure not to just adjust the device node's phandle value,
++ * but modify the phandle properties values as well.
++ */
++static void __of_adjust_tree_phandles(struct device_node *node,
++		int phandle_delta)
++{
++	struct device_node *child;
++	struct property *prop;
++	phandle phandle;
++
++	/* first adjust the node's phandle direct value */
++	if (node->phandle != 0 && node->phandle != OF_PHANDLE_ILLEGAL)
++		node->phandle += phandle_delta;
++
++	/* now adjust phandle & linux,phandle values */
++	for_each_property_of_node(node, prop) {
++
++		/* only look for these two */
++		if (of_prop_cmp(prop->name, "phandle") != 0 &&
++		    of_prop_cmp(prop->name, "linux,phandle") != 0)
++			continue;
++
++		/* must be big enough */
++		if (prop->length < 4)
++			continue;
++
++		/* read phandle value */
++		phandle = be32_to_cpup(prop->value);
++		if (phandle == OF_PHANDLE_ILLEGAL)	/* unresolved */
++			continue;
++
++		/* adjust */
++		*(uint32_t *)prop->value = cpu_to_be32(node->phandle);
++	}
++
++	/* now do the children recursively */
++	__for_each_child_of_node(node, child)
++		__of_adjust_tree_phandles(child, phandle_delta);
++}
++
++/*
++ * Adjust the local phandle references by the given phandle delta.
++ * Assumes the existances of a __local_fixups__ node at the root
++ * of the tree. Does not take any devtree locks so make sure you
++ * call this on a tree which is at the detached state.
++ */
++static int __of_adjust_tree_phandle_references(struct device_node *node,
++		int phandle_delta)
++{
++	phandle phandle;
++	struct device_node *refnode, *child;
++	struct property *rprop, *sprop;
++	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
++	int offset, propcurlen;
++	int err;
++
++	/* locate the symbols & fixups nodes on resolve */
++	__for_each_child_of_node(node, child)
++		if (of_node_cmp(child->name, "__local_fixups__") == 0)
++			break;
++
++	/* no local fixups */
++	if (!child)
++		return 0;
++
++	/* find the local fixups property */
++	for_each_property_of_node(child, rprop) {
++
++		/* skip properties added automatically */
++		if (of_prop_cmp(rprop->name, "name") == 0)
++			continue;
++
++		/* make a copy */
++		propval = kmalloc(rprop->length, GFP_KERNEL);
++		if (!propval) {
++			pr_err("%s: Could not copy value of '%s'\n",
++					__func__, rprop->name);
++			return -ENOMEM;
++		}
++		memcpy(propval, rprop->value, rprop->length);
++
++		propend = propval + rprop->length;
++		for (propcur = propval; propcur < propend;
++				propcur += propcurlen + 1) {
++
++			propcurlen = strlen(propcur);
++
++			nodestr = propcur;
++			s = strchr(propcur, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (1)\n",
++					__func__, propcur);
++				err = -EINVAL;
++				goto err_fail;
++			}
++			*s++ = '\0';
++
++			propstr = s;
++			s = strchr(s, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (2)\n",
++					__func__, (char *)rprop->value);
++				err = -EINVAL;
++				goto err_fail;
++			}
++
++			*s++ = '\0';
++			err = kstrtoint(s, 10, &offset);
++			if (err != 0) {
++				pr_err("%s: Could get offset '%s'\n",
++					__func__, (char *)rprop->value);
++				goto err_fail;
++			}
++
++			/* look into the resolve node for the full path */
++			refnode = __of_find_node_by_full_name(node, nodestr);
++			if (!refnode) {
++				pr_warn("%s: Could not find refnode '%s'\n",
++					__func__, (char *)rprop->value);
++				continue;
++			}
++
++			/* now find the property */
++			for_each_property_of_node(refnode, sprop) {
++				if (of_prop_cmp(sprop->name, propstr) == 0)
++					break;
++			}
++
++			if (!sprop) {
++				pr_err("%s: Could not find property '%s'\n",
++					__func__, (char *)rprop->value);
++				err = -ENOENT;
++				goto err_fail;
++			}
++
++			phandle = be32_to_cpup(sprop->value + offset);
++			*(__be32 *)(sprop->value + offset) =
++				cpu_to_be32(phandle + phandle_delta);
++		}
++
++		kfree(propval);
++		propval = NULL;
++	}
++
++	return 0;
++
++err_fail:
++	kfree(propval);
++	return err;
++}
++
++/**
++ * of_resolve	- Resolve the given node against the live tree.
++ *
++ * @resolve:	Node to resolve
++ *
++ * Perform dynamic Device Tree resolution against the live tree
++ * to the given node to resolve. This depends on the live tree
++ * having a __symbols__ node, and the resolve node the __fixups__ &
++ * __local_fixups__ nodes (if needed).
++ * The result of the operation is a resolve node that it's contents
++ * are fit to be inserted or operate upon the live tree.
++ * Returns 0 on success or a negative error value on error.
++ */
++int of_resolve(struct device_node *resolve)
++{
++	struct device_node *child, *refnode;
++	struct device_node *root_sym, *resolve_sym, *resolve_fix;
++	struct property *rprop, *sprop;
++	const char *refpath;
++	char *propval, *propcur, *propend, *nodestr, *propstr, *s;
++	int offset, propcurlen;
++	phandle phandle, phandle_delta;
++	int err;
++
++	/* the resolve node must exist, and be detached */
++	if (!resolve || !of_node_check_flag(resolve, OF_DETACHED))
++		return -EINVAL;
++
++	/* first we need to adjust the phandles */
++	phandle_delta = of_get_tree_max_phandle() + 1;
++	__of_adjust_tree_phandles(resolve, phandle_delta);
++	err = __of_adjust_tree_phandle_references(resolve, phandle_delta);
++	if (err != 0)
++		return err;
++
++	root_sym = NULL;
++	resolve_sym = NULL;
++	resolve_fix = NULL;
++
++	/* this may fail (if no fixups are required) */
++	root_sym = of_find_node_by_path("/__symbols__");
++
++	/* locate the symbols & fixups nodes on resolve */
++	__for_each_child_of_node(resolve, child) {
++
++		if (!resolve_sym &&
++				of_node_cmp(child->name, "__symbols__") == 0)
++			resolve_sym = child;
++
++		if (!resolve_fix &&
++				of_node_cmp(child->name, "__fixups__") == 0)
++			resolve_fix = child;
++
++		/* both found, don't bother anymore */
++		if (resolve_sym && resolve_fix)
++			break;
++	}
++
++	/* we do allow for the case where no fixups are needed */
++	if (!resolve_fix) {
++		err = 0;	/* no error */
++		goto out;
++	}
++
++	/* we need to fixup, but no root symbols... */
++	if (!root_sym) {
++		err = -EINVAL;
++		goto out;
++	}
++
++	for_each_property_of_node(resolve_fix, rprop) {
++
++		/* skip properties added automatically */
++		if (of_prop_cmp(rprop->name, "name") == 0)
++			continue;
++
++		err = of_property_read_string(root_sym,
++				rprop->name, &refpath);
++		if (err != 0) {
++			pr_err("%s: Could not find symbol '%s'\n",
++					__func__, rprop->name);
++			goto out;
++		}
++
++		refnode = of_find_node_by_path(refpath);
++		if (!refnode) {
++			pr_err("%s: Could not find node by path '%s'\n",
++					__func__, refpath);
++			err = -ENOENT;
++			goto out;
++		}
++
++		phandle = refnode->phandle;
++		of_node_put(refnode);
++
++		pr_debug("%s: %s phandle is 0x%08x\n",
++				__func__, rprop->name, phandle);
++
++		/* make a copy */
++		propval = kmalloc(rprop->length, GFP_KERNEL);
++		if (!propval) {
++			pr_err("%s: Could not copy value of '%s'\n",
++					__func__, rprop->name);
++			err = -ENOMEM;
++			goto out;
++		}
++
++		memcpy(propval, rprop->value, rprop->length);
++
++		propend = propval + rprop->length;
++		for (propcur = propval; propcur < propend;
++				propcur += propcurlen + 1) {
++			propcurlen = strlen(propcur);
++
++			nodestr = propcur;
++			s = strchr(propcur, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (1)\n",
++					__func__, (char *)rprop->value);
++				err = -EINVAL;
++				goto err_fail_free;
++			}
++			*s++ = '\0';
++
++			propstr = s;
++			s = strchr(s, ':');
++			if (!s) {
++				pr_err("%s: Illegal symbol entry '%s' (2)\n",
++					__func__, (char *)rprop->value);
++				err = -EINVAL;
++				goto err_fail_free;
++			}
++
++			*s++ = '\0';
++			err = kstrtoint(s, 10, &offset);
++			if (err != 0) {
++				pr_err("%s: Could get offset '%s'\n",
++					__func__, (char *)rprop->value);
++				goto err_fail_free;
++			}
++
++			/* look into the resolve node for the full path */
++			refnode = __of_find_node_by_full_name(resolve,
++					nodestr);
++			if (!refnode) {
++				pr_err("%s: Could not find refnode '%s'\n",
++					__func__, (char *)rprop->value);
++				err = -ENOENT;
++				goto err_fail_free;
++			}
++
++			/* now find the property */
++			for_each_property_of_node(refnode, sprop) {
++				if (of_prop_cmp(sprop->name, propstr) == 0)
++					break;
++			}
++
++			if (!sprop) {
++				pr_err("%s: Could not find property '%s'\n",
++					__func__, (char *)rprop->value);
++				err = -ENOENT;
++				goto err_fail_free;
++			}
++
++			*(__be32 *)(sprop->value + offset) =
++				cpu_to_be32(phandle);
++		}
++
++		kfree(propval);
++		propval = NULL;
++	}
++
++err_fail_free:
++	kfree(propval);
++
++out:
++	/* NULL is handled by of_node_put as NOP */
++	of_node_put(root_sym);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(of_resolve);
+diff --git a/include/linux/of.h b/include/linux/of.h
+index 38d4d74..f37432b 100644
+--- a/include/linux/of.h
++++ b/include/linux/of.h
+@@ -1110,4 +1110,20 @@ static inline int of_transaction_update_property(struct of_transaction *oft,
+ 			OF_RECONFIG_UPDATE_PROPERTY, np, prop);
+ }
+ 
++/* illegal phandle value (set when unresolved) */
++#define OF_PHANDLE_ILLEGAL	0xdeadbeef
++
++#ifdef CONFIG_OF_RESOLVE
++
++int of_resolve(struct device_node *resolve);
++
++#else
++
++static inline int of_resolve(struct device_node *resolve)
++{
++	return -ENOTSUPP;
++}
++
++#endif
++
+ #endif /* _LINUX_OF_H */
+-- 
+1.7.12
