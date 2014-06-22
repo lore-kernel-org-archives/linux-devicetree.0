@@ -1,65 +1,120 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
-Subject: [PATCH] ARM: dts: exynos5410: Fill in CPU clock-frequency
-Date: Sun, 22 Jun 2014 21:49:55 +0200
-Message-ID: <1403466596-3347-1-git-send-email-afaerber@suse.de>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: [PATCH v4 06/13] dt-bindings: add documentation for rk3188 clock and
+ reset unit
+Date: Sun, 22 Jun 2014 22:46:30 +0200
+Message-ID: <7978745.5O2LWkqdyA@diego>
+References: <1808429.dNxms7FR7U@diego>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Tarek Dakhran <t.dakhran-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "moderated list:ARM/SAMSUNG ARM
-	A..." <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1808429.dNxms7FR7U@diego>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Turquette <mturquette@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Max Schwarz <max.schwarz@online.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-It's 1.6 GHz for the Cortex-A15.
+This add bindings documentation for the clock and reset unit found on
+rk3188 and rk3066 SoCs from Rockchip.
 
-Avoids warnings like "/cpus/cpu@0 missing clock-frequency property".
+Also deprecate the old gate clock binding, as these shouldn't be used
+in the future.
 
-Signed-off-by: Andreas F=C3=A4rber <afaerber-l3A5Bk7waGM@public.gmane.org>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- arch/arm/boot/dts/exynos5410.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ .../bindings/clock/rockchip,rk3188-cru.txt         | 61 ++++++++++++++++++++++
+ .../devicetree/bindings/clock/rockchip.txt         |  3 ++
+ 2 files changed, 64 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
 
-diff --git a/arch/arm/boot/dts/exynos5410.dtsi b/arch/arm/boot/dts/exyn=
-os5410.dtsi
-index 3839c26..9d0b8cc 100644
---- a/arch/arm/boot/dts/exynos5410.dtsi
-+++ b/arch/arm/boot/dts/exynos5410.dtsi
-@@ -28,24 +28,28 @@
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a15";
- 			reg =3D <0x0>;
-+			clock-frequency =3D <1600000000>;
- 		};
-=20
- 		CPU1: cpu@1 {
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a15";
- 			reg =3D <0x1>;
-+			clock-frequency =3D <1600000000>;
- 		};
-=20
- 		CPU2: cpu@2 {
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a15";
- 			reg =3D <0x2>;
-+			clock-frequency =3D <1600000000>;
- 		};
-=20
- 		CPU3: cpu@3 {
- 			device_type =3D "cpu";
- 			compatible =3D "arm,cortex-a15";
- 			reg =3D <0x3>;
-+			clock-frequency =3D <1600000000>;
- 		};
- 	};
-=20
---=20
-1.9.3
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+new file mode 100644
+index 0000000..0c2bf5e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+@@ -0,0 +1,61 @@
++* Rockchip RK3188/RK3066 Clock and Reset Unit
++
++The RK3188/RK3066 clock controller generates and supplies clock to various
++controllers within the SoC and also implements a reset controller for SoC
++peripherals.
++
++Required Properties:
++
++- compatible: should be "rockchip,rk3188-cru", "rockchip,rk3188a-cru" or
++			"rockchip,rk3066a-cru"
++- reg: physical base address of the controller and length of memory mapped
++  region.
++- #clock-cells: should be 1.
++- #reset-cells: should be 1.
++
++Optional Properties:
++
++- rockchip,grf: phandle to the syscon managing the "general register files"
++  If missing pll rates are not changable, due to the missing pll lock status.
++
++Each clock is assigned an identifier and client nodes can use this identifier
++to specify the clock which they consume. All available clocks are defined as
++preprocessor macros in the dt-bindings/clock/rk3188-cru.h and
++dt-bindings/clock/rk3066-cru.h headers and can be used in device tree sources.
++Similar macros exist for the reset sources in these files.
++
++External clocks:
++
++There are several clocks that are generated outside the SoC. It is expected
++that they are defined using standard clock bindings with following
++clock-output-names:
++ - "xin24m" - crystal input - required,
++ - "xin32k" - rtc clock - optional,
++ - "xin27m" - 27mhz crystal input on rk3066 - optional,
++ - "ext_hsadc" - external HSADC clock - optional,
++ - "ext_cif0" - external camera clock - optional,
++ - "ext_rmii" - external RMII clock - optional,
++ - "ext_jtag" - externalJTAG clock - optional
++
++Example: Clock controller node:
++
++	cru: cru@20000000 {
++		compatible = "rockchip,rk3188-cru";
++		reg = <0x20000000 0x1000>;
++		rockchip,grf = <&grf>;
++
++		#clock-cells = <1>;
++		#reset-cells = <1>;
++	};
++
++Example: UART controller node that consumes the clock generated by the clock
++  controller:
++
++	uart0: serial@10124000 {
++		compatible = "snps,dw-apb-uart";
++		reg = <0x10124000 0x400>;
++		interrupts = <GIC_SPI 34 IRQ_TYPE_LEVEL_HIGH>;
++		reg-shift = <2>;
++		reg-io-width = <1>;
++		clocks = <&cru SCLK_UART0>;
++	};
+diff --git a/Documentation/devicetree/bindings/clock/rockchip.txt b/Documentation/devicetree/bindings/clock/rockchip.txt
+index a891c82..22f6769 100644
+--- a/Documentation/devicetree/bindings/clock/rockchip.txt
++++ b/Documentation/devicetree/bindings/clock/rockchip.txt
+@@ -6,6 +6,9 @@ This binding uses the common clock binding[1].
+ 
+ == Gate clocks ==
+ 
++These bindings are deprecated!
++Please use the soc specific CRU bindings instead.
++
+ The gate registers form a continuos block which makes the dt node
+ structure a matter of taste, as either all gates can be put into
+ one gate clock spanning all registers or they can be divided into
+-- 
+1.9.0
