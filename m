@@ -1,93 +1,103 @@
-From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
-Subject: Re: [PATCHv6 1/3] devicetree: Addition of the Altera SDRAM controller
-Date: Sun, 22 Jun 2014 20:41:24 +0200
-Message-ID: <20140622184124.GC8053@pengutronix.de>
-References: <1403306523-4174-2-git-send-email-tthayer@altera.com>
- <20140621090446.GA8053@pengutronix.de>
- <CAF03EBeUdrqfjOPCf4XxaKL_ZSqAcrgSbpDfTKov9_5oG4-Btg@mail.gmail.com>
+From: =?ISO-8859-1?Q?Noralf_Tr=F8nnes?= <notro-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Re: Initial register settings in Device Tree?
+Date: Sun, 22 Jun 2014 21:27:52 +0200
+Message-ID: <53A72E38.8040307@tronnes.org>
+References: <53A71474.7030704@tronnes.org> <4560059.E2lhedgi9o@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAF03EBeUdrqfjOPCf4XxaKL_ZSqAcrgSbpDfTKov9_5oG4-Btg@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Thor Thayer <tthayer.linux@gmail.com>
-Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4560059.E2lhedgi9o@wuerfel>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 22, 2014 at 01:31:02PM -0500, Thor Thayer wrote:
-> On Sat, Jun 21, 2014 at 4:04 AM, Steffen Trumtrar
-> <s.trumtrar@pengutronix.de> wrote:
-> > Hi!
-> >
-> > On Fri, Jun 20, 2014 at 06:22:01PM -0500, tthayer@altera.com wrote:
-> >> From: Thor Thayer <tthayer@altera.com>
-> >>
-> >> Addition of the Altera SDRAM Controller bindings and device tree changes.
-> >>
-> >> v2: Changes to SoC SDRAM EDAC code.
-> >>
-> >> v3: Implement code suggestions for SDRAM EDAC code.
-> >>
-> >> v4: Remove syscon from SDRAM controller bindings.
-> >>
-> >> v5: No Change, bump version for consistency.
-> >>
-> >> v6: Only map the ctrlcfg register as syscon.
-> >>
-> >> Signed-off-by: Thor Thayer <tthayer@altera.com>
-> >> ---
-> >>  .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
-> >>  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
-> >>  2 files changed, 16 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> >> new file mode 100644
-> >> index 0000000..5027026
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
-> >> @@ -0,0 +1,11 @@
-> >> +Altera SOCFPGA SDRAM Controller
-> >> +
-> >> +Required properties:
-> >> +- compatible : "altr,sdr-ctl";
-> >> +- reg : Should contain 1 register ranges(address and length)
-> >> +
-> >> +Example:
-> >> +     sdrctl@ffc25000 {
-> >> +             compatible = "altr,sdr-ctl";
-> >> +             reg = <0xffc25000 0x4>;
-> >> +     };
-> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-> >> index 4676f25..310292e 100644
-> >> --- a/arch/arm/boot/dts/socfpga.dtsi
-> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
-> >> @@ -682,6 +682,11 @@
-> >>                       clocks = <&l4_sp_clk>;
-> >>               };
-> >>
-> >> +             sdrctl@ffc25000 {
-> >> +                     compatible = "altr,sdr-ctl", "syscon";
-> >
-> > Did you forget to add the syscon to the binding documentation?
-> >
-> Hi Steffen,
-> 
-> I guess I'm confused about when to use syscon. In my last series, I
-> was advised not to include syscon in the bindings but to use it in the
-> device tree. I had been including it in the binding document until
-> this patch.
-> 
+Den 22.06.2014 20:18, skrev Arnd Bergmann:
+> On Sunday 22 June 2014 19:37:56 Noralf Tr=F8nnes wrote:
+>> I see two possibilities:
+>> * add a special marker value to separate the registers, as I do now
+>> * add a flag to indicate a register number. So far I've only seen 8 =
+and
+>> 16-bit register number widths: register 20h could thus be written as
+>> 10000020, 1000020, 100020 or 10020
+>>
+>> Example (skipped state changes from previous example):
+>> <100B1 01 2C 2D
+>>    100B2 01 2C 2D
+>>    100B3 01 2C 2D 01 2C 2D
+>>    100B4 07 C0 A2 02 84
+>>    100C1 C5 C2 0A 00
+>>    100C3 8A 2A
+>>    100C4 8A EE
+>>    100C5 0E
+>>    10020
+>>    10036 C0
+>>    1003A 05
+>>    100E0 0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07 02 10
+>>    100E1 0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07 03 10>
+>>
+>> Is this a viable solution?
+> We normally use high-level descriptions of the timings that the drive=
+r
+> then converts into register-level settings. See
+> Documentation/devicetree/bindings/video/display-timing.txt and
+> other files in that directory for how existing drivers handle this.
+>
+> 	Arnd
+>
+OK, that takes care of the timings. But what about power control, and=20
+gamma registers?
 
-Oh, aha. Well, then I'm confused, too. Let's wait for one of the DT
-binding guys than.
+The power registers usually have bitfields that map to voltages, factor=
+s=20
+(0.7x, 1x,..) and levels (low,medium,high).
 
-Regards,
-Steffen
+Should all these bitfiels have their own property in DT?
+=46or some controllers this would be 20+ properties.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Should the properties have the same name as the register and bitfield=20
+from the datasheet?
+st7735r,pwctr1-avdd
+st7735r,pwctr1-vrhp
+st7735r,pwctr1-vrhn
+st7735r,pwctr1-mode
+
+Should the value map directly to the bitfield or should a string be use=
+d?
+st7735r,pwctr1-avdd =3D <6> /* 5.1v - Power pin for analog circuits */
+st7735r,pwctr1-avdd =3D "5.1"
+
+Or should each register have it's own property?
+st7735r,pwctr1 =3D <C5 C2 0A 00>
+
+
+The gamma registers have several values that control a resistor network=
+=20
+that sets grayscale values.
+Would this suffice?
+st7735r,gamma-positive =3D <0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07 0=
+2 10>
+st7735r,gamma-negative =3D <0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07 0=
+3 10>
+
+
+Usually when buying these displays, they come with an initialization=20
+sequence.
+Having register values in the DT, a user will be up and running in=20
+minutes with a new display.
+If one has to read the datasheet and map the register values to=20
+bitfields and properties, it takes a lot of time and not the least, it'=
+s=20
+error prone.
+
+
+Noralf.
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
