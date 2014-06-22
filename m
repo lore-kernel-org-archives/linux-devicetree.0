@@ -1,70 +1,75 @@
-From: Tushar Behera <tushar.b@samsung.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
-Date: Sun, 22 Jun 2014 21:23:37 +0530
-Message-ID: <CAC5m3Byht1TRGu28Y-_mRY8iZT+=rrzpQS1jx5rxQaJ7XLKxTw@mail.gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
-	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>
-	<CABxcv=kX07pNCd-YPYp6J8S5hHzG1rsoer1YRfdPE0g-xFqZnQ@mail.gmail.com>
-	<539ED472.5020102@gmail.com>
+From: =?ISO-8859-1?Q?Noralf_Tr=F8nnes?= <notro-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
+Subject: Initial register settings in Device Tree?
+Date: Sun, 22 Jun 2014 19:37:56 +0200
+Message-ID: <53A71474.7030704@tronnes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <539ED472.5020102@gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Javier Martinez Canillas <javier@dowhile0.org>, Tushar Behera <tushar.b@samsung.com>, Kevin Hilman <khilman@linaro.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Doug Anderson <dianders@google.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 16, 2014 at 4:56 PM, Tushar Behera <trblinux@gmail.com> wrote:
-> On 06/11/2014 09:28 PM, Javier Martinez Canillas wrote:
->> On Wed, Jun 11, 2014 at 7:32 AM, Tushar Behera <tushar.b@samsung.com> wrote:
->>> Currently CLK_FOUT_EPLL was set as one of the parents of AUDSS mux.
->>> As per the user manual, it should be CLK_MAU_EPLL.
->>>
->>> The problem surfaced when the bootloader in Peach-pit board set
->>> the EPLL clock as the parent of AUDSS mux. While booting the kernel,
->>> we used to get a system hang during late boot if CLK_MAU_EPLL was
->>> disabled.
->>>
->>> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
->>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
->>> Reported-by: Kevin Hilman <khilman@linaro.org>
->>> ---
->>>  arch/arm/boot/dts/exynos5420.dtsi |    2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5420.dtsi b/arch/arm/boot/dts/exynos5420.dtsi
->>> index e385322..79e9119 100644
->>> --- a/arch/arm/boot/dts/exynos5420.dtsi
->>> +++ b/arch/arm/boot/dts/exynos5420.dtsi
->>> @@ -167,7 +167,7 @@
->>>                 compatible = "samsung,exynos5420-audss-clock";
->>>                 reg = <0x03810000 0x0C>;
->>>                 #clock-cells = <1>;
->>> -               clocks = <&clock CLK_FIN_PLL>, <&clock CLK_FOUT_EPLL>,
->>> +               clocks = <&clock CLK_FIN_PLL>, <&clock CLK_MAU_EPLL>,
->>>                          <&clock CLK_SCLK_MAUDIO0>, <&clock CLK_SCLK_MAUPCM0>;
->>>                 clock-names = "pll_ref", "pll_in", "sclk_audio", "sclk_pcm_in";
->>>         };
->>> --
->>> 1.7.9.5
->>>
->>> --
->>
->> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>
->
-> Kukjin,
->
-> Would you please take this patch as a fix for 3.16?
->
-> --
-> Tushar Behera
+I have some framebuffer drivers [1] for LCD controllers with onboard 
+RAM, targeted at small displays (<10").
+I'm now going to rewrite these drivers from scratch and add DT support.
 
-Kukjin,
+The controllers have many registers that controls various parameters to 
+match the attached panel.
+Since a controller can be used with a whole lot of panels, I wonder if I 
+can put the register initialization sequence in the Device Tree?
 
-Please pick this patch for 3.16. This is an essential fix required for
-Peach-pit/Peach-pi board.
+Currently I have a module parameter: init=, which can override the 
+default init sequence in the driver if needed.
+A challenge is that the register depth often varies among the registers 
+(the number of values a register holds). Some also doesn't have a value, 
+they're called commands.
+This has led me to add markers in my module parameter:
+Sainsmart 1.8" (ST7735R)
+init=-1,0x01,-2,150,-1,0x11,-2,500,-1,0xB1,0x01,0x2C,0x2D,-1,0xB2,0x01,0x2C,0x2D,-1,0xB3,0x01,0x2C,0x2D,0x01,0x2C,0x2D,-1,0xB4,0x07,-1,0xC0,0xA2,0x02,0x84,-1,0xC1,0xC5,-1,0xC2,0x0A,0x00,-1,0xC3,0x8A,0x2A,-1,0xC4,0x8A,0xEE,-1,0xC5,0x0E,-1,0x20,-1,0x36,0xC0,-1,0x3A,0x05,-1,0xE0,0x0f,0x1a,0x0f,0x18,0x2f,0x28,0x20,0x22,0x1f,0x1b,0x23,0x37,0x00,0x07,0x02,0x10,-1,0xE1,0x0f,0x1b,0x0f,0x17,0x33,0x2c,0x29,0x2e,0x30,0x30,0x39,0x3f,0x00,0x07,0x03,0x10,-1,0x29,-2,100,-1,0x13,-2,10,-3
+
+Markers:
+-1: next value is a register, followed by zero or more values
+-2: next value is a delay in milliseconds
+-3: end marker
+
+ From reading a post by Grant Likely, I understand that 
+write-delay-write in the DT is out of the question.
+I believe delays mostly have to do with power state transitions and 
+display on/off anyway, so I assume it can be handle by the driver for 
+all panels.
+
+I see two possibilities:
+* add a special marker value to separate the registers, as I do now
+* add a flag to indicate a register number. So far I've only seen 8 and 
+16-bit register number widths: register 20h could thus be written as 
+10000020, 1000020, 100020 or 10020
+
+Example (skipped state changes from previous example):
+<100B1 01 2C 2D
+  100B2 01 2C 2D
+  100B3 01 2C 2D 01 2C 2D
+  100B4 07 C0 A2 02 84
+  100C1 C5 C2 0A 00
+  100C3 8A 2A
+  100C4 8A EE
+  100C5 0E
+  10020
+  10036 C0
+  1003A 05
+  100E0 0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07 02 10
+  100E1 0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07 03 10>
+
+Is this a viable solution?
+
+
+
+Noralf Tronnes
+
+
+[1] https://github.com/notro/fbtft
 
 --
-Tushar Behera
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
