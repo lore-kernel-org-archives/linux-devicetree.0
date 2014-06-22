@@ -1,315 +1,113 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v6 8/9] of: spi: Export single device registration method and accessors
-Date: Sun, 22 Jun 2014 12:41:52 +0300
-Message-Id: <1403430113-15171-9-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+Subject: [PATCH v6 0/9] Device Tree Overlays; now less filling
+Date: Sun, 22 Jun 2014 12:41:44 +0300
+Message-Id: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
 To: Grant Likely <grant.likely@secretlab.ca>
 Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Dynamically inserting spi device nodes requires the use of a single
-device registration method. Rework and export it.
+The following patchset introduces Device Tree overlays, a method
+of dynamically altering the kernel's live Device Tree, along with
+a generic interface to use it in a board agnostic manner.
 
-Methods to lookup a device/master using a device node are added
-as well, of_find_spi_master_by_node() & of_find_spi_device_by_node().
+It is against linux mainline as of today 22/6/2014
+"a497c3ba1d97fc69c1e78e7b96435ba8c2cb42ee Linux 3.16-rc2"
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/spi/spi.c | 256 +++++++++++++++++++++++++++++++++---------------------
- 1 file changed, 158 insertions(+), 98 deletions(-)
+It relies on the following previously submitted patches/patchsets:
 
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index d4f9670..cd98bf2 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1200,6 +1200,123 @@ err_init_queue:
- /*-------------------------------------------------------------------------*/
- 
- #if defined(CONFIG_OF)
-+
-+static struct spi_device *
-+of_register_spi_device(struct spi_master *master, struct device_node *node)
-+{
-+	struct spi_device *spi;
-+	struct device_node *nc;
-+	int rc;
-+	u32 value;
-+
-+	/* Alloc an spi_device */
-+	spi = spi_alloc_device(master);
-+	if (!spi) {
-+		dev_err(&master->dev, "spi_device alloc error for %s\n",
-+			nc->full_name);
-+		rc = -ENOMEM;
-+		goto err_out;
-+	}
-+
-+	/* Select device driver */
-+	rc = of_modalias_node(nc, spi->modalias,
-+				sizeof(spi->modalias));
-+	if (rc < 0) {
-+		dev_err(&master->dev, "cannot find modalias for %s\n",
-+			nc->full_name);
-+		goto err_out;
-+	}
-+
-+	/* Device address */
-+	rc = of_property_read_u32(nc, "reg", &value);
-+	if (rc) {
-+		dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
-+			nc->full_name, rc);
-+		goto err_out;
-+	}
-+	spi->chip_select = value;
-+
-+	/* Mode (clock phase/polarity/etc.) */
-+	if (of_find_property(nc, "spi-cpha", NULL))
-+		spi->mode |= SPI_CPHA;
-+	if (of_find_property(nc, "spi-cpol", NULL))
-+		spi->mode |= SPI_CPOL;
-+	if (of_find_property(nc, "spi-cs-high", NULL))
-+		spi->mode |= SPI_CS_HIGH;
-+	if (of_find_property(nc, "spi-3wire", NULL))
-+		spi->mode |= SPI_3WIRE;
-+	if (of_find_property(nc, "spi-lsb-first", NULL))
-+		spi->mode |= SPI_LSB_FIRST;
-+
-+	/* Device DUAL/QUAD mode */
-+	if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
-+		switch (value) {
-+		case 1:
-+			break;
-+		case 2:
-+			spi->mode |= SPI_TX_DUAL;
-+			break;
-+		case 4:
-+			spi->mode |= SPI_TX_QUAD;
-+			break;
-+		default:
-+			dev_warn(&master->dev,
-+				"spi-tx-bus-width %d not supported\n",
-+				value);
-+			break;
-+		}
-+	}
-+
-+	if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
-+		switch (value) {
-+		case 1:
-+			break;
-+		case 2:
-+			spi->mode |= SPI_RX_DUAL;
-+			break;
-+		case 4:
-+			spi->mode |= SPI_RX_QUAD;
-+			break;
-+		default:
-+			dev_warn(&master->dev,
-+				"spi-rx-bus-width %d not supported\n",
-+				value);
-+			break;
-+		}
-+	}
-+
-+	/* Device speed */
-+	rc = of_property_read_u32(nc, "spi-max-frequency", &value);
-+	if (rc) {
-+		dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
-+			nc->full_name, rc);
-+		goto err_out;
-+	}
-+	spi->max_speed_hz = value;
-+
-+	/* IRQ */
-+	spi->irq = irq_of_parse_and_map(nc, 0);
-+
-+	/* Store a pointer to the node in the device structure */
-+	of_node_get(nc);
-+	spi->dev.of_node = nc;
-+
-+	/* Register the new device */
-+	request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
-+	rc = spi_add_device(spi);
-+	if (rc) {
-+		dev_err(&master->dev, "spi_device register error %s\n",
-+			nc->full_name);
-+		goto err_out;
-+	}
-+
-+	return spi;
-+
-+err_out:
-+	spi_dev_put(spi);
-+	return ERR_PTR(rc);
-+}
-+
- /**
-  * of_register_spi_devices() - Register child devices onto the SPI bus
-  * @master:	Pointer to spi_master device
-@@ -1209,120 +1326,63 @@ err_init_queue:
-  */
- static void of_register_spi_devices(struct spi_master *master)
- {
--	struct spi_device *spi;
- 	struct device_node *nc;
--	int rc;
--	u32 value;
-+	struct spi_device *spi;
- 
- 	if (!master->dev.of_node)
- 		return;
- 
- 	for_each_available_child_of_node(master->dev.of_node, nc) {
--		/* Alloc an spi_device */
--		spi = spi_alloc_device(master);
--		if (!spi) {
--			dev_err(&master->dev, "spi_device alloc error for %s\n",
-+		spi = of_register_spi_device(master, nc);
-+		if (IS_ERR(spi))
-+			dev_warn(&master->dev, "Failed to create SPI device for %s\n",
- 				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
-+	}
-+}
- 
--		/* Select device driver */
--		if (of_modalias_node(nc, spi->modalias,
--				     sizeof(spi->modalias)) < 0) {
--			dev_err(&master->dev, "cannot find modalias for %s\n",
--				nc->full_name);
--			spi_dev_put(spi);
--			continue;
--		}
-+static int of_dev_node_match(struct device *dev, void *data)
-+{
-+	return dev->of_node == data;
-+}
- 
--		/* Device address */
--		rc = of_property_read_u32(nc, "reg", &value);
--		if (rc) {
--			dev_err(&master->dev, "%s has no valid 'reg' property (%d)\n",
--				nc->full_name, rc);
--			spi_dev_put(spi);
--			continue;
--		}
--		spi->chip_select = value;
--
--		/* Mode (clock phase/polarity/etc.) */
--		if (of_find_property(nc, "spi-cpha", NULL))
--			spi->mode |= SPI_CPHA;
--		if (of_find_property(nc, "spi-cpol", NULL))
--			spi->mode |= SPI_CPOL;
--		if (of_find_property(nc, "spi-cs-high", NULL))
--			spi->mode |= SPI_CS_HIGH;
--		if (of_find_property(nc, "spi-3wire", NULL))
--			spi->mode |= SPI_3WIRE;
--		if (of_find_property(nc, "spi-lsb-first", NULL))
--			spi->mode |= SPI_LSB_FIRST;
--
--		/* Device DUAL/QUAD mode */
--		if (!of_property_read_u32(nc, "spi-tx-bus-width", &value)) {
--			switch (value) {
--			case 1:
--				break;
--			case 2:
--				spi->mode |= SPI_TX_DUAL;
--				break;
--			case 4:
--				spi->mode |= SPI_TX_QUAD;
--				break;
--			default:
--				dev_warn(&master->dev,
--					 "spi-tx-bus-width %d not supported\n",
--					 value);
--				break;
--			}
--		}
-+/* bah; the match functions differ just by const-ness */
-+static int of_dev_node_match_const(struct device *dev, const void *data)
-+{
-+	return dev->of_node == data;
-+}
- 
--		if (!of_property_read_u32(nc, "spi-rx-bus-width", &value)) {
--			switch (value) {
--			case 1:
--				break;
--			case 2:
--				spi->mode |= SPI_RX_DUAL;
--				break;
--			case 4:
--				spi->mode |= SPI_RX_QUAD;
--				break;
--			default:
--				dev_warn(&master->dev,
--					 "spi-rx-bus-width %d not supported\n",
--					 value);
--				break;
--			}
--		}
-+/* must call put_device() when done with returned spi_device device */
-+struct spi_device *of_find_spi_device_by_node(struct device_node *node)
-+{
-+	struct device *dev;
- 
--		/* Device speed */
--		rc = of_property_read_u32(nc, "spi-max-frequency", &value);
--		if (rc) {
--			dev_err(&master->dev, "%s has no valid 'spi-max-frequency' property (%d)\n",
--				nc->full_name, rc);
--			spi_dev_put(spi);
--			continue;
--		}
--		spi->max_speed_hz = value;
-+	dev = bus_find_device(&spi_bus_type, NULL, node,
-+					 of_dev_node_match);
-+	if (!dev)
-+		return NULL;
- 
--		/* IRQ */
--		spi->irq = irq_of_parse_and_map(nc, 0);
-+	return to_spi_device(dev);
-+}
-+EXPORT_SYMBOL(of_find_spi_device_by_node);
- 
--		/* Store a pointer to the node in the device structure */
--		of_node_get(nc);
--		spi->dev.of_node = nc;
-+/* forward decl */
-+static struct class spi_master_class;
- 
--		/* Register the new device */
--		request_module("%s%s", SPI_MODULE_PREFIX, spi->modalias);
--		rc = spi_add_device(spi);
--		if (rc) {
--			dev_err(&master->dev, "spi_device register error %s\n",
--				nc->full_name);
--			spi_dev_put(spi);
--		}
-+/* the spi masters are not using spi_bus, so we find it with another way */
-+struct spi_master *of_find_spi_master_by_node(struct device_node *node)
-+{
-+	struct device *dev;
- 
--	}
-+	dev = class_find_device(&spi_master_class, NULL, node,
-+				of_dev_node_match_const);
-+	if (!dev)
-+		return NULL;
-+
-+	/* reference got in class_find_device */
-+	return container_of(dev, struct spi_master, dev);
- }
-+EXPORT_SYMBOL(of_find_spi_master_by_node);
-+
- #else
- static void of_register_spi_devices(struct spi_master *master) { }
- #endif
+* configfs: Implement binary attributes"
+* OF: Fixes preparing transactions/overlays
+* of: Transactional DT support.
+
+To compile overlays you need the DTC compiler patch
+
+* "dtc: Dynamic symbols & fixup support (v2)"
+
+The full patchset is applied to the following tree/branch:
+
+git:    git@github.com:pantoniou/linux-beagle-track-mainline.git
+branch: dt-ng/bbb
+http:   https://github.com/pantoniou/linux-beagle-track-mainline/tree/dt-ng/bbb
+
+Changes since V5:
+* Rely on transactions for affecting changes to the live tree.
+This makes the patchset considerably smaller, and easier to grok.
+* Removed the internal API, simplyfing the interface.
+
+Changes since V4:
+* New API of_overlay_create/destroy being able to support stacked
+overlays correctly.
+* Removed use of notifiers internally.
+* Removed own-grown bus handler notifiers; using already in-place DT
+notification infrastructure.
+* Split SPI notifier patch to one patch of generic changes and one
+for DT overlay notifier.
+* Removed unused overlay depth feature.
+* Updated documentation.
+* Moved configfs based interface to using the new API.
+* Added overlay removal stacking tests.
+
+Changes since V3:
+* Added overlay self-tests.
+* Fix bug in of_init_overlay_info (wrong sizeof)
+* Platform bus handler handles parent_pdev == NULL
+* of_resolve fixes according to comments by robh
+  + changed if (foo == NULL) to if (!foo)
+  + changed if (foo != NULL) to if (foo)
+  + drivers/of/Kconfig added dep on OF && !SPARC
+  + convert to using be32_to_cpup
+  + u32 -> __be32 when modifying property values
+  + cosmetic fixes
+
+Changes since V2:
+* Use of a configfs board agnostic overlay method
+* Use of per bus handlers instead of hardcoded behaviour
+* Optional target-path overlay target, which allows one to use standard
+DTBs without resolution options.
+
+Changes since V1:
+
+* Removal of any bits related to a specific board (beaglebone).
+* Introduced a platform agnostic interface using /proc/device-tree-overlay
+* Various bug fixes related to i2c device handling have been squashed in.
+
+Pantelis Antoniou (9):
+  OF: Introduce Device Tree resolve support.
+  OF: Introduce DT overlay support.
+  OF: selftest: Add overlay self-test support.
+  OF: DT-Overlay configfs interface
+  OF: platform: Add OF notifier handler
+  of: i2c: Export single device registration method
+  OF: i2c: Add OF notifier handler
+  of: spi: Export single device registration method and accessors
+  OF: spi: Add OF notifier handler
+
+ Documentation/devicetree/bindings/selftest.txt     |  14 +
+ .../devicetree/dynamic-resolution-notes.txt        |  25 +
+ Documentation/devicetree/overlay-notes.txt         | 137 ++++
+ drivers/base/platform.c                            |  70 ++-
+ drivers/i2c/i2c-core.c                             | 164 +++--
+ drivers/of/Kconfig                                 |  20 +
+ drivers/of/Makefile                                |   3 +
+ drivers/of/configfs.c                              | 340 ++++++++++
+ drivers/of/overlay.c                               | 696 +++++++++++++++++++++
+ drivers/of/resolver.c                              | 378 +++++++++++
+ drivers/of/selftest.c                              | 481 ++++++++++++++
+ drivers/of/testcase-data/testcases.dtsi            |   1 +
+ drivers/of/testcase-data/tests-overlay.dtsi        | 180 ++++++
+ drivers/spi/spi.c                                  | 320 +++++++---
+ include/linux/i2c.h                                |  10 +
+ include/linux/of.h                                 |  79 +++
+ 16 files changed, 2770 insertions(+), 148 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/selftest.txt
+ create mode 100644 Documentation/devicetree/dynamic-resolution-notes.txt
+ create mode 100644 Documentation/devicetree/overlay-notes.txt
+ create mode 100644 drivers/of/configfs.c
+ create mode 100644 drivers/of/overlay.c
+ create mode 100644 drivers/of/resolver.c
+ create mode 100644 drivers/of/testcase-data/tests-overlay.dtsi
+
 -- 
 1.7.12
