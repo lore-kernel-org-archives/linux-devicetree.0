@@ -1,146 +1,113 @@
-Return-Path: <mporter@linaro.org>
-Date: Thu, 19 Jun 2014 15:03:42 -0400
-From: Matt Porter <mporter@linaro.org>
-Subject: Re: [PATCHv7 2/5] mailbox: Introduce framework for mailbox
-Message-ID: <20140619190342.GT4173@beef>
-References: <1402592317-7043-1-git-send-email-jaswinder.singh@linaro.org>
- <1402592479-7244-1-git-send-email-jaswinder.singh@linaro.org>
- <53A32927.4060004@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <53A32927.4060004@arm.com>
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: Jassi Brar <jaswinder.singh@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "patches@linaro.org" <patches@linaro.org>, "bjorn@kryo.se" <bjorn@kryo.se>, "ashwin.chaugule@linaro.org" <ashwin.chaugule@linaro.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "s-anna@ti.com" <s-anna@ti.com>, "loic.pallardy@st.com" <loic.pallardy@st.com>, "lftan.linux@gmail.com" <lftan.linux@gmail.com>, "slapdau@yahoo.com.au" <slapdau@yahoo.com.au>, "courtney.cavin@sonymobile.com" <courtney.cavin@sonymobile.com>, Pawel Moll <Pawel.Moll@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "arnd@arndb.de" <arnd@arndb.de>, "joshc@codeaurora.org" <joshc@codeaurora.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "galak@codeaurora.org" <galak@codeaurora.org>, "ks.giri@samsung.com" <ks.giri@samsung.com>
+Return-Path: <pantelis.antoniou@konsulko.com>
+Return-Path: <pantelis.antoniou@konsulko.com>
+From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Subject: [PATCH v6 7/9] OF: i2c: Add OF notifier handler
+Date: Sun, 22 Jun 2014 12:41:51 +0300
+Message-Id: <1403430113-15171-8-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
+To: Grant Likely <grant.likely@secretlab.ca>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jun 19, 2014 at 07:17:11PM +0100, Sudeep Holla wrote:
-> Hi Jassi,
-> 
-> I started using this from v5 and tried briefly to follow previous versions
-> and discussion. Please forgive me if I ask questions that are already answered.
-> 
-> On 12/06/14 18:01, Jassi Brar wrote:
-> >Introduce common framework for client/protocol drivers and
-> >controller drivers of Inter-Processor-Communication (IPC).
-> >
-> >Client driver developers should have a look at
-> >  include/linux/mailbox_client.h to understand the part of
-> >the API exposed to client drivers.
-> >Similarly controller driver developers should have a look
-> >at include/linux/mailbox_controller.h
+Add OF notifier handler needed for creating/destroying i2c devices
+according to dynamic runtime changes in the DT live tree.
 
-...
+Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+---
+ drivers/i2c/i2c-core.c | 65 +++++++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 64 insertions(+), 1 deletion(-)
 
-> >+ * After startup and before shutdown any data received on the chan
-> >+ * is passed on to the API via atomic mbox_chan_received_data().
-> >+ * The controller should ACK the RX only after this call returns.
-> 
-> Does this mean we can't support asynchronous messages from the remote.
-> One possible scenario I can think is if the remote system power controller
-> has feature to configure the bounds for thermal sensors and it can send
-> async interrupt when the bounds are crossed. We can't just block one channel
-> for this always. Again this might have been discussed before and you might have
-> solution, I could not gather it with my brief look at older discussions.
-
-The way I see it we are simply putting the burden on the client to
-implement very little in the rx_callback. In my case, we will have a
-single client which is the IPC layer. The controller driver will notify
-the IPC client layer which will do as little as possible in the
-rx_callback before returning. We'll handle asynchronous dispatch of
-events within our IPC layer to the real client drivers rather than in
-the controller driver.
-
-> >+ */
-> >+void mbox_chan_received_data(struct mbox_chan *chan, void *mssg)
-> >+{
-> >+       /* No buffering the received data */
-> >+       if (chan->cl->rx_callback)
-> >+               chan->cl->rx_callback(chan->cl, mssg);
-> >+}
-> >+EXPORT_SYMBOL_GPL(mbox_chan_received_data);
-> >+
-> >+/**
-> >+ * mbox_chan_txdone - A way for controller driver to notify the
-> >+ *                     framework that the last TX has completed.
-> >+ * @chan: Pointer to the mailbox chan on which TX happened.
-> >+ * @r: Status of last TX - OK or ERROR
-> >+ *
-> >+ * The controller that has IRQ for TX ACK calls this atomic API
-> >+ * to tick the TX state machine. It works only if txdone_irq
-> >+ * is set by the controller.
-> >+ */
-> >+void mbox_chan_txdone(struct mbox_chan *chan, int r)
-> >+{
-> >+       if (unlikely(!(chan->txdone_method & TXDONE_BY_IRQ))) {
-> >+               pr_err("Controller can't run the TX ticker\n");
-> >+               return;
-> >+       }
-> >+
-> >+       tx_tick(chan, r);
-> >+}
-> >+EXPORT_SYMBOL_GPL(mbox_chan_txdone);
-> >+
-> >+/**
-> >+ * mbox_client_txdone - The way for a client to run the TX state machine.
-> >+ * @chan: Mailbox channel assigned to this client.
-> >+ * @r: Success status of last transmission.
-> >+ *
-> >+ * The client/protocol had received some 'ACK' packet and it notifies
-> >+ * the API that the last packet was sent successfully. This only works
-> >+ * if the controller can't sense TX-Done.
-> >+ */
-> >+void mbox_client_txdone(struct mbox_chan *chan, int r)
-> >+{
-> >+       if (unlikely(!(chan->txdone_method & TXDONE_BY_ACK))) {
-> >+               pr_err("Client can't run the TX ticker\n");
-> >+               return;
-> >+       }
-> >+
-> >+       tx_tick(chan, r);
-> >+}
-> >+EXPORT_SYMBOL_GPL(mbox_client_txdone);
-> >+
-> >+/**
-> >+ * mbox_client_peek_data - A way for client driver to pull data
-> >+ *                     received from remote by the controller.
-> >+ * @chan: Mailbox channel assigned to this client.
-> >+ *
-> >+ * A poke to controller driver for any received data.
-> >+ * The data is actually passed onto client via the
-> >+ * mbox_chan_received_data()
-> >+ * The call can be made from atomic context, so the controller's
-> >+ * implementation of peek_data() must not sleep.
-> >+ *
-> >+ * Return: True, if controller has, and is going to push after this,
-> >+ *          some data.
-> >+ *         False, if controller doesn't have any data to be read.
-> >+ */
-> >+bool mbox_client_peek_data(struct mbox_chan *chan)
-> >+{
-> >+       if (chan->mbox->ops->peek_data)
-> >+               return chan->mbox->ops->peek_data(chan);
-> >+
-> >+       return false;
-> >+}
-> >+EXPORT_SYMBOL_GPL(mbox_client_peek_data);
-> 
-> I am unable to understand how this API will be used. IIUC when the controller
-> receives any data from remote, it calls mbox_chan_received_data to push data to
-> client.
-
-Good question.
-
-That function is a no-op if your client chooses not to populate
-rx_callback. It's not explicitly stated, but the implementation is a
-no-op if rx_callback is NULL so rx_callback seems to be intended as an
-optional field in the client data.
-
-I'm also not clear of the scenario where this could be used. I
-originally thought .peek_data() was an alternative to the callback for
-polling purposes except it clearly states it needs the callback to carry
-the data.
-
-I probably missed earlier discussion that explains this.
-
--Matt
+diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
+index 6e47f73..8df7cd0 100644
+--- a/drivers/i2c/i2c-core.c
++++ b/drivers/i2c/i2c-core.c
+@@ -1097,6 +1097,7 @@ struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node)
+ 	return i2c_verify_adapter(dev);
+ }
+ EXPORT_SYMBOL(of_find_i2c_adapter_by_node);
++
+ #else
+ static void of_i2c_register_devices(struct i2c_adapter *adap) { }
+ #endif /* CONFIG_OF */
+@@ -1675,6 +1676,57 @@ void i2c_clients_command(struct i2c_adapter *adap, unsigned int cmd, void *arg)
+ }
+ EXPORT_SYMBOL(i2c_clients_command);
+ 
++#if IS_ENABLED(CONFIG_OF)
++
++static int of_i2c_notify(struct notifier_block *nb,
++				unsigned long action, void *arg)
++{
++	struct device_node *dn;
++	struct i2c_adapter *adap;
++	struct i2c_client *client;
++
++	if (action == OF_RECONFIG_DYNAMIC_CREATE_DEV) {
++
++		dn = arg;
++
++		adap = of_find_i2c_adapter_by_node(dn->parent);
++		if (adap == NULL)
++			return NOTIFY_OK;	/* not for us */
++
++		client = of_i2c_register_device(adap, dn);
++		put_device(&adap->dev);
++
++		if (IS_ERR(client)) {
++			pr_err("%s: failed to create for '%s'\n",
++					__func__, dn->full_name);
++			return notifier_from_errno(PTR_ERR(client));
++		}
++
++	} else if (action == OF_RECONFIG_DYNAMIC_DESTROY_DEV) {
++
++		dn = arg;
++
++		/* find our device by node */
++		client = of_find_i2c_device_by_node(dn);
++		if (client == NULL)
++			return NOTIFY_OK;	/* no? not meant for us */
++
++		/* unregister takes one ref away */
++		i2c_unregister_device(client);
++
++		/* and put the reference of the find */
++		put_device(&client->dev);
++
++	} else
++		return NOTIFY_OK;
++
++	return NOTIFY_STOP;
++}
++
++static struct notifier_block i2c_of_notifier;
++
++#endif
++
+ static int __init i2c_init(void)
+ {
+ 	int retval;
+@@ -1692,8 +1744,19 @@ static int __init i2c_init(void)
+ 	retval = i2c_add_driver(&dummy_driver);
+ 	if (retval)
+ 		goto class_err;
+-	return 0;
+ 
++#if IS_ENABLED(CONFIG_OF)
++	i2c_of_notifier.notifier_call = of_i2c_notify;
++	retval = of_reconfig_notifier_register(&i2c_of_notifier);
++	if (retval)
++		goto notifier_err;
++#endif
++
++	return 0;
++#if IS_ENABLED(CONFIG_OF)
++notifier_err:
++	i2c_del_driver(&dummy_driver);
++#endif
+ class_err:
+ #ifdef CONFIG_I2C_COMPAT
+ 	class_compat_unregister(i2c_adapter_compat_class);
+-- 
+1.7.12
