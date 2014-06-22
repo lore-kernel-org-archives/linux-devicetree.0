@@ -1,8 +1,7 @@
 From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
-Subject: [PATCH v4 06/13] dt-bindings: add documentation for rk3188 clock and
- reset unit
-Date: Sun, 22 Jun 2014 22:46:30 +0200
-Message-ID: <7978745.5O2LWkqdyA@diego>
+Subject: [PATCH v4 13/13] dt-bindings: add documentation for rk3288 cru
+Date: Sun, 22 Jun 2014 22:50:53 +0200
+Message-ID: <7933694.40emL7M0jh@diego>
 References: <1808429.dNxms7FR7U@diego>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,35 +21,30 @@ To: Mike Turquette <mturquette@linaro.org>
 Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Max Schwarz <max.schwarz@online.de>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This add bindings documentation for the clock and reset unit found on
-rk3188 and rk3066 SoCs from Rockchip.
-
-Also deprecate the old gate clock binding, as these shouldn't be used
-in the future.
+This adds the dt-binding documentation for the clock and reset unit found on
+Rockchip rk3288 SoCs.
 
 Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 ---
- .../bindings/clock/rockchip,rk3188-cru.txt         | 61 ++++++++++++++++++++++
- .../devicetree/bindings/clock/rockchip.txt         |  3 ++
- 2 files changed, 64 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+ .../bindings/clock/rockchip,rk3288-cru.txt         | 61 ++++++++++++++++++++++
+ 1 file changed, 61 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
 
-diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
+diff --git a/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
 new file mode 100644
-index 0000000..0c2bf5e
+index 0000000..c9fbb76
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/clock/rockchip,rk3188-cru.txt
++++ b/Documentation/devicetree/bindings/clock/rockchip,rk3288-cru.txt
 @@ -0,0 +1,61 @@
-+* Rockchip RK3188/RK3066 Clock and Reset Unit
++* Rockchip RK3288 Clock and Reset Unit
 +
-+The RK3188/RK3066 clock controller generates and supplies clock to various
++The RK3288 clock controller generates and supplies clock to various
 +controllers within the SoC and also implements a reset controller for SoC
 +peripherals.
 +
 +Required Properties:
 +
-+- compatible: should be "rockchip,rk3188-cru", "rockchip,rk3188a-cru" or
-+			"rockchip,rk3066a-cru"
++- compatible: should be "rockchip,rk3288-cru"
 +- reg: physical base address of the controller and length of memory mapped
 +  region.
 +- #clock-cells: should be 1.
@@ -63,9 +57,9 @@ index 0000000..0c2bf5e
 +
 +Each clock is assigned an identifier and client nodes can use this identifier
 +to specify the clock which they consume. All available clocks are defined as
-+preprocessor macros in the dt-bindings/clock/rk3188-cru.h and
-+dt-bindings/clock/rk3066-cru.h headers and can be used in device tree sources.
-+Similar macros exist for the reset sources in these files.
++preprocessor macros in the dt-bindings/clock/rk3288-cru.h headers and can be
++used in device tree sources. Similar macros exist for the reset sources in
++these files.
 +
 +External clocks:
 +
@@ -74,11 +68,12 @@ index 0000000..0c2bf5e
 +clock-output-names:
 + - "xin24m" - crystal input - required,
 + - "xin32k" - rtc clock - optional,
-+ - "xin27m" - 27mhz crystal input on rk3066 - optional,
++ - "ext_i2s" - external I2S clock - optional,
 + - "ext_hsadc" - external HSADC clock - optional,
-+ - "ext_cif0" - external camera clock - optional,
-+ - "ext_rmii" - external RMII clock - optional,
-+ - "ext_jtag" - externalJTAG clock - optional
++ - "ext_edp_24m" - external display port clock - optional,
++ - "ext_vip" - external VIP clock - optional,
++ - "ext_isp" - external ISP clock - optional,
++ - "ext_jtag" - external JTAG clock - optional
 +
 +Example: Clock controller node:
 +
@@ -102,19 +97,5 @@ index 0000000..0c2bf5e
 +		reg-io-width = <1>;
 +		clocks = <&cru SCLK_UART0>;
 +	};
-diff --git a/Documentation/devicetree/bindings/clock/rockchip.txt b/Documentation/devicetree/bindings/clock/rockchip.txt
-index a891c82..22f6769 100644
---- a/Documentation/devicetree/bindings/clock/rockchip.txt
-+++ b/Documentation/devicetree/bindings/clock/rockchip.txt
-@@ -6,6 +6,9 @@ This binding uses the common clock binding[1].
- 
- == Gate clocks ==
- 
-+These bindings are deprecated!
-+Please use the soc specific CRU bindings instead.
-+
- The gate registers form a continuos block which makes the dt node
- structure a matter of taste, as either all gates can be put into
- one gate clock spanning all registers or they can be divided into
 -- 
 1.9.0
