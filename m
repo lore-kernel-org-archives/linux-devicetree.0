@@ -1,7 +1,7 @@
 From: Beniamino Galvani <b.galvani@gmail.com>
-Subject: [PATCH 5/5] regulator: act8865: add act8846 to DT binding documentation
-Date: Sun, 22 Jun 2014 17:31:45 +0200
-Message-ID: <1403451105-31929-6-git-send-email-b.galvani@gmail.com>
+Subject: [PATCH 2/5] regulator: act8865: set correct number of regulators in pdata
+Date: Sun, 22 Jun 2014 17:31:42 +0200
+Message-ID: <1403451105-31929-3-git-send-email-b.galvani@gmail.com>
 References: <1403451105-31929-1-git-send-email-b.galvani@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1403451105-31929-1-git-send-email-b.galvani@gmail.com>
@@ -10,37 +10,27 @@ To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
 Cc: Wenyou Yang <wenyou.yang@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Beniamino Galvani <b.galvani@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a new "active-semi,act8846" compatible string and a
-list of supported regulator names to the devicetree binding
-documentation for Active-Semi PMUs.
+When platform data is populated from DT all the regulators are
+instantiated and the value of num_regulators should be the number of
+all available regulators rather than the number of matched ones.
 
 Signed-off-by: Beniamino Galvani <b.galvani@gmail.com>
 ---
- .../devicetree/bindings/regulator/act8865-regulator.txt         |    7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+ drivers/regulator/act8865-regulator.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-index bef1fbb..865614b 100644
---- a/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-+++ b/Documentation/devicetree/bindings/regulator/act8865-regulator.txt
-@@ -1,13 +1,16 @@
--ACT8865 regulator
-+ACT88xx regulators
- -------------------
+diff --git a/drivers/regulator/act8865-regulator.c b/drivers/regulator/act8865-regulator.c
+index fe2c038..b03a0e8 100644
+--- a/drivers/regulator/act8865-regulator.c
++++ b/drivers/regulator/act8865-regulator.c
+@@ -230,7 +230,7 @@ static int act8865_pdata_from_dt(struct device *dev,
+ 	if (!pdata->regulators)
+ 		return -ENOMEM;
  
- Required properties:
--- compatible: "active-semi,act8865"
-+- compatible: "active-semi,act8846" or "active-semi,act8865"
- - reg: I2C slave address
+-	pdata->num_regulators = matched;
++	pdata->num_regulators = ARRAY_SIZE(act8865_matches);
+ 	regulator = pdata->regulators;
  
- Any standard regulator properties can be used to configure the single regulator.
- 
- The valid names for regulators are:
-+	- for act8846:
-+	REG1, REG2, REG3, REG4, REG5, REG6, REG7, REG8, REG9, REG10, REG11, REG12
-+	- for act8865:
- 	DCDC_REG1, DCDC_REG2, DCDC_REG3, LDO_REG1, LDO_REG2, LDO_REG3, LDO_REG4.
- 
- Example:
+ 	for (i = 0; i < ARRAY_SIZE(act8865_matches); i++) {
 -- 
 1.7.10.4
