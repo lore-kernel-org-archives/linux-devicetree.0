@@ -1,93 +1,93 @@
-From: Thor Thayer <tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCHv6 2/3] devicetree: Addition of the Altera SDRAM EDAC
-Date: Sun, 22 Jun 2014 13:31:51 -0500
-Message-ID: <CAF03EBfK4kjKZxdcUGKNF91AYnad8ReoAY8oqAHUChQ4kN4dyg@mail.gmail.com>
+From: Steffen Trumtrar <s.trumtrar@pengutronix.de>
+Subject: Re: [PATCHv6 1/3] devicetree: Addition of the Altera SDRAM controller
+Date: Sun, 22 Jun 2014 20:41:24 +0200
+Message-ID: <20140622184124.GC8053@pengutronix.de>
 References: <1403306523-4174-2-git-send-email-tthayer@altera.com>
-	<1403306523-4174-3-git-send-email-tthayer@altera.com>
-	<20140621090618.GB8053@pengutronix.de>
+ <20140621090446.GA8053@pengutronix.de>
+ <CAF03EBeUdrqfjOPCf4XxaKL_ZSqAcrgSbpDfTKov9_5oG4-Btg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140621090618.GB8053-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Steffen Trumtrar <s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
-Cc: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, pawel.moll-5wv7dgnIgG8@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Landley <rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Borislav Petkov <bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAF03EBeUdrqfjOPCf4XxaKL_ZSqAcrgSbpDfTKov9_5oG4-Btg@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Thor Thayer <tthayer.linux@gmail.com>
+Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 21, 2014 at 4:06 AM, Steffen Trumtrar
-<s.trumtrar-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
-> On Fri, Jun 20, 2014 at 06:22:02PM -0500, tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org wrote:
->> From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->>
->> Addition of the Altera SDRAM EDAC bindings and device tree changes
->>
->> v2: Changes to SoC EDAC source code.
->>
->> v3: Fix typo in device tree documentation.
->>
->> v4,v5: No changes - bump version for consistency.
->>
->> v6: Assign ECC registers in SDRAM controller to EDAC
->>
->> Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
->> ---
->>  .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
->>  arch/arm/boot/dts/socfpga.dtsi                     |    6 ++++++
->>  2 files changed, 21 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
->>
->> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
->> new file mode 100644
->> index 0000000..540c9cf
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
->> @@ -0,0 +1,15 @@
->> +Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
->> +
->> +Required properties:
->> +- compatible : should contain "altr,sdram-edac";
->> +- reg : should contain the ECC register range in sdram
->> +        controller (address and length).
->> +- interrupts : Should contain the SDRAM ECC IRQ in the
->> +     appropriate format for the IRQ controller.
->> +
->> +Example:
->> +     sdramedac@0 {
->> +             compatible = "altr,sdram-edac";
->> +             reg = <0xffc2502C 0x28>;
->> +             interrupts = <0 39 4>;
->> +     };
->> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
->> index 310292e..fe9832e 100644
->> --- a/arch/arm/boot/dts/socfpga.dtsi
->> +++ b/arch/arm/boot/dts/socfpga.dtsi
->> @@ -687,6 +687,12 @@
->>                       reg = <0xffc25000 0x4>;
->>               };
->>
->> +             sdramedac@0 {
->                          ^^^
->
-> Please fix the baseaddress (also in the binding doc).
->
+On Sun, Jun 22, 2014 at 01:31:02PM -0500, Thor Thayer wrote:
+> On Sat, Jun 21, 2014 at 4:04 AM, Steffen Trumtrar
+> <s.trumtrar@pengutronix.de> wrote:
+> > Hi!
+> >
+> > On Fri, Jun 20, 2014 at 06:22:01PM -0500, tthayer@altera.com wrote:
+> >> From: Thor Thayer <tthayer@altera.com>
+> >>
+> >> Addition of the Altera SDRAM Controller bindings and device tree changes.
+> >>
+> >> v2: Changes to SoC SDRAM EDAC code.
+> >>
+> >> v3: Implement code suggestions for SDRAM EDAC code.
+> >>
+> >> v4: Remove syscon from SDRAM controller bindings.
+> >>
+> >> v5: No Change, bump version for consistency.
+> >>
+> >> v6: Only map the ctrlcfg register as syscon.
+> >>
+> >> Signed-off-by: Thor Thayer <tthayer@altera.com>
+> >> ---
+> >>  .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
+> >>  arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+> >>  2 files changed, 16 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >> new file mode 100644
+> >> index 0000000..5027026
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+> >> @@ -0,0 +1,11 @@
+> >> +Altera SOCFPGA SDRAM Controller
+> >> +
+> >> +Required properties:
+> >> +- compatible : "altr,sdr-ctl";
+> >> +- reg : Should contain 1 register ranges(address and length)
+> >> +
+> >> +Example:
+> >> +     sdrctl@ffc25000 {
+> >> +             compatible = "altr,sdr-ctl";
+> >> +             reg = <0xffc25000 0x4>;
+> >> +     };
+> >> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> >> index 4676f25..310292e 100644
+> >> --- a/arch/arm/boot/dts/socfpga.dtsi
+> >> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> >> @@ -682,6 +682,11 @@
+> >>                       clocks = <&l4_sp_clk>;
+> >>               };
+> >>
+> >> +             sdrctl@ffc25000 {
+> >> +                     compatible = "altr,sdr-ctl", "syscon";
+> >
+> > Did you forget to add the syscon to the binding documentation?
+> >
+> Hi Steffen,
+> 
+> I guess I'm confused about when to use syscon. In my last series, I
+> was advised not to include syscon in the bindings but to use it in the
+> device tree. I had been including it in the binding document until
+> this patch.
+> 
 
-Thanks. Good catch. I will fix this.
+Oh, aha. Well, then I'm confused, too. Let's wait for one of the DT
+binding guys than.
 
->> +                     compatible = "altr,sdram-edac";
->> +                     reg = <0xffc2502C 0x28>;
->> +                     interrupts = <0 39 4>;
->> +             };
->> +
->>               rst: rstmgr@ffd05000 {
->>                       compatible = "altr,rst-mgr";
->>                       reg = <0xffd05000 0x1000>;
->
-> --
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Regards,
+Steffen
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
