@@ -1,56 +1,45 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-Date: Mon, 23 Jun 2014 11:02:49 +0530
-Message-ID: <20140623053249.GD2666@pratyush-vbox>
-References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com>
- <53A453D1.4040308@ti.com>
- <53A46B49.3040009@ti.com>
- <14956334.eDhb2zObBc@wuerfel>
+From: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] ARM: dts: imx6sx: iomux-gpr syscon is compatible to imx6q
+Date: Mon, 23 Jun 2014 14:04:01 +0800
+Message-ID: <1403503442-2273-1-git-send-email-b20788@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <14956334.eDhb2zObBc@wuerfel>
-Sender: linux-doc-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Murali Karicheri <m-karicheri2@ti.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marek Vasut <marex@denx.de>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Richard Zhu <r65037@freescale.com>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org, kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 21, 2014 at 03:05:30AM +0800, Arnd Bergmann wrote:
-> On Friday 20 June 2014 13:11:37 Santosh Shilimkar wrote:
+The imx6sx iomuxc-gpr syscon is compatible to imx6q, so let's add
+compatible string 'fsl,imx6q-iomuxc-gpr' for imx6sx iomuxc-gpr syscon node.
 
-> > > 
-> > Arnd suggestion was to have the version 3.65 code in generic place since
-> > its IP specific and just in case some other vendor using the same version
-> > can leverage the code.
+This is necessary to enable SW workaround for ERR007265,
+please refer to imx6_pm_common_init of arch/arm/mach-imx/pm-imx6.c
+for detail.
 
-Sorry, I do not follow PCIe mailing list these days, doing something else
-now. So coming to this topic a bit delayed.
+Signed-off-by: Anson Huang <b20788-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ arch/arm/boot/dts/imx6sx.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> > 
-> > Concern here seems toe really those name of the files. I can't think of
-> > any other appropriate name. 
-> 
-> We should definitely keep the version in the DT "compatible" strings
-> wherever we know it. Regarding a better file name, I have no idea.
+diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
+index 78ccf61..7b41194 100644
+--- a/arch/arm/boot/dts/imx6sx.dtsi
++++ b/arch/arm/boot/dts/imx6sx.dtsi
+@@ -697,7 +697,8 @@
+ 			};
+ 
+ 			gpr: iomuxc-gpr@020e4000 {
+-				compatible = "fsl,imx6sx-iomuxc-gpr", "syscon";
++				compatible = "fsl,imx6sx-iomuxc-gpr",
++					     "fsl,imx6q-iomuxc-gpr", "syscon";
+ 				reg = <0x020e4000 0x4000>;
+ 			};
+ 
+-- 
+1.7.9.5
 
-In my opinion, we do not need any of dw-v3_65 files, as code in these
-files will not be usable by other vendors.
-
-Anything which is implemented in application space, will not be same
-across all IP users. For example, MSI0_IRQ_ENABLE_SET has been defined
-at offset 0x108 in keystone PCIe application space.Other vendor may
-not have this register at the same offset. Moreover, other vendors are
-not even obliged to implement MSI Enable signals in same way, so
-internal bit definition of the register may change.
-      
-Therefore code is not reusable if all register offset and bit
-definitions are not same across vendors. So, in case of DW driver none
-of the code which are accessed using va_app_base should go to common
-area.
-
-Regards
-Pratyush
-
-> 
-> 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
