@@ -1,50 +1,54 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: kirkwood: fix phy-connection-type for
- Guruplug
-Date: Mon, 23 Jun 2014 17:50:15 -0400
-Message-ID: <20140623215015.GC10202@titan.lakedaemon.net>
-References: <1403555115-13111-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: Re: [PATCH] ARM: mvebu: Fix the improper use of the compatible
+ string armada38x using a wildcard
+Date: Mon, 23 Jun 2014 17:53:09 -0400
+Message-ID: <20140623215309.GD10202@titan.lakedaemon.net>
+References: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403555115-13111-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+In-Reply-To: <1403533011-21339-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 23, 2014 at 10:25:15PM +0200, Sebastian Hesselbarth wrote:
-> Commit eeb845459a72e792a959278b858f9c417e9995bd
->  ("ARM: dts: kirkwood: set Guruplug phy-connection-type to rgmii-id")
-> added phy-connection-type properties to ethernet PHY nodes.
+On Mon, Jun 23, 2014 at 04:16:51PM +0200, Gregory CLEMENT wrote:
+> Wildcards in compatible strings should be avoid. "marvell,armada38x"
+> was recently introduced but was not yet used.
 > 
-> Actually, the property has to be set for the ethernet port node instead.
-> Fix it by moving the corresponding properties to the correct nodes.
+> The armada 385 SoC is a superset of the armada 380 SoC (with more CPUs
+> and more PCIe slots). So this patch replaces the use of
+> "marvell,armada38x" by the "marvell,armada380" string.
 > 
-> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 > ---
-> Jason,
+> Hi,
 > 
-> this should go in as a fix for v3.16 where above commit appeared first.
+> This fix should be merged in 3.16 and maybe sent as a fix for 3.15
+> too.
 > 
-> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-> Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> ---
->  arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+> The initial patch (ARM: mvebu: Fix missing binding documentation for
+> Armada 38x) was re-written after the review about the use of the
+> wildcards here:
+> http://thread.gmane.org/gmane.linux.kernel/1728755/focus=79339 and
+> there:
+> http://thread.gmane.org/gmane.linux.ports.arm.kernel/334225/focus=334311
+> 
+> 
+> Thanks,
+> Gregory
+> 
+>  Documentation/devicetree/bindings/arm/armada-38x.txt | 14 ++++++++++++--
+>  arch/arm/boot/dts/armada-380.dtsi                    |  2 +-
+>  arch/arm/boot/dts/armada-385-db.dts                  |  2 +-
+>  arch/arm/boot/dts/armada-385-rd.dts                  |  2 +-
+>  arch/arm/boot/dts/armada-385.dtsi                    |  2 +-
+>  arch/arm/boot/dts/armada-38x.dtsi                    |  2 +-
+>  6 files changed, 17 insertions(+), 7 deletions(-)
 
-Applied to mvebu/fixes
+Applied to mvebu/dt with Andrew's Ack.
 
 thx,
 
