@@ -1,146 +1,146 @@
-From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Fix the improper use of the compatible
- string armada38x using a wildcard
-Date: Mon, 23 Jun 2014 17:04:07 +0200
-Message-ID: <20140623150407.GA6553@lunn.ch>
-References: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com>
-Mime-Version: 1.0
+From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Subject: Re: OF_DYNAMIC node lifecycle
+Date: Mon, 23 Jun 2014 18:26:04 +0300
+Message-ID: <5213060A-74FB-4CD6-BF1C-4B7DCA98BE51@konsulko.com>
+References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com> <43898B58-2EA7-42B5-A17A-27F16F2618A6@konsulko.com> <20140623145844.DA6A3C40AE5@trevor.secretlab.ca>
+Mime-Version: 1.0 (Apple Message framework v1085)
 Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403533011-21339-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20140623145844.DA6A3C40AE5-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 23, 2014 at 04:16:51PM +0200, Gregory CLEMENT wrote:
-> Wildcards in compatible strings should be avoid. "marvell,armada38x"
-> was recently introduced but was not yet used.
-> 
-> The armada 385 SoC is a superset of the armada 380 SoC (with more CPUs
-> and more PCIe slots). So this patch replaces the use of
-> "marvell,armada38x" by the "marvell,armada380" string.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Hi Grant,
 
-Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+On Jun 23, 2014, at 5:58 PM, Grant Likely wrote:
 
-> ---
-> Hi,
+> On Thu, 19 Jun 2014 11:33:20 +0300, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> Hi Grant,
+>> 
+>> CCing Thomas Gleixner & Steven Rostedt, since they might have a few
+>> ideas...
+>> 
+>> On Jun 18, 2014, at 11:07 PM, Grant Likely wrote:
+>> 
+>>> Hi Nathan and Tyrel,
+>>> 
+>>> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
+>>> I'm hoping you can help me. Right now, pseries seems to be the only
+>>> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
+>>> the entire kernel because it requires all DT code to manage reference
+>>> counting with iterating over nodes. Most users simply get it wrong.
+>>> Pantelis did some investigation and found that the reference counts on
+>>> a running kernel are all over the place. I have my doubts that any
+>>> code really gets it right.
+>>> 
+>>> The problem is that users need to know when it is appropriate to call
+>>> of_node_get()/of_node_put(). All list traversals that exit early need
+>>> an extra call to of_node_put(), and code that is searching for a node
+>>> in the tree and holding a reference to it needs to call of_node_get().
+>>> 
+>> 
+>> In hindsight it appears that drivers just can't get the lifecycle right.
+>> So we need to simplify things.
+>> 
+>>> I've got a few pseries questions:
+>>> - What are the changes being requested by pseries firmware? Is it only
+>>> CPUs and memory nodes, or does it manipulate things all over the tree?
+>>> - How frequent are the changes? How many changes would be likely over
+>>> the runtime of the system?
+>>> - Are you able to verify that removed nodes are actually able to be
+>>> freed correctly? Do you have any testcases for node removal?
+>>> 
+>>> I'm thinking very seriously about changing the locking semantics of DT
+>>> code entirely so that most users never have to worry about
+>>> of_node_get/put at all. If the DT code is switched to use rcu
+>>> primitives for tree iteration (which also means making DT code use
+>>> list_head, something I'm already investigating), then instead of
+>>> trying to figure out of_node_get/put rules, callers could use
+>>> rcu_read_lock()/rcu_read_unlock() to protect the region that is
+>>> searching over nodes, and only call of_node_get() if the node pointer
+>>> is needed outside the rcu read-side lock.
+>>> 
+>>> I'd really like to be rid of the node reference counting entirely, but
+>>> I can't figure out a way of doing that safely, so I'd settle for
+>>> making it a lot easier to get correct.
+>>> 
+>> 
+>> Since we're going about changing things, how about that devtree_lock?
 > 
-> This fix should be merged in 3.16 and maybe sent as a fix for 3.15
-> too.
+> I believe rcu would pretty much eliminate the devtree_lock entirely. All
+> modifiers would need to grab a mutex to ensure there is only one writer
+> at any given time, but readers would have free reign to parse the tree
+> however they like.
 > 
-> The initial patch (ARM: mvebu: Fix missing binding documentation for
-> Armada 38x) was re-written after the review about the use of the
-> wildcards here:
-> http://thread.gmane.org/gmane.linux.kernel/1728755/focus=79339 and
-> there:
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/334225/focus=334311
+> DT writers would have to follow some strict rules about how to handle
+> nodes that are removed (ie. don't modify or of_node_put() them until
+> after rcu is syncronized), but the number of writers is very small and
+> we have control of all of them.
 > 
+
+There's one final nitpick with transactions; we might need another 
+node/property flag marking the 'in-progress' state so that
+can be skipped by iterators, but in general this looks good.
+
+>> We're using a raw_spinlock and we're always taking the lock with
+>> interrupts disabled.
+>> 
+>> If we're going to make DT changes frequently during normal runtime
+>> and not only during boot time, those are bad for any kind of real-time
+>> performance.
+>> 
+>> So the question is, do we really have code that access the live tree
+>> during atomic sections?  Is that something we want? Enforcing this
+>> will make our lives easier, and we'll get the change to replace
+>> that spinlock with a mutex.
 > 
-> Thanks,
-> Gregory
+> Yes, I believe the powerpc CPU hotplug code accesses the DT in atomic
+> sections. I cannot put my finger on the exact code however. Nathan might
+> know better. But, if I'm right, the whole problem goes away with RCU.
 > 
->  Documentation/devicetree/bindings/arm/armada-38x.txt | 14 ++++++++++++--
->  arch/arm/boot/dts/armada-380.dtsi                    |  2 +-
->  arch/arm/boot/dts/armada-385-db.dts                  |  2 +-
->  arch/arm/boot/dts/armada-385-rd.dts                  |  2 +-
->  arch/arm/boot/dts/armada-385.dtsi                    |  2 +-
->  arch/arm/boot/dts/armada-38x.dtsi                    |  2 +-
->  6 files changed, 17 insertions(+), 7 deletions(-)
+
+This is just bad. Why would you need to that?
+
+> The design with RCU is to switch struct device_node and struct property
+> to use list_head and/or hlist_head with the _rcu accessors. They allow
+> items to be removed from a list without syncronizing with readers. Right
+> now we have two lists that need to be modified; the allnodes list and
+> the sibling list. I *think* it will be fine for the two list removals to
+> be non-atomic (there will be a brief period where the node can be found
+> on one list, but not the other) because it is a transient state already
+> accounted for in rcu read-side critical region.
 > 
-> diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
-> index 11f2330a6554..ad9f8ed4d9bd 100644
-> --- a/Documentation/devicetree/bindings/arm/armada-38x.txt
-> +++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
-> @@ -6,5 +6,15 @@ following property:
->  
->  Required root node property:
->  
-> - - compatible: must contain either "marvell,armada380" or
-> -   "marvell,armada385" depending on the variant of the SoC being used.
-> + - compatible: must contain "marvell,armada380"
-> +
-> +In addition, boards using the Marvell Armada 385 SoC shall have the
-> +following property before the previous one:
-> +
-> +Required root node property:
-> +
-> +compatible: must contain "marvell,armada385"
-> +
-> +Example:
-> +
-> +compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada380";
-> diff --git a/arch/arm/boot/dts/armada-380.dtsi b/arch/arm/boot/dts/armada-380.dtsi
-> index e69bc6759c39..4173a8ab34e7 100644
-> --- a/arch/arm/boot/dts/armada-380.dtsi
-> +++ b/arch/arm/boot/dts/armada-380.dtsi
-> @@ -16,7 +16,7 @@
->  
->  / {
->  	model = "Marvell Armada 380 family SoC";
-> -	compatible = "marvell,armada380", "marvell,armada38x";
-> +	compatible = "marvell,armada380";
->  
->  	cpus {
->  		#address-cells = <1>;
-> diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-> index ff9637dd8d0f..4be6a2838a41 100644
-> --- a/arch/arm/boot/dts/armada-385-db.dts
-> +++ b/arch/arm/boot/dts/armada-385-db.dts
-> @@ -16,7 +16,7 @@
->  
->  / {
->  	model = "Marvell Armada 385 Development Board";
-> -	compatible = "marvell,a385-db", "marvell,armada385", "marvell,armada38x";
-> +	compatible = "marvell,a385-db", "marvell,armada385", "marvell,armada380";
->  
->  	chosen {
->  		bootargs = "console=ttyS0,115200 earlyprintk";
-> diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-> index 40893255a3f0..aaca2861dc87 100644
-> --- a/arch/arm/boot/dts/armada-385-rd.dts
-> +++ b/arch/arm/boot/dts/armada-385-rd.dts
-> @@ -17,7 +17,7 @@
->  
->  / {
->  	model = "Marvell Armada 385 Reference Design";
-> -	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada38x";
-> +	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada380";
->  
->  	chosen {
->  		bootargs = "console=ttyS0,115200 earlyprintk";
-> diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/armada-385.dtsi
-> index f011009bf4cf..6283d7912f71 100644
-> --- a/arch/arm/boot/dts/armada-385.dtsi
-> +++ b/arch/arm/boot/dts/armada-385.dtsi
-> @@ -16,7 +16,7 @@
->  
->  / {
->  	model = "Marvell Armada 385 family SoC";
-> -	compatible = "marvell,armada385", "marvell,armada38x";
-> +	compatible = "marvell,armada385", "marvell,armada380";
->  
->  	cpus {
->  		#address-cells = <1>;
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 3de364e81b52..689fa1a46728 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -20,7 +20,7 @@
->  
->  / {
->  	model = "Marvell Armada 38x family SoC";
-> -	compatible = "marvell,armada38x";
-> +	compatible = "marvell,armada380";
->  
->  	aliases {
->  		gpio0 = &gpio0;
-> -- 
-> 1.8.1.2
+
+See above about transient states.
+
+> That said, I've also got a design to remove the allnodes list entirely
+> and only work with the sibling list. I need to prototype this.
 > 
+
+In my original patchset for the overlays I used a single node as a root
+and didn't deal with allnodes at all. So it can definitely can work.
+
+> We'll also need a transition plan to move to RCU. I think the existing
+> iterators can be modified to do the rcu locking in-line, but still require
+> the of_node_get/put stuff (basically, so existing code continue to works
+> unchanged). Then we can add _rcu versions that drop the need for
+> of_node_get/put(). When everything is converted, the old iterators can
+> be dropped.
+> 
+
+Eventually yes. We're not close to that yet. I'd be happy if we get the 
+lifecycle issues fixed right now (with of_node_get/put) and plan ahead.
+I am sure we missed a few things, which we will come across.
+
+> g.
+
+Regards
+
+-- Pantelis
+
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
