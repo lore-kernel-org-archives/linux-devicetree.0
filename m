@@ -1,68 +1,54 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: [PATCH v3 1/2] arm: dts: am4372: let boards access all nodes through phandles
-Date: Mon, 23 Jun 2014 13:20:58 -0500
-Message-ID: <1403547659-24558-2-git-send-email-balbi@ti.com>
-References: <1403547659-24558-1-git-send-email-balbi@ti.com>
+From: Tejun Heo <tj@kernel.org>
+Subject: Re: [PATCH v1 2/3] ata: Fix the link down in first attempt for the
+ APM X-Gene SoC AHCI SATA host controller driver.
+Date: Mon, 23 Jun 2014 14:29:29 -0400
+Message-ID: <20140623182929.GB18451@mtj.dyndns.org>
+References: <1403518538-30697-1-git-send-email-stripathi@apm.com>
+ <1403518538-30697-3-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403547659-24558-1-git-send-email-balbi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Benoit Cousson <bcousson@baylibre.com>
-Cc: robh+dt@kernel.org, galak@codeaurora.org, Tony Lindgren <tony@atomide.com>, linux@arm.linux.org.uk, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, r.sricharan@ti.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Felipe Balbi <balbi@ti.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403518538-30697-3-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>
+Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-by providing phandles to rtc, wdt, cpu and dispc nodes,
-boards can access them to add board-specific data.
+Hello,
 
-Signed-off-by: Felipe Balbi <balbi@ti.com>
----
+On Mon, Jun 23, 2014 at 03:45:37PM +0530, Suman Tripathi wrote:
+> @@ -234,15 +237,20 @@ static int xgene_ahci_do_hardreset(struct ata_link *link,
+>  	u8 *d2h_fis = pp->rx_fis + RX_FIS_D2H_REG;
+>  	void __iomem *port_mmio = ahci_port_base(ap);
+>  	struct ata_taskfile tf;
+> +	int link_down_retry = 0;
+>  	int rc;
+>  	u32 val;
+> 
+> -	/* clear D2H reception area to properly wait for D2H FIS */
+> -	ata_tf_init(link->device, &tf);
+> -	tf.command = ATA_BUSY;
+> -	ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+> -	rc = sata_link_hardreset(link, timing, deadline, online,
+> +	do {
+> +		/* clear D2H reception area to properly wait for D2H FIS */
+> +		ata_tf_init(link->device, &tf);
+> +		tf.command = ATA_BUSY;
+> +		ata_tf_to_fis(&tf, 0, 0, d2h_fis);
+> +		rc = sata_link_hardreset(link, timing, deadline, online,
+>  				 ahci_check_ready);
+> +		if (*online)
+> +			break;
+> +	} while (link_down_retry++ < MAX_LINK_DOWN_RETRY);
 
-Changes since v1:
-	- added phandles to cpu and dispc
+Hmm... so it's retrying w/o extending deadline if the link is reported
+to be offline.  This definitely needs comment explaining what's going
+on.  Wouldn't it make more sense to change @timing instead rather than
+retrying resets?  sata_sil24 already does something similar.  Does,
+f.e., using sata_deb_timing_long for @timing make the problem go away?
 
- arch/arm/boot/dts/am4372.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+Thanks.
 
-diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-index 49fa596..8d3c163 100644
---- a/arch/arm/boot/dts/am4372.dtsi
-+++ b/arch/arm/boot/dts/am4372.dtsi
-@@ -30,7 +30,7 @@
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
--		cpu@0 {
-+		cpu: cpu@0 {
- 			compatible = "arm,cortex-a9";
- 			device_type = "cpu";
- 			reg = <0>;
-@@ -270,7 +270,7 @@
- 			ti,hwmods = "counter_32k";
- 		};
- 
--		rtc@44e3e000 {
-+		rtc: rtc@44e3e000 {
- 			compatible = "ti,am4372-rtc","ti,da830-rtc";
- 			reg = <0x44e3e000 0x1000>;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH
-@@ -279,7 +279,7 @@
- 			status = "disabled";
- 		};
- 
--		wdt@44e35000 {
-+		wdt: wdt@44e35000 {
- 			compatible = "ti,am4372-wdt","ti,omap3-wdt";
- 			reg = <0x44e35000 0x1000>;
- 			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
-@@ -871,7 +871,7 @@
- 			#size-cells = <1>;
- 			ranges;
- 
--			dispc@4832a400 {
-+			dispc: dispc@4832a400 {
- 				compatible = "ti,omap3-dispc";
- 				reg = <0x4832a400 0x400>;
- 				interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
 -- 
-2.0.0.390.gcb682f8
+tejun
