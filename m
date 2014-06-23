@@ -1,110 +1,146 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] genirq: generic chip: export irq_map_generic_chip
- function
-Date: Mon, 23 Jun 2014 17:07:47 +0200
-Message-ID: <53A842C3.6060606@free-electrons.com>
-References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com> <1403276487-8792-2-git-send-email-boris.brezillon@free-electrons.com> <20140621235108.GJ21711@titan.lakedaemon.net> <53A68CF0.8040303@free-electrons.com> <20140623130705.GM21711@titan.lakedaemon.net>
+From: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Fix the improper use of the compatible
+ string armada38x using a wildcard
+Date: Mon, 23 Jun 2014 17:04:07 +0200
+Message-ID: <20140623150407.GA6553@lunn.ch>
+References: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140623130705.GM21711-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403533011-21339-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jun 23, 2014 at 04:16:51PM +0200, Gregory CLEMENT wrote:
+> Wildcards in compatible strings should be avoid. "marvell,armada38x"
+> was recently introduced but was not yet used.
+> 
+> The armada 385 SoC is a superset of the armada 380 SoC (with more CPUs
+> and more PCIe slots). So this patch replaces the use of
+> "marvell,armada38x" by the "marvell,armada380" string.
+> 
+> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-On 23/06/2014 15:07, Jason Cooper wrote:
-> On Sun, Jun 22, 2014 at 09:59:44AM +0200, Boris BREZILLON wrote:
->> On 22/06/2014 01:51, Jason Cooper wrote:
->>> On Fri, Jun 20, 2014 at 05:01:21PM +0200, Boris BREZILLON wrote:
->>>> Export the generic irq map function in order to provide irq_domain ops with
->>>> generic mapping and specific of xlate function (needed by the new atmel
->>>> AIC driver).
->>>>
->>>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>> ---
->>>>  include/linux/irq.h       | 2 ++
->>>>  kernel/irq/generic-chip.c | 5 +++--
->>>>  2 files changed, 5 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/include/linux/irq.h b/include/linux/irq.h
->>>> index 0d998d8..62af592 100644
->>>> --- a/include/linux/irq.h
->>>> +++ b/include/linux/irq.h
->>>> @@ -771,6 +771,8 @@ void irq_gc_eoi(struct irq_data *d);
->>>>  int irq_gc_set_wake(struct irq_data *d, unsigned int on);
->>>>  
->>>>  /* Setup functions for irq_chip_generic */
->>>> +int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>> +			 irq_hw_number_t hw_irq);
->>>>  struct irq_chip_generic *
->>>>  irq_alloc_generic_chip(const char *name, int nr_ct, unsigned int irq_base,
->>>>  		       void __iomem *reg_base, irq_flow_handler_t handler);
->>>> diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
->>>> index 452d6f2..cf80e7b 100644
->>>> --- a/kernel/irq/generic-chip.c
->>>> +++ b/kernel/irq/generic-chip.c
->>>> @@ -341,8 +341,8 @@ static struct lock_class_key irq_nested_lock_class;
->>>>  /*
->>>>   * irq_map_generic_chip - Map a generic chip for an irq domain
->>>>   */
->>>> -static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>> -				irq_hw_number_t hw_irq)
->>>> +int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>> +			 irq_hw_number_t hw_irq)
->>>>  {
->>>>  	struct irq_data *data = irq_get_irq_data(virq);
->>>>  	struct irq_domain_chip_generic *dgc = d->gc;
->>>> @@ -394,6 +394,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>>  	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
->>>>  	return 0;
->>>>  }
->>>> +EXPORT_SYMBOL_GPL(irq_map_generic_chip);
->>>>  
->>>>  struct irq_domain_ops irq_generic_chip_ops = {
->>>>  	.map	= irq_map_generic_chip,
->>> Why can't you use irq_generic_chip_ops.map in your code and avoid this
-> s/code/declaration/, sorry for the misunderstanding.
->
->>> patch entirely?
->> Because in this case I'll have to remove constness from my
->> irq_domain_ops struct and initialize it in my init function.
->> This is not a big concern, but in general I tend to declare ops struct
->> with a const constraint.
-> /*
->  * We're the only user of irq_map_generic_chip() who
->  * doesn't also use irq_domain_xlate_onetwocell()
->  */
-> static const struct irq_domain_ops aic_irq_ops = {
-> 	.map    = irq_generic_chip_ops.map,
->         .xlate  = aic_irq_domain_xlate,
-> };
->
-> Wouldn't work?
+Acked-by: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
 
-No, it fails  with :
-
-"error: initializer element is not constant"
-
-
->
->> Tell me if you still want me to drop this patch and rework my init process.
-> If the above is satisfactory for you, please do so.  If we get a few
-> more chips that need one function, but not the other, then we'll revisit
-> what we're exporting.  The comment should bring the issue up in a
-> future grep.
->
-> thx,
->
-> Jason.
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
+> ---
+> Hi,
+> 
+> This fix should be merged in 3.16 and maybe sent as a fix for 3.15
+> too.
+> 
+> The initial patch (ARM: mvebu: Fix missing binding documentation for
+> Armada 38x) was re-written after the review about the use of the
+> wildcards here:
+> http://thread.gmane.org/gmane.linux.kernel/1728755/focus=79339 and
+> there:
+> http://thread.gmane.org/gmane.linux.ports.arm.kernel/334225/focus=334311
+> 
+> 
+> Thanks,
+> Gregory
+> 
+>  Documentation/devicetree/bindings/arm/armada-38x.txt | 14 ++++++++++++--
+>  arch/arm/boot/dts/armada-380.dtsi                    |  2 +-
+>  arch/arm/boot/dts/armada-385-db.dts                  |  2 +-
+>  arch/arm/boot/dts/armada-385-rd.dts                  |  2 +-
+>  arch/arm/boot/dts/armada-385.dtsi                    |  2 +-
+>  arch/arm/boot/dts/armada-38x.dtsi                    |  2 +-
+>  6 files changed, 17 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
+> index 11f2330a6554..ad9f8ed4d9bd 100644
+> --- a/Documentation/devicetree/bindings/arm/armada-38x.txt
+> +++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
+> @@ -6,5 +6,15 @@ following property:
+>  
+>  Required root node property:
+>  
+> - - compatible: must contain either "marvell,armada380" or
+> -   "marvell,armada385" depending on the variant of the SoC being used.
+> + - compatible: must contain "marvell,armada380"
+> +
+> +In addition, boards using the Marvell Armada 385 SoC shall have the
+> +following property before the previous one:
+> +
+> +Required root node property:
+> +
+> +compatible: must contain "marvell,armada385"
+> +
+> +Example:
+> +
+> +compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada380";
+> diff --git a/arch/arm/boot/dts/armada-380.dtsi b/arch/arm/boot/dts/armada-380.dtsi
+> index e69bc6759c39..4173a8ab34e7 100644
+> --- a/arch/arm/boot/dts/armada-380.dtsi
+> +++ b/arch/arm/boot/dts/armada-380.dtsi
+> @@ -16,7 +16,7 @@
+>  
+>  / {
+>  	model = "Marvell Armada 380 family SoC";
+> -	compatible = "marvell,armada380", "marvell,armada38x";
+> +	compatible = "marvell,armada380";
+>  
+>  	cpus {
+>  		#address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
+> index ff9637dd8d0f..4be6a2838a41 100644
+> --- a/arch/arm/boot/dts/armada-385-db.dts
+> +++ b/arch/arm/boot/dts/armada-385-db.dts
+> @@ -16,7 +16,7 @@
+>  
+>  / {
+>  	model = "Marvell Armada 385 Development Board";
+> -	compatible = "marvell,a385-db", "marvell,armada385", "marvell,armada38x";
+> +	compatible = "marvell,a385-db", "marvell,armada385", "marvell,armada380";
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
+> index 40893255a3f0..aaca2861dc87 100644
+> --- a/arch/arm/boot/dts/armada-385-rd.dts
+> +++ b/arch/arm/boot/dts/armada-385-rd.dts
+> @@ -17,7 +17,7 @@
+>  
+>  / {
+>  	model = "Marvell Armada 385 Reference Design";
+> -	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada38x";
+> +	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada380";
+>  
+>  	chosen {
+>  		bootargs = "console=ttyS0,115200 earlyprintk";
+> diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/armada-385.dtsi
+> index f011009bf4cf..6283d7912f71 100644
+> --- a/arch/arm/boot/dts/armada-385.dtsi
+> +++ b/arch/arm/boot/dts/armada-385.dtsi
+> @@ -16,7 +16,7 @@
+>  
+>  / {
+>  	model = "Marvell Armada 385 family SoC";
+> -	compatible = "marvell,armada385", "marvell,armada38x";
+> +	compatible = "marvell,armada385", "marvell,armada380";
+>  
+>  	cpus {
+>  		#address-cells = <1>;
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> index 3de364e81b52..689fa1a46728 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -20,7 +20,7 @@
+>  
+>  / {
+>  	model = "Marvell Armada 38x family SoC";
+> -	compatible = "marvell,armada38x";
+> +	compatible = "marvell,armada380";
+>  
+>  	aliases {
+>  		gpio0 = &gpio0;
+> -- 
+> 1.8.1.2
+> 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
