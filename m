@@ -1,16 +1,17 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] ARM: sunxi: Introduce Allwinner A23 support
-Date: Mon, 23 Jun 2014 18:00:13 +0200
-Message-ID: <20140623160013.GH19730@lukather>
+Subject: Re: [PATCH v3 2/4] ARM: sunxi: Add earlyprintk support
+ using R_UART (sun6i/sun8i)
+Date: Mon, 23 Jun 2014 18:01:34 +0200
+Message-ID: <20140623160134.GI19730@lukather>
 References: <1403275973-24259-1-git-send-email-wens@csie.org>
- <1403275973-24259-2-git-send-email-wens@csie.org>
+ <1403275973-24259-3-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="OdQvBiqfLsaeimeB"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBA7JUGOQKGQETNU2AYY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="GFRhMCFsFD5VPY3r"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBCXJUGOQKGQEHOIXJJQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403275973-24259-2-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+In-Reply-To: <1403275973-24259-3-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -22,16 +23,18 @@ Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-su
 List-Id: devicetree@vger.kernel.org
 
 
---OdQvBiqfLsaeimeB
+--GFRhMCFsFD5VPY3r
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jun 20, 2014 at 10:52:50PM +0800, Chen-Yu Tsai wrote:
-> The Allwinner A23 is a dual-core Cortex-A7-based SoC. It re-uses most of
-> the IPs found in previous SoCs, notably the A31.
+On Fri, Jun 20, 2014 at 10:52:51PM +0800, Chen-Yu Tsai wrote:
+> sun6i/sun8i have a UART in the RTC block group, which can be used
+> as an early console. This is most useful on sun8i as UART0 is muxed
+> with MMC0, which is not available if we boot from MMC.
 >=20
 > Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
 Applied, thanks
 
@@ -42,26 +45,26 @@ Maxime Ripard, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
 
---OdQvBiqfLsaeimeB
+--GFRhMCFsFD5VPY3r
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v1
 
-iQIcBAEBAgAGBQJTqE8NAAoJEBx+YmzsjxAg7eAQAMDLRpN54i36dfBSEjdcLGQz
-IkZ8ABc4BgifcFZkpNIKekHiVa36SzXpLeMAw3WhwP09mBlr+VsXW0faf4LGUc7Q
-yw1Z+9yWnWUOlgrG98HBrzsylj9FNV5P8TgBW3dw5RNcot7y0QRz1jNZG0Zz3Wmm
-MeEJzekNKL6rS+Mfw73Z8DcC9vyIUJZITpSen+A4V3LoPqmSFw5XhOXL++1knTXe
-M2SMaDU6SjlWbDENpQhZO0/KALdCM/7YkQfY2z1+PCTg9+05AoBWyEaM5fGRZCqR
-HCVAlUn5Hb+T2BiLpLdGusEu8eSHhRBEerqYm/mVxGtMw9TTKGxegInITt11qabb
-ecq+AeCKmns4Ax3ABCEL2BhzU9nJdre8uAXHP7/D7jauJXErjFvw8lIvDsqwwov3
-jkNq1E1EahyiKhpwtzszDTGVDk8sNAyu2ZhmVjHwu8VbRd+0dPIXamaDqHMcBg7E
-BgAR0g+kFZBzZTKkHYkflpZcM0/5KbkQ7AkKdWbCVGsbqhngRrI2bpqsF7splFvE
-rAalTbYyT9beNoHAlGb9f4msoDlZuAQDsKQIGbnxiEYKOVgGBboe7Yy8msBx79DW
-8soTnnQTZq4sKIB3kE7tlm9E7PlJnboFhwHkysLdLrCbTEKcYJKnt81r1pPIokXU
-oOylERDrOGrW9DJyPFRO
-=GH0q
+iQIcBAEBAgAGBQJTqE9eAAoJEBx+YmzsjxAgDb4P+gKbCSsrMk68+3nw4yhQ59ik
+XdfcoLnp+aWt73g3IcY6dP/sxsCKz+srAttHQ9ap1HGMKbsjHH3nyNq906voFaSu
+xn3116SSEPDJmG825BQ6J1jAXru9rP3kx+/oyYcz6WIB3Ia1yHdsiBzqbmXtgUS0
+tEMiG1wGDccdsLX9xubMVdszTjJEZWM5iC+s8sWl3glwE9TgVDHGiVmNXgE3NjVa
+29AVaG9H07Br923vbngGOtE9HBzqWxaun2f7tHwnb5fwPyx4WErM/3EJ5R2Yh9en
+lpT7UewqF4rD4md0CRjbX+zj4a+7NoLtOtp5n1A2PLvJDOsKVB742W7jwP1vgbm4
+M/PpUegJWqhBTIW4Xb04ZvDytX2zw8lFlCSrO5b7cBL7MZP7xi17t0hHJtByPu5P
+4v+A+je34mwDkb6qzZ0zICbvJMWEV2tRsPYmW6gzeOU0Df5SbnxGS2aJ2sw6lnz0
+sW0LMyirOzHKDRX5AYeEmL8WtDkRmCykubBjqVtSQu+tARiCfcpDa/vTH2VKslkX
+U368Qu1rFOXV5ZICNRcqwsT6sE/9laFkq478d7jQAwriRMQkJ0zMXRySaoFDM0+U
+vt/8DGuehhHtT0c0vK60o+yGtFSW6j7qlO6+w0pM4uIXtOkZvQxM5fyRs4iId1JH
+ruOBknFvTVjPoMeuY1cp
+=Sc9s
 -----END PGP SIGNATURE-----
 
---OdQvBiqfLsaeimeB--
+--GFRhMCFsFD5VPY3r--
