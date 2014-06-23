@@ -1,76 +1,129 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 4/4] ARM: sun8i: dt: Add Ippo-q8h v5 support
-Date: Mon, 23 Jun 2014 20:56:31 +0200
-Message-ID: <20140623185631.GK19730@lukather>
-References: <1403275973-24259-1-git-send-email-wens@csie.org>
- <1403275973-24259-5-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Dinh Nguyen <dinguyen-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCHv6 3/3] edac: altera: Add EDAC support for SDRAM Ctlr
+Date: Mon, 23 Jun 2014 14:13:18 -0500
+Message-ID: <1403550798.9081.5.camel@linux-builds1>
+References: <1403306523-4174-2-git-send-email-tthayer@altera.com>
+	 <1403306523-4174-4-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="HUNbJr+8XKUS5qN7"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBOXSUGOQKGQE6UK66YY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403275973-24259-5-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403306523-4174-4-git-send-email-tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+Cc: robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, dougthompson-aS9lmoZGLiVWk0Htik3J/w@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-edac-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tthayer.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
+Hi Thor,
 
---HUNbJr+8XKUS5qN7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Fri, 2014-06-20 at 18:22 -0500, Thor Thayer wrote:
+> From: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> 
+> Addition of the driver to support the Altera SDRAM Controller. 
+> This patch adds support for the CycloneV and ArriaV SDRAM controllers. 
+> Correction and reporting of SBEs, Panic on DBEs.
+> 
+> v2: Use the SDRAM controller registers to calculate memory size
+>     instead of the Device Tree. Update To & Cc list. Add maintainer
+>     information.
+> 
+> v3: EDAC driver cleanup based on comments from Mailing list.
+> 
+> v4: Panic on DBE. Add macro around inject-error reads to prevent
+>     them from being optimized out. Remove of_match_ptr since this
+>     will always use Device Tree.
+> 
+> v5: Addition of printk to trigger function to ensure read vars
+>     are not optimized out.
+> 
+> v6: Changes to split out shared SDRAM controller reg (offset 0x00)
+>     as a syscon device and allocate ECC specific SDRAM registers
+>     to EDAC.
+> 
+> Signed-off-by: Thor Thayer <tthayer-EIB2kfCEclfQT0dZR+AlfA@public.gmane.org>
+> ---
 
-On Fri, Jun 20, 2014 at 10:52:53PM +0800, Chen-Yu Tsai wrote:
-> The Ippo-q8h is a tablet circuit board commonly found in cheap Android
-> tablets with A23 SoCs. There are at least 2 versions of the board, with
-> different peripherals, such as WiFi chips.
->=20
-> Common features among these tablets include 512 MB DRAM, NAND, MMC, LCD,
-> capacitive touchscreen, accelerometer, 1 or 2 camera sensors, USB OTG,
-> microphone and speaker.
->=20
-> v5 of these board designs has a ESP8089 WiFi chip (not supported)
-> connected to mmc1. This patch adds very basic support.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+For future patch submissions, please add your version history after the
+"---".
 
-Fixed the whitespace warning and applied.
+>  drivers/edac/Kconfig       |    9 +
+>  drivers/edac/Makefile      |    2 +
+>  drivers/edac/altera_edac.c |  448 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 459 insertions(+)
+>  create mode 100644 drivers/edac/altera_edac.c
+> 
+> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
+> index 878f090..4f4d379 100644
+> --- a/drivers/edac/Kconfig
+> +++ b/drivers/edac/Kconfig
+> @@ -368,4 +368,13 @@ config EDAC_OCTEON_PCI
+>  	  Support for error detection and correction on the
+>  	  Cavium Octeon family of SOCs.
+>  
+> +config EDAC_ALTERA_MC
+> +	bool "Altera SDRAM Memory Controller EDAC"
+> +	depends on EDAC_MM_EDAC && ARCH_SOCFPGA
+> +	help
+> +	  Support for error detection and correction on the
+> +	  Altera SDRAM memory controller. Note that the
+> +	  preloader must initialize the SDRAM before loading
+> +	  the kernel.
+> +
+>  endif # EDAC
+> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
+> index 4154ed6..9741336 100644
+> --- a/drivers/edac/Makefile
+> +++ b/drivers/edac/Makefile
+> @@ -64,3 +64,5 @@ obj-$(CONFIG_EDAC_OCTEON_PC)		+= octeon_edac-pc.o
+>  obj-$(CONFIG_EDAC_OCTEON_L2C)		+= octeon_edac-l2c.o
+>  obj-$(CONFIG_EDAC_OCTEON_LMC)		+= octeon_edac-lmc.o
+>  obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
+> +
+> +obj-$(CONFIG_EDAC_ALTERA_MC)	        += altera_edac.o
+> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+> new file mode 100644
+> index 0000000..e3fcd27
+> --- /dev/null
+> +++ b/drivers/edac/altera_edac.c
+> @@ -0,0 +1,448 @@
+> +/*
+> + *  Copyright Altera Corporation (C) 2014. All rights reserved.
+> + *  Copyright 2011-2012 Calxeda, Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms and conditions of the GNU General Public License,
+> + * version 2, as published by the Free Software Foundation.
+> + *
+> + * This program is distributed in the hope it will be useful, but WITHOUT
+> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+> + * more details.
+> + *
+> + * This file is subject to the terms and conditions of the GNU General Public
+> + * License.  See the file "COPYING" in the main directory of this archive
+> + * for more details.
+> +
+> + *
+> + * Adapted from the highbank_mc_edac driver
+> + *
+> + */
+> +#include <linux/types.h>
+> +#include <linux/kernel.h>
+> +#include <linux/ctype.h>
+> +#include <linux/edac.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/uaccess.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
 
-Thanks!
-Maxime
+Can you alphabetize these headers please?
 
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Dinh
 
---HUNbJr+8XKUS5qN7
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTqHhfAAoJEBx+YmzsjxAgnoMQAK7eZs8AhCllm6htRDHaviTG
-7csqMo3CGnc0ttZvevXbYDe9RigZrFeZlpjc37OsUGZSFu/2QTqooCcIGV1QqqtR
-LYdmRL7XxUK0IjFgYQMO+t9V7KZtYnzSOeG2Ylubx/b7eq0dhkIG/g7394LZdegB
-9OFH61BzErXP4uIp4pYk861GK30kCedhTQA33073+7E3zjASgwnreThCpYYGKLV9
-GeNhTAj+ifYWtClz+4UWh86kWfzKMY4YAYnHsbOCYQeYLS64gjvEQfJwrzmz6V4l
-1C+XVpV9rN7DIkohCAFMuH7smqM+PdUzd51Z6IF3JuTaa0Kx7P3EomHvFzyy05A4
-I99geTQsXC31/y4dOpQ7d8rWKcvCbGHtitAOEoeQxYYFyHoAFjSGab6hALQ5SpiZ
-l9FQJCjf+9WK8vLagLuAPsi0Vv7K7A26PUz5X5f7/XeY/gvG4nk89WjLAaDfHPw9
-U6KHI3VizKdzm67thpnlUI3U9l+eBrWajoYtMkmc9BFXKoNL3vYg0hk40kTaOJwO
-+wflC6Vedvyd0ElyoHZFmW8y8I/SBjveNECjEgyAvgaMzf5gW9sOlHENBJGb5b+b
-RYIr0IKUJIfCgwF/o+VwntwUl6XuU5xBgIQdxy2+Q5D19KndXS4MUQ2airCzrUPP
-NMYbkzt5OqnXTA1vj8kp
-=fkPf
------END PGP SIGNATURE-----
-
---HUNbJr+8XKUS5qN7--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
