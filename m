@@ -1,146 +1,428 @@
-From: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Subject: Re: OF_DYNAMIC node lifecycle
-Date: Mon, 23 Jun 2014 18:26:04 +0300
-Message-ID: <5213060A-74FB-4CD6-BF1C-4B7DCA98BE51@konsulko.com>
-References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com> <43898B58-2EA7-42B5-A17A-27F16F2618A6@konsulko.com> <20140623145844.DA6A3C40AE5@trevor.secretlab.ca>
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+From: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH V4 04/10] drm/panel: Add driver for lvds/edp based panels
+Date: Mon, 23 Jun 2014 17:30:40 +0200
+Message-ID: <CABxcv=naPZMfNnU1a88JVjH_Q+rfZN8pdiUv8n3LwPtGmg76dA@mail.gmail.com>
+References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
+	<1402511228-18945-5-git-send-email-ajaykumar.rs@samsung.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140623145844.DA6A3C40AE5-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1402511228-18945-5-git-send-email-ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+To: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, inki.dae-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, seanpaul-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, ajaynumb-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, daniel.vetter-/w4YWyX8dFk@public.gmane.org, thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, joshi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, prashanth.g-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, marcheu-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Rahul Sharma <rahul.sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Grant,
+Hello Ajay,
 
-On Jun 23, 2014, at 5:58 PM, Grant Likely wrote:
+Not an extensive review since I'm not familiar with the graphics stack
+but a few things I noticed are commented below.
 
-> On Thu, 19 Jun 2014 11:33:20 +0300, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->> Hi Grant,
->> 
->> CCing Thomas Gleixner & Steven Rostedt, since they might have a few
->> ideas...
->> 
->> On Jun 18, 2014, at 11:07 PM, Grant Likely wrote:
->> 
->>> Hi Nathan and Tyrel,
->>> 
->>> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
->>> I'm hoping you can help me. Right now, pseries seems to be the only
->>> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
->>> the entire kernel because it requires all DT code to manage reference
->>> counting with iterating over nodes. Most users simply get it wrong.
->>> Pantelis did some investigation and found that the reference counts on
->>> a running kernel are all over the place. I have my doubts that any
->>> code really gets it right.
->>> 
->>> The problem is that users need to know when it is appropriate to call
->>> of_node_get()/of_node_put(). All list traversals that exit early need
->>> an extra call to of_node_put(), and code that is searching for a node
->>> in the tree and holding a reference to it needs to call of_node_get().
->>> 
->> 
->> In hindsight it appears that drivers just can't get the lifecycle right.
->> So we need to simplify things.
->> 
->>> I've got a few pseries questions:
->>> - What are the changes being requested by pseries firmware? Is it only
->>> CPUs and memory nodes, or does it manipulate things all over the tree?
->>> - How frequent are the changes? How many changes would be likely over
->>> the runtime of the system?
->>> - Are you able to verify that removed nodes are actually able to be
->>> freed correctly? Do you have any testcases for node removal?
->>> 
->>> I'm thinking very seriously about changing the locking semantics of DT
->>> code entirely so that most users never have to worry about
->>> of_node_get/put at all. If the DT code is switched to use rcu
->>> primitives for tree iteration (which also means making DT code use
->>> list_head, something I'm already investigating), then instead of
->>> trying to figure out of_node_get/put rules, callers could use
->>> rcu_read_lock()/rcu_read_unlock() to protect the region that is
->>> searching over nodes, and only call of_node_get() if the node pointer
->>> is needed outside the rcu read-side lock.
->>> 
->>> I'd really like to be rid of the node reference counting entirely, but
->>> I can't figure out a way of doing that safely, so I'd settle for
->>> making it a lot easier to get correct.
->>> 
->> 
->> Since we're going about changing things, how about that devtree_lock?
-> 
-> I believe rcu would pretty much eliminate the devtree_lock entirely. All
-> modifiers would need to grab a mutex to ensure there is only one writer
-> at any given time, but readers would have free reign to parse the tree
-> however they like.
-> 
-> DT writers would have to follow some strict rules about how to handle
-> nodes that are removed (ie. don't modify or of_node_put() them until
-> after rcu is syncronized), but the number of writers is very small and
-> we have control of all of them.
-> 
+On Wed, Jun 11, 2014 at 8:27 PM, Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> This patch adds a simple driver to handle all the LCD and LED
+> powerup/down routines needed to support eDP/LVDS panels.
+>
+> The LCD and LED units are usually powered up via regulators,
+> and almost on all boards, we will have a BACKLIGHT_EN pin to
+> enable/ disable the backlight.
+> Sometimes, we can have LCD_EN switches as well.
+>
+> The routines in this driver can be used to control
+> panel power sequence on such boards.
+>
+> Signed-off-by: Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Signed-off-by: Rahul Sharma <Rahul.Sharma-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  .../devicetree/bindings/panel/panel-lvds.txt       |   50 ++++
+>  drivers/gpu/drm/panel/Kconfig                      |   10 +
+>  drivers/gpu/drm/panel/Makefile                     |    1 +
+>  drivers/gpu/drm/panel/panel-lvds.c                 |  262 ++++++++++++++++++++
+>  4 files changed, 323 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/panel/panel-lvds.txt
+>  create mode 100644 drivers/gpu/drm/panel/panel-lvds.c
+>
+> diff --git a/Documentation/devicetree/bindings/panel/panel-lvds.txt b/Documentation/devicetree/bindings/panel/panel-lvds.txt
+> new file mode 100644
+> index 0000000..7cb6084
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/panel/panel-lvds.txt
+> @@ -0,0 +1,50 @@
+> +panel interface for eDP/lvds panels
+> +
+> +Required properties:
+> +  - compatible: "panel-lvds"
+> +
+> +Optional properties:
+> +       -lcd-en-gpio:
+> +               panel LCD poweron GPIO.
+> +                       Indicates which GPIO needs to be powered up as output
+> +                       to powerup/enable the switch to the LCD panel.
+> +       -led-en-gpio:
+> +               panel LED enable GPIO.
+> +                       Indicates which GPIO needs to be powered up as output
+> +                       to enable the backlight.
+> +       -panel-prepare-delay:
+> +               delay value in ms required for panel_prepare process
+> +                       Delay in ms needed for the panel LCD unit to
+> +                       powerup completely.
+> +                       ex: delay needed till eDP panel throws HPD.
+> +                           delay needed so that we cans tart reading edid.
+> +       -panel-enable-delay:
+> +               delay value in ms required for panel_enable process
+> +                       Delay in ms needed for the panel backlight/LED unit
+> +                       to powerup, and delay needed between video_enable and
+> +                       backlight_enable.
+> +       -panel-disable-delay:
+> +               delay value in ms required for panel_disable process
+> +                       Delay in ms needed for the panel backlight/LED unit
+> +                       powerdown, and delay needed between backlight_disable
+> +                       and video_disable.
+> +       -panel-unprepare-delay:
+> +               delay value in ms required for panel_post_disable process
+> +                       Delay in ms needed for the panel LCD unit to
+> +                       to powerdown completely, and the minimum delay needed
+> +                       before powering it on again.
+> +       -panel-width-mm: physical panel width [mm]
+> +       -panel-height-mm: physical panel height [mm]
+> +
+> +Example:
+> +
+> +       panel-lvds {
+> +               compatible = "panel-lvds";
+> +               led-en-gpio = <&gpx3 0 1>;
+> +               panel-prepare-delay = <40>;
+> +               panel-enable-delay = <20>;
+> +               panel-disable-delay = <20>;
+> +               panel-unprepare-delay = <30>;
+> +               panel-width-mm = <256>;
+> +               panel-height-mm = <144>;
+> +       };
 
-There's one final nitpick with transactions; we might need another 
-node/property flag marking the 'in-progress' state so that
-can be skipped by iterators, but in general this looks good.
+Recently it's considered a good practice to have the DT binding
+documentation in a separate patch.
 
->> We're using a raw_spinlock and we're always taking the lock with
->> interrupts disabled.
->> 
->> If we're going to make DT changes frequently during normal runtime
->> and not only during boot time, those are bad for any kind of real-time
->> performance.
->> 
->> So the question is, do we really have code that access the live tree
->> during atomic sections?  Is that something we want? Enforcing this
->> will make our lives easier, and we'll get the change to replace
->> that spinlock with a mutex.
-> 
-> Yes, I believe the powerpc CPU hotplug code accesses the DT in atomic
-> sections. I cannot put my finger on the exact code however. Nathan might
-> know better. But, if I'm right, the whole problem goes away with RCU.
-> 
+> diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+> index 4ec874d..8fe7ee5 100644
+> --- a/drivers/gpu/drm/panel/Kconfig
+> +++ b/drivers/gpu/drm/panel/Kconfig
+> @@ -30,4 +30,14 @@ config DRM_PANEL_S6E8AA0
+>         select DRM_MIPI_DSI
+>         select VIDEOMODE_HELPERS
+>
+> +config DRM_PANEL_EDP_LVDS
+> +       tristate "support for eDP/LVDS panels"
+> +       depends on OF && DRM_PANEL
+> +       select VIDEOMODE_HELPERS
+> +       help
+> +         DRM panel driver for direct eDP panels or LVDS connected
+> +         via DP bridges, that need at most a regulator for LCD unit,
+> +         a regulator for LED unit and/or enable GPIOs for LCD or LED units.
+> +         Delay values can also be specified to support powerup and
+> +         powerdown process.
+>  endmenu
+> diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+> index 8b92921..eaafa01 100644
+> --- a/drivers/gpu/drm/panel/Makefile
+> +++ b/drivers/gpu/drm/panel/Makefile
+> @@ -1,3 +1,4 @@
+>  obj-$(CONFIG_DRM_PANEL_SIMPLE) += panel-simple.o
+>  obj-$(CONFIG_DRM_PANEL_LD9040) += panel-ld9040.o
+>  obj-$(CONFIG_DRM_PANEL_S6E8AA0) += panel-s6e8aa0.o
+> +obj-$(CONFIG_DRM_PANEL_EDP_LVDS) += panel-lvds.o
+> diff --git a/drivers/gpu/drm/panel/panel-lvds.c b/drivers/gpu/drm/panel/panel-lvds.c
+> new file mode 100644
+> index 0000000..2124fcb
+> --- /dev/null
+> +++ b/drivers/gpu/drm/panel/panel-lvds.c
+> @@ -0,0 +1,262 @@
+> +/*
+> + * panel driver for lvds and eDP panels
+> + *
+> + * Copyright (c) 2014 Samsung Electronics Co., Ltd
+> + *
+> + * Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/gpio.h>
+> +#include <linux/module.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/regulator/consumer.h>
+> +
+> +#include <video/of_videomode.h>
+> +#include <video/videomode.h>
+> +
+> +#include <drm/drmP.h>
+> +#include <drm/drm_crtc.h>
+> +#include <drm/drm_panel.h>
+> +
+> +struct panel_lvds {
+> +       struct drm_panel        base;
+> +       struct regulator        *backlight_fet;
+> +       struct regulator        *lcd_fet;
+> +       struct videomode        vm;
+> +       int                     width_mm;
+> +       int                     height_mm;
+> +       bool                    backlight_fet_enabled;
+> +       bool                    lcd_fet_enabled;
+> +       int                     led_en_gpio;
+> +       int                     lcd_en_gpio;
+> +       int                     panel_prepare_delay;
+> +       int                     panel_enable_delay;
+> +       int                     panel_disable_delay;
+> +       int                     panel_unprepare_delay;
+> +};
+> +
+> +static inline struct panel_lvds *to_panel(struct drm_panel *panel)
+> +{
+> +       return container_of(panel, struct panel_lvds, base);
+> +}
+> +
+> +static int panel_lvds_prepare(struct drm_panel *panel)
+> +{
+> +       struct panel_lvds *lvds_panel = to_panel(panel);
+> +
+> +       if (!IS_ERR_OR_NULL(lvds_panel->lcd_fet))
+> +               if (!lvds_panel->lcd_fet_enabled) {
+> +                       if (regulator_enable(lvds_panel->lcd_fet))
+> +                               DRM_ERROR("failed to enable LCD fet\n");
+> +                       lvds_panel->lcd_fet_enabled = true;
 
-This is just bad. Why would you need to that?
+If this is an expected condition then using DRM_INFO() instead? It
+looks like an error to me though so maybe should return an error in
+this case?
 
-> The design with RCU is to switch struct device_node and struct property
-> to use list_head and/or hlist_head with the _rcu accessors. They allow
-> items to be removed from a list without syncronizing with readers. Right
-> now we have two lists that need to be modified; the allnodes list and
-> the sibling list. I *think* it will be fine for the two list removals to
-> be non-atomic (there will be a brief period where the node can be found
-> on one list, but not the other) because it is a transient state already
-> accounted for in rcu read-side critical region.
-> 
+> +               }
+> +
+> +       if (gpio_is_valid(lvds_panel->lcd_en_gpio))
+> +               gpio_set_value(lvds_panel->lcd_en_gpio, 1);
+> +
+> +       msleep(lvds_panel->panel_prepare_delay);
+> +
+> +       return 0;
+> +}
+> +
+> +static int panel_lvds_enable(struct drm_panel *panel)
+> +{
+> +       struct panel_lvds *lvds_panel = to_panel(panel);
+> +
+> +       if (!IS_ERR_OR_NULL(lvds_panel->backlight_fet))
+> +               if (!lvds_panel->backlight_fet_enabled) {
+> +                       if (regulator_enable(lvds_panel->backlight_fet))
+> +                               DRM_ERROR("failed to enable LED fet\n");
+> +                       lvds_panel->backlight_fet_enabled = true;
 
-See above about transient states.
+Same here.
 
-> That said, I've also got a design to remove the allnodes list entirely
-> and only work with the sibling list. I need to prototype this.
-> 
+> +               }
+> +
+> +       msleep(lvds_panel->panel_enable_delay);
+> +
+> +       if (gpio_is_valid(lvds_panel->led_en_gpio))
+> +               gpio_set_value(lvds_panel->led_en_gpio, 1);
+> +
+> +       return 0;
+> +}
+> +
+> +static int panel_lvds_disable(struct drm_panel *panel)
+> +{
+> +       struct panel_lvds *lvds_panel = to_panel(panel);
+> +
+> +       if (gpio_is_valid(lvds_panel->led_en_gpio))
+> +               gpio_set_value(lvds_panel->led_en_gpio, 0);
+> +
+> +       if (!IS_ERR_OR_NULL(lvds_panel->backlight_fet))
+> +               if (lvds_panel->backlight_fet_enabled) {
+> +                       regulator_disable(lvds_panel->backlight_fet);
+> +                       lvds_panel->backlight_fet_enabled = false;
+> +               }
+> +
+> +       msleep(lvds_panel->panel_disable_delay);
+> +
+> +       return 0;
+> +}
+> +
+> +static int panel_lvds_unprepare(struct drm_panel *panel)
+> +{
+> +       struct panel_lvds *lvds_panel = to_panel(panel);
+> +
+> +       if (gpio_is_valid(lvds_panel->lcd_en_gpio))
+> +               gpio_set_value(lvds_panel->lcd_en_gpio, 0);
+> +
+> +       if (!IS_ERR_OR_NULL(lvds_panel->lcd_fet))
+> +               if (lvds_panel->lcd_fet_enabled) {
+> +                       regulator_disable(lvds_panel->lcd_fet);
+> +                       lvds_panel->lcd_fet_enabled = false;
+> +               }
+> +
+> +       msleep(lvds_panel->panel_unprepare_delay);
+> +
+> +       return 0;
+> +}
+> +
+> +static int panel_lvds_get_modes(struct drm_panel *panel)
+> +{
+> +       struct drm_connector *connector = panel->connector;
+> +       struct panel_lvds *lvds_panel = to_panel(panel);
+> +       struct drm_display_mode *mode;
+> +
+> +       mode = drm_mode_create(connector->dev);
+> +       if (!mode) {
+> +               DRM_ERROR("failed to create a new display mode.\n");
+> +               return 0;
+> +       }
+> +
+> +       drm_display_mode_from_videomode(&lvds_panel->vm, mode);
+> +       mode->width_mm = lvds_panel->width_mm;
+> +       mode->height_mm = lvds_panel->height_mm;
+> +       connector->display_info.width_mm = mode->width_mm;
+> +       connector->display_info.height_mm = mode->height_mm;
+> +
+> +       mode->type = DRM_MODE_TYPE_DRIVER | DRM_MODE_TYPE_PREFERRED;
+> +       drm_mode_set_name(mode);
+> +       drm_mode_probed_add(connector, mode);
+> +
+> +       return 1;
+> +}
+> +
+> +static const struct drm_panel_funcs panel_lvds_funcs = {
+> +       .unprepare = panel_lvds_unprepare,
+> +       .disable = panel_lvds_disable,
+> +       .prepare = panel_lvds_prepare,
+> +       .enable = panel_lvds_enable,
+> +       .get_modes = panel_lvds_get_modes,
+> +};
+> +
+> +static int panel_lvds_probe(struct platform_device *pdev)
+> +{
+> +       struct panel_lvds *panel;
+> +       struct device *dev = &pdev->dev;
+> +       struct device_node *node = dev->of_node;
+> +       int ret;
+> +
+> +       panel = devm_kzalloc(dev, sizeof(*panel), GFP_KERNEL);
+> +       if (!panel)
+> +               return -ENOMEM;
+> +
+> +       ret = of_get_videomode(node, &panel->vm, 0);
+> +       if (ret) {
+> +               DRM_ERROR("failed: of_get_videomode() : %d\n", ret);
+> +               return ret;
+> +       }
+> +
+> +       panel->lcd_fet = devm_regulator_get_optional(dev, "lcd_vdd");
+> +       if (IS_ERR(panel->lcd_fet))
+> +               return -EPROBE_DEFER;
+> +
+> +       panel->backlight_fet = devm_regulator_get_optional(dev, "vcd_led");
+> +       if (IS_ERR(panel->backlight_fet))
+> +               return -EPROBE_DEFER;
+> +
+> +       panel->lcd_en_gpio = of_get_named_gpio(node, "lcd-en-gpio", 0);
+> +       panel->led_en_gpio = of_get_named_gpio(node, "led-en-gpio", 0);
+> +
 
-In my original patchset for the overlays I used a single node as a root
-and didn't deal with allnodes at all. So it can definitely can work.
+The old integer-based GPIO API has been deprecated and new drivers
+should use the new descriptor-based interface
+(Documentation/gpio/consumer.txt) instead if possible.
 
-> We'll also need a transition plan to move to RCU. I think the existing
-> iterators can be modified to do the rcu locking in-line, but still require
-> the of_node_get/put stuff (basically, so existing code continue to works
-> unchanged). Then we can add _rcu versions that drop the need for
-> of_node_get/put(). When everything is converted, the old iterators can
-> be dropped.
-> 
+> +       of_property_read_u32(node, "panel-width-mm", &panel->width_mm);
+> +       of_property_read_u32(node, "panel-height-mm", &panel->height_mm);
+> +
+> +       of_property_read_u32(node, "panel-prepare-delay",
+> +                                       &panel->panel_prepare_delay);
+> +       of_property_read_u32(node, "panel-enable-delay",
+> +                                       &panel->panel_enable_delay);
+> +       of_property_read_u32(node, "panel-disable-delay",
+> +                                       &panel->panel_disable_delay);
+> +       of_property_read_u32(node, "panel-unprepare-delay",
+> +                                       &panel->panel_unprepare_delay);
+> +
+> +       if (gpio_is_valid(panel->lcd_en_gpio)) {
+> +               ret = devm_gpio_request_one(dev, panel->lcd_en_gpio,
+> +                                       GPIOF_OUT_INIT_LOW, "lcd_en_gpio");
+> +               if (ret) {
+> +                       DRM_ERROR("failed to get lcd-en gpio [%d]\n", ret);
+> +                       return 0;
 
-Eventually yes. We're not close to that yet. I'd be happy if we get the 
-lifecycle issues fixed right now (with of_node_get/put) and plan ahead.
-I am sure we missed a few things, which we will come across.
+The probe() function returning 0 means success to the driver core but
+here is returning early due an error.
 
-> g.
+> +               }
+> +       } else {
+> +               panel->lcd_en_gpio = -ENODEV;
+> +       }
+> +
+> +       if (gpio_is_valid(panel->led_en_gpio)) {
+> +               ret = devm_gpio_request_one(dev, panel->led_en_gpio,
+> +                                       GPIOF_OUT_INIT_LOW, "led_en_gpio");
+> +               if (ret) {
+> +                       DRM_ERROR("failed to get led-en gpio [%d]\n", ret);
+> +                       return 0;
 
-Regards
+Same here, it should return an error code instead 0.
 
--- Pantelis
+> +               }
+> +       } else {
+> +               panel->led_en_gpio = -ENODEV;
+> +       }
+> +
+> +       drm_panel_init(&panel->base);
+> +       panel->base.dev = dev;
+> +       panel->base.funcs = &panel_lvds_funcs;
+> +
+> +       ret = drm_panel_add(&panel->base);
+> +       if (ret < 0)
+> +               return ret;
+> +
+> +       dev_set_drvdata(dev, panel);
+> +
+> +       return 0;
+> +}
+> +
+> +static int panel_lvds_remove(struct platform_device *pdev)
+> +{
+> +       struct panel_lvds *panel = dev_get_drvdata(&pdev->dev);
+> +
+> +       panel_lvds_disable(&panel->base);
+> +       panel_lvds_unprepare(&panel->base);
+> +
+> +       drm_panel_remove(&panel->base);
+> +
+> +       return 0;
+> +}
+> +
+> +static const struct of_device_id lvds_panel_dt_match[] = {
+> +       { .compatible = "panel-lvds" },
+> +       {},
+> +};
+> +MODULE_DEVICE_TABLE(of, lvds_panel_dt_match);
+> +
+> +struct platform_driver lvds_panel_driver = {
+> +       .driver = {
+> +               .name = "panel_lvds",
+> +               .owner = THIS_MODULE,
+> +               .of_match_table = lvds_panel_dt_match,
+> +       },
+> +       .probe = panel_lvds_probe,
+> +       .remove = panel_lvds_remove,
+> +};
+> +module_platform_driver(lvds_panel_driver);
+> +
+> +MODULE_AUTHOR("Ajay Kumar <ajaykumar.rs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+> +MODULE_DESCRIPTION("lvds/eDP panel driver");
+> +MODULE_LICENSE("GPL v2");
+> --
+> 1.7.9.5
+>
 
+Best regards,
+Javier
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
