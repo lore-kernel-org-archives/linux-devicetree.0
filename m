@@ -1,105 +1,121 @@
-From: Christian Gmeiner <christian.gmeiner@gmail.com>
-Subject: Re: [PATCH V4 04/10] drm/panel: Add driver for lvds/edp based panels
-Date: Mon, 23 Jun 2014 18:55:01 +0200
-Message-ID: <CAH9NwWeZ2i_zDD2EkE7nE12W314TiAUPudBu_WEXT34az3xOYw@mail.gmail.com>
-References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
- <1402511228-18945-5-git-send-email-ajaykumar.rs@samsung.com>
+From: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Regression on Integrator after commit 07e461cd7
+Date: Mon, 23 Jun 2014 19:17:03 +0200
+Message-ID: <CACRpkdZ_4xcfAjuOY7izwMvYg+zqA4stJ3gv_EdTiALmc1go3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1402511228-18945-5-git-send-email-ajaykumar.rs@samsung.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Ajay Kumar <ajaykumar.rs@samsung.com>
-Cc: devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, daniel.vetter@ffwll.ch, joshi@samsung.com, DRI mailing list <dri-devel@lists.freedesktop.org>, ajaynumb@gmail.com, marcheu@chromium.org, prashanth.g@samsung.com, Rahul Sharma <rahul.sharma@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi Grant,
+
+The Integrators are not booting after commit
+07e461cd7e73a84f0e3757932b93cc80976fd749
+"of: Ensure unique names without sacrificing determinism"
+
+i.e. these device trees:
+arch/arm/boot/dts/integratorap.dts
+arch/arm/boot/dts/integratorcp.dts
+
+It hangs very early boot at one time with the message:
+Error: unrecognized/unsupported processor variant (0x41069262).
+
+Reverting that patch (manually) makes the platform boot again,
+so it's definately caused by that.
+
+Can you see what is wrong with these device trees, like if it's
+something obvious that the code is not expecting? It's like
+it cannot build the tree or something.
+
+My revert does not look very nice but looks like this:
+
+commit be15147f12a72b7bc63a8e18a2edd74123bcb5f0
+Author: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Date:   Mon Jun 23 18:59:58 2014 +0200
+
+    Revert "of: Ensure unique names without sacrificing determinism"
+
+    This reverts commit 07e461cd7e73a84f0e3757932b93cc80976fd749.
+
+    Conflicts:
+        drivers/of/platform.c
+
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 6c48d73a7fd7..71581921c1f3 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -64,35 +64,37 @@ EXPORT_SYMBOL(of_find_device_by_node);
+  * of_device_make_bus_id - Use the device node data to assign a unique name
+  * @dev: pointer to device structure that is linked to a device tree node
+  *
+- * This routine will first try using the translated bus address to
+- * derive a unique name. If it cannot, then it will prepend names from
+- * parent nodes until a unique name can be derived.
++ * This routine will first try using either the dcr-reg or the reg property
++ * value to derive a unique name.  As a last resort it will use the node
++ * name followed by a unique number.
+  */
+ void of_device_make_bus_id(struct device *dev)
+ {
++       static atomic_t bus_no_reg_magic;
+        struct device_node *node = dev->of_node;
+        const __be32 *reg;
+        u64 addr;
++       int magic;
+
+-       /* Construct the name, using parent nodes if necessary to
+ensure uniqueness */
+-       while (node->parent) {
+-               /*
+-                * If the address can be translated, then that is as much
+-                * uniqueness as we need. Make it the first component and return
+-                */
+-               reg = of_get_property(node, "reg", NULL);
+-               if (reg && (addr = of_translate_address(node, reg)) !=
+OF_BAD_ADDR) {
+-                       dev_set_name(dev, dev_name(dev) ? "%llx.%s:%s"
+: "%llx.%s",
+-                                    (unsigned long long)addr, node->name,
+-                                    dev_name(dev));
++       /*
++        * For MMIO, get the physical address
++        */
++       reg = of_get_property(node, "reg", NULL);
++       if (reg) {
++               addr = of_translate_address(node, reg);
++               if (addr != OF_BAD_ADDR) {
++                       dev_set_name(dev, "%llx.%s",
++                                    (unsigned long long)addr, node->name);
+                        return;
+                }
+-
+-               /* format arguments only used if dev_name() resolves to NULL */
+-               dev_set_name(dev, dev_name(dev) ? "%s:%s" : "%s",
+-                            strrchr(node->full_name, '/') + 1, dev_name(dev));
+-               node = node->parent;
+        }
++
++       /*
++        * No BusID, use the node name and add a globally incremented
++        * counter (and pray...)
++        */
++       magic = atomic_add_return(1, &bus_no_reg_magic);
++       dev_set_name(dev, "%s.%d", node->name, magic - 1);
+ }
+
+ /**
 
 
-2014-06-11 20:27 GMT+02:00 Ajay Kumar <ajaykumar.rs@samsung.com>:
-> This patch adds a simple driver to handle all the LCD and LED
-> powerup/down routines needed to support eDP/LVDS panels.
->
-> The LCD and LED units are usually powered up via regulators,
-> and almost on all boards, we will have a BACKLIGHT_EN pin to
-> enable/ disable the backlight.
-> Sometimes, we can have LCD_EN switches as well.
->
-> The routines in this driver can be used to control
-> panel power sequence on such boards.
->
-> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
-> Signed-off-by: Rahul Sharma <Rahul.Sharma@samsung.com>
-> ---
->  .../devicetree/bindings/panel/panel-lvds.txt       |   50 ++++
->  drivers/gpu/drm/panel/Kconfig                      |   10 +
->  drivers/gpu/drm/panel/Makefile                     |    1 +
->  drivers/gpu/drm/panel/panel-lvds.c                 |  262 ++++++++++++++++++++
->  4 files changed, 323 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/panel/panel-lvds.txt
->  create mode 100644 drivers/gpu/drm/panel/panel-lvds.c
->
-> diff --git a/Documentation/devicetree/bindings/panel/panel-lvds.txt b/Documentation/devicetree/bindings/panel/panel-lvds.txt
-> new file mode 100644
-> index 0000000..7cb6084
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/panel/panel-lvds.txt
-> @@ -0,0 +1,50 @@
-> +panel interface for eDP/lvds panels
-> +
-> +Required properties:
-> +  - compatible: "panel-lvds"
-> +
-> +Optional properties:
-> +       -lcd-en-gpio:
-> +               panel LCD poweron GPIO.
-> +                       Indicates which GPIO needs to be powered up as output
-> +                       to powerup/enable the switch to the LCD panel.
-> +       -led-en-gpio:
-> +               panel LED enable GPIO.
-> +                       Indicates which GPIO needs to be powered up as output
-> +                       to enable the backlight.
-> +       -panel-prepare-delay:
-> +               delay value in ms required for panel_prepare process
-> +                       Delay in ms needed for the panel LCD unit to
-> +                       powerup completely.
-> +                       ex: delay needed till eDP panel throws HPD.
-> +                           delay needed so that we cans tart reading edid.
-> +       -panel-enable-delay:
-> +               delay value in ms required for panel_enable process
-> +                       Delay in ms needed for the panel backlight/LED unit
-> +                       to powerup, and delay needed between video_enable and
-> +                       backlight_enable.
-> +       -panel-disable-delay:
-> +               delay value in ms required for panel_disable process
-> +                       Delay in ms needed for the panel backlight/LED unit
-> +                       powerdown, and delay needed between backlight_disable
-> +                       and video_disable.
-> +       -panel-unprepare-delay:
-> +               delay value in ms required for panel_post_disable process
-> +                       Delay in ms needed for the panel LCD unit to
-> +                       to powerdown completely, and the minimum delay needed
-> +                       before powering it on again.
-> +       -panel-width-mm: physical panel width [mm]
-> +       -panel-height-mm: physical panel height [mm]
-> +
+I have no real idea of how the OF core works so I'm a bit in the blue
+here :-/
 
-For what are these two properties are needed?
+Any help appreciated!
 
-If I find some time I will give this patch a try as I need something
-like this for an imx6d based device.
-
-greets
+Yours,
+Linus Walleij
 --
-Christian Gmeiner, MSc
-
-https://soundcloud.com/christian-gmeiner
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
