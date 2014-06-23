@@ -1,44 +1,185 @@
-From: Tomasz Figa <tomasz.figa@gmail.com>
-Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip
- support
-Date: Mon, 23 Jun 2014 16:38:22 +0200
-Message-ID: <53A83BDE.7080005@gmail.com>
-References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOp0jiZC-XqqQX7S7Dbu-_bi2unpVU2P4zAQ7VmopD27A@mail.gmail.com>
- <CAAQKjZPHc2KfmNyfchP68BJiPUFyAO_keCHMBc1YuYTj_J0kVQ@mail.gmail.com>
- <CAPdUM4Mpo_9A_+4k9ctcXKnctKOdgxkEH4Sv0TO-4Y8dZ8aiow@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAPdUM4Mpo_9A_+4k9ctcXKnctKOdgxkEH4Sv0TO-4Y8dZ8aiow@mail.gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rahul Sharma <rahul.sharma@samsung.com>, Inki Dae <inki.dae@samsung.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay kumar <ajaynumb@gmail.com>, =?ISO-8859-1?Q?St=E9phane_Marchesin?= <marcheu@chromium.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: [PATCH v2 2/2] ARM: vexpress: Add CLCD Device Tree properties
+Date: Mon, 23 Jun 2014 15:55:18 +0100
+Message-ID: <1403535318-19333-2-git-send-email-pawel.moll@arm.com>
+References: <1403532837.3804.29.camel@hornet>
+ <1403535318-19333-1-git-send-email-pawel.moll@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403535318-19333-1-git-send-email-pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rahul,
+... for V2M-P1 motherboard CLCD (limited to 640x480 16bpp and using
+dedicated video RAM bank) and for V2P-CA9 (up to 1024x768 16bpp).
 
-On 23.06.2014 15:58, Rahul Sharma wrote:
-> Hi Ajay, Inki,
-> 
-> I tested this series for Exynos5420 based peach-pit board,
-> Exynos5800 based Peach-pi board and Exynos5250 based
-> Snow board. I verified with the chrome test environment and
-> able to see upto Login Screen. DPMS on/off functionality and
-> S2R is also working fine for Display. therefore:
+Signed-off-by: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+---
+ arch/arm/boot/dts/vexpress-v2m-rs1.dtsi | 34 ++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/vexpress-v2m.dtsi     | 34 ++++++++++++++++++++++++++++++++-
+ arch/arm/boot/dts/vexpress-v2p-ca9.dts  | 31 ++++++++++++++++++++++++++++++
+ 3 files changed, 97 insertions(+), 2 deletions(-)
 
-What tree did you apply this patches onto? I don't see S2R support for
-Exynos5420 or 5800 in current linux-next (e.g. there are no PMU tables
-present for these SoCs).
+diff --git a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+index 756c986..c14c026 100644
+--- a/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m-rs1.dtsi
+@@ -246,9 +246,41 @@
+ 			clcd@1f0000 {
+ 				compatible = "arm,pl111", "arm,primecell";
+ 				reg = <0x1f0000 0x1000>;
++				interrupt-names = "combined";
+ 				interrupts = <14>;
+ 				clocks = <&v2m_oscclk1>, <&smbclk>;
+ 				clock-names = "clcdclk", "apb_pclk";
++				arm,pl11x,framebuffer = <0x18000000 0x00800000>;
++				max-memory-bandwidth = <36864000>; /* Bps, 640x480@60 16bpp */
++
++				port {
++					v2m_clcd_pads: endpoint {
++						remote-endpoint = <&v2m_clcd_panel>;
++						arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++					};
++				};
++
++				panel {
++					compatible = "panel-dpi";
++
++					port {
++						v2m_clcd_panel: endpoint {
++							remote-endpoint = <&v2m_clcd_pads>;
++						};
++					};
++
++					panel-timing {
++						clock-frequency = <25175000>;
++						hactive = <640>;
++						hback-porch = <40>;
++						hfront-porch = <24>;
++						hsync-len = <96>;
++						vactive = <480>;
++						vback-porch = <32>;
++						vfront-porch = <11>;
++						vsync-len = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -350,7 +382,7 @@
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+-				freq-range = <23750000 63500000>;
++				freq-range = <23750000 65000000>;
+ 				#clock-cells = <0>;
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+diff --git a/arch/arm/boot/dts/vexpress-v2m.dtsi b/arch/arm/boot/dts/vexpress-v2m.dtsi
+index ba856d6..a448420 100644
+--- a/arch/arm/boot/dts/vexpress-v2m.dtsi
++++ b/arch/arm/boot/dts/vexpress-v2m.dtsi
+@@ -245,9 +245,41 @@
+ 			clcd@1f000 {
+ 				compatible = "arm,pl111", "arm,primecell";
+ 				reg = <0x1f000 0x1000>;
++				interrupt-names = "combined";
+ 				interrupts = <14>;
+ 				clocks = <&v2m_oscclk1>, <&smbclk>;
+ 				clock-names = "clcdclk", "apb_pclk";
++				arm,pl11x,framebuffer = <0x4c000000 0x00800000>;
++				max-memory-bandwidth = <36864000>; /* Bps, 640x480@60 16bpp */
++
++				port {
++					v2m_clcd_pads: endpoint {
++						remote-endpoint = <&v2m_clcd_panel>;
++						arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++					};
++				};
++
++				panel {
++					compatible = "panel-dpi";
++
++					port {
++						v2m_clcd_panel: endpoint {
++							remote-endpoint = <&v2m_clcd_pads>;
++						};
++					};
++
++					panel-timing {
++						clock-frequency = <25175000>;
++						hactive = <640>;
++						hback-porch = <40>;
++						hfront-porch = <24>;
++						hsync-len = <96>;
++						vactive = <480>;
++						vback-porch = <32>;
++						vfront-porch = <11>;
++						vsync-len = <2>;
++					};
++				};
+ 			};
+ 		};
+ 
+@@ -349,7 +381,7 @@
+ 				/* CLCD clock */
+ 				compatible = "arm,vexpress-osc";
+ 				arm,vexpress-sysreg,func = <1 1>;
+-				freq-range = <23750000 63500000>;
++				freq-range = <23750000 65000000>;
+ 				#clock-cells = <0>;
+ 				clock-output-names = "v2m:oscclk1";
+ 			};
+diff --git a/arch/arm/boot/dts/vexpress-v2p-ca9.dts b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+index 62d9b22..31107cd 100644
+--- a/arch/arm/boot/dts/vexpress-v2p-ca9.dts
++++ b/arch/arm/boot/dts/vexpress-v2p-ca9.dts
+@@ -70,9 +70,40 @@
+ 	clcd@10020000 {
+ 		compatible = "arm,pl111", "arm,primecell";
+ 		reg = <0x10020000 0x1000>;
++		interrupt-names = "combined";
+ 		interrupts = <0 44 4>;
+ 		clocks = <&oscclk1>, <&oscclk2>;
+ 		clock-names = "clcdclk", "apb_pclk";
++		max-memory-bandwidth = <94371840>; /* Bps, 1024x768@60 16bpp */
++
++		port {
++			clcd_pads: endpoint {
++				remote-endpoint = <&clcd_panel>;
++				arm,pl11x,tft-r0g0b0-pads = <0 8 16>;
++			};
++		};
++
++		panel {
++			compatible = "panel-dpi";
++
++			port {
++				clcd_panel: endpoint {
++					remote-endpoint = <&clcd_pads>;
++				};
++			};
++
++			panel-timing {
++				clock-frequency = <63500127>;
++				hactive = <1024>;
++				hback-porch = <152>;
++				hfront-porch = <48>;
++				hsync-len = <104>;
++				vactive = <768>;
++				vback-porch = <23>;
++				vfront-porch = <3>;
++				vsync-len = <4>;
++			};
++		};
+ 	};
+ 
+ 	memory-controller@100e0000 {
+-- 
+1.9.1
 
-Best regards,
-Tomasz
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
