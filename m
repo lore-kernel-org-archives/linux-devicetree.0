@@ -1,42 +1,417 @@
-From: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Subject: Re: [PATCH v4 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
- nodes
-Date: Mon, 23 Jun 2014 14:40:36 -0600
-Message-ID: <20140623204036.GA12793@obsidianresearch.com>
-References: <201406210034.57784.sergei.shtylyov@cogentembedded.com>
- <4637423.jWRbL1GbCK@wuerfel>
- <53A4A0E5.50904@cogentembedded.com>
- <4490558.0d3xbrzEgW@wuerfel>
- <53A4A6C6.9000703@cogentembedded.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53A4A6C6.9000703@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: Arnd Bergmann <arnd@arndb.de>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, linux-sh@vger.kernel.org, magnus.damm@gmail.com, robh+dt@kernel.org, horms@verge.net.au, galak@codeaurora.org, ben.dooks@codethink.co.uk, linux-arm-kernel@lists.infradead.org
+From: Doug Anderson <dianders@chromium.org>
+Subject: [PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi
+Date: Mon, 23 Jun 2014 13:49:36 -0700
+Message-ID: <1403556576-8038-1-git-send-email-dianders@chromium.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kukjin Kim <kgene.kim@samsung.com>
+Cc: Tomasz Figa <tomasz.figa@gmail.com>, sjg@chromium.org, olof@lixom.net, javier.martinez@collabora.co.uk, ch.naveen@samsung.com, swarren@wwwdotorg.org, khilman@linaro.org, ajaynumb@gmail.com, rahul.sharma@samsung.com, tushar.b@samsung.com, Doug Anderson <dianders@chromium.org>, ben-linux@fluff.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
+including:
+* The keyboard
+* The i2c tunnel
+* The tps65090 under the i2c tunnel
+* The battery under the i2c tunnel
 
-> >>     Hm, are you sure about that? I thought only PCI devices should have it...
-> 
-> >Yes, pretty sure it's needed in both the host controller and the
-> >devices.
-> 
->     I don't understand the case of the PCI devices, honestly.
-> Shouldn't the "device_type" prop reflect the device's functionality
-> rather than the bus where it's located?
+To add extra motivation, it should be noted that tps65090 is one of
+the things needed to get display-related FETs turned on for pit and
+pi.
 
-It is confusingly named, but it is required on the host bridge OF node.
+Note that this relies on a few outstanding changes:
+* Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
+  (spi: s3c64xx: for DT platofrms always get the chipselect info from
+  DT node) to work properly and match the documented bindings.  See
+  <https://patchwork.kernel.org/patch/4346701/> and
+  <https://patchwork.kernel.org/patch/4346711/>
 
-The spec says ' .. corresponding to a device that implements a PCI bus',
-which includes the host bridge.
+Signed-off-by: Doug Anderson <dianders@chromium.org>
+Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+---
+Changes in v2:
+- Now just one patch since mfd patch landed.
+- Rebased to ToT linux-next
 
-The key element is that it must be present on the node that introduces
-the PCI 3 dword address encoding scheme, and then on all nodes below
-it that use the 3 dword scheme.
+ arch/arm/boot/dts/exynos5420-peach-pit.dts | 145 +++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  | 145 +++++++++++++++++++++++++++++
+ 2 files changed, 290 insertions(+)
 
-Otherwise Linux common OF PCI code does not work properly.
-
-Jason
+diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+index 7649982..581f385 100644
+--- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
++++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+@@ -25,6 +25,11 @@
+ 		"google,pit", "google,peach","samsung,exynos5420",
+ 		"samsung,exynos5";
+ 
++	aliases {
++		/* Assign 20 so we don't get confused w/ builtin ones */
++		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
++	};
++
+ 	backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm 0 1000000 0>;
+@@ -87,6 +92,13 @@
+ 		pinctrl-0 = <&usb301_vbus_en>;
+ 		enable-active-high;
+ 	};
++
++	vbat: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vbat-supply";
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
+ 
+ &dp {
+@@ -231,6 +243,20 @@
+ 		samsung,pin-drv = <0>;
+ 	};
+ 
++	ec_irq: ec-irq {
++		samsung,pins = "gpx1-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
++	tps65090_irq: tps65090-irq {
++		samsung,pins = "gpx2-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
+ 	dp_hpd_gpio: dp_hpd_gpio {
+ 		samsung,pins = "gpx2-6";
+ 		samsung,pin-function = <0>;
+@@ -247,6 +273,19 @@
+ };
+ 
+ &pinctrl_3 {
++	/* Drive SPI lines at x2 for better integrity */
++	spi2-bus {
++		samsung,pin-drv = <2>;
++	};
++
++	/* Drive SPI chip select at x2 for better integrity */
++	ec_spi_cs: ec-spi-cs {
++		samsung,pins = "gpb1-2";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <2>;
++	};
++
+ 	usb300_vbus_en: usb300-vbus-en {
+ 		samsung,pins = "gph0-0";
+ 		samsung,pin-function = <1>;
+@@ -266,6 +305,111 @@
+ 	status = "okay";
+ };
+ 
++&spi_2 {
++	status = "okay";
++	num-cs = <1>;
++	samsung,spi-src-clk = <0>;
++	cs-gpios = <&gpb1 2 0>;
++
++	cros_ec: cros-ec@0 {
++		compatible = "google,cros-ec-spi";
++		interrupt-parent = <&gpx1>;
++		interrupts = <5 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ec_spi_cs &ec_irq>;
++		reg = <0>;
++		spi-max-frequency = <3125000>;
++
++		controller-data {
++			samsung,spi-feedback-delay = <1>;
++		};
++
++		i2c-tunnel {
++			compatible = "google,cros-ec-i2c-tunnel";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			google,remote-bus = <0>;
++
++			battery: sbs-battery@b {
++				compatible = "sbs,sbs-battery";
++				reg = <0xb>;
++				sbs,poll-retry-count = <1>;
++				sbs,i2c-retry-count = <2>;
++			};
++
++			power-regulator@48 {
++				compatible = "ti,tps65090";
++				reg = <0x48>;
++
++				/*
++				 * Config irq to disable internal pulls
++				 * even though we run in polling mode.
++				 */
++				pinctrl-names = "default";
++				pinctrl-0 = <&tps65090_irq>;
++
++				vsys1-supply = <&vbat>;
++				vsys2-supply = <&vbat>;
++				vsys3-supply = <&vbat>;
++				infet1-supply = <&vbat>;
++				infet2-supply = <&vbat>;
++				infet3-supply = <&vbat>;
++				infet4-supply = <&vbat>;
++				infet5-supply = <&vbat>;
++				infet6-supply = <&vbat>;
++				infet7-supply = <&vbat>;
++				vsys-l1-supply = <&vbat>;
++				vsys-l2-supply = <&vbat>;
++
++				regulators {
++					dcdc1 {
++						ti,enable-ext-control;
++					};
++					dcdc2 {
++						ti,enable-ext-control;
++					};
++					dcdc3 {
++						ti,enable-ext-control;
++					};
++					fet1 {
++						regulator-name = "vcd_led";
++					};
++					tps65090_fet2: fet2 {
++						regulator-name = "video_mid";
++						regulator-always-on;
++					};
++					fet3 {
++						regulator-name = "wwan_r";
++						regulator-always-on;
++					};
++					fet4 {
++						regulator-name = "sdcard";
++						regulator-always-on;
++					};
++					fet5 {
++						regulator-name = "camout";
++					};
++					fet6 {
++						regulator-name = "lcd_vdd";
++					};
++					tps65090_fet7: fet7 {
++						regulator-name = "video_mid_1a";
++						regulator-always-on;
++					};
++					ldo1 {
++					};
++					ldo2 {
++					};
++				};
++
++				charger {
++					compatible = "ti,tps65090-charger";
++				};
++			};
++		};
++	};
++};
++
+ &uart_3 {
+ 	status = "okay";
+ };
+@@ -287,3 +431,4 @@
+ 	timeout-sec = <32>;
+ };
+ 
++#include "cros-ec-keyboard.dtsi"
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 2c2c137..b2dc290 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -23,6 +23,11 @@
+ 		"google,pi", "google,peach", "samsung,exynos5800",
+ 		"samsung,exynos5";
+ 
++	aliases {
++		/* Assign 20 so we don't get confused w/ builtin ones */
++		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
++	};
++
+ 	backlight {
+ 		compatible = "pwm-backlight";
+ 		pwms = <&pwm 0 1000000 0>;
+@@ -85,6 +90,13 @@
+ 		pinctrl-0 = <&usb301_vbus_en>;
+ 		enable-active-high;
+ 	};
++
++	vbat: fixed-regulator {
++		compatible = "regulator-fixed";
++		regulator-name = "vbat-supply";
++		regulator-boot-on;
++		regulator-always-on;
++	};
+ };
+ 
+ &dp {
+@@ -229,6 +241,20 @@
+ 		samsung,pin-drv = <0>;
+ 	};
+ 
++	ec_irq: ec-irq {
++		samsung,pins = "gpx1-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
++	tps65090_irq: tps65090-irq {
++		samsung,pins = "gpx2-5";
++		samsung,pin-function = <0>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <0>;
++	};
++
+ 	dp_hpd_gpio: dp_hpd_gpio {
+ 		samsung,pins = "gpx2-6";
+ 		samsung,pin-function = <0>;
+@@ -245,6 +271,19 @@
+ };
+ 
+ &pinctrl_3 {
++	/* Drive SPI lines at x2 for better integrity */
++	spi2-bus {
++		samsung,pin-drv = <2>;
++	};
++
++	/* Drive SPI chip select at x2 for better integrity */
++	ec_spi_cs: ec-spi-cs {
++		samsung,pins = "gpb1-2";
++		samsung,pin-function = <1>;
++		samsung,pin-pud = <0>;
++		samsung,pin-drv = <2>;
++	};
++
+ 	usb300_vbus_en: usb300-vbus-en {
+ 		samsung,pins = "gph0-0";
+ 		samsung,pin-function = <1>;
+@@ -264,6 +303,111 @@
+ 	status = "okay";
+ };
+ 
++&spi_2 {
++	status = "okay";
++	num-cs = <1>;
++	samsung,spi-src-clk = <0>;
++	cs-gpios = <&gpb1 2 0>;
++
++	cros_ec: cros-ec@0 {
++		compatible = "google,cros-ec-spi";
++		interrupt-parent = <&gpx1>;
++		interrupts = <5 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&ec_spi_cs &ec_irq>;
++		reg = <0>;
++		spi-max-frequency = <3125000>;
++
++		controller-data {
++			samsung,spi-feedback-delay = <1>;
++		};
++
++		i2c-tunnel {
++			compatible = "google,cros-ec-i2c-tunnel";
++			#address-cells = <1>;
++			#size-cells = <0>;
++			google,remote-bus = <0>;
++
++			battery: sbs-battery@b {
++				compatible = "sbs,sbs-battery";
++				reg = <0xb>;
++				sbs,poll-retry-count = <1>;
++				sbs,i2c-retry-count = <2>;
++			};
++
++			power-regulator@48 {
++				compatible = "ti,tps65090";
++				reg = <0x48>;
++
++				/*
++				 * Config irq to disable internal pulls
++				 * even though we run in polling mode.
++				 */
++				pinctrl-names = "default";
++				pinctrl-0 = <&tps65090_irq>;
++
++				vsys1-supply = <&vbat>;
++				vsys2-supply = <&vbat>;
++				vsys3-supply = <&vbat>;
++				infet1-supply = <&vbat>;
++				infet2-supply = <&vbat>;
++				infet3-supply = <&vbat>;
++				infet4-supply = <&vbat>;
++				infet5-supply = <&vbat>;
++				infet6-supply = <&vbat>;
++				infet7-supply = <&vbat>;
++				vsys-l1-supply = <&vbat>;
++				vsys-l2-supply = <&vbat>;
++
++				regulators {
++					dcdc1 {
++						ti,enable-ext-control;
++					};
++					dcdc2 {
++						ti,enable-ext-control;
++					};
++					dcdc3 {
++						ti,enable-ext-control;
++					};
++					fet1 {
++						regulator-name = "vcd_led";
++					};
++					tps65090_fet2: fet2 {
++						regulator-name = "video_mid";
++						regulator-always-on;
++					};
++					fet3 {
++						regulator-name = "wwan_r";
++						regulator-always-on;
++					};
++					fet4 {
++						regulator-name = "sdcard";
++						regulator-always-on;
++					};
++					fet5 {
++						regulator-name = "camout";
++					};
++					fet6 {
++						regulator-name = "lcd_vdd";
++					};
++					tps65090_fet7: fet7 {
++						regulator-name = "video_mid_1a";
++						regulator-always-on;
++					};
++					ldo1 {
++					};
++					ldo2 {
++					};
++				};
++
++				charger {
++					compatible = "ti,tps65090-charger";
++				};
++			};
++		};
++	};
++};
++
+ &uart_3 {
+ 	status = "okay";
+ };
+@@ -285,3 +429,4 @@
+ 	timeout-sec = <32>;
+ };
+ 
++#include "cros-ec-keyboard.dtsi"
+-- 
+2.0.0.526.g5318336
