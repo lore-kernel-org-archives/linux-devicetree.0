@@ -1,125 +1,86 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: Initial register settings in Device Tree?
-Date: Mon, 23 Jun 2014 15:38:40 +0200
-Message-ID: <9567058.OVFbhFdhBE@wuerfel>
-References: <53A71474.7030704@tronnes.org> <4560059.E2lhedgi9o@wuerfel> <53A72E38.8040307@tronnes.org>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: [PATCH v7 0/7] ARM: berlin: add AHCI support
+Date: Mon, 23 Jun 2014 15:39:36 +0200
+Message-ID: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53A72E38.8040307-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Noralf =?ISO-8859-1?Q?Tr=F8nnes?= <notro-L59+Z2yzLopAfugRpC6u6w@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 22 June 2014 21:27:52 Noralf Tr=F8nnes wrote:
-> Den 22.06.2014 20:18, skrev Arnd Bergmann:
-> > On Sunday 22 June 2014 19:37:56 Noralf Tr=F8nnes wrote:
-> >> I see two possibilities:
-> >> * add a special marker value to separate the registers, as I do no=
-w
-> >> * add a flag to indicate a register number. So far I've only seen =
-8 and
-> >> 16-bit register number widths: register 20h could thus be written =
-as
-> >> 10000020, 1000020, 100020 or 10020
-> >>
-> >> Example (skipped state changes from previous example):
-> >> <100B1 01 2C 2D
-> >>    100B2 01 2C 2D
-> >>    100B3 01 2C 2D 01 2C 2D
-> >>    100B4 07 C0 A2 02 84
-> >>    100C1 C5 C2 0A 00
-> >>    100C3 8A 2A
-> >>    100C4 8A EE
-> >>    100C5 0E
-> >>    10020
-> >>    10036 C0
-> >>    1003A 05
-> >>    100E0 0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07 02 10
-> >>    100E1 0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07 03 10>
-> >>
-> >> Is this a viable solution?
-> > We normally use high-level descriptions of the timings that the dri=
-ver
-> > then converts into register-level settings. See
-> > Documentation/devicetree/bindings/video/display-timing.txt and
-> > other files in that directory for how existing drivers handle this.
-> >
-> > 	Arnd
-> >
-> OK, that takes care of the timings. But what about power control, and=
-=20
-> gamma registers?
->
-> The power registers usually have bitfields that map to voltages, fact=
-ors=20
-> (0.7x, 1x,..) and levels (low,medium,high).
->=20
-> Should all these bitfiels have their own property in DT?
-> For some controllers this would be 20+ properties.
+This series adds the support for Berlin SoC AHCI controller. The
+controller allows to use the SATA host interface and, for example, the
+eSATA port on the BG2Q.
 
-In some cases, it can make sense to group several values into one
-multi-cell property.
+The series adds a PHY driver to control the two SATA ports available,
+and adds a generic compatible to use the existing ahci_platform driver.
 
-> Should the properties have the same name as the register and bitfield=
-=20
-> from the datasheet?
-> st7735r,pwctr1-avdd
-> st7735r,pwctr1-vrhp
-> st7735r,pwctr1-vrhn
-> st7735r,pwctr1-mode
->=20
-> Should the value map directly to the bitfield or should a string be u=
-sed?
-> st7735r,pwctr1-avdd =3D <6> /* 5.1v - Power pin for analog circuits *=
-/
-> st7735r,pwctr1-avdd =3D "5.1"
->=20
-> Or should each register have it's own property?
-> st7735r,pwctr1 =3D <C5 C2 0A 00>
+Also enable the eSATA interface on the BG2Q DMP.
 
-Each user-serviceable property should be abstract and use the normal
-units that you'd expect to see in a data sheet: milivolts, nanoseconds,
-etc. See if some other display controller already has picked names
-for these properties, then use the same. If nobody has done this
-before, try to use property names that would also make sense on a
-different controller. If we get a couple of these, we can split out
-the property parsing code into a separate helper module.
+Changes since v6:
+        - added the 'clocks' property and support in the PHY driver
+        - updated the PHY compatible
 
-> The gamma registers have several values that control a resistor netwo=
-rk=20
-> that sets grayscale values.
-> Would this suffice?
-> st7735r,gamma-positive =3D <0f 1a 0f 18 2f 28 20 22 1f 1b 23 37 00 07=
- 02 10>
-> st7735r,gamma-negative =3D <0f 1b 0f 17 33 2c 29 2e 30 30 39 3f 00 07=
- 03 10>
->
-> Usually when buying these displays, they come with an initialization=20
-> sequence.
-> Having register values in the DT, a user will be up and running in=20
-> minutes with a new display.
-> If one has to read the datasheet and map the register values to=20
-> bitfields and properties, it takes a lot of time and not the least, i=
-t's=20
-> error prone.
+Changes since v5:
+        - rebased on top of v3.16-rc1
+        - added the 'clocks' property in the sata node
 
-Can you describe how this works for arbitrary combinations of controlle=
-rs
-and displays? Are the initialization sequences specific to some control=
-ler?
+Changes since v4:
+        - updated PHY driver as tristate
+        - handled the case were no SATA port is enabled
+        - updated the compatible to a generic one
+        - cosmetic fixups
 
-An alternative to listing all the settings in DT might be to have a lis=
-t
-of supported displays in the controller driver and pick the display
-by name, but that only works if there are a small number of possible
-displays that can be connected to each controller.
+Changes since v3:
+        - moved all PHY operations to the PHY driver
+        - removed PHY sub-nodes
+        - removed the custom Berlin AHCI driver and switched to
+          ahci_platform
+        - added multiple PHYs support to the libahci_platform
 
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Changes since v2:
+        - modeled each PHY as a sub-node
+        - cosmetic fixups
+
+Changes since v1:
+        - added a PHY driver, allowing to enable each port
+          individually and removed the 'force-port-map' property
+	- made the drivers a bit less magic :)
+        - wrote a function to select and configure registers in the
+          AHCI driver
+        - removed BG2 / BG2CD nodes
+
+Antoine T=C3=A9nart (7):
+  phy: add a driver for the Berlin SATA PHY
+  Documentation: bindings: add the Berlin SATA PHY
+  ata: libahci: allow to use multiple PHYs
+  ata: ahci_platform: add a generic AHCI compatible
+  Documentation: bindings: document the sub-nodes AHCI bindings
+  ARM: berlin: add the AHCI node for the BG2Q
+  ARM: berlin: enable the eSATA interface on the BG2Q DMP
+
+ .../devicetree/bindings/ata/ahci-platform.txt      |  37 ++++
+ .../devicetree/bindings/phy/berlin-sata-phy.txt    |  16 ++
+ arch/arm/boot/dts/berlin2q-marvell-dmp.dts         |   8 +
+ arch/arm/boot/dts/berlin2q.dtsi                    |  29 +++
+ drivers/ata/ahci.h                                 |   3 +-
+ drivers/ata/ahci_platform.c                        |   2 +
+ drivers/ata/libahci.c                              |   7 +
+ drivers/ata/libahci_platform.c                     | 170 +++++++++++--=
+-
+ drivers/phy/Kconfig                                |   7 +
+ drivers/phy/Makefile                               |   1 +
+ drivers/phy/phy-berlin-sata.c                      | 246 +++++++++++++=
+++++++++
+ 11 files changed, 490 insertions(+), 36 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/berlin-sata-p=
+hy.txt
+ create mode 100644 drivers/phy/phy-berlin-sata.c
+
+--=20
+1.9.1
+
