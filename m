@@ -1,48 +1,156 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/4] Documentation: devicetree: Fix s2mps11 example syntax
-Date: Mon, 23 Jun 2014 09:15:53 +0100
-Message-ID: <20140623081553.GB8847@lee--X1>
-References: <1403486483-4063-1-git-send-email-afaerber@suse.de>
- <1403486483-4063-3-git-send-email-afaerber@suse.de>
+From: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+Subject: Re: [RFC PATCH] mfd: syscon: add child device support
+Date: Mon, 23 Jun 2014 10:59:10 +0200
+Message-ID: <1403513950.4136.34.camel@paszta.hi.pengutronix.de>
+References: <1401198917-16077-1-git-send-email-p.zabel@pengutronix.de>
+	 <CAL_JsqLjyNQfjs4cDf8Eh1WeVGauym=qbF_pEAMu7ASVMqaccg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403486483-4063-3-git-send-email-afaerber@suse.de>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: linux-samsung-soc@vger.kernel.org, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Sachin Kamat <sachin.kamat@linaro.org>, Yadwinder Singh Brar <yadi.brar@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqLjyNQfjs4cDf8Eh1WeVGauym=qbF_pEAMu7ASVMqaccg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org" <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 23 Jun 2014, Andreas F=C3=A4rber wrote:
+Hi Rob,
 
-> It's <1>, not 1.
->=20
-> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
-> ---
->  Documentation/devicetree/bindings/mfd/s2mps11.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Am Dienstag, den 17.06.2014, 11:57 -0500 schrieb Rob Herring:
+> On Tue, May 27, 2014 at 8:55 AM, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org> wrote:
+> > For devices which have a complete register for themselves, it is possible to
+> > place them next to the syscon device with overlapping reg ranges. The same is
+> 
+> We want to avoid overlapping ranges.
+>
+> > not possible for devices which only occupy bitfields in registers shared with
+> > other users.
+> 
+> You are addressing the latter case here?
 
-Applied, thanks.
+Yes, exactly. Although this patch would make it possible to also use
+child nodes in the former case.
 
-> diff --git a/Documentation/devicetree/bindings/mfd/s2mps11.txt b/Docu=
-mentation/devicetree/bindings/mfd/s2mps11.txt
-> index 55ab4f4..99a0c52 100644
-> --- a/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> +++ b/Documentation/devicetree/bindings/mfd/s2mps11.txt
-> @@ -96,7 +96,7 @@ Example:
-> =20
->  		s2m_osc: clocks {
->  			compatible =3D "samsung,s2mps11-clk";
-> -			#clock-cells =3D 1;
-> +			#clock-cells =3D <1>;
->  			clock-output-names =3D "xx", "yy", "zz";
->  		};
-> =20
+> > For devices that are completely controlled by bitfields in the syscon address
+> > range, such as multiplexers or voltage regulators, allow to put child devices
+> > into the syscon device node.
+> >
+> > Signed-off-by: Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>
+> > ---
+> >  Documentation/devicetree/bindings/mfd/syscon.txt | 11 +++++++++++
+> >  drivers/mfd/syscon.c                             |  2 ++
+> >  2 files changed, 13 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/mfd/syscon.txt b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > index fe8150b..a7e11d5 100644
+> > --- a/Documentation/devicetree/bindings/mfd/syscon.txt
+> > +++ b/Documentation/devicetree/bindings/mfd/syscon.txt
+> > @@ -9,10 +9,21 @@ using a specific compatible value), interrogate the node (or associated
+> >  OS driver) to determine the location of the registers, and access the
+> >  registers directly.
+> >
+> > +Optionally, devices that are only controlled through single syscon
+> > +registers or bitfields can also be added as child nodes to the syscon
+> > +device node. These devices can implicitly assume their parent node
+> > +as syscon provider without referencing it explicitly via phandle.
+> > +In this case, the syscon node should have #address-cells = <1> and
+> > +#size-cells = <0> and no ranges property.
+> > +
+> 
+> I'd like to see an example.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+My indented use case is the the i.MX6 IOMUXC that mainly does pin
+control, but also has a set of general purpose registers (GPR) that
+among others control the LVDS encoder and some video input and output
+multiplexers.
+Also the i.MX6 ANATOP driver does a similar thing already by misusing
+the "simple-bus" compatible to probe its child regulator devices.
+
+The LVDS display bridge (LDB) has its own register in the IOMUXC GPR
+region and is currently described as an overlapping region in imx53.dts:
+
+	iomuxc: iomuxc@53fa8000 {
+		reg = <0x53fa8000 0x4000>;
+	};
+	gpr: iomuxc-gpr@53fa8000 {
+		compatible = "syscon";
+		reg = <0x53fa8000 0xc>;
+	};
+	ldb: ldb@53fa8008 {
+		reg = <0x53fa8008 0x4>;
+		gpr = <&gpr>;
+	};
+
+The ldb reg property is not used, the ldb driver is accessing its
+register through the iomuxc-gpr regmap, found via the phandle.
+In imx6qdl.dtsi the ldb reg property isn't even there. I'd like to move
+the ldb node into the gpr node and add a few multiplexers there:
+
+	gpr: iomuxc-gpr@020e0000 {
+		compatible = "syscon";
+		reg = <0x020e0000 0x38>;
+		ldb: ldb@020e0008 {
+			/* gpr = <&gpr>; <-- deprecated */
+		};
+		mipi_ipu1_mux {
+			reg = <0x04>;
+			bit-mask = <1>;
+			bit-shift = <19>;
+		};
+		mipi_ipu1_mux {
+			reg = <0x04>;
+			bit-mask = <1>;
+			bit-shift = <20>;
+		};
+	};
+	iomuxc: iomuxc@020e0000 {
+		reg = <0x020e0000 0x4000>;
+	};
+
+I'd  like to describe this in the device tree because these multiplexers
+are at different positions and connect different nodes on i.MX6Q and
+i.MX6DL (and are missing on i.MX53). The connections would use the graph
+bindings documented in Documentation/devicetree/bindings/graph.txt.
+
+>  What does reg in the child contain? The register address?
+> What if the child device needs 3 bitfields from 3 different registers?
+
+Good question. I'd use the register address. The reg(ister) / bit-mask /
+bit-shift property pattern is already used by the keystone-pll clock
+bindings.
+Given your point about multiple bitfields, maybe this should be binding
+specific. The i.MX6 ANATOP bindings use custom properties for this:
+
+	anatop: anatop@020c8000 {
+		/* I'd like to get rid of the simple-bus here: */
+		compatible = "syscon", "simple-bus";
+		reg = <0x020c8000 0x1000>;
+		regulator-1p1@110 {
+			compatible = "fsl,anatop-regulator";
+			anatop-reg-offset = <0x110>;
+			anatop-vol-bit-shift = <8>;
+			anatop-vol-bit-width = <5>;
+			anatop-min-bit-val = <4>;
+			anatop-min-voltage = <800000>;
+			anatop-max-voltage = <1375000>;
+		};
+		/* ... */
+	};
+
+> It seems to me that you could then want to describe every single
+> bitfield of a block in the DT. That seems like too much information in
+> DT much like trying to describe every single clock in DT.
+
+See above. Often there are other reasons already to describe the child
+nodes in the device tree anyway, such as regulators, or video nodes that
+need to be linked to other nodes using the graph bindings. In those
+cases it would be very useful to just use the same nodes to probe the
+devices.
+
+regards
+Philipp
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
