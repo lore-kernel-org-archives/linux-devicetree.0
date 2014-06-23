@@ -1,64 +1,46 @@
-From: Maxime Coquelin <maxime.coquelin@st.com>
-Subject: Re: [PATCH v3 10/10] MAINTAINERS: Add sdhci-st file to ARCH/STI architecture
-Date: Mon, 23 Jun 2014 12:54:12 +0200
-Message-ID: <53A80754.9000900@st.com>
-References: <1401899424-1365-1-git-send-email-peter.griffin@linaro.org> <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v1 3/3] arm64: Fix the APM X-Gene SoC SATA PHY clock DTS
+ node csr-mask of the SATA Host Controller 1.
+Date: Mon, 23 Jun 2014 14:56:50 +0400
+Message-ID: <53A807F2.4000408@cogentembedded.com>
+References: <1403518538-30697-1-git-send-email-stripathi@apm.com> <1403518538-30697-4-git-send-email-stripathi@apm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature";
-	boundary="EOOXtWS7XOREkUW9Lh7gKmdeVvUII2idw"
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <1401899424-1365-11-git-send-email-peter.griffin@linaro.org>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Peter Griffin <peter.griffin@linaro.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chris@printf.net, ulf.hansson@linaro.org, patrice.chotard@st.com, srinivas.kandagatla@gmail.com
-Cc: kernel@stlinux.com, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1403518538-30697-4-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Suman Tripathi <stripathi@apm.com>, olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
---EOOXtWS7XOREkUW9Lh7gKmdeVvUII2idw
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: quoted-printable
+Hello.
 
+On 06/23/2014 02:15 PM, Suman Tripathi wrote:
 
+> This patch fixes the SATA PHY clock DTS node csr-mask of the SATA
+> Host controller 1. This patch also fixes the status of the PHY
+> clock node of SATA Host controller 1.
 
-On 06/04/2014 06:30 PM, Peter Griffin wrote:
-> Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+> Signed-off-by: Loc Ho <lho@apm.com>
+> Signed-off-by: Suman Tripathi <stripathi@apm.com>
+> ---
+>   arch/arm64/boot/dts/apm-storm.dtsi | 4 ++--
+>   1 file changed, 2 insertions(+), 2 deletions(-)
 
-Acked-by: Maxime Coquelin <maxime.coquelin@st.com>
+> diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
+> index f8c40a6..d14bcc4 100644
+> --- a/arch/arm64/boot/dts/apm-storm.dtsi
+> +++ b/arch/arm64/boot/dts/apm-storm.dtsi
+> @@ -184,9 +184,9 @@
+>   				reg = <0x0 0x1f21c000 0x0 0x1000>;
+>   				reg-names = "csr-reg";
+>   				clock-output-names = "sataphy1clk";
+> -				status = "disabled";
+> +				status = "ok";
 
-> --- MAINTAINERS | 1 + 1 file changed, 1 insertion(+)
->=20
-> diff --git a/MAINTAINERS b/MAINTAINERS index 6dc67b1..19dc265
-> 100644 --- a/MAINTAINERS +++ b/MAINTAINERS @@ -1306,6 +1306,7 @@ F:
-> drivers/pinctrl/pinctrl-st.c F:	drivers/media/rc/st_rc.c F:
-> drivers/i2c/busses/i2c-st.c F:	drivers/tty/serial/st-asc.c +F:
-> drivers/mmc/host/sdhci-st.c
->=20
-> ARM/TECHNOLOGIC SYSTEMS TS7250 MACHINE SUPPORT M:	Lennert Buytenhek
-> <kernel@wantstofly.org>
->=20
+    You don't need the specifically set "status to "ok" unless you're 
+overriding the "status" prop; "ok" is assumed AFAIK.
 
+WBR, Sergei
 
---EOOXtWS7XOREkUW9Lh7gKmdeVvUII2idw
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1.4.11 (GNU/Linux)
-
-iQIcBAEBAgAGBQJTqAdUAAoJEMo4jShGhw+Jr5kP/26TFEhqQcxPolwQTqNrgLLT
-F2LY4sY7tTqRrSPkIeQ4tfe30tveb2twhKpNmDmjcwGaAc5YZUYpaaB0PZHEGiMl
-njGybn7cgPdhU8NX/FKEQCXjgFmEvbwnC4UOEsL107NUBH9TD+60kTAV+bwjxFXJ
-gVQHrZIclJRNhHAshiMR2ogc3AaMcpmLEBOYCBeNl80VrTiCG/N2ZNELEdNtD0ZO
-DESnlbDRJX46KHyKQZPuEcHh6HkXMsZ8dPaj+f8rLg1vyHZF+4qkMypl7inEbOba
-kNQR2k7KM3ZFaFmLewBcGixu7EY5+Z9/qKXbof5DFpP3F88Zx56oyVEIacEfpa2H
-qhE9b+sdZj5F0ZpKiLvUZZWZgsfZAYGl0TyRJAFteMIOWutTJUClYfp2GNtJ2UFB
-G2ARN52ZGDFXYgMvh+wYOeg+a2Fy+wWO8cOa/hXnHHtH/rrHocTYPn4xH35rLjyI
-4TDk9k4zalBD52u6AZ7jXGcHNHNrjrtyOVfgohRNLZNFBq1xlR/7ekMXcjykqBH3
-PUkjcUiZLURSonV1UmBJAqRQLjcE+iXeCXQUylCqDv6lvbUnY05KOmJxB5TPEgxD
-62dr152nsYYOOk6kahKR/DeGMDSgSBmn0pDQVEKoPG3/dWhSjWLhNY2h1/vnkr3i
-LDxHOuxTk8YlrSgZA/zZ
-=CFTR
------END PGP SIGNATURE-----
-
---EOOXtWS7XOREkUW9Lh7gKmdeVvUII2idw--
