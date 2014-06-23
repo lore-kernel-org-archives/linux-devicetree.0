@@ -1,130 +1,76 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] genirq: generic chip: export irq_map_generic_chip
- function
-Date: Mon, 23 Jun 2014 22:10:40 +0200
-Message-ID: <53A889C0.2090207@free-electrons.com>
-References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com> <1403276487-8792-2-git-send-email-boris.brezillon@free-electrons.com> <20140621235108.GJ21711@titan.lakedaemon.net> <53A68CF0.8040303@free-electrons.com> <20140623130705.GM21711@titan.lakedaemon.net> <53A842C3.6060606@free-electrons.com> <20140623175041.GB10202@titan.lakedaemon.net>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140623175041.GB10202-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Subject: [PATCH] ARM: dts: kirkwood: fix phy-connection-type for Guruplug
+Date: Mon, 23 Jun 2014 22:25:15 +0200
+Message-ID: <1403555115-13111-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory CLEMENT <gregory.clement@free-electrons.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Commit eeb845459a72e792a959278b858f9c417e9995bd
+ ("ARM: dts: kirkwood: set Guruplug phy-connection-type to rgmii-id")
+added phy-connection-type properties to ethernet PHY nodes.
 
-On 23/06/2014 19:50, Jason Cooper wrote:
-> On Mon, Jun 23, 2014 at 05:07:47PM +0200, Boris BREZILLON wrote:
->> On 23/06/2014 15:07, Jason Cooper wrote:
->>> On Sun, Jun 22, 2014 at 09:59:44AM +0200, Boris BREZILLON wrote:
->>>> On 22/06/2014 01:51, Jason Cooper wrote:
->>>>> On Fri, Jun 20, 2014 at 05:01:21PM +0200, Boris BREZILLON wrote:
->>>>>> Export the generic irq map function in order to provide irq_domain ops with
->>>>>> generic mapping and specific of xlate function (needed by the new atmel
->>>>>> AIC driver).
->>>>>>
->>>>>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>>>>> ---
->>>>>>  include/linux/irq.h       | 2 ++
->>>>>>  kernel/irq/generic-chip.c | 5 +++--
->>>>>>  2 files changed, 5 insertions(+), 2 deletions(-)
->>>>>>
->>>>>> diff --git a/include/linux/irq.h b/include/linux/irq.h
->>>>>> index 0d998d8..62af592 100644
->>>>>> --- a/include/linux/irq.h
->>>>>> +++ b/include/linux/irq.h
->>>>>> @@ -771,6 +771,8 @@ void irq_gc_eoi(struct irq_data *d);
->>>>>>  int irq_gc_set_wake(struct irq_data *d, unsigned int on);
->>>>>>  
->>>>>>  /* Setup functions for irq_chip_generic */
->>>>>> +int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>>>> +			 irq_hw_number_t hw_irq);
->>>>>>  struct irq_chip_generic *
->>>>>>  irq_alloc_generic_chip(const char *name, int nr_ct, unsigned int irq_base,
->>>>>>  		       void __iomem *reg_base, irq_flow_handler_t handler);
->>>>>> diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
->>>>>> index 452d6f2..cf80e7b 100644
->>>>>> --- a/kernel/irq/generic-chip.c
->>>>>> +++ b/kernel/irq/generic-chip.c
->>>>>> @@ -341,8 +341,8 @@ static struct lock_class_key irq_nested_lock_class;
->>>>>>  /*
->>>>>>   * irq_map_generic_chip - Map a generic chip for an irq domain
->>>>>>   */
->>>>>> -static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>>>> -				irq_hw_number_t hw_irq)
->>>>>> +int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>>>> +			 irq_hw_number_t hw_irq)
->>>>>>  {
->>>>>>  	struct irq_data *data = irq_get_irq_data(virq);
->>>>>>  	struct irq_domain_chip_generic *dgc = d->gc;
->>>>>> @@ -394,6 +394,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->>>>>>  	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
->>>>>>  	return 0;
->>>>>>  }
->>>>>> +EXPORT_SYMBOL_GPL(irq_map_generic_chip);
->>>>>>  
->>>>>>  struct irq_domain_ops irq_generic_chip_ops = {
->>>>>>  	.map	= irq_map_generic_chip,
->>>>> Why can't you use irq_generic_chip_ops.map in your code and avoid this
->>> s/code/declaration/, sorry for the misunderstanding.
->>>
->>>>> patch entirely?
->>>> Because in this case I'll have to remove constness from my
->>>> irq_domain_ops struct and initialize it in my init function.
->>>> This is not a big concern, but in general I tend to declare ops struct
->>>> with a const constraint.
->>> /*
->>>  * We're the only user of irq_map_generic_chip() who
->>>  * doesn't also use irq_domain_xlate_onetwocell()
->>>  */
->>> static const struct irq_domain_ops aic_irq_ops = {
->>> 	.map    = irq_generic_chip_ops.map,
->>>         .xlate  = aic_irq_domain_xlate,
->>> };
->>>
->>> Wouldn't work?
->> No, it fails  with :
->>
->> "error: initializer element is not constant"
-> Gah!  Of course.  That's what I get for pseudo-coding without sufficient
-> coffee. :)
->
-> I won't have a chance to dig deeper into this until tonight or the next
-> few days.  But my primary concern is that they chose to export the
-> struct for a reason.  I'd like to dig through the history and find out
-> why.
+Actually, the property has to be set for the ethernet port node instead.
+Fix it by moving the corresponding properties to the correct nodes.
 
-IMHO exporting both (the struct and the functions independently) makes
-sense.
-The struct can be used by drivers that have a standard behaviour for
-both xslate and map functions, and functions (irq_map_generic_chip or
-irq_domain_xlate_onetwocell) could be used when only one end of the
-implementation is standard.
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+---
+Jason,
 
-BTW, shouldn't we declare irq_generic_chip_ops as a const instance to
-prevent users from modifying its content ?
+this should go in as a fix for v3.16 where above commit appeared first.
 
->
-> Assuming there's no big reason not to export the function(s) directly,
-> I'm fine with exporting them.  But it would be nice to get Thomas' Ack
-> before I take the original patch since it touches core code.
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Pawel Moll <pawel.moll@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Ian Campbell <ijc+devicetree@hellion.org.uk>
+Cc: Kumar Gala <galak@codeaurora.org>
+Cc: Russell King <linux@arm.linux.org.uk>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+---
+ arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-Sure.
-
-Thanks for your help.
-
-Best Regards,
-
-Boris
-
+diff --git a/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts b/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
+index c5a1fc75c7a3..b2d9834bf458 100644
+--- a/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
++++ b/arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts
+@@ -105,7 +105,6 @@
+ 		compatible = "ethernet-phy-id0141.0cb0",
+ 		             "ethernet-phy-ieee802.3-c22";
+ 		reg = <0>;
+-		phy-connection-type = "rgmii-id";
+ 	};
+ 
+ 	ethphy1: ethernet-phy@1 {
+@@ -113,7 +112,6 @@
+ 		compatible = "ethernet-phy-id0141.0cb0",
+ 		             "ethernet-phy-ieee802.3-c22";
+ 		reg = <1>;
+-		phy-connection-type = "rgmii-id";
+ 	};
+ };
+ 
+@@ -121,6 +119,7 @@
+ 	status = "okay";
+ 	ethernet0-port@0 {
+ 		phy-handle = <&ethphy0>;
++		phy-connection-type = "rgmii-id";
+ 	};
+ };
+ 
+@@ -128,5 +127,6 @@
+ 	status = "okay";
+ 	ethernet1-port@0 {
+ 		phy-handle = <&ethphy1>;
++		phy-connection-type = "rgmii-id";
+ 	};
+ };
 -- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.0
