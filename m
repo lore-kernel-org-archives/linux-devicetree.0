@@ -1,37 +1,44 @@
-From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v7 1/2] video: ARM CLCD: Add DT support
-Date: Mon, 23 Jun 2014 15:23:45 +0100
-Message-ID: <1403533425.3804.35.camel@hornet>
-References: <1403018494-10264-1-git-send-email-pawel.moll@arm.com>
-	 <CAFEAcA-NZiRDDeUc7n+6hxgjG1V3qYXPAwyfSdtyz=ZCcD8kiw@mail.gmail.com>
-	 <1403531535.3804.11.camel@hornet>
-	 <20140623141022.GJ32514@n2100.arm.linux.org.uk>
+From: Tomasz Figa <tomasz.figa@gmail.com>
+Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip
+ support
+Date: Mon, 23 Jun 2014 16:38:22 +0200
+Message-ID: <53A83BDE.7080005@gmail.com>
+References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
+ <CAEC9eQOp0jiZC-XqqQX7S7Dbu-_bi2unpVU2P4zAQ7VmopD27A@mail.gmail.com>
+ <CAAQKjZPHc2KfmNyfchP68BJiPUFyAO_keCHMBc1YuYTj_J0kVQ@mail.gmail.com>
+ <CAPdUM4Mpo_9A_+4k9ctcXKnctKOdgxkEH4Sv0TO-4Y8dZ8aiow@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140623141022.GJ32514-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, lkml - Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAPdUM4Mpo_9A_+4k9ctcXKnctKOdgxkEH4Sv0TO-4Y8dZ8aiow@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rahul Sharma <rahul.sharma@samsung.com>, Inki Dae <inki.dae@samsung.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay kumar <ajaynumb@gmail.com>, =?ISO-8859-1?Q?St=E9phane_Marchesin?= <marcheu@chromium.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-06-23 at 15:10 +0100, Russell King - ARM Linux wrote:
-> As far as the CLD outputs are concerned, they are standard.  The PLD on
-> their outputs routes the CLD bits to the 8-bit red, green and blue
-> channels according to the configuration of SYS_CLCD to achieve the
-> various colour formats which the CLCD does not natively provide for.
+Hi Rahul,
+
+On 23.06.2014 15:58, Rahul Sharma wrote:
+> Hi Ajay, Inki,
 > 
-> So, it /is/ a PL110 with an independent external muxer.
+> I tested this series for Exynos5420 based peach-pit board,
+> Exynos5800 based Peach-pi board and Exynos5250 based
+> Snow board. I verified with the chrome test environment and
+> able to see upto Login Screen. DPMS on/off functionality and
+> S2R is also working fine for Display. therefore:
 
-Cool, this means that one can still use this property do define which
-CLDs are wired to R/G/B-0s and make an informed decision in the driver
-based on this (although with a separate compatible value it won't be
-really necessary).
+What tree did you apply this patches onto? I don't see S2R support for
+Exynos5420 or 5800 in current linux-next (e.g. there are no PMU tables
+present for these SoCs).
 
-Pawel
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
