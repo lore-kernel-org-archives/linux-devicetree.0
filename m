@@ -1,54 +1,36 @@
 From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH] ARM: mvebu: Fix the improper use of the compatible
- string armada38x using a wildcard
-Date: Mon, 23 Jun 2014 17:53:09 -0400
-Message-ID: <20140623215309.GD10202@titan.lakedaemon.net>
-References: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com>
+Subject: Re: [PATCH v3 1/7] genirq: generic chip: export
+ irq_map_generic_chip function
+Date: Mon, 23 Jun 2014 18:14:43 -0400
+Message-ID: <20140623221443.GF10202@titan.lakedaemon.net>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1403276487-8792-2-git-send-email-boris.brezillon@free-electrons.com>
+ <20140621235108.GJ21711@titan.lakedaemon.net>
+ <53A68CF0.8040303@free-electrons.com>
+ <20140623130705.GM21711@titan.lakedaemon.net>
+ <53A842C3.6060606@free-electrons.com>
+ <20140623175041.GB10202@titan.lakedaemon.net>
+ <53A889C0.2090207@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403533011-21339-1-git-send-email-gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <53A889C0.2090207-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 23, 2014 at 04:16:51PM +0200, Gregory CLEMENT wrote:
-> Wildcards in compatible strings should be avoid. "marvell,armada38x"
-> was recently introduced but was not yet used.
-> 
-> The armada 385 SoC is a superset of the armada 380 SoC (with more CPUs
-> and more PCIe slots). So this patch replaces the use of
-> "marvell,armada38x" by the "marvell,armada380" string.
-> 
-> Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
-> Hi,
-> 
-> This fix should be merged in 3.16 and maybe sent as a fix for 3.15
-> too.
-> 
-> The initial patch (ARM: mvebu: Fix missing binding documentation for
-> Armada 38x) was re-written after the review about the use of the
-> wildcards here:
-> http://thread.gmane.org/gmane.linux.kernel/1728755/focus=79339 and
-> there:
-> http://thread.gmane.org/gmane.linux.ports.arm.kernel/334225/focus=334311
-> 
-> 
-> Thanks,
-> Gregory
-> 
->  Documentation/devicetree/bindings/arm/armada-38x.txt | 14 ++++++++++++--
->  arch/arm/boot/dts/armada-380.dtsi                    |  2 +-
->  arch/arm/boot/dts/armada-385-db.dts                  |  2 +-
->  arch/arm/boot/dts/armada-385-rd.dts                  |  2 +-
->  arch/arm/boot/dts/armada-385.dtsi                    |  2 +-
->  arch/arm/boot/dts/armada-38x.dtsi                    |  2 +-
->  6 files changed, 17 insertions(+), 7 deletions(-)
+> On 23/06/2014 19:50, Jason Cooper wrote:
+...
+> > I won't have a chance to dig deeper into this until tonight or the next
+> > few days.  But my primary concern is that they chose to export the
+> > struct for a reason.  I'd like to dig through the history and find out
+> > why.
 
-Applied to mvebu/dt with Andrew's Ack.
+Ok, I took a look.  It seems that was the most expedient way to
+implement the linear domain registration.  No mention of avoiding
+exporting the functions directly. :)
 
 thx,
 
