@@ -1,112 +1,313 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v2 09/20] clk: sunxi: Add sun6i MBUS clock support
-Date: Mon, 23 Jun 2014 12:44:25 +0800
-Message-ID: <CAGb2v64GobnAM+J7QxbZxWretA5632Xn9=-pkrobUQWrGHn_ig@mail.gmail.com>
-References: <1403016777-15121-1-git-send-email-wens@csie.org>
- <1403016777-15121-10-git-send-email-wens@csie.org> <20140618100404.GM19730@lukather>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Pratyush Anand <pratyush.anand@st.com>
+Subject: Re: [PATCH v2 2/8] PCI: designware: refactor host init code to
+ re-use on v3.65 DW pci hw
+Date: Mon, 23 Jun 2014 10:35:48 +0530
+Message-ID: <20140623050548.GB2666@pratyush-vbox>
+References: <1402426287-31157-1-git-send-email-m-karicheri2@ti.com>
+ <1402426287-31157-3-git-send-email-m-karicheri2@ti.com>
+ <20140618070500.GB6098@pratyush-vbox>
+ <53A481BF.8010404@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBPXBT2OQKGQEZJKP4OA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140618100404.GM19730@lukather>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53A481BF.8010404@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Murali Karicheri <m-karicheri2@ti.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>R
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 18, 2014 at 6:04 PM, Maxime Ripard
-<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Tue, Jun 17, 2014 at 10:52:46PM +0800, Chen-Yu Tsai wrote:
->> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
->> ---
->>  Documentation/devicetree/bindings/clock/sunxi.txt |  1 +
->>  drivers/clk/sunxi/clk-sunxi.c                     | 44 +++++++++++++++++++++++
->>  2 files changed, 45 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
->> index b9ec668..7b2ba41 100644
->> --- a/Documentation/devicetree/bindings/clock/sunxi.txt
->> +++ b/Documentation/devicetree/bindings/clock/sunxi.txt
->> @@ -40,6 +40,7 @@ Required properties:
->>       "allwinner,sun6i-a31-apb2-div-clk" - for the APB2 gates on A31
->>       "allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
->>       "allwinner,sun4i-a10-mod0-clk" - for the module 0 family of clocks
->> +     "allwinner,sun6i-a31-mbus-clk" - for the MBUS clocks on A31 / A23
->>       "allwinner,sun7i-a20-out-clk" - for the external output clocks
->>       "allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
->>       "allwinner,sun4i-a10-usb-clk" - for usb gates + resets on A10 / A20
->> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
->> index eca3c6e..a086b5b 100644
->> --- a/drivers/clk/sunxi/clk-sunxi.c
->> +++ b/drivers/clk/sunxi/clk-sunxi.c
->> @@ -307,6 +307,37 @@ static void sun4i_get_mod0_factors(u32 *freq, u32 parent_rate,
->>
->>
->>  /**
->> + * sun6i_a31_get_mbus_factors() - calculates m factor for MBUS clocks
->> + * MBUS rate is calculated as follows
->> + * rate = parent_rate / (m + 1);
->> + */
->> +
->> +static void sun6i_a31_get_mbus_factors(u32 *freq, u32 parent_rate,
->> +                                    u8 *n, u8 *k, u8 *m, u8 *p)
->> +{
->> +     u8 div;
->> +
->> +     /* These clocks can only divide, so we will never be able to achieve
->> +      * frequencies higher than the parent frequency */
->> +     if (*freq > parent_rate)
->> +             *freq = parent_rate;
->> +
->> +     div = DIV_ROUND_UP(parent_rate, *freq);
->> +
->> +     if (div > 8)
->> +             div = 8;
->> +
->> +     *freq = parent_rate / div;
->> +
->> +     /* we were called to round the frequency, we can now return */
->> +     if (n == NULL)
->
-> s/n/m/ ?
+On Sat, Jun 21, 2014 at 02:47:27AM +0800, Murali Karicheri wrote:
+> On 6/18/2014 3:05 AM, Pratyush Anand wrote:
+> > Hi Murali,
+> >
+> > On Wed, Jun 11, 2014 at 02:51:21AM +0800, Murali Karicheri wrote:
 
-The factors clk driver passes all or none pointers.
-But I will change this to avoid the confusion.
+[...]
 
->> +             return;
->> +
->> +     *m = div - 1;
->> +}
->> +
->> +
->> +/**
->>   * sun7i_a20_get_out_factors() - calculates m, p factors for CLK_OUT_A/B
->>   * CLK_OUT rate is calculated as follows
->>   * rate = (parent_rate >> p) / (m + 1);
->> @@ -447,6 +478,11 @@ static struct clk_factors_config sun4i_mod0_config = {
->>       .pwidth = 2,
->>  };
->>
->> +static struct clk_factors_config sun6i_a31_mbus_config = {
->> +     .mshift = 0,
->> +     .mwidth = 3,
->
-> Actually, the A31 has an extra N factor.
->
-> So this mbus clock looks like it's only about the A23, and not the A31
-> at all.
+> Pratyush,
+> 
+> Thanks for the comments.
+> 
+> This is IP specific code and another driver that has this version of the 
+> IP will be able to
+> re-use the code. This is also being discussed in another thread from 
+> Bjorn and Jingoo.
 
-I checked original sun6i code and sun6i code found in the A23 SDK.
-The original code uses the module 0 clock driver for mbus, so yes
-there's an extra N factor. The new code in the A23 SDK does not.
+Anything which is implemented in application space, will not be same
+across all IP users. For example, you have MSI0_IRQ_ENABLE_SET at
+offset 0x108 in application space.Other vendor may not have this
+register at the same offset. Moreover, other vendors are not even
+obliged to implement MSI Enable signals in same way, so internal bit
+definition of the register may change.
 
-Unfortunately I haven't been able to get my Hummingbird A31 up yet,
-so I can't poke around to check it.
+In summary: Code is only reusable if all register offset and bit
+definitions are same across vendors. In case of DW driver none of the
+code which are accessed using va_app_base should go to common area.
 
+> Please discuss this in that thread.
 
-ChenYu
+Sorry, I am not following pci mailing list. Doing something else these
+days. So if you can help me with the thread link.
+
+Regards
+Pratyush
+> 
+> >> initialization code. So refactor the msi host controller code into a
+> >> separate function. Other common functions across both hw versions
+> >> are moved to dw_pcie_common_host_init() and called from the newer and
+> >> v3.65 hw host initialization code.
+> >>
+> >> Signed-off-by: Murali Karicheri <m-karicheri2@ti.com>
+> >>
+> >> CC: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> >> CC: Russell King <linux@arm.linux.org.uk>
+> >> CC: Grant Likely <grant.likely@linaro.org>
+> >> CC: Rob Herring <robh+dt@kernel.org>
+> >> CC: Mohit Kumar <mohit.kumar@st.com>
+> >> CC: Jingoo Han <jg1.han@samsung.com>
+> >> CC: Bjorn Helgaas <bhelgaas@google.com>
+> >> CC: Pratyush Anand <pratyush.anand@st.com>
+> >> CC: Richard Zhu <r65037@freescale.com>
+> >> CC: Kishon Vijay Abraham I <kishon@ti.com>
+> >> CC: Marek Vasut <marex@denx.de>
+> >> CC: Arnd Bergmann <arnd@arndb.de>
+> >> CC: Pawel Moll <pawel.moll@arm.com>
+> >> CC: Mark Rutland <mark.rutland@arm.com>
+> >> CC: Ian Campbell <ijc+devicetree@hellion.org.uk>
+> >> CC: Kumar Gala <galak@codeaurora.org>
+> >> CC: Randy Dunlap <rdunlap@infradead.org>
+> >> CC: Grant Likely <grant.likely@linaro.org>
+> >>
+> >> ---
+> >>   drivers/pci/host/pcie-designware.c |  136 ++++++++++++++++++++++++++----------
+> >>   1 file changed, 101 insertions(+), 35 deletions(-)
+> >>
+> >> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-designware.c
+> >> index e8f5d8d..e4bd19a 100644
+> >> --- a/drivers/pci/host/pcie-designware.c
+> >> +++ b/drivers/pci/host/pcie-designware.c
+> >> @@ -389,13 +389,19 @@ static const struct irq_domain_ops msi_domain_ops = {
+> >>   	.map = dw_pcie_msi_map,
+> >>   };
+> >>   
+> >> -int __init dw_pcie_host_init(struct pcie_port *pp)
+> >> +/*
+> >> + * dw_pcie_parse_resource() - Function to parse common resources
+> >> + *
+> >> + * @pp: ptr to pcie port
+> >> + *
+> >> + * Parse the range property for MEM, IO and cfg resources, and map
+> >> + * the cfg register space.
+> >> + */
+> > Why do you need this function? If you have some extra resource, you
+> > can ioremap that before you call dw_pcie_host_init.
+> 
+> I assume you are referring to dw_pcie_parse_resource(). Keystone PCIe 
+> driver needs
+> this to parse the range property for IORESOURCE_MEM and IORESOURCE_IO 
+> resources.
+> So refactored this into a function and called from host_init()
+> code for v3.65 and dw_pcie_host_init . But for Keystone PCI driver, no 
+> need to ioremap
+> cfg1 and cfg2 as it doesn't have ATU ports. So host_init() code has to 
+> be little different.
+> Idea is to have IP specific host_init() and refactor and re-use the 
+> common code on both.
+> 
+> >
+> >> +int __init dw_pcie_parse_resource(struct pcie_port *pp)
+> >>   {
+> >>   	struct device_node *np = pp->dev->of_node;
+> >>   	struct of_pci_range range;
+> >>   	struct of_pci_range_parser parser;
+> >> -	u32 val;
+> >> -	int i;
+> >>   
+> >>   	if (of_pci_range_parser_init(&parser, np)) {
+> >>   		dev_err(pp->dev, "missing ranges property\n");
+> >> @@ -431,41 +437,29 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >>   			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+> >>   		}
+> >>   	}
+> >> -
+> >> -	if (!pp->dbi_base) {
+> >> -		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
+> >> -					resource_size(&pp->cfg));
+> >> -		if (!pp->dbi_base) {
+> >> -			dev_err(pp->dev, "error with ioremap\n");
+> >> -			return -ENOMEM;
+> >> -		}
+> >> -	}
+> >> -
+> >> -	pp->cfg0_base = pp->cfg.start;
+> >> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+> >>   	pp->mem_base = pp->mem.start;
+> >>   
+> >> -	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> >> -					pp->config.cfg0_size);
+> >> -	if (!pp->va_cfg0_base) {
+> >> -		dev_err(pp->dev, "error with ioremap in function\n");
+> >> -		return -ENOMEM;
+> >> -	}
+> >> -	pp->va_cfg1_base = devm_ioremap(pp->dev, pp->cfg1_base,
+> >> -					pp->config.cfg1_size);
+> >> -	if (!pp->va_cfg1_base) {
+> >> -		dev_err(pp->dev, "error with ioremap\n");
+> >> -		return -ENOMEM;
+> >> -	}
+> >> +	return 0;
+> >> +}
+> >>   
+> >> -	if (of_property_read_u32(np, "num-lanes", &pp->lanes)) {
+> >> -		dev_err(pp->dev, "Failed to parse the number of lanes\n");
+> >> -		return -EINVAL;
+> >> -	}
+> >> +/*
+> >> + * dw_pcie_msi_host_init() - Function to initialize msi host controller
+> >> + *
+> >> + * @pp: ptr to pcie port
+> >> + * @np: device node ptr to msi irq controller
+> >> + * @irq_msi_ops: ptr to MSI irq_domain_ops struct
+> >> + *
+> >> + * Function register irq domain for msi irq controller and create mappings
+> >> + * for MSI irqs.
+> >> + */
+> >
+> > May be you can only do following to support your MSI chip:
+> >
+> > Initialize pp->irq_domain into your add_pcie_port function before you
+> > call dw_pcie_host_init.
+> >
+> > In dw_pcie_host_init,
+> >
+> > if (IS_ENABLED(CONFIG_PCI_MSI) && !pp->irq_domain)
+> 
+> How do I pass the keystone specific msi irq_domain_ops? It looks clean 
+> the way it is implemented
+> in this patch. Also since MSI host controller and legacy host controller 
+> are different, it make
+> sense to add separate host_init for each. Let me know.
+> 
+> Regards,
+> 
+> Murali
+> 
+> >
+> >> +int dw_pcie_msi_host_init(struct pcie_port *pp, struct device_node *np,
+> >> +				const struct irq_domain_ops *irq_msi_ops)
+> >> +{
+> >> +	int i;
+> >>   
+> >>   	if (IS_ENABLED(CONFIG_PCI_MSI)) {
+> >>   		pp->irq_domain = irq_domain_add_linear(pp->dev->of_node,
+> >> -					MAX_MSI_IRQS, &msi_domain_ops,
+> >> +					MAX_MSI_IRQS, irq_msi_ops,
+> >>   					&dw_pcie_msi_chip);
+> >>   		if (!pp->irq_domain) {
+> >>   			dev_err(pp->dev, "irq domain init failed\n");
+> >> @@ -476,6 +470,29 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >>   			irq_create_mapping(pp->irq_domain, i);
+> >>   	}
+> >>   
+> >> +	return 0;
+> >> +}
+> >> +
+> >> +/*
+> >> + * dw_pcie_common_host_init() - common host init function across different
+> >> + *				versions of the designware PCI controller.
+> >> + * @pp: ptr to pcie port
+> >> + * @hw: ptr to hw_pci structure
+> >> + *
+> >> + * This functions parses common DT properties, call host_init() callback
+> >> + * of the PCI controller driver. Also initialize the common RC configurations
+> >> + * and call common pci core function to intialize the controller driver.
+> >> + */
+> >> +int __init dw_pcie_common_host_init(struct pcie_port *pp, struct hw_pci *hw)
+> >> +{
+> >> +	struct device_node *np = pp->dev->of_node;
+> >> +	u32 val;
+> >> +
+> >> +	if (of_property_read_u32(np, "num-lanes", &pp->lanes)) {
+> >> +		dev_err(pp->dev, "Failed to parse the number of lanes\n");
+> >> +		return -EINVAL;
+> >> +	}
+> >> +
+> >>   	if (pp->ops->host_init)
+> >>   		pp->ops->host_init(pp);
+> >>   
+> >> @@ -488,10 +505,10 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >>   	val |= PORT_LOGIC_SPEED_CHANGE;
+> >>   	dw_pcie_wr_own_conf(pp, PCIE_LINK_WIDTH_SPEED_CONTROL, 4, val);
+> >>   
+> >> -	dw_pci.nr_controllers = 1;
+> >> -	dw_pci.private_data = (void **)&pp;
+> >> +	hw->nr_controllers = 1;
+> >> +	hw->private_data = (void **)&pp;
+> >>   
+> >> -	pci_common_init_dev(pp->dev, &dw_pci);
+> >> +	pci_common_init_dev(pp->dev, hw);
+> >>   	pci_assign_unassigned_resources();
+> >>   #ifdef CONFIG_PCI_DOMAINS
+> >>   	dw_pci.domain++;
+> >> @@ -500,6 +517,55 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+> >>   	return 0;
+> >>   }
+> >>   
+> >> +/*
+> >> + * dw_pcie_host_init() - Host init function for new designware h/w
+> >> + *
+> >> + * @pp: ptr to pcie port
+> >> + *
+> >> + * The function parse the PCI resurces for IO, Memory and map the config
+> >> + * space addresses. Also initliaze the MSI irq controller and call
+> >> + * dw_pcie_common_host_init() to initialize the PCI controller.
+> >> + */
+> >> +int __init dw_pcie_host_init(struct pcie_port *pp)
+> >> +{
+> >> +	int ret;
+> >> +
+> >> +	ret = dw_pcie_parse_resource(pp);
+> >> +	if (ret)
+> >> +		return ret;
+> >> +
+> >> +	if (!pp->dbi_base) {
+> >> +		pp->dbi_base = devm_ioremap(pp->dev, pp->cfg.start,
+> >> +					resource_size(&pp->cfg));
+> >> +		if (!pp->dbi_base) {
+> >> +			dev_err(pp->dev, "error with ioremap\n");
+> >> +			return -ENOMEM;
+> >> +		}
+> >> +	}
+> >> +
+> >> +	pp->cfg0_base = pp->cfg.start;
+> >> +	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+> >> +
+> >> +	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
+> >> +					pp->config.cfg0_size);
+> >> +	if (!pp->va_cfg0_base) {
+> >> +		dev_err(pp->dev, "error with ioremap in function\n");
+> >> +		return -ENOMEM;
+> >> +	}
+> >> +	pp->va_cfg1_base = devm_ioremap(pp->dev, pp->cfg1_base,
+> >> +					pp->config.cfg1_size);
+> >> +	if (!pp->va_cfg1_base) {
+> >> +		dev_err(pp->dev, "error with ioremap\n");
+> >> +		return -ENOMEM;
+> >> +	}
+> >> +
+> >> +	ret = dw_pcie_msi_host_init(pp, pp->dev->of_node, &msi_domain_ops);
+> >> +	if (ret < 0)
+> >> +		return ret;
+> >> +
+> >> +	return dw_pcie_common_host_init(pp, &dw_pci);
+> >> +}
+> >> +
+> >>   static void dw_pcie_prog_viewport_cfg0(struct pcie_port *pp, u32 busdev)
+> >>   {
+> >>   	/* Program viewport 0 : OUTBOUND : CFG0 */
+> > Regards
+> > Pratyush
+> >
+> >> -- 
+> >> 1.7.9.5
