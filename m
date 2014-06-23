@@ -1,73 +1,111 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH 1/2] ASoC: max98090: Add max98091 compatible string
-Date: Mon, 23 Jun 2014 11:49:33 +0530
-Message-ID: <53A7C6F5.9070203@gmail.com>
-References: <1403251396-17487-1-git-send-email-tushar.b@samsung.com> <CAD=FV=XX1XAX-jZTJaQYTHbeXkHu2uX_6==vHYbSnVpjJe6+tQ@mail.gmail.com>
+From: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Subject: Re: [PATCH V3 03/16] irqchip: crossbar: introduce ti,irqs-skip to
+ skip
+Date: Mon, 23 Jun 2014 12:50:33 +0530
+Message-ID: <53A7D541.6090009@ti.com>
+References: <1402917796-31574-1-git-send-email-r.sricharan@ti.com> <1402917796-31574-4-git-send-email-r.sricharan@ti.com> <20140621023302.GE21711@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=XX1XAX-jZTJaQYTHbeXkHu2uX_6==vHYbSnVpjJe6+tQ@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Tushar Behera <tushar.b@samsung.com>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, alsa-devel@alsa-project.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, tiwai@suse.de, "broonie@kernel.org" <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Wonjoon Lee <woojoo.lee@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140621023302.GE21711-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2014 02:02 AM, Doug Anderson wrote:
-> Tushar,
+On Saturday 21 June 2014 08:03 AM, Jason Cooper wrote:
+> Sricharan,
 > 
-> On Fri, Jun 20, 2014 at 1:03 AM, Tushar Behera <tushar.b@samsung.com> wrote:
->> From: Wonjoon Lee <woojoo.lee@samsung.com>
+> Your subject line seems truncated:
+> 
+>   "irqchip: crossbar: introduce ti,irqs-skip to skip"
+> 
+> maybe "... Introduce DT property to skip hardwired irqs" ?
+> 
+> Also note that you need to correct the subject line for *every* patch in
+> the series wrt capitalization.
+> 
+> I don't mind correcting it when I apply it, provided that:
+> 
+ha, i think this got truncated unintentionally. Sorry will fix this.
+>  - the patch is otherwise ready
+>  - I only have to do it once or twice for the series
+>  - I never had a chance to ask since you created a rockstar patch series
+>    the first time out of the gate (except for capitalization).
+> 
+> Once I've looked over the whole series, please resend with the subject
+> lines corrected.
+> 
+Ok. I will look for your comments on the rest of the patches and
+resend with capitalization fix said above.
+
+> On Mon, Jun 16, 2014 at 04:53:03PM +0530, Sricharan R wrote:
+>> From: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
 >>
->> The MAX98091 CODEC is the same as MAX98090 CODEC, but with an extra
->> microphone. Existing driver for MAX98090 CODEC already has support
->> for MAX98091 CODEC. Adding proper compatible string so that MAX98091
->> CODEC can be specified from device tree.
+>> When, in the system due to varied reasons, interrupts might be unusable
+>> due to hardware behavior, but register maps do exist, then those interrupts
+>> should be skipped while mapping irq to crossbars.
 >>
->> Signed-off-by: Wonjoon Lee <woojoo.lee@samsung.com>
->> Signed-off-by: Doug Anderson <dianders@chromium.org>
->> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
+>> Signed-off-by: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+>> Signed-off-by: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
 >> ---
+>> [V3] introduced ti,irqs-skip dt property to list the
+>>      irqs to be skipped.
 >>
->> Picked from https://chromium-review.googlesource.com/#/c/184091/
+>>  .../devicetree/bindings/arm/omap/crossbar.txt      |    4 ++++
+>>  drivers/irqchip/irq-crossbar.c                     |   20 ++++++++++++++++++++
+>>  2 files changed, 24 insertions(+)
 >>
->>  .../devicetree/bindings/sound/max98090.txt         |    2 +-
->>  sound/soc/codecs/max98090.c                        |    2 ++
->>  2 files changed, 3 insertions(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/sound/max98090.txt b/Documentation/devicetree/bindings/sound/max98090.txt
->> index a5e63fa..c454e67 100644
->> --- a/Documentation/devicetree/bindings/sound/max98090.txt
->> +++ b/Documentation/devicetree/bindings/sound/max98090.txt
->> @@ -4,7 +4,7 @@ This device supports I2C only.
->>
->>  Required properties:
->>
->> -- compatible : "maxim,max98090".
->> +- compatible : "maxim,max98090" or "maxim,max98091".
->>
->>  - reg : The I2C address of the device.
->>
->> diff --git a/sound/soc/codecs/max98090.c b/sound/soc/codecs/max98090.c
->> index f5fccc7..4f5534d 100644
->> --- a/sound/soc/codecs/max98090.c
->> +++ b/sound/soc/codecs/max98090.c
->> @@ -2460,12 +2460,14 @@ static const struct dev_pm_ops max98090_pm = {
->>
->>  static const struct i2c_device_id max98090_i2c_id[] = {
->>         { "max98090", MAX98090 },
->> +       { "max98091", MAX98091 },
+>> diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+>> index fb88585..cfcbd52 100644
+>> --- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+>> +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+>> @@ -17,6 +17,10 @@ Required properties:
+>>  		 so crossbar bar driver should not consider them as free
+>>  		 lines.
+>>  
+>> +Optional properties:
+>> +- ti,irqs-skip: This is similar to "ti,irqs-reserved", but are irq mappings
+>> +  which are not supposed to be used for errata or other reasons(virtualization).
 > 
-> optional: This would allow you to add some extra error checking in
-> max98090_probe() to make sure that the device-tree specified device
-> matched the device that was detected.  That could be in a future
-> patch, though.
+> I would specifically mention SoC-specific hard-wiring of irqs here.
+> Also the fact that the hardwiring unexpectedly bypasses the crossbar.
+ok, that will be more easily understandable and will add that.
 > 
-> Reviewed-by: Doug Anderson <dianders@chromium.org>
+>> +
+>>  Examples:
+>>  		crossbar_mpu: @4a020000 {
+>>  			compatible = "ti,irq-crossbar";
 > 
+> Please include a ti,irqs-skip example here.
+> 
+ok.
+>> diff --git a/drivers/irqchip/irq-crossbar.c b/drivers/irqchip/irq-crossbar.c
+>> index 51d4b87..27049de 100644
+>> --- a/drivers/irqchip/irq-crossbar.c
+>> +++ b/drivers/irqchip/irq-crossbar.c
+>> @@ -18,6 +18,7 @@
+>>  
+>>  #define IRQ_FREE	-1
+>>  #define IRQ_RESERVED	-2
+>> +#define IRQ_SKIP	-3
+>>  #define GIC_IRQ_START	32
+>>  
+>>  /*
+>> @@ -160,6 +161,25 @@ static int __init crossbar_of_init(struct device_node *node)
+>>  		}
+>>  	}
+>>  
+>> +	/* Skip the ones marked as skip */
+> 
+> This comment is redundant, perhaps "Skip irqs hardwired to bypass the
+> crossbar."?
+ok, will change this.
 
-Okay. I will add that in a follow-up patch.
-
-Thanks for reviewing.
--- 
-Tushar Behera
+Regards,
+ Sricharan
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
