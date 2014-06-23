@@ -1,83 +1,65 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 1/7] genirq: generic chip: export
- irq_map_generic_chip function
-Date: Mon, 23 Jun 2014 18:17:33 -0400
-Message-ID: <20140623221733.GG10202@titan.lakedaemon.net>
-References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
- <1403276487-8792-2-git-send-email-boris.brezillon@free-electrons.com>
+From: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v2 1/2] ASoC: cs4265: bindings: sound: Add binding for CS4265 CODEC.
+Date: Mon, 23 Jun 2014 17:29:52 -0500
+Message-ID: <1403562593-31952-1-git-send-email-Paul.Handrigan@cirrus.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403276487-8792-2-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawl.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>, Paul Handrigan <paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thomas,
+This patch adds binding documentation for the Cirrus Logic CS4265 I2C CODEC.
 
-Would you mind Acking this and letting me know how you'd like me to
-handle it?  It's a build requirement for the rest of the series, but
-it's in core code.
+Changes for v2:
 
-I can do a separate topic branch for you or just merge it in with
-irqchip/core.  Whichever is easiest for you.
+* Change DT reset pin name to "reset-gpios"
 
-On Fri, Jun 20, 2014 at 05:01:21PM +0200, Boris BREZILLON wrote:
-> Export the generic irq map function in order to provide irq_domain ops with
-> generic mapping and specific of xlate function (needed by the new atmel
-> AIC driver).
-> 
-> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-> ---
->  include/linux/irq.h       | 2 ++
->  kernel/irq/generic-chip.c | 5 +++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/linux/irq.h b/include/linux/irq.h
-> index 0d998d8..62af592 100644
-> --- a/include/linux/irq.h
-> +++ b/include/linux/irq.h
-> @@ -771,6 +771,8 @@ void irq_gc_eoi(struct irq_data *d);
->  int irq_gc_set_wake(struct irq_data *d, unsigned int on);
->  
->  /* Setup functions for irq_chip_generic */
-> +int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
-> +			 irq_hw_number_t hw_irq);
->  struct irq_chip_generic *
->  irq_alloc_generic_chip(const char *name, int nr_ct, unsigned int irq_base,
->  		       void __iomem *reg_base, irq_flow_handler_t handler);
-> diff --git a/kernel/irq/generic-chip.c b/kernel/irq/generic-chip.c
-> index 452d6f2..cf80e7b 100644
-> --- a/kernel/irq/generic-chip.c
-> +++ b/kernel/irq/generic-chip.c
-> @@ -341,8 +341,8 @@ static struct lock_class_key irq_nested_lock_class;
->  /*
->   * irq_map_generic_chip - Map a generic chip for an irq domain
->   */
-> -static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
-> -				irq_hw_number_t hw_irq)
-> +int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
-> +			 irq_hw_number_t hw_irq)
->  {
->  	struct irq_data *data = irq_get_irq_data(virq);
->  	struct irq_domain_chip_generic *dgc = d->gc;
-> @@ -394,6 +394,7 @@ static int irq_map_generic_chip(struct irq_domain *d, unsigned int virq,
->  	irq_modify_status(virq, dgc->irq_flags_to_clear, dgc->irq_flags_to_set);
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(irq_map_generic_chip);
->  
->  struct irq_domain_ops irq_generic_chip_ops = {
->  	.map	= irq_map_generic_chip,
-> -- 
-> 1.8.3.2
-> 
+Signed-off-by: Paul Handrigan <paul.handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
+---
+ Documentation/devicetree/bindings/sound/cs4265.txt | 29 ++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/cs4265.txt
 
-thx,
+diff --git a/Documentation/devicetree/bindings/sound/cs4265.txt b/Documentation/devicetree/bindings/sound/cs4265.txt
+new file mode 100644
+index 0000000..380fff8
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/cs4265.txt
+@@ -0,0 +1,29 @@
++CS4265 audio CODEC
++
++This device supports I2C only.
++
++Required properties:
++
++  - compatible : "cirrus,cs4265"
++
++  - reg : the I2C address of the device for I2C. The I2C address depends on
++          the state of the AD0 pin.  If AD0 is high, the i2c address is 0x4f.
++          If it is low, the i2c address is 0x4e.
++
++Optional properties:
++
++  - reset-gpios : a GPIO spec for the reset pin. If specified, it will be
++		 deasserted before communication to the codec starts.
++
++Examples:
++
++codec_ad0_high: cs4265@4f { /* AD0 Pin is high */
++	compatible = "cirrus,cs4265";
++	reg = <0x4f>;
++};
++
++
++codec_ad0_low: cs4265@4e { /* AD0 Pin is low */
++	compatible = "cirrus,cs4265";
++	reg = <0x4e>;
++};
+-- 
+1.9.1
 
-Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
