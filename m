@@ -1,135 +1,35 @@
-From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH] ARM: mvebu: Fix the improper use of the compatible string armada38x using a wildcard
-Date: Mon, 23 Jun 2014 16:16:51 +0200
-Message-ID: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com>
+From: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v7 1/2] video: ARM CLCD: Add DT support
+Date: Mon, 23 Jun 2014 15:23:45 +0100
+Message-ID: <1403533425.3804.35.camel@hornet>
+References: <1403018494-10264-1-git-send-email-pawel.moll@arm.com>
+	 <CAFEAcA-NZiRDDeUc7n+6hxgjG1V3qYXPAwyfSdtyz=ZCcD8kiw@mail.gmail.com>
+	 <1403531535.3804.11.camel@hornet>
+	 <20140623141022.GJ32514@n2100.arm.linux.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140623141022.GJ32514-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Peter Maydell <peter.maydell-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, lkml - Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, arm-mail-list <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Wildcards in compatible strings should be avoid. "marvell,armada38x"
-was recently introduced but was not yet used.
+On Mon, 2014-06-23 at 15:10 +0100, Russell King - ARM Linux wrote:
+> As far as the CLD outputs are concerned, they are standard.  The PLD on
+> their outputs routes the CLD bits to the 8-bit red, green and blue
+> channels according to the configuration of SYS_CLCD to achieve the
+> various colour formats which the CLCD does not natively provide for.
+> 
+> So, it /is/ a PL110 with an independent external muxer.
 
-The armada 385 SoC is a superset of the armada 380 SoC (with more CPUs
-and more PCIe slots). So this patch replaces the use of
-"marvell,armada38x" by the "marvell,armada380" string.
+Cool, this means that one can still use this property do define which
+CLDs are wired to R/G/B-0s and make an informed decision in the driver
+based on this (although with a separate compatible value it won't be
+really necessary).
 
-Signed-off-by: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
-Hi,
-
-This fix should be merged in 3.16 and maybe sent as a fix for 3.15
-too.
-
-The initial patch (ARM: mvebu: Fix missing binding documentation for
-Armada 38x) was re-written after the review about the use of the
-wildcards here:
-http://thread.gmane.org/gmane.linux.kernel/1728755/focus=79339 and
-there:
-http://thread.gmane.org/gmane.linux.ports.arm.kernel/334225/focus=334311
-
-
-Thanks,
-Gregory
-
- Documentation/devicetree/bindings/arm/armada-38x.txt | 14 ++++++++++++--
- arch/arm/boot/dts/armada-380.dtsi                    |  2 +-
- arch/arm/boot/dts/armada-385-db.dts                  |  2 +-
- arch/arm/boot/dts/armada-385-rd.dts                  |  2 +-
- arch/arm/boot/dts/armada-385.dtsi                    |  2 +-
- arch/arm/boot/dts/armada-38x.dtsi                    |  2 +-
- 6 files changed, 17 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/arm/armada-38x.txt b/Documentation/devicetree/bindings/arm/armada-38x.txt
-index 11f2330a6554..ad9f8ed4d9bd 100644
---- a/Documentation/devicetree/bindings/arm/armada-38x.txt
-+++ b/Documentation/devicetree/bindings/arm/armada-38x.txt
-@@ -6,5 +6,15 @@ following property:
- 
- Required root node property:
- 
-- - compatible: must contain either "marvell,armada380" or
--   "marvell,armada385" depending on the variant of the SoC being used.
-+ - compatible: must contain "marvell,armada380"
-+
-+In addition, boards using the Marvell Armada 385 SoC shall have the
-+following property before the previous one:
-+
-+Required root node property:
-+
-+compatible: must contain "marvell,armada385"
-+
-+Example:
-+
-+compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada380";
-diff --git a/arch/arm/boot/dts/armada-380.dtsi b/arch/arm/boot/dts/armada-380.dtsi
-index e69bc6759c39..4173a8ab34e7 100644
---- a/arch/arm/boot/dts/armada-380.dtsi
-+++ b/arch/arm/boot/dts/armada-380.dtsi
-@@ -16,7 +16,7 @@
- 
- / {
- 	model = "Marvell Armada 380 family SoC";
--	compatible = "marvell,armada380", "marvell,armada38x";
-+	compatible = "marvell,armada380";
- 
- 	cpus {
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/armada-385-db.dts b/arch/arm/boot/dts/armada-385-db.dts
-index ff9637dd8d0f..4be6a2838a41 100644
---- a/arch/arm/boot/dts/armada-385-db.dts
-+++ b/arch/arm/boot/dts/armada-385-db.dts
-@@ -16,7 +16,7 @@
- 
- / {
- 	model = "Marvell Armada 385 Development Board";
--	compatible = "marvell,a385-db", "marvell,armada385", "marvell,armada38x";
-+	compatible = "marvell,a385-db", "marvell,armada385", "marvell,armada380";
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-diff --git a/arch/arm/boot/dts/armada-385-rd.dts b/arch/arm/boot/dts/armada-385-rd.dts
-index 40893255a3f0..aaca2861dc87 100644
---- a/arch/arm/boot/dts/armada-385-rd.dts
-+++ b/arch/arm/boot/dts/armada-385-rd.dts
-@@ -17,7 +17,7 @@
- 
- / {
- 	model = "Marvell Armada 385 Reference Design";
--	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada38x";
-+	compatible = "marvell,a385-rd", "marvell,armada385", "marvell,armada380";
- 
- 	chosen {
- 		bootargs = "console=ttyS0,115200 earlyprintk";
-diff --git a/arch/arm/boot/dts/armada-385.dtsi b/arch/arm/boot/dts/armada-385.dtsi
-index f011009bf4cf..6283d7912f71 100644
---- a/arch/arm/boot/dts/armada-385.dtsi
-+++ b/arch/arm/boot/dts/armada-385.dtsi
-@@ -16,7 +16,7 @@
- 
- / {
- 	model = "Marvell Armada 385 family SoC";
--	compatible = "marvell,armada385", "marvell,armada38x";
-+	compatible = "marvell,armada385", "marvell,armada380";
- 
- 	cpus {
- 		#address-cells = <1>;
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 3de364e81b52..689fa1a46728 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -20,7 +20,7 @@
- 
- / {
- 	model = "Marvell Armada 38x family SoC";
--	compatible = "marvell,armada38x";
-+	compatible = "marvell,armada380";
- 
- 	aliases {
- 		gpio0 = &gpio0;
--- 
-1.8.1.2
+Pawel
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
