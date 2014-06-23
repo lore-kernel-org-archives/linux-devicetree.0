@@ -1,128 +1,114 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 5/6] OF: Utility helper functions for dynamic nodes
-Date: Mon, 23 Jun 2014 12:48:26 -0700
-Message-ID: <53A8848A.3000803@roeck-us.net>
-References: <1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com> <1403430039-15085-6-git-send-email-pantelis.antoniou@konsulko.com> <53A85549.7040809@nsn.com> <6E91A461-4361-4A18-BE32-CECDD789C114@konsulko.com> <20140623183343.GA10389@heimdall> <78ACBAF6-A73E-4272-8D3A-258C4B10858C@konsulko.com>
+From: =?UTF-8?B?0JDQu9C10LrRgdCw0L3QtNGAINCR0LXRgNGB0LXQvdC10LI=?= <bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org>
+Subject: Re: [PATCH v10 4/5] ARM: sunxi: Add IR controllers on
+ A20 to dtsi
+Date: Mon, 23 Jun 2014 13:08:24 -0700 (PDT)
+Message-ID: <7d7d6451-3a26-45dc-aa62-b939fc7889ce@googlegroups.com>
+References: <1403348646-31091-1-git-send-email-bay@hackerdom.ru>
+ <1403348646-31091-5-git-send-email-bay@hackerdom.ru>
+ <20140623130851.GD19730@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <78ACBAF6-A73E-4272-8D3A-258C4B10858C-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Ioan Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>
-Cc: Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.orgPe
+Content-Type: multipart/alternative;
+	boundary="----=_Part_673_28035074.1403554104453"
+Return-path: <linux-sunxi+bncBCLIFP6QZ4HRBOMSUKOQKGQE2SETBKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <20140623130851.GD19730@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Cc: bay-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org, david-0WFrdVpeebksCylrc8G9yg@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, james.hogan-1AXoQHu6uovQT0dZR+AlfA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, m.chehab-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sean-hENCXIMQXOg@public.gmane.org, srinivas.kandagatla-qxv4g6HH51o@public.gmane.org, wingrime-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2014 12:13 PM, Pantelis Antoniou wrote:
-> Hi Ioan,
+------=_Part_673_28035074.1403554104453
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+
+Thanks,
+
+Should I send applied patches in the further versions of this patch set?
+
+Best,
+Alexander Bersenev
+
+=D0=BF=D0=BE=D0=BD=D0=B5=D0=B4=D0=B5=D0=BB=D1=8C=D0=BD=D0=B8=D0=BA, 23 =D0=
+=B8=D1=8E=D0=BD=D1=8F 2014 =D0=B3., 19:10:45 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=
+=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=B5=D0=BB=D1=8C Maxime Ripard=20
+=D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:
 >
-> I'm going to let Grant answer that but the code in question doesn't look right.
+> On Sat, Jun 21, 2014 at 05:04:05PM +0600, Alexander Bersenev wrote:=20
+> > This patch adds records for two IR controllers on A20=20
+> >=20
+> > Signed-off-by: Alexander Bersenev <b...-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org <javascript:>>=20
+> > Signed-off-by: Alexsey Shestacov <wing...-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org <javascript:>=
+>=20
 >
-> On Jun 23, 2014, at 9:33 PM, Ioan Nicu wrote:
 >
->> Hi Pantelis,
->>
->> On Mon, Jun 23, 2014 at 07:57:24PM +0300, ext Pantelis Antoniou wrote:
->>> Hi Alexander,
->>>
->>> On Jun 23, 2014, at 7:26 PM, Alexander Sverdlin wrote:
->>>
->>>> Hello Pantelis!
->>>>
->>>> On 22/06/14 11:40, ext Pantelis Antoniou wrote:
->>>>> Introduce helper functions for working with the live DT tree,
->>>>> all of them related to dynamically adding/removing nodes and
->>>>> properties.
->>>>>
->>>>> __of_copy_property() copies a property dynamically
->>>>> __of_create_empty_node() creates an empty node
->>>>>
->>>>> Bug fix about prop->len == 0 by Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>
->>>>
->>>> Are you sure about this? (see below...)
->>>>
->>
->> Alexander is right, my fix was lost even though it's mentioned in this patch.
->>
+> Applied, thanks.=20
 >
-> I'm sorry, I didn't understand that the intention of the fix was to address
-> the issue below.
->
->>>>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
->>>>> ---
->>>
->>> [snip]
->>>>> +
->>>>> +	if (prop->length > 0) {
->>>>        ^^^^^^^^^^^^^^^^^^^^^
->>>> Seems, that length==0 case will still produce value==NULL results,
->>>> which will brake some checks in the kernel... Or am I missing something in
->>>> the new version?
->>>>
->>>
->>> prop->value will be set to NULL, and length will be set to zero (kzalloc).
->>> This is a normal zero length property.
->>>
->>> I don't know of any place in the kernel accessing the value if prop->length==0
->>>
->>
->> We have a simple use case. We have an overlay which adds an interrupt controller.
->> If you look in drivers/of/irq.c, in of_irq_parse_raw():
->>
->> [...]
->> 	/* Now start the actual "proper" walk of the interrupt tree */
->> 	while (ipar != NULL) {
->> 		/* Now check if cursor is an interrupt-controller and if it is
->> 		 * then we are done
->> 		 */
->> 		if (of_get_property(ipar, "interrupt-controller", NULL) !=
->> 				NULL) {
->> 			pr_debug(" -> got it !\n");
->> 			return 0;
->> 		}
->> [...]
->>
->> A node is identified as an interrupt controller if it has a zero-length property
->> called "interrupt-controller" but with a non-NULL value.
->>
->> My proposed fix for this was to remove the if () condition. propn->value will be
->> allocated with kmalloc(0) which returns ZERO_SIZE_PTR which is != NULL.
->>
->
-> If that's the case, the code in irq.c is wrong.
->
-> interrupt-controller is a bool property; the correct call to use is of_property_read_bool()
-> which returns true or false when the value is defined.
->
-> The use of of_get_property is a bug here. It is perfectly valid for a property to have a
-> NULL value when length = 0.
+> Maxime=20
+> --=20
+> Maxime Ripard, Free Electrons=20
+> Embedded Linux, Kernel and Android engineering=20
+> http://free-electrons.com=20
 >
 
-That usage is spread throughout the code though. There are three or four similar checks
-for interrupt-controller in the code, and many others using of_get_property() to check
-for booleans.
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
 
-Some examples:
-	s5m8767,pmic-buck2-ramp-enable
-	s5m8767,pmic-buck3-ramp-enable
-	s5m8767,pmic-buck4-ramp-enable
-	d7s-flipped?
-	atmel,use-dma-rx
-	linux,rs485-enabled-at-boot-time
-	marvell,enable-port1 (and many others)
-	linux,bootx-noscreen
-	linux,opened
+------=_Part_673_28035074.1403554104453
+Content-Type: text/html; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-and many many others.
+<div dir=3D"ltr">Thanks,<div><br></div><div>Should I send applied patches i=
+n the further versions of this patch set?</div><div><br></div><div>Best,</d=
+iv><div>Alexander Bersenev<br><br>=D0=BF=D0=BE=D0=BD=D0=B5=D0=B4=D0=B5=D0=
+=BB=D1=8C=D0=BD=D0=B8=D0=BA, 23 =D0=B8=D1=8E=D0=BD=D1=8F 2014&nbsp;=D0=B3.,=
+ 19:10:45 UTC+6 =D0=BF=D0=BE=D0=BB=D1=8C=D0=B7=D0=BE=D0=B2=D0=B0=D1=82=D0=
+=B5=D0=BB=D1=8C Maxime Ripard =D0=BD=D0=B0=D0=BF=D0=B8=D1=81=D0=B0=D0=BB:<b=
+lockquote class=3D"gmail_quote" style=3D"margin: 0;margin-left: 0.8ex;borde=
+r-left: 1px #ccc solid;padding-left: 1ex;">On Sat, Jun 21, 2014 at 05:04:05=
+PM +0600, Alexander Bersenev wrote:
+<br>&gt; This patch adds records for two IR controllers on A20
+<br>&gt;=20
+<br>&gt; Signed-off-by: Alexander Bersenev &lt;<a href=3D"javascript:" targ=
+et=3D"_blank" gdf-obfuscated-mailto=3D"nx6y97nMHg0J" onmousedown=3D"this.hr=
+ef=3D'javascript:';return true;" onclick=3D"this.href=3D'javascript:';retur=
+n true;">b...-d8LqKIyZzER6k2ZkT/Rh8A@public.gmane.org</a>&gt;
+<br>&gt; Signed-off-by: Alexsey Shestacov &lt;<a href=3D"javascript:" targe=
+t=3D"_blank" gdf-obfuscated-mailto=3D"nx6y97nMHg0J" onmousedown=3D"this.hre=
+f=3D'javascript:';return true;" onclick=3D"this.href=3D'javascript:';return=
+ true;">wing...-3kdeTeqwOZ9EV1b7eY7vFQ@public.gmane.org</a>&gt;
+<br>
+<br>Applied, thanks.
+<br>
+<br>Maxime
+<br>--=20
+<br>Maxime Ripard, Free Electrons
+<br>Embedded Linux, Kernel and Android engineering
+<br><a href=3D"http://free-electrons.com" target=3D"_blank" onmousedown=3D"=
+this.href=3D'http://www.google.com/url?q\75http%3A%2F%2Ffree-electrons.com\=
+46sa\75D\46sntz\0751\46usg\75AFQjCNGC8C9pT7xKJEabITLGL5cqtolifQ';return tru=
+e;" onclick=3D"this.href=3D'http://www.google.com/url?q\75http%3A%2F%2Ffree=
+-electrons.com\46sa\75D\46sntz\0751\46usg\75AFQjCNGC8C9pT7xKJEabITLGL5cqtol=
+ifQ';return true;">http://free-electrons.com</a>
+<br></blockquote></div></div>
 
-Maybe people meant to use of_find_property() ?
+<p></p>
 
-Either case, if the new code depends on proper use of of_get_property(), we may have
-a problem unless all those bad use cases are fixed.
+-- <br />
+You received this message because you are subscribed to the Google Groups &=
+quot;linux-sunxi&quot; group.<br />
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to <a href=3D"mailto:linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org">linux-s=
+unxi+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org</a>.<br />
+For more options, visit <a href=3D"https://groups.google.com/d/optout">http=
+s://groups.google.com/d/optout</a>.<br />
 
-Guenter
-
---
-To unsubscribe from this list: send the line "unsubscribe linux-spi" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+------=_Part_673_28035074.1403554104453--
