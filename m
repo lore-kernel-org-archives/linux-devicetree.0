@@ -1,417 +1,55 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: [PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi
-Date: Mon, 23 Jun 2014 13:49:36 -0700
-Message-ID: <1403556576-8038-1-git-send-email-dianders@chromium.org>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <tomasz.figa@gmail.com>, sjg@chromium.org, olof@lixom.net, javier.martinez@collabora.co.uk, ch.naveen@samsung.com, swarren@wwwdotorg.org, khilman@linaro.org, ajaynumb@gmail.com, rahul.sharma@samsung.com, tushar.b@samsung.com, Doug Anderson <dianders@chromium.org>, ben-linux@fluff.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: kirkwood: fix phy-connection-type for
+ Guruplug
+Date: Mon, 23 Jun 2014 17:50:15 -0400
+Message-ID: <20140623215015.GC10202@titan.lakedaemon.net>
+References: <1403555115-13111-1-git-send-email-sebastian.hesselbarth@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403555115-13111-1-git-send-email-sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
-including:
-* The keyboard
-* The i2c tunnel
-* The tps65090 under the i2c tunnel
-* The battery under the i2c tunnel
+On Mon, Jun 23, 2014 at 10:25:15PM +0200, Sebastian Hesselbarth wrote:
+> Commit eeb845459a72e792a959278b858f9c417e9995bd
+>  ("ARM: dts: kirkwood: set Guruplug phy-connection-type to rgmii-id")
+> added phy-connection-type properties to ethernet PHY nodes.
+> 
+> Actually, the property has to be set for the ethernet port node instead.
+> Fix it by moving the corresponding properties to the correct nodes.
+> 
+> Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+> Jason,
+> 
+> this should go in as a fix for v3.16 where above commit appeared first.
+> 
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+> Cc: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+> Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>
+> Cc: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+> Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> ---
+>  arch/arm/boot/dts/kirkwood-guruplug-server-plus.dts | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-To add extra motivation, it should be noted that tps65090 is one of
-the things needed to get display-related FETs turned on for pit and
-pi.
+Applied to mvebu/fixes
 
-Note that this relies on a few outstanding changes:
-* Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
-  (spi: s3c64xx: for DT platofrms always get the chipselect info from
-  DT node) to work properly and match the documented bindings.  See
-  <https://patchwork.kernel.org/patch/4346701/> and
-  <https://patchwork.kernel.org/patch/4346711/>
+thx,
 
-Signed-off-by: Doug Anderson <dianders@chromium.org>
-Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
----
-Changes in v2:
-- Now just one patch since mfd patch landed.
-- Rebased to ToT linux-next
-
- arch/arm/boot/dts/exynos5420-peach-pit.dts | 145 +++++++++++++++++++++++++++++
- arch/arm/boot/dts/exynos5800-peach-pi.dts  | 145 +++++++++++++++++++++++++++++
- 2 files changed, 290 insertions(+)
-
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index 7649982..581f385 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -25,6 +25,11 @@
- 		"google,pit", "google,peach","samsung,exynos5420",
- 		"samsung,exynos5";
- 
-+	aliases {
-+		/* Assign 20 so we don't get confused w/ builtin ones */
-+		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
-+	};
-+
- 	backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 0 1000000 0>;
-@@ -87,6 +92,13 @@
- 		pinctrl-0 = <&usb301_vbus_en>;
- 		enable-active-high;
- 	};
-+
-+	vbat: fixed-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbat-supply";
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
- };
- 
- &dp {
-@@ -231,6 +243,20 @@
- 		samsung,pin-drv = <0>;
- 	};
- 
-+	ec_irq: ec-irq {
-+		samsung,pins = "gpx1-5";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	tps65090_irq: tps65090-irq {
-+		samsung,pins = "gpx2-5";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
- 	dp_hpd_gpio: dp_hpd_gpio {
- 		samsung,pins = "gpx2-6";
- 		samsung,pin-function = <0>;
-@@ -247,6 +273,19 @@
- };
- 
- &pinctrl_3 {
-+	/* Drive SPI lines at x2 for better integrity */
-+	spi2-bus {
-+		samsung,pin-drv = <2>;
-+	};
-+
-+	/* Drive SPI chip select at x2 for better integrity */
-+	ec_spi_cs: ec-spi-cs {
-+		samsung,pins = "gpb1-2";
-+		samsung,pin-function = <1>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <2>;
-+	};
-+
- 	usb300_vbus_en: usb300-vbus-en {
- 		samsung,pins = "gph0-0";
- 		samsung,pin-function = <1>;
-@@ -266,6 +305,111 @@
- 	status = "okay";
- };
- 
-+&spi_2 {
-+	status = "okay";
-+	num-cs = <1>;
-+	samsung,spi-src-clk = <0>;
-+	cs-gpios = <&gpb1 2 0>;
-+
-+	cros_ec: cros-ec@0 {
-+		compatible = "google,cros-ec-spi";
-+		interrupt-parent = <&gpx1>;
-+		interrupts = <5 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ec_spi_cs &ec_irq>;
-+		reg = <0>;
-+		spi-max-frequency = <3125000>;
-+
-+		controller-data {
-+			samsung,spi-feedback-delay = <1>;
-+		};
-+
-+		i2c-tunnel {
-+			compatible = "google,cros-ec-i2c-tunnel";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			google,remote-bus = <0>;
-+
-+			battery: sbs-battery@b {
-+				compatible = "sbs,sbs-battery";
-+				reg = <0xb>;
-+				sbs,poll-retry-count = <1>;
-+				sbs,i2c-retry-count = <2>;
-+			};
-+
-+			power-regulator@48 {
-+				compatible = "ti,tps65090";
-+				reg = <0x48>;
-+
-+				/*
-+				 * Config irq to disable internal pulls
-+				 * even though we run in polling mode.
-+				 */
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&tps65090_irq>;
-+
-+				vsys1-supply = <&vbat>;
-+				vsys2-supply = <&vbat>;
-+				vsys3-supply = <&vbat>;
-+				infet1-supply = <&vbat>;
-+				infet2-supply = <&vbat>;
-+				infet3-supply = <&vbat>;
-+				infet4-supply = <&vbat>;
-+				infet5-supply = <&vbat>;
-+				infet6-supply = <&vbat>;
-+				infet7-supply = <&vbat>;
-+				vsys-l1-supply = <&vbat>;
-+				vsys-l2-supply = <&vbat>;
-+
-+				regulators {
-+					dcdc1 {
-+						ti,enable-ext-control;
-+					};
-+					dcdc2 {
-+						ti,enable-ext-control;
-+					};
-+					dcdc3 {
-+						ti,enable-ext-control;
-+					};
-+					fet1 {
-+						regulator-name = "vcd_led";
-+					};
-+					tps65090_fet2: fet2 {
-+						regulator-name = "video_mid";
-+						regulator-always-on;
-+					};
-+					fet3 {
-+						regulator-name = "wwan_r";
-+						regulator-always-on;
-+					};
-+					fet4 {
-+						regulator-name = "sdcard";
-+						regulator-always-on;
-+					};
-+					fet5 {
-+						regulator-name = "camout";
-+					};
-+					fet6 {
-+						regulator-name = "lcd_vdd";
-+					};
-+					tps65090_fet7: fet7 {
-+						regulator-name = "video_mid_1a";
-+						regulator-always-on;
-+					};
-+					ldo1 {
-+					};
-+					ldo2 {
-+					};
-+				};
-+
-+				charger {
-+					compatible = "ti,tps65090-charger";
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &uart_3 {
- 	status = "okay";
- };
-@@ -287,3 +431,4 @@
- 	timeout-sec = <32>;
- };
- 
-+#include "cros-ec-keyboard.dtsi"
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index 2c2c137..b2dc290 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -23,6 +23,11 @@
- 		"google,pi", "google,peach", "samsung,exynos5800",
- 		"samsung,exynos5";
- 
-+	aliases {
-+		/* Assign 20 so we don't get confused w/ builtin ones */
-+		i2c20 = "/spi@12d40000/cros-ec@0/i2c-tunnel";
-+	};
-+
- 	backlight {
- 		compatible = "pwm-backlight";
- 		pwms = <&pwm 0 1000000 0>;
-@@ -85,6 +90,13 @@
- 		pinctrl-0 = <&usb301_vbus_en>;
- 		enable-active-high;
- 	};
-+
-+	vbat: fixed-regulator {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vbat-supply";
-+		regulator-boot-on;
-+		regulator-always-on;
-+	};
- };
- 
- &dp {
-@@ -229,6 +241,20 @@
- 		samsung,pin-drv = <0>;
- 	};
- 
-+	ec_irq: ec-irq {
-+		samsung,pins = "gpx1-5";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
-+	tps65090_irq: tps65090-irq {
-+		samsung,pins = "gpx2-5";
-+		samsung,pin-function = <0>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <0>;
-+	};
-+
- 	dp_hpd_gpio: dp_hpd_gpio {
- 		samsung,pins = "gpx2-6";
- 		samsung,pin-function = <0>;
-@@ -245,6 +271,19 @@
- };
- 
- &pinctrl_3 {
-+	/* Drive SPI lines at x2 for better integrity */
-+	spi2-bus {
-+		samsung,pin-drv = <2>;
-+	};
-+
-+	/* Drive SPI chip select at x2 for better integrity */
-+	ec_spi_cs: ec-spi-cs {
-+		samsung,pins = "gpb1-2";
-+		samsung,pin-function = <1>;
-+		samsung,pin-pud = <0>;
-+		samsung,pin-drv = <2>;
-+	};
-+
- 	usb300_vbus_en: usb300-vbus-en {
- 		samsung,pins = "gph0-0";
- 		samsung,pin-function = <1>;
-@@ -264,6 +303,111 @@
- 	status = "okay";
- };
- 
-+&spi_2 {
-+	status = "okay";
-+	num-cs = <1>;
-+	samsung,spi-src-clk = <0>;
-+	cs-gpios = <&gpb1 2 0>;
-+
-+	cros_ec: cros-ec@0 {
-+		compatible = "google,cros-ec-spi";
-+		interrupt-parent = <&gpx1>;
-+		interrupts = <5 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&ec_spi_cs &ec_irq>;
-+		reg = <0>;
-+		spi-max-frequency = <3125000>;
-+
-+		controller-data {
-+			samsung,spi-feedback-delay = <1>;
-+		};
-+
-+		i2c-tunnel {
-+			compatible = "google,cros-ec-i2c-tunnel";
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			google,remote-bus = <0>;
-+
-+			battery: sbs-battery@b {
-+				compatible = "sbs,sbs-battery";
-+				reg = <0xb>;
-+				sbs,poll-retry-count = <1>;
-+				sbs,i2c-retry-count = <2>;
-+			};
-+
-+			power-regulator@48 {
-+				compatible = "ti,tps65090";
-+				reg = <0x48>;
-+
-+				/*
-+				 * Config irq to disable internal pulls
-+				 * even though we run in polling mode.
-+				 */
-+				pinctrl-names = "default";
-+				pinctrl-0 = <&tps65090_irq>;
-+
-+				vsys1-supply = <&vbat>;
-+				vsys2-supply = <&vbat>;
-+				vsys3-supply = <&vbat>;
-+				infet1-supply = <&vbat>;
-+				infet2-supply = <&vbat>;
-+				infet3-supply = <&vbat>;
-+				infet4-supply = <&vbat>;
-+				infet5-supply = <&vbat>;
-+				infet6-supply = <&vbat>;
-+				infet7-supply = <&vbat>;
-+				vsys-l1-supply = <&vbat>;
-+				vsys-l2-supply = <&vbat>;
-+
-+				regulators {
-+					dcdc1 {
-+						ti,enable-ext-control;
-+					};
-+					dcdc2 {
-+						ti,enable-ext-control;
-+					};
-+					dcdc3 {
-+						ti,enable-ext-control;
-+					};
-+					fet1 {
-+						regulator-name = "vcd_led";
-+					};
-+					tps65090_fet2: fet2 {
-+						regulator-name = "video_mid";
-+						regulator-always-on;
-+					};
-+					fet3 {
-+						regulator-name = "wwan_r";
-+						regulator-always-on;
-+					};
-+					fet4 {
-+						regulator-name = "sdcard";
-+						regulator-always-on;
-+					};
-+					fet5 {
-+						regulator-name = "camout";
-+					};
-+					fet6 {
-+						regulator-name = "lcd_vdd";
-+					};
-+					tps65090_fet7: fet7 {
-+						regulator-name = "video_mid_1a";
-+						regulator-always-on;
-+					};
-+					ldo1 {
-+					};
-+					ldo2 {
-+					};
-+				};
-+
-+				charger {
-+					compatible = "ti,tps65090-charger";
-+				};
-+			};
-+		};
-+	};
-+};
-+
- &uart_3 {
- 	status = "okay";
- };
-@@ -285,3 +429,4 @@
- 	timeout-sec = <32>;
- };
- 
-+#include "cros-ec-keyboard.dtsi"
--- 
-2.0.0.526.g5318336
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
