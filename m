@@ -1,53 +1,119 @@
-From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH] gpio: crystalcove: Fix implicit declaration of function
- 'seq_printf' error
-Date: Tue, 24 Jun 2014 11:26:43 +0100
-Message-ID: <20140624102643.GJ13803@lee--X1>
-References: <1403265753-25851-1-git-send-email-lee.jones@linaro.org>
- <1403265753-25851-3-git-send-email-lee.jones@linaro.org>
+From: Heiko =?ISO-8859-1?Q?St=FCbner?= <heiko@sntech.de>
+Subject: Re: [PATCH 1/2] documentation: add rockchip spi documentation
+Date: Tue, 24 Jun 2014 12:32:21 +0200
+Message-ID: <2324491.URDIcWcjph@diego>
+References: <1403582324-9485-1-git-send-email-addy.ke@rock-chips.com> <1403582324-9485-2-git-send-email-addy.ke@rock-chips.com> <20140624101802.GE5856@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403265753-25851-3-git-send-email-lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140624101802.GE5856@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: addy ke <addy.ke@rock-chips.com>, "broonie@kernel.org" <broonie@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "huangtao@rock-chips.com" <huangtao@rock-chips.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "yzq@rock-chips.com" <yzq@rock-chips.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "kever.yang@rock-chips.com" <kever.yang@rock-chips.com>, "zyw@rock-chips.com" <zyw@rock-chips.com>, "xjq@rock-chips.com" <xjq@rock-chips.com>, "zhenfu.fang@rock-chips.com" <zhenfu.fang@rock-chips.com>, "olof@lixom.net" <olof@lixom.net>, "cf@rock-chips.com" <cf@rock-chips.com>, "hj@rock-chips.com" <hj@rock-chips.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hmm... a leftover patch in my 'send' directory I feel!
+Am Dienstag, 24. Juni 2014, 11:18:02 schrieb Mark Rutland:
+> On Tue, Jun 24, 2014 at 04:58:43AM +0100, addy ke wrote:
+> > Signed-off-by: addy ke <addy.ke@rock-chips.com>
+> > ---
+> > 
+> >  .../devicetree/bindings/spi/spi-rockchip.txt       | 51
+> >  ++++++++++++++++++++++ 1 file changed, 51 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> > b/Documentation/devicetree/bindings/spi/spi-rockchip.txt new file mode
+> > 100644
+> > index 0000000..ce9c881
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+> > @@ -0,0 +1,51 @@
+> > +* Rockchip SPI Controller
+> > +
+> > +The Rockchip SPI controller is used to interface with various devices
+> > such as flash +and display controllers using the SPI communication
+> > interface.
+> > +
+> > +Required SoC Specific Properties:
+> > +
+> > +- compatible: should be one of the following.
+> > +    - rockchip,rk3066-spi: for rk3066, rk3188 and rk3288 platforms.
+> 
+> Are you sure you don't want specifc strings for rk3188 and rk3288 (in
+> addtion to the common "rockchip,rk3066-spi")?
 
-Please ignore.
+Wasn't the convention that "later" platforms that are compatible to an earlier 
+one, reuse this compatible string instead of introducing a new one?
 
-> drivers/gpio/gpio-crystalcove.c: In function 'crystalcove_gpio_dbg_sh=
-ow':
-> drivers/gpio/gpio-crystalcove.c:286:3: error: implicit declaration of=
- function 'seq_printf'
->    seq_printf(s, " gpio-%-2d %s %s %s %s ctlo=3D%2x,%s %s %s\n",
->=20
-> Reported-by: Stephen Rothwell <sfr-3FnU+UHB4dNDw9hX6IcOSA@public.gmane.org>
-> Signed-off-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/gpio/gpio-crystalcove.c | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/drivers/gpio/gpio-crystalcove.c b/drivers/gpio/gpio-crys=
-talcove.c
-> index 5a98499..934462f 100644
-> --- a/drivers/gpio/gpio-crystalcove.c
-> +++ b/drivers/gpio/gpio-crystalcove.c
-> @@ -18,6 +18,7 @@
->  #include <linux/interrupt.h>
->  #include <linux/platform_device.h>
->  #include <linux/gpio.h>
-> +#include <linux/seq_file.h>
->  #include <linux/bitops.h>
->  #include <linux/regmap.h>
->  #include <linux/mfd/intel_soc_pmic.h>
+>From what I've heard so far, the specific spi controller got introduced with 
+the rk3066 [earlier SoCs used a different implementation] and didn't change for 
+rk3188 and rk3288. Addy may be able to verify this.
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+
+> > +- reg: physical base address of the controller and length of memory
+> > mapped
+> > +       region.
+> > +- interrupts: The interrupt number to the cpu. The interrupt specifier
+> > format +              depends on the interrupt controller.
+> > +- clocks: Must contain an entry for each entry in clock-names.
+> > +- clock-names: Shall be "spiclk" for the transfer-clock, and "apb_pclk"
+> > for +			   the peripheral clock.
+> > +
+> > +Optional properties:
+> > +- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
+> > +		Documentation/devicetree/bindings/dma/dma.txt
+> > +- dma-names: DMA request names should include "tx" and "rx" if present.
+> > +
+> > +Example:
+> > +
+> > +- SoC Specific Portion:
+> > +
+> > +	spi0: spi@ff110000 {
+> > +		compatible = "rockchip,rockchip-spi";
+> 
+> This does not match the description of the compatible property.
+> 
+> > +		reg = <0xff110000 0x1000>;
+> > +		dmas = <&pdma1 11>, <&pdma1 12>;
+> > +		dma-names = "tx", "rx";
+> > +		#address-cells = <1>;
+> > +		#size-cells = <0>;
+> 
+> These weren't mentioned.
+> 
+> > +		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
+> > +		pinctrl-names = "default";
+> > +		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
+> 
+> pinctrl was not mentioned.
+> 
+> > +		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
+> > +		clock-names = "spiclk", "apb_pclk";
+> > +		status = "disabled";
+> 
+> Any reason for the status?
+
+I guess to have the spi controller only be enabled when a board is using it as 
+below. But it may be an implementation detail which could be omitted from the 
+binding doc.
+
+
+> 
+> > +	};
+> > +
+> > +- Board Specific Portion:
+> > +
+> > +	&spi0 {
+> > +		status = "okay";
+> > +		spi_test@00 {
+> > +			compatible = "rockchip,spi_test";
+> 
+> Huh?
+
+SPI declares it's devices similar to i2c, so while the example might profit 
+from a more casual device, I'm not exactly sure what is the problem here.
+
+
+Thanks
+Heiko
