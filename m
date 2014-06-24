@@ -1,87 +1,72 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the
- MiPHY365x
-Date: Tue, 24 Jun 2014 13:46:34 +0100
-Message-ID: <20140624124634.GO13803@lee--X1>
-References: <1400766819-22286-1-git-send-email-lee.jones@linaro.org>
- <53A160D1.8000908@ti.com>
- <20140618100411.GL23945@lee--X1>
- <6599289.0ZjjaMbRqj@wuerfel>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
+Date: Tue, 24 Jun 2014 08:56:53 -0400
+Message-ID: <20140624125653.GN10202@titan.lakedaemon.net>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com>
+ <53A74316.5080509@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <6599289.0ZjjaMbRqj@wuerfel>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <53A74316.5080509-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-> > > > converting all addresses to to resources so drivers can easily =
-pull
-> > > > them out using platform_get_resource() and friends.  Pushing th=
-e reg
-> > >=20
-> > > right. Can't we use of_address_to_resource here?
-> >=20
-> > We could, but that would be an extra layer.  We'd be pulling the
-> > address, putting it into a resource, then pulling it from the resou=
-rce
-> > for use.  If we're going to be pulling addresses out manually, we'r=
-e
-> > probably better off using of_get_address().  But again, we're just
-> > carrying out functionality which is already provided by the
-> > framework.
->=20
-> there is also of_ioremap().
+Boris,
 
-Isn't this SPARK only?  And doesn't it require a populated resource? =20
-Which is what I'm saying is the issue here i.e. we don't have one.
+On Sun, Jun 22, 2014 at 10:56:54PM +0200, Boris BREZILLON wrote:
+> 
+> On 20/06/2014 17:01, Boris BREZILLON wrote:
+> > Add new atmel AIC (Advanced Interrupt Controller) driver based on the
+> > generic chip infrastructure.
+> >
+> > This driver is only compatible with dt enabled board and replaces the old
+> > implementation found in arch/arm/mach-at91/irq.c.
+> >
+> > Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> > ---
+> >  drivers/irqchip/Kconfig         |   7 +
+> >  drivers/irqchip/Makefile        |   1 +
+> >  drivers/irqchip/irq-atmel-aic.c | 700 ++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 708 insertions(+)
+> >  create mode 100644 drivers/irqchip/irq-atmel-aic.c
+> >
+> > diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> > index bbb746e..6a7ad81 100644
+> > --- a/drivers/irqchip/Kconfig
+> > +++ b/drivers/irqchip/Kconfig
+> > @@ -30,6 +30,13 @@ config ARM_VIC_NR
+> >  	  The maximum number of VICs available in the system, for
+> >  	  power management.
+> >  
+> 
+> [...]
+> 
+> > +
+> > +static int at91_aic_common_irq_domain_xlate(struct irq_domain *d,
+> 
+> This function should be named aic_common_irq_domain_xslate to be
+> consistent with other function names.
+> I'll fix that for the next version.
 
-> > > > properties down into a child node means that we have to now ite=
-rate
-> > > > over the sub-nodes and pull them out manually.  This will lead =
-to a
-> > >=20
-> > > You anyway iterate while creating PHYs based on some constant. No=
-w you have to
-> > > iterate over the sub-nodes.
-> > > > pretty messy implementation IMHO.
-> >=20
-> > This much is true.
-> >=20
-> > > > Can you point me in the direction of previous implementations w=
-here you
-> > > > have stipulated the same set of constraints please?
-> > >=20
-> > > ah.. there isn't any. The author of the other multi-phy driver [1=
-] also feels
-> > > this will just add to the complexity of the driver.
-> >=20
-> > =3D:)
-> >=20
-> > > Maybe we should ask the opinion of others?
-> >=20
-> > We could.  I'll CC Arnd as he likes this PHY stuff. :)
-> >=20
-> > > [1] -> http://www.spinics.net/lists/linux-sh/msg32087.html
->=20
-> Having sub-nodes for each individual PHY managed by a controller seem=
-s
-> very reasonable to me. Making them show up as separate platform devic=
-es
-> seems less useful though.
+Other than this one change, this series looks good wrt to irqchip.  When
+you respin, please adjust the patch subject lines like so:
 
-Are there any examples of other nodes with reg properties, but not
-compatible strings i.e. ones that aren't probed independently and
-aren't platform devices that I can use for reference.  I'm having a
-hard time figuring out how to _easily_ obtain indexed addresses
-without adding a bunch of new code.  Perhaps if we did something in
-the core there would be less overhead overall?=20
+  irqchip: atmel-aic: Add new atmel AIC driver
 
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+Note the capitalization.  Also, if you could add Thomas' Ack to the
+first patch, that would be appreciated.
+
+Once you post the new series, I assume it's ok to apply patches 1-3 to
+irqchip/core, or are there some dependency considerations?
+
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
