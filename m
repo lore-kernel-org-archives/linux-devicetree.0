@@ -1,79 +1,106 @@
-From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
-Subject: Re: [PATCH 3/4] ARM: DTS: use new compatible string as per the documentation
-Date: Tue, 24 Jun 2014 19:11:39 +0530
-Message-ID: <CAHfPSqAEuFRSrv5BHw05aK7TiMzXxveriKx9vdqhLc7AxF=i9Q@mail.gmail.com>
-References: <1403612356-23685-1-git-send-email-ch.naveen@samsung.com>
- <1403612356-23685-4-git-send-email-ch.naveen@samsung.com> <20140624133314.GJ5856@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140624133314.GJ5856@leverpostej>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "kgene.kim@samsung.com" <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "cpgs@samsung.com" <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lars@metafoo.de" <lars@metafoo.de>, Chanwoo Choi <cw00.choi@samsung.com>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH 2/6] OF: Add [__]of_find_node_by_full_name
+Date: Tue, 24 Jun 2014 14:55:23 +0100
+Message-ID: <20140624135523.99956C40B84@trevor.secretlab.ca>
+References: <1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1403430039-15085-3-git-send-email-pantelis.antoniou@konsulko.com>
+	<53A86ADA.9000903@roeck-us.net>
+	<4F4A55EC-744B-49CC-96FA-811C9483A43D@konsulko.com>
+Return-path: <linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <4F4A55EC-744B-49CC-96FA-811C9483A43D-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-spi-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Pete
 List-Id: devicetree@vger.kernel.org
 
-Hello Mark,
+On Mon, 23 Jun 2014 21:00:39 +0300, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> Hi Guenter,
+> 
+> On Jun 23, 2014, at 8:58 PM, Guenter Roeck wrote:
+> 
+> > On 06/22/2014 02:40 AM, Pantelis Antoniou wrote:
+> >> __of_find_node_by_full_name recursively searches for a matching node
+> >> with the given full name without taking any locks.
+> >> 
+> >> of_find_node_by_full_name takes locks and takes a reference on the
+> >> matching node.
+> >> 
+> >> Signed-off-by: Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+> >> ---
+> >>  drivers/of/base.c  | 58 ++++++++++++++++++++++++++++++++++++++++++++++++++++++
+> >>  include/linux/of.h |  4 ++++
+> >>  2 files changed, 62 insertions(+)
+> >> 
+> >> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> >> index d3493e1..80fef33 100644
+> >> --- a/drivers/of/base.c
+> >> +++ b/drivers/of/base.c
+> >> @@ -1201,6 +1201,64 @@ static void *of_find_property_value_of_size(const struct device_node *np,
+> >>  }
+> >> 
+> >>  /**
+> >> + * __of_find_node_by_full_name - Find a node with the full name recursively
+> >> + * @node:	Root of the tree to perform the search
+> >> + * @full_name:	Full name of the node to find.
+> >> + *
+> >> + * Find a node with the give full name by recursively following any of
+> >> + * the child node links.
+> >> + * Returns the matching node, or NULL if not found.
+> >> + * Note that the devtree lock is not taken, so this function is only
+> >> + * safe to call on either detached trees, or when devtree lock is already
+> >> + * taken.
+> >> + */
+> >> +struct device_node *__of_find_node_by_full_name(struct device_node *node,
+> >> +		const char *full_name)
+> >> +{
+> >> +	struct device_node *child, *found;
+> >> +
+> >> +	if (node == NULL)
+> >> +		return NULL;
+> >> +
+> >> +	/* check */
+> >> +	if (of_node_cmp(node->full_name, full_name) == 0)
+> >> +		return node;
+> >> +
+> >> +	__for_each_child_of_node(node, child) {
+> >> +		found = __of_find_node_by_full_name(child, full_name);
+> >> +		if (found != NULL)
+> >> +			return found;
+> >> +	}
+> >> +
+> >> +	return NULL;
+> >> +}
+> >> +EXPORT_SYMBOL(__of_find_node_by_full_name);
+> >> +
+> >> +/**
+> >> + * of_find_node_by_full_name - Find a node with the full name recursively
+> >> + * @node:	Root of the tree to perform the search
+> >> + * @full_name:	Full name of the node to find.
+> >> + *
+> >> + * Find a node with the give full name by recursively following any of
+> >> + * the child node links.
+> >> + * Returns the matching node (with a ref taken), or NULL if not found.
+> >> + */
+> >> +struct device_node *of_find_node_by_full_name(struct device_node *node,
+> >> +		const char *full_name)
+> >> +{
+> >> +	unsigned long flags;
+> >> +	struct device_node *np;
+> >> +
+> >> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> >> +	np = of_find_node_by_full_name(node, full_name);
+> > 
+> > Should this be __of_find_node_by_full_name, or am I missing something ?
+> > 
+> 
+> Ugh, you're not missing something. This slipped through since this is not 
+> used in the current code
 
-On 24 June 2014 19:03, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Tue, Jun 24, 2014 at 01:19:15PM +0100, Naveen Krishna Chatradhi wrote:
->> As Murata is the Manufactures the NTC thermistors. The vendor
->> name in the compatibility is preposed to change to "murata, ncpXXX"
->>
->> This patch uses the new compatibility string in exynos4412 based
->> Trats2 board.
->>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
->> Cc: Chanwoo Choi <cw00.choi@samsung.com>
->> ---
->> 1. Updates the thermistor node in Exynos4412 based Trats2 dts
->>    using the new DT bindings for NTC thermistors updated with vendor-prefix
->>
->>  arch/arm/boot/dts/exynos4412-trats2.dts |    4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
->> index 11967f4..d35755a 100644
->> --- a/arch/arm/boot/dts/exynos4412-trats2.dts
->> +++ b/arch/arm/boot/dts/exynos4412-trats2.dts
->> @@ -771,7 +771,7 @@
->>       };
->>
->>       thermistor-ap@0 {
->> -             compatible = "ntc,ncp15wb473";
->> +             compatible = "murata,ncp15wb473";
->
-> So the previous patch woul have broken this board?
+Then perhaps the function shouldn't exist at all.
 
-Will keep the deprecated binding. But, still change here.
-As, this is the only board currently using the NTC thermistors.
+g.
 
->
-> Mark.
->
->>               pullup-uv = <1800000>;   /* VCC_1.8V_AP */
->>               pullup-ohm = <100000>;   /* 100K */
->>               pulldown-ohm = <100000>; /* 100K */
->> @@ -779,7 +779,7 @@
->>       };
->>
->>       thermistor-battery@1 {
->> -             compatible = "ntc,ncp15wb473";
->> +             compatible = "murata,ncp15wb473";
->>               pullup-uv = <1800000>;   /* VCC_1.8V_AP */
->>               pullup-ohm = <100000>;   /* 100K */
->>               pulldown-ohm = <100000>; /* 100K */
->> --
->> 1.7.9.5
->>
->> --
->> To unsubscribe from this list: send the line "unsubscribe devicetree" in
->> the body of a message to majordomo@vger.kernel.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->>
-
-
-
--- 
-Shine bright,
-(: Nav :)
+--
+To unsubscribe from this list: send the line "unsubscribe linux-spi" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
