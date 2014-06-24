@@ -1,44 +1,84 @@
-From: Daniel Jeong <gshark.jeong@gmail.com>
-Subject: [RFC v2 2/2] backlight: device tree: add new tps611xx backlight driver
-Date: Tue, 24 Jun 2014 15:17:54 +0900
-Message-ID: <1403590674-14361-3-git-send-email-gshark.jeong@gmail.com>
-References: <1403590674-14361-1-git-send-email-gshark.jeong@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403590674-14361-1-git-send-email-gshark.jeong@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
-Cc: Daniel Jeong <daniel.jeong@ti.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Daniel Jeong <gshark.jeong@gmail.com>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and
+ exynos5800-peach-pi
+Date: Tue, 24 Jun 2014 12:13:21 +0530
+Message-ID: <53A91E09.7050603@gmail.com>
+References: <1403556576-8038-1-git-send-email-dianders@chromium.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1403556576-8038-1-git-send-email-dianders@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: mark.rutland@arm.com, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, khilman@linaro.org, pawel.moll@arm.com, swarren@wwwdotorg.org, tushar.b@samsung.com, olof@lixom.net, robh+dt@kernel.org, ben-linux@fluff.org, ch.naveen@samsung.com, linux-arm-kernel@lists.infradead.org, rahul.sharma@samsung.com, sjg@chromium.org, linux-kernel@vger.kernel.org, galak@codeaurora.org, ajaynumb@gmail.com, javier.martinez@collabora.co.uk
 List-Id: devicetree@vger.kernel.org
 
-This commit is about tps611xx device tree documentation.
+On 06/24/2014 02:19 AM, Doug Anderson wrote:
+> This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
+> including:
+> * The keyboard
+> * The i2c tunnel
+> * The tps65090 under the i2c tunnel
+> * The battery under the i2c tunnel
+> 
+> To add extra motivation, it should be noted that tps65090 is one of
+> the things needed to get display-related FETs turned on for pit and
+> pi.
+> 
+> Note that this relies on a few outstanding changes:
+> * Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
+>   (spi: s3c64xx: for DT platofrms always get the chipselect info from
+>   DT node) to work properly and match the documented bindings.  See
+>   <https://patchwork.kernel.org/patch/4346701/> and
+>   <https://patchwork.kernel.org/patch/4346711/>
+> 
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 
-Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
----
- .../video/backlight/tps611xx-backlight.txt         |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+Along with the dependency patches on next-20140623, tested keyboard on
+Peach-Pi board.
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-new file mode 100644
-index 0000000..01f110d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-@@ -0,0 +1,16 @@
-+TPS611xx family of backlight driver based on EasyScale.
-+
-+It supports tps61158, tps61161, tps61163 and tps61165.
-+
-+Required properties:
-+- compatible: "ti,tps61158_bl", "ti,tps61161_bl", "ti,tps61163_bl", "ti,tps61165_bl"
-+- rfa_en: enable request for acknowledge. ( 0 : disable , 1 : enable )
-+- en_gpio_num: gpio number for en pin.
-+
-+Example:
-+
-+	backlight {
-+		compatible = "ti,tps61163_bl";
-+		rfa_en = <1>;
-+		en_gpio_num = <45>;
-+	};
+Tested-by: Tushar Behera <tushar.b@samsung.com>
+
+Some comments below.
+
+> ---
+> Changes in v2:
+> - Now just one patch since mfd patch landed.
+> - Rebased to ToT linux-next
+> 
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 145 +++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 145 +++++++++++++++++++++++++++++
+>  2 files changed, 290 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> index 7649982..581f385 100644
+> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+
+> +				regulators {
+> +					dcdc1 {
+> +						ti,enable-ext-control;
+> +					};
+> +					dcdc2 {
+> +						ti,enable-ext-control;
+> +					};
+> +					dcdc3 {
+> +						ti,enable-ext-control;
+> +					};
+> +					fet1 {
+
+"tps65090_fet1: fet1 {" ?
+
+> +						regulator-name = "vcd_led";
+> +					};
+> +					tps65090_fet2: fet2 {
+
+I would suggest we add similar labels to fet1, fet3, fet4, fet5 and fet6
+also. That way it would be easy to reference them in subsequent DT nodes.
+
+Same comment for Peach-Pi dts file too.
+
 -- 
-1.7.9.5
+Tushar Behera
