@@ -1,77 +1,40 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCHv2] of: Check for phys_addr_t overflows in
- early_init_dt_add_memory_arch
-Date: Tue, 24 Jun 2014 12:19:55 +0100
-Message-ID: <20140624111955.3F4E8C40B13@trevor.secretlab.ca>
-References: <1403234018-10942-1-git-send-email-lauraa@codeaurora.org>
-	<alpine.LFD.2.11.1406192329400.16842@knanqh.ubzr>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Fix the improper use of the compatible
+ string armada38x using a wildcard
+Date: Tue, 24 Jun 2014 07:46:47 -0400
+Message-ID: <20140624114647.GI10202@titan.lakedaemon.net>
+References: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com>
+ <20140623215309.GD10202@titan.lakedaemon.net>
+ <53A92EEF.6070803@free-electrons.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <alpine.LFD.2.11.1406192329400.16842-fMhRO7WWcppj+hNMo8g0rg@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53A92EEF.6070803-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 19 Jun 2014 23:33:27 -0400 (EDT), Nicolas Pitre <nicolas.pitre-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, 19 Jun 2014, Laura Abbott wrote:
+On Tue, Jun 24, 2014 at 09:55:27AM +0200, Gregory CLEMENT wrote:
+> Hi Jason,
 > 
-> > The common early_init_dt_add_memory_arch takes the base and size
-> > of a memory region as u64 types. The function never checks if
-> > the base and size can actually fit in a phys_addr_t which may
-> > be smaller than 64-bits. This may result in incorrect memory
-> > being passed to memblock_add if the memory falls outside the
-> > range of phys_addr_t. Add range checks for the base and size if
-> > phys_addr_t is smaller than u64.
-> > 
-> > Reported-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> > Tested-by: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
-> > Signed-off-by: Laura Abbott <lauraa-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> >> This fix should be merged in 3.16 and maybe sent as a fix for 3.15
+> >> too.
 > 
-> Acked-by: Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-
-Applied, thanks.
-
-g.
-
+> [...]
 > 
-> > ---
-> > v2: Switched to sizeof(phys_addr_t) < sizeof(u64) instead of macros.
-> > Sending to right e-mails/mailing lists this time.
-> > 
-> >  drivers/of/fdt.c | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> > 
-> > diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
-> > index c4cddf0..b777d8f 100644
-> > --- a/drivers/of/fdt.c
-> > +++ b/drivers/of/fdt.c
-> > @@ -880,6 +880,21 @@ void __init __weak early_init_dt_add_memory_arch(u64 base, u64 size)
-> >  	const u64 phys_offset = __pa(PAGE_OFFSET);
-> >  	base &= PAGE_MASK;
-> >  	size &= PAGE_MASK;
-> > +
-> > +	if (sizeof(phys_addr_t) < sizeof(u64)) {
-> > +		if (base > ULONG_MAX) {
-> > +			pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> > +					base, base + size);
-> > +			return;
-> > +		}
-> > +
-> > +		if (base + size > ULONG_MAX) {
-> > +			pr_warning("Ignoring memory range 0x%lx - 0x%llx\n",
-> > +					ULONG_MAX, base + size);
-> > +			size = ULONG_MAX - base;
-> > +		}
-> > +	}
-> > +
-> >  	if (base + size < phys_offset) {
-> >  		pr_warning("Ignoring memory block 0x%llx - 0x%llx\n",
-> >  			   base, base + size);
-> > -- 
-> > The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> > hosted by The Linux Foundation
-> > 
+> > Applied to mvebu/dt with Andrew's Ack.
+> 
+> I think it should go mvebu/fixes as this patch modifies the binding,
+> sooner is better.
 
+oops.  Yeah, I f'd that up.  Sorry.  Fixed now.  I've Cc'd stable for
+v3.15+
+
+thx,
+
+Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
