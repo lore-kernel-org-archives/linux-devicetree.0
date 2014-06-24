@@ -1,777 +1,156 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH 2/6] OF: Add [__]of_find_node_by_full_name
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH] configfs: Implement binary attributes
-Date: Sun, 22 Jun 2014 12:37:42 +0300
-Message-Id: <1403429862-15022-1-git-send-email-pantelis.antoniou@konsulko.com>
+In-Reply-To: <20140624141213.33995C40B84@trevor.secretlab.ca>
+Date: Tue, 24 Jun 2014 17:23:52 +0300
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <0904B592-0BB3-4D99-A211-8C38EE5345D3@konsulko.com>
+References: <1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com> <1403430039-15085-3-git-send-email-pantelis.antoniou@konsulko.com> <20140624141213.33995C40B84@trevor.secretlab.ca>
 To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
-ConfigFS lacked binary attributes up until now. This patch
-introduces support for binary attributes in a somewhat similar
-manner of sysfs binary attributes albeit with changes that
-fit the configfs usage model.
+Hi Grant,
 
-Problems that configfs binary attributes fix are everything that
-requires a binary blob as part of the configuration of a resource,
-such as bitstream loading for FPGAs, DTBs for dynamically created
-devices etc.
+On Jun 24, 2014, at 5:12 PM, Grant Likely wrote:
 
-Look at Documentation/filesystems/configfs/configfs.txt for internals
-and howto use them.
+> On Sun, 22 Jun 2014 12:40:35 +0300, Pantelis Antoniou =
+<pantelis.antoniou@konsulko.com> wrote:
+>> __of_find_node_by_full_name recursively searches for a matching node
+>> with the given full name without taking any locks.
+>>=20
+>> of_find_node_by_full_name takes locks and takes a reference on the
+>> matching node.
+>>=20
+>> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+>=20
+> The only user of this turns out to be the resolver. No need to export =
+it
+> or advertise it in include/linux/of.h. I don't want drive-by users. =
+Move
+> it to the resolver.c file.
+>=20
 
-This patch generates a bunch of checkpatch warnings, but this stems from
-following the formatting of the configfs code, so please ignore.
+OK.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- Documentation/filesystems/configfs/configfs.txt |  66 +++++-
- fs/configfs/configfs_internal.h                 |  14 +-
- fs/configfs/dir.c                               |  19 +-
- fs/configfs/file.c                              | 302 ++++++++++++++++++++++--
- fs/configfs/inode.c                             |   2 +-
- include/linux/configfs.h                        |  87 +++++++
- 6 files changed, 460 insertions(+), 30 deletions(-)
+> g.
+>=20
 
-diff --git a/Documentation/filesystems/configfs/configfs.txt b/Documentation/filesystems/configfs/configfs.txt
-index b40fec9..fc8a820 100644
---- a/Documentation/filesystems/configfs/configfs.txt
-+++ b/Documentation/filesystems/configfs/configfs.txt
-@@ -51,15 +51,26 @@ configfs tree is always there, whether mounted on /config or not.
- An item is created via mkdir(2).  The item's attributes will also
- appear at this time.  readdir(3) can determine what the attributes are,
- read(2) can query their default values, and write(2) can store new
--values.  Like sysfs, attributes should be ASCII text files, preferably
--with only one value per file.  The same efficiency caveats from sysfs
--apply.  Don't mix more than one attribute in one attribute file.
--
--Like sysfs, configfs expects write(2) to store the entire buffer at
--once.  When writing to configfs attributes, userspace processes should
--first read the entire file, modify the portions they wish to change, and
--then write the entire buffer back.  Attribute files have a maximum size
--of one page (PAGE_SIZE, 4096 on i386).
-+values.  Don't mix more than one attribute in one attribute file.
-+
-+There are two types of configfs attributes:
-+
-+* Normal attributes, which similar to sysfs attributes, are small ASCII text
-+files, with a maximum size of one page (PAGE_SIZE, 4096 on i386).  Preferably
-+only one value per file should be used, and the same caveats from sysfs apply.
-+Configfs expects write(2) to store the entire buffer at once.  When writing to
-+normal configfs attributes, userspace processes should first read the entire
-+file, modify the portions they wish to change, and then write the entire
-+buffer back.
-+
-+* Binary attributes, which are somewhat similar to sysfs binary attributes,
-+but with a few slight changes to semantics.  The PAGE_SIZE limitation does not
-+apply, but the whole binary item must fit in single kernel kmalloc'ed buffer,
-+which in most architectures is a few tens of megabytes.  The write(2) calls
-+from user space are buffered, and the attributes' write_bin_attribute method
-+will be invoked on the final close, therefore it is imperative for user-space
-+to check the return code of close(2) in order to verify that the operation
-+finished succesfully.
- 
- When an item needs to be destroyed, remove it with rmdir(2).  An
- item cannot be destroyed if any other item has a link to it (via
-@@ -166,6 +177,12 @@ among other things.  For that, it needs a type.
- 		ssize_t (*store_attribute)(struct config_item *,
- 					   struct configfs_attribute *,
- 					   const char *, size_t);
-+		ssize_t (*read_bin_attribute)(struct config_item *,
-+					      struct configfs_bin_attribute *,
-+					      void *, size_t);
-+		ssize_t (*write_bin_attribute)(struct config_item *,
-+					       struct configfs_bin_attribute *,
-+					       const void *, size_t);
- 		int (*allow_link)(struct config_item *src,
- 				  struct config_item *target);
- 		int (*drop_link)(struct config_item *src,
-@@ -177,15 +194,18 @@ among other things.  For that, it needs a type.
- 		struct configfs_item_operations         *ct_item_ops;
- 		struct configfs_group_operations        *ct_group_ops;
- 		struct configfs_attribute               **ct_attrs;
-+		struct configfs_bin_attribute		**ct_bin_attrs;
- 	};
- 
- The most basic function of a config_item_type is to define what
- operations can be performed on a config_item.  All items that have been
- allocated dynamically will need to provide the ct_item_ops->release()
- method.  This method is called when the config_item's reference count
--reaches zero.  Items that wish to display an attribute need to provide
--the ct_item_ops->show_attribute() method.  Similarly, storing a new
--attribute value uses the store_attribute() method.
-+reaches zero.  Items that wish to display an normal attribute need to provide
-+the ct_item_ops->show_attribute() method, while binary attributes provide the
-+ct_item_ops->read_bin_attribute(). Similarly, storing a new normal attribute
-+value uses the store_attribute() method, while the binarys' attribute equivalent
-+is the ct_item_ops->write_bin_attribute() method.
- 
- [struct configfs_attribute]
- 
-@@ -207,6 +227,28 @@ ct_item_ops->show_attribute() method, that method will be called
- whenever userspace asks for a read(2) on the attribute.  The converse
- will happen for write(2).
- 
-+[struct configfs_bin_attribute]
-+
-+	struct configfs_attribute {
-+		struct configfs_attribute	attr;
-+		void				*private;
-+	};
-+
-+The binary attribute is used when the one needs to use binary blob to
-+appear as the contents of a file in the item's configfs directory.
-+To do so add the binary attribute to the NULL-terminated array
-+config_item_type->ct_bin_attrs, and the item appears in configfs, the
-+attribute file will appear with the configfs_bin_attribute->attr.ca_name
-+filename.  configfs_attribute->bin_attribute.ca_mode specifies the file
-+permissions.
-+
-+If binary attribute is readable and the config_item provides a
-+ct_item_ops->read_bin_attribute() method, that method will be called
-+whenever userspace asks for a read(2) on the attribute.  The converse
-+will happen for write(2). The reads/writes are bufferred so only a
-+single read/write will occur; the attributes' need not concern itself
-+with it.
-+
- [struct config_group]
- 
- A config_item cannot live in a vacuum.  The only way one can be created
-diff --git a/fs/configfs/configfs_internal.h b/fs/configfs/configfs_internal.h
-index bd4a3c1..3a3f6d6 100644
---- a/fs/configfs/configfs_internal.h
-+++ b/fs/configfs/configfs_internal.h
-@@ -53,13 +53,14 @@ struct configfs_dirent {
- #define CONFIGFS_ROOT		0x0001
- #define CONFIGFS_DIR		0x0002
- #define CONFIGFS_ITEM_ATTR	0x0004
-+#define CONFIGFS_ITEM_BIN_ATTR	0x0008
- #define CONFIGFS_ITEM_LINK	0x0020
- #define CONFIGFS_USET_DIR	0x0040
- #define CONFIGFS_USET_DEFAULT	0x0080
- #define CONFIGFS_USET_DROPPING	0x0100
- #define CONFIGFS_USET_IN_MKDIR	0x0200
- #define CONFIGFS_USET_CREATING	0x0400
--#define CONFIGFS_NOT_PINNED	(CONFIGFS_ITEM_ATTR)
-+#define CONFIGFS_NOT_PINNED	(CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)
- 
- extern struct mutex configfs_symlink_mutex;
- extern spinlock_t configfs_dirent_lock;
-@@ -74,11 +75,13 @@ extern int configfs_inode_init(void);
- extern void configfs_inode_exit(void);
- 
- extern int configfs_create_file(struct config_item *, const struct configfs_attribute *);
-+extern int configfs_create_bin_file(struct config_item *, const struct configfs_bin_attribute *);
- extern int configfs_make_dirent(struct configfs_dirent *,
- 				struct dentry *, void *, umode_t, int);
- extern int configfs_dirent_is_ready(struct configfs_dirent *);
- 
- extern int configfs_add_file(struct dentry *, const struct configfs_attribute *, int);
-+extern int configfs_add_bin_file(struct dentry *, const struct configfs_bin_attribute *, int);
- extern void configfs_hash_and_remove(struct dentry * dir, const char * name);
- 
- extern const unsigned char * configfs_get_name(struct configfs_dirent *sd);
-@@ -91,7 +94,7 @@ extern void configfs_release_fs(void);
- extern struct rw_semaphore configfs_rename_sem;
- extern const struct file_operations configfs_dir_operations;
- extern const struct file_operations configfs_file_operations;
--extern const struct file_operations bin_fops;
-+extern const struct file_operations configfs_bin_file_operations;
- extern const struct inode_operations configfs_dir_inode_operations;
- extern const struct inode_operations configfs_root_inode_operations;
- extern const struct inode_operations configfs_symlink_inode_operations;
-@@ -122,6 +125,13 @@ static inline struct configfs_attribute * to_attr(struct dentry * dentry)
- 	return ((struct configfs_attribute *) sd->s_element);
- }
- 
-+static inline struct configfs_bin_attribute * to_bin_attr(struct dentry * dentry)
-+{
-+	struct configfs_attribute * attr = to_attr(dentry);
-+
-+	return container_of(attr, struct configfs_bin_attribute, attr);
-+}
-+
- static inline struct config_item *configfs_get_config_item(struct dentry *dentry)
- {
- 	struct config_item * item = NULL;
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 668dcab..9474b86 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -257,6 +257,13 @@ static int configfs_init_file(struct inode * inode)
- 	return 0;
- }
- 
-+static int configfs_init_bin_file(struct inode * inode)
-+{
-+	inode->i_size = 0;
-+	inode->i_fop = &configfs_bin_file_operations;
-+	return 0;
-+}
-+
- static int init_symlink(struct inode * inode)
- {
- 	inode->i_op = &configfs_symlink_inode_operations;
-@@ -431,7 +438,9 @@ static int configfs_attach_attr(struct configfs_dirent * sd, struct dentry * den
- 	spin_unlock(&configfs_dirent_lock);
- 
- 	error = configfs_create(dentry, (attr->ca_mode & S_IALLUGO) | S_IFREG,
--				configfs_init_file);
-+				(sd->s_type & CONFIGFS_ITEM_ATTR) ?
-+					configfs_init_file :
-+					configfs_init_bin_file);
- 	if (error) {
- 		configfs_put(sd);
- 		return error;
-@@ -591,6 +600,7 @@ static int populate_attrs(struct config_item *item)
- {
- 	struct config_item_type *t = item->ci_type;
- 	struct configfs_attribute *attr;
-+	struct configfs_bin_attribute *bin_attr;
- 	int error = 0;
- 	int i;
- 
-@@ -603,6 +613,13 @@ static int populate_attrs(struct config_item *item)
- 		}
- 	}
- 
-+	if (t->ct_bin_attrs) {
-+		for (i = 0; (bin_attr = t->ct_bin_attrs[i]) != NULL; i++) {
-+			if ((error = configfs_create_bin_file(item, bin_attr)))
-+				break;
-+		}
-+	}
-+
- 	if (error)
- 		detach_attrs(item);
- 
-diff --git a/fs/configfs/file.c b/fs/configfs/file.c
-index 1d1c41f..aec051b 100644
---- a/fs/configfs/file.c
-+++ b/fs/configfs/file.c
-@@ -48,6 +48,10 @@ struct configfs_buffer {
- 	struct configfs_item_operations	* ops;
- 	struct mutex		mutex;
- 	int			needs_read_fill;
-+	int			read_in_progress;
-+	int			write_in_progress;
-+	char			*bin_buffer;
-+	int			bin_buffer_size;
- };
- 
- 
-@@ -107,8 +111,15 @@ static ssize_t
- configfs_read_file(struct file *file, char __user *buf, size_t count, loff_t *ppos)
- {
- 	struct configfs_buffer * buffer = file->private_data;
-+	struct configfs_dirent * sd = file->f_path.dentry->d_fsdata;
- 	ssize_t retval = 0;
- 
-+	if (WARN_ON(sd == NULL))
-+		return -EINVAL;
-+
-+	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_ATTR)))
-+		return -EINVAL;
-+
- 	mutex_lock(&buffer->mutex);
- 	if (buffer->needs_read_fill) {
- 		if ((retval = fill_read_buffer(file->f_path.dentry,buffer)))
-@@ -123,6 +134,93 @@ out:
- 	return retval;
- }
- 
-+/**
-+ *	configfs_read_bin_file - read a binary attribute.
-+ *	@file:	file pointer.
-+ *	@buf:	buffer to fill.
-+ *	@count:	number of bytes to read.
-+ *	@ppos:	starting offset in file.
-+ *
-+ *	Userspace wants to read a binary attribute file. The attribute descriptor
-+ *	is in the file's ->d_fsdata. The target item is in the directory's
-+ *	->d_fsdata.
-+ *
-+ *	We check whether we need to refill the buffer. If so we will
-+ *	call the attributes' ops->read_bin_attribute() twice. The first time we
-+ *	will pass a NULL as a buffer pointer, which the attributes' method
-+ *	will use to return the size of the buffer required. If no error
-+ *	occurs we will allocate the buffer using kmalloc and call 
-+ *	ops->read_bin_atribute() again passing that buffer as an argument.
-+ *	Then we just copy to user-space using simple_read_from_buffer.
-+ */
-+
-+static ssize_t
-+configfs_read_bin_file(struct file *file, char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct configfs_buffer * buffer = file->private_data;
-+	struct dentry *dentry = file->f_path.dentry;
-+	struct configfs_dirent * sd = dentry->d_fsdata;
-+	struct config_item * item = to_item(dentry->d_parent);
-+	struct configfs_item_operations * ops = buffer->ops;
-+	struct configfs_attribute * attr = to_attr(dentry);
-+	struct configfs_bin_attribute *bin_attr =
-+		container_of(attr, struct configfs_bin_attribute, attr);
-+	ssize_t retval = 0;
-+	ssize_t len = min_t(size_t, count, PAGE_SIZE);
-+
-+	if (WARN_ON(sd == NULL))
-+		return -EINVAL;
-+
-+	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_BIN_ATTR)))
-+		return -EINVAL;
-+
-+	mutex_lock(&buffer->mutex);
-+
-+	/* we don't support switching read/write modes */
-+	if (buffer->write_in_progress) {
-+		retval = -EINVAL;
-+		goto out;
-+	}
-+	if (!buffer->read_in_progress)
-+		buffer->read_in_progress = 1;
-+
-+	if (buffer->needs_read_fill) {
-+
-+		/* perform first read with buf == NULL to get extent */
-+		len = ops->read_bin_attribute(item, bin_attr, NULL, 0);
-+		if (len < 0) {
-+			retval = len;
-+			goto out;
-+		}
-+
-+		buffer->bin_buffer = kmalloc(len, GFP_KERNEL);
-+		if (buffer->bin_buffer == NULL) {
-+			retval = -ENOMEM;
-+			goto out;
-+		}
-+		buffer->bin_buffer_size = len;
-+
-+		/* perform second read to fill buffer */
-+		len = ops->read_bin_attribute(item, bin_attr,
-+				buffer->bin_buffer, len);
-+		if (len < 0) {
-+			retval = len;
-+			kfree(buffer->bin_buffer);
-+			buffer->bin_buffer_size = 0;
-+			buffer->bin_buffer = NULL;
-+			goto out;
-+		}
-+
-+		buffer->needs_read_fill = 0;
-+	}
-+
-+	retval = simple_read_from_buffer(buf, count, ppos, buffer->bin_buffer,
-+					buffer->bin_buffer_size);
-+out:
-+	mutex_unlock(&buffer->mutex);
-+	return retval;
-+}
-+
- 
- /**
-  *	fill_write_buffer - copy buffer from userspace.
-@@ -198,8 +296,15 @@ static ssize_t
- configfs_write_file(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
- {
- 	struct configfs_buffer * buffer = file->private_data;
-+	struct configfs_dirent * sd = file->f_path.dentry->d_fsdata;
- 	ssize_t len;
- 
-+	if (WARN_ON(sd == NULL))
-+		return -EINVAL;
-+
-+	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_ATTR)))
-+		return -EINVAL;
-+
- 	mutex_lock(&buffer->mutex);
- 	len = fill_write_buffer(buffer, buf, count);
- 	if (len > 0)
-@@ -210,10 +315,80 @@ configfs_write_file(struct file *file, const char __user *buf, size_t count, lof
- 	return len;
- }
- 
--static int check_perm(struct inode * inode, struct file * file)
-+/**
-+ *	configfs_write_bin_file - write a binary attribute.
-+ *	@file:	file pointer
-+ *	@buf:	data to write
-+ *	@count:	number of bytes
-+ *	@ppos:	starting offset
-+ *
-+ *	Writting to a binary attribute file is similar to a normal read.
-+ *	We buffer the consecutive writes (binary attribute files do not
-+ *	support lseek) in a continuously growing buffer, but we don't 
-+ *	commit until the close of the file.
-+ */
-+
-+static ssize_t
-+configfs_write_bin_file(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-+{
-+	struct configfs_buffer * buffer = file->private_data;
-+	struct dentry *dentry = file->f_path.dentry;
-+	struct configfs_dirent * sd = dentry->d_fsdata;
-+	void *tbuf = NULL;
-+	ssize_t len;
-+
-+	if (WARN_ON(sd == NULL))
-+		return -EINVAL;
-+
-+	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_BIN_ATTR)))
-+		return -EINVAL;
-+
-+	mutex_lock(&buffer->mutex);
-+
-+	/* we don't support switching read/write modes */
-+	if (buffer->read_in_progress) {
-+		len = -EINVAL;
-+		goto out;
-+	}
-+	if (!buffer->write_in_progress)
-+		buffer->write_in_progress = 1;
-+
-+	/* buffer grows? */
-+	if (*ppos + count > buffer->bin_buffer_size) {
-+
-+		tbuf = kmalloc(*ppos + count, GFP_KERNEL);
-+		if (tbuf == NULL) {
-+			len = -ENOMEM;
-+			goto out;
-+		}
-+
-+		/* copy old contents */
-+		if (buffer->bin_buffer) {
-+			memcpy(tbuf, buffer->bin_buffer,
-+					buffer->bin_buffer_size);
-+			kfree(buffer->bin_buffer);
-+		}
-+
-+		/* clear the new area */
-+		memset(tbuf + buffer->bin_buffer_size, 0,
-+				*ppos + count - buffer->bin_buffer_size);
-+		buffer->bin_buffer = tbuf;
-+		buffer->bin_buffer_size = *ppos + count;
-+	}
-+
-+	len = simple_write_to_buffer(buffer->bin_buffer, buffer->bin_buffer_size,
-+			ppos, buf, count);
-+	if (len > 0)
-+		*ppos += len;
-+out:
-+	mutex_unlock(&buffer->mutex);
-+	return len;
-+}
-+
-+static int check_perm(struct inode * inode, struct file * file,
-+		struct config_item * item, struct configfs_attribute * attr,
-+		int type)
- {
--	struct config_item *item = configfs_get_config_item(file->f_path.dentry->d_parent);
--	struct configfs_attribute * attr = to_attr(file->f_path.dentry);
- 	struct configfs_buffer * buffer;
- 	struct configfs_item_operations * ops = NULL;
- 	int error = 0;
-@@ -238,9 +413,14 @@ static int check_perm(struct inode * inode, struct file * file)
- 	 */
- 	if (file->f_mode & FMODE_WRITE) {
- 
--		if (!(inode->i_mode & S_IWUGO) || !ops->store_attribute)
-+		if (!(inode->i_mode & S_IWUGO))
-+			goto Eaccess;
-+
-+		if ((type & CONFIGFS_ITEM_ATTR) && !ops->store_attribute)
- 			goto Eaccess;
- 
-+		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !ops->write_bin_attribute)
-+			goto Eaccess;
- 	}
- 
- 	/* File needs read support.
-@@ -248,7 +428,13 @@ static int check_perm(struct inode * inode, struct file * file)
- 	 * must be a show method for it.
- 	 */
- 	if (file->f_mode & FMODE_READ) {
--		if (!(inode->i_mode & S_IRUGO) || !ops->show_attribute)
-+		if (!(inode->i_mode & S_IRUGO))
-+			goto Eaccess;
-+
-+		if ((type & CONFIGFS_ITEM_ATTR) && !ops->show_attribute)
-+			goto Eaccess;
-+
-+		if ((type & CONFIGFS_ITEM_BIN_ATTR) && !ops->read_bin_attribute)
- 			goto Eaccess;
- 	}
- 
-@@ -262,6 +448,8 @@ static int check_perm(struct inode * inode, struct file * file)
- 	}
- 	mutex_init(&buffer->mutex);
- 	buffer->needs_read_fill = 1;
-+	buffer->read_in_progress = 0;
-+	buffer->write_in_progress = 0;
- 	buffer->ops = ops;
- 	file->private_data = buffer;
- 	goto Done;
-@@ -279,15 +467,10 @@ static int check_perm(struct inode * inode, struct file * file)
- 	return error;
- }
- 
--static int configfs_open_file(struct inode * inode, struct file * filp)
--{
--	return check_perm(inode,filp);
--}
--
--static int configfs_release(struct inode * inode, struct file * filp)
-+static int do_release(struct inode * inode, struct file * filp,
-+		struct config_item *item, struct configfs_attribute *attr,
-+		int type)
- {
--	struct config_item * item = to_item(filp->f_path.dentry->d_parent);
--	struct configfs_attribute * attr = to_attr(filp->f_path.dentry);
- 	struct module * owner = attr->ca_owner;
- 	struct configfs_buffer * buffer = filp->private_data;
- 
-@@ -305,14 +488,90 @@ static int configfs_release(struct inode * inode, struct file * filp)
- 	return 0;
- }
- 
-+static int configfs_open_file(struct inode * inode, struct file * filp)
-+{
-+	return check_perm(inode, filp,
-+			configfs_get_config_item(filp->f_path.dentry->d_parent),
-+			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_ATTR);
-+}
-+
-+static int configfs_release_file(struct inode * inode, struct file * filp)
-+{
-+	return do_release(inode, filp,
-+			to_item(filp->f_path.dentry->d_parent),
-+			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_ATTR);
-+}
-+
-+static int configfs_open_bin_file(struct inode * inode, struct file * filp)
-+{
-+	return check_perm(inode, filp,
-+			configfs_get_config_item(filp->f_path.dentry->d_parent),
-+			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_BIN_ATTR);
-+}
-+
-+/**
-+ *	configfs_release_bin_file - write a binary attribute.
-+ *	@inode: inode pointer
-+ *	@filp:	file pointer
-+ *
-+ *	Releasing a binary attribute file is similar for a read op
-+ *	to the normal attribute file. When writting we call the
-+ *	attributes' ops->write_bin_attribute() method to commit the
-+ *	changes to the attribute.
-+ */
-+
-+static int configfs_release_bin_file(struct inode * inode, struct file * filp)
-+{
-+	struct configfs_buffer * buffer = filp->private_data;
-+	struct dentry *dentry = filp->f_path.dentry;
-+	struct config_item * item = to_item(dentry->d_parent);
-+	struct configfs_item_operations * ops = buffer->ops;
-+	struct configfs_attribute * attr = to_attr(dentry);
-+	struct configfs_bin_attribute *bin_attr =
-+		container_of(attr, struct configfs_bin_attribute, attr);
-+	ssize_t len = 0;
-+	int ret;
-+
-+	if (buffer->read_in_progress)
-+		buffer->read_in_progress = 0;
-+
-+	if (buffer->write_in_progress) {
-+		buffer->write_in_progress = 0;
-+
-+		len = ops->write_bin_attribute(item, bin_attr, buffer->bin_buffer,
-+				buffer->bin_buffer_size);
-+
-+		/* kfree on NULL is safe */
-+		kfree(buffer->bin_buffer);
-+		buffer->bin_buffer = NULL;
-+		buffer->bin_buffer_size = 0;
-+		buffer->needs_read_fill = 1;
-+	}
-+
-+	ret = do_release(inode, filp,
-+			to_item(filp->f_path.dentry->d_parent),
-+			to_attr(filp->f_path.dentry), CONFIGFS_ITEM_BIN_ATTR);
-+	if (len < 0)
-+		return len;
-+	return ret;
-+}
-+
-+
- const struct file_operations configfs_file_operations = {
- 	.read		= configfs_read_file,
- 	.write		= configfs_write_file,
- 	.llseek		= generic_file_llseek,
- 	.open		= configfs_open_file,
--	.release	= configfs_release,
-+	.release	= configfs_release_file,
- };
- 
-+const struct file_operations configfs_bin_file_operations = {
-+	.read		= configfs_read_bin_file,
-+	.write		= configfs_write_bin_file,
-+	.llseek		= NULL,		/* bin file is not seekable */
-+	.open		= configfs_open_bin_file,
-+	.release	= configfs_release_bin_file,
-+};
- 
- int configfs_add_file(struct dentry * dir, const struct configfs_attribute * attr, int type)
- {
-@@ -342,3 +601,18 @@ int configfs_create_file(struct config_item * item, const struct configfs_attrib
- 				 CONFIGFS_ITEM_ATTR);
- }
- 
-+/**
-+ *	configfs_create_bin_file - create a binary attribute file for an item.
-+ *	@item:	item we're creating for.
-+ *	@attr:	atrribute descriptor.
-+ */
-+
-+int configfs_create_bin_file(struct config_item * item,
-+		const struct configfs_bin_attribute * bin_attr)
-+{
-+	BUG_ON(!item || !item->ci_dentry || !bin_attr);
-+
-+	return configfs_add_file(item->ci_dentry, &bin_attr->attr,
-+				 CONFIGFS_ITEM_BIN_ATTR);
-+}
-+
-diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
-index 5946ad9..dd9c24b 100644
---- a/fs/configfs/inode.c
-+++ b/fs/configfs/inode.c
-@@ -231,7 +231,7 @@ const unsigned char * configfs_get_name(struct configfs_dirent *sd)
- 	if (sd->s_type & (CONFIGFS_DIR | CONFIGFS_ITEM_LINK))
- 		return sd->s_dentry->d_name.name;
- 
--	if (sd->s_type & CONFIGFS_ITEM_ATTR) {
-+	if (sd->s_type & (CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)) {
- 		attr = sd->s_element;
- 		return attr->ca_name;
- 	}
-diff --git a/include/linux/configfs.h b/include/linux/configfs.h
-index 34025df..15f1079 100644
---- a/include/linux/configfs.h
-+++ b/include/linux/configfs.h
-@@ -51,6 +51,7 @@ struct module;
- struct configfs_item_operations;
- struct configfs_group_operations;
- struct configfs_attribute;
-+struct configfs_bin_attribute;
- struct configfs_subsystem;
- 
- struct config_item {
-@@ -84,6 +85,7 @@ struct config_item_type {
- 	struct configfs_item_operations		*ct_item_ops;
- 	struct configfs_group_operations	*ct_group_ops;
- 	struct configfs_attribute		**ct_attrs;
-+	struct configfs_bin_attribute		**ct_bin_attrs;
- };
- 
- /**
-@@ -207,6 +209,89 @@ static ssize_t _item##_attr_store(struct config_item *item,		\
- 	return ret;							\
- }
- 
-+struct file;
-+struct vm_area_struct;
-+
-+struct configfs_bin_attribute {
-+	struct configfs_attribute	attr;
-+	void				*private;
-+};
-+
-+/*
-+ * Similar to CONFIGFS_ATTR_STRUCT
-+ */
-+#define CONFIGFS_BIN_ATTR_STRUCT(_item)					\
-+struct _item##_bin_attribute {						\
-+	struct configfs_bin_attribute bin_attr;				\
-+	ssize_t (*read)(struct _item *, void *, size_t);		\
-+	ssize_t (*write)(struct _item *, const void *, size_t);		\
-+}
-+
-+/* macros to create static binary attributes easier */
-+#define __CONFIGFS_BIN_ATTR(_name, _mode, _read, _write)		\
-+{									\
-+	.bin_attr = {							\
-+		.attr	= {						\
-+				.ca_name = __stringify(_name),		\
-+				.ca_mode = _mode,			\
-+				.ca_owner = THIS_MODULE,		\
-+		},							\
-+	},								\
-+	.read	= _read,						\
-+	.write	= _write,						\
-+}
-+
-+#define __CONFIGFS_BIN_ATTR_RO(_name) {					\
-+	.attr	= {							\
-+			.ca_name = __stringify(_name),			\
-+			.ca_mode = _mode,				\
-+			.ca_owner = THIS_MODULE,			\
-+	},								\
-+	.read	= _name##_read,						\
-+}
-+
-+#define __CONFIGFS_BIN_ATTR_RW(_name)					\
-+	__CONFIGFS_BIN_ATTR(_name, (S_IWUSR | S_IRUGO),			\
-+		_name##_read, _name##_write)
-+
-+#define CONFIGFS_BIN_ATTR(_name, _mode, _read, _write)			\
-+struct configfs_bin_attribute bin_attr_##_name =			\
-+	__CONFIGFS_BIN_ATTR(_name, _mode, _read, _write)
-+
-+#define CONFIGFS_BIN_ATTR_RO(_name)					\
-+struct configfs_bin_attribute bin_attr_##_name =			\
-+	__CONFIGFS_BIN_ATTR_RO(_name)
-+
-+#define CONFIGFS_BIN_ATTR_OPS(_item)					\
-+static ssize_t _item##_bin_attr_read(struct config_item *item,		\
-+			struct configfs_bin_attribute *bin_attr,	\
-+			void *buf, size_t max_count)			\
-+{									\
-+	struct _item *_item = to_##_item(item);				\
-+	struct _item##_bin_attribute *_item##_bin_attr =		\
-+		container_of(bin_attr, struct _item##_bin_attribute,	\
-+				bin_attr);				\
-+	ssize_t ret = 0;						\
-+									\
-+	if (_item##_bin_attr->read)					\
-+		ret = _item##_bin_attr->read(_item, buf, max_count);	\
-+	return ret;							\
-+}									\
-+static ssize_t _item##_bin_attr_write(struct config_item *item,		\
-+			struct configfs_bin_attribute *bin_attr,	\
-+			const void *buf, size_t count)			\
-+{									\
-+	struct _item *_item = to_##_item(item);				\
-+	struct _item##_bin_attribute *_item##_bin_attr =		\
-+		container_of(bin_attr, struct _item##_bin_attribute,	\
-+				bin_attr);				\
-+	ssize_t ret = -EINVAL;						\
-+									\
-+	if (_item##_bin_attr->write)					\
-+		ret = _item##_bin_attr->write(_item, buf, count);	\
-+	return ret;							\
-+}
-+
- /*
-  * If allow_link() exists, the item can symlink(2) out to other
-  * items.  If the item is a group, it may support mkdir(2).
-@@ -225,6 +310,8 @@ struct configfs_item_operations {
- 	void (*release)(struct config_item *);
- 	ssize_t	(*show_attribute)(struct config_item *, struct configfs_attribute *,char *);
- 	ssize_t	(*store_attribute)(struct config_item *,struct configfs_attribute *,const char *, size_t);
-+	ssize_t (*read_bin_attribute)(struct config_item *, struct configfs_bin_attribute *, void *, size_t);
-+	ssize_t (*write_bin_attribute)(struct config_item *, struct configfs_bin_attribute *, const void *, size_t);
- 	int (*allow_link)(struct config_item *src, struct config_item *target);
- 	int (*drop_link)(struct config_item *src, struct config_item *target);
- };
--- 
-1.7.12
+Regards
+
+-- Pantelis
+
+>> ---
+>> drivers/of/base.c  | 58 =
+++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>> include/linux/of.h |  4 ++++
+>> 2 files changed, 62 insertions(+)
+>>=20
+>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+>> index d3493e1..80fef33 100644
+>> --- a/drivers/of/base.c
+>> +++ b/drivers/of/base.c
+>> @@ -1201,6 +1201,64 @@ static void =
+*of_find_property_value_of_size(const struct device_node *np,
+>> }
+>>=20
+>> /**
+>> + * __of_find_node_by_full_name - Find a node with the full name =
+recursively
+>> + * @node:	Root of the tree to perform the search
+>> + * @full_name:	Full name of the node to find.
+>> + *
+>> + * Find a node with the give full name by recursively following any =
+of
+>> + * the child node links.
+>> + * Returns the matching node, or NULL if not found.
+>> + * Note that the devtree lock is not taken, so this function is only
+>> + * safe to call on either detached trees, or when devtree lock is =
+already
+>> + * taken.
+>> + */
+>> +struct device_node *__of_find_node_by_full_name(struct device_node =
+*node,
+>> +		const char *full_name)
+>> +{
+>> +	struct device_node *child, *found;
+>> +
+>> +	if (node =3D=3D NULL)
+>> +		return NULL;
+>> +
+>> +	/* check */
+>> +	if (of_node_cmp(node->full_name, full_name) =3D=3D 0)
+>> +		return node;
+>> +
+>> +	__for_each_child_of_node(node, child) {
+>> +		found =3D __of_find_node_by_full_name(child, full_name);
+>> +		if (found !=3D NULL)
+>> +			return found;
+>> +	}
+>> +
+>> +	return NULL;
+>> +}
+>> +EXPORT_SYMBOL(__of_find_node_by_full_name);
+>> +
+>> +/**
+>> + * of_find_node_by_full_name - Find a node with the full name =
+recursively
+>> + * @node:	Root of the tree to perform the search
+>> + * @full_name:	Full name of the node to find.
+>> + *
+>> + * Find a node with the give full name by recursively following any =
+of
+>> + * the child node links.
+>> + * Returns the matching node (with a ref taken), or NULL if not =
+found.
+>> + */
+>> +struct device_node *of_find_node_by_full_name(struct device_node =
+*node,
+>> +		const char *full_name)
+>> +{
+>> +	unsigned long flags;
+>> +	struct device_node *np;
+>> +
+>> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+>> +	np =3D of_find_node_by_full_name(node, full_name);
+>> +	of_node_get(np);
+>> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>> +
+>> +	return np;
+>> +}
+>> +EXPORT_SYMBOL(of_find_node_by_full_name);
+>> +
+>> +/**
+>>  * of_property_read_u32_index - Find and read a u32 from a =
+multi-value property.
+>>  *
+>>  * @np:		device node from which the property value is to =
+be read.
+>> diff --git a/include/linux/of.h b/include/linux/of.h
+>> index 196b34c..f7392c0 100644
+>> --- a/include/linux/of.h
+>> +++ b/include/linux/of.h
+>> @@ -230,6 +230,10 @@ extern struct device_node =
+*of_find_matching_node_and_match(
+>>=20
+>> extern struct device_node *of_find_node_by_path(const char *path);
+>> extern struct device_node *of_find_node_by_phandle(phandle handle);
+>> +struct device_node *__of_find_node_by_full_name(struct device_node =
+*node,
+>> +						const char *full_name);
+>> +struct device_node *of_find_node_by_full_name(struct device_node =
+*node,
+>> +						const char *full_name);
+>> extern struct device_node *of_get_parent(const struct device_node =
+*node);
+>> extern struct device_node *of_get_next_parent(struct device_node =
+*node);
+>> extern struct device_node *of_get_next_child(const struct device_node =
+*node,
+>> --=20
+>> 1.7.12
+>>=20
+>=20
