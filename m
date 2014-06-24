@@ -1,132 +1,48 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v14 08/10] drm/panel: Add Eukrea mbimxsd51 displays.
-Date: Tue, 24 Jun 2014 14:52:11 -0500
-Message-ID: <CAL_JsqLbzS9Zh+NK8pfqJ=twQpz0qYfyH4xC3NnvCXBokyx+yQ@mail.gmail.com>
-References: <1402913484-25910-1-git-send-email-denis@eukrea.com>
- <1402913484-25910-8-git-send-email-denis@eukrea.com>
- <20140624150600.GT32514@n2100.arm.linux.org.uk>
+From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
+Date: Tue, 24 Jun 2014 16:00:36 -0400
+Message-ID: <20140624200036.GP10202@titan.lakedaemon.net>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
+ <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com>
+ <53A74316.5080509@free-electrons.com>
+ <20140624125653.GN10202@titan.lakedaemon.net>
+ <53A9A3E3.5020409@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20140624150600.GT32514@n2100.arm.linux.org.uk>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: driverdev-devel-bounces@linuxdriverproject.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, dri-devel@lists.freedesktop.org, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <53A9A3E3.5020409-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 10:06 AM, Russell King - ARM Linux
-<linux@arm.linux.org.uk> wrote:
-> Denis,
->
-> This patch creates binding documentation.  Any patch which does so
-> should be copied to the DT people so they can review the bindings
-> and give appropriate acks.  It would be better if you separate the
-> binding documentation updates from the other functional changes too.
->
-> I've added them on this reply to see whether they'll feel friendly
-> enough to comment on the patch as it stands to avoid having to go
-> through two more rounds on this already-fourteen revision patch set.
->
-> On Mon, Jun 16, 2014 at 12:11:22PM +0200, Denis Carikli wrote:
->> Signed-off-by: Denis Carikli <denis@eukrea.com>
->> ---
->> ChangeLog v13->v14:
->> - None
->>
->> ChangeLog v12->v13:
->> - Added a note explaining why the size is zero in
->>   the eukrea_mbimxsd51_dvi(s)vga structs.
->> ChangeLog v11->v12:
->> - Rebased: It now uses the new DRM_MODE_FLAG_POL_DE flags defines names
->>
->> ChangeLog v10->v11:
->> - New patch.
->> ---
->>  .../bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt   |    7 ++
->>  .../bindings/panel/eukrea,mbimxsd51-dvi-svga.txt   |    7 ++
->>  .../bindings/panel/eukrea,mbimxsd51-dvi-vga.txt    |    7 ++
->>  drivers/gpu/drm/panel/panel-simple.c               |   83 ++++++++++++++++++++
->>  4 files changed, 104 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt
->>  create mode 100644 Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt
->>  create mode 100644 Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt
->>
->> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt
->> new file mode 100644
->> index 0000000..03679d0
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt
->> @@ -0,0 +1,7 @@
->> +Eukrea CMO-QVGA (320x240 pixels) TFT LCD panel
->> +
->> +Required properties:
->> +- compatible: should be "eukrea,mbimxsd51-cmo-qvga"
->> +
->> +This binding is compatible with the simple-panel binding, which is specified
->> +in simple-panel.txt in this directory.
->> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt
->> new file mode 100644
->> index 0000000..f408c9a
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt
->> @@ -0,0 +1,7 @@
->> +Eukrea DVI-SVGA (800x600 pixels) DVI output.
->> +
->> +Required properties:
->> +- compatible: should be "eukrea,mbimxsd51-dvi-svga"
->> +
->> +This binding is compatible with the simple-panel binding, which is specified
->> +in simple-panel.txt in this directory.
->> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt
->> new file mode 100644
->> index 0000000..8ea90da
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt
->> @@ -0,0 +1,7 @@
->> +Eukrea DVI-VGA (640x480 pixels) DVI output.
->> +
->> +Required properties:
->> +- compatible: should be "eukrea,mbimxsd51-dvi-vga"
->> +
->> +This binding is compatible with the simple-panel binding, which is specified
->> +in simple-panel.txt in this directory.
+On Tue, Jun 24, 2014 at 06:14:27PM +0200, Boris BREZILLON wrote:
+> On 24/06/2014 14:56, Jason Cooper wrote:
+...
+> > Once you post the new series, I assume it's ok to apply patches 1-3 to
+> > irqchip/core, or are there some dependency considerations?
+> 
+> Patches 6 and 7 depend on the 3 first patches, but we should be able to
+> merge them through the at91/arm-soc tree (Nicolas might have to rebase
+> its tree for 3.17 on irqchip/core after you have applied patches 1-3).
 
-Seems like we could just have a list of compatible strings rather than
-a mostly duplicated file.
+I'll create a topic branch for you when the time comes.  That way
+arm-soc doesn't have to pull in any code it doesn't actually need (helps
+with for-next testing).
 
->> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
->> index a251361..adc40a7 100644
->> --- a/drivers/gpu/drm/panel/panel-simple.c
->> +++ b/drivers/gpu/drm/panel/panel-simple.c
->> @@ -403,6 +403,80 @@ static const struct panel_desc edt_etm0700g0dh6 = {
->>       },
->>  };
->>
->> +static const struct drm_display_mode eukrea_mbimxsd51_cmoqvga_mode = {
->> +     .clock = 6500,
->> +     .hdisplay = 320,
->> +     .hsync_start = 320 + 38,
->> +     .hsync_end = 320 + 38 + 20,
->> +     .htotal = 320 + 38 + 20 + 30,
->> +     .vdisplay = 240,
->> +     .vsync_start = 240 + 15,
->> +     .vsync_end = 240 + 15 + 4,
->> +     .vtotal = 240 + 15 + 4 + 3,
->> +     .vrefresh = 60,
->> +     .pol_flags = DRM_MODE_FLAG_POL_PIXDATA_NEGEDGE |
->> +                  DRM_MODE_FLAG_POL_DE_LOW,
+Please give me a gentle reminder in the coverletter or comments when you
+send the next version.
 
-Why aren't you using:
+> Anyway, I'd like to wait for at91 maintainers/developers reviews before
+> posting a new version.
 
-Documentation/devicetree/bindings/video/display-timing.txt
+Sure.
 
-Rob
+thx,
+
+Jason.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
