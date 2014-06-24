@@ -1,86 +1,44 @@
-From: Shawn Guo <shawn.guo@freescale.com>
-Subject: [PATCH] dt-bindings: ata: create bindings for imx sata controller
-Date: Tue, 24 Jun 2014 15:44:37 +0800
-Message-ID: <1403595877-5921-1-git-send-email-shawn.guo@freescale.com>
+From: Gregory CLEMENT <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH] ARM: mvebu: Fix the improper use of the compatible string
+ armada38x using a wildcard
+Date: Tue, 24 Jun 2014 09:55:27 +0200
+Message-ID: <53A92EEF.6070803@free-electrons.com>
+References: <1403533011-21339-1-git-send-email-gregory.clement@free-electrons.com> <20140623215309.GD10202@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-ide-owner@vger.kernel.org>
-Sender: linux-ide-owner@vger.kernel.org
-To: linux-ide@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@freescale.com>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140623215309.GD10202-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org, Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-The Freescale i.MX SATA controller mostly conforms to the AHCI
-interface, but there are some special extensions at integration level
-like clocks settings and hardware parameters.
+Hi Jason,
 
-Let's create a separate bindings doc for imx sata controller, so that
-more imx specific properties can be added later without messing up the
-generic ahci-platform bindings.
+>> This fix should be merged in 3.16 and maybe sent as a fix for 3.15
+>> too.
 
-Signed-off-by: Shawn Guo <shawn.guo@freescale.com>
----
- .../devicetree/bindings/ata/ahci-platform.txt      |  6 -----
- Documentation/devicetree/bindings/ata/imx-sata.txt | 26 ++++++++++++++++++++++
- 2 files changed, 26 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/ata/imx-sata.txt
+[...]
 
-diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-index c96d8dcf98fd..549ceb8cb93b 100644
---- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
-+++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
-@@ -6,8 +6,6 @@ Each SATA controller should have its own node.
- Required properties:
- - compatible        : compatible string, one of:
-   - "allwinner,sun4i-a10-ahci"
--  - "fsl,imx53-ahci"
--  - "fsl,imx6q-ahci"
-   - "hisilicon,hisi-ahci"
-   - "ibm,476gtr-ahci"
-   - "marvell,armada-380-ahci"
-@@ -22,10 +20,6 @@ Optional properties:
- - clocks            : a list of phandle + clock specifier pairs
- - target-supply     : regulator for SATA target power
- 
--"fsl,imx53-ahci", "fsl,imx6q-ahci" required properties:
--- clocks            : must contain the sata, sata_ref and ahb clocks
--- clock-names       : must contain "ahb" for the ahb clock
--
- Examples:
-         sata@ffe08000 {
- 		compatible = "snps,spear-ahci";
-diff --git a/Documentation/devicetree/bindings/ata/imx-sata.txt b/Documentation/devicetree/bindings/ata/imx-sata.txt
-new file mode 100644
-index 000000000000..aeb99dd986b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/ata/imx-sata.txt
-@@ -0,0 +1,26 @@
-+* Freescale i.MX AHCI SATA Controller
-+
-+The Freescale i.MX SATA controller mostly conforms to the AHCI interface
-+with some special extensions at integration level.
-+
-+Required properties:
-+- compatible : should be one of the following:
-+   - "fsl,imx53-ahci" for i.MX53 SATA controller
-+   - "fsl,imx6q-ahci" for i.MX6Q SATA controller
-+- interrupts : interrupt mapping for SATA IRQ
-+- reg : registers mapping
-+- clocks : list of clock specifiers, must contain an entry for each
-+  required entry in clock-names
-+- clock-names : should include "sata", "sata_ref" and "ahb" entries
-+
-+Examples:
-+
-+sata@02200000 {
-+	compatible = "fsl,imx6q-ahci";
-+	reg = <0x02200000 0x4000>;
-+	interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clks IMX6QDL_CLK_SATA>,
-+		 <&clks IMX6QDL_CLK_SATA_REF_100M>,
-+		 <&clks IMX6QDL_CLK_AHB>;
-+	clock-names = "sata", "sata_ref", "ahb";
-+};
+> Applied to mvebu/dt with Andrew's Ack.
+
+I think it should go mvebu/fixes as this patch modifies the binding,
+sooner is better.
+
+
+Thanks,
+
+Gregory
+
+
+
 -- 
-1.8.3.2
-
+Gregory Clement, Free Electrons
+Kernel, drivers, real-time and embedded Linux
+development, consulting, training and support.
+http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
