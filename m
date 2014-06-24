@@ -1,81 +1,87 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-Date: Tue, 24 Jun 2014 12:08:48 -0400
-Message-ID: <53A9A290.7020407@ti.com>
-References: <20140623053249.GD2666@pratyush-vbox> <53A85ACE.9070506@ti.com>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
+Date: Tue, 24 Jun 2014 18:14:27 +0200
+Message-ID: <53A9A3E3.5020409@free-electrons.com>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com> <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com> <53A74316.5080509@free-electrons.com> <20140624125653.GN10202@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53A85ACE.9070506@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@st.com>, Arnd Bergmann <arnd@arndb.de>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marek Vasut <marex@denx.de>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, ABRAHAM KISHON VIJAY <kishon@ti.com>, Richard Zhu <r65037@freescale.com>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140624125653.GN10202-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Pratyush,
+Hello Jason,
 
-On 06/23/2014 12:50 PM, Santosh Shilimkar wrote:
+On 24/06/2014 14:56, Jason Cooper wrote:
+> Boris,
 >
->
->
-> -------- Original Message --------
-> Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-> On Sat, Jun 21, 2014 at 03:05:30AM +0800, Arnd Bergmann wrote:
->> On Friday 20 June 2014 13:11:37 Santosh Shilimkar wrote:
->
->>>>
->>> Arnd suggestion was to have the version 3.65 code in generic place since
->>> its IP specific and just in case some other vendor using the same version
->>> can leverage the code.
->
-> Sorry, I do not follow PCIe mailing list these days, doing something else
-> now. So coming to this topic a bit delayed.
->
-My Apologies for the email format as I mysteriously lost this email and
-had to resort to a forwarded email to respond to this.
-
-Let us have the discussion on this thread as I lost the original emails.
+> On Sun, Jun 22, 2014 at 10:56:54PM +0200, Boris BREZILLON wrote:
+>> On 20/06/2014 17:01, Boris BREZILLON wrote:
+>>> Add new atmel AIC (Advanced Interrupt Controller) driver based on the
+>>> generic chip infrastructure.
 >>>
->>> Concern here seems toe really those name of the files. I can't think of
->>> any other appropriate name.
+>>> This driver is only compatible with dt enabled board and replaces the old
+>>> implementation found in arch/arm/mach-at91/irq.c.
+>>>
+>>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+>>> ---
+>>>  drivers/irqchip/Kconfig         |   7 +
+>>>  drivers/irqchip/Makefile        |   1 +
+>>>  drivers/irqchip/irq-atmel-aic.c | 700 ++++++++++++++++++++++++++++++++++++++++
+>>>  3 files changed, 708 insertions(+)
+>>>  create mode 100644 drivers/irqchip/irq-atmel-aic.c
+>>>
+>>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>>> index bbb746e..6a7ad81 100644
+>>> --- a/drivers/irqchip/Kconfig
+>>> +++ b/drivers/irqchip/Kconfig
+>>> @@ -30,6 +30,13 @@ config ARM_VIC_NR
+>>>  	  The maximum number of VICs available in the system, for
+>>>  	  power management.
+>>>  
+>> [...]
 >>
->> We should definitely keep the version in the DT "compatible" strings
->> wherever we know it. Regarding a better file name, I have no idea.
+>>> +
+>>> +static int at91_aic_common_irq_domain_xlate(struct irq_domain *d,
+>> This function should be named aic_common_irq_domain_xslate to be
+>> consistent with other function names.
+>> I'll fix that for the next version.
+> Other than this one change, this series looks good wrt to irqchip.  When
+> you respin, please adjust the patch subject lines like so:
 >
-> In my opinion, we do not need any of dw-v3_65 files, as code in these
-> files will not be usable by other vendors.
+>   irqchip: atmel-aic: Add new atmel AIC driver
 >
-> Anything which is implemented in application space, will not be same
-> across all IP users. For example, MSI0_IRQ_ENABLE_SET has been defined
-> at offset 0x108 in keystone PCIe application space.Other vendor may
-> not have this register at the same offset. Moreover, other vendors are
-> not even obliged to implement MSI Enable signals in same way, so
-> internal bit definition of the register may change.
->
-> Therefore code is not reusable if all register offset and bit
-> definitions are not same across vendors. So, in case of DW driver none
-> of the code which are accessed using va_app_base should go to common
-> area.
->
+> Note the capitalization.  Also, if you could add Thomas' Ack to the
+> first patch, that would be appreciated.
 
-I think based on the response far on this issue, it is best to keep
-the Application specific code as part of Keystone driver and in
-future if there is any driver that has similar application register
-implemented. we can refactor the code and re-use.
+Sure, I'll fix the commit message and add Thomas' ack.
 
-My V3 will revert back to implementation similar to RFC. Also since this
-is individual h/w specific, there is no no need for a compatibility as
-well. Will use keystone specific compatibility string for this.
-
-Arnd, hope this is fine. Please respond if you still think a 
-compatibility string is needed.
-
-Murali
-
-> Pratyush
 >
->>
->> 	Arnd
->
->
+> Once you post the new series, I assume it's ok to apply patches 1-3 to
+> irqchip/core, or are there some dependency considerations?
+
+Patches 6 and 7 depend on the 3 first patches, but we should be able to
+merge them through the at91/arm-soc tree (Nicolas might have to rebase
+its tree for 3.17 on irqchip/core after you have applied patches 1-3).
+
+Anyway, I'd like to wait for at91 maintainers/developers reviews before
+posting a new version.
+
+Thanks for your support on this series.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
