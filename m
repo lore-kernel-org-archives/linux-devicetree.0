@@ -1,86 +1,28 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH v4 1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
-Date: Tue, 24 Jun 2014 22:10:05 +0400
-Message-ID: <201406242210.06194.sergei.shtylyov@cogentembedded.com>
-References: <201406242207.32790.sergei.shtylyov@cogentembedded.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v5 1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+Date: Tue, 24 Jun 2014 20:11:16 +0200
+Message-ID: <4473942.0JR5ujEtJi@wuerfel>
+References: <201406242157.05973.sergei.shtylyov@cogentembedded.com> <201406242159.55373.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-1"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
 Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201406242207.32790.sergei.shtylyov@cogentembedded.com>
+In-Reply-To: <201406242159.55373.sergei.shtylyov@cogentembedded.com>
 Sender: linux-sh-owner@vger.kernel.org
-To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
-Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, ben.dooks@codethink.co.uk, magnus.damm@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Add device nodes for the R8A7791 internal PCI bridge devices.
+On Tuesday 24 June 2014 21:59:54 Sergei Shtylyov wrote:
+> From: Ben Dooks <ben.dooks@codethink.co.uk>
+> 
+> Add device nodes for the R8A7790 internal PCI bridge devices.
+> 
+> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+> [Sergei: added several properties to the PCI bridge nodes]
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Yes, looks better, thanks for the update.
 
----
-Changes in version 4:
-- added "device_type" and "ranges" properties to the PCI bridge nodes;
-- removed "0x" prefix from zero values in the "reg" properties.
-
-Changes in version 3:
-- refreshed the patch.
-
-Changes in version 2:
-- added interrupt-related properties to the PCI device nodes;
-- refreshed the patch.
-
- arch/arm/boot/dts/r8a7791.dtsi |   40 ++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 40 insertions(+)
-
-Index: renesas/arch/arm/boot/dts/r8a7791.dtsi
-===================================================================
---- renesas.orig/arch/arm/boot/dts/r8a7791.dtsi
-+++ renesas/arch/arm/boot/dts/r8a7791.dtsi
-@@ -961,6 +961,46 @@
- 		status = "disabled";
- 	};
- 
-+	pci0: pci@ee090000 {
-+		compatible = "renesas,pci-r8a7791";
-+		device_type = "pci";
-+		clocks = <&mstp7_clks R8A7791_CLK_EHCI>;
-+		reg = <0 0xee090000 0 0xc00>,
-+		      <0 0xee080000 0 0x1100>;
-+		interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <0 0>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
-+		interrupt-map-mask = <0xff00 0 0 0x7>;
-+		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
-+	pci1: pci@ee0d0000 {
-+		compatible = "renesas,pci-r8a7791";
-+		device_type = "pci";
-+		clocks = <&mstp7_clks R8A7791_CLK_EHCI>;
-+		reg = <0 0xee0d0000 0 0xc00>,
-+		      <0 0xee0c0000 0 0x1100>;
-+		interrupts = <0 113 IRQ_TYPE_LEVEL_HIGH>;
-+		status = "disabled";
-+
-+		bus-range = <1 1>;
-+		#address-cells = <3>;
-+		#size-cells = <2>;
-+		#interrupt-cells = <1>;
-+		ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
-+		interrupt-map-mask = <0xff00 0 0 0x7>;
-+		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-+			      	 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-+	};
-+
- 	pciec: pcie@fe000000 {
- 		compatible = "renesas,pcie-r8a7791";
- 		reg = <0 0xfe000000 0 0x80000>;
+Acked-by: Arnd Bergmann <arnd@arndb.de>
