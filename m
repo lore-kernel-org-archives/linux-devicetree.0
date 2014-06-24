@@ -1,49 +1,86 @@
-From: Daniel Jeong <gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [RFC v3 2/2] backlight: device tree: add new tps611xx backlight driver
-Date: Tue, 24 Jun 2014 16:18:50 +0900
-Message-ID: <1403594330-15387-3-git-send-email-gshark.jeong@gmail.com>
-References: <1403594330-15387-1-git-send-email-gshark.jeong@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403594330-15387-1-git-send-email-gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bryan Wu <cooloney-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Tomi Valkeinen <tomi.valkeinen-l0cyMroinI0@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>
-Cc: Daniel Jeong <daniel.jeong-l0cyMroinI0@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-fbdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Jeong <gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: [PATCH] dt-bindings: ata: create bindings for imx sata controller
+Date: Tue, 24 Jun 2014 15:44:37 +0800
+Message-ID: <1403595877-5921-1-git-send-email-shawn.guo@freescale.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-ide-owner@vger.kernel.org>
+Sender: linux-ide-owner@vger.kernel.org
+To: linux-ide@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Tejun Heo <tj@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Russell King <linux@arm.linux.org.uk>, Shawn Guo <shawn.guo@freescale.com>
 List-Id: devicetree@vger.kernel.org
 
-This commit is about tps611xx device tree documentation.
+The Freescale i.MX SATA controller mostly conforms to the AHCI
+interface, but there are some special extensions at integration level
+like clocks settings and hardware parameters.
 
-Signed-off-by: Daniel Jeong <gshark.jeong-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Let's create a separate bindings doc for imx sata controller, so that
+more imx specific properties can be added later without messing up the
+generic ahci-platform bindings.
+
+Signed-off-by: Shawn Guo <shawn.guo@freescale.com>
 ---
- .../video/backlight/tps611xx-backlight.txt         |   16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+ .../devicetree/bindings/ata/ahci-platform.txt      |  6 -----
+ Documentation/devicetree/bindings/ata/imx-sata.txt | 26 ++++++++++++++++++++++
+ 2 files changed, 26 insertions(+), 6 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/ata/imx-sata.txt
 
-diff --git a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+diff --git a/Documentation/devicetree/bindings/ata/ahci-platform.txt b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+index c96d8dcf98fd..549ceb8cb93b 100644
+--- a/Documentation/devicetree/bindings/ata/ahci-platform.txt
++++ b/Documentation/devicetree/bindings/ata/ahci-platform.txt
+@@ -6,8 +6,6 @@ Each SATA controller should have its own node.
+ Required properties:
+ - compatible        : compatible string, one of:
+   - "allwinner,sun4i-a10-ahci"
+-  - "fsl,imx53-ahci"
+-  - "fsl,imx6q-ahci"
+   - "hisilicon,hisi-ahci"
+   - "ibm,476gtr-ahci"
+   - "marvell,armada-380-ahci"
+@@ -22,10 +20,6 @@ Optional properties:
+ - clocks            : a list of phandle + clock specifier pairs
+ - target-supply     : regulator for SATA target power
+ 
+-"fsl,imx53-ahci", "fsl,imx6q-ahci" required properties:
+-- clocks            : must contain the sata, sata_ref and ahb clocks
+-- clock-names       : must contain "ahb" for the ahb clock
+-
+ Examples:
+         sata@ffe08000 {
+ 		compatible = "snps,spear-ahci";
+diff --git a/Documentation/devicetree/bindings/ata/imx-sata.txt b/Documentation/devicetree/bindings/ata/imx-sata.txt
 new file mode 100644
-index 0000000..01f110d
+index 000000000000..aeb99dd986b0
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
-@@ -0,0 +1,16 @@
-+TPS611xx family of backlight driver based on EasyScale.
++++ b/Documentation/devicetree/bindings/ata/imx-sata.txt
+@@ -0,0 +1,26 @@
++* Freescale i.MX AHCI SATA Controller
 +
-+It supports tps61158, tps61161, tps61163 and tps61165.
++The Freescale i.MX SATA controller mostly conforms to the AHCI interface
++with some special extensions at integration level.
 +
 +Required properties:
-+- compatible: "ti,tps61158_bl", "ti,tps61161_bl", "ti,tps61163_bl", "ti,tps61165_bl"
-+- rfa_en: enable request for acknowledge. ( 0 : disable , 1 : enable )
-+- en_gpio_num: gpio number for en pin.
++- compatible : should be one of the following:
++   - "fsl,imx53-ahci" for i.MX53 SATA controller
++   - "fsl,imx6q-ahci" for i.MX6Q SATA controller
++- interrupts : interrupt mapping for SATA IRQ
++- reg : registers mapping
++- clocks : list of clock specifiers, must contain an entry for each
++  required entry in clock-names
++- clock-names : should include "sata", "sata_ref" and "ahb" entries
 +
-+Example:
++Examples:
 +
-+	backlight {
-+		compatible = "ti,tps61163_bl";
-+		rfa_en = <1>;
-+		en_gpio_num = <45>;
-+	};
++sata@02200000 {
++	compatible = "fsl,imx6q-ahci";
++	reg = <0x02200000 0x4000>;
++	interrupts = <0 39 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&clks IMX6QDL_CLK_SATA>,
++		 <&clks IMX6QDL_CLK_SATA_REF_100M>,
++		 <&clks IMX6QDL_CLK_AHB>;
++	clock-names = "sata", "sata_ref", "ahb";
++};
 -- 
-1.7.9.5
+1.8.3.2
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
