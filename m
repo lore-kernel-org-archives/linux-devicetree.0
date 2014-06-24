@@ -1,84 +1,74 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and
- exynos5800-peach-pi
-Date: Tue, 24 Jun 2014 12:13:21 +0530
-Message-ID: <53A91E09.7050603@gmail.com>
-References: <1403556576-8038-1-git-send-email-dianders@chromium.org>
+From: sundeep subbaraya <sundeep.lkml-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] usb: doc: udc-xilinx: Add devicetree bindings
+Date: Tue, 24 Jun 2014 12:14:10 +0530
+Message-ID: <CALHRZup3_eFiw8iSJJmxy0dHDeHLnb2fAfRtKPTW1UQ2U+cEig@mail.gmail.com>
+References: <b0dfcba4-7319-4687-a455-bfcddf61b7d1@BN1AFFO11FD028.protection.gbl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403556576-8038-1-git-send-email-dianders@chromium.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: mark.rutland@arm.com, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc@vger.kernel.org, linux@arm.linux.org.uk, ijc+devicetree@hellion.org.uk, devicetree@vger.kernel.org, khilman@linaro.org, pawel.moll@arm.com, swarren@wwwdotorg.org, tushar.b@samsung.com, olof@lixom.net, robh+dt@kernel.org, ben-linux@fluff.org, ch.naveen@samsung.com, linux-arm-kernel@lists.infradead.org, rahul.sharma@samsung.com, sjg@chromium.org, linux-kernel@vger.kernel.org, galak@codeaurora.org, ajaynumb@gmail.com, javier.martinez@collabora.co.uk
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <b0dfcba4-7319-4687-a455-bfcddf61b7d1-reflc3kr++MpSWDJVTaHWOhlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: "balbi-l0cyMroinI0@public.gmane.org" <balbi-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Michal Simek <michals-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2014 02:19 AM, Doug Anderson wrote:
-> This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
-> including:
-> * The keyboard
-> * The i2c tunnel
-> * The tps65090 under the i2c tunnel
-> * The battery under the i2c tunnel
-> 
-> To add extra motivation, it should be noted that tps65090 is one of
-> the things needed to get display-related FETs turned on for pit and
-> pi.
-> 
-> Note that this relies on a few outstanding changes:
-> * Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
->   (spi: s3c64xx: for DT platofrms always get the chipselect info from
->   DT node) to work properly and match the documented bindings.  See
->   <https://patchwork.kernel.org/patch/4346701/> and
->   <https://patchwork.kernel.org/patch/4346711/>
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Ping
 
-Along with the dependency patches on next-20140623, tested keyboard on
-Peach-Pi board.
+Thanks,
+Sundeep.B.S.
 
-Tested-by: Tushar Behera <tushar.b@samsung.com>
-
-Some comments below.
-
+On Tue, Jun 10, 2014 at 5:34 PM,  <subbaraya.sundeep.bhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org> wrote:
+> From: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>
+> Add devicetree bindings for Xilinx axi udc driver.
+>
+> Signed-off-by: Subbaraya Sundeep Bhatta <sbhatta-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 > ---
-> Changes in v2:
-> - Now just one patch since mfd patch landed.
-> - Rebased to ToT linux-next
-> 
->  arch/arm/boot/dts/exynos5420-peach-pit.dts | 145 +++++++++++++++++++++++++++++
->  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 145 +++++++++++++++++++++++++++++
->  2 files changed, 290 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> index 7649982..581f385 100644
-> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-
-> +				regulators {
-> +					dcdc1 {
-> +						ti,enable-ext-control;
-> +					};
-> +					dcdc2 {
-> +						ti,enable-ext-control;
-> +					};
-> +					dcdc3 {
-> +						ti,enable-ext-control;
-> +					};
-> +					fet1 {
-
-"tps65090_fet1: fet1 {" ?
-
-> +						regulator-name = "vcd_led";
-> +					};
-> +					tps65090_fet2: fet2 {
-
-I would suggest we add similar labels to fet1, fet3, fet4, fet5 and fet6
-also. That way it would be easy to reference them in subsequent DT nodes.
-
-Same comment for Peach-Pi dts file too.
-
--- 
-Tushar Behera
+> Changes for v3:
+>         - None
+> Changes for v2:
+>         - replaced xlnx,include-dma with xlnx,has-builtin-dma
+>
+>  .../devicetree/bindings/usb/udc-xilinx.txt         |   20 ++++++++++++++++++++
+>  1 files changed, 20 insertions(+), 0 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/usb/udc-xilinx.txt
+>
+> diff --git a/Documentation/devicetree/bindings/usb/udc-xilinx.txt b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> new file mode 100644
+> index 0000000..7c24fac
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/udc-xilinx.txt
+> @@ -0,0 +1,20 @@
+> +Xilinx AXI USB2 device controller
+> +
+> +Required properties:
+> +- compatible           : Should be "xlnx,axi-usb2-device-4.00.a"
+> +- reg                  : Physical base address and size of the Axi USB2
+> +                         device registers map.
+> +- interrupts           : Property with a value describing the interrupt
+> +                         number.
+> +- interrupt-parent     : Must be core interrupt controller
+> +- xlnx,include-dma     : if DMA is included
+> +
+> +Example:
+> +               axi-usb2-device@42e00000 {
+> +                        compatible = "xlnx,axi-usb2-device-4.00.a";
+> +                        interrupt-parent = <0x1>;
+> +                        interrupts = <0x0 0x39 0x1>;
+> +                        reg = <0x42e00000 0x10000>;
+> +                        xlnx,has-builtin-dma;
+> +                };
+> +
+> --
+> 1.7.4
+>
+>
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
+> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> Please read the FAQ at  http://www.tux.org/lkml/
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
