@@ -1,60 +1,46 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH V4 00/10] drm: exynos: few patches to enhance bridge chip
- support
-Date: Tue, 24 Jun 2014 08:55:18 +0530
-Message-ID: <CAPdUM4OFtAnGOc3sjjBhv+MwoQWKgaFNakP0V4ReVARix-tLtg@mail.gmail.com>
-References: <1402511228-18945-1-git-send-email-ajaykumar.rs@samsung.com>
- <CAEC9eQOp0jiZC-XqqQX7S7Dbu-_bi2unpVU2P4zAQ7VmopD27A@mail.gmail.com>
- <CAAQKjZPHc2KfmNyfchP68BJiPUFyAO_keCHMBc1YuYTj_J0kVQ@mail.gmail.com>
- <CAPdUM4Mpo_9A_+4k9ctcXKnctKOdgxkEH4Sv0TO-4Y8dZ8aiow@mail.gmail.com>
- <53A83BDE.7080005@gmail.com>
+From: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH 2/2] arm64: dts: Add PMU node for APM X-Gene Storm SOC
+Date: Mon, 23 Jun 2014 23:42:00 -0400
+Message-ID: <53A8F388.80101@redhat.com>
+References: <1395308847-16317-1-git-send-email-vkale@apm.com>	<1395308847-16317-3-git-send-email-vkale@apm.com> <CACVXFVMiOvV=CytiaLFgEdt3_f7frJ6afjz39iLhafOhvJ0m7g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <53A83BDE.7080005@gmail.com>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomasz Figa <tomasz.figa@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, Daniel Vetter <daniel.vetter@ffwll.ch>, sunil joshi <joshi@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay kumar <ajaynumb@gmail.com>, =?ISO-8859-1?Q?St=E9phane_Marchesin?= <marcheu@chromium.org>, Prashanth G <prashanth.g@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CACVXFVMiOvV=CytiaLFgEdt3_f7frJ6afjz39iLhafOhvJ0m7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
+Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+On 06/23/2014 10:47 PM, Ming Lei wrote:
 
-On 23 June 2014 20:08, Tomasz Figa <tomasz.figa@gmail.com> wrote:
-> Hi Rahul,
->
-> On 23.06.2014 15:58, Rahul Sharma wrote:
->> Hi Ajay, Inki,
+> On Thu, Mar 20, 2014 at 5:47 PM, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> This patch adds the PMU device tree node for APM X-Gene Storm SOC.
 >>
->> I tested this series for Exynos5420 based peach-pit board,
->> Exynos5800 based Peach-pi board and Exynos5250 based
->> Snow board. I verified with the chrome test environment and
->> able to see upto Login Screen. DPMS on/off functionality and
->> S2R is also working fine for Display. therefore:
->
-> What tree did you apply this patches onto? I don't see S2R support for
-> Exynos5420 or 5800 in current linux-next (e.g. there are no PMU tables
-> present for these SoCs).
+>> Please note that this patch has dependancy on a GIC driver patch [1] which is
+>> yet to be approved by maintainers.
+>>
+>> [1]- https://lkml.org/lkml/2014/2/27/605
+>> (irqchip:gic: change access of gicc_ctrl register to read modify write)
 
-I verified them with inflight patches and some private patches. All of them
-are available at
-https://github.com/exynos-reference/kernel/tree/linux-3.16-rc1-ui-s2r
+> No matter if Feng Kan's gic patch is applied or not, perf(PMU)
+> still can't work well with your patch, and the failure[1] will be
+> triggered when 'perf top' is started.
+> 
+> The failure happened during the 1st pmu overflow interrupt.
+> 
+> I test several mustang boards, and all has the problem with
+> upstream kernel.
 
-Regards,
-Rahul Sharma.
+Note that the GIC bypass register config is set by the firmware and this
+only preserves the original setting, so you could be running an older
+firmware (such as U-Boot). On our (UEFI-enabled systems, complete with
+correct patch) perf top runs correctly without any such problems.
 
->
-> Best regards,
-> Tomasz
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> http://lists.freedesktop.org/mailman/listinfo/dri-devel
+Jon.
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
