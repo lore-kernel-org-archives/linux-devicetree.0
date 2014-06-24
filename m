@@ -1,48 +1,36 @@
-From: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: [PATCH v3 4/8] dt-bindings: ata: add ahci_imx electrical properties
-Date: Tue, 24 Jun 2014 11:19:42 +0100
-Message-ID: <E1WzNpG-0005ds-P3@rmk-PC.arm.linux.org.uk>
+From: Russell King <rmk+kernel@arm.linux.org.uk>
+Subject: [PATCH v3 6/8] dt-bindings: ata: document ability to disable
+ spread-spectrum clock
+Date: Tue, 24 Jun 2014 11:19:53 +0100
+Message-ID: <E1WzNpR-0005e1-0Y@rmk-PC.arm.linux.org.uk>
 References: <20140624101901.GL32514@n2100.arm.linux.org.uk>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140624101901.GL32514-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tejun Heo <tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Sascha Hauer <kernel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Shawn Guo <shawn.guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140624101901.GL32514@n2100.arm.linux.org.uk>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>, linux-ide@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the documentation for the electrical properties for the iMX SATA
-controller.  There are many values for these, and listing them would
-be error prone.  Refer readers to the device documentation and driver
-source code for these details.
+Add documentation of the fsl,no-spread-spectrum option.
 
-Signed-off-by: Russell King <rmk+kernel-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
+Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 ---
- Documentation/devicetree/bindings/ata/imx-sata.txt | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/ata/imx-sata.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/ata/imx-sata.txt b/Documentation/devicetree/bindings/ata/imx-sata.txt
-index aeb99dd986b0..a13f0f603776 100644
+index a13f0f603776..fa511db18408 100644
 --- a/Documentation/devicetree/bindings/ata/imx-sata.txt
 +++ b/Documentation/devicetree/bindings/ata/imx-sata.txt
-@@ -13,6 +13,14 @@ with some special extensions at integration level.
-   required entry in clock-names
- - clock-names : should include "sata", "sata_ref" and "ahb" entries
+@@ -20,6 +20,8 @@ with some special extensions at integration level.
+ - fsl,receive-eq-mdB : receive equalisation, in milli-decibels
+   Please refer to the technical documentation or the driver source code
+   for the list of legal values for these options.
++- fsl,no-spread-spectrum : disable spread-spectrum clocking on the SATA
++  link.
  
-+Optional properties:
-+- fsl,transmit-level-mV : transmit voltage level, in millivolts.
-+- fsl,transmit-boost-mdB : transmit boost level, in milli-decibels
-+- fsl,transmit-atten-16ths : transmit attenuation, in 16ths
-+- fsl,receive-eq-mdB : receive equalisation, in milli-decibels
-+  Please refer to the technical documentation or the driver source code
-+  for the list of legal values for these options.
-+
  Examples:
  
- sata@02200000 {
 -- 
 1.8.3.1
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
