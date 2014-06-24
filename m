@@ -1,109 +1,132 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v4 2/2] ata: Fix the dma state machine lockup for the
- IDENTIFY DEVICE PIO mode command.
-Date: Tue, 24 Jun 2014 17:55:17 -0400
-Message-ID: <20140624215517.GF14909@htj.dyndns.org>
-References: <1403517193-29776-1-git-send-email-stripathi@apm.com>
- <1403517193-29776-3-git-send-email-stripathi@apm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH v14 08/10] drm/panel: Add Eukrea mbimxsd51 displays.
+Date: Tue, 24 Jun 2014 23:56:48 +0200
+Message-ID: <20140624215647.GA30143@mithrandir>
+References: <1402913484-25910-1-git-send-email-denis@eukrea.com>
+ <1402913484-25910-8-git-send-email-denis@eukrea.com>
+ <20140624150600.GT32514@n2100.arm.linux.org.uk>
+ <CAL_JsqLbzS9Zh+NK8pfqJ=twQpz0qYfyH4xC3NnvCXBokyx+yQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403517193-29776-3-git-send-email-stripathi@apm.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+Content-Type: multipart/mixed; boundary="===============0221724547=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLbzS9Zh+NK8pfqJ=twQpz0qYfyH4xC3NnvCXBokyx+yQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robherring2@gmail.com>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, Eric =?utf-8?Q?B=C3=A9nard?= <eric@eukrea.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, dri-devel@lists.freedesktop.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Grant Likely <grant.likely@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
 
-On Mon, Jun 23, 2014 at 03:23:13PM +0530, Suman Tripathi wrote:
-> This patch fixes the dma state machine lockup due to the processing
-> of IDENTIFY DEVICE PIO mode command. The X-Gene AHCI controller
-> has an errata in which it cannot clear the BSY bit after
-> receiving the PIO setup FIS and results the dma state machine to go
-> into the CMFatalErrorUpdate state resulting in the dma state
-> machine lockup. This patch also removes the dma restart workaround
-> from the read_id function as the read_id function is only called by
-> libata layer for ATA_INTERNAL commands. But for somecases eg:
-> PORT MULTIPLIER and udev, the framework will enumerate using SCSI
-> commands and it will not call read_id function.
+--===============0221724547==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
+Content-Disposition: inline
 
-I assume that it's verified that only IDENTIFY is affected?  Please
-try to explicitly follow up on the previous discussions.  It makes
-keeping track a lot easier for the reviewers.
 
->  /**
-> + * xgene_ahci_qc_issue - Issue commands to the device
-> + * @qc: Command to issue
-> + *
-> + * Due to H/W errata, for the IDENTIFY DEVICE command controller is unable to
-> + * clear the BSY bit after receiving the PIO setup FIS and results the dma
-> + * state machine to go into the CMFatalErrorUpdate state resulting in the dma
-> + * state machine lockup. By restarting the dma engine to move it removes the
-> + * controller out of lock up state.
-> + */
-> +static unsigned int xgene_ahci_qc_issue(struct ata_queued_cmd *qc)
-> +{
-> +	struct ata_port *ap = qc->ap;
-> +	struct ahci_host_priv *hpriv = ap->host->private_data;
-> +	struct xgene_ahci_context *ctx = hpriv->plat_data;
-> +	int rc = 0;
-> +
-> +	/*
-> +	 * Restart the dma engine if the last cmd issued
-> +	 * is IDENTIFY DEVICE command
-> +	 */
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I think the function comment is doing a good job of explaining and we
-can lose the above comment.  Comments which explain the code itself is
-useful if the logic involved is complex but I don't think that's the
-case here.
+On Tue, Jun 24, 2014 at 02:52:11PM -0500, Rob Herring wrote:
+> On Tue, Jun 24, 2014 at 10:06 AM, Russell King - ARM Linux <linux@arm.lin=
+ux.org.uk> wrote:
+[...]
+> > On Mon, Jun 16, 2014 at 12:11:22PM +0200, Denis Carikli wrote:
+[...]
+> >> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-=
+dvi-vga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-=
+vga.txt
+[...]
+> >> @@ -0,0 +1,7 @@
+> >> +Eukrea DVI-VGA (640x480 pixels) DVI output.
+> >> +
+> >> +Required properties:
+> >> +- compatible: should be "eukrea,mbimxsd51-dvi-vga"
+> >> +
+> >> +This binding is compatible with the simple-panel binding, which is sp=
+ecified
+> >> +in simple-panel.txt in this directory.
+>=20
+> Seems like we could just have a list of compatible strings rather than
+> a mostly duplicated file.
 
-> +	if (unlikely(ctx->last_cmd[ap->port_no] == ATA_CMD_ID_ATA))
-> +		ahci_restart_engine(ap);
-> +
-> +	rc = ahci_qc_issue(qc);
-> +
-> +	/* Save the last command issued */
-> +	ctx->last_cmd[ap->port_no] = qc->tf.command;
-> +
-> +	return rc;
-> +}
-...
-> diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
-> index d1c9122..1b86cf4 100644
-> --- a/drivers/ata/libahci.c
-> +++ b/drivers/ata/libahci.c
-> @@ -68,7 +68,6 @@ static ssize_t ahci_transmit_led_message(struct ata_port *ap, u32 state,
-> 
->  static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val);
->  static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
-> -static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
->  static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
->  static int ahci_port_start(struct ata_port *ap);
->  static void ahci_port_stop(struct ata_port *ap);
-> @@ -1952,7 +1951,7 @@ irqreturn_t ahci_interrupt(int irq, void *dev_instance)
->  }
->  EXPORT_SYMBOL_GPL(ahci_interrupt);
-> 
-> -static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
-> +unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
->  {
->  	struct ata_port *ap = qc->ap;
->  	void __iomem *port_mmio = ahci_port_base(ap);
-> @@ -1981,6 +1980,7 @@ static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
-> 
->  	return 0;
->  }
-> +EXPORT_SYMBOL_GPL(ahci_qc_issue);
+We've been doing it this way for all other panels.
 
-Can we please do this in the previous patch?  "implement
-ahci_restart_engine() and export ahci_qc_issue()" is completely fine
-with me.  Just note in the description that a following patch will
-make use of them.
+> >> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/pa=
+nel/panel-simple.c
+> >> index a251361..adc40a7 100644
+> >> --- a/drivers/gpu/drm/panel/panel-simple.c
+> >> +++ b/drivers/gpu/drm/panel/panel-simple.c
+> >> @@ -403,6 +403,80 @@ static const struct panel_desc edt_etm0700g0dh6 =
+=3D {
+> >>       },
+> >>  };
+> >>
+> >> +static const struct drm_display_mode eukrea_mbimxsd51_cmoqvga_mode =
+=3D {
+> >> +     .clock =3D 6500,
+> >> +     .hdisplay =3D 320,
+> >> +     .hsync_start =3D 320 + 38,
+> >> +     .hsync_end =3D 320 + 38 + 20,
+> >> +     .htotal =3D 320 + 38 + 20 + 30,
+> >> +     .vdisplay =3D 240,
+> >> +     .vsync_start =3D 240 + 15,
+> >> +     .vsync_end =3D 240 + 15 + 4,
+> >> +     .vtotal =3D 240 + 15 + 4 + 3,
+> >> +     .vrefresh =3D 60,
+> >> +     .pol_flags =3D DRM_MODE_FLAG_POL_PIXDATA_NEGEDGE |
+> >> +                  DRM_MODE_FLAG_POL_DE_LOW,
+>=20
+> Why aren't you using:
+>=20
+> Documentation/devicetree/bindings/video/display-timing.txt
 
-Thanks.
+Because it's redundant information. We need to have a compatible for the
+panel in the device tree anyway and that already implicitly defines the
+display mode.
 
--- 
-tejun
+Thierry
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2.0.22 (GNU/Linux)
+
+iQIcBAEBAgAGBQJTqfQfAAoJEN0jrNd/PrOht/UP/ifx9VfFjl9Gt78qipN1LOai
+e08ZktpMr/+Z0xecbTlZ7Ajyfh8dGwEJO1LWUPGVUBncyCLaw6YLFjRdsSQ7gDJU
+BBLhJB2NhMKP8A6rDs0kxnvrN4gaJx+E6ofOeP8lf+lbmweP0M8pVawHvkoE3/s2
+CjApkFpZ+68Xytz/FvruijEcvNyEm3iUBxr5bISdmP7TCyK9zBqRQpqRUo4L9ljL
+M4pzrVHwBjifuiVgltbAhcScfDsvBfB64gRjj0jobGI4z8FD0nmQTot3BLWs1xVh
+jbxamUM8w5uFi3e2KNliZDvty/GPLXNM1E/LWyYe6X2FcbrWY04SA/yN+0oQaf3Z
+2yW31WNpbWCUvquclnQiAfvYXqojjGELCoNbSo8xSRFULo2kG4JopNw0CEjNffzl
+ccJ7rywp0bt4KvaZn+SgPkNE7otfruUNTRoUNRnAwKX6A/0GLTOD+dfPH2x2cL/L
+Uz0vZP1AlBMd3GhXM6DGdzsjOmUs2PsQmuH+46pophEX9JJbVMB7Cnk/he4SzD5D
+GIVXCimvzwu+U5oVA3KOiiVCg1DfOVaekjWJPuxgcphXbybZe7XaR20D4t+4C6tM
+NusWYPKrGcCi2+wSYiO/btAR7ehgiH0vZPseFKiJK0tt7G+G5jfRU3+8tScY33uz
+GM2i376W1SLu9Wc9HVlB
+=7MQu
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
+
+--===============0221724547==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+dri-devel mailing list
+dri-devel@lists.freedesktop.org
+http://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+--===============0221724547==--
