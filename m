@@ -1,29 +1,81 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v4 0/3] Add R8A7791/Koelsch/Henninger board PCI DT support
-Date: Tue, 24 Jun 2014 20:22:24 +0200
-Message-ID: <9076479.78BOG4SjZ9@wuerfel>
-References: <201406242207.32790.sergei.shtylyov@cogentembedded.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2] pinctrl: msm: Add msm8960 definitions
+Date: Tue, 24 Jun 2014 19:27:08 +0100
+Message-ID: <20140624182708.GA29789@leverpostej>
+References: <1403633766-25796-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201406242207.32790.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, linux@arm.linux.org.uk, magnus.damm@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403633766-25796-1-git-send-email-bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+Cc: Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Andy Gross <agross-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tuesday 24 June 2014 22:07:31 Sergei Shtylyov wrote:
+On Tue, Jun 24, 2014 at 07:16:06PM +0100, Bjorn Andersson wrote:
+> Signed-off-by: Bjorn Andersson <bjorn.andersson-/MT0OVThwyLZJqsBc5GL+g@public.gmane.org>
+> ---
 > 
->    Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
-> 'renesas-devel-v3.16-rc2-20140623' tag. Here we add PCI USB device tree support
-> for the R8A7791-based Koelsch and Henninger boards. As the 'pci-rcar-gen2'
-> driver device tree support has been merged for 3.16, this patchset can now be
-> merged too... 
+> Changes since v1:
+>  - Deduplicated functions for alternative pins
 > 
-> [1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
-> [2/3] ARM: shmobile: koelsch: enable internal PCI
-> [3/3] ARM: shmobile: henninger: enable internal PCI
+>  .../bindings/pinctrl/qcom,msm8960-pinctrl.txt      |  103 ++
+>  drivers/pinctrl/Kconfig                            |    8 +
+>  drivers/pinctrl/Makefile                           |    1 +
+>  drivers/pinctrl/pinctrl-msm8960.c                  | 1146 ++++++++++++++++++++
+>  4 files changed, 1258 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+>  create mode 100644 drivers/pinctrl/pinctrl-msm8960.c
 > 
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+> new file mode 100644
+> index 0000000..6e79eea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.txt
+> @@ -0,0 +1,103 @@
+> +Qualcomm MSM8960 TLMM block
+> +
+> +Required properties:
+> +- compatible: "qcom,msm8960-pinctrl"
+> +- reg: Should be the base address and length of the TLMM block.
+> +- interrupts: Should be the parent IRQ of the TLMM block.
+> +- interrupt-controller: Marks the device node as an interrupt controller.
+> +- #interrupt-cells: Should be two.
 
-Acked-by: Arnd Bergmann <arnd@arndb.de>
+There should be a description of valid values for the two cells of an
+interrupt-specifier.
+
+> +- gpio-controller: Marks the device node as a GPIO controller.
+> +- #gpio-cells : Should be two.
+> +                The first cell is the gpio pin number and the
+> +                second cell is used for optional parameters.
+
+And what are those optional parameters?
+
+[...]
+
+> +Example:
+> +
+> +       msmgpio: pinctrl@800000 {
+> +               compatible = "qcom,msm8960-pinctrl";
+> +               reg = <0x800000 0x4000>;
+> +
+> +               gpio-controller;
+> +               #gpio-cells = <2>;
+> +               interrupt-controller;
+> +               #interrupt-cells = <2>;
+> +                interrupts = <0 32 0x4>;
+> +
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&debug_uart>;
+
+The fact that the pinctrl block itself supports pinctrl properties was
+not described above.
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
