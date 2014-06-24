@@ -1,56 +1,57 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
-Subject: [PATCH v2 04/12] ARM: dts: berlin: add a required reset property in
- the chip controller node
-Date: Tue, 24 Jun 2014 12:35:13 +0200
-Message-ID: <1403606121-6368-5-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 06/12] Documentation: bindings: add doc for the Berlin USB PHY
+Date: Tue, 24 Jun 2014 12:35:15 +0200
+Message-ID: <1403606121-6368-7-git-send-email-antoine.tenart@free-electrons.com>
 References: <1403606121-6368-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1403606121-6368-1-git-send-email-antoine.tenart@free-electrons.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403606121-6368-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGNoaXAgY29udHJvbGxlciBub2RlIG5vdyBhbHNvIGRlc2NyaWJlcyB0aGUgTWFydmVsbCBC
-ZXJsaW4gcmVzZXQKY29udHJvbGxlci4gQWRkIHRoZSByZXF1aXJlZCAncmVzZXQtY2VsbHMnIHBy
-b3BlcnR5LgoKU2lnbmVkLW9mZi1ieTogQW50b2luZSBUw6luYXJ0IDxhbnRvaW5lLnRlbmFydEBm
-cmVlLWVsZWN0cm9ucy5jb20+Ci0tLQogYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMi5kdHNpICAg
-fCAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpIHwgMSArCiBhcmNoL2FybS9i
-b290L2R0cy9iZXJsaW4ycS5kdHNpICB8IDEgKwogMyBmaWxlcyBjaGFuZ2VkLCAzIGluc2VydGlv
-bnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kgYi9hcmNo
-L2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kKaW5kZXggMjQ3N2RhYzRkNjQzLi45N2IxMjQ5MjY3
-NWUgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjIuZHRzaQorKysgYi9hcmNo
-L2FybS9ib290L2R0cy9iZXJsaW4yLmR0c2kKQEAgLTI0Myw2ICsyNDMsNyBAQAogCQljaGlwOiBj
-aGlwLWNvbnRyb2xAZWEwMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4yLWNo
-aXAtY3RybCI7CiAJCQkjY2xvY2stY2VsbHMgPSA8MT47CisJCQkjcmVzZXQtY2VsbHMgPSA8Mj47
-CiAJCQlyZWcgPSA8MHhlYTAwMDAgMHg0MDA+OwogCQkJY2xvY2tzID0gPCZyZWZjbGs+OwogCQkJ
-Y2xvY2stbmFtZXMgPSAicmVmY2xrIjsKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Jl
-cmxpbjJjZC5kdHNpIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmVybGluMmNkLmR0c2kKaW5kZXggY2Mx
-ZGY2NWRhNTA0Li42OGY3MDMyYjQ2ODYgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2Jl
-cmxpbjJjZC5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJjZC5kdHNpCkBAIC0y
-MzEsNiArMjMxLDcgQEAKIAkJY2hpcDogY2hpcC1jb250cm9sQGVhMDAwMCB7CiAJCQljb21wYXRp
-YmxlID0gIm1hcnZlbGwsYmVybGluMmNkLWNoaXAtY3RybCI7CiAJCQkjY2xvY2stY2VsbHMgPSA8
-MT47CisJCQkjcmVzZXQtY2VsbHMgPSA8Mj47CiAJCQlyZWcgPSA8MHhlYTAwMDAgMHg0MDA+Owog
-CQkJY2xvY2tzID0gPCZyZWZjbGs+OwogCQkJY2xvY2stbmFtZXMgPSAicmVmY2xrIjsKZGlmZiAt
-LWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JlcmxpbjJxLmR0c2kgYi9hcmNoL2FybS9ib290L2R0
-cy9iZXJsaW4ycS5kdHNpCmluZGV4IDYzNWExNmE2NGNiNC4uYTZmN2VjMzI1MjAwIDEwMDY0NAot
-LS0gYS9hcmNoL2FybS9ib290L2R0cy9iZXJsaW4ycS5kdHNpCisrKyBiL2FyY2gvYXJtL2Jvb3Qv
-ZHRzL2JlcmxpbjJxLmR0c2kKQEAgLTI5OCw2ICsyOTgsNyBAQAogCQljaGlwOiBjaGlwLWNvbnRy
-b2xAZWEwMDAwIHsKIAkJCWNvbXBhdGlibGUgPSAibWFydmVsbCxiZXJsaW4ycS1jaGlwLWN0cmwi
-OwogCQkJI2Nsb2NrLWNlbGxzID0gPDE+OworCQkJI3Jlc2V0LWNlbGxzID0gPDI+OwogCQkJcmVn
-ID0gPDB4ZWEwMDAwIDB4NDAwPiwgPDB4ZGQwMTcwIDB4MTA+OwogCQkJY2xvY2tzID0gPCZyZWZj
-bGs+OwogCQkJY2xvY2stbmFtZXMgPSAicmVmY2xrIjsKLS0gCjEuOS4xCgoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Document the bindings of the Marvell Berlin USB PHY driver.
+
+Signed-off-by: Antoine T=C3=A9nart <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ Documentation/devicetree/bindings/usb/berlin-usb-phy.txt | 16 ++++++++=
+++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/berlin-usb-ph=
+y.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/berlin-usb-phy.txt b=
+/Documentation/devicetree/bindings/usb/berlin-usb-phy.txt
+new file mode 100644
+index 000000000000..3a2a5cc42d45
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/berlin-usb-phy.txt
+@@ -0,0 +1,16 @@
++* Marvell Berlin USB PHY
++
++Required properties:
++- compatible: "marvell,berlin2-usb-phy" or "marvell,berlin2cd-usb-phy"
++- reg: base address and length of the registers
++- #phys-cells: should be 0
++- resets: reference to the reset controller
++
++Example:
++
++	usb-phy@f774000 {
++		compatible =3D "marvell,berlin2-usb-phy";
++		reg =3D <0xf774000 0x128>;
++		#phy-cells =3D <0>;
++		resets =3D <&chip 0x104 14>;
++	};
+--=20
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
