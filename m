@@ -1,56 +1,31 @@
-From: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: Add PMU node for APM X-Gene Storm SOC
-Date: Tue, 24 Jun 2014 12:17:49 +0800
-Message-ID: <CACVXFVMSea0DBRmWP4kwftgn8GmoymCR6giCjQ8dua4dFj3C7A@mail.gmail.com>
-References: <1395308847-16317-1-git-send-email-vkale@apm.com>
-	<1395308847-16317-3-git-send-email-vkale@apm.com>
-	<CACVXFVMiOvV=CytiaLFgEdt3_f7frJ6afjz39iLhafOhvJ0m7g@mail.gmail.com>
-	<53A8F388.80101@redhat.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53A8F388.80101-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Cc: Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+From: Daniel Jeong <gshark.jeong@gmail.com>
+Subject: [RFC v2 0/2]  backlight: add new tps611xx backlight driver
+Date: Tue, 24 Jun 2014 15:17:52 +0900
+Message-ID: <1403590674-14361-1-git-send-email-gshark.jeong@gmail.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>
+Cc: Daniel Jeong <daniel.jeong@ti.com>, linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, Daniel Jeong <gshark.jeong@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 11:42 AM, Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
-> On 06/23/2014 10:47 PM, Ming Lei wrote:
->
->> On Thu, Mar 20, 2014 at 5:47 PM, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org> wrote:
->>> This patch adds the PMU device tree node for APM X-Gene Storm SOC.
->>>
->>> Please note that this patch has dependancy on a GIC driver patch [1] which is
->>> yet to be approved by maintainers.
->>>
->>> [1]- https://lkml.org/lkml/2014/2/27/605
->>> (irqchip:gic: change access of gicc_ctrl register to read modify write)
->
->> No matter if Feng Kan's gic patch is applied or not, perf(PMU)
->> still can't work well with your patch, and the failure[1] will be
->> triggered when 'perf top' is started.
->>
->> The failure happened during the 1st pmu overflow interrupt.
->>
->> I test several mustang boards, and all has the problem with
->> upstream kernel.
->
-> Note that the GIC bypass register config is set by the firmware and this
-> only preserves the original setting, so you could be running an older
-> firmware (such as U-Boot). On our (UEFI-enabled systems, complete with
-> correct patch) perf top runs correctly without any such problems.
+This driver a general version for tps611xx backlgiht chips of TI.
+It supports tps61158, tps61161, tps61163 and tps61165 backlight driver
+based on EasyScale protocol.
 
-We are using U-Boot 2013.04-mustang_sw_1.11.06-beta_rc (Feb 03 2014 -
-09:10:17), looks not very old.
+Daniel Jeong (2):
+  backlight
+  backlight: add new tps611xx backlight device tree support      This
+    commit is tps611xx device tree documentation.
 
-Do you know how to check if the GIC bypass register config is correct
-inside kernel?
+ .../video/backlight/tps611xx-backlight.txt         |   16 +
+ drivers/video/backlight/Kconfig                    |    7 +
+ drivers/video/backlight/Makefile                   |    1 +
+ drivers/video/backlight/tps611xx_bl.c              |  494 ++++++++++++++++++++
+ include/linux/platform_data/tps611xx_bl.h          |   31 ++
+ 5 files changed, 549 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+ create mode 100644 drivers/video/backlight/tps611xx_bl.c
+ create mode 100644 include/linux/platform_data/tps611xx_bl.h
 
-Thanks,
---
-Ming Lei
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
