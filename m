@@ -1,65 +1,74 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ASoC: cs4265: bindings: sound: Add binding for
- CS4265 CODEC.
-Date: Tue, 24 Jun 2014 16:18:16 +0100
-Message-ID: <20140624151816.GM23300@sirena.org.uk>
-References: <1403562593-31952-1-git-send-email-Paul.Handrigan@cirrus.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [RFC 4/4] ARM: dts: exynos5250: Add Spring device tree
+Date: Tue, 24 Jun 2014 08:20:30 -0700
+Message-ID: <CAD=FV=VEVwPzW4hdR1kSdZS741Hn6VnDr+yXetTPsN4hEym2xA@mail.gmail.com>
+References: <1403486483-4063-1-git-send-email-afaerber@suse.de>
+	<1403486483-4063-5-git-send-email-afaerber@suse.de>
+	<CAD=FV=WHAqASC+bp8mGVnhfr79F5LapJCTLtSfgUG8XuRUSCqw@mail.gmail.com>
+	<53A8AE4C.6080702@suse.de>
+	<CAD=FV=W96QpDhh1NSaVwrXYjL6Jr-v4sq1-eRSfT=tErw_KCOQ@mail.gmail.com>
+	<53A94DA1.50703@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="kkcDP0v44wDpNmbp"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403562593-31952-1-git-send-email-Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Paul Handrigan <Paul.Handrigan-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org>
-Cc: alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, brian.austin-jGc1dHjMKG3QT0dZR+AlfA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawl.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <53A94DA1.50703@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, ARM PORT <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Todd Broch <tbroch@chromium.org>, Tomasz Figa <t.figa@samsung.com>, jwerner@chromium.org
 List-Id: devicetree@vger.kernel.org
 
+Javier,
 
---kkcDP0v44wDpNmbp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jun 24, 2014 at 3:06 AM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> Hello Doug,
+>
+> On 06/24/2014 06:05 AM, Doug Anderson wrote:
+> Another option is to identify DTS fragments that are common across boards and
+> create .dtsi files for these specific chunks instead of trying to group all set
+> of common things on a single .dtsi file.
+>
+> For example, a quite common design for OMAP2+ based boards is to use a SMSC LAN
+> chip connected to OMAP's General-Purpose Memory Controller (GPMC). So the
+> following files were created to reduce DTS duplication:
+>
+> arch/arm/boot/dts/omap-gpmc-smsc911x.dtsi
+> arch/arm/boot/dts/omap-gpmc-smsc9221.dtsi
+>
+> Now that I think about it, is the same that what you did for
+> arm/boot/dts/cros-ec-keyboard.dtsi.
+>
+> Maybe splitting exynos5250-cros-common.dtsi in a set of .dtsi files will make it
+> more flexible/reusable?
 
-On Mon, Jun 23, 2014 at 05:29:52PM -0500, Paul Handrigan wrote:
-> This patch adds binding documentation for the Cirrus Logic CS4265 I2C COD=
-EC.
+Yes, I think the config fragments can be cleaner but I think we have
+to be judicious about using them.  There are definitely tradeoffs
+involved.  The keyboard was such an excessively large thing and
+totally duplicated, so moving it out made sense.  Other bits are less
+obvious (to me) because there are so many interactions / combinations
+and you end up with a bit of spaghetti in terms of which labels are
+used by and provided by each fragment.  I guess possibly you could
+codify that better...
 
-Applied both, thanks.  I suspect you'll end up needing to split the
-S/PDIF mute operation but it doesn't make such a big difference at the
-framework level.
+A few thoughts looking at exynos5420-peach-pit:
 
-> Changes for v2:
->=20
-> * Change DT reset pin name to "reset-gpios"
+* backlight: seems (?) too board specific
+* samsung,exynos5420-oscclk: could totally be a fragment, but very small.
+* power key: could be a fragment for all boards that happen to use
+gpx1-2 for this
+* sound: could be a fragment for all devices using
+"google,snow-audio-max98090", possibly.
 
-As covered in SubmittingPatches things like this should go after the
----.
 
---kkcDP0v44wDpNmbp
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> Personally I think that "status = [enabled | disabled]" only makes sense for IP
+> blocks that are part of the SoC but may or may not be used by a board (e.g: i2c
+> and spi buses, sdhci and usb host controllers, etc).
+>
+> DTS should be a description of the hardware so I agree that having a disabled
+> node for a device that is not present in the board is not right.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTqZa1AAoJELSic+t+oim9FpUP/3P1KlHjoJ8ozY8Hbf9g/zKo
-a0hCd6yrfXf3t6FYTsQ6eWi0VKa43r8/uy7az+SfDBKnISMhdmMd5Ifi8M/ygGbd
-0nJ3jgMx4qxgKkQEvDh0U2yZ1KtF9Ua2knsJjdKAYA4EoWisHENuC423l5CSdkQH
-kvKyw6NoTV0ryDd6eE/aZgDR6a/jFL7WEiju+cU3Eb5QfLWHf24G8XuD5gZRnoJO
-Ncf/5S3/Z/4f26YhKM6SbSMcYoM+s0CwJWuwWUstOKwTWLPTqNqoEw8B7Y5Qd6kX
-s9ILdwKlbkxemSd+Z7F+Jrs44VEQS1l5plcIsY+w+xOEbsJEIL4y/ZV8AouyNN43
-ws3l6Ox//K1OX3fklsG1SJ1XNLnmtO5kxBjYxEH1k1VLwJy2lGPSbjp6W42xrEGH
-2oaY6w1+kHxcJsjmjozjNe4ATA8Qmwqbi33sPx1+PTsMGMmZ6cAKDcozjmZyX6ZD
-eq9q1Vz0JrOYvnmLadQtZ+uuqIuequvbzXffZoXeil67JoVne9VtWQi2wdz6nguD
-UWYHtHTH+uxXMjzWG8pbfQXkssehoD3QFGc/LN3wtddyYVEU1FXJRxXdNrSRs35P
-K1o6syZkjnHxID50G0Oo8MMmlxXQ+l4/1R9uYYc26WGQ1wtLnGgS2e7e5CBa9Xi2
-cVlBggqXvY9xJyY2nYxE
-=bZjB
------END PGP SIGNATURE-----
-
---kkcDP0v44wDpNmbp--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Right.  We'll take a look again in v2 when cros-common isn't used.  I
+think this could go in steps:
+1. Don't use cros-common for spring
+2. Don't use cros-common for snow (fold stuff in)
+3. Introduce some fragments.
