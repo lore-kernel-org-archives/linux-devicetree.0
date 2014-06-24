@@ -1,86 +1,132 @@
-From: "Cooper Jr., Franklin" <fcooper@ti.com>
-Subject: RE: [PATCH v3 1/2] arm: dts: am4372: let boards access all nodes
- through phandles
-Date: Tue, 24 Jun 2014 18:39:40 +0000
-Message-ID: <8F29D6B095ED194EA1980491A5E029710C6D71A1@DFLE08.ent.ti.com>
-References: <1403547659-24558-1-git-send-email-balbi@ti.com>
- <1403547659-24558-2-git-send-email-balbi@ti.com>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH v14 08/10] drm/panel: Add Eukrea mbimxsd51 displays.
+Date: Tue, 24 Jun 2014 14:52:11 -0500
+Message-ID: <CAL_JsqLbzS9Zh+NK8pfqJ=twQpz0qYfyH4xC3NnvCXBokyx+yQ@mail.gmail.com>
+References: <1402913484-25910-1-git-send-email-denis@eukrea.com>
+ <1402913484-25910-8-git-send-email-denis@eukrea.com>
+ <20140624150600.GT32514@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403547659-24558-2-git-send-email-balbi@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Balbi, Felipe" <balbi@ti.com>, Benoit Cousson <bcousson@baylibre.com>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "galak@codeaurora.org" <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "Nayak, Rajendra" <rnayak@ti.com>, "Menon, Nishanth" <nm@ti.com>, "R, Sricharan" <r.sricharan@ti.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20140624150600.GT32514@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: devel@driverdev.osuosl.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, dri-devel@lists.freedesktop.org, Denis Carikli <denis@eukrea.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, =?UTF-8?B?RXJpYyBCw6luYXJk?= <eric@eukrea.com>, Grant Likely <grant.likely@linaro.org>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mauro Carvalho Chehab <m.chehab@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Tested-by: Franklin Cooper Jr. <fcooper@ti.com>
+On Tue, Jun 24, 2014 at 10:06 AM, Russell King - ARM Linux
+<linux@arm.linux.org.uk> wrote:
+> Denis,
+>
+> This patch creates binding documentation.  Any patch which does so
+> should be copied to the DT people so they can review the bindings
+> and give appropriate acks.  It would be better if you separate the
+> binding documentation updates from the other functional changes too.
+>
+> I've added them on this reply to see whether they'll feel friendly
+> enough to comment on the patch as it stands to avoid having to go
+> through two more rounds on this already-fourteen revision patch set.
+>
+> On Mon, Jun 16, 2014 at 12:11:22PM +0200, Denis Carikli wrote:
+>> Signed-off-by: Denis Carikli <denis@eukrea.com>
+>> ---
+>> ChangeLog v13->v14:
+>> - None
+>>
+>> ChangeLog v12->v13:
+>> - Added a note explaining why the size is zero in
+>>   the eukrea_mbimxsd51_dvi(s)vga structs.
+>> ChangeLog v11->v12:
+>> - Rebased: It now uses the new DRM_MODE_FLAG_POL_DE flags defines names
+>>
+>> ChangeLog v10->v11:
+>> - New patch.
+>> ---
+>>  .../bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt   |    7 ++
+>>  .../bindings/panel/eukrea,mbimxsd51-dvi-svga.txt   |    7 ++
+>>  .../bindings/panel/eukrea,mbimxsd51-dvi-vga.txt    |    7 ++
+>>  drivers/gpu/drm/panel/panel-simple.c               |   83 ++++++++++++++++++++
+>>  4 files changed, 104 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt
+>>  create mode 100644 Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt
+>>  create mode 100644 Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt
+>> new file mode 100644
+>> index 0000000..03679d0
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-cmo-qvga.txt
+>> @@ -0,0 +1,7 @@
+>> +Eukrea CMO-QVGA (320x240 pixels) TFT LCD panel
+>> +
+>> +Required properties:
+>> +- compatible: should be "eukrea,mbimxsd51-cmo-qvga"
+>> +
+>> +This binding is compatible with the simple-panel binding, which is specified
+>> +in simple-panel.txt in this directory.
+>> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt
+>> new file mode 100644
+>> index 0000000..f408c9a
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-svga.txt
+>> @@ -0,0 +1,7 @@
+>> +Eukrea DVI-SVGA (800x600 pixels) DVI output.
+>> +
+>> +Required properties:
+>> +- compatible: should be "eukrea,mbimxsd51-dvi-svga"
+>> +
+>> +This binding is compatible with the simple-panel binding, which is specified
+>> +in simple-panel.txt in this directory.
+>> diff --git a/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt
+>> new file mode 100644
+>> index 0000000..8ea90da
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/panel/eukrea,mbimxsd51-dvi-vga.txt
+>> @@ -0,0 +1,7 @@
+>> +Eukrea DVI-VGA (640x480 pixels) DVI output.
+>> +
+>> +Required properties:
+>> +- compatible: should be "eukrea,mbimxsd51-dvi-vga"
+>> +
+>> +This binding is compatible with the simple-panel binding, which is specified
+>> +in simple-panel.txt in this directory.
 
-> -----Original Message-----
-> From: Balbi, Felipe
-> Sent: Monday, June 23, 2014 1:21 PM
-> To: Benoit Cousson
-> Cc: robh+dt@kernel.org; galak@codeaurora.org; Tony Lindgren;
-> linux@arm.linux.org.uk; Nayak, Rajendra; Menon, Nishanth; R, Sricharan;
-> devicetree@vger.kernel.org; Linux Kernel Mailing List; Linux OMAP Mailing
-> List; Linux ARM Kernel Mailing List; Balbi, Felipe
-> Subject: [PATCH v3 1/2] arm: dts: am4372: let boards access all nodes through
-> phandles
-> 
-> by providing phandles to rtc, wdt, cpu and dispc nodes, boards can access
-> them to add board-specific data.
-> 
-> Signed-off-by: Felipe Balbi <balbi@ti.com>
-> ---
-> 
-> Changes since v1:
-> 	- added phandles to cpu and dispc
-> 
->  arch/arm/boot/dts/am4372.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
-> index 49fa596..8d3c163 100644
-> --- a/arch/arm/boot/dts/am4372.dtsi
-> +++ b/arch/arm/boot/dts/am4372.dtsi
-> @@ -30,7 +30,7 @@
->  	cpus {
->  		#address-cells = <1>;
->  		#size-cells = <0>;
-> -		cpu@0 {
-> +		cpu: cpu@0 {
->  			compatible = "arm,cortex-a9";
->  			device_type = "cpu";
->  			reg = <0>;
-> @@ -270,7 +270,7 @@
->  			ti,hwmods = "counter_32k";
->  		};
-> 
-> -		rtc@44e3e000 {
-> +		rtc: rtc@44e3e000 {
->  			compatible = "ti,am4372-rtc","ti,da830-rtc";
->  			reg = <0x44e3e000 0x1000>;
->  			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH @@ -
-> 279,7 +279,7 @@
->  			status = "disabled";
->  		};
-> 
-> -		wdt@44e35000 {
-> +		wdt: wdt@44e35000 {
->  			compatible = "ti,am4372-wdt","ti,omap3-wdt";
->  			reg = <0x44e35000 0x1000>;
->  			interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>; @@
-> -871,7 +871,7 @@
->  			#size-cells = <1>;
->  			ranges;
-> 
-> -			dispc@4832a400 {
-> +			dispc: dispc@4832a400 {
->  				compatible = "ti,omap3-dispc";
->  				reg = <0x4832a400 0x400>;
->  				interrupts = <GIC_SPI 127
-> IRQ_TYPE_LEVEL_HIGH>;
-> --
-> 2.0.0.390.gcb682f8
+Seems like we could just have a list of compatible strings rather than
+a mostly duplicated file.
+
+>> diff --git a/drivers/gpu/drm/panel/panel-simple.c b/drivers/gpu/drm/panel/panel-simple.c
+>> index a251361..adc40a7 100644
+>> --- a/drivers/gpu/drm/panel/panel-simple.c
+>> +++ b/drivers/gpu/drm/panel/panel-simple.c
+>> @@ -403,6 +403,80 @@ static const struct panel_desc edt_etm0700g0dh6 = {
+>>       },
+>>  };
+>>
+>> +static const struct drm_display_mode eukrea_mbimxsd51_cmoqvga_mode = {
+>> +     .clock = 6500,
+>> +     .hdisplay = 320,
+>> +     .hsync_start = 320 + 38,
+>> +     .hsync_end = 320 + 38 + 20,
+>> +     .htotal = 320 + 38 + 20 + 30,
+>> +     .vdisplay = 240,
+>> +     .vsync_start = 240 + 15,
+>> +     .vsync_end = 240 + 15 + 4,
+>> +     .vtotal = 240 + 15 + 4 + 3,
+>> +     .vrefresh = 60,
+>> +     .pol_flags = DRM_MODE_FLAG_POL_PIXDATA_NEGEDGE |
+>> +                  DRM_MODE_FLAG_POL_DE_LOW,
+
+Why aren't you using:
+
+Documentation/devicetree/bindings/video/display-timing.txt
+
+Rob
