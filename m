@@ -1,74 +1,50 @@
-From: Varka Bhadram <varkabhadram-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH v6 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Tue, 24 Jun 2014 17:52:00 +0530
-Message-ID: <53A96D68.8070303@gmail.com>
-References: <1402914392-6028-1-git-send-email-antoine.tenart@free-electrons.com> <1402914392-6028-2-git-send-email-antoine.tenart@free-electrons.com> <53A9685E.9090501@ti.com> <53A96A1C.5030800@gmail.com> <20140624121525.GM13803@lee--X1>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140624121525.GM13803@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, tj-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-ide-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 0/4] hwmon: ntc_thermistor: prepose vendor prefix change
+Date: Tue, 24 Jun 2014 17:49:12 +0530
+Message-ID: <1403612356-23685-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org
+Cc: naveenkrishna.ch@gmail.com, kgene.kim@samsung.com, linux-arm-kernel@lists.infradead.org, cpgs@samsung.com, devicetree@vger.kernel.org, lars@metafoo.de
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2014 05:45 PM, Lee Jones wrote:
-> On Tue, 24 Jun 2014, Varka Bhadram wrote:
->> On 06/24/2014 05:30 PM, Kishon Vijay Abraham I wrote:
->>> On Monday 16 June 2014 03:56 PM, Antoine T=C3=A9nart wrote:
->>>> The Berlin SoC has a two SATA ports. Add a PHY driver to handle th=
-em.
->>>>
->>>> The mode selection can let us think this PHY can be configured to =
-fit
->>>> other purposes. But there are reasons to think the SATA mode will =
-be
->>>> the only one usable: the PHY registers are only accessible indirec=
-tly
->>>> through two registers in the SATA range, the PHY seems to be integ=
-rated
->>>> and no information tells us the contrary. For these reasons, make =
-the
->>>> driver a SATA PHY driver.
->>>>
->>>> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.=
-com>
->>>> ---
->>>>   drivers/phy/Kconfig           |   7 ++
->>>>   drivers/phy/Makefile          |   1 +
->>>>   drivers/phy/phy-berlin-sata.c | 232 ++++++++++++++++++++++++++++=
-++++++++++++++
->>>>   3 files changed, 240 insertions(+)
->>>>   create mode 100644 drivers/phy/phy-berlin-sata.c
+As Murata is the manufacturer of the NTC (Negative Temperature coefficient)
+based Thermistors. ntc_thermistor driver extensively used the prefix "ntc".
+But, vendor-prefix should be "murata" instead of "ntc".
 
-[...]
+This patchset
+1. Updates the vendor-prefix, DT bindings and Documentation,
+   where ever necessary.
+2. Adds thermistor nodes to Exynos5420 and Exynos5800 based boards.
 
->>>> +static struct platform_driver phy_berlin_sata_driver =3D {
->>>> +	.probe	=3D phy_berlin_sata_probe,
->>>> +	.driver	=3D {
->>>> +		.name		=3D "phy-berlin-sata",
->>>> +		.owner		=3D THIS_MODULE,
->>>> +		.of_match_table	=3D phy_berlin_sata_of_match,
->> use of_match_ptr for of_match_table
-> What use is this?
->
-> [...]
->
-of_match_table is NULL for Non-DT based. Better to use the of_match_ptr=
-().
-If driver is DT based 'of_match_table	=3D phy_berlin_sata_of_match'
-else 'of_match_table	=3D NULL'
+Patches:
+1/4. devicetree: bindings: Document murata vendor prefix
+     Adds the vendor prefix "murata" to vendor-prefixes.txt.
+2/4. hwmon: ntc_thermistor: Use the manufacturer name properly
+     Updates the driver, Kconfig, device tree bindings and Documentation
+     with the Manufacturer/vendor information.
+3/4. ARM: DTS: use new compatible string as per the documentation
+     Updates the device node in Exynos4412 based Trats2 board
+     with the new device tree bindings.
+4/4. ARM: DTS: Add NTC thermistor nodes as child nodes to ADC
+     Adds Thermistor nodes to Exynos5420 and Exynos5800 based boards.
 
-This is take care by of_match_ptr() macro.
+This patchset
+Naveen Krishna Chatradhi (4):
+  devicetree: bindings: Document murata vendor prefix
+  hwmon: ntc_thermistor: Use the manufacturer name properly
+  ARM: DTS: Add NTC thermistor nodes as child nodes to ADC
+  ARM: DTS: use new compatible string as per the documentation
 
-Thanks,
-Varka Bhadram
+ .../devicetree/bindings/arm/samsung/exynos-adc.txt |    2 +-
+ .../devicetree/bindings/hwmon/ntc_thermistor.txt   |   12 ++++----
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ Documentation/hwmon/ntc_thermistor                 |    8 ++---
+ arch/arm/boot/dts/exynos4412-trats2.dts            |    4 +--
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         |   32 ++++++++++++++++++++
+ drivers/hwmon/Kconfig                              |    5 +--
+ drivers/hwmon/ntc_thermistor.c                     |   12 ++++----
+ 8 files changed, 55 insertions(+), 21 deletions(-)
 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" i=
-n
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.7.9.5
