@@ -1,34 +1,62 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH 0/8] iMX6 SATA configuration
-Date: Tue, 24 Jun 2014 18:09:58 -0400
-Message-ID: <20140624220958.GI14909@htj.dyndns.org>
-References: <20140624101901.GL32514@n2100.arm.linux.org.uk>
+From: Doug Anderson <dianders@google.com>
+Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss
+ always enabled
+Date: Tue, 24 Jun 2014 15:59:17 -0700
+Message-ID: <CAD=FV=VP4-+B6oV8Skb3rxxPRbOWmzu=6PJbWbxCU=86ZvRuYQ@mail.gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-2-git-send-email-tushar.b@samsung.com>
+	<7ha99jjspt.fsf@paris.lan>
+	<CAC5m3Bwj1HEWSQd7rx6Zn5vbUPKFqeT_X0PL3mAxRw0FNkK=QQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140624101901.GL32514@n2100.arm.linux.org.uk>
-Sender: linux-doc-owner@vger.kernel.org
-To: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Cc: linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>, Shawn Guo <shawn.guo@freescale.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAC5m3Bwj1HEWSQd7rx6Zn5vbUPKFqeT_X0PL3mAxRw0FNkK=QQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.b@samsung.com>
+Cc: Kevin Hilman <khilman@linaro.org>, lkml <linux-kernel@vger.kernel.org>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 11:19:01AM +0100, Russell King - ARM Linux wrote:
-> Another round of these patches.  I've integrated Shawn's patch to split
-> the documentation into this series so I can add the DT documentation
-> on top of it.
-> 
->  .../devicetree/bindings/ata/ahci-platform.txt      |   6 -
->  Documentation/devicetree/bindings/ata/imx-sata.txt |  36 ++++
->  arch/arm/boot/dts/imx6q-cubox-i.dts                |   4 +
->  drivers/ata/ahci_imx.c                             | 184 ++++++++++++++++++++-
->  4 files changed, 216 insertions(+), 14 deletions(-)
+Tushar,
 
-Patches look good to me.  Shawn, can you please review the ahci_imx
-portion?  How should the patches be routed?  Should I pick only the
-ata parts or apply the whole thing?
+On Thu, Jun 12, 2014 at 12:40 AM, Tushar Behera <tushar.b@samsung.com> wrote:
+> On Wed, Jun 11, 2014 at 10:20 PM, Kevin Hilman <khilman@linaro.org> wrote:
+>> Tushar Behera <tushar.b@samsung.com> writes:
+>>
+>>> When the output clock of AUDSS mux is disabled, we are getting kernel
+>>> oops while doing a clk_get() on other clocks provided by AUDSS.
+>>>
+>>> Though user manual doesn't specify this dependency, we came across
+>>> this issue while disabling the parent of AUDSS mux clocks.
+>>>
+>>> Keeping the parents of AUDSS mux always enabled fixes this issue.
+>>
+>> While this patch works (and fixes the boot problem for me), it seems
+>> like it's papering over the real problem.
+>>
+>
+> Thanks for testing.
+>
+>> Seems like the right fix is actually modelling the clocks properly so
+>> that enabling a child clock ensures that the parent is also enabled.
+>>
+>
+> Patch 2/3 was to ensure we have proper clock tree defined for
+> Exynos5420. While testing with audio disabled, that patch alone fixed
+> the issue. But when audio was enabled (and hence I2S0 was trying to
+> access the clocks), we got some kernel oops during late booting, hence
+> I came up this solution.
+>
+> The solution might be a little half-baked because of the urgency to
+> push the fix, but will try to dig more into the issue on Monday when I
+> resume office.
 
-Thanks.
+Which Monday were you referring to?  ;)
 
--- 
-tejun
+...but in all seriousness do you have an official status update on
+this patch?  It seems as if it's not needed and all you need is
+<https://patchwork.kernel.org/patch/4333581/>, but it would be nice to
+get an official confirmation.
+
+Thanks!
+
+-Doug
