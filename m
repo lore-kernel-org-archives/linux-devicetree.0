@@ -1,47 +1,128 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
-Date: Tue, 24 Jun 2014 16:00:36 -0400
-Message-ID: <20140624200036.GP10202@titan.lakedaemon.net>
-References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com>
- <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com>
- <53A74316.5080509@free-electrons.com>
- <20140624125653.GN10202@titan.lakedaemon.net>
- <53A9A3E3.5020409@free-electrons.com>
+From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+Subject: Re: OF_DYNAMIC node lifecycle
+Date: Tue, 24 Jun 2014 15:07:05 -0500
+Message-ID: <53A9DA69.1040101@austin.ibm.com>
+References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>	<43898B58-2EA7-42B5-A17A-27F16F2618A6@konsulko.com> <20140623145844.DA6A3C40AE5@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53A9A3E3.5020409-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+In-Reply-To: <20140623145844.DA6A3C40AE5-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 06:14:27PM +0200, Boris BREZILLON wrote:
-> On 24/06/2014 14:56, Jason Cooper wrote:
-...
-> > Once you post the new series, I assume it's ok to apply patches 1-3 to
-> > irqchip/core, or are there some dependency considerations?
+On 06/23/2014 09:58 AM, Grant Likely wrote:
+> On Thu, 19 Jun 2014 11:33:20 +0300, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+>> Hi Grant,
+>>
+>> CCing Thomas Gleixner & Steven Rostedt, since they might have a few
+>> ideas...
+>>
+>> On Jun 18, 2014, at 11:07 PM, Grant Likely wrote:
+>>
+>>> Hi Nathan and Tyrel,
+>>>
+>>> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
+>>> I'm hoping you can help me. Right now, pseries seems to be the only
+>>> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
+>>> the entire kernel because it requires all DT code to manage reference
+>>> counting with iterating over nodes. Most users simply get it wrong.
+>>> Pantelis did some investigation and found that the reference counts on
+>>> a running kernel are all over the place. I have my doubts that any
+>>> code really gets it right.
+>>>
+>>> The problem is that users need to know when it is appropriate to call
+>>> of_node_get()/of_node_put(). All list traversals that exit early need
+>>> an extra call to of_node_put(), and code that is searching for a node
+>>> in the tree and holding a reference to it needs to call of_node_get().
+>>>
+>>
+>> In hindsight it appears that drivers just can't get the lifecycle right.
+>> So we need to simplify things.
+>>
+>>> I've got a few pseries questions:
+>>> - What are the changes being requested by pseries firmware? Is it only
+>>> CPUs and memory nodes, or does it manipulate things all over the tree?
+>>> - How frequent are the changes? How many changes would be likely over
+>>> the runtime of the system?
+>>> - Are you able to verify that removed nodes are actually able to be
+>>> freed correctly? Do you have any testcases for node removal?
+>>>
+>>> I'm thinking very seriously about changing the locking semantics of DT
+>>> code entirely so that most users never have to worry about
+>>> of_node_get/put at all. If the DT code is switched to use rcu
+>>> primitives for tree iteration (which also means making DT code use
+>>> list_head, something I'm already investigating), then instead of
+>>> trying to figure out of_node_get/put rules, callers could use
+>>> rcu_read_lock()/rcu_read_unlock() to protect the region that is
+>>> searching over nodes, and only call of_node_get() if the node pointer
+>>> is needed outside the rcu read-side lock.
+>>>
+>>> I'd really like to be rid of the node reference counting entirely, but
+>>> I can't figure out a way of doing that safely, so I'd settle for
+>>> making it a lot easier to get correct.
+>>>
+>>
+>> Since we're going about changing things, how about that devtree_lock?
 > 
-> Patches 6 and 7 depend on the 3 first patches, but we should be able to
-> merge them through the at91/arm-soc tree (Nicolas might have to rebase
-> its tree for 3.17 on irqchip/core after you have applied patches 1-3).
+> I believe rcu would pretty much eliminate the devtree_lock entirely. All
+> modifiers would need to grab a mutex to ensure there is only one writer
+> at any given time, but readers would have free reign to parse the tree
+> however they like.
+> 
+> DT writers would have to follow some strict rules about how to handle
+> nodes that are removed (ie. don't modify or of_node_put() them until
+> after rcu is syncronized), but the number of writers is very small and
+> we have control of all of them.
+> 
+>> We're using a raw_spinlock and we're always taking the lock with
+>> interrupts disabled.
+>>
+>> If we're going to make DT changes frequently during normal runtime
+>> and not only during boot time, those are bad for any kind of real-time
+>> performance.
+>>
+>> So the question is, do we really have code that access the live tree
+>> during atomic sections?  Is that something we want? Enforcing this
+>> will make our lives easier, and we'll get the change to replace
+>> that spinlock with a mutex.
+> 
+> Yes, I believe the powerpc CPU hotplug code accesses the DT in atomic
+> sections. I cannot put my finger on the exact code however. Nathan might
+> know better. But, if I'm right, the whole problem goes away with RCU.
 
-I'll create a topic branch for you when the time comes.  That way
-arm-soc doesn't have to pull in any code it doesn't actually need (helps
-with for-next testing).
+I went back through the cpu hotplug code. we do update the DT during cpu
+hotplug but I don't see it happening during atomic sections.
 
-Please give me a gentle reminder in the coverletter or comments when you
-send the next version.
+The code is in arch/powerpc/platforms/pseries/dlpar.c
 
-> Anyway, I'd like to wait for at91 maintainers/developers reviews before
-> posting a new version.
+-Nathan
 
-Sure.
+> 
+> The design with RCU is to switch struct device_node and struct property
+> to use list_head and/or hlist_head with the _rcu accessors. They allow
+> items to be removed from a list without syncronizing with readers. Right
+> now we have two lists that need to be modified; the allnodes list and
+> the sibling list. I *think* it will be fine for the two list removals to
+> be non-atomic (there will be a brief period where the node can be found
+> on one list, but not the other) because it is a transient state already
+> accounted for in rcu read-side critical region.
+> 
+> That said, I've also got a design to remove the allnodes list entirely
+> and only work with the sibling list. I need to prototype this.
+> 
+> We'll also need a transition plan to move to RCU. I think the existing
+> iterators can be modified to do the rcu locking in-line, but still require
+> the of_node_get/put stuff (basically, so existing code continue to works
+> unchanged). Then we can add _rcu versions that drop the need for
+> of_node_get/put(). When everything is converted, the old iterators can
+> be dropped.
+> 
+> g.
+> 
 
-thx,
-
-Jason.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
