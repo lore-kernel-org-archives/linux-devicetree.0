@@ -1,97 +1,25 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-Date: Tue, 24 Jun 2014 12:58:15 -0400
-Message-ID: <53A9AE27.2050504@ti.com>
-References: <20140623053249.GD2666@pratyush-vbox> <53A85ACE.9070506@ti.com> <53A9A290.7020407@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH v5 0/2] Add R8A7790/Lager board PCI USB DT support
+Date: Tue, 24 Jun 2014 21:57:04 +0400
+Message-ID: <201406242157.05973.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53A9A290.7020407@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Pratyush Anand <pratyush.anand@st.com>, Arnd Bergmann <arnd@arndb.de>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Marek Vasut <marex@denx.de>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, ABRAHAM KISHON VIJAY <kishon@ti.com>, Richard Zhu <r65037@freescale.com>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Grant Likely <grant.likely@linaro.org>, Kumar Gala <galak@codeaurora.org>, Mark Rutland <mark.rutland@arm.com>
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On 06/24/2014 12:08 PM, Murali Karicheri wrote:
-> Pratyush,
->
-> On 06/23/2014 12:50 PM, Santosh Shilimkar wrote:
->>
->>
->>
->> -------- Original Message --------
->> Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
->> On Sat, Jun 21, 2014 at 03:05:30AM +0800, Arnd Bergmann wrote:
->>> On Friday 20 June 2014 13:11:37 Santosh Shilimkar wrote:
->>
->>>>>
->>>> Arnd suggestion was to have the version 3.65 code in generic place
->>>> since
->>>> its IP specific and just in case some other vendor using the same
->>>> version
->>>> can leverage the code.
->>
->> Sorry, I do not follow PCIe mailing list these days, doing something else
->> now. So coming to this topic a bit delayed.
->>
-> My Apologies for the email format as I mysteriously lost this email and
-> had to resort to a forwarded email to respond to this.
->
-> Let us have the discussion on this thread as I lost the original emails.
->>>>
->>>> Concern here seems toe really those name of the files. I can't think of
->>>> any other appropriate name.
->>>
->>> We should definitely keep the version in the DT "compatible" strings
->>> wherever we know it. Regarding a better file name, I have no idea.
->>
->> In my opinion, we do not need any of dw-v3_65 files, as code in these
->> files will not be usable by other vendors.
->>
->> Anything which is implemented in application space, will not be same
->> across all IP users. For example, MSI0_IRQ_ENABLE_SET has been defined
->> at offset 0x108 in keystone PCIe application space.Other vendor may
->> not have this register at the same offset. Moreover, other vendors are
->> not even obliged to implement MSI Enable signals in same way, so
->> internal bit definition of the register may change.
->>
->> Therefore code is not reusable if all register offset and bit
->> definitions are not same across vendors. So, in case of DW driver none
->> of the code which are accessed using va_app_base should go to common
->> area.
->>
->
-> I think based on the response far on this issue, it is best to keep
-> the Application specific code as part of Keystone driver and in
-> future if there is any driver that has similar application register
-> implemented. we can refactor the code and re-use.
->
-> My V3 will revert back to implementation similar to RFC. Also since this
-> is individual h/w specific, there is no no need for a compatibility as
-> well. Will use keystone specific compatibility string for this.
->
-> Arnd, hope this is fine. Please respond if you still think a
-> compatibility string is needed.
+Hello.
 
-On a second thought, I think it is better to keep the compatibility
-string to differentiate the h/w and do any old h/w specific initialization.
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+'renesas-devel-v3.16-rc2-20140623' tag. Here we add PCI USB device tree support
+for the R8A7790-based Lager board. As the 'pci-rcar-gen2' driver device tree
+support has been merged for 3.16, this patchset can now be merged too...
 
-Thanks and regards,
+[1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+[2/2] ARM: shmobile: lager: enable internal PCI
 
-Murali
->
-> Murali
->
->> Pratyush
->>
->>>
->>> Arnd
->>
->>
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-pci" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at http://vger.kernel.org/majordomo-info.html
-
+WBR, Sergei
