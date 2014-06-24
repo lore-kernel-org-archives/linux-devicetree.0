@@ -1,46 +1,88 @@
-From: Jon Masters <jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 2/2] arm64: dts: Add PMU node for APM X-Gene Storm SOC
-Date: Mon, 23 Jun 2014 23:42:00 -0400
-Message-ID: <53A8F388.80101@redhat.com>
-References: <1395308847-16317-1-git-send-email-vkale@apm.com>	<1395308847-16317-3-git-send-email-vkale@apm.com> <CACVXFVMiOvV=CytiaLFgEdt3_f7frJ6afjz39iLhafOhvJ0m7g@mail.gmail.com>
+From: addy ke <addy.ke@rock-chips.com>
+Subject: [PATCH 1/2] documentation: add rockchip spi documentation
+Date: Tue, 24 Jun 2014 11:58:43 +0800
+Message-ID: <1403582324-9485-2-git-send-email-addy.ke@rock-chips.com>
+References: <1403582324-9485-1-git-send-email-addy.ke@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CACVXFVMiOvV=CytiaLFgEdt3_f7frJ6afjz39iLhafOhvJ0m7g-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Ming Lei <ming.lei-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org>
-Cc: linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, patches-qTEPVZfXA3Y@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1403582324-9485-1-git-send-email-addy.ke@rock-chips.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: broonie@kernel.org, heiko@sntech.de, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, addy ke <addy.ke@rock-chips.com>, yzq@rock-chips.com, linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, kever.yang@rock-chips.com, zyw@rock-chips.com, xjq@rock-chips.com, zhenfu.fang@rock-chips.com, olof@lixom.net, cf@rock-chips.com, hj@rock-chips.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/23/2014 10:47 PM, Ming Lei wrote:
+Signed-off-by: addy ke <addy.ke@rock-chips.com>
+---
+ .../devicetree/bindings/spi/spi-rockchip.txt       | 51 ++++++++++++++++++++++
+ 1 file changed, 51 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-rockchip.txt
 
-> On Thu, Mar 20, 2014 at 5:47 PM, Vinayak Kale <vkale-qTEPVZfXA3Y@public.gmane.org> wrote:
->> This patch adds the PMU device tree node for APM X-Gene Storm SOC.
->>
->> Please note that this patch has dependancy on a GIC driver patch [1] which is
->> yet to be approved by maintainers.
->>
->> [1]- https://lkml.org/lkml/2014/2/27/605
->> (irqchip:gic: change access of gicc_ctrl register to read modify write)
-
-> No matter if Feng Kan's gic patch is applied or not, perf(PMU)
-> still can't work well with your patch, and the failure[1] will be
-> triggered when 'perf top' is started.
-> 
-> The failure happened during the 1st pmu overflow interrupt.
-> 
-> I test several mustang boards, and all has the problem with
-> upstream kernel.
-
-Note that the GIC bypass register config is set by the firmware and this
-only preserves the original setting, so you could be running an older
-firmware (such as U-Boot). On our (UEFI-enabled systems, complete with
-correct patch) perf top runs correctly without any such problems.
-
-Jon.
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+diff --git a/Documentation/devicetree/bindings/spi/spi-rockchip.txt b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+new file mode 100644
+index 0000000..ce9c881
+--- /dev/null
++++ b/Documentation/devicetree/bindings/spi/spi-rockchip.txt
+@@ -0,0 +1,51 @@
++* Rockchip SPI Controller
++
++The Rockchip SPI controller is used to interface with various devices such as flash
++and display controllers using the SPI communication interface.
++
++Required SoC Specific Properties:
++
++- compatible: should be one of the following.
++    - rockchip,rk3066-spi: for rk3066, rk3188 and rk3288 platforms.
++- reg: physical base address of the controller and length of memory mapped
++       region.
++- interrupts: The interrupt number to the cpu. The interrupt specifier format
++              depends on the interrupt controller.
++- clocks: Must contain an entry for each entry in clock-names.
++- clock-names: Shall be "spiclk" for the transfer-clock, and "apb_pclk" for
++			   the peripheral clock.
++
++Optional properties:
++- dmas: DMA specifiers for tx and rx dma. See the DMA client binding,
++		Documentation/devicetree/bindings/dma/dma.txt
++- dma-names: DMA request names should include "tx" and "rx" if present.
++
++Example:
++
++- SoC Specific Portion:
++
++	spi0: spi@ff110000 {
++		compatible = "rockchip,rockchip-spi";
++		reg = <0xff110000 0x1000>;
++		dmas = <&pdma1 11>, <&pdma1 12>;
++		dma-names = "tx", "rx";
++		#address-cells = <1>;
++		#size-cells = <0>;
++		interrupts = <GIC_SPI 44 IRQ_TYPE_LEVEL_HIGH>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&spi0_clk &spi0_tx &spi0_rx &spi0_cs0 &spi0_cs1>;
++		clocks = <&cru SCLK_SPI0>, <&cru PCLK_SPI0>;
++		clock-names = "spiclk", "apb_pclk";
++		status = "disabled";
++	};
++
++- Board Specific Portion:
++
++	&spi0 {
++		status = "okay";
++		spi_test@00 {
++			compatible = "rockchip,spi_test";
++			reg = <0>;
++			spi-max-frequency = <24000000>;
++		};
++	};
+-- 
+1.8.3.2
