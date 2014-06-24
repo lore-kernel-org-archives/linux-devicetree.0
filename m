@@ -1,69 +1,81 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v2 REBASED 00/10] Generic earlyconsole for ARC UART Driver
-Date: Tue, 24 Jun 2014 16:05:30 -0500
-Message-ID: <CAL_JsqJF-a3K+dUHpwgSLNrwZTHLp2uj44bZaNboVpTtc8a-RA@mail.gmail.com>
-References: <1403598315-1429-1-git-send-email-vgupta@synopsys.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH v3 1/2] arm: dts: am4372: let boards access all nodes
+ through phandles
+Date: Tue, 24 Jun 2014 16:11:48 -0500
+Message-ID: <CAL_JsqJx_DJqxpEJebi0Etfv5g7=eYje_53vd_44GykreA-rkQ@mail.gmail.com>
+References: <1403547659-24558-1-git-send-email-balbi@ti.com> <1403547659-24558-2-git-send-email-balbi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-serial-owner@vger.kernel.org>
-In-Reply-To: <1403598315-1429-1-git-send-email-vgupta@synopsys.com>
-Sender: linux-serial-owner@vger.kernel.org
-To: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Francois.Bedard@synopsys.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403547659-24558-2-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 3:25 AM, Vineet Gupta
-<Vineet.Gupta1@synopsys.com> wrote:
-> Hi,
->
-> This is slightly modified repost of series posted last week
-> http://www.spinics.net/lists/linux-serial/msg12884.html
->
-> This series switches ARC UART from custom earlyprintk support to generic
-> earlycon (many thanks to Rob for doing that). And also build on Grant's recent
-> work for using DT stdout-path as default console.
->
-> The motivation is to get rid of the early platform code, which in turn
-> would help consolidate the init code across several ARC platforms.
->
-> First 3 patches are general cleanup/refactoring, not necesarily related to
-> earlycon.
+On Mon, Jun 23, 2014 at 1:20 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> by providing phandles to rtc, wdt, cpu and dispc nodes,
+> boards can access them to add board-specific data.
 
-Other than my comment on patch 6:
+Strictly speaking, you are adding labels, not phandles. You can do
+phandles without using labels, but the syntax is not so obvious. I'd
+tell you what it is but offhand I don't remember. :)
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Rob
 
+> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+> ---
 >
-> v2 <- v1
-> --------
-> * Rebased on linux-next: 20140623
-> * Patch 9 split into 9 and 10 for driver/platform changes
-> * Patch 10 also uses the DT stdout-path so no need for console=
+> Changes since v1:
+>         - added phandles to cpu and dispc
 >
+>  arch/arm/boot/dts/am4372.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 >
-> Thx,
-> -Vineet
+> diff --git a/arch/arm/boot/dts/am4372.dtsi b/arch/arm/boot/dts/am4372.dtsi
+> index 49fa596..8d3c163 100644
+> --- a/arch/arm/boot/dts/am4372.dtsi
+> +++ b/arch/arm/boot/dts/am4372.dtsi
+> @@ -30,7 +30,7 @@
+>         cpus {
+>                 #address-cells = <1>;
+>                 #size-cells = <0>;
+> -               cpu@0 {
+> +               cpu: cpu@0 {
+>                         compatible = "arm,cortex-a9";
+>                         device_type = "cpu";
+>                         reg = <0>;
+> @@ -270,7 +270,7 @@
+>                         ti,hwmods = "counter_32k";
+>                 };
 >
+> -               rtc@44e3e000 {
+> +               rtc: rtc@44e3e000 {
+>                         compatible = "ti,am4372-rtc","ti,da830-rtc";
+>                         reg = <0x44e3e000 0x1000>;
+>                         interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH
+> @@ -279,7 +279,7 @@
+>                         status = "disabled";
+>                 };
 >
-> Vineet Gupta (10):
->   serial/arc: use uart_console_write() helper
->   serial/arc: Refactor by referencing to uart_port where possible
->   serial/arc: Remove the workaround for legacy ISS
->   serial/arc: Use generic earlycon infrastructure
->   serial/arc: remove earlyprintk support and switch to earlycon
->   serial/arc: remove last remanants of platform data
->   serial/arc: inline the probe helper
->   ARC: [arcfpga] RIP early uart platform device stuff
->   serial/arc: Enable DT based earlycon
->   ARC: [arcfpga] stdout-path now suffices for earlycon/console
+> -               wdt@44e35000 {
+> +               wdt: wdt@44e35000 {
+>                         compatible = "ti,am4372-wdt","ti,omap3-wdt";
+>                         reg = <0x44e35000 0x1000>;
+>                         interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -871,7 +871,7 @@
+>                         #size-cells = <1>;
+>                         ranges;
 >
->  arch/arc/boot/dts/angel4.dts     |   3 +-
->  arch/arc/plat-arcfpga/Kconfig    |   7 -
->  arch/arc/plat-arcfpga/platform.c |  97 +-----------
->  drivers/tty/serial/Kconfig       |   1 +
->  drivers/tty/serial/arc_uart.c    | 329 ++++++++++++++-------------------------
->  5 files changed, 123 insertions(+), 314 deletions(-)
->
+> -                       dispc@4832a400 {
+> +                       dispc: dispc@4832a400 {
+>                                 compatible = "ti,omap3-dispc";
+>                                 reg = <0x4832a400 0x400>;
+>                                 interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
 > --
-> 1.8.3.2
+> 2.0.0.390.gcb682f8
 >
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
