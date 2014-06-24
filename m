@@ -1,39 +1,44 @@
-From: Jyri Sarha <jsarha@TI.COM>
-Subject: Re: [PATCH 3/3] ASoC: simple-card: Add system-clock-id DT parameter
- to dai nodes
-Date: Tue, 24 Jun 2014 12:59:20 +0300
-Message-ID: <53A94BF8.4090808@ti.com>
-References: <cover.1402653217.git.jsarha@ti.com> <c0281e720e9ef2056d3460047cf5bc5e75684abf.1402653217.git.jsarha@ti.com> <20140621100959.GC5099@sirena.org.uk>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v3 1/6] clk: sunxi: register clock gates with clkdev
+Date: Tue, 24 Jun 2014 17:59:35 +0800
+Message-ID: <1403603980-31101-2-git-send-email-wens@csie.org>
+References: <1403603980-31101-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <20140621100959.GC5099@sirena.org.uk>
-Sender: linux-omap-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, peter.ujfalusi@TI.COM, liam.r.girdwood@linux.intel.com, detheridge@TI.COM
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNUYUWOQKGQEYYCV7HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1403603980-31101-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/21/2014 01:09 PM, Mark Brown wrote:
-> On Fri, Jun 13, 2014 at 01:04:38PM +0300, Jyri Sarha wrote:
->> Select clk_id parameters for set_sysclk calls in the card init phase.
->
-> This is making the ID defined by the drivers into ABI.  It's not clear
-> that this is something we want to do, and we certainly don't want to do
-> it without updating the driver bindings.  In principle what we want to
-> do here is have our clocks handled by the clock API, though that's not
-> trivial work.
->
+The new important clock protect code requires the clocks be
+registered with clkdev. This was missing for sunxi_gates
+type clocks.
 
-I see, actually this is not something I would need anytime soon, but
-how about the previous "Add system-clock-direction DT parameter to dai 
-nodes" patch?
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ drivers/clk/sunxi/clk-sunxi.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-There is a clear common definitions for clock direction, so this should 
-be ok, right?
-
-If the clock direction patch would go in I would not need to add more 
-stuff to already quite messy davinci-evm driver.
-
-Best regards,
-Jyri
+diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+index fb2ce84..e43ed6a 100644
+--- a/drivers/clk/sunxi/clk-sunxi.c
++++ b/drivers/clk/sunxi/clk-sunxi.c
+@@ -899,6 +899,7 @@ static void __init sunxi_gates_clk_setup(struct device_node *node,
+ 						      reg + 4 * (i/32), i % 32,
+ 						      0, &clk_lock);
+ 		WARN_ON(IS_ERR(clk_data->clks[i]));
++		clk_register_clkdev(clk_data->clks[i], clk_name, NULL);
+ 
+ 		j++;
+ 	}
+-- 
+2.0.0
