@@ -1,110 +1,88 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-Date: Tue, 24 Jun 2014 12:21:47 -0400
-Message-ID: <53A9A59B.9000709@ti.com>
-References: <20140623051346.GC2666@pratyush-vbox> <53A85AAC.4070401@ti.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi
+Date: Tue, 24 Jun 2014 09:28:49 -0700
+Message-ID: <CAD=FV=WwmjyH4Uq_SeRMf9-f6pgu+HpkZYRx_Sv-CJV-z8rkmA@mail.gmail.com>
+References: <1403556576-8038-1-git-send-email-dianders@chromium.org>
+	<53A91E09.7050603@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53A85AAC.4070401@ti.com>
+In-Reply-To: <53A91E09.7050603@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
+To: Tushar Behera <trblinux@gmail.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tushar Behera <tushar.b@samsung.com>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, naveen krishna <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, Simon Glass <sjg@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ajay kumar <ajaynumb@gmail.co>
 List-Id: devicetree@vger.kernel.org
 
-Mohit,
+Tushar,
 
-On 06/23/2014 12:49 PM, Santosh Shilimkar wrote:
+On Mon, Jun 23, 2014 at 11:43 PM, Tushar Behera <trblinux@gmail.com> wrote:
+> On 06/24/2014 02:19 AM, Doug Anderson wrote:
+>> This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
+>> including:
+>> * The keyboard
+>> * The i2c tunnel
+>> * The tps65090 under the i2c tunnel
+>> * The battery under the i2c tunnel
+>>
+>> To add extra motivation, it should be noted that tps65090 is one of
+>> the things needed to get display-related FETs turned on for pit and
+>> pi.
+>>
+>> Note that this relies on a few outstanding changes:
+>> * Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
+>>   (spi: s3c64xx: for DT platofrms always get the chipselect info from
+>>   DT node) to work properly and match the documented bindings.  See
+>>   <https://patchwork.kernel.org/patch/4346701/> and
+>>   <https://patchwork.kernel.org/patch/4346711/>
+>>
+>> Signed-off-by: Doug Anderson <dianders@chromium.org>
+>> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 >
+> Along with the dependency patches on next-20140623, tested keyboard on
+> Peach-Pi board.
 >
+> Tested-by: Tushar Behera <tushar.b@samsung.com>
 >
-> -------- Original Message --------
-> Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
-> Date: Mon, 23 Jun 2014 10:43:46 +0530
-> From: Pratyush Anand<pratyush.anand@st.com>
-> To: Murali Karicheri<m-karicheri2@ti.com>
+> Some comments below.
 >
-> On Sat, Jun 21, 2014 at 05:17:07AM +0800, Murali Karicheri wrote:
+>> ---
+>> Changes in v2:
+>> - Now just one patch since mfd patch landed.
+>> - Rebased to ToT linux-next
 >>
->> Sorry, my previous response was in html and not sure it has made to the
->> list. I did
->> get an error as well. So resending my response.
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 145 +++++++++++++++++++++++++++++
+>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 145 +++++++++++++++++++++++++++++
+>>  2 files changed, 290 insertions(+)
 >>
->> On 6/18/2014 6:14 AM, Mohit KUMAR DCG wrote:
->>> Hello Murali,
->>>
->>
+>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> index 7649982..581f385 100644
+>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
 >
-> [...]
+>> +                             regulators {
+>> +                                     dcdc1 {
+>> +                                             ti,enable-ext-control;
+>> +                                     };
+>> +                                     dcdc2 {
+>> +                                             ti,enable-ext-control;
+>> +                                     };
+>> +                                     dcdc3 {
+>> +                                             ti,enable-ext-control;
+>> +                                     };
+>> +                                     fet1 {
 >
->> *pos = pos0;
->>
->> @@ -349,7 +353,10 @@ static int dw_msi_setup_irq(struct msi_chip *chip,
->> struct pci_dev *pdev,
->>
->> */
->>
->> desc->msi_attrib.multiple = msgvec;
->>
->> -msg.address_lo = virt_to_phys((void *)pp->msi_data);
->>
->> +if (pp->ops->get_msi_data)
->>
->> +msg.address_lo = pp->ops->get_msi_data(pp);
->>
->> +else
->>
->> +msg.address_lo = virt_to_phys((void *)pp->msi_data);
->>
->> msg.address_hi = 0x0;
->>
->> msg.data = pos;
->>
->>
->> What about this code? This requires get_msi_data() as well
+> "tps65090_fet1: fet1 {" ?
 >
-> pp->msi_data is set in dw_pcie_msi_init, which is a global function
-> called from vendor specific code. You can have your own
-> keystone_pcie_msi_init and then you do not need above changes.
+>> +                                             regulator-name = "vcd_led";
+>> +                                     };
+>> +                                     tps65090_fet2: fet2 {
 >
-My Apologies for the email format as I lost the original email and had
-to respond using a forwarded email.
+> I would suggest we add similar labels to fet1, fet3, fet4, fet5 and fet6
+> also. That way it would be easy to reference them in subsequent DT nodes.
+>
+> Same comment for Peach-Pi dts file too.
 
-If you look at my original patch, keystone driver was not calling
-dw_pcie_msi_init(). However the issue is msi_chip of DW core is
-re-used as most of the code is platform independent. However
-code that sends write_msi_msg() can be re-used on keystone by
-adding this get_msi_data() API as the only difference IMO is the
-address EP writes to raise an MSI IRQ event. I don't see any
-reason why the entire code needs to be duplicated on Keystone.
-BTW, currently I have not tested the MSI IRQ and tested my driver
-only with Legacy IRQ. I plan to test this before sending my
-v3 of the patch.
+OK.  I added it to all the regulators in tps65090.  That'll probably
+be useful for Javier in his max77802 work.
 
-Murali
-
->>
->>> -- 3rd to use pp->ops->msi_set/clear if defined.
->> Why not API enhancement and refactor the code in a single patch?
->
-> Yes, can be. You can send changes in 2 or 3 patches as you wish, but I
-> believe that should be able to solve problem in best way.
->
-> Regards
-> Pratyush
->>
->> Murali
->>> Pls let us know for any issue or have different opinion.
->>>
->>> Regards
->>> Mohit
->>>
->>>
->>>
->>>
->>>> --
->>>> 1.7.9.5
->>
->
->
+-Doug
