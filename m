@@ -1,87 +1,110 @@
-From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
-Date: Tue, 24 Jun 2014 18:14:27 +0200
-Message-ID: <53A9A3E3.5020409@free-electrons.com>
-References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com> <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com> <53A74316.5080509@free-electrons.com> <20140624125653.GN10202@titan.lakedaemon.net>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
+Date: Tue, 24 Jun 2014 12:21:47 -0400
+Message-ID: <53A9A59B.9000709@ti.com>
+References: <20140623051346.GC2666@pratyush-vbox> <53A85AAC.4070401@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140624125653.GN10202-u4khhh1J0LxI1Ri9qeTfzeTW4wlIGRCZ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Cc: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53A85AAC.4070401@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mohit KUMAR DCG <Mohit.KUMAR@st.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "Shilimkar, Santosh" <santosh.shilimkar@ti.com>, Russell King <linux@arm.linux.org.uk>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Richard Zhu <r65037@freescale.com>, "ABRAHAM, KISHON VIJAY" <kishon@ti.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Jason,
+Mohit,
 
-On 24/06/2014 14:56, Jason Cooper wrote:
-> Boris,
+On 06/23/2014 12:49 PM, Santosh Shilimkar wrote:
 >
-> On Sun, Jun 22, 2014 at 10:56:54PM +0200, Boris BREZILLON wrote:
->> On 20/06/2014 17:01, Boris BREZILLON wrote:
->>> Add new atmel AIC (Advanced Interrupt Controller) driver based on the
->>> generic chip infrastructure.
->>>
->>> This driver is only compatible with dt enabled board and replaces the old
->>> implementation found in arch/arm/mach-at91/irq.c.
->>>
->>> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->>> ---
->>>  drivers/irqchip/Kconfig         |   7 +
->>>  drivers/irqchip/Makefile        |   1 +
->>>  drivers/irqchip/irq-atmel-aic.c | 700 ++++++++++++++++++++++++++++++++++++++++
->>>  3 files changed, 708 insertions(+)
->>>  create mode 100644 drivers/irqchip/irq-atmel-aic.c
->>>
->>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->>> index bbb746e..6a7ad81 100644
->>> --- a/drivers/irqchip/Kconfig
->>> +++ b/drivers/irqchip/Kconfig
->>> @@ -30,6 +30,13 @@ config ARM_VIC_NR
->>>  	  The maximum number of VICs available in the system, for
->>>  	  power management.
->>>  
->> [...]
+>
+>
+> -------- Original Message --------
+> Subject: Re: [PATCH v2 0/8] Add Keystone PCIe controller driver
+> Date: Mon, 23 Jun 2014 10:43:46 +0530
+> From: Pratyush Anand<pratyush.anand@st.com>
+> To: Murali Karicheri<m-karicheri2@ti.com>
+>
+> On Sat, Jun 21, 2014 at 05:17:07AM +0800, Murali Karicheri wrote:
 >>
->>> +
->>> +static int at91_aic_common_irq_domain_xlate(struct irq_domain *d,
->> This function should be named aic_common_irq_domain_xslate to be
->> consistent with other function names.
->> I'll fix that for the next version.
-> Other than this one change, this series looks good wrt to irqchip.  When
-> you respin, please adjust the patch subject lines like so:
+>> Sorry, my previous response was in html and not sure it has made to the
+>> list. I did
+>> get an error as well. So resending my response.
+>>
+>> On 6/18/2014 6:14 AM, Mohit KUMAR DCG wrote:
+>>> Hello Murali,
+>>>
+>>
 >
->   irqchip: atmel-aic: Add new atmel AIC driver
+> [...]
 >
-> Note the capitalization.  Also, if you could add Thomas' Ack to the
-> first patch, that would be appreciated.
-
-Sure, I'll fix the commit message and add Thomas' ack.
-
+>> *pos = pos0;
+>>
+>> @@ -349,7 +353,10 @@ static int dw_msi_setup_irq(struct msi_chip *chip,
+>> struct pci_dev *pdev,
+>>
+>> */
+>>
+>> desc->msi_attrib.multiple = msgvec;
+>>
+>> -msg.address_lo = virt_to_phys((void *)pp->msi_data);
+>>
+>> +if (pp->ops->get_msi_data)
+>>
+>> +msg.address_lo = pp->ops->get_msi_data(pp);
+>>
+>> +else
+>>
+>> +msg.address_lo = virt_to_phys((void *)pp->msi_data);
+>>
+>> msg.address_hi = 0x0;
+>>
+>> msg.data = pos;
+>>
+>>
+>> What about this code? This requires get_msi_data() as well
 >
-> Once you post the new series, I assume it's ok to apply patches 1-3 to
-> irqchip/core, or are there some dependency considerations?
+> pp->msi_data is set in dw_pcie_msi_init, which is a global function
+> called from vendor specific code. You can have your own
+> keystone_pcie_msi_init and then you do not need above changes.
+>
+My Apologies for the email format as I lost the original email and had
+to respond using a forwarded email.
 
-Patches 6 and 7 depend on the 3 first patches, but we should be able to
-merge them through the at91/arm-soc tree (Nicolas might have to rebase
-its tree for 3.17 on irqchip/core after you have applied patches 1-3).
+If you look at my original patch, keystone driver was not calling
+dw_pcie_msi_init(). However the issue is msi_chip of DW core is
+re-used as most of the code is platform independent. However
+code that sends write_msi_msg() can be re-used on keystone by
+adding this get_msi_data() API as the only difference IMO is the
+address EP writes to raise an MSI IRQ event. I don't see any
+reason why the entire code needs to be duplicated on Keystone.
+BTW, currently I have not tested the MSI IRQ and tested my driver
+only with Legacy IRQ. I plan to test this before sending my
+v3 of the patch.
 
-Anyway, I'd like to wait for at91 maintainers/developers reviews before
-posting a new version.
+Murali
 
-Thanks for your support on this series.
-
-Best Regards,
-
-Boris
-
--- 
-Boris Brezillon, Free Electrons
-Embedded Linux and Kernel engineering
-http://free-electrons.com
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>>
+>>> -- 3rd to use pp->ops->msi_set/clear if defined.
+>> Why not API enhancement and refactor the code in a single patch?
+>
+> Yes, can be. You can send changes in 2 or 3 patches as you wish, but I
+> believe that should be able to solve problem in best way.
+>
+> Regards
+> Pratyush
+>>
+>> Murali
+>>> Pls let us know for any issue or have different opinion.
+>>>
+>>> Regards
+>>> Mohit
+>>>
+>>>
+>>>
+>>>
+>>>> --
+>>>> 1.7.9.5
+>>
+>
+>
