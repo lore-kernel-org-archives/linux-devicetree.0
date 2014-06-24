@@ -1,36 +1,86 @@
-From: Doug Anderson <dianders@google.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
-Date: Tue, 24 Jun 2014 16:00:38 -0700
-Message-ID: <CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
-	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: max1586 add device-tree support
+Date: Wed, 25 Jun 2014 00:15:28 +0100
+Message-ID: <20140624231528.GV23300@sirena.org.uk>
+References: <1402757665-15102-1-git-send-email-robert.jarzmik@free.fr>
+ <20140617144323.GU5099@sirena.org.uk>
+ <87oaxrs5wb.fsf@free.fr>
+ <20140624153812.GT23300@sirena.org.uk>
+ <877g46tc7p.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1402464739-19044-3-git-send-email-tushar.b@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Tushar Behera <tushar.b@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene.kim@gmail.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@linaro.org>, Tushar Behera <trblinux@gmail.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="Zd8I2GZVcdxtyaG/"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <877g46tc7p.fsf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Tushar,
 
-On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b@samsung.com> wrote:
-> Currently CLK_FOUT_EPLL was set as one of the parents of AUDSS mux.
-> As per the user manual, it should be CLK_MAU_EPLL.
->
-> The problem surfaced when the bootloader in Peach-pit board set
-> the EPLL clock as the parent of AUDSS mux. While booting the kernel,
-> we used to get a system hang during late boot if CLK_MAU_EPLL was
-> disabled.
->
-> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
-> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
-> Reported-by: Kevin Hilman <khilman@linaro.org>
-> ---
->  arch/arm/boot/dts/exynos5420.dtsi |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+--Zd8I2GZVcdxtyaG/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I've tested this myself now as well.
+On Tue, Jun 24, 2014 at 08:05:30PM +0200, Robert Jarzmik wrote:
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
 
-Tested-by: Doug Anderson <dianders@chromium.org>
+> >> As for the "state report", this max1586 doesn't report anything, it cannot even
+> >> be queried about the current voltage, sic ...
+
+> > It can't?  That's unfortunate, though I was able to turn up a datasheet
+> > which appears to support that.
+
+> Oh really ? Well, tell me where you read it.
+
+I said I *was* able to turn up a datasheet which appeared to support
+that.
+
+> >> If you want me to modify this bit I need a bit more of an explanation to
+> >> understand.
+
+> > Where the driver is doing unusual things if they are actually sensible
+> > then the change needs to be clearer about why.
+
+> So would a comment like this address your comment ?
+
+> 	/* Either matched < 0 and return the error. Or matched is 0 which means
+> 	 * no init data was found, ie. no regulator is configured, and return 0
+> 	 * to caller, stating neither error nor any matched regulator.
+> 	 */
+> 	if (matched <= 0)
+> 		return matched;
+
+Can you include something like "...and we have no readback support in
+the device so can't report status" or something please?  That's the key
+bit - the point is that even unconfigured regulators should normally be
+registered.
+
+--Zd8I2GZVcdxtyaG/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTqgaNAAoJELSic+t+oim9fLwP/0JTT64mVDazJpLup0JPRaMK
+WVpI0q4VpnKyi58EVpsaU3VyFf6HnY8r4PKOP5tK7XMol7AYPnLyN5YbHHTPjRmU
+vfssB+TeewaDSfGsr8HV+mPICtAqZqRGpqRWvAEunsm9RjO+tf05YKZlZUJhCNMS
+GepbyBvZrsmupyqPZiQ2zSnZvbc7Lh5gKpYWrxJ4/gKOdvvk09zKECf8T0l2as0A
+nZFO8Gr0iygkXtHLmmHCigOjsipsDevAHHurjHdQZ9djh/k5Ec0ZziUjUpQwhFxP
+TD3PlssZ7hK4kbWvVwCOEcaTvrC0Y/b7LbknjEb7J/mwGwQVL2tyjzNHxuA35Ejy
+kfuku2X8DZd+GeNtnidd9pRW4nOsfIMnA3HJ69VxIrqYpSy1ECoxVdi1YtGh+9Nd
+X9+N2VsXtBP6DMAUKzUbNmgpzI/E4lb+Ibi84qusQzwFXcKyiw2Q5HnIkS4H5/L1
+uQWNzJ1ZXd2geSODQ3Hp6kw9ySHewYjS8XN/KKjjLiSXssnhthJLGX19qCix64k4
+CCSRVvcWQ16hQDc+3o20nABi/LYTBcwf0MFS9tHfgZ3a7AB1ECPcOaLBUJ0Kr65L
+pzTcJbo82gfuvMCROnlvM4q1JKqAc6pmxiASI3BnSTKf7IHXbf46bxn75uTYioVv
+ZmoXj0/LENbZfMEr8eBB
+=nEK4
+-----END PGP SIGNATURE-----
+
+--Zd8I2GZVcdxtyaG/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
