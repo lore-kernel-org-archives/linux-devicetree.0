@@ -1,102 +1,41 @@
 From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and
- exynos5800-peach-pi
-Date: Tue, 24 Jun 2014 18:33:37 +0200
-Message-ID: <53A9A861.4020502@collabora.co.uk>
-References: <1403556576-8038-1-git-send-email-dianders@chromium.org>	<53A91E09.7050603@gmail.com> <CAD=FV=WwmjyH4Uq_SeRMf9-f6pgu+HpkZYRx_Sv-CJV-z8rkmA@mail.gmail.com>
+Subject: Re: [PATCH v2 07/10] regulator: Add driver for Maxim 77802 PMIC regulators
+Date: Tue, 24 Jun 2014 18:43:13 +0200
+Message-ID: <53A9AAA1.4030005@collabora.co.uk>
+References: <1402941758-11216-1-git-send-email-javier.martinez@collabora.co.uk> <1402941758-11216-8-git-send-email-javier.martinez@collabora.co.uk> <20140616192500.GJ5099@sirena.org.uk> <53A01D54.10506@collabora.co.uk> <20140617141254.GP5099@sirena.org.uk> <53A06749.1010606@collabora.co.uk> <20140621204026.GH22657@sirena.org.uk> <53A7F339.7050608@collabora.co.uk> <20140623094734.GV24291@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WwmjyH4Uq_SeRMf9-f6pgu+HpkZYRx_Sv-CJV-z8rkmA@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Tushar Behera <trblinux@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Ian Campbell <ijc+devicetree@hellion.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Tushar Behera <tushar.b@samsung.com>, Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, Ben Dooks <ben-linux@fluff.org>, naveen krishna <ch.naveen@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Rahul Sharma <rahul.sharma@samsung.com>, Simon Glass <sjg@chromium.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kumar Gala <galak@codeaurora.org>, Ajay kumar <ajaynumb@gmail.co>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140623094734.GV24291@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
+Hello Mark,
 
-On 06/24/2014 06:28 PM, Doug Anderson wrote:
-> Tushar,
+On 06/23/2014 11:47 AM, Mark Brown wrote:
+> On Mon, Jun 23, 2014 at 11:28:25AM +0200, Javier Martinez Canillas wrote:
+>> On 06/21/2014 10:40 PM, Mark Brown wrote:
 > 
-> On Mon, Jun 23, 2014 at 11:43 PM, Tushar Behera <trblinux@gmail.com> wrote:
->> On 06/24/2014 02:19 AM, Doug Anderson wrote:
->>> This adds cros_ec to exynos5420-peach-pit and exynos5800-peach-pi,
->>> including:
->>> * The keyboard
->>> * The i2c tunnel
->>> * The tps65090 under the i2c tunnel
->>> * The battery under the i2c tunnel
->>>
->>> To add extra motivation, it should be noted that tps65090 is one of
->>> the things needed to get display-related FETs turned on for pit and
->>> pi.
->>>
->>> Note that this relies on a few outstanding changes:
->>> * Needs (spi: s3c64xx: fix broken "cs_gpios" usage in the driver) and
->>>   (spi: s3c64xx: for DT platofrms always get the chipselect info from
->>>   DT node) to work properly and match the documented bindings.  See
->>>   <https://patchwork.kernel.org/patch/4346701/> and
->>>   <https://patchwork.kernel.org/patch/4346711/>
->>>
->>> Signed-off-by: Doug Anderson <dianders@chromium.org>
->>> Tested-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->>
->> Along with the dependency patches on next-20140623, tested keyboard on
->> Peach-Pi board.
->>
->> Tested-by: Tushar Behera <tushar.b@samsung.com>
->>
->> Some comments below.
->>
->>> ---
->>> Changes in v2:
->>> - Now just one patch since mfd patch landed.
->>> - Rebased to ToT linux-next
->>>
->>>  arch/arm/boot/dts/exynos5420-peach-pit.dts | 145 +++++++++++++++++++++++++++++
->>>  arch/arm/boot/dts/exynos5800-peach-pi.dts  | 145 +++++++++++++++++++++++++++++
->>>  2 files changed, 290 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>> index 7649982..581f385 100644
->>> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
->>
->>> +                             regulators {
->>> +                                     dcdc1 {
->>> +                                             ti,enable-ext-control;
->>> +                                     };
->>> +                                     dcdc2 {
->>> +                                             ti,enable-ext-control;
->>> +                                     };
->>> +                                     dcdc3 {
->>> +                                             ti,enable-ext-control;
->>> +                                     };
->>> +                                     fet1 {
->>
->> "tps65090_fet1: fet1 {" ?
->>
->>> +                                             regulator-name = "vcd_led";
->>> +                                     };
->>> +                                     tps65090_fet2: fet2 {
->>
->> I would suggest we add similar labels to fet1, fet3, fet4, fet5 and fet6
->> also. That way it would be easy to reference them in subsequent DT nodes.
->>
->> Same comment for Peach-Pi dts file too.
+>> > That's not really relevant here - I'm asking if the regulators get their
+>> > own supplies rather than if anything uses them.
 > 
-> OK.  I added it to all the regulators in tps65090.  That'll probably
-> be useful for Javier in his max77802 work.
->
+>> Sorry if I keep misunderstanding your question but the regulators in this PMIC
+>> don't have a parent supply/regulator node.
+> 
+> They should, I'm pretty sure the device does actually regulate one
+> supply into another.
+> 
 
-Thanks, in fact I did add both tps65090_dcdc1 and tps65090_dcdc2 labels to be
-able to use these regulators as supply for some of the max77802 regulators.
+Thanks a lot for the clarification. This was not evident to me when I read the
+PMIC datasheet and because both the max77xxx Chrome OS 3.8 and mainline max77686
+drivers used a simplistic model of the power scheme.
 
-Will rebase on top of this.
+But Doug confirmed to me that some regulators on this PMIC do indeed use others
+regulators as a power supply so I'll change this in the next version of the
+patch-set.
 
 Best regards,
 Javier
-
-> -Doug
-> 
