@@ -1,104 +1,52 @@
-From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH v2 09/12] ARM: dts: berlin: add BG2Q nodes for USB support
-Date: Tue, 24 Jun 2014 12:35:18 +0200
-Message-ID: <1403606121-6368-10-git-send-email-antoine.tenart@free-electrons.com>
+From: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>
+Subject: [PATCH v2 02/12] Documentation: bindings: add reset bindings docs for
+ Marvell Berlin SoCs
+Date: Tue, 24 Jun 2014 12:35:11 +0200
+Message-ID: <1403606121-6368-3-git-send-email-antoine.tenart@free-electrons.com>
 References: <1403606121-6368-1-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1403606121-6368-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com, balbi@ti.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: sebastian.hesselbarth@gmail.com, p.zabel@pengutronix.de
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, linux-kernel@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Adds nodes describing the Marvell Berlin BG2Q USB PHY and USB. The BG2Q
-SoC has 3 USB host controller, compatible with ChipIdea.
-
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
----
- arch/arm/boot/dts/berlin2q.dtsi | 52 +++++++++++++++++++++++++++++++++=
-++++++++
- 1 file changed, 52 insertions(+)
-
-diff --git a/arch/arm/boot/dts/berlin2q.dtsi b/arch/arm/boot/dts/berlin=
-2q.dtsi
-index a6f7ec325200..0726ab891e0a 100644
---- a/arch/arm/boot/dts/berlin2q.dtsi
-+++ b/arch/arm/boot/dts/berlin2q.dtsi
-@@ -111,6 +111,39 @@
- 			#interrupt-cells =3D <3>;
- 		};
-=20
-+		usb_phy2: usb-phy@a2f400 {
-+			compatible =3D "marvell,berlin2-usb-phy";
-+			reg =3D <0xa2f400 0x128>;
-+			#phy-cells =3D <0>;
-+			resets =3D <&chip 0x104 14>;
-+			status =3D "disabled";
-+		};
-+
-+		usb2: usb@a30000 {
-+			compatible =3D "chipidea-usb";
-+			reg =3D <0xa30000 0x10000>;
-+			interrupts =3D <GIC_SPI 52 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&chip CLKID_USB2>;
-+			usb-phy =3D <&usb_phy2>;
-+			status =3D "disabled";
-+		};
-+
-+		usb_phy0: usb-phy@b74000 {
-+			compatible =3D "marvell,berlin2-usb-phy";
-+			reg =3D <0xb74000 0x128>;
-+			#phy-cells =3D <0>;
-+			resets =3D <&chip 0x104 12>;
-+			status =3D "disabled";
-+		};
-+
-+		usb_phy1: usb-phy@b78000 {
-+			compatible =3D "marvell,berlin2-usb-phy";
-+			reg =3D <0xb78000 0x128>;
-+			#phy-cells =3D <0>;
-+			resets =3D <&chip 0x104 13>;
-+			status =3D "disabled";
-+		};
-+
- 		apb@e80000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
-@@ -304,6 +337,24 @@
- 			clock-names =3D "refclk";
- 		};
-=20
-+		usb0: usb@ed0000 {
-+			compatible =3D "chipidea-usb";
-+			reg =3D <0xed0000 0x10000>;
-+			interrupts =3D <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&chip CLKID_USB0>;
-+			usb-phy =3D <&usb_phy0>;
-+			status =3D "disabled";
-+		};
-+
-+		usb1: usb@ee0000 {
-+			compatible =3D "chipidea-usb";
-+			reg =3D <0xee0000 0x10000>;
-+			interrupts =3D <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks =3D <&chip CLKID_USB1>;
-+			usb-phy =3D <&usb_phy1>;
-+			status =3D "disabled";
-+		};
-+
- 		apb@fc0000 {
- 			compatible =3D "simple-bus";
- 			#address-cells =3D <1>;
-@@ -360,5 +411,6 @@
- 				interrupts =3D <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
- 			};
- 		};
-+
- 	};
- };
---=20
-1.9.1
+QWRkIHRoZSByZXNldCBiaW5kaW5nIGRvY3VtZW50YXRpb24gdG8gdGhlIFNvQyBiaW5kaW5nIGRv
+Y3VtZW50YXRpb24gYXMKdGhlIHJlc2V0IGRyaXZlciBpbiBNYXJ2ZWxsIEJlcmxpbiBTb0MgaXMg
+cGFydCBvZiB0aGUgY2hpcC9zeXN0ZW0KY29udHJvbCByZWdpc3RlcnMuIFRoaXMgcGF0Y2ggYWRk
+cyB0aGUgcmVxdWlyZWQgcHJvcGVydGllcyB0byBjb25maWd1cmUKdGhlIHJlc2V0IGNvbnRyb2xs
+ZXIuCgpTaWduZWQtb2ZmLWJ5OiBBbnRvaW5lIFTDqW5hcnQgPGFudG9pbmUudGVuYXJ0QGZyZWUt
+ZWxlY3Ryb25zLmNvbT4KLS0tCiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJt
+L21hcnZlbGwsYmVybGluLnR4dCB8IDEwICsrKysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCAxMCBp
+bnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
+bmdzL2FybS9tYXJ2ZWxsLGJlcmxpbi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvYXJtL21hcnZlbGwsYmVybGluLnR4dAppbmRleCA5NDAxM2E5YTg3NjkuLjMyYTFhOGE2
+NTJhZCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9t
+YXJ2ZWxsLGJlcmxpbi50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L2FybS9tYXJ2ZWxsLGJlcmxpbi50eHQKQEAgLTkwLDExICs5MCwyMSBAQCBSZXF1aXJlZCBzdWJu
+b2RlLXByb3BlcnRpZXM6CiAtIGdyb3VwczogYSBsaXN0IG9mIHN0cmluZ3MgZGVzY3JpYmluZyB0
+aGUgZ3JvdXAgbmFtZXMuCiAtIGZ1bmN0aW9uOiBhIHN0cmluZyBkZXNjcmliaW5nIHRoZSBmdW5j
+dGlvbiB1c2VkIHRvIG11eCB0aGUgZ3JvdXBzLgogCisqIFJlc2V0IGNvbnRyb2xsZXIgYmluZGlu
+ZworCitBIHJlc2V0IGNvbnRyb2xsZXIgaXMgcGFydCBvZiB0aGUgY2hpcCBjb250cm9sIHJlZ2lz
+dGVycyBzZXQuIFRoZSBjaGlwIGNvbnRyb2wKK25vZGUgYWxzbyBwcm92aWRlcyB0aGUgcmVzZXQu
+IFRoZSByZWdpc3RlciBzZXQgaXMgbm90IGF0IHRoZSBzYW1lIG9mZnNldCBiZXR3ZWVuCitCZXJs
+aW4gU29Dcy4KKworUmVxdWlyZWQgcHJvcGVydHk6CistICNyZXNldC1jZWxsczogbXVzdCBiZSBz
+ZXQgdG8gMgorCiBFeGFtcGxlOgogCiBjaGlwOiBjaGlwLWNvbnRyb2xAZWEwMDAwIHsKIAljb21w
+YXRpYmxlID0gIm1hcnZlbGwsYmVybGluMi1jaGlwLWN0cmwiOwogCSNjbG9jay1jZWxscyA9IDwx
+PjsKKwkjcmVzZXQtY2VsbHMgPSA8Mj47CiAJcmVnID0gPDB4ZWEwMDAwIDB4NDAwPjsKIAljbG9j
+a3MgPSA8JnJlZmNsaz4sIDwmZXh0ZXJuYWxkZXYgMD47CiAJY2xvY2stbmFtZXMgPSAicmVmY2xr
+IiwgInZpZGVvX2V4dDAiOwotLSAKMS45LjEKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1h
+cm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
