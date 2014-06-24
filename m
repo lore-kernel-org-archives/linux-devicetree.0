@@ -1,103 +1,39 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH 1/4] phy: miphy365x: Add Device Tree bindings for the MiPHY365x
-Date: Tue, 24 Jun 2014 11:38:54 +0200
-Message-ID: <6599289.0ZjjaMbRqj@wuerfel>
-References: <1400766819-22286-1-git-send-email-lee.jones@linaro.org> <53A160D1.8000908@ti.com> <20140618100411.GL23945@lee--X1>
+From: Jyri Sarha <jsarha@TI.COM>
+Subject: Re: [PATCH 3/3] ASoC: simple-card: Add system-clock-id DT parameter
+ to dai nodes
+Date: Tue, 24 Jun 2014 12:59:20 +0300
+Message-ID: <53A94BF8.4090808@ti.com>
+References: <cover.1402653217.git.jsarha@ti.com> <c0281e720e9ef2056d3460047cf5bc5e75684abf.1402653217.git.jsarha@ti.com> <20140621100959.GC5099@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140618100411.GL23945@lee--X1>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <20140621100959.GC5099@sirena.org.uk>
+Sender: linux-omap-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: alsa-devel@alsa-project.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, bcousson@baylibre.com, peter.ujfalusi@TI.COM, liam.r.girdwood@linux.intel.com, detheridge@TI.COM
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 18 June 2014 11:04:11 Lee Jones wrote:
-> > On Tuesday 17 June 2014 04:53 PM, Lee Jones wrote:
-> > >>> The MiPHY365x is a Generic PHY which can serve various SATA or PCIe
-> > >>> devices. It has 2 ports which it can use for either; both SATA, both
-> > >>> PCIe or one of each in any configuration.
-> > >>
-> > >> I've asked others who wrote multi-phy PHY providers to model each individual
-> > >> PHY as sub-node of the PHY provider. So It's only fair I ask you the same to
-> > >> do. So in this case the dt node should look something like:
-> > >>
-> > >> 	miphy365x_phy: miphy365x@fe382000 {
-> > >> 		compatible = "st,miphy365x-phy";
-> > >> 		#phy-cells = <2>;
-> > >> 		st,syscfg = <&syscfg_rear>;
-> > >> 		channel@0 {
-> > >> 			reg =	<0xfe382000 0x100>, <0xfe394000 0x100>;
-> > >> 			reg-names = "sata", "pcie";
-> > >> 		}
-> > >>
-> > >> 		channel@1{
-> > >> 			reg =	<0xfe38a000 0x100>, <0xfe804000 0x100>;
-> > >> 			reg-names = "sata", "pcie";
-> > >> 		}
-> > >>
-> > >> 	};
-> > > 
-> > > I'm interested to know why you've taken this approach, as it makes the
-> > > code much more complex.  The DT framework goes to the trouble of
-> > 
-> > It looks to be much closer representation of the hardware in dt. It also
-> > enables to have more control of each individual PHYs. For example, we can have
-> > something like status="disabled" for channels which is disabled.
-> 
-> If you wanted to disable the channels in this way, you would either
-> have to A) add your own code to parse that property or B) have each
-> channel set itself up as platform device and would probe (or not if
-> status = "disabled") individually.  If you choose the later option,
-> the platform resource would also be populated.
+On 06/21/2014 01:09 PM, Mark Brown wrote:
+> On Fri, Jun 13, 2014 at 01:04:38PM +0300, Jyri Sarha wrote:
+>> Select clk_id parameters for set_sysclk calls in the card init phase.
+>
+> This is making the ID defined by the drivers into ABI.  It's not clear
+> that this is something we want to do, and we certainly don't want to do
+> it without updating the driver bindings.  In principle what we want to
+> do here is have our clocks handled by the clock API, though that's not
+> trivial work.
+>
 
-We have of_device_is_available() and for_each_available_child_of_node()
-to check for the status property. This doesn't seem much extra overhead.
+I see, actually this is not something I would need anytime soon, but
+how about the previous "Add system-clock-direction DT parameter to dai 
+nodes" patch?
 
-> > > converting all addresses to to resources so drivers can easily pull
-> > > them out using platform_get_resource() and friends.  Pushing the reg
-> > 
-> > right. Can't we use of_address_to_resource here?
-> 
-> We could, but that would be an extra layer.  We'd be pulling the
-> address, putting it into a resource, then pulling it from the resource
-> for use.  If we're going to be pulling addresses out manually, we're
-> probably better off using of_get_address().  But again, we're just
-> carrying out functionality which is already provided by the
-> framework.
+There is a clear common definitions for clock direction, so this should 
+be ok, right?
 
-there is also of_ioremap().
+If the clock direction patch would go in I would not need to add more 
+stuff to already quite messy davinci-evm driver.
 
-> > > properties down into a child node means that we have to now iterate
-> > > over the sub-nodes and pull them out manually.  This will lead to a
-> > 
-> > You anyway iterate while creating PHYs based on some constant. Now you have to
-> > iterate over the sub-nodes.
-> > > pretty messy implementation IMHO.
-> 
-> This much is true.
-> 
-> > > Can you point me in the direction of previous implementations where you
-> > > have stipulated the same set of constraints please?
-> > 
-> > ah.. there isn't any. The author of the other multi-phy driver [1] also feels
-> > this will just add to the complexity of the driver.
-> 
-> =:)
-> 
-> > Maybe we should ask the opinion of others?
-> 
-> We could.  I'll CC Arnd as he likes this PHY stuff. :)
-> 
-> > [1] -> http://www.spinics.net/lists/linux-sh/msg32087.html
-
-Having sub-nodes for each individual PHY managed by a controller seems
-very reasonable to me. Making them show up as separate platform devices
-seems less useful though.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Jyri
