@@ -1,12 +1,13 @@
 From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 0/6] clk: sunxi: fixes, cleanups and A23
- basic clocks
-Date: Tue, 24 Jun 2014 17:59:34 +0800
-Message-ID: <1403603980-31101-1-git-send-email-wens@csie.org>
+Subject: [PATCH v3 6/6] ARM: sun8i: Add basic clock nodes to the DTSI
+Date: Tue, 24 Jun 2014 17:59:40 +0800
+Message-ID: <1403603980-31101-7-git-send-email-wens@csie.org>
+References: <1403603980-31101-1-git-send-email-wens@csie.org>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBOEYUWOQKGQEZ5X5VMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBNUYUWOQKGQEYYCV7HY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1403603980-31101-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <http://groups.google.com/group/linux-sunxi>
@@ -17,66 +18,139 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi everyone,
+Now that we have support for sun8i specific clocks in the driver,
+add the corresponding clock nodes to the DTSI.
 
-This is a followup series to my A23 bare-minimum bringup series [1],
-which adds basic clock support for the A23 SoC. It is one of many
-split up from the original A23 series [2]. Yet to come are more
-clocks, reset controllers, pinctrl, prcm, and mmc.
+Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-a23.dtsi | 115 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 115 insertions(+)
 
-The first patch fixes the reworked clock protection code merged in
-3.16-rc1, which unintentionally made clock gates unprotectable.
-
-The second patch moves the remaining "ahb_sdram" clock to the
-protected clock list, now that it works.
-
-The third patch adds support for factor clocks that have an N factor
-not starting from 0. This is found on some PLLs in A31/A23.
-
-The fourth patch adds table-based dividers for div clocks, as some
-clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
-on sun8i.
-
-The fifth patch adds support for the basic clocks in the A23, just
-PLL1 for cpus, and the system bus clocks and gates.
-
-The last patch adds the DT nodes for the newly added clocks.
-
-Patch 1 should be merged for 3.16, while the rest should go in 3.17.
-
-
-Related changes since v2:
-
-  - Rewrote factor clocks to support any (0~255) N factor starting value
-
-Related changes since v1:
-
-  - Added "clk: sunxi: Add support for table-based divider clocks"
-  - Added table-based divider axi clock
-  - Fixed incorrectly squashed fixups
-
-
-Cheers
-ChenYu
-
-
-  [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265211.html
-  [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259097.html
-
-Chen-Yu Tsai (6):
-  clk: sunxi: register clock gates with clkdev
-  clk: sunxi: move "ahb_sdram" to protected clock list
-  clk: sunxi: Support factor clocks with N factor starting not from 0
-  clk: sunxi: Add support for table-based divider clocks
-  clk: sunxi: Add A23 clocks support
-  ARM: sun8i: Add basic clock nodes to the DTSI
-
- Documentation/devicetree/bindings/clock/sunxi.txt |   5 +
- arch/arm/boot/dts/sun8i-a23.dtsi                  | 115 ++++++++++++++++++++
- drivers/clk/sunxi/clk-factors.c                   |   2 +-
- drivers/clk/sunxi/clk-factors.h                   |   1 +
- drivers/clk/sunxi/clk-sunxi.c                     | 121 ++++++++++++++++++++--
- 5 files changed, 234 insertions(+), 10 deletions(-)
-
+diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
+index ac5f69a..559ab08 100644
+--- a/arch/arm/boot/dts/sun8i-a23.dtsi
++++ b/arch/arm/boot/dts/sun8i-a23.dtsi
+@@ -64,6 +64,121 @@
+ 			clock-frequency = <32768>;
+ 			clock-output-names = "osc32k";
+ 		};
++
++		pll1: clk@01c20000 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun8i-a23-pll1-clk";
++			reg = <0x01c20000 0x4>;
++			clocks = <&osc24M>;
++			clock-output-names = "pll1";
++		};
++
++		/* dummy clock until actually implemented */
++		pll6: pll6_clk {
++			#clock-cells = <0>;
++			compatible = "fixed-clock";
++			clock-frequency = <600000000>;
++			clock-output-names = "pll6";
++		};
++
++		cpu: cpu_clk@01c20050 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-cpu-clk";
++			reg = <0x01c20050 0x4>;
++
++			/*
++			 * PLL1 is listed twice here.
++			 * While it looks suspicious, it's actually documented
++			 * that way both in the datasheet and in the code from
++			 * Allwinner.
++			 */
++			clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
++			clock-output-names = "cpu";
++		};
++
++		axi: axi_clk@01c20050 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-axi-clk";
++			reg = <0x01c20050 0x4>;
++			clocks = <&cpu>;
++			clock-output-names = "axi";
++		};
++
++		ahb1_mux: ahb1_mux_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun6i-a31-ahb1-mux-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6>;
++			clock-output-names = "ahb1_mux";
++		};
++
++		ahb1: ahb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-ahb-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&ahb1_mux>;
++			clock-output-names = "ahb1";
++		};
++
++		apb1: apb1_clk@01c20054 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb0-clk";
++			reg = <0x01c20054 0x4>;
++			clocks = <&ahb1>;
++			clock-output-names = "apb1";
++		};
++
++		ahb1_gates: clk@01c20060 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-a23-ahb1-gates-clk";
++			reg = <0x01c20060 0x8>;
++			clocks = <&ahb1>;
++			clock-output-names = "ahb1_mipidsi", "ahb1_dma",
++					"ahb1_mmc0", "ahb1_mmc1", "ahb1_mmc2",
++					"ahb1_nand", "ahb1_sdram",
++					"ahb1_hstimer", "ahb1_spi0",
++					"ahb1_spi1", "ahb1_otg", "ahb1_ehci",
++					"ahb1_ohci", "ahb1_ve", "ahb1_lcd",
++					"ahb1_csi", "ahb1_be",	"ahb1_fe",
++					"ahb1_gpu", "ahb1_spinlock",
++					"ahb1_drc";
++		};
++
++		apb1_gates: clk@01c20068 {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-a23-apb1-gates-clk";
++			reg = <0x01c20068 0x4>;
++			clocks = <&apb1>;
++			clock-output-names = "apb1_codec", "apb1_pio",
++					"apb1_daudio0",	"apb1_daudio1";
++		};
++
++		apb2_mux: apb2_mux_clk@01c20058 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun4i-a10-apb1-mux-clk";
++			reg = <0x01c20058 0x4>;
++			clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
++			clock-output-names = "apb2_mux";
++		};
++
++		apb2: apb2_clk@01c20058 {
++			#clock-cells = <0>;
++			compatible = "allwinner,sun6i-a31-apb2-div-clk";
++			reg = <0x01c20058 0x4>;
++			clocks = <&apb2_mux>;
++			clock-output-names = "apb2";
++		};
++
++		apb2_gates: clk@01c2006c {
++			#clock-cells = <1>;
++			compatible = "allwinner,sun8i-a23-apb2-gates-clk";
++			reg = <0x01c2006c 0x4>;
++			clocks = <&apb2>;
++			clock-output-names = "apb2_i2c0", "apb2_i2c1",
++					"apb2_i2c2", "apb2_uart0",
++					"apb2_uart1", "apb2_uart2",
++					"apb2_uart3", "apb2_uart4";
++		};
+ 	};
+ 
+ 	soc@01c00000 {
 -- 
 2.0.0
