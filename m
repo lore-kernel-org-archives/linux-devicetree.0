@@ -1,74 +1,84 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [RFC 4/4] ARM: dts: exynos5250: Add Spring device tree
-Date: Tue, 24 Jun 2014 08:20:30 -0700
-Message-ID: <CAD=FV=VEVwPzW4hdR1kSdZS741Hn6VnDr+yXetTPsN4hEym2xA@mail.gmail.com>
-References: <1403486483-4063-1-git-send-email-afaerber@suse.de>
-	<1403486483-4063-5-git-send-email-afaerber@suse.de>
-	<CAD=FV=WHAqASC+bp8mGVnhfr79F5LapJCTLtSfgUG8XuRUSCqw@mail.gmail.com>
-	<53A8AE4C.6080702@suse.de>
-	<CAD=FV=W96QpDhh1NSaVwrXYjL6Jr-v4sq1-eRSfT=tErw_KCOQ@mail.gmail.com>
-	<53A94DA1.50703@collabora.co.uk>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/2] regulator: max1586 add device-tree support
+Date: Tue, 24 Jun 2014 16:38:12 +0100
+Message-ID: <20140624153812.GT23300@sirena.org.uk>
+References: <1402757665-15102-1-git-send-email-robert.jarzmik@free.fr>
+ <20140617144323.GU5099@sirena.org.uk>
+ <87oaxrs5wb.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53A94DA1.50703@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, ARM PORT <linux-arm-kernel@lists.infradead.org>, LKML <linux-kernel@vger.kernel.org>, Olof Johansson <olof@lixom.net>, Todd Broch <tbroch@chromium.org>, Tomasz Figa <t.figa@samsung.com>, jwerner@chromium.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="9r3HF47jptiQlX4s"
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87oaxrs5wb.fsf-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Javier,
 
-On Tue, Jun 24, 2014 at 3:06 AM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
-> Hello Doug,
->
-> On 06/24/2014 06:05 AM, Doug Anderson wrote:
-> Another option is to identify DTS fragments that are common across boards and
-> create .dtsi files for these specific chunks instead of trying to group all set
-> of common things on a single .dtsi file.
->
-> For example, a quite common design for OMAP2+ based boards is to use a SMSC LAN
-> chip connected to OMAP's General-Purpose Memory Controller (GPMC). So the
-> following files were created to reduce DTS duplication:
->
-> arch/arm/boot/dts/omap-gpmc-smsc911x.dtsi
-> arch/arm/boot/dts/omap-gpmc-smsc9221.dtsi
->
-> Now that I think about it, is the same that what you did for
-> arm/boot/dts/cros-ec-keyboard.dtsi.
->
-> Maybe splitting exynos5250-cros-common.dtsi in a set of .dtsi files will make it
-> more flexible/reusable?
+--9r3HF47jptiQlX4s
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Yes, I think the config fragments can be cleaner but I think we have
-to be judicious about using them.  There are definitely tradeoffs
-involved.  The keyboard was such an excessively large thing and
-totally duplicated, so moving it out made sense.  Other bits are less
-obvious (to me) because there are so many interactions / combinations
-and you end up with a bit of spaghetti in terms of which labels are
-used by and provided by each fragment.  I guess possibly you could
-codify that better...
+On Tue, Jun 17, 2014 at 09:16:52PM +0200, Robert Jarzmik wrote:
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> > On Sat, Jun 14, 2014 at 04:54:24PM +0200, Robert Jarzmik wrote:
 
-A few thoughts looking at exynos5420-peach-pit:
+> >> +	matched = of_regulator_match(dev, np, rmatch, ARRAY_SIZE(rmatch));
+> >> +	of_node_put(np);
+> >> +	if (matched <= 0)
+> >> +		return matched;
 
-* backlight: seems (?) too board specific
-* samsung,exynos5420-oscclk: could totally be a fragment, but very small.
-* power key: could be a fragment for all boards that happen to use
-gpx1-2 for this
-* sound: could be a fragment for all devices using
-"google,snow-audio-max98090", possibly.
+> > Why is this treating zero as an error?  We should be able to at least
+> > report the current state of regulators even if none are configured in
+> > the device tree.
 
+> Euh how so an error ?
 
-> Personally I think that "status = [enabled | disabled]" only makes sense for IP
-> blocks that are part of the SoC but may or may not be used by a board (e.g: i2c
-> and spi buses, sdhci and usb host controllers, etc).
->
-> DTS should be a description of the hardware so I agree that having a disabled
-> node for a device that is not present in the board is not right.
+> If 0 is returned, this means no regulators are found in device-tree. It's not an
+> error, it's a lack of regulators (ie. no Output_V3 and no Output_V6), and no
+> more handling is necessary in this function, while returning "ok", ie 0 ...
 
-Right.  We'll take a look again in v2 when cros-common isn't used.  I
-think this could go in steps:
-1. Don't use cros-common for spring
-2. Don't use cros-common for snow (fold stuff in)
-3. Introduce some fragments.
+OK, so there's just nothing to do in that case.  That's fine, but it's
+just not at all clear from the code.  A comment would help.
+
+> As for the "state report", this max1586 doesn't report anything, it cannot even
+> be queried about the current voltage, sic ...
+
+It can't?  That's unfortunate, though I was able to turn up a datasheet
+which appears to support that.
+
+> If you want me to modify this bit I need a bit more of an explanation to
+> understand.
+
+Where the driver is doing unusual things if they are actually sensible
+then the change needs to be clearer about why.
+
+--9r3HF47jptiQlX4s
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTqZthAAoJELSic+t+oim9Fz8P/3emk2uOeeFB7ylGHAa942DQ
+9A0tfjtpqeWiae0JkYfUFfZ0ZtagqiJ1OwEHJH+6ccQM1bRtff1+RHSs32N90FDv
+B7J0VPzAhCLnOwI9gO/gvebdQx5Ig0LYeVHAAishl7a9nE4JDgNziMchXuI/BCJr
+6W1qVgq6Dzgi5KcnyAjEkqY1sj/qfRENhCfoLps/X+V0U5xPr9pNavG9O7zTOz0L
+mvLJWz2vkpzkgLhNVEoi7T2G5/lRfbZcOy44yu492tbpvZV5cJpH0LYEYW0AtXEE
+Lf+319qluANzwalsrG1QA58wVSsWcO06kLSw43NSj6eO/8XE2hsnLMTCUvUM27f8
++cNRmfdf2rAXeczivFqjABgStTLgaJtYwLVwzGkzC4wGXGRmR7MRM6lGTHYwEc24
+PlBG00NAc/R/XPbviX4y3Vv9PgKFQbCMH8IiOYEj08yPf6esqf/IMRj/Ld5tVPWL
+ohDxAtB68kao4ev/W1l6i5VSBQS7f/1WmpMYHHAIYOhZ2xxGQdK2nul5RlirqJsc
+Pap8aPi1bRde0HSL3e5YKBUPELRto2iDnKLdMBMkKdOmxq/ISKGwgexNGrixF047
+DElPDJSOPRSohZ8YOSFuHQuZhHs9MEpVilTVwwUlxI3R4RBG3ehkVW+j2rNOIRRf
+nkXQouG7qRruKK04QcLT
+=10eV
+-----END PGP SIGNATURE-----
+
+--9r3HF47jptiQlX4s--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
