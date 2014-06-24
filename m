@@ -1,57 +1,83 @@
 From: =?UTF-8?q?Antoine=20T=C3=A9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: [PATCH v2 08/12] Documentation: bindings: add doc for the generic ChipIdea USB driver
-Date: Tue, 24 Jun 2014 12:35:17 +0200
-Message-ID: <1403606121-6368-9-git-send-email-antoine.tenart@free-electrons.com>
+	<antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH v2 11/12] ARM: dts: berlin: add BG2CD nodes for USB support
+Date: Tue, 24 Jun 2014 12:35:20 +0200
+Message-ID: <1403606121-6368-12-git-send-email-antoine.tenart@free-electrons.com>
 References: <1403606121-6368-1-git-send-email-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403606121-6368-1-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sebastian.hesselbarth@gmail.com, Peter.Chen@freescale.com
-Cc: =?UTF-8?q?Antoine=20T=C3=A9nart?= <antoine.tenart@free-electrons.com>, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403606121-6368-1-git-send-email-antoine.tenart-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, balbi-l0cyMroinI0@public.gmane.org
+Cc: alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, zmxu-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, jszhang-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Document the generic ChipIdea USB driver bindings.
+From: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 
-Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com>
+Adds nodes describing the Marvell Berlin BG2CD USB PHY and USB. The BG2CD
+SoC has 2 USB ChipIdea controllers, with usb0 host-only and usb1 dual-role
+capable.
+
+Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 ---
- .../devicetree/bindings/usb/ci-hdrc-generic.txt    | 22 ++++++++++++++=
-++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/ci-hdrc-gener=
-ic.txt
+ arch/arm/boot/dts/berlin2cd.dtsi | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-generic.txt =
-b/Documentation/devicetree/bindings/usb/ci-hdrc-generic.txt
-new file mode 100644
-index 000000000000..4c85f9944077
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/ci-hdrc-generic.txt
-@@ -0,0 +1,22 @@
-+* Generic ChipIdea USB controller
+diff --git a/arch/arm/boot/dts/berlin2cd.dtsi b/arch/arm/boot/dts/berlin2cd.dtsi
+index 68f7032b4686..d35c9fbaa397 100644
+--- a/arch/arm/boot/dts/berlin2cd.dtsi
++++ b/arch/arm/boot/dts/berlin2cd.dtsi
+@@ -66,6 +66,22 @@
+ 			clocks = <&chip CLKID_TWD>;
+ 		};
+ 
++		usb_phy0: usb-phy@b74000 {
++			compatible = "marvell,berlin2cd-usb-phy";
++			reg = <0xb74000 0x128>;
++			#phy-cells = <0>;
++			resets = <&chip 0x178 23>;
++			status = "disabled";
++		};
 +
-+Required properties:
-+- compatible: should be "chipidea-usb"
-+- reg: base address and length of the registers
-+- interrupts: interrupt for the USB controller
++		usb_phy1: usb-phy@b78000 {
++			compatible = "marvell,berlin2cd-usb-phy";
++			reg = <0xb78000 0x128>;
++			#phy-cells = <0>;
++			resets = <&chip 0x178 24>;
++			status = "disabled";
++		};
 +
-+Optional properties:
-+- clocks: reference to the USB clock
-+- usb-phy: reference to the USB PHY
-+- vbus-supply: reference to the VBUS regulator
+ 		apb@e80000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+@@ -242,6 +258,24 @@
+ 			};
+ 		};
+ 
++		usb0: usb@ed0000 {
++			compatible = "chipidea-usb";
++			reg = <0xed0000 0x200>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&chip CLKID_USB0>;
++			usb-phy = <&usb_phy0>;
++			status = "disabled";
++		};
 +
-+Example:
++		usb1: usb@ee0000 {
++			compatible = "chipidea-usb";
++			reg = <0xee0000 0x200>;
++			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&chip CLKID_USB1>;
++			usb-phy = <&usb_phy1>;
++			status = "disabled";
++		};
 +
-+	usb@f7ed0000 {
-+		compatible =3D "chipidea-usb";
-+		reg =3D <0xf7ed0000 0x10000>;
-+		interrupts =3D <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
-+		clocks =3D <&chip CLKID_USB0>;
-+		usb-phy =3D <&usb_phy0>;
-+		vbus-supply =3D <&reg_usb0_vbus>;
-+	};
---=20
+ 		apb@fc0000 {
+ 			compatible = "simple-bus";
+ 			#address-cells = <1>;
+-- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
