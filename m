@@ -1,272 +1,162 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v3 06/14] clk: max77686: Convert to the generic max clock
- driver
-Date: Wed, 25 Jun 2014 16:30:08 +0200
-Message-ID: <1403706608.22107.24.camel@AMDC1943>
-References: <1403202040-12641-1-git-send-email-javier.martinez@collabora.co.uk>
- <1403202040-12641-7-git-send-email-javier.martinez@collabora.co.uk>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 6/6] ARM: sun8i: Add basic clock nodes to
+ the DTSI
+Date: Wed, 25 Jun 2014 22:36:14 +0800
+Message-ID: <CAGb2v667uLQVs3ck2JCnRW3Ov09iHa53WjfHXxxgJCfR9TDakg@mail.gmail.com>
+References: <1403603980-31101-1-git-send-email-wens@csie.org> <1403603980-31101-7-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <1403202040-12641-7-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Daniel Stone <daniels-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB454VOOQKGQEB5IOVCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1403603980-31101-7-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On czw, 2014-06-19 at 20:20 +0200, Javier Martinez Canillas wrote:
-> Clocks drivers for Maxim PMIC are very similar so they can
-> be converted to use the generic Maxim clock driver.
-> 
-> Also, while being there use module_platform_driver() helper
-> macro to eliminate more boilerplate code.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+On Tue, Jun 24, 2014 at 5:59 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> Now that we have support for sun8i specific clocks in the driver,
+> add the corresponding clock nodes to the DTSI.
+>
+> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
 > ---
->  drivers/clk/Kconfig        |   1 +
->  drivers/clk/clk-max77686.c | 176 +++------------------------------------------
->  2 files changed, 9 insertions(+), 168 deletions(-)
+>  arch/arm/boot/dts/sun8i-a23.dtsi | 115 +++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 115 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
+> index ac5f69a..559ab08 100644
+> --- a/arch/arm/boot/dts/sun8i-a23.dtsi
+> +++ b/arch/arm/boot/dts/sun8i-a23.dtsi
+> @@ -64,6 +64,121 @@
+>                         clock-frequency = <32768>;
+>                         clock-output-names = "osc32k";
+>                 };
+> +
+> +               pll1: clk@01c20000 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun8i-a23-pll1-clk";
+> +                       reg = <0x01c20000 0x4>;
+> +                       clocks = <&osc24M>;
+> +                       clock-output-names = "pll1";
+> +               };
+> +
+> +               /* dummy clock until actually implemented */
+> +               pll6: pll6_clk {
+> +                       #clock-cells = <0>;
+> +                       compatible = "fixed-clock";
+> +                       clock-frequency = <600000000>;
+> +                       clock-output-names = "pll6";
+> +               };
+> +
+> +               cpu: cpu_clk@01c20050 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun4i-a10-cpu-clk";
+> +                       reg = <0x01c20050 0x4>;
+> +
+> +                       /*
+> +                        * PLL1 is listed twice here.
+> +                        * While it looks suspicious, it's actually documented
+> +                        * that way both in the datasheet and in the code from
+> +                        * Allwinner.
+> +                        */
+> +                       clocks = <&osc32k>, <&osc24M>, <&pll1>, <&pll1>;
+> +                       clock-output-names = "cpu";
+> +               };
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Nack on this one. I pulled the wrong files.
 
-Best regards,
-Krzysztof
-
-
-> 
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 73f78e8..3fd4270 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -38,6 +38,7 @@ config COMMON_CLK_MAX_GEN
->  config COMMON_CLK_MAX77686
->  	tristate "Clock driver for Maxim 77686 MFD"
->  	depends on MFD_MAX77686
-> +	select COMMON_CLK_MAX_GEN
->  	---help---
->  	  This driver supports Maxim 77686 crystal oscillator clock. 
->  
-> diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
-> index 185b611..ed0beb4 100644
-> --- a/drivers/clk/clk-max77686.c
-> +++ b/drivers/clk/clk-max77686.c
-> @@ -31,187 +31,37 @@
->  #include <linux/clkdev.h>
->  
->  #include <dt-bindings/clock/maxim,max77686.h>
-> -
-> -struct max77686_clk {
-> -	struct max77686_dev *iodev;
-> -	u32 mask;
-> -	struct clk_hw hw;
-> -	struct clk_lookup *lookup;
-> -};
-> -
-> -static struct max77686_clk *to_max77686_clk(struct clk_hw *hw)
-> -{
-> -	return container_of(hw, struct max77686_clk, hw);
-> -}
-> -
-> -static int max77686_clk_prepare(struct clk_hw *hw)
-> -{
-> -	struct max77686_clk *max77686 = to_max77686_clk(hw);
-> -
-> -	return regmap_update_bits(max77686->iodev->regmap,
-> -				  MAX77686_REG_32KHZ, max77686->mask,
-> -				  max77686->mask);
-> -}
-> -
-> -static void max77686_clk_unprepare(struct clk_hw *hw)
-> -{
-> -	struct max77686_clk *max77686 = to_max77686_clk(hw);
-> -
-> -	regmap_update_bits(max77686->iodev->regmap,
-> -		MAX77686_REG_32KHZ, max77686->mask, ~max77686->mask);
-> -}
-> -
-> -static int max77686_clk_is_prepared(struct clk_hw *hw)
-> -{
-> -	struct max77686_clk *max77686 = to_max77686_clk(hw);
-> -	int ret;
-> -	u32 val;
-> -
-> -	ret = regmap_read(max77686->iodev->regmap,
-> -				MAX77686_REG_32KHZ, &val);
-> -
-> -	if (ret < 0)
-> -		return -EINVAL;
-> -
-> -	return val & max77686->mask;
-> -}
-> -
-> -static unsigned long max77686_recalc_rate(struct clk_hw *hw,
-> -					  unsigned long parent_rate)
-> -{
-> -	return 32768;
-> -}
-> -
-> -static struct clk_ops max77686_clk_ops = {
-> -	.prepare	= max77686_clk_prepare,
-> -	.unprepare	= max77686_clk_unprepare,
-> -	.is_prepared	= max77686_clk_is_prepared,
-> -	.recalc_rate	= max77686_recalc_rate,
-> -};
-> +#include "clk-max-gen.h"
->  
->  static struct clk_init_data max77686_clks_init[MAX77686_CLKS_NUM] = {
->  	[MAX77686_CLK_AP] = {
->  		.name = "32khz_ap",
-> -		.ops = &max77686_clk_ops,
-> +		.ops = &max_gen_clk_ops,
->  		.flags = CLK_IS_ROOT,
->  	},
->  	[MAX77686_CLK_CP] = {
->  		.name = "32khz_cp",
-> -		.ops = &max77686_clk_ops,
-> +		.ops = &max_gen_clk_ops,
->  		.flags = CLK_IS_ROOT,
->  	},
->  	[MAX77686_CLK_PMIC] = {
->  		.name = "32khz_pmic",
-> -		.ops = &max77686_clk_ops,
-> +		.ops = &max_gen_clk_ops,
->  		.flags = CLK_IS_ROOT,
->  	},
->  };
->  
-> -static struct clk *max77686_clk_register(struct device *dev,
-> -				struct max77686_clk *max77686)
-> -{
-> -	struct clk *clk;
-> -	struct clk_hw *hw = &max77686->hw;
-> -
-> -	clk = clk_register(dev, hw);
-> -	if (IS_ERR(clk))
-> -		return clk;
-> -
-> -	max77686->lookup = kzalloc(sizeof(struct clk_lookup), GFP_KERNEL);
-> -	if (!max77686->lookup)
-> -		return ERR_PTR(-ENOMEM);
-> -
-> -	max77686->lookup->con_id = hw->init->name;
-> -	max77686->lookup->clk = clk;
-> -
-> -	clkdev_add(max77686->lookup);
-> -
-> -	return clk;
-> -}
-> -
->  static int max77686_clk_probe(struct platform_device *pdev)
->  {
->  	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
-> -	struct max77686_clk *max77686_clks[MAX77686_CLKS_NUM];
-> -	struct clk **clocks;
-> -	int i, ret;
-> -
-> -	clocks = devm_kzalloc(&pdev->dev, sizeof(struct clk *)
-> -					* MAX77686_CLKS_NUM, GFP_KERNEL);
-> -	if (!clocks)
-> -		return -ENOMEM;
-> -
-> -	for (i = 0; i < MAX77686_CLKS_NUM; i++) {
-> -		max77686_clks[i] = devm_kzalloc(&pdev->dev,
-> -					sizeof(struct max77686_clk), GFP_KERNEL);
-> -		if (!max77686_clks[i])
-> -			return -ENOMEM;
-> -	}
-> -
-> -	for (i = 0; i < MAX77686_CLKS_NUM; i++) {
-> -		max77686_clks[i]->iodev = iodev;
-> -		max77686_clks[i]->mask = 1 << i;
-> -		max77686_clks[i]->hw.init = &max77686_clks_init[i];
-> -
-> -		clocks[i] = max77686_clk_register(&pdev->dev, max77686_clks[i]);
-> -		if (IS_ERR(clocks[i])) {
-> -			ret = PTR_ERR(clocks[i]);
-> -			dev_err(&pdev->dev, "failed to register %s\n",
-> -				max77686_clks[i]->hw.init->name);
-> -			goto err_clocks;
-> -		}
-> -	}
-> -
-> -	platform_set_drvdata(pdev, clocks);
-> -
-> -	if (iodev->dev->of_node) {
-> -		struct clk_onecell_data *of_data;
-> -
-> -		of_data = devm_kzalloc(&pdev->dev,
-> -					sizeof(*of_data), GFP_KERNEL);
-> -		if (!of_data) {
-> -			ret = -ENOMEM;
-> -			goto err_clocks;
-> -		}
->  
-> -		of_data->clks = clocks;
-> -		of_data->clk_num = MAX77686_CLKS_NUM;
-> -		ret = of_clk_add_provider(iodev->dev->of_node,
-> -					of_clk_src_onecell_get, of_data);
-> -		if (ret) {
-> -			dev_err(&pdev->dev, "failed to register OF clock provider\n");
-> -			goto err_clocks;
-> -		}
-> -	}
-> -
-> -	return 0;
-> -
-> -err_clocks:
-> -	for (--i; i >= 0; --i) {
-> -		clkdev_drop(max77686_clks[i]->lookup);
-> -		clk_unregister(max77686_clks[i]->hw.clk);
-> -	}
-> -
-> -	return ret;
-> +	return max_gen_clk_probe(pdev, iodev->regmap, MAX77686_REG_32KHZ,
-> +				 max77686_clks_init, MAX77686_CLKS_NUM);
->  }
->  
->  static int max77686_clk_remove(struct platform_device *pdev)
->  {
-> -	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
-> -	struct clk **clocks = platform_get_drvdata(pdev);
-> -	int i;
-> -
-> -	if (iodev->dev->of_node)
-> -		of_clk_del_provider(iodev->dev->of_node);
-> -
-> -	for (i = 0; i < MAX77686_CLKS_NUM; i++) {
-> -		struct clk_hw *hw = __clk_get_hw(clocks[i]);
-> -		struct max77686_clk *max77686 = to_max77686_clk(hw);
-> -
-> -		clkdev_drop(max77686->lookup);
-> -		clk_unregister(clocks[i]);
-> -	}
-> -	return 0;
-> +	return max_gen_clk_remove(pdev, MAX77686_CLKS_NUM);
->  }
->  
->  static const struct platform_device_id max77686_clk_id[] = {
-> @@ -230,17 +80,7 @@ static struct platform_driver max77686_clk_driver = {
->  	.id_table = max77686_clk_id,
->  };
->  
-> -static int __init max77686_clk_init(void)
-> -{
-> -	return platform_driver_register(&max77686_clk_driver);
-> -}
-> -subsys_initcall(max77686_clk_init);
-> -
-> -static void __init max77686_clk_cleanup(void)
-> -{
-> -	platform_driver_unregister(&max77686_clk_driver);
-> -}
-> -module_exit(max77686_clk_cleanup);
-> +module_platform_driver(max77686_clk_driver);
->  
->  MODULE_DESCRIPTION("MAXIM 77686 Clock Driver");
->  MODULE_AUTHOR("Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +
+> +               axi: axi_clk@01c20050 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun4i-a10-axi-clk";
+> +                       reg = <0x01c20050 0x4>;
+> +                       clocks = <&cpu>;
+> +                       clock-output-names = "axi";
+> +               };
+> +
+> +               ahb1_mux: ahb1_mux_clk@01c20054 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun6i-a31-ahb1-mux-clk";
+> +                       reg = <0x01c20054 0x4>;
+> +                       clocks = <&osc32k>, <&osc24M>, <&axi>, <&pll6>;
+> +                       clock-output-names = "ahb1_mux";
+> +               };
+> +
+> +               ahb1: ahb1_clk@01c20054 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun4i-a10-ahb-clk";
+> +                       reg = <0x01c20054 0x4>;
+> +                       clocks = <&ahb1_mux>;
+> +                       clock-output-names = "ahb1";
+> +               };
+> +
+> +               apb1: apb1_clk@01c20054 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun4i-a10-apb0-clk";
+> +                       reg = <0x01c20054 0x4>;
+> +                       clocks = <&ahb1>;
+> +                       clock-output-names = "apb1";
+> +               };
+> +
+> +               ahb1_gates: clk@01c20060 {
+> +                       #clock-cells = <1>;
+> +                       compatible = "allwinner,sun8i-a23-ahb1-gates-clk";
+> +                       reg = <0x01c20060 0x8>;
+> +                       clocks = <&ahb1>;
+> +                       clock-output-names = "ahb1_mipidsi", "ahb1_dma",
+> +                                       "ahb1_mmc0", "ahb1_mmc1", "ahb1_mmc2",
+> +                                       "ahb1_nand", "ahb1_sdram",
+> +                                       "ahb1_hstimer", "ahb1_spi0",
+> +                                       "ahb1_spi1", "ahb1_otg", "ahb1_ehci",
+> +                                       "ahb1_ohci", "ahb1_ve", "ahb1_lcd",
+> +                                       "ahb1_csi", "ahb1_be",  "ahb1_fe",
+> +                                       "ahb1_gpu", "ahb1_spinlock",
+> +                                       "ahb1_drc";
+> +               };
+> +
+> +               apb1_gates: clk@01c20068 {
+> +                       #clock-cells = <1>;
+> +                       compatible = "allwinner,sun8i-a23-apb1-gates-clk";
+> +                       reg = <0x01c20068 0x4>;
+> +                       clocks = <&apb1>;
+> +                       clock-output-names = "apb1_codec", "apb1_pio",
+> +                                       "apb1_daudio0", "apb1_daudio1";
+> +               };
+> +
+> +               apb2_mux: apb2_mux_clk@01c20058 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun4i-a10-apb1-mux-clk";
+> +                       reg = <0x01c20058 0x4>;
+> +                       clocks = <&osc32k>, <&osc24M>, <&pll6>, <&pll6>;
+> +                       clock-output-names = "apb2_mux";
+> +               };
+> +
+> +               apb2: apb2_clk@01c20058 {
+> +                       #clock-cells = <0>;
+> +                       compatible = "allwinner,sun6i-a31-apb2-div-clk";
+> +                       reg = <0x01c20058 0x4>;
+> +                       clocks = <&apb2_mux>;
+> +                       clock-output-names = "apb2";
+> +               };
+> +
+> +               apb2_gates: clk@01c2006c {
+> +                       #clock-cells = <1>;
+> +                       compatible = "allwinner,sun8i-a23-apb2-gates-clk";
+> +                       reg = <0x01c2006c 0x4>;
+> +                       clocks = <&apb2>;
+> +                       clock-output-names = "apb2_i2c0", "apb2_i2c1",
+> +                                       "apb2_i2c2", "apb2_uart0",
+> +                                       "apb2_uart1", "apb2_uart2",
+> +                                       "apb2_uart3", "apb2_uart4";
+> +               };
+>         };
+>
+>         soc@01c00000 {
+> --
+> 2.0.0
+>
