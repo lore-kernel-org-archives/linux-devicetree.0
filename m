@@ -1,166 +1,102 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Wed, 25 Jun 2014 23:03:25 +0400
-Message-ID: <53AB1CFD.4040500@cogentembedded.com>
-References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com> <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
-Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: [PATCH v4 00/14] Add Maxim 77802 PMIC support
+Date: Wed, 25 Jun 2014 21:03:24 +0200
+Message-ID: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Javier Martinez Canillas <javier.martinez@collabora.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
+32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
+a Real-Time-Clock (RTC) and a I2C interface to program the individual
+regulators, clocks and the RTC.
 
-On 06/23/2014 05:39 PM, Antoine T=C3=A9nart wrote:
+This fourth version of the patch-set addresses several issues pointed
+out by Mark Brown, Doug Anderson and Krzysztof Kozlowski The individual
+changes are added on each patch change log.
 
-> The Berlin SoC has a two SATA ports. Add a PHY driver to handle them.
+This series are based on drivers added by Simon Glass to the Chrome OS
+kernel and adds support for the Maxim 77802 Power Management IC, their
+regulators, clocks, RTC and I2C interface.
 
-> The mode selection can let us think this PHY can be configured to fit
-> other purposes. But there are reasons to think the SATA mode will be
-> the only one usable: the PHY registers are only accessible indirectly
-> through two registers in the SATA range, the PHY seems to be integrat=
-ed
-> and no information tells us the contrary. For these reasons, make the
-> driver a SATA PHY driver.
+NOTE: This version of the series model the real power scheme for Maxim
+77802 regulators instead of a simplistic model like in older versions.
+So these changes depend on patch:
 
-    I'm not even sure why you want to make it a separate driver if the=20
-registers are mapped to SATA controller's range.
+"[PATCH v3] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi"
+https://patchwork.kernel.org/patch/4411351/
 
-> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
->
+which adds tps65090 support to Peach boards since regulators from this
+PMIC supply power to a set of MAX77802 regulators.
 
-[...]
+The patch-set has been tested on both Daisy/Snow (max77686) and Peach
+pit (max77802) Chromebooks and it's composed of the following patches:
 
-> diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-s=
-ata.c
-> new file mode 100644
-> index 000000000000..317f62358165
-> --- /dev/null
-> +++ b/drivers/phy/phy-berlin-sata.c
-> @@ -0,0 +1,246 @@
-[...]
-+#define HOST_VSA_ADDR		0x0
-+#define HOST_VSA_DATA		0x4
-+#define PORT_VSR_ADDR		0x78
-+#define PORT_VSR_DATA		0x7c
-+#define PORT_SCR_CTL		0x2c
+Doug Anderson (1):
+  mfd: max77686: Allow the max77686 rtc to wakeup the system
 
-    Could you keep this list sorted?
+Javier Martinez Canillas (13):
+  mfd: max77686: Convert to use regmap_irq
+  clk: max77686: Add DT include for MAX77686 PMIC clock
+  clk: max77686: Improve Maxim 77686 PMIC clocks binding
+  clk: Add generic driver for Maxim PMIC clocks
+  clk: max77686: Convert to the generic max clock driver
+  mfd: Add driver for Maxim 77802 Power Management IC
+  mfd: max77802: Add DT binding documentation
+  regmap: Add regmap_reg_copy function
+  regulator: Add driver for Maxim 77802 PMIC regulators
+  clk: Add driver for Maxim 77802 PMIC clocks
+  clk: max77802: Add DT binding documentation
+  rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+  ARM: dts: Add max77802 to exynos5420-peach-pit and exynos5800-peach-pi
 
-[...]
+ .../devicetree/bindings/clock/maxim,max77686.txt   |  15 +-
+ .../devicetree/bindings/clock/maxim,max77802.txt   |  42 ++
+ Documentation/devicetree/bindings/mfd/max77802.txt |  97 +++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         | 343 ++++++++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          | 343 ++++++++++
+ drivers/base/regmap/regmap.c                       |  34 +
+ drivers/clk/Kconfig                                |  11 +
+ drivers/clk/Makefile                               |   2 +
+ drivers/clk/clk-max-gen.c                          | 195 ++++++
+ drivers/clk/clk-max-gen.h                          |  32 +
+ drivers/clk/clk-max77686.c                         | 183 +-----
+ drivers/clk/clk-max77802.c                         |  99 +++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   3 +-
+ drivers/mfd/max77686-irq.c                         | 319 ----------
+ drivers/mfd/max77686.c                             |  97 ++-
+ drivers/mfd/max77802.c                             | 366 +++++++++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/max77802.c                       | 694 +++++++++++++++++++++
+ drivers/rtc/Kconfig                                |  10 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-max77686.c                         |  55 +-
+ drivers/rtc/rtc-max77802.c                         | 637 +++++++++++++++++++
+ include/dt-bindings/clock/maxim,max77686.h         |  23 +
+ include/dt-bindings/clock/maxim,max77802.h         |  22 +
+ include/linux/mfd/max77686-private.h               |  28 +-
+ include/linux/mfd/max77686.h                       |   2 -
+ include/linux/mfd/max77802-private.h               | 307 +++++++++
+ include/linux/mfd/max77802.h                       | 121 ++++
+ include/linux/regmap.h                             |   9 +
+ 31 files changed, 3583 insertions(+), 532 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/maxim,max77802.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+ create mode 100644 drivers/clk/clk-max-gen.c
+ create mode 100644 drivers/clk/clk-max-gen.h
+ create mode 100644 drivers/clk/clk-max77802.c
+ delete mode 100644 drivers/mfd/max77686-irq.c
+ create mode 100644 drivers/mfd/max77802.c
+ create mode 100644 drivers/regulator/max77802.c
+ create mode 100644 drivers/rtc/rtc-max77802.c
+ create mode 100644 include/dt-bindings/clock/maxim,max77686.h
+ create mode 100644 include/dt-bindings/clock/maxim,max77802.h
+ create mode 100644 include/linux/mfd/max77802-private.h
+ create mode 100644 include/linux/mfd/max77802.h
 
-+struct phy_berlin_desc {
-+	struct phy	*phy;
-+	u32		val;
-
-    Hm, aren't these power down bits? Why not call the field accordingl=
-y?
-
-[...]
-
-> +static int phy_berlin_sata_power_on(struct phy *phy)
-> +{
-> +	struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
-> +	struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc);
-> +	void __iomem *ctrl_reg =3D priv->base + 0x60 + (desc->index * 0x80)=
-;
-> +	int ret =3D 0;
-> +	u32 regval;
-> +
-> +	clk_prepare_enable(priv->clk);
-> +
-> +	spin_lock(&priv->lock);
-> +
-> +	/* Power on PHY */
-> +	writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
-> +	regval =3D readl(priv->base + HOST_VSA_DATA);
-> +	regval &=3D ~(desc->val);
-
-    Parens not needed here.
-
-> +	writel(regval, priv->base + HOST_VSA_DATA);
-> +
-> +	/* Configure MBus */
-> +	writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
-> +	regval =3D readl(priv->base + HOST_VSA_DATA);
-> +	regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUEST_SIZE_12=
-8;
-> +	writel(regval, priv->base + HOST_VSA_DATA);
-
-    It probably makes sense to factor these address/data register write=
-s into=20
-a separate function like phy_berlin_sata_reg_setbits().
-
-[...]
-> +	/* set the controller speed */
-> +	writel(0x31, ctrl_reg + PORT_SCR_CTL);
-
-    Value undocumented? Or is this the SATA SControl register by chance=
-?
-
-[...]
-
-> +static int phy_berlin_sata_probe(struct platform_device *pdev)
-> +{
-> +	struct device *dev =3D &pdev->dev;
-> +	struct phy *phy;
-> +	struct phy_provider *phy_provider;
-> +	struct phy_berlin_priv *priv;
-> +	struct resource *res;
-> +	int i;
-> +
-> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (!res)
-> +		return -EINVAL;
-> +
-> +	priv->base =3D devm_ioremap(dev, res->start, resource_size(res));
-
-    Can't you use devm_ioremap_resource()?
-
-> +	if (!priv->base)
-> +		return -ENOMEM;
-> +
-> +	priv->clk =3D devm_clk_get(dev, NULL);
-> +	if (IS_ERR(priv->clk))
-> +		return PTR_ERR(priv->clk);
-> +
-> +	dev_set_drvdata(dev, priv);
-> +	spin_lock_init(&priv->lock);
-> +
-> +	for (i =3D 0; i < BERLIN_SATA_PHY_NB; i++) {
-> +		phy =3D devm_phy_create(dev, &phy_berlin_sata_ops, NULL);
-> +		if (IS_ERR(phy)) {
-> +			dev_err(dev, "failed to create PHY %d\n", i);
-> +			return PTR_ERR(phy);
-> +		}
-> +
-> +		priv->phys[i].phy =3D phy;
-> +		priv->phys[i].val =3D phy_berlin_power_down_bits[i];
-> +		priv->phys[i].index =3D i;
-> +		phy_set_drvdata(phy, &priv->phys[i]);
-> +
-> +		/* Make sure the PHY is off */
-> +		phy_berlin_sata_power_off(phy);
-> +	}
-> +
-> +	phy_provider =3D
-> +		devm_of_phy_provider_register(dev, phy_berlin_sata_phy_xlate);
-> +	if (IS_ERR(phy_provider))
-
-    No dev_err() here?
-
-> +		return PTR_ERR(phy_provider);
-> +
-> +	return 0;
-> +}
-
-WBR, Sergei
+-- 
+2.0.0.rc2
