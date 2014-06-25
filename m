@@ -1,66 +1,46 @@
-From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH V7 0/6] Add X-Gene platform reboot mechanism
-Date: Wed, 25 Jun 2014 16:03:20 -0700
-Message-ID: <1403737406-6474-1-git-send-email-fkan@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
-Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V7 3/6] Documentation: arm64: add SCU dts binding documentation to linux kernel
+Date: Wed, 25 Jun 2014 16:03:23 -0700
+Message-ID: <1403737406-6474-4-git-send-email-fkan@apm.com>
+References: <1403737406-6474-1-git-send-email-fkan@apm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403737406-6474-1-git-send-email-fkan@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Enable reboot driver for the X-Gene platform. Add generic syscon reboot
-driver.
+This add documentation for the SCU system clock unit device tree binding
+to the kernel.
 
-V7 Change:
-	- Seem V3 on, the patches were not making in to the mailinglist.
-	- Fix build error produced by other ARCH while including this
-	  driver. Set to depend on arm64 ARCH for now.
+Signed-off-by: Feng Kan <fkan@apm.com>
+---
+ Documentation/devicetree/bindings/arm/apm/scu.txt | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/apm/scu.txt
 
-V6 Change:
-	- Add documentation for scu node.
-
-V5 Change:
-	- Documentation update, endian and access size.
-
-V4 Change:
-	- Remove old X-Gene reboot driver
-	- Add generic syscon reboot driver
-	- Add DTS and Kconfig for X-Gene reboot using syscon method
-
-V3 Change:
-	- Remove the reboot driver's use of acpi resource patch.
-	- Change the reboot driver to use syscon to parse out 
-	  system clock register. Remove the old method of getting
-	  register from the reboot driver directly.
-	- Remove documentation since its now simple.
-
-V2 Change:
-	- Add support for using ACPI resource.
-
-Feng Kan (5):
-  power: reset: Add generic SYSCON register mapped reset
-  power: reset: Remove X-Gene reboot driver
-  arm64: dts: Add X-Gene reboot driver dts node
-  arm64: Select reboot driver for X-Gene platform
-  Documentation: power: reset: Add documentation for generic SYSCON
-    reboot driver
-
- .../bindings/power/reset/syscon-reboot.txt         |   23 +++++
- arch/arm64/Kconfig                                 |    2 +
- arch/arm64/boot/dts/apm-storm.dtsi                 |   13 +++
- drivers/power/reset/Kconfig                        |    8 +-
- drivers/power/reset/Makefile                       |    2 +-
- drivers/power/reset/syscon-reboot.c                |  100 +++++++++++++++++++
- drivers/power/reset/xgene-reboot.c                 |  103 --------------------
- 7 files changed, 143 insertions(+), 108 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
- create mode 100644 drivers/power/reset/syscon-reboot.c
- delete mode 100644 drivers/power/reset/xgene-reboot.c
-
+diff --git a/Documentation/devicetree/bindings/arm/apm/scu.txt b/Documentation/devicetree/bindings/arm/apm/scu.txt
+new file mode 100644
+index 0000000..b45be06
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/apm/scu.txt
+@@ -0,0 +1,17 @@
++APM X-GENE SoC series SCU Registers
++
++This system clock unit contain various register that control block resets,
++clock enable/disables, clock divisors and other deepsleep registers.
++
++Properties:
++ - compatible : should contain two values. First value must be:
++		   - "apm,xgene-scu"
++		second value must be always "syscon".
++
++ - reg : offset and length of the register set.
++
++Example :
++	scu: system-clk-controller@17000000 {
++		compatible = "apm,xgene-scu","syscon";
++		reg = <0x0 0x17000000 0x0 0x400>;
++	};
 -- 
-1.7.6.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.9.1
