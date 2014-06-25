@@ -1,57 +1,86 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH 4/4 v2] ARM: DTS: Add NTC thermistor nodes to Exynos5420
- based Peach_PIT
-Date: Wed, 25 Jun 2014 13:40:47 -0700
-Message-ID: <CAD=FV=WeuFhGK=JNEm20CT73J=c1Zc_dZGQT6bKeob895M+kQA@mail.gmail.com>
-References: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
-	<1403677773-21141-5-git-send-email-ch.naveen@samsung.com>
+From: Geoff Levand <geoff@infradead.org>
+Subject: Re: [PATCH v5 4/8] arm64: add PSCI CPU_SUSPEND based cpu_suspend
+ support
+Date: Wed, 25 Jun 2014 13:52:00 -0700
+Message-ID: <1403729520.11749.64.camel@smoke>
+References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
+	 <1403705421-17597-5-git-send-email-lorenzo.pieralisi@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403677773-21141-5-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Naveen Krishna <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1403705421-17597-5-git-send-email-lorenzo.pieralisi@arm.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul@pwsan.com>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@linaro.org>, Nicolas Pitre <nico@linaro.org>, Catalin Marinas <catalin.marinas@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, Chander Kashyap <chander.kashyap@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Brown <broonie@kernel.org>, Sudeep Holla <sudeep.holla@arm.com>, Grant Likely <grant.likely@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Antti Miettinen <ananaza@iki.fi>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm>
 List-Id: devicetree@vger.kernel.org
 
-Naveen,
+Hi Lorenzo,
 
-On Tue, Jun 24, 2014 at 11:29 PM, Naveen Krishna Chatradhi
-<ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> Exynos5420 based Peach PIT board has 4 NTC thermistors to measure
-> temperatures at various points on the board.
->
-> IIO based ADC becomes the parent and NTC thermistors are the childs,
-> via the HWMON interface.
->
-> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-> ---
-> Changes since v1:
-> 1. Arranged the ADC node alphabetical
-> 2. Added "status = "okay"" to the ADC node
->
-> This patch needs
-> 1. MAX77802 PMIC device tree nodes (for ldo9)
->    https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg31430.html
-> 2. Uses the DT documentation for NTC thermistors updated with vendor-prefix
->
-> This patch set is tested
-> 1. On Peach PIT board via sysfs entry exposed by hwmon
-> localhost ~ # cat /sys/class/hwmon/hwmon*/device/temp1_input
-> 37436
-> 36449
-> 38560
-> 38059
->
-> 2. Backward compatibility is tested by replacing "murata" with "ntc"
->    in the dts nodes and running the above test.
->
->  arch/arm/boot/dts/exynos5420-peach-pit.dts |   34 ++++++++++++++++++++++++++++
->  1 file changed, 34 insertions(+)
+On Wed, 2014-06-25 at 15:10 +0100, Lorenzo Pieralisi wrote:
+> diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
 
-Now that Javier has spun his patch, perhaps you can fold the "pi"
-version in here too?
+> +	/*
+> +	 * This is belt-and-braces: make sure that if the idle
+> +	 * specified protocol is psci, the cpu_ops have been
+> +	 * initialized to psci operations. Anything else is
+> +	 * a recipe for mayhem.
+> +	 */
+> +	for_each_cpu(cpu, drv->cpumask) {
+> +		cpu_ops_ptr = cpu_ops[cpu];
+> +		if (WARN_ON(!cpu_ops_ptr || strcmp(cpu_ops_ptr->name, "psci")))
+> +			return -EOPNOTSUPP;
+> +	}
 
-Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+I'm not sure how drv->cpumask is setup, but if a system has mixed enable
+methods, say some cpus 'spin-table' and some 'psci', will this give a
+false error?
+
+If drv->cpumask should only include 'psci' cpus, then should this be a
+BUG()?
+
+> +
+> +	psci_states = kcalloc(drv->state_count, sizeof(*psci_states),
+> +			      GFP_KERNEL);
+> +
+> +	if (!psci_states) {
+> +		pr_warn("psci idle state allocation failed\n");
+> +		return -ENOMEM;
+> +	}
+> +
+> +	for_each_cpu(cpu, drv->cpumask) {
+> +		if (per_cpu(psci_power_state, cpu)) {
+> +			pr_warn("idle states already initialized on cpu %u\n",
+> +				cpu);
+
+This seems like an implementation problem, if so, shouldn't this be
+pr_debug()?
+
+
+>  #endif
+>  
+> +#ifdef CONFIG_ARM64_CPU_SUSPEND
+> +static int cpu_psci_cpu_suspend(unsigned long index)
+> +{
+> +	struct psci_power_state *state = __get_cpu_var(psci_power_state);
+> +
+> +	if (!state)
+> +		return -EOPNOTSUPP;
+> +
+> +	return psci_ops.cpu_suspend(state[index], virt_to_phys(cpu_resume));
+> +}
+> +#endif
+
+Why not put a __maybe_unused attribute on cpu_psci_cpu_suspend() and
+remove the preprocessor conditional.  That way this code will always be
+compiled, and with therefor always get a build test.  The linker should
+strip out the unused code when CONFIG_ARM64_CPU_SUSPEND=n and the code
+below is not compiled. 
+
+> +#ifdef CONFIG_ARM64_CPU_SUSPEND
+> +	.cpu_suspend	= cpu_psci_cpu_suspend,
+> +#endif
+>  };
+
+-Geoff
+
