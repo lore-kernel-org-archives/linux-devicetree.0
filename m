@@ -1,79 +1,43 @@
-From: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Subject: Re: [PATCH v8 4/4] drivers: net: Add APM X-Gene SoC ethernet
-	driver support.
-Date: Thu, 26 Jun 2014 00:04:50 +0100
-Message-ID: <20140625230450.GO32514@n2100.arm.linux.org.uk>
-References: <1403306296-26198-1-git-send-email-isubramanian@apm.com> <1403306296-26198-5-git-send-email-isubramanian@apm.com> <CALdTtnvHt5mYMC3619E4F3KK0jPOw7mCpKE6bTn0Um6fdZ4rbw@mail.gmail.com>
+From: Andrew Bresticker <abrestic@chromium.org>
+Subject: Re: [PATCH v1 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
+Date: Wed, 25 Jun 2014 16:07:53 -0700
+Message-ID: <CAL1qeaH+pfyJKQyS3=7M7C6QGFkm3r5ssDohur7KUwk2EXG2tA@mail.gmail.com>
+References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>
+	<1403072180-4944-3-git-send-email-abrestic@chromium.org>
+	<53AB46E0.5010908@wwwdotorg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CALdTtnvHt5mYMC3619E4F3KK0jPOw7mCpKE6bTn0Um6fdZ4rbw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Dann Frazier <dann.frazier-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
-Cc: Iyappan Subramanian <isubramanian-qTEPVZfXA3Y@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, jcm-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Keyur Chudgar <kchudgar-qTEPVZfXA3Y@public.gmane.org>, davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Ravi Patel <rapatel-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53AB46E0.5010908@wwwdotorg.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Stephen Warren <swarren@wwwdotorg.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jun 24, 2014 at 10:29:48PM -0600, Dann Frazier wrote:
-> On Fri, Jun 20, 2014 at 5:18 PM, Iyappan Subramanian
-> <isubramanian-qTEPVZfXA3Y@public.gmane.org> wrote:
-> > +       ring->desc_addr = dma_zalloc_coherent(dev, size, &ring->dma,
-> > +                                             GFP_KERNEL);
-> 
-> Iyappan,
-> When testing this driver on a 3.16-rc2 base, I'm finding that
-> desc_addr gets assigned to NULL here, which results in an oops later
-> on (see below).
+On Wed, Jun 25, 2014 at 3:02 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+> On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
+>> The Tegra XHCI controller communicates requests to the host through
+>> a mailbox interface.  Host drivers which can handle these requests,
+>> such as the Tegra XUSB pad controller driver and upcoming Tegra XHCI
+>> host controller driver, can send messages and register to be notified
+>> of incoming messages.
+>
+>> diff --git a/include/linux/tegra-xusb-mbox.h b/include/linux/tegra-xusb-mbox.h
+>
+>> +extern int tegra_xusb_mbox_register_notifier(struct tegra_xusb_mbox *mbox,
+>> +                                          struct notifier_block *nb);
+>> +extern void tegra_xusb_mbox_unregister_notifier(struct tegra_xusb_mbox *mbox,
+>> +                                             struct notifier_block *nb);
+>> +extern int tegra_xusb_mbox_send(struct tegra_xusb_mbox *mbox,
+>> +                             enum tegra_xusb_mbox_cmd cmd, u32 data);
+>> +extern struct tegra_xusb_mbox *
+>> +tegra_xusb_mbox_lookup_by_phandle(struct device_node *np, const char *prop);
+>
+> This seems to use a custom API. I've seen mention of a mailbox
+> subsystem, and I assume that has a standardized API. Should this driver
+> implement that instead?
 
-Note that on failure here...
-
-> > +       if (!ring->desc_addr)
-> > +               goto err;
-
-we jump to 'err'.
-
-> > +err:
-> > +       dma_free_coherent(dev, size, ring->desc_addr, ring->dma);
-
-which then tries to call dma_free_coherent on a NULL pointer, and
-possibly undefined ring->dma value.  That's not a nice thing to do,
-and will probably lead to problems.  I know that none of the ARM
-flavours of this function will handle this gracefully, and neither
-does x86's version either.  So this is very probably illegal.
-
-> > +static int xgene_enet_create_desc_rings(struct net_device *ndev)
-> > +{
-> > +       struct xgene_enet_pdata *pdata = netdev_priv(ndev);
-> > +       struct device *dev = &pdata->pdev->dev;
-> > +       struct xgene_enet_desc_ring *rx_ring, *tx_ring, *cp_ring;
-> > +       struct xgene_enet_desc_ring *buf_pool = NULL;
-> > +       u8 cpu_bufnum = 0, eth_bufnum = 0;
-> > +       u8 bp_bufnum = 0x20;
-> > +       u16 ring_id, ring_num = 0;
-> > +       int ret;
-> > +
-> > +       /* allocate rx descriptor ring */
-> > +       ring_id = xgene_enet_get_ring_id(RING_OWNER_CPU, cpu_bufnum++);
-> > +       rx_ring = xgene_enet_create_desc_ring(ndev, ring_num++,
-> > +                                             RING_CFGSIZE_16KB, ring_id);
-> > +       if (IS_ERR_OR_NULL(rx_ring)) {
-> > +               ret = PTR_ERR(rx_ring);
-> > +               goto err;
-> > +       }
-> 
-> Here we test for IS_ERR_OR_NULL. In the oops I'm hitting, rx_ring is
-> NULL here - but PTR_ERR() apparently returns 0 in that case. So this
-> function ends up returning no error.
-
-Yes, IS_ERR_OR_NULL is evil for this very reason and should be avoided
-where possible.  There were discussions a while back about removing it,
-or at least deprecating it because it causes more bugs (exactly of this
-type) than it solves.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All the mailbox drivers currently use a custom API, but there is
+indeed a patch series floating around to create a generic mailbox
+framework, though it hasn't landed in -next yet.  I can take a look at
+how this driver would fit into that framework.
