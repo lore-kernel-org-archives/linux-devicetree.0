@@ -1,7 +1,7 @@
 From: Suman Anna <s-anna@ti.com>
-Subject: [PATCH 0/9]
-Date: Tue, 24 Jun 2014 20:00:56 -0500
-Message-ID: <1403658065-54614-1-git-send-email-s-anna@ti.com>
+Subject: [PATCH 0/9] OMAP Mailbox DT node/hwmod cleanup
+Date: Tue, 24 Jun 2014 20:04:46 -0500
+Message-ID: <1403658295-54766-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
