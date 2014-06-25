@@ -1,126 +1,198 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 1/3] usb: gadget: pxa27x_udc: add devicetree support
-Date: Wed, 25 Jun 2014 11:41:25 +0100
-Message-ID: <20140625104125.GD14495@leverpostej>
-References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH 2/4 v2] hwmon: ntc_thermistor: Use the manufacturer name properly
+Date: Wed, 25 Jun 2014 16:12:24 +0530
+Message-ID: <CAHfPSqCuAfaJyseYRaZTxLmPpeguXA6D=AX6jPjUFSmBJDdF9w@mail.gmail.com>
+References: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
+ <1403677773-21141-3-git-send-email-ch.naveen@samsung.com> <CABxcv=knKWT6kJYWBV59U_jeV2yeQJkuRof9qZaGgxOVLJ5WDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403427899-32154-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=knKWT6kJYWBV59U_jeV2yeQJkuRof9qZaGgxOVLJ5WDQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "cpgs ." <cpgs@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Lars-Peter Clausen <lars@metafoo.de>, Guenter Roeck <linux@roeck-us.net>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 22, 2014 at 10:04:57AM +0100, Robert Jarzmik wrote:
-> Add support for device-tree device discovery. If devicetree is not
-> provided, fallback to legacy platform data "discovery".
-> 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> 
-> ---
-> Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
->           This is a consequence of other DT reviews on the marvell
->           namings.
-> ---
->  drivers/usb/gadget/pxa27x_udc.c | 105 ++++++++++++++++++++++++++++++++--------
->  drivers/usb/gadget/pxa27x_udc.h |   4 ++
->  2 files changed, 90 insertions(+), 19 deletions(-)
+Hello Javier,
 
-[...]
+On 25 June 2014 16:06, Javier Martinez Canillas <javier@dowhile0.org> wrote:
+> Hello Naveen,
+>
+> On Wed, Jun 25, 2014 at 8:29 AM, Naveen Krishna Chatradhi
+> <ch.naveen@samsung.com> wrote:
+>> Murata Manufacturing Co., Ltd is the vendor for
+>> NTC (Negative Temperature coefficient) based Thermistors.
+>> But, the driver extensively uses "NTC" as the vendor name.
+>>
+>> This patch corrects the vendor name also updates the
+>> compatibility strings according to the vendor-prefix.txt
+>>
+>> Note: Drivers continue to support the previous compatible strings
+>> but further addition of these compatible strings in device tree
+>> is deprecated.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+>> Cc: Guenter Roeck <linux@roeck-us.net>
+>> ---
+>> Changes since v1:
+>> 1. Kept the old compatible string marked as <DEPRECATED> in code and
+>>    in the Documentation.
+>>
+>>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |    2 +-
+>>  .../devicetree/bindings/hwmon/ntc_thermistor.txt   |   20 ++++++++++++++------
+>>  Documentation/hwmon/ntc_thermistor                 |    8 ++++----
+>>  drivers/hwmon/Kconfig                              |    5 +++--
+>>  drivers/hwmon/ntc_thermistor.c                     |   14 +++++++++++++-
+>>  5 files changed, 35 insertions(+), 14 deletions(-)
+>>
+>
+> Looks good to me.
+>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Thanks for the review.
+>
+>> diff --git a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> index 5d49f2b..832fe8c 100644
+>> --- a/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> +++ b/Documentation/devicetree/bindings/arm/samsung/exynos-adc.txt
+>> @@ -48,7 +48,7 @@ adc@12D10000 {
+>>
+>>         /* NTC thermistor is a hwmon device */
+>>         ncp15wb473@0 {
+>> -               compatible = "ntc,ncp15wb473";
+>> +               compatible = "murata,ncp15wb473";
+>>                 pullup-uv = <1800000>;
+>>                 pullup-ohm = <47000>;
+>>                 pulldown-ohm = <0>;
+>> diff --git a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+>> index c6f6667..b117b2e 100644
+>> --- a/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+>> +++ b/Documentation/devicetree/bindings/hwmon/ntc_thermistor.txt
+>> @@ -3,11 +3,19 @@ NTC Thermistor hwmon sensors
+>>
+>>  Requires node properties:
+>>  - "compatible" value : one of
+>> -       "ntc,ncp15wb473"
+>> -       "ntc,ncp18wb473"
+>> -       "ntc,ncp21wb473"
+>> -       "ntc,ncp03wb473"
+>> -       "ntc,ncp15wl333"
+>> +       "murata,ncp15wb473"
+>> +       "murata,ncp18wb473"
+>> +       "murata,ncp21wb473"
+>> +       "murata,ncp03wb473"
+>> +       "murata,ncp15wl333"
+>> +
+>> +/* Usage of vendor name "ntc" is deprecated */
+>> +<DEPRECATED>   "ntc,ncp15wb473"
+>> +<DEPRECATED>   "ntc,ncp18wb473"
+>> +<DEPRECATED>   "ntc,ncp21wb473"
+>> +<DEPRECATED>   "ntc,ncp03wb473"
+>> +<DEPRECATED>   "ntc,ncp15wl333"
+>> +
+>>  - "pullup-uv"  Pull up voltage in micro volts
+>>  - "pullup-ohm" Pull up resistor value in ohms
+>>  - "pulldown-ohm" Pull down resistor value in ohms
+>> @@ -21,7 +29,7 @@ Read more about iio bindings at
+>>
+>>  Example:
+>>         ncp15wb473@0 {
+>> -               compatible = "ntc,ncp15wb473";
+>> +               compatible = "murata,ncp15wb473";
+>>                 pullup-uv = <1800000>;
+>>                 pullup-ohm = <47000>;
+>>                 pulldown-ohm = <0>;
+>> diff --git a/Documentation/hwmon/ntc_thermistor b/Documentation/hwmon/ntc_thermistor
+>> index 3bfda94..057b770 100644
+>> --- a/Documentation/hwmon/ntc_thermistor
+>> +++ b/Documentation/hwmon/ntc_thermistor
+>> @@ -1,7 +1,7 @@
+>>  Kernel driver ntc_thermistor
+>>  =================
+>>
+>> -Supported thermistors:
+>> +Supported thermistors from Murata:
+>>  * Murata NTC Thermistors NCP15WB473, NCP18WB473, NCP21WB473, NCP03WB473, NCP15WL333
+>>    Prefixes: 'ncp15wb473', 'ncp18wb473', 'ncp21wb473', 'ncp03wb473', 'ncp15wl333'
+>>    Datasheet: Publicly available at Murata
+>> @@ -15,9 +15,9 @@ Authors:
+>>  Description
+>>  -----------
+>>
+>> -The NTC thermistor is a simple thermistor that requires users to provide the
+>> -resistance and lookup the corresponding compensation table to get the
+>> -temperature input.
+>> +The NTC (Negative Temperature Coefficient) thermistor is a simple thermistor
+>> +that requires users to provide the resistance and lookup the corresponding
+>> +compensation table to get the temperature input.
+>>
+>>  The NTC driver provides lookup tables with a linear approximation function
+>>  and four circuit models with an option not to use any of the four models.
+>> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
+>> index 08531a1..154851b 100644
+>> --- a/drivers/hwmon/Kconfig
+>> +++ b/drivers/hwmon/Kconfig
+>> @@ -1052,7 +1052,7 @@ config SENSORS_PC87427
+>>           will be called pc87427.
+>>
+>>  config SENSORS_NTC_THERMISTOR
+>> -       tristate "NTC thermistor support"
+>> +       tristate "NTC thermistor support from Murata"
+>>         depends on !OF || IIO=n || IIO
+>>         help
+>>           This driver supports NTC thermistors sensor reading and its
+>> @@ -1060,7 +1060,8 @@ config SENSORS_NTC_THERMISTOR
+>>           send notifications about the temperature.
+>>
+>>           Currently, this driver supports
+>> -         NCP15WB473, NCP18WB473, NCP21WB473, NCP03WB473, and NCP15WL333.
+>> +         NCP15WB473, NCP18WB473, NCP21WB473, NCP03WB473, and NCP15WL333
+>> +         from Murata.
+>>
+>>           This driver can also be built as a module.  If so, the module
+>>           will be called ntc-thermistor.
+>> diff --git a/drivers/hwmon/ntc_thermistor.c b/drivers/hwmon/ntc_thermistor.c
+>> index e76feb86..bdfbe91 100644
+>> --- a/drivers/hwmon/ntc_thermistor.c
+>> +++ b/drivers/hwmon/ntc_thermistor.c
+>> @@ -163,6 +163,18 @@ static int ntc_adc_iio_read(struct ntc_thermistor_platform_data *pdata)
+>>  }
+>>
+>>  static const struct of_device_id ntc_match[] = {
+>> +       { .compatible = "murata,ncp15wb473",
+>> +               .data = &ntc_thermistor_id[0] },
+>> +       { .compatible = "murata,ncp18wb473",
+>> +               .data = &ntc_thermistor_id[1] },
+>> +       { .compatible = "murata,ncp21wb473",
+>> +               .data = &ntc_thermistor_id[2] },
+>> +       { .compatible = "murata,ncp03wb473",
+>> +               .data = &ntc_thermistor_id[3] },
+>> +       { .compatible = "murata,ncp15wl333",
+>> +               .data = &ntc_thermistor_id[4] },
+>> +
+>> +       /* Usage of vendor name "ntc" is deprecated */
+>>         { .compatible = "ntc,ncp15wb473",
+>>                 .data = &ntc_thermistor_id[0] },
+>>         { .compatible = "ntc,ncp18wb473",
+>> @@ -534,7 +546,7 @@ static struct platform_driver ntc_thermistor_driver = {
+>>
+>>  module_platform_driver(ntc_thermistor_driver);
+>>
+>> -MODULE_DESCRIPTION("NTC Thermistor Driver");
+>> +MODULE_DESCRIPTION("NTC Thermistor Driver from Murata");
+>>  MODULE_AUTHOR("MyungJoo Ham <myungjoo.ham@samsung.com>");
+>>  MODULE_LICENSE("GPL");
+>>  MODULE_ALIAS("platform:ntc-thermistor");
+>> --
+>> 1.7.9.5
+>>
+>> --
+>> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+>> the body of a message to majordomo@vger.kernel.org
+>> More majordomo info at  http://vger.kernel.org/majordomo-info.html
 
-> +/**
-> + * pxa_udc_probe_dt - device tree specific probe
-> + * @pdev: platform data
-> + * @udc: pxa_udc structure to fill
-> + *
-> + * Fills udc from platform data out of device tree.
-> + *
-> + * Returns 0 if DT found, 1 if DT not found, and <0 on error
 
-That's impossible as this function is marked as returning bool.
 
-Make this an int and return negative error codes.
-
-> + */
-> +bool pxa_udc_probe_dt(struct platform_device *pdev, struct pxa_udc *udc)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	const struct of_device_id *of_id =
-> +			of_match_device(udc_pxa_dt_ids, &pdev->dev);
-> +	int ret;
-> +	u32 gpio_pullup;
-> +
-> +	if (!np || !of_id)
-> +		return 1;
-> +	ret = of_alias_get_id(np, "udc");
-> +	pdev->id = (ret >= 0) ? ret : -1;
-
-The alias name wasn't mentioned in the binding...
-
-> +
-> +	if (!of_property_read_u32(np, "udc-pullup-gpio", &gpio_pullup))
-> +		udc->gpio_pullup = gpio_pullup;
-
-This number is a Linux internal detail. Use the GPIO bindings.
-
-> +	udc->gpio_pullup_inverted =
-> +		of_property_read_bool(np, "udc-pullup-gpio-inverted");
-
-The GPIO bindings can describe this.
-
-> @@ -2415,7 +2469,13 @@ static int pxa_udc_probe(struct platform_device *pdev)
->  {
->  	struct resource *regs;
->  	struct pxa_udc *udc = &memory;
-> -	int retval = 0, gpio;
-> +	int retval = 0;
-> +
-> +	retval = pxa_udc_probe_dt(pdev, udc);
-> +	if (retval < 0)
-> +		return retval;
-
-This case can never happen given the prototype of pxa_udc_probe_dt.
-
-> @@ -2446,6 +2504,9 @@ static int pxa_udc_probe(struct platform_device *pdev)
->  		retval = PTR_ERR(udc->clk);
->  		goto err_clk;
->  	}
-> +	retval = clk_prepare(udc->clk);
-> +	if (retval)
-> +		goto err_clk_prepare;
->  
->  	retval = -ENOMEM;
->  	udc->regs = ioremap(regs->start, resource_size(regs));
-> @@ -2483,9 +2544,13 @@ err_add_udc:
->  err_irq:
->  	iounmap(udc->regs);
->  err_map:
-> +	clk_unprepare(udc->clk);
-> +err_clk_prepare:
->  	clk_put(udc->clk);
->  	udc->clk = NULL;
->  err_clk:
-> +	if (gpio_is_valid(udc->gpio_pullup))
-> +		gpio_free(udc->gpio_pullup);
->  	return retval;
->  }
->  
-> @@ -2509,6 +2574,7 @@ static int pxa_udc_remove(struct platform_device *_dev)
->  
->  	udc->transceiver = NULL;
->  	the_controller = NULL;
-> +	clk_unprepare(udc->clk);
->  	clk_put(udc->clk);
-
-I don't see why these clock changes should be in the same patch as the
-DT support. They might be a prerequisite, but as far as I can tell they
-are required even without DT probing.
-
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Shine bright,
+(: Nav :)
