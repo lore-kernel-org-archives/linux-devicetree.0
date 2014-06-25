@@ -1,86 +1,75 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 1/2] regulator: max1586 add device-tree support
-Date: Wed, 25 Jun 2014 00:15:28 +0100
-Message-ID: <20140624231528.GV23300@sirena.org.uk>
-References: <1402757665-15102-1-git-send-email-robert.jarzmik@free.fr>
- <20140617144323.GU5099@sirena.org.uk>
- <87oaxrs5wb.fsf@free.fr>
- <20140624153812.GT23300@sirena.org.uk>
- <877g46tc7p.fsf@free.fr>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v2] pinctrl: msm: Add msm8960 definitions
+Date: Wed, 25 Jun 2014 02:17:34 +0200
+Message-ID: <53AA151E.9090701@suse.de>
+References: <1403633766-25796-1-git-send-email-bjorn.andersson@sonymobile.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="Zd8I2GZVcdxtyaG/"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <877g46tc7p.fsf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <1403633766-25796-1-git-send-email-bjorn.andersson@sonymobile.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Linus Walleij <linus.walleij@linaro.org>
+Cc: Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Am 24.06.2014 20:16, schrieb Bjorn Andersson:
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-p=
+inctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pin=
+ctrl.txt
+> new file mode 100644
+> index 0000000..6e79eea
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.=
+txt
+[...]
+> +Example:
+> +
+> +	msmgpio: pinctrl@800000 {
+> +		compatible =3D "qcom,msm8960-pinctrl";
+> +		reg =3D <0x800000 0x4000>;
+> +
+> +		gpio-controller;
+> +		#gpio-cells =3D <2>;
+> +		interrupt-controller;
+> +		#interrupt-cells =3D <2>;
+> +                interrupts =3D <0 32 0x4>;
 
---Zd8I2GZVcdxtyaG/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This line seems space-indented while surrounding ones are tab-indented.
 
-On Tue, Jun 24, 2014 at 08:05:30PM +0200, Robert Jarzmik wrote:
-> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> writes:
+> +
+> +		pinctrl-names =3D "default";
+> +		pinctrl-0 =3D <&debug_uart>;
+> +
+> +		debug_uart: debug_uart {
 
-> >> As for the "state report", this max1586 doesn't report anything, it cannot even
-> >> be queried about the current voltage, sic ...
+While at it, might debug-uart be a better node name? That seems the
+predominant convention and distinguishes from the label.
 
-> > It can't?  That's unfortunate, though I was able to turn up a datasheet
-> > which appears to support that.
+Regards,
+Andreas
 
-> Oh really ? Well, tell me where you read it.
+> +			mux {
+> +				pins =3D "gpio34", "gpio35";
+> +				function =3D "gsbi8";
+> +			};
+> +
+> +			tx {
+> +				pins =3D "gpio34";
+> +				drive-strength =3D <4>;
+> +				bias-disable;
+> +			};
+> +
+> +			rx {
+> +				pins =3D "gpio35";
+> +				drive-strength =3D <2>;
+> +				bias-pull-up;
+> +			};
+> +		};
+> +	};
+[snip]
 
-I said I *was* able to turn up a datasheet which appeared to support
-that.
-
-> >> If you want me to modify this bit I need a bit more of an explanation to
-> >> understand.
-
-> > Where the driver is doing unusual things if they are actually sensible
-> > then the change needs to be clearer about why.
-
-> So would a comment like this address your comment ?
-
-> 	/* Either matched < 0 and return the error. Or matched is 0 which means
-> 	 * no init data was found, ie. no regulator is configured, and return 0
-> 	 * to caller, stating neither error nor any matched regulator.
-> 	 */
-> 	if (matched <= 0)
-> 		return matched;
-
-Can you include something like "...and we have no readback support in
-the device so can't report status" or something please?  That's the key
-bit - the point is that even unconfigured regulators should normally be
-registered.
-
---Zd8I2GZVcdxtyaG/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTqgaNAAoJELSic+t+oim9fLwP/0JTT64mVDazJpLup0JPRaMK
-WVpI0q4VpnKyi58EVpsaU3VyFf6HnY8r4PKOP5tK7XMol7AYPnLyN5YbHHTPjRmU
-vfssB+TeewaDSfGsr8HV+mPICtAqZqRGpqRWvAEunsm9RjO+tf05YKZlZUJhCNMS
-GepbyBvZrsmupyqPZiQ2zSnZvbc7Lh5gKpYWrxJ4/gKOdvvk09zKECf8T0l2as0A
-nZFO8Gr0iygkXtHLmmHCigOjsipsDevAHHurjHdQZ9djh/k5Ec0ZziUjUpQwhFxP
-TD3PlssZ7hK4kbWvVwCOEcaTvrC0Y/b7LbknjEb7J/mwGwQVL2tyjzNHxuA35Ejy
-kfuku2X8DZd+GeNtnidd9pRW4nOsfIMnA3HJ69VxIrqYpSy1ECoxVdi1YtGh+9Nd
-X9+N2VsXtBP6DMAUKzUbNmgpzI/E4lb+Ibi84qusQzwFXcKyiw2Q5HnIkS4H5/L1
-uQWNzJ1ZXd2geSODQ3Hp6kw9ySHewYjS8XN/KKjjLiSXssnhthJLGX19qCix64k4
-CCSRVvcWQ16hQDc+3o20nABi/LYTBcwf0MFS9tHfgZ3a7AB1ECPcOaLBUJ0Kr65L
-pzTcJbo82gfuvMCROnlvM4q1JKqAc6pmxiASI3BnSTKf7IHXbf46bxn75uTYioVv
-ZmoXj0/LENbZfMEr8eBB
-=nEK4
------END PGP SIGNATURE-----
-
---Zd8I2GZVcdxtyaG/--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
