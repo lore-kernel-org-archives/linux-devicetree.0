@@ -1,72 +1,96 @@
-From: Kukjin Kim <kgene.kim@samsung.com>
-Subject: RE: [PATCH 0/4 v2] hwmon: ntc_thermistor: prepose vendor prefix change
-Date: Wed, 25 Jun 2014 19:57:07 +0900
-Message-ID: <02b501cf9064$34f16b80$9ed44280$@samsung.com>
-References: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v6 3/3] ASoC: fsl: add imx-es8328 machine driver
+Date: Wed, 25 Jun 2014 12:00:49 +0100
+Message-ID: <20140625110049.GF14495@leverpostej>
+References: <1403519742-4076-1-git-send-email-xobs@kosagi.com>
+ <1403519742-4076-4-git-send-email-xobs@kosagi.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
-Content-language: ko
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: 'Naveen Krishna Chatradhi' <ch.naveen@samsung.com>, linux-samsung-soc@vger.kernel.org, linux-iio@vger.kernel.org, jdelvare@suse.de, linux@roeck-us.net
-Cc: naveenkrishna.ch@gmail.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, lars@metafoo.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403519742-4076-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org" <bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Naveen Krishna Chatradhi wrote:
+On Mon, Jun 23, 2014 at 11:35:42AM +0100, Sean Cross wrote:
+> This adds an initial machine driver for the ES8328 audio codec on Freescale
+> boards.  The driver supports headphones and an audio regulator for an onboard
+> speaker amp.
 > 
-+ Jean Delvare, Guenter Roeck
+> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+> ---
+>  .../devicetree/bindings/sound/imx-audio-es8328.txt |  61 ++++++
+>  sound/soc/fsl/Kconfig                              |  14 ++
+>  sound/soc/fsl/Makefile                             |   2 +
+>  sound/soc/fsl/imx-es8328.c                         | 224 +++++++++++++++++++++
+>  4 files changed, 301 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+>  create mode 100644 sound/soc/fsl/imx-es8328.c
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+> new file mode 100644
+> index 0000000..89a9a58f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
 
-I'm adding maintainers for drivers/hwmon/ntc* but I'm not sure.
+[...]
 
-Hi,
+> +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX)
+> +- mux-ext-port : The external port of the i.MX audio muxer
+> +
+> +Note: The AUDMUX port numbering should start at 1, which is consistent with
+> +hardware manual.
 
-This series looks good to me. I will take 3/4 and 4/4 for exynos DT changes once
-hwmon/ntc maintainer pick the others.
+Is this true for both internal and external? The code implies so, but
+the lack of "(AUDMUX)" in the mux-ext-port description implies not.
+
+[...]
+
+> +static int imx_es8328_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *np = pdev->dev.of_node;
+> +	struct device_node *ssi_np, *codec_np;
+> +	struct platform_device *ssi_pdev;
+> +	struct imx_es8328_data *data;
+> +	int int_port, ext_port;
+
+You use these as u32 below. Please match the types.
+
+> +	int ret;
+> +	struct device *dev = &pdev->dev;
+> +
+> +	ret = of_property_read_u32(np, "mux-int-port", &int_port);
+> +	if (ret) {
+> +		dev_err(dev, "mux-int-port missing or invalid\n");
+> +		return ret;
+> +	}
+> +	ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
+> +	if (ret) {
+> +		dev_err(dev, "mux-ext-port missing or invalid\n");
+> +		return ret;
+> +	}
+
+Both int_port and ex_port are defined as int but used as u32. Could you
+match the types? It looks like they're never expected to be negative, so
+changing them to u32 should be fine.
+
+It's also probably worth sanity checking the values before using them.
+
+[...]
+
+> +fail:
+> +	if (ssi_np)
+> +		of_node_put(ssi_np);
+> +	if (codec_np)
+> +		of_node_put(codec_np);
+
+You can avoid the checks; of_node_put handles NULL gracefully.
 
 Thanks,
-Kukjin
-
-> As Murata is the manufacturer of the NTC (Negative Temperature coefficient)
-> based Thermistors. ntc_thermistor driver extensively used the prefix "ntc".
-> But, vendor-prefix should be "murata" instead of "ntc".
-> 
-> This patchset
-> 1. Updates the vendor-prefix, DT bindings and Documentation,
->    where ever necessary.
-> 2. Adds thermistor nodes to Exynos5420 based Peach PIT board.
-> 
-> Patches:
-> 1/4. devicetree: bindings: Document murata vendor prefix
->      Adds the vendor prefix "murata" to vendor-prefixes.txt.
-> 2/4. hwmon: ntc_thermistor: Use the manufacturer name properly
->      Updates the driver, Kconfig, device tree bindings and Documentation
->      with the Manufacturer/vendor information.
->      Keeps the old bindings marked as <DEPRECATED> in code and Documentation
-> 3/4. ARM: DTS: use new compatible string as per the documentation
->      Updates the device node in Exynos4412 based Trats2 board
->      with the new device tree bindings.
-> 4/4. ARM: DTS: Add NTC thermistor nodes as child nodes to ADC
->      Adds Thermistor nodes to Exynos5420 based Peach PIT board.
-> 
-> This patchset
-> Naveen Krishna Chatradhi (4):
->   devicetree: bindings: Document murata vendor prefix
->   hwmon: ntc_thermistor: Use the manufacturer name properly
->   ARM: DTS: use new compatible string as per the documentation
->   ARM: DTS: Add NTC thermistor nodes to Exynos5420 based Peach_PIT
-> 
->  .../devicetree/bindings/arm/samsung/exynos-adc.txt |    2 +-
->  .../devicetree/bindings/hwmon/ntc_thermistor.txt   |   20 ++++++++----
->  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
->  Documentation/hwmon/ntc_thermistor                 |    8 ++---
->  arch/arm/boot/dts/exynos4412-trats2.dts            |    4 +--
->  arch/arm/boot/dts/exynos5420-peach-pit.dts         |   34
-++++++++++++++++++++
->  drivers/hwmon/Kconfig                              |    5 +--
->  drivers/hwmon/ntc_thermistor.c                     |   14 +++++++-
->  8 files changed, 72 insertions(+), 16 deletions(-)
-> 
-> --
-> 1.7.9.5
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
