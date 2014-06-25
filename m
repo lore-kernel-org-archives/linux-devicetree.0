@@ -1,48 +1,272 @@
-From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: Re: [PATCH v5 8/8] arm64: boot: dts: update rtsm aemv8 dts with PSCI
- and idle states
-Date: Wed, 25 Jun 2014 15:29:06 +0100
-Message-ID: <53AADCB2.9010802@arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com> <1403705421-17597-9-git-send-email-lorenzo.pieralisi@arm.com>
+From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v3 06/14] clk: max77686: Convert to the generic max clock
+ driver
+Date: Wed, 25 Jun 2014 16:30:08 +0200
+Message-ID: <1403706608.22107.24.camel@AMDC1943>
+References: <1403202040-12641-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1403202040-12641-7-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252; format=flowed
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1403705421-17597-9-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: Sudeep Holla <sudeep.holla@arm.com>, Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>, Chander Kashyap <chander.kashyap@linaro.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <1403202040-12641-7-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Cc: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Daniel Stone <daniels-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 25/06/14 15:10, Lorenzo Pieralisi wrote:
-> This patch updates the RTSM dts file with PSCI bindings and nodes
-> describing the AEMv8 model idle states parameters.
->
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+On czw, 2014-06-19 at 20:20 +0200, Javier Martinez Canillas wrote:
+> Clocks drivers for Maxim PMIC are very similar so they can
+> be converted to use the generic Maxim clock driver.
+> 
+> Also, while being there use module_platform_driver() helper
+> macro to eliminate more boilerplate code.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 > ---
->   arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 44 +++++++++++++++++++++++++++-------
->   1 file changed, 36 insertions(+), 8 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> index d79de9c..4051ffb 100644
-> --- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> +++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> @@ -27,37 +27,65 @@
->   		serial3 = &v2m_serial3;
->   	};
->
-> +	psci {
-> +		compatible = "arm,psci-0.2";
-> +		method = "smc";
-> +		cpu_suspend = <0xc4000001>;
-> +		cpu_off = <0x84000002>;
-> +		cpu_on = <0xc4000003>;
+>  drivers/clk/Kconfig        |   1 +
+>  drivers/clk/clk-max77686.c | 176 +++------------------------------------------
+>  2 files changed, 9 insertions(+), 168 deletions(-)
 
-Standard PSCI v0.2 function IDs are used for "arm,psci-0.2", so you can drop
-them here.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
-Regards,
-Sudeep
+Best regards,
+Krzysztof
 
+
+> 
+> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
+> index 73f78e8..3fd4270 100644
+> --- a/drivers/clk/Kconfig
+> +++ b/drivers/clk/Kconfig
+> @@ -38,6 +38,7 @@ config COMMON_CLK_MAX_GEN
+>  config COMMON_CLK_MAX77686
+>  	tristate "Clock driver for Maxim 77686 MFD"
+>  	depends on MFD_MAX77686
+> +	select COMMON_CLK_MAX_GEN
+>  	---help---
+>  	  This driver supports Maxim 77686 crystal oscillator clock. 
+>  
+> diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
+> index 185b611..ed0beb4 100644
+> --- a/drivers/clk/clk-max77686.c
+> +++ b/drivers/clk/clk-max77686.c
+> @@ -31,187 +31,37 @@
+>  #include <linux/clkdev.h>
+>  
+>  #include <dt-bindings/clock/maxim,max77686.h>
+> -
+> -struct max77686_clk {
+> -	struct max77686_dev *iodev;
+> -	u32 mask;
+> -	struct clk_hw hw;
+> -	struct clk_lookup *lookup;
+> -};
+> -
+> -static struct max77686_clk *to_max77686_clk(struct clk_hw *hw)
+> -{
+> -	return container_of(hw, struct max77686_clk, hw);
+> -}
+> -
+> -static int max77686_clk_prepare(struct clk_hw *hw)
+> -{
+> -	struct max77686_clk *max77686 = to_max77686_clk(hw);
+> -
+> -	return regmap_update_bits(max77686->iodev->regmap,
+> -				  MAX77686_REG_32KHZ, max77686->mask,
+> -				  max77686->mask);
+> -}
+> -
+> -static void max77686_clk_unprepare(struct clk_hw *hw)
+> -{
+> -	struct max77686_clk *max77686 = to_max77686_clk(hw);
+> -
+> -	regmap_update_bits(max77686->iodev->regmap,
+> -		MAX77686_REG_32KHZ, max77686->mask, ~max77686->mask);
+> -}
+> -
+> -static int max77686_clk_is_prepared(struct clk_hw *hw)
+> -{
+> -	struct max77686_clk *max77686 = to_max77686_clk(hw);
+> -	int ret;
+> -	u32 val;
+> -
+> -	ret = regmap_read(max77686->iodev->regmap,
+> -				MAX77686_REG_32KHZ, &val);
+> -
+> -	if (ret < 0)
+> -		return -EINVAL;
+> -
+> -	return val & max77686->mask;
+> -}
+> -
+> -static unsigned long max77686_recalc_rate(struct clk_hw *hw,
+> -					  unsigned long parent_rate)
+> -{
+> -	return 32768;
+> -}
+> -
+> -static struct clk_ops max77686_clk_ops = {
+> -	.prepare	= max77686_clk_prepare,
+> -	.unprepare	= max77686_clk_unprepare,
+> -	.is_prepared	= max77686_clk_is_prepared,
+> -	.recalc_rate	= max77686_recalc_rate,
+> -};
+> +#include "clk-max-gen.h"
+>  
+>  static struct clk_init_data max77686_clks_init[MAX77686_CLKS_NUM] = {
+>  	[MAX77686_CLK_AP] = {
+>  		.name = "32khz_ap",
+> -		.ops = &max77686_clk_ops,
+> +		.ops = &max_gen_clk_ops,
+>  		.flags = CLK_IS_ROOT,
+>  	},
+>  	[MAX77686_CLK_CP] = {
+>  		.name = "32khz_cp",
+> -		.ops = &max77686_clk_ops,
+> +		.ops = &max_gen_clk_ops,
+>  		.flags = CLK_IS_ROOT,
+>  	},
+>  	[MAX77686_CLK_PMIC] = {
+>  		.name = "32khz_pmic",
+> -		.ops = &max77686_clk_ops,
+> +		.ops = &max_gen_clk_ops,
+>  		.flags = CLK_IS_ROOT,
+>  	},
+>  };
+>  
+> -static struct clk *max77686_clk_register(struct device *dev,
+> -				struct max77686_clk *max77686)
+> -{
+> -	struct clk *clk;
+> -	struct clk_hw *hw = &max77686->hw;
+> -
+> -	clk = clk_register(dev, hw);
+> -	if (IS_ERR(clk))
+> -		return clk;
+> -
+> -	max77686->lookup = kzalloc(sizeof(struct clk_lookup), GFP_KERNEL);
+> -	if (!max77686->lookup)
+> -		return ERR_PTR(-ENOMEM);
+> -
+> -	max77686->lookup->con_id = hw->init->name;
+> -	max77686->lookup->clk = clk;
+> -
+> -	clkdev_add(max77686->lookup);
+> -
+> -	return clk;
+> -}
+> -
+>  static int max77686_clk_probe(struct platform_device *pdev)
+>  {
+>  	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+> -	struct max77686_clk *max77686_clks[MAX77686_CLKS_NUM];
+> -	struct clk **clocks;
+> -	int i, ret;
+> -
+> -	clocks = devm_kzalloc(&pdev->dev, sizeof(struct clk *)
+> -					* MAX77686_CLKS_NUM, GFP_KERNEL);
+> -	if (!clocks)
+> -		return -ENOMEM;
+> -
+> -	for (i = 0; i < MAX77686_CLKS_NUM; i++) {
+> -		max77686_clks[i] = devm_kzalloc(&pdev->dev,
+> -					sizeof(struct max77686_clk), GFP_KERNEL);
+> -		if (!max77686_clks[i])
+> -			return -ENOMEM;
+> -	}
+> -
+> -	for (i = 0; i < MAX77686_CLKS_NUM; i++) {
+> -		max77686_clks[i]->iodev = iodev;
+> -		max77686_clks[i]->mask = 1 << i;
+> -		max77686_clks[i]->hw.init = &max77686_clks_init[i];
+> -
+> -		clocks[i] = max77686_clk_register(&pdev->dev, max77686_clks[i]);
+> -		if (IS_ERR(clocks[i])) {
+> -			ret = PTR_ERR(clocks[i]);
+> -			dev_err(&pdev->dev, "failed to register %s\n",
+> -				max77686_clks[i]->hw.init->name);
+> -			goto err_clocks;
+> -		}
+> -	}
+> -
+> -	platform_set_drvdata(pdev, clocks);
+> -
+> -	if (iodev->dev->of_node) {
+> -		struct clk_onecell_data *of_data;
+> -
+> -		of_data = devm_kzalloc(&pdev->dev,
+> -					sizeof(*of_data), GFP_KERNEL);
+> -		if (!of_data) {
+> -			ret = -ENOMEM;
+> -			goto err_clocks;
+> -		}
+>  
+> -		of_data->clks = clocks;
+> -		of_data->clk_num = MAX77686_CLKS_NUM;
+> -		ret = of_clk_add_provider(iodev->dev->of_node,
+> -					of_clk_src_onecell_get, of_data);
+> -		if (ret) {
+> -			dev_err(&pdev->dev, "failed to register OF clock provider\n");
+> -			goto err_clocks;
+> -		}
+> -	}
+> -
+> -	return 0;
+> -
+> -err_clocks:
+> -	for (--i; i >= 0; --i) {
+> -		clkdev_drop(max77686_clks[i]->lookup);
+> -		clk_unregister(max77686_clks[i]->hw.clk);
+> -	}
+> -
+> -	return ret;
+> +	return max_gen_clk_probe(pdev, iodev->regmap, MAX77686_REG_32KHZ,
+> +				 max77686_clks_init, MAX77686_CLKS_NUM);
+>  }
+>  
+>  static int max77686_clk_remove(struct platform_device *pdev)
+>  {
+> -	struct max77686_dev *iodev = dev_get_drvdata(pdev->dev.parent);
+> -	struct clk **clocks = platform_get_drvdata(pdev);
+> -	int i;
+> -
+> -	if (iodev->dev->of_node)
+> -		of_clk_del_provider(iodev->dev->of_node);
+> -
+> -	for (i = 0; i < MAX77686_CLKS_NUM; i++) {
+> -		struct clk_hw *hw = __clk_get_hw(clocks[i]);
+> -		struct max77686_clk *max77686 = to_max77686_clk(hw);
+> -
+> -		clkdev_drop(max77686->lookup);
+> -		clk_unregister(clocks[i]);
+> -	}
+> -	return 0;
+> +	return max_gen_clk_remove(pdev, MAX77686_CLKS_NUM);
+>  }
+>  
+>  static const struct platform_device_id max77686_clk_id[] = {
+> @@ -230,17 +80,7 @@ static struct platform_driver max77686_clk_driver = {
+>  	.id_table = max77686_clk_id,
+>  };
+>  
+> -static int __init max77686_clk_init(void)
+> -{
+> -	return platform_driver_register(&max77686_clk_driver);
+> -}
+> -subsys_initcall(max77686_clk_init);
+> -
+> -static void __init max77686_clk_cleanup(void)
+> -{
+> -	platform_driver_unregister(&max77686_clk_driver);
+> -}
+> -module_exit(max77686_clk_cleanup);
+> +module_platform_driver(max77686_clk_driver);
+>  
+>  MODULE_DESCRIPTION("MAXIM 77686 Clock Driver");
+>  MODULE_AUTHOR("Jonghwa Lee <jonghwa3.lee-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>");
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
