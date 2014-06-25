@@ -1,55 +1,63 @@
-From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: [PATCH V7 4/6] arm64: dts: Add X-Gene reboot driver dts node
-Date: Wed, 25 Jun 2014 16:03:24 -0700
-Message-ID: <1403737406-6474-5-git-send-email-fkan@apm.com>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V7 2/6] Documentation: power: reset: Add documentation for
+ generic SYSCON reboot driver
+Date: Wed, 25 Jun 2014 16:03:22 -0700
+Message-ID: <1403737406-6474-3-git-send-email-fkan@apm.com>
 References: <1403737406-6474-1-git-send-email-fkan@apm.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403737406-6474-1-git-send-email-fkan-qTEPVZfXA3Y@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
-Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1403737406-6474-1-git-send-email-fkan@apm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, arnd@arndb.de, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, patches@apm.com
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-Add X-Gene platform reboot driver dts node.
+Add documentation for generic SYSCON reboot driver.
 
-Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Signed-off-by: Feng Kan <fkan@apm.com>
 ---
- arch/arm64/boot/dts/apm-storm.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ .../bindings/power/reset/syscon-reboot.txt         | 23 ++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 40aa96c..53e70f8 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -103,6 +103,11 @@
- 		#size-cells = <2>;
- 		ranges;
- 
-+		scu: system-clk-controller@17000000 {
-+			compatible = "apm,xgene-scu","syscon";
-+			reg = <0x0 0x17000000 0x0 0x400>;
-+		};
+diff --git a/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+new file mode 100644
+index 0000000..1190631
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+@@ -0,0 +1,23 @@
++Generic SYSCON mapped register reset driver
 +
- 		clocks {
- 			#address-cells = <2>;
- 			#size-cells = <2>;
-@@ -397,5 +402,12 @@
- 			#clock-cells = <1>;
- 			clocks = <&rtcclk 0>;
- 		};
++This is a generic reset driver using syscon to map the reset register.
++The reset is generally performed with a write to the reset register
++defined by the register map pointed by syscon reference plus the offset
++with the mask defined in the reboot node.
 +
-+		reboot@17000014 {
-+			compatible = "syscon-reboot";
-+			regmap = <&scu>;
-+			offset = <0x14>;
-+			mask = <0x1>;
-+		};
- 	};
- };
++Required properties:
++- compatible: should contain "syscon-reboot"
++- regmap: this is phandle to the register map node
++- offset: offset in the register map for the reboot register (in bytes)
++- mask: the reset value written to the reboot register (32 bit access)
++
++Default will be little endian mode, 32 bit access only.
++
++Examples:
++
++	reboot {
++	   compatible = "syscon-reboot";
++	   regmap = <&regmapnode>;
++	   offset = <0x0>;
++	   mask = <0x1>;
++	};
 -- 
 1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
