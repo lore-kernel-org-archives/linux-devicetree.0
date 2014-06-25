@@ -1,77 +1,43 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: gadget: pxa27x_udc device-tree documentation
-Date: Wed, 25 Jun 2014 21:54:01 +0200
-Message-ID: <87zjh07okm.fsf@free.fr>
-References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
-	<1403427899-32154-2-git-send-email-robert.jarzmik@free.fr>
-	<20140625103357.GC14495@leverpostej>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v4 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks binding
+Date: Wed, 25 Jun 2014 12:54:31 -0700
+Message-ID: <CAD=FV=Udt1G4MwSOAS-KmJa=zm4OBkPPxFO81ezY+ywG6zKRgw@mail.gmail.com>
+References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
+	<1403723019-6212-5-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140625103357.GC14495@leverpostej> (Mark Rutland's message of
-	"Wed, 25 Jun 2014 11:33:57 +0100")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403723019-6212-5-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
+Javier,
 
-> On Sun, Jun 22, 2014 at 10:04:58AM +0100, Robert Jarzmik wrote:
->> index 79729a9..0e4863f 100644
->> --- a/Documentation/devicetree/bindings/usb/pxa-usb.txt
->> +++ b/Documentation/devicetree/bindings/usb/pxa-usb.txt
->> @@ -29,3 +29,23 @@ Example:
->>  		marvell,port-mode = <2>; /* PMM_GLOBAL_MODE */
->>  	};
->>  
->> +UDC
->> +
->> +Required properties:
->> + - compatible: Should be "marvell,pxa27x-udc" for USB controllers
->> +   used in device mode.
+On Wed, Jun 25, 2014 at 12:03 PM, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> Like most clock drivers, the Maxim 77686 PMIC clock binding
+> follows the convention that the "#clock-cells" property is
+> used to specify the number of cells in a clock provider.
 >
-> We typically don't like wildcard compatible strings in DT.
-Same as in the other patch, "marvell,pxa270-udc".
+> But the binding document is not clear enough that it shall
+> be set to 1 since the PMIC support multiple clocks outputs.
 >
->> +
->> +Optional properties:
->> + - "udc-pullup-gpio" - gpio activated to control the USB D+ pullup.
->> + - "udc-pullup-gpio-inverted" - boolean inverting gpio pullup logic.
+> Also, explain that the clocks identifiers are defined in a
+> header file that can be included by Device Tree source with
+> client nodes to avoid using magic numbers.
 >
-> Use the GPIO bindings.
-OK. I'm presuming in this case you think of something like :
-	udc-pullup-gpio = <&gpio 22 GPIO_ACTIVE_LOW>
-Which translates into:
-	"udc-pullup-gpio" - gpio activated to control the USB D+ pullup (see
-        gpio.txt)
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> ---
+>
+> Changes since v3:
+>  - Don't change clock-names property to make clear that it's
+>    the consumer clock name and should not match the producer clock.
+>    Suggested by Doug Anderson.
+>
+>  Documentation/devicetree/bindings/clock/maxim,max77686.txt | 13 +++++++++----
+>  1 file changed, 9 insertions(+), 4 deletions(-)
 
->
->> +
->> +Example:
->> +
->> +		pxa27x_udc: udc@40600000 {
->> +			compatible = "marvell,pxa27x-udc";
->> +			reg = <0x40600000 0x10000>;
->> +			interrupts = <11>;
->> +			clocks = <&pxa2xx_clks 11>;
->> +			clock-names = "pxa27x-udc";
->
-> Neither of these were mentioned above.
-Ah you mean I shall describe the standard reg, interrupts as mandatory standard
-options I take it. OK.
->
-> The name of the clock input doesn't make sense.
-I don't understand. With [1] does it make any more sense ? If not you'll have to
-expand a bit more the "doesn't make sense".
-
-Cheers.
-
---
-Robert
-
-[1] http://www.spinics.net/lists/arm-kernel/msg337522.html
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Reviewed-by: Doug Anderson <dianders@chromium.org>
