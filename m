@@ -1,40 +1,151 @@
-From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Subject: Re: [PATCH v1 2/9] mailbox: Add NVIDIA Tegra XUSB mailbox driver
-Date: Wed, 25 Jun 2014 16:02:08 -0600
-Message-ID: <53AB46E0.5010908@wwwdotorg.org>
-References: <1403072180-4944-1-git-send-email-abrestic@chromium.org> <1403072180-4944-3-git-send-email-abrestic@chromium.org>
+From: Paul Walmsley <paul@pwsan.com>
+Subject: Re: [PATCH 7/9] ARM: OMAP2: hwmod_data: Remove legacy mailbox data
+ and addrs
+Date: Wed, 25 Jun 2014 22:05:17 +0000 (UTC)
+Message-ID: <alpine.DEB.2.02.1406252205020.10674@utopia.booyaka.com>
+References: <1403658295-54766-1-git-send-email-s-anna@ti.com> <1403658295-54766-8-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403072180-4944-3-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Content-Type: TEXT/PLAIN; charset=US-ASCII
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1403658295-54766-8-git-send-email-s-anna@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Dave Gerlach <d-gerlach@ti.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
-> The Tegra XHCI controller communicates requests to the host through
-> a mailbox interface.  Host drivers which can handle these requests,
-> such as the Tegra XUSB pad controller driver and upcoming Tegra XHCI
-> host controller driver, can send messages and register to be notified
-> of incoming messages.
+On Tue, 24 Jun 2014, Suman Anna wrote:
 
-> diff --git a/include/linux/tegra-xusb-mbox.h b/include/linux/tegra-xusb-mbox.h
+> OMAP2 devices are devicetree boot only, and the legacy mode
+> of mailbox device creation should no longer be used, so remove
+> the mailbox attribute data and the hwmod addr space used for
+> creating mailboxes in legacy mode.
+> 
+> Cc: Paul Walmsley <paul@pwsan.com>
+> Signed-off-by: Suman Anna <s-anna@ti.com>
 
-> +extern int tegra_xusb_mbox_register_notifier(struct tegra_xusb_mbox *mbox,
-> +					     struct notifier_block *nb);
-> +extern void tegra_xusb_mbox_unregister_notifier(struct tegra_xusb_mbox *mbox,
-> +						struct notifier_block *nb);
-> +extern int tegra_xusb_mbox_send(struct tegra_xusb_mbox *mbox,
-> +				enum tegra_xusb_mbox_cmd cmd, u32 data);
-> +extern struct tegra_xusb_mbox *
-> +tegra_xusb_mbox_lookup_by_phandle(struct device_node *np, const char *prop);
+Acked-by: Paul Walmsley <paul@pwsan.com>
 
-This seems to use a custom API. I've seen mention of a mailbox
-subsystem, and I assume that has a standardized API. Should this driver
-implement that instead?
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+- Paul
+
+> ---
+>  arch/arm/mach-omap2/omap_hwmod_2420_data.c                 | 14 --------------
+>  arch/arm/mach-omap2/omap_hwmod_2430_data.c                 | 13 -------------
+>  .../mach-omap2/omap_hwmod_2xxx_3xxx_interconnect_data.c    |  9 ---------
+>  arch/arm/mach-omap2/omap_hwmod_common_data.h               |  1 -
+>  4 files changed, 37 deletions(-)
+> 
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_2420_data.c b/arch/arm/mach-omap2/omap_hwmod_2420_data.c
+> index 2f15979..65b1647 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_2420_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_2420_data.c
+> @@ -16,7 +16,6 @@
+>  #include <linux/i2c-omap.h>
+>  #include <linux/platform_data/spi-omap2-mcspi.h>
+>  #include <linux/omap-dma.h>
+> -#include <linux/platform_data/mailbox-omap.h>
+>  #include <plat/dmtimer.h>
+>  
+>  #include "omap_hwmod.h"
+> @@ -163,18 +162,6 @@ static struct omap_hwmod omap2420_dma_system_hwmod = {
+>  };
+>  
+>  /* mailbox */
+> -static struct omap_mbox_dev_info omap2420_mailbox_info[] = {
+> -	{ .name = "dsp", .tx_id = 0, .rx_id = 1, .irq_id = 0, .usr_id = 0 },
+> -	{ .name = "iva", .tx_id = 2, .rx_id = 3, .irq_id = 1, .usr_id = 3 },
+> -};
+> -
+> -static struct omap_mbox_pdata omap2420_mailbox_attrs = {
+> -	.num_users	= 4,
+> -	.num_fifos	= 6,
+> -	.info_cnt	= ARRAY_SIZE(omap2420_mailbox_info),
+> -	.info		= omap2420_mailbox_info,
+> -};
+> -
+>  static struct omap_hwmod omap2420_mailbox_hwmod = {
+>  	.name		= "mailbox",
+>  	.class		= &omap2xxx_mailbox_hwmod_class,
+> @@ -188,7 +175,6 @@ static struct omap_hwmod omap2420_mailbox_hwmod = {
+>  			.idlest_idle_bit = OMAP24XX_ST_MAILBOXES_SHIFT,
+>  		},
+>  	},
+> -	.dev_attr	= &omap2420_mailbox_attrs,
+>  };
+>  
+>  /*
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_2430_data.c b/arch/arm/mach-omap2/omap_hwmod_2430_data.c
+> index 6d1b609..c2555cb 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_2430_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_2430_data.c
+> @@ -17,7 +17,6 @@
+>  #include <linux/platform_data/asoc-ti-mcbsp.h>
+>  #include <linux/platform_data/spi-omap2-mcspi.h>
+>  #include <linux/omap-dma.h>
+> -#include <linux/platform_data/mailbox-omap.h>
+>  #include <plat/dmtimer.h>
+>  
+>  #include "omap_hwmod.h"
+> @@ -161,17 +160,6 @@ static struct omap_hwmod omap2430_dma_system_hwmod = {
+>  };
+>  
+>  /* mailbox */
+> -static struct omap_mbox_dev_info omap2430_mailbox_info[] = {
+> -	{ .name = "dsp", .tx_id = 0, .rx_id = 1 },
+> -};
+> -
+> -static struct omap_mbox_pdata omap2430_mailbox_attrs = {
+> -	.num_users	= 4,
+> -	.num_fifos	= 6,
+> -	.info_cnt	= ARRAY_SIZE(omap2430_mailbox_info),
+> -	.info		= omap2430_mailbox_info,
+> -};
+> -
+>  static struct omap_hwmod omap2430_mailbox_hwmod = {
+>  	.name		= "mailbox",
+>  	.class		= &omap2xxx_mailbox_hwmod_class,
+> @@ -185,7 +173,6 @@ static struct omap_hwmod omap2430_mailbox_hwmod = {
+>  			.idlest_idle_bit = OMAP24XX_ST_MAILBOXES_SHIFT,
+>  		},
+>  	},
+> -	.dev_attr	= &omap2430_mailbox_attrs,
+>  };
+>  
+>  /* mcspi3 */
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_2xxx_3xxx_interconnect_data.c b/arch/arm/mach-omap2/omap_hwmod_2xxx_3xxx_interconnect_data.c
+> index 0413dab..c1e98d5 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_2xxx_3xxx_interconnect_data.c
+> +++ b/arch/arm/mach-omap2/omap_hwmod_2xxx_3xxx_interconnect_data.c
+> @@ -152,15 +152,6 @@ struct omap_hwmod_addr_space omap2_dma_system_addrs[] = {
+>  	{ }
+>  };
+>  
+> -struct omap_hwmod_addr_space omap2_mailbox_addrs[] = {
+> -	{
+> -		.pa_start	= 0x48094000,
+> -		.pa_end		= 0x48094000 + SZ_512 - 1,
+> -		.flags		= ADDR_TYPE_RT,
+> -	},
+> -	{ }
+> -};
+> -
+>  struct omap_hwmod_addr_space omap2_mcbsp1_addrs[] = {
+>  	{
+>  		.name		= "mpu",
+> diff --git a/arch/arm/mach-omap2/omap_hwmod_common_data.h b/arch/arm/mach-omap2/omap_hwmod_common_data.h
+> index 2c38c6b..11ed5a1 100644
+> --- a/arch/arm/mach-omap2/omap_hwmod_common_data.h
+> +++ b/arch/arm/mach-omap2/omap_hwmod_common_data.h
+> @@ -33,7 +33,6 @@ extern struct omap_hwmod_addr_space omap2_mcspi1_addr_space[];
+>  extern struct omap_hwmod_addr_space omap2_mcspi2_addr_space[];
+>  extern struct omap_hwmod_addr_space omap2430_mcspi3_addr_space[];
+>  extern struct omap_hwmod_addr_space omap2_dma_system_addrs[];
+> -extern struct omap_hwmod_addr_space omap2_mailbox_addrs[];
+>  extern struct omap_hwmod_addr_space omap2_mcbsp1_addrs[];
+>  extern struct omap_hwmod_addr_space omap2_hdq1w_addr_space[];
+>  
+> -- 
+> 2.0.0
+> 
+
+
+- Paul
