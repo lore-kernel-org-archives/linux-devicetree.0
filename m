@@ -1,115 +1,77 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 8/8] ARM: dts: dra7: Add dt data for PCIe controller
-Date: Wed, 25 Jun 2014 23:30:18 +0530
-Message-ID: <1403719218-9484-9-git-send-email-kishon@ti.com>
+Subject: [PATCH 4/8] ARM: dts: dra7xx-clocks: rename pcie clocks to
+ accommodate second PHY instance
+Date: Wed, 25 Jun 2014 23:30:14 +0530
+Message-ID: <1403719218-9484-5-git-send-email-kishon@ti.com>
 References: <1403719218-9484-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <1403719218-9484-1-git-send-email-kishon@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, bhelgaas@google.com, mohit.kumar@st.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, linux-kernel@vger.kernel.org
-Cc: kishon@ti.com, grant.likely@linaro.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, Paul Walmsley <paul@pwsan.com>, Pawel Moll <pawel.moll@arm.com>, Keerthy <j-keerthy@ti.com>, Rajendra Nayak <rnayak@ti.com>, kishon@ti.com, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Kumar Gala <galak@codeaurora.org>, grant.likely@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Added dt data for PCIe controller. This node contains dt data for
-both the DRA7 part of designware controller and for the designware core.
-The documention for this node can be found @ ../bindings/pci/ti-pci.txt.
+There are two instances of PCIe PHY in DRA7xx. So renamed
+optfclk_pciephy_32khz, optfclk_pciephy_clk and optfclk_pciephy_div_clk to
+optfclk_pciephy1_32khz, optfclk_pciephy1_clk and optfclk_pciephy1_div_clk
+respectively. This is needed for adding the clocks for second PCIe PHY
+instance.
 
+Cc: Rajendra Nayak <rnayak@ti.com>
+Cc: Tero Kristo <t-kristo@ti.com>
+Cc: Paul Walmsley <paul@pwsan.com>
 Cc: Tony Lindgren <tony@atomide.com>
 Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Pawel Moll <pawel.moll@arm.com>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Kumar Gala <galak@codeaurora.org>
-Cc: Bjorn Helgaas <bhelgaas@google.com>
-Cc: Jingoo Han <jg1.han@samsung.com>
-Cc: Jason Gunthorpe <jgunthorpe@obsidianresearch.com>
-Cc: Marek Vasut <marex@denx.de>
-Cc: Arnd Bergmann <arnd@arndb.de>
+Signed-off-by: Keerthy <j-keerthy@ti.com>
 Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
 ---
- arch/arm/boot/dts/dra7.dtsi |   69 +++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 69 insertions(+)
+ arch/arm/boot/dts/dra7xx-clocks.dtsi |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dra7.dtsi b/arch/arm/boot/dts/dra7.dtsi
-index d196404..117288d 100644
---- a/arch/arm/boot/dts/dra7.dtsi
-+++ b/arch/arm/boot/dts/dra7.dtsi
-@@ -98,6 +98,75 @@
- 			};
- 		};
+diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+index 3ff6d7c..fe5db55 100644
+--- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
++++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
+@@ -1165,7 +1165,7 @@
+ 		reg = <0x021c>, <0x0220>;
+ 	};
  
-+		axi@0 {
-+			compatible = "simple-bus";
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+			ranges = <0x51000000 0x51000000 0x3000
-+				  0x0	     0x20000000 0x10000000>;
-+			pcie@51000000 {
-+				compatible = "ti,dra7-pcie";
-+				reg = <0x51000000 0x2000>, <0x51002000 0x14c>, <0x1000 0x2000>;
-+				reg-names = "rc_dbics", "ti_conf", "config";
-+				interrupts = <0 232 0x4>, <0 233 0x4>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				device_type = "pci";
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-+				#interrupt-cells = <1>;
-+				num-lanes = <1>;
-+				ti,hwmods = "pcie1";
-+				phys = <&pcie1_phy>;
-+				phy-names = "pcie-phy0";
-+				interrupt-map-mask = <0 0 0 7>;
-+				interrupt-map = <0 0 0 1 &pcie1_intc 1>,
-+						<0 0 0 2 &pcie1_intc 2>,
-+						<0 0 0 3 &pcie1_intc 3>,
-+						<0 0 0 4 &pcie1_intc 4>;
-+				pcie1_intc: interrupt-controller {
-+					interrupt-controller;
-+					#address-cells = <0>;
-+					#interrupt-cells = <1>;
-+				};
-+			};
-+		};
-+
-+		axi@1 {
-+			compatible = "simple-bus";
-+			#size-cells = <1>;
-+			#address-cells = <1>;
-+			ranges = <0x51800000 0x51800000 0x3000
-+				  0x0	     0x30000000 0x10000000>;
-+			status = "disabled";
-+			pcie@51000000 {
-+				compatible = "ti,dra7-pcie";
-+				reg = <0x51800000 0x2000>, <0x51802000 0x14c>, <0x1000 0x2000>;
-+				reg-names = "rc_dbics", "ti_conf", "config";
-+				interrupts = <0 355 0x4>, <0 356 0x4>;
-+				#address-cells = <3>;
-+				#size-cells = <2>;
-+				device_type = "pci";
-+				ranges = <0x81000000 0 0          0x03000 0 0x00010000
-+					  0x82000000 0 0x30013000 0x13000 0 0xffed000>;
-+				#interrupt-cells = <1>;
-+				num-lanes = <1>;
-+				ti,hwmods = "pcie2";
-+				phys = <&pcie2_phy>;
-+				phy-names = "pcie-phy0";
-+				interrupt-map-mask = <0 0 0 7>;
-+				interrupt-map = <0 0 0 1 &pcie2_intc 1>,
-+						<0 0 0 2 &pcie2_intc 2>,
-+						<0 0 0 3 &pcie2_intc 3>,
-+						<0 0 0 4 &pcie2_intc 4>;
-+				pcie2_intc: interrupt-controller {
-+					interrupt-controller;
-+					#address-cells = <0>;
-+					#interrupt-cells = <1>;
-+				};
-+			};
-+		};
-+
- 		cm_core_aon: cm_core_aon@4a005000 {
- 			compatible = "ti,dra7-cm-core-aon";
- 			reg = <0x4a005000 0x2000>;
+-	optfclk_pciephy_32khz: optfclk_pciephy_32khz@4a0093b0 {
++	optfclk_pciephy1_32khz: optfclk_pciephy1_32khz@4a0093b0 {
+ 		compatible = "ti,gate-clock";
+ 		clocks = <&sys_32k_ck>;
+ 		#clock-cells = <0>;
+@@ -1183,7 +1183,7 @@
+ 		ti,max-div = <2>;
+ 	};
+ 
+-	optfclk_pciephy_clk: optfclk_pciephy_clk@4a0093b0 {
++	optfclk_pciephy1_clk: optfclk_pciephy1_clk@4a0093b0 {
+ 		compatible = "ti,gate-clock";
+ 		clocks = <&apll_pcie_ck>;
+ 		#clock-cells = <0>;
+@@ -1191,7 +1191,7 @@
+ 		ti,bit-shift = <9>;
+ 	};
+ 
+-	optfclk_pciephy_div_clk: optfclk_pciephy_div_clk@4a0093b0 {
++	optfclk_pciephy1_div_clk: optfclk_pciephy1_div_clk@4a0093b0 {
+ 		compatible = "ti,gate-clock";
+ 		clocks = <&optfclk_pciephy_div>;
+ 		#clock-cells = <0>;
 -- 
 1.7.9.5
