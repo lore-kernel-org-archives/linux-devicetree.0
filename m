@@ -1,75 +1,71 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v3 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks
- binding
-Date: Wed, 25 Jun 2014 12:19:11 +0200
-Message-ID: <1403691551.22107.9.camel@AMDC1943>
-References: <1403202040-12641-1-git-send-email-javier.martinez@collabora.co.uk>
- <1403202040-12641-5-git-send-email-javier.martinez@collabora.co.uk>
+From: Kukjin Kim <kgene.kim@samsung.com>
+Subject: RE: [PATCH] ARM: dts: update mmc node with hs-200 mode
+Date: Wed, 25 Jun 2014 19:24:57 +0900
+Message-ID: <01ed01cf905f$b6b21250$241636f0$@samsung.com>
+References: <1403689886-14573-1-git-send-email-yuvaraj.cd@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1403202040-12641-5-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1403689886-14573-1-git-send-email-yuvaraj.cd@samsung.com>
+Content-language: ko
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: 'Yuvaraj Kumar C D' <yuvaraj.cd@gmail.com>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, jh80.chung@samsung.com, cjb@laptop.org, tgih.jun@samsung.com, linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, devicetree@vger.kernel.org, 'Doug Anderson' <dianders@chromium.org>
+Cc: sonnyrao@chromium.org, t.figa@samsung.com, joshi@samsung.com, ks.giri@samsung.com, prashanth.g@samsung.com, alim.akhtar@samsung.com, rahul.sharma@samsung.com, 'Yuvaraj Kumar C D' <yuvaraj.cd@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On czw, 2014-06-19 at 20:20 +0200, Javier Martinez Canillas wrote:
-> Like most clock drivers, the Maxim 77686 PMIC clock binding
-> follows the convention that the "#clock-cells" property is
-> used to specify the number of cells in a clock provider.
+Yuvaraj Kumar C D wrote:
 > 
-> But the binding document is not clear enough that it shall
-> be set to 1 since the PMIC support multiple clocks outputs.
++ Doug
+
+Hi,
+
+> This patch updates hs-200 device tree property from
+> caps2-mmc-hs200-1.8v to mmc-hs200-1.8v for peach-pit
+> and peach-pi boards.
 > 
-> Also, explain that the clocks identifiers are defined in a
-> header file that can be included by Device Tree source with
-> client nodes to avoid using magic numbers.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Signed-off-by: Yuvaraj Kumar C D <yuvaraj.cd@samsung.com>
+
+Already I've queued same patch into my local but waiting for dependencies for
+push to my tree in git.kernel.org:
+
+http://www.spinics.net/lists/arm-kernel/msg341198.html
+
+Thanks,
+Kukjin
+
 > ---
->  .../devicetree/bindings/clock/maxim,max77686.txt          | 15 ++++++++++-----
->  1 file changed, 10 insertions(+), 5 deletions(-)
-
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-
-Best regards,
-Krzysztof
-
-
-> diff --git a/Documentation/devicetree/bindings/clock/maxim,max77686.txt b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> index 96ce71b..8dea305 100644
-> --- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> +++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-> @@ -9,13 +9,18 @@ The MAX77686 contains three 32.768khz clock outputs that can be controlled
->  Following properties should be presend in main device node of the MFD chip.
->  
->  Required properties:
-> -- #clock-cells: simple one-cell clock specifier format is used, where the
-> -  only cell is used as an index of the clock inside the provider. Following
-> -  indices are allowed:
-> +
-> +- #clock-cells: from common clock binding; shall be set to 1.
-> +
-> +Each clock is assigned an identifier and client nodes can use this identifier
-> +to specify the clock which they consume. Following indices are allowed:
->      - 0: 32khz_ap clock,
->      - 1: 32khz_cp clock,
->      - 2: 32khz_pmic clock.
->  
-> +Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max77686.h
-> +header and can be used in device tree sources.
-> +
->  Example: Node of the MFD chip
->  
->  	max77686: max77686@09 {
-> @@ -33,6 +38,6 @@ Example: Clock consumer node
->  	foo@0 {
->  		compatible = "bar,foo";
->  		/* ... */
-> -		clock-names = "my-clock";
-> -		clocks = <&max77686 2>;
-> +		clock-names = "32khz_pmic";
-> +		clocks = <&max77686 MAX77686_CLK_PMIC>;
->  	};
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    2 +-
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-
+> peach-pit.dts
+> index 1cf9df0..056a6fa 100644
+> --- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> +++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
+> @@ -186,7 +186,7 @@
+>  	status = "okay";
+>  	num-slots = <1>;
+>  	broken-cd;
+> -	caps2-mmc-hs200-1_8v;
+> +	mmc-hs200-1_8v;
+>  	supports-highspeed;
+>  	non-removable;
+>  	card-detect-delay = <200>;
+> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-
+> peach-pi.dts
+> index 2c2c137..bb3ee76 100644
+> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+> @@ -171,7 +171,7 @@
+>  	status = "okay";
+>  	num-slots = <1>;
+>  	broken-cd;
+> -	caps2-mmc-hs200-1_8v;
+> +	mmc-hs200-1_8v;
+>  	supports-highspeed;
+>  	non-removable;
+>  	card-detect-delay = <200>;
+> --
+> 1.7.10.4
