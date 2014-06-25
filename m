@@ -1,66 +1,43 @@
-From: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Subject: Re: [PATCH v5 7/8] drivers: cpuidle: initialize Exynos driver through
- DT
-Date: Wed, 25 Jun 2014 17:23:38 +0200
-Message-ID: <5019714.S4WTdsyrXS@amdc1032>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-8-git-send-email-lorenzo.pieralisi@arm.com>
+From: Shawn Guo <shawn.guo@freescale.com>
+Subject: Re: [PATCH 0/8] iMX6 SATA configuration
+Date: Wed, 25 Jun 2014 23:29:14 +0800
+Message-ID: <20140625152912.GI2224@dragon>
+References: <20140624101901.GL32514@n2100.arm.linux.org.uk>
+ <20140624220958.GI14909@htj.dyndns.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-reply-to: <1403705421-17597-8-git-send-email-lorenzo.pieralisi@arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Mark Rutland <mark.rutland@arm.com>, Sudeep Holla <sudeep.holla@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Charles Garcia Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Paul Walmsley <paul@pwsan.com>Ch
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-doc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140624220958.GI14909@htj.dyndns.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: Tejun Heo <tj@kernel.org>
+Cc: Russell King - ARM Linux <linux@arm.linux.org.uk>, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Sascha Hauer <kernel@pengutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-
-Hi,
-
-On Wednesday, June 25, 2014 03:10:20 PM Lorenzo Pieralisi wrote:
-> With the introduction of DT based idle states, CPUidle drivers for
-> ARM can now initialize idle states data through properties in the device
-> tree.
+On Tue, Jun 24, 2014 at 06:09:58PM -0400, Tejun Heo wrote:
+> On Tue, Jun 24, 2014 at 11:19:01AM +0100, Russell King - ARM Linux wrote:
+> > Another round of these patches.  I've integrated Shawn's patch to split
+> > the documentation into this series so I can add the DT documentation
+> > on top of it.
+> > 
+> >  .../devicetree/bindings/ata/ahci-platform.txt      |   6 -
+> >  Documentation/devicetree/bindings/ata/imx-sata.txt |  36 ++++
+> >  arch/arm/boot/dts/imx6q-cubox-i.dts                |   4 +
+> >  drivers/ata/ahci_imx.c                             | 184 ++++++++++++++++++++-
+> >  4 files changed, 216 insertions(+), 14 deletions(-)
 > 
-> This patch adds code to the Exynos CPUidle driver to dynamically
-> initialize idle states data through the updated device tree source
-> files.
-> 
-> Cc: Kukjin Kim <kgene.kim@samsung.com>
-> Cc: Tomasz Figa <t.figa@samsung.com>
-> Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> ---
-> Compile tested, I am not sure I patched the right dts files, please check.
+> Patches look good to me.  Shawn, can you please review the ahci_imx
+> portion?
 
-cpuidle-exynos driver is currently working properly in deeper cpuidle
-mode (AFTR) on Exynos4210 and Exynos5250 (please also see the following
-patch from Tomasz Figa: [1]).  There is ongoing work to AFTR mode work
-also on Exynos4x12 and Exynos3250 but it is not complete yet.  Exynos5410
-OTOH should probably use the generic big little cpuidle driver (this SoC
-is similar to Exynos5420 one for which Chander Kashyap has developed
-cpuidle-big_little support [2]).
+Reviewed-by: Shawn Guo <shawn.guo@freescale.com>
 
-Making long story short, I think that your patch should depend on patch
-[1] and update only exynos4210.dtsi and exynos5250.dtsi.  Also for your
-patch #6 there needs to be some coordination with merging of Chander's
-patchset ([2]).
+I also tested the series on imx6q-sabresd board and nothing breaks
+regarding SATA support on the board.
 
-[1] http://www.spinics.net/lists/arm-kernel/msg341023.html
-[2] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg664470.html
+> How should the patches be routed?  Should I pick only the
+> ata parts or apply the whole thing?
 
->  .../devicetree/bindings/arm/exynos/idle-states.txt | 27 ++++++++++++++++++++
->  arch/arm/boot/dts/exynos3250.dtsi                  | 16 ++++++++++++
->  arch/arm/boot/dts/exynos5250.dtsi                  | 15 +++++++++++
->  arch/arm/boot/dts/exynos5410.dtsi                  | 17 +++++++++++++
->  drivers/cpuidle/Kconfig.arm                        |  1 +
->  drivers/cpuidle/cpuidle-exynos.c                   | 29 +++++++++++++---------
->  6 files changed, 93 insertions(+), 12 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/arm/exynos/idle-states.txt
+I will apply the last two dts patches via IMX tree, and please apply
+the first 6 patches through your tree.
 
-Best regards,
---
-Bartlomiej Zolnierkiewicz
-Samsung R&D Institute Poland
-Samsung Electronics
-
+Shawn
