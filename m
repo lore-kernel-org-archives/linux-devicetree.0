@@ -1,111 +1,66 @@
-Return-Path: <pantelis.antoniou@konsulko.com>
-Return-Path: <pantelis.antoniou@konsulko.com>
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v6 5/9] OF: platform: Add OF notifier handler
-Date: Sun, 22 Jun 2014 12:41:49 +0300
-Message-Id: <1403430113-15171-6-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+Return-Path: <grant.likely@secretlab.ca>
+Return-Path: <grant.likely@secretlab.ca>
+Sender: Grant Likely <glikely@secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
+Subject: Re: [PATCH 1/6] of: Do not free memory at of_node_release
+In-Reply-To: <44A964DB-2C39-4E5B-BD7B-61973942B25A@konsulko.com>
+References: 
+	<1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1403430039-15085-2-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140624141004.9E989C40B84@trevor.secretlab.ca>
+	<0E39F7E8-1141-4D6D-A251-3F0DDEA9AA29@konsulko.com>
+	<20140624202121.7A8E3C40D39@trevor.secretlab.ca>
+	<44A964DB-2C39-4E5B-BD7B-61973942B25A@konsulko.com>
+Date: Wed, 25 Jun 2014 20:24:25 +0100
+Message-Id: <20140625192425.18500C40AE6@trevor.secretlab.ca>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add OF notifier handler needed for creating/destroying platform devices
-according to dynamic runtime changes in the DT live tree.
+On Tue, 24 Jun 2014 23:23:35 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> Hi Grant,
+> 
+> On Jun 24, 2014, at 11:21 PM, Grant Likely wrote:
+> 
+> > On Tue, 24 Jun 2014 17:23:35 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> >> Hi Grant,
+> >> 
+> >> On Jun 24, 2014, at 5:10 PM, Grant Likely wrote:
+> >> 
+> >>> On Sun, 22 Jun 2014 12:40:34 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> >>>> The life-cycle of nodes and properties does not allow us to release
+> >>>> the memory taken by a device_node. Pointer to properties and nodes
+> >>>> might still be in use in drivers, so any memory free'ing is dangerous.
+> >>>> 
+> >>>> Simply move all the properties to the deadprops list, and the node
+> >>>> itself to of_alldeadnodes until the life-cycles issues are resolved.
+> >>> 
+> >>> Ummm. this looks wrong. The release function is supposed to be the place
+> >>> to do the freeing, and with our discussion the other day about moving to
+> >>> rcu, but keeping of_node_get/put() for anything that needs to hold a
+> >>> long term reference, that means the lifecycle issues are pretty much
+> >>> resolved. I don't think this patch is necessary.
+> >>> 
+> >> 
+> >> Well, I thought about it too. This is the culmination of that process :)
+> >> 
+> >> The problem is not the node life-cycle, it's the properties. We can't
+> >> tell for sure who and where has a pointer to the properties of the node,
+> >> and when we free the node, the current code iterates over the properties
+> >> list and frees them. This works only because in my tests, of_node_release
+> >> only gets called when using overlays created nodes.
+> > 
+> > If a caller want's to use the value of a property, then it needs to
+> > of_node_get() the node. Property lifecycle is strictly attached to the
+> > lifecycle of it's node.
+> > 
+> 
+> Taking bets if that's always the case?
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- drivers/base/platform.c | 70 ++++++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 67 insertions(+), 3 deletions(-)
+Any users that do are buggy. I don't want to change the lifecycle model.
 
-diff --git a/drivers/base/platform.c b/drivers/base/platform.c
-index 9e9227e..aa4a7a7 100644
---- a/drivers/base/platform.c
-+++ b/drivers/base/platform.c
-@@ -930,6 +930,57 @@ struct bus_type platform_bus_type = {
- };
- EXPORT_SYMBOL_GPL(platform_bus_type);
- 
-+static struct notifier_block platform_of_notifier;
-+
-+static int of_platform_notify(struct notifier_block *nb,
-+				unsigned long action, void *arg)
-+{
-+	struct device_node *dn;
-+	struct platform_device *pdev_parent, *pdev;
-+	bool children_left;
-+
-+	if (action == OF_RECONFIG_DYNAMIC_CREATE_DEV) {
-+
-+		dn = arg;
-+
-+		/* verify that the parent is a bus */
-+		if (!of_match_node(of_default_bus_match_table, dn->parent))
-+			return NOTIFY_OK;	/* not for us */
-+
-+		/* pdev_parent may be NULL when no bus platform device */
-+		pdev_parent = of_find_device_by_node(dn->parent);
-+		pdev = of_platform_device_create(dn, NULL,
-+				pdev_parent ? &pdev_parent->dev : NULL);
-+		of_dev_put(pdev_parent);
-+
-+		if (pdev == NULL) {
-+			pr_err("%s: failed to create for '%s'\n",
-+					__func__, dn->full_name);
-+			/* of_platform_device_create tosses the error code */
-+			return notifier_from_errno(-EINVAL);
-+		}
-+
-+	} else if (action == OF_RECONFIG_DYNAMIC_DESTROY_DEV) {
-+
-+		dn = arg;
-+
-+		/* find our device by node */
-+		pdev = of_find_device_by_node(dn);
-+		if (pdev == NULL)
-+			return NOTIFY_OK;	/* no? not meant for us */
-+
-+		/* unregister takes one ref away */
-+		of_platform_device_destroy(&pdev->dev, &children_left);
-+
-+		/* and put the reference of the find */
-+		of_dev_put(pdev);
-+
-+	} else
-+		return NOTIFY_OK;
-+
-+	return NOTIFY_STOP;
-+}
-+
- int __init platform_bus_init(void)
- {
- 	int error;
-@@ -938,10 +989,23 @@ int __init platform_bus_init(void)
- 
- 	error = device_register(&platform_bus);
- 	if (error)
--		return error;
--	error =  bus_register(&platform_bus_type);
-+		goto err_out;
-+
-+	error = bus_register(&platform_bus_type);
-+	if (error)
-+		goto err_unreg_dev;
-+
-+	platform_of_notifier.notifier_call = of_platform_notify;
-+	error = of_reconfig_notifier_register(&platform_of_notifier);
- 	if (error)
--		device_unregister(&platform_bus);
-+		goto err_unreg_bus;
-+
-+	return 0;
-+err_unreg_bus:
-+	bus_unregister(&platform_bus_type);
-+err_unreg_dev:
-+	device_unregister(&platform_bus);
-+err_out:
- 	return error;
- }
- 
--- 
-1.7.12
+That said, what I would consider merging a patch that makes a
+configuration or runtime option to never free nodes or properties,
+and/or clears the memory so we know if anyone tries to manipulate them.
+
+g.
