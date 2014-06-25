@@ -1,75 +1,66 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2] pinctrl: msm: Add msm8960 definitions
-Date: Wed, 25 Jun 2014 02:17:34 +0200
-Message-ID: <53AA151E.9090701@suse.de>
-References: <1403633766-25796-1-git-send-email-bjorn.andersson@sonymobile.com>
+From: Suman Anna <s-anna@ti.com>
+Subject: [PATCH 0/9]
+Date: Tue, 24 Jun 2014 20:00:56 -0500
+Message-ID: <1403658065-54614-1-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <1403633766-25796-1-git-send-email-bjorn.andersson@sonymobile.com>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@sonymobile.com>, Linus Walleij <linus.walleij@linaro.org>
-Cc: Andy Gross <agross@codeaurora.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Paul Walmsley <paul@pwsan.com>, Dave Gerlach <d-gerlach@ti.com>, Jassi Brar <jaswinder.singh@linaro.org>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Suman Anna <s-anna@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 24.06.2014 20:16, schrieb Bjorn Andersson:
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-p=
-inctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pin=
-ctrl.txt
-> new file mode 100644
-> index 0000000..6e79eea
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,msm8960-pinctrl.=
-txt
-[...]
-> +Example:
-> +
-> +	msmgpio: pinctrl@800000 {
-> +		compatible =3D "qcom,msm8960-pinctrl";
-> +		reg =3D <0x800000 0x4000>;
-> +
-> +		gpio-controller;
-> +		#gpio-cells =3D <2>;
-> +		interrupt-controller;
-> +		#interrupt-cells =3D <2>;
-> +                interrupts =3D <0 32 0x4>;
+Hi Tony, Paul,
 
-This line seems space-indented while surrounding ones are tab-indented.
+This patch series adds the minimal mailbox DT nodes for the SoCs that are
+currently missing them (OMAP4, AM335x, DRA7). It also limits the legacy
+mailbox platform device creation only for non-DT boot, and cleans up the
+legacy hwmod addresses and attributes used for creating the sub-mailbox
+devices. The sub-mailboxes in DT boot are not created until the OMAP
+mailbox DT adoption series, and is not an issue since some of the other
+required hwmod data for using legacy-mode devices have already been
+cleaned up.
 
-> +
-> +		pinctrl-names =3D "default";
-> +		pinctrl-0 =3D <&debug_uart>;
-> +
-> +		debug_uart: debug_uart {
+The patches are based on 3.16-rc2. The series do not have any order
+dependencies with the OMAP mailbox cleanup series [1], and can be applied
+in any order. The following shows the boot logs on various OMAP platforms
+with just these patches on top of 3.16-rc2:
+  OMAP2 (SDP2430)           : http://slexy.org/view/s21gGdJxXP
+  OMAP3 (BeagleXM)          : http://slexy.org/view/s2n8Pc83Rp
+  OMAP4 (PandaBoard)        : http://slexy.org/view/s21StNWKPz
+  OMAP5 (OMAP5 uEVM)        : http://slexy.org/view/s2y3t6HZtk
+  DRA7  (DRA7 EVM)          : http://slexy.org/view/s2qY23Mt97
+  AM33xx (BeagleBone Black) : http://slexy.org/view/s2ce8jj35O
+  AM43xx (AM437x GP EVM)    : http://slexy.org/view/s2nttmOLSq
 
-While at it, might debug-uart be a better node name? That seems the
-predominant convention and distinguishes from the label.
+[1] http://marc.info/?l=linux-omap&m=140365705821115&w=2
 
-Regards,
-Andreas
+Suman Anna (9):
+  ARM: dts: OMAP4: Add mailbox node
+  ARM: dts: AM33xx: Add mailbox node
+  ARM: dts: AM4372: Correct mailbox node data
+  ARM: dts: DRA7: Add mailbox nodes
+  ARM: DRA7: hwmod_data: Add mailbox hwmod data
+  ARM: OMAP2+: Avoid mailbox legacy device creation for DT-boot
+  ARM: OMAP2: hwmod_data: Remove legacy mailbox data and addrs
+  ARM: OMAP4: hwmod_data: Remove legacy mailbox addrs
+  ARM: AM33xx: hwmod_data: Remove legacy mailbox addrs
 
-> +			mux {
-> +				pins =3D "gpio34", "gpio35";
-> +				function =3D "gsbi8";
-> +			};
-> +
-> +			tx {
-> +				pins =3D "gpio34";
-> +				drive-strength =3D <4>;
-> +				bias-disable;
-> +			};
-> +
-> +			rx {
-> +				pins =3D "gpio35";
-> +				drive-strength =3D <2>;
-> +				bias-pull-up;
-> +			};
-> +		};
-> +	};
-[snip]
+ arch/arm/boot/dts/am33xx.dtsi                      |   7 +
+ arch/arm/boot/dts/am4372.dtsi                      |   7 +-
+ arch/arm/boot/dts/dra7.dtsi                        |  91 ++++++
+ arch/arm/boot/dts/omap4.dtsi                       |   7 +
+ arch/arm/mach-omap2/devices.c                      |   2 +-
+ arch/arm/mach-omap2/omap_hwmod_2420_data.c         |  14 -
+ arch/arm/mach-omap2/omap_hwmod_2430_data.c         |  13 -
+ .../omap_hwmod_2xxx_3xxx_interconnect_data.c       |   9 -
+ .../omap_hwmod_33xx_43xx_interconnect_data.c       |  10 -
+ arch/arm/mach-omap2/omap_hwmod_44xx_data.c         |  10 -
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c          | 305 +++++++++++++++++++++
+ arch/arm/mach-omap2/omap_hwmod_common_data.h       |   1 -
+ 12 files changed, 412 insertions(+), 64 deletions(-)
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+-- 
+2.0.0
+
