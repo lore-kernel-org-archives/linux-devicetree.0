@@ -1,344 +1,288 @@
-Return-Path: <pantelis.antoniou@konsulko.com>
-Return-Path: <pantelis.antoniou@konsulko.com>
+Return-Path: <grant.likely@secretlab.ca>
+Return-Path: <grant.likely@secretlab.ca>
+Sender: Grant Likely <glikely@secretlab.ca>
+From: Grant Likely <grant.likely@secretlab.ca>
 Subject: Re: [PATCH 5/6] OF: Utility helper functions for dynamic nodes
-Mime-Version: 1.0 (Apple Message framework v1085)
-Content-Type: text/plain; charset=us-ascii
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-In-Reply-To: <20140625111432.D067BC40A60@trevor.secretlab.ca>
-Date: Wed, 25 Jun 2014 14:22:36 +0300
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <BC8FE33A-6975-4B86-A46C-A70671D87717@konsulko.com>
-References: <1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com> <1403430039-15085-6-git-send-email-pantelis.antoniou@konsulko.com> <20140625111432.D067BC40A60@trevor.secretlab.ca>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
+In-Reply-To: 
+ <1403430039-15085-6-git-send-email-pantelis.antoniou@konsulko.com>
+References: 
+	<1403430039-15085-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<1403430039-15085-6-git-send-email-pantelis.antoniou@konsulko.com>
+Date: Wed, 25 Jun 2014 12:14:32 +0100
+Message-Id: <20140625111432.D067BC40A60@trevor.secretlab.ca>
+To: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Grant,
+On Sun, 22 Jun 2014 12:40:38 +0300, Pantelis Antoniou <pantelis.antoniou@konsulko.com> wrote:
+> Introduce helper functions for working with the live DT tree,
+> all of them related to dynamically adding/removing nodes and
+> properties.
+> 
+> __of_copy_property() copies a property dynamically
+> __of_create_empty_node() creates an empty node
+> 
+> Bug fix about prop->len == 0 by Ionut Nicu <ioan.nicu.ext@nsn.com>
+> 
+> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
 
-On Jun 25, 2014, at 2:14 PM, Grant Likely wrote:
+So, despite our my earlier comments about wanting to reusing the
+pointers from unflattening the fdt, the addition of fine-grained flags
+just makes things worse. While I still think it would be best to
+directly modify and add the nodes that were created by unflattening
+instead of duplicating them, to do so requires rework of the full_name
+handling that I'm not going to ask you to do.
 
-> On Sun, 22 Jun 2014 12:40:38 +0300, Pantelis Antoniou =
-<pantelis.antoniou@konsulko.com> wrote:
->> Introduce helper functions for working with the live DT tree,
->> all of them related to dynamically adding/removing nodes and
->> properties.
->>=20
->> __of_copy_property() copies a property dynamically
->> __of_create_empty_node() creates an empty node
->>=20
->> Bug fix about prop->len =3D=3D 0 by Ionut Nicu =
-<ioan.nicu.ext@nsn.com>
->>=20
->> Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
->=20
-> So, despite our my earlier comments about wanting to reusing the
-> pointers from unflattening the fdt, the addition of fine-grained flags
-> just makes things worse. While I still think it would be best to
-> directly modify and add the nodes that were created by unflattening
-> instead of duplicating them, to do so requires rework of the full_name
-> handling that I'm not going to ask you to do.
->=20
-> I won't hold things up on that point. It can be reworked later and you
-> can drop the new flags and fine-grained tracking from this patch.
->=20
-> For next version, keep this patch in the same series as the patch
-> actually using it.
->=20
+I won't hold things up on that point. It can be reworked later and you
+can drop the new flags and fine-grained tracking from this patch.
 
-OK. For what is worth, it's easy enough to plonk a check about a zero
-length property and substitute an empty string pointer.
+For next version, keep this patch in the same series as the patch
+actually using it.
 
-I haven't realized there was such a big mess.
+More comments below...
 
-> More comments below...
->=20
->> ---
->> drivers/of/Makefile |   2 +-
->> drivers/of/util.c   | 141 =
-++++++++++++++++++++++++++++++++++++++++++++++++++++
->> include/linux/of.h  |  42 ++++++++++++++++
->=20
-> Similar to the other patches, this will never get used by non-OF core
-> code. Put the prototypes into of_private.h
->=20
+> ---
+>  drivers/of/Makefile |   2 +-
+>  drivers/of/util.c   | 141 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  include/linux/of.h  |  42 ++++++++++++++++
 
-OK.
+Similar to the other patches, this will never get used by non-OF core
+code. Put the prototypes into of_private.h
 
->> 3 files changed, 184 insertions(+), 1 deletion(-)
->> create mode 100644 drivers/of/util.c
->>=20
->> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
->> index 099b1fb..734d3e2 100644
->> --- a/drivers/of/Makefile
->> +++ b/drivers/of/Makefile
->> @@ -1,4 +1,4 @@
->> -obj-y =3D base.o device.o platform.o
->> +obj-y =3D base.o device.o platform.o util.o
->=20
-> obj-$(CONFIG_OF_DYNAMIC) perhaps? We won't use these for anything =
-else.
->=20
+>  3 files changed, 184 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/of/util.c
+> 
+> diff --git a/drivers/of/Makefile b/drivers/of/Makefile
+> index 099b1fb..734d3e2 100644
+> --- a/drivers/of/Makefile
+> +++ b/drivers/of/Makefile
+> @@ -1,4 +1,4 @@
+> -obj-y = base.o device.o platform.o
+> +obj-y = base.o device.o platform.o util.o
 
-OK.
+obj-$(CONFIG_OF_DYNAMIC) perhaps? We won't use these for anything else.
 
->> obj-$(CONFIG_OF_FLATTREE) +=3D fdt.o
->> obj-$(CONFIG_OF_EARLY_FLATTREE) +=3D fdt_address.o
->> obj-$(CONFIG_OF_PROMTREE) +=3D pdt.o
->> diff --git a/drivers/of/util.c b/drivers/of/util.c
->> new file mode 100644
->> index 0000000..f4211f8
->> --- /dev/null
->> +++ b/drivers/of/util.c
->> @@ -0,0 +1,141 @@
->> +/*
->> + * Utility functions for working with device tree(s)
->> + *
->> + * Copyright (C) 2012 Pantelis Antoniou =
-<panto@antoniou-consulting.com>
->> + * Copyright (C) 2012 Texas Instruments Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License
->> + * version 2 as published by the Free Software Foundation.
->> + */
->> +
->> +#include <linux/kernel.h>
->> +#include <linux/module.h>
->> +#include <linux/of.h>
->> +#include <linux/of_device.h>
->> +#include <linux/string.h>
->> +#include <linux/ctype.h>
->> +#include <linux/errno.h>
->> +#include <linux/string.h>
->> +#include <linux/slab.h>
->> +#include <linux/err.h>
->> +
->> +/**
->> + * __of_copy_property - Copy a property dynamically.
->> + * @prop:	Property to copy
->> + * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
->> + * @propflags:	Property flags
->> + *
->> + * Copy a property by dynamically allocating the memory of both the
->> + * property stucture and the property name & contents. The =
-property's
->> + * flags have the OF_DYNAMIC bit set so that we can differentiate =
-between
->> + * dynamically allocated properties and not.
->> + * Returns the newly allocated property or NULL on out of memory =
-error.
->> + */
->> +struct property *__of_copy_property(const struct property *prop,
->> +		gfp_t allocflags, unsigned long propflags)
->=20
-> of_property_dup()?
->=20
-> What is the reason for the double underscore prefix? There isn't a
-> non-double-underscore version to differentiate between it, there is no
-> locking involved at all, and __ isn't used to designate private
-> functions.
->=20
+>  obj-$(CONFIG_OF_FLATTREE) += fdt.o
+>  obj-$(CONFIG_OF_EARLY_FLATTREE) += fdt_address.o
+>  obj-$(CONFIG_OF_PROMTREE) += pdt.o
+> diff --git a/drivers/of/util.c b/drivers/of/util.c
+> new file mode 100644
+> index 0000000..f4211f8
+> --- /dev/null
+> +++ b/drivers/of/util.c
+> @@ -0,0 +1,141 @@
+> +/*
+> + * Utility functions for working with device tree(s)
+> + *
+> + * Copyright (C) 2012 Pantelis Antoniou <panto@antoniou-consulting.com>
+> + * Copyright (C) 2012 Texas Instruments Inc.
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License
+> + * version 2 as published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_device.h>
+> +#include <linux/string.h>
+> +#include <linux/ctype.h>
+> +#include <linux/errno.h>
+> +#include <linux/string.h>
+> +#include <linux/slab.h>
+> +#include <linux/err.h>
+> +
+> +/**
+> + * __of_copy_property - Copy a property dynamically.
+> + * @prop:	Property to copy
+> + * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
+> + * @propflags:	Property flags
+> + *
+> + * Copy a property by dynamically allocating the memory of both the
+> + * property stucture and the property name & contents. The property's
+> + * flags have the OF_DYNAMIC bit set so that we can differentiate between
+> + * dynamically allocated properties and not.
+> + * Returns the newly allocated property or NULL on out of memory error.
+> + */
+> +struct property *__of_copy_property(const struct property *prop,
+> +		gfp_t allocflags, unsigned long propflags)
 
-Double underscore prefix =3D=3D function not meant to be used by =
-drivers, only
-by core OF code. The move of the prototype to the of_private.h will make =
-this
-point moot.
+of_property_dup()?
 
->> +{
->> +	struct property *propn;
->> +
->> +	propn =3D kzalloc(sizeof(*prop), allocflags);
->> +	if (propn =3D=3D NULL)
->=20
-> Nit: I prefer 'if (!propn)' for pointer checks.
->=20
+What is the reason for the double underscore prefix? There isn't a
+non-double-underscore version to differentiate between it, there is no
+locking involved at all, and __ isn't used to designate private
+functions.
 
-OK.
+> +{
+> +	struct property *propn;
+> +
+> +	propn = kzalloc(sizeof(*prop), allocflags);
+> +	if (propn == NULL)
 
->> +		return NULL;
->> +
->> +	propn->_flags =3D propflags;
->> +
->> +	if (of_property_check_flag(propn, OF_ALLOCNAME)) {
->> +		propn->name =3D kstrdup(prop->name, allocflags);
->> +		if (propn->name =3D=3D NULL)
->> +			goto err_fail_name;
->> +	} else
->> +		propn->name =3D prop->name;
->> +
->> +	if (prop->length > 0) {
->> +		if (of_property_check_flag(propn, OF_ALLOCVALUE)) {
->> +			propn->value =3D kmalloc(prop->length, =
-allocflags);
->> +			if (propn->value =3D=3D NULL)
->> +				goto err_fail_value;
->> +			memcpy(propn->value, prop->value, prop->length);
->> +		} else
->> +			propn->value =3D prop->value;
->> +
->> +		propn->length =3D prop->length;
->> +	}
->> +
->> +	/* mark the property as dynamic */
->> +	of_property_set_flag(propn, OF_DYNAMIC);
->> +
->> +	return propn;
->> +
->> +err_fail_value:
->> +	if (of_property_check_flag(propn, OF_ALLOCNAME))
->> +		kfree(propn->name);
->> +err_fail_name:
->> +	kfree(propn);
->> +	return NULL;
->> +}
->> +
->> +/**
->> + * __of_create_empty_node - Create an empty device node dynamically.
->> + * @name:	Name of the new device node
->> + * @type:	Type of the new device node
->> + * @full_name:	Full name of the new device node
->> + * @phandle:	Phandle of the new device node
->> + * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
->> + * @nodeflags:	Node flags
->> + *
->> + * Create an empty device tree node, suitable for further =
-modification.
->> + * The node data are dynamically allocated and all the node flags
->> + * have the OF_DYNAMIC & OF_DETACHED bits set.
->> + * Returns the newly allocated node or NULL on out of memory error.
->> + */
->> +struct device_node *__of_create_empty_node(
->> +		const char *name, const char *type, const char =
-*full_name,
->> +		phandle phandle, gfp_t allocflags, unsigned long =
-nodeflags)
->> +{
->> +	struct device_node *node;
->> +
->> +	node =3D kzalloc(sizeof(*node), allocflags);
->> +	if (node =3D=3D NULL)
->> +		return NULL;
->> +
->> +	node->_flags =3D nodeflags;
->> +
->> +	if (of_node_check_flag(node, OF_ALLOCNAME)) {
->> +		node->name =3D kstrdup(name, allocflags);
->> +		if (node->name =3D=3D NULL)
->> +			goto err_free_node;
->> +	} else
->> +		node->name =3D name;
->> +
->> +	if (of_node_check_flag(node, OF_ALLOCTYPE)) {
->> +		node->type =3D kstrdup(type, allocflags);
->> +		if (node->type =3D=3D NULL)
->> +			goto err_free_name;
->> +	} else
->> +		node->type =3D type;
->> +
->> +	if (of_node_check_flag(node, OF_ALLOCFULL)) {
->> +		node->full_name =3D kstrdup(full_name, allocflags);
->> +		if (node->full_name =3D=3D NULL)
->> +			goto err_free_type;
->> +	} else
->> +		node->full_name =3D full_name;
->> +
->> +	node->phandle =3D phandle;
->> +	of_node_set_flag(node, OF_DYNAMIC);
->> +	of_node_set_flag(node, OF_DETACHED);
->> +
->> +	of_node_init(node);
->> +
->> +	return node;
->> +err_free_type:
->> +	if (of_node_check_flag(node, OF_ALLOCTYPE))
->> +		kfree(node->type);
->> +err_free_name:
->> +	if (of_node_check_flag(node, OF_ALLOCNAME))
->> +		kfree(node->name);
->> +err_free_node:
->> +	kfree(node);
->> +	return NULL;
->> +}
->> diff --git a/include/linux/of.h b/include/linux/of.h
->> index 5e4e1b3..d381eb5 100644
->> --- a/include/linux/of.h
->> +++ b/include/linux/of.h
->> @@ -211,6 +211,15 @@ static inline unsigned long of_read_ulong(const =
-__be32 *cell, int size)
->> #define OF_DYNAMIC	1 /* node and properties were allocated via =
-kmalloc */
->> #define OF_DETACHED	2 /* node has been detached from the device tree =
-*/
->> #define OF_POPULATED	3 /* device already created for the node */
->> +#define OF_ALLOCNAME	4 /* name was kmalloc-ed */
->> +#define OF_ALLOCTYPE	5 /* type was kmalloc-ed */
->> +#define OF_ALLOCFULL	6 /* full_name was kmalloc-ed */
->> +#define OF_ALLOCVALUE	7 /* value was kmalloc-ed */
->> +
->> +#define OF_NODE_ALLOCALL \
->> +	((1 << OF_ALLOCNAME) | (1 << OF_ALLOCTYPE) | (1 << =
-OF_ALLOCFULL))
->> +#define OF_PROP_ALLOCALL \
->> +	((1 << OF_ALLOCNAME) | (1 << OF_ALLOCVALUE))
->>=20
->> #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
->> #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
->> @@ -824,4 +833,37 @@ typedef void (*of_init_fn_1)(struct device_node =
-*);
->> #define OF_DECLARE_2(table, name, compat, fn) \
->> 		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
->>=20
->> +/**
->> + * General utilities for working with live trees.
->> + *
->> + * All functions with two leading underscores operate
->> + * without taking node references, so you either have to
->> + * own the devtree lock or work on detached trees only.
->> + */
->> +
->> +#ifdef CONFIG_OF
->=20
-> #ifdef CONFIG_OF_DYNAMIC perhaps? This will never get used for
-> non-dynamic trees.
->=20
+Nit: I prefer 'if (!propn)' for pointer checks.
 
-OK.
+> +		return NULL;
+> +
+> +	propn->_flags = propflags;
+> +
+> +	if (of_property_check_flag(propn, OF_ALLOCNAME)) {
+> +		propn->name = kstrdup(prop->name, allocflags);
+> +		if (propn->name == NULL)
+> +			goto err_fail_name;
+> +	} else
+> +		propn->name = prop->name;
+> +
+> +	if (prop->length > 0) {
+> +		if (of_property_check_flag(propn, OF_ALLOCVALUE)) {
+> +			propn->value = kmalloc(prop->length, allocflags);
+> +			if (propn->value == NULL)
+> +				goto err_fail_value;
+> +			memcpy(propn->value, prop->value, prop->length);
+> +		} else
+> +			propn->value = prop->value;
+> +
+> +		propn->length = prop->length;
+> +	}
+> +
+> +	/* mark the property as dynamic */
+> +	of_property_set_flag(propn, OF_DYNAMIC);
+> +
+> +	return propn;
+> +
+> +err_fail_value:
+> +	if (of_property_check_flag(propn, OF_ALLOCNAME))
+> +		kfree(propn->name);
+> +err_fail_name:
+> +	kfree(propn);
+> +	return NULL;
+> +}
+> +
+> +/**
+> + * __of_create_empty_node - Create an empty device node dynamically.
+> + * @name:	Name of the new device node
+> + * @type:	Type of the new device node
+> + * @full_name:	Full name of the new device node
+> + * @phandle:	Phandle of the new device node
+> + * @allocflags:	Allocation flags (typically pass GFP_KERNEL)
+> + * @nodeflags:	Node flags
+> + *
+> + * Create an empty device tree node, suitable for further modification.
+> + * The node data are dynamically allocated and all the node flags
+> + * have the OF_DYNAMIC & OF_DETACHED bits set.
+> + * Returns the newly allocated node or NULL on out of memory error.
+> + */
+> +struct device_node *__of_create_empty_node(
+> +		const char *name, const char *type, const char *full_name,
+> +		phandle phandle, gfp_t allocflags, unsigned long nodeflags)
+> +{
+> +	struct device_node *node;
+> +
+> +	node = kzalloc(sizeof(*node), allocflags);
+> +	if (node == NULL)
+> +		return NULL;
+> +
+> +	node->_flags = nodeflags;
+> +
+> +	if (of_node_check_flag(node, OF_ALLOCNAME)) {
+> +		node->name = kstrdup(name, allocflags);
+> +		if (node->name == NULL)
+> +			goto err_free_node;
+> +	} else
+> +		node->name = name;
+> +
+> +	if (of_node_check_flag(node, OF_ALLOCTYPE)) {
+> +		node->type = kstrdup(type, allocflags);
+> +		if (node->type == NULL)
+> +			goto err_free_name;
+> +	} else
+> +		node->type = type;
+> +
+> +	if (of_node_check_flag(node, OF_ALLOCFULL)) {
+> +		node->full_name = kstrdup(full_name, allocflags);
+> +		if (node->full_name == NULL)
+> +			goto err_free_type;
+> +	} else
+> +		node->full_name = full_name;
+> +
+> +	node->phandle = phandle;
+> +	of_node_set_flag(node, OF_DYNAMIC);
+> +	of_node_set_flag(node, OF_DETACHED);
+> +
+> +	of_node_init(node);
+> +
+> +	return node;
+> +err_free_type:
+> +	if (of_node_check_flag(node, OF_ALLOCTYPE))
+> +		kfree(node->type);
+> +err_free_name:
+> +	if (of_node_check_flag(node, OF_ALLOCNAME))
+> +		kfree(node->name);
+> +err_free_node:
+> +	kfree(node);
+> +	return NULL;
+> +}
+> diff --git a/include/linux/of.h b/include/linux/of.h
+> index 5e4e1b3..d381eb5 100644
+> --- a/include/linux/of.h
+> +++ b/include/linux/of.h
+> @@ -211,6 +211,15 @@ static inline unsigned long of_read_ulong(const __be32 *cell, int size)
+>  #define OF_DYNAMIC	1 /* node and properties were allocated via kmalloc */
+>  #define OF_DETACHED	2 /* node has been detached from the device tree */
+>  #define OF_POPULATED	3 /* device already created for the node */
+> +#define OF_ALLOCNAME	4 /* name was kmalloc-ed */
+> +#define OF_ALLOCTYPE	5 /* type was kmalloc-ed */
+> +#define OF_ALLOCFULL	6 /* full_name was kmalloc-ed */
+> +#define OF_ALLOCVALUE	7 /* value was kmalloc-ed */
+> +
+> +#define OF_NODE_ALLOCALL \
+> +	((1 << OF_ALLOCNAME) | (1 << OF_ALLOCTYPE) | (1 << OF_ALLOCFULL))
+> +#define OF_PROP_ALLOCALL \
+> +	((1 << OF_ALLOCNAME) | (1 << OF_ALLOCVALUE))
+>  
+>  #define OF_IS_DYNAMIC(x) test_bit(OF_DYNAMIC, &x->_flags)
+>  #define OF_MARK_DYNAMIC(x) set_bit(OF_DYNAMIC, &x->_flags)
+> @@ -824,4 +833,37 @@ typedef void (*of_init_fn_1)(struct device_node *);
+>  #define OF_DECLARE_2(table, name, compat, fn) \
+>  		_OF_DECLARE(table, name, compat, fn, of_init_fn_2)
+>  
+> +/**
+> + * General utilities for working with live trees.
+> + *
+> + * All functions with two leading underscores operate
+> + * without taking node references, so you either have to
+> + * own the devtree lock or work on detached trees only.
+> + */
+> +
+> +#ifdef CONFIG_OF
 
->> +
->> +struct property *__of_copy_property(const struct property *prop,
->> +		gfp_t allocflags, unsigned long propflags);
->> +struct device_node *__of_create_empty_node(const char *name,
->> +		const char *type, const char *full_name,
->> +		phandle phandle, gfp_t allocflags, unsigned long =
-nodeflags);
->> +
->> +#else /* !CONFIG_OF */
->> +
->> +static inline struct property *__of_copy_property(const struct =
-property *prop,
->> +		gfp_t allocflags, unsigned long propflags)
->> +{
->> +	return NULL;
->> +}
->> +
->> +static inline struct device_node *__of_create_empty_node(const char =
-*name,
->> +		const char *type, const char *full_name,
->> +		phandle phandle, gfp_t allocflags, unsigned long =
-nodeflags)
->> +{
->> +	return NULL;
->> +}
->=20
-> There is absolutely no way these functions should ever get called by
-> non-OF code. Don't tempt people to call them by adding empty versions.
->=20
+#ifdef CONFIG_OF_DYNAMIC perhaps? This will never get used for
+non-dynamic trees.
 
-Heh, OK.
+> +
+> +struct property *__of_copy_property(const struct property *prop,
+> +		gfp_t allocflags, unsigned long propflags);
+> +struct device_node *__of_create_empty_node(const char *name,
+> +		const char *type, const char *full_name,
+> +		phandle phandle, gfp_t allocflags, unsigned long nodeflags);
+> +
+> +#else /* !CONFIG_OF */
+> +
+> +static inline struct property *__of_copy_property(const struct property *prop,
+> +		gfp_t allocflags, unsigned long propflags)
+> +{
+> +	return NULL;
+> +}
+> +
+> +static inline struct device_node *__of_create_empty_node(const char *name,
+> +		const char *type, const char *full_name,
+> +		phandle phandle, gfp_t allocflags, unsigned long nodeflags)
+> +{
+> +	return NULL;
+> +}
 
-> g.
+There is absolutely no way these functions should ever get called by
+non-OF code. Don't tempt people to call them by adding empty versions.
 
-Regards
-
--- Pantelis
+g.
