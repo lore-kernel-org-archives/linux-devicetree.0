@@ -1,271 +1,84 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v5 6/8] drivers: cpuidle: initialize big.LITTLE driver
- through DT
-Date: Wed, 25 Jun 2014 17:44:04 +0100
-Message-ID: <20140625164403.GA15050@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-7-git-send-email-lorenzo.pieralisi@arm.com>
- <20140625150623.GD15240@leverpostej>
+From: "maxime.ripard" <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: Re: [PATCH v2 12/20] clk: sunxi: Add A23 APB0
+ support to sun6i-a31-apb0-clk
+Date: Wed, 25 Jun 2014 18:41:07 +0200
+Message-ID: <20140625164107.GA19569@lukather>
+References: <1403016777-15121-1-git-send-email-wens@csie.org>
+ <1403016777-15121-13-git-send-email-wens@csie.org>
+ <20140618102623.GQ19730@lukather>
+ <CAGb2v64D6qBtXGXzn25443s_oj_=Z-u_P6+-MX52Lz54+9bQyQ@mail.gmail.com>
+ <20140619092847.GW19730@lukather>
+ <CAGb2v64hFc7oVdydoNzKVqjnyNUxuqMXX2AiV3aJLFizKvkOPA@mail.gmail.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140625150623.GD15240@leverpostej>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="BOKacYhQ+x31HxR3"
+Return-path: <linux-sunxi+bncBD2ZNBF5VYJRBFPZVOOQKGQELDW6GRQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Content-Disposition: inline
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Chander Kashyap <chander.kashyap-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sudeep Holla <Sudeep.Holla-5wv7dgnIgG8@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin-5wv7dgnIgG8@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Peter De Schrijver <pdeschrijver-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Santosh Shilimkar <santosh.shilimkar-l0cyMroinI0@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Amit Kucheria <amit.kucheria-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Antti Miettinen <ananaza-X3B1VOXEql0@public.gmane.org>, Stephen Boyd <sboyd-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kevin Hilman <khilman-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Sebastian Capella <sebcape-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>Tomasz Figa <t>
+In-Reply-To: <CAGb2v64hFc7oVdydoNzKVqjnyNUxuqMXX2AiV3aJLFizKvkOPA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Luc Verhaegen <libv-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 04:06:23PM +0100, Mark Rutland wrote:
-> On Wed, Jun 25, 2014 at 03:10:19PM +0100, Lorenzo Pieralisi wrote:
-> > With the introduction of DT based idle states, CPUidle drivers for ARM
-> > can now initialize idle states data through properties in the device tree.
-> > 
-> > This patch adds code to the big.LITTLE CPUidle driver to dynamically
-> > initialize idle states data through the updated device tree source file.
-> > 
-> > Cc: Chander Kashyap <chander.kashyap-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/vexpress.txt | 25 +++++++++++++
-> >  arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts         | 25 +++++++++++++
-> >  drivers/cpuidle/Kconfig.arm                        |  1 +
-> >  drivers/cpuidle/cpuidle-big_little.c               | 43 +++++++++++-----------
-> >  4 files changed, 73 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/vexpress.txt b/Documentation/devicetree/bindings/arm/vexpress.txt
-> > index 39844cd..7f52ac8 100644
-> > --- a/Documentation/devicetree/bindings/arm/vexpress.txt
-> > +++ b/Documentation/devicetree/bindings/arm/vexpress.txt
-> > @@ -67,6 +67,28 @@ with device_type = "cpu" property for every available core, eg.:
-> >  		};
-> >  	};
-> >  
-> > +idle-states node
-> > +----------------
-> > +
-> > +On Versatile Express platforms with power management capabilities, the device
-> > +tree source file must contain the idle-states node[1]. As defined in [1] the
-> > +idle-states node must contain an entry-method property that for Versatile
-> > +Express platforms can be one of:
-> > +
-> > +	- "arm,vexpress-v2p-ca15_a7"
-> 
-> ... and what does this mean? It's the name we've assigned the platform
-> in the Linux DT bindings, but this binding document tells me nothing
-> about how this method works.
 
-Ok, I should have omitted it, I added it to make it compliant with
-current DT bindings where entry-method for idle-states is required and I
-have just added TC2 compatible string to get code out for review.
+--BOKacYhQ+x31HxR3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-I should have made the entry-method optional for arm32 and get rid of
-this useless binding and entry-method string.
+On Fri, Jun 20, 2014 at 02:13:58PM +0800, Chen-Yu Tsai wrote:
+> > If these two clocks are these different though, maybe it would just be
+> > easier to add a new driver. These are trivial enough anyway.
+>=20
+> Yes it is. But it adds more of the same boilerplate code than actual
+> differences of the hardware.
+>=20
+> I'm inclined to keep it as it is for now, unless someone strongly
+> objects.
 
-Thanks,
-Lorenzo
+I'm not strongly objecting, but I'd strongly prefer to go with two
+drivers.
 
-> This feels like leaking Linux internals rather than a reusable
-> interface.
-> 
-> Mark.
-> 
-> > +
-> > +Versatile Express idle-states nodes example:
-> > +
-> > +	idle-states {
-> > +		entry-method = "arm,vexpress-v2p-ca15_a7";
-> > +
-> > +		cluster-sleep-0 {
-> > +			compatible = "arm,idle-state";
-> > +			entry-latency-us = <1000>;
-> > +			exit-latency-us = <700>;
-> > +			min-residency-us = <3500>;
-> > +		};
-> > +	};
-> >  
-> >  Configuration infrastructure
-> >  ----------------------------
-> > @@ -227,3 +249,6 @@ Example of a VE tile description (simplified)
-> >  	};
-> >  };
-> >  
-> > +
-> > +[1] ARM Linux Kernel documentation - Idle states bindings
-> > +    Documentation/devicetree/bindings/arm/idle-states.txt
-> > diff --git a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-> > index a25c262..ad28242 100644
-> > --- a/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-> > +++ b/arch/arm/boot/dts/vexpress-v2p-ca15_a7.dts
-> > @@ -33,11 +33,32 @@
-> >  		#address-cells = <1>;
-> >  		#size-cells = <0>;
-> >  
-> > +		idle-states {
-> > +			entry-method = "arm,vexpress-v2p-ca15_a7";
-> > +
-> > +			CLUSTER_SLEEP_BIG: cluster-sleep-big {
-> > +				compatible = "arm,idle-state";
-> > +				power-rank = <0>;
-> > +				entry-latency-us = <1000>;
-> > +				exit-latency-us = <700>;
-> > +				min-residency-us = <3500>;
-> > +			};
-> > +
-> > +			CLUSTER_SLEEP_LITTLE: cluster-sleep-little {
-> > +				compatible = "arm,idle-state";
-> > +				power-rank = <0>;
-> > +				entry-latency-us = <1000>;
-> > +				exit-latency-us = <500>;
-> > +				min-residency-us = <3000>;
-> > +			};
-> > +		};
-> > +
-> >  		cpu0: cpu@0 {
-> >  			device_type = "cpu";
-> >  			compatible = "arm,cortex-a15";
-> >  			reg = <0>;
-> >  			cci-control-port = <&cci_control1>;
-> > +			cpu-idle-states = <&CLUSTER_SLEEP_BIG>;
-> >  		};
-> >  
-> >  		cpu1: cpu@1 {
-> > @@ -45,6 +66,7 @@
-> >  			compatible = "arm,cortex-a15";
-> >  			reg = <1>;
-> >  			cci-control-port = <&cci_control1>;
-> > +			cpu-idle-states = <&CLUSTER_SLEEP_BIG>;
-> >  		};
-> >  
-> >  		cpu2: cpu@2 {
-> > @@ -52,6 +74,7 @@
-> >  			compatible = "arm,cortex-a7";
-> >  			reg = <0x100>;
-> >  			cci-control-port = <&cci_control2>;
-> > +			cpu-idle-states = <&CLUSTER_SLEEP_LITTLE>;
-> >  		};
-> >  
-> >  		cpu3: cpu@3 {
-> > @@ -59,6 +82,7 @@
-> >  			compatible = "arm,cortex-a7";
-> >  			reg = <0x101>;
-> >  			cci-control-port = <&cci_control2>;
-> > +			cpu-idle-states = <&CLUSTER_SLEEP_LITTLE>;
-> >  		};
-> >  
-> >  		cpu4: cpu@4 {
-> > @@ -66,6 +90,7 @@
-> >  			compatible = "arm,cortex-a7";
-> >  			reg = <0x102>;
-> >  			cci-control-port = <&cci_control2>;
-> > +			cpu-idle-states = <&CLUSTER_SLEEP_LITTLE>;
-> >  		};
-> >  	};
-> >  
-> > diff --git a/drivers/cpuidle/Kconfig.arm b/drivers/cpuidle/Kconfig.arm
-> > index b6d69e8..a9b089c 100644
-> > --- a/drivers/cpuidle/Kconfig.arm
-> > +++ b/drivers/cpuidle/Kconfig.arm
-> > @@ -12,6 +12,7 @@ config ARM_BIG_LITTLE_CPUIDLE
-> >  	depends on ARCH_VEXPRESS_TC2_PM
-> >  	select ARM_CPU_SUSPEND
-> >  	select CPU_IDLE_MULTIPLE_DRIVERS
-> > +	select DT_IDLE_STATES
-> >  	help
-> >  	  Select this option to enable CPU idle driver for big.LITTLE based
-> >  	  ARM systems. Driver manages CPUs coordination through MCPM and
-> > diff --git a/drivers/cpuidle/cpuidle-big_little.c b/drivers/cpuidle/cpuidle-big_little.c
-> > index b45fc62..6712441 100644
-> > --- a/drivers/cpuidle/cpuidle-big_little.c
-> > +++ b/drivers/cpuidle/cpuidle-big_little.c
-> > @@ -24,6 +24,8 @@
-> >  #include <asm/smp_plat.h>
-> >  #include <asm/suspend.h>
-> >  
-> > +#include "dt_idle_states.h"
-> > +
-> >  static int bl_enter_powerdown(struct cpuidle_device *dev,
-> >  			      struct cpuidle_driver *drv, int idx);
-> >  
-> > @@ -61,32 +63,12 @@ static struct cpuidle_driver bl_idle_little_driver = {
-> >  	.name = "little_idle",
-> >  	.owner = THIS_MODULE,
-> >  	.states[0] = ARM_CPUIDLE_WFI_STATE,
-> > -	.states[1] = {
-> > -		.enter			= bl_enter_powerdown,
-> > -		.exit_latency		= 700,
-> > -		.target_residency	= 2500,
-> > -		.flags			= CPUIDLE_FLAG_TIME_VALID |
-> > -					  CPUIDLE_FLAG_TIMER_STOP,
-> > -		.name			= "C1",
-> > -		.desc			= "ARM little-cluster power down",
-> > -	},
-> > -	.state_count = 2,
-> >  };
-> >  
-> >  static struct cpuidle_driver bl_idle_big_driver = {
-> >  	.name = "big_idle",
-> >  	.owner = THIS_MODULE,
-> >  	.states[0] = ARM_CPUIDLE_WFI_STATE,
-> > -	.states[1] = {
-> > -		.enter			= bl_enter_powerdown,
-> > -		.exit_latency		= 500,
-> > -		.target_residency	= 2000,
-> > -		.flags			= CPUIDLE_FLAG_TIME_VALID |
-> > -					  CPUIDLE_FLAG_TIMER_STOP,
-> > -		.name			= "C1",
-> > -		.desc			= "ARM big-cluster power down",
-> > -	},
-> > -	.state_count = 2,
-> >  };
-> >  
-> >  /*
-> > @@ -165,7 +147,8 @@ static int __init bl_idle_driver_init(struct cpuidle_driver *drv, int cpu_id)
-> >  
-> >  static int __init bl_idle_init(void)
-> >  {
-> > -	int ret;
-> > +	int ret, i;
-> > +	struct cpuidle_driver *drv;
-> >  
-> >  	/*
-> >  	 * Initialize the driver just for a compliant set of machines
-> > @@ -187,6 +170,24 @@ static int __init bl_idle_init(void)
-> >  	if (ret)
-> >  		goto out_uninit_little;
-> >  
-> > +	 /* Start at index 1, index 0 standard WFI */
-> > +	ret = dt_init_idle_driver(&bl_idle_big_driver, NULL, 1, false);
-> > +	if (ret)
-> > +		goto out_uninit_big;
-> > +
-> > +	 /* Start at index 1, index 0 standard WFI */
-> > +	ret = dt_init_idle_driver(&bl_idle_little_driver, NULL, 1, false);
-> > +	if (ret)
-> > +		goto out_uninit_big;
-> > +
-> > +	drv = &bl_idle_big_driver;
-> > +	for (i = 1; i < drv->state_count; i++)
-> > +		drv->states[i].enter = bl_enter_powerdown;
-> > +
-> > +	drv = &bl_idle_little_driver;
-> > +	for (i = 1; i < drv->state_count; i++)
-> > +		drv->states[i].enter = bl_enter_powerdown;
-> > +
-> >  	ret = cpuidle_register(&bl_idle_little_driver, NULL);
-> >  	if (ret)
-> >  		goto out_uninit_big;
-> > -- 
-> > 1.9.1
-> > 
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+I don't really want to end up in the same case than with clk-sunxi.c,
+which handles a lot of weird corner case for one particular clock,
+while most of them are just a single-bit gate.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Especially when they have nothing in common, which is pretty much the
+case here.
+
+Maxime
+
+--=20
+Maxime Ripard, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
+
+--BOKacYhQ+x31HxR3
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTqvujAAoJEBx+YmzsjxAgIdEP/2M8UjpshuzvSXZrCUTplpYy
+lwDLn1Nnmo/ycspMBwqi/rCcD/0e3QjAuy/EwlpR9Y4RPPRy2Rt5mNQZ7uLq3Cj3
+C4UPo5Qjf4b4x9lYU5LR6FcKn9QWE/wQhI6Kta0AqWfuh948RVER9kIQZYDyFqq4
+MFUaG3lpZcxIWc6alq0B3oxaKfwHUFZVd/f+8m8Xb/VKxlMh5ATtMmKjjMXKcGkO
+liNacaPJCagQlj77V0zvsFwlOlXIa7jKg1NS4UiUCxItjbcRnjfcim/aS8wqs9Qz
+4wmwIwPSPlaT/HRisz2pVUncwXDycEHLoAmJPbsCZfv+aHU7pRFInHhZ0uBbWzyJ
+etzNQjw/9XSxzjGOG/ZdMHPRNReYkibiqzRK2UTdTAB103hHqR1FH/WPpZCAUu44
+wDoo5epV0RTUiQxRRf4QMivDjQJXingrfylQjp5trNjS/B9E6RsT9p0POmP53RgO
+wojJFE8K9B55ws23QEGVpQj5e2sfTcOgJjY679UCk7UBC0xPtfStVEbsvGZJpBVy
+8NGPMmkP32vPgajAQwDf+jeU1Gora+M4J/4K2/f5wHUR9DmWHEvzdJpVxbijOHel
+K0EasHgc84P2PRVnIqDgMavq8hqexzD0hJtIxEBah6nh4BJQjZX2o3K/BiF8JUxK
+IZpi4gkMaHKLY8GH4TEc
+=Peqk
+-----END PGP SIGNATURE-----
+
+--BOKacYhQ+x31HxR3--
