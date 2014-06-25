@@ -1,392 +1,83 @@
-From: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v3 2/2] arm: dts: add support for AM437x StarterKit
-Date: Tue, 24 Jun 2014 21:07:50 -0500
-Message-ID: <53AA2EF6.6070604@ti.com>
-References: <1403547659-24558-1-git-send-email-balbi@ti.com> <1403547659-24558-3-git-send-email-balbi@ti.com>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH 1/3] clk: exynos-audss: Keep the parent of mout_audss
+ always enabled
+Date: Wed, 25 Jun 2014 08:39:37 +0530
+Message-ID: <53AA3D71.5010000@gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>	<1402464739-19044-2-git-send-email-tushar.b@samsung.com>	<7ha99jjspt.fsf@paris.lan>	<CAC5m3Bwj1HEWSQd7rx6Zn5vbUPKFqeT_X0PL3mAxRw0FNkK=QQ@mail.gmail.com> <CAD=FV=VP4-+B6oV8Skb3rxxPRbOWmzu=6PJbWbxCU=86ZvRuYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed;
-	boundary="------------090103080008050308010404"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403547659-24558-3-git-send-email-balbi-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, r.sricharan-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Josh Elliot <jelliott-l0cyMroinI0@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAD=FV=VP4-+B6oV8Skb3rxxPRbOWmzu=6PJbWbxCU=86ZvRuYQ@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@google.com>, Tushar Behera <tushar.b@samsung.com>
+Cc: Kevin Hilman <khilman@linaro.org>, lkml <linux-kernel@vger.kernel.org>, ML Devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, ML Arch-Arm <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---------------090103080008050308010404
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
+On 06/25/2014 04:29 AM, Doug Anderson wrote:
+> Tushar,
+> 
+> On Thu, Jun 12, 2014 at 12:40 AM, Tushar Behera <tushar.b@samsung.com> wrote:
+>> On Wed, Jun 11, 2014 at 10:20 PM, Kevin Hilman <khilman@linaro.org> wrote:
+>>> Tushar Behera <tushar.b@samsung.com> writes:
+>>>
+>>>> When the output clock of AUDSS mux is disabled, we are getting kernel
+>>>> oops while doing a clk_get() on other clocks provided by AUDSS.
+>>>>
+>>>> Though user manual doesn't specify this dependency, we came across
+>>>> this issue while disabling the parent of AUDSS mux clocks.
+>>>>
+>>>> Keeping the parents of AUDSS mux always enabled fixes this issue.
+>>>
+>>> While this patch works (and fixes the boot problem for me), it seems
+>>> like it's papering over the real problem.
+>>>
+>>
+>> Thanks for testing.
+>>
+>>> Seems like the right fix is actually modelling the clocks properly so
+>>> that enabling a child clock ensures that the parent is also enabled.
+>>>
+>>
+>> Patch 2/3 was to ensure we have proper clock tree defined for
+>> Exynos5420. While testing with audio disabled, that patch alone fixed
+>> the issue. But when audio was enabled (and hence I2S0 was trying to
+>> access the clocks), we got some kernel oops during late booting, hence
+>> I came up this solution.
+>>
+>> The solution might be a little half-baked because of the urgency to
+>> push the fix, but will try to dig more into the issue on Monday when I
+>> resume office.
+> 
+> Which Monday were you referring to?  ;)
+> 
 
-On 06/23/2014 01:20 PM, Felipe Balbi wrote:
-> Add support for TI's AM437x StarterKit Evaluation
-> Module.
->
-> Cc: Josh Elliot <jelliott-l0cyMroinI0@public.gmane.org>
-> Cc: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
-> Signed-off-by: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Sorry that I couldn't get deeper into this issue. Thanks for reminding
+though.
 
-Tested-by: Darren Etheridge <detheridge-l0cyMroinI0@public.gmane.org>
+> ...but in all seriousness do you have an official status update on
+> this patch?  It seems as if it's not needed and all you need is
+> <https://patchwork.kernel.org/patch/4333581/>, but it would be nice to
+> get an official confirmation.
 
-I tested with omap2plus_defconfig + additionally enabling OMAPDSS and 
-Backlight in .config.  Working great for me with ethernet, sdcard, lcd 
-panel and backlight all functional.
+I have tested various scenarios with only patch 2/3, which seems to be
+sufficient for the time being. I have not encountered the older issue
+till now. I was thinking of testing a bit further, but given that you
+have already asked for, we can go ahead with only patch 2/3 right now.
 
-dmesg log attached - generated by kernel built from the repo/branch 
-Felipe pointed to in the cover letter for this series and obviously 
-running on an AM437x StarterKit EVM.
+In case any further issue comes up, I will post patch 1/3 as per the
+review comments that I have got.
 
-Darren
-
---------------090103080008050308010404
-Content-Type: text/x-log; name="dmesg-am437x-sk.log"
-Content-Transfer-Encoding: 8bit
-Content-Disposition: attachment; filename="dmesg-am437x-sk.log"
-
-[    0.000000] Booting Linux on physical CPU 0x0
-[    0.000000] Linux version 3.16.0-rc1-next-20140617-00935-g2072735 (darrene@build-laptop) (gcc version 4.7.3 20130328 (prerelease) (crosstool-NG linaro-1.13.1-4.7-2013.04-20130415 - Linaro GCC 2013.04) ) #5 SMP Tue Jun 24 17:42:32 CDT 2014
-[    0.000000] CPU: ARMv7 Processor [412fc09a] revision 10 (ARMv7), cr=10c5387d
-[    0.000000] CPU: PIPT / VIPT nonaliasing data cache, VIPT aliasing instruction cache
-[    0.000000] Machine model: TI AM437x SK EVM
-[    0.000000] cma: CMA: reserved 16 MiB at ae800000
-[    0.000000] Memory policy: Data cache writeback
-[    0.000000] On node 0 totalpages: 262144
-[    0.000000] free_area_init_node: node 0, pgdat c0956880, node_mem_map edff1000
-[    0.000000]   Normal zone: 1520 pages used for memmap
-[    0.000000]   Normal zone: 0 pages reserved
-[    0.000000]   Normal zone: 194560 pages, LIFO batch:31
-[    0.000000]   HighMem zone: 528 pages used for memmap
-[    0.000000]   HighMem zone: 67584 pages, LIFO batch:15
-[    0.000000] CPU: All CPU(s) started in SVC mode.
-[    0.000000] AM437x ES1.1 (sgx neon )
-[    0.000000] L2C: platform modifies aux control register: 0x0e030000 -> 0x3e430000
-[    0.000000] L2C: DT/platform modifies aux control register: 0x0e030000 -> 0x3e430000
-[    0.000000] L2C-310 enabling early BRESP for Cortex-A9
-[    0.000000] L2C-310 ID prefetch enabled, offset 1 lines
-[    0.000000] OMAP L2C310: ROM does not support power control setting
-[    0.000000] L2C-310 dynamic clock gating disabled, standby mode disabled
-[    0.000000] L2C-310 cache controller enabled, 16 ways, 256 kB
-[    0.000000] L2C-310: CACHE_ID 0x410000c9, AUX_CTRL 0x7e430000
-[    0.000000] PERCPU: Embedded 9 pages/cpu @edfb5000 s14336 r8192 d14336 u36864
-[    0.000000] pcpu-alloc: s14336 r8192 d14336 u36864 alloc=9*4096
-[    0.000000] pcpu-alloc: [0] 0
-[    0.000000] Built 1 zonelists in Zone order, mobility grouping on.  Total pages: 260624
-[    0.000000] Kernel command line: console=ttyO0,115200n8 root=/dev/mmcblk0p2 rw rootfstype=ext4 rootwait
-[    0.000000] PID hash table entries: 4096 (order: 2, 16384 bytes)
-[    0.000000] Dentry cache hash table entries: 131072 (order: 7, 524288 bytes)
-[    0.000000] Inode-cache hash table entries: 65536 (order: 6, 262144 bytes)
-[    0.000000] Memory: 1005092K/1048576K available (6039K kernel code, 705K rwdata, 2388K rodata, 414K init, 8220K bss, 43484K reserved, 270336K highmem)
-[    0.000000] Virtual kernel memory layout:
-[    0.000000]     vector  : 0xffff0000 - 0xffff1000   (   4 kB)
-[    0.000000]     fixmap  : 0xffc00000 - 0xffe00000   (2048 kB)
-[    0.000000]     vmalloc : 0xf0000000 - 0xff000000   ( 240 MB)
-[    0.000000]     lowmem  : 0xc0000000 - 0xef800000   ( 760 MB)
-[    0.000000]     pkmap   : 0xbfe00000 - 0xc0000000   (   2 MB)
-[    0.000000]     modules : 0xbf000000 - 0xbfe00000   (  14 MB)
-[    0.000000]       .text : 0xc0008000 - 0xc0843100   (8429 kB)
-[    0.000000]       .init : 0xc0844000 - 0xc08ab800   ( 414 kB)
-[    0.000000]       .data : 0xc08ac000 - 0xc095c498   ( 706 kB)
-[    0.000000]        .bss : 0xc095c498 - 0xc11635e0   (8221 kB)
-[    0.000000] Hierarchical RCU implementation.
-[    0.000000]  RCU restricting CPUs from NR_CPUS=2 to nr_cpu_ids=1.
-[    0.000000] RCU: Adjusting geometry for rcu_fanout_leaf=16, nr_cpu_ids=1
-[    0.000000] NR_IRQS:16 nr_irqs:16 16
-[    0.000000] GIC CPU mask not found - kernel will fail to boot.
-[    0.000000] GIC CPU mask not found - kernel will fail to boot.
-[    0.000000] OMAP clockevent source: timer2 at 24000000 Hz
-[    0.000012] sched_clock: 32 bits at 24MHz, resolution 41ns, wraps every 178956969942ns
-[    0.000062] OMAP clocksource: timer1 at 24000000 Hz
-[    0.000643] Console: colour dummy device 80x30
-[    0.000680] Lock dependency validator: Copyright (c) 2006 Red Hat, Inc., Ingo Molnar
-[    0.000692] ... MAX_LOCKDEP_SUBCLASSES:  8
-[    0.000702] ... MAX_LOCK_DEPTH:          48
-[    0.000711] ... MAX_LOCKDEP_KEYS:        8191
-[    0.000720] ... CLASSHASH_SIZE:          4096
-[    0.000729] ... MAX_LOCKDEP_ENTRIES:     32768
-[    0.000738] ... MAX_LOCKDEP_CHAINS:      65536
-[    0.000747] ... CHAINHASH_SIZE:          32768
-[    0.000756]  memory used by lock dependency info: 5167 kB
-[    0.000765]  per task-struct memory footprint: 1152 bytes
-[    0.000804] Calibrating delay loop... 1993.93 BogoMIPS (lpj=9969664)
-[    0.119229] pid_max: default: 32768 minimum: 301
-[    0.119549] Security Framework initialized
-[    0.119650] Mount-cache hash table entries: 2048 (order: 1, 8192 bytes)
-[    0.119666] Mountpoint-cache hash table entries: 2048 (order: 1, 8192 bytes)
-[    0.121422] CPU: Testing write buffer coherency: ok
-[    0.122355] CPU0: thread -1, cpu 0, socket 0, mpidr 80000000
-[    0.122459] Setting up static identity map for 0x805b9230 - 0x805b92a0
-[    0.125160] Brought up 1 CPUs
-[    0.125179] SMP: Total of 1 processors activated.
-[    0.125193] CPU: All CPU(s) started in SVC mode.
-[    0.127382] devtmpfs: initialized
-[    0.137997] VFP support v0.3: implementor 41 architecture 3 part 30 variant 9 rev 4
-[    0.171344] omap_hwmod: tptc0 using broken dt data from edma
-[    0.171647] omap_hwmod: tptc1 using broken dt data from edma
-[    0.171925] omap_hwmod: tptc2 using broken dt data from edma
-[    0.236581] omap_hwmod: dss_dispc: cannot be enabled for reset (3)
-[    0.239887] omap_hwmod: dss_rfbi: cannot be enabled for reset (3)
-[    0.241769] pinctrl core: initialized pinctrl subsystem
-[    0.243762] regulator-dummy: no parameters
-[    0.266686] NET: Registered protocol family 16
-[    0.271145] DMA: preallocated 256 KiB pool for atomic coherent allocations
-[    0.272944] cpuidle: using governor ladder
-[    0.272992] cpuidle: using governor menu
-[    0.287209] platform 49000000.edma: alias fck already exists
-[    0.287293] platform 49000000.edma: alias fck already exists
-[    0.287314] platform 49000000.edma: alias fck already exists
-[    0.288633] platform 44e3e000.rtc: Cannot lookup hwmod 'rtc'
-[    0.290482] gpiochip_add: registered GPIOs 0 to 31 on device: gpio
-[    0.291100] OMAP GPIO hardware version 0.1
-[    0.292129] gpiochip_add: registered GPIOs 32 to 63 on device: gpio
-[    0.293422] gpiochip_add: registered GPIOs 64 to 95 on device: gpio
-[    0.297098] platform 53701000.des: Cannot lookup hwmod 'des'
-[    0.303135] No ATAGs?
-[    0.303220] hw-breakpoint: found 5 (+1 reserved) breakpoint and 1 watchpoint registers.
-[    0.303256] hw-breakpoint: maximum watchpoint size is 4 bytes.
-[    0.338263] edma-dma-engine edma-dma-engine.0: TI EDMA DMA engine driver
-[    0.338869] of_get_named_gpiod_flags: can't parse gpios property of node '/fixedregulator@0[0]'
-[    0.339398] V5_0D: 5000 mV
-[    0.339537] reg-fixed-voltage fixedregulator@0: Failed to find supply vin
-[    0.340842] reg-fixed-voltage fixedregulator@0: Failed to register regulator: -517
-[    0.340893] platform fixedregulator@0: Driver reg-fixed-voltage requests probe deferral
-[    0.341008] of_get_named_gpiod_flags: can't parse gpios property of node '/fixedregulator@1[0]'
-[    0.341286] VBUS_USB: 5000 mV
-[    0.341401] reg-fixed-voltage fixedregulator@1: Failed to find supply vin
-[    0.341672] reg-fixed-voltage fixedregulator@1: Failed to register regulator: -517
-[    0.341709] platform fixedregulator@1: Driver reg-fixed-voltage requests probe deferral
-[    0.344303] SCSI subsystem initialized
-[    0.344904] usbcore: registered new interface driver usbfs
-[    0.345050] usbcore: registered new interface driver hub
-[    0.347504] usbcore: registered new device driver usb
-[    0.348353] omap_i2c 44e0b000.i2c: could not find pctldev for node /pinmux@44e10800/i2c0_pins, deferring probe
-[    0.348397] platform 44e0b000.i2c: Driver omap_i2c requests probe deferral
-[    0.348454] omap_i2c 4802a000.i2c: could not find pctldev for node /pinmux@44e10800/i2c1_pins, deferring probe
-[    0.348478] platform 4802a000.i2c: Driver omap_i2c requests probe deferral
-[    0.349489] Advanced Linux Sound Architecture Driver Initialized.
-[    0.352214] Switched to clocksource timer1
-[    0.459745] NET: Registered protocol family 2
-[    0.461308] TCP established hash table entries: 8192 (order: 3, 32768 bytes)
-[    0.461502] TCP bind hash table entries: 8192 (order: 6, 294912 bytes)
-[    0.463402] TCP: Hash tables configured (established 8192 bind 8192)
-[    0.463731] TCP: reno registered
-[    0.463793] UDP hash table entries: 512 (order: 3, 40960 bytes)
-[    0.464052] UDP-Lite hash table entries: 512 (order: 3, 40960 bytes)
-[    0.465147] NET: Registered protocol family 1
-[    0.466781] RPC: Registered named UNIX socket transport module.
-[    0.466822] RPC: Registered udp transport module.
-[    0.466834] RPC: Registered tcp transport module.
-[    0.466846] RPC: Registered tcp NFSv4.1 backchannel transport module.
-[    0.470306] futex hash table entries: 256 (order: 2, 16384 bytes)
-[    0.474374] VFS: Disk quotas dquot_6.5.2
-[    0.474486] Dquot-cache hash table entries: 1024 (order 0, 4096 bytes)
-[    0.476580] NFS: Registering the id_resolver key type
-[    0.476868] Key type id_resolver registered
-[    0.476904] Key type id_legacy registered
-[    0.477049] jffs2: version 2.2. (NAND) (SUMMARY)  © 2001-2006 Red Hat, Inc.
-[    0.477412] msgmni has been set to 1467
-[    0.481434] bounce: pool size: 64 pages
-[    0.481605] io scheduler noop registered
-[    0.481631] io scheduler deadline registered
-[    0.481696] io scheduler cfq registered (default)
-[    0.485979] pinctrl-single 44e10800.pinmux: 199 pins at pa f9e10800 size 796
-[    0.490000] pwm-backlight backlight: GPIO lookup for consumer enable
-[    0.490022] pwm-backlight backlight: using device tree for GPIO lookup
-[    0.490040] of_get_named_gpiod_flags: can't parse gpios property of node '/backlight[0]'
-[    0.490054] of_get_named_gpiod_flags: can't parse gpios property of node '/backlight[0]'
-[    0.490067] pwm-backlight backlight: using lookup tables for GPIO lookup
-[    0.490183] pwm-backlight backlight: lookup for GPIO enable failed
-[    0.490289] backlight supply power not found, using dummy regulator
-[    0.492682] DSS: set fck to 200000000
-[    0.493245] DSS: dss_runtime_get
-[    0.493292] DSS: dss_restore_context
-[    0.493336] OMAP DSS rev 2.0
-[    0.493346] DSS: dss_runtime_put
-[    0.493360] DSS: dss_save_context
-[    0.493370] DSS: context saved
-[    0.493854] DISPC: dispc_runtime_get
-[    0.493895] DSS: dss_restore_context
-[    0.493907] DSS: context restored
-[    0.493941] DISPC: dispc_restore_context
-[    0.493968] omapdss_dispc 4832a400.dispc: OMAP DISPC rev 3.0
-[    0.493979] DISPC: dispc_runtime_put
-[    0.493996] DISPC: dispc_save_context
-[    0.494032] DISPC: context saved
-[    0.495376] panel-dpi display: GPIO lookup for consumer enable
-[    0.495397] panel-dpi display: using device tree for GPIO lookup
-[    0.495451] of_get_named_gpiod_flags exited with status 0
-[    0.496831] DISPC: dispc_runtime_get
-[    0.497089] DISPC: dispc_runtime_put
-[    0.497111] DISPC: dispc_save_context
-[    0.497148] DISPC: context saved
-[    0.497358] DISPC: dispc_runtime_get
-[    0.497509] DISPC: dispc_runtime_put
-[    0.497548] DISPC: dispc_save_context
-[    0.497579] DISPC: context saved
-[    0.497604] DISPC: dispc_runtime_get
-[    0.497635] DISPC: dispc_runtime_put
-[    0.497650] DISPC: dispc_save_context
-[    0.497676] DISPC: context saved
-[    0.497696] DISPC: dispc_runtime_get
-[    0.497723] DISPC: dispc_runtime_put
-[    0.497737] DISPC: dispc_save_context
-[    0.497760] DISPC: context saved
-[    0.497960] DSS: dss_save_context
-[    0.498009] DSS: context saved
-[    0.501233] APPLY: omap_dss_mgr_apply(lcd)
-[    0.502209] Console: switching to colour frame buffer device 60x34
-[    0.504855] APPLY: omap_dss_mgr_apply(lcd)
-[    0.504885] APPLY: omap_dss_mgr_apply(lcd)
-[    0.504900] DPI: dpi_set_timings
-[    0.505078] DISPC: dispc_runtime_get
-[    0.505210] DSS: dss_restore_context
-[    0.505225] DSS: context restored
-[    0.505552] DSS: set fck to 198000000
-[    0.508202] APPLY: writing mgr 0 regs
-[    0.508252] APPLY: writing ovl 0 regs
-[    0.508273] DISPC: dispc_ovl_setup 0, pa 0xae840000, pa_uv 0x00000000, sw 480, 0,0, 480x272 -> 480x272, cmode 40, rot 0, mir 0, chan 0 repl 1
-[    0.508291] DISPC: calc_rot(0): scrw 480, 480x272
-[    0.508304] DISPC: offset0 0, offset1 0, row_inc 1, pix_inc 1
-[    0.508318] DISPC: 0,0 480x272 -> 480x272
-[    0.508332] APPLY: writing ovl 0 regs extra
-[    0.508342] DISPC: dispc_enable_plane 0, 1
-[    0.508355] DISPC: fifo(0) threshold (bytes), old 960/1023, new 960/1023
-[    0.508364] APPLY: writing ovl 1 regs
-[    0.508372] APPLY: writing ovl 1 regs extra
-[    0.508381] APPLY: writing ovl 2 regs
-[    0.508389] APPLY: writing ovl 2 regs extra
-[    0.508398] APPLY: writing mgr 0 regs extra
-[    0.508408] DISPC: channel 0 xres 480 yres 272
-[    0.508419] DISPC: pck 9000000
-[    0.508429] DISPC: hsw 4 hfp 8 hbp 43 vsw 10 vfp 4 vbp 12
-[    0.508440] DISPC: vsync_level 1 hsync_level 1 data_pclk_edge 1 de_level 0 sync_pclk_edge 0
-[    0.508449] DISPC: hsync 16822Hz, vsync 56Hz
-[    0.508461] DISPC: lck = 198000000 (1)
-[    0.508470] DISPC: pck = 9000000 (22)
-[    0.508743] omapfb omapfb: using display 'lcd' mode 480x272
-[    0.510994] Serial: 8250/16550 driver, 4 ports, IRQ sharing enabled
-[    0.516430] omap_uart 44e09000.serial: no wakeirq for uart0
-[    0.516467] of_get_named_gpiod_flags: can't parse gpios property of node '/ocp/serial@44e09000[0]'
-[    0.516488] omap_uart 44e09000.serial: No clock speed specified: using default: 48000000
-[    0.517035] 44e09000.serial: ttyO0 at MMIO 0x44e09000 (irq = 104, base_baud = 3000000) is a OMAP UART0
-[    1.369909] console [ttyO0] enabled
-[    1.393306] brd: module loaded
-[    1.407599] loop: module loaded
-[    1.413502] mtdoops: mtd device (mtddev=name/number) must be supplied
-[    1.421194] ti-qspi 47900000.qspi: memory mapped resource not required
-[    1.519456] usbcore: registered new interface driver asix
-[    1.525443] usbcore: registered new interface driver ax88179_178a
-[    1.531942] usbcore: registered new interface driver cdc_ether
-[    1.538249] usbcore: registered new interface driver smsc95xx
-[    1.544429] usbcore: registered new interface driver net1080
-[    1.550443] usbcore: registered new interface driver cdc_subset
-[    1.556778] usbcore: registered new interface driver zaurus
-[    1.562813] usbcore: registered new interface driver cdc_ncm
-[    1.570817] usbcore: registered new interface driver cdc_wdm
-[    1.577089] usbcore: registered new interface driver usb-storage
-[    1.583590] usbcore: registered new interface driver usbtest
-[    1.591744] mousedev: PS/2 mouse device common for all mice
-[    1.600240] omap_rtc 44e3e000.rtc: _od_fail_runtime_resume: FIXME: missing hwmod/omap_dev info
-[    1.610515] omap_rtc 44e3e000.rtc: rtc core: registered 44e3e000.rtc as rtc0
-[    1.618113] 44e3e000.rtc: already running
-[    1.622972] i2c /dev entries driver
-[    1.626696] Driver for 1-wire Dallas network protocol.
-[    1.636377] omap_wdt: OMAP Watchdog Timer Rev 0x01: initial timeout 60 sec
-[    1.644980] of_get_named_gpiod_flags exited with status 0
-[    1.645005] of_get_named_gpiod_flags: can't parse gpios property of node '/ocp/mmc@48060000[0]'
-[    1.646047] omap_hsmmc 48060000.mmc: unable to get vmmc regulator -517
-[    1.653419] platform 48060000.mmc: Driver omap_hsmmc requests probe deferral
-[    1.661412] of_get_named_gpiod_flags exited with status 0
-[    1.661441] of_get_named_gpiod_flags exited with status 0
-[    1.661461] of_get_named_gpiod_flags exited with status 0
-[    1.661479] of_get_named_gpiod_flags exited with status 0
-[    1.661501] of_get_named_gpiod_flags exited with status 0
-[    1.662298] of_get_named_gpiod_flags exited with status 0
-[    1.662599] of_get_named_gpiod_flags exited with status 0
-[    1.662851] of_get_named_gpiod_flags exited with status 0
-[    1.663539] ledtrig-cpu: registered to indicate activity on CPUs
-[    1.670316] usbcore: registered new interface driver usbhid
-[    1.676218] usbhid: USB HID core driver
-[    1.686465] davinci_evm sound: ASoC: CODEC (null) not registered
-[    1.693258] davinci_evm sound: snd_soc_register_card failed (-517)
-[    1.699796] platform sound: Driver davinci_evm requests probe deferral
-[    1.707389] oprofile: no performance counters
-[    1.712705] oprofile: using timer interrupt.
-[    1.717756] TCP: cubic registered
-[    1.721275] Initializing XFRM netlink socket
-[    1.725922] NET: Registered protocol family 17
-[    1.730642] NET: Registered protocol family 15
-[    1.735760] Key type dns_resolver registered
-[    1.740441] omap_voltage_late_init: Voltage driver support not added
-[    1.747176] sr_dev_init: No voltage domain specified for smartreflex0. Cannot initialize
-[    1.755674] sr_dev_init: No voltage domain specified for smartreflex1. Cannot initialize
-[    1.765097] ThumbEE CPU extension supported.
-[    1.769618] Registering SWP/SWPB emulation handler
-[    1.774719] SmartReflex Class3 initialized
-[    1.786932] of_get_named_gpiod_flags: can't parse gpios property of node '/fixedregulator@0[0]'
-[    1.787552] V5_0D: 5000 mV
-[    1.790632] reg-fixed-voltage fixedregulator@0: Failed to find supply vin
-[    1.798436] reg-fixed-voltage fixedregulator@0: Failed to register regulator: -517
-[    1.806537] platform fixedregulator@0: Driver reg-fixed-voltage requests probe deferral
-[    1.815438] of_get_named_gpiod_flags: can't parse gpios property of node '/fixedregulator@1[0]'
-[    1.815766] VBUS_USB: 5000 mV
-[    1.819088] reg-fixed-voltage fixedregulator@1: Failed to find supply vin
-[    1.826567] reg-fixed-voltage fixedregulator@1: Failed to register regulator: -517
-[    1.834559] platform fixedregulator@1: Driver reg-fixed-voltage requests probe deferral
-[    1.864401] vdd_core: 920 <--> 1140 mV at 1100 mV
-[    1.872723] vdd_mpu: 920 <--> 1375 mV at 1330 mV
-[    1.880067] vdds_ddr: 1350 mV
-[    1.885953] v3_3d: 3300 mV
-[    1.891406] v1_8d: 1800 mV
-[    1.895981] omap_i2c 44e0b000.i2c: bus 0 rev0.12 at 400 kHz
-[    1.907140] of_get_named_gpiod_flags: can't parse gpios property of node '/ocp/i2c@4802a000/tlv320aic3106@1b[0]'
-[    1.909258] omap_i2c 4802a000.i2c: bus 1 rev0.12 at 400 kHz
-[    1.915920] of_get_named_gpiod_flags exited with status 0
-[    1.915947] of_get_named_gpiod_flags: can't parse gpios property of node '/ocp/mmc@48060000[0]'
-[    1.956837] davinci_evm sound: tlv320aic3x-hifi <-> 4803c000.mcasp mapping ok
-[    1.985824] of_get_named_gpiod_flags: can't parse gpios property of node '/fixedregulator@0[0]'
-[    1.986188] V5_0D: 5000 mV
-[    1.989231] V5_0D: supplied by v3_3d
-[    1.993646] of_get_named_gpiod_flags: can't parse gpios property of node '/fixedregulator@1[0]'
-[    1.993982] VBUS_USB: 5000 mV
-[    1.997291] VBUS_USB: supplied by V5_0D
-[    2.029373] mmc0: host does not support reading read-only switch. assuming write-enable.
-[    2.039924] mmc0: new high speed SDHC card at address 0001
-[    2.049058] mmcblk0: mmc0:0001 00000 14.6 GiB
-[    2.058925]  mmcblk0: p1 p2
-[    2.062698] davinci_mdio 4a101000.mdio: davinci mdio revision 1.6
-[    2.069120] davinci_mdio 4a101000.mdio: detected phy mask ffffffcf
-[    2.081905] libphy: 4a101000.mdio: probed
-[    2.086292] davinci_mdio 4a101000.mdio: phy[4]: device 4a101000.mdio:04, driver unknown
-[    2.094745] davinci_mdio 4a101000.mdio: phy[5]: device 4a101000.mdio:05, driver unknown
-[    2.104147] cpsw 4a100000.ethernet: Detected MACID = 34:b1:f7:31:45:4b
-[    2.113009] cpsw 4a100000.ethernet: cpsw: Detected MACID = 34:b1:f7:31:45:4d
-[    2.122132] omap_rtc 44e3e000.rtc: setting system clock to 2000-01-01 00:00:00 UTC (946684800)
-[    2.131167] sr_init: No PMIC hook to init smartreflex
-[    2.136698] sr_init: platform driver register failed for SR
-[    2.156224] ALSA device list:
-[    2.159357]   #0: AM437x-SK-EVM
-[    2.322629] EXT4-fs (mmcblk0p2): recovery complete
-[    2.329912] EXT4-fs (mmcblk0p2): mounted filesystem with ordered data mode. Opts: (null)
-[    2.338573] VFS: Mounted root (ext4 filesystem) on device 179:2.
-[    2.354804] devtmpfs: mounted
-[    2.358353] Freeing unused kernel memory: 412K (c0844000 - c08ab000)
->[    3.032245] udevd[783]: starting version 182
-[    4.003482] lis3lv02d: 16 bits lis331dlh sensor found
-[    4.142890] input: ST LIS3LV02DL Accelerometer as /devices/platform/lis3lv02d/input/input0
-[    4.340037] of_get_named_gpiod_flags exited with status 0
-[    4.340072] of_get_named_gpiod_flags exited with status 0
-[    4.340090] of_get_named_gpiod_flags exited with status 0
-[    4.340110] of_get_named_gpiod_flags exited with status 0
-[    4.341037] input: matrix_keypad@0 as /devices/matrix_keypad@0/input/input1
-[    7.454529] FAT-fs (mmcblk0p1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
-[    8.000585] random: nonblocking pool is initialized
-[    8.103464] EXT4-fs (mmcblk0p2): re-mounted. Opts: data=ordered
-[    9.099669] net eth0: initializing cpsw version 1.15 (0)
-[    9.182898] net eth0: phy found : id is : 0x221621
-[   13.183101] cpsw 4a100000.ethernet eth0: Link is Up - 1Gbps/Full - flow control rx/tx
+> 
+> Thanks!
+> 
+> -Doug
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
 
 
---------------090103080008050308010404--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+Tushar Behera
