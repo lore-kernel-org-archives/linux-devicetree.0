@@ -1,132 +1,64 @@
-From: Thor Thayer <tthayer.linux@gmail.com>
-Subject: Re: [PATCHv7 3/3] edac: altera: Add EDAC support for Altera SoC SDRAM Controller.
-Date: Wed, 25 Jun 2014 16:22:14 -0500
-Message-ID: <CAF03EBe-9JEj_=FoA3So-9NvUyDJtQ=0-Y87JAvxk7pr+5_WWw@mail.gmail.com>
-References: <1403730927-16163-1-git-send-email-tthayer@altera.com>
-	<1403730927-16163-4-git-send-email-tthayer@altera.com>
-	<53AB3B53.2080104@gmail.com>
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v1 3/9] of: Update Tegra XUSB pad controller binding for
+ USB
+Date: Wed, 25 Jun 2014 15:46:18 -0600
+Message-ID: <53AB432A.7010400@wwwdotorg.org>
+References: <1403072180-4944-1-git-send-email-abrestic@chromium.org> <1403072180-4944-4-git-send-email-abrestic@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53AB3B53.2080104@gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Dinh Nguyen <dinh.linux@gmail.com>
-Cc: Thor Thayer <tthayer@altera.com>, Rob Herring <robherring2@gmail.com>, pawel.moll@arm.com, Mark Rutland <mark.rutland@arm.com>, ijc+devicetree@hellion.org.uk, Kumar Gala <galak@codeaurora.org>, Rob Landley <rob@landley.net>, linux@arm.linux.org.uk, Dinh Nguyen <dinguyen@altera.com>, dougthompson@xmission.com, Grant Likely <grant.likely@linaro.org>, Borislav Petkov <bp@alien8.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403072180-4944-4-git-send-email-abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dinh,
+On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
+> Add new bindings used for USB support by the Tegra XUSB pad controller.
+> This includes additional PHY types, USB-specific pinconfig properties, etc.
 
-On Wed, Jun 25, 2014 at 4:12 PM, Dinh Nguyen <dinh.linux@gmail.com> wrote:
-> Hi Thor,
->
->
-> On 06/25/2014 04:15 PM, tthayer@altera.com wrote:
->>
->> From: Thor Thayer <tthayer@altera.com>
->>
->> This patch adds support for the CycloneV and ArriaV SDRAM controllers.
->> Correction and reporting of SBEs, Panic on DBEs.
->>
->> Signed-off-by: Thor Thayer <tthayer@altera.com>
->> ---
->> v2: Use the SDRAM controller registers to calculate memory size
->>      instead of the Device Tree. Update To & Cc list. Add maintainer
->>      information.
->>
->> v3: EDAC driver cleanup based on comments from Mailing list.
->>
->> v4: Panic on DBE. Add macro around inject-error reads to prevent
->>      them from being optimized out. Remove of_match_ptr since this
->>      will always use Device Tree.
->>
->> v5: Addition of printk to trigger function to ensure read vars
->>      are not optimized out.
->>
->> v6: Changes to split out shared SDRAM controller reg (offset 0x00)
->>      as a syscon device and allocate ECC specific SDRAM registers
->>      to EDAC.
->>
->> v7: No change. Bump version for consistency.
->> ---
->>   drivers/edac/Kconfig       |    9 +
->>   drivers/edac/Makefile      |    2 +
->>   drivers/edac/altera_edac.c |  448
->> ++++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 459 insertions(+)
->>   create mode 100644 drivers/edac/altera_edac.c
->>
->> diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
->> index 878f090..4f4d379 100644
->> --- a/drivers/edac/Kconfig
->> +++ b/drivers/edac/Kconfig
->> @@ -368,4 +368,13 @@ config EDAC_OCTEON_PCI
->>           Support for error detection and correction on the
->>           Cavium Octeon family of SOCs.
->>
->> +config EDAC_ALTERA_MC
->> +       bool "Altera SDRAM Memory Controller EDAC"
->> +       depends on EDAC_MM_EDAC && ARCH_SOCFPGA
->> +       help
->> +         Support for error detection and correction on the
->> +         Altera SDRAM memory controller. Note that the
->> +         preloader must initialize the SDRAM before loading
->> +         the kernel.
->> +
->>   endif # EDAC
->> diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
->> index 4154ed6..9741336 100644
->> --- a/drivers/edac/Makefile
->> +++ b/drivers/edac/Makefile
->> @@ -64,3 +64,5 @@ obj-$(CONFIG_EDAC_OCTEON_PC)          +=
->> octeon_edac-pc.o
->>   obj-$(CONFIG_EDAC_OCTEON_L2C)         += octeon_edac-l2c.o
->>   obj-$(CONFIG_EDAC_OCTEON_LMC)         += octeon_edac-lmc.o
->>   obj-$(CONFIG_EDAC_OCTEON_PCI)         += octeon_edac-pci.o
->> +
->> +obj-$(CONFIG_EDAC_ALTERA_MC)           += altera_edac.o
->> diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
->> new file mode 100644
->> index 0000000..e3fcd27
->> --- /dev/null
->> +++ b/drivers/edac/altera_edac.c
->> @@ -0,0 +1,448 @@
->> +/*
->> + *  Copyright Altera Corporation (C) 2014. All rights reserved.
->> + *  Copyright 2011-2012 Calxeda, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms and conditions of the GNU General Public License,
->> + * version 2, as published by the Free Software Foundation.
->> + *
->> + * This program is distributed in the hope it will be useful, but WITHOUT
->> + * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
->> + * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
->> for
->> + * more details.
->> + *
->> + * This file is subject to the terms and conditions of the GNU General
->> Public
->> + * License.  See the file "COPYING" in the main directory of this archive
->> + * for more details.
->> +
->> + *
->> + * Adapted from the highbank_mc_edac driver
->> + *
->> + */
->> +#include <linux/types.h>
->> +#include <linux/kernel.h>
->> +#include <linux/ctype.h>
->> +#include <linux/edac.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/uaccess.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->>
->
-> Did you miss my comment to put these headers in alpabetical order?
->
-> Dinh
+> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
 
-Yep, I missed your comment - looking at it now.
+> @@ -21,6 +21,12 @@ Required properties:
+>    - padctl
+>  - #phy-cells: Should be 1. The specifier is the index of the PHY to reference.
+>    See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the list of valid values.
+> +- nvidia,xusb-mbox: Handle to the Tegra XUSB mailbox node.
+
+Why does the padctrl code need access to the XUSB mailbox? Isn't the
+padctrl HW module something that provides services to the XUSB code. I
+would have expected the XUSB node to reference the padctrl node. If
+notifications need to be sent back from XUSB padctrl to XUSB, then that
+seems like an internal SW detail that doesn't need to be represented in DT.
+
+> +Optional properties:
+> +-------------------
+> +- vbus-otg-{0,1,2}-supply: VBUS regulator for the corresponding UTMI pad.
+
+Isn't VBUS something that's controlled by the USB PHY? I think the PHYs
+are part of the XUSB controller, whereas the XUSB pad control is just
+the low level IO pad HW.
+
+> +- nvidia,usb3-port-num: USB3 port (0 or 1) to which the lane is mapped.
+> +- nvidia,usb2-port-num: USB2 port (0, 1, or 2) to which the lane is mapped.
+> +- nvidia,hsic-strobe-trim: HSIC strobe trimmer value.
+> +- nvidia,hsic-rx-strobe-trim: HSIC RX strobe trimmer value.
+> +- nvidia,hsic-rx-data-trim: HSIC RX data trimmer value.
+> +- nvidia,hsic-tx-rtune-n: HSIC TX RTUNEN value.
+> +- nvidia,hsic-tx-rtune-p: HSIC TX RTUNEP value.
+> +- nvidia,hsic-tx-slew-n: HSIC TX SLEWN value.
+> +- nvidia,hsic-tx-slew-p: HSIC TX SLEWP value.
+> +- nvidia,hsic-auto-term: Enables HSIC AUTO_TERM. (0: no, 1: yes)
+
+I wonder if some of that isn't part of the PHY not the pads?
+
+>      Valid functions for this group are: "snps", "xusb", "uart", "rsvd".
+>  
+> -    The nvidia,iddq property does not apply to this group.
+> +    The nvidia,iddq, nvidia,usb3-port-num, nvidia,usb2-port-num, and
+> +    nvidia,hsic-* properties do not apply to this group.
+
+Given the increased number of properties we now have, it seems better to
+list the properties that *do* apply to each group, rather than those
+that don't.
