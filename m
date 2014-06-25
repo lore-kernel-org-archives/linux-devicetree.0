@@ -1,47 +1,66 @@
-From: Andrew Bresticker <abrestic-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v1 5/9] of: Add NVIDIA Tegra XHCI controller binding
-Date: Wed, 25 Jun 2014 16:02:48 -0700
-Message-ID: <CAL1qeaHThKVBoY0fikFCh9X00BFNJ=XKfovOBwztEyOVjHBLjg@mail.gmail.com>
-References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>
-	<1403072180-4944-6-git-send-email-abrestic@chromium.org>
-	<53AB4530.2050106@wwwdotorg.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53AB4530.2050106-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Randy Dunlap <rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Linus Walleij <linus.walleij-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Mathias Nyman <mathias.nyman-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: [PATCH V7 0/6] Add X-Gene platform reboot mechanism
+Date: Wed, 25 Jun 2014 16:03:20 -0700
+Message-ID: <1403737406-6474-1-git-send-email-fkan@apm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, catalin.marinas-5wv7dgnIgG8@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, patches-qTEPVZfXA3Y@public.gmane.org
+Cc: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 2:54 PM, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org> wrote:
-> On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
->> Add device-tree binding documentation for the XHCI controller present
->> on Tegra124 and later SoCs.
->
->> diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra124-xhci.txt
->
->> + - clock-names: Must include the following entries:
->> +    - xusb_host
->> +    - xusb_falcon_src
->> +    - xusb_ss
->> +    - xusb_ss_src
->> +    - xusb_hs_src
->> +    - xusb_fs_src
->
-> Looking at include/dt-bindings/clock/tegra124-car.h I see a few entries
-> potentially missing here:
->
-> #define TEGRA124_CLK_XUSB_HOST_SRC 252
-> #define TEGRA124_CLK_XUSB_DEV_SRC 256
-> #define TEGRA124_CLK_XUSB_DEV 257
-> #define TEGRA124_CLK_XUSB_SS_DIV2 312
+Enable reboot driver for the X-Gene platform. Add generic syscon reboot
+driver.
 
-The driver doesn't use them, so I didn't put them in the binding.
+V7 Change:
+	- Seem V3 on, the patches were not making in to the mailinglist.
+	- Fix build error produced by other ARCH while including this
+	  driver. Set to depend on arm64 ARCH for now.
 
->> +    - pll_u_480m
->
-> Not just pll_u?
+V6 Change:
+	- Add documentation for scu node.
 
-We specifically want pll_u_480M as that's what we use as the parent of
-xusb_ss_src when scaling it to 120Mhz.
+V5 Change:
+	- Documentation update, endian and access size.
+
+V4 Change:
+	- Remove old X-Gene reboot driver
+	- Add generic syscon reboot driver
+	- Add DTS and Kconfig for X-Gene reboot using syscon method
+
+V3 Change:
+	- Remove the reboot driver's use of acpi resource patch.
+	- Change the reboot driver to use syscon to parse out 
+	  system clock register. Remove the old method of getting
+	  register from the reboot driver directly.
+	- Remove documentation since its now simple.
+
+V2 Change:
+	- Add support for using ACPI resource.
+
+Feng Kan (5):
+  power: reset: Add generic SYSCON register mapped reset
+  power: reset: Remove X-Gene reboot driver
+  arm64: dts: Add X-Gene reboot driver dts node
+  arm64: Select reboot driver for X-Gene platform
+  Documentation: power: reset: Add documentation for generic SYSCON
+    reboot driver
+
+ .../bindings/power/reset/syscon-reboot.txt         |   23 +++++
+ arch/arm64/Kconfig                                 |    2 +
+ arch/arm64/boot/dts/apm-storm.dtsi                 |   13 +++
+ drivers/power/reset/Kconfig                        |    8 +-
+ drivers/power/reset/Makefile                       |    2 +-
+ drivers/power/reset/syscon-reboot.c                |  100 +++++++++++++++++++
+ drivers/power/reset/xgene-reboot.c                 |  103 --------------------
+ 7 files changed, 143 insertions(+), 108 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/syscon-reboot.txt
+ create mode 100644 drivers/power/reset/syscon-reboot.c
+ delete mode 100644 drivers/power/reset/xgene-reboot.c
+
+-- 
+1.7.6.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
