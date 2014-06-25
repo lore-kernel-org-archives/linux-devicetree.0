@@ -1,62 +1,80 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 25 Jun 2014 11:27:50 +0200
-Message-ID: <4839521.56FtveYIl6@wuerfel>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com> <4855051.rhxSrNMNLg@wuerfel> <20140625091702.GF6153@arm.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC v3 2/2] backlight: device tree: add new tps611xx backlight
+ driver
+Date: Wed, 25 Jun 2014 10:32:59 +0100
+Message-ID: <20140625093259.GC29789@leverpostej>
+References: <1403594330-15387-1-git-send-email-gshark.jeong@gmail.com>
+ <1403594330-15387-3-git-send-email-gshark.jeong@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140625091702.GF6153@arm.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Olav Haugan <ohaugan@codeaurora.org>, Rob Herring <robherring2@gmail.com>, Mark Rutland <Mark.Rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Grant Grundler <grundler@chromium.org>, Joerg Roedel <joro@8bytes.org>, Stephen Warren <swarren@wwwdotorg.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Marc Zyngier <Marc.Zyngier@arm.com>, Linux IOMMU <iommu@lists.linux-foundation.org>, Rob Herring <robh+dt@kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Kumar Gala <galak@codeaurora.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, Cho KyongHo <pullip.cho@samsung.com>, Dave P Martin <Dave.Martin@arm.com>"linux-arm-kernel@lists.infradead.org" <li>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403594330-15387-3-git-send-email-gshark.jeong@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Jeong <gshark.jeong@gmail.com>
+Cc: Jingoo Han <jg1.han@samsung.com>, Bryan Wu <cooloney@gmail.com>, Lee Jones <lee.jones@linaro.org>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Daniel Jeong <daniel.jeong@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 June 2014 10:17:02 Will Deacon wrote:
-> On Tue, Jun 24, 2014 at 07:20:56PM +0100, Arnd Bergmann wrote:
-> > On Tuesday 24 June 2014 19:11:50 Will Deacon wrote:
-> > > On Tue, Jun 24, 2014 at 06:57:44PM +0100, Olav Haugan wrote:
-> > > > We do describe the masked StreamID (SID) but we need to specify the mask
-> > > > that the SMMU should apply to the incoming SIDs, right?
-> > > > 
-> > > > We have a bus master that emits 43 unique SIDs. However, we have only 40
-> > > > SMMU_SMRn registers in the SMMU. So we need to mask out some of the
-> > > > incoming SID bits so that the 43 SIDs can match one of 40 entries in the
-> > > > SMR.
-> > > 
-> > > Hmm, so you're talking about stream matching, right? That doesn't belong in
-> > > the device-tree. I appreciate that the current driver does a terrible job at
-> > > allocating the SMRs (it's bloody difficult!), but we should try to improve
-> > > the dynamic behaviour instead of moving configuration of the SMMU out into
-> > > device-tree, where it's inflexible at best.
-> > > 
-> > > There have been patches previously posted by Andreas Herrmann helping here.
-> > > I'd be glad to see them revived.
-> > 
-> > Note that there are areas where we have in the past decided that dynamic
-> > configuration is just too hard for the kernel to do and that we're better
-> > off putting the configuration into DT. Pinctrl and clocks are at least
-> > partially in that category.
-> > 
-> > It's always best if you can get the kernel to do things in the ideal
-> > way where that is possible, but getting there may be just not worth it.
-> > 
-> > I have no idea where it should be for SMMU, but it's something to consider:
-> > if you can take reasonable shortcuts by reading parts of the configuration
-> > from DT, you may just as well do that.
+Hello,
+
+Please fix the subject: this is a _binding_, not a driver.
+
+On Tue, Jun 24, 2014 at 08:18:50AM +0100, Daniel Jeong wrote:
+> This commit is about tps611xx device tree documentation.
 > 
-> I treat this in the same manner as the topology bindings we discussed
-> previously; we should do a best-effort to configure things dynamically and
-> solve corner-cases and quirks as special cases.
+> Signed-off-by: Daniel Jeong <gshark.jeong@gmail.com>
+> ---
+>  .../video/backlight/tps611xx-backlight.txt         |   16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> new file mode 100644
+> index 0000000..01f110d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/video/backlight/tps611xx-backlight.txt
+> @@ -0,0 +1,16 @@
+> +TPS611xx family of backlight driver based on EasyScale.
+> +
+> +It supports tps61158, tps61161, tps61163 and tps61165.
 
-I think the situation is a bit different here: It's less about the corner
-cases for the SMMU, but about the question whether it makes more sense to
-have the kernel figure out the settings, or have them come from DT
-all the time.
+What supports these? The driver?
 
-As I said, I can't tell which approach is best here, but it sounds to
-me we should either do dynamic configuration and get it right, or
-hardcode the configuration it all the time if we can't.
+The binding should describe the _hardware_, not the driver.
 
-	Arnd
+> +Required properties:
+> +- compatible: "ti,tps61158_bl", "ti,tps61161_bl", "ti,tps61163_bl", "ti,tps61165_bl"
+
+Use '-' rather than '_' in compatible strings and properties.
+
+Is there any reason for the "bl" suffix? Does that actually form part of
+the name of the unit, or is that just to point out it's a backlight? If
+it's the latter, drop it.
+
+Are these all very similar? Can I use a particular string as a fallback?
+
+To allow for future expansion, the addition of notes, and to make this
+easier to read, I would recommend formatting this something like:
+
+- compatible: should contain at least one of:
+  * "ti,tps61158"
+  * "ti,tps61161"
+  * "ti,tps61163"
+  * "ti,tps61165"
+
+> +- rfa_en: enable request for acknowledge. ( 0 : disable , 1 : enable )
+
+Use empty properties for describing booleans.
+
+That said, why does this need to be in the DT? When would I want this
+and when wouldn't I? Why can't the driver choose?
+
+> +- en_gpio_num: gpio number for en pin.
+
+Use the GPIO bindings. The numbering Linux uses internally is completely
+arbitrary, so this is completely broken.
+
+Are there other pins we might need to describe? Regulators? Clocks?
+
+Mark.
