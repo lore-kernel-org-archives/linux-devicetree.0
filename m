@@ -1,81 +1,32 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: [PATCH 5/8] ARM: dts: dra7xx-clocks: Add missing clocks for second PCIe PHY instance
-Date: Wed, 25 Jun 2014 23:30:15 +0530
-Message-ID: <1403719218-9484-6-git-send-email-kishon@ti.com>
-References: <1403719218-9484-1-git-send-email-kishon@ti.com>
+Subject: [PATCH 0/2] arm: hwmod: dra7: Add PCIe data and PCIe PHY data
+Date: Wed, 25 Jun 2014 23:32:44 +0530
+Message-ID: <1403719366-9656-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403719218-9484-1-git-send-email-kishon@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, jg1.han@samsung.com, bhelgaas@google.com, mohit.kumar@st.com, linux-arm-kernel@lists.infradead.org, tony@atomide.com, linux-kernel@vger.kernel.org
-Cc: kishon@ti.com, grant.likely@linaro.org, Rajendra Nayak <rnayak@ti.com>, Tero Kristo <t-kristo@ti.com>, Paul Walmsley <paul@pwsan.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>
+To: devicetree@vger.kernel.org, linux-pci@vger.kernel.org, linux-omap@vger.kernel.org, paul@pwsan.com, tony@atomide.com, linux@arm.linux.org.uk, rnayak@ti.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Added missing clocks used by second instance of PCIe PHY.
-The documention for this nodes can be found @ ../bindings/clock/ti/gate.txt.
+[1] is split into separate series in order for individual subsystem
+Maintainers to pick up the patches. This series handles the PCIe
+hwmod data for DRA7.
 
-Cc: Rajendra Nayak <rnayak@ti.com>
-Cc: Tero Kristo <t-kristo@ti.com>
-Cc: Paul Walmsley <paul@pwsan.com>
-Cc: Tony Lindgren <tony@atomide.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Pawel Moll <pawel.moll@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Kumar Gala <galak@codeaurora.org>
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
----
- arch/arm/boot/dts/dra7xx-clocks.dtsi |   24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Please find the bootlog with these hwmod patches @ [2]
 
-diff --git a/arch/arm/boot/dts/dra7xx-clocks.dtsi b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-index fe5db55..b48f18b 100644
---- a/arch/arm/boot/dts/dra7xx-clocks.dtsi
-+++ b/arch/arm/boot/dts/dra7xx-clocks.dtsi
-@@ -1173,6 +1173,14 @@
- 		ti,bit-shift = <8>;
- 	};
- 
-+	optfclk_pciephy2_32khz: optfclk_pciephy2_32khz@4a0093b8 {
-+		compatible = "ti,gate-clock";
-+		clocks = <&sys_32k_ck>;
-+		#clock-cells = <0>;
-+		reg = <0x13b8>;
-+		ti,bit-shift = <8>;
-+	};
-+
- 	optfclk_pciephy_div: optfclk_pciephy_div@4a00821c {
- 		compatible = "ti,divider-clock";
- 		clocks = <&apll_pcie_ck>;
-@@ -1191,6 +1199,14 @@
- 		ti,bit-shift = <9>;
- 	};
- 
-+	optfclk_pciephy2_clk: optfclk_pciephy2_clk@4a0093b8 {
-+		compatible = "ti,gate-clock";
-+		clocks = <&apll_pcie_ck>;
-+		#clock-cells = <0>;
-+		reg = <0x13b8>;
-+		ti,bit-shift = <9>;
-+	};
-+
- 	optfclk_pciephy1_div_clk: optfclk_pciephy1_div_clk@4a0093b0 {
- 		compatible = "ti,gate-clock";
- 		clocks = <&optfclk_pciephy_div>;
-@@ -1199,6 +1215,14 @@
- 		ti,bit-shift = <10>;
- 	};
- 
-+	optfclk_pciephy2_div_clk: optfclk_pciephy2_div_clk@4a0093b8 {
-+		compatible = "ti,gate-clock";
-+		clocks = <&optfclk_pciephy_div>;
-+		#clock-cells = <0>;
-+		reg = <0x13b8>;
-+		ti,bit-shift = <10>;
-+	};
-+
- 	apll_pcie_clkvcoldo: apll_pcie_clkvcoldo {
- 		#clock-cells = <0>;
- 		compatible = "fixed-factor-clock";
+[1] -> https://lkml.org/lkml/2014/5/29/258
+[2] -> http://paste.ubuntu.com/7701601/
+
+Kishon Vijay Abraham I (2):
+  arm: dra7xx: Add hwmod data for pcie1 phy and pcie2 phy
+  arm: dra7xx: Add hwmod data for pcie1 and pcie2 subsystems
+
+ arch/arm/mach-omap2/cm2_7xx.h             |    4 ++
+ arch/arm/mach-omap2/omap_hwmod_7xx_data.c |  112 +++++++++++++++++++++++++++++
+ arch/arm/mach-omap2/prm7xx.h              |    4 ++
+ 3 files changed, 120 insertions(+)
+
 -- 
 1.7.9.5
