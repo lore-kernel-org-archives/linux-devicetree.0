@@ -1,80 +1,30 @@
-From: =?UTF-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>
-Subject: Re: [PATCH 3/4] Documentation: devicetree: Fix tps65090 typos
-Date: Wed, 25 Jun 2014 13:43:18 +0200
-Message-ID: <53AAB5D6.50500@suse.de>
-References: <1403486483-4063-1-git-send-email-afaerber@suse.de> <1403486483-4063-4-git-send-email-afaerber@suse.de> <CAD=FV=UUGQ_ULm+juj0hMxCKhhcXTa2aJT50Y=WrePy9g8u-zA@mail.gmail.com> <20140625104732.GE14495@leverpostej>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 1/2] Documentation: Document Hisilicon hix5hd2 sata PHY
+Date: Wed, 25 Jun 2014 14:16:49 +0200
+Message-ID: <201406251416.49561.arnd@arndb.de>
+References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <1403687648-29082-2-git-send-email-zhangfei.gao@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140625104732.GE14495@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Doug Anderson <dianders@chromium.org>
-Cc: linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Stephan van Schaik <stephan@synkhronix.com>, Vincent Palatin <vpalatin@chromium.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Mark Brown <broonie@linaro.org>, Simon Glass <sjg@chromium.org>, Michael Spang <spang@chromium.org>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, DOCUMENTATION <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+Content-Type: Text/Plain;
+  charset="iso-8859-15"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403687648-29082-2-git-send-email-zhangfei.gao@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Zhangfei Gao <zhangfei.gao@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jiancheng Xue <xuejiancheng@huawei.com>
 List-Id: devicetree@vger.kernel.org
 
-Am 25.06.2014 12:47, schrieb Mark Rutland:
-> On Mon, Jun 23, 2014 at 06:27:04PM +0100, Doug Anderson wrote:
->> Andreas,
->>
->> On Sun, Jun 22, 2014 at 6:21 PM, Andreas F=C3=A4rber <afaerber@suse.=
-de> wrote:
->>> It's vsys-l{1,2}-supply, not vsys_l{1,2}-supply.
->>>
->>> Signed-off-by: Andreas F=C3=A4rber <afaerber@suse.de>
->>> ---
->>>  Documentation/devicetree/bindings/regulator/tps65090.txt | 4 ++--
->>>  1 file changed, 2 insertions(+), 2 deletions(-)
->>>
->>> diff --git a/Documentation/devicetree/bindings/regulator/tps65090.t=
-xt b/Documentation/devicetree/bindings/regulator/tps65090.txt
->>> index 34098023..ca69f5e 100644
->>> --- a/Documentation/devicetree/bindings/regulator/tps65090.txt
->>> +++ b/Documentation/devicetree/bindings/regulator/tps65090.txt
->>> @@ -45,8 +45,8 @@ Example:
->>>                 infet5-supply =3D <&some_reg>;
->>>                 infet6-supply =3D <&some_reg>;
->>>                 infet7-supply =3D <&some_reg>;
->>> -               vsys_l1-supply =3D <&some_reg>;
->>> -               vsys_l2-supply =3D <&some_reg>;
->>> +               vsys-l1-supply =3D <&some_reg>;
->>> +               vsys-l2-supply =3D <&some_reg>;
->>
->> Your change matches the code and all existing device trees in the
->> Linux kernel.
->=20
-> Could this fact please be mentioned in the commit message?
+On Wednesday 25 June 2014, Zhangfei Gao wrote:
+> From: Jiancheng Xue <xuejiancheng@huawei.com>
+> 
+> Add necessary binding documentation SATA PHY on Hisilicon hix5hd2 soc.
+> 
+> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
+> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
 
-Yes, I admit the commit message could've been clearer in stating that
-only the example is modified, not the actual specification. What about:
+We have had a couple of PHY drivers that were initially meant to be
+single-purpose but then turned out to be for hardware that could
+be put into multiple modes (SATA, gbit ethernet, PCIe, ...). Are
+you sure that this particular device is SATA-only?
 
-"Specification and existing device trees use vsys-l{1,2}-supply, not
-vsys_l{1,2}-supply. Fix the example to match the specification."
-
-Maybe also "... typos in example" in the subject.
-
-Let me know whether I should send a v2 or let maintainers fix it up.
-
-Regards,
-Andreas
-
-> Given that:
->=20
-> Acked-by: Mark Rutland <mark.rutland@arm.com>
->=20
->> I also see plenty of other bindings with dashes, so this seems
->> reasonable.
->=20
-> Dashes rather than underscores are preferred/correct for property nam=
-es
-> and compatible strings. Given no-one can possibly be using the
-> bad/incorrect form with underscores, fixing the documentation to use
-> dashes makes sense.
->=20
-> Thanks,
-> Mark.
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=C3=B6rffer; HRB 16746 AG N=C3=
-=BCrnberg
+	Arnd
