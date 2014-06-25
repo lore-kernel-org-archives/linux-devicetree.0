@@ -1,60 +1,82 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 25 Jun 2014 11:14:09 +0100
-Message-ID: <20140625101409.GJ6153@arm.com>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
-	<130361958.xFghHXmZkz@wuerfel> <20140625095735.GI6153@arm.com>
-	<6589024.32Qh7fFhXo@wuerfel>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v3 03/14] clk: max77686: Add DT include for MAX77686 PMIC
+ clock
+Date: Wed, 25 Jun 2014 12:18:52 +0200
+Message-ID: <1403691532.22107.8.camel@AMDC1943>
+References: <1403202040-12641-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1403202040-12641-4-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <6589024.32Qh7fFhXo@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1403202040-12641-4-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 11:12:13AM +0100, Arnd Bergmann wrote:
-> On Wednesday 25 June 2014 10:57:36 Will Deacon wrote:
-> > So far, I've been avoiding the hardcoding. However, you could potentially
-> > build a system with a small number of SMRs (compared to the number of
-> > StreamIDs) and allocate the StreamIDs in such a way that I think the dynamic
-> > configuration would be NP complete if we require an optimal SMR allocation.
-> > 
-> > However:
-> > 
-> >   (1) I don't know of a system where this is the case
-> >   (2) Not much work has been done on improving the dynamic allocator yet
-> > 
-> > which is why I'm still favouring dynamic configuration in the driver.
-> > 
-> > The other thing I forgot to mention earlier is that we need to support
-> > device hotplug in the future, so some level of dynamic configuration
-> > will always be required.
+On czw, 2014-06-19 at 20:20 +0200, Javier Martinez Canillas wrote:
+> This patch adds a dt-binding include for Maxim 77686
+> PMIC clock IDs that can be to be shared between the
+> clk-max77686 clock driver and DeviceTree source files.
 > 
-> Ok, got it. So we just hope that we can make dynamic configuration
-> work all the time, but if it all fails, then we come up with a
-> hardcoded configuration method.
-> 
-> I guess this could be done similarly to how we handle clocks on
-> a lot of systems: generally these are dynamic, but you have the
-> option to provide hints in the clock controller node about how
-> you expect things to be configured.
-> 
-> For the SMMU that could mean that (if we get into the situation you
-> describe), we add optional properties to the SMMU node itself
-> describing how we expect the SMRs to be used.
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> ---
+>  drivers/clk/clk-max77686.c                 |  7 +------
+>  include/dt-bindings/clock/maxim,max77686.h | 23 +++++++++++++++++++++++
+>  2 files changed, 24 insertions(+), 6 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/maxim,max77686.h
 
-That sounds good to me! Thanks for the discussion.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-Will
+Best regards,
+Krzysztof
+
+> 
+> diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
+> index 3d7e8dd..185b611 100644
+> --- a/drivers/clk/clk-max77686.c
+> +++ b/drivers/clk/clk-max77686.c
+> @@ -30,12 +30,7 @@
+>  #include <linux/mutex.h>
+>  #include <linux/clkdev.h>
+>  
+> -enum {
+> -	MAX77686_CLK_AP = 0,
+> -	MAX77686_CLK_CP,
+> -	MAX77686_CLK_PMIC,
+> -	MAX77686_CLKS_NUM,
+> -};
+> +#include <dt-bindings/clock/maxim,max77686.h>
+>  
+>  struct max77686_clk {
+>  	struct max77686_dev *iodev;
+> diff --git a/include/dt-bindings/clock/maxim,max77686.h b/include/dt-bindings/clock/maxim,max77686.h
+> new file mode 100644
+> index 0000000..7b28b09
+> --- /dev/null
+> +++ b/include/dt-bindings/clock/maxim,max77686.h
+> @@ -0,0 +1,23 @@
+> +/*
+> + * Copyright (C) 2014 Google, Inc
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + *
+> + * Device Tree binding constants clocks for the Maxim 77686 PMIC.
+> + */
+> +
+> +#ifndef _DT_BINDINGS_CLOCK_MAXIM_MAX77686_CLOCK_H
+> +#define _DT_BINDINGS_CLOCK_MAXIM_MAX77686_CLOCK_H
+> +
+> +/* Fixed rate clocks. */
+> +
+> +#define MAX77686_CLK_AP		0
+> +#define MAX77686_CLK_CP		1
+> +#define MAX77686_CLK_PMIC	2
+> +
+> +/* Total number of clocks. */
+> +#define MAX77686_CLKS_NUM		(MAX77686_CLK_PMIC + 1)
+> +
+> +#endif /* _DT_BINDINGS_CLOCK_MAXIM_MAX77686_CLOCK_H */
