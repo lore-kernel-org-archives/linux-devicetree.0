@@ -1,7 +1,7 @@
 From: <tthayer@altera.com>
-Subject: [PATCHv7 2/3] devicetree: Addition of the Altera SDRAM EDAC.
-Date: Wed, 25 Jun 2014 16:15:26 -0500
-Message-ID: <1403730927-16163-3-git-send-email-tthayer@altera.com>
+Subject: [PATCHv7 1/3] devicetree: Addition of the Altera SDRAM Controller.
+Date: Wed, 25 Jun 2014 16:15:25 -0500
+Message-ID: <1403730927-16163-2-git-send-email-tthayer@altera.com>
 References: <1403730927-16163-1-git-send-email-tthayer@altera.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,58 +14,55 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <tthayer@altera.com>
 
-Add the Altera SDRAM EDAC bindings and device tree changes to the Altera SoC project.
+Add the Altera SDRAM controller bindings and device tree changes to the Altera SoC project.
 
 Signed-off-by: Thor Thayer <tthayer@altera.com>
 ---
-v2: Changes to SoC EDAC source code.
+v2: Changes to SoC SDRAM EDAC code.
 
-v3: Fix typo in device tree documentation.
+v3: Implement code suggestions for SDRAM EDAC code.
 
-v4,v5: No changes - bump version for consistency.
+v4: Remove syscon from SDRAM controller bindings.
 
-v6: Assign ECC registers in SDRAM controller to EDAC
+v5: No Change, bump version for consistency.
 
-v7: Fix SDRAM EDAC base address.
+v6: Only map the ctrlcfg register as syscon.
+
+v7: No change. Bump for consistency.
 ---
- .../bindings/arm/altera/socfpga-sdram-edac.txt     |   15 +++++++++++++++
- arch/arm/boot/dts/socfpga.dtsi                     |    6 ++++++
- 2 files changed, 21 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+ .../bindings/arm/altera/socfpga-sdram.txt          |   11 +++++++++++
+ arch/arm/boot/dts/socfpga.dtsi                     |    5 +++++
+ 2 files changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 
-diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
 new file mode 100644
-index 0000000..d68e033
+index 0000000..5027026
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram-edac.txt
-@@ -0,0 +1,15 @@
-+Altera SOCFPGA SDRAM Error Detection & Correction [EDAC]
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-sdram.txt
+@@ -0,0 +1,11 @@
++Altera SOCFPGA SDRAM Controller
 +
 +Required properties:
-+- compatible : should contain "altr,sdram-edac";
-+- reg : should contain the ECC register range in sdram
-+        controller (address and length).
-+- interrupts : Should contain the SDRAM ECC IRQ in the
-+	appropriate format for the IRQ controller.
++- compatible : "altr,sdr-ctl";
++- reg : Should contain 1 register ranges(address and length)
 +
 +Example:
-+	sdramedac@ffc2502c {
-+		compatible = "altr,sdram-edac";
-+		reg = <0xffc2502c 0x28>;
-+		interrupts = <0 39 4>;
++	sdrctl@ffc25000 {
++		compatible = "altr,sdr-ctl";
++		reg = <0xffc25000 0x4>;
 +	};
 diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
-index 310292e..da0785d 100644
+index 4676f25..310292e 100644
 --- a/arch/arm/boot/dts/socfpga.dtsi
 +++ b/arch/arm/boot/dts/socfpga.dtsi
-@@ -687,6 +687,12 @@
- 			reg = <0xffc25000 0x4>;
+@@ -682,6 +682,11 @@
+ 			clocks = <&l4_sp_clk>;
  		};
  
-+		sdramedac@ffc2502c {
-+			compatible = "altr,sdram-edac";
-+			reg = <0xffc2502c 0x28>;
-+			interrupts = <0 39 4>;
++		sdrctl@ffc25000 {
++			compatible = "altr,sdr-ctl", "syscon";
++			reg = <0xffc25000 0x4>;
 +		};
 +
  		rst: rstmgr@ffd05000 {
