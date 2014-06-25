@@ -1,94 +1,43 @@
 From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v6 3/3] ASoC: fsl: add imx-es8328 machine driver
-Date: Wed, 25 Jun 2014 12:00:49 +0100
-Message-ID: <20140625110049.GF14495@leverpostej>
-References: <1403519742-4076-1-git-send-email-xobs@kosagi.com>
- <1403519742-4076-4-git-send-email-xobs@kosagi.com>
+Subject: Re: [PATCH v3 1/2] arm: dts: am4372: let boards access all nodes
+ through phandles
+Date: Wed, 25 Jun 2014 12:14:43 +0100
+Message-ID: <20140625111443.GG14495@leverpostej>
+References: <1403547659-24558-1-git-send-email-balbi@ti.com>
+ <1403547659-24558-2-git-send-email-balbi@ti.com>
+ <CAL_JsqJx_DJqxpEJebi0Etfv5g7=eYje_53vd_44GykreA-rkQ@mail.gmail.com>
+ <20140625014016.GA21616@saruman.home>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403519742-4076-4-git-send-email-xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+In-Reply-To: <20140625014016.GA21616-HgARHv6XitL9zxVx7UNMDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-Cc: Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, "lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org" <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org" <alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org" <bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+To: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Benoit Cousson <bcousson-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Rajendra Nayak <rnayak-l0cyMroinI0@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel Mailing List <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux OMAP Mailing List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux ARM Kernel Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 23, 2014 at 11:35:42AM +0100, Sean Cross wrote:
-> This adds an initial machine driver for the ES8328 audio codec on Freescale
-> boards.  The driver supports headphones and an audio regulator for an onboard
-> speaker amp.
+On Wed, Jun 25, 2014 at 02:40:16AM +0100, Felipe Balbi wrote:
+> Hi,
 > 
-> Signed-off-by: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../devicetree/bindings/sound/imx-audio-es8328.txt |  61 ++++++
->  sound/soc/fsl/Kconfig                              |  14 ++
->  sound/soc/fsl/Makefile                             |   2 +
->  sound/soc/fsl/imx-es8328.c                         | 224 +++++++++++++++++++++
->  4 files changed, 301 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
->  create mode 100644 sound/soc/fsl/imx-es8328.c
+> On Tue, Jun 24, 2014 at 04:11:48PM -0500, Rob Herring wrote:
+> > On Mon, Jun 23, 2014 at 1:20 PM, Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org> wrote:
+> > > by providing phandles to rtc, wdt, cpu and dispc nodes,
+> > > boards can access them to add board-specific data.
+> > 
+> > Strictly speaking, you are adding labels, not phandles. You can do
 > 
-> diff --git a/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
-> new file mode 100644
-> index 0000000..89a9a58f
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+> heh, fair point. Easily editable when applying, though (?)
+> 
+> > phandles without using labels, but the syntax is not so obvious. I'd
+> > tell you what it is but offhand I don't remember. :)
+> 
+> something along the lines of using the full path ?
 
-[...]
+Yup. The full path in braces:
 
-> +- mux-int-port : The internal port of the i.MX audio muxer (AUDMUX)
-> +- mux-ext-port : The external port of the i.MX audio muxer
-> +
-> +Note: The AUDMUX port numbering should start at 1, which is consistent with
-> +hardware manual.
+	phandle-property = <&{/full/path/to/node@0xDEAD}>;
 
-Is this true for both internal and external? The code implies so, but
-the lack of "(AUDMUX)" in the mux-ext-port description implies not.
-
-[...]
-
-> +static int imx_es8328_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *np = pdev->dev.of_node;
-> +	struct device_node *ssi_np, *codec_np;
-> +	struct platform_device *ssi_pdev;
-> +	struct imx_es8328_data *data;
-> +	int int_port, ext_port;
-
-You use these as u32 below. Please match the types.
-
-> +	int ret;
-> +	struct device *dev = &pdev->dev;
-> +
-> +	ret = of_property_read_u32(np, "mux-int-port", &int_port);
-> +	if (ret) {
-> +		dev_err(dev, "mux-int-port missing or invalid\n");
-> +		return ret;
-> +	}
-> +	ret = of_property_read_u32(np, "mux-ext-port", &ext_port);
-> +	if (ret) {
-> +		dev_err(dev, "mux-ext-port missing or invalid\n");
-> +		return ret;
-> +	}
-
-Both int_port and ex_port are defined as int but used as u32. Could you
-match the types? It looks like they're never expected to be negative, so
-changing them to u32 should be fine.
-
-It's also probably worth sanity checking the values before using them.
-
-[...]
-
-> +fail:
-> +	if (ssi_np)
-> +		of_node_put(ssi_np);
-> +	if (codec_np)
-> +		of_node_put(codec_np);
-
-You can avoid the checks; of_node_put handles NULL gracefully.
-
-Thanks,
 Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
