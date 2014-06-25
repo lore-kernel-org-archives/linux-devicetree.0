@@ -1,71 +1,115 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCH v3 3/6] clk: sunxi: Support factor clocks
- with N factor starting not from 0
-Date: Wed, 25 Jun 2014 22:15:51 +0200
-Message-ID: <20140625201551.GI19569@lukather>
-References: <1403603980-31101-1-git-send-email-wens@csie.org>
- <1403603980-31101-4-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="NyChO5MpGs3JHJbz"
-Return-path: <linux-sunxi+bncBD2ZNBF5VYJRB7O5VSOQKGQEOPWJM6A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1403603980-31101-4-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: OF_DYNAMIC node lifecycle
+Date: Wed, 25 Jun 2014 21:22:16 +0100
+Message-ID: <20140625202216.16A8AC40AE6@trevor.secretlab.ca>
+References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>
+	<43898B58-2EA7-42B5-A17A-27F16F2618A6@konsulko.com>
+	<20140623145844.DA6A3C40AE5@trevor.secretlab.ca>
+	<53A9DA69.1040101@austin.ibm.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53A9DA69.1040101-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, 24 Jun 2014 15:07:05 -0500, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrote:
+> On 06/23/2014 09:58 AM, Grant Likely wrote:
+> > On Thu, 19 Jun 2014 11:33:20 +0300, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
+> >> Hi Grant,
+> >>
+> >> CCing Thomas Gleixner & Steven Rostedt, since they might have a few
+> >> ideas...
+> >>
+> >> On Jun 18, 2014, at 11:07 PM, Grant Likely wrote:
+> >>
+> >>> Hi Nathan and Tyrel,
+> >>>
+> >>> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
+> >>> I'm hoping you can help me. Right now, pseries seems to be the only
+> >>> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
+> >>> the entire kernel because it requires all DT code to manage reference
+> >>> counting with iterating over nodes. Most users simply get it wrong.
+> >>> Pantelis did some investigation and found that the reference counts on
+> >>> a running kernel are all over the place. I have my doubts that any
+> >>> code really gets it right.
+> >>>
+> >>> The problem is that users need to know when it is appropriate to call
+> >>> of_node_get()/of_node_put(). All list traversals that exit early need
+> >>> an extra call to of_node_put(), and code that is searching for a node
+> >>> in the tree and holding a reference to it needs to call of_node_get().
+> >>>
+> >>
+> >> In hindsight it appears that drivers just can't get the lifecycle right.
+> >> So we need to simplify things.
+> >>
+> >>> I've got a few pseries questions:
+> >>> - What are the changes being requested by pseries firmware? Is it only
+> >>> CPUs and memory nodes, or does it manipulate things all over the tree?
+> >>> - How frequent are the changes? How many changes would be likely over
+> >>> the runtime of the system?
+> >>> - Are you able to verify that removed nodes are actually able to be
+> >>> freed correctly? Do you have any testcases for node removal?
+> >>>
+> >>> I'm thinking very seriously about changing the locking semantics of DT
+> >>> code entirely so that most users never have to worry about
+> >>> of_node_get/put at all. If the DT code is switched to use rcu
+> >>> primitives for tree iteration (which also means making DT code use
+> >>> list_head, something I'm already investigating), then instead of
+> >>> trying to figure out of_node_get/put rules, callers could use
+> >>> rcu_read_lock()/rcu_read_unlock() to protect the region that is
+> >>> searching over nodes, and only call of_node_get() if the node pointer
+> >>> is needed outside the rcu read-side lock.
+> >>>
+> >>> I'd really like to be rid of the node reference counting entirely, but
+> >>> I can't figure out a way of doing that safely, so I'd settle for
+> >>> making it a lot easier to get correct.
+> >>>
+> >>
+> >> Since we're going about changing things, how about that devtree_lock?
+> > 
+> > I believe rcu would pretty much eliminate the devtree_lock entirely. All
+> > modifiers would need to grab a mutex to ensure there is only one writer
+> > at any given time, but readers would have free reign to parse the tree
+> > however they like.
+> > 
+> > DT writers would have to follow some strict rules about how to handle
+> > nodes that are removed (ie. don't modify or of_node_put() them until
+> > after rcu is syncronized), but the number of writers is very small and
+> > we have control of all of them.
+> > 
+> >> We're using a raw_spinlock and we're always taking the lock with
+> >> interrupts disabled.
+> >>
+> >> If we're going to make DT changes frequently during normal runtime
+> >> and not only during boot time, those are bad for any kind of real-time
+> >> performance.
+> >>
+> >> So the question is, do we really have code that access the live tree
+> >> during atomic sections?  Is that something we want? Enforcing this
+> >> will make our lives easier, and we'll get the change to replace
+> >> that spinlock with a mutex.
+> > 
+> > Yes, I believe the powerpc CPU hotplug code accesses the DT in atomic
+> > sections. I cannot put my finger on the exact code however. Nathan might
+> > know better. But, if I'm right, the whole problem goes away with RCU.
+> 
+> I went back through the cpu hotplug code. we do update the DT during cpu
+> hotplug but I don't see it happening during atomic sections.
+> 
+> The code is in arch/powerpc/platforms/pseries/dlpar.c
 
---NyChO5MpGs3JHJbz
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Great, thanks,
 
-On Tue, Jun 24, 2014 at 05:59:37PM +0800, Chen-Yu Tsai wrote:
-> The PLLs on newer Allwinner SoC's, such as the A31 and A23, have a
-> N multiplier factor that starts from 1, not 0.
->=20
-> This patch adds an option to the factor clk driver's config data
-> structures to specify the base value of N.
->=20
-> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+By the way, notifiers currently get sent before any updates are applied
+to the tree. I want to change it so that the notifier gets sent
+afterwards. Does that work for you? I've looked through all the users
+and aside from a stupid block of code in arch/powerpc/kernel/prom.c
+which does things that should be done by of_attach_node(), it looks like
+everything should be fine.
 
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-
-Maxime
-
---=20
-Maxime Ripard, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
-
---NyChO5MpGs3JHJbz
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTqy33AAoJEBx+YmzsjxAgswwP/RC7rvYBP2z4wH0T327EPD6E
-UvoahyZbmXusXrJk2vRMWBgEPlD1n8GV6hNnE+zWIxCi0T7+gNH73rwVouGFtCqn
-Y4NisQD91nGaCI69Z1jLDdd/H5+WiQ5MDKnriHyfoJyTXuJehQnS92T0uPLW5P5Z
-6GHgvaIKiLR57qp9kpJ7ccW9TUFwBAB0TWEbkhnBda8WDCZLrZwPCpyuSfwLWAep
-IQkwyt2BEgcC2PhpWYpRH4LtnhCN/YV/nzW9k12FrDtp7NAdw5qczHOlOGogrbwE
-2bYdGGHHp+DgY+SJk1zGR/H/8fFUZWA0Mvmzm3s4F1ygwDpCn3t83k/kd6FUb3Gl
-C66gLOz6ccKaJq0t53ExrpoxGF+0XvKfnIQME2RQY7vloy7iL4lubsAM34QVVUWW
-RlsSF1GKkaHll8vT9MoTkGUnxNwc+pyL08WWA+KBo0xSlki5dl114+XXdxGj7u52
-7Hug4vs6g8VtmsExv8I08dUaPxaXe1mKkDwfZYMitZyIBcRY6uRHVK1dHuKPTN+F
-I1NQ6hUj2fBSPXAEWPzS5jRuh4GdvKhBN9bMXwVtfs5A7yEG8G9b8Do4lCou+48v
-aDZK23yj44Y2jpUgTooswg7Qcl4XRsGVW7CFr/dSM5NNu0o6XhLhii0hsZx+ocYZ
-1TMwp8mk3bcOcVhmByZW
-=/VF5
------END PGP SIGNATURE-----
-
---NyChO5MpGs3JHJbz--
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
