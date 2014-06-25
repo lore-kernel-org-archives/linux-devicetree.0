@@ -1,91 +1,34 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 7/8] drivers: cpuidle: initialize Exynos driver
- through DT
-Date: Wed, 25 Jun 2014 17:58:18 +0100
-Message-ID: <20140625165818.GB15050@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-8-git-send-email-lorenzo.pieralisi@arm.com>
- <20140625151333.GE15240@leverpostej>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: DTS: Add NTC thermistor nodes as child nodes to ADC
+Date: Wed, 25 Jun 2014 10:00:57 -0700
+Message-ID: <CAD=FV=VnHZY3vC6y3B-3xXMnYCV+UVrCcgT5y73FJEuKdot_Sw@mail.gmail.com>
+References: <1403612356-23685-1-git-send-email-ch.naveen@samsung.com>
+	<1403612356-23685-5-git-send-email-ch.naveen@samsung.com>
+	<CAD=FV=Wmi73S4c5TPUqnNyycQ5xX5SbYy_ES-cbbJF2Hr0tqvQ@mail.gmail.com>
+	<CAHfPSqAAWFtCQQrKBhLFuE2OuO_fwmUOhcOX9zKk8eMRMNSVvg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140625151333.GE15240@leverpostej>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gm>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAHfPSqAAWFtCQQrKBhLFuE2OuO_fwmUOhcOX9zKk8eMRMNSVvg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 04:13:33PM +0100, Mark Rutland wrote:
-> On Wed, Jun 25, 2014 at 03:10:20PM +0100, Lorenzo Pieralisi wrote:
-> > With the introduction of DT based idle states, CPUidle drivers for
-> > ARM can now initialize idle states data through properties in the device
-> > tree.
-> > 
-> > This patch adds code to the Exynos CPUidle driver to dynamically
-> > initialize idle states data through the updated device tree source
-> > files.
-> > 
-> > Cc: Kukjin Kim <kgene.kim@samsung.com>
-> > Cc: Tomasz Figa <t.figa@samsung.com>
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> > Compile tested, I am not sure I patched the right dts files, please check.
-> > 
-> >  .../devicetree/bindings/arm/exynos/idle-states.txt | 27 ++++++++++++++++++++
-> >  arch/arm/boot/dts/exynos3250.dtsi                  | 16 ++++++++++++
-> >  arch/arm/boot/dts/exynos5250.dtsi                  | 15 +++++++++++
-> >  arch/arm/boot/dts/exynos5410.dtsi                  | 17 +++++++++++++
-> >  drivers/cpuidle/Kconfig.arm                        |  1 +
-> >  drivers/cpuidle/cpuidle-exynos.c                   | 29 +++++++++++++---------
-> >  6 files changed, 93 insertions(+), 12 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/exynos/idle-states.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/arm/exynos/idle-states.txt b/Documentation/devicetree/bindings/arm/exynos/idle-states.txt
-> > new file mode 100644
-> > index 0000000..342ecb4
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/arm/exynos/idle-states.txt
-> > @@ -0,0 +1,27 @@
-> > +idle-states node
-> > +----------------
-> > +
-> > +On Exynos platforms with power management capabilities, the device
-> > +tree source file must contain the idle-states node[1]. As defined in [1] the
-> > +idle-states node must contain an entry-method property that for Exynos
-> > +platforms can be one of:
-> > +
-> > +	- "samsung,exynos"
-> 
-> Similarly to the TC2 binding, what does this mean?
-> 
-> What is a kernel expected to do when it sees this entry-method?
-> 
-> Using "samsung,exynos" as the entry-method feels like something that's
-> going to bite us; it sounds far too wide-reaching.
+Naveen,
 
-Same story as TC2, it adds nothing to the patch, it is just there for
-compliance with current DT bindings, but useless and will disappear.
+On Tue, Jun 24, 2014 at 10:04 PM, Naveen Krishna Ch
+<naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> Also, we have few similar nodes on Peach PI  and Peach PIT.
+> Any plans or discussion on merging the common nodes ?
 
-> >  static int exynos_cpuidle_probe(struct platform_device *pdev)
-> >  {
-> > -	int ret;
-> > +	int ret, i;
-> > +	struct cpuidle_driver *drv = &exynos_idle_driver;
-> >  
-> >  	exynos_enter_aftr = (void *)(pdev->dev.platform_data);
-> >  
-> > -	ret = cpuidle_register(&exynos_idle_driver, NULL);
-> > +	drv->cpumask = (struct cpumask *) cpu_possible_mask;
-> 
-> This assignment looks scary to me. Why do we need to do this, and why
-> are we throwing away the constness of cpu_possible_mask?
+There was some discussion about this in another thread with Javier.
+We were thinking of doing more "config fragments" like I did for the
+keyboard.  See <https://lkml.org/lkml/2014/6/24/337> for context.
 
-Yes, that's how it is done in CPUidle core if the idle driver does not
-initialize cpumask pointer, I guess it is to save some bytes, but I agree
-with you, I do not like that either, I will allocate the mask and copy.
+If someone wants to try to break some config fragments out feel free
+to send up patches.  Until that is done let's at least keep pit and pi
+as close to the same as possible (try to add features to both and try
+to make sure that "diff" between the two looks good).
 
-Thanks,
-Lorenzo
-
+-Doug
