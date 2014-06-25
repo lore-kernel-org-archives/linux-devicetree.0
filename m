@@ -1,996 +1,400 @@
 Return-Path: <pantelis.antoniou@konsulko.com>
 Return-Path: <pantelis.antoniou@konsulko.com>
+Subject: Re: [PATCH] configfs: Implement binary attributes
+Mime-Version: 1.0 (Apple Message framework v1085)
+Content-Type: text/plain; charset=us-ascii
 From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH] of: Transactional DT support.
-Date: Sun, 22 Jun 2014 12:41:33 +0300
-Message-Id: <1403430093-15132-1-git-send-email-pantelis.antoniou@konsulko.com>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
+In-Reply-To: <20140625125252.GU30852@ZenIV.linux.org.uk>
+Date: Wed, 25 Jun 2014 15:58:56 +0300
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C1B3C0F9-176B-480E-8AE6-7511A54FBC41@konsulko.com>
+References: <1403429862-15022-1-git-send-email-pantelis.antoniou@konsulko.com> <20140625125252.GU30852@ZenIV.linux.org.uk>
+To: Joel Becker <jlbec@evilplan.org>
+Cc: Grant Likely <grant.likely@secretlab.ca>, Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Introducing DT transactional support.
+Hi Joel,
 
-A DT transaction is a method which allows one to apply changes
-in the live tree, in such a way that either the full set of changes
-take effect, or the state of the tree can be rolled-back to the
-state it was before it was attempted. An applied transaction
-can be rolled-back at any time.
+On Jun 25, 2014, at 3:52 PM, Joel Becker wrote:
 
-If any transaction results in the change of a state of a device
-node, a notifier for that node will be fired which allows a bus
-to create/destroy devices as directed.
+> On Sun, Jun 22, 2014 at 12:37:42PM +0300, Pantelis Antoniou wrote:
+>> ConfigFS lacked binary attributes up until now. This patch
+>> introduces support for binary attributes in a somewhat similar
+>> manner of sysfs binary attributes albeit with changes that
+>> fit the configfs usage model.
+>>=20
+>> Problems that configfs binary attributes fix are everything that
+>> requires a binary blob as part of the configuration of a resource,
+>> such as bitstream loading for FPGAs, DTBs for dynamically created
+>> devices etc.
+>=20
+> I wanted to object on principle, but I actually think I like the way =
+you
+> did this.  More comments inline.
+>=20
 
-Documentation is in
-	Documentation/devicetree/transactions.txt
+Hehe. It sounded weird to me at first, but actually it's not so bad.
+It does solve a problem.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
----
- Documentation/devicetree/transactions.txt |  41 +++
- drivers/of/Makefile                       |   2 +-
- drivers/of/base.c                         |  42 ++-
- drivers/of/transaction.c                  | 529 ++++++++++++++++++++++++++++++
- include/linux/of.h                        | 237 +++++++++++++
- 5 files changed, 839 insertions(+), 12 deletions(-)
- create mode 100644 Documentation/devicetree/transactions.txt
- create mode 100644 drivers/of/transaction.c
+>>=20
+>> Look at Documentation/filesystems/configfs/configfs.txt for internals
+>> and howto use them.
+>>=20
+>> This patch generates a bunch of checkpatch warnings, but this stems =
+from
+>> following the formatting of the configfs code, so please ignore.
+>=20
+> I thought someone had looked into cleaning up that cut-n-paste legacy.
+> I'm fine with new code following sanity..
+>=20
 
-diff --git a/Documentation/devicetree/transactions.txt b/Documentation/devicetree/transactions.txt
-new file mode 100644
-index 0000000..59ff5b7
---- /dev/null
-+++ b/Documentation/devicetree/transactions.txt
-@@ -0,0 +1,41 @@
-+A DT transaction is a method which allows one to apply changes
-+in the live tree, in such a way that either the full set of changes
-+take effect, or the state of the tree can be rolled-back to the
-+state it was before it was attempted. An applied transaction
-+can be rolled-back at any time.
-+
-+If any transaction results in the change of a state of a device
-+node, a notifier for that node will be fired which allows a bus
-+to create/destroy devices as directed.
-+
-+The sequence of a transaction is as follows.
-+
-+1. of_transaction_init() - initializes a transaction
-+
-+2. of_transaction_start() - starts a transaction; a global
-+transaction lock is taken at this point and disallowes any other
-+dynamic tree changes.
-+
-+3. A number of DT tree change calls, of_transaction_attach_node(),
-+of_transaction_detach_node(), of_transaction_add_property(),
-+of_transaction_remove_property, of_transaction_update_property()
-+modify the live tree (but without any user-space visible changes).
-+All changes are recorded in the list of of_transaction_entry of
-+the transaction.
-+
-+4.a. No errors occured during application, so a call to
-+of_transaction_commit() is issued. All the changes are made visible
-+to user-space and all device creation/destruction notifiers are
-+fired. The global transaction is released.
-+
-+4.b. An error occured, so a of_transaction_abort() call is issued.
-+All changes to the live tree will be reverted. The global transaction
-+lock will be released.
-+
-+5.a If the transaction needs not be reverted, a call to
-+of_transaction_destroy will release the resources of the transaction.
-+
-+5.b If the transaction is to be reverted, a call to
-+of_transaction_revert will do so. All device notifiers will be
-+fired, and the state of the tree will be the same as before
-+the call to of_start_transaction().
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index 734d3e2..ae07348 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -1,4 +1,4 @@
--obj-y = base.o device.o platform.o util.o
-+obj-y = base.o device.o platform.o util.o transaction.o
- obj-$(CONFIG_OF_FLATTREE) += fdt.o
- obj-$(CONFIG_OF_EARLY_FLATTREE) += fdt_address.o
- obj-$(CONFIG_OF_PROMTREE) += pdt.o
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b5d854d..6dc6d63 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -50,6 +50,8 @@ DEFINE_MUTEX(of_aliases_mutex);
-  */
- DEFINE_RAW_SPINLOCK(devtree_lock);
- 
-+DEFINE_MUTEX(of_transaction_mutex);
-+
- int of_n_addr_cells(struct device_node *np)
- {
- 	const __be32 *ip;
-@@ -1888,13 +1890,16 @@ int of_add_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_transaction_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	rc = __of_add_property(np, prop);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
--	if (rc)
--		return rc;
- 
--	__of_add_property_post(np, prop, 0);
-+	if (rc == 0)
-+		__of_add_property_post(np, prop, 0);
-+
-+	mutex_unlock(&of_transaction_mutex);
- 
- 	return rc;
- }
-@@ -1942,16 +1947,18 @@ int of_remove_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_transaction_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	rc = __of_remove_property(np, prop);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
--	if (rc)
--		return rc;
-+	if (rc == 0)
-+		__of_remove_property_post(np, prop);
- 
--	__of_remove_property_post(np, prop);
-+	mutex_unlock(&of_transaction_mutex);
- 
--	return 0;
-+	return rc;
- }
- 
- int __of_update_property(struct device_node *np, struct property *newprop,
-@@ -2015,15 +2022,18 @@ int of_update_property(struct device_node *np, struct property *prop)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_transaction_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	rc = __of_update_property(np, prop, &oldprop);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
--	if (rc)
--		return rc;
- 
--	__of_update_property_post(np, prop, oldprop);
-+	if (rc == 0)
-+		__of_update_property_post(np, prop, oldprop);
- 
--	return 0;
-+	mutex_unlock(&of_transaction_mutex);
-+
-+	return rc;
- }
- 
- #if defined(CONFIG_OF_DYNAMIC)
-@@ -2083,11 +2093,16 @@ int of_attach_node(struct device_node *np)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_transaction_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	__of_attach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
- 	__of_attach_node_post(np);
-+
-+	mutex_unlock(&of_transaction_mutex);
-+
- 	return 0;
- }
- 
-@@ -2147,11 +2162,16 @@ int of_detach_node(struct device_node *np)
- 	if (rc)
- 		return rc;
- 
-+	mutex_lock(&of_transaction_mutex);
-+
- 	raw_spin_lock_irqsave(&devtree_lock, flags);
- 	__of_detach_node(np);
- 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
- 
- 	__of_detach_node_post(np);
-+
-+	mutex_unlock(&of_transaction_mutex);
-+
- 	return rc;
- }
- #endif /* defined(CONFIG_OF_DYNAMIC) */
-diff --git a/drivers/of/transaction.c b/drivers/of/transaction.c
-new file mode 100644
-index 0000000..1055b6e
---- /dev/null
-+++ b/drivers/of/transaction.c
-@@ -0,0 +1,529 @@
-+/*
-+ * Functions for DT transactions
-+ *
-+ * Copyright (C) 2014 Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ */
-+#undef DEBUG
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/string.h>
-+#include <linux/ctype.h>
-+#include <linux/errno.h>
-+#include <linux/string.h>
-+#include <linux/slab.h>
-+#include <linux/err.h>
-+
-+#define __OFT_REVERT_PRE	(1 << 0)
-+#define __OFT_REVERT_POST	(1 << 1)
-+#define __OFT_APPLY_PRE		(1 << 2)
-+#define __OFT_APPLY_POST	(1 << 3)
-+#define __OFT_FREE		(1 << 4)
-+#define __OFT_DEV_CHANGE	(1 << 5)
-+#define __OFT_FIRE_NOTIFIERS	(1 << 6)
-+
-+static struct of_transaction_entry *__of_transaction_entry_create(
-+		unsigned long action, struct device_node *dn,
-+		struct property *prop)
-+{
-+	struct of_transaction_entry *te;
-+	int prop_avail, prev_avail;
-+
-+	te = kzalloc(sizeof(*te), GFP_KERNEL);
-+	if (te == NULL) {
-+		pr_err("%s: Failed to allocate\n", __func__);
-+		return ERR_PTR(-ENOMEM);
-+	}
-+	te->device_state_change = -1;
-+
-+	/* get a reference to the node */
-+	te->action = action;
-+	te->np = of_node_get(dn);
-+	te->prop = prop;
-+
-+	if (action == OF_RECONFIG_UPDATE_PROPERTY && prop)
-+		te->old_prop = of_find_property(dn, prop->name, NULL);
-+
-+	if (action == OF_RECONFIG_ADD_PROPERTY ||
-+			action == OF_RECONFIG_REMOVE_PROPERTY ||
-+			action == OF_RECONFIG_UPDATE_PROPERTY) {
-+
-+		/* te->prop & te->old_prop in the update case are not NULL */
-+
-+		prop_avail = -1;
-+		if (of_prop_cmp(prop->name, "status") == 0)
-+			prop_avail = (strcmp(prop->value, "okay") == 0 ||
-+					strcmp(prop->value, "ok") == 0);
-+		else if (of_prop_cmp(prop->name, "-status") == 0)
-+			prop_avail = 1;
-+
-+		if (prop_avail != -1) {
-+			/* state, but change? */
-+			prev_avail = of_device_is_available(te->np) &&
-+				of_find_property(te->np, "compatible", NULL) &&
-+				of_find_property(te->np, "status", NULL);
-+
-+			if (prop_avail != prev_avail)
-+				te->device_state_change = prop_avail;
-+		}
-+	}
-+	return te;
-+}
-+
-+static void __of_transaction_entry_destroy(struct of_transaction_entry *te)
-+{
-+	of_node_put(te->np);
-+	list_del(&te->node);
-+	kfree(te);
-+}
-+
-+static int __of_transaction_entry_apply_op(
-+		struct of_transaction_entry *te, unsigned int op)
-+{
-+	struct property *old_prop;
-+	unsigned long flags;
-+	int ret;
-+
-+	ret = 0;
-+
-+	if (op & __OFT_FIRE_NOTIFIERS) {
-+		switch (te->action) {
-+		case OF_RECONFIG_ATTACH_NODE:
-+		case OF_RECONFIG_DETACH_NODE:
-+			ret = of_reconfig_notify(te->action, te->np);
-+			break;
-+		case OF_RECONFIG_ADD_PROPERTY:
-+		case OF_RECONFIG_REMOVE_PROPERTY:
-+		case OF_RECONFIG_UPDATE_PROPERTY:
-+			ret = of_property_notify(te->action, te->np, te->prop);
-+			break;
-+		}
-+	}
-+
-+	if (ret == 0 && (op & __OFT_APPLY_PRE)) {
-+		raw_spin_lock_irqsave(&devtree_lock, flags);
-+		switch (te->action) {
-+		case OF_RECONFIG_ATTACH_NODE:
-+			__of_attach_node(te->np);
-+			break;
-+		case OF_RECONFIG_DETACH_NODE:
-+			__of_detach_node(te->np);
-+			break;
-+		case OF_RECONFIG_ADD_PROPERTY:
-+			ret = __of_add_property(te->np, te->prop);
-+			if (ret != 0) {
-+				pr_err("%s: __of_add_property failed @%s/%s\n",
-+					__func__, te->np->full_name,
-+					te->prop->name);
-+				break;
-+			}
-+			break;
-+		case OF_RECONFIG_REMOVE_PROPERTY:
-+			ret = __of_remove_property(te->np, te->prop);
-+			if (ret != 0) {
-+				pr_err("%s: __of_remove_property failed @%s/%s\n",
-+					__func__, te->np->full_name,
-+					te->np->name);
-+				break;
-+			}
-+			break;
-+		case OF_RECONFIG_UPDATE_PROPERTY:
-+			ret = __of_update_property(te->np, te->prop, &old_prop);
-+			if (ret != 0) {
-+				pr_err("%s: __of_update_property failed @%s/%s\n",
-+					__func__, te->np->full_name,
-+					te->np->name);
-+				break;
-+			}
-+			break;
-+		}
-+		raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+	}
-+
-+	if (ret == 0 && (op & __OFT_APPLY_POST)) {
-+		switch (te->action) {
-+		case OF_RECONFIG_ATTACH_NODE:
-+			__of_attach_node_post(te->np);
-+			break;
-+		case OF_RECONFIG_DETACH_NODE:
-+			__of_detach_node(te->np);
-+			break;
-+		case OF_RECONFIG_ADD_PROPERTY:
-+			/* ignore duplicate names */
-+			__of_add_property_post(te->np, te->prop, 1);
-+			break;
-+		case OF_RECONFIG_REMOVE_PROPERTY:
-+			__of_remove_property_post(te->np, te->prop);
-+			break;
-+		case OF_RECONFIG_UPDATE_PROPERTY:
-+			__of_update_property_post(te->np, te->prop,
-+					te->old_prop);
-+			break;
-+		}
-+	}
-+
-+	if (ret == 0 && (op & __OFT_DEV_CHANGE) &&
-+			te->device_state_change != -1) {
-+
-+		pr_debug("%s: %s device for node '%s'\n", __func__,
-+				te->device_state_change ? "create" : "remove",
-+				te->np->full_name);
-+
-+		of_reconfig_notify(te->device_state_change ?
-+				OF_RECONFIG_DYNAMIC_CREATE_DEV :
-+				OF_RECONFIG_DYNAMIC_DESTROY_DEV,
-+				te->np);
-+	}
-+
-+	return ret;
-+}
-+
-+static int __of_transaction_entry_revert_op(
-+		struct of_transaction_entry *te, unsigned int op)
-+{
-+	struct property *prop, *old_prop, **propp;
-+	unsigned long action, flags;
-+	struct device_node *np;
-+	int ret, device_state_change;
-+
-+	/* get node and immediately put */
-+	action = te->action;
-+	np = te->np;
-+	prop = te->prop;
-+	old_prop = te->old_prop;
-+	device_state_change = te->device_state_change;
-+
-+	/* if free, do it upfront */
-+	if (op & __OFT_FREE) {
-+		__of_transaction_entry_destroy(te);
-+		te = NULL;
-+	}
-+
-+	if (op & __OFT_FIRE_NOTIFIERS) {
-+		switch (action) {
-+		case OF_RECONFIG_ATTACH_NODE:
-+			ret = of_reconfig_notify(OF_RECONFIG_DETACH_NODE, np);
-+			break;
-+		case OF_RECONFIG_DETACH_NODE:
-+			ret = of_reconfig_notify(OF_RECONFIG_ATTACH_NODE, np);
-+			break;
-+		case OF_RECONFIG_ADD_PROPERTY:
-+			ret = of_property_notify(OF_RECONFIG_REMOVE_PROPERTY,
-+					np, prop);
-+			break;
-+		case OF_RECONFIG_REMOVE_PROPERTY:
-+			ret = of_property_notify(OF_RECONFIG_ADD_PROPERTY,
-+					np, prop);
-+			break;
-+		case OF_RECONFIG_UPDATE_PROPERTY:
-+			ret = of_property_notify(OF_RECONFIG_UPDATE_PROPERTY,
-+					np, old_prop);
-+			break;
-+		}
-+	}
-+
-+	if (ret == 0 && (op & __OFT_DEV_CHANGE) && device_state_change != -1) {
-+
-+		pr_debug("%s: %s device for node '%s'\n", __func__,
-+				!device_state_change ? "create" : "remove",
-+				np->full_name);
-+
-+		of_reconfig_notify(!device_state_change ?
-+				OF_RECONFIG_DYNAMIC_CREATE_DEV :
-+				OF_RECONFIG_DYNAMIC_DESTROY_DEV,
-+				np);
-+	}
-+
-+	ret = 0;
-+	if (op & __OFT_REVERT_PRE) {
-+		raw_spin_lock_irqsave(&devtree_lock, flags);
-+		switch (action) {
-+		case OF_RECONFIG_ATTACH_NODE:
-+			__of_detach_node(np);
-+			break;
-+		case OF_RECONFIG_DETACH_NODE:
-+			__of_attach_node(np);
-+			break;
-+		case OF_RECONFIG_ADD_PROPERTY:
-+			ret = __of_remove_property(np, prop);
-+			break;
-+		case OF_RECONFIG_REMOVE_PROPERTY:
-+		case OF_RECONFIG_UPDATE_PROPERTY:
-+			/* property is *always* on deadprops */
-+			if (action == OF_RECONFIG_UPDATE_PROPERTY)
-+				prop = old_prop;
-+			propp = &np->deadprops;
-+			while (*propp != NULL) {
-+				if (*propp == prop)
-+					break;
-+				propp = &(*propp)->next;
-+			}
-+
-+			/* we should find it in deadprops */
-+			WARN_ON(*propp == NULL);
-+
-+			/* remove it from deadprops */
-+			if (*propp != NULL)
-+				*propp = prop->next;
-+
-+			if (action == OF_RECONFIG_REMOVE_PROPERTY)
-+				ret = __of_add_property(np, prop);
-+			else
-+				ret = __of_update_property(np, prop, &old_prop);
-+			break;
-+		}
-+		raw_spin_unlock_irqrestore(&devtree_lock, flags);
-+	}
-+
-+	if (ret == 0 && (op & __OFT_REVERT_POST)) {
-+		switch (action) {
-+		case OF_RECONFIG_ATTACH_NODE:
-+			__of_detach_node_post(np);
-+			break;
-+		case OF_RECONFIG_DETACH_NODE:
-+			__of_attach_node_post(np);
-+			break;
-+		case OF_RECONFIG_ADD_PROPERTY:
-+			__of_remove_property_post(np, prop);
-+			break;
-+		case OF_RECONFIG_REMOVE_PROPERTY:
-+			__of_add_property_post(np, prop, 0);
-+			break;
-+		case OF_RECONFIG_UPDATE_PROPERTY:
-+			__of_update_property_post(np, prop, old_prop);
-+			break;
-+		}
-+	}
-+
-+	return ret;
-+}
-+
-+int of_transaction_init(struct of_transaction *oft)
-+{
-+	memset(oft, 0, sizeof(*oft));
-+
-+	mutex_init(&oft->lock);
-+	INIT_LIST_HEAD(&oft->te_list);
-+	oft->state = OFT_READY;
-+
-+	return 0;
-+}
-+
-+int of_transaction_destroy(struct of_transaction *oft)
-+{
-+	struct of_transaction_entry *te, *ten;
-+	int ret;
-+
-+	ret = 0;
-+	mutex_lock(&oft->lock);
-+	if (oft->state != OFT_READY && oft->state != OFT_COMMITTED) {
-+		ret = -EBUSY;
-+		pr_err("%s: transaction is busy; can't destroy\n", __func__);
-+		goto out;
-+	}
-+
-+	/* for a commited transaction, just free the memory */
-+	if (oft->state == OFT_COMMITTED) {
-+		list_for_each_entry_safe_reverse(te, ten, &oft->te_list, node)
-+			__of_transaction_entry_revert_op(te, __OFT_FREE);
-+		oft->state = OFT_READY;
-+	}
-+out:
-+	mutex_unlock(&oft->lock);
-+
-+	return ret;
-+}
-+
-+/* start a transaction */
-+int of_transaction_start(struct of_transaction *oft)
-+{
-+	int ret;
-+
-+	ret = 0;
-+
-+	/* take the global of transaction mutex */
-+	mutex_lock(&of_transaction_mutex);
-+
-+	mutex_lock(&oft->lock);
-+	if (oft->state != OFT_READY) {
-+		ret = -EBUSY;
-+		pr_err("%s: transaction is busy; can't start\n", __func__);
-+		goto out;
-+	}
-+	oft->state = OFT_IN_PROGRESS;
-+out:
-+	mutex_unlock(&oft->lock);
-+
-+	/* release the global transaction lock in case of an error */
-+	if (ret != 0)
-+		mutex_unlock(&of_transaction_mutex);
-+
-+	return ret;
-+}
-+
-+/* abort a transaction in progress */
-+int of_transaction_abort(struct of_transaction *oft)
-+{
-+	int ret, rel_global_lock;
-+	struct of_transaction_entry *te, *ten;
-+
-+	ret = 0;
-+	rel_global_lock = 0;
-+	mutex_lock(&oft->lock);
-+	if (oft->state != OFT_IN_PROGRESS) {
-+		ret = -EINVAL;
-+		pr_err("%s: transaction invalid state\n", __func__);
-+		goto out;
-+	}
-+	/* release global lock */
-+	rel_global_lock = 1;
-+
-+	list_for_each_entry_safe_reverse(te, ten, &oft->te_list, node)
-+		__of_transaction_entry_revert_op(te, __OFT_FIRE_NOTIFIERS |
-+				__OFT_REVERT_PRE | __OFT_FREE);
-+
-+	oft->state = OFT_READY;
-+out:
-+	mutex_unlock(&oft->lock);
-+
-+	if (rel_global_lock)
-+		mutex_unlock(&of_transaction_mutex);
-+
-+	return ret;
-+}
-+
-+int of_transaction_commit(struct of_transaction *oft)
-+{
-+	struct of_transaction_entry *te;
-+	int ret;
-+
-+	ret = 0;
-+	mutex_lock(&oft->lock);
-+	if (oft->state != OFT_IN_PROGRESS) {
-+		ret = -EINVAL;
-+		pr_err("%s: transaction invalid state\n", __func__);
-+		goto out;
-+	}
-+	/* change state to committing */
-+	oft->state = OFT_COMMITTING;
-+	mutex_unlock(&oft->lock);
-+
-+	/* drop the global lock here (notifiers and devices need it) */
-+	mutex_unlock(&of_transaction_mutex);
-+
-+	/* grab the lock again */
-+	mutex_lock(&oft->lock);
-+	if (oft->state != OFT_COMMITTING) {
-+		ret = -EINVAL;
-+		pr_err("%s: transaction not in committing state\n",
-+				__func__);
-+		goto out;
-+	}
-+	/* perform the rest of the work */
-+	list_for_each_entry(te, &oft->te_list, node)
-+		__of_transaction_entry_apply_op(te, __OFT_APPLY_POST |
-+				__OFT_DEV_CHANGE);
-+	oft->state = OFT_COMMITTED;
-+out:
-+	mutex_unlock(&oft->lock);
-+
-+	return ret;
-+}
-+
-+int of_transaction_revert(struct of_transaction *oft)
-+{
-+	int ret, rel_global_lock;
-+	struct of_transaction_entry *te, *ten;
-+
-+	ret = 0;
-+	rel_global_lock = 0;
-+
-+	mutex_lock(&oft->lock);
-+	if (oft->state != OFT_COMMITTED) {
-+		ret = -EBUSY;
-+		pr_err("%s: transaction is not commited\n", __func__);
-+		goto out;
-+	}
-+	/* change state to reverting */
-+	oft->state = OFT_REVERTING;
-+
-+	/* fire the device change notifiers */
-+	list_for_each_entry_reverse(te, &oft->te_list, node)
-+		__of_transaction_entry_revert_op(te, __OFT_DEV_CHANGE |
-+				__OFT_FIRE_NOTIFIERS);
-+
-+	mutex_unlock(&oft->lock);
-+
-+	/* take the global of transaction mutex */
-+	mutex_lock(&of_transaction_mutex);
-+
-+	mutex_lock(&oft->lock);
-+	rel_global_lock = 1;
-+
-+	if (oft->state != OFT_REVERTING) {
-+		ret = -EBUSY;
-+		pr_err("%s: transaction is not reverting\n", __func__);
-+		goto out;
-+	}
-+
-+	list_for_each_entry_safe_reverse(te, ten, &oft->te_list, node)
-+		__of_transaction_entry_revert_op(te, __OFT_REVERT_PRE |
-+				__OFT_REVERT_POST | __OFT_FREE);
-+	/* and we're done */
-+	oft->state = OFT_READY;
-+out:
-+	mutex_unlock(&oft->lock);
-+
-+	if (rel_global_lock)
-+		mutex_unlock(&of_transaction_mutex);
-+
-+	return ret;
-+}
-+
-+int of_transaction_action(struct of_transaction *oft, unsigned long action,
-+		struct device_node *np, struct property *prop)
-+{
-+	struct of_transaction_entry *te;
-+	int ret;
-+
-+	ret = 0;
-+
-+	mutex_lock(&oft->lock);
-+
-+	if (oft->state != OFT_IN_PROGRESS) {
-+		ret = -EINVAL;
-+		pr_err("%s: transaction invalid state\n", __func__);
-+		goto out;
-+	}
-+
-+	/* create the transaction entry */
-+	te = __of_transaction_entry_create(action, np, prop);
-+	if (IS_ERR(te)) {
-+		pr_err("%s: failed to create entry for @%s\n",
-+				__func__, np->full_name);
-+		ret = PTR_ERR(te);
-+		goto out;
-+	}
-+
-+	/* apply it */
-+	ret = __of_transaction_entry_apply_op(te, __OFT_FIRE_NOTIFIERS |
-+			__OFT_APPLY_PRE);
-+	if (ret != 0) {
-+		pr_err("%s: failed to apply for @%s\n",
-+				__func__, np->full_name);
-+		__of_transaction_entry_destroy(te);
-+		goto out;
-+	}
-+
-+	/* add it to the list */
-+	list_add_tail(&te->node, &oft->te_list);
-+out:
-+	mutex_unlock(&oft->lock);
-+
-+	return ret;
-+}
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 60e9f3b..38d4d74 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -121,6 +121,8 @@ extern struct device_node *of_allnodes;
- extern struct device_node *of_chosen;
- extern struct device_node *of_aliases;
- extern raw_spinlock_t devtree_lock;
-+extern struct mutex of_aliases_mutex;
-+extern struct mutex of_transaction_mutex;
- 
- static inline bool of_have_populated_dt(void)
- {
-@@ -873,4 +875,239 @@ static inline struct device_node *__of_create_empty_node(const char *name,
- 
- #endif	/* !CONFIG_OF */
- 
-+/**
-+ * struct of_transaction_entry	- Holds a transaction entry
-+ *
-+ * @node:	list_head for the log list
-+ * @action:	notifier action
-+ * @np:		pointer to the device node affected
-+ * @prop:	pointer to the property affected
-+ * @old_prop:	hold a pointer to the original property
-+ *
-+ * Every modification of the device tree during a transaction
-+ * is held in a list of of_transaction_entry structures.
-+ * That way we can recover from a partial application, or we can
-+ * revert the transaction
-+ */
-+struct of_transaction_entry {
-+	struct list_head node;
-+	unsigned long action;
-+	struct device_node *np;
-+	struct property *prop;
-+	struct property *old_prop;
-+
-+	/* if property change on status
-+	*/
-+	int device_state_change;
-+};
-+
-+/* possible states of the transaction */
-+enum of_transaction_state {
-+	OFT_READY,		/* ready for use (i.e. using start()       */
-+	OFT_IN_PROGRESS,	/* application in progress, start() issued */
-+	OFT_COMMITTING,		/* committing but not yet completed        */
-+	OFT_COMMITTED,		/* has been commited to live tree          */
-+	OFT_REVERTING,		/* revert is in progress                   */
-+};
-+
-+/**
-+ * struct of_transaction - transaction tracker structure
-+ *
-+ * @lock:	lock for accessing the te_list and state entries
-+ * @te_list:	list_head for the transaction entries
-+ * @state:	State of the transaction
-+ *
-+ * Transactions are a convenient way to apply bulk changes to the
-+ * live tree. In case of an error, changes are rolled-back.
-+ * Transactions live on after initial application, and if not
-+ * destroyed after use, they can be reverted in one single call.
-+ */
-+struct of_transaction {
-+	struct mutex lock;
-+	struct list_head te_list;
-+	enum of_transaction_state state;
-+};
-+
-+/* forward iterator */
-+#define for_each_transaction_entry(_oft, _te) \
-+	list_for_each_entry(_te, &(_oft)->te_list, node)
-+
-+/* reverse iterator */
-+#define for_each_transaction_entry_reverse(_oft, _te) \
-+	list_for_each_entry_reverse(_te, &(_oft)->te_list, node)
-+
-+#ifdef CONFIG_OF
-+
-+/**
-+ * of_transaction_init - Initialize a transaction for use
-+ *
-+ * @oft:	transaction pointer
-+ *
-+ * Initialize a transaction putting it in READY state.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_init(struct of_transaction *oft);
-+
-+/**
-+ * of_transaction_destroy - Destroy a transaction
-+ *
-+ * @oft:	transaction pointer
-+ *
-+ * Destroy a transaction, which is in either a COMMITED or READY state.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_destroy(struct of_transaction *oft);
-+
-+/**
-+ * of_transaction_start - Start a transaction
-+ *
-+ * @oft:	transaction pointer
-+ *
-+ * Starts a transaction, by moving it from READY to IN_PROGRESS state.
-+ * The global transaction mutex will be held on sucess, so that no
-+ * transactions/live updates can occur until either the transaction
-+ * completes (i.e. moves to COMMITTED state), or aborted.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_start(struct of_transaction *oft);
-+
-+/**
-+ * of_transaction_abort - Aborts a transaction in progress
-+ *
-+ * @oft:	transaction pointer
-+ *
-+ * Aborts a transaction in IN_PROGRESS state, reverting the state
-+ * of the live tree to the condition it was before application.
-+ * The global transaction mutex is released if successful.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_abort(struct of_transaction *oft);
-+
-+/**
-+ * of_transaction_abort - Aborts a transaction in progress
-+ *
-+ * @oft:	transaction pointer
-+ *
-+ * Aborts a transaction in IN_PROGRESS state, reverting the state
-+ * of the live tree to the condition it was before application.
-+ * The global transaction mutex is released if successful, and the
-+ * state transitions to COMMITTED.
-+ * Any side-effects of live tree state changes are applied here on
-+ * sucess, like creation/destruction of devices and side-effects
-+ * like creation of sysfs properties and directories.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_commit(struct of_transaction *oft);
-+
-+/**
-+ * of_transaction_revert - Reverts an applied transaction
-+ *
-+ * @oft:	transaction pointer
-+ *
-+ * Aborts a transaction in COMMITTED state, reverting the state
-+ * of the live tree to the condition it was before application.
-+ * Any side-effects of live tree state reverting to the original
-+ * state, like creation/destruction of devices and side-effects
-+ * like removal of sysfs properties and directories are applied.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_revert(struct of_transaction *oft);
-+
-+/**
-+ * of_transaction_action - Perform a transaction action
-+ *
-+ * @oft:	transaction pointer
-+ * @action:	action to perform
-+ * @np:		Pointer to device node
-+ * @prop:	Pointer to property
-+ *
-+ * On action being one of:
-+ * + OF_RECONFIG_ATTACH_NODE
-+ * + OF_RECONFIG_DETACH_NODE,
-+ * + OF_RECONFIG_ADD_PROPERTY
-+ * + OF_RECONFIG_REMOVE_PROPERTY,
-+ * + OF_RECONFIG_UPDATE_PROPERTY
-+ * performs a update of the live tree, while recording the
-+ * act on a transaction entry. The remaining of side-effects are
-+ * applied on commit.
-+ * Returns 0 on success, a negative error value in case of an error.
-+ */
-+int of_transaction_action(struct of_transaction *oft, unsigned long action,
-+		struct device_node *np, struct property *prop);
-+
-+#else
-+
-+static inline int of_transaction_init(struct of_transaction *oft)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int of_transaction_destroy(struct of_transaction *oft)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int of_transaction_start(struct of_transaction *oft)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int of_transaction_abort(struct of_transaction *oft)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int of_transaction_commit(struct of_transaction *oft)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int of_transaction_revert(struct of_transaction *oft)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline int of_transaction_action(struct of_transaction *oft,
-+		unsigned long action, struct device_node *np,
-+		struct property *prop)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+#endif
-+
-+static inline int of_transaction_attach_node(struct of_transaction *oft,
-+		struct device_node *np)
-+{
-+	return of_transaction_action(oft, OF_RECONFIG_ATTACH_NODE, np, NULL);
-+}
-+
-+static inline int of_transaction_detach_node(struct of_transaction *oft,
-+		struct device_node *np)
-+{
-+	return of_transaction_action(oft,
-+			OF_RECONFIG_DETACH_NODE, np, NULL);
-+}
-+
-+static inline int of_transaction_add_property(struct of_transaction *oft,
-+		struct device_node *np, struct property *prop)
-+{
-+	return of_transaction_action(oft,
-+			OF_RECONFIG_ADD_PROPERTY, np, prop);
-+}
-+
-+static inline int of_transaction_remove_property(struct of_transaction *oft,
-+		struct device_node *np, struct property *prop)
-+{
-+	return of_transaction_action(oft,
-+			OF_RECONFIG_REMOVE_PROPERTY, np, prop);
-+}
-+
-+static inline int of_transaction_update_property(struct of_transaction *oft,
-+		struct device_node *np, struct property *prop)
-+{
-+	return of_transaction_action(oft,
-+			OF_RECONFIG_UPDATE_PROPERTY, np, prop);
-+}
-+
- #endif /* _LINUX_OF_H */
--- 
-1.7.12
+OK.
+
+>> @@ -431,7 +438,9 @@ static int configfs_attach_attr(struct =
+configfs_dirent * sd, struct dentry * den
+>> 	spin_unlock(&configfs_dirent_lock);
+>>=20
+>> 	error =3D configfs_create(dentry, (attr->ca_mode & S_IALLUGO) | =
+S_IFREG,
+>> -				configfs_init_file);
+>> +				(sd->s_type & CONFIGFS_ITEM_ATTR) ?
+>> +					configfs_init_file :
+>> +					configfs_init_bin_file);
+>> 	if (error) {
+>> 		configfs_put(sd);
+>> 		return error;
+>> @@ -591,6 +600,7 @@ static int populate_attrs(struct config_item =
+*item)
+>> {
+>> 	struct config_item_type *t =3D item->ci_type;
+>> 	struct configfs_attribute *attr;
+>> +	struct configfs_bin_attribute *bin_attr;
+>> 	int error =3D 0;
+>> 	int i;
+>>=20
+>> @@ -603,6 +613,13 @@ static int populate_attrs(struct config_item =
+*item)
+>> 		}
+>> 	}
+>>=20
+>=20
+> No need for this blank line.
+>=20
+
+OK
+
+>> +	if (t->ct_bin_attrs) {
+>> +		for (i =3D 0; (bin_attr =3D t->ct_bin_attrs[i]) !=3D =
+NULL; i++) {
+>> +			if ((error =3D configfs_create_bin_file(item, =
+bin_attr)))
+>> +				break;
+>> +		}
+>> +	}
+>> +
+>> 	if (error)
+>> 		detach_attrs(item);
+>>=20
+>> diff --git a/fs/configfs/file.c b/fs/configfs/file.c
+>> index 1d1c41f..aec051b 100644
+>> --- a/fs/configfs/file.c
+>> +++ b/fs/configfs/file.c
+>> @@ -48,6 +48,10 @@ struct configfs_buffer {
+>> 	struct configfs_item_operations	* ops;
+>> 	struct mutex		mutex;
+>> 	int			needs_read_fill;
+>> +	int			read_in_progress;
+>> +	int			write_in_progress;
+>> +	char			*bin_buffer;
+>> +	int			bin_buffer_size;
+>> };
+>>=20
+>>=20
+>> @@ -107,8 +111,15 @@ static ssize_t
+>> configfs_read_file(struct file *file, char __user *buf, size_t count, =
+loff_t *ppos)
+>> {
+>> 	struct configfs_buffer * buffer =3D file->private_data;
+>> +	struct configfs_dirent * sd =3D file->f_path.dentry->d_fsdata;
+>> 	ssize_t retval =3D 0;
+>>=20
+>> +	if (WARN_ON(sd =3D=3D NULL))
+>> +		return -EINVAL;
+>> +
+>> +	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_ATTR)))
+>> +		return -EINVAL;
+>> +
+>> 	mutex_lock(&buffer->mutex);
+>> 	if (buffer->needs_read_fill) {
+>> 		if ((retval =3D =
+fill_read_buffer(file->f_path.dentry,buffer)))
+>> @@ -123,6 +134,93 @@ out:
+>> 	return retval;
+>> }
+>>=20
+>> +/**
+>> + *	configfs_read_bin_file - read a binary attribute.
+>> + *	@file:	file pointer.
+>> + *	@buf:	buffer to fill.
+>> + *	@count:	number of bytes to read.
+>> + *	@ppos:	starting offset in file.
+>> + *
+>> + *	Userspace wants to read a binary attribute file. The attribute =
+descriptor
+>> + *	is in the file's ->d_fsdata. The target item is in the =
+directory's
+>> + *	->d_fsdata.
+>> + *
+>> + *	We check whether we need to refill the buffer. If so we will
+>> + *	call the attributes' ops->read_bin_attribute() twice. The first =
+time we
+>> + *	will pass a NULL as a buffer pointer, which the attributes' =
+method
+>> + *	will use to return the size of the buffer required. If no error
+>> + *	occurs we will allocate the buffer using kmalloc and call=20
+>> + *	ops->read_bin_atribute() again passing that buffer as an =
+argument.
+>> + *	Then we just copy to user-space using simple_read_from_buffer.
+>> + */
+>> +
+>> +static ssize_t
+>> +configfs_read_bin_file(struct file *file, char __user *buf, size_t =
+count, loff_t *ppos)
+>> +{
+>> +	struct configfs_buffer * buffer =3D file->private_data;
+>> +	struct dentry *dentry =3D file->f_path.dentry;
+>> +	struct configfs_dirent * sd =3D dentry->d_fsdata;
+>> +	struct config_item * item =3D to_item(dentry->d_parent);
+>> +	struct configfs_item_operations * ops =3D buffer->ops;
+>> +	struct configfs_attribute * attr =3D to_attr(dentry);
+>> +	struct configfs_bin_attribute *bin_attr =3D
+>> +		container_of(attr, struct configfs_bin_attribute, attr);
+>=20
+> You defined to_bin_attr().  Use it here and in write_bin_file() rather
+> than open-coding the container_of() calls.
+>=20
+
+OK
+
+>> +	ssize_t retval =3D 0;
+>> +	ssize_t len =3D min_t(size_t, count, PAGE_SIZE);
+>> +
+>> +	if (WARN_ON(sd =3D=3D NULL))
+>> +		return -EINVAL;
+>> +
+>> +	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_BIN_ATTR)))
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&buffer->mutex);
+>> +
+>> +	/* we don't support switching read/write modes */
+>> +	if (buffer->write_in_progress) {
+>> +		retval =3D -EINVAL;
+>> +		goto out;
+>> +	}
+>> +	if (!buffer->read_in_progress)
+>> +		buffer->read_in_progress =3D 1;
+>=20
+> You can always set read_in_progress, even if the read has already
+> started.
+
+OK
+
+>=20
+>> +
+>> +	if (buffer->needs_read_fill) {
+>> +
+>> +		/* perform first read with buf =3D=3D NULL to get extent =
+*/
+>> +		len =3D ops->read_bin_attribute(item, bin_attr, NULL, =
+0);
+>> +		if (len < 0) {
+>> +			retval =3D len;
+>> +			goto out;
+>> +		}
+>> +
+>> +		buffer->bin_buffer =3D kmalloc(len, GFP_KERNEL);
+>> +		if (buffer->bin_buffer =3D=3D NULL) {
+>> +			retval =3D -ENOMEM;
+>> +			goto out;
+>> +		}
+>> +		buffer->bin_buffer_size =3D len;
+>> +
+>> +		/* perform second read to fill buffer */
+>> +		len =3D ops->read_bin_attribute(item, bin_attr,
+>> +				buffer->bin_buffer, len);
+>> +		if (len < 0) {
+>> +			retval =3D len;
+>> +			kfree(buffer->bin_buffer);
+>> +			buffer->bin_buffer_size =3D 0;
+>> +			buffer->bin_buffer =3D NULL;
+>> +			goto out;
+>> +		}
+>> +
+>> +		buffer->needs_read_fill =3D 0;
+>> +	}
+>> +
+>> +	retval =3D simple_read_from_buffer(buf, count, ppos, =
+buffer->bin_buffer,
+>> +					buffer->bin_buffer_size);
+>> +out:
+>> +	mutex_unlock(&buffer->mutex);
+>> +	return retval;
+>> +}
+>> +
+>>=20
+>> /**
+>>  *	fill_write_buffer - copy buffer from userspace.
+>> @@ -198,8 +296,15 @@ static ssize_t
+>> configfs_write_file(struct file *file, const char __user *buf, size_t =
+count, loff_t *ppos)
+>> {
+>> 	struct configfs_buffer * buffer =3D file->private_data;
+>> +	struct configfs_dirent * sd =3D file->f_path.dentry->d_fsdata;
+>> 	ssize_t len;
+>>=20
+>> +	if (WARN_ON(sd =3D=3D NULL))
+>> +		return -EINVAL;
+>> +
+>> +	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_ATTR)))
+>> +		return -EINVAL;
+>> +
+>> 	mutex_lock(&buffer->mutex);
+>> 	len =3D fill_write_buffer(buffer, buf, count);
+>> 	if (len > 0)
+>> @@ -210,10 +315,80 @@ configfs_write_file(struct file *file, const =
+char __user *buf, size_t count, lof
+>> 	return len;
+>> }
+>>=20
+>> -static int check_perm(struct inode * inode, struct file * file)
+>> +/**
+>> + *	configfs_write_bin_file - write a binary attribute.
+>> + *	@file:	file pointer
+>> + *	@buf:	data to write
+>> + *	@count:	number of bytes
+>> + *	@ppos:	starting offset
+>> + *
+>> + *	Writting to a binary attribute file is similar to a normal read.
+>> + *	We buffer the consecutive writes (binary attribute files do not
+>> + *	support lseek) in a continuously growing buffer, but we don't=20
+>> + *	commit until the close of the file.
+>> + */
+>> +
+>> +static ssize_t
+>> +configfs_write_bin_file(struct file *file, const char __user *buf, =
+size_t count, loff_t *ppos)
+>> +{
+>> +	struct configfs_buffer * buffer =3D file->private_data;
+>> +	struct dentry *dentry =3D file->f_path.dentry;
+>> +	struct configfs_dirent * sd =3D dentry->d_fsdata;
+>> +	void *tbuf =3D NULL;
+>> +	ssize_t len;
+>> +
+>> +	if (WARN_ON(sd =3D=3D NULL))
+>> +		return -EINVAL;
+>> +
+>> +	if (WARN_ON(!(sd->s_type & CONFIGFS_ITEM_BIN_ATTR)))
+>> +		return -EINVAL;
+>> +
+>> +	mutex_lock(&buffer->mutex);
+>> +
+>> +	/* we don't support switching read/write modes */
+>> +	if (buffer->read_in_progress) {
+>> +		len =3D -EINVAL;
+>> +		goto out;
+>> +	}
+>> +	if (!buffer->write_in_progress)
+>> +		buffer->write_in_progress =3D 1;
+>> +
+>> +	/* buffer grows? */
+>> +	if (*ppos + count > buffer->bin_buffer_size) {
+>> +
+>> +		tbuf =3D kmalloc(*ppos + count, GFP_KERNEL);
+>> +		if (tbuf =3D=3D NULL) {
+>> +			len =3D -ENOMEM;
+>> +			goto out;
+>> +		}
+>> +
+>> +		/* copy old contents */
+>> +		if (buffer->bin_buffer) {
+>> +			memcpy(tbuf, buffer->bin_buffer,
+>> +					buffer->bin_buffer_size);
+>=20
+> Fix the argument alignment.  Do this elsewhere in your patch, too.
+>=20
+
+Hmm, I see.
+
+>> +			kfree(buffer->bin_buffer);
+>> +		}
+>> +
+>> +		/* clear the new area */
+>> +		memset(tbuf + buffer->bin_buffer_size, 0,
+>> +				*ppos + count - =
+buffer->bin_buffer_size);
+>> +		buffer->bin_buffer =3D tbuf;
+>> +		buffer->bin_buffer_size =3D *ppos + count;
+>> +	}
+>> +
+>> +	len =3D simple_write_to_buffer(buffer->bin_buffer, =
+buffer->bin_buffer_size,
+>> +			ppos, buf, count);
+>> +	if (len > 0)
+>> +		*ppos +=3D len;
+>> +out:
+>> +	mutex_unlock(&buffer->mutex);
+>> +	return len;
+>> +}
+>> +
+>=20
+> <snip>
+>=20
+>> diff --git a/fs/configfs/inode.c b/fs/configfs/inode.c
+>> index 5946ad9..dd9c24b 100644
+>> --- a/fs/configfs/inode.c
+>> +++ b/fs/configfs/inode.c
+>> @@ -231,7 +231,7 @@ const unsigned char * configfs_get_name(struct =
+configfs_dirent *sd)
+>> 	if (sd->s_type & (CONFIGFS_DIR | CONFIGFS_ITEM_LINK))
+>> 		return sd->s_dentry->d_name.name;
+>>=20
+>> -	if (sd->s_type & CONFIGFS_ITEM_ATTR) {
+>> +	if (sd->s_type & (CONFIGFS_ITEM_ATTR | CONFIGFS_ITEM_BIN_ATTR)) =
+{
+>> 		attr =3D sd->s_element;
+>> 		return attr->ca_name;
+>> 	}
+>> diff --git a/include/linux/configfs.h b/include/linux/configfs.h
+>> index 34025df..15f1079 100644
+>> --- a/include/linux/configfs.h
+>> +++ b/include/linux/configfs.h
+>=20
+> <snip>
+>=20
+>> @@ -207,6 +209,89 @@ static ssize_t _item##_attr_store(struct =
+config_item *item,		\
+>> 	return ret;							=
+\
+>> }
+>>=20
+>> +struct file;
+>> +struct vm_area_struct;
+>> +
+>> +struct configfs_bin_attribute {
+>> +	struct configfs_attribute	attr;
+>> +	void				*private;
+>> +};
+>=20
+> cb_attr and cb_private or similar prefixes, please.
+>=20
+
+OK, will roll everything up in the next submission.
+
+> Joel
+>=20
+>=20
+
+Regards
+
+-- Pantelis
