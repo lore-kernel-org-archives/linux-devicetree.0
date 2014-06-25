@@ -1,30 +1,38 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 1/2] Documentation: Document Hisilicon hix5hd2 sata PHY
-Date: Wed, 25 Jun 2014 14:16:49 +0200
-Message-ID: <201406251416.49561.arnd@arndb.de>
-References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <1403687648-29082-2-git-send-email-zhangfei.gao@linaro.org>
+From: Rob Herring <robherring2@gmail.com>
+Subject: Re: [PATCH] arm/arm64: DT: Fix GICv2 CPU interface size
+Date: Wed, 25 Jun 2014 07:21:17 -0500
+Message-ID: <CAL_Jsq+rS3FE8_F-4qdUUTaJ6X9XNFP2d2h7CdU9hDRG0KG9uA@mail.gmail.com>
+References: <1403692675-26503-1-git-send-email-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain;
-  charset="iso-8859-15"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403687648-29082-2-git-send-email-zhangfei.gao@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhangfei Gao <zhangfei.gao@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, mark.rutland@arm.com, haifeng.yan@linaro.org, jchxue@gmail.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Jiancheng Xue <xuejiancheng@huawei.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1403692675-26503-1-git-send-email-marc.zyngier@arm.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Ben Dooks <ben-linux@fluff.org>, Kukjin Kim <kgene.kim@samsung.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, Tony Lindgren <tony@atomide.com>, Maxime Ripard <maxime.ripard@free-electrons.com>, Stephen Warren <swarren@wwwdotorg.org>, Thierry Reding <thierry.reding@gmail.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>linux
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 June 2014, Zhangfei Gao wrote:
-> From: Jiancheng Xue <xuejiancheng@huawei.com>
-> 
-> Add necessary binding documentation SATA PHY on Hisilicon hix5hd2 soc.
-> 
-> Signed-off-by: Jiancheng Xue <xuejiancheng@huawei.com>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao@linaro.org>
+On Wed, Jun 25, 2014 at 5:37 AM, Marc Zyngier <marc.zyngier@arm.com> wrote:
+> All the Cortex-{A7,A15} implementations are using a GICv2. Same for
+> the current arm64 platforms.
+>
+> Turns out that most of these platforms have described their GIC CPU
+> interface size as being 4kB. while it is actually 8kB (the GICC_DIR
+> register lives at offset 0x1000).
+>
+> This was found when converting the GIC driver to use EOImode==1 on
+> GICv2-based systems. It uses the GICC_DIR register, and the result
+> is a very early firework...
 
-We have had a couple of PHY drivers that were initially meant to be
-single-purpose but then turned out to be for hardware that could
-be put into multiple modes (SATA, gbit ethernet, PCIe, ...). Are
-you sure that this particular device is SATA-only?
+What's your plan for making the kernel change? Updating the dts files
+is good, but that doesn't immediately help you if you have old dtbs.
 
-	Arnd
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
+>  arch/arm/boot/dts/axm55xx.dtsi              | 2 +-
+>  arch/arm/boot/dts/dra7.dtsi                 | 2 +-
+>  arch/arm/boot/dts/ecx-2000.dts              | 2 +-
+
+Acked-by: Rob Herring <robh@kernel.org>
+
+Rob
