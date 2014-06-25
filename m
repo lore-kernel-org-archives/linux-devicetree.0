@@ -1,48 +1,60 @@
-From: Rahul Sharma <rahul.sharma@samsung.com>
-Subject: Re: [PATCH] clk/exynos5250: fix bit number for tv sysmmu clock
-Date: Wed, 25 Jun 2014 18:27:10 +0530
-Message-ID: <CAPdUM4OnH0a1V3vgoyHNmqstOq8w5fsmevyMvZh0qBq2HNANmg@mail.gmail.com>
-References: <1403156836-24421-1-git-send-email-rahul.sharma@samsung.com>
-	<CAK5sBcHOCPvr2Kr0GDOyYCEAjaXcUKKPsEWKYDK9BFKtPioc4Q@mail.gmail.com>
-	<CAPdUM4Nx1g=aicFYAYEd1d2VVWPdbJXCZxFAmqRK0ooR8+E=9g@mail.gmail.com>
-	<53AAB154.7010403@samsung.com>
-	<036401cf9068$40106ad0$c0314070$@samsung.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] Documentation: Document Hisilicon hix5hd2 sata PHY
+Date: Wed, 25 Jun 2014 15:32:13 +0200
+Message-ID: <20300092.1dHGFVKfHm@wuerfel>
+References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <201406251416.49561.arnd@arndb.de> <53AAC376.7050705@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <036401cf9068$40106ad0$c0314070$@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kukjin Kim <kgene.kim@samsung.com>
-Cc: Tomasz Figa <t.figa@samsung.com>, Sachin Kamat <sachin.kamat@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <tomasz.figa@gmail.com>, sunil joshi <joshi@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53AAC376.7050705-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Sure Tomasz, Kukjin.
-Thanks for the update.
+On Wednesday 25 June 2014 20:41:26 zhangfei wrote:
+> On 06/25/2014 08:16 PM, Arnd Bergmann wrote:
+> > On Wednesday 25 June 2014, Zhangfei Gao wrote:
+> >> From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >>
+> >> Add necessary binding documentation SATA PHY on Hisilicon hix5hd2 soc.
+> >>
+> >> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+> >> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> >
+> > We have had a couple of PHY drivers that were initially meant to be
+> > single-purpose but then turned out to be for hardware that could
+> > be put into multiple modes (SATA, gbit ethernet, PCIe, ...). Are
+> > you sure that this particular device is SATA-only?
+> >
+> 
+> Yes, double confimed.
+> Hix5hd2 phy diver only support sata phy, in fact, current soc only 
+> support synposis phy, since some internal physical link.
+> And hix5hd2 ethernet phy is already in hix5hd2_gmac.c.
+> No pcie support on hix5hd2 platfrom.
 
-Regards.
+Sorry if I my question was unclear, I did not mean the implementation
+of this phy in hix5hd2, but the Synopsys phy itself. I was mainly
+asking because of the "compatible" string, which should otherwise
+not include "sata" but be more generic.
 
-On 25 June 2014 16:56, Kukjin Kim <kgene.kim@samsung.com> wrote:
-> Tomasz Figa wrote:
->>
->> Hi Rahul,
->>
->> On 25.06.2014 13:22, Rahul Sharma wrote:
->> > Hi Kukjin,
->> >
->> > Please take this fix in your tree.
->>
->> This is a patch for Samsung clock drivers, so I'll apply it when about
->> to send fixes pull request to Mike.
->>
-> Yes, I also checked the datasheet and this change is correct.
->
-> If you want, please add my ack on the patch.
->
-> Thanks,
-> Kukjin
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Since you mention that this is a synopsys part, it may however be
+good to also define a compatible string for the generic device,
+to allow other SoCs to share this driver, and to make it easier
+for people to find out that we already have one so they don't have
+to write another driver for the same hardware.
+
+Can you find out what the Synopsys/Designware product designation for
+this PHY is? It would be good to rename the driver and binding
+if possible. I would still recommend leaving the
+"hisilicon,hix5hd2-sata-phy" string and the "hisilicon,peripheral-syscon"
+property in place, since that indicates a minor variation of the
+generic part.
+
+	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
