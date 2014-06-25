@@ -1,48 +1,166 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v3 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks
- binding
-Date: Wed, 25 Jun 2014 20:13:20 +0200
-Message-ID: <53AB1140.7070904@collabora.co.uk>
-References: <1403202040-12641-1-git-send-email-javier.martinez@collabora.co.uk>	<1403202040-12641-5-git-send-email-javier.martinez@collabora.co.uk> <CAD=FV=VezCMpYiD6vj_SkPYVM30GWF_YiRZVGyLHDD0-EbD+7Q@mail.gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Wed, 25 Jun 2014 23:03:25 +0400
+Message-ID: <53AB1CFD.4040500@cogentembedded.com>
+References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com> <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=VezCMpYiD6vj_SkPYVM30GWF_YiRZVGyLHDD0-EbD+7Q@mail.gmail.com>
+In-Reply-To: <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?QW50b2luZSBUw6luYXJ0?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com
+Cc: thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug,
+Hello.
 
-Thanks a lot for your feedback.
+On 06/23/2014 05:39 PM, Antoine T=C3=A9nart wrote:
 
-On 06/25/2014 08:06 PM, Doug Anderson wrote:
-> Javier,
-> 
-> On Thu, Jun 19, 2014 at 11:20 AM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->> @@ -33,6 +38,6 @@ Example: Clock consumer node
->>         foo@0 {
->>                 compatible = "bar,foo";
->>                 /* ... */
->> -               clock-names = "my-clock";
->> -               clocks = <&max77686 2>;
->> +               clock-names = "32khz_pmic";
->> +               clocks = <&max77686 MAX77686_CLK_PMIC>;
-> 
-> A minor comment here is that you probably shouldn't change "clock-names".
-> 
-> The "clock-names" is the consumer's concept of the clock name and not
-> the producer's concept.  If this clock were specified as going into
-> the TPM, for instance, the TPM might call it "32k-reference".  Then
-> the TPM would get the clock by referring to this name in its driver.
-> 
-> -Doug
-> 
+> The Berlin SoC has a two SATA ports. Add a PHY driver to handle them.
 
-You're right. I won't change the clock names in the next version of the patch-set.
+> The mode selection can let us think this PHY can be configured to fit
+> other purposes. But there are reasons to think the SATA mode will be
+> the only one usable: the PHY registers are only accessible indirectly
+> through two registers in the SATA range, the PHY seems to be integrat=
+ed
+> and no information tells us the contrary. For these reasons, make the
+> driver a SATA PHY driver.
 
-Best regards,
-Javier
+    I'm not even sure why you want to make it a separate driver if the=20
+registers are mapped to SATA controller's range.
+
+> Signed-off-by: Antoine T=C3=A9nart <antoine.tenart@free-electrons.com=
+>
+
+[...]
+
+> diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-s=
+ata.c
+> new file mode 100644
+> index 000000000000..317f62358165
+> --- /dev/null
+> +++ b/drivers/phy/phy-berlin-sata.c
+> @@ -0,0 +1,246 @@
+[...]
++#define HOST_VSA_ADDR		0x0
++#define HOST_VSA_DATA		0x4
++#define PORT_VSR_ADDR		0x78
++#define PORT_VSR_DATA		0x7c
++#define PORT_SCR_CTL		0x2c
+
+    Could you keep this list sorted?
+
+[...]
+
++struct phy_berlin_desc {
++	struct phy	*phy;
++	u32		val;
+
+    Hm, aren't these power down bits? Why not call the field accordingl=
+y?
+
+[...]
+
+> +static int phy_berlin_sata_power_on(struct phy *phy)
+> +{
+> +	struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
+> +	struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc);
+> +	void __iomem *ctrl_reg =3D priv->base + 0x60 + (desc->index * 0x80)=
+;
+> +	int ret =3D 0;
+> +	u32 regval;
+> +
+> +	clk_prepare_enable(priv->clk);
+> +
+> +	spin_lock(&priv->lock);
+> +
+> +	/* Power on PHY */
+> +	writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
+> +	regval =3D readl(priv->base + HOST_VSA_DATA);
+> +	regval &=3D ~(desc->val);
+
+    Parens not needed here.
+
+> +	writel(regval, priv->base + HOST_VSA_DATA);
+> +
+> +	/* Configure MBus */
+> +	writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
+> +	regval =3D readl(priv->base + HOST_VSA_DATA);
+> +	regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUEST_SIZE_12=
+8;
+> +	writel(regval, priv->base + HOST_VSA_DATA);
+
+    It probably makes sense to factor these address/data register write=
+s into=20
+a separate function like phy_berlin_sata_reg_setbits().
+
+[...]
+> +	/* set the controller speed */
+> +	writel(0x31, ctrl_reg + PORT_SCR_CTL);
+
+    Value undocumented? Or is this the SATA SControl register by chance=
+?
+
+[...]
+
+> +static int phy_berlin_sata_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev =3D &pdev->dev;
+> +	struct phy *phy;
+> +	struct phy_provider *phy_provider;
+> +	struct phy_berlin_priv *priv;
+> +	struct resource *res;
+> +	int i;
+> +
+> +	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	priv->base =3D devm_ioremap(dev, res->start, resource_size(res));
+
+    Can't you use devm_ioremap_resource()?
+
+> +	if (!priv->base)
+> +		return -ENOMEM;
+> +
+> +	priv->clk =3D devm_clk_get(dev, NULL);
+> +	if (IS_ERR(priv->clk))
+> +		return PTR_ERR(priv->clk);
+> +
+> +	dev_set_drvdata(dev, priv);
+> +	spin_lock_init(&priv->lock);
+> +
+> +	for (i =3D 0; i < BERLIN_SATA_PHY_NB; i++) {
+> +		phy =3D devm_phy_create(dev, &phy_berlin_sata_ops, NULL);
+> +		if (IS_ERR(phy)) {
+> +			dev_err(dev, "failed to create PHY %d\n", i);
+> +			return PTR_ERR(phy);
+> +		}
+> +
+> +		priv->phys[i].phy =3D phy;
+> +		priv->phys[i].val =3D phy_berlin_power_down_bits[i];
+> +		priv->phys[i].index =3D i;
+> +		phy_set_drvdata(phy, &priv->phys[i]);
+> +
+> +		/* Make sure the PHY is off */
+> +		phy_berlin_sata_power_off(phy);
+> +	}
+> +
+> +	phy_provider =3D
+> +		devm_of_phy_provider_register(dev, phy_berlin_sata_phy_xlate);
+> +	if (IS_ERR(phy_provider))
+
+    No dev_err() here?
+
+> +		return PTR_ERR(phy_provider);
+> +
+> +	return 0;
+> +}
+
+WBR, Sergei
