@@ -1,81 +1,72 @@
-From: Vineet Gupta <Vineet.Gupta1@synopsys.com>
-Subject: Re: [PATCH v2 REBASED 06/10] serial/arc: remove last remanants of
- platform data
-Date: Wed, 25 Jun 2014 04:38:44 +0000
-Message-ID: <C2D7FE5348E1B147BCA15975FBA230751A6B9CE5@IN01WEMBXA.internal.synopsys.com>
-References: <1403598315-1429-1-git-send-email-vgupta@synopsys.com>
- <1403598315-1429-7-git-send-email-vgupta@synopsys.com>
- <CAL_JsqLpLKs0+u2a0VvgYW_0bGDpQCOEJSqKDqpYTO=KuO6uhg@mail.gmail.com>
+From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4] ARM: DTS: Add NTC thermistor nodes as child nodes to ADC
+Date: Wed, 25 Jun 2014 10:34:03 +0530
+Message-ID: <CAHfPSqAAWFtCQQrKBhLFuE2OuO_fwmUOhcOX9zKk8eMRMNSVvg@mail.gmail.com>
+References: <1403612356-23685-1-git-send-email-ch.naveen@samsung.com>
+ <1403612356-23685-5-git-send-email-ch.naveen@samsung.com> <CAD=FV=Wmi73S4c5TPUqnNyycQ5xX5SbYy_ES-cbbJF2Hr0tqvQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Paul Bolle <pebolle@tiscali.nl>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "Francois.Bedard@synopsys.com" <Francois.Bedard@synopsys.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=Wmi73S4c5TPUqnNyycQ5xX5SbYy_ES-cbbJF2Hr0tqvQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 25 June 2014 02:31 AM, Rob Herring wrote:
-> On Tue, Jun 24, 2014 at 3:25 AM, Vineet Gupta
-> <Vineet.Gupta1@synopsys.com> wrote:
->> Signed-off-by: Vineet Gupta <vgupta@synopsys.com>
+Doug,
+
+On 25 June 2014 03:24, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Naveen,
+>
+> On Tue, Jun 24, 2014 at 5:19 AM, Naveen Krishna Chatradhi
+> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Exynos5420 based Peach PIT and Exynos5800 based PI boards have
+>> 4 NTC thermistors to measure temperatures at various points on the
+>> board.
+>>
+>> IIO based ADC becomes the parent and NTC thermistors are the childs,
+>> via the HWMON interface.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 >> ---
->>  drivers/tty/serial/arc_uart.c | 22 ++++++----------------
->>  1 file changed, 6 insertions(+), 16 deletions(-)
+>> This patch needs
+>> 1. MAX77802 PMIC device tree nodes (for ldo9)
+>>    https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg31430.html
+>> 2. Uses the DT documentation for NTC thermistors updated with vendor-prefix
 >>
->> diff --git a/drivers/tty/serial/arc_uart.c b/drivers/tty/serial/arc_uart.c
->> index 2ffaf099691a..dc3d5db37dc4 100644
->> --- a/drivers/tty/serial/arc_uart.c
->> +++ b/drivers/tty/serial/arc_uart.c
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts |   32 ++++++++++++++++++++++++++++
+>>  1 file changed, 32 insertions(+)
 >
->> @@ -518,21 +516,13 @@ arc_uart_init_one(struct platform_device *pdev, int dev_id)
->>         }
->>         uart->baud = val;
->>
->> -       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->> -       if (!res)
->> -               return -ENODEV;
->> -
->> -       res2 = platform_get_resource(pdev, IORESOURCE_IRQ, 0);
->> -       if (!res2)
->> -               return -ENODEV;
->> -
->> -       port->mapbase = res->start;
->> -       port->membase = ioremap_nocache(res->start, resource_size(res));
->> +       port->membase = of_iomap(np, 0);
-> ioremap is preferred over of_iomap as it is not OF specific.
+> * You forgot: status="okay" for the ADC.  One might question how this
+> patch was tested.
 
-I could, but much of the driver assumes OF to be selected already (of_property...)
-
->  Perhaps
-> use devm_request_and_ioremap instead.
-
-devm_request_and_ioremap has been flag day removed in favour of
-devm_ioremap_resource().
-However even then it would require me to retain the prior platform_get_resource()
-call.
-IMHO, of_iomap is must more concise.
+Will correct it.
 
 >
->>         if (!port->membase)
->>                 /* No point of dev_err since UART itself is hosed here */
->>                 return -ENXIO;
->>
->> -       port->irq = res2->start;
->> +       port->irq = irq_of_parse_and_map(np, 0);
->> +
-> platform_get_irq should be used here.
+> * Please also include this change for pi.
 
-And this again is for reducing OF dependency or is it something else.
+MAX77802 device node was not added for Peach_PI (exynos5800-peach-pi.dts).
+I guess, Javier have a plan to send.
 
-Thx,
--Vineet
+I will edit the commit message to remove Peach_PI for now.
+
+Also, we have few similar nodes on Peach PI  and Peach PIT.
+Any plans or discussion on merging the common nodes ?
 
 >
->>         port->dev = &pdev->dev;
->>         port->iotype = UPIO_MEM;
->>         port->flags = UPF_BOOT_AUTOCONF;
->> --
->> 1.8.3.2
->>
+> * We just got through the painful process of sorting this .dts file.
+> Please sort "&adc" alphabetically.  Kukjin: please confirm that you
+> will keep an eye on patches and make sure that they are sorted OK.
+>
+>
+> Other than those problems this seems to work fine to me.
+>
+> -Doug
+
+Thanks for the Review.
+
+
+-- 
+Shine bright,
+(: Nav :)
