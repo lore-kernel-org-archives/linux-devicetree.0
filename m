@@ -1,66 +1,74 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2 1/2] media: soc_camera: pxa_camera documentation
- device-tree support
-Date: Wed, 25 Jun 2014 11:30:42 +0100
-Message-ID: <20140625103042.GB14495@leverpostej>
-References: <1403389307-17489-1-git-send-email-robert.jarzmik@free.fr>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] usb: gadget: pxa27x_udc device-tree documentation
+Date: Wed, 25 Jun 2014 11:33:57 +0100
+Message-ID: <20140625103357.GC14495@leverpostej>
+References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
+ <1403427899-32154-2-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-media-owner@vger.kernel.org>
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1403389307-17489-1-git-send-email-robert.jarzmik@free.fr>
-Sender: linux-media-owner@vger.kernel.org
-To: Robert Jarzmik <robert.jarzmik@free.fr>
-Cc: "g.liakhovetski@gmx.de" <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+In-Reply-To: <1403427899-32154-2-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 21, 2014 at 11:21:46PM +0100, Robert Jarzmik wrote:
-> Add device-tree bindings documentation for pxa_camera driver.
+On Sun, Jun 22, 2014 at 10:04:58AM +0100, Robert Jarzmik wrote:
+> Add documentation for device-tree binding of arm PXA 27x udc (usb
+> device) driver.
 > 
-> Signed-off-by: Robert Jarzmik <robert.jarzmik@free.fr>
+> Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> 
 > ---
->  .../devicetree/bindings/media/pxa-camera.txt       | 39 ++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/pxa-camera.txt
+> Since V1: change OF id mrvl,pxa27x_udc -> marvell,pxa27x-udc
+>           This is a consequence of other DT reviews on the marvell
+>           namings.
+> ---
+>  Documentation/devicetree/bindings/usb/pxa-usb.txt | 20 ++++++++++++++++++++
+>  1 file changed, 20 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/media/pxa-camera.txt b/Documentation/devicetree/bindings/media/pxa-camera.txt
-> new file mode 100644
-> index 0000000..9835aae
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/pxa-camera.txt
-> @@ -0,0 +1,39 @@
-> +Marvell PXA camera host interface
+> diff --git a/Documentation/devicetree/bindings/usb/pxa-usb.txt b/Documentation/devicetree/bindings/usb/pxa-usb.txt
+> index 79729a9..0e4863f 100644
+> --- a/Documentation/devicetree/bindings/usb/pxa-usb.txt
+> +++ b/Documentation/devicetree/bindings/usb/pxa-usb.txt
+> @@ -29,3 +29,23 @@ Example:
+>  		marvell,port-mode = <2>; /* PMM_GLOBAL_MODE */
+>  	};
+>  
+> +UDC
 > +
 > +Required properties:
-> + - compatible: Should be "marvell,pxa27x-qci"
+> + - compatible: Should be "marvell,pxa27x-udc" for USB controllers
+> +   used in device mode.
 
-Is that x a wildcard? Or is 'x' part of the name of a particular unit?
+We typically don't like wildcard compatible strings in DT.
 
-We prefer not to have wildcard compatible strings in DT.
-
-> + - reg: register base and size
-> + - interrupts: the interrupt number
-> + - any required generic properties defined in video-interfaces.txt
 > +
 > +Optional properties:
-> + - clock-frequency: host interface is driving MCLK, and MCLK rate is this rate
+> + - "udc-pullup-gpio" - gpio activated to control the USB D+ pullup.
+> + - "udc-pullup-gpio-inverted" - boolean inverting gpio pullup logic.
 
-Is MCLK an input or an output of this block?
-
-If the former, why isn't this described as a clock?
+Use the GPIO bindings.
 
 > +
 > +Example:
 > +
-> +	pxa_camera: pxa_camera@50000000 {
-> +		compatible = "marvell,pxa27x-qci";
-> +		reg = <0x50000000 0x1000>;
-> +		interrupts = <33>;
-> +
-> +		clocks = <&pxa2xx_clks 24>;
-> +		clock-names = "camera";
+> +		pxa27x_udc: udc@40600000 {
+> +			compatible = "marvell,pxa27x-udc";
+> +			reg = <0x40600000 0x10000>;
+> +			interrupts = <11>;
+> +			clocks = <&pxa2xx_clks 11>;
+> +			clock-names = "pxa27x-udc";
 
-These weren't mentioned above. Is the clock input line really called
-"camera"?
+Neither of these were mentioned above.
 
+The name of the clock input doesn't make sense.
+
+Thanks,
 Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
