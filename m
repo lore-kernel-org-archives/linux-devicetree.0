@@ -1,85 +1,21 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Wed, 25 Jun 2014 10:38:25 +0100
-Message-ID: <20140625093825.GH6153@arm.com>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
-	<4855051.rhxSrNMNLg@wuerfel> <20140625091702.GF6153@arm.com>
-	<4839521.56FtveYIl6@wuerfel>
+From: Denis Carikli <denis@eukrea.com>
+Subject: Re: [PATCH v14 08/10] drm/panel: Add Eukrea mbimxsd51 displays.
+Date: Wed, 25 Jun 2014 11:42:38 +0200
+Message-ID: <53AA998E.9000305@eukrea.com>
+References: <1402913484-25910-1-git-send-email-denis@eukrea.com> <1402913484-25910-8-git-send-email-denis@eukrea.com> <20140624150600.GT32514@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <4839521.56FtveYIl6@wuerfel>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Return-path: <linux-media-owner@vger.kernel.org>
+In-Reply-To: <20140624150600.GT32514@n2100.arm.linux.org.uk>
+Sender: linux-media-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, =?ISO-8859-1?Q?Eric_B=E9nar?= =?ISO-8859-1?Q?d?= <eric@eukrea.com>, Shawn Guo <shawn.guo@linaro.org>, Sascha Hauer <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devel@driverdev.osuosl.org, Mauro Carvalho Chehab <m.chehab@samsung.com>, linux-media@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 10:27:50AM +0100, Arnd Bergmann wrote:
-> On Wednesday 25 June 2014 10:17:02 Will Deacon wrote:
-> > On Tue, Jun 24, 2014 at 07:20:56PM +0100, Arnd Bergmann wrote:
-> > > On Tuesday 24 June 2014 19:11:50 Will Deacon wrote:
-> > > > On Tue, Jun 24, 2014 at 06:57:44PM +0100, Olav Haugan wrote:
-> > > > > We do describe the masked StreamID (SID) but we need to specify the mask
-> > > > > that the SMMU should apply to the incoming SIDs, right?
-> > > > > 
-> > > > > We have a bus master that emits 43 unique SIDs. However, we have only 40
-> > > > > SMMU_SMRn registers in the SMMU. So we need to mask out some of the
-> > > > > incoming SID bits so that the 43 SIDs can match one of 40 entries in the
-> > > > > SMR.
-> > > > 
-> > > > Hmm, so you're talking about stream matching, right? That doesn't belong in
-> > > > the device-tree. I appreciate that the current driver does a terrible job at
-> > > > allocating the SMRs (it's bloody difficult!), but we should try to improve
-> > > > the dynamic behaviour instead of moving configuration of the SMMU out into
-> > > > device-tree, where it's inflexible at best.
-> > > > 
-> > > > There have been patches previously posted by Andreas Herrmann helping here.
-> > > > I'd be glad to see them revived.
-> > > 
-> > > Note that there are areas where we have in the past decided that dynamic
-> > > configuration is just too hard for the kernel to do and that we're better
-> > > off putting the configuration into DT. Pinctrl and clocks are at least
-> > > partially in that category.
-> > > 
-> > > It's always best if you can get the kernel to do things in the ideal
-> > > way where that is possible, but getting there may be just not worth it.
-> > > 
-> > > I have no idea where it should be for SMMU, but it's something to consider:
-> > > if you can take reasonable shortcuts by reading parts of the configuration
-> > > from DT, you may just as well do that.
-> > 
-> > I treat this in the same manner as the topology bindings we discussed
-> > previously; we should do a best-effort to configure things dynamically and
-> > solve corner-cases and quirks as special cases.
-> 
-> I think the situation is a bit different here: It's less about the corner
-> cases for the SMMU, but about the question whether it makes more sense to
-> have the kernel figure out the settings, or have them come from DT
-> all the time.
+On 06/24/2014 05:06 PM, Russell King - ARM Linux wrote:
+ > It would be better if you separate the
+> binding documentation updates from the other functional changes too.
+Fixed.
 
-But, as far as I can tell, this setting is basically `which bits are
-constant among this set of IDs'.
-
-> As I said, I can't tell which approach is best here, but it sounds to
-> me we should either do dynamic configuration and get it right, or
-> hardcode the configuration it all the time if we can't.
-
-I disagree. If you have `sensible' StreamID allocations, doing this
-dynamically should be straight-forward and gives the driver more flexibility
-(e.g. we then have the option of combining SMR entries for different masters
-if they are in the same domain). The dynamic approach also lends itself to
-sanity-checking (it is IMPLEMENTATION DEFINED whether the SMMU detects SMR
-aliases) and helps with virtualisation (forcing QEMU to generate these masks
-in a device-tree for a guest using a virtual SMMU interface is very painful).
-
-Will
+Denis.
