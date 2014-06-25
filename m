@@ -1,114 +1,33 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 8/8] arm64: boot: dts: update rtsm aemv8 dts with PSCI
- and idle states
-Date: Wed, 25 Jun 2014 18:47:52 +0100
-Message-ID: <20140625174751.GD15050@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-9-git-send-email-lorenzo.pieralisi@arm.com>
- <20140625142714.GB15240@leverpostej>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/2] dra7: Add PCIe PHY support
+Date: Wed, 25 Jun 2014 23:22:55 +0530
+Message-ID: <1403718777-9227-1-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140625142714.GB15240@leverpostej>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: kishon@ti.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: rogerq@ti.com, balbi@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 03:27:14PM +0100, Mark Rutland wrote:
-> Hi Lorenzo,
-> 
-> On Wed, Jun 25, 2014 at 03:10:21PM +0100, Lorenzo Pieralisi wrote:
-> > This patch updates the RTSM dts file with PSCI bindings and nodes
-> > describing the AEMv8 model idle states parameters.
-> > 
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> >  arch/arm64/boot/dts/rtsm_ve-aemv8a.dts | 44 +++++++++++++++++++++++++++-------
-> >  1 file changed, 36 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> > index d79de9c..4051ffb 100644
-> > --- a/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> > +++ b/arch/arm64/boot/dts/rtsm_ve-aemv8a.dts
-> > @@ -27,37 +27,65 @@
-> >  		serial3 = &v2m_serial3;
-> >  	};
-> >  
-> > +	psci {
-> > +		compatible = "arm,psci-0.2";
-> 
-> Where can I find a PSCI 0.2 implementation for the RTSM VE model? I
-> couldn't find a link in the cover.
-> 
-> The upstream bootwrapper is not PSCI 0.2 compliant and it does not
-> implement CPU_SUSPEND.
+[1] is split into separate series in order for individual subsystem
+Maintainers to pick up the patches. This series handles the PCIe
+PHY support for DRA7.
 
-This patch was not meant to be merged, it was for DT bindings demonstration
-purposes, you are definitely right. I will patch the FVP model dts and
-add a link to trusted firmware that supports the FVP models power
-controller.
+The only change from previous version is added 'id' property in-order
+to differentiate between each individual lanes of PCIe PHY.
 
-> > +		method = "smc";
-> > +		cpu_suspend = <0xc4000001>;
-> > +		cpu_off = <0x84000002>;
-> > +		cpu_on = <0xc4000003>;
-> 
-> Without "arm,psci" in the compatible list, these three properties are
-> meaningless.
+[1] -> https://lkml.org/lkml/2014/5/29/258
 
-Right, my bad.
+Kishon Vijay Abraham I (2):
+  phy: phy-omap-pipe3: Add support for PCIe PHY
+  phy: pipe3: insert delay to enumerate in GEN2 mode
 
-> > +	};
-> > +
-> >  	cpus {
-> >  		#address-cells = <2>;
-> >  		#size-cells = <0>;
-> >  
-> > +		idle-states {
-> > +			entry-method = "arm,psci";
-> > +
-> > +			CPU_SLEEP_0: cpu-sleep-0 {
-> > +				compatible = "arm,idle-state";
-> > +				entry-method-param = <0x0010000>;
-> > +				entry-latency-us = <40>;
-> > +				exit-latency-us = <100>;
-> > +				min-residency-us = <150>;
-> > +			};
-> > +
-> > +			CLUSTER_SLEEP_0: cluster-sleep-0 {
-> > +				compatible = "arm,idle-state";
-> > +				entry-method-param = <0x1010000>;
-> > +				entry-latency-us = <500>;
-> > +				exit-latency-us = <1000>;
-> > +				min-residency-us = <2500>;
-> > +			};
-> > +		};
-> > +
-> 
-> If this is going to live in the /cpus node, could it please be placed
-> after the cpu nodes?
+ Documentation/devicetree/bindings/phy/ti-phy.txt |   23 +++--
+ drivers/phy/phy-omap-control.c                   |   52 ++++++++++-
+ drivers/phy/phy-ti-pipe3.c                       |  105 +++++++++++++++++-----
+ include/linux/phy/omap_control_phy.h             |   10 +++
+ 4 files changed, 161 insertions(+), 29 deletions(-)
 
-Ok.
-
-> >  		cpu@0 {
-> >  			device_type = "cpu";
-> >  			compatible = "arm,armv8";
-> >  			reg = <0x0 0x0>;
-> > -			enable-method = "spin-table";
-> > -			cpu-release-addr = <0x0 0x8000fff8>;
-> > +			enable-method = "psci";
-> 
-> Changing the enable-method will break boot on a model when using a
-> bootwrapper without PSCI support. Really we should leave it up to the
-> bootwrapper to inject the enable method...
-
-See above, you are right, I should have made it clear that this patch
-was not meant for merging or testing and it was to provide a sample dts, will
-fix it for v6.
-
-Thanks,
-Lorenzo
-
+-- 
+1.7.9.5
