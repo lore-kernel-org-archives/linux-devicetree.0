@@ -1,263 +1,314 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v4 5/6] clk: sunxi: Add A23 clocks support
-Date: Thu, 26 Jun 2014 23:55:43 +0800
-Message-ID: <1403798144-32188-6-git-send-email-wens@csie.org>
-References: <1403798144-32188-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 3/8] drivers: cpuidle: implement DT based idle states
+ infrastructure
+Date: Thu, 26 Jun 2014 17:01:35 +0100
+Message-ID: <20140626160135.GC27364@e102568-lin.cambridge.arm.com>
+References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1403705421-17597-4-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140625155949.GF15240@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBKMFWGOQKGQETWM3B4Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1403798144-32188-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140625155949.GF15240@leverpostej>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel>
 List-Id: devicetree@vger.kernel.org
 
-The clock control unit on the A23 is similar to the one found on the A31.
+On Wed, Jun 25, 2014 at 04:59:49PM +0100, Mark Rutland wrote:
+> On Wed, Jun 25, 2014 at 03:10:16PM +0100, Lorenzo Pieralisi wrote:
 
-The AHB1, APB1, APB2 gates on the A23 are almost identical to the ones
-on the A31, but some outputs are missing.
+[...]
 
-The main CPU PLL (PLL1) however is like that on older Allwinner SoCs,
-such as the A10 or A20, but the N factor starts from 1 instead of 0.
+> > diff --git a/drivers/cpuidle/dt_idle_states.c b/drivers/cpuidle/dt_idle_states.c
+> > new file mode 100644
+> > index 0000000..5c16001c
+> > --- /dev/null
+> > +++ b/drivers/cpuidle/dt_idle_states.c
+> > @@ -0,0 +1,283 @@
+> > +/*
+> > + * DT idle states parsing code.
+> > + *
+> > + * Copyright (C) 2014 ARM Ltd.
+> > + * Author: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > + *
+> > + * This program is free software; you can redistribute it and/or modify
+> > + * it under the terms of the GNU General Public License version 2 as
+> > + * published by the Free Software Foundation.
+> > + */
+> > +
+> > +#define pr_fmt(fmt) "DT idle-states: " fmt
+> > +
+> > +#include <linux/cpuidle.h>
+> > +#include <linux/cpumask.h>
+> > +#include <linux/errno.h>
+> > +#include <linux/kernel.h>
+> > +#include <linux/list.h>
+> > +#include <linux/list_sort.h>
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/slab.h>
+> > +
+> > +#include "dt_idle_states.h"
+> > +
+> > +struct state_elem {
+> > +	struct list_head list;
+> > +	struct device_node *node;
+> > +	u32 val;
+> > +};
+> 
+> Ah. So the fixed-size entry parameter requirement is because this code
+> is in charge of allocating and freeing these structs?
 
-This patch adds support for PLL1 and all the basic clock muxes and gates.
+Nope, I use this struct to sort the states and val is the value that
+determines the order (ie power-rank) in this patch. If I used the
+phandle lists for ordering nodes, this struct would disappear completely,
+I have to check if that's feasible.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- Documentation/devicetree/bindings/clock/sunxi.txt |   5 ++
- drivers/clk/sunxi/clk-sunxi.c                     | 101 ++++++++++++++++++++++
- 2 files changed, 106 insertions(+)
+> > +
+> > +static struct list_head head __initdata = LIST_HEAD_INIT(head);
+> > +
+> > +static bool __init state_cpu_valid(struct device_node *state_node,
+> > +				   struct device_node *cpu_node)
+> > +{
+> > +	int i = 0;
+> > +	struct device_node *cpu_state;
+> > +
+> > +	while ((cpu_state = of_parse_phandle(cpu_node,
+> > +					     "cpu-idle-states", i++))) {
+> > +		if (cpu_state && state_node == cpu_state) {
+> 
+> You can drop the cpu_state NULL check, it's implicit in the while loop.
 
-diff --git a/Documentation/devicetree/bindings/clock/sunxi.txt b/Documentation/devicetree/bindings/clock/sunxi.txt
-index b9ec668..18030ce 100644
---- a/Documentation/devicetree/bindings/clock/sunxi.txt
-+++ b/Documentation/devicetree/bindings/clock/sunxi.txt
-@@ -9,11 +9,13 @@ Required properties:
- 	"allwinner,sun4i-a10-osc-clk" - for a gatable oscillator
- 	"allwinner,sun4i-a10-pll1-clk" - for the main PLL clock and PLL4
- 	"allwinner,sun6i-a31-pll1-clk" - for the main PLL clock on A31
-+	"allwinner,sun8i-a23-pll1-clk" - for the main PLL clock on A23
- 	"allwinner,sun4i-a10-pll5-clk" - for the PLL5 clock
- 	"allwinner,sun4i-a10-pll6-clk" - for the PLL6 clock
- 	"allwinner,sun6i-a31-pll6-clk" - for the PLL6 clock on A31
- 	"allwinner,sun4i-a10-cpu-clk" - for the CPU multiplexer clock
- 	"allwinner,sun4i-a10-axi-clk" - for the AXI clock
-+	"allwinner,sun8i-a23-axi-clk" - for the AXI clock on A23
- 	"allwinner,sun4i-a10-axi-gates-clk" - for the AXI gates
- 	"allwinner,sun4i-a10-ahb-clk" - for the AHB clock
- 	"allwinner,sun4i-a10-ahb-gates-clk" - for the AHB gates on A10
-@@ -23,6 +25,7 @@ Required properties:
- 	"allwinner,sun6i-a31-ar100-clk" - for the AR100 on A31
- 	"allwinner,sun6i-a31-ahb1-mux-clk" - for the AHB1 multiplexer on A31
- 	"allwinner,sun6i-a31-ahb1-gates-clk" - for the AHB1 gates on A31
-+	"allwinner,sun8i-a23-ahb1-gates-clk" - for the AHB1 gates on A23
- 	"allwinner,sun4i-a10-apb0-clk" - for the APB0 clock
- 	"allwinner,sun6i-a31-apb0-clk" - for the APB0 clock on A31
- 	"allwinner,sun4i-a10-apb0-gates-clk" - for the APB0 gates on A10
-@@ -37,8 +40,10 @@ Required properties:
- 	"allwinner,sun5i-a10s-apb1-gates-clk" - for the APB1 gates on A10s
- 	"allwinner,sun6i-a31-apb1-gates-clk" - for the APB1 gates on A31
- 	"allwinner,sun7i-a20-apb1-gates-clk" - for the APB1 gates on A20
-+	"allwinner,sun8i-a23-apb1-gates-clk" - for the APB1 gates on A23
- 	"allwinner,sun6i-a31-apb2-div-clk" - for the APB2 gates on A31
- 	"allwinner,sun6i-a31-apb2-gates-clk" - for the APB2 gates on A31
-+	"allwinner,sun8i-a23-apb2-gates-clk" - for the APB2 gates on A23
- 	"allwinner,sun4i-a10-mod0-clk" - for the module 0 family of clocks
- 	"allwinner,sun7i-a20-out-clk" - for the external output clocks
- 	"allwinner,sun7i-a20-gmac-clk" - for the GMAC clock module on A20/A31
-diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
-index 6fe9492..8975972 100644
---- a/drivers/clk/sunxi/clk-sunxi.c
-+++ b/drivers/clk/sunxi/clk-sunxi.c
-@@ -164,6 +164,54 @@ static void sun6i_a31_get_pll1_factors(u32 *freq, u32 parent_rate,
- }
- 
- /**
-+ * sun8i_a23_get_pll1_factors() - calculates n, k, m, p factors for PLL1
-+ * PLL1 rate is calculated as follows
-+ * rate = (parent_rate * (n + 1) * (k + 1) >> p) / (m + 1);
-+ * parent_rate is always 24Mhz
-+ */
-+
-+static void sun8i_a23_get_pll1_factors(u32 *freq, u32 parent_rate,
-+				   u8 *n, u8 *k, u8 *m, u8 *p)
-+{
-+	u8 div;
-+
-+	/* Normalize value to a 6M multiple */
-+	div = *freq / 6000000;
-+	*freq = 6000000 * div;
-+
-+	/* we were called to round the frequency, we can now return */
-+	if (n == NULL)
-+		return;
-+
-+	/* m is always zero for pll1 */
-+	*m = 0;
-+
-+	/* k is 1 only on these cases */
-+	if (*freq >= 768000000 || *freq == 42000000 || *freq == 54000000)
-+		*k = 1;
-+	else
-+		*k = 0;
-+
-+	/* p will be 2 for divs under 20 and odd divs under 32 */
-+	if (div < 20 || (div < 32 && (div & 1)))
-+		*p = 2;
-+
-+	/* p will be 1 for even divs under 32, divs under 40 and odd pairs
-+	 * of divs between 40-62 */
-+	else if (div < 40 || (div < 64 && (div & 2)))
-+		*p = 1;
-+
-+	/* any other entries have p = 0 */
-+	else
-+		*p = 0;
-+
-+	/* calculate a suitable n based on k and p */
-+	div <<= *p;
-+	div /= (*k + 1);
-+	*n = div / 4 - 1;
-+}
-+
-+/**
-  * sun4i_get_pll5_factors() - calculates n, k factors for PLL5
-  * PLL5 rate is calculated as follows
-  * rate = parent_rate * n * (k + 1)
-@@ -422,6 +470,18 @@ static struct clk_factors_config sun6i_a31_pll1_config = {
- 	.mwidth = 2,
- };
- 
-+static struct clk_factors_config sun8i_a23_pll1_config = {
-+	.nshift = 8,
-+	.nwidth = 5,
-+	.kshift = 4,
-+	.kwidth = 2,
-+	.mshift = 0,
-+	.mwidth = 2,
-+	.pshift = 16,
-+	.pwidth = 2,
-+	.n_start = 1,
-+};
-+
- static struct clk_factors_config sun4i_pll5_config = {
- 	.nshift = 8,
- 	.nwidth = 5,
-@@ -471,6 +531,12 @@ static const struct factors_data sun6i_a31_pll1_data __initconst = {
- 	.getter = sun6i_a31_get_pll1_factors,
- };
- 
-+static const struct factors_data sun8i_a23_pll1_data __initconst = {
-+	.enable = 31,
-+	.table = &sun8i_a23_pll1_config,
-+	.getter = sun8i_a23_get_pll1_factors,
-+};
-+
- static const struct factors_data sun7i_a20_pll4_data __initconst = {
- 	.enable = 31,
- 	.table = &sun4i_pll5_config,
-@@ -673,6 +739,23 @@ static const struct div_data sun4i_axi_data __initconst = {
- 	.width	= 2,
- };
- 
-+static const struct clk_div_table sun8i_a23_axi_table[] __initconst = {
-+	{ .val = 0, .div = 1 },
-+	{ .val = 1, .div = 2 },
-+	{ .val = 2, .div = 3 },
-+	{ .val = 3, .div = 4 },
-+	{ .val = 4, .div = 4 },
-+	{ .val = 5, .div = 4 },
-+	{ .val = 6, .div = 4 },
-+	{ .val = 7, .div = 4 },
-+	{ } /* sentinel */
-+};
-+
-+static const struct div_data sun8i_a23_axi_data __initconst = {
-+	.width	= 3,
-+	.table	= sun8i_a23_axi_table,
-+};
-+
- static const struct div_data sun4i_ahb_data __initconst = {
- 	.shift	= 4,
- 	.pow	= 1,
-@@ -805,6 +888,10 @@ static const struct gates_data sun7i_a20_ahb_gates_data __initconst = {
- 	.mask = { 0x12f77fff, 0x16ff3f },
- };
- 
-+static const struct gates_data sun8i_a23_ahb1_gates_data __initconst = {
-+	.mask = {0x25386742, 0x2505111},
-+};
-+
- static const struct gates_data sun4i_apb0_gates_data __initconst = {
- 	.mask = {0x4EF},
- };
-@@ -837,6 +924,10 @@ static const struct gates_data sun6i_a31_apb1_gates_data __initconst = {
- 	.mask = {0x3031},
- };
- 
-+static const struct gates_data sun8i_a23_apb1_gates_data __initconst = {
-+	.mask = {0x3021},
-+};
-+
- static const struct gates_data sun6i_a31_apb2_gates_data __initconst = {
- 	.mask = {0x3F000F},
- };
-@@ -845,6 +936,10 @@ static const struct gates_data sun7i_a20_apb1_gates_data __initconst = {
- 	.mask = { 0xff80ff },
- };
- 
-+static const struct gates_data sun8i_a23_apb2_gates_data __initconst = {
-+	.mask = {0x1F0007},
-+};
-+
- static const struct gates_data sun4i_a10_usb_gates_data __initconst = {
- 	.mask = {0x1C0},
- 	.reset_mask = 0x07,
-@@ -1100,6 +1195,7 @@ free_clkdata:
- static const struct of_device_id clk_factors_match[] __initconst = {
- 	{.compatible = "allwinner,sun4i-a10-pll1-clk", .data = &sun4i_pll1_data,},
- 	{.compatible = "allwinner,sun6i-a31-pll1-clk", .data = &sun6i_a31_pll1_data,},
-+	{.compatible = "allwinner,sun8i-a23-pll1-clk", .data = &sun8i_a23_pll1_data,},
- 	{.compatible = "allwinner,sun7i-a20-pll4-clk", .data = &sun7i_a20_pll4_data,},
- 	{.compatible = "allwinner,sun6i-a31-pll6-clk", .data = &sun6i_a31_pll6_data,},
- 	{.compatible = "allwinner,sun4i-a10-apb1-clk", .data = &sun4i_apb1_data,},
-@@ -1111,6 +1207,7 @@ static const struct of_device_id clk_factors_match[] __initconst = {
- /* Matches for divider clocks */
- static const struct of_device_id clk_div_match[] __initconst = {
- 	{.compatible = "allwinner,sun4i-a10-axi-clk", .data = &sun4i_axi_data,},
-+	{.compatible = "allwinner,sun8i-a23-axi-clk", .data = &sun8i_a23_axi_data,},
- 	{.compatible = "allwinner,sun4i-a10-ahb-clk", .data = &sun4i_ahb_data,},
- 	{.compatible = "allwinner,sun4i-a10-apb0-clk", .data = &sun4i_apb0_data,},
- 	{.compatible = "allwinner,sun6i-a31-apb2-div-clk", .data = &sun6i_a31_apb2_div_data,},
-@@ -1140,6 +1237,7 @@ static const struct of_device_id clk_gates_match[] __initconst = {
- 	{.compatible = "allwinner,sun5i-a13-ahb-gates-clk", .data = &sun5i_a13_ahb_gates_data,},
- 	{.compatible = "allwinner,sun6i-a31-ahb1-gates-clk", .data = &sun6i_a31_ahb1_gates_data,},
- 	{.compatible = "allwinner,sun7i-a20-ahb-gates-clk", .data = &sun7i_a20_ahb_gates_data,},
-+	{.compatible = "allwinner,sun8i-a23-ahb1-gates-clk", .data = &sun8i_a23_ahb1_gates_data,},
- 	{.compatible = "allwinner,sun4i-a10-apb0-gates-clk", .data = &sun4i_apb0_gates_data,},
- 	{.compatible = "allwinner,sun5i-a10s-apb0-gates-clk", .data = &sun5i_a10s_apb0_gates_data,},
- 	{.compatible = "allwinner,sun5i-a13-apb0-gates-clk", .data = &sun5i_a13_apb0_gates_data,},
-@@ -1149,7 +1247,9 @@ static const struct of_device_id clk_gates_match[] __initconst = {
- 	{.compatible = "allwinner,sun5i-a13-apb1-gates-clk", .data = &sun5i_a13_apb1_gates_data,},
- 	{.compatible = "allwinner,sun6i-a31-apb1-gates-clk", .data = &sun6i_a31_apb1_gates_data,},
- 	{.compatible = "allwinner,sun7i-a20-apb1-gates-clk", .data = &sun7i_a20_apb1_gates_data,},
-+	{.compatible = "allwinner,sun8i-a23-apb1-gates-clk", .data = &sun8i_a23_apb1_gates_data,},
- 	{.compatible = "allwinner,sun6i-a31-apb2-gates-clk", .data = &sun6i_a31_apb2_gates_data,},
-+	{.compatible = "allwinner,sun8i-a23-apb2-gates-clk", .data = &sun8i_a23_apb2_gates_data,},
- 	{.compatible = "allwinner,sun4i-a10-usb-clk", .data = &sun4i_a10_usb_gates_data,},
- 	{.compatible = "allwinner,sun5i-a13-usb-clk", .data = &sun5i_a13_usb_gates_data,},
- 	{.compatible = "allwinner,sun6i-a31-usb-clk", .data = &sun6i_a31_usb_gates_data,},
-@@ -1236,3 +1336,4 @@ static void __init sun6i_init_clocks(struct device_node *node)
- 			  ARRAY_SIZE(sun6i_critical_clocks));
- }
- CLK_OF_DECLARE(sun6i_a31_clk_init, "allwinner,sun6i-a31", sun6i_init_clocks);
-+CLK_OF_DECLARE(sun8i_a23_clk_init, "allwinner,sun8i-a23", sun6i_init_clocks);
--- 
-2.0.0
+Yep.
+
+> > +			of_node_put(cpu_state);
+> > +			return true;
+> > +		}
+> > +		of_node_put(cpu_state);
+> > +	}
+> > +	return false;
+> > +}
+> 
+> Is it possible to use a bool ret variable to avoid the two of_node_put
+> cases? Or does that end up making this larger?
+
+No, I think you are right.
+
+> > +static bool __init state_cpus_valid(const cpumask_t *cpus,
+> > +				    struct device_node *state_node)
+> > +{
+> > +	int cpu;
+> > +	struct device_node *cpu_node;
+> > +
+> > +	/*
+> > +	 * Check if state is valid on driver cpumask cpus
+> > +	 */
+> > +	for_each_cpu(cpu, cpus) {
+> > +		cpu_node = of_get_cpu_node(cpu, NULL);
+> > +
+> > +		if (!cpu_node) {
+> > +			pr_err("Missing device node for CPU %d\n", cpu);
+> > +			return false;
+> > +		}
+> > +
+> > +		if (!state_cpu_valid(state_node, cpu_node))
+> > +			return false;
+> > +	}
+> > +
+> > +	return true;
+> > +}
+> 
+> Doesn't this leave all the cpu node refcounts incremented? (it's painful
+> to get device node refcounting right, I know).
+> 
+> I think you can use the similarly named of_cpu_device_node_get to find
+> the CPU node. It uses the pointer stored in cpu->dev.of_node, so it
+> doesn't have to walk the tree to find the CPU node. It also doesn't
+> increment the refcount.
+> 
+> Unless this is too early for that?
+
+I think I can use of_cpu_device_node_get(...), but I should still manage
+refcount properly on that, which I am not doing here, good catch.
+
+> > +static void __init init_state_node(struct cpuidle_driver *drv,
+> > +				   struct device_node *state_node,
+> > +				   int *cnt)
+> > +{
+> > +	struct cpuidle_state *idle_state;
+> > +
+> > +	pr_debug(" * %s...\n", state_node->full_name);
+> > +
+> > +	idle_state = &drv->states[*cnt];
+> > +
+> > +	if (of_property_read_u32(state_node, "wakeup-latency-us",
+> > +				 &idle_state->exit_latency)) {
+> 
+> I'm not a fan of this construction, as the obvious reading is that we
+> take the branch if we succeeded (which obviously isn't true as
+> of_property_read_* return error codes). 
+> 
+> Could we change it to something like:
+> 
+> 	err = of_property_read_u32(state_node, "wakeup-latency-us",
+> 				   &idle_state->exit_latency);
+> 	if (err) {
+
+You are right, I will update it.
+
+> > +		u32 entry_latency, exit_latency;
+> > +
+> > +		if (of_property_read_u32(state_node, "entry-latency-us",
+> > +					 &entry_latency)) {
+> > +			pr_debug(" * %s missing entry-latency-us property\n",
+> > +				 state_node->full_name);
+> > +			return;
+> > +		}
+> 
+> Returning without error code? Do the fields have sane default values?
+> 
+> Or is this safe because we didn't increment cnt?
+
+The latter, but it isn't nice, agreed, it is just an internal interface
+though. I will make it less opaque and easier to understand.
+
+> > +
+> > +		if (of_property_read_u32(state_node, "exit-latency-us",
+> > +					 &exit_latency)) {
+> > +			pr_debug(" * %s missing exit-latency-us property\n",
+> > +				 state_node->full_name);
+> > +			return;
+> > +		}
+> > +		/*
+> > +		 * If wakeup-latency-us is missing, default to entry+exit
+> > +		 * latencies as defined in idle states bindings
+> > +		 */
+> > +		idle_state->exit_latency = entry_latency + exit_latency;
+> > +	}
+> > +
+> > +	if (of_property_read_u32(state_node, "min-residency-us",
+> > +				 &idle_state->target_residency)) {
+> > +		pr_debug(" * %s missing min-residency-us property\n",
+> > +			     state_node->full_name);
+> > +		return;
+> > +	}
+> > +
+> > +	idle_state->flags = CPUIDLE_FLAG_TIME_VALID;
+> > +	if (!of_property_read_bool(state_node, "timer-state-retained"))
+> > +		idle_state->flags |= CPUIDLE_FLAG_TIMER_STOP;
+> > + 	strncpy(idle_state->name, state_node->name, CPUIDLE_NAME_LEN);
+> > +	strncpy(idle_state->desc, state_node->name, CPUIDLE_NAME_LEN);
+> 
+> Does the name make sense as a desc? Is a desc necessary?
+> 
+> CPUIDLE_DESC_LEN seems to exist, and is double CPUIDLE_NAME_LEN.
+
+Yes, that's a copy and paste typo that I missed. BTW this code is likely
+to disappear, since the way CPUidle driver manages these strings is changing.
+
+As to is desc really needed, I need to check all existing drivers to
+provide a complete answer.
+
+> > +static void __init add_idle_states(struct cpuidle_driver *drv,
+> > +				   struct device_node *idle_states)
+> > +{
+> > +	struct device_node *state_node;
+> > +
+> > +	for_each_child_of_node(idle_states, state_node) {
+> > +		if ((!of_device_is_compatible(state_node, "arm,idle-state"))) {
+> 
+> Holy brackets batman! I think we can drop the outer ones given there's
+> no assignment we want to supress warnings for.
+
+Eheh sorry, should be a leftover, fixed.
+
+> > +			pr_warn(" * %s: children of /cpus/idle-states must be \"arm,idle-state\" compatible\n",
+> > +				     state_node->full_name);
+> 
+> Presumably the entire reason for having the compatible string is for
+> future extensibility.
+> 
+> It would probably be better to have something like:
+> 
+> 	pr_warn("Node %s has unrecognised/missing compatible string\n",
+> 		state_node->full_name);
+> 
+
+It makes sense, so I will change the pr_warn.
+
+> > +			continue;
+> > +		}
+> > +		/*
+> > +		 * If memory allocation fails, better bail out.
+> > +		 * Initialized nodes are freed at initialization
+> > +		 * completion in of_init_idle_driver().
+> > +		 */
+> > +		if ((add_state_node(drv->cpumask, state_node) == -ENOMEM))
+> > +			break;
+> 
+> Can we not return? Or is the list sort important in the error case too?
+
+Well, we might have a valid list of states that have to be sorted and I
+think that's correct to break and not just return in that case.
+
+Let's see if I can avoid the sorting altogether.
+
+> > +	}
+> > +	/*
+> > +	 * Sort the states list before initializing the CPUidle driver
+> > +	 * states array.
+> > +	 */
+> > +	list_sort(NULL, &head, state_cmp);
+> > +}
+> > +
+> > +/**
+> > + * dt_init_idle_driver() - Parse the DT idle states and initialize the
+> > + *			   idle driver states array
+> > + *
+> > + * @drv:	  Pointer to CPU idle driver to be initialized
+> > + * @state_nodes:  Array of struct device_nodes to be initialized if
+> > + *		  init_nodes == true. Must be sized CPUIDLE_STATE_MAX
+> > + * @start_idx:    First idle state index to be initialized
+> > + * @init_nodes:   Boolean to request device nodes initialization
+> > + *
+> > + * On success the states array in the cpuidle driver contains
+> > + * initialized entries in the states array, starting from index start_idx.
+> > + * If init_nodes == true, on success the state_nodes array is initialized
+> > + * with idle state DT node pointers, starting from index start_idx,
+> > + * in a 1:1 relation with the idle driver states array.
+> > + *
+> > + * Return:
+> > + *	0 on success
+> > + *	<0 on failure
+> > + */
+> > +int __init dt_init_idle_driver(struct cpuidle_driver *drv,
+> > +			       struct device_node *state_nodes[],
+> > +			       unsigned int start_idx, bool init_nodes)
+> > +{
+> > +	struct device_node *idle_states_node;
+> > +	int ret;
+> > +
+> > +	if (start_idx >= CPUIDLE_STATE_MAX) {
+> > +		pr_warn("State index exceeds static CPU idle driver states array size\n");
+> > +		return -EINVAL;
+> > +	}
+> > +
+> > +	if (WARN(init_nodes && !state_nodes,
+> > +		"Requested nodes stashing in an invalid nodes container\n"))
+> > +		return -EINVAL;
+> 
+> That warning message is somewhat confusing, and I'm not sure I
+> follow the logic.
+
+It is a belt and braces check to make sure that, if the dt init code is
+requested to fill in the state_nodes array (init_nodes == true), at least
+the array base was passed and it is not a NULL pointer. I think I'd better
+remove it and let the kernel oops if the interface is used wrongly, that would
+be a kernel bug and there is not much to WARN about.
+
+Thanks,
+Lorenzo
+
