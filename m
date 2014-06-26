@@ -1,74 +1,136 @@
-From: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] PCI: designware: use untranslated address while
- programming ATU
-Date: Thu, 26 Jun 2014 11:07:38 +0530
-Message-ID: <CAHM4w1mMT5een4pAFb9s1JENm=j1W2yMPYdO+OdBhAy0wcRdjw@mail.gmail.com>
+From: Mohit KUMAR DCG <Mohit.KUMAR-qxv4g6HH51o@public.gmane.org>
+Subject: RE: [PATCH 1/3] PCI: designware: Configuration space should be
+ specified in 'reg'
+Date: Thu, 26 Jun 2014 13:55:34 +0800
+Message-ID: <2CC2A0A4A178534D93D5159BF3BCB6619C5F94EFC8@EAPEX1MAIL1.st.com>
 References: <1403719007-9352-1-git-send-email-kishon@ti.com>
-	<1403719007-9352-3-git-send-email-kishon@ti.com>
+ <1403719007-9352-2-git-send-email-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="Windows-1252"
+Content-Transfer-Encoding: 8BIT
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403719007-9352-3-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+In-Reply-To: <1403719007-9352-2-git-send-email-kishon-l0cyMroinI0@public.gmane.org>
+Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mohit KUMAR DCG <mohit.kumar-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org" <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org" <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Cc: "grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
+Hello Kishon,
 
- Few things, if you can help me to understand:
+> -----Original Message-----
+> From: Kishon Vijay Abraham I [mailto:kishon-l0cyMroinI0@public.gmane.org]
+> Sent: Wednesday, June 25, 2014 11:27 PM
+> To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; linux-
+> pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org; bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org; Mohit
+> KUMAR DCG; linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: kishon-l0cyMroinI0@public.gmane.org; grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; Jason Gunthorpe; Marek Vasut;
+> Arnd Bergmann
+> Subject: [PATCH 1/3] PCI: designware: Configuration space should be
+> specified in 'reg'
+> 
+> The configuration address space has so far been specified in *ranges*,
+> however it should be specified in *reg* making it a platform MEM resource.
+> Hence used 'platform_get_resource_*' API to get configuration address
+> space in the designware driver.
+> 
+> Cc: Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>
+> Cc: Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
+> Cc: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>
+> Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+> Signed-off-by: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
+> ---
+>  .../devicetree/bindings/pci/designware-pcie.txt    |    4 ++++
+>  drivers/pci/host/pcie-designware.c                 |   17 +++++++++++++++--
+>  2 files changed, 19 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> index d0d15ee..ed0d9b9 100644
+> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+> @@ -2,6 +2,10 @@
+> 
+>  Required properties:
+>  - compatible: should contain "snps,dw-pcie" to identify the core.
+> +- reg: Should contain the configuration address space.
+> +- reg-names: Must be "config" for the PCIe configuration space.
+> +    (The old way of getting the configuration address space from "ranges"
+> +    is deprecated and should be avoided.)
+>  - #address-cells: set to <3>
+>  - #size-cells: set to <2>
+>  - device_type: set to "pci"
+> diff --git a/drivers/pci/host/pcie-designware.c b/drivers/pci/host/pcie-
+> designware.c
+> index 1eaf4df..0b7b455 100644
+> --- a/drivers/pci/host/pcie-designware.c
+> +++ b/drivers/pci/host/pcie-designware.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/of_pci.h>
+>  #include <linux/pci.h>
+>  #include <linux/pci_regs.h>
+> +#include <linux/platform_device.h>
+>  #include <linux/types.h>
+> 
+>  #include "pcie-designware.h"
+> @@ -396,11 +397,23 @@ static const struct irq_domain_ops
+> msi_domain_ops = {  int __init dw_pcie_host_init(struct pcie_port *pp)  {
+>  	struct device_node *np = pp->dev->of_node;
+> +	struct platform_device *pdev = to_platform_device(pp->dev);
+>  	struct of_pci_range range;
+>  	struct of_pci_range_parser parser;
+> +	struct resource *cfg_res;
+>  	u32 val;
+>  	int i;
+> 
+> +	cfg_res = platform_get_resource_byname(pdev,
+> IORESOURCE_MEM, "config");
+> +	if (cfg_res) {
+> +		pp->config.cfg0_size = resource_size(cfg_res)/2;
+> +		pp->config.cfg1_size = resource_size(cfg_res)/2;
+> +		pp->cfg0_base = cfg_res->start;
+> +		pp->cfg1_base = cfg_res->start + pp->config.cfg0_size;
+> +	} else {
+> +		dev_err(pp->dev, "missing *config* reg space\n");
 
-On Wed, Jun 25, 2014 at 11:26 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
-> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
-> address. So whenever the cpu issues a read/write request, the 4 most
-> significant bits are used by L3 to determine the target controller.
-> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
-> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
-> the outbound translation window the *base* should be programmed as 0x000_0000.
-> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
-> we have programmed in the translation window with base as 0x000_0000.
->
-> This is needed when the dt node is modelled something like below
-> axi {
->         compatible = "simple-bus";
->         #size-cells = <1>;
->         #address-cells = <1>;
->         ranges = <0x0        0x20000000 0x10000000 // 28-bit bus
->                   0x51000000 0x51000000 0x3000>;
->         pcie@51000000 {
->                 reg = <0x1000 0x2000>, <0x51002000 0x14c>, <0x51000000 0x2000>;
->                 reg-names = "config", "ti_conf", "rc_dbics";
+- so this message will remind other platform to comply and specify configuration space
+ in *reg* property. 
 
-So for DRA7, config base which will be coming from reg property should
-be 0x1000 and size 0x2000, no?
+> +	}
+> +
+>  	if (of_pci_range_parser_init(&parser, np)) {
+>  		dev_err(pp->dev, "missing ranges property\n");
+>  		return -EINVAL;
+> @@ -433,6 +446,8 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>  			of_pci_range_to_resource(&range, np, &pp->cfg);
+>  			pp->config.cfg0_size = resource_size(&pp->cfg)/2;
+>  			pp->config.cfg1_size = resource_size(&pp->cfg)/2;
+> +			pp->cfg0_base = pp->cfg.start;
+> +			pp->cfg1_base = pp->cfg.start + pp-
+> >config.cfg0_size;
+>  		}
+>  	}
+> 
+> @@ -445,8 +460,6 @@ int __init dw_pcie_host_init(struct pcie_port *pp)
+>  		}
+>  	}
+> 
+> -	pp->cfg0_base = pp->cfg.start;
+> -	pp->cfg1_base = pp->cfg.start + pp->config.cfg0_size;
+>  	pp->mem_base = pp->mem.start;
+> 
+>  	pp->va_cfg0_base = devm_ioremap(pp->dev, pp->cfg0_base,
 
->                 #address-cells = <3>;
->                 #size-cells = <2>;
->                 ranges = <0x81000000 0 0          0x03000 0 0x00010000
+Reviewed and Acked-by: Mohit Kumar <mohit.kumar-qxv4g6HH51o@public.gmane.org>
 
-range type 0x81000000 tells that it is IO
+Regards
+Mohit
 
->                           0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+> --
+> 1.7.9.5
 
-range type 0x81000000 tells that it is mem
-
-
->         };
-> };
->
-> Here the CPU address for configuration space is 0x20013000 and the controller
-> address for configuration space is 0x13000. The controller address should
-be
-
-If above understanding is correct then:
-
-Aren't these addresses(0x20013000  and 0x13000) from mem space
-instead of configuration space.
-
-If yes, then how can you get two addresses (CPU and Controller address)
-from reg property for configuration space?
-
-~Pratyush
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
