@@ -1,129 +1,139 @@
-From: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
-Subject: Re: Unifying cape overlays into boot .dtb for
- BeagleBoard.org boards
-Date: Thu, 26 Jun 2014 09:06:13 -0400
-Message-ID: <53AC1AC5.5000103@ti.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com> <CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EAF59A7@DBDE04.ent.ti.com> <CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com> <20980858CB6D3A4BAE95CA194937D5E73EAF5DD0@DBDE04.ent.ti.com> <20140626075039.GG28884@atomide.com>
-Reply-To: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Subject: Re: [PATCH v4 00/14] Add Maxim 77802 PMIC support
+Date: Thu, 26 Jun 2014 19:02:25 +0530
+Message-ID: <CAHfPSqB9620OiHxd_w3ReS6gg7PzYK1eN11rH6Z6boai0x=2og@mail.gmail.com>
+References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <beagleboard+bncBCF77LUSWAKRBVNVWCOQKGQE2YF5HFI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <20140626075039.GG28884-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-List-Post: <http://groups.google.com/group/beagleboard/post>, <mailto:beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:beagleboard+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/beagleboard>
-Sender: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:beagleboard+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:googlegroups-manage+1035534660134+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>
-Cc: Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/26/2014 03:50 AM, Tony Lindgren wrote:
-> * Gupta, Pekon <pekon-l0cyMroinI0@public.gmane.org> [140618 01:52]:
->> Hi,
->>
->>> From: Jason Kridner [mailto:jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->>>> On Tue, Jun 17, 2014 at 3:11 AM, Gupta, Pekon <pekon-l0cyMroinI0@public.gmane.org> wrote:
->>>>> From: Jason Kridner
->> [...]
->>>>>> * The devicetree sources, including the primary boot .dts files, will
->>>>>> eventually be removed from the kernel source tree. I'm not too sure if
->>>>>> and when it'll really happen, but starting up a project to maintain
->>>>>> the definitive beagleboard.org board devicetree files outside the
->>>>>> kernel seems to make sense. Given the interdependency of the boot .dtb
->>>>>> and the overlay .dtbo files, combining them into a single repository
->>>>>> where every distribution can pick them up seems like a natural and
->>>>>> obvious choice. There are of course some dependencies on kernel
->>>>>> versions, but I believe most of those have settled out by now and we
->>>>>> should be OK moving forward.
->>>>
->>>> +1
->>>> Yes, moving cape DTS out of kernel tree should help developers.
->>>> There are quite a few cape patches floating in mail-lists, but as cape
->>>> DTS is still not accepted in mainline so they get lost and forgotten.
->>>> So one place for collecting all this is a good idea.
->>>>
->>>>
->>>> However, somehow the universal I/O DTS looked seemed complicated:
->>>> (1)
->>>> All capes work standalone, but due to share pin-mux some cape
->>>> combinations cannot be used simultaneously. But most users of
->>>> BeagleBone are already well-versed with DT and kernel infrastructure,
->>>> so they need not be spoon fed to get a out-of-box working solution
->>>> for each combination. If there is proper documentation is available
->>>> about compatibility of capes with each other, then users will figure
->>>> out themselves.
->>>
->>> I think you have too much confidence in users. If this doesn't hurt
->>> power users, then why is it bad have an option to spoon feed? This
->>> doesn't prevent anyone with knowledge of DT from doing their own
->>> thing.
->>>
->> Fair enough.
->> But plz give a try to u-boot alternative below. It works at my end.
->>
->>>>
->>>> (2)
->>>> Also, there was a talk of enabling and disabling DT fragments via u-boot.
->>>> That should also be explored instead of complicating cape DTS.
->>>
->>> Link? Relevance?
->>>
->> we can modify DT from u-boot itself [1].
->> Example:  "MMC2" pin-mux conflicts with "NAND" and "NOR" capes.
->> But using following sequence of commands, you can modify DTB via
->> u-boot and make NAND cape work _without_any_hack_ in patch [2].
->>
->> /* load DTB */
->> u-boot> tftp 0x81000000 am335x-boneblack.dtb
->> u-boot> fdt addr 0x81000000
->> /* disable MMC2 node */
->> u-boot> fdt list /ocp/mmc@481d8000
->> u-boot> fdt set  /ocp/mmc@481d8000 status \d\i\s\a\b\l\e\d
->> u-boot> fdt list /ocp/mmc@481d8000 status
->> /* enable GPMC node */
->> u-boot> fdt list /ocp/gpmc
->> u-boot> fdt set  /ocp/gpmc status \o\k\a\y
->> u-boot> fdt list /ocp/gpmc status
->> /* enable ELM node */
->> u-boot> fdt list /ocp/elm
->> u-boot> fdt set  /ocp/elm status \o\k\a\y
->> u-boot> fdt list /ocp/elm status
->> /* boot uImage */
->> tftp 0x82000000 uImage
->> bootm 0x82000000 - 0x81000000
->>
->> Note: "fdt set" command does not accept string literals
->> as binding values, it internally converts them to string, so
->> escape sequenced characters were used here..
->> "okay" == \o\k\a\y
->> "disabled" == \d\i\s\a\b\l\e\d"
->>
->>
->> Hope above solves the pre-requisite because of which 'Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'
->> was unable to accept cape related DTS into his tree [3]
-> 
-> Yes. If the capes are disabled by default we can have at
-> least some of them included in the mainline kernel and
-> enabled by the bootloader as needed. I'd like to hear back
-> from the u-boot people too on this approach naturally.
-> 
-> And some things we still cannot merge if they overlap for
-> GPMC bindings for example. So we have to carefully check
-> the generated .dtb file with dtc -I dtb -O dts.
+Hello Javier,
 
-This sounds really problematic to me from an end-user horror point of
-view.  And fortunately 3.17 is going to have some level of overlay
-support so we can set this problem aside (and even treat the am335x gp
-evm "profileN" trees as overlays too).
+On 26 June 2014 00:33, Javier Martinez Canillas
+<javier.martinez@collabora.co.uk> wrote:
+> MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
+> 32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
+> a Real-Time-Clock (RTC) and a I2C interface to program the individual
+> regulators, clocks and the RTC.
+>
+> This fourth version of the patch-set addresses several issues pointed
+> out by Mark Brown, Doug Anderson and Krzysztof Kozlowski The individual
+> changes are added on each patch change log.
+>
+> This series are based on drivers added by Simon Glass to the Chrome OS
+> kernel and adds support for the Maxim 77802 Power Management IC, their
+> regulators, clocks, RTC and I2C interface.
+>
+> NOTE: This version of the series model the real power scheme for Maxim
+> 77802 regulators instead of a simplistic model like in older versions.
+> So these changes depend on patch:
+>
+> "[PATCH v3] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi"
+> https://patchwork.kernel.org/patch/4411351/
+>
+> which adds tps65090 support to Peach boards since regulators from this
+> PMIC supply power to a set of MAX77802 regulators.
+>
+> The patch-set has been tested on both Daisy/Snow (max77686) and Peach
+> pit (max77802) Chromebooks and it's composed of the following patches:
+>
+> Doug Anderson (1):
+>   mfd: max77686: Allow the max77686 rtc to wakeup the system
+>
+> Javier Martinez Canillas (13):
+>   mfd: max77686: Convert to use regmap_irq
+>   clk: max77686: Add DT include for MAX77686 PMIC clock
+>   clk: max77686: Improve Maxim 77686 PMIC clocks binding
+>   clk: Add generic driver for Maxim PMIC clocks
+>   clk: max77686: Convert to the generic max clock driver
+>   mfd: Add driver for Maxim 77802 Power Management IC
+>   mfd: max77802: Add DT binding documentation
+>   regmap: Add regmap_reg_copy function
+>   regulator: Add driver for Maxim 77802 PMIC regulators
+>   clk: Add driver for Maxim 77802 PMIC clocks
+>   clk: max77802: Add DT binding documentation
+>   rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+>   ARM: dts: Add max77802 to exynos5420-peach-pit and exynos5800-peach-pi
+>
+>  .../devicetree/bindings/clock/maxim,max77686.txt   |  15 +-
+>  .../devicetree/bindings/clock/maxim,max77802.txt   |  42 ++
+>  Documentation/devicetree/bindings/mfd/max77802.txt |  97 +++
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         | 343 ++++++++++
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          | 343 ++++++++++
+>  drivers/base/regmap/regmap.c                       |  34 +
+>  drivers/clk/Kconfig                                |  11 +
+>  drivers/clk/Makefile                               |   2 +
+>  drivers/clk/clk-max-gen.c                          | 195 ++++++
+>  drivers/clk/clk-max-gen.h                          |  32 +
+>  drivers/clk/clk-max77686.c                         | 183 +-----
+>  drivers/clk/clk-max77802.c                         |  99 +++
+>  drivers/mfd/Kconfig                                |  15 +
+>  drivers/mfd/Makefile                               |   3 +-
+>  drivers/mfd/max77686-irq.c                         | 319 ----------
+>  drivers/mfd/max77686.c                             |  97 ++-
+>  drivers/mfd/max77802.c                             | 366 +++++++++++
+>  drivers/regulator/Kconfig                          |   9 +
+>  drivers/regulator/Makefile                         |   1 +
+>  drivers/regulator/max77802.c                       | 694 +++++++++++++++++++++
+>  drivers/rtc/Kconfig                                |  10 +
+>  drivers/rtc/Makefile                               |   1 +
+>  drivers/rtc/rtc-max77686.c                         |  55 +-
+>  drivers/rtc/rtc-max77802.c                         | 637 +++++++++++++++++++
+>  include/dt-bindings/clock/maxim,max77686.h         |  23 +
+>  include/dt-bindings/clock/maxim,max77802.h         |  22 +
+>  include/linux/mfd/max77686-private.h               |  28 +-
+>  include/linux/mfd/max77686.h                       |   2 -
+>  include/linux/mfd/max77802-private.h               | 307 +++++++++
+>  include/linux/mfd/max77802.h                       | 121 ++++
+>  include/linux/regmap.h                             |   9 +
+>  31 files changed, 3583 insertions(+), 532 deletions(-)
+>  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max77802.txt
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+>  create mode 100644 drivers/clk/clk-max-gen.c
+>  create mode 100644 drivers/clk/clk-max-gen.h
+>  create mode 100644 drivers/clk/clk-max77802.c
+>  delete mode 100644 drivers/mfd/max77686-irq.c
+>  create mode 100644 drivers/mfd/max77802.c
+>  create mode 100644 drivers/regulator/max77802.c
+>  create mode 100644 drivers/rtc/rtc-max77802.c
+>  create mode 100644 include/dt-bindings/clock/maxim,max77686.h
+>  create mode 100644 include/dt-bindings/clock/maxim,max77802.h
+>  create mode 100644 include/linux/mfd/max77802-private.h
+>  create mode 100644 include/linux/mfd/max77802.h
+>
+> --
+> 2.0.0.rc2
+> --
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
+> the body of a message to majordomo@vger.kernel.org
+> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+With this patchset
++
+[PATCH 0/4 v2] hwmon: ntc_thermistor: prepose vendor prefix change
+http://www.spinics.net/lists/linux-samsung-soc/msg33034.html
++
+spi: s3c64xx: fix broken "cs_gpios" usage in the driver
+http://comments.gmane.org/gmane.linux.kernel.samsung-soc/33102
++
+[PATCH v2] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi
+http://www.gossamer-threads.com/lists/linux/kernel/1951591
+
+Tested on Peach PIT and PI boards.
+
+1. Max77802 seems to probe and configure the supplies properly.
+    Verified via the sysfs entries exported by the regulators.
+
+2. ADC probes fine and Thermistors report proper values,
+    ADC requires vdd_supply = "ldo09_reg".
+
+Tested-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
 
 -- 
-Tom
-
--- 
-For more options, visit http://beagleboard.org/discuss
---- 
-You received this message because you are subscribed to the Google Groups "BeagleBoard" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to beagleboard+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+Shine bright,
+(: Nav :)
