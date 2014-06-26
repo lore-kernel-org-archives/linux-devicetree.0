@@ -1,122 +1,123 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: Unifying cape overlays into boot .dtb for BeagleBoard.org boards
-Date: Thu, 26 Jun 2014 00:50:40 -0700
-Message-ID: <20140626075039.GG28884@atomide.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
- <CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EAF59A7@DBDE04.ent.ti.com>
- <CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com>
- <20980858CB6D3A4BAE95CA194937D5E73EAF5DD0@DBDE04.ent.ti.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] PCI: designware: use untranslated address while programming
+ ATU
+Date: Thu, 26 Jun 2014 13:54:24 +0530
+Message-ID: <53ABD8B8.5030200@ti.com>
+References: <1403719007-9352-1-git-send-email-kishon@ti.com> <1403719007-9352-3-git-send-email-kishon@ti.com> <CAHM4w1mMT5een4pAFb9s1JENm=j1W2yMPYdO+OdBhAy0wcRdjw@mail.gmail.com> <53ABB93A.8070301@ti.com> <20140626063336.GA6166@pratyush-vbox>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20980858CB6D3A4BAE95CA194937D5E73EAF5DD0@DBDE04.ent.ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: "Gupta, Pekon" <pekon@ti.com>
-Cc: Jason Kridner <jkridner@gmail.com>, "Rini, Tom" <trini@ti.com>, OMAP List <linux-omap@vger.kernel.org>, "beagleboard@googlegroups.com" <beagleboard@googlegroups.com>, Robert Nelson <robertcnelson@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, ARM Kernel List <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140626063336.GA6166@pratyush-vbox>
+Sender: linux-doc-owner@vger.kernel.org
+To: Pratyush Anand <pratyush.anand@st.com>
+Cc: Pratyush Anand <pratyush.anand@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-* Gupta, Pekon <pekon@ti.com> [140618 01:52]:
-> Hi,
-> 
-> >From: Jason Kridner [mailto:jkridner@gmail.com]
-> >>On Tue, Jun 17, 2014 at 3:11 AM, Gupta, Pekon <pekon@ti.com> wrote:
-> >>>From: Jason Kridner
-> [...]
-> >>>> * The devicetree sources, including the primary boot .dts files, will
-> >>>> eventually be removed from the kernel source tree. I'm not too sure if
-> >>>> and when it'll really happen, but starting up a project to maintain
-> >>>> the definitive beagleboard.org board devicetree files outside the
-> >>>> kernel seems to make sense. Given the interdependency of the boot .dtb
-> >>>> and the overlay .dtbo files, combining them into a single repository
-> >>>> where every distribution can pick them up seems like a natural and
-> >>>> obvious choice. There are of course some dependencies on kernel
-> >>>> versions, but I believe most of those have settled out by now and we
-> >>>> should be OK moving forward.
-> >>
-> >> +1
-> >> Yes, moving cape DTS out of kernel tree should help developers.
-> >> There are quite a few cape patches floating in mail-lists, but as cape
-> >> DTS is still not accepted in mainline so they get lost and forgotten.
-> >> So one place for collecting all this is a good idea.
-> >>
-> >>
-> >> However, somehow the universal I/O DTS looked seemed complicated:
-> >> (1)
-> >> All capes work standalone, but due to share pin-mux some cape
-> >> combinations cannot be used simultaneously. But most users of
-> >> BeagleBone are already well-versed with DT and kernel infrastructure,
-> >> so they need not be spoon fed to get a out-of-box working solution
-> >> for each combination. If there is proper documentation is available
-> >> about compatibility of capes with each other, then users will figure
-> >> out themselves.
-> >
-> >I think you have too much confidence in users. If this doesn't hurt
-> >power users, then why is it bad have an option to spoon feed? This
-> >doesn't prevent anyone with knowledge of DT from doing their own
-> >thing.
-> >
-> Fair enough.
-> But plz give a try to u-boot alternative below. It works at my end.
-> 
-> >>
-> >> (2)
-> >> Also, there was a talk of enabling and disabling DT fragments via u-boot.
-> >> That should also be explored instead of complicating cape DTS.
-> >
-> >Link? Relevance?
-> >
-> we can modify DT from u-boot itself [1].
-> Example:  "MMC2" pin-mux conflicts with "NAND" and "NOR" capes.
-> But using following sequence of commands, you can modify DTB via
-> u-boot and make NAND cape work _without_any_hack_ in patch [2].
-> 
-> /* load DTB */
-> u-boot> tftp 0x81000000 am335x-boneblack.dtb
-> u-boot> fdt addr 0x81000000
-> /* disable MMC2 node */
-> u-boot> fdt list /ocp/mmc@481d8000
-> u-boot> fdt set  /ocp/mmc@481d8000 status \d\i\s\a\b\l\e\d
-> u-boot> fdt list /ocp/mmc@481d8000 status
-> /* enable GPMC node */
-> u-boot> fdt list /ocp/gpmc
-> u-boot> fdt set  /ocp/gpmc status \o\k\a\y
-> u-boot> fdt list /ocp/gpmc status
-> /* enable ELM node */
-> u-boot> fdt list /ocp/elm
-> u-boot> fdt set  /ocp/elm status \o\k\a\y
-> u-boot> fdt list /ocp/elm status
-> /* boot uImage */
-> tftp 0x82000000 uImage
-> bootm 0x82000000 - 0x81000000
-> 
-> Note: "fdt set" command does not accept string literals
-> as binding values, it internally converts them to string, so
-> escape sequenced characters were used here..
-> "okay" == \o\k\a\y
-> "disabled" == \d\i\s\a\b\l\e\d"
-> 
-> 
-> Hope above solves the pre-requisite because of which 'Tony Lindgren <tony@atomide.com>'
-> was unable to accept cape related DTS into his tree [3]
+Hi Pratyush,
 
-Yes. If the capes are disabled by default we can have at
-least some of them included in the mainline kernel and
-enabled by the bootloader as needed. I'd like to hear back
-from the u-boot people too on this approach naturally.
-
-And some things we still cannot merge if they overlap for
-GPMC bindings for example. So we have to carefully check
-the generated .dtb file with dtc -I dtb -O dts.
-
-Regards,
-
-Tony
- 
-> [1] http://www.denx.de/wiki/view/DULG/UBootCmdFDT
-> [2] http://www.spinics.net/lists/linux-omap/msg107307.html
-> [3] http://www.spinics.net/lists/linux-omap/msg107354.html
+On Thursday 26 June 2014 12:03 PM, Pratyush Anand wrote:
+> Hi Kishon,
 > 
+> On Thu, Jun 26, 2014 at 02:10:02PM +0800, Kishon Vijay Abraham I wrote:
+>> Hi Pratyush,
+>>
+>> On Thursday 26 June 2014 11:07 AM, Pratyush Anand wrote:
+>>> Hi Kishon,
+>>>
+>>>  Few things, if you can help me to understand:
+>>>
+>>> On Wed, Jun 25, 2014 at 11:26 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
+>>>> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
+>>>> address. So whenever the cpu issues a read/write request, the 4 most
+>>>> significant bits are used by L3 to determine the target controller.
+>>>> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
+>>>> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
+>>>> the outbound translation window the *base* should be programmed as 0x000_0000.
+>>>> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
+>>>> we have programmed in the translation window with base as 0x000_0000.
+>>>>
+>>>> This is needed when the dt node is modelled something like below
+>>>> axi {
+>>>>         compatible = "simple-bus";
+>>>>         #size-cells = <1>;
+>>>>         #address-cells = <1>;
+>>>>         ranges = <0x0        0x20000000 0x10000000 // 28-bit bus
+>>>>                   0x51000000 0x51000000 0x3000>;
+>>>>         pcie@51000000 {
+>>>>                 reg = <0x1000 0x2000>, <0x51002000 0x14c>, <0x51000000 0x2000>;
+>>>>                 reg-names = "config", "ti_conf", "rc_dbics";
+>>>
+>>> So for DRA7, config base which will be coming from reg property should
+>>> be 0x1000 and size 0x2000, no?
+>>
+>> right. The first element in 'reg' and 'reg-names' specify exactly that.
+>>>
+>>>>                 #address-cells = <3>;
+>>>>                 #size-cells = <2>;
+>>>>                 ranges = <0x81000000 0 0          0x03000 0 0x00010000
+>>>
+>>> range type 0x81000000 tells that it is IO
+>>>
+>>>>                           0x82000000 0 0x20013000 0x13000 0 0xffed000>;
+>>>
+>>> range type 0x81000000 tells that it is mem
+>>>
+>>>
+>>>>         };
+>>>> };
+>>>>
+>>>> Here the CPU address for configuration space is 0x20013000 and the controller
+>>>> address for configuration space is 0x13000. The controller address should
+>>> be
+>>>
+>>> If above understanding is correct then:
+>>>
+>>> Aren't these addresses(0x20013000  and 0x13000) from mem space
+>>> instead of configuration space.
+>>
+>> Sorry. I didn't get you. Configuration space is different from mem space and IO
+>> space. We specify only the configuration space in "reg", the IO space and
+>> memory space should be specified in ranges.
+>>
+>> In my case
+>> configuration space range: 0x20001000 - 0x20002fff
+>> IO space range:            0x20003000 - 0x20012fff
+>> Mem space range:           0x20013000 - 0x2fffffff
+>>
+>> Here only the configuration space is obtained from 'reg' and 'IO' and 'MEM'
+>> space is obtained from ranges.
+>>>
+>>> If yes, then how can you get two addresses (CPU and Controller address)
+>>> from reg property for configuration space?
+>>
+>> I used platform_get_resource_byname() to get CPU address and of_get_address()
+>> to get the untranslated controller address.
 > 
-> with regards, pekon
+> This is what I am not able to understand that how does
+> platform_get_resource_byname gives correct CPU address from reg =
+> <0x1000 0x2000>?
+> 
+> cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
+> 
+> how cfg_res->start is now 0x20001000? Shouldn't cfg_res->start be
+> 0x1000?
+> 
+> What am I missing?
+
+IIUC, converting to the cpu address happens long back when the platform device
+is created from dt node.
+
+See if the following makes sense to you.
+
+starting from drivers/of/platform.c
+of_device_alloc() -> of_address_to_resource() -> __of_address_to_resource() ->
+of_translate_address() -> __of_translate_address() -> of_translate_one() ->
+of_bus_default_translate()
+
+So the 'resource' in 'struct platform_device' already holds the translated
+address. platform_get_resource_byname() just returns the resource from this
+platform device.
+
+Cheers
+Kishon
