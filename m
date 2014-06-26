@@ -1,90 +1,73 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT idle states bindings
-Date: Thu, 26 Jun 2014 13:32:52 -0500
-Message-ID: <CAL_Jsq+F9i3v9CNSUKZcmHfH6bPv=475Qrs-Rbdp6Y=tVHO5Qg@mail.gmail.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20140625145849.GC15240@leverpostej> <20140625173745.GC15050@e102568-lin.cambridge.arm.com>
+From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC 1/3] of: Migrate of_find_node_by_name() users to for_each_node_by_name()
+Date: Thu, 26 Jun 2014 19:56:53 +0100
+Message-ID: <CACxGe6tiiNvz9VCq=enTWMGDBUS_0gsDZh2DvzpVP5itQtiRpA@mail.gmail.com>
+References: <1401983021-13829-1-git-send-email-grant.likely@linaro.org>
+ <1401983021-13829-2-git-send-email-grant.likely@linaro.org>
+ <CABGGisx=fhp1P68M+9aQUTzi6Bp+PnXK7Xq_TQ+=87AkGCZvwQ@mail.gmail.com>
+ <20140626160345.6613CC41060@trevor.secretlab.ca> <CAL_JsqKDsdqd3PJ0gwvESMER=Nxi1us55pKWDhTuZtwgjo_MGA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140625173745.GC15050@e102568-lin.cambridge.arm.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@sam>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAL_JsqKDsdqd3PJ0gwvESMER=Nxi1us55pKWDhTuZtwgjo_MGA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 12:37 PM, Lorenzo Pieralisi
-<lorenzo.pieralisi@arm.com> wrote:
-> On Wed, Jun 25, 2014 at 03:58:49PM +0100, Mark Rutland wrote:
->> Hi Lorenzo,
+On Thu, Jun 26, 2014 at 7:22 PM, Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> On Thu, Jun 26, 2014 at 11:03 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, 5 Jun 2014 12:48:54 -0500, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> On Thu, Jun 5, 2014 at 10:43 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>>> > There are a bunch of users open coding the for_each_node_by_name() by
+>>> > calling of_find_node_by_name() directly instead of using the macro. This
+>>> > is getting in the way of some cleanups, and the possibility of removing
+>>> > of_find_node_by_name() entirely. Clean it up so that all the users are
+>>> > consistent.
+>>> >
+>>> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>>> > ---
+>>> >  arch/powerpc/platforms/powermac/feature.c  | 20 +++++---------------
+>>> >  arch/powerpc/platforms/powermac/pci.c      |  2 +-
+>>> >  arch/powerpc/platforms/powermac/smp.c      |  2 +-
+>>> >  arch/powerpc/platforms/powermac/udbg_adb.c |  2 +-
+>>> >  arch/powerpc/platforms/pseries/setup.c     |  3 +--
+>>> >  drivers/cpufreq/pmac64-cpufreq.c           |  3 +--
+>>> >  drivers/edac/cell_edac.c                   |  3 +--
+>>> >  drivers/pci/hotplug/rpaphp_core.c          |  4 ++--
+>>> >  drivers/tty/serial/pmac_zilog.c            |  9 +++------
+>>> >  sound/ppc/pmac.c                           |  6 +++---
+>>> >  10 files changed, 19 insertions(+), 35 deletions(-)
+>>> >
+>>> > diff --git a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/platforms/powermac/feature.c
+>>> > index 63d82bbc05e9..39e1d163c427 100644
+>>> > --- a/arch/powerpc/platforms/powermac/feature.c
+>>> > +++ b/arch/powerpc/platforms/powermac/feature.c
+>>> > @@ -2805,25 +2805,20 @@ set_initial_features(void)
+>>> >                 /* Enable GMAC for now for PCI probing. It will be disabled
+>>> >                  * later on after PCI probe
+>>> >                  */
+>>> > -               np = of_find_node_by_name(NULL, "ethernet");
+>>> > -               while(np) {
+>>> > +               for_each_node_by_name(np, "ethernet")
+>>> >                         if (of_device_is_compatible(np, "K2-GMAC"))
+>>>
+>>> Can't for_each_compatible_node be used here instead?
 >>
->> On Wed, Jun 25, 2014 at 03:10:14PM +0100, Lorenzo Pieralisi wrote:
->> > ARM based platforms implement a variety of power management schemes that
->> > allow processors to enter idle states at run-time.
->> > The parameters defining these idle states vary on a per-platform basis forcing
->> > the OS to hardcode the state parameters in platform specific static tables
->> > whose size grows as the number of platforms supported in the kernel increases
->> > and hampers device drivers standardization.
->> >
->> > Therefore, this patch aims at standardizing idle state device tree bindings for
->> > ARM platforms. Bindings define idle state parameters inclusive of entry methods
->> > and state latencies, to allow operating systems to retrieve the configuration
->> > entries from the device tree and initialize the related power management
->> > drivers, paving the way for common code in the kernel to deal with idle
->> > states and removing the need for static data in current and previous kernel
->> > versions.
->> >
->> > Reviewed-by: Sebastian Capella <sebcape@gmail.com>
->> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
->> > ---
->> >  Documentation/devicetree/bindings/arm/cpus.txt     |   8 +
->> >  .../devicetree/bindings/arm/idle-states.txt        | 733 +++++++++++++++++++++
->> >  2 files changed, 741 insertions(+)
->> >  create mode 100644 Documentation/devicetree/bindings/arm/idle-states.txt
->>
->> [...]
-
-
->> > +       - power-rank
->> > +               Usage: Required
->> > +               Value type: <u32>
->> > +               Definition: It represents the idle state power-rank.
->> > +                           An increasing value implies less power
->> > +                           consumption. It must be given a sequential
->> > +                           value = {0, 1, ....}, starting from 0.
->> > +                           Phandles in the cpu nodes [1] cpu-idle-states
->> > +                           array property are not allowed to point at idle
->> > +                           state nodes having the same power-rank value.
->>
->> Why can't this be implicit in the order of the cpu-idle-states list?
->> That way it's impossible to violate the ordering requirement.
+>> Not easily without changing the behaviour. It would need to then check
+>> the name inside the block.
 >
-> You mean the phandles list in the cpu nodes ? Maybe, but this would
-> require the list to be the same order for all cpu nodes on which the
-> idle states are valid, or just take one and use that.
->
-> It can be viable, as long as everyone agrees, every time I post this
-> code someone comes up with a new idea on how to sort the states and
-> honestly I would like to be done with that.
+> Why would it change behavior? If the compatible string matches, do you
+> really have cases where the node name is not "ethernet"? I don't
+> believe it's the kernel's job to validate DT bindings.
 
-power-rank feels like an index in disguise. I agree with the phandle
-list defining the order.
+Yes, there are actually some bindings that have the same compatible
+property but behaviour changes based on node name! I don't want to do
+the legwork to figure out if these are in that group. Someone else can
+do that job.
 
->> > +       - entry-method-param
->> > +               Usage: See definition.
->> > +               Value type: <u32>
->> > +               Definition: Depends on the idle-states node entry-method
->> > +                           property value. Refer to the entry-method bindings
->> > +                           for this property value definition.
->>
->> Should this not be left up to the particular mechanism to describe?
->> e.g. for PSCI we could have a arm,psci-suspend-param property.
->
-> It was like that in early postings, and probably was better than the
-> current definition. I need to think about that but I am almost convinced
-> you are right.
-
-I think arm,psci-suspend-param is the right way to go.
-
-Rob
+g.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
