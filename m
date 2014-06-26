@@ -1,96 +1,72 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 2/3] PCI: designware: use untranslated address while programming
- ATU
-Date: Thu, 26 Jun 2014 11:40:02 +0530
-Message-ID: <53ABB93A.8070301@ti.com>
-References: <1403719007-9352-1-git-send-email-kishon@ti.com>	<1403719007-9352-3-git-send-email-kishon@ti.com> <CAHM4w1mMT5een4pAFb9s1JENm=j1W2yMPYdO+OdBhAy0wcRdjw@mail.gmail.com>
+From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 4/4 v2] ARM: DTS: Add NTC thermistor nodes to Exynos5420
+ based Peach_PIT
+Date: Thu, 26 Jun 2014 11:46:59 +0530
+Message-ID: <CAHfPSqBL9hH+r8Fy4GbbY1E_sJVCP-gpDHATDJgRHP4wKrFaiA@mail.gmail.com>
+References: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
+ <1403677773-21141-5-git-send-email-ch.naveen@samsung.com> <CAD=FV=WeuFhGK=JNEm20CT73J=c1Zc_dZGQT6bKeob895M+kQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHM4w1mMT5een4pAFb9s1JENm=j1W2yMPYdO+OdBhAy0wcRdjw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Pratyush Anand <pratyush.anand-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, Mohit KUMAR DCG <mohit.kumar-qxv4g6HH51o@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, Jason Gunthorpe <jgunthorpe-ePGOBjL8dl3ta4EC/59zMFaTQe2KTcn/@public.gmane.org>, Marek Vasut <marex-ynQEQJNshbs@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pratyush ANAND <pratyush.anand-qxv4g6HH51o@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=WeuFhGK=JNEm20CT73J=c1Zc_dZGQT6bKeob895M+kQA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pratyush,
+Doug,
 
-On Thursday 26 June 2014 11:07 AM, Pratyush Anand wrote:
-> Hi Kishon,
-> 
->  Few things, if you can help me to understand:
-> 
-> On Wed, Jun 25, 2014 at 11:26 PM, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org> wrote:
->> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
->> address. So whenever the cpu issues a read/write request, the 4 most
->> significant bits are used by L3 to determine the target controller.
->> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
->> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
->> the outbound translation window the *base* should be programmed as 0x000_0000.
->> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
->> we have programmed in the translation window with base as 0x000_0000.
+On 26 June 2014 02:10, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Naveen,
+>
+> On Tue, Jun 24, 2014 at 11:29 PM, Naveen Krishna Chatradhi
+> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Exynos5420 based Peach PIT board has 4 NTC thermistors to measure
+>> temperatures at various points on the board.
 >>
->> This is needed when the dt node is modelled something like below
->> axi {
->>         compatible = "simple-bus";
->>         #size-cells = <1>;
->>         #address-cells = <1>;
->>         ranges = <0x0        0x20000000 0x10000000 // 28-bit bus
->>                   0x51000000 0x51000000 0x3000>;
->>         pcie@51000000 {
->>                 reg = <0x1000 0x2000>, <0x51002000 0x14c>, <0x51000000 0x2000>;
->>                 reg-names = "config", "ti_conf", "rc_dbics";
-> 
-> So for DRA7, config base which will be coming from reg property should
-> be 0x1000 and size 0x2000, no?
-
-right. The first element in 'reg' and 'reg-names' specify exactly that.
-> 
->>                 #address-cells = <3>;
->>                 #size-cells = <2>;
->>                 ranges = <0x81000000 0 0          0x03000 0 0x00010000
-> 
-> range type 0x81000000 tells that it is IO
-> 
->>                           0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-> 
-> range type 0x81000000 tells that it is mem
-> 
-> 
->>         };
->> };
+>> IIO based ADC becomes the parent and NTC thermistors are the childs,
+>> via the HWMON interface.
 >>
->> Here the CPU address for configuration space is 0x20013000 and the controller
->> address for configuration space is 0x13000. The controller address should
-> be
-> 
-> If above understanding is correct then:
-> 
-> Aren't these addresses(0x20013000  and 0x13000) from mem space
-> instead of configuration space.
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>> Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+>> ---
+>> Changes since v1:
+>> 1. Arranged the ADC node alphabetical
+>> 2. Added "status = "okay"" to the ADC node
+>>
+>> This patch needs
+>> 1. MAX77802 PMIC device tree nodes (for ldo9)
+>>    https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg31430.html
+>> 2. Uses the DT documentation for NTC thermistors updated with vendor-prefix
+>>
+>> This patch set is tested
+>> 1. On Peach PIT board via sysfs entry exposed by hwmon
+>> localhost ~ # cat /sys/class/hwmon/hwmon*/device/temp1_input
+>> 37436
+>> 36449
+>> 38560
+>> 38059
+>>
+>> 2. Backward compatibility is tested by replacing "murata" with "ntc"
+>>    in the dts nodes and running the above test.
+>>
+>>  arch/arm/boot/dts/exynos5420-peach-pit.dts |   34 ++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
+>
+> Now that Javier has spun his patch, perhaps you can fold the "pi"
+> version in here too?
 
-Sorry. I didn't get you. Configuration space is different from mem space and IO
-space. We specify only the configuration space in "reg", the IO space and
-memory space should be specified in ranges.
+Sure, thanks for the information.
 
-In my case
-configuration space range: 0x20001000 - 0x20002fff
-IO space range:            0x20003000 - 0x20012fff
-Mem space range:           0x20013000 - 0x2fffffff
+Snow also needs the adc nodes.
+Will try to implement an adc fragment for PIT, PI and Snow.
 
-Here only the configuration space is obtained from 'reg' and 'IO' and 'MEM'
-space is obtained from ranges.
-> 
-> If yes, then how can you get two addresses (CPU and Controller address)
-> from reg property for configuration space?
+>
+> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
 
-I used platform_get_resource_byname() to get CPU address and of_get_address()
-to get the untranslated controller address.
 
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+-- 
+Shine bright,
+(: Nav :)
