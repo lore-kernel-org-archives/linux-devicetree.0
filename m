@@ -1,88 +1,95 @@
-From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 4/4 v2] ARM: DTS: Add NTC thermistor nodes to Exynos5420
- based Peach_PIT
-Date: Thu, 26 Jun 2014 14:15:15 +0530
-Message-ID: <CAHfPSqBAurQtiVg8KjxJkgvdB7XUHdQkEfjRtgUCKncE2feCdA@mail.gmail.com>
-References: <1403677773-21141-1-git-send-email-ch.naveen@samsung.com>
- <1403677773-21141-5-git-send-email-ch.naveen@samsung.com> <CAD=FV=WeuFhGK=JNEm20CT73J=c1Zc_dZGQT6bKeob895M+kQA@mail.gmail.com>
- <CAHfPSqBL9hH+r8Fy4GbbY1E_sJVCP-gpDHATDJgRHP4wKrFaiA@mail.gmail.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Thu, 26 Jun 2014 09:59:26 +0100
+Message-ID: <20140626085926.GB11244@arm.com>
+References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
+ <20140405001953.GE15806@google.com>
+ <20140407083120.GE17163@e106497-lin.cambridge.arm.com>
+ <5183143.FxBNM0xTAV@wuerfel>
+ <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAHfPSqBL9hH+r8Fy4GbbY1E_sJVCP-gpDHATDJgRHP4wKrFaiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-pci-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-pci-owner@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Arnd Bergmann <arnd@arndb.de>, Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, LKML <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Jon Masters <jonathan@jonmasters.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug, Kukjin,
+(sorry for replying to a months old thread)
 
-On 26 June 2014 11:46, Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> Doug,
->
-> On 26 June 2014 02:10, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
->> Naveen,
->>
->> On Tue, Jun 24, 2014 at 11:29 PM, Naveen Krishna Chatradhi
->> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> Exynos5420 based Peach PIT board has 4 NTC thermistors to measure
->>> temperatures at various points on the board.
->>>
->>> IIO based ADC becomes the parent and NTC thermistors are the childs,
->>> via the HWMON interface.
->>>
->>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>> Cc: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->>> ---
->>> Changes since v1:
->>> 1. Arranged the ADC node alphabetical
->>> 2. Added "status = "okay"" to the ADC node
->>>
->>> This patch needs
->>> 1. MAX77802 PMIC device tree nodes (for ldo9)
->>>    https://www.mail-archive.com/devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org/msg31430.html
->>> 2. Uses the DT documentation for NTC thermistors updated with vendor-prefix
->>>
->>> This patch set is tested
->>> 1. On Peach PIT board via sysfs entry exposed by hwmon
->>> localhost ~ # cat /sys/class/hwmon/hwmon*/device/temp1_input
->>> 37436
->>> 36449
->>> 38560
->>> 38059
->>>
->>> 2. Backward compatibility is tested by replacing "murata" with "ntc"
->>>    in the dts nodes and running the above test.
->>>
->>>  arch/arm/boot/dts/exynos5420-peach-pit.dts |   34 ++++++++++++++++++++++++++++
->>>  1 file changed, 34 insertions(+)
->>
->> Now that Javier has spun his patch, perhaps you can fold the "pi"
->> version in here too?
->
-> Sure, thanks for the information.
->
-> Snow also needs the adc nodes.
-> Will try to implement an adc fragment for PIT, PI and Snow.
+On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
+> On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> 
+> > I think migrating other architectures to use the same code should be
+> > a separate effort from adding a generic implementation that can be
+> > used by arm64. It's probably a good idea to have patches to convert
+> > arm32 and/or microblaze.
+> 
+> Let me reiterate that I am 100% in favor of replacing arch-specific
+> code with more generic implementations.
+> 
+> However, I am not 100% in favor of doing it as separate efforts
+> (although maybe I could be convinced).  The reasons I hesitate are
+> that (1) if only one architecture uses a new "generic" implementation,
+> we really don't know whether it is generic enough, (2) until I see the
+> patches to convert other architectures, I have to assume that I'm the
+> one who will write them, and (3) as soon as we add the code to
+> drivers/pci, it becomes partly my headache to maintain it, even if
+> only one arch benefits from it.
 
-I just found out  https://lkml.org/lkml/2013/3/27/453
+I agree and understand your point.
 
-Adding ADC based Thermistor nodes to Exynos5250-snow.dts din't make it in.
+> Please don't think I'm questioning anyone's intent or good will.  It's
+> just that I understand the business pressures, and I know how hard it
+> can be to justify this sort of work to one's management, especially
+> after the immediate problem has been solved.
 
+But, unfortunately, that's something we failed to address in reasonable
+time (even though I was one of the proponents of the generic PCIe
+implementation). This work is very likely to slip further into the late
+part of this year and I am aware that several ARM partners are blocked
+on the (upstream) availability of PCIe support for the arm64 kernel.
 
->
->>
->> Reviewed-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->> Tested-by: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
->
->
->
-> --
-> Shine bright,
-> (: Nav :)
+Although a bit late, I'm raising this now and hopefully we'll come to a
+conclusion soon. Delaying arm64 PCIe support even further is not a real
+option, which leaves us with:
 
+1. Someone else (with enough PCIe knowledge) volunteering to take over
+   soon or
+2. Dropping Liviu's work and going for an arm64-specific implementation
+   (most likely based on the arm32 implementation, see below)
 
+First option is ideal but there is work to do as laid out by Arnd here:
+
+http://article.gmane.org/gmane.linux.kernel/1679304
+
+The latest patches from Liviu are here (they only target arm64 and there
+are additional comments to be addressed from the above thread):
+
+http://linux-arm.org/git?p=linux-ld.git;a=shortlog;h=refs/heads/for-upstream/pci-next
+
+The main reason for the second option is timing. We could temporarily
+move Liviu's code under arch/arm64 with the hope that we generalise it
+later. However, the risk is even higher that once the code is in
+mainline, the generic implementation won't happen. In which case, I
+don't see much point in departing from the arm32 PCI API, making bios32
+clone the best second option.
+
+For the alternative implementation above, we already have a heavily cut
+down version of the arm32 PCI support but only tested in a virtual
+environment so far:
+
+https://git.kernel.org/cgit/linux/kernel/git/will/linux.git/log/?h=pci/bios32
+
+In conclusion, unless someone volunteers for the first option fairly
+soon, we'll post the alternative patches for review and take it from
+there.
+
+Thanks.
 
 -- 
-Shine bright,
-(: Nav :)
+Catalin
