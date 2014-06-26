@@ -1,62 +1,93 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
-Date: Thu, 26 Jun 2014 08:50:50 +0530
-Message-ID: <CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
-	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>
-	<CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>
-	<7hpphwlgn0.fsf@paris.lan>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: Re: [PATCH v3 5/6] clk: sunxi: Add A23 clocks support
+Date: Thu, 26 Jun 2014 11:25:49 +0800
+Message-ID: <CAGb2v66wBfq2z93gJ7Xh64o09AdFDWJwAS2VzgU_EVURKoQ+YA@mail.gmail.com>
+References: <1403603980-31101-1-git-send-email-wens@csie.org>
+ <1403603980-31101-6-git-send-email-wens@csie.org> <20140625202029.GJ19569@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <7hpphwlgn0.fsf@paris.lan>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene.kim@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBLVIV2OQKGQERZWF3PA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140625202029.GJ19569@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 4:51 AM, Kevin Hilman <khilman@linaro.org> wrote:
-> Doug Anderson <dianders@google.com> writes:
->
->> Tushar,
+On Thu, Jun 26, 2014 at 4:20 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Tue, Jun 24, 2014 at 05:59:39PM +0800, Chen-Yu Tsai wrote:
+>> The clock control unit on the A23 is similar to the one found on the A31.
 >>
->> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b@samsung.com> wrote:
->>> Currently CLK_FOUT_EPLL was set as one of the parents of AUDSS mux.
->>> As per the user manual, it should be CLK_MAU_EPLL.
->>>
->>> The problem surfaced when the bootloader in Peach-pit board set
->>> the EPLL clock as the parent of AUDSS mux. While booting the kernel,
->>> we used to get a system hang during late boot if CLK_MAU_EPLL was
->>> disabled.
->>>
->>> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
->>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
->>> Reported-by: Kevin Hilman <khilman@linaro.org>
->>> ---
->>>  arch/arm/boot/dts/exynos5420.dtsi |    2 +-
->>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>> The AHB1, APB1, APB2 gates on the A23 are almost identical to the ones
+>> on the A31, but some outputs are missing.
 >>
->> I've tested this myself now as well.
+>> The main CPU PLL (PLL1) however is like that on older Allwinner SoCs,
+>> such as the A10 or A20, but the N factor starts from 1 instead of 0.
 >>
->> Tested-by: Doug Anderson <dianders@chromium.org>
+>> This patch adds support for PLL1 and all the basic clock muxes and gates.
+>>
+>> Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+>> ---
+>>  Documentation/devicetree/bindings/clock/sunxi.txt |   5 ++
+>>  drivers/clk/sunxi/clk-sunxi.c                     | 103 ++++++++++++++++++++++
+>>  2 files changed, 108 insertions(+)
+>>
+>> diff --git a/drivers/clk/sunxi/clk-sunxi.c b/drivers/clk/sunxi/clk-sunxi.c
+>> index 6fe9492..d4832a7 100644
+>> --- a/drivers/clk/sunxi/clk-sunxi.c
+>> +++ b/drivers/clk/sunxi/clk-sunxi.c
+[...]
+>> @@ -673,6 +739,25 @@ static const struct div_data sun4i_axi_data __initconst = {
+>>       .width  = 2,
+>>  };
+>>
+>> +static const struct clk_div_table sun8i_a23_axi_table[] __initconst = {
+>> +     { .val = 0, .div = 1 },
+>> +     { .val = 1, .div = 2 },
+>> +     { .val = 2, .div = 3 },
+>> +     { .val = 3, .div = 4 },
+>> +     { .val = 4, .div = 4 },
+>> +     { .val = 5, .div = 4 },
+>> +     { .val = 6, .div = 4 },
+>> +     { .val = 7, .div = 4 },
+>> +     { } /* sentinel */
+>> +};
+>> +
+>> +static const struct div_data sun8i_a23_axi_data __initconst = {
+>> +     .shift  = 0,
+>> +     .pow    = 0,
 >
-> For me, this patch alone (on top of -next) doesn't solve the boot hang.
-> I still need clk_ignore_unused for a successful boot.
+> These are the default value.
+
+I am aware. This is consistent with all the other div_data
+instances, which have all fields set regardless of default
+values.
+
+>> +     .width  = 3,
+>> +     .table  = sun8i_a23_axi_table,
+>> +};
+>> +
+>>  static const struct div_data sun4i_ahb_data __initconst = {
+>>       .shift  = 4,
+>>       .pow    = 1,
+
+[...]
+
+> Looks fine otherwise,
 >
-> So, this patch might be correct, but it doesn't prevent a boot hang
-> using a chain-loaded nv_uboot on peach-pi.  There's still another clock
-> being disabled that causes a hang.
->
-> Kevin
+> Acked-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 
-Kevin,
+If you're ok with being consistent, I'll add your acked-by
+without changing it. Otherwise I'll remove the fields with
+default values.
 
-Can you please check if adding patch 1/3 alongwith patch 2/3 fixes the
-issue for you?
+Thanks!
 
-Also can you please confirm that setting CLK_IGNORE_UNUSED flag
-CLK_MAU_EPLL alone fixes the issue, without any need for
-clk_ignore_unused in u-boot bootargs?
 
--- 
-Tushar Behera
+ChenYu
