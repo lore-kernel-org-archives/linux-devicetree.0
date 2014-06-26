@@ -1,137 +1,67 @@
-From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-Subject: Re: OF_DYNAMIC node lifecycle
-Date: Thu, 26 Jun 2014 15:01:49 -0500
-Message-ID: <53AC7C2D.3040604@austin.ibm.com>
-References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>	<53A30117.3010100@austin.ibm.com>	<20140623144806.1348EC40A60@trevor.secretlab.ca>	<53A9DB4F.9060708@austin.ibm.com> <20140625202446.77687C40AE6@trevor.secretlab.ca>
+From: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v3 3/7] irqchip: atmel-aic: add new atmel AIC driver
+Date: Thu, 26 Jun 2014 22:20:24 +0200
+Message-ID: <53AC8088.6020905@free-electrons.com>
+References: <1403276487-8792-1-git-send-email-boris.brezillon@free-electrons.com> <1403276487-8792-4-git-send-email-boris.brezillon@free-electrons.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140625202446.77687C40AE6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+In-Reply-To: <1403276487-8792-4-git-send-email-boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>
-Cc: Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+To: Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2014 03:24 PM, Grant Likely wrote:
-> On Tue, 24 Jun 2014 15:10:55 -0500, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrote:
->> On 06/23/2014 09:48 AM, Grant Likely wrote:
->>> On Thu, 19 Jun 2014 10:26:15 -0500, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrote:
->>>> On 06/18/2014 03:07 PM, Grant Likely wrote:
->>>>> Hi Nathan and Tyrel,
->>>>>
->>>>> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
->>>>> I'm hoping you can help me. Right now, pseries seems to be the only
->>>>> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
->>>>> the entire kernel because it requires all DT code to manage reference
->>>>> counting with iterating over nodes. Most users simply get it wrong.
->>>>> Pantelis did some investigation and found that the reference counts on
->>>>> a running kernel are all over the place. I have my doubts that any
->>>>> code really gets it right.
->>>>>
->>>>> The problem is that users need to know when it is appropriate to call
->>>>> of_node_get()/of_node_put(). All list traversals that exit early need
->>>>> an extra call to of_node_put(), and code that is searching for a node
->>>>> in the tree and holding a reference to it needs to call of_node_get().
->>>>>
->>>>> I've got a few pseries questions:
->>>>> - What are the changes being requested by pseries firmware? Is it only
->>>>> CPUs and memory nodes, or does it manipulate things all over the tree?
->>>>
->>>> The short answer, everything.
->>>
->>> :-)
->>>
->>>> For pseries the two big actions that can change the device tree are
->>>> adding/removing resources and partition migration.
->>>>
->>>> The most frequent updates to the device tree happen during resource
->>>> (cpu, memory, and pci/phb) add and remove. During this process we add
->>>> and remove the node and its properties from the device tree.
->>>> - For memory on newer systems this just involves updating the
->>>>   ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory property. Older
->>>>   firmware levels add and remove the memroy@XXX nodes and their properties.
->>>> - For cpus the cpus/PowerPC,POWERXXXX nodes and its properties are added
->>>>   or removed
->>>> - For pci/phb the pci@XXXXX nodes and properties are added/removed.
->>>>
->>>> The less frequent operation of live partition migration (and suspend/resume)
->>>> can update just about anything in the device tree. When this occurs and the
->>>> systems starts after being migrated (or waking up after a suspend) we make
->>>> a call to firmware to get updates to the device tree for the new hardware
->>>> we are running on.
->>>>  
->>>>> - How frequent are the changes? How many changes would be likely over
->>>>> the runtime of the system?
->>>>
->>>> This can happen frequently.
->>>
->>> Thanks, that is exactly the information that I want. I'm not so much
->>> concerned with the addition or removal of nodes/properties, which is
->>> actually pretty easy to handle. It is the lifecycle of allocations on
->>> dynamic nodes that causes heartburn.
->>>
->>>>> - Are you able to verify that removed nodes are actually able to be
->>>>> freed correctly? Do you have any testcases for node removal?
->>>>
->>>> I have always tested this by doing resource add/remove, usually cpu and memory
->>>> since it is the easiest.
->>>
->>> Is that just testing the functionality, or do you have tests that check
->>> if the memory gets freed?
->>
->> In general it's just functionality testing.
->>
->>>
->>>>> I'm thinking very seriously about changing the locking semantics of DT
->>>>> code entirely so that most users never have to worry about
->>>>> of_node_get/put at all. If the DT code is switched to use rcu
->>>>> primitives for tree iteration (which also means making DT code use
->>>>> list_head, something I'm already investigating), then instead of
->>>>> trying to figure out of_node_get/put rules, callers could use
->>>>> rcu_read_lock()/rcu_read_unlock() to protect the region that is
->>>>> searching over nodes, and only call of_node_get() if the node pointer
->>>>> is needed outside the rcu read-side lock.
->>>>>
->>>>
->>>> This sounds good. I like just taking the rcu lock around accessing the DT.
->>>> Do we have many places where DT node pointers are held that require
->>>> keeping the of_node_get/put calls? If this did exist perhaps we could
->>>> update those places to look up the DT node every time instead of
->>>> holding on to the pointer. We could just get rid of the reference counting
->>>> altogether then.
->>>
->>> There are a few, but I would be happy to restrict reference counting to
->>> only those locations. Most places will decode the DT data, and then
->>> throw away the reference. We /might/ even be able to do rcu_lock/unlock
->>> around the entire probe path which would make it transparent to all
->>> device drivers.
->>>
->>>>> I'd really like to be rid of the node reference counting entirely, but
->>>>> I can't figure out a way of doing that safely, so I'd settle for
->>>>> making it a lot easier to get correct.
->>>>>
->>>>
->>>> heh! I have often thought about adding reference counting to device tree
->>>> properties.
->>>
->>> You horrible, horrible man.
->>
->> Yes. I are evil :)
->>
->> After looking again the work needed to add reference counts to properties
->> would be huge. The few properties I am concerned with are specific to powerpc
->> so perhaps just adding an arch specific lock around updating those
->> properties would work.
-> 
-> Which code/properties? I'd like to have a look myself.
 
-/ibm,dynamic-reconfiguration-memory/ibm,dynamic-memory
+On 20/06/2014 17:01, Boris BREZILLON wrote:
+> Add new atmel AIC (Advanced Interrupt Controller) driver based on the
+> generic chip infrastructure.
+>
+> This driver is only compatible with dt enabled board and replaces the old
+> implementation found in arch/arm/mach-at91/irq.c.
+>
+> Signed-off-by: Boris BREZILLON <boris.brezillon-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+> ---
+>  drivers/irqchip/Kconfig         |   7 +
+>  drivers/irqchip/Makefile        |   1 +
+>  drivers/irqchip/irq-atmel-aic.c | 700 ++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 708 insertions(+)
+>  create mode 100644 drivers/irqchip/irq-atmel-aic.c
+>
+> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+> index bbb746e..6a7ad81 100644
+> --- a/drivers/irqchip/Kconfig
+> +++ b/drivers/irqchip/Kconfig
+> @@ -30,6 +30,13 @@ config ARM_VIC_NR
+>  	  The maximum number of VICs available in the system, for
+>  	  power management.
+>  
+> +config ATMEL_AIC_IRQ
+> +	bool
+> +	select GENERIC_IRQ_CHIP
+> +	select IRQ_DOMAIN
+> +	select MULTI_IRQ_HANDLER
+> +	select SPARSE_IRQ
+> +
 
-The property is updated in 
-arch/powerpc/platforms/pseries/hotplug-memory.c:pseries_update_drconf_memory()
+I just though a bit about it and it might be better to split AIC and
+AIC5 support in 2 different drivers, because the AIC is only available
+on at91sam9/at91rm9200 SoCs and AIC5 only available on sama5 SoCs, and
+AFAICT there is no combination of both controller in a singler SoC.
 
--Nathan
+Jason, Thomas, let me know if you think this worth the trouble, and if
+so, should I keep a common implementation (in irq-atmel-aic-common.c/.h)
+for the shared functions/structures.
+
+Best Regards,
+
+Boris
+
+-- 
+Boris Brezillon, Free Electrons
+Embedded Linux and Kernel engineering
+http://free-electrons.com
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
