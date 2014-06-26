@@ -1,63 +1,40 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v5 1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
-Date: Thu, 26 Jun 2014 12:53:14 +0900
-Message-ID: <CANqRtoQnmmxN7TOjx7SN9VknkiDPNG0VO2Q2mjwjLcAa5pb1uw@mail.gmail.com>
-References: <201406242157.05973.sergei.shtylyov@cogentembedded.com>
-	<201406242159.55373.sergei.shtylyov@cogentembedded.com>
-	<53AB89B3.9020207@renesas.com>
-	<CANqRtoSsx+NAz2W_utN-A2fx+=e_Ywt5eD=Tf9uGnEDvk3w-PQ@mail.gmail.com>
-	<53AB9581.7090806@renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53AB9581.7090806@renesas.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>
+From: Rahul Sharma <rahul.sharma@samsung.com>
+Subject: [PATCH] ARM: dts: add hdmi regulators for exynos5800 based peach-pi
+ board
+Date: Thu, 26 Jun 2014 10:56:22 +0530
+Message-ID: <1403760382-12533-1-git-send-email-rahul.sharma@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org
+Cc: kgene.kim@samsung.com, inki.dae@samsung.com, tomasz.figa@gmail.com, joshi@samsung.com, r.sh.open@gmail.com, Rahul Sharma <rahul.sharma@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Shimoda-san,
+Adding regulators for HDMI for exynos5800 based Peach-pi board.
 
-On Thu, Jun 26, 2014 at 12:37 PM, Yoshihiro Shimoda
-<yoshihiro.shimoda.uh@renesas.com> wrote:
-> Hi Magnus-san,
->
-> (2014/06/26 12:01), Magnus Damm wrote:
->> Hi Shimoda-san,
->>
->> On Thu, Jun 26, 2014 at 11:47 AM, Yoshihiro Shimoda
->> <yoshihiro.shimoda.uh@renesas.com> wrote:
->>> Hi Sergei,
->>>
->>> (2014/06/25 2:59), Sergei Shtylyov wrote:
->>>> From: Ben Dooks <ben.dooks@codethink.co.uk>
->>>>
->>>> Add device nodes for the R8A7790 internal PCI bridge devices.
->>>>
->>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
->>>> [Sergei: added several properties to the PCI bridge nodes]
->>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->>>
->>> Thank you for the patch!
->>> I tested this patch on my lager board and a usb memory, and it works.
->>>
->>> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->>
->> Thanks for testing. Just one quick question from my side: Which USB
->> port did you test?
->
-> I tested usb ch1 only...
->
->> I somehow assumed that at least the majority of the USB ports on R-Car
->> Gen2 require a USB PHY device driver to work?
->
-> Thank you for the point.
-> About usb ch1, a USB PHY device driver doesn't need, I think.
-> But, about ch0 and ch2, I think that they should require a USB PHY device driver.
+Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
+---
+Based on Kukjin's for-next branch.
+Depends on:
+1) PMIC addition to Peach-pi: http://www.spinics.net/lists/linux-samsung-soc/msg33166.html
+2) tps65090 addition to Peach-pi: http://www.spinics.net/lists/linux-samsung-soc/msg32464.html
 
-Thanks for your clarification. It all makes sense now!
+ arch/arm/boot/dts/exynos5800-peach-pi.dts |    4 ++++
+ 1 file changed, 4 insertions(+)
 
-Cheers,
-
-/ magnus
+diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+index 2c2c137..30d1a26 100644
+--- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
++++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
+@@ -127,6 +127,10 @@
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&hdmi_hpd_irq>;
+ 	ddc = <&i2c_2>;
++	hdmi-en-supply = <&tps65090_fet7>;
++	vdd-supply = <&ldo8_reg>;
++	vdd_osc-supply = <&ldo10_reg>;
++	vdd_pll-supply = <&ldo8_reg>;
+ };
+ 
+ &hsi2c_7 {
+-- 
+1.7.9.5
