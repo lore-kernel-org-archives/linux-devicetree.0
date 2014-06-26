@@ -1,160 +1,87 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH V7 1/6] power: reset: Add generic SYSCON register mapped reset
-Date: Thu, 26 Jun 2014 09:38:41 +0800
-Message-ID: <CAGb2v65mGXDGb8Y045kehKufpMZWnfBm4dBJarJeOa8j-3g0RQ@mail.gmail.com>
-References: <1403737406-6474-1-git-send-email-fkan@apm.com> <1403737406-6474-2-git-send-email-fkan@apm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403737406-6474-2-git-send-email-fkan@apm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Feng Kan <fkan@apm.com>
-Cc: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, patches@apm.com
+From: Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH v7 0/3] Add ES8328 audio codec
+Date: Thu, 26 Jun 2014 10:01:52 +0800
+Message-ID: <1403748115-11047-1-git-send-email-xobs@kosagi.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Charles Keepax <ckeepax-yzvPICuk2AATkU/dhu1WVueM+bqZidxxQQ4Iyu8u01E@public.gmane.org>, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-l3A5Bk7waGM@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Shawn Guo <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Fabio Estevam <fabio.estevam-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Nicolin Chen <b42378-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: bunnie-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org, Sean Cross <xobs-nXMMniAx+RbQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 7:03 AM, Feng Kan <fkan@apm.com> wrote:
-> Add a generic SYSCON register mapped reset mechanism.
->
-> Signed-off-by: Feng Kan <fkan@apm.com>
-> ---
->  drivers/power/reset/Kconfig         |  6 +++
->  drivers/power/reset/Makefile        |  1 +
->  drivers/power/reset/syscon-reboot.c | 91 +++++++++++++++++++++++++++++++++++++
->  3 files changed, 98 insertions(+)
->  create mode 100644 drivers/power/reset/syscon-reboot.c
->
-> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
-> index bdcf517..7035236 100644
-> --- a/drivers/power/reset/Kconfig
-> +++ b/drivers/power/reset/Kconfig
-> @@ -80,3 +80,9 @@ config POWER_RESET_KEYSTONE
->         help
->           Reboot support for the KEYSTONE SoCs.
->
-> +config POWER_RESET_SYSCON
-> +       bool "Generic SYSCON regmap reset driver"
-> +       depends on ARCH_XGENE
+This patchset adds support for the Everest Semi ES8328 audio codec.  It also
+adds support for using the es8328 on IMX boards.
 
-If this is supposed to be generic, why are you depending on
-a certain platform?
+We write a machine driver rather than using simple-card because the machine
+driver needs to support regulators for the speaker amps and as well as
+supporting headphone jacks, in addition to the i.MX audmux routing.
 
+Changes since v6:
+    - Minor clarification of AUDMUX in imx-audio-es8328.txt
+    - Use u32 instead of int in imx-es8328.c for int-mux and ext-mux
+    - Bounds checking on mux-int-port and mux-ext-port in imx-es8328.c
+    - Remove NULL checks before calling of_node_put()
 
-ChenYu
+Changes since v5:
+    - Removed empty imx_set_frequency function from imx-es8328.c
+    - Move the clock from imx-audio-es8328 to the es8328 codec itself
+    - Add support for 2x (22.5792 MHz) and 1x (11.2896 MHz) source clocks
+    - Restore registers on resume
+    - Document pins for ES8328, including input pins
 
-> +       depends on POWER_RESET && MFD_SYSCON
-> +       help
-> +         Reboot support for generic SYSCON mapped register reset.
-> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
-> index dde2e8b..b1b5ab3 100644
-> --- a/drivers/power/reset/Makefile
-> +++ b/drivers/power/reset/Makefile
-> @@ -8,3 +8,4 @@ obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
->  obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
->  obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
->  obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
-> +obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
-> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
-> new file mode 100644
-> index 0000000..9c15ba5
-> --- /dev/null
-> +++ b/drivers/power/reset/syscon-reboot.c
-> @@ -0,0 +1,91 @@
-> +/*
-> + * Generic Syscon Reboot Driver
-> + *
-> + * Copyright (c) 2013, Applied Micro Circuits Corporation
-> + * Author: Feng Kan <fkan@apm.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation; either version 2 of
-> + * the License, or (at your option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + */
-> +#include <linux/io.h>
-> +#include <linux/of_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/stat.h>
-> +#include <linux/slab.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reboot.h>
-> +#include <asm/system_misc.h>
-> +
-> +struct syscon_reboot_context {
-> +       struct regmap *map;
-> +       u32 offset;
-> +       u32 mask;
-> +};
-> +
-> +static struct syscon_reboot_context *syscon_reboot_ctx;
-> +
-> +static void syscon_restart(enum reboot_mode reboot_mode, const char *cmd)
-> +{
-> +       struct syscon_reboot_context *ctx = syscon_reboot_ctx;
-> +       unsigned long timeout;
-> +
-> +       /* Issue the reboot */
-> +       if (ctx->map)
-> +               regmap_write(ctx->map, ctx->offset, ctx->mask);
-> +
-> +       timeout = jiffies + HZ;
-> +       while (time_before(jiffies, timeout))
-> +               cpu_relax();
-> +
-> +       pr_emerg("Unable to restart system\n");
-> +}
-> +
-> +static int syscon_reboot_probe(struct platform_device *pdev)
-> +{
-> +       struct syscon_reboot_context *ctx;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
-> +       if (!ctx) {
-> +               dev_err(&pdev->dev, "out of memory for context\n");
-> +               return -ENOMEM;
-> +       }
-> +
-> +       ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
-> +       if (IS_ERR(ctx->map))
-> +               return PTR_ERR(ctx->map);
-> +
-> +       if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
-> +               return -EINVAL;
-> +
-> +       if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
-> +               return -EINVAL;
-> +
-> +       arm_pm_restart = syscon_restart;
-> +       syscon_reboot_ctx = ctx;
-> +
-> +       return 0;
-> +}
-> +
-> +static struct of_device_id syscon_reboot_of_match[] = {
-> +       { .compatible = "syscon-reboot" },
-> +       {}
-> +};
-> +
-> +static struct platform_driver syscon_reboot_driver = {
-> +       .probe = syscon_reboot_probe,
-> +       .driver = {
-> +               .name = "syscon-reboot",
-> +               .of_match_table = syscon_reboot_of_match,
-> +       },
-> +};
-> +module_platform_driver(syscon_reboot_driver);
-> --
-> 1.9.1
->
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Changes since v4:
+    - Simplify clock handling and use assigned-clock-parents
+    - Move the codec regulator from the machine driver to the codec
+    - Specify all four regulators, and require their presence
+    - Fix audio recording, such that it enables the PGA
+
+Changes since v3:
+    - Add OF bindings for everest,es8328
+    - Add back in patch to add everest as a vendor prefix
+    - Give clocks more generic names
+    - Document required clocks in DT bindings document
+
+Changes since v2:
+    - Change deemph to a bool, and update based on sample rate
+    - Replace value enums with regular enums
+    - Break SPI and I2C drivers into their own modules
+    - Rename everest,es8328 to es8328 as the module wasn't getting detected.
+      Because of this, the patch to vendor-prefixes.txt has been dropped.
+
+Changes since v1:
+    - Rename HP/Speaker to OUT1/OUT2
+    - Use DAPM widgets for startup/shutdown
+    - Add regulator support to machine driver
+
+Sean Cross (3):
+  devicetree: bindings: Add Everest Semicodunctor
+  ASoC: add es8328 codec driver
+  ASoC: fsl: add imx-es8328 machine driver
+
+ Documentation/devicetree/bindings/sound/es8328.txt |  38 ++
+ .../devicetree/bindings/sound/imx-audio-es8328.txt |  61 ++
+ .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+ sound/soc/codecs/Kconfig                           |  13 +
+ sound/soc/codecs/Makefile                          |   6 +
+ sound/soc/codecs/es8328-i2c.c                      |  60 ++
+ sound/soc/codecs/es8328-spi.c                      |  49 ++
+ sound/soc/codecs/es8328.c                          | 719 +++++++++++++++++++++
+ sound/soc/codecs/es8328.h                          | 314 +++++++++
+ sound/soc/fsl/Kconfig                              |  14 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/imx-es8328.c                         | 233 +++++++
+ 12 files changed, 1510 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/es8328.txt
+ create mode 100644 Documentation/devicetree/bindings/sound/imx-audio-es8328.txt
+ create mode 100644 sound/soc/codecs/es8328-i2c.c
+ create mode 100644 sound/soc/codecs/es8328-spi.c
+ create mode 100644 sound/soc/codecs/es8328.c
+ create mode 100644 sound/soc/codecs/es8328.h
+ create mode 100644 sound/soc/fsl/imx-es8328.c
+
+-- 
+2.0.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
