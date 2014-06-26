@@ -1,52 +1,44 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT idle states bindings
-Date: Thu, 26 Jun 2014 11:17:07 +0100
-Message-ID: <20140626101707.GB25130@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-2-git-send-email-lorenzo.pieralisi@arm.com>
- <alpine.LFD.2.11.1406251154500.16842@knanqh.ubzr>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V4 2/2] arm: dts: dra7: add crossbar device binding
+Date: Thu, 26 Jun 2014 03:26:51 -0700
+Message-ID: <20140626102650.GH28884@atomide.com>
+References: <1403767532-19290-1-git-send-email-r.sricharan@ti.com>
+ <1403767532-19290-3-git-send-email-r.sricharan@ti.com>
+ <20140626074417.GF28884@atomide.com>
+ <53ABDA9A.8000108@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <alpine.LFD.2.11.1406251154500.16842@knanqh.ubzr>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Nicolas Pitre <nicolas.pitre@linaro.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@ke>
+In-Reply-To: <53ABDA9A.8000108@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, nm@ti.com, rnayak@ti.com, linux@arm.linux.org.uk, tglx@linutronix.de, jason@lakedaemon.net, joe@perches.com, Benoit Cousson <bcousson@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 04:56:02PM +0100, Nicolas Pitre wrote:
-> On Wed, 25 Jun 2014, Lorenzo Pieralisi wrote:
+* Sricharan R <r.sricharan@ti.com> [140626 01:36]:
+> Hi Tony,
 > 
-> > ARM based platforms implement a variety of power management schemes that
-> > allow processors to enter idle states at run-time.
-> > The parameters defining these idle states vary on a per-platform basis forcing
-> > the OS to hardcode the state parameters in platform specific static tables
-> > whose size grows as the number of platforms supported in the kernel increases
-> > and hampers device drivers standardization.
-> >
-> > Therefore, this patch aims at standardizing idle state device tree bindings for
-> > ARM platforms. Bindings define idle state parameters inclusive of entry methods
-> > and state latencies, to allow operating systems to retrieve the configuration
-> > entries from the device tree and initialize the related power management
-> > drivers, paving the way for common code in the kernel to deal with idle
-> > states and removing the need for static data in current and previous kernel
-> > versions.
-> >
-> > Reviewed-by: Sebastian Capella <sebcape@gmail.com>
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> 
-> Excellent.
-> 
-> Reviewed-by: Nicolas Pitre <nico@linaro.org>
+> On Thursday 26 June 2014 01:14 PM, Tony Lindgren wrote:
+> > * Sricharan R <r.sricharan@ti.com> [140626 00:29]:
+> >> From: R Sricharan <r.sricharan@ti.com>
+> >>
+> >> There is a IRQ crossbar device in the soc, which
+> >> maps the irq requests from the peripherals to the
+> >> mpu interrupt controller's inputs. The Peripheral irq
+> >> requests are connected to only one crossbar
+> >> input and the output of the crossbar is connected to only one
+> >> controller's input line. The crossbar device is used to map
+> >> a peripheral input to a free mpu's interrupt controller line.
+> >>
+> >> Here, adding a new crossbar device node and replacing all the peripheral
+> >> interrupt numbers with its fixed crossbar input lines.
+> > 
+> > I think these two patches need to be a single patch to avoid
+> > breaking booting for git bisect inbetween these patches?
+>   This does not cause booting issues. irq_desc gets allocated linearly,
+>    but that does not create boot issues.
 
-Thanks Nico, there are still a couple of niggles to sort out (ie local
-timer state), but the bulk of the document should be complete I hope.
+OK
 
-I will postpone adding your (and Seb's) Reviewed-by until we have a
-final agreement if it is ok with you.
-
-Thanks !
-Lorenzo
-
+Tony
