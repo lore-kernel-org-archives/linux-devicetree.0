@@ -1,85 +1,66 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: [PATCH v5 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks
- binding
-Date: Thu, 26 Jun 2014 20:15:36 +0200
-Message-ID: <1403806546-31122-5-git-send-email-javier.martinez@collabora.co.uk>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 1/3] of: Migrate of_find_node_by_name() users to for_each_node_by_name()
+Date: Thu, 26 Jun 2014 13:22:35 -0500
+Message-ID: <CAL_JsqKDsdqd3PJ0gwvESMER=Nxi1us55pKWDhTuZtwgjo_MGA@mail.gmail.com>
+References: <1401983021-13829-1-git-send-email-grant.likely@linaro.org>
+ <1401983021-13829-2-git-send-email-grant.likely@linaro.org>
+ <CABGGisx=fhp1P68M+9aQUTzi6Bp+PnXK7Xq_TQ+=87AkGCZvwQ@mail.gmail.com> <20140626160345.6613CC41060@trevor.secretlab.ca>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree@vger.kernel.org, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc@vger.kernel.org, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, Javier Martinez Canillas <javier.martinez@collabora.co.uk>, linux-arm-kernel@lists.infradead.org, Daniel Stone <daniels@collabora.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140626160345.6613CC41060-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Like most clock drivers, the Maxim 77686 PMIC clock binding
-follows the convention that the "#clock-cells" property is
-used to specify the number of cells in a clock provider.
+On Thu, Jun 26, 2014 at 11:03 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+> On Thu, 5 Jun 2014 12:48:54 -0500, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> On Thu, Jun 5, 2014 at 10:43 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
+>> > There are a bunch of users open coding the for_each_node_by_name() by
+>> > calling of_find_node_by_name() directly instead of using the macro. This
+>> > is getting in the way of some cleanups, and the possibility of removing
+>> > of_find_node_by_name() entirely. Clean it up so that all the users are
+>> > consistent.
+>> >
+>> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+>> > ---
+>> >  arch/powerpc/platforms/powermac/feature.c  | 20 +++++---------------
+>> >  arch/powerpc/platforms/powermac/pci.c      |  2 +-
+>> >  arch/powerpc/platforms/powermac/smp.c      |  2 +-
+>> >  arch/powerpc/platforms/powermac/udbg_adb.c |  2 +-
+>> >  arch/powerpc/platforms/pseries/setup.c     |  3 +--
+>> >  drivers/cpufreq/pmac64-cpufreq.c           |  3 +--
+>> >  drivers/edac/cell_edac.c                   |  3 +--
+>> >  drivers/pci/hotplug/rpaphp_core.c          |  4 ++--
+>> >  drivers/tty/serial/pmac_zilog.c            |  9 +++------
+>> >  sound/ppc/pmac.c                           |  6 +++---
+>> >  10 files changed, 19 insertions(+), 35 deletions(-)
+>> >
+>> > diff --git a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/platforms/powermac/feature.c
+>> > index 63d82bbc05e9..39e1d163c427 100644
+>> > --- a/arch/powerpc/platforms/powermac/feature.c
+>> > +++ b/arch/powerpc/platforms/powermac/feature.c
+>> > @@ -2805,25 +2805,20 @@ set_initial_features(void)
+>> >                 /* Enable GMAC for now for PCI probing. It will be disabled
+>> >                  * later on after PCI probe
+>> >                  */
+>> > -               np = of_find_node_by_name(NULL, "ethernet");
+>> > -               while(np) {
+>> > +               for_each_node_by_name(np, "ethernet")
+>> >                         if (of_device_is_compatible(np, "K2-GMAC"))
+>>
+>> Can't for_each_compatible_node be used here instead?
+>
+> Not easily without changing the behaviour. It would need to then check
+> the name inside the block.
 
-But the binding document is not clear enough that it shall
-be set to 1 since the PMIC support multiple clocks outputs.
+Why would it change behavior? If the compatible string matches, do you
+really have cases where the node name is not "ethernet"? I don't
+believe it's the kernel's job to validate DT bindings.
 
-Also, explain that the clocks identifiers are defined in a
-header file that can be included by Device Tree source with
-client nodes to avoid using magic numbers.
-
-Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
----
-
-Changes since v4: None
-
-Changes since v3:
- - Don't change clock-names property to make clear that it's
-   the consumer clock name and should not match the producer clock.
-   Suggested by Doug Anderson.
-
- Documentation/devicetree/bindings/clock/maxim,max77686.txt | 13 +++++++++----
- 1 file changed, 9 insertions(+), 4 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/clock/maxim,max77686.txt b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-index 96ce71b..48e00bb 100644
---- a/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-+++ b/Documentation/devicetree/bindings/clock/maxim,max77686.txt
-@@ -9,13 +9,18 @@ The MAX77686 contains three 32.768khz clock outputs that can be controlled
- Following properties should be presend in main device node of the MFD chip.
- 
- Required properties:
--- #clock-cells: simple one-cell clock specifier format is used, where the
--  only cell is used as an index of the clock inside the provider. Following
--  indices are allowed:
-+
-+- #clock-cells: from common clock binding; shall be set to 1.
-+
-+Each clock is assigned an identifier and client nodes can use this identifier
-+to specify the clock which they consume. Following indices are allowed:
-     - 0: 32khz_ap clock,
-     - 1: 32khz_cp clock,
-     - 2: 32khz_pmic clock.
- 
-+Clocks are defined as preprocessor macros in dt-bindings/clock/maxim,max77686.h
-+header and can be used in device tree sources.
-+
- Example: Node of the MFD chip
- 
- 	max77686: max77686@09 {
-@@ -34,5 +39,5 @@ Example: Clock consumer node
- 		compatible = "bar,foo";
- 		/* ... */
- 		clock-names = "my-clock";
--		clocks = <&max77686 2>;
-+		clocks = <&max77686 MAX77686_CLK_PMIC>;
- 	};
--- 
-2.0.0.rc2
+Rob
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
