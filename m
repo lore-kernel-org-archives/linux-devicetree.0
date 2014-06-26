@@ -1,106 +1,97 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [RFC 1/3] of: Migrate of_find_node_by_name() users to
- for_each_node_by_name()
-Date: Thu, 26 Jun 2014 17:03:45 +0100
-Message-ID: <20140626160345.6613CC41060@trevor.secretlab.ca>
-References: <1401983021-13829-1-git-send-email-grant.likely@linaro.org>
-	<1401983021-13829-2-git-send-email-grant.likely@linaro.org>
-	<CABGGisx=fhp1P68M+9aQUTzi6Bp+PnXK7Xq_TQ+=87AkGCZvwQ@mail.gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABGGisx=fhp1P68M+9aQUTzi6Bp+PnXK7Xq_TQ+=87AkGCZvwQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Kevin Hilman <khilman@linaro.org>
+Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
+Date: Thu, 26 Jun 2014 09:08:17 -0700
+Message-ID: <7h8uojk61a.fsf@paris.lan>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>
+	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>
+	<CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>
+	<7hpphwlgn0.fsf@paris.lan>
+	<CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>
+	(Tushar Behera's message of "Thu, 26 Jun 2014 08:50:50 +0530")
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <trblinux@gmail.com>
+Cc: Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene.kim@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 5 Jun 2014 12:48:54 -0500, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> On Thu, Jun 5, 2014 at 10:43 AM, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> > There are a bunch of users open coding the for_each_node_by_name() by
-> > calling of_find_node_by_name() directly instead of using the macro. This
-> > is getting in the way of some cleanups, and the possibility of removing
-> > of_find_node_by_name() entirely. Clean it up so that all the users are
-> > consistent.
-> >
-> > Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> > ---
-> >  arch/powerpc/platforms/powermac/feature.c  | 20 +++++---------------
-> >  arch/powerpc/platforms/powermac/pci.c      |  2 +-
-> >  arch/powerpc/platforms/powermac/smp.c      |  2 +-
-> >  arch/powerpc/platforms/powermac/udbg_adb.c |  2 +-
-> >  arch/powerpc/platforms/pseries/setup.c     |  3 +--
-> >  drivers/cpufreq/pmac64-cpufreq.c           |  3 +--
-> >  drivers/edac/cell_edac.c                   |  3 +--
-> >  drivers/pci/hotplug/rpaphp_core.c          |  4 ++--
-> >  drivers/tty/serial/pmac_zilog.c            |  9 +++------
-> >  sound/ppc/pmac.c                           |  6 +++---
-> >  10 files changed, 19 insertions(+), 35 deletions(-)
-> >
-> > diff --git a/arch/powerpc/platforms/powermac/feature.c b/arch/powerpc/platforms/powermac/feature.c
-> > index 63d82bbc05e9..39e1d163c427 100644
-> > --- a/arch/powerpc/platforms/powermac/feature.c
-> > +++ b/arch/powerpc/platforms/powermac/feature.c
-> > @@ -2805,25 +2805,20 @@ set_initial_features(void)
-> >                 /* Enable GMAC for now for PCI probing. It will be disabled
-> >                  * later on after PCI probe
-> >                  */
-> > -               np = of_find_node_by_name(NULL, "ethernet");
-> > -               while(np) {
-> > +               for_each_node_by_name(np, "ethernet")
-> >                         if (of_device_is_compatible(np, "K2-GMAC"))
-> 
-> Can't for_each_compatible_node be used here instead?
+Tushar Behera <trblinux@gmail.com> writes:
 
-Not easily without changing the behaviour. It would need to then check
-the name inside the block.
+> On Thu, Jun 26, 2014 at 4:51 AM, Kevin Hilman <khilman@linaro.org> wrote:
+>> Doug Anderson <dianders@google.com> writes:
+>>
+>>> Tushar,
+>>>
+>>> On Tue, Jun 10, 2014 at 10:32 PM, Tushar Behera <tushar.b@samsung.com> wrote:
+>>>> Currently CLK_FOUT_EPLL was set as one of the parents of AUDSS mux.
+>>>> As per the user manual, it should be CLK_MAU_EPLL.
+>>>>
+>>>> The problem surfaced when the bootloader in Peach-pit board set
+>>>> the EPLL clock as the parent of AUDSS mux. While booting the kernel,
+>>>> we used to get a system hang during late boot if CLK_MAU_EPLL was
+>>>> disabled.
+>>>>
+>>>> Signed-off-by: Tushar Behera <tushar.b@samsung.com>
+>>>> Signed-off-by: Shaik Ameer Basha <shaik.ameer@samsung.com>
+>>>> Reported-by: Kevin Hilman <khilman@linaro.org>
+>>>> ---
+>>>>  arch/arm/boot/dts/exynos5420.dtsi |    2 +-
+>>>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>>
+>>> I've tested this myself now as well.
+>>>
+>>> Tested-by: Doug Anderson <dianders@chromium.org>
+>>
+>> For me, this patch alone (on top of -next) doesn't solve the boot hang.
+>> I still need clk_ignore_unused for a successful boot.
+>>
+>> So, this patch might be correct, but it doesn't prevent a boot hang
+>> using a chain-loaded nv_uboot on peach-pi.  There's still another clock
+>> being disabled that causes a hang.
+>>
+>> Kevin
+>
+> Kevin,
+>
+> Can you please check if adding patch 1/3 alongwith patch 2/3 fixes the
+> issue for you?
 
-> 
-> >                                 g5_gmac_enable(np, 0, 1);
-> > -                       np = of_find_node_by_name(np, "ethernet");
-> > -               }
-> >
-> >                 /* Enable FW before PCI probe. Will be disabled later on
-> >                  * Note: We should have a batter way to check that we are
-> >                  * dealing with uninorth internal cell and not a PCI cell
-> >                  * on the external PCI. The code below works though.
-> >                  */
-> > -               np = of_find_node_by_name(NULL, "firewire");
-> > -               while(np) {
-> > +               for_each_node_by_name(np, "firewire") {
-> >                         if (of_device_is_compatible(np, "pci106b,5811")) {
-> 
-> and here...
+Yes, using patch 1/3 along with 2/3 fixes the issue.
 
-same.
+> Also can you please confirm that setting CLK_IGNORE_UNUSED flag
+> CLK_MAU_EPLL alone fixes the issue, without any need for
+> clk_ignore_unused in u-boot bootargs?
 
-> 
-> >                                 macio_chips[0].flags |= MACIO_FLAG_FW_SUPPORTED;
-> >                                 g5_fw_enable(np, 0, 1);
-> >                         }
-> > -                       np = of_find_node_by_name(np, "firewire");
-> >                 }
-> >         }
-> >  #else /* CONFIG_POWER4 */
-> > @@ -2834,13 +2829,11 @@ set_initial_features(void)
-> >                 /* Enable GMAC for now for PCI probing. It will be disabled
-> >                  * later on after PCI probe
-> >                  */
-> > -               np = of_find_node_by_name(NULL, "ethernet");
-> > -               while(np) {
-> > +               for_each_node_by_name(np, "ethernet") {
-> >                         if (np->parent
-> >                             && of_device_is_compatible(np->parent, "uni-north")
-> >                             && of_device_is_compatible(np, "gmac"))
-> 
-> This one is a bit more complicated, but should still work with
-> for_each_compatible_node.
-> 
-> There's a few more that could be converted. I guess it depends if you
-> think dropping looking at node names is okay.
+Yes, I have this patch[1] in my local branch which fixes the issue
+alone, without clk_ignore_unused on the command line.
 
-I'll take another look through and see if anything can be simplified.
+Kevin
 
-g.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+[1]
+>From ab1627127730ef4507ce96cbf95047d626bbb53f Mon Sep 17 00:00:00 2001
+From: Kevin Hilman <khilman@linaro.org>
+Date: Thu, 5 Jun 2014 17:12:28 -0700
+Subject: [PATCH] KJH: leave mau_epll enabled
+
+---
+ drivers/clk/samsung/clk-exynos5420.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/clk/samsung/clk-exynos5420.c b/drivers/clk/samsung/clk-exynos5420.c
+index 61eccf0dd72f..ed175088ee7e 100644
+--- a/drivers/clk/samsung/clk-exynos5420.c
++++ b/drivers/clk/samsung/clk-exynos5420.c
+@@ -911,7 +911,7 @@ static struct samsung_gate_clock exynos5x_gate_clks[] __initdata = {
+ 			SRC_MASK_TOP2, 24, 0, 0),
+ 
+ 	GATE(CLK_MAU_EPLL, "mau_epll", "mout_mau_epll_clk",
+-			SRC_MASK_TOP7, 20, 0, 0),
++			SRC_MASK_TOP7, 20, CLK_IGNORE_UNUSED, 0),
+ 
+ 	/* sclk */
+ 	GATE(CLK_SCLK_UART0, "sclk_uart0", "dout_uart0",
+-- 
+1.9.2
