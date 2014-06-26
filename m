@@ -1,115 +1,35 @@
-From: Pratyush Anand <pratyush.anand@st.com>
-Subject: Re: [PATCH 2/3] PCI: designware: use untranslated address while
- programming ATU
-Date: Thu, 26 Jun 2014 12:03:37 +0530
-Message-ID: <20140626063336.GA6166@pratyush-vbox>
-References: <1403719007-9352-1-git-send-email-kishon@ti.com>
- <1403719007-9352-3-git-send-email-kishon@ti.com>
- <CAHM4w1mMT5een4pAFb9s1JENm=j1W2yMPYdO+OdBhAy0wcRdjw@mail.gmail.com>
- <53ABB93A.8070301@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-doc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53ABB93A.8070301@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Pratyush Anand <pratyush.anand@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, Bjorn Helgaas <bhelgaas@google.com>, Mohit KUMAR DCG <Mohit.KUMAR@st.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Jason Gunthorpe <jgunthorpe@obsidianresearch.com>, Marek Vasut <marex@denx.de>, Arnd Bergmann <arnd@arndb.de>
+From: Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>
+Subject: Re: [PATCH] of: Transactional DT support.
+Date: Thu, 26 Jun 2014 07:56:30 +0100
+Message-ID: <20140626065630.626CFC40E5E@trevor.secretlab.ca>
+References: <1403430093-15132-1-git-send-email-pantelis.antoniou@konsulko.com>
+	<20140625140641.F10F0C40B59@trevor.secretlab.ca>
+	<C0AB3C41-C0BE-4F50-A4DB-843EAC8C8F6F@konsulko.com>
+	<2B23E906-3099-4775-B471-58BEB1542A36@konsulko.com>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <2B23E906-3099-4775-B471-58BEB1542A36-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
+Cc: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Matt Porter <matt.porter-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Koen Kooi <koen-QLwJDigV5abLmq1fohREcCpxlwaOVQ5f@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Alison Chaiken <Alison_Chaiken-nmGgyN9QBj3QT0dZR+AlfA@public.gmane.org>, Dinh Nguyen <dinh.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jan Lubbe <jluebbe-H4yykcOXDpCzQB+pC5nmwQ@public.gmane.org>, Alexander Sverdlin <alexander.sverdlin-OYasijW0DpE@public.gmane.org>, Michael Stickel <ms-g5CePrrZ5ROELgA04lAiVw@public.gmane.org>, Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>, Dirk Behme <dirk.behme-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alan Tull <delicious.quinoa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Michael Bohan <mbohan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Ionut Nicu <ioan.nicu.ext-OYasijW0DpE@public.gmane.org>, Michal Simek <monstr-pSz03upnqPeHXe+LvDLADg@public.gmane.org>, Matt Ranostay <mranostay-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Joel Becker <jlbec-aKy9MeLSZ9dg9hUCZPvPmw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-spi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kishon,
-
-On Thu, Jun 26, 2014 at 02:10:02PM +0800, Kishon Vijay Abraham I wrote:
-> Hi Pratyush,
+On Wed, 25 Jun 2014 12:20:16 -0700, Dan Malek <dan.malek-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
 > 
-> On Thursday 26 June 2014 11:07 AM, Pratyush Anand wrote:
-> > Hi Kishon,
-> > 
-> >  Few things, if you can help me to understand:
-> > 
-> > On Wed, Jun 25, 2014 at 11:26 PM, Kishon Vijay Abraham I <kishon@ti.com> wrote:
-> >> In DRA7, the cpu sees 32bit address, but the pcie controller can see only 28bit
-> >> address. So whenever the cpu issues a read/write request, the 4 most
-> >> significant bits are used by L3 to determine the target controller.
-> >> For example, the cpu reserves 0x2000_0000 - 0x2FFF_FFFF for PCIe controller but
-> >> the PCIe controller will see only (0x000_0000 - 0xFFF_FFF). So for programming
-> >> the outbound translation window the *base* should be programmed as 0x000_0000.
-> >> Whenever we try to write to say 0x2000_0000, it will be translated to whatever
-> >> we have programmed in the translation window with base as 0x000_0000.
-> >>
-> >> This is needed when the dt node is modelled something like below
-> >> axi {
-> >>         compatible = "simple-bus";
-> >>         #size-cells = <1>;
-> >>         #address-cells = <1>;
-> >>         ranges = <0x0        0x20000000 0x10000000 // 28-bit bus
-> >>                   0x51000000 0x51000000 0x3000>;
-> >>         pcie@51000000 {
-> >>                 reg = <0x1000 0x2000>, <0x51002000 0x14c>, <0x51000000 0x2000>;
-> >>                 reg-names = "config", "ti_conf", "rc_dbics";
-> > 
-> > So for DRA7, config base which will be coming from reg property should
-> > be 0x1000 and size 0x2000, no?
+> On Jun 25, 2014, at 7:48 AM, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
 > 
-> right. The first element in 'reg' and 'reg-names' specify exactly that.
+> >>> +int of_transaction_commit(struct of_transaction *oft);
+> >> 
+> >> How about of_transaction_apply()?
+> >> 
 > > 
-> >>                 #address-cells = <3>;
-> >>                 #size-cells = <2>;
-> >>                 ranges = <0x81000000 0 0          0x03000 0 0x00010000
-> > 
-> > range type 0x81000000 tells that it is IO
-> > 
-> >>                           0x82000000 0 0x20013000 0x13000 0 0xffed000>;
-> > 
-> > range type 0x81000000 tells that it is mem
-> > 
-> > 
-> >>         };
-> >> };
-> >>
-> >> Here the CPU address for configuration space is 0x20013000 and the controller
-> >> address for configuration space is 0x13000. The controller address should
-> > be
-> > 
-> > If above understanding is correct then:
-> > 
-> > Aren't these addresses(0x20013000  and 0x13000) from mem space
-> > instead of configuration space.
+> > Sure.
 > 
-> Sorry. I didn't get you. Configuration space is different from mem space and IO
-> space. We specify only the configuration space in "reg", the IO space and
-> memory space should be specified in ranges.
+> LOL!  Panto, you give in too easily :)
 > 
-> In my case
-> configuration space range: 0x20001000 - 0x20002fff
-> IO space range:            0x20003000 - 0x20012fff
-> Mem space range:           0x20013000 - 0x2fffffff
-> 
-> Here only the configuration space is obtained from 'reg' and 'IO' and 'MEM'
-> space is obtained from ranges.
-> > 
-> > If yes, then how can you get two addresses (CPU and Controller address)
-> > from reg property for configuration space?
-> 
-> I used platform_get_resource_byname() to get CPU address and of_get_address()
-> to get the untranslated controller address.
+> Any transaction state diagrams I've seen always have a "commit" phase/state, never anything called "apply."  So, of_transaction_commit() is exactly the proper name.
 
-This is what I am not able to understand that how does
-platform_get_resource_byname gives correct CPU address from reg =
-<0x1000 0x2000>?
+Hahaha. my suggestiong on name is conditional on my earlier comment to
+make the API bulk-change instead of transaction oriented. Commit is
+indeed the right name for a transactional model.
 
-cfg_res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "config");
-
-how cfg_res->start is now 0x20001000? Shouldn't cfg_res->start be
-0x1000?
-
-What am I missing?
-
-Thanks for explaining.
-
-~Pratyush
-
-
-
-> Thanks
-> Kishon
+g.
