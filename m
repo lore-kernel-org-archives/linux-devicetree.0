@@ -1,88 +1,81 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 7/8] drivers: cpuidle: initialize Exynos driver
- through DT
-Date: Thu, 26 Jun 2014 16:16:01 +0100
-Message-ID: <20140626151601.GB27364@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-8-git-send-email-lorenzo.pieralisi@arm.com>
- <5019714.S4WTdsyrXS@amdc1032>
+From: Javier Martinez Canillas <javier@dowhile0.org>
+Subject: Re: [PATCH 0/3] ARM: DTS: create common dtsi for Peach pit and pi boards
+Date: Thu, 26 Jun 2014 17:21:16 +0200
+Message-ID: <CABxcv=nTfkRkpz_zZuxYHznjDuNgpiKO+FD4MnHi2C_2e32eqA@mail.gmail.com>
+References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5019714.S4WTdsyrXS@amdc1032>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Tomasz Figa <t.figa@samsung.com>, Chander Kashyap <chander.kashyap@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>, Vincent Guittot <vincent.guittot@linaro.org>, Nicolas Pitre <nico@linaro.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Sebastian Capella <sebcape@gmail.com>, Mark Brown <broonie@kernel.org>, Antti Miettinen <ananaza@iki.fi>, Paul Walmsley <paul@pwsan.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Stephen Boyd <sboyd@codeaurora.org>, Amit
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Naveen Krishna <naveenkrishna.ch@gmail.com>, "cpgs ." <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 04:23:38PM +0100, Bartlomiej Zolnierkiewicz wrote:
-> 
-> Hi,
-> 
-> On Wednesday, June 25, 2014 03:10:20 PM Lorenzo Pieralisi wrote:
-> > With the introduction of DT based idle states, CPUidle drivers for
-> > ARM can now initialize idle states data through properties in the device
-> > tree.
-> > 
-> > This patch adds code to the Exynos CPUidle driver to dynamically
-> > initialize idle states data through the updated device tree source
-> > files.
-> > 
-> > Cc: Kukjin Kim <kgene.kim@samsung.com>
-> > Cc: Tomasz Figa <t.figa@samsung.com>
-> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-> > ---
-> > Compile tested, I am not sure I patched the right dts files, please check.
-> 
-> cpuidle-exynos driver is currently working properly in deeper cpuidle
-> mode (AFTR) on Exynos4210 and Exynos5250 (please also see the following
-> patch from Tomasz Figa: [1]).  There is ongoing work to AFTR mode work
-> also on Exynos4x12 and Exynos3250 but it is not complete yet.  Exynos5410
-> OTOH should probably use the generic big little cpuidle driver (this SoC
-> is similar to Exynos5420 one for which Chander Kashyap has developed
-> cpuidle-big_little support [2]).
-> 
-> Making long story short, I think that your patch should depend on patch
-> [1] and update only exynos4210.dtsi and exynos5250.dtsi.  Also for your
-> patch #6 there needs to be some coordination with merging of Chander's
-> patchset ([2]).
+Hello Naveen,
 
-Ok, thank you for the info, I will coordinate with Tomasz and Chander
-then.
+On Thu, Jun 26, 2014 at 2:19 PM, Naveen Krishna Chatradhi
+<ch.naveen@samsung.com> wrote:
+> This patchset does the following
+> 1. Create a common dtsi file cros-exynos-peach.dtsi for
+>    exynos5420-peach-pit.dts and exynos5800-peach-pi.dts
 
-Lorenzo
+There was some previous discussion in this list about what's the best
+approach to handle common DTS chunks, please take a look to
+http://patchwork.ozlabs.org/patch/362633/.
 
-> [1] http://www.spinics.net/lists/arm-kernel/msg341023.html
-> [2] https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg664470.html
-> 
-> >  .../devicetree/bindings/arm/exynos/idle-states.txt | 27 ++++++++++++++++++++
-> >  arch/arm/boot/dts/exynos3250.dtsi                  | 16 ++++++++++++
-> >  arch/arm/boot/dts/exynos5250.dtsi                  | 15 +++++++++++
-> >  arch/arm/boot/dts/exynos5410.dtsi                  | 17 +++++++++++++
-> >  drivers/cpuidle/Kconfig.arm                        |  1 +
-> >  drivers/cpuidle/cpuidle-exynos.c                   | 29 +++++++++++++---------
-> >  6 files changed, 93 insertions(+), 12 deletions(-)
-> >  create mode 100644 Documentation/devicetree/bindings/arm/exynos/idle-states.txt
-> 
-> Best regards,
+In summary, there is a common .dtsi file for Daisy based boards
+(arch/arm/boot/dts/exynos5250-cros-common.dtsi) but it seems it turned
+out to do more harm than good since having a single .dtsi for all the
+common DTS chunks is not quite flexible. As more boards gets
+introduced you have to start moving stuff from the common .dtsi file
+to the board .dts.
+
+The same was tried to do for OMAP2+ boards and it turned out that you
+need to either a) create a hierarchy of .dtsi files to model all the
+different board combinations that have similar fragments or b) split
+out isolated DTS fragments on an .dtsi and include a set of this
+fragments.
+
+ For an example of a) you can take a look to
+arch/arm/boot/dts/omap3-overo* and for b) to
+arch/arm/boot/dts/omap-gpmc-smsc9*.dtsi.
+
+For a Peach Pit/Pi specific example of b) you can look at the recent
+arch/arm/boot/dts/cros-ec-keyboard.dtsi file that Doug added for Peach
+Pit/Pi keyboard.
+
+Personally I think that b) is a more flexible and reusable approach.
+So, maybe instead of creating a cros-exynos-peach.dts to contain all
+the common DT nodes you can add a cros-ec-thermistor.dsti file that
+only includes the ADC based Thermistor nodes?
+
+Thanks a lot and best regards,
+Javier
+
+> 2. Adds the ADC based Thermistor nodes and enables them in peach_pit.dts
+>    and peach_pi.dts
+> 3. Adds the ADC based Thermistor nodes for Exynos5250 based Snow
+> 4. Corrects the vendor prefix for thermistors in exynos4412-trats2.dts
+>
+> Naveen Krishna Chatradhi (3):
+>   ARM: DTS: use new compatible string for thermistors in trats2
+>   ARM: DTS: Add NTC thermistor nodes to Exynos5250 based Snow
+>   ARM: DTS: Add common dts file for Peach PIT and PI along with ADC
+>     nodes
+>
+>  arch/arm/boot/dts/cros-exynos-peach.dtsi   |   41 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos4412-trats2.dts    |    4 +--
+>  arch/arm/boot/dts/exynos5250-snow.dts      |   34 +++++++++++++++++++++++
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    6 ++++
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    6 ++++
+>  5 files changed, 89 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm/boot/dts/cros-exynos-peach.dtsi
+>
 > --
-> Bartlomiej Zolnierkiewicz
-> Samsung R&D Institute Poland
-> Samsung Electronics
-> 
+> 1.7.9.5
+>
 > --
-> To unsubscribe from this list: send the line "unsubscribe linux-pm" in
+> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
 > the body of a message to majordomo@vger.kernel.org
 > More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
-> 
