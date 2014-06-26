@@ -1,152 +1,98 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH v2 4/6] mmc: sdhci: host: add new f_sdh30
-Date: Thu, 26 Jun 2014 12:03:51 +0100
-Message-ID: <20140626110351.GN15240@leverpostej>
-References: <1403763812-5495-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <1403763812-5495-5-git-send-email-Vincent.Yang@tw.fujitsu.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v4 07/14] mfd: Add driver for Maxim 77802 Power Management
+ IC
+Date: Thu, 26 Jun 2014 13:13:02 +0200
+Message-ID: <53AC003E.2010608@collabora.co.uk>
+References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk> <1403723019-6212-8-git-send-email-javier.martinez@collabora.co.uk> <1403775093.27156.13.camel@AMDC1943>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403763812-5495-5-git-send-email-Vincent.Yang@tw.fujitsu.com>
-Content-Language: en-US
-Sender: linux-mmc-owner@vger.kernel.org
-To: Vincent Yang <vincent.yang.fujitsu@gmail.com>
-Cc: "chris@printf.net" <chris@printf.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "anton@enomsg.org" <anton@enomsg.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "Vincent.Yang@tw.fujitsu.com" <Vincent.Yang@tw.fujitsu.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1403775093.27156.13.camel@AMDC1943>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 07:23:30AM +0100, Vincent Yang wrote:
-> This patch adds new host controller driver for
-> Fujitsu SDHCI controller f_sdh30.
+Hello Krzysztof,
+
+Thanks a lot for your feedback.
+
+On 06/26/2014 11:31 AM, Krzysztof Kozlowski wrote:
+> Hi,
+> 
+> Just a few nit-picks below but overall everything looks fine:
+> 
+> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> 
+> 
+
+>> +
+>> +static int max77802_i2c_probe(struct i2c_client *i2c,
+>> +			      const struct i2c_device_id *id)
+>> +{
+>> +	struct max77802_dev *max77802 = NULL;
+>> +	struct max77802_platform_data *pdata = dev_get_platdata(&i2c->dev);
+>> +	unsigned int data;
+>> +	int ret = 0;
+>> +
+>> +	if (i2c->dev.of_node)
+>> +		pdata = max77802_i2c_parse_dt_pdata(&i2c->dev);
+>> +
+>> +	if (!pdata) {
+>> +		dev_err(&i2c->dev, "No platform data found.\n");
+>> +		return -EIO;
+>> +	}
+>> +
+>> +	max77802 = devm_kzalloc(&i2c->dev, sizeof(struct max77802_dev),
+>> +				GFP_KERNEL);
+>> +	if (max77802 == NULL)
+> 
+> It is inconsistent. Before you used "(!pd)" and "(!pdata)" so maybe
+> stick to one format?
 >
-> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
-> ---
->  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
->  drivers/mmc/host/Kconfig                           |   7 +
->  drivers/mmc/host/Makefile                          |   1 +
->  drivers/mmc/host/sdhci_f_sdh30.c                   | 346 +++++++++++++++++++++
->  drivers/mmc/host/sdhci_f_sdh30.h                   |  40 +++
->  5 files changed, 429 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
->  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
+
+Right, I'll change to "(!max77802)" as well to be consistent.
+
+>> +
+>> +#ifdef CONFIG_PM_SLEEP
+>> +static int max77802_suspend(struct device *dev)
+>> +{
+>> +	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
+>> +	struct max77802_dev *max77802 = i2c_get_clientdata(i2c);
+>> +
+>> +	if (device_may_wakeup(dev))
+>> +		enable_irq_wake(max77802->irq);
+>> +
+>> +	disable_irq(max77802->irq);
+> 
+> Can you add short comment why this is needed? I know why but just for
+> future generations which will wonder: "why do we need to disable the IRQ
+> while suspending?" :). Especially that this is rather a workaround for
+> issue in other driver (I2C bus).
 >
-> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> new file mode 100644
-> index 0000000..40add438
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> @@ -0,0 +1,35 @@
-> +* Fujitsu SDHCI controller
-> +
-> +This file documents differences between the core properties in mmc.txt
-> +and the properties used by the sdhci_f_sdh30 driver.
-> +
-> +Required properties:
-> +- compatible: "fujitsu,f_sdh30"
 
-Please use '-' rather than '_' in compatible strings.
+Good idea, I'll add a comment here on next version so code archaeologists can
+figure out what what's going on here.
 
-This seems to be the name of the driver. What is the precise name of the
-IP block?
+>> +
+>> +#define MAX77802_IRQSRC_PMIC            (0)
+> 
+> Shouldn't it be BIT(0) or BIT(1)? It looks odd.
+> 
+>> +#define MAX77802_IRQSRC_RTC	        BIT(0)
+> 
+> Anyway, are these defines used anywhere? Seems not. 
+> 
 
-> +- voltage-ranges : two cells are required, first cell specifies minimum
-> +  slot voltage (mV), second cell specifies maximum slot voltage (mV).
-> +  Several ranges could be specified.
+Yes, these defines were used in the max77802-irq.c so is a left over from the
+regmap IRQ chip refactoring. I'll remove these and also the ones from max77686
+driver.
 
-Describe this as a list of pairs, it's confusing otherwise.
+> Best regards,
+> Krzysztof
+> 
+> 
 
-I'm not sure I follow what having multiple pairs implies.
-
-> +Optional properties:
-> +- gpios: This is one optional gpio for controlling a power mux which
-> +  switches between two power supplies. 3.3V is selected when gpio is high,
-> +  and 1.8V is selected when gpio is low. This voltage is used for signal
-> +  level.
-
-Give this a more descriptive name, like power-mux-gpios. That will match
-up with the style of cd-gpios and wp-gpios.
-
-> +- clocks: Must contain an entry for each entry in clock-names. It is a
-> +  list of phandles and clock-specifier pairs.
-> +  See ../clocks/clock-bindings.txt for details.
-> +- clock-names: Should contain the following two entries:
-> +       "sd_sd4clk" - clock primarily used for tuning process
-> +       "sd_bclk"   - base clock for sdhci controller
-> +
-> +Example:
-> +
-> +       sdhci1: sdio@36600000 {
-> +               compatible = "fujitsu,f_sdh30";
-> +               reg = <0 0x36600000 0x1000>;
-> +               interrupts = <0 172 0x4>,
-> +                            <0 173 0x4>;
-> +               voltage-ranges = <1800 1800 3300 3300>;
-
-Place brackets around each pair to make this clearer:
-
-	voltage-ranges = <1800 1800>, <3300 3300>;
-
-[...]
-
-> +       if (!of_property_read_u32(pdev->dev.of_node, "vendor-hs200",
-> +                                 &priv->vendor_hs200))
-> +               dev_info(dev, "Applying vendor-hs200 setting\n");
-> +       else
-> +               priv->vendor_hs200 = 0;
-
-This wasn't in the binding document, and a grep for "vendor-hs200" in a
-v3.16-rc2 tree found me nothing.
-
-Please document this.
-
-> +
-> +       if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width)) {
-> +               if (bus_width == 8) {
-> +                       dev_info(dev, "Applying 8 bit bus width\n");
-> +                       host->mmc->caps |= MMC_CAP_8_BIT_DATA;
-> +               }
-> +       }
-
-What if bus-width is not 8, or is not present?
-
-> +
-> +       ret = mmc_of_parse_voltage(pdev->dev.of_node, &host->ocr_mask);
-> +       if (ret) {
-> +               dev_err(dev, "%s: parse voltage error\n", __func__);
-> +               goto err_voltage;
-> +       }
-> +
-> +       host->hw_name = DRIVER_NAME;
-> +       host->ops = &sdhci_f_sdh30_ops;
-> +       host->irq = irq;
-> +
-> +       host->ioaddr = of_iomap(pdev->dev.of_node, 0);
-> +       if (!host->ioaddr) {
-> +               dev_err(dev, "%s: failed to remap registers\n", __func__);
-> +               ret = -ENXIO;
-> +               goto err_remap;
-> +       }
-> +
-> +       priv->clk_sd4 = of_clk_get(pdev->dev.of_node, 0);
-> +       if (!IS_ERR(priv->clk_sd4)) {
-> +               ret = clk_prepare_enable(priv->clk_sd4);
-> +               if (ret < 0) {
-> +                       dev_err(dev, "Failed to enable sd4 clock: %d\n", ret);
-> +                       goto err_clk1;
-> +               }
-> +       }
-> +       priv->clk_b = of_clk_get(pdev->dev.of_node, 1);
-> +       if (!IS_ERR(priv->clk_b)) {
-> +               ret = clk_prepare_enable(priv->clk_b);
-> +               if (ret < 0) {
-> +                       dev_err(dev, "Failed to enable clk_b clock: %d\n", ret);
-> +                       goto err_clk2;
-> +               }
-> +       }
-
-Given you gave these names, get these by name rather than index. It's
-less surprising and more flexible.
-
-Thanks,
-Mark.
+Best regards
+Javier
