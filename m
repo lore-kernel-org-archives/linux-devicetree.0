@@ -1,98 +1,56 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: Document Hisilicon hix5hd2 sata PHY
-Date: Thu, 26 Jun 2014 22:53:48 +0200
-Message-ID: <4989178.vejv39dnj8@wuerfel>
-References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <20300092.1dHGFVKfHm@wuerfel> <53AC24C6.8000304@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53AC24C6.8000304-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+From: Feng Kan <fkan@apm.com>
+Subject: [PATCH V5 0/3] gpio: Add APM X-Gene SoC platform GPIO driver
+Date: Thu, 26 Jun 2014 15:59:44 -0700
+Message-ID: <1403823587-23404-1-git-send-email-fkan@apm.com>
+Return-path: <linux-gpio-owner@vger.kernel.org>
+Sender: linux-gpio-owner@vger.kernel.org
+To: patches@apm.com, linus.walleij@linaro.org, gnurou@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: Feng Kan <fkan@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 June 2014 21:48:54 zhangfei wrote:
-> 
-> On 06/25/2014 09:32 PM, Arnd Bergmann wrote:
-> > On Wednesday 25 June 2014 20:41:26 zhangfei wrote:
-> >> On 06/25/2014 08:16 PM, Arnd Bergmann wrote:
-> >>> On Wednesday 25 June 2014, Zhangfei Gao wrote:
-> >>>> From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >>>>
-> >>>> Add necessary binding documentation SATA PHY on Hisilicon hix5hd2 soc.
-> >>>>
-> >>>> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> >>>> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> >>>
-> >>> We have had a couple of PHY drivers that were initially meant to be
-> >>> single-purpose but then turned out to be for hardware that could
-> >>> be put into multiple modes (SATA, gbit ethernet, PCIe, ...). Are
-> >>> you sure that this particular device is SATA-only?
-> >>>
-> >>
-> >> Yes, double confimed.
-> >> Hix5hd2 phy diver only support sata phy, in fact, current soc only
-> >> support synposis phy, since some internal physical link.
-> >> And hix5hd2 ethernet phy is already in hix5hd2_gmac.c.
-> >> No pcie support on hix5hd2 platfrom.
-> >
-> > Sorry if I my question was unclear, I did not mean the implementation
-> > of this phy in hix5hd2, but the Synopsys phy itself. I was mainly
-> > asking because of the "compatible" string, which should otherwise
-> > not include "sata" but be more generic.
-> 
-> This phy is specifically for sata.
+This patch add the GPIO controller in the APM X-Gene platform. The GPIO
+controller pins are muxed with the generic flash controller pins on the 
+system.
 
-Ok.
+V5 Change:
+	1. Remove gpio->dev
+	2. Remove not needed headers. 
+	3. Change to use latest driver.h for gpio.
+	4. Set chip base to -1
+	5. Put back label as it is needed sys interface.
 
-> > Since you mention that this is a synopsys part, it may however be
-> > good to also define a compatible string for the generic device,
-> > to allow other SoCs to share this driver, and to make it easier
-> > for people to find out that we already have one so they don't have
-> > to write another driver for the same hardware.
-> 
-> http://www.synopsys.com/dw/ipdir.php?ds=dwc_sata_phy
-> name can be: dwc_sata_phy
-> However, not find register from the website, not sure whether the 
-> register are totally same, or there is some change.
-> Other soc from hisilicon using the same ip can share this driver.
+V4 Change:
+	1. Add remove function for module
+	2. Add set function to dir out function.
+	3. remove sets to np and label in probe.
 
-I found a list of versions under "Downloads and Documentation", but
-unfortunately the actual downloads are not accessible without a
-customer account.
+V3 Change:
+	1. Change code to use single entry to describe gpio node, hardcode
+	   to use bank stride to target gpios.
+	2. Fix up dts and doc accordingly
 
-> > Can you find out what the Synopsys/Designware product designation for
-> > this PHY is? It would be good to rename the driver and binding
-> > if possible. I would still recommend leaving the
-> > "hisilicon,hix5hd2-sata-phy" string and the "hisilicon,peripheral-syscon"
-> > property in place, since that indicates a minor variation of the
-> > generic part.
-> 
-> "hisilicon,peripheral-syscon" is privide power supply, etc.
-> 
-> Do you mean change the compatible to "hisilicon,dwc-sata-phy" or 
-> multiple compatible?
+V2 Change:
+	1. Address concerns from maintainer, split to multiple device node
+	2. Add pm code to restore set register.
+	3. fix up dts and documentation accordingly.
 
-Multiple compatible strings.
+I did not incorporate pin mux functionality at this time, move this to
+bootloader for now. Will submit pinctrl driver seperately. 
 
-"hisilicon,dwc-sata-phy" would be too generic anyway, it should include the
-name of the chip that first implements this, or the exact version of the
-IP block, preferably both.
+Feng Kan (3):
+  gpio: Add APM X-Gene SoC GPIO controller support
+  Documentation: gpio: Add APM X-Gene SoC GPIO controller DTS binding
+  arm64:dts: Add APM X-Gene SoC GPIO controller DTS entries
 
-Ideally if you can find out the version that hisilicon uses, it could
-look something like
+ .../devicetree/bindings/gpio/gpio-xgene.txt        |  37 ++++
+ arch/arm64/boot/dts/apm-storm.dtsi                 |  21 ++
+ drivers/gpio/Kconfig                               |   9 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-xgene.c                          | 231 +++++++++++++++++++++
+ 5 files changed, 299 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-xgene.txt
+ create mode 100644 drivers/gpio/gpio-xgene.c
 
-compatible = "hisilicon,hi15hd2-sata-phy", "snps,dwc-sata-phy-2.3a", ""snps,dwc-sata-phy";
+-- 
+1.9.1
 
-Note also the specific version of the hisilicon chip: you must not use
-wildcards in compatible strings but should always use a real product number.
-("1" instead of "x"). If multiple chips are mutually compatible, they
-can all use the number of the first one here.
-
-	Arnd
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
