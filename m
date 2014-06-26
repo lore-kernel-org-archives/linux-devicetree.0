@@ -1,170 +1,92 @@
-From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
-Subject: Re: [PATCH V7 1/6] power: reset: Add generic SYSCON register mapped reset
-Date: Thu, 26 Jun 2014 09:51:14 -0700
-Message-ID: <CAL85gmCOzaT+dJf9e8Uj-w3v1nq8Qjg-EXfWDN5kdrU2k=kHJQ@mail.gmail.com>
-References: <1403737406-6474-1-git-send-email-fkan@apm.com>
-	<1403737406-6474-2-git-send-email-fkan@apm.com>
-	<CAGb2v65mGXDGb8Y045kehKufpMZWnfBm4dBJarJeOa8j-3g0RQ@mail.gmail.com>
+From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: DTS: Add NTC thermistor nodes to Exynos5250
+ based Snow
+Date: Thu, 26 Jun 2014 22:23:40 +0530
+Message-ID: <CAHfPSqBYbUsmmwRv5E1xvLs1eW+wnqtLn7-nx-q4Fvt29k3mEA@mail.gmail.com>
+References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
+ <1403785148-20792-3-git-send-email-ch.naveen@samsung.com> <CAD=FV=W=e-5LJRacxA-sSUUn8cBB5oCHJkwz=Py7iU2fdERVRA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAGb2v65mGXDGb8Y045kehKufpMZWnfBm4dBJarJeOa8j-3g0RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: dbaryshkov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, dwmw2 <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAD=FV=W=e-5LJRacxA-sSUUn8cBB5oCHJkwz=Py7iU2fdERVRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 6:38 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
-> On Thu, Jun 26, 2014 at 7:03 AM, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org> wrote:
->> Add a generic SYSCON register mapped reset mechanism.
+Hello Doug and Kukjin,
+
+On 26 June 2014 21:16, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
+> Naveen,
+>
+> On Thu, Jun 26, 2014 at 5:19 AM, Naveen Krishna Chatradhi
+> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> Exynos5250 based Snow board has 4 NTC thermistors to measure
+>> temperatures at various points on the board.
 >>
->> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>> IIO based ADC becomes the parent and NTC thermistors are the childs,
+>> via the HWMON interface.
+>>
+>> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 >> ---
->>  drivers/power/reset/Kconfig         |  6 +++
->>  drivers/power/reset/Makefile        |  1 +
->>  drivers/power/reset/syscon-reboot.c | 91 +++++++++++++++++++++++++++++++++++++
->>  3 files changed, 98 insertions(+)
->>  create mode 100644 drivers/power/reset/syscon-reboot.c
+>> Posted earlier by Doug Anderson @ https://lkml.org/lkml/2013/3/27/453
 >>
->> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
->> index bdcf517..7035236 100644
->> --- a/drivers/power/reset/Kconfig
->> +++ b/drivers/power/reset/Kconfig
->> @@ -80,3 +80,9 @@ config POWER_RESET_KEYSTONE
->>         help
->>           Reboot support for the KEYSTONE SoCs.
+>> This patch depends on (1/4 and 2/4 patches of) patchset posted
+>> http://www.spinics.net/lists/linux-iio/msg13486.html
+>> Which were applied on to Guenter Roeck's tree.
 >>
->> +config POWER_RESET_SYSCON
->> +       bool "Generic SYSCON regmap reset driver"
->> +       depends on ARCH_XGENE
+>> cat sysfs entries exported by hwmon for 4 thermistors
+>> and verified the values on Snow.
+>>
+>>  arch/arm/boot/dts/exynos5250-snow.dts |   34 +++++++++++++++++++++++++++++++++
+>>  1 file changed, 34 insertions(+)
 >
-> If this is supposed to be generic, why are you depending on
-> a certain platform?
+> NAK.
+>
+> The first chunk of exynos5250-snow devices have the thermistors
+> populated, but a huge chunk of devices also _don't_ have them
+> populated.
 
-Yes, the problem was that it was breaking the x86 build.
+I've realized only the rev4 and before boards have thermistors
+while going through the git logs of snow related dts files
+in an older chrome kernel.
+
 
 >
+> If I remember my history properly, rev3 and earlier all had
+> thermistors.  Some of rev4 might have thermistors (I never got a clear
+> answer).  ...and rev5 definitely doesn't have resistors.  Aside from
+> thermistors there's no good reason to differentiate rev3 and rev4
+> (they just have different memory).  The upstream kernel may eventually
+> need to differentiate rev4 and rev5 since they have a different audio
+> codec.
+
+I've found one patch which says, "No thermistors on Rev5 and above boards"
+I still thought, we should support few boards out there.
+
+But, i din't knew they were removed completely.
+
 >
-> ChenYu
+> See <https://chromium-review.googlesource.com/#/c/170841/> for some
+> descriptions of the different revisions of snow and how they were
+> handled in the Chrome OS tree.
+
+Got it now, Thanks
+
 >
->> +       depends on POWER_RESET && MFD_SYSCON
->> +       help
->> +         Reboot support for generic SYSCON mapped register reset.
->> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
->> index dde2e8b..b1b5ab3 100644
->> --- a/drivers/power/reset/Makefile
->> +++ b/drivers/power/reset/Makefile
->> @@ -8,3 +8,4 @@ obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
->>  obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
->>  obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
->>  obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
->> +obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
->> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
->> new file mode 100644
->> index 0000000..9c15ba5
->> --- /dev/null
->> +++ b/drivers/power/reset/syscon-reboot.c
->> @@ -0,0 +1,91 @@
->> +/*
->> + * Generic Syscon Reboot Driver
->> + *
->> + * Copyright (c) 2013, Applied Micro Circuits Corporation
->> + * Author: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
->> + *
->> + * This program is free software; you can redistribute it and/or
->> + * modify it under the terms of the GNU General Public License as
->> + * published by the Free Software Foundation; either version 2 of
->> + * the License, or (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +#include <linux/io.h>
->> +#include <linux/of_device.h>
->> +#include <linux/of_address.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/stat.h>
->> +#include <linux/slab.h>
->> +#include <linux/mfd/syscon.h>
->> +#include <linux/regmap.h>
->> +#include <linux/reboot.h>
->> +#include <asm/system_misc.h>
->> +
->> +struct syscon_reboot_context {
->> +       struct regmap *map;
->> +       u32 offset;
->> +       u32 mask;
->> +};
->> +
->> +static struct syscon_reboot_context *syscon_reboot_ctx;
->> +
->> +static void syscon_restart(enum reboot_mode reboot_mode, const char *cmd)
->> +{
->> +       struct syscon_reboot_context *ctx = syscon_reboot_ctx;
->> +       unsigned long timeout;
->> +
->> +       /* Issue the reboot */
->> +       if (ctx->map)
->> +               regmap_write(ctx->map, ctx->offset, ctx->mask);
->> +
->> +       timeout = jiffies + HZ;
->> +       while (time_before(jiffies, timeout))
->> +               cpu_relax();
->> +
->> +       pr_emerg("Unable to restart system\n");
->> +}
->> +
->> +static int syscon_reboot_probe(struct platform_device *pdev)
->> +{
->> +       struct syscon_reboot_context *ctx;
->> +       struct device *dev = &pdev->dev;
->> +
->> +       ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
->> +       if (!ctx) {
->> +               dev_err(&pdev->dev, "out of memory for context\n");
->> +               return -ENOMEM;
->> +       }
->> +
->> +       ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
->> +       if (IS_ERR(ctx->map))
->> +               return PTR_ERR(ctx->map);
->> +
->> +       if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
->> +               return -EINVAL;
->> +
->> +       if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
->> +               return -EINVAL;
->> +
->> +       arm_pm_restart = syscon_restart;
->> +       syscon_reboot_ctx = ctx;
->> +
->> +       return 0;
->> +}
->> +
->> +static struct of_device_id syscon_reboot_of_match[] = {
->> +       { .compatible = "syscon-reboot" },
->> +       {}
->> +};
->> +
->> +static struct platform_driver syscon_reboot_driver = {
->> +       .probe = syscon_reboot_probe,
->> +       .driver = {
->> +               .name = "syscon-reboot",
->> +               .of_match_table = syscon_reboot_of_match,
->> +       },
->> +};
->> +module_platform_driver(syscon_reboot_driver);
->> --
->> 1.9.1
->>
->>
->> _______________________________________________
->> linux-arm-kernel mailing list
->> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
->> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> See <https://chromium-review.googlesource.com/#/c/186357/> for
+> thermistors talk.  Patch set #1 actually split out rev3, but we then
+> decided that we really didn't need to use the thermistors on any of
+> the revisions so the later patchsets just totally take them out.
+
+So, no need of thermistor nodes on Snow.
+I thought https://lkml.org/lkml/2013/3/27/453 patch is missed out.
+
+>
+> -Doug
+
+Kukjin, Sorry for the confusion. Please drop this one.
+
+-- 
+Thanks,
+(: Nav :)
