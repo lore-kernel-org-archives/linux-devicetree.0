@@ -1,98 +1,124 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v4 07/14] mfd: Add driver for Maxim 77802 Power Management
- IC
-Date: Thu, 26 Jun 2014 13:13:02 +0200
-Message-ID: <53AC003E.2010608@collabora.co.uk>
-References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk> <1403723019-6212-8-git-send-email-javier.martinez@collabora.co.uk> <1403775093.27156.13.camel@AMDC1943>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 4/8] arm64: add PSCI CPU_SUSPEND based cpu_suspend
+ support
+Date: Thu, 26 Jun 2014 12:23:35 +0100
+Message-ID: <20140626112335.GC25130@e102568-lin.cambridge.arm.com>
+References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1403705421-17597-5-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140625160911.GG15240@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403775093.27156.13.camel@AMDC1943>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140625160911.GG15240@leverpostej>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel>
 List-Id: devicetree@vger.kernel.org
 
-Hello Krzysztof,
+On Wed, Jun 25, 2014 at 05:09:11PM +0100, Mark Rutland wrote:
+> On Wed, Jun 25, 2014 at 03:10:17PM +0100, Lorenzo Pieralisi wrote:
+> > This patch implements the cpu_suspend cpu operations method through
+> > the PSCI CPU_SUSPEND API. The PSCI implementation translates the idle state
+> > index passed by the cpu_suspend core call into a valid PSCI state according to
+> > the PSCI states initialized at boot by the PSCI suspend backend.
+> > 
+> > Entry point is set to cpu_resume physical address, that represents the
+> > default kernel execution address following a CPU reset.
+> > 
+> > Idle state indices missing a DT node description are initialized to power
+> > state standby WFI so that if called by the idle driver they provide the
+> > default behaviour.
+> > 
+> > Reviewed-by: Sebastian Capella <sebcape@gmail.com>
+> > Signed-off-by: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+> > ---
+> >  arch/arm64/include/asm/psci.h |   4 ++
+> >  arch/arm64/kernel/psci.c      | 103 ++++++++++++++++++++++++++++++++++++++++++
+> >  2 files changed, 107 insertions(+)
+> 
+> [...]
+> 
+> > +static void psci_power_state_unpack(u32 power_state,
+> > +				    struct psci_power_state *state)
+> > +{
+> > +	state->id = (power_state & PSCI_0_2_POWER_STATE_ID_MASK) >>
+> > +			PSCI_0_2_POWER_STATE_ID_SHIFT;
+> > +	state->type = (power_state & PSCI_0_2_POWER_STATE_TYPE_MASK) >>
+> > +			PSCI_0_2_POWER_STATE_TYPE_SHIFT;
+> > +	state->affinity_level =
+> > +			(power_state & PSCI_0_2_POWER_STATE_AFFL_MASK) >>
+> > +			PSCI_0_2_POWER_STATE_AFFL_SHIFT;
+> > +}
+> 
+> Is this valid for PSCI versions prior to 0.2?
 
-Thanks a lot for your feedback.
+Yes, it should, as for the packing function.
 
-On 06/26/2014 11:31 AM, Krzysztof Kozlowski wrote:
-> Hi,
+> >  /*
+> >   * The following two functions are invoked via the invoke_psci_fn pointer
+> >   * and will not be inlined, allowing us to piggyback on the AAPCS.
+> > @@ -199,6 +216,77 @@ static int psci_migrate_info_type(void)
+> >  	return err;
+> >  }
+> >  
+> > +int __init psci_dt_register_idle_states(struct cpuidle_driver *drv,
+> > +					struct device_node *state_nodes[])
+> > +{
+> > +	int cpu, i;
 > 
-> Just a few nit-picks below but overall everything looks fine:
-> 
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> 
-> 
+> Perhaps unsigned int? You print i with %u below.
 
->> +
->> +static int max77802_i2c_probe(struct i2c_client *i2c,
->> +			      const struct i2c_device_id *id)
->> +{
->> +	struct max77802_dev *max77802 = NULL;
->> +	struct max77802_platform_data *pdata = dev_get_platdata(&i2c->dev);
->> +	unsigned int data;
->> +	int ret = 0;
->> +
->> +	if (i2c->dev.of_node)
->> +		pdata = max77802_i2c_parse_dt_pdata(&i2c->dev);
->> +
->> +	if (!pdata) {
->> +		dev_err(&i2c->dev, "No platform data found.\n");
->> +		return -EIO;
->> +	}
->> +
->> +	max77802 = devm_kzalloc(&i2c->dev, sizeof(struct max77802_dev),
->> +				GFP_KERNEL);
->> +	if (max77802 == NULL)
-> 
-> It is inconsistent. Before you used "(!pd)" and "(!pdata)" so maybe
-> stick to one format?
->
+Yes.
 
-Right, I'll change to "(!max77802)" as well to be consistent.
+> > +	for (i = 0; i < drv->state_count; i++) {
+> > +		u32 psci_power_state;
+> > +
+> > +		if (!state_nodes[i]) {
+> > +			/*
+> > +			 * An index with a missing node pointer falls back to
+> > +			 * simple STANDBYWFI
+> > +			 */
+> > +			psci_states[i].type = PSCI_POWER_STATE_TYPE_STANDBY;
+> > +			continue;
+> > +		}
+> 
+> Does this make sense? Are there any limitations on which state nodes
+> could be missing?
 
->> +
->> +#ifdef CONFIG_PM_SLEEP
->> +static int max77802_suspend(struct device *dev)
->> +{
->> +	struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
->> +	struct max77802_dev *max77802 = i2c_get_clientdata(i2c);
->> +
->> +	if (device_may_wakeup(dev))
->> +		enable_irq_wake(max77802->irq);
->> +
->> +	disable_irq(max77802->irq);
-> 
-> Can you add short comment why this is needed? I know why but just for
-> future generations which will wonder: "why do we need to disable the IRQ
-> while suspending?" :). Especially that this is rather a workaround for
-> issue in other driver (I2C bus).
->
+I think the check is overkill, you are right.
 
-Good idea, I'll add a comment here on next version so code archaeologists can
-figure out what what's going on here.
+> > +
+> > +		if (of_property_read_u32(state_nodes[i], "entry-method-param",
+> > +					 &psci_power_state)) {
+> > +			pr_warn(" * %s missing entry-method-param property\n",
+> > +				state_nodes[i]->full_name);
+> > +			/*
+> > +			 * If entry-method-param property is missing, fall
+> > +			 * back to STANDBYWFI state
+> > +			 */
+> > +			psci_states[i].type = PSCI_POWER_STATE_TYPE_STANDBY;
+> > +			continue;
+> 
+> Surely we want to throw away these states instead?
+> 
+> Otherwise we can get into a mess like:
+> 
+> psci_states[0] => low power state
+> psci_states[1] => lower power state
+> psci_states[2] => WFI / not low power
+> psci_states[3] => lowest power state
+> 
+> Where power usage and latency would jump around rather than follow
+> monotonic patterns.
 
->> +
->> +#define MAX77802_IRQSRC_PMIC            (0)
-> 
-> Shouldn't it be BIT(0) or BIT(1)? It looks odd.
-> 
->> +#define MAX77802_IRQSRC_RTC	        BIT(0)
-> 
-> Anyway, are these defines used anywhere? Seems not. 
-> 
+I do not think that's a problem by itself, but honestly I think you have
+a point. It is better to barf, throw away the states and avoid initializing
+CPUidle to force a firmware update than keep going with a state that is
+actually not doing what it probably was designed for, I just tried to be too
+accommodating on this.
 
-Yes, these defines were used in the max77802-irq.c so is a left over from the
-regmap IRQ chip refactoring. I'll remove these and also the ones from max77686
-driver.
+Thanks,
+Lorenzo
 
-> Best regards,
-> Krzysztof
-> 
-> 
-
-Best regards
-Javier
