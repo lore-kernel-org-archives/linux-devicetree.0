@@ -1,44 +1,34 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v4 07/14] mfd: Add driver for Maxim 77802 Power Management IC
-Date: Thu, 26 Jun 2014 09:12:58 -0700
-Message-ID: <CAD=FV=U5sBQ4VDG65D4rTnfruo5XzQH_EMs4SMpO4BjY1UHA5Q@mail.gmail.com>
-References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
-	<1403723019-6212-8-git-send-email-javier.martinez@collabora.co.uk>
-	<1403775093.27156.13.camel@AMDC1943>
-	<53AC003E.2010608@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53AC003E.2010608@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Krzysztof Kozlowski <k.kozlowski@samsung.com>, Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: [PATCH] gpio: gpio-twl4030.c:  Cleaning up null pointer checks that could never happen
+Date: Thu, 26 Jun 2014 18:17:21 +0200
+Message-ID: <1403799441-20362-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Linus Walleij <linus.walleij@linaro.org>, Alexandre Courbot <gnurou@gmail.com>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Javier,
+Removal of null pointer checks that could never happen
 
-On Thu, Jun 26, 2014 at 4:13 AM, Javier Martinez Canillas
-<javier.martinez@collabora.co.uk> wrote:
->>> +
->>> +#ifdef CONFIG_PM_SLEEP
->>> +static int max77802_suspend(struct device *dev)
->>> +{
->>> +    struct i2c_client *i2c = container_of(dev, struct i2c_client, dev);
->>> +    struct max77802_dev *max77802 = i2c_get_clientdata(i2c);
->>> +
->>> +    if (device_may_wakeup(dev))
->>> +            enable_irq_wake(max77802->irq);
->>> +
->>> +    disable_irq(max77802->irq);
->>
->> Can you add short comment why this is needed? I know why but just for
->> future generations which will wonder: "why do we need to disable the IRQ
->> while suspending?" :). Especially that this is rather a workaround for
->> issue in other driver (I2C bus).
->>
->
-> Good idea, I'll add a comment here on next version so code archaeologists can
-> figure out what what's going on here.
+This was found using a static code analysis program called cppcheck
 
-Is the disable_irq() needed if you have
-<https://patchwork.kernel.org/patch/4421891/>?
+Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+---
+ drivers/gpio/gpio-twl4030.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/gpio/gpio-twl4030.c b/drivers/gpio/gpio-twl4030.c
+index 3ebb1a5..826da37 100644
+--- a/drivers/gpio/gpio-twl4030.c
++++ b/drivers/gpio/gpio-twl4030.c
+@@ -554,7 +554,7 @@ no_irqs:
+ 
+ 	platform_set_drvdata(pdev, priv);
+ 
+-	if (pdata && pdata->setup) {
++	if (pdata->setup) {
+ 		int status;
+ 
+ 		status = pdata->setup(&pdev->dev, priv->gpio_chip.base,
+-- 
+1.7.10.4
