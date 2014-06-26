@@ -1,92 +1,107 @@
-From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 2/3] ARM: DTS: Add NTC thermistor nodes to Exynos5250
- based Snow
-Date: Thu, 26 Jun 2014 22:23:40 +0530
-Message-ID: <CAHfPSqBYbUsmmwRv5E1xvLs1eW+wnqtLn7-nx-q4Fvt29k3mEA@mail.gmail.com>
-References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
- <1403785148-20792-3-git-send-email-ch.naveen@samsung.com> <CAD=FV=W=e-5LJRacxA-sSUUn8cBB5oCHJkwz=Py7iU2fdERVRA@mail.gmail.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 4/8] arm64: add PSCI CPU_SUSPEND based cpu_suspend
+ support
+Date: Thu, 26 Jun 2014 17:55:05 +0100
+Message-ID: <20140626165505.GD27364@e102568-lin.cambridge.arm.com>
+References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1403705421-17597-5-git-send-email-lorenzo.pieralisi@arm.com>
+ <1403729520.11749.64.camel@smoke>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAD=FV=W=e-5LJRacxA-sSUUn8cBB5oCHJkwz=Py7iU2fdERVRA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1403729520.11749.64.camel@smoke>
+Content-Disposition: inline
+Sender: linux-pm-owner@vger.kernel.org
+To: Geoff Levand <geoff@infradead.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Paul Walmsley <paul@pwsan.com>, Vincent Guittot <vincent.guittot@linaro.org>, Kevin Hilman <khilman@linaro.org>, Nicolas Pitre <nico@linaro.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>, Amit Kucheria <amit.kucheria@linaro.org>, Chander Kashyap <chander.kashyap@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Mark Brown <broonie@kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Doug and Kukjin,
+Hi Geoff,
 
-On 26 June 2014 21:16, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org> wrote:
-> Naveen,
->
-> On Thu, Jun 26, 2014 at 5:19 AM, Naveen Krishna Chatradhi
-> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> Exynos5250 based Snow board has 4 NTC thermistors to measure
->> temperatures at various points on the board.
->>
->> IIO based ADC becomes the parent and NTC thermistors are the childs,
->> via the HWMON interface.
->>
->> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->> ---
->> Posted earlier by Doug Anderson @ https://lkml.org/lkml/2013/3/27/453
->>
->> This patch depends on (1/4 and 2/4 patches of) patchset posted
->> http://www.spinics.net/lists/linux-iio/msg13486.html
->> Which were applied on to Guenter Roeck's tree.
->>
->> cat sysfs entries exported by hwmon for 4 thermistors
->> and verified the values on Snow.
->>
->>  arch/arm/boot/dts/exynos5250-snow.dts |   34 +++++++++++++++++++++++++++++++++
->>  1 file changed, 34 insertions(+)
->
-> NAK.
->
-> The first chunk of exynos5250-snow devices have the thermistors
-> populated, but a huge chunk of devices also _don't_ have them
-> populated.
+On Wed, Jun 25, 2014 at 09:52:00PM +0100, Geoff Levand wrote:
+> Hi Lorenzo,
+> 
+> On Wed, 2014-06-25 at 15:10 +0100, Lorenzo Pieralisi wrote:
+> > diff --git a/arch/arm64/kernel/psci.c b/arch/arm64/kernel/psci.c
+> 
+> > +	/*
+> > +	 * This is belt-and-braces: make sure that if the idle
+> > +	 * specified protocol is psci, the cpu_ops have been
+> > +	 * initialized to psci operations. Anything else is
+> > +	 * a recipe for mayhem.
+> > +	 */
+> > +	for_each_cpu(cpu, drv->cpumask) {
+> > +		cpu_ops_ptr = cpu_ops[cpu];
+> > +		if (WARN_ON(!cpu_ops_ptr || strcmp(cpu_ops_ptr->name, "psci")))
+> > +			return -EOPNOTSUPP;
+> > +	}
+> 
+> I'm not sure how drv->cpumask is setup, but if a system has mixed enable
+> methods, say some cpus 'spin-table' and some 'psci', will this give a
+> false error?
 
-I've realized only the rev4 and before boards have thermistors
-while going through the git logs of snow related dts files
-in an older chrome kernel.
+I do not think that's a false error. If the idle states specify an
+entry-method == psci, and cpu_ops for some cpus are not set to PSCI,
+obviously because the enable-method specified that, that's a firmware bug.
 
+> If drv->cpumask should only include 'psci' cpus, then should this be a
+> BUG()?
 
->
-> If I remember my history properly, rev3 and earlier all had
-> thermistors.  Some of rev4 might have thermistors (I never got a clear
-> answer).  ...and rev5 definitely doesn't have resistors.  Aside from
-> thermistors there's no good reason to differentiate rev3 and rev4
-> (they just have different memory).  The upstream kernel may eventually
-> need to differentiate rev4 and rev5 since they have a different audio
-> codec.
+Ok, if we got here, it is because the idle-states entry-method was set
+to PSCI. Now, if any of the CPUs in the driver mask has a cpu_ops
+pointer != PSCI, we have a problem and we should warn on that. I do
+not think that justifies a BUG_ON, but that's one of those things, it is
+debatable.
 
-I've found one patch which says, "No thermistors on Rev5 and above boards"
-I still thought, we should support few boards out there.
+Question is whether the check should also be carried out at cpu_ops
+initialization (ie to check for mixed cpu_ops), for certain if the
+idle states entry-method is PSCI and cpu_ops != PSCI we should
+WARN/BUG on that. Or embed this idle state parameters initialization at
+cpu_ops init (see other thread you started) so that we can kill two
+birds with one stone.
 
-But, i din't knew they were removed completely.
+> > +
+> > +	psci_states = kcalloc(drv->state_count, sizeof(*psci_states),
+> > +			      GFP_KERNEL);
+> > +
+> > +	if (!psci_states) {
+> > +		pr_warn("psci idle state allocation failed\n");
+> > +		return -ENOMEM;
+> > +	}
+> > +
+> > +	for_each_cpu(cpu, drv->cpumask) {
+> > +		if (per_cpu(psci_power_state, cpu)) {
+> > +			pr_warn("idle states already initialized on cpu %u\n",
+> > +				cpu);
+> 
+> This seems like an implementation problem, if so, shouldn't this be
+> pr_debug()?
 
->
-> See <https://chromium-review.googlesource.com/#/c/170841/> for some
-> descriptions of the different revisions of snow and how they were
-> handled in the Chrome OS tree.
+Maybe, I will give it some thought.
 
-Got it now, Thanks
+> >  #endif
+> >  
+> > +#ifdef CONFIG_ARM64_CPU_SUSPEND
+> > +static int cpu_psci_cpu_suspend(unsigned long index)
+> > +{
+> > +	struct psci_power_state *state = __get_cpu_var(psci_power_state);
+> > +
+> > +	if (!state)
+> > +		return -EOPNOTSUPP;
+> > +
+> > +	return psci_ops.cpu_suspend(state[index], virt_to_phys(cpu_resume));
+> > +}
+> > +#endif
+> 
+> Why not put a __maybe_unused attribute on cpu_psci_cpu_suspend() and
+> remove the preprocessor conditional.  That way this code will always be
+> compiled, and with therefor always get a build test.  The linker should
+> strip out the unused code when CONFIG_ARM64_CPU_SUSPEND=n and the code
+> below is not compiled. 
 
->
-> See <https://chromium-review.googlesource.com/#/c/186357/> for
-> thermistors talk.  Patch set #1 actually split out rev3, but we then
-> decided that we really didn't need to use the thermistors on any of
-> the revisions so the later patchsets just totally take them out.
+It can make sense, yes.
 
-So, no need of thermistor nodes on Snow.
-I thought https://lkml.org/lkml/2013/3/27/453 patch is missed out.
-
->
-> -Doug
-
-Kukjin, Sorry for the confusion. Please drop this one.
-
--- 
 Thanks,
-(: Nav :)
+Lorenzo
+
