@@ -1,94 +1,75 @@
-From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-Subject: Re: [PATCH v4 02/14] mfd: max77686: Allow the max77686 rtc to wakeup
- the system
-Date: Thu, 26 Jun 2014 11:03:59 +0200
-Message-ID: <1403773439.27156.1.camel@AMDC1943>
-References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
- <1403723019-6212-3-git-send-email-javier.martinez@collabora.co.uk>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2 1/2] media: soc_camera: pxa_camera documentation
+ device-tree support
+Date: Thu, 26 Jun 2014 10:06:25 +0100
+Message-ID: <20140626090625.GK15240@leverpostej>
+References: <1403389307-17489-1-git-send-email-robert.jarzmik@free.fr>
+ <20140625103042.GB14495@leverpostej>
+ <874mz893kw.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1403723019-6212-3-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-media-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <874mz893kw.fsf@free.fr>
+Sender: linux-media-owner@vger.kernel.org
+To: Robert Jarzmik <robert.jarzmik@free.fr>
+Cc: "g.liakhovetski@gmx.de" <g.liakhovetski@gmx.de>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On =C5=9Bro, 2014-06-25 at 21:03 +0200, Javier Martinez Canillas wrote:
-> From: Doug Anderson <dianders@chromium.org>
->=20
-> The max77686 includes an RTC that keeps power during suspend.  It's
-> convenient to be able to use it as a wakeup source.
->=20
-> NOTE: due to wakeup ordering problems this patch alone doesn't work s=
-o
-> well on exynos5250-snow.  You also need something that brings the i2c
-> bus up before the max77686 wakeup runs.
->=20
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
-> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
-k>
-> ---
->=20
-> Changes since v3:
->  - Keep the note that this patch needs another change due wakeup
->    ordering problems.
->=20
->  drivers/rtc/rtc-max77686.c | 28 ++++++++++++++++++++++++++++
->  1 file changed, 28 insertions(+)
+On Wed, Jun 25, 2014 at 08:44:31PM +0100, Robert Jarzmik wrote:
+> Mark Rutland <mark.rutland@arm.com> writes:
+> 
+> > On Sat, Jun 21, 2014 at 11:21:46PM +0100, Robert Jarzmik wrote:
+> >> +Required properties:
+> >> + - compatible: Should be "marvell,pxa27x-qci"
+> >
+> > Is that x a wildcard? Or is 'x' part of the name of a particular unit?
+> It's kind of a wildcard for a group of platforms
+> It stands for the 3 PXA27x SoCs I'm aware of : PXA270, PXA271, and PXA272. The
+> difference between them is different core frequency range and embedded RAM.
+> 
+> > We prefer not to have wildcard compatible strings in DT.
+> OK, then let's go for "marvell,pxa270-qci".
 
-Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+That sounds fine to me.
 
-Best regards,
-Krzysztof
+> >
+> >> + - reg: register base and size
+> >> + - interrupts: the interrupt number
+> >> + - any required generic properties defined in video-interfaces.txt
+> >> +
+> >> +Optional properties:
+> >> + - clock-frequency: host interface is driving MCLK, and MCLK rate is this rate
+> >
+> > Is MCLK an input or an output of this block?
+> An output clock.
+> 
+> > If the former, why isn't this described as a clock?
+> It's a good point. I'll try to add that too. The little trouble I have is that
+> the PXA clocks are not _yet_ in device-tree. Putting a clock description will
+> make this patch dependant on the clock framework patches [1], right ?
 
+Yes, this will.
 
-> diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
-> index d20a7f0..c1c6055 100644
-> --- a/drivers/rtc/rtc-max77686.c
-> +++ b/drivers/rtc/rtc-max77686.c
-> @@ -583,6 +583,33 @@ static void max77686_rtc_shutdown(struct platfor=
-m_device *pdev)
->  #endif /* MAX77686_RTC_WTSR_SMPL */
->  }
-> =20
-> +#ifdef CONFIG_PM_SLEEP
-> +static int max77686_rtc_suspend(struct device *dev)
-> +{
-> +	if (device_may_wakeup(dev)) {
-> +		struct max77686_rtc_info *info =3D dev_get_drvdata(dev);
-> +
-> +		return enable_irq_wake(info->virq);
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int max77686_rtc_resume(struct device *dev)
-> +{
-> +	if (device_may_wakeup(dev)) {
-> +		struct max77686_rtc_info *info =3D dev_get_drvdata(dev);
-> +
-> +		return disable_irq_wake(info->virq);
-> +	}
-> +
-> +	return 0;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(max77686_rtc_pm_ops,
-> +			 max77686_rtc_suspend, max77686_rtc_resume);
-> +
->  static const struct platform_device_id rtc_id[] =3D {
->  	{ "max77686-rtc", 0 },
->  	{},
-> @@ -592,6 +619,7 @@ static struct platform_driver max77686_rtc_driver=
- =3D {
->  	.driver		=3D {
->  		.name	=3D "max77686-rtc",
->  		.owner	=3D THIS_MODULE,
-> +		.pm	=3D &max77686_rtc_pm_ops,
->  	},
->  	.probe		=3D max77686_rtc_probe,
->  	.shutdown	=3D max77686_rtc_shutdown,
+> 
+> >> 
+> >> +Example:
+> >> +
+> >> +	pxa_camera: pxa_camera@50000000 {
+> >> +		compatible = "marvell,pxa27x-qci";
+> >> +		reg = <0x50000000 0x1000>;
+> >> +		interrupts = <33>;
+> >> +
+> >> +		clocks = <&pxa2xx_clks 24>;
+> >> +		clock-names = "camera";
+> >
+> > These weren't mentioned above. Is the clock input line really called
+> > "camera"?
+> This is another clock, an input clock, independant of the former one. This is
+> the clock actually fed to make this IP block work. This is dependant on the
+> clock framework patches [1].
+
+Ok. This clock should be mentioned in the properties description above.
+
+Thanks,
+Mark.
