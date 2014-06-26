@@ -1,64 +1,107 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 4/9] pinctrl: tegra-xusb: Add USB PHY support
-Date: Thu, 26 Jun 2014 12:08:57 -0600
-Message-ID: <53AC61B9.5030408@wwwdotorg.org>
-References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>	<1403072180-4944-5-git-send-email-abrestic@chromium.org>	<53AB493F.3030802@wwwdotorg.org> <CAL1qeaHhoqEPu-j+drNiRMyeutz=qqZPxSP8H+v-sgjZSfS5tQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaHhoqEPu-j+drNiRMyeutz=qqZPxSP8H+v-sgjZSfS5tQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, Arnd Bergmann <arnd@arndb.de>, bal
+From: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Subject: [PATCH v5 00/14] Add Maxim 77802 PMIC support
+Date: Thu, 26 Jun 2014 20:15:32 +0200
+Message-ID: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Daniel Stone <daniels-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yadwinder Singh Brar <yadi.brar01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2014 05:30 PM, Andrew Bresticker wrote:
-> On Wed, Jun 25, 2014 at 3:12 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
->>> In addition to the PCIe and SATA PHYs, the XUSB pad controller also
->>> supports 3 UTMI, 2 HSIC, and 2 USB3 PHYs.  Each USB3 PHY uses a single
->>> PCIe or SATA lane and is mapped to one of the three UTMI ports.
->>>
->>
->>> diff --git a/drivers/pinctrl/pinctrl-tegra-xusb.c b/drivers/pinctrl/pinctrl-tegra-xusb.c
->>
->>> @@ -372,6 +720,193 @@ static int tegra_xusb_padctl_pinconf_group_set(struct pinctrl_dev *pinctrl,
->>>                       padctl_writel(padctl, regval, lane->offset);
->>>                       break;
->>>
->>> +             case TEGRA_XUSB_PADCTL_USB3_PORT_NUM:
->>> +                     if (value >= TEGRA_XUSB_PADCTL_USB3_PORTS) {
->>> +                             dev_err(padctl->dev, "Invalid USB3 port: %lu\n",
->>> +                                     value);
->>> +                             return -EINVAL;
->>> +                     }
->>> +                     if (!is_pcie_sata_lane(group)) {
->>> +                             dev_err(padctl->dev,
->>> +                                     "USB3 port not applicable for pin %d\n",
->>> +                                     group);
->>> +                             return -EINVAL;
->>> +                     }
->>> +                     padctl->usb3_ports[value].lane = group;
->>> +                     break;
->>
->> It feels odd to use pinctrl for a SW-only purpose. In other words, that
->> chunk of code isn't writing the pinconf data to HW, but rather some
->> internal variable.
-> 
-> Well the mapping of lanes to USB3 ports is a hardware property and we
-> do use it when programming the hardware later to choose which set of
-> lane registers to program given a USB3 port, but it's true that it's
-> not some value we program into HW directly.
-> 
->> Perhaps it would make more sense for the DT binding to represent this
->> data directly in a custom property that's parsed at probe() time. That
->> way, pinctrl only touches "real" HW stuff.
-> 
-> I'm on the fence about this.  If you or others feel strongly about
-> this then I can make it a separate DT property and move it out of the
-> pinctrl properties.
+MAX77802 is a PMIC that contains 10 high efficiency Buck regulators,
+32 Low-dropout (LDO) regulators, two 32kHz buffered clock outputs,
+a Real-Time-Clock (RTC) and a I2C interface to program the individual
+regulators, clocks and the RTC.
 
-I'd certainly prefer to use pinctrl bindings only for things that get
-directly written into HW. Other configuration data should be easy to
-retrieve directly from properties.
+This fifth version of the patch-set addresses several issues pointed
+out by Krzysztof Kozlowski and Yadwinder Singh Brar. The individual
+changes are added on each patch change log.
+
+This series are based on drivers added by Simon Glass to the Chrome OS
+kernel and adds support for the Maxim 77802 Power Management IC, their
+regulators, clocks, RTC and I2C interface.
+
+NOTE: This version of the series model the real power scheme for Maxim
+77802 regulators instead of a simplistic model like in older versions.
+So these changes depend on patch:
+
+"[PATCH v3] ARM: dts: Add cros_ec to exynos5420-peach-pit and exynos5800-peach-pi"
+https://patchwork.kernel.org/patch/4411351/
+
+which adds tps65090 support to Peach boards since regulators from this
+PMIC supply power to a set of MAX77802 regulators.
+
+The patch-set has been tested on both Daisy/Snow (max77686) and Peach
+pit (max77802) Chromebooks and it's composed of the following patches:
+
+Doug Anderson (1):
+  mfd: max77686: Allow the max77686 rtc to wakeup the system
+
+Javier Martinez Canillas (13):
+  mfd: max77686: Convert to use regmap_irq
+  clk: max77686: Add DT include for MAX77686 PMIC clock
+  clk: max77686: Improve Maxim 77686 PMIC clocks binding
+  clk: Add generic driver for Maxim PMIC clocks
+  clk: max77686: Convert to the generic max clock driver
+  mfd: Add driver for Maxim 77802 Power Management IC
+  mfd: max77802: Add DT binding documentation
+  regmap: Add regmap_reg_copy function
+  regulator: Add driver for Maxim 77802 PMIC regulators
+  clk: Add driver for Maxim 77802 PMIC clocks
+  clk: max77802: Add DT binding documentation
+  rtc: Add driver for Maxim 77802 PMIC Real-Time-Clock
+  ARM: dts: Add max77802 to exynos5420-peach-pit and exynos5800-peach-pi
+
+ .../devicetree/bindings/clock/maxim,max77686.txt   |  13 +-
+ .../devicetree/bindings/clock/maxim,max77802.txt   |  42 ++
+ Documentation/devicetree/bindings/mfd/max77802.txt |  97 +++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts         | 343 ++++++++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts          | 343 ++++++++++
+ drivers/base/regmap/regmap.c                       |  34 +
+ drivers/clk/Kconfig                                |  11 +
+ drivers/clk/Makefile                               |   2 +
+ drivers/clk/clk-max-gen.c                          | 198 ++++++
+ drivers/clk/clk-max-gen.h                          |  32 +
+ drivers/clk/clk-max77686.c                         | 183 +-----
+ drivers/clk/clk-max77802.c                         |  99 +++
+ drivers/mfd/Kconfig                                |  15 +
+ drivers/mfd/Makefile                               |   3 +-
+ drivers/mfd/max77686-irq.c                         | 319 ----------
+ drivers/mfd/max77686.c                             |  97 ++-
+ drivers/mfd/max77802.c                             | 372 +++++++++++
+ drivers/regulator/Kconfig                          |   9 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/max77802.c                       | 694 +++++++++++++++++++++
+ drivers/rtc/Kconfig                                |  10 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-max77686.c                         |  55 +-
+ drivers/rtc/rtc-max77802.c                         | 637 +++++++++++++++++++
+ include/dt-bindings/clock/maxim,max77686.h         |  23 +
+ include/dt-bindings/clock/maxim,max77802.h         |  22 +
+ include/linux/mfd/max77686-private.h               |  31 +-
+ include/linux/mfd/max77686.h                       |   2 -
+ include/linux/mfd/max77802-private.h               | 304 +++++++++
+ include/linux/mfd/max77802.h                       | 121 ++++
+ include/linux/regmap.h                             |   9 +
+ 31 files changed, 3588 insertions(+), 534 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/maxim,max77802.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77802.txt
+ create mode 100644 drivers/clk/clk-max-gen.c
+ create mode 100644 drivers/clk/clk-max-gen.h
+ create mode 100644 drivers/clk/clk-max77802.c
+ delete mode 100644 drivers/mfd/max77686-irq.c
+ create mode 100644 drivers/mfd/max77802.c
+ create mode 100644 drivers/regulator/max77802.c
+ create mode 100644 drivers/rtc/rtc-max77802.c
+ create mode 100644 include/dt-bindings/clock/maxim,max77686.h
+ create mode 100644 include/dt-bindings/clock/maxim,max77802.h
+ create mode 100644 include/linux/mfd/max77802-private.h
+ create mode 100644 include/linux/mfd/max77802.h
+
+-- 
+2.0.0.rc2
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
