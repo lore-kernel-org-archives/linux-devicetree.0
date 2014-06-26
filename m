@@ -1,132 +1,70 @@
-From: Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org>
-Subject: Re: OF_DYNAMIC node lifecycle
-Date: Thu, 26 Jun 2014 14:59:31 -0500
-Message-ID: <53AC7BA3.5030909@austin.ibm.com>
-References: <CACxGe6tsXuLZT=h8S0yRPRPy6Hqz1xkX8G+ViY0cxEUuxZ1dsw@mail.gmail.com>	<43898B58-2EA7-42B5-A17A-27F16F2618A6@konsulko.com>	<20140623145844.DA6A3C40AE5@trevor.secretlab.ca>	<53A9DA69.1040101@austin.ibm.com> <20140625202216.16A8AC40AE6@trevor.secretlab.ca>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v1 3/9] of: Update Tegra XUSB pad controller binding for
+ USB
+Date: Thu, 26 Jun 2014 14:00:14 -0600
+Message-ID: <53AC7BCE.4030604@wwwdotorg.org>
+References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>	<1403072180-4944-4-git-send-email-abrestic@chromium.org>	<53AB432A.7010400@wwwdotorg.org> <CAL1qeaEnOEgdNp8F1YyUAeco6WVY0XffpiEDsPGdcCQL62sw3Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140625202216.16A8AC40AE6-WNowdnHR2B42iJbIjFUEsiwD8/FfD2ys@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org>
-Cc: Tyrel Datwyler <tyreld-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, linuxppc-dev <linuxppc-dev-mnsaURCQ41sdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Steven Rostedt <rostedt-nx8X9YLhiw1AfugRpC6u6w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CAL1qeaEnOEgdNp8F1YyUAeco6WVY0XffpiEDsPGdcCQL62sw3Q@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Andrew Bresticker <abrestic@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
-On 06/25/2014 03:22 PM, Grant Likely wrote:
-> On Tue, 24 Jun 2014 15:07:05 -0500, Nathan Fontenot <nfont-V7BBcbaFuwjMbYB6QlFGEg@public.gmane.org> wrote:
->> On 06/23/2014 09:58 AM, Grant Likely wrote:
->>> On Thu, 19 Jun 2014 11:33:20 +0300, Pantelis Antoniou <pantelis.antoniou-OWPKS81ov/FWk0Htik3J/w@public.gmane.org> wrote:
->>>> Hi Grant,
->>>>
->>>> CCing Thomas Gleixner & Steven Rostedt, since they might have a few
->>>> ideas...
->>>>
->>>> On Jun 18, 2014, at 11:07 PM, Grant Likely wrote:
->>>>
->>>>> Hi Nathan and Tyrel,
->>>>>
->>>>> I'm looking into lifecycle issues on nodes modified by OF_DYNAMIC, and
->>>>> I'm hoping you can help me. Right now, pseries seems to be the only
->>>>> user of OF_DYNAMIC, but making OF_DYNAMIC work has a huge impact on
->>>>> the entire kernel because it requires all DT code to manage reference
->>>>> counting with iterating over nodes. Most users simply get it wrong.
->>>>> Pantelis did some investigation and found that the reference counts on
->>>>> a running kernel are all over the place. I have my doubts that any
->>>>> code really gets it right.
->>>>>
->>>>> The problem is that users need to know when it is appropriate to call
->>>>> of_node_get()/of_node_put(). All list traversals that exit early need
->>>>> an extra call to of_node_put(), and code that is searching for a node
->>>>> in the tree and holding a reference to it needs to call of_node_get().
->>>>>
->>>>
->>>> In hindsight it appears that drivers just can't get the lifecycle right.
->>>> So we need to simplify things.
->>>>
->>>>> I've got a few pseries questions:
->>>>> - What are the changes being requested by pseries firmware? Is it only
->>>>> CPUs and memory nodes, or does it manipulate things all over the tree?
->>>>> - How frequent are the changes? How many changes would be likely over
->>>>> the runtime of the system?
->>>>> - Are you able to verify that removed nodes are actually able to be
->>>>> freed correctly? Do you have any testcases for node removal?
->>>>>
->>>>> I'm thinking very seriously about changing the locking semantics of DT
->>>>> code entirely so that most users never have to worry about
->>>>> of_node_get/put at all. If the DT code is switched to use rcu
->>>>> primitives for tree iteration (which also means making DT code use
->>>>> list_head, something I'm already investigating), then instead of
->>>>> trying to figure out of_node_get/put rules, callers could use
->>>>> rcu_read_lock()/rcu_read_unlock() to protect the region that is
->>>>> searching over nodes, and only call of_node_get() if the node pointer
->>>>> is needed outside the rcu read-side lock.
->>>>>
->>>>> I'd really like to be rid of the node reference counting entirely, but
->>>>> I can't figure out a way of doing that safely, so I'd settle for
->>>>> making it a lot easier to get correct.
->>>>>
->>>>
->>>> Since we're going about changing things, how about that devtree_lock?
->>>
->>> I believe rcu would pretty much eliminate the devtree_lock entirely. All
->>> modifiers would need to grab a mutex to ensure there is only one writer
->>> at any given time, but readers would have free reign to parse the tree
->>> however they like.
->>>
->>> DT writers would have to follow some strict rules about how to handle
->>> nodes that are removed (ie. don't modify or of_node_put() them until
->>> after rcu is syncronized), but the number of writers is very small and
->>> we have control of all of them.
->>>
->>>> We're using a raw_spinlock and we're always taking the lock with
->>>> interrupts disabled.
->>>>
->>>> If we're going to make DT changes frequently during normal runtime
->>>> and not only during boot time, those are bad for any kind of real-time
->>>> performance.
->>>>
->>>> So the question is, do we really have code that access the live tree
->>>> during atomic sections?  Is that something we want? Enforcing this
->>>> will make our lives easier, and we'll get the change to replace
->>>> that spinlock with a mutex.
->>>
->>> Yes, I believe the powerpc CPU hotplug code accesses the DT in atomic
->>> sections. I cannot put my finger on the exact code however. Nathan might
->>> know better. But, if I'm right, the whole problem goes away with RCU.
->>
->> I went back through the cpu hotplug code. we do update the DT during cpu
->> hotplug but I don't see it happening during atomic sections.
->>
->> The code is in arch/powerpc/platforms/pseries/dlpar.c
+On 06/25/2014 04:25 PM, Andrew Bresticker wrote:
+> Thanks for the review Stephen!
 > 
-> Great, thanks,
+> On Wed, Jun 25, 2014 at 2:46 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
+>> On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
+>>> Add new bindings used for USB support by the Tegra XUSB pad controller.
+>>> This includes additional PHY types, USB-specific pinconfig properties, etc.
+>>
+>>> diff --git a/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/pinctrl/nvidia,tegra124-xusb-padctl.txt
+>>
+>>> @@ -21,6 +21,12 @@ Required properties:
+>>>    - padctl
+>>>  - #phy-cells: Should be 1. The specifier is the index of the PHY to reference.
+>>>    See <dt-bindings/pinctrl/pinctrl-tegra-xusb.h> for the list of valid values.
+>>> +- nvidia,xusb-mbox: Handle to the Tegra XUSB mailbox node.
+>>
+>> Why does the padctrl code need access to the XUSB mailbox?
 > 
-> By the way, notifiers currently get sent before any updates are applied
-> to the tree. I want to change it so that the notifier gets sent
-> afterwards. Does that work for you? I've looked through all the users
-> and aside from a stupid block of code in arch/powerpc/kernel/prom.c
-> which does things that should be done by of_attach_node(), it looks like
-> everything should be fine.
+> The XUSB firmware sends messages which make requests of the PHY (XUSB
+> pad controller), such as idling/un-idling the HSIC PHYs or saving USB3
+> PHY context.
+> 
+>> Isn't the padctrl HW module something that provides services to the XUSB
+>> code. I would have expected the XUSB node to reference the padctrl node.
+> 
+> The XUSB padctrl HW does provide services to the XUSB host in the form
+> of PHYs and it is through the PHY bindings that the host references
+> the padctrl node.
+> 
+>> If notifications need to be sent back from XUSB padctrl to XUSB, then that
+>> seems like an internal SW detail that doesn't need to be represented in DT.
+> 
+> I think you mean notifications need to be sent back from the XUSB host
+> to the XUSB padctrl?  This is what the mailbox is for and I chose to
+> have the padctrl refer to the mailbox since messages are sent from the
+> mailbox which make requests to the PHY specifically and not the host
+> (see above).
 
-This would affect property updates. When doing a property update the
-notifier passes a pointer to a struct containing a device node
-pointer and a pointer to the new device node property.
+I've looked at the details of the mailbox messages a bit more now. It
+seems that the firmware running on the XUSB controller sends a variety
+of different messages, some of which are relevant to the XHCI controller
+driver and some relevant to the PHY/PAD driver. It's a pity these
+different message streams are intermixed, but I guess that's not changing.
 
-I know specifically in memory property updates we grab the current version
-of the device tree property and compare it to the 'new' version that 
-was passed to us.
+As such, I think at this stage it does make sense for the mailbox to be
+represented as a separate node, with each of the XHCI controller and USB
+PADCTL nodes referring to the mailbox node by phandle.
 
-If you want to do the DT update before calling the notifier that should be
-fine for the memory update code and would only require very minimal
-updates.
-
-It does look like OF_RECONFIG_UPDATE_PROPERTY is used in a couple of other
-places that would need to be investigated.
-
--Nathan 
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I'm still not 100% sure about whether the PHY driver is the same level
+of abstraction intended by the Linux kernel's PHY layer. Pending that
+discussion's results, the "PHY" message from the firmware may not go to
+a Linux kernel PHY but some layer above which might get subsumed into
+the overall XHCI controller driver, which would change my argument above
+a bit.
