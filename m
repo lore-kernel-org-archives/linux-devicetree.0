@@ -1,141 +1,48 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH 3/3] ARM: DTS: Add common dts file for Peach PIT and PI along
- with ADC nodes
-Date: Thu, 26 Jun 2014 17:49:08 +0530
-Message-ID: <1403785148-20792-4-git-send-email-ch.naveen@samsung.com>
-References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, cpgs@samsung.com
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v5 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
+ nodes
+Date: Thu, 26 Jun 2014 16:28:58 +0400
+Message-ID: <53AC120A.8000905@cogentembedded.com>
+References: <201406242157.05973.sergei.shtylyov@cogentembedded.com>	<201406242159.55373.sergei.shtylyov@cogentembedded.com>	<53AB89B3.9020207@renesas.com> <CANqRtoSsx+NAz2W_utN-A2fx+=e_Ywt5eD=Tf9uGnEDvk3w-PQ@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+In-Reply-To: <CANqRtoSsx+NAz2W_utN-A2fx+=e_Ywt5eD=Tf9uGnEDvk3w-PQ@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Cc: "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>
 List-Id: devicetree@vger.kernel.org
 
-DTS files exynos5420-peach-pit.dts and exynos5800-peach-pi.dts
-have lots of device tree nodes in common.
+Hello.
 
-This patch creates a cros-exynos-peach.dts file, which can carry the
-device tree nodes common across exynos5420-peach-pit.dts and
-exynos5800-peach-pi.dts. Starting with ADC based Thermistor nodes.
+On 06/26/2014 07:01 AM, Magnus Damm wrote:
 
-Also, enables ADC based thermistors for peach_pi and peach_pit.
+>>> From: Ben Dooks <ben.dooks@codethink.co.uk>
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
----
-This patchset needs
-"[PATCH v4 00/14] Add Maxim 77802 PMIC support" by "Javier Martinez Canillas"
-Posted  https://lkml.org/lkml/2014/6/25/668
+>>> Add device nodes for the R8A7790 internal PCI bridge devices.
 
-Intention is to slowly move the common DT nodes across exynos5420-peach-pit.dts
-and exynos5800-peach-pi.dts into cros-exynos-peach.dts
+>>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
+>>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
+>>> [Sergei: added several properties to the PCI bridge nodes]
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-I'm unsure of the naming conventions for dts files
-   Named it "cros-exynos-peach.dts" as below.
-   used for "cros" + based on "exynos" + boards named "peach" in common.
+>> Thank you for the patch!
+>> I tested this patch on my lager board and a usb memory, and it works.
 
-cat sysfs entries exported by hwmon for 4 thermistors
-and verified the values on peach pit.
+>> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 
- arch/arm/boot/dts/cros-exynos-peach.dtsi   |   41 ++++++++++++++++++++++++++++
- arch/arm/boot/dts/exynos5420-peach-pit.dts |    6 ++++
- arch/arm/boot/dts/exynos5800-peach-pi.dts  |    6 ++++
- 3 files changed, 53 insertions(+)
- create mode 100644 arch/arm/boot/dts/cros-exynos-peach.dtsi
+> Thanks for testing. Just one quick question from my side: Which USB
+> port did you test?
 
-diff --git a/arch/arm/boot/dts/cros-exynos-peach.dtsi b/arch/arm/boot/dts/cros-exynos-peach.dtsi
-new file mode 100644
-index 0000000..86135bd
---- /dev/null
-+++ b/arch/arm/boot/dts/cros-exynos-peach.dtsi
-@@ -0,0 +1,41 @@
-+/*
-+ * Common device tree include for Exynos5420 based Peach PIT and
-+ * Exynos5800 based Peach PI.
-+ *
-+ * Copyright (c) 2014 Samsung Electronics Co., Ltd.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License version 2 as
-+ * published by the Free Software Foundation.
-+*/
-+
-+&adc {
-+	ncp15wb473@3 {
-+		compatible = "murata,ncp15wb473";
-+		pullup-uv = <1800000>;
-+		pullup-ohm = <47000>;
-+		pulldown-ohm = <0>;
-+		io-channels = <&adc 3>;
-+	};
-+	ncp15wb473@4 {
-+		compatible = "murata,ncp15wb473";
-+		pullup-uv = <1800000>;
-+		pullup-ohm = <47000>;
-+		pulldown-ohm = <0>;
-+		io-channels = <&adc 4>;
-+	};
-+	ncp15wb473@5 {
-+		compatible = "murata,ncp15wb473";
-+		pullup-uv = <1800000>;
-+		pullup-ohm = <47000>;
-+		pulldown-ohm = <0>;
-+		io-channels = <&adc 5>;
-+	};
-+	ncp15wb473@6 {
-+		compatible = "murata,ncp15wb473";
-+		pullup-uv = <1800000>;
-+		pullup-ohm = <47000>;
-+		pulldown-ohm = <0>;
-+		io-channels = <&adc 6>;
-+	};
-+};
-diff --git a/arch/arm/boot/dts/exynos5420-peach-pit.dts b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-index d124394..682b9c2 100644
---- a/arch/arm/boot/dts/exynos5420-peach-pit.dts
-+++ b/arch/arm/boot/dts/exynos5420-peach-pit.dts
-@@ -12,6 +12,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/gpio.h>
- #include "exynos5420.dtsi"
-+#include "cros-exynos-peach.dtsi"
- 
- / {
- 	model = "Google Peach Pit Rev 6+";
-@@ -101,6 +102,11 @@
- 	};
- };
- 
-+&adc {
-+	status = "okay";
-+	vdd-supply = <&ldo9_reg>;
-+};
-+
- &dp {
- 	status = "okay";
- 	pinctrl-names = "default";
-diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-index c36c9ce..7552173 100644
---- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-+++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-@@ -12,6 +12,7 @@
- #include <dt-bindings/input/input.h>
- #include <dt-bindings/gpio/gpio.h>
- #include "exynos5800.dtsi"
-+#include "cros-exynos-peach.dtsi"
- 
- / {
- 	model = "Google Peach Pi Rev 10+";
-@@ -99,6 +100,11 @@
- 	};
- };
- 
-+&adc {
-+	status = "okay";
-+	vdd-supply = <&ldo9_reg>;
-+};
-+
- &dp {
- 	status = "okay";
- 	pinctrl-names = "default";
--- 
-1.7.9.5
+> I somehow assumed that at least the majority of the USB ports on R-Car
+> Gen2 require a USB PHY device driver to work?
+
+    In fact, channel #2 also works without the PHY driver as the default 
+UGCTRL2 setting route USB2 pins to OHCI/EHCI.
+
+> Cheers,
+> / magnus
+
+WBR, Sergei
+
