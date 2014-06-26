@@ -1,49 +1,94 @@
-From: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: [PATCH] of: Add todo tasklist for Devicetree
-Date: Thu, 26 Jun 2014 16:54:38 +0100
-Message-ID: <1403798078-1104-1-git-send-email-grant.likely@linaro.org>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
+ basic clocks
+Date: Thu, 26 Jun 2014 23:55:38 +0800
+Message-ID: <1403798144-32188-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Mime-Version: 1.0
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBGEFWGOQKGQE7NYUJRA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-There are a number of outstanding workitems that need to be done on the
-device tree code. Start tracking them so that interested developers can
-pick up a task and start working on it.
+Hi everyone,
 
-Signed-off-by: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
----
- Documentation/devicetree/todo.txt | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/todo.txt
+This is v4 of the sun8i clock series, which adds basic clock
+support for the A23 SoC. It is based on my initial sun8i bring
+up series [1]. This series was split up from the original A23
+series [2]. Yet to come are more clocks, reset controllers,
+prcm, pinctrl, and mmc.
 
-diff --git a/Documentation/devicetree/todo.txt b/Documentation/devicetree/todo.txt
-new file mode 100644
-index 000000000000..6a20bb3ef2e6
---- /dev/null
-+++ b/Documentation/devicetree/todo.txt
-@@ -0,0 +1,16 @@
-+Todo list for devicetree:
-+
-+=== General structure ===
-+- Switch from custom lists to (h)list_head for nodes and properties structure
-+- Remove of_allnodes list and iterate using list of child nodes alone
-+
-+=== CONFIG_OF_DYNAMIC ===
-+- Switch to RCU for tree updates and get rid of global spinlock
-+- Document node lifecycle for CONFIG_OF_DYNAMIC
-+- Always set ->full_name at of_attach_node() time
-+- pseries fixups
-+  - Get rid of open-coded tree modification from arch/powerpc/platforms/pseries/dlpar.c
-+  - Move of_finish_dynamic_node() behaviour into of_attach_node()
-+- Fix notifier order. Notifiers should be sent after tree changes have
-+  been applied instead of before (need to verify it works with for
-+  pseries)
+The first patch fixes the reworked clock protection code merged in
+3.16-rc1, which unintentionally made clock gates unprotectable.
+
+The second patch moves the remaining "ahb_sdram" clock to the
+protected clock list, now that it works.
+
+The third patch adds support for factor clocks that have an N factor
+not starting from 0. This is found on some PLLs in A31/A23.
+
+The fourth patch adds table-based dividers for div clocks, as some
+clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
+on sun8i.
+
+The fifth patch adds support for the basic clocks in the A23, just
+PLL1 for cpus, and the system bus clocks and gates.
+
+The last patch adds the DT nodes for the newly added clocks, and
+updates clock phandles for existing peripherals, the uarts.
+
+Originally I intended for patch 1 to be merged as a fix for 3.16.
+However, the only user of the affected code, sun6i's "ahb1_sdram"
+clock, doesn't seem to result in any runtime issues. So this whole
+series can go into 3.17.
+
+
+Related changes since v3:
+
+  - Dropped fields with default values from sun8i_a23_axi_div_data
+  - Added Maxime's Acked-by
+  - Fixed incorrect compatible string for axi clock node
+  - Updated clock phandles for uarts in dtsi
+
+Related changes since v2:
+
+  - Rewrote factor clocks to support any (0~255) N factor starting value
+
+Related changes since v1:
+
+  - Added "clk: sunxi: Add support for table-based divider clocks"
+  - Added table-based divider axi clock
+  - Fixed incorrectly squashed fixups
+
+
+Cheers
+ChenYu
+
+
+  [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265211.html
+  [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259097.html
+
+Chen-Yu Tsai (6):
+  clk: sunxi: register clock gates with clkdev
+  clk: sunxi: move "ahb_sdram" to protected clock list
+  clk: sunxi: Support factor clocks with N factor starting not from 0
+  clk: sunxi: Add support for table-based divider clocks
+  clk: sunxi: Add A23 clocks support
+  ARM: sun8i: Add basic clock nodes to the DTSI
+
+ Documentation/devicetree/bindings/clock/sunxi.txt |   5 +
+ arch/arm/boot/dts/sun8i-a23.dtsi                  | 125 +++++++++++++++++++++-
+ drivers/clk/sunxi/clk-factors.c                   |   2 +-
+ drivers/clk/sunxi/clk-factors.h                   |   1 +
+ drivers/clk/sunxi/clk-sunxi.c                     | 119 ++++++++++++++++++--
+ 5 files changed, 237 insertions(+), 15 deletions(-)
+
 -- 
-1.9.1
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.0
