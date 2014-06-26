@@ -1,157 +1,68 @@
-From: Jason Kridner <jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: Unifying cape overlays into boot .dtb for
- BeagleBoard.org boards
-Date: Thu, 26 Jun 2014 11:27:08 -0400
-Message-ID: <CA+T6QP=-mUz_uGg6eZEdP-1y9hyYJfDbx+363THSJarF=dTcog@mail.gmail.com>
-References: <CA+T6QP==raXdWz9mezK3JxSvZjWhUZZ7aKv4CpCr0SbdaCMgDQ@mail.gmail.com>
-	<CA+T6QP=jqdKij3bg3qZKT8GAKTKP94XtDWR+rcJWnDME5ZNmUg@mail.gmail.com>
-	<20980858CB6D3A4BAE95CA194937D5E73EAF59A7@DBDE04.ent.ti.com>
-	<CA+T6QP=Q0db33NU1g=9QrOUqQhLfKg=UiHVSn=Loog_JFxtP1w@mail.gmail.com>
-	<20980858CB6D3A4BAE95CA194937D5E73EAF5DD0@DBDE04.ent.ti.com>
-	<20140626075039.GG28884@atomide.com>
-	<53AC1AC5.5000103@ti.com>
-Reply-To: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH 2/3] ARM: DTS: Add NTC thermistor nodes to Exynos5250
+ based Snow
+Date: Thu, 26 Jun 2014 08:46:14 -0700
+Message-ID: <CAD=FV=W=e-5LJRacxA-sSUUn8cBB5oCHJkwz=Py7iU2fdERVRA@mail.gmail.com>
+References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
+	<1403785148-20792-3-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <beagleboard+bncBDELZWNUYMHBBTPXWCOQKGQETBXREAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <53AC1AC5.5000103-l0cyMroinI0@public.gmane.org>
-List-Post: <http://groups.google.com/group/beagleboard/post>, <mailto:beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:beagleboard+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/beagleboard>
-Sender: beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:beagleboard+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/beagleboard/subscribe>, <mailto:googlegroups-manage+1035534660134+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Tom Rini <trini-l0cyMroinI0@public.gmane.org>
-Cc: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, "Gupta, Pekon" <pekon-l0cyMroinI0@public.gmane.org>, OMAP List <linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org" <beagleboard-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Robert Nelson <robertcnelson-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, ARM Kernel List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Pantelis Antoniou <panto-wVdstyuyKrO8r51toPun2/C9HSW9iNxf@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403785148-20792-3-git-send-email-ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Naveen Krishna <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tushar Behera <tushar.b-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 9:06 AM, Tom Rini <trini-l0cyMroinI0@public.gmane.org> wrote:
-> On 06/26/2014 03:50 AM, Tony Lindgren wrote:
->> * Gupta, Pekon <pekon-l0cyMroinI0@public.gmane.org> [140618 01:52]:
->>> Hi,
->>>
->>>> From: Jason Kridner [mailto:jkridner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org]
->>>>> On Tue, Jun 17, 2014 at 3:11 AM, Gupta, Pekon <pekon-l0cyMroinI0@public.gmane.org> wrote:
->>>>>> From: Jason Kridner
->>> [...]
->>>>>>> * The devicetree sources, including the primary boot .dts files, will
->>>>>>> eventually be removed from the kernel source tree. I'm not too sure if
->>>>>>> and when it'll really happen, but starting up a project to maintain
->>>>>>> the definitive beagleboard.org board devicetree files outside the
->>>>>>> kernel seems to make sense. Given the interdependency of the boot .dtb
->>>>>>> and the overlay .dtbo files, combining them into a single repository
->>>>>>> where every distribution can pick them up seems like a natural and
->>>>>>> obvious choice. There are of course some dependencies on kernel
->>>>>>> versions, but I believe most of those have settled out by now and we
->>>>>>> should be OK moving forward.
->>>>>
->>>>> +1
->>>>> Yes, moving cape DTS out of kernel tree should help developers.
->>>>> There are quite a few cape patches floating in mail-lists, but as cape
->>>>> DTS is still not accepted in mainline so they get lost and forgotten.
->>>>> So one place for collecting all this is a good idea.
->>>>>
->>>>>
->>>>> However, somehow the universal I/O DTS looked seemed complicated:
->>>>> (1)
->>>>> All capes work standalone, but due to share pin-mux some cape
->>>>> combinations cannot be used simultaneously. But most users of
->>>>> BeagleBone are already well-versed with DT and kernel infrastructure,
->>>>> so they need not be spoon fed to get a out-of-box working solution
->>>>> for each combination. If there is proper documentation is available
->>>>> about compatibility of capes with each other, then users will figure
->>>>> out themselves.
->>>>
->>>> I think you have too much confidence in users. If this doesn't hurt
->>>> power users, then why is it bad have an option to spoon feed? This
->>>> doesn't prevent anyone with knowledge of DT from doing their own
->>>> thing.
->>>>
->>> Fair enough.
->>> But plz give a try to u-boot alternative below. It works at my end.
->>>
->>>>>
->>>>> (2)
->>>>> Also, there was a talk of enabling and disabling DT fragments via u-boot.
->>>>> That should also be explored instead of complicating cape DTS.
->>>>
->>>> Link? Relevance?
->>>>
->>> we can modify DT from u-boot itself [1].
->>> Example:  "MMC2" pin-mux conflicts with "NAND" and "NOR" capes.
->>> But using following sequence of commands, you can modify DTB via
->>> u-boot and make NAND cape work _without_any_hack_ in patch [2].
->>>
->>> /* load DTB */
->>> u-boot> tftp 0x81000000 am335x-boneblack.dtb
->>> u-boot> fdt addr 0x81000000
->>> /* disable MMC2 node */
->>> u-boot> fdt list /ocp/mmc@481d8000
->>> u-boot> fdt set  /ocp/mmc@481d8000 status \d\i\s\a\b\l\e\d
->>> u-boot> fdt list /ocp/mmc@481d8000 status
->>> /* enable GPMC node */
->>> u-boot> fdt list /ocp/gpmc
->>> u-boot> fdt set  /ocp/gpmc status \o\k\a\y
->>> u-boot> fdt list /ocp/gpmc status
->>> /* enable ELM node */
->>> u-boot> fdt list /ocp/elm
->>> u-boot> fdt set  /ocp/elm status \o\k\a\y
->>> u-boot> fdt list /ocp/elm status
->>> /* boot uImage */
->>> tftp 0x82000000 uImage
->>> bootm 0x82000000 - 0x81000000
->>>
->>> Note: "fdt set" command does not accept string literals
->>> as binding values, it internally converts them to string, so
->>> escape sequenced characters were used here..
->>> "okay" == \o\k\a\y
->>> "disabled" == \d\i\s\a\b\l\e\d"
->>>
->>>
->>> Hope above solves the pre-requisite because of which 'Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>'
->>> was unable to accept cape related DTS into his tree [3]
->>
->> Yes. If the capes are disabled by default we can have at
->> least some of them included in the mainline kernel and
->> enabled by the bootloader as needed. I'd like to hear back
->> from the u-boot people too on this approach naturally.
+Naveen,
 
-Great.
-
->>
->> And some things we still cannot merge if they overlap for
->> GPMC bindings for example. So we have to carefully check
->> the generated .dtb file with dtc -I dtb -O dts.
+On Thu, Jun 26, 2014 at 5:19 AM, Naveen Krishna Chatradhi
+<ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+> Exynos5250 based Snow board has 4 NTC thermistors to measure
+> temperatures at various points on the board.
 >
-> This sounds really problematic to me from an end-user horror point of
-> view.  And fortunately 3.17 is going to have some level of overlay
-> support so we can set this problem aside (and even treat the am335x gp
-> evm "profileN" trees as overlays too).
+> IIO based ADC becomes the parent and NTC thermistors are the childs,
+> via the HWMON interface.
+>
+> Signed-off-by: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+> Posted earlier by Doug Anderson @ https://lkml.org/lkml/2013/3/27/453
+>
+> This patch depends on (1/4 and 2/4 patches of) patchset posted
+> http://www.spinics.net/lists/linux-iio/msg13486.html
+> Which were applied on to Guenter Roeck's tree.
+>
+> cat sysfs entries exported by hwmon for 4 thermistors
+> and verified the values on Snow.
+>
+>  arch/arm/boot/dts/exynos5250-snow.dts |   34 +++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
 
-Thank you Tom for chiming in. I think the end user experience is
-horrific. Pekon should at least provide patches to u-boot that would
-provide a mechanism to enable/disable a cape with a single operation,
-rather than the individual devicetree nodes. This seems to really
-break any ability to keep information about a cape consolidated or
-usable by mere mortals.
+NAK.
 
-I don't know that pushing it all into the kernel with overlays,
-however, is the right answer. We've seen challenges with some
-userspaces not exposing /lib/firmware in time and needing to compile
-overlays into the kernel to make them work. More troublesome are the
-types of errors end-users get when there are syntax errors, conflicts
-or other failures, most notably because testing of loading all of the
-various overlays in conflict with each other is adhoc at best. We've
-gotten a lot of good feedback on using the pinmux-helper and
-config-pin utility from end users who are still struggling to learn
-how to do devicetree overlays properly. It seems to me that kernel
-run-time overlays should be used for development and dynamic hardware
-rather than boot-time configuration, despite the convenience they add
-to most of us who understand the basics of how to use them.
+The first chunk of exynos5250-snow devices have the thermistors
+populated, but a huge chunk of devices also _don't_ have them
+populated.
 
--- 
-For more options, visit http://beagleboard.org/discuss
---- 
-You received this message because you are subscribed to the Google Groups "BeagleBoard" group.
-To unsubscribe from this group and stop receiving emails from it, send an email to beagleboard+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
-For more options, visit https://groups.google.com/d/optout.
+If I remember my history properly, rev3 and earlier all had
+thermistors.  Some of rev4 might have thermistors (I never got a clear
+answer).  ...and rev5 definitely doesn't have resistors.  Aside from
+thermistors there's no good reason to differentiate rev3 and rev4
+(they just have different memory).  The upstream kernel may eventually
+need to differentiate rev4 and rev5 since they have a different audio
+codec.
+
+See <https://chromium-review.googlesource.com/#/c/170841/> for some
+descriptions of the different revisions of snow and how they were
+handled in the Chrome OS tree.
+
+See <https://chromium-review.googlesource.com/#/c/186357/> for
+thermistors talk.  Patch set #1 actually split out rev3, but we then
+decided that we really didn't need to use the thermistors on any of
+the revisions so the later patchsets just totally take them out.
+
+-Doug
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
