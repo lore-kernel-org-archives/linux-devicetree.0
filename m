@@ -1,103 +1,65 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v5 2/2] ARM: shmobile: lager: enable internal PCI
-Date: Thu, 26 Jun 2014 11:48:17 +0900
-Message-ID: <53AB89F1.8040509@renesas.com>
-References: <201406242157.05973.sergei.shtylyov@cogentembedded.com> <201406242202.22807.sergei.shtylyov@cogentembedded.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH v3 0/6] clk: sunxi: fixes, cleanups and A23
+ basic clocks
+Date: Thu, 26 Jun 2014 10:51:08 +0800
+Message-ID: <CAGb2v65RZfdFKRGdWTph=W6jyccNo420ZSfdeFmWGpwnbHdYZQ@mail.gmail.com>
+References: <1403603980-31101-1-git-send-email-wens@csie.org> <20140625201416.GH19569@lukather>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <201406242202.22807.sergei.shtylyov@cogentembedded.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "magnus.damm@gmail.com" <magnus.damm@gmail.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBMMVV2OQKGQEOC4AGCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20140625201416.GH19569@lukather>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sergei,
+On Thu, Jun 26, 2014 at 4:14 AM, Maxime Ripard
+<maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Tue, Jun 24, 2014 at 05:59:34PM +0800, Chen-Yu Tsai wrote:
+>> Hi everyone,
+>>
+>> This is a followup series to my A23 bare-minimum bringup series [1],
+>> which adds basic clock support for the A23 SoC. It is one of many
+>> split up from the original A23 series [2]. Yet to come are more
+>> clocks, reset controllers, pinctrl, prcm, and mmc.
+>>
+>> The first patch fixes the reworked clock protection code merged in
+>> 3.16-rc1, which unintentionally made clock gates unprotectable.
+>>
+>> The second patch moves the remaining "ahb_sdram" clock to the
+>> protected clock list, now that it works.
+>>
+>> The third patch adds support for factor clocks that have an N factor
+>> not starting from 0. This is found on some PLLs in A31/A23.
+>>
+>> The fourth patch adds table-based dividers for div clocks, as some
+>> clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
+>> on sun8i.
+>>
+>> The fifth patch adds support for the basic clocks in the A23, just
+>> PLL1 for cpus, and the system bus clocks and gates.
+>>
+>> The last patch adds the DT nodes for the newly added clocks.
+>>
+>> Patch 1 should be merged for 3.16, while the rest should go in 3.17.
+>
+> Why should it go in for 3.16? Is there any user for it yet?
 
-(2014/06/25 3:02), Sergei Shtylyov wrote:
-> From: Ben Dooks <ben.dooks@codethink.co.uk>
-> 
-> Enable internal AHB-PCI bridges for the USB EHCI/OHCI controllers attached to
-> them.
-> 
-> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
-> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
-> [Sergei: enabled PCI0]
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Yes. Your patch
 
-I also tested this patch, and it works.
+   efb3184 clk: sun6i: Protect SDRAM gating bit
 
-Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+from the series that added the new clock protection code.
+This adds "ahb1_sdram" to the list.
 
-Best regards,
-Yoshihiro shimoda
+Now, on my sun8i tablet, disabling "ahb1_sdram" doesn't seem to
+affect the system. So I'm not sure what this clock actually does.
 
-> ---
-> Changes in version 4:
-> - refreshed the patch.
-> 
-> Changes in version 3:
-> - refreshed the patch.
-> 
-> Changes in version 2:
-> - enabled PCI0 device;
-> - reworded summary and changelog;
-> - refreshed the patch.
-> 
->  arch/arm/boot/dts/r8a7790-lager.dts |   33 +++++++++++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
-> 
-> Index: renesas/arch/arm/boot/dts/r8a7790-lager.dts
-> ===================================================================
-> --- renesas.orig/arch/arm/boot/dts/r8a7790-lager.dts
-> +++ renesas/arch/arm/boot/dts/r8a7790-lager.dts
-> @@ -219,6 +219,21 @@
->  		renesas,groups = "i2c3";
->  		renesas,function = "i2c3";
->  	};
-> +
-> +	usb0_pins: usb0 {
-> +		renesas,groups = "usb0";
-> +		renesas,function = "usb0";
-> +	};
-> +
-> +	usb1_pins: usb1 {
-> +		renesas,groups = "usb1";
-> +		renesas,function = "usb1";
-> +	};
-> +
-> +	usb2_pins: usb2 {
-> +		renesas,groups = "usb2";
-> +		renesas,function = "usb2";
-> +	};
->  };
->  
->  &ether {
-> @@ -368,3 +383,21 @@
->  		regulator-always-on;
->  	};
->  };
-> +
-> +&pci0 {
-> +	status = "okay";
-> +	pinctrl-0 = <&usb0_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&pci1 {
-> +	status = "okay";
-> +	pinctrl-0 = <&usb1_pins>;
-> +	pinctrl-names = "default";
-> +};
-> +
-> +&pci2 {
-> +	status = "okay";
-> +	pinctrl-0 = <&usb2_pins>;
-> +	pinctrl-names = "default";
-> +};
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> 
+
+ChenYu
