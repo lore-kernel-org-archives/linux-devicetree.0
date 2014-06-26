@@ -1,89 +1,94 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: gadget: pxa27x_udc device-tree documentation
-Date: Thu, 26 Jun 2014 09:59:51 +0100
-Message-ID: <20140626085950.GJ15240@leverpostej>
-References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
- <1403427899-32154-2-git-send-email-robert.jarzmik@free.fr>
- <20140625103357.GC14495@leverpostej>
- <87zjh07okm.fsf@free.fr>
+From: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+Subject: Re: [PATCH v4 02/14] mfd: max77686: Allow the max77686 rtc to wakeup
+ the system
+Date: Thu, 26 Jun 2014 11:03:59 +0200
+Message-ID: <1403773439.27156.1.camel@AMDC1943>
+References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1403723019-6212-3-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87zjh07okm.fsf-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1403723019-6212-3-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 08:54:01PM +0100, Robert Jarzmik wrote:
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
-> 
-> > On Sun, Jun 22, 2014 at 10:04:58AM +0100, Robert Jarzmik wrote:
-> >> index 79729a9..0e4863f 100644
-> >> --- a/Documentation/devicetree/bindings/usb/pxa-usb.txt
-> >> +++ b/Documentation/devicetree/bindings/usb/pxa-usb.txt
-> >> @@ -29,3 +29,23 @@ Example:
-> >>  		marvell,port-mode = <2>; /* PMM_GLOBAL_MODE */
-> >>  	};
-> >>  
-> >> +UDC
-> >> +
-> >> +Required properties:
-> >> + - compatible: Should be "marvell,pxa27x-udc" for USB controllers
-> >> +   used in device mode.
-> >
-> > We typically don't like wildcard compatible strings in DT.
-> Same as in the other patch, "marvell,pxa270-udc".
-> >
-> >> +
-> >> +Optional properties:
-> >> + - "udc-pullup-gpio" - gpio activated to control the USB D+ pullup.
-> >> + - "udc-pullup-gpio-inverted" - boolean inverting gpio pullup logic.
-> >
-> > Use the GPIO bindings.
-> OK. I'm presuming in this case you think of something like :
-> 	udc-pullup-gpio = <&gpio 22 GPIO_ACTIVE_LOW>
-> Which translates into:
-> 	"udc-pullup-gpio" - gpio activated to control the USB D+ pullup (see
->         gpio.txt)
+On =C5=9Bro, 2014-06-25 at 21:03 +0200, Javier Martinez Canillas wrote:
+> From: Doug Anderson <dianders@chromium.org>
+>=20
+> The max77686 includes an RTC that keeps power during suspend.  It's
+> convenient to be able to use it as a wakeup source.
+>=20
+> NOTE: due to wakeup ordering problems this patch alone doesn't work s=
+o
+> well on exynos5250-snow.  You also need something that brings the i2c
+> bus up before the max77686 wakeup runs.
+>=20
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.u=
+k>
+> ---
+>=20
+> Changes since v3:
+>  - Keep the note that this patch needs another change due wakeup
+>    ordering problems.
+>=20
+>  drivers/rtc/rtc-max77686.c | 28 ++++++++++++++++++++++++++++
+>  1 file changed, 28 insertions(+)
 
-Something like that, yes.
+Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
 
-> >
-> >> +
-> >> +Example:
-> >> +
-> >> +		pxa27x_udc: udc@40600000 {
-> >> +			compatible = "marvell,pxa27x-udc";
-> >> +			reg = <0x40600000 0x10000>;
-> >> +			interrupts = <11>;
-> >> +			clocks = <&pxa2xx_clks 11>;
-> >> +			clock-names = "pxa27x-udc";
-> >
-> > Neither of these were mentioned above.
-> Ah you mean I shall describe the standard reg, interrupts as mandatory standard
-> options I take it. OK.
+Best regards,
+Krzysztof
 
-Yes. While the properties are standard, their precise meanings (e.g.
-which interrupt or address space region), and whether a particular
-binding uses them is not.
 
-> > The name of the clock input doesn't make sense.
-> I don't understand. With [1] does it make any more sense ? If not you'll have to
-> expand a bit more the "doesn't make sense".
-
-My concern is that clock-names is supposed to describe the name of the
-input clock line from the view of the IP block. "pxa27x-udc" doesn't
-sound like the name of a clock input line from the view of the UDC
-block.
-
-I assume the clock input line you care about has a more specific name
-than "pxa27x-udc"?
-
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> diff --git a/drivers/rtc/rtc-max77686.c b/drivers/rtc/rtc-max77686.c
+> index d20a7f0..c1c6055 100644
+> --- a/drivers/rtc/rtc-max77686.c
+> +++ b/drivers/rtc/rtc-max77686.c
+> @@ -583,6 +583,33 @@ static void max77686_rtc_shutdown(struct platfor=
+m_device *pdev)
+>  #endif /* MAX77686_RTC_WTSR_SMPL */
+>  }
+> =20
+> +#ifdef CONFIG_PM_SLEEP
+> +static int max77686_rtc_suspend(struct device *dev)
+> +{
+> +	if (device_may_wakeup(dev)) {
+> +		struct max77686_rtc_info *info =3D dev_get_drvdata(dev);
+> +
+> +		return enable_irq_wake(info->virq);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int max77686_rtc_resume(struct device *dev)
+> +{
+> +	if (device_may_wakeup(dev)) {
+> +		struct max77686_rtc_info *info =3D dev_get_drvdata(dev);
+> +
+> +		return disable_irq_wake(info->virq);
+> +	}
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(max77686_rtc_pm_ops,
+> +			 max77686_rtc_suspend, max77686_rtc_resume);
+> +
+>  static const struct platform_device_id rtc_id[] =3D {
+>  	{ "max77686-rtc", 0 },
+>  	{},
+> @@ -592,6 +619,7 @@ static struct platform_driver max77686_rtc_driver=
+ =3D {
+>  	.driver		=3D {
+>  		.name	=3D "max77686-rtc",
+>  		.owner	=3D THIS_MODULE,
+> +		.pm	=3D &max77686_rtc_pm_ops,
+>  	},
+>  	.probe		=3D max77686_rtc_probe,
+>  	.shutdown	=3D max77686_rtc_shutdown,
