@@ -1,195 +1,63 @@
-From: Yadwinder Singh Brar <yadi.brar01@gmail.com>
-Subject: Re: [PATCH v4 05/14] clk: Add generic driver for Maxim PMIC clocks
-Date: Thu, 26 Jun 2014 17:21:29 +0530
-Message-ID: <CAKew6eWt-0c4gxGX7C7KtRrxR=9h9BSUmN3a2aWQtuT40cva1w@mail.gmail.com>
-References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>
-	<1403723019-6212-6-git-send-email-javier.martinez@collabora.co.uk>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH 0/3] Deterministic UART numbering on Samsung SoCs
+Date: Thu, 26 Jun 2014 14:02:20 +0200
+Message-ID: <53AC0BCC.1010608@samsung.com>
+References: <1403781875-5425-1-git-send-email-t.figa@samsung.com>
+ <20140626113939.GP32514@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403723019-6212-6-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-serial-owner@vger.kernel.org>
+In-reply-to: <20140626113939.GP32514@n2100.arm.linux.org.uk>
+Sender: linux-serial-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, Kukjin Kim <kgene.kim@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.cz>, Daniel Drake <drake@endlessm.com>, Tomasz Figa <tomasz.figa@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Javier,
+On 26.06.2014 13:39, Russell King - ARM Linux wrote:
+> On Thu, Jun 26, 2014 at 01:24:32PM +0200, Tomasz Figa wrote:
+>> Current Samsung UART driver relies on probe order of particular
+>> samsung-uart instances, which makes it impossible to get proper
+>> initialization of ports when not all ports are available on board,
+>> not even saying of deterministic device naming.
+>>
+>> This series intends to fix this situation by adding support to parse
+>> aliases from device tree and use them to assign instance IDs to
+>> particular port instances.
+> 
+> How about instead exporting the path/id information so that userspace
+> can create /dev/serial/by-{path,id}/... for internal devices instead?
+> 
+> The problem you're raising is very much the same problem you have when
+> there are multiple USB serial devices connected to the machine - you
+> just get a bunch of /dev/ttyUSB* devices which are unordered (they can
+> change on each boot, or change order if you disconnect and reconnect
+> them.)
+> 
+> /dev/serial/by-{path,id}/ allows for a much more stable path.
+> 
 
-Sorry for jumping in late, but just one concern mentioned inline.
+The problem being solved has slightly different constraints than the one
+with USB serials you mentioned:
 
-[ .. ]
+- basically Samsung UART already has its own namespace (ttySAC) and the
+order inside it is well-defined - instance ID shall be the hardware
+instance number as specified by documentation. The ports vary in certain
+aspects and the ID is important knowledge of the driver. The problem
+here was broken implementation of assigning IDs based on probe order,
+which worked only because on all Exynos platforms all ports have been
+always registered (which we want to change now and keep unused ones
+"disabled" in DT),
 
-> +
-> +static unsigned long max_gen_recalc_rate(struct clk_hw *hw,
-> +                                        unsigned long parent_rate)
-> +{
-> +       return 32768;
-> +}
+- we already have a lot of userspace depending on the aforementioned
+ttySAC namespace and proper ordering of instances there. While I believe
+the proper solution as of today would be to go back to standard ttyS
+namespace and make userspace use a smarter way of identifying the
+instances (e.g. by path or id, as you suggested), I don't think this
+will make anyone's life easier with current assumptions,
 
-Isn't more safer(correct), if it check and return 0 when clk is
-disabled(unprepared) ?
+- correct me if I'm wrong, but I don't think the
+/dev/serial/by-{path,id} would be handled in kernel's console= parameter.
 
-Regards,
-Yadwinder
-
-> +
-> +struct clk_ops max_gen_clk_ops = {
-> +       .prepare        = max_gen_clk_prepare,
-> +       .unprepare      = max_gen_clk_unprepare,
-> +       .is_prepared    = max_gen_clk_is_prepared,
-> +       .recalc_rate    = max_gen_recalc_rate,
-> +};
-> +EXPORT_SYMBOL_GPL(max_gen_clk_ops);
-> +
-> +static struct clk *max_gen_clk_register(struct device *dev,
-> +                                       struct max_gen_clk *max_gen)
-> +{
-> +       struct clk *clk;
-> +       struct clk_hw *hw = &max_gen->hw;
-> +
-> +       clk = clk_register(dev, hw);
-> +       if (IS_ERR(clk))
-> +               return clk;
-> +
-> +       max_gen->lookup = kzalloc(sizeof(struct clk_lookup), GFP_KERNEL);
-> +       if (!max_gen->lookup)
-> +               return ERR_PTR(-ENOMEM);
-> +
-> +       max_gen->lookup->con_id = hw->init->name;
-> +       max_gen->lookup->clk = clk;
-> +
-> +       clkdev_add(max_gen->lookup);
-> +
-> +       return clk;
-> +}
-> +
-> +int max_gen_clk_probe(struct platform_device *pdev, struct regmap *regmap,
-> +                     u32 reg, struct clk_init_data *clks_init, int num_init)
-> +{
-> +       int i, ret;
-> +       struct max_gen_clk *max_gen_clks;
-> +       struct clk **clocks;
-> +       struct device *dev = &pdev->dev;
-> +
-> +       clocks = devm_kzalloc(dev, sizeof(struct clk *) * num_init, GFP_KERNEL);
-> +       if (!clocks)
-> +               return -ENOMEM;
-> +
-> +       max_gen_clks = devm_kzalloc(dev, sizeof(struct max_gen_clk)
-> +                                   * num_init, GFP_KERNEL);
-> +       if (!max_gen_clks)
-> +               return -ENOMEM;
-> +
-> +       for (i = 0; i < num_init; i++) {
-> +               max_gen_clks[i].regmap = regmap;
-> +               max_gen_clks[i].mask = 1 << i;
-> +               max_gen_clks[i].reg = reg;
-> +               max_gen_clks[i].hw.init = &clks_init[i];
-> +
-> +               clocks[i] = max_gen_clk_register(dev, &max_gen_clks[i]);
-> +               if (IS_ERR(clocks[i])) {
-> +                       ret = PTR_ERR(clocks[i]);
-> +                       dev_err(dev, "failed to register %s\n",
-> +                               max_gen_clks[i].hw.init->name);
-> +                       goto err_clocks;
-> +               }
-> +       }
-> +
-> +       platform_set_drvdata(pdev, clocks);
-> +
-> +       if (dev->of_node) {
-> +               struct clk_onecell_data *of_data;
-> +
-> +               of_data = devm_kzalloc(dev, sizeof(*of_data), GFP_KERNEL);
-> +               if (!of_data) {
-> +                       ret = -ENOMEM;
-> +                       goto err_clocks;
-> +               }
-> +
-> +               of_data->clks = clocks;
-> +               of_data->clk_num = num_init;
-> +               ret = of_clk_add_provider(dev->of_node, of_clk_src_onecell_get,
-> +                                         of_data);
-> +
-> +               if (ret) {
-> +                       dev_err(dev, "failed to register OF clock provider\n");
-> +                       goto err_clocks;
-> +               }
-> +       }
-> +
-> +       return 0;
-> +
-> +err_clocks:
-> +       for (--i; i >= 0; --i) {
-> +               clkdev_drop(max_gen_clks[i].lookup);
-> +               clk_unregister(max_gen_clks[i].hw.clk);
-> +       }
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(max_gen_clk_probe);
-> +
-> +int max_gen_clk_remove(struct platform_device *pdev, int num_init)
-> +{
-> +       struct clk **clocks = platform_get_drvdata(pdev);
-> +       struct device *dev = pdev->dev.parent;
-> +       int i;
-> +
-> +       if (dev->of_node)
-> +               of_clk_del_provider(dev->of_node);
-> +
-> +       for (i = 0; i < num_init; i++) {
-> +               struct clk_hw *hw = __clk_get_hw(clocks[i]);
-> +               struct max_gen_clk *max_gen = to_max_gen_clk(hw);
-> +
-> +               clkdev_drop(max_gen->lookup);
-> +               clk_unregister(clocks[i]);
-> +       }
-> +       return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(max_gen_clk_remove);
-> diff --git a/drivers/clk/clk-max-gen.h b/drivers/clk/clk-max-gen.h
-> new file mode 100644
-> index 0000000..997e86f
-> --- /dev/null
-> +++ b/drivers/clk/clk-max-gen.h
-> @@ -0,0 +1,32 @@
-> +/*
-> + * clk-max-gen.h - Generic clock driver for Maxim PMICs clocks
-> + *
-> + * Copyright (C) 2014 Google, Inc
-> + *
-> + * This program is free software; you can redistribute  it and/or modify it
-> + * under  the terms of  the GNU General  Public License as published by the
-> + * Free Software Foundation;  either version 2 of the  License, or (at your
-> + * option) any later version.
-> + *
-> + * This program is distributed in the hope that it will be useful,
-> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-> + * GNU General Public License for more details.
-> + *
-> + */
-> +
-> +#ifndef __CLK_MAX_GEN_H__
-> +#define __CLK_MAX_GEN_H__
-> +
-> +#include <linux/types.h>
-> +#include <linux/device.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/regmap.h>
-> +#include <linux/platform_device.h>
-> +
-> +int max_gen_clk_probe(struct platform_device *pdev, struct regmap *regmap,
-> +                     u32 reg, struct clk_init_data *clks_init, int num_init);
-> +int max_gen_clk_remove(struct platform_device *pdev, int num_init);
-> +extern struct clk_ops max_gen_clk_ops;
-> +
-> +#endif /* __CLK_MAX_GEN_H__ */
-> --
-> 2.0.0.rc2
->
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
