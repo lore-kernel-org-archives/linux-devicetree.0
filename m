@@ -1,47 +1,34 @@
-From: Jethren Lukkah <jethren-xJ99GygIntDQT0dZR+AlfA@public.gmane.org>
-Subject: WRITING YOU FROM MY HEART
-Date: Thu, 26 Jun 2014 13:12:34 +0100
-Message-ID: <CADmHqK=+FTbTWvGJ=4oyi47oQV=i1tzni1d7ERONp0YBPdXaOA@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: jethren-xJ99GygIntDQT0dZR+AlfA@public.gmane.org
+From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Subject: [PATCH 0/3] ARM: DTS: create common dtsi for Peach pit and pi boards
+Date: Thu, 26 Jun 2014 17:49:05 +0530
+Message-ID: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
+This patchset does the following
+1. Create a common dtsi file cros-exynos-peach.dtsi for
+   exynos5420-peach-pit.dts and exynos5800-peach-pi.dts
+2. Adds the ADC based Thermistor nodes and enables them in peach_pit.dts
+   and peach_pi.dts
+3. Adds the ADC based Thermistor nodes for Exynos5250 based Snow
+4. Corrects the vendor prefix for thermistors in exynos4412-trats2.dts
+
+Naveen Krishna Chatradhi (3):
+  ARM: DTS: use new compatible string for thermistors in trats2
+  ARM: DTS: Add NTC thermistor nodes to Exynos5250 based Snow
+  ARM: DTS: Add common dts file for Peach PIT and PI along with ADC
+    nodes
+
+ arch/arm/boot/dts/cros-exynos-peach.dtsi   |   41 ++++++++++++++++++++++++++++
+ arch/arm/boot/dts/exynos4412-trats2.dts    |    4 +--
+ arch/arm/boot/dts/exynos5250-snow.dts      |   34 +++++++++++++++++++++++
+ arch/arm/boot/dts/exynos5420-peach-pit.dts |    6 ++++
+ arch/arm/boot/dts/exynos5800-peach-pi.dts  |    6 ++++
+ 5 files changed, 89 insertions(+), 2 deletions(-)
+ create mode 100644 arch/arm/boot/dts/cros-exynos-peach.dtsi
+
 -- 
-Dear,
-Hope you are doing well today; it might surprise you to receive a mail
-from me even when we have not met in person. Well, I am contacting you
-by faith believing that you will read and understand my plight and
-then, reply back.
-
-I lost my husband few years ago after battling with cancer of the
-brain leaving me and only son who is under aged. My husband was a
-successful businessman; he was dealing on coco and previous stones.
-Before his death, he disclosed to me of the fund (10.5 Million Euro)
-he deposited in one of the leading banks. He said that he wanted to
-use the money to set up coco processing factory and also real estate
-business.
-
-Well, the reason I am contacting you is because of the pressures and
-threats I have been receiving from the family members since the death
-of my husband. I met my local pastor who advised me to look for a
-foreigner who will assist me to receive the fund while I leave this
-country with my son to escape the danger of been killed since my
-brother in-laws have forcefully collected some of his properties.
-
-None of these people is aware of the very deposit; therefore, if you
-accept to help me we must keep the information very confidential for
-the safety of the fund. If I receive your reply, I shall send you more
-details and my picture. This is my number if you would like to speak
-with me: +22998520796.
-
-I wait for your reply, God bless you.
-
-Thanks
-Jethren Lukkah
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+1.7.9.5
