@@ -1,63 +1,46 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [PATCH] ARM: dts: add hdmi regulators for exynos5800 based
- peach-pi board
-Date: Thu, 26 Jun 2014 09:41:37 +0200
-Message-ID: <CABxcv=ncVTiFX+YYguyk0XJDC6WTYnvJeivzf-4wOLwETmzK9w@mail.gmail.com>
-References: <1403760382-12533-1-git-send-email-rahul.sharma@samsung.com>
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
+Date: Thu, 26 Jun 2014 00:42:09 -0700
+Message-ID: <20140626074209.GE28884@atomide.com>
+References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403760382-12533-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Inki Dae <inki.dae@samsung.com>, tomasz.figa@gmail.com, sunil joshi <joshi@samsung.com>, r.sh.open@gmail.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1403766634-18543-1-git-send-email-r.sricharan-l0cyMroinI0@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>
+Cc: linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rahul,
+* Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org> [140626 00:14]:
+> This series does some cleanups, fixes for handling two interrupts
+> getting mapped twice to same crossbar and provides support for
+> hardwired IRQ and crossbar definitions.
+> 
+> On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
+> 131, 132, 133 are direct wired to hardware blocks bypassing
+> crossbar. This quirky implementation is *NOT* supposed to be the
+> expectation of crossbar hardware usage. This series adds support
+> to represent such hard-wired irqs through DT and avoid generic
+> allocation/programming of crossbar in the driver.
+> 
+> This way of supporting hard-wired irqs was a result of
+> the below discussions.
+> http://www.spinics.net/lists/arm-kernel/msg329946.html
+> 
+> Based on 3.16 rc2 mainline.
 
-On Thu, Jun 26, 2014 at 7:26 AM, Rahul Sharma <rahul.sharma@samsung.com> wrote:
-> Adding regulators for HDMI for exynos5800 based Peach-pi board.
->
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
-> Based on Kukjin's for-next branch.
-> Depends on:
-> 1) PMIC addition to Peach-pi: http://www.spinics.net/lists/linux-samsung-soc/msg33166.html
-> 2) tps65090 addition to Peach-pi: http://www.spinics.net/lists/linux-samsung-soc/msg32464.html
->
->  arch/arm/boot/dts/exynos5800-peach-pi.dts |    4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/exynos5800-peach-pi.dts b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> index 2c2c137..30d1a26 100644
-> --- a/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> +++ b/arch/arm/boot/dts/exynos5800-peach-pi.dts
-> @@ -127,6 +127,10 @@
->         pinctrl-names = "default";
->         pinctrl-0 = <&hdmi_hpd_irq>;
->         ddc = <&i2c_2>;
-> +       hdmi-en-supply = <&tps65090_fet7>;
-> +       vdd-supply = <&ldo8_reg>;
-> +       vdd_osc-supply = <&ldo10_reg>;
-> +       vdd_pll-supply = <&ldo8_reg>;
+Jason, once these patches look OK for merging, can you please
+set them up into an immutable branch so I too can merge them in?
 
-You had a line break between the ddc and the supplies on your patch
-for Peach pit, can you please add it here as well?
+The immutable branch is needed so I can eventually apply
+the related .dts changes to enable the crossbar interrupts.
 
-I think that is more readable and also we may later factor out common
-DTS fragments on these two boards in .dtsi include files so is better
-to keep the diff as small as possible.
+Regards,
 
->  };
->
->  &hsi2c_7 {
-> --
-> 1.7.9.5
->
-
-With that trivial change:
-
-Reviewed-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-
-Best regards,
-Javier
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
