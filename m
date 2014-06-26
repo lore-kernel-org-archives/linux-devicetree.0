@@ -1,48 +1,46 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v5 1/2] ARM: shmobile: r8a7790: add internal PCI bridge
- nodes
-Date: Thu, 26 Jun 2014 16:28:58 +0400
-Message-ID: <53AC120A.8000905@cogentembedded.com>
-References: <201406242157.05973.sergei.shtylyov@cogentembedded.com>	<201406242159.55373.sergei.shtylyov@cogentembedded.com>	<53AB89B3.9020207@renesas.com> <CANqRtoSsx+NAz2W_utN-A2fx+=e_Ywt5eD=Tf9uGnEDvk3w-PQ@mail.gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v4 05/14] clk: Add generic driver for Maxim PMIC clocks
+Date: Thu, 26 Jun 2014 14:31:36 +0200
+Message-ID: <53AC12A8.6040201@collabora.co.uk>
+References: <1403723019-6212-1-git-send-email-javier.martinez@collabora.co.uk>	<1403723019-6212-6-git-send-email-javier.martinez@collabora.co.uk> <CAKew6eWt-0c4gxGX7C7KtRrxR=9h9BSUmN3a2aWQtuT40cva1w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoSsx+NAz2W_utN-A2fx+=e_Ywt5eD=Tf9uGnEDvk3w-PQ@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Cc: "horms@verge.net.au" <horms@verge.net.au>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "ben.dooks@codethink.co.uk" <ben.dooks@codethink.co.uk>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAKew6eWt-0c4gxGX7C7KtRrxR=9h9BSUmN3a2aWQtuT40cva1w@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Yadwinder Singh Brar <yadi.brar01@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Hello Yadwinder,
 
-On 06/26/2014 07:01 AM, Magnus Damm wrote:
+Thanks a lot for your feedback.
 
->>> From: Ben Dooks <ben.dooks@codethink.co.uk>
+On 06/26/2014 01:51 PM, Yadwinder Singh Brar wrote:
+> Hi Javier,
+> 
+> Sorry for jumping in late, but just one concern mentioned inline.
+> 
+> [ .. ]
+> 
+>> +
+>> +static unsigned long max_gen_recalc_rate(struct clk_hw *hw,
+>> +                                        unsigned long parent_rate)
+>> +{
+>> +       return 32768;
+>> +}
+> 
+> Isn't more safer(correct), if it check and return 0 when clk is
+> disabled(unprepared) ?
+> 
 
->>> Add device nodes for the R8A7790 internal PCI bridge devices.
+Makes sense to me. I'll add a if (__clk_is_enabled(hw->clk)) check in the next
+version.
 
->>> Signed-off-by: Ben Dooks <ben.dooks@codethink.co.uk>
->>> Reviewed-by: Ian Molton <ian.molton@codethink.co.uk>
->>> [Sergei: added several properties to the PCI bridge nodes]
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Regards,
+> Yadwinder
+> 
 
->> Thank you for the patch!
->> I tested this patch on my lager board and a usb memory, and it works.
-
->> Tested-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-
-> Thanks for testing. Just one quick question from my side: Which USB
-> port did you test?
-
-> I somehow assumed that at least the majority of the USB ports on R-Car
-> Gen2 require a USB PHY device driver to work?
-
-    In fact, channel #2 also works without the PHY driver as the default 
-UGCTRL2 setting route USB2 pins to OHCI/EHCI.
-
-> Cheers,
-> / magnus
-
-WBR, Sergei
-
+Best regards,
+Javier
