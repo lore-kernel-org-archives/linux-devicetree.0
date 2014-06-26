@@ -1,107 +1,170 @@
-From: Naveen Krishna Ch <naveenkrishna.ch-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/3] ARM: DTS: create common dtsi for Peach pit and pi boards
-Date: Thu, 26 Jun 2014 22:08:47 +0530
-Message-ID: <CAHfPSqC2sjkrpYz53QzW1PDSV2E9yfSEnE734JHH1zUONnh=rw@mail.gmail.com>
-References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com> <CABxcv=nTfkRkpz_zZuxYHznjDuNgpiKO+FD4MnHi2C_2e32eqA@mail.gmail.com>
+From: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+Subject: Re: [PATCH V7 1/6] power: reset: Add generic SYSCON register mapped reset
+Date: Thu, 26 Jun 2014 09:51:14 -0700
+Message-ID: <CAL85gmCOzaT+dJf9e8Uj-w3v1nq8Qjg-EXfWDN5kdrU2k=kHJQ@mail.gmail.com>
+References: <1403737406-6474-1-git-send-email-fkan@apm.com>
+	<1403737406-6474-2-git-send-email-fkan@apm.com>
+	<CAGb2v65mGXDGb8Y045kehKufpMZWnfBm4dBJarJeOa8j-3g0RQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CABxcv=nTfkRkpz_zZuxYHznjDuNgpiKO+FD4MnHi2C_2e32eqA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org>
-Cc: Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-iio <linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Linux Kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "cpgs ." <cpgs-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAGb2v65mGXDGb8Y045kehKufpMZWnfBm4dBJarJeOa8j-3g0RQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: dbaryshkov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, dwmw2 <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, patches <patches-qTEPVZfXA3Y@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Javier,
-
-On 26 June 2014 20:51, Javier Martinez Canillas <javier-0uQlZySMnqxg9hUCZPvPmw@public.gmane.org> wrote:
-> Hello Naveen,
->
-> On Thu, Jun 26, 2014 at 2:19 PM, Naveen Krishna Chatradhi
-> <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> This patchset does the following
->> 1. Create a common dtsi file cros-exynos-peach.dtsi for
->>    exynos5420-peach-pit.dts and exynos5800-peach-pi.dts
->
-> There was some previous discussion in this list about what's the best
-> approach to handle common DTS chunks, please take a look to
-> http://patchwork.ozlabs.org/patch/362633/.
->
-> In summary, there is a common .dtsi file for Daisy based boards
-> (arch/arm/boot/dts/exynos5250-cros-common.dtsi) but it seems it turned
-> out to do more harm than good since having a single .dtsi for all the
-> common DTS chunks is not quite flexible. As more boards gets
-> introduced you have to start moving stuff from the common .dtsi file
-> to the board .dts.
->
-> The same was tried to do for OMAP2+ boards and it turned out that you
-> need to either a) create a hierarchy of .dtsi files to model all the
-> different board combinations that have similar fragments or b) split
-> out isolated DTS fragments on an .dtsi and include a set of this
-> fragments.
->
->  For an example of a) you can take a look to
-> arch/arm/boot/dts/omap3-overo* and for b) to
-> arch/arm/boot/dts/omap-gpmc-smsc9*.dtsi.
->
-> For a Peach Pit/Pi specific example of b) you can look at the recent
-> arch/arm/boot/dts/cros-ec-keyboard.dtsi file that Doug added for Peach
-> Pit/Pi keyboard.
-
-Right. It makes sense to have multiple smaller chunks
-that can be included in more boards than having one big chunk
-which can only be used for 2 or 3 boards.
-But, then i was unsure. If Device Tree communities likes having more
-smaller fragment files under one "arch/arm/boot/dts/ directory".
-
-
->
-> Personally I think that b) is a more flexible and reusable approach.
-> So, maybe instead of creating a cros-exynos-peach.dts to contain all
-> the common DT nodes you can add a cros-ec-thermistor.dsti file that
-> only includes the ADC based Thermistor nodes?
-
-I've started with making a fragment dts naming it "cros-exynos-adc.dts".
-Then moved on with an implementation similar to
-exynos5250-cros-common.dtsi
-
->
-> Thanks a lot and best regards,
-> Javier
-
-Will wait for few more opinions and make a fragment instead of common dtsi.
-Thank you a lot for the information and the references.
-
->
->> 2. Adds the ADC based Thermistor nodes and enables them in peach_pit.dts
->>    and peach_pi.dts
->> 3. Adds the ADC based Thermistor nodes for Exynos5250 based Snow
->> 4. Corrects the vendor prefix for thermistors in exynos4412-trats2.dts
+On Wed, Jun 25, 2014 at 6:38 PM, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org> wrote:
+> On Thu, Jun 26, 2014 at 7:03 AM, Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org> wrote:
+>> Add a generic SYSCON register mapped reset mechanism.
 >>
->> Naveen Krishna Chatradhi (3):
->>   ARM: DTS: use new compatible string for thermistors in trats2
->>   ARM: DTS: Add NTC thermistor nodes to Exynos5250 based Snow
->>   ARM: DTS: Add common dts file for Peach PIT and PI along with ADC
->>     nodes
+>> Signed-off-by: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>> ---
+>>  drivers/power/reset/Kconfig         |  6 +++
+>>  drivers/power/reset/Makefile        |  1 +
+>>  drivers/power/reset/syscon-reboot.c | 91 +++++++++++++++++++++++++++++++++++++
+>>  3 files changed, 98 insertions(+)
+>>  create mode 100644 drivers/power/reset/syscon-reboot.c
 >>
->>  arch/arm/boot/dts/cros-exynos-peach.dtsi   |   41 ++++++++++++++++++++++++++++
->>  arch/arm/boot/dts/exynos4412-trats2.dts    |    4 +--
->>  arch/arm/boot/dts/exynos5250-snow.dts      |   34 +++++++++++++++++++++++
->>  arch/arm/boot/dts/exynos5420-peach-pit.dts |    6 ++++
->>  arch/arm/boot/dts/exynos5800-peach-pi.dts  |    6 ++++
->>  5 files changed, 89 insertions(+), 2 deletions(-)
->>  create mode 100644 arch/arm/boot/dts/cros-exynos-peach.dtsi
+>> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+>> index bdcf517..7035236 100644
+>> --- a/drivers/power/reset/Kconfig
+>> +++ b/drivers/power/reset/Kconfig
+>> @@ -80,3 +80,9 @@ config POWER_RESET_KEYSTONE
+>>         help
+>>           Reboot support for the KEYSTONE SoCs.
 >>
+>> +config POWER_RESET_SYSCON
+>> +       bool "Generic SYSCON regmap reset driver"
+>> +       depends on ARCH_XGENE
+>
+> If this is supposed to be generic, why are you depending on
+> a certain platform?
+
+Yes, the problem was that it was breaking the x86 build.
+
+>
+>
+> ChenYu
+>
+>> +       depends on POWER_RESET && MFD_SYSCON
+>> +       help
+>> +         Reboot support for generic SYSCON mapped register reset.
+>> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+>> index dde2e8b..b1b5ab3 100644
+>> --- a/drivers/power/reset/Makefile
+>> +++ b/drivers/power/reset/Makefile
+>> @@ -8,3 +8,4 @@ obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
+>>  obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
+>>  obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
+>>  obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
+>> +obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
+>> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
+>> new file mode 100644
+>> index 0000000..9c15ba5
+>> --- /dev/null
+>> +++ b/drivers/power/reset/syscon-reboot.c
+>> @@ -0,0 +1,91 @@
+>> +/*
+>> + * Generic Syscon Reboot Driver
+>> + *
+>> + * Copyright (c) 2013, Applied Micro Circuits Corporation
+>> + * Author: Feng Kan <fkan-qTEPVZfXA3Y@public.gmane.org>
+>> + *
+>> + * This program is free software; you can redistribute it and/or
+>> + * modify it under the terms of the GNU General Public License as
+>> + * published by the Free Software Foundation; either version 2 of
+>> + * the License, or (at your option) any later version.
+>> + *
+>> + * This program is distributed in the hope that it will be useful,
+>> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+>> + * GNU General Public License for more details.
+>> + */
+>> +#include <linux/io.h>
+>> +#include <linux/of_device.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/platform_device.h>
+>> +#include <linux/stat.h>
+>> +#include <linux/slab.h>
+>> +#include <linux/mfd/syscon.h>
+>> +#include <linux/regmap.h>
+>> +#include <linux/reboot.h>
+>> +#include <asm/system_misc.h>
+>> +
+>> +struct syscon_reboot_context {
+>> +       struct regmap *map;
+>> +       u32 offset;
+>> +       u32 mask;
+>> +};
+>> +
+>> +static struct syscon_reboot_context *syscon_reboot_ctx;
+>> +
+>> +static void syscon_restart(enum reboot_mode reboot_mode, const char *cmd)
+>> +{
+>> +       struct syscon_reboot_context *ctx = syscon_reboot_ctx;
+>> +       unsigned long timeout;
+>> +
+>> +       /* Issue the reboot */
+>> +       if (ctx->map)
+>> +               regmap_write(ctx->map, ctx->offset, ctx->mask);
+>> +
+>> +       timeout = jiffies + HZ;
+>> +       while (time_before(jiffies, timeout))
+>> +               cpu_relax();
+>> +
+>> +       pr_emerg("Unable to restart system\n");
+>> +}
+>> +
+>> +static int syscon_reboot_probe(struct platform_device *pdev)
+>> +{
+>> +       struct syscon_reboot_context *ctx;
+>> +       struct device *dev = &pdev->dev;
+>> +
+>> +       ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+>> +       if (!ctx) {
+>> +               dev_err(&pdev->dev, "out of memory for context\n");
+>> +               return -ENOMEM;
+>> +       }
+>> +
+>> +       ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
+>> +       if (IS_ERR(ctx->map))
+>> +               return PTR_ERR(ctx->map);
+>> +
+>> +       if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
+>> +               return -EINVAL;
+>> +
+>> +       if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+>> +               return -EINVAL;
+>> +
+>> +       arm_pm_restart = syscon_restart;
+>> +       syscon_reboot_ctx = ctx;
+>> +
+>> +       return 0;
+>> +}
+>> +
+>> +static struct of_device_id syscon_reboot_of_match[] = {
+>> +       { .compatible = "syscon-reboot" },
+>> +       {}
+>> +};
+>> +
+>> +static struct platform_driver syscon_reboot_driver = {
+>> +       .probe = syscon_reboot_probe,
+>> +       .driver = {
+>> +               .name = "syscon-reboot",
+>> +               .of_match_table = syscon_reboot_of_match,
+>> +       },
+>> +};
+>> +module_platform_driver(syscon_reboot_driver);
 >> --
->> 1.7.9.5
+>> 1.9.1
 >>
->> --
->> To unsubscribe from this list: send the line "unsubscribe linux-samsung-soc" in
->> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
->> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-
-
-
--- 
-Shine bright,
-(: Nav :)
+>>
+>> _______________________________________________
+>> linux-arm-kernel mailing list
+>> linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+>> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
