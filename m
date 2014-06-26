@@ -1,59 +1,160 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Thu, 26 Jun 2014 09:18:19 +0900
-Message-ID: <53AB66CB.7010401@renesas.com>
-References: <539AEC8F.4030003@renesas.com>	<20140613142525.GE8319@saruman.home> <CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH V7 1/6] power: reset: Add generic SYSCON register mapped reset
+Date: Thu, 26 Jun 2014 09:38:41 +0800
+Message-ID: <CAGb2v65mGXDGb8Y045kehKufpMZWnfBm4dBJarJeOa8j-3g0RQ@mail.gmail.com>
+References: <1403737406-6474-1-git-send-email-fkan@apm.com> <1403737406-6474-2-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>, Felipe Balbi <balbi@ti.com>
-Cc: "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403737406-6474-2-git-send-email-fkan@apm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Feng Kan <fkan@apm.com>
+Cc: dbaryshkov@gmail.com, catalin.marinas@arm.com, dwmw2@infradead.org, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, patches@apm.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Felipe,
-
-(2014/06/18 14:15), Magnus Damm wrote:
-> Hi Felipe,
-> 
-> On Fri, Jun 13, 2014 at 11:25 PM, Felipe Balbi <balbi@ti.com> wrote:
->> Hi,
->>
->> On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
-< snip >
->>> +/* This function needs to initialize a "phy" of usb before */
->>
->> initializing a PHY looks like something that the PHY layer should do.
->> Why don't you write a PHY driver and teach xhci-core about PHYs ? Then,
->> more people would benefit.
-> 
-> Could you please clarify what you would like Shimoda-san to do?
+On Thu, Jun 26, 2014 at 7:03 AM, Feng Kan <fkan@apm.com> wrote:
+> Add a generic SYSCON register mapped reset mechanism.
 >
-> Like Ben and Shimoda-san mentioned, there is already a PHY driver
-> developed for this SoC. The PHY driver is however shared in various
-> ways. For example, on one particular SoC the same PHY driver is
-> interfacing to a total of 3 different variants of USB controllers
-> where XHCI is one of them. And to make things even more complicated,
-> depending on SoC variant the XHCI hardware may or may not be available
-> - but the PHY portion is more or less the same.
-> 
-> Putting the firmware loader in the XHCI driver like this at least
-> keeps it together with the rest of the XHCI stuff and also makes it
-> possible to easily access the XHCI I/O register window for firmware
-> loading. Moving the firmware loading to the PHY driver however
-> complicates the situation when it comes to Kconfig handling of XHCI
-> and PHY driver and also forces the PHY driver to access the XHCI
-> hardware I/O registers for firmware loading...
+> Signed-off-by: Feng Kan <fkan@apm.com>
+> ---
+>  drivers/power/reset/Kconfig         |  6 +++
+>  drivers/power/reset/Makefile        |  1 +
+>  drivers/power/reset/syscon-reboot.c | 91 +++++++++++++++++++++++++++++++++++++
+>  3 files changed, 98 insertions(+)
+>  create mode 100644 drivers/power/reset/syscon-reboot.c
+>
+> diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+> index bdcf517..7035236 100644
+> --- a/drivers/power/reset/Kconfig
+> +++ b/drivers/power/reset/Kconfig
+> @@ -80,3 +80,9 @@ config POWER_RESET_KEYSTONE
+>         help
+>           Reboot support for the KEYSTONE SoCs.
+>
+> +config POWER_RESET_SYSCON
+> +       bool "Generic SYSCON regmap reset driver"
+> +       depends on ARCH_XGENE
 
-Do you have any comment about Magnus's comment?
+If this is supposed to be generic, why are you depending on
+a certain platform?
 
-Best regards,
-Yoshihiro Shimoda
 
-> Cheers,
-> 
-> / magnus
-> 
+ChenYu
+
+> +       depends on POWER_RESET && MFD_SYSCON
+> +       help
+> +         Reboot support for generic SYSCON mapped register reset.
+> diff --git a/drivers/power/reset/Makefile b/drivers/power/reset/Makefile
+> index dde2e8b..b1b5ab3 100644
+> --- a/drivers/power/reset/Makefile
+> +++ b/drivers/power/reset/Makefile
+> @@ -8,3 +8,4 @@ obj-$(CONFIG_POWER_RESET_SUN6I) += sun6i-reboot.o
+>  obj-$(CONFIG_POWER_RESET_VEXPRESS) += vexpress-poweroff.o
+>  obj-$(CONFIG_POWER_RESET_XGENE) += xgene-reboot.o
+>  obj-$(CONFIG_POWER_RESET_KEYSTONE) += keystone-reset.o
+> +obj-$(CONFIG_POWER_RESET_SYSCON) += syscon-reboot.o
+> diff --git a/drivers/power/reset/syscon-reboot.c b/drivers/power/reset/syscon-reboot.c
+> new file mode 100644
+> index 0000000..9c15ba5
+> --- /dev/null
+> +++ b/drivers/power/reset/syscon-reboot.c
+> @@ -0,0 +1,91 @@
+> +/*
+> + * Generic Syscon Reboot Driver
+> + *
+> + * Copyright (c) 2013, Applied Micro Circuits Corporation
+> + * Author: Feng Kan <fkan@apm.com>
+> + *
+> + * This program is free software; you can redistribute it and/or
+> + * modify it under the terms of the GNU General Public License as
+> + * published by the Free Software Foundation; either version 2 of
+> + * the License, or (at your option) any later version.
+> + *
+> + * This program is distributed in the hope that it will be useful,
+> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
+> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+> + * GNU General Public License for more details.
+> + */
+> +#include <linux/io.h>
+> +#include <linux/of_device.h>
+> +#include <linux/of_address.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/stat.h>
+> +#include <linux/slab.h>
+> +#include <linux/mfd/syscon.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reboot.h>
+> +#include <asm/system_misc.h>
+> +
+> +struct syscon_reboot_context {
+> +       struct regmap *map;
+> +       u32 offset;
+> +       u32 mask;
+> +};
+> +
+> +static struct syscon_reboot_context *syscon_reboot_ctx;
+> +
+> +static void syscon_restart(enum reboot_mode reboot_mode, const char *cmd)
+> +{
+> +       struct syscon_reboot_context *ctx = syscon_reboot_ctx;
+> +       unsigned long timeout;
+> +
+> +       /* Issue the reboot */
+> +       if (ctx->map)
+> +               regmap_write(ctx->map, ctx->offset, ctx->mask);
+> +
+> +       timeout = jiffies + HZ;
+> +       while (time_before(jiffies, timeout))
+> +               cpu_relax();
+> +
+> +       pr_emerg("Unable to restart system\n");
+> +}
+> +
+> +static int syscon_reboot_probe(struct platform_device *pdev)
+> +{
+> +       struct syscon_reboot_context *ctx;
+> +       struct device *dev = &pdev->dev;
+> +
+> +       ctx = devm_kzalloc(&pdev->dev, sizeof(*ctx), GFP_KERNEL);
+> +       if (!ctx) {
+> +               dev_err(&pdev->dev, "out of memory for context\n");
+> +               return -ENOMEM;
+> +       }
+> +
+> +       ctx->map = syscon_regmap_lookup_by_phandle(dev->of_node, "regmap");
+> +       if (IS_ERR(ctx->map))
+> +               return PTR_ERR(ctx->map);
+> +
+> +       if (of_property_read_u32(pdev->dev.of_node, "offset", &ctx->offset))
+> +               return -EINVAL;
+> +
+> +       if (of_property_read_u32(pdev->dev.of_node, "mask", &ctx->mask))
+> +               return -EINVAL;
+> +
+> +       arm_pm_restart = syscon_restart;
+> +       syscon_reboot_ctx = ctx;
+> +
+> +       return 0;
+> +}
+> +
+> +static struct of_device_id syscon_reboot_of_match[] = {
+> +       { .compatible = "syscon-reboot" },
+> +       {}
+> +};
+> +
+> +static struct platform_driver syscon_reboot_driver = {
+> +       .probe = syscon_reboot_probe,
+> +       .driver = {
+> +               .name = "syscon-reboot",
+> +               .of_match_table = syscon_reboot_of_match,
+> +       },
+> +};
+> +module_platform_driver(syscon_reboot_driver);
+> --
+> 1.9.1
+>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
