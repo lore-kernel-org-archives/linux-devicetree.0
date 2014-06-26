@@ -1,39 +1,27 @@
-From: Feng Kan <fkan@apm.com>
-Subject: [PATCH V5 3/3] arm64:dts: Add APM X-Gene SoC GPIO controller DTS entries
-Date: Thu, 26 Jun 2014 15:59:47 -0700
-Message-ID: <1403823587-23404-4-git-send-email-fkan@apm.com>
-References: <1403823587-23404-1-git-send-email-fkan@apm.com>
-Return-path: <linux-gpio-owner@vger.kernel.org>
-In-Reply-To: <1403823587-23404-1-git-send-email-fkan@apm.com>
-Sender: linux-gpio-owner@vger.kernel.org
-To: patches@apm.com, linus.walleij@linaro.org, gnurou@gmail.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Feng Kan <fkan@apm.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH 0/3] ARM: DTS: create common dtsi for Peach pit and pi boards
+Date: Thu, 26 Jun 2014 16:53:31 -0700
+Message-ID: <CAD=FV=U4NA2TaQWf8f4bL48dFG6T+k3vh_nRnWSM_VWivUFjoQ@mail.gmail.com>
+References: <1403785148-20792-1-git-send-email-ch.naveen@samsung.com>
+	<CABxcv=nTfkRkpz_zZuxYHznjDuNgpiKO+FD4MnHi2C_2e32eqA@mail.gmail.com>
+	<CAHfPSqC2sjkrpYz53QzW1PDSV2E9yfSEnE734JHH1zUONnh=rw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAHfPSqC2sjkrpYz53QzW1PDSV2E9yfSEnE734JHH1zUONnh=rw@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Ch <naveenkrishna.ch@gmail.com>
+Cc: Javier Martinez Canillas <javier@dowhile0.org>, Naveen Krishna Chatradhi <ch.naveen@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-iio <linux-iio@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "cpgs ." <cpgs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add gpio dts node for APM X-Gene SoC platform.
+Naveen,
 
-Signed-off-by: Feng Kan <fkan@apm.com>
----
- arch/arm64/boot/dts/apm-storm.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
+On Thu, Jun 26, 2014 at 9:38 AM, Naveen Krishna Ch
+<naveenkrishna.ch@gmail.com> wrote:
+> Will wait for few more opinions and make a fragment instead of common dtsi.
+> Thank you a lot for the information and the references.
 
-diff --git a/arch/arm64/boot/dts/apm-storm.dtsi b/arch/arm64/boot/dts/apm-storm.dtsi
-index 40aa96c..a203a4e 100644
---- a/arch/arm64/boot/dts/apm-storm.dtsi
-+++ b/arch/arm64/boot/dts/apm-storm.dtsi
-@@ -397,5 +397,12 @@
- 			#clock-cells = <1>;
- 			clocks = <&rtcclk 0>;
- 		};
-+
-+		gpio: gpio0@1701c000 {
-+			compatible = "apm,xgene-gpio";
-+			reg = <0x0 0x1701c000 0x0 0x40>;
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+		};
- 	};
- };
--- 
-1.9.1
+Just in case you're waiting for my opinion, I'll say that I'm of the
+opinion that fragments will work better.
 
+-Doug
