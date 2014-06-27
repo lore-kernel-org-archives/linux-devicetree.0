@@ -1,249 +1,108 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Fri, 27 Jun 2014 10:40:21 -0500
-Message-ID: <20140627154021.GH8069@saruman.home>
-References: <539AEC8F.4030003@renesas.com>
- <20140613142525.GE8319@saruman.home>
- <CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Stephen Warren <swarren@wwwdotorg.org>
+Subject: Re: [PATCH v1 4/9] pinctrl: tegra-xusb: Add USB PHY support
+Date: Fri, 27 Jun 2014 10:05:11 -0600
+Message-ID: <53AD9637.5010605@wwwdotorg.org>
+References: <1403072180-4944-1-git-send-email-abrestic@chromium.org> <1403072180-4944-5-git-send-email-abrestic@chromium.org> <53AB493F.3030802@wwwdotorg.org> <CAL1qeaHhoqEPu-j+drNiRMyeutz=qqZPxSP8H+v-sgjZSfS5tQ@mail.gmail.com> <20140627150004.GF8069@saruman.home>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="svZFHVx8/dhPCe52"
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+ protocol="application/pgp-signature";
+ boundary="GFxGbm30iTpCH0Ab2w9hd3LXB2gxK7eTq"
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140627150004.GF8069@saruman.home>
+Sender: linux-doc-owner@vger.kernel.org
+To: balbi@ti.com, Andrew Bresticker <abrestic@chromium.org>
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, Arnd Bergmann <arnd@arndb.de>
 List-Id: devicetree@vger.kernel.org
 
---svZFHVx8/dhPCe52
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--GFxGbm30iTpCH0Ab2w9hd3LXB2gxK7eTq
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jun 18, 2014 at 02:15:42PM +0900, Magnus Damm wrote:
-> Hi Felipe,
->=20
-> On Fri, Jun 13, 2014 at 11:25 PM, Felipe Balbi <balbi@ti.com> wrote:
-> > Hi,
-> >
-> > On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
-> >> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
-> >> some specific initializations related to the firmware downloading and
-> >> some specific registers. This patch adds the support for this special
-> >> configuration as an xHCI quirk executed during probe and start.
-> >>
-> >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >> ---
->=20
-> >> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar=
-=2Ec
-> >> new file mode 100644
-> >> index 0000000..ff0d1b4
-> >> --- /dev/null
-> >> +++ b/drivers/usb/host/xhci-rcar.c
-> >> @@ -0,0 +1,148 @@
-> >> +/*
-> >> + * xHCI host controller driver for R-Car SoCs
-> >> + *
-> >> + * Copyright (C) 2014 Renesas Electronics Corporation
-> >> + *
-> >> + * This program is free software; you can redistribute it and/or
-> >> + * modify it under the terms of the GNU General Public License
-> >> + * version 2 as published by the Free Software Foundation.
-> >> + */
-> >> +
-> >> +#include <linux/firmware.h>
-> >> +#include <linux/module.h>
-> >> +#include <linux/platform_device.h>
-> >> +#include <linux/usb/phy.h>
-> >> +
-> >> +#include "xhci.h"
-> >> +#include "xhci-rcar.h"
-> >> +
-> >> +#define FIRMWARE_NAME                "r8a779x_usb3_v1.dlmem"
-> >> +MODULE_FIRMWARE(FIRMWARE_NAME);
-> >> +
-> >> +/*** Register Offset ***/
-> >> +#define RCAR_USB3_INT_ENA    0x224   /* Interrupt Enable */
-> >> +#define RCAR_USB3_DL_CTRL    0x250   /* FW Download Control & Status =
-*/
-> >> +#define RCAR_USB3_FW_DATA0   0x258   /* FW Data0 */
-> >> +
-> >> +#define RCAR_USB3_LCLK               0xa44   /* LCLK Select */
-> >> +#define RCAR_USB3_CONF1              0xa48   /* USB3.0 Configuration1=
- */
-> >> +#define RCAR_USB3_CONF2              0xa5c   /* USB3.0 Configuration2=
- */
-> >> +#define RCAR_USB3_CONF3              0xaa8   /* USB3.0 Configuration3=
- */
-> >> +#define RCAR_USB3_RX_POL     0xab0   /* USB3.0 RX Polarity */
-> >> +#define RCAR_USB3_TX_POL     0xab8   /* USB3.0 TX Polarity */
-> >> +
-> >> +/*** Register Settings ***/
-> >> +/* Interrupt Enable */
-> >> +#define RCAR_USB3_INT_XHC_ENA        0x00000001
-> >> +#define RCAR_USB3_INT_PME_ENA        0x00000002
-> >> +#define RCAR_USB3_INT_HSE_ENA        0x00000004
-> >> +#define RCAR_USB3_INT_ENA_VAL        (RCAR_USB3_INT_XHC_ENA | \
-> >> +                             RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HS=
-E_ENA)
-> >> +
-> >> +/* FW Download Control & Status */
-> >> +#define RCAR_USB3_DL_CTRL_ENABLE     0x00000001
-> >> +#define RCAR_USB3_DL_CTRL_FW_SUCCESS 0x00000010
-> >> +#define RCAR_USB3_DL_CTRL_FW_SET_DATA0       0x00000100
-> >> +
-> >> +/* LCLK Select */
-> >> +#define RCAR_USB3_LCLK_ENA_VAL       0x01030001
-> >> +
-> >> +/* USB3.0 Configuration */
-> >> +#define RCAR_USB3_CONF1_VAL  0x00030204
-> >> +#define RCAR_USB3_CONF2_VAL  0x00030300
-> >> +#define RCAR_USB3_CONF3_VAL  0x13802007
-> >> +
-> >> +/* USB3.0 Polarity */
-> >> +#define RCAR_USB3_RX_POL_VAL BIT(21)
-> >> +#define RCAR_USB3_TX_POL_VAL BIT(4)
-> >> +
-> >> +void xhci_rcar_start(struct usb_hcd *hcd)
-> >> +{
-> >> +     u32 temp;
-> >> +
-> >> +     if (hcd->regs !=3D NULL) {
-> >> +             /* Interrupt Enable */
-> >> +             temp =3D readl(hcd->regs + RCAR_USB3_INT_ENA);
-> >> +             temp |=3D RCAR_USB3_INT_ENA_VAL;
-> >> +             writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
-> >> +             /* LCLK Select */
-> >> +             writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCL=
-K);
-> >> +             /* USB3.0 Configuration */
-> >> +             writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
-> >> +             writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
-> >> +             writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
-> >> +             /* USB3.0 Polarity */
-> >> +             writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_PO=
-L);
-> >> +             writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_PO=
-L);
-> >> +     }
-> >> +}
-> >> +
-> >> +static int xhci_rcar_download_firmware(struct device *dev, void __iom=
-em *regs)
-> >> +{
-> >> +     const struct firmware *fw;
-> >> +     int retval, index, j, time;
-> >> +     int timeout =3D 10000;
-> >> +     u32 data, val, temp;
-> >> +
-> >> +     /* request R-Car USB3.0 firmware */
-> >> +     retval =3D request_firmware(&fw, FIRMWARE_NAME, dev);
-> >> +     if (retval)
-> >> +             return retval;
-> >> +
-> >> +     /* download R-Car USB3.0 firmware */
-> >> +     temp =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> +     temp |=3D RCAR_USB3_DL_CTRL_ENABLE;
-> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
-> >> +
-> >> +     for (index =3D 0; index < fw->size; index +=3D 4) {
-> >> +             /* to avoid reading beyond the end of the buffer */
-> >> +             for (data =3D 0, j =3D 3; j >=3D 0; j--) {
-> >> +                     if ((j + index) < fw->size)
-> >> +                             data |=3D fw->data[index + j] << (8 * j);
-> >> +             }
-> >> +             writel(data, regs + RCAR_USB3_FW_DATA0);
-> >> +             temp =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> +             temp |=3D RCAR_USB3_DL_CTRL_FW_SET_DATA0;
-> >> +             writel(temp, regs + RCAR_USB3_DL_CTRL);
-> >> +
-> >> +             for (time =3D 0; time < timeout; time++) {
-> >> +                     val =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> +                     if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) =3D=
-=3D 0)
-> >> +                             break;
-> >> +                     udelay(1);
-> >> +             }
-> >> +             if (time =3D=3D timeout) {
-> >> +                     retval =3D -ETIMEDOUT;
-> >> +                     break;
-> >> +             }
-> >> +     }
-> >> +
-> >> +     temp =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> +     temp &=3D ~RCAR_USB3_DL_CTRL_ENABLE;
-> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
-> >> +
-> >> +     for (time =3D 0; time < timeout; time++) {
-> >> +             val =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> +             if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
-> >> +                     retval =3D 0;
-> >> +                     break;
-> >> +             }
-> >> +             udelay(1);
-> >> +     }
-> >> +     if (time =3D=3D timeout)
-> >> +             retval =3D -ETIMEDOUT;
-> >> +
-> >> +     release_firmware(fw);
-> >> +
-> >> +     return retval;
-> >> +}
-> >> +
-> >> +/* This function needs to initialize a "phy" of usb before */
-> >
-> > initializing a PHY looks like something that the PHY layer should do.
-> > Why don't you write a PHY driver and teach xhci-core about PHYs ? Then,
-> > more people would benefit.
->=20
-> Could you please clarify what you would like Shimoda-san to do?
->=20
-> Like Ben and Shimoda-san mentioned, there is already a PHY driver
-> developed for this SoC. The PHY driver is however shared in various
-> ways. For example, on one particular SoC the same PHY driver is
-> interfacing to a total of 3 different variants of USB controllers
-> where XHCI is one of them. And to make things even more complicated,
-> depending on SoC variant the XHCI hardware may or may not be available
-> - but the PHY portion is more or less the same.
->=20
-> Putting the firmware loader in the XHCI driver like this at least
-> keeps it together with the rest of the XHCI stuff and also makes it
-> possible to easily access the XHCI I/O register window for firmware
-> loading. Moving the firmware loading to the PHY driver however
-> complicates the situation when it comes to Kconfig handling of XHCI
-> and PHY driver and also forces the PHY driver to access the XHCI
-> hardware I/O registers for firmware loading...
+On 06/27/2014 09:00 AM, Felipe Balbi wrote:
+> On Wed, Jun 25, 2014 at 04:30:48PM -0700, Andrew Bresticker wrote:
+>>>> +static int usb3_phy_power_on(struct phy *phy)
+>>>> +{
+>>>> +     struct tegra_xusb_padctl *padctl =3D phy_get_drvdata(phy);
+>>>> +     int port =3D usb3_phy_to_port(phy);
+>>>> +     int lane =3D padctl->usb3_ports[port].lane;
+>>>> +     u32 value, offset;
+>>>> +
+>>>> +     value =3D padctl_readl(padctl, XUSB_PADCTL_IOPHY_USB3_PADX_CTL=
+2(port));
+>>>> +     value &=3D ~((XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_MASK <=
+<
+>>>> +                 XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_WANDER_SHIFT) |=
 
-But the firmware is being loaded into the PHY registers, no ? In that
-case, it should sit in the PHY driver.
+>>>> +                (XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_MASK <<
+>>>> +                 XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_RX_EQ_SHIFT) |
+>>>> +                (XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_MASK <<
+>>>> +                 XUSB_PADCTL_IOPHY_USB3_PAD_CTL2_CDR_CNTL_SHIFT));
+>>>
+>>> Hmm. So there is a lot of "PHY" stuff here after all.
+>>>
+>>> However, the PHYs implemented here appear to implement very low-level=
 
---=20
-balbi
+>>> I/O pad code, whereas the PHYs we have for our USB 2.0 controller are=
 
---svZFHVx8/dhPCe52
+>>> somewhat higher-level; they're more USB-oriented than just IO pad
+>>> oriented. Do you know which level of abstraction a Linux PHY object i=
+s
+>>> supposed to be? I could never get an answer when I asked before.
+>>
+>> The only other PHY driver I've worked with (Exynos USB2/3 PHYs) also
+>> mainly only did low-level pad control stuff, but looking at a couple
+>> of other USB PHYs (MSM, MV), there appear to be others that have
+>> higher-level USB stuff in the PHY driver.  Perhaps Kishon or Felipe
+>> could offer us some guidance?
+>=20
+> well, if you're adding a new driver, I'd rather see folks moving over t=
+o
+> the generic phy framework (drivers/phy) because we're trying really har=
+d
+> to get rid of drivers/usb/phy/. And I think, in your case, it's actuall=
+y
+> ok to use pinctrl because you actually are muxing pads to the USB3 PHY,=
+
+> you just do it lazyly.
+
+What I'm looking for is a good definition of exactly what a PHY is
+supposed to be in Linux.
+
+Is it purely something that turns some IO pads/drivers off/on, and
+nothing more?
+
+Or, does the PHY concept encompass protocol-specific concepts such as
+USB VBUS enable, USB VBUS detection, USB OTG switching,
+UTMI-vs-ULPI-vs-HSIC selection... all of which are irrelevant of the PHY
+(or at least IO pads) are used for SATA or PCIe instead.
+
+This obviously affects which code goes in the PHY driver, and which in
+the EHCI/XHCI controller driver.
+
+
+--GFxGbm30iTpCH0Ab2w9hd3LXB2gxK7eTq
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v1.4.11 (GNU/Linux)
+Comment: Using GnuPG with Thunderbird - http://www.enigmail.net/
 
-iQIcBAEBAgAGBQJTrZBlAAoJEIaOsuA1yqREjosP/Ailim1SOGO/mN7iwGOlDtLt
-3iJc9sm+Xif0w1bifihd1ZDEmsflU5yUcsOfrl7nF532z+ZKfbGJUd8y3tTXPmRc
-e5xfVXvO8Xfei11At5Sv8j9YifqYaB+Hxk14QxB3tVF8HxhwC++0hq/lOV5YCdTE
-q12qUQoEYL0OBR4DDctb729b8x2e6NbBPdeb4A0uJdnbvhnDPHtMAKxkc4WKBKB9
-tMG6JbkoKfZqF0T3XTU01Xpcwbpn2Axqah4NJ9Gq3/GKqIjiefZgcNI1PdaMVlDV
-GNXdbe3CXDjJV3XbihOF40hMUzSTOTMPwCFSc5cdjs/IOoSoqDnpovAOn+MaeU3P
-L4dhw1su2dNc5pBKJii83UPN2yLZCADR0xZed/w4aBMyWq7U4WRmjAOxe7fleUJ8
-tQkmft5S0inTwjZdoOQITWoMj5uKcLAMCqg1K6iv/9TwBSH5hul8davoCs5/FbqB
-BRKFXpc9Avg0IXFFtAWBZ9JK7jjV5BNW1kG+Yeqi4BKJX3vJ1u4CfYsYYz6xTPTJ
-u7uao0TM6xrrh6EuVP+cu4HX2VyQSJRvF+sns+zb7a2xFjpSkuk+AVS4d/GRu8JP
-fUrED0F7k7xe/p9/a0CPzN0y/naxf+mZbmeUUutYyxL7arhiCWZ+3bD8DuPV/5iU
-/ubcGho5d8ck0XixDhrK
-=1zl4
+iQIcBAEBAgAGBQJTrZY3AAoJEJuNpwkmVCGcvtIQAKFrmuE6SyOFAl8hA/0P5BZj
+nreRyhuDpflz1XnD2SH2U6IF7nLFg8+QlnZEuv3/ZhwHL16TY1SFzVvvCu2OB4QB
+I3Pp/ArAHh1FFCUvYYB/GK+f++jPHlL5O8lpeL80SZ7TVz0NcfaV9c+owqqkqFM3
+n5fqL7Z9US1NELQFT0XERy6GnGHoADybkPzLqomzBdenrAzt8gLwY5nc/9oafuwL
+HCbyffiAv6Nd85BL+x8ASv+6fzX/wnU8ru2JxSyZuS9B0Kzj3BneeSJz9t69svrw
+3I8qq9YstNn+wMpDRZGJ3BSbGFANm9MDdTJNz52ZhhiSk+pes3kxLuyP8MjxMZxD
+CzoAlWxRKN5dz8lWowMgT+jV8OTclmiTfWsnwVS5uz6ibrNV4w4kInYiW7Sphpas
+SYV8Rbs6Qr7cDAyZQi4C50MqONQaAOP0EB1fE4I3HCfbgG0BIsT7hVqSa0Zine9u
+Xn1YIZdeX2jyDYEqZ/lm2NplHyBUAVfYiYclWa/ydvEcjJaSlyLYLQakpVTvkfHG
+5kIrAAWvAOlL9eKd1TGLJ4JCldMGO9jpOJfjJ/iFdwbUtH9cf9W+Wg6/sBB4jV9Q
+onFQbzcadQ+TORqCdal3PD17TaAyhF3eh187B44+QZ7arXvnkXWOasXOe4T8DDKy
+GTMwUqQjIL0ml2vwSxiU
+=LcIR
 -----END PGP SIGNATURE-----
 
---svZFHVx8/dhPCe52--
+--GFxGbm30iTpCH0Ab2w9hd3LXB2gxK7eTq--
