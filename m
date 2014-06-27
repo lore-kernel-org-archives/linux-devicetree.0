@@ -1,98 +1,52 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT idle states bindings
-Date: Fri, 27 Jun 2014 11:53:45 +0100
-Message-ID: <20140627105345.GA3626@e102568-lin.cambridge.arm.com>
-References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
- <1403705421-17597-2-git-send-email-lorenzo.pieralisi@arm.com>
- <20140625145849.GC15240@leverpostej>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC 09/10] drm/tegra: Add IOMMU support
+Date: Fri, 27 Jun 2014 12:54:20 +0200
+Message-ID: <4455459.GtiCHWk2CB@wuerfel>
+References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com> <1403815790-8548-10-git-send-email-thierry.reding@gmail.com> <20140627124614.050be2e406a4b9a02d9fe97c@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=WINDOWS-1252
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <20140625145849.GC15240@leverpostej>
-Content-Disposition: inline
-Sender: linux-pm-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140627124614.050be2e406a4b9a02d9fe97c-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Hiroshi DOyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Allen Martin <AMartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak@codeaurora>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jun 25, 2014 at 03:58:49PM +0100, Mark Rutland wrote:
-
-[...]
-
-> > +===========================================
-> > +4 - state node
-> > +===========================================
-> > +
-> > +A state node represents an idle state description and must be defined as
-> > +follows:
-> > +
-> > +- state node
-> > +
-> > +       Description: must be child of the idle-states node
-> > +
-> > +       The state node name shall follow standard device tree naming
-> > +       rules ([5], 2.2.1 "Node names"), in particular state nodes which
-> > +       are siblings within a single common parent must be given a unique name.
-> > +
-> > +       The idle state entered by executing the wfi instruction (idle_standby
-> > +       SBSA,[3][4]) is considered standard on all ARM platforms and therefore
-> > +       must not be listed.
-> > +
-> > +       With the definitions provided above, the following list represents
-> > +       the valid properties for a state node:
-> > +
-> > +       - compatible
-> > +               Usage: Required
-> > +               Value type: <stringlist>
-> > +               Definition: Must be "arm,idle-state".
-> > +
-> > +       - logic-state-retained
-> > +               Usage: See definition
-> > +               Value type: <none>
-> > +               Definition: if present logic is retained on state entry,
-> > +                           otherwise it is lost.
+On Friday 27 June 2014 12:46:14 Hiroshi DOyu wrote:
 > 
-> What logic state is retained? All system registers?
+> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 > 
-> > +       - cache-state-retained
-> > +               Usage: See definition
-> > +               Value type: <none>
-> > +               Definition: if present cache memory is retained on state entry,
-> > +                           otherwise it is lost.
+> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> >
+> > When an IOMMU device is available on the platform bus, allocate an IOMMU
+> > domain and attach the display controllers to it. The display controllers
+> > can then scan out non-contiguous buffers by mapping them through the
+> > IOMMU.
+> >
+> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> > ---
+> > @@ -1283,8 +1284,18 @@ static int tegra_dc_init(struct host1x_client *client)
+> >  {
+> >         struct drm_device *drm = dev_get_drvdata(client->parent);
+> >         struct tegra_dc *dc = host1x_client_to_dc(client);
+> > +       struct tegra_drm *tegra = drm->dev_private;
+> >         int err;
+> >
+> > +       if (tegra->domain) {
+> > +               err = iommu_attach_device(tegra->domain, dc->dev);
 > 
-> Likewise, how much of the cache hierarchy is affected? Any of it? All of
-> it?
+> I wanted to keep device drivers iommu-free with the following:
 > 
-> > +       - timer-state-retained
-> > +               Usage: See definition
-> > +               Value type: <none>
-> > +               Definition: if present the timer control logic is retained on
-> > +                            state entry, otherwise it is lost.
+> http://patchwork.ozlabs.org/patch/354074/
 > 
-> The architected generic timers? Any CPU-local timers? Or any timers
-> whatsoever?
 
-Ok, as I mentioned this timer property is a blocking point for the
-entire set. I gave it more thought, and it is a very hard nut to crack,
-even if we resort to power domains (tick devices do not even contain
-struct device or device node pointers, even if I added a list of
-phandles to timers that are lost on idle state entry I would not be able
-to figure out if the tick device is lost on idle state entry).
+We definitely need something like your series to make iommus work transparently
+on ARM for normal devices, using the of_dma_configure() to look up the correct
+iommu per device and initialize it.
 
-I am reasoning in kernel terms, I know it is bad but I can't help it
-in this case.
+However, any devices that work with multiple iommu domains cannot do that
+and still need to use the iommu API directy. I believe the tegra drm code
+falls into this category.
 
-Would a boolean property like the following one be deemed acceptable, eg:
-
-- local-timer-stop
-
-I want to be 100% honest here, this might turn out a Linux specific
-thing, or might be not, but I still think it is representative of how HW
-works.
-
-Comments welcome and would be very appreciated on this specific detail.
-
-Thanks,
-Lorenzo
-
+	Arnd
