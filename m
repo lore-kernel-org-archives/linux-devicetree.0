@@ -1,73 +1,39 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Fri, 27 Jun 2014 13:03:34 +0200
-Message-ID: <6381366.2IfqZj1r0B@wuerfel>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <20140626085926.GB11244@arm.com> <CAL_JsqKCHf6VXR3FFcBSu1xuhP54dYsAJCZwT-X9p5iTZAOJfQ@mail.gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [RFC 04/10] memory: Add Tegra124 memory controller support
+Date: Fri, 27 Jun 2014 13:07:04 +0200
+Message-ID: <9283417.yKmnrljUYI@wuerfel>
+References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com> <1403815790-8548-5-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqKCHf6VXR3FFcBSu1xuhP54dYsAJCZwT-X9p5iTZAOJfQ@mail.gmail.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jon Masters <jonathan@jonmasters.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Michal Simek <monstr@monstr.eu>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403815790-8548-5-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thursday 26 June 2014 19:44:21 Rob Herring wrote:
-> > Although a bit late, I'm raising this now and hopefully we'll come to a
-> > conclusion soon. Delaying arm64 PCIe support even further is not a real
-> > option, which leaves us with:
-> >
-> > 1. Someone else (with enough PCIe knowledge) volunteering to take over
-> >    soon or
-> 
-> Well, I might have 2 months ago, but now I'm pretty booked up.
-> 
-> > 2. Dropping Liviu's work and going for an arm64-specific implementation
-> >    (most likely based on the arm32 implementation, see below)
-> 
-> 3. Keeping Liviu's patches leaving some of the architecture specific
-> bits. I know Arnd and I both commented on it still needing more common
-> pieces, but compared to option 2 that would be way better.
+On Thursday 26 June 2014 22:49:44 Thierry Reding wrote:
+> +static const struct tegra_mc_client tegra124_mc_clients[] = {
+> +       {
+> +               .id = 0x01,
+> +               .name = "display0a",
+> +               .swgroup = TEGRA_SWGROUP_DC,
+> +               .smmu = {
+> +                       .reg = 0x228,
+> +                       .bit = 1,
+> +               },
+> +               .latency = {
+> +                       .reg = 0x2e8,
+> +                       .shift = 0,
+> +                       .mask = 0xff,
+> +                       .def = 0xc2,
+> +               },
+> +       }, {
 
-Agreed.
- 
-> 920a685 pci: Add support for creating a generic host_bridge from device tree
-> 
-> This function could be moved to drivers/of/of_pci.c if having it in
-> drivers/pci is too much maintenance burden. However, nearly the same
-> code is already being duplicated in every DT enabled ARM PCI host
-> driver and will continue as more PCI hosts are added. So this isn't
-> really a question of converting other architectures to common PCI host
-> infrastructure, but converting DT based PCI hosts to common
-> infrastructure. ARM is the only arch moving host drivers to
-> drivers/pci ATM. Until other architectures start doing that,
-> converting them is pointless.
-
-This is the most important part in my mind. Every implementation gets
-this code wrong at least initially, and we have to provide some generic
-helper to get the broken code out of host drivers. I don't care whether
-that helper is part of the PCI core or part of the OF core.
-
-> 7cfde80 arm64: Add architecture support for PCI
-> 
-> What is here is really just a function of which option we pick.
-> 
-> 
-> > First option is ideal but there is work to do as laid out by Arnd here:
-> >
-> > http://article.gmane.org/gmane.linux.kernel/1679304
-> 
-> I don't agree arm32 is harder than microblaze. Yes, converting ALL of
-> arm would be, but that is not necessary. With Liviu's latest branch
-> the hacks I previously needed are gone (thanks!), and this is all I
-> need to get Versatile PCI working (under QEMU):
-
-I meant converting all of arm32 would be harder, but I agree we don't
-have to do it. It would be nice to convert all of the drivers/pci/host
-drivers though, iow all multiplatform-enabled ones, and leaving the
-current arm32 pci implementation for the platforms we don't want to
-convert to multiplatform anyway (footbridge, iop, ixp4xx, ks8695 (?),
-pxa, sa1100).
+This is a rather long table that I assume would need to get duplicated
+and modified for each specific SoC. Have you considered to put the information
+into DT instead, as auxiliary data in the iommu specifier as provided by
+the device?
 
 	Arnd
