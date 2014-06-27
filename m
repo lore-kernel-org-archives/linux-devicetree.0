@@ -1,186 +1,109 @@
-From: punnaiah choudary kalluri <punnaia@xilinx.com>
-Subject: Re: [PATCH 2/2] usb: chipidea: Add support for zynq usb host and
- device controller
-Date: Fri, 27 Jun 2014 10:49:17 +0530
-Message-ID: <CAGnW=BYk1deQDeyxWyQsNi3t=5ug9f20YgQE18Sn3UBXjJCw+w@mail.gmail.com>
-References: <1403840409-5035-1-git-send-email-punnaia@xilinx.com>
-	<d5c3bf63-f860-4f59-9a9a-88fb73454be7@BL2FFO11FD031.protection.gbl>
-	<20140627033904.GB18039@shlinux1.ap.freescale.net>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [RESEND 1/2] dt/bindings: Binding documentation for Palmas clk32kg and clk32kgaudio clocks
+Date: Fri, 27 Jun 2014 09:01:10 +0300
+Message-ID: <1403848871-26519-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140627033904.GB18039@shlinux1.ap.freescale.net>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Chen <peter.chen@freescale.com>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Punnaiah Choudary <kpc528@gmail.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@linaro.org, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, ldewangan@nvidia.com, linux-doc@vger.kernel.org, nm@ti.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 27, 2014 at 9:09 AM, Peter Chen <peter.chen@freescale.com> wrote:
-> On Fri, Jun 27, 2014 at 09:10:09AM +0530, Punnaiah Choudary Kalluri wrote:
->> Zynq soc usb controller is a synopsys IP and it is compatible
->> with the chipidea spec. So, reusing chipidea drivers for zynq usb
->> controller.
->
-> What means "... usb controller is a synopsys IP", or it should be "uses
-> synopsys IP"?
+Palmas class of devices can provide 32K clock(s) to be used by other devices
+on the board. Depending on the actual device the provided clocks can be:
+CLK32K_KG and CLK32K_KGAUDIO
+or only one:
+CLK32K_KG (TPS659039 for example)
 
-Zynq soc uses synopsys usb IP. I will correct it
+Use separate compatible flags for the two 32K clock.
+A system which needs or have only one of the 32k clock from
+Palmas will need to add node(s) for each clock as separate section
+in the dts file.
+The two compatible property is:
+"ti,palmas-clk32kg" for clk32kg clock
+"ti,palmas-clk32kgaudio" for clk32kgaudio clock
 
->>
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
->> ---
->>  drivers/usb/chipidea/Makefile       |    1 +
->>  drivers/usb/chipidea/ci_hdrc_zynq.c |  115 +++++++++++++++++++++++++++++++++++
->>  2 files changed, 116 insertions(+), 0 deletions(-)
->>  create mode 100644 drivers/usb/chipidea/ci_hdrc_zynq.c
->>
->> diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
->> index 2f099c7..b0d6b6f 100644
->> --- a/drivers/usb/chipidea/Makefile
->> +++ b/drivers/usb/chipidea/Makefile
->> @@ -12,6 +12,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)               += otg_fsm.o
->>
->>  obj-$(CONFIG_USB_CHIPIDEA)   += ci_hdrc_msm.o
->>  obj-$(CONFIG_USB_CHIPIDEA)   += ci_hdrc_zevio.o
->> +obj-$(CONFIG_USB_CHIPIDEA)   += ci_hdrc_zynq.o
->>
->>  # PCI doesn't provide stubs, need to check
->>  ifneq ($(CONFIG_PCI),)
->> diff --git a/drivers/usb/chipidea/ci_hdrc_zynq.c b/drivers/usb/chipidea/ci_hdrc_zynq.c
->> new file mode 100644
->> index 0000000..b3667da
->> --- /dev/null
->> +++ b/drivers/usb/chipidea/ci_hdrc_zynq.c
->> @@ -0,0 +1,115 @@
->> +/*
->> + * Copyright (C) 2014 Xilinx, Inc.
->> + *
->> + * This program is free software; you can redistribute it and/or modify it under
->> + * the terms of the GNU General Public License version 2 as published by the
->> + * Free Software Foundation; either version 2 of the License, or (at your
->> + * option) any later version.
->> + */
->> +
->> +#include <linux/clk.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/module.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/pm_runtime.h>
->> +#include <linux/usb/chipidea.h>
->> +
->> +#include "ci.h"
->> +
->> +#define ZYNQ_USB_DMA_MASK    0xFFFFFFF0
->> +
->> +struct ci_hdrc_zynq_data {
->> +     struct platform_device *ci_pdev;
->> +     struct clk *clk;
->> +};
->> +
->> +static struct ci_hdrc_platform_data pdata = {
->> +     .name           = "ci_hdrc_zynq",
->> +     .capoffset      = DEF_CAPOFFSET,
->> +     .flags          = CI_HDRC_REQUIRE_TRANSCEIVER
->> +};
->> +
->> +static int ci_hdrc_zynq_probe(struct platform_device *pdev)
->> +{
->> +     struct ci_hdrc_zynq_data *data;
->> +     int ret;
->> +
->> +     data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->> +     if (!data) {
->> +             dev_err(&pdev->dev, "Failed to allocate ci_hdrc-imx data!\n");
->
-> hmm, you forget to delete "xxx-imx".
+Apart from the register control of the clocks - which is done via
+the clock API there is a posibility to enable the external sleep
+control. In this way the clock can be enabled/disabled on demand by the
+user of the clock.
 
-Oh! i will correct it and send you the v2.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Reviewed-by: Nishanth Menon <nm@ti.com>
+---
+ .../bindings/clock/clk-palmas-clk32kg-clocks.txt   | 35 ++++++++++++++++++++++
+ include/dt-bindings/mfd/palmas.h                   | 18 +++++++++++
+ 2 files changed, 53 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/clock/clk-palmas-clk32kg-clocks.txt
+ create mode 100644 include/dt-bindings/mfd/palmas.h
 
-Regards,
-Punnaiah
->
->> +             return -ENOMEM;
->> +     }
->> +
->> +     data->clk = devm_clk_get(&pdev->dev, NULL);
->> +     if (IS_ERR(data->clk)) {
->> +             dev_err(&pdev->dev,
->> +                     "Failed to get clock, err=%ld\n", PTR_ERR(data->clk));
->> +             return PTR_ERR(data->clk);
->> +     }
->> +
->> +     ret = clk_prepare_enable(data->clk);
->> +     if (ret) {
->> +             dev_err(&pdev->dev,
->> +                     "Failed to prepare or enable clock, err=%d\n", ret);
->> +             return ret;
->> +     }
->> +
->> +     ret = dma_coerce_mask_and_coherent(&pdev->dev, ZYNQ_USB_DMA_MASK);
->> +     if (ret)
->> +             goto err_clk;
->> +
->> +     data->ci_pdev = ci_hdrc_add_device(&pdev->dev,
->> +                             pdev->resource, pdev->num_resources,
->> +                             &pdata);
->> +     if (IS_ERR(data->ci_pdev)) {
->> +             ret = PTR_ERR(data->ci_pdev);
->> +             dev_err(&pdev->dev,
->> +                     "Can't register ci_hdrc platform device, err=%d\n",
->> +                     ret);
->> +             goto err_clk;
->> +     }
->> +
->> +     platform_set_drvdata(pdev, data);
->> +
->> +     pm_runtime_no_callbacks(&pdev->dev);
->> +     pm_runtime_enable(&pdev->dev);
->> +     return 0;
->> +
->> +err_clk:
->> +     clk_disable_unprepare(data->clk);
->> +     return ret;
->> +}
->> +
->> +static int ci_hdrc_zynq_remove(struct platform_device *pdev)
->> +{
->> +     struct ci_hdrc_zynq_data *data = platform_get_drvdata(pdev);
->> +
->> +     pm_runtime_disable(&pdev->dev);
->> +     ci_hdrc_remove_device(data->ci_pdev);
->> +     clk_disable_unprepare(data->clk);
->> +
->> +     return 0;
->> +}
->> +
->> +static const struct of_device_id ci_hdrc_zynq_dt_ids[] = {
->> +     { .compatible = "xlnx,zynq-usb-2.20a" },
->> +     {},
->> +};
->> +
->> +static struct platform_driver ci_hdrc_zynq_driver = {
->> +     .probe = ci_hdrc_zynq_probe,
->> +     .remove = ci_hdrc_zynq_remove,
->> +     .driver = {
->> +             .name = "zynq_usb",
->> +             .owner = THIS_MODULE,
->> +             .of_match_table = ci_hdrc_zynq_dt_ids,
->> +      },
->> +};
->> +
->> +module_platform_driver(ci_hdrc_zynq_driver);
->> +
->> +MODULE_ALIAS("platform:zynq_usb");
->> +MODULE_DESCRIPTION("CI HDRC ZYNQ USB binding");
->> +MODULE_AUTHOR("Xilinx Inc");
->> +MODULE_LICENSE("GPL v2");
->> --
->> 1.7.4
->>
->>
->
-> --
->
-> Best Regards,
-> Peter Chen
+diff --git a/Documentation/devicetree/bindings/clock/clk-palmas-clk32kg-clocks.txt b/Documentation/devicetree/bindings/clock/clk-palmas-clk32kg-clocks.txt
+new file mode 100644
+index 000000000000..4208886d834a
+--- /dev/null
++++ b/Documentation/devicetree/bindings/clock/clk-palmas-clk32kg-clocks.txt
+@@ -0,0 +1,35 @@
++* Palmas 32KHz clocks *
++
++Palmas device has two clock output pins for 32KHz, KG and KG_AUDIO.
++
++This binding uses the common clock binding ./clock-bindings.txt.
++
++Required properties:
++- compatible :	"ti,palmas-clk32kg" for clk32kg clock
++		"ti,palmas-clk32kgaudio" for clk32kgaudio clock
++- #clock-cells : shall be set to 0.
++
++Optional property:
++- ti,external-sleep-control: The external enable input pins controlled the
++	enable/disable of clocks.  The external enable input pins ENABLE1,
++	ENABLE2 and NSLEEP. The valid values for the external pins are:
++		PALMAS_EXT_CONTROL_PIN_ENABLE1 for ENABLE1 pin
++		PALMAS_EXT_CONTROL_PIN_ENABLE2 for ENABLE2 pin
++		PALMAS_EXT_CONTROL_PIN_NSLEEP for NSLEEP pin
++	Option 0 or missing this property means the clock is enabled/disabled
++	via register access and these pins do not have any control.
++	The macros of external control pins for DTS is defined at
++	dt-bindings/mfd/palmas.h
++
++Example:
++	#include <dt-bindings/mfd/palmas.h>
++	...
++	palmas: tps65913@58 {
++		...
++		clk32kg: palmas_clk32k@0 {
++			compatible = "ti,palmas-clk32kg";
++			#clock-cells = <0>;
++			ti,external-sleep-control = <PALMAS_EXT_CONTROL_PIN_NSLEEP>;
++		};
++		...
++	};
+diff --git a/include/dt-bindings/mfd/palmas.h b/include/dt-bindings/mfd/palmas.h
+new file mode 100644
+index 000000000000..2c8ac4841385
+--- /dev/null
++++ b/include/dt-bindings/mfd/palmas.h
+@@ -0,0 +1,18 @@
++/*
++ * This header provides macros for Palmas device bindings.
++ *
++ * Copyright (c) 2013, NVIDIA Corporation.
++ *
++ * Author: Laxman Dewangan <ldewangan@nvidia.com>
++ *
++ */
++
++#ifndef __DT_BINDINGS_PALMAS_H__
++#define __DT_BINDINGS_PALMAS_H
++
++/* External control pins */
++#define PALMAS_EXT_CONTROL_PIN_ENABLE1	1
++#define PALMAS_EXT_CONTROL_PIN_ENABLE2	2
++#define PALMAS_EXT_CONTROL_PIN_NSLEEP	3
++
++#endif /* __DT_BINDINGS_PALMAS_H */
+-- 
+2.0.0
