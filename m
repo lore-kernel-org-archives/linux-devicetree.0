@@ -1,55 +1,53 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/5] regulator: act8865: set correct number of regulators
- in pdata
-Date: Fri, 27 Jun 2014 17:07:25 +0100
-Message-ID: <20140627160725.GQ23300@sirena.org.uk>
+Subject: Re: [PATCH 1/5] regulator: act8865: fix parsing of platform data
+Date: Fri, 27 Jun 2014 17:09:02 +0100
+Message-ID: <20140627160902.GR23300@sirena.org.uk>
 References: <1403451105-31929-1-git-send-email-b.galvani@gmail.com>
- <1403451105-31929-3-git-send-email-b.galvani@gmail.com>
+ <1403451105-31929-2-git-send-email-b.galvani@gmail.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="mOiujxrFkW1D5yf7"
+	protocol="application/pgp-signature"; boundary="jIKIjq1mcf2dngXY"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1403451105-31929-3-git-send-email-b.galvani@gmail.com>
+In-Reply-To: <1403451105-31929-2-git-send-email-b.galvani@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Beniamino Galvani <b.galvani@gmail.com>
 Cc: Liam Girdwood <lgirdwood@gmail.com>, Wenyou Yang <wenyou.yang@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---mOiujxrFkW1D5yf7
+--jIKIjq1mcf2dngXY
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Jun 22, 2014 at 05:31:42PM +0200, Beniamino Galvani wrote:
-> When platform data is populated from DT all the regulators are
-> instantiated and the value of num_regulators should be the number of
-> all available regulators rather than the number of matched ones.
+On Sun, Jun 22, 2014 at 05:31:41PM +0200, Beniamino Galvani wrote:
+> The driver loops through all available regulators (ACT8865_REG_NUM)
+> and accesses pdata->regulators[i].platform_data without checking the
+> actual value of num_regulators in platform data, potentially causing a
+> invalid memory access.
 
-Could you go into more detail on your logic on this one please?  The
-platform data (and DT configuration) for regulators should be completely
-optional.
+Applied, thanks.
 
---mOiujxrFkW1D5yf7
+--jIKIjq1mcf2dngXY
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTrZa6AAoJELSic+t+oim9i8kP/jVroVZJmC/cmNj62Wcocffe
-E4fChDT1Km+gZ9Fk39AgU7SSImHxQhntsHc78WkBdyGKqCcwTQcRDbZBu5ull8XC
-drDd15JTRDIu/S6aH9u+gZKk9ZghE/No+06nlzDU9u2KW8E3k8Gbs4mYKXh8qQfe
-brQ8VCHulIj9bD4MpCW7Zh8oeP0kUtYOlT7G901Qb+RvqHxxVUG5SeSR8WBQld37
-tc2wD7Ddt1FsMkZuR2SgtpTZSn3xjSJOIT3rgxGZbwO0NEURTbpBrqfGpT6ExkYq
-4F+7uvwF6xM9wDC4eVXWJOvhGlbfuuGpf3W5w9mi5DtjtzLwsEvKDwnlU7asiUDo
-m7cDeEo1BwHfBLUZOOHEEUDAOZhEkhWsgtkKaCP2MnKSOuweAb0HaU3R2LaFTQE4
-nvt4aSR0ArxXfCaXqcczAzfOTfvEBg2MxYVgw3ITE1adIAuttBLr6JxzZLmgP9Ob
-O5jsqkunrqwyZyXfPpEUTueMs2yXdf9QI5wOvLKvhAXlYIk+sxueCSoqBfKQWaRO
-KUlLvDfzPRjVm6I1yHH7xnp8y/RwmWbeylVE40H/mXhPOkRkJjBsKovn4K5sGNC0
-QyOnJS1EvS5B9ZBV1tm9FFc4FEzlIZRGG9t59m54asEXJuBLwFKPdKySbLf6eQZd
-XdKiylvAMQRzG7lyGWZH
-=RkoU
+iQIcBAEBAgAGBQJTrZcbAAoJELSic+t+oim9pccP/1JEECFhxMIuuJIwGyPgTRcE
+Y9AF6y90pqSTlKjvctCRag2nVzpD9l8XGqdGASsagIaZFrsFi+McxARz7iVFguvP
+2v2CtnA6UOOvXJFC3xvpI0X+WCDl95wj2CfTCrX4QXF4/pxIkArEfxO05UsRW1os
+ucgz1xY9G7hjA5QRYsJ/aCBM2W/ZZ87p58X+NBMZ/P3akV/JZv6WxNfDdaEmZZYm
+lH7aBOCooMkU+j9p4N/tiqs59c3uwu28kz+rF/ehsxtH8bcBwQ2Qnr+JX1zLwlya
+3odHFP8hSQhdFWIrfxVaSaFBgsRcRb4hQZnnNbXgf4i1dFBz2SoMoJa5TUTwugaz
+4iDLzAwFnlZm72sMwYq+RXvT1JrpQu08Gh1iYB4I+UCuGYB1PscIngddGwx+d24C
+2kq6qbj+5/kQKEMOLdY2o7oidQe4BdsNNifwHIIE6WLfS6bIiyr76ctatjRol2qZ
+GOvDfynBPEZ81aKOi8biB3JfOnUCV7+qACTHBWEM54A3Fm4ZZsZQSNQeBFNLk6da
+r5QyG6d7k3p2FGkTh2jm5kGjwTzAya9HRpq5miB3s9m6GIGxNnX1nq2mClWX2j7F
+ZCjdEv2vPoN602xlahkRah7PCAxAAg5YXEze7vKXuUjfmjXtwdSZLAa0wUPzrCZX
+XYaNAUgIjYVkboSn4K6j
+=0ZDs
 -----END PGP SIGNATURE-----
 
---mOiujxrFkW1D5yf7--
+--jIKIjq1mcf2dngXY--
