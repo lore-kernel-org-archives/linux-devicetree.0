@@ -1,47 +1,151 @@
-From: Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>
-Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
-Date: Fri, 27 Jun 2014 08:01:51 -0400
-Message-ID: <20140627120151.GC23978@titan.lakedaemon.net>
-References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
- <20140626074209.GE28884@atomide.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140626074209.GE28884-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Cc: Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org>, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, santosh.shilimkar-l0cyMroinI0@public.gmane.org, nm-l0cyMroinI0@public.gmane.org, rnayak-l0cyMroinI0@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH v2 3/3] ARM: tegra: Initialize flow controller from DT
+Date: Fri, 27 Jun 2014 14:07:28 +0200
+Message-ID: <1403870848-1754-3-git-send-email-thierry.reding@gmail.com>
+References: <1403870848-1754-1-git-send-email-thierry.reding@gmail.com>
+Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403870848-1754-1-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 12:42:09AM -0700, Tony Lindgren wrote:
-> * Sricharan R <r.sricharan-l0cyMroinI0@public.gmane.org> [140626 00:14]:
-> > This series does some cleanups, fixes for handling two interrupts
-> > getting mapped twice to same crossbar and provides support for
-> > hardwired IRQ and crossbar definitions.
-> > 
-> > On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
-> > 131, 132, 133 are direct wired to hardware blocks bypassing
-> > crossbar. This quirky implementation is *NOT* supposed to be the
-> > expectation of crossbar hardware usage. This series adds support
-> > to represent such hard-wired irqs through DT and avoid generic
-> > allocation/programming of crossbar in the driver.
-> > 
-> > This way of supporting hard-wired irqs was a result of
-> > the below discussions.
-> > http://www.spinics.net/lists/arm-kernel/msg329946.html
-> > 
-> > Based on 3.16 rc2 mainline.
-> 
-> Jason, once these patches look OK for merging, can you please
-> set them up into an immutable branch so I too can merge them in?
+From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Sure thing.
+Use a matching device tree node to initialize the flow controller driver
+instead of hard-coding the I/O address. This is necessary to get rid of
+the iomap.h include, which in turn make it easier to share this code
+with 64-bit Tegra SoCs.
 
-thx,
+Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+---
+Changes in v2:
+- implement fallback when the device tree node is missing
+- while at it, reorder includes alphabetically
 
-Jason.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ arch/arm/mach-tegra/flowctrl.c | 48 ++++++++++++++++++++++++++++++++++--------
+ arch/arm/mach-tegra/flowctrl.h |  2 ++
+ arch/arm/mach-tegra/tegra.c    |  2 ++
+ 3 files changed, 43 insertions(+), 9 deletions(-)
+
+diff --git a/arch/arm/mach-tegra/flowctrl.c b/arch/arm/mach-tegra/flowctrl.c
+index 4b31091f0d40..89d13b2fa0b5 100644
+--- a/arch/arm/mach-tegra/flowctrl.c
++++ b/arch/arm/mach-tegra/flowctrl.c
+@@ -18,14 +18,15 @@
+  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
+ 
++#include <linux/cpumask.h>
+ #include <linux/init.h>
+-#include <linux/kernel.h>
+ #include <linux/io.h>
+-#include <linux/cpumask.h>
++#include <linux/kernel.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
+ #include <linux/tegra-soc.h>
+ 
+ #include "flowctrl.h"
+-#include "iomap.h"
+ 
+ static u8 flowctrl_offset_halt_cpu[] = {
+ 	FLOW_CTRL_HALT_CPU0_EVENTS,
+@@ -41,23 +42,22 @@ static u8 flowctrl_offset_cpu_csr[] = {
+ 	FLOW_CTRL_CPU1_CSR + 16,
+ };
+ 
++static void __iomem *tegra_flowctrl_base;
++
+ static void flowctrl_update(u8 offset, u32 value)
+ {
+-	void __iomem *addr = IO_ADDRESS(TEGRA_FLOW_CTRL_BASE) + offset;
+-
+-	writel(value, addr);
++	writel(value, tegra_flowctrl_base + offset);
+ 
+ 	/* ensure the update has reached the flow controller */
+ 	wmb();
+-	readl_relaxed(addr);
++	readl_relaxed(tegra_flowctrl_base + offset);
+ }
+ 
+ u32 flowctrl_read_cpu_csr(unsigned int cpuid)
+ {
+ 	u8 offset = flowctrl_offset_cpu_csr[cpuid];
+-	void __iomem *addr = IO_ADDRESS(TEGRA_FLOW_CTRL_BASE) + offset;
+ 
+-	return readl(addr);
++	return readl(tegra_flowctrl_base + offset);
+ }
+ 
+ void flowctrl_write_cpu_csr(unsigned int cpuid, u32 value)
+@@ -138,3 +138,33 @@ void flowctrl_cpu_suspend_exit(unsigned int cpuid)
+ 	reg |= FLOW_CTRL_CSR_EVENT_FLAG;		/* clear event */
+ 	flowctrl_write_cpu_csr(cpuid, reg);
+ }
++
++static const struct of_device_id matches[] __initconst = {
++	{ .compatible = "nvidia,tegra124-flowctrl" },
++	{ .compatible = "nvidia,tegra114-flowctrl" },
++	{ .compatible = "nvidia,tegra30-flowctrl" },
++	{ .compatible = "nvidia,tegra20-flowctrl" },
++	{ }
++};
++
++void __init tegra_flowctrl_init(void)
++{
++	/* hardcoded fallback if device tree node is missing */
++	unsigned long base = 0x60007000;
++	unsigned long size = SZ_4K;
++	struct device_node *np;
++
++	np = of_find_matching_node(NULL, matches);
++	if (np) {
++		struct resource res;
++
++		if (of_address_to_resource(np, 0, &res) == 0) {
++			size = resource_size(&res);
++			base = res.start;
++		}
++
++		of_node_put(np);
++	}
++
++	tegra_flowctrl_base = ioremap_nocache(base, size);
++}
+diff --git a/arch/arm/mach-tegra/flowctrl.h b/arch/arm/mach-tegra/flowctrl.h
+index c89aac60a143..73a9c5016c1a 100644
+--- a/arch/arm/mach-tegra/flowctrl.h
++++ b/arch/arm/mach-tegra/flowctrl.h
+@@ -59,6 +59,8 @@ void flowctrl_write_cpu_halt(unsigned int cpuid, u32 value);
+ 
+ void flowctrl_cpu_suspend_enter(unsigned int cpuid);
+ void flowctrl_cpu_suspend_exit(unsigned int cpuid);
++
++void tegra_flowctrl_init(void);
+ #endif
+ 
+ #endif
+diff --git a/arch/arm/mach-tegra/tegra.c b/arch/arm/mach-tegra/tegra.c
+index 76a6779c5f84..8e139e246526 100644
+--- a/arch/arm/mach-tegra/tegra.c
++++ b/arch/arm/mach-tegra/tegra.c
+@@ -46,6 +46,7 @@
+ #include "board.h"
+ #include "common.h"
+ #include "cpuidle.h"
++#include "flowctrl.h"
+ #include "iomap.h"
+ #include "irq.h"
+ #include "pmc.h"
+@@ -78,6 +79,7 @@ static void __init tegra_init_early(void)
+ 	tegra_cpu_reset_handler_init();
+ 	tegra_powergate_init();
+ 	tegra_hotplug_init();
++	tegra_flowctrl_init();
+ }
+ 
+ static void __init tegra_dt_init_irq(void)
+-- 
+2.0.0
