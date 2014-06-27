@@ -1,79 +1,106 @@
-From: Stephen Warren <swarren@wwwdotorg.org>
-Subject: Re: [PATCH v1 6/9] usb: xhci: Add NVIDIA Tegra XHCI host-controller
- driver
-Date: Fri, 27 Jun 2014 16:01:06 -0600
-Message-ID: <53ADE9A2.5020305@wwwdotorg.org>
-References: <1403072180-4944-1-git-send-email-abrestic@chromium.org>	<1403072180-4944-7-git-send-email-abrestic@chromium.org>	<53AB4F2D.2060208@wwwdotorg.org>	<CAL1qeaFhfYdW06Md10eGVYWBrRR+f1yykVYHNp5+9-t1C9joPQ@mail.gmail.com>	<53AC6152.5060908@wwwdotorg.org> <CAL1qeaEb2aV16F+sXWZ=FtEFW2rcGHhqVJk7+OmU5AtjZiHBDQ@mail.gmail.com>
+From: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
+Date: Fri, 27 Jun 2014 15:23:27 -0700
+Message-ID: <53ADEEDF.7060902@codeaurora.org>
+References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
+	<CAL_JsqKumG1PSFoVfeGpLLG+MjXFeF4aUjun=vv1BJpaxk0Byg@mail.gmail.com>
+	<4545972.cM7IP1qTXQ@wuerfel> <53A4C0C9.2050908@codeaurora.org>
+	<20140624091808.GC26013@arm.com> <53A9BC18.2090106@codeaurora.org>
+	<20140624181150.GB4067@arm.com> <53A9EF3A.2070704@codeaurora.org>
+	<20140625091858.GG6153@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <CAL1qeaEb2aV16F+sXWZ=FtEFW2rcGHhqVJk7+OmU5AtjZiHBDQ@mail.gmail.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Andrew Bresticker <abrestic@chromium.org>
-Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-usb@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, Thierry Reding <thierry.reding@gmail.com>, Russell King <linux@arm.linux.org.uk>, Linus Walleij <linus.walleij@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Grant Likely <grant.likely@linaro.org>, Alan Stern <stern@rowland.harvard.edu>, Kishon Vijay Abraham I <kishon@ti.com>, Arnd Bergmann <arnd@arndb.de>
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <20140625091858.GG6153-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2014 03:19 PM, Andrew Bresticker wrote:
-> On Thu, Jun 26, 2014 at 11:07 AM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->> On 06/25/2014 06:06 PM, Andrew Bresticker wrote:
->>> On Wed, Jun 25, 2014 at 3:37 PM, Stephen Warren <swarren@wwwdotorg.org> wrote:
->>>> On 06/18/2014 12:16 AM, Andrew Bresticker wrote:
->>>>> Add support for the on-chip XHCI host controller present on Tegra SoCs.
+On 6/25/2014 2:18 AM, Will Deacon wrote:
+> On Tue, Jun 24, 2014 at 10:35:54PM +0100, Olav Haugan wrote:
+>> On 6/24/2014 11:11 AM, Will Deacon wrote:
+>>> On Tue, Jun 24, 2014 at 06:57:44PM +0100, Olav Haugan wrote:
+>>>> On 6/24/2014 2:18 AM, Will Deacon wrote:
+>>>>> On Sat, Jun 21, 2014 at 12:16:25AM +0100, Olav Haugan wrote:
+>>>>>> We have multiple-master SMMUs and each master emits a variable number of
+>>>>>> StreamIDs. However, we have to apply a mask (the ARM SMMU spec allows
+>>>>>> for this) to the StreamIDs due to limited number of StreamID 2 Context
+>>>>>> Bank entries in the SMMU. If my understanding is correct we would
+>>>>>> represent this in the DT like this:
+>>>>>>
+>>>>>> 	iommu {
+>>>>>> 		#address-cells = <2>;
+>>>>>> 		#size-cells = <0>;
+>>>>>> 	};
+>>>>>>
+>>>>>> 	master@a {
+>>>>>> 		...
+>>>>>> 		iommus = <&iommu StreamID0 MASK0>,
+>>>>>> 			 <&iommu StreamID1 MASK1>,
+>>>>>> 			 <&iommu StreamID2 MASK2>;
+>>>>>> 	};
 >>>>>
->>>>> The driver is currently very basic: it loads the controller with its
->>>>> firmware, starts the controller, and is able to service messages sent
->>>>> by the controller's firmware.  The hardware supports device mode as
->>>>> well as runtime power-gating, but support for these is not yet
->>>>> implemented here.
-> 
->>>>> diff --git a/drivers/usb/host/xhci-tegra.c b/drivers/usb/host/xhci-tegra.c
-> 
->>>>> +static int tegra_xhci_set_ss_clk(struct tegra_xhci_hcd *tegra,
->>>>> +                              unsigned long rate)
+>>>>> Stupid question, but why not simply describe the masked IDs? What use does
+>>>>> the `raw' ID have to Linux?
 >>>>
->>>>> +     switch (rate) {
->>>>> +     case TEGRA_XHCI_SS_CLK_HIGH_SPEED:
->>>>> +             /* Reparent to PLLU_480M. Set div first to avoid overclocking */
->>>>> +             old_parent_rate = clk_get_rate(clk_get_parent(clk));
->>>>> +             new_parent_rate = clk_get_rate(tegra->pll_u_480m);
->>>>> +             div = new_parent_rate / rate;
->>>>> +             ret = clk_set_rate(clk, old_parent_rate / div);
->>>>> +             if (ret)
->>>>> +                     return ret;
->>>>> +             ret = clk_set_parent(clk, tegra->pll_u_480m);
->>>>> +             if (ret)
->>>>> +                     return ret;
+>>>> We do describe the masked StreamID (SID) but we need to specify the mask
+>>>> that the SMMU should apply to the incoming SIDs, right?
 >>>>
->>>> Don't you need to call clk_set_rate() again after reparenting, since the
->>>> divisor will be different, and the rounding too.
+>>>> We have a bus master that emits 43 unique SIDs. However, we have only 40
+>>>> SMMU_SMRn registers in the SMMU. So we need to mask out some of the
+>>>> incoming SID bits so that the 43 SIDs can match one of 40 entries in the
+>>>> SMR.
 >>>
->>> Nope, the divider we set before remains in-tact after clk_set_parent().
+>>> Hmm, so you're talking about stream matching, right? That doesn't belong in
+>>> the device-tree. I appreciate that the current driver does a terrible job at
+>>> allocating the SMRs (it's bloody difficult!), but we should try to improve
+>>> the dynamic behaviour instead of moving configuration of the SMMU out into
+>>> device-tree, where it's inflexible at best.
 >>
->> Oh I see, the clk_set_rate() call is setting up div so it's appropriate
->> after the new parent is selected.
->>
->> Wouldn't it be better to just stop the clock, assert reset, reparent the
->> clock, and then set the desired rate directly?
+>> I am talking about SMMU_SMRn[MASK] register bits. This is not something
+>> that can be dynamically detected at run-time. It is configuration at the
+>> same level as the actual StreamIDs.
 > 
-> I'm not sure how that would be better than making it more obvious as
-> to how we arrive at the final rate.  Keep in mind that the XHCI host
-> is running at this point (we usually get the scale-up message as a
-> USB3 device is being enumerated) and that disabling the clock and/or
-> asserting reset to the SS partition clock may not be the best idea...
+> Why can't it be dynamically detected? Whilst the StreamIDs are fixed in
+> hardware (from the SMMU architecture perspective), the SMRs are completely
+> programmable. Why doesn't something like Andreas's proposal work for you?
+> The idea there was to find the constant bits among the StreamIDs for a
+> master and create the mask accordingly.
+> 
+Lets say I have an IOMMU with 2 masters and 2 SMRn slots with the
+following stream IDs coming from the masters:
 
-Oh, this happens while the device is running rather than when
-initializing it? Applying reset is probably a bad idea then. Still,
-perhaps stopping the clock for a short time is fine? What about:
+Master 1: 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28
+Master 2: 0x30
 
-clk_disable_unprepare(clk);
-clk_set_parent(clk, tegra->pll_u_480m);
-clk_set_rate(clk, rate);
-clk_prepare_enable(clk);
+To make this work I would program SMR[0] with StreamID 0x20 and mask 0xF
+to ignore lower 4 bits. SMR[1] would just be StreamID 0x30 with mask 0x0.
 
-That seems much more direct to me. The code above feels over-complex to me.
+However, I could also have an IOMMU with 2 masters and 9 SMRn slots with
+the following stream IDs:
 
-If the clock really can't be stopped, then I suppose the existing code
-in the patch is fine. I'd like to see a final clk_get_rate(clk) call
-added, and the value compared against the expected value, to make sure
-no rounding/truncation of the divider happened though.
+Master 1: 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28
+Master 2: 0x29
+
+Here I would program all SMRn and leave the mask to be 0 for all SMRn's.
+So how do I detect when to apply a mask or not?
+
+I am not familiar with Andreas's proposal. Do you have a link?
+
+Thanks,
+
+Olav Haugan
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+hosted by The Linux Foundation
