@@ -1,52 +1,57 @@
-From: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Subject: [PATCH v2 1/2] ARM: DTS: use new compatible string for thermistors in
- trats2
-Date: Fri, 27 Jun 2014 11:38:14 +0530
-Message-ID: <1403849295-29538-2-git-send-email-ch.naveen@samsung.com>
-References: <1403849295-29538-1-git-send-email-ch.naveen@samsung.com>
+From: Patrice Chotard <patrice.chotard@st.com>
+Subject: Re: [PATCH] pinctrl: pinctrl-st.c:  Cleaning up values that are never
+ used
+Date: Fri, 27 Jun 2014 08:47:04 +0200
+Message-ID: <53AD1368.8020305@st.com>
+References: <1403790272-11635-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1403849295-29538-1-git-send-email-ch.naveen@samsung.com>
+In-Reply-To: <1403790272-11635-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org
-Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, dianders@chromium.org, gregkh@linuxfoundation.org, naveenkrishna.ch@gmail.com, cpgs@samsung.com, Chanwoo Choi <cw00.choi@samsung.com>
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Srinivas Kandagatla <srinivas.kandagatla@gmail.com>, Maxime Coquelin <maxime.coquelin@st.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As Murata Manufactures the NTC based thermistors. The vendor
-name in the compatibility is preposed to change to "murata"
+Hi Rickard
 
-This patch uses the new compatibility string in exynos4412 based
-Trats2 board.
+On 06/26/2014 03:44 PM, Rickard Strandqvist wrote:
+> Remove variable that are never used
+>
+> This was found using a static code analysis program called cppcheck.
+>
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+> ---
+>   drivers/pinctrl/pinctrl-st.c |    6 ++----
+>   1 file changed, 2 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/pinctrl/pinctrl-st.c b/drivers/pinctrl/pinctrl-st.c
+> index 1bd6363bc9..d3bd687 100644
+> --- a/drivers/pinctrl/pinctrl-st.c
+> +++ b/drivers/pinctrl/pinctrl-st.c
+> @@ -1178,9 +1178,7 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
+>   	const __be32 *list;
+>   	struct property *pp;
+>   	struct st_pinconf *conf;
+> -	phandle phandle;
+>   	struct device_node *pins;
+> -	u32 pin;
+>   	int i = 0, npins = 0, nr_props;
+>   
+>   	pins = of_get_child_by_name(np, "st,pins");
+> @@ -1218,8 +1216,8 @@ static int st_pctl_dt_parse_groups(struct device_node *np,
+>   		conf = &grp->pin_conf[i];
+>   
+>   		/* bank & offset */
+> -		phandle = be32_to_cpup(list++);
+> -		pin = be32_to_cpup(list++);
+> +		be32_to_cpup(list++);
+> +		be32_to_cpup(list++);
+>   		conf->pin = of_get_named_gpio(pins, pp->name, 0);
+>   		conf->name = pp->name;
+>   		grp->pins[i] = conf->pin;
 
-Signed-off-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-Cc: Chanwoo Choi <cw00.choi@samsung.com>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
----
-Changes since v1: None
+Acked-by: Patrice Chotard <patrice.chotard@st.com>
 
- arch/arm/boot/dts/exynos4412-trats2.dts |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/arch/arm/boot/dts/exynos4412-trats2.dts b/arch/arm/boot/dts/exynos4412-trats2.dts
-index 11967f4..d35755a 100644
---- a/arch/arm/boot/dts/exynos4412-trats2.dts
-+++ b/arch/arm/boot/dts/exynos4412-trats2.dts
-@@ -771,7 +771,7 @@
- 	};
- 
- 	thermistor-ap@0 {
--		compatible = "ntc,ncp15wb473";
-+		compatible = "murata,ncp15wb473";
- 		pullup-uv = <1800000>;	 /* VCC_1.8V_AP */
- 		pullup-ohm = <100000>;	 /* 100K */
- 		pulldown-ohm = <100000>; /* 100K */
-@@ -779,7 +779,7 @@
- 	};
- 
- 	thermistor-battery@1 {
--		compatible = "ntc,ncp15wb473";
-+		compatible = "murata,ncp15wb473";
- 		pullup-uv = <1800000>;	 /* VCC_1.8V_AP */
- 		pullup-ohm = <100000>;	 /* 100K */
- 		pulldown-ohm = <100000>; /* 100K */
--- 
-1.7.9.5
+Thanks
