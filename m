@@ -1,119 +1,58 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [RFC PATCH v2 4/6] mmc: sdhci: host: add new f_sdh30
-Date: Fri, 27 Jun 2014 11:12:49 +0100
-Message-ID: <20140627101248.GD7262@leverpostej>
-References: <1403763812-5495-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <1403763812-5495-5-git-send-email-Vincent.Yang@tw.fujitsu.com>
- <20140626110351.GN15240@leverpostej>
- <CAOEd-H3+MwT3DMqMO0XHaZQqYAN0zaQqRMjC_UjyJn5ZwCaMoQ@mail.gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: mfd: sec-core requires regulators
+Date: Fri, 27 Jun 2014 11:19:40 +0100
+Message-ID: <20140627101940.GJ19645@lee--X1>
+References: <CA+r1ZhhFYip3Jp2c3d8tNpD-vK8Pkf7DzrKTtk6Gy8uOOO3Ucw@mail.gmail.com>
+ <29237234.T7oGEGKuvp@wuerfel>
+ <20140624154833.GR13803@lee--X1>
+ <6906564.1ehoeq1QjB@wuerfel>
+ <20140627090957.GG19645@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-next-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAOEd-H3+MwT3DMqMO0XHaZQqYAN0zaQqRMjC_UjyJn5ZwCaMoQ@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Vincent Yang <vincent.yang.fujitsu@gmail.com>
-Cc: "chris@printf.net" <chris@printf.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "anton@enomsg.org" <anton@enomsg.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "Vincent.Yang@tw.fujitsu.com" <Vincent.Yang@tw.fujitsu.com>
+In-Reply-To: <20140627090957.GG19645@lee--X1>
+Sender: linux-next-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Jim Davis <jim.epost@gmail.com>, sfr@canb.auug.org.au, linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, sbkim73@samsung.com, sameo@linux.intel.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 27, 2014 at 04:32:21AM +0100, Vincent Yang wrote:
-> 2014-06-26 19:03 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
-> > On Thu, Jun 26, 2014 at 07:23:30AM +0100, Vincent Yang wrote:
-> >> This patch adds new host controller driver for
-> >> Fujitsu SDHCI controller f_sdh30.
-> >>
-> >> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
-> >> ---
-> >>  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
-> >>  drivers/mmc/host/Kconfig                           |   7 +
-> >>  drivers/mmc/host/Makefile                          |   1 +
-> >>  drivers/mmc/host/sdhci_f_sdh30.c                   | 346 +++++++++++++++++++++
-> >>  drivers/mmc/host/sdhci_f_sdh30.h                   |  40 +++
-> >>  5 files changed, 429 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
-> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> >> new file mode 100644
-> >> index 0000000..40add438
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
-> >> @@ -0,0 +1,35 @@
-> >> +* Fujitsu SDHCI controller
-> >> +
-> >> +This file documents differences between the core properties in mmc.txt
-> >> +and the properties used by the sdhci_f_sdh30 driver.
-> >> +
-> >> +Required properties:
-> >> +- compatible: "fujitsu,f_sdh30"
-> >
-> > Please use '-' rather than '_' in compatible strings.
-> 
-> Hi Mark,
-> Yes, I'll update it to '-' in next version.
-> 
-> >
-> > This seems to be the name of the driver. What is the precise name of the
-> > IP block?
-> 
-> The name of the IP block is "F_SDH30".
-> That's why it uses "fujitsu,f_sdh30"
+On Fri, 27 Jun 2014, Lee Jones wrote:
 
-Hmm. I'd still be tempted to use "fujitsu,f-sdh30".
+> On Tue, 24 Jun 2014, Arnd Bergmann wrote:
+>=20
+> > The newly added sec-core mfd module calls the regulator_suspend_pre=
+pare()
+> > function, which is only available if the regulator API is provided.=
+ This
+> > matches the usage of the driver, so we can just add a Kconfig depen=
+dency.
+> >=20
+> > Reported-by: Jim Davis <jim.epost@gmail.com>
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+>=20
+> Thanks for re-sending Arnd, patch applied.
 
-> >
-> > [...]
-> >
-> >> +       if (!of_property_read_u32(pdev->dev.of_node, "vendor-hs200",
-> >> +                                 &priv->vendor_hs200))
-> >> +               dev_info(dev, "Applying vendor-hs200 setting\n");
-> >> +       else
-> >> +               priv->vendor_hs200 = 0;
-> >
-> > This wasn't in the binding document, and a grep for "vendor-hs200" in a
-> > v3.16-rc2 tree found me nothing.
-> >
-> > Please document this.
-> 
-> Yes, it is a setting for a vendor specific register.
-> I'll update it in next version.
+Slight change of plan - this appears to have been fixed by 591123e.
 
-It would be nice to know exactly what this is. We usually shy clear of
-placing register values in dt. I can wait until the next posting if
-you're goin to document that.
+> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> > index 207c433..1caa3c5 100644
+> > --- a/drivers/mfd/Kconfig
+> > +++ b/drivers/mfd/Kconfig
+> > @@ -582,7 +582,7 @@ config MFD_RC5T583
+> > =20
+> >  config MFD_SEC_CORE
+> >         bool "SAMSUNG Electronics PMIC Series Support"
+> > -       depends on I2C=3Dy
+> > +       depends on I2C=3Dy && REGULATOR
+> >         select MFD_CORE
+> >         select REGMAP_I2C
+> >         select REGMAP_IRQ
+>=20
 
-> >> +       if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width)) {
-> >> +               if (bus_width == 8) {
-> >> +                       dev_info(dev, "Applying 8 bit bus width\n");
-> >> +                       host->mmc->caps |= MMC_CAP_8_BIT_DATA;
-> >> +               }
-> >> +       }
-> >
-> > What if bus-width is not 8, or is not present?
-> 
-> In both cases, it will not touch host->mmc->caps at all. Then sdhci_add_host()
-> will handle it and set MMC_CAP_4_BIT_DATA as default:
-> 
-> [...]
-> /*
-> * A controller may support 8-bit width, but the board itself
-> * might not have the pins brought out.  Boards that support
-> * 8-bit width must set "mmc->caps |= MMC_CAP_8_BIT_DATA;" in
-> * their platform code before calling sdhci_add_host(), and we
-> * won't assume 8-bit width for hosts without that CAP.
-> */
-> if (!(host->quirks & SDHCI_QUIRK_FORCE_1_BIT_DATA))
-> mmc->caps |= MMC_CAP_4_BIT_DATA;
-
-Ok, but does it make sense for a dts to have:
-
-	bus-width = <1>;
-
-If so, we should presumably do something.
-
-If not, we should at least print a warning that the dtb doesn't make
-sense.
-
-Cheers,
-Mark.
+--=20
+Lee Jones
+Linaro STMicroelectronics Landing Team Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+=46ollow Linaro: Facebook | Twitter | Blog
