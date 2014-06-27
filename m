@@ -1,37 +1,66 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Fri, 27 Jun 2014 15:16:28 +0200
-Message-ID: <7528887.J1DnSBg239@wuerfel>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com> <6381366.2IfqZj1r0B@wuerfel> <20140627124949.GR26276@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140627124949.GR26276@arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org
-Cc: Will Deacon <will.deacon@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Michal Simek <monstr@monstr.eu>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Catalin Marinas <Catalin.Marinas@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Jon Masters <jonathan@jonmasters.org>, Tanmay Inamdar <tinamdar@apm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>
+From: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Subject: [PATCH 11/16] ARM: mvebu: dts: Add CA9 MPcore SoC Controller node
+Date: Fri, 27 Jun 2014 15:22:52 +0200
+Message-ID: <1403875377-940-12-git-send-email-gregory.clement@free-electrons.com>
+References: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 27 June 2014 13:49:49 Will Deacon wrote:
-> On Fri, Jun 27, 2014 at 12:03:34PM +0100, Arnd Bergmann wrote:
-> > On Thursday 26 June 2014 19:44:21 Rob Herring wrote:
-> > > I don't agree arm32 is harder than microblaze. Yes, converting ALL of
-> > > arm would be, but that is not necessary. With Liviu's latest branch
-> > > the hacks I previously needed are gone (thanks!), and this is all I
-> > > need to get Versatile PCI working (under QEMU):
-> > 
-> > I meant converting all of arm32 would be harder, but I agree we don't
-> > have to do it. It would be nice to convert all of the drivers/pci/host
-> > drivers though, iow all multiplatform-enabled ones, and leaving the
-> > current arm32 pci implementation for the platforms we don't want to
-> > convert to multiplatform anyway (footbridge, iop, ixp4xx, ks8695 (?),
-> > pxa, sa1100).
-> 
-> I'm more than happy to convert the generic host controller we merged
-> recently, but I'd probably want the core changes merged first so that I
-> know I'm not wasting my time!
+The CA9 MPcore SoC Control block allows to do some configuration that
+the SoC could use for a specific use case. In most cases the defaults
+case is enough. However there is few exception: for cpuidle we need to
+use the CA9 MPcore Reset Control register.
 
-That is definitely fine with me, but it's Bjorn's decision.
+The documentation is also updated in the same time.
 
-	Arnd
+Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: devicetree@vger.kernel.org
+---
+ .../devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt | 14 ++++++++++++++
+ arch/arm/boot/dts/armada-38x.dtsi                          |  5 +++++
+ 2 files changed, 19 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+new file mode 100644
+index 000000000000..0a2df51ba560
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+@@ -0,0 +1,14 @@
++Marvell Armada 38x CA9 MPcore SoC Controller
++============================================
++
++Required properties:
++
++- compatible: Should be "marvell,armada-380-mpcore-soc-ctrl".
++
++- reg: should be register base and length as documented in the
++  datasheet for the CA9 MPcore SoC Control registers
++
++mpcore-soc-ctrl@20d20 {
++	compatible = "marvell,armada-380-mpcore-soc-ctrl";
++	reg = <0x20d20 0x6c>;
++};
+diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+index 689fa1a46728..242d0ecc99f3 100644
+--- a/arch/arm/boot/dts/armada-38x.dtsi
++++ b/arch/arm/boot/dts/armada-38x.dtsi
+@@ -286,6 +286,11 @@
+ 				reg = <0x20800 0x10>;
+ 			};
+ 
++			mpcore-soc-ctrl@20d20 {
++				compatible = "marvell,armada-380-mpcore-soc-ctrl";
++				reg = <0x20d20 0x6c>;
++			};
++
+ 			coherency-fabric@21010 {
+ 				compatible = "marvell,armada-380-coherency-fabric";
+ 				reg = <0x21010 0x1c>;
+-- 
+1.8.1.2
+
