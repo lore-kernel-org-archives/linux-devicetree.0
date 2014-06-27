@@ -1,57 +1,119 @@
-From: Hiroshi DOyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [RFC 04/10] memory: Add Tegra124 memory controller support
-Date: Fri, 27 Jun 2014 12:46:38 +0300
-Message-ID: <20140627124638.7ec150cca163c89727b8953f@nvidia.com>
-References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com>
-	<1403815790-8548-5-git-send-email-thierry.reding@gmail.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [RFC PATCH v2 4/6] mmc: sdhci: host: add new f_sdh30
+Date: Fri, 27 Jun 2014 11:12:49 +0100
+Message-ID: <20140627101248.GD7262@leverpostej>
+References: <1403763812-5495-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <1403763812-5495-5-git-send-email-Vincent.Yang@tw.fujitsu.com>
+ <20140626110351.GN15240@leverpostej>
+ <CAOEd-H3+MwT3DMqMO0XHaZQqYAN0zaQqRMjC_UjyJn5ZwCaMoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <1403815790-8548-5-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Allen Martin <AMartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak@codeaurora.o>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-mmc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAOEd-H3+MwT3DMqMO0XHaZQqYAN0zaQqRMjC_UjyJn5ZwCaMoQ@mail.gmail.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Vincent Yang <vincent.yang.fujitsu@gmail.com>
+Cc: "chris@printf.net" <chris@printf.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "anton@enomsg.org" <anton@enomsg.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>, "Vincent.Yang@tw.fujitsu.com" <Vincent.Yang@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 27, 2014 at 04:32:21AM +0100, Vincent Yang wrote:
+> 2014-06-26 19:03 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> > On Thu, Jun 26, 2014 at 07:23:30AM +0100, Vincent Yang wrote:
+> >> This patch adds new host controller driver for
+> >> Fujitsu SDHCI controller f_sdh30.
+> >>
+> >> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
+> >> ---
+> >>  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
+> >>  drivers/mmc/host/Kconfig                           |   7 +
+> >>  drivers/mmc/host/Makefile                          |   1 +
+> >>  drivers/mmc/host/sdhci_f_sdh30.c                   | 346 +++++++++++++++++++++
+> >>  drivers/mmc/host/sdhci_f_sdh30.h                   |  40 +++
+> >>  5 files changed, 429 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
+> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+> >> new file mode 100644
+> >> index 0000000..40add438
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+> >> @@ -0,0 +1,35 @@
+> >> +* Fujitsu SDHCI controller
+> >> +
+> >> +This file documents differences between the core properties in mmc.txt
+> >> +and the properties used by the sdhci_f_sdh30 driver.
+> >> +
+> >> +Required properties:
+> >> +- compatible: "fujitsu,f_sdh30"
+> >
+> > Please use '-' rather than '_' in compatible strings.
+> 
+> Hi Mark,
+> Yes, I'll update it to '-' in next version.
+> 
+> >
+> > This seems to be the name of the driver. What is the precise name of the
+> > IP block?
+> 
+> The name of the IP block is "F_SDH30".
+> That's why it uses "fujitsu,f_sdh30"
 
-Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Hmm. I'd still be tempted to use "fujitsu,f-sdh30".
 
-> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
->
-> The memory controller on NVIDIA Tegra124 exposes various knobs that can
-> be used to tune the behaviour of the clients attached to it.
->
-> Currently this driver sets up the latency allowance registers to the HW
-> defaults. Eventually an API should be exported by this driver (via a
-> custom API or a generic subsystem) to allow clients to register latency
-> requirements.
->
-> This driver also registers an IOMMU (SMMU) that's implemented by the
-> memory controller.
->
-> Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> ---
->  drivers/memory/Kconfig                   |    9 +
->  drivers/memory/Makefile                  |    1 +
->  drivers/memory/tegra124-mc.c             | 1945 ++++++++++++++++++++++++++++++
->  include/dt-bindings/memory/tegra124-mc.h |   30 +
->  4 files changed, 1985 insertions(+)
->  create mode 100644 drivers/memory/tegra124-mc.c
->  create mode 100644 include/dt-bindings/memory/tegra124-mc.h
+> >
+> > [...]
+> >
+> >> +       if (!of_property_read_u32(pdev->dev.of_node, "vendor-hs200",
+> >> +                                 &priv->vendor_hs200))
+> >> +               dev_info(dev, "Applying vendor-hs200 setting\n");
+> >> +       else
+> >> +               priv->vendor_hs200 = 0;
+> >
+> > This wasn't in the binding document, and a grep for "vendor-hs200" in a
+> > v3.16-rc2 tree found me nothing.
+> >
+> > Please document this.
+> 
+> Yes, it is a setting for a vendor specific register.
+> I'll update it in next version.
 
-I prefer reusing the existing SMMU and having MC and SMMU separated
-since most of SMMU code are not different from functionality POV, and
-new MC features are quite independent of SMMU.
+It would be nice to know exactly what this is. We usually shy clear of
+placing register values in dt. I can wait until the next posting if
+you're goin to document that.
 
-If it's really convenient to combine MC and SMMU into one driver, we
-could move "drivers/iomm/tegra-smmu.c" here first, and add MC features
-on the top of it.
+> >> +       if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width)) {
+> >> +               if (bus_width == 8) {
+> >> +                       dev_info(dev, "Applying 8 bit bus width\n");
+> >> +                       host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+> >> +               }
+> >> +       }
+> >
+> > What if bus-width is not 8, or is not present?
+> 
+> In both cases, it will not touch host->mmc->caps at all. Then sdhci_add_host()
+> will handle it and set MMC_CAP_4_BIT_DATA as default:
+> 
+> [...]
+> /*
+> * A controller may support 8-bit width, but the board itself
+> * might not have the pins brought out.  Boards that support
+> * 8-bit width must set "mmc->caps |= MMC_CAP_8_BIT_DATA;" in
+> * their platform code before calling sdhci_add_host(), and we
+> * won't assume 8-bit width for hosts without that CAP.
+> */
+> if (!(host->quirks & SDHCI_QUIRK_FORCE_1_BIT_DATA))
+> mmc->caps |= MMC_CAP_4_BIT_DATA;
+
+Ok, but does it make sense for a dts to have:
+
+	bus-width = <1>;
+
+If so, we should presumably do something.
+
+If not, we should at least print a warning that the dtb doesn't make
+sense.
+
+Cheers,
+Mark.
