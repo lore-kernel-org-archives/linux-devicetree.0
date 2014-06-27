@@ -1,58 +1,52 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: mfd: sec-core requires regulators
-Date: Fri, 27 Jun 2014 11:19:40 +0100
-Message-ID: <20140627101940.GJ19645@lee--X1>
-References: <CA+r1ZhhFYip3Jp2c3d8tNpD-vK8Pkf7DzrKTtk6Gy8uOOO3Ucw@mail.gmail.com>
- <29237234.T7oGEGKuvp@wuerfel>
- <20140624154833.GR13803@lee--X1>
- <6906564.1ehoeq1QjB@wuerfel>
- <20140627090957.GG19645@lee--X1>
+From: Inki Dae <inki.dae@samsung.com>
+Subject: Re: [PATCH V3 0/7] drm/exynos: Support DP CLKCON register in FIMD
+ driver
+Date: Fri, 27 Jun 2014 19:24:58 +0900
+Message-ID: <53AD467A.1030005@samsung.com>
+References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-next-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140627090957.GG19645@lee--X1>
-Sender: linux-next-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Jim Davis <jim.epost@gmail.com>, sfr@canb.auug.org.au, linux-next <linux-next@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, sbkim73@samsung.com, sameo@linux.intel.com, grant.likely@linaro.org, robh+dt@kernel.org, devicetree <devicetree@vger.kernel.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Ajay Kumar <ajaykumar.rs@samsung.com>
+Cc: dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, seanpaul@google.com, ajaynumb@gmail.com, jg1.han@samsung.com, joshi@samsung.com, prashanth.g@samsung.com, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, cpgs@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 27 Jun 2014, Lee Jones wrote:
 
-> On Tue, 24 Jun 2014, Arnd Bergmann wrote:
++ DT mailing list
+
+
+On 2014=EB=85=84 06=EC=9B=94 27=EC=9D=BC 19:12, Ajay Kumar wrote:
+> This series is based on exynos-drm-next branch of Inki Dae's tree at:
+> git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.git
 >=20
-> > The newly added sec-core mfd module calls the regulator_suspend_pre=
-pare()
-> > function, which is only available if the regulator API is provided.=
- This
-> > matches the usage of the driver, so we can just add a Kconfig depen=
-dency.
-> >=20
-> > Reported-by: Jim Davis <jim.epost@gmail.com>
-> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> Changes since V2:
+> 	Add DT property to know the type of FIMD output interface
+> 	as per Inki's suggestion.
+> 	Add samsung,output-type DT property in FIMD node for all boards
+> 	supporting DP interface.
 >=20
-> Thanks for re-sending Arnd, patch applied.
-
-Slight change of plan - this appears to have been fixed by 591123e.
-
-> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> > index 207c433..1caa3c5 100644
-> > --- a/drivers/mfd/Kconfig
-> > +++ b/drivers/mfd/Kconfig
-> > @@ -582,7 +582,7 @@ config MFD_RC5T583
-> > =20
-> >  config MFD_SEC_CORE
-> >         bool "SAMSUNG Electronics PMIC Series Support"
-> > -       depends on I2C=3Dy
-> > +       depends on I2C=3Dy && REGULATOR
-> >         select MFD_CORE
-> >         select REGMAP_I2C
-> >         select REGMAP_IRQ
+> Ajay Kumar (7):
+>   [PATCH V3 1/7] drm/exynos: Support DP CLKCON register in FIMD drive=
+r
+>   [PATCH V3 2/7] ARM: dts: Add FIMD output property for snow
+>   [PATCH V3 3/7] ARM: dts: Add FIMD output property for peach_pit
+>   [PATCH V3 4/7] ARM: dts: Add FIMD output property for peach_pi
+>   [PATCH V3 5/7] ARM: dts: Add FIMD output property for smdk5250
+>   [PATCH V3 6/7] ARM: dts: Add FIMD output property for smdk5420
+>   [PATCH V3 7/7] ARM: dts: Add FIMD output property for arndale
 >=20
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+>  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
+>  arch/arm/boot/dts/exynos5250-arndale.dts           |    1 +
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    1 +
+>  arch/arm/boot/dts/exynos5250-snow.dts              |    1 +
+>  arch/arm/boot/dts/exynos5420-peach-pit.dts         |    1 +
+>  arch/arm/boot/dts/exynos5420-smdk5420.dts          |    1 +
+>  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    1 +
+>  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   23 ++++++++++=
+++++++++++
+>  include/video/samsung_fimd.h                       |    4 ++++
+>  9 files changed, 34 insertions(+)
+>=20
