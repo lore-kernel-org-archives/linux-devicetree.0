@@ -1,148 +1,359 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper function.
-Date: Thu, 26 Jun 2014 19:44:21 -0500
-Message-ID: <CAL_JsqKCHf6VXR3FFcBSu1xuhP54dYsAJCZwT-X9p5iTZAOJfQ@mail.gmail.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <20140405001953.GE15806@google.com> <20140407083120.GE17163@e106497-lin.cambridge.arm.com>
- <5183143.FxBNM0xTAV@wuerfel> <CAErSpo4iEV6khP63ZTF+YUTKi9WLFXzMv13nxw15y3qDg15Ztg@mail.gmail.com>
- <20140626085926.GB11244@arm.com>
+From: Vincent Yang <vincent.yang.fujitsu@gmail.com>
+Subject: Re: [RFC PATCH v2 6/6] mmc: core: add manual resume capability
+Date: Fri, 27 Jun 2014 10:23:42 +0800
+Message-ID: <CAOEd-H2Xtpmj9LAnfX6SwcUSu3W1qvD32YNNPpB4ZQn_HF9-wg@mail.gmail.com>
+References: <1403763812-5495-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1403763812-5495-7-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<8b071848-f7df-4965-bd49-ae05b21ebe2e@email.android.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140626085926.GB11244@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Arnd Bergmann <arnd@arndb.de>, linux-pci <linux-pci@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jon Masters <jonathan@jonmasters.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Michal Simek <monstr@monstr.eu>
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <8b071848-f7df-4965-bd49-ae05b21ebe2e@email.android.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: chris@printf.net, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, Anton Vorontsov <anton@enomsg.org>, linuxppc-dev@lists.ozlabs.org, patches@linaro.org, Andy Green <andy.green@linaro.org>, Jaswinder Singh <jaswinder.singh@linaro.org>, Vincent Yang <Vincent.Yang@tw.fujitsu.com>
 List-Id: devicetree@vger.kernel.org
 
-Adding Michael Simek...
-
-On Thu, Jun 26, 2014 at 3:59 AM, Catalin Marinas
-<catalin.marinas@arm.com> wrote:
-> (sorry for replying to a months old thread)
+2014-06-26 17:42 GMT+08:00 Ulf Hansson <ulf.hansson@linaro.org>:
 >
-> On Mon, Apr 07, 2014 at 06:58:24PM +0100, Bjorn Helgaas wrote:
->> On Mon, Apr 7, 2014 at 5:36 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+>
+> On 26 juni 2014 08:23:32 CEST, Vincent Yang <vincent.yang.fujitsu@gmail.com> wrote:
+>>This patch adds manual resume for some embedded platforms with rootfs
+>>stored in SD card. It references CONFIG_MMC_BLOCK_DEFERRED_RESUME in
+>>kernel 3.10. It lets host controller driver to manually handle resume
+>>by itself.
 >>
->> > I think migrating other architectures to use the same code should be
->> > a separate effort from adding a generic implementation that can be
->> > used by arm64. It's probably a good idea to have patches to convert
->> > arm32 and/or microblaze.
+>>[symptom]
+>>This issue is found on mb86s7x platforms with rootfs stored in SD card.
+>>It failed to resume form STR suspend mode because SD card cannot be
+>>ready
+>>in time. It take longer time (e.g., 600ms) to be ready for access.
+>>The error log looks like below:
 >>
->> Let me reiterate that I am 100% in favor of replacing arch-specific
->> code with more generic implementations.
+>>root@localhost:~# echo mem > /sys/power/state
+>>[   30.441974] SUSPEND
 >>
->> However, I am not 100% in favor of doing it as separate efforts
->> (although maybe I could be convinced).  The reasons I hesitate are
->> that (1) if only one architecture uses a new "generic" implementation,
->> we really don't know whether it is generic enough, (2) until I see the
->> patches to convert other architectures, I have to assume that I'm the
->> one who will write them, and (3) as soon as we add the code to
->> drivers/pci, it becomes partly my headache to maintain it, even if
->> only one arch benefits from it.
+>>SCB Firmware : Category 01 Version 02.03 Rev. 00_
+>>    Config   : (no configuration)
+>>root@localhost:~# [   30.702976] Buffer I/O error on device mmcblk1p2,
+>>logical block 31349
+>>[   30.709678] Buffer I/O error on device mmcblk1p2, logical block
+>>168073
+>>[   30.716220] Buffer I/O error on device mmcblk1p2, logical block
+>>168074
+>>[   30.722759] Buffer I/O error on device mmcblk1p2, logical block
+>>168075
+>>[   30.729456] Buffer I/O error on device mmcblk1p2, logical block
+>>31349
+>>[   30.735916] Buffer I/O error on device mmcblk1p2, logical block
+>>31350
+>>[   30.742370] Buffer I/O error on device mmcblk1p2, logical block
+>>31351
+>>[   30.749025] Buffer I/O error on device mmcblk1p2, logical block
+>>168075
+>>[   30.755657] Buffer I/O error on device mmcblk1p2, logical block
+>>31351
+>>[   30.763130] Aborting journal on device mmcblk1p2-8.
+>>[   30.768060] JBD2: Error -5 detected when updating journal superblock
+>>for mmcblk1p2-8.
+>>[   30.776085] EXT4-fs error (device mmcblk1p2):
+>>ext4_journal_check_start:56: Detected aborted journal
+>>[   30.785259] EXT4-fs (mmcblk1p2): Remounting filesystem read-only
+>>[   31.370716] EXT4-fs error (device mmcblk1p2): ext4_find_entry:1309:
+>>inode #2490369: comm udevd: reading directory lblock 0
+>>[   31.382485] EXT4-fs error (device mmcblk1p2): ext4_find_entry:1309:
+>>inode #1048577: comm udevd: reading directory lblock 0
+>>
+>>[analysis]
+>>In system resume path, mmc_sd_resume() is failed with error code -123
+>>because at that time SD card is still not ready on mb86s7x platforms.
 >
-> I agree and understand your point.
+> So why does it fail? It shouldn't!
 >
->> Please don't think I'm questioning anyone's intent or good will.  It's
->> just that I understand the business pressures, and I know how hard it
->> can be to justify this sort of work to one's management, especially
->> after the immediate problem has been solved.
+> I get the impression that you are solving this in the wrong way.
+
+Hi Uffe,
+On mb86s7x EVB, power for SD card is completely removed when entering
+STR suspend mode (i.e., echo mem > /sys/power/state). When system
+starts to resume, it turns on the power for SD card again. However, It take
+longer time (e.g., 600ms) to get the power ready.
+This is why mmc_sd_resume() failed with error code -123. At that time point,
+power for SD card is not ready yet.
+
+At first we fixed it by a simple method of using SDHCI_QUIRK_DELAY_AFTER_POWER:
+
+diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
+index 169e17d..ed28896 100644
+--- a/drivers/mmc/host/sdhci.c
++++ b/drivers/mmc/host/sdhci.c
+@@ -1283,7 +1283,7 @@ static void sdhci_set_power(struct sdhci_host
+*host, unsigned char mode,
+                 * they can apply clock after applying power
+                 */
+                if (host->quirks & SDHCI_QUIRK_DELAY_AFTER_POWER)
+-                       mdelay(10);
++                       mdelay(600);
+        }
+
+        if (host->vmmc) {
+
+However, we found it blocks the system resume path. It can slow down
+system resume and also booting.
+Therefore, we would like to resume SD card manually and asynchronously
+by host controller driver itself. Thus system resume path is not blocked.
+Thanks a lot for your review!
+
+
+Best regards,
+Vincent Yang
+
 >
-> But, unfortunately, that's something we failed to address in reasonable
-> time (even though I was one of the proponents of the generic PCIe
-> implementation). This work is very likely to slip further into the late
-> part of this year and I am aware that several ARM partners are blocked
-> on the (upstream) availability of PCIe support for the arm64 kernel.
+> Kind regards
+> Uffe
 >
-> Although a bit late, I'm raising this now and hopefully we'll come to a
-> conclusion soon. Delaying arm64 PCIe support even further is not a real
-> option, which leaves us with:
+>>
+>>[solution]
+>>In order to not blocking system resume path, this patch just sets a
+>>flag
+>>MMC_BUSRESUME_MANUAL_RESUME when this error happened, and then host
+>>controller
+>>driver can understand it by this flag. Then host controller driver have
+>>to
+>>resume SD card manually and asynchronously.
+>>
+>>Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
+>>---
+>> drivers/mmc/core/core.c          |  4 ++
+>> drivers/mmc/core/sd.c            |  4 ++
+>>drivers/mmc/host/sdhci_f_sdh30.c | 89
+>>++++++++++++++++++++++++++++++++++++++++
+>> include/linux/mmc/host.h         | 14 +++++++
+>> 4 files changed, 111 insertions(+)
+>>
+>>diff --git a/drivers/mmc/core/core.c b/drivers/mmc/core/core.c
+>>index 764af63..51fce49 100644
+>>--- a/drivers/mmc/core/core.c
+>>+++ b/drivers/mmc/core/core.c
+>>@@ -2648,6 +2648,10 @@ int mmc_pm_notify(struct notifier_block
+>>*notify_block,
+>>       case PM_POST_RESTORE:
+>>
+>>               spin_lock_irqsave(&host->lock, flags);
+>>+              if (mmc_bus_manual_resume(host)) {
+>>+                      spin_unlock_irqrestore(&host->lock, flags);
+>>+                      break;
+>>+              }
+>>               host->rescan_disable = 0;
+>>               spin_unlock_irqrestore(&host->lock, flags);
+>>               _mmc_detect_change(host, 0, false);
+>>diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+>>index 0c44510..859390d 100644
+>>--- a/drivers/mmc/core/sd.c
+>>+++ b/drivers/mmc/core/sd.c
+>>@@ -1133,6 +1133,10 @@ static int mmc_sd_resume(struct mmc_host *host)
+>>
+>>       if (!(host->caps & MMC_CAP_RUNTIME_RESUME)) {
+>>               err = _mmc_sd_resume(host);
+>>+              if ((host->caps2 & MMC_CAP2_MANUAL_RESUME) && err)
+>>+                      mmc_set_bus_resume_policy(host, 1);
+>>+              else
+>>+                      mmc_set_bus_resume_policy(host, 0);
+>>               pm_runtime_set_active(&host->card->dev);
+>>               pm_runtime_mark_last_busy(&host->card->dev);
+>>       }
+>>diff --git a/drivers/mmc/host/sdhci_f_sdh30.c
+>>b/drivers/mmc/host/sdhci_f_sdh30.c
+>>index 6fae509..67bcff2 100644
+>>--- a/drivers/mmc/host/sdhci_f_sdh30.c
+>>+++ b/drivers/mmc/host/sdhci_f_sdh30.c
+>>@@ -30,6 +30,12 @@
+>> #include "../core/core.h"
+>>
+>> #define DRIVER_NAME "f_sdh30"
+>>+#define RESUME_WAIT_COUNT     100
+>>+#define RESUME_WAIT_TIME      50
+>>+#define RESUME_WAIT_JIFFIES   msecs_to_jiffies(RESUME_DETECT_TIME)
+>>+#define RESUME_DETECT_COUNT   16
+>>+#define RESUME_DETECT_TIME    50
+>>+#define RESUME_DETECT_JIFFIES msecs_to_jiffies(RESUME_DETECT_TIME)
+>>
+>>
+>> struct f_sdhost_priv {
+>>@@ -38,8 +44,59 @@ struct f_sdhost_priv {
+>>       int gpio_select_1v8;
+>>       u32 vendor_hs200;
+>>       struct device *dev;
+>>+      unsigned int quirks;    /* Deviations from spec. */
+>>+
+>>+/* retry to detect mmc device when resume */
+>>+#define F_SDH30_QUIRK_RESUME_DETECT_RETRY             (1<<0)
+>>+
+>>+      struct workqueue_struct *resume_detect_wq;
+>>+      struct delayed_work resume_detect_work;
+>>+      unsigned int            resume_detect_count;
+>>+      unsigned int            resume_wait_count;
+>> };
+>>
+>>+static void sdhci_f_sdh30_resume_detect_work_func(struct work_struct
+>>*work)
+>>+{
+>>+      struct f_sdhost_priv *priv = container_of(work, struct f_sdhost_priv,
+>>+              resume_detect_work.work);
+>>+      struct sdhci_host *host = dev_get_drvdata(priv->dev);
+>>+      int err = 0;
+>>+
+>>+      if (mmc_bus_manual_resume(host->mmc)) {
+>>+              pm_runtime_disable(&host->mmc->card->dev);
+>>+              mmc_card_set_suspended(host->mmc->card);
+>>+              err = host->mmc->bus_ops->resume(host->mmc);
+>>+              if (priv->resume_detect_count-- && err)
+>>+                      queue_delayed_work(priv->resume_detect_wq,
+>>+                                         &priv->resume_detect_work,
+>>+                              RESUME_DETECT_JIFFIES);
+>>+              else
+>>+                      pr_debug("%s: resume detection done (count:%d, wait:%d, err:%d)\n",
+>>+                               mmc_hostname(host->mmc),
+>>+                               priv->resume_detect_count,
+>>+                               priv->resume_wait_count, err);
+>>+      } else {
+>>+              if (priv->resume_wait_count--)
+>>+                      queue_delayed_work(priv->resume_detect_wq,
+>>+                                         &priv->resume_detect_work,
+>>+                              RESUME_WAIT_JIFFIES);
+>>+              else
+>>+                      pr_debug("%s: resume done\n", mmc_hostname(host->mmc));
+>>+      }
+>>+}
+>>+
+>>+static void sdhci_f_sdh30_resume_detect(struct mmc_host *mmc,
+>>+                                      int detect, int wait)
+>>+{
+>>+      struct sdhci_host *host = mmc_priv(mmc);
+>>+      struct f_sdhost_priv *priv = sdhci_priv(host);
+>>+
+>>+      priv->resume_detect_count = detect;
+>>+      priv->resume_wait_count = wait;
+>>+      queue_delayed_work(priv->resume_detect_wq,
+>>+                         &priv->resume_detect_work, 0);
+>>+}
+>>+
+>> void sdhci_f_sdh30_soft_voltage_switch(struct sdhci_host *host)
+>> {
+>>       struct f_sdhost_priv *priv = sdhci_priv(host);
+>>@@ -146,6 +203,12 @@ static int sdhci_f_sdh30_probe(struct
+>>platform_device *pdev)
+>>               }
+>>       }
+>>
+>>+      if (of_find_property(pdev->dev.of_node, "resume-detect-retry", NULL))
+>>{
+>>+              dev_info(dev, "Applying resume detect retry quirk\n");
+>>+              priv->quirks |= F_SDH30_QUIRK_RESUME_DETECT_RETRY;
+>>+              host->mmc->caps2 |= MMC_CAP2_MANUAL_RESUME;
+>>+      }
+>>+
+>>       ret = mmc_of_parse_voltage(pdev->dev.of_node, &host->ocr_mask);
+>>       if (ret) {
+>>               dev_err(dev, "%s: parse voltage error\n", __func__);
+>>@@ -197,6 +260,18 @@ static int sdhci_f_sdh30_probe(struct
+>>platform_device *pdev)
+>>               }
+>>       }
+>>
+>>+      /* Init workqueue */
+>>+      if (priv->quirks & F_SDH30_QUIRK_RESUME_DETECT_RETRY) {
+>>+              priv->resume_detect_wq = create_workqueue("sdhci_f_sdh30");
+>>+              if (priv->resume_detect_wq == NULL) {
+>>+                      ret = -ENOMEM;
+>>+                      dev_err(dev, "Failed to create resume detection workqueue\n");
+>>+                      goto err_init_wq;
+>>+              }
+>>+              INIT_DELAYED_WORK(&priv->resume_detect_work,
+>>+                                sdhci_f_sdh30_resume_detect_work_func);
+>>+      }
+>>+
+>>       ret = sdhci_add_host(host);
+>>       if (ret) {
+>>               dev_err(dev, "%s: host add error\n", __func__);
+>>@@ -229,6 +304,9 @@ static int sdhci_f_sdh30_probe(struct
+>>platform_device *pdev)
+>>       return 0;
+>>
+>> err_add_host:
+>>+      if (priv->quirks & F_SDH30_QUIRK_RESUME_DETECT_RETRY)
+>>+              destroy_workqueue(priv->resume_detect_wq);
+>>+err_init_wq:
+>>       if (gpio_is_valid(priv->gpio_select_1v8)) {
+>>               gpio_direction_output(priv->gpio_select_1v8, 1);
+>>               gpio_free(priv->gpio_select_1v8);
+>>@@ -268,6 +346,9 @@ static int sdhci_f_sdh30_remove(struct
+>>platform_device *pdev)
+>>               gpio_free(priv->gpio_select_1v8);
+>>       }
+>>
+>>+      if (priv->quirks & F_SDH30_QUIRK_RESUME_DETECT_RETRY)
+>>+              destroy_workqueue(priv->resume_detect_wq);
+>>+
+>>       sdhci_free_host(host);
+>>       platform_set_drvdata(pdev, NULL);
+>>
+>>@@ -285,7 +366,15 @@ static int sdhci_f_sdh30_suspend(struct device
+>>*dev)
+>> static int sdhci_f_sdh30_resume(struct device *dev)
+>> {
+>>       struct sdhci_host *host = dev_get_drvdata(dev);
+>>+      struct f_sdhost_priv *priv = sdhci_priv(host);
+>>
+>>+      if (priv->quirks & F_SDH30_QUIRK_RESUME_DETECT_RETRY) {
+>>+              pr_debug("%s: start resume detect\n",
+>>+                       mmc_hostname(host->mmc));
+>>+              sdhci_f_sdh30_resume_detect(host->mmc,
+>>+                                          RESUME_DETECT_COUNT,
+>>+                                          RESUME_WAIT_COUNT);
+>>+      }
+>>       return sdhci_resume_host(host);
+>> }
+>> #endif
+>>diff --git a/include/linux/mmc/host.h b/include/linux/mmc/host.h
+>>index 7960424..55221dd 100644
+>>--- a/include/linux/mmc/host.h
+>>+++ b/include/linux/mmc/host.h
+>>@@ -283,6 +283,7 @@ struct mmc_host {
+>> #define MMC_CAP2_HS400                (MMC_CAP2_HS400_1_8V | \
+>>                                MMC_CAP2_HS400_1_2V)
+>> #define MMC_CAP2_SDIO_IRQ_NOTHREAD (1 << 17)
+>>+#define MMC_CAP2_MANUAL_RESUME     (1 << 18)  /* Resume manually when
+>>error */
+>>
+>>       mmc_pm_flag_t           pm_caps;        /* supported pm features */
+>>
+>>@@ -338,6 +339,9 @@ struct mmc_host {
+>>       const struct mmc_bus_ops *bus_ops;      /* current bus driver */
+>>       unsigned int            bus_refs;       /* reference counter */
+>>
+>>+      unsigned int            bus_resume_flags;
+>>+#define MMC_BUSRESUME_MANUAL_RESUME   (1 << 0)
+>>+
+>>       unsigned int            sdio_irqs;
+>>       struct task_struct      *sdio_irq_thread;
+>>       bool                    sdio_irq_pending;
+>>@@ -384,6 +388,16 @@ static inline void *mmc_priv(struct mmc_host
+>>*host)
+>> #define mmc_dev(x)    ((x)->parent)
+>> #define mmc_classdev(x)       (&(x)->class_dev)
+>> #define mmc_hostname(x)       (dev_name(&(x)->class_dev))
+>>+#define mmc_bus_manual_resume(host) ((host)->bus_resume_flags &               \
+>>+      MMC_BUSRESUME_MANUAL_RESUME)
+>>+
+>>+static inline void mmc_set_bus_resume_policy(struct mmc_host *host,
+>>int manual)
+>>+{
+>>+      if (manual)
+>>+              host->bus_resume_flags |= MMC_BUSRESUME_MANUAL_RESUME;
+>>+      else
+>>+              host->bus_resume_flags &= ~MMC_BUSRESUME_MANUAL_RESUME;
+>>+}
+>>
+>> int mmc_power_save_host(struct mmc_host *host);
+>> int mmc_power_restore_host(struct mmc_host *host);
 >
-> 1. Someone else (with enough PCIe knowledge) volunteering to take over
->    soon or
-
-Well, I might have 2 months ago, but now I'm pretty booked up.
-
-> 2. Dropping Liviu's work and going for an arm64-specific implementation
->    (most likely based on the arm32 implementation, see below)
-
-3. Keeping Liviu's patches leaving some of the architecture specific
-bits. I know Arnd and I both commented on it still needing more common
-pieces, but compared to option 2 that would be way better.
-
-Let's look at the patches in question:
-
-3e71867 pci: Introduce pci_register_io_range() helper function.
-6681dff pci: OF: Fix the conversion of IO ranges into IO resources.
-
-Both OF patches. I'll happily merge them.
-
-
-2d5dd85 pci: Create pci_host_bridge before its associated bus in
-pci_create_root_bus.
-f6f2854 pci: Introduce a domain number for pci_host_bridge.
-524a9f5 pci: Export find_pci_host_bridge() function.
-
-These don't seem to be too controversial.
-
-
-fb75718 pci: of: Parse and map the IRQ when adding the PCI device.
-
-6 LOC. Hardly controversial.
-
-
-920a685 pci: Add support for creating a generic host_bridge from device tree
-
-This function could be moved to drivers/of/of_pci.c if having it in
-drivers/pci is too much maintenance burden. However, nearly the same
-code is already being duplicated in every DT enabled ARM PCI host
-driver and will continue as more PCI hosts are added. So this isn't
-really a question of converting other architectures to common PCI host
-infrastructure, but converting DT based PCI hosts to common
-infrastructure. ARM is the only arch moving host drivers to
-drivers/pci ATM. Until other architectures start doing that,
-converting them is pointless.
-
-bcf5c10 Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
-
-Seems like an independent fix that should be applied regardless.
-
-
-7cfde80 arm64: Add architecture support for PCI
-
-What is here is really just a function of which option we pick.
-
-
-> First option is ideal but there is work to do as laid out by Arnd here:
->
-> http://article.gmane.org/gmane.linux.kernel/1679304
-
-I don't agree arm32 is harder than microblaze. Yes, converting ALL of
-arm would be, but that is not necessary. With Liviu's latest branch
-the hacks I previously needed are gone (thanks!), and this is all I
-need to get Versatile PCI working (under QEMU):
-
-diff --git a/arch/arm/include/asm/io.h b/arch/arm/include/asm/io.h
-index 3d23418..22b7529 100644
---- a/arch/arm/include/asm/io.h
-+++ b/arch/arm/include/asm/io.h
-@@ -178,6 +178,7 @@ static inline void __iomem *__typesafe_io(unsigned
-long addr)
-
- /* PCI fixed i/o mapping */
- #define PCI_IO_VIRT_BASE       0xfee00000
-+#define PCI_IOBASE             PCI_IO_VIRT_BASE
-
- #if defined(CONFIG_PCI)
- void pci_ioremap_set_mem_type(int mem_type);
-
-Hum, so I guess now I've converted ARM...
-
-Here's a branch with my changes[1]. And BTW, it also has
-multi-platform support for Versatile as moving the PCI host to DT (and
-drivers/pci/host) is about the last remaining obstacle.
-
-Rob
-
-[1] git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-versatile-pci-v2
