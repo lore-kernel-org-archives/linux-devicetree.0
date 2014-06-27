@@ -1,66 +1,61 @@
-From: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Subject: [PATCH 11/16] ARM: mvebu: dts: Add CA9 MPcore SoC Controller node
-Date: Fri, 27 Jun 2014 15:22:52 +0200
-Message-ID: <1403875377-940-12-git-send-email-gregory.clement@free-electrons.com>
-References: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, Nadav Haklai <nadavh@marvell.com>, devicetree@vger.kernel.org
+From: Gabriel FERNANDEZ <gabriel.fernandez@st.com>
+Subject: [PATCH v2 00/14] Add Flexgen Clock support
+Date: Fri, 27 Jun 2014 15:24:57 +0200
+Message-ID: <1403875511-7710-1-git-send-email-gabriel.fernandez@linaro.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+Sender: linux-doc-owner@vger.kernel.org
+To: mturquette@linaro.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, kernel@stlinux.com, Lee Jones <lee.jones@linaro.org>, Gabriel Fernandez <gabriel.fernandez@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The CA9 MPcore SoC Control block allows to do some configuration that
-the SoC could use for a specific use case. In most cases the defaults
-case is enough. However there is few exception: for cpuidle we need to
-use the CA9 MPcore Reset Control register.
+Changes in v2:
+ - use static const for clkgen_pll_data and stm_fs tables (from
+   Peter Griffin review)
+ - add 326 and 333 Mhz frequencies
+ - cosmetic correction in st,clkgen-vcc.txt
+ - use of kcalloc instead of kzalloc in drivers/clk/st/clk-flexgen.c
 
-The documentation is also updated in the same time.
+The goal of this series is to add Flexgen clock support to ST SoCs.
 
-Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt | 14 ++++++++++++++
- arch/arm/boot/dts/armada-38x.dtsi                          |  5 +++++
- 2 files changed, 19 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+A Flexgen clock is composed by:
+  - a clock cross bar (represented by a mux element)
+  - a pre and final dividers (represented by a divider and gate elements)
 
-diff --git a/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-new file mode 100644
-index 000000000000..0a2df51ba560
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-@@ -0,0 +1,14 @@
-+Marvell Armada 38x CA9 MPcore SoC Controller
-+============================================
-+
-+Required properties:
-+
-+- compatible: Should be "marvell,armada-380-mpcore-soc-ctrl".
-+
-+- reg: should be register base and length as documented in the
-+  datasheet for the CA9 MPcore SoC Control registers
-+
-+mpcore-soc-ctrl@20d20 {
-+	compatible = "marvell,armada-380-mpcore-soc-ctrl";
-+	reg = <0x20d20 0x6c>;
-+};
-diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-index 689fa1a46728..242d0ecc99f3 100644
---- a/arch/arm/boot/dts/armada-38x.dtsi
-+++ b/arch/arm/boot/dts/armada-38x.dtsi
-@@ -286,6 +286,11 @@
- 				reg = <0x20800 0x10>;
- 			};
- 
-+			mpcore-soc-ctrl@20d20 {
-+				compatible = "marvell,armada-380-mpcore-soc-ctrl";
-+				reg = <0x20d20 0x6c>;
-+			};
-+
- 			coherency-fabric@21010 {
- 				compatible = "marvell,armada-380-coherency-fabric";
- 				reg = <0x21010 0x1c>;
+Tested on B2120 board.
+
+Gabriel Fernandez (14):
+  clk: st: Update ST clock binding documentation
+  drivers: clk: st: use static const for stm_fs tables
+  drivers: clk: st: use static const for clkgen_pll_data tables
+  clk: st: Adds Flexgen clock binding
+  drivers: clk: st: STiH407: Support for Flexgen Clocks
+  drivers: clk: st: STiH407: Support for A9 MUX Clocks
+  drivers: clk: st: STiH407: Support for clockgenA0
+  drivers: clk: st: Add polarity bit indication
+  drivers: clk: st: Add quadfs reset handling
+  drivers: clk: st: STiH407: Support for clockgenC0
+  drivers: clk: st: STiH407: Support for clockgenD0/D2/D3
+  drivers: clk: st: STiH407: Support for clockgenA9
+  drivers: clk: st: Update frequency tables for fs660c32 and fs432c65
+  drivers: clk: st: Use round to closest divider flag
+
+ .../bindings/clock/st/st,clkgen-divmux.txt         |  28 +-
+ .../devicetree/bindings/clock/st/st,clkgen-mux.txt |   6 +-
+ .../devicetree/bindings/clock/st/st,clkgen-pll.txt |  17 +-
+ .../bindings/clock/st/st,clkgen-prediv.txt         |   8 +-
+ .../devicetree/bindings/clock/st/st,clkgen-vcc.txt |  34 ++-
+ .../devicetree/bindings/clock/st/st,clkgen.txt     |  59 ++--
+ .../devicetree/bindings/clock/st/st,flexgen.txt    |  48 +++
+ .../devicetree/bindings/clock/st/st,quadfs.txt     |  15 +-
+ drivers/clk/st/Makefile                            |   2 +-
+ drivers/clk/st/clk-flexgen.c                       | 332 +++++++++++++++++++++
+ drivers/clk/st/clkgen-fsyn.c                       | 211 +++++++++++--
+ drivers/clk/st/clkgen-mux.c                        |  12 +-
+ drivers/clk/st/clkgen-pll.c                        |  94 +++++-
+ 13 files changed, 750 insertions(+), 116 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
+ create mode 100644 drivers/clk/st/clk-flexgen.c
+
 -- 
-1.8.1.2
+1.9.1
 
