@@ -1,38 +1,42 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v7 1/6] pci: Introduce pci_register_io_range() helper
- function.
-Date: Fri, 27 Jun 2014 13:49:49 +0100
-Message-ID: <20140627124949.GR26276@arm.com>
-References: <1394811272-1547-1-git-send-email-Liviu.Dudau@arm.com>
- <20140626085926.GB11244@arm.com>
- <CAL_JsqKCHf6VXR3FFcBSu1xuhP54dYsAJCZwT-X9p5iTZAOJfQ@mail.gmail.com>
- <6381366.2IfqZj1r0B@wuerfel>
+From: Michael Grzeschik <mgr@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] usb: chipidea: Add support for zynq usb host and
+ device controller
+Date: Fri, 27 Jun 2014 14:55:15 +0200
+Message-ID: <20140627125515.GA6025@pengutronix.de>
+References: <1403868233-5123-1-git-send-email-punnaia@xilinx.com>
+ <fa656d2d-a2a8-4b8d-a29b-e89e4bfced3e@BL2FFO11FD034.protection.gbl>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-pci-owner@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <6381366.2IfqZj1r0B@wuerfel>
-Sender: linux-pci-owner@vger.kernel.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: Rob Herring <robherring2@gmail.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, linux-pci <linux-pci@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@secretlab.ca>, Tanmay Inamdar <tinamdar@apm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jon Masters <jonathan@jonmasters.org>, Liviu Dudau <Liviu.Dudau@arm.com>, LAKML <linux-arm-kernel@lists.infradead.org>, Michal Simek <monstr@monstr.eu>
+In-Reply-To: <fa656d2d-a2a8-4b8d-a29b-e89e4bfced3e@BL2FFO11FD034.protection.gbl>
+Sender: linux-doc-owner@vger.kernel.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Cc: robh+dt@kernel.org, Peter.Chen@freescale.com, gregkh@linuxfoundation.org, galak@codeaurora.org, rdunlap@infradead.org, michal.simek@xilinx.com, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 27, 2014 at 12:03:34PM +0100, Arnd Bergmann wrote:
-> On Thursday 26 June 2014 19:44:21 Rob Herring wrote:
-> > I don't agree arm32 is harder than microblaze. Yes, converting ALL of
-> > arm would be, but that is not necessary. With Liviu's latest branch
-> > the hacks I previously needed are gone (thanks!), and this is all I
-> > need to get Versatile PCI working (under QEMU):
+Hi,
+
+On Fri, Jun 27, 2014 at 04:53:53PM +0530, Punnaiah Choudary Kalluri wrote:
+> Zynq soc uses Chipidea/Synopsys usb IP core(CI13612). This patch adds
+> necessary glue to allow the chipidea driver to work on zynq soc.
 > 
-> I meant converting all of arm32 would be harder, but I agree we don't
-> have to do it. It would be nice to convert all of the drivers/pci/host
-> drivers though, iow all multiplatform-enabled ones, and leaving the
-> current arm32 pci implementation for the platforms we don't want to
-> convert to multiplatform anyway (footbridge, iop, ixp4xx, ks8695 (?),
-> pxa, sa1100).
 
-I'm more than happy to convert the generic host controller we merged
-recently, but I'd probably want the core changes merged first so that I
-know I'm not wasting my time!
+Did you see the currently discussed patches for the generic chipidea
+glue?
 
-Will
+http://www.spinics.net/lists/linux-usb/msg109576.html
+
+Try to improve that code instead writing another version
+of this simple gluecode.
+
+
+Thanks,
+Michael
+
+
+-- 
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
