@@ -1,157 +1,103 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [RESEND 2/2] clk: Add driver for Palmas clk32kg and clk32kgaudio clocks
-Date: Fri, 27 Jun 2014 20:23:12 +0200
-Message-ID: <CABxcv=metB4=eoT=fAh7S-b_mhAvHcJtn2wrV8v8koSyKMxNNw@mail.gmail.com>
-References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
-	<1403848871-26519-3-git-send-email-peter.ujfalusi@ti.com>
+From: Belisko Marek <marek.belisko@gmail.com>
+Subject: Re: [PATCH 1/2] staging: iio: hmc5843: Add all available models to
+ device tree id table.
+Date: Fri, 27 Jun 2014 22:48:13 +0200
+Message-ID: <CAAfyv34-gTwWU-QZmFFFXnwNeWNjxObVrFkaxN2CNSNuuo_EqQ@mail.gmail.com>
+References: <1392387929-31491-1-git-send-email-marek@goldelico.com>
+ <530338B2.603@kernel.org>
+ <CAAfyv36ZdwpoGsARQKRfvX4EeanZVVus5A444KSE8LOmePhyig@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1403848871-26519-3-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Cc: Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, ldewangan@nvidia.com, linux-doc@vger.kernel.org, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <CAAfyv36ZdwpoGsARQKRfvX4EeanZVVus5A444KSE8LOmePhyig@mail.gmail.com>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: driverdev-devel-bounces@linuxdriverproject.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, devel@driverdev.osuosl.org, Peter Meerwald <pmeerw@pmeerw.net>, Pawel Moll <pawel.moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, linux-iio@vger.kernel.org, "Dr. H. Nikolaus Schaller" <hns@goldelico.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Rob Landley <rob@landley.net>, Kumar Gala <galak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Peter,
+PIng? Jonathan do you have any objections to this approach? Can you
+please pick it? Thx.
 
-On Fri, Jun 27, 2014 at 8:01 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
-> Palmas class of devices can provide 32K clock(s) to be used by other devices
-> on the board. Depending on the actual device the provided clocks can be:
-> CLK32K_KG and CLK32K_KGAUDIO
-> or only one:
-> CLK32K_KG (TPS659039 for example)
+On Tue, Feb 18, 2014 at 9:35 PM, Belisko Marek <marek.belisko@gmail.com> wrote:
+> Hi Jonathan,
 >
-> Use separate compatible flags for the two 32K clock.
-> A system which needs or have only one of the 32k clock from
-> Palmas will need to add node(s) for each clock as separate section
-> in the dts file.
-> The two compatible property is:
-> "ti,palmas-clk32kg" for clk32kg clock
-> "ti,palmas-clk32kgaudio" for clk32kgaudio clock
+> On Tue, Feb 18, 2014 at 11:40 AM, Jonathan Cameron <jic23@kernel.org> wrote:
+>> On 14/02/14 14:25, Marek Belisko wrote:
+>>>
+>>> Signed-off-by: Marek Belisko <marek@goldelico.com>
+>>
+>> I wonder how this got missed.  However, for those data elements to be
+>> useful, you will
+>> need to read them somewhere in the driver I think.... (if there is any magic
+>> that puts this in the relevant i2c locations then point it out to me!)
+> There is a table called hmc5843_chip_info_tbl which contains entries
+> for all models
+> which this driver can handle. And magic is that correct model variant
+> is set probe function:
+> line: idata->variant = &hmc5843_chip_info_tbl[id->driver_data];
+> (id->driver_data contains model value).
+>>
+>>> ---
+>>>   drivers/staging/iio/magnetometer/hmc5843.c | 4 +++-
+>>>   1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/drivers/staging/iio/magnetometer/hmc5843.c
+>>> b/drivers/staging/iio/magnetometer/hmc5843.c
+>>> index d4f4dd9..f595fdc 100644
+>>> --- a/drivers/staging/iio/magnetometer/hmc5843.c
+>>> +++ b/drivers/staging/iio/magnetometer/hmc5843.c
+>>> @@ -630,7 +630,9 @@ static const struct i2c_device_id hmc5843_id[] = {
+>>>   MODULE_DEVICE_TABLE(i2c, hmc5843_id);
+>>>
+>>>   static const struct of_device_id hmc5843_of_match[] = {
+>>> -       { .compatible = "honeywell,hmc5843" },
+>>> +       { .compatible = "honeywell,hmc5843", .data = (void *)HMC5843_ID },
+>>> +       { .compatible = "honeywell,hmc5883", .data = (void *)HMC5883_ID },
+>>> +       { .compatible = "honeywell,hmc5883l", .data = (void *)HMC5883L_ID
+>>> },
+>>>         {}
+>>>   };
+>>>   MODULE_DEVICE_TABLE(of, hmc5843_of_match);
+>>>
+>>
 >
-> Apart from the register control of the clocks - which is done via
-> the clock API there is a posibility to enable the external sleep
-> control. In this way the clock can be enabled/disabled on demand by the
-> user of the clock.
+> BR,
 >
-> See the documentation for more details.
+> marek
 >
-> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-> Reviewed-by: Nishanth Menon <nm@ti.com>
-> ---
->  drivers/clk/Kconfig      |   7 ++
->  drivers/clk/Makefile     |   1 +
->  drivers/clk/clk-palmas.c | 307 +++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 315 insertions(+)
->  create mode 100644 drivers/clk/clk-palmas.c
+> --
+> as simple and primitive as possible
+> -------------------------------------------------
+> Marek Belisko - OPEN-NANDRA
+> Freelance Developer
 >
-> diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-> index 9f9c5ae5359b..cfd3af7b2cbd 100644
-> --- a/drivers/clk/Kconfig
-> +++ b/drivers/clk/Kconfig
-> @@ -102,6 +102,13 @@ config COMMON_CLK_KEYSTONE
->            Supports clock drivers for Keystone based SOCs. These SOCs have local
->           a power sleep control module that gate the clock to the IPs and PLLs.
->
-> +config COMMON_CLK_PALMAS
-> +       tristate "Clock driver for TI Palmas devices"
-> +       depends on MFD_PALMAS
-> +       ---help---
-> +         This driver supports TI Palmas devices 32KHz output KG and KG_AUDIO
-> +         using common clock framework.
-> +
->  source "drivers/clk/qcom/Kconfig"
->
->  endmenu
-> diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-> index 567f10259029..312742c10661 100644
-> --- a/drivers/clk/Makefile
-> +++ b/drivers/clk/Makefile
-> @@ -22,6 +22,7 @@ obj-$(CONFIG_COMMON_CLK_MAX77686)     += clk-max77686.o
->  obj-$(CONFIG_ARCH_MOXART)              += clk-moxart.o
->  obj-$(CONFIG_ARCH_NOMADIK)             += clk-nomadik.o
->  obj-$(CONFIG_ARCH_NSPIRE)              += clk-nspire.o
-> +obj-$(CONFIG_COMMON_CLK_PALMAS)                += clk-palmas.o
->  obj-$(CONFIG_CLK_PPC_CORENET)          += clk-ppc-corenet.o
->  obj-$(CONFIG_COMMON_CLK_S2MPS11)       += clk-s2mps11.o
->  obj-$(CONFIG_COMMON_CLK_SI5351)                += clk-si5351.o
-> diff --git a/drivers/clk/clk-palmas.c b/drivers/clk/clk-palmas.c
-> new file mode 100644
-> index 000000000000..781630e1372b
-> --- /dev/null
-> +++ b/drivers/clk/clk-palmas.c
-> @@ -0,0 +1,307 @@
-> +/*
-> + * Clock driver for Palmas device.
-> + *
-> + * Copyright (c) 2013, NVIDIA Corporation.
-> + * Copyright (c) 2013-2014 Texas Instruments, Inc.
-> + *
-> + * Author:     Laxman Dewangan <ldewangan@nvidia.com>
-> + *             Peter Ujfalusi <peter.ujfalusi@ti.com>
-> + *
-> + * This program is free software; you can redistribute it and/or
-> + * modify it under the terms of the GNU General Public License as
-> + * published by the Free Software Foundation version 2.
-> + *
-> + * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
-> + * whether express or implied; without even the implied warranty of
-> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
-> + * General Public License for more details.
-> + */
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clkdev.h>
-> +#include <linux/clk-provider.h>
-> +#include <linux/mfd/palmas.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/of_device.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/slab.h>
-> +
-> +#define PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE1    1
-> +#define PALMAS_CLOCK_DT_EXT_CONTROL_ENABLE2    2
-> +#define PALMAS_CLOCK_DT_EXT_CONTROL_NSLEEP     3
-> +
-> +struct palmas_clk32k_desc {
-> +       const char *clk_name;
-> +       unsigned int control_reg;
-> +       unsigned int enable_mask;
-> +       unsigned int sleep_mask;
-> +       unsigned int sleep_reqstr_id;
-> +       int delay;
-> +};
-> +
-> +struct palmas_clock_info {
-> +       struct device *dev;
-> +       struct clk *clk;
-> +       struct clk_hw hw;
-> +       struct palmas *palmas;
-> +       struct palmas_clk32k_desc *clk_desc;
-> +       int ext_control_pin;
-> +};
-> +
-> +static inline struct palmas_clock_info *to_palmas_clks_info(struct clk_hw *hw)
-> +{
-> +       return container_of(hw, struct palmas_clock_info, hw);
-> +}
-> +
-> +static unsigned long palmas_clks_recalc_rate(struct clk_hw *hw,
-> +                                            unsigned long parent_rate)
-> +{
-> +       return 32768;
-> +}
+> Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+> Tel: +421 915 052 184
+> skype: marekwhite
+> twitter: #opennandra
+> web: http://open-nandra.com
 
-I see that other clock drivers using a constant rate return 0 if the
-clock has not been enabled. So maybe is more correct to have something
-like the following?
+BR,
 
-if (__clk_is_enabled(hw->clk))
-        return 32768;
-else
-        return 0;
+marek
 
-Best regards,
-Javier
+-- 
+as simple and primitive as possible
+-------------------------------------------------
+Marek Belisko - OPEN-NANDRA
+Freelance Developer
+
+Ruska Nova Ves 219 | Presov, 08005 Slovak Republic
+Tel: +421 915 052 184
+skype: marekwhite
+twitter: #opennandra
+web: http://open-nandra.com
