@@ -1,101 +1,105 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH v2 1/3] of: Add NVIDIA Tegra flow controller bindings
-Date: Fri, 27 Jun 2014 14:07:26 +0200
-Message-ID: <1403870848-1754-1-git-send-email-thierry.reding@gmail.com>
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
-Cc: linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH] i2c: busses: i2c-pxa.c:  Fix for possible null pointer
+ dereferenc
+Date: Fri, 27 Jun 2014 14:21:48 +0200
+Message-ID: <20140627122147.GF2641@katana>
+References: <1401831034-30255-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="cz6wLo+OExbGG7q/"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1401831034-30255-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Leilei Shang <shangll@marvell.com>, Daniel Drake <dsd@laptop.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 
-Add device tree bindings for the flow controller found on NVIDIA Tegra
-SoCs.
+--cz6wLo+OExbGG7q/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
----
- .../bindings/arm/tegra/nvidia,tegra114-flowctrl.txt          | 12 ++++++++++++
- .../bindings/arm/tegra/nvidia,tegra124-flowctrl.txt          | 12 ++++++++++++
- .../bindings/arm/tegra/nvidia,tegra20-flowctrl.txt           | 12 ++++++++++++
- .../bindings/arm/tegra/nvidia,tegra30-flowctrl.txt           | 12 ++++++++++++
- 4 files changed, 48 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-flowctrl.txt
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-flowctrl.txt
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
- create mode 100644 Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-flowctrl.txt
+On Tue, Jun 03, 2014 at 11:30:34PM +0200, Rickard Strandqvist wrote:
+> Fix for possible null pointer dereferenc, and there is a risk
+> for memory leak in when something unexpected happens and the
+> function returns.
+>=20
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.s=
+e>
+> ---
+>  drivers/i2c/busses/i2c-pxa.c |   19 +++++++++++--------
+>  1 file changed, 11 insertions(+), 8 deletions(-)
+>=20
+> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> index bbe6dfb..948a3c7 100644
+> --- a/drivers/i2c/busses/i2c-pxa.c
+> +++ b/drivers/i2c/busses/i2c-pxa.c
+> @@ -1142,10 +1142,8 @@ static int i2c_pxa_probe(struct platform_device *d=
+ev)
+>  	int ret, irq;
+> =20
+>  	i2c =3D kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
+> -	if (!i2c) {
+> -		ret =3D -ENOMEM;
+> -		goto emalloc;
+> -	}
+> +	if (!i2c)
+> +		return -ENOMEM;
+> =20
+>  	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+>  	i2c->adap.nr =3D dev->id;
+> @@ -1154,11 +1152,16 @@ static int i2c_pxa_probe(struct platform_device *=
+dev)
+>  	if (ret > 0)
+>  		ret =3D i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
+>  	if (ret < 0)
+> -		goto eclk;
+> +		goto emalloc;
+> =20
+>  	res =3D platform_get_resource(dev, IORESOURCE_MEM, 0);
+> +	if (res =3D=3D NULL) {
+> +		ret =3D -ENODEV;
+> +		goto emalloc;
+> +	}
+> +
+>  	irq =3D platform_get_irq(dev, 0);
+> -	if (res =3D=3D NULL || irq < 0) {
+> +	if (irq < 0) {
+>  		ret =3D -ENODEV;
+>  		goto eclk;
 
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-flowctrl.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-flowctrl.txt
-new file mode 100644
-index 000000000000..72599fdb09a2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra114-flowctrl.txt
-@@ -0,0 +1,12 @@
-+NVIDIA Tegra114 Flow Controller
-+
-+Required properties:
-+- compatible: "nvidia,tegra114-flowctrl"
-+- reg: Should contain one register range (address and length)
-+
-+Example:
-+
-+	flow-controller@60007000 {
-+		compatible = "nvidia,tegra114-flowctrl";
-+		reg = <0x60007000 0x1000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-flowctrl.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-flowctrl.txt
-new file mode 100644
-index 000000000000..3af5fe2019f2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra124-flowctrl.txt
-@@ -0,0 +1,12 @@
-+NVIDIA Tegra124 Flow Controller
-+
-+Required properties:
-+- compatible: "nvidia,tegra124-flowctrl"
-+- reg: Should contain one register range (address and length)
-+
-+Example:
-+
-+	flow-controller@0,60007000 {
-+		compatible = "nvidia,tegra124-flowctrl";
-+		reg = <0x0 0x60007000 0x0 0x1000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
-new file mode 100644
-index 000000000000..b077ca8a22c6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra20-flowctrl.txt
-@@ -0,0 +1,12 @@
-+NVIDIA Tegra20 Flow Controller
-+
-+Required properties:
-+- compatible: "nvidia,tegra20-flowctrl"
-+- reg: Should contain one register range (address and length)
-+
-+Example:
-+
-+	flow-controller@60007000 {
-+		compatible = "nvidia,tegra20-flowctrl";
-+		reg = <0x60007000 0x1000>;
-+	};
-diff --git a/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-flowctrl.txt b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-flowctrl.txt
-new file mode 100644
-index 000000000000..72c90dd59110
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/tegra/nvidia,tegra30-flowctrl.txt
-@@ -0,0 +1,12 @@
-+NVIDIA Tegra30 Flow Controller
-+
-+Required properties:
-+- compatible: "nvidia,tegra30-flowctrl"
-+- reg: Should contain one register range (address and length)
-+
-+Example:
-+
-+	flow-controller@60007000 {
-+		compatible = "nvidia,tegra30-flowctrl";
-+		reg = <0x60007000 0x1000>;
-+	};
--- 
-2.0.0
+Nope, those should be emalloc as well since the region was not requested
+here. May I ask you to just convert this driver to managed devices (devm_*
+functions)? They are made to exactly avoid this hazzle and cleanup the
+driver.
+
+Thanks,
+
+   Wolfram
+
+
+--cz6wLo+OExbGG7q/
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTrWHbAAoJEBQN5MwUoCm2ZSwP/2qAclUPmuYRl9LRNSqOFKV1
+OApDTwxBFwIC1EUsg0zZ5/lpj5ZSZkkLLPGu3Of0oyHJbeXS4+dnw9+1NdmdwVyH
+bBUBNCu7T5yhRQgolWPjVMKOnGRqjxJmp1A03BF960lMc+LaSijD9sqJrWQnCemP
+UbJXFXEC7xk8u2QRX8uxmKRdnSAb/d7f8FUC6n4SXZc1eDivljc2cWgpE1Qtn1av
+LTB3Iw21m8076qUitVBXIo1+rVj6zxmZiKgL/Bg1bEJBIQhu2TU5D8xTJf3TQKgC
+FHUHXFEdhZYy6lGRnQBYFULPsbviYp153HJaEa7zY5xEMWOq08E1TMMPGTU72Mwd
+/DOInBIjirzdLnWOQVovOtmZ9KRux/jXJwigjxy2NSEuEncKXgF1Xc3TEiP75ybP
+BAwRAesucL9b/xYKlsET7OpVjOaRzS4DfjYKAZjYFi8mpMFjSgk/ruHpahwwAIUX
+RKpoNLGZyeyHeziXp1T4S4l7EnThzvpzwkcSjQsFNxtbo9kLnkZbKlhg0GI/lYrl
+I/Tkbfd1OHY5N2g3bDnJKHx5bOvB+RIHQoACNmcTqZE1IawOApEI8yy5qFMrjjmd
+y65qwlBf7aynHryrTOTLFttH7aNLrWXiC0AGzGdexSbhQ7SSnuhanvE/dNKwHxpd
+z2Wb18VoVffZluRrjGVn
+=it/c
+-----END PGP SIGNATURE-----
+
+--cz6wLo+OExbGG7q/--
