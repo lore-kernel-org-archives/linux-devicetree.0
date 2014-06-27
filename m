@@ -1,64 +1,74 @@
-From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] Documentation: Document Hisilicon hix5hd2 sata PHY
-Date: Fri, 27 Jun 2014 09:50:46 +0200
-Message-ID: <11262017.C011KreL6u@wuerfel>
-References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <4989178.vejv39dnj8@wuerfel> <53ACE6EE.4050300@linaro.org>
+From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: Re: [PATCH v5 12/14] clk: max77802: Add DT binding documentation
+Date: Fri, 27 Jun 2014 09:52:48 +0200
+Message-ID: <53AD22D0.9000403@suse.de>
+References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-13-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=ISO-8859-15
+Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53ACE6EE.4050300-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1403806546-31122-13-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-Cc: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+To: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Daniel Stone <daniels-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yadwinder Singh Brar <yadi.brar01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Friday 27 June 2014 11:37:18 zhangfei wrote:
-> >
-> 
-> Sorry for the confusion.
-> 
-> The phy is rather an analog controller, without standard register.
-> Instead, the phy interface is just some pin / analog interface.
-> The register is in fact hix5hd2 register, controls all the analog 
-> output, including reset, power, speed, para tunning.
+Am 26.06.2014 20:15, schrieb Javier Martinez Canillas:
+> Add Device Tree binding documentation for the clocks
+> outputs in the Maxim 77802 Power Management IC.
+>=20
+> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8rSCDK34cm6iQ@public.gmane.org=
+=2Euk>
+> ---
+>=20
+> Changes since v4: None
+>=20
+> Changes since v3:
+>  - Don't use the same clock driver name in clock-names since it's a c=
+onsumer
+>    concept and most probably will be different. Suggested by Doug And=
+erson.
+>=20
+> Changes since v2:
+>  - Split the DT binding documentation in a separate patch.
+>=20
+>  .../devicetree/bindings/clock/maxim,max77802.txt   | 42 ++++++++++++=
+++++++++++
+>  1 file changed, 42 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/maxim,max=
+77802.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/maxim,max77802.t=
+xt b/Documentation/devicetree/bindings/clock/maxim,max77802.txt
+> new file mode 100644
+> index 0000000..26bc4f7
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/maxim,max77802.txt
+> @@ -0,0 +1,42 @@
+> +Binding for Maxim MAX77802 32k clock generator block
+> +
+> +This is a part of device tree bindings of MAX77802 multi-function de=
+vice.
+> +More information can be found in bindings/mfd/max77802.txt file.
+> +
+> +The MAX77802 contains two 32.768khz clock outputs that can be contro=
+lled
+> +(gated/ungated) over I2C.
+> +
+> +Following properties should be presend in main device node of the MF=
+D chip.
 
-Ok, thanks for the explanation.
+"present"
 
-> Even the same phy is used in other soc, they can not share this driver, 
-> since the connection must be different, as well as internal soc register 
-> layout.
-> Only if the same controller & phy are reused in other hisilicon soc, 
-> this driver can be shared.
-> 
-> Since what we control is hix5hd2 controller itself, so it may not 
-> suitable to put snps here.
+Regards,
+Andreas
 
-Makes sense.
-
-> And about hix5hd2 name: x is not wildcard.
-> 
-> Currently hix5hd2 is series of hi3716c v200, hi3719c v100, hi3718c v100.
-> They are same soc, except minus pin assembles different.
-> 
-> However, not all hi37x is in this series, for example hi3716c v100 is a 
-> different soc.
-> 
-> In the future hi3719m, hi3718m may also plan to add to hix5hd2 series.
-> The difference will be different cpu core number, different gpu core 
-> number. Also use different ethernet controller.
-
-Ah, I think you explained this before, sorry for misremembering it.
- 
-> So we may still keep "hisilicon,hix5hd2-sata-phy" unchanged.
-> What do you think?
-
-Yes, please keep this string, it's good.
-
-Thanks for your patience,
-
-	Arnd
+--=20
+SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
+GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
+berg
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
