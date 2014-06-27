@@ -1,106 +1,28 @@
-From: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Fri, 27 Jun 2014 15:23:27 -0700
-Message-ID: <53ADEEDF.7060902@codeaurora.org>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
-	<CAL_JsqKumG1PSFoVfeGpLLG+MjXFeF4aUjun=vv1BJpaxk0Byg@mail.gmail.com>
-	<4545972.cM7IP1qTXQ@wuerfel> <53A4C0C9.2050908@codeaurora.org>
-	<20140624091808.GC26013@arm.com> <53A9BC18.2090106@codeaurora.org>
-	<20140624181150.GB4067@arm.com> <53A9EF3A.2070704@codeaurora.org>
-	<20140625091858.GG6153@arm.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v5 0/2] Add R8A7790/Lager board PCI USB DT support
+Date: Sat, 28 Jun 2014 08:56:22 +0900
+Message-ID: <20140627235622.GA29865@verge.net.au>
+References: <201406242157.05973.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140625091858.GG6153-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <201406242157.05973.sergei.shtylyov@cogentembedded.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, ben.dooks@codethink.co.uk
 List-Id: devicetree@vger.kernel.org
 
-On 6/25/2014 2:18 AM, Will Deacon wrote:
-> On Tue, Jun 24, 2014 at 10:35:54PM +0100, Olav Haugan wrote:
->> On 6/24/2014 11:11 AM, Will Deacon wrote:
->>> On Tue, Jun 24, 2014 at 06:57:44PM +0100, Olav Haugan wrote:
->>>> On 6/24/2014 2:18 AM, Will Deacon wrote:
->>>>> On Sat, Jun 21, 2014 at 12:16:25AM +0100, Olav Haugan wrote:
->>>>>> We have multiple-master SMMUs and each master emits a variable number of
->>>>>> StreamIDs. However, we have to apply a mask (the ARM SMMU spec allows
->>>>>> for this) to the StreamIDs due to limited number of StreamID 2 Context
->>>>>> Bank entries in the SMMU. If my understanding is correct we would
->>>>>> represent this in the DT like this:
->>>>>>
->>>>>> 	iommu {
->>>>>> 		#address-cells = <2>;
->>>>>> 		#size-cells = <0>;
->>>>>> 	};
->>>>>>
->>>>>> 	master@a {
->>>>>> 		...
->>>>>> 		iommus = <&iommu StreamID0 MASK0>,
->>>>>> 			 <&iommu StreamID1 MASK1>,
->>>>>> 			 <&iommu StreamID2 MASK2>;
->>>>>> 	};
->>>>>
->>>>> Stupid question, but why not simply describe the masked IDs? What use does
->>>>> the `raw' ID have to Linux?
->>>>
->>>> We do describe the masked StreamID (SID) but we need to specify the mask
->>>> that the SMMU should apply to the incoming SIDs, right?
->>>>
->>>> We have a bus master that emits 43 unique SIDs. However, we have only 40
->>>> SMMU_SMRn registers in the SMMU. So we need to mask out some of the
->>>> incoming SID bits so that the 43 SIDs can match one of 40 entries in the
->>>> SMR.
->>>
->>> Hmm, so you're talking about stream matching, right? That doesn't belong in
->>> the device-tree. I appreciate that the current driver does a terrible job at
->>> allocating the SMRs (it's bloody difficult!), but we should try to improve
->>> the dynamic behaviour instead of moving configuration of the SMMU out into
->>> device-tree, where it's inflexible at best.
->>
->> I am talking about SMMU_SMRn[MASK] register bits. This is not something
->> that can be dynamically detected at run-time. It is configuration at the
->> same level as the actual StreamIDs.
+On Tue, Jun 24, 2014 at 09:57:04PM +0400, Sergei Shtylyov wrote:
+> Hello.
 > 
-> Why can't it be dynamically detected? Whilst the StreamIDs are fixed in
-> hardware (from the SMMU architecture perspective), the SMRs are completely
-> programmable. Why doesn't something like Andreas's proposal work for you?
-> The idea there was to find the constant bits among the StreamIDs for a
-> master and create the mask accordingly.
+>    Here's the set of 2 patches against Simon Horman's 'renesas.git' repo's
+> 'renesas-devel-v3.16-rc2-20140623' tag. Here we add PCI USB device tree support
+> for the R8A7790-based Lager board. As the 'pci-rcar-gen2' driver device tree
+> support has been merged for 3.16, this patchset can now be merged too...
 > 
-Lets say I have an IOMMU with 2 masters and 2 SMRn slots with the
-following stream IDs coming from the masters:
+> [1/2] ARM: shmobile: r8a7790: add internal PCI bridge nodes
+> [2/2] ARM: shmobile: lager: enable internal PCI
 
-Master 1: 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28
-Master 2: 0x30
-
-To make this work I would program SMR[0] with StreamID 0x20 and mask 0xF
-to ignore lower 4 bits. SMR[1] would just be StreamID 0x30 with mask 0x0.
-
-However, I could also have an IOMMU with 2 masters and 9 SMRn slots with
-the following stream IDs:
-
-Master 1: 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28
-Master 2: 0x29
-
-Here I would program all SMRn and leave the mask to be 0 for all SMRn's.
-So how do I detect when to apply a mask or not?
-
-I am not familiar with Andreas's proposal. Do you have a link?
-
-Thanks,
-
-Olav Haugan
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Thanks, I will queue these up with
+Shimoda-san's Tested-by.
