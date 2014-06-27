@@ -1,120 +1,170 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [RFC 04/10] memory: Add Tegra124 memory controller support
-Date: Fri, 27 Jun 2014 13:08:12 +0200
-Message-ID: <20140627110811.GD2797@ulmo>
-References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com>
-	<1403815790-8548-5-git-send-email-thierry.reding@gmail.com>
-	<20140627124638.7ec150cca163c89727b8953f@nvidia.com>
+From: Nicolin Chen <Guangyu.Chen@freescale.com>
+Subject: Re: [RFC][PATCH 1/2] dma: imx-sdma: Add device to
+	device support
+Date: Fri, 27 Jun 2014 18:58:09 +0800
+Message-ID: <20140627105808.GB2506@MrMyself>
+References: <cover.1402653667.git.nicoleotsuka@gmail.com>
+ <42744e778ce8a4b424d5642f86d18ef047bcc7cd.1402653667.git.nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1763454004634767336=="
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-In-Reply-To: <20140627124638.7ec150cca163c89727b8953f-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Hiroshi DOyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Allen Martin <AMartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOJiIJoWrK/4GQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Disposition: inline
+In-Reply-To: <42744e778ce8a4b424d5642f86d18ef047bcc7cd.1402653667.git.nicoleotsuka@gmail.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>, vinod.koul@intel.com, s.hauer@pengutronix.de
+Cc: mark.rutland@arm.com, alsa-devel@alsa-project.org, linux-doc@vger.kernel.org, tiwai@suse.de, timur@tabi.org, lgirdwood@gmail.com, b42378@freescale.com, b02247@freescale.com, grant.likely@linaro.org, devicetree@vger.kernel.org, pawel.moll@arm.com, ijc+devicetree@hellion.org.uk, b38343@freescale.com, robh+dt@kernel.org, dan.j.williams@intel.com, rdunlap@infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, galak@codeaurora.org, dmaengine@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
+On Fri, Jun 13, 2014 at 06:07:04PM +0800, Nicolin Chen wrote:
+> This patch adds DEV_TO_DEV support for i.MX SDMA driver to support data
+> tranfer between two peripheral FIFOs. The per_2_per script requires two
+> peripheral addresses and two DMA requests. So this patch also adds them
+> into private structure.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
 
---===============1763454004634767336==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="jCrbxBqMcLqd4mOl"
-Content-Disposition: inline
+Excuse me, the patch has been here for two weeks. Could anyone please
+give a comment or an Ack on it?
 
+Thank you,
+Nicolin
 
---jCrbxBqMcLqd4mOl
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jun 27, 2014 at 12:46:38PM +0300, Hiroshi DOyu wrote:
->=20
-> Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
->=20
-> > From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> >
-> > The memory controller on NVIDIA Tegra124 exposes various knobs that can
-> > be used to tune the behaviour of the clients attached to it.
-> >
-> > Currently this driver sets up the latency allowance registers to the HW
-> > defaults. Eventually an API should be exported by this driver (via a
-> > custom API or a generic subsystem) to allow clients to register latency
-> > requirements.
-> >
-> > This driver also registers an IOMMU (SMMU) that's implemented by the
-> > memory controller.
-> >
-> > Signed-off-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
-> > ---
-> >  drivers/memory/Kconfig                   |    9 +
-> >  drivers/memory/Makefile                  |    1 +
-> >  drivers/memory/tegra124-mc.c             | 1945 ++++++++++++++++++++++=
-++++++++
-> >  include/dt-bindings/memory/tegra124-mc.h |   30 +
-> >  4 files changed, 1985 insertions(+)
-> >  create mode 100644 drivers/memory/tegra124-mc.c
-> >  create mode 100644 include/dt-bindings/memory/tegra124-mc.h
->=20
-> I prefer reusing the existing SMMU and having MC and SMMU separated
-> since most of SMMU code are not different from functionality POV, and
-> new MC features are quite independent of SMMU.
->=20
-> If it's really convenient to combine MC and SMMU into one driver, we
-> could move "drivers/iomm/tegra-smmu.c" here first, and add MC features
-> on the top of it.
-
-I'm not sure if we can do that, since the tegra-smmu driver is
-technically used by Tegra30 and Tegra114. We've never really made use of
-it, but there are device trees in mainline releases that contain the
-separate SMMU node.
-
-Perhaps one of the DT folks can comment on whether it would be possible
-to break compatibility with existing DTs in this case, given that the
-SMMU on Tegra30 and Tegra114 have never been used.
-
-Either way, I do see advantages in incremental patches, but at the same
-time the old driver and architecture was never enabled (therefore not
-tested either) upstream and as shown by the Tegra DRM example can't cope
-with more complex cases. So I'm not completely convinced that an
-incremental approach would be the best here.
-
-Thierry
-
---jCrbxBqMcLqd4mOl
-Content-Type: application/pgp-signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTrVCbAAoJEN0jrNd/PrOhvbwP/jRt3vshZDONx45I9YYV8PGt
-zzvV3YoYcDqCeHLXPVZNC/HRv4oLQ3yNJK91vUt9Zgc8kGEose9FZaYYvC76OtMZ
-XcCvXhSGo3N8wy+4SvIovdVC2FXEzZfRPiizoL5vuyBlwHhb2emaBJwjEJaWk7GI
-j4EtmVMnXv/11VSYiwAkyV9bkRYyaQZ6i7PNB0gmj9TH2RmFAIbNsRbHhPo/dovN
-oKf8+tXQZmoGAey64URLlTfXZFU1P5Fz9ejNbF6ZD3mf8GyRghRjk3ypxl/2oUH9
-RqVFhWnEeqH3723V3uMOgFrIRz2QgTUS8GFrHPmH2LWdYAFBmW3h3RfOzvJXlnvQ
-yZkcOV7+8kNOXuxWLZG3+tj6QHD+jbhAk8qS9/HSKYPm5Lp6YsUCmf/f3dsyUgRZ
-JCittXDjBZgkJA8aq4l/om7Ts6IOPWVK+2TwRv3w3wgxjzno6krN5i42kGCy4s41
-nRIWUfXxOwe3VVE2WUA5ukKRc/ON8JPUZZ1SLQfnPmnMgqo1+jGkR7LViDv1yit7
-U/Y3Dgl/ihIWOJBYmVUhg3G6M1e7DZJdshIHbcj4adIxOPUK/wqbtc8h6l4uCqh1
-tzgCra21tMiqWzW9n6To7EK/Sqe2+W9gcQnTo4bsidUXM4F31UAMGpKr6T6jKNiW
-j0FMUh6TTRPRhp/b8RgY
-=m2wZ
------END PGP SIGNATURE-----
-
---jCrbxBqMcLqd4mOl--
-
---===============1763454004634767336==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============1763454004634767336==--
+> ---
+>  drivers/dma/imx-sdma.c                | 40 ++++++++++++++++++++++++++++++-----
+>  include/linux/platform_data/dma-imx.h |  1 +
+>  2 files changed, 36 insertions(+), 5 deletions(-)
+> 
+> diff --git a/drivers/dma/imx-sdma.c b/drivers/dma/imx-sdma.c
+> index 85561dc..5af1a69 100644
+> --- a/drivers/dma/imx-sdma.c
+> +++ b/drivers/dma/imx-sdma.c
+> @@ -258,8 +258,9 @@ struct sdma_channel {
+>  	struct sdma_buffer_descriptor	*bd;
+>  	dma_addr_t			bd_phys;
+>  	unsigned int			pc_from_device, pc_to_device;
+> +	unsigned int			device_to_device;
+>  	unsigned long			flags;
+> -	dma_addr_t			per_address;
+> +	dma_addr_t			per_address, per_address2;
+>  	unsigned long			event_mask[2];
+>  	unsigned long			watermark_level;
+>  	u32				shp_addr, per_addr;
+> @@ -696,6 +697,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  
+>  	sdmac->pc_from_device = 0;
+>  	sdmac->pc_to_device = 0;
+> +	sdmac->device_to_device = 0;
+>  
+>  	switch (peripheral_type) {
+>  	case IMX_DMATYPE_MEMORY:
+> @@ -770,6 +772,7 @@ static void sdma_get_pc(struct sdma_channel *sdmac,
+>  
+>  	sdmac->pc_from_device = per_2_emi;
+>  	sdmac->pc_to_device = emi_2_per;
+> +	sdmac->device_to_device = per_2_per;
+>  }
+>  
+>  static int sdma_load_context(struct sdma_channel *sdmac)
+> @@ -782,11 +785,12 @@ static int sdma_load_context(struct sdma_channel *sdmac)
+>  	int ret;
+>  	unsigned long flags;
+>  
+> -	if (sdmac->direction == DMA_DEV_TO_MEM) {
+> +	if (sdmac->direction == DMA_DEV_TO_MEM)
+>  		load_address = sdmac->pc_from_device;
+> -	} else {
+> +	else if (sdmac->direction == DMA_DEV_TO_DEV)
+> +		load_address = sdmac->device_to_device;
+> +	else
+>  		load_address = sdmac->pc_to_device;
+> -	}
+>  
+>  	if (load_address < 0)
+>  		return load_address;
+> @@ -850,6 +854,12 @@ static int sdma_config_channel(struct sdma_channel *sdmac)
+>  		sdma_event_enable(sdmac, sdmac->event_id0);
+>  	}
+>  
+> +	if (sdmac->event_id1) {
+> +		if (sdmac->event_id1 >= sdmac->sdma->drvdata->num_events)
+> +			return -EINVAL;
+> +		sdma_event_enable(sdmac, sdmac->event_id1);
+> +	}
+> +
+>  	switch (sdmac->peripheral_type) {
+>  	case IMX_DMATYPE_DSP:
+>  		sdma_config_ownership(sdmac, false, true, true);
+> @@ -880,7 +890,12 @@ static int sdma_config_channel(struct sdma_channel *sdmac)
+>  		/* Watermark Level */
+>  		sdmac->watermark_level |= sdmac->watermark_level;
+>  		/* Address */
+> -		sdmac->shp_addr = sdmac->per_address;
+> +		if (sdmac->direction == DMA_DEV_TO_DEV) {
+> +			sdmac->shp_addr = sdmac->per_address2;
+> +			sdmac->per_addr = sdmac->per_address;
+> +		} else {
+> +			sdmac->shp_addr = sdmac->per_address;
+> +		}
+>  	} else {
+>  		sdmac->watermark_level = 0; /* FIXME: M3_BASE_ADDRESS */
+>  	}
+> @@ -974,6 +989,7 @@ static int sdma_alloc_chan_resources(struct dma_chan *chan)
+>  
+>  	sdmac->peripheral_type = data->peripheral_type;
+>  	sdmac->event_id0 = data->dma_request;
+> +	sdmac->event_id1 = data->dma_request2;
+>  
+>  	clk_enable(sdmac->sdma->clk_ipg);
+>  	clk_enable(sdmac->sdma->clk_ahb);
+> @@ -1213,6 +1229,19 @@ static int sdma_control(struct dma_chan *chan, enum dma_ctrl_cmd cmd,
+>  			sdmac->watermark_level = dmaengine_cfg->src_maxburst *
+>  						dmaengine_cfg->src_addr_width;
+>  			sdmac->word_size = dmaengine_cfg->src_addr_width;
+> +		} else if (dmaengine_cfg->direction == DMA_DEV_TO_DEV) {
+> +			sdmac->per_address = dmaengine_cfg->src_addr;
+> +			sdmac->per_address2 = dmaengine_cfg->dst_addr;
+> +			/*
+> +			 * For per_2_per sciprt, register r7 requires two
+> +			 * watermark levels: the lower placed at bits [0-7]
+> +			 * and the higher one placed at bits [16-23].
+> +			 */
+> +			sdmac->watermark_level =
+> +				dmaengine_cfg->src_maxburst & 0xff;
+> +			sdmac->watermark_level |=
+> +				(dmaengine_cfg->dst_maxburst & 0xff) << 16;
+> +			sdmac->word_size = dmaengine_cfg->dst_addr_width;
+>  		} else {
+>  			sdmac->per_address = dmaengine_cfg->dst_addr;
+>  			sdmac->watermark_level = dmaengine_cfg->dst_maxburst *
+> @@ -1433,6 +1462,7 @@ static struct dma_chan *sdma_xlate(struct of_phandle_args *dma_spec,
+>  	data.dma_request = dma_spec->args[0];
+>  	data.peripheral_type = dma_spec->args[1];
+>  	data.priority = dma_spec->args[2];
+> +	data.dma_request2 = 0;
+>  
+>  	return dma_request_channel(mask, sdma_filter_fn, &data);
+>  }
+> diff --git a/include/linux/platform_data/dma-imx.h b/include/linux/platform_data/dma-imx.h
+> index 7aa0e89..6a1357d 100644
+> --- a/include/linux/platform_data/dma-imx.h
+> +++ b/include/linux/platform_data/dma-imx.h
+> @@ -51,6 +51,7 @@ enum imx_dma_prio {
+>  
+>  struct imx_dma_data {
+>  	int dma_request; /* DMA request line */
+> +	int dma_request2; /* secondary DMA request line */
+>  	enum sdma_peripheral_type peripheral_type;
+>  	int priority;
+>  };
+> -- 
+> 1.8.4
+> 
