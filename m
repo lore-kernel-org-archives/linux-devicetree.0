@@ -1,179 +1,117 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v5 08/14] mfd: max77802: Add DT binding documentation
-Date: Fri, 27 Jun 2014 10:06:14 +0200
-Message-ID: <53AD25F6.6030007@suse.de>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-9-git-send-email-javier.martinez@collabora.co.uk>
+From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [RFC 04/10] memory: Add Tegra124 memory controller support
+Date: Fri, 27 Jun 2014 10:17:00 +0200
+Message-ID: <20140627081659.GA10794@ulmo>
+References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com>
+	<1403815790-8548-5-git-send-email-thierry.reding@gmail.com>
+	<53AD2020.1050802@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403806546-31122-9-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============8499723190041747257=="
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <53AD2020.1050802-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Joseph Lo <josephl-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Allen Martin <AMartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOJiIJoWrK/4GQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 26.06.2014 20:15, schrieb Javier Martinez Canillas:
-> Add Device Tree binding documentation for Maxim 77802 PMIC.
+
+--===============8499723190041747257==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
+Content-Disposition: inline
+
+
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jun 27, 2014 at 03:41:20PM +0800, Joseph Lo wrote:
+> Hi Thierry,
 >=20
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> ---
+> On 06/27/2014 04:49 AM, Thierry Reding wrote:
+> [snip]
+> >+
+> >+#define MC_INTSTATUS 0x000
+> >+#define  MC_INT_DECERR_MTS (1 << 16)
+> >+#define  MC_INT_SECERR_SEC (1 << 13)
+> >+#define  MC_INT_DECERR_VPR (1 << 12)
+> >+#define  MC_INT_INVALID_APB_ASID_UPDATE (1 << 11)
+> >+#define  MC_INT_INVALID_SMMU_PAGE (1 << 10)
+> >+#define  MC_INT_ARBITRATION_EMEM (1 << 9)
+> >+#define  MC_INT_SECURITY_VIOLATION (1 << 8)
+> >+#define  MC_INT_DECERR_EMEM (1 << 6)
+> >+#define MC_INTMASK 0x004
+> >+#define MC_ERR_STATUS 0x08
+> >+#define MC_ERR_ADR 0x0c
+> >+
+> [snip]
+> >+
+> >+#define SMMU_PDE_ATTR          (SMMU_PDE_READABLE | SMMU_PDE_WRITABLE |=
+ \
+> >+                                SMMU_PDE_NONSECURE)
+> >+#define SMMU_PTE_ATTR          (SMMU_PTE_READABLE | SMMU_PTE_WRITABLE |=
+ \
+> >+                                SMMU_PTE_NONSECURE)
+> >+
+> >+#define SMMU_PDE_VACANT(n)     (((n) << 10) | SMMU_PDE_ATTR)
+> >+#define SMMU_PTE_VACANT(n)     (((n) << 12) | SMMU_PTE_ATTR)
 >=20
-> Changes since v4: None
->=20
-> Changes since v3: None
->=20
-> Changes since v2:
->  - Explain better the Dynamic Voltage Scaling (DVS) support in some B=
-uck
->    regulators and the max77802,pmic-buck-{dvs,selb}-gpios properties.
->    Suggested by Mark Brown.
->=20
->  Documentation/devicetree/bindings/mfd/max77802.txt | 97 ++++++++++++=
-++++++++++
->  1 file changed, 97 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/mfd/max77802.tx=
-t
->=20
-> diff --git a/Documentation/devicetree/bindings/mfd/max77802.txt b/Doc=
-umentation/devicetree/bindings/mfd/max77802.txt
-> new file mode 100644
-> index 0000000..f3b67c5
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/mfd/max77802.txt
-> @@ -0,0 +1,97 @@
-> +Maxim MAX77802 multi-function device
-> +
-> +MAX77802 is a Mulitifunction device with PMIC, RTC and Charger on ch=
-ip. It is
+> There is an ISR to catch the invalid SMMU translation. Do you want to mod=
+ify
+> the identity mapping with read/write attribute of the unused SMMU pages?
 
-"Multifunction"?
+I'm not sure I understand what you mean by "identity mapping". None of
+the public documentation seems to describe the exact layout of PDEs or
+PTEs, so it's somewhat hard to tell what to set them to when pages are
+unmapped.
 
-> +interfaced to host controller using i2c interface. PMIC, Charger and=
- RTC
-> +submodules are addressed using same i2c slave address.
-> +
-> +Buck regulators 1, 2, 3, 4 and 6 include Dynamic Voltage Scaling (DV=
-S) that
-> +allows each output voltage to change dynamically. Each Buck output v=
-oltage
-> +is selected using a set of external inputs: DVS1-3 and SELB1, 2, 3 a=
-nd 6.
-> +
-> +There are 8 DVS registers that can be used to configure the output v=
-oltage
-> +for each Buck regulator and which one is active is controled by DVSx=
- lines.
-> +
-> +SELBx lines are used to control if individual Buck lines are ON or O=
-=46F.
-> +
-> +This document describes the binding for mfd device and PMIC submodul=
-e.
-> +
-> +Binding for the built-in 32k clock generator block is defined separa=
-tely
-> +in bindings/clk/maxim,max77802.txt file.
-> +
-> +Required properties:
-> +- compatible : Must be "maxim,max77802";
-> +- reg : Specifies the i2c slave address of PMIC block.
-> +- interrupts : This i2c device has an IRQ line connected to the main=
- SoC.
-> +- interrupt-parent : The parent interrupt controller.
-> +
-> +Optional properties:
-> +- max77802,pmic-buck-default-dvs-idx: We'll always write this DVS in=
-dex in the
-> +  PMIC for Bucks with DVS.
-> +  NOTE: at the moment these bindings don't include enough details fo=
-r actual
-> +  GPIO-DVS--this just lets you choose which single slot to use.
-> +
-> +- max77802,pmic-buck-dvs-gpios: A GPIO array where each GPIO is conn=
-ected to a
-> +  DVS line. We'll try to set these GPIOs to match pmic-buck-default-=
-dvs-idx at
-> +  probe time if they are defined. If some or all of these GPIOs are =
-not defined
-> +  it's assumed that the board has any missing GPIOs hardwired to mat=
-ch
-> +  pmic-buck-default-dvs-idx.
-> +
-> +- max77802,pmic-buck-selb-gpios: A GPIO array where each GPIO is con=
-nected to a
-> +  SELBx line. Should be five values: 1, 2, 3, 4, 6. It is strongly s=
-uggested to
-> +  include these GPIOs if there's any chance that changing DVS GPIOs =
-one line at
-> +  a time might glitch your DVS values.
-> +
-> +Optional node:
-> +- regulators : The regulators of max77802 have to be instantiated
-> +  under subnode named "regulators" using the following format.
-> +
-> +	regulator_name {
+> This can make sure we capture the invalid SMMU translation. And helps for
+> driver to capture issues when using SMMU.
 
-The convention, I was told, would be regulator-name as node name.
+That certainly sounds like a useful thing to have. Like I said this is
+an RFC and I'm not even sure if it's acceptable in the current form, so
+I wanted to get feedback early on to avoid wasting effort on something
+that turn out to be a wild-goose chase.
 
-> +		standard regulator constraints....
-> +	};
-> +	refer Documentation/devicetree/bindings/regulator/regulator.txt
-> +
-> +  The regulator node name should be initialized with a string
-> +to get matched with their hardware counterparts as follow:
-> +
-> +	-LDOn 	:	for LDOs, where n can lie in range 1 to 35.
-> +			example: LDO1, LDO2, LDO35.
-> +	-BUCKn 	:	for BUCKs, where n can lie in range 1 to 10.
-> +			example: BUCK1, BUCK5, BUCK10.
-> +Example:
-> +
-> +	max77802@09 {
-> +		compatible =3D "maxim,max77802";
-> +		interrupt-parent =3D <&wakeup_eint>;
-> +		interrupts =3D <26 0>;
-> +		reg =3D <0x09>;
-> +		#address-cells =3D <1>;
-> +		#size-cells =3D <0>;
-> +
-> +		max77802,pmic-buck-default-dvs-idx =3D <1>;
-> +		max77802,pmic-buck-dvs-gpios =3D <&gpy7 6 0>,
-> +					       <&gpj4 2 0>,
-> +					       <&gpj4 3 0>;
-> +		max77802,pmic-buck-selb-gpios =3D <&gph0 2 0>,
-> +						<&gph0 3 0>,
-> +						<&gph0 4 0>,
-> +						<&gph0 5 0>,
-> +						<&gph0 6 0>;
-> +
-> +		regulators {
-> +			ldo11_reg: LDO11 {
-> +				regulator-compatible =3D "LDO11";
-> +				regulator-name =3D "vdd_ldo11";
-> +				regulator-min-microvolt =3D <1900000>;
-> +				regulator-max-microvolt =3D <1900000>;
-> +				regulator-always-on;
-> +			};
-> +
-> +			buck1_reg {
+Thierry
 
-Missing ": BUCK1"
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature
 
-> +				regulator-compatible =3D "BUCK1";
-> +				regulator-name =3D "vdd_mif";
-> +				regulator-min-microvolt =3D <950000>;
-> +				regulator-max-microvolt =3D <1300000>;
-> +				regulator-always-on;
-> +				regulator-boot-on;
-> +			};
-> +	};
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Regards,
-Andreas
+iQIcBAEBAgAGBQJTrSh7AAoJEN0jrNd/PrOhHXsQAIofIx+IcObVIU5pebdVPE64
+KB9+bvQGZfjn6EiaoqDuJ9DsiFKhWFrn3cFXZM9nkgYioPK/IVY6/wPguoC1MEW3
+95sX9SkVhXjjbQOLAuDu2hYJZXB0ljpYnV23ag2rJtCcqQqOoiKuSdziqSmoYPdA
+JerEdaZQRU3yy0wBGkG+pAeHCZLmJCX6zAGYGqIaFks9Y7TUE3tfLOffZHxY22nc
+uMP7Q756Py1KMxObpEcU6twL5I6gRloVP8maES54ZfNJ2aUMDyhHHn0+2LMEil1f
+4nEmkOuFTBgJpMHtzA4I1VtudRzsDXbrINgEP1WVyUrmol1xwI918+kMj3ap+Pd0
+H5Qw0AvlXsIvTYSVj+y+mrPrfTR07m1vxutUE1Fxcj7FI55X7HLM3aaAG+Qrxei4
+z41szUY1JSxLBPJckbhdyV5EA290y9n/8iCRMCzITeohXM1JDTg5Qa91eGPtvAYa
+rRbJEE5mPdkIRAlieTUrqxKaZ0k4mYQNd7v5AuglEA42FMEJB1YugkcveKVMpOdg
+x3sfPuT1lHGsMcM1G/s11zWeGK1Mc4dWbiwTdaXMGDgdC9pjG79Zo8pBObocJSlH
+YlPCizYYlOizZoOMp5fCoc2QFwCwxJ2XNYUs8fhY2veSOF9yN6SZFzTwsMxUMS81
+makzzz/StBEFKD5aUsLM
+=DBY2
+-----END PGP SIGNATURE-----
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+--d6Gm4EdcadzBjdND--
+
+--===============8499723190041747257==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8499723190041747257==--
