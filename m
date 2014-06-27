@@ -1,94 +1,229 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH RFC v3 1/2] Devicetree: Add pl353 smc controller devicetree binding information
-Date: Fri, 27 Jun 2014 08:32:41 +0530
-Message-ID: <ab701d63-921a-42a2-b1a8-c450b0e172df@BL2FFO11FD041.protection.gbl>
-References: <1403838162-18756-1-git-send-email-punnaia@xilinx.com>
+From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>
+Subject: [PATCH RFC v3 3/4] nand: pl353: Add ONDIE ECC support
+Date: Fri, 27 Jun 2014 08:33:58 +0530
+Message-ID: <eb265357-7edd-4a14-bfa4-e84b9160be49@BL2FFO11FD041.protection.gbl>
+References: <1403838239-4140-1-git-send-email-punnaia@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403838162-18756-1-git-send-email-punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rob-VoJi6FS/r0vR7s880joybQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, computersforpeace-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, artem.bityutskiy-VuQAYsv1563Yd54FQh9/CA@public.gmane.org, pekon-l0cyMroinI0@public.gmane.org, jussi.kivilinna-X3B1VOXEql0@public.gmane.org, acourbot-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org, ivan.khoronzhuk-l0cyMroinI0@public.gmane.org, joern-PCqxUs/MD9bYtjvyW6yDsg@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-mtd-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1403838239-4140-1-git-send-email-punnaia@xilinx.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rob@landley.net, michal.simek@xilinx.com, grant.likely@linaro.org, gregkh@linuxfoundation.org, jason@lakedaemon.net, ezequiel.garcia@free-electrons.com, arnd@arndb.de, dwmw2@infradead.org, computersforpeace@gmail.com, artem.bityutskiy@linux.intel.com, pekon@ti.com, jussi.kivilinna@iki.fi, acourbot@nvidia.com, ivan.khoronzhuk@ti.com, joern@logfs.org
+Cc: devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org, kpc528@gmail.com, kalluripunnaiahchoudary@gmail.com, Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add pl353 static memory controller devicetree binding information.
+Added ONDIE ECC support. Currently this ecc mode is supported for
+specific micron parts with oob size 64 bytes.
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Signed-off-by: Punnaiah Choudary Kalluri <punnaia@xilinx.com>
 ---
-Changes in v2:
- - modified timing binding info as per onfi timing parameters
- - add suffix nano second as timing unit
- - modified the clock names as per the IP spec
----
- .../bindings/memory-controllers/pl353-smc.txt      |   53 ++++++++++++++++++++
- 1 files changed, 53 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
+ drivers/mtd/nand/pl353_nand.c |  131 +++++++++++++++++++++++++++++++++++++++-
+ 1 files changed, 127 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-new file mode 100644
-index 0000000..c1f011d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/memory-controllers/pl353-smc.txt
-@@ -0,0 +1,53 @@
-+Device tree bindings for ARM PL353 static memory controller
+diff --git a/drivers/mtd/nand/pl353_nand.c b/drivers/mtd/nand/pl353_nand.c
+index eca205f..4f56c7f 100644
+--- a/drivers/mtd/nand/pl353_nand.c
++++ b/drivers/mtd/nand/pl353_nand.c
+@@ -140,6 +140,48 @@ static struct nand_ecclayout nand_oob_64 = {
+ 		 .length = 50} }
+ };
+ 
++static struct nand_ecclayout ondie_nand_oob_64 = {
++	.eccbytes = 32,
 +
-+PL353 static memory controller supports two kinds of memory
-+interfaces.i.e NAND and SRAM/NOR interfaces.
-+The actual devices are instantiated from the child nodes of pl353 smc node.
++	.eccpos = {
++		8, 9, 10, 11, 12, 13, 14, 15,
++		24, 25, 26, 27, 28, 29, 30, 31,
++		40, 41, 42, 43, 44, 45, 46, 47,
++		56, 57, 58, 59, 60, 61, 62, 63
++	},
 +
-+Required properties:
-+- compatible		: Should be "arm,pl353-smc-r2p1"
-+- reg			: Controller registers map and length.
-+- clock-names		: List of input clock names - "memclk", "aclk"
-+			  (See clock bindings for details).
-+- clocks		: Clock phandles (see clock bindings for details).
-+- address-cells	: Address cells, must be 1.
-+- size-cells		: Size cells. Must be 1.
++	.oobfree = {
++		{ .offset = 4, .length = 4 },
++		{ .offset = 20, .length = 4 },
++		{ .offset = 36, .length = 4 },
++		{ .offset = 52, .length = 4 }
++	}
++};
 +
-+Child nodes:
-+ For NAND the "arm,pl353-nand-r2p1" and for NOR the "cfi-flash" drivers are
-+supported as child nodes.
++/* Generic flash bbt decriptors */
++static uint8_t bbt_pattern[] = { 'B', 'b', 't', '0' };
++static uint8_t mirror_pattern[] = { '1', 't', 'b', 'B' };
 +
-+Mandatory timing properties for child nodes:
-+- nand-tRC-ns	: Read cycle time.
-+- nand-tWC-ns	: Write cycle time.
-+- nand-tREA-ns	: re_n assertion delay.
-+- nand-tWP-ns	: we_n de-assertion delay.
-+- nand-tCLR-ns	: Status read time
-+- nand-tAR-ns	: ID read time
-+- nand-tRR-ns	: busy to re_n
++static struct nand_bbt_descr bbt_main_descr = {
++	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE
++		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
++	.offs = 4,
++	.len = 4,
++	.veroffs = 20,
++	.maxblocks = 4,
++	.pattern = bbt_pattern
++};
 +
-+for nand partition information please refer the below file
-+Documentation/devicetree/bindings/mtd/partition.txt
++static struct nand_bbt_descr bbt_mirror_descr = {
++	.options = NAND_BBT_LASTBLOCK | NAND_BBT_CREATE | NAND_BBT_WRITE
++		| NAND_BBT_2BIT | NAND_BBT_VERSION | NAND_BBT_PERCHIP,
++	.offs = 4,
++	.len = 4,
++	.veroffs = 20,
++	.maxblocks = 4,
++	.pattern = mirror_pattern
++};
 +
-+Example:
-+	pl353smcc_0: pl353smcc@e000e000 {
-+			compatible = "arm,pl353-smcc-r2p1"
-+			clock-names = "memclk", "aclk";
-+			clocks = <&clkc 11>, <&clkc 44>;
-+			reg = <0xe000e000 0x1000>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+			nand_0: nand@e1000000 {
-+				compatible = "arm,pl353-nand-r2p1"
-+				reg = <0xe1000000 0x1000000>;
-+				nand-tRC-ns = <40>;
-+				nand-tWC-ns = <40>;
-+				nand-tREA-ns = <10>;
-+				nand-tWP-ns = <20>;
-+				nand-tCLR-ns = <20>;
-+				nand-tAR-ns = <20>;
-+				nand-tRR-ns = <40>;
-+				(...)
-+			};
-+	};
+ /**
+  * pl353_nand_calculate_hwecc - Calculate Hardware ECC
+  * @mtd:	Pointer to the mtd_info structure
+@@ -816,15 +858,74 @@ static int pl353_nand_device_ready(struct mtd_info *mtd)
+ }
+ 
+ /**
++ * pl353_nand_detect_ondie_ecc - Get the flash ondie ecc state
++ * @mtd:	Pointer to the mtd_info structure
++ *
++ * This function enables the ondie ecc for the Micron ondie ecc capable devices
++ *
++ * Return:	1 on detect, 0 if fail to detect
++ */
++static int pl353_nand_detect_ondie_ecc(struct mtd_info *mtd)
++{
++	struct nand_chip *nand_chip = mtd->priv;
++	u8 maf_id, dev_id, i, get_feature;
++	u8 set_feature[4] = { 0x08, 0x00, 0x00, 0x00 };
++
++	/* Check if On-Die ECC flash */
++	nand_chip->cmdfunc(mtd, NAND_CMD_RESET, -1, -1);
++	nand_chip->cmdfunc(mtd, NAND_CMD_READID, 0x00, -1);
++
++	/* Read manufacturer and device IDs */
++	maf_id = readb(nand_chip->IO_ADDR_R);
++	dev_id = readb(nand_chip->IO_ADDR_R);
++
++	if ((maf_id == NAND_MFR_MICRON) &&
++	    ((dev_id == 0xf1) || (dev_id == 0xa1) ||
++	     (dev_id == 0xb1) || (dev_id == 0xaa) ||
++	     (dev_id == 0xba) || (dev_id == 0xda) ||
++	     (dev_id == 0xca) || (dev_id == 0xac) ||
++	     (dev_id == 0xbc) || (dev_id == 0xdc) ||
++	     (dev_id == 0xcc) || (dev_id == 0xa3) ||
++	     (dev_id == 0xb3) ||
++	     (dev_id == 0xd3) || (dev_id == 0xc3))) {
++
++		nand_chip->cmdfunc(mtd, NAND_CMD_GET_FEATURES,
++				   ONDIE_ECC_FEATURE_ADDR, -1);
++		get_feature = readb(nand_chip->IO_ADDR_R);
++
++		if (get_feature & 0x08) {
++			return 1;
++		} else {
++			nand_chip->cmdfunc(mtd, NAND_CMD_SET_FEATURES,
++					   ONDIE_ECC_FEATURE_ADDR, -1);
++			for (i = 0; i < 4; i++)
++				writeb(set_feature[i], nand_chip->IO_ADDR_W);
++
++			ndelay(1000);
++
++			nand_chip->cmdfunc(mtd, NAND_CMD_GET_FEATURES,
++					   ONDIE_ECC_FEATURE_ADDR, -1);
++			get_feature = readb(nand_chip->IO_ADDR_R);
++
++			if (get_feature & 0x08)
++				return 1;
++		}
++	}
++
++	return 0;
++}
++
++/**
+  * pl353_nand_ecc_init - Initialize the ecc information as per the ecc mode
+  * @mtd:	Pointer to the mtd_info structure
++ * @ondie_ecc_state:	ondie ecc status
+  *
+  * This function initializes the ecc block and functional pointers as per the
+  * ecc mode
+  *
+  * Return:	Zero on success and error on failure.
+  */
+-static int pl353_nand_ecc_init(struct mtd_info *mtd)
++static int pl353_nand_ecc_init(struct mtd_info *mtd, int ondie_ecc_state)
+ {
+ 	struct nand_chip *nand_chip = mtd->priv;
+ 	struct pl353_nand_info *xnand =
+@@ -838,12 +939,28 @@ static int pl353_nand_ecc_init(struct mtd_info *mtd)
+ 
+ 	switch (xnand->ecc_mode) {
+ 	case NAND_ECC_HW:
+-		if (mtd->writesize > 2048) {
++		if ((mtd->writesize > 2048) || ((ondie_ecc_state) &&
++						(mtd->oobsize != 64))) {
+ 			pr_warn("hardware ECC not possible\n");
+ 			return -ENOTSUPP;
+ 		}
+ 
+ 		nand_chip->ecc.mode = NAND_ECC_HW;
++		if (ondie_ecc_state) {
++			/* Bypass the controller ECC block */
++			pl353_smc_set_ecc_mode(PL353_SMC_ECCMODE_BYPASS);
++			nand_chip->ecc.bytes = 0;
++			nand_chip->ecc.layout = &ondie_nand_oob_64;
++			nand_chip->ecc.read_page = pl353_nand_read_page_raw;
++			nand_chip->ecc.write_page = pl353_nand_write_page_raw;
++			nand_chip->ecc.size = mtd->writesize;
++			/*
++			 * On-Die ECC spare bytes offset 8 is used for ECC codes
++			 * Use the BBT pattern descriptors
++			 */
++			nand_chip->bbt_td = &bbt_main_descr;
++			nand_chip->bbt_md = &bbt_mirror_descr;
++		} else {
+ 		nand_chip->ecc.calculate = pl353_nand_calculate_hwecc;
+ 		nand_chip->ecc.correct = pl353_nand_correct_data;
+ 		nand_chip->ecc.hwctl = NULL;
+@@ -852,13 +969,17 @@ static int pl353_nand_ecc_init(struct mtd_info *mtd)
+ 		nand_chip->ecc.write_page = pl353_nand_write_page_hwecc;
+ 		pl353_smc_set_ecc_pg_size(mtd->writesize);
+ 		pl353_smc_set_ecc_mode(PL353_SMC_ECCMODE_APB);
+-		/* Hardware ECC generates 3 bytes ECC code for each 512 bytes */
++			/*
++			 * Hardware ECC generates 3 bytes ECC code for each
++			 * 512 bytes
++			 */
+ 		nand_chip->ecc.bytes = 3;
+ 
+ 		if (mtd->oobsize == 16)
+ 			nand_chip->ecc.layout = &nand_oob_16;
+ 		else
+ 			nand_chip->ecc.layout = &nand_oob_64;
++		}
+ 
+ 		break;
+ 	case NAND_ECC_SOFT:
+@@ -900,6 +1021,7 @@ static int pl353_nand_probe(struct platform_device *pdev)
+ 	struct nand_chip *nand_chip;
+ 	struct resource *res;
+ 	struct mtd_part_parser_data ppdata;
++	int ondie_ecc_state;
+ 
+ 	xnand = devm_kzalloc(&pdev->dev, sizeof(*xnand), GFP_KERNEL);
+ 	if (!xnand)
+@@ -942,6 +1064,7 @@ static int pl353_nand_probe(struct platform_device *pdev)
+ 
+ 	platform_set_drvdata(pdev, xnand);
+ 
++	ondie_ecc_state = pl353_nand_detect_ondie_ecc(mtd);
+ 	/* first scan to find the device and get the page size */
+ 	if (nand_scan_ident(mtd, 1, NULL)) {
+ 		dev_err(&pdev->dev, "nand_scan_ident for NAND failed\n");
+@@ -952,7 +1075,7 @@ static int pl353_nand_probe(struct platform_device *pdev)
+ 	if (xnand->ecc_mode < 0)
+ 		xnand->ecc_mode = NAND_ECC_HW;
+ 
+-	if (pl353_nand_ecc_init(mtd))
++	if (pl353_nand_ecc_init(mtd, ondie_ecc_state))
+ 		return -ENOTSUPP;
+ 
+ 	if (nand_chip->options & NAND_BUSWIDTH_16)
 -- 
 1.7.4
 
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
