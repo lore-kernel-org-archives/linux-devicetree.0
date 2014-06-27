@@ -1,105 +1,53 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH] i2c: busses: i2c-pxa.c:  Fix for possible null pointer
- dereferenc
-Date: Fri, 27 Jun 2014 14:21:48 +0200
-Message-ID: <20140627122147.GF2641@katana>
-References: <1401831034-30255-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+From: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] usb: chipidea: zynq: Add device tree binding information
+Date: Fri, 27 Jun 2014 16:23:55 +0400
+Message-ID: <53AD625B.1080002@cogentembedded.com>
+References: <6233f866-678d-4a90-a307-debcb848ae76@BN1AFFO11FD023.protection.gbl>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="cz6wLo+OExbGG7q/"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1401831034-30255-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jingoo Han <jg1.han@samsung.com>, Leilei Shang <shangll@marvell.com>, Daniel Drake <dsd@laptop.org>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <6233f866-678d-4a90-a307-debcb848ae76-reflc3kr++Mk2TTsEbHRquhlVc3/7hDbVaz/vdPVXQ4@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Hello.
 
---cz6wLo+OExbGG7q/
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+On 06/27/2014 03:23 PM, Punnaiah Choudary Kalluri wrote:
 
-On Tue, Jun 03, 2014 at 11:30:34PM +0200, Rickard Strandqvist wrote:
-> Fix for possible null pointer dereferenc, and there is a risk
-> for memory leak in when something unexpected happens and the
-> function returns.
->=20
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.s=
-e>
-> ---
->  drivers/i2c/busses/i2c-pxa.c |   19 +++++++++++--------
->  1 file changed, 11 insertions(+), 8 deletions(-)
->=20
-> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> index bbe6dfb..948a3c7 100644
-> --- a/drivers/i2c/busses/i2c-pxa.c
-> +++ b/drivers/i2c/busses/i2c-pxa.c
-> @@ -1142,10 +1142,8 @@ static int i2c_pxa_probe(struct platform_device *d=
-ev)
->  	int ret, irq;
-> =20
->  	i2c =3D kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
-> -	if (!i2c) {
-> -		ret =3D -ENOMEM;
-> -		goto emalloc;
-> -	}
-> +	if (!i2c)
-> +		return -ENOMEM;
-> =20
->  	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
->  	i2c->adap.nr =3D dev->id;
-> @@ -1154,11 +1152,16 @@ static int i2c_pxa_probe(struct platform_device *=
-dev)
->  	if (ret > 0)
->  		ret =3D i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
->  	if (ret < 0)
-> -		goto eclk;
-> +		goto emalloc;
-> =20
->  	res =3D platform_get_resource(dev, IORESOURCE_MEM, 0);
-> +	if (res =3D=3D NULL) {
-> +		ret =3D -ENODEV;
-> +		goto emalloc;
-> +	}
+> Document device tree binding information as required by
+> the ZYNQ USB controller.
+
+> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+[...]
+
+> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
+> new file mode 100644
+> index 0000000..54bb3b4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
+> @@ -0,0 +1,23 @@
+> +Xilinx Zynq usb controller based on synopsys usb IP(v2.20a)
+
+    s/usb/USB/.
+
 > +
->  	irq =3D platform_get_irq(dev, 0);
-> -	if (res =3D=3D NULL || irq < 0) {
-> +	if (irq < 0) {
->  		ret =3D -ENODEV;
->  		goto eclk;
+> +Required properties:
+> +- compatible:   should contain "xlnx,zynq-usb-2.20a"
+> +- clocks:       clock provider specifier
+> +- reg:          offset and length of the register set in the memory map
+> +- interrupt-parent: the phandle for the interrupt controller that services
+> +                    interrupts for this device.
 
-Nope, those should be emalloc as well since the region was not requested
-here. May I ask you to just convert this driver to managed devices (devm_*
-functions)? They are made to exactly avoid this hazzle and cleanup the
-driver.
+    This property has never been required -- it can be inherited from the 
+upper level node.
 
-Thanks,
-
-   Wolfram
+WBR, Sergei
 
 
---cz6wLo+OExbGG7q/
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTrWHbAAoJEBQN5MwUoCm2ZSwP/2qAclUPmuYRl9LRNSqOFKV1
-OApDTwxBFwIC1EUsg0zZ5/lpj5ZSZkkLLPGu3Of0oyHJbeXS4+dnw9+1NdmdwVyH
-bBUBNCu7T5yhRQgolWPjVMKOnGRqjxJmp1A03BF960lMc+LaSijD9sqJrWQnCemP
-UbJXFXEC7xk8u2QRX8uxmKRdnSAb/d7f8FUC6n4SXZc1eDivljc2cWgpE1Qtn1av
-LTB3Iw21m8076qUitVBXIo1+rVj6zxmZiKgL/Bg1bEJBIQhu2TU5D8xTJf3TQKgC
-FHUHXFEdhZYy6lGRnQBYFULPsbviYp153HJaEa7zY5xEMWOq08E1TMMPGTU72Mwd
-/DOInBIjirzdLnWOQVovOtmZ9KRux/jXJwigjxy2NSEuEncKXgF1Xc3TEiP75ybP
-BAwRAesucL9b/xYKlsET7OpVjOaRzS4DfjYKAZjYFi8mpMFjSgk/ruHpahwwAIUX
-RKpoNLGZyeyHeziXp1T4S4l7EnThzvpzwkcSjQsFNxtbo9kLnkZbKlhg0GI/lYrl
-I/Tkbfd1OHY5N2g3bDnJKHx5bOvB+RIHQoACNmcTqZE1IawOApEI8yy5qFMrjjmd
-y65qwlBf7aynHryrTOTLFttH7aNLrWXiC0AGzGdexSbhQ7SSnuhanvE/dNKwHxpd
-z2Wb18VoVffZluRrjGVn
-=it/c
------END PGP SIGNATURE-----
-
---cz6wLo+OExbGG7q/--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
