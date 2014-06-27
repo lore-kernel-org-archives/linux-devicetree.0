@@ -1,75 +1,98 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH V3 0/7] drm/exynos: Support DP CLKCON register in FIMD
- driver
-Date: Fri, 27 Jun 2014 11:49:40 +0100
-Message-ID: <20140627104940.GF7262@leverpostej>
-References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
- <53AD467A.1030005@samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v5 1/8] Documentation: arm: define DT idle states bindings
+Date: Fri, 27 Jun 2014 11:53:45 +0100
+Message-ID: <20140627105345.GA3626@e102568-lin.cambridge.arm.com>
+References: <1403705421-17597-1-git-send-email-lorenzo.pieralisi@arm.com>
+ <1403705421-17597-2-git-send-email-lorenzo.pieralisi@arm.com>
+ <20140625145849.GC15240@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Type: text/plain; charset=WINDOWS-1252
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <20140625145849.GC15240@leverpostej>
 Content-Disposition: inline
-In-Reply-To: <53AD467A.1030005@samsung.com>
-Content-Language: en-US
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Inki Dae <inki.dae@samsung.com>
-Cc: Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "seanpaul@google.com" <seanpaul@google.com>, "ajaynumb@gmail.com" <ajaynumb@gmail.com>, "jg1.han@samsung.com" <jg1.han@samsung.com>, "joshi@samsung.com" <joshi@samsung.com>, "prashanth.g@samsung.com" <prashanth.g@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "cpgs@samsung.com" <cpgs@samsung.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sudeep Holla <Sudeep.Holla@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Charles Garcia-Tobin <Charles.Garcia-Tobin@arm.com>, Nicolas Pitre <nico@linaro.org>, Rob Herring <robh+dt@kernel.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, Peter De Schrijver <pdeschrijver@nvidia.com>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Antti Miettinen <ananaza@iki.fi>, Stephen Boyd <sboyd@codeaurora.org>, Kevin Hilman <khilman@linaro.org>, Sebastian Capella <sebcape@gmail.com>, Tomasz Figa <t.figa@samsung.com>, Mark Brown <broonie@kernel>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 27, 2014 at 11:24:58AM +0100, Inki Dae wrote:
->=20
-> + DT mailing list
+On Wed, Jun 25, 2014 at 03:58:49PM +0100, Mark Rutland wrote:
 
-Thanks for the Cc.
+[...]
 
-Can we get the rest of the series? Judging a series based on its
-diffstat alone is a little hard...
+> > +===========================================
+> > +4 - state node
+> > +===========================================
+> > +
+> > +A state node represents an idle state description and must be defined as
+> > +follows:
+> > +
+> > +- state node
+> > +
+> > +       Description: must be child of the idle-states node
+> > +
+> > +       The state node name shall follow standard device tree naming
+> > +       rules ([5], 2.2.1 "Node names"), in particular state nodes which
+> > +       are siblings within a single common parent must be given a unique name.
+> > +
+> > +       The idle state entered by executing the wfi instruction (idle_standby
+> > +       SBSA,[3][4]) is considered standard on all ARM platforms and therefore
+> > +       must not be listed.
+> > +
+> > +       With the definitions provided above, the following list represents
+> > +       the valid properties for a state node:
+> > +
+> > +       - compatible
+> > +               Usage: Required
+> > +               Value type: <stringlist>
+> > +               Definition: Must be "arm,idle-state".
+> > +
+> > +       - logic-state-retained
+> > +               Usage: See definition
+> > +               Value type: <none>
+> > +               Definition: if present logic is retained on state entry,
+> > +                           otherwise it is lost.
+> 
+> What logic state is retained? All system registers?
+> 
+> > +       - cache-state-retained
+> > +               Usage: See definition
+> > +               Value type: <none>
+> > +               Definition: if present cache memory is retained on state entry,
+> > +                           otherwise it is lost.
+> 
+> Likewise, how much of the cache hierarchy is affected? Any of it? All of
+> it?
+> 
+> > +       - timer-state-retained
+> > +               Usage: See definition
+> > +               Value type: <none>
+> > +               Definition: if present the timer control logic is retained on
+> > +                            state entry, otherwise it is lost.
+> 
+> The architected generic timers? Any CPU-local timers? Or any timers
+> whatsoever?
 
-Or is my mailbox filtering hiding the rest of these from me?
+Ok, as I mentioned this timer property is a blocking point for the
+entire set. I gave it more thought, and it is a very hard nut to crack,
+even if we resort to power domains (tick devices do not even contain
+struct device or device node pointers, even if I added a list of
+phandles to timers that are lost on idle state entry I would not be able
+to figure out if the tick device is lost on idle state entry).
 
-Any reason for not Ccing lakml?
+I am reasoning in kernel terms, I know it is bad but I can't help it
+in this case.
 
-Mark.
+Would a boolean property like the following one be deemed acceptable, eg:
 
-> On 2014=EB=85=84 06=EC=9B=94 27=EC=9D=BC 19:12, Ajay Kumar wrote:
-> > This series is based on exynos-drm-next branch of Inki Dae's tree a=
-t:
-> > git://git.kernel.org/pub/scm/linux/kernel/git/daeinki/drm-exynos.gi=
-t
-> >=20
-> > Changes since V2:
-> > 	Add DT property to know the type of FIMD output interface
-> > 	as per Inki's suggestion.
-> > 	Add samsung,output-type DT property in FIMD node for all boards
-> > 	supporting DP interface.
-> >=20
-> > Ajay Kumar (7):
-> >   [PATCH V3 1/7] drm/exynos: Support DP CLKCON register in FIMD dri=
-ver
-> >   [PATCH V3 2/7] ARM: dts: Add FIMD output property for snow
-> >   [PATCH V3 3/7] ARM: dts: Add FIMD output property for peach_pit
-> >   [PATCH V3 4/7] ARM: dts: Add FIMD output property for peach_pi
-> >   [PATCH V3 5/7] ARM: dts: Add FIMD output property for smdk5250
-> >   [PATCH V3 6/7] ARM: dts: Add FIMD output property for smdk5420
-> >   [PATCH V3 7/7] ARM: dts: Add FIMD output property for arndale
-> >=20
-> >  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
-> >  arch/arm/boot/dts/exynos5250-arndale.dts           |    1 +
-> >  arch/arm/boot/dts/exynos5250-smdk5250.dts          |    1 +
-> >  arch/arm/boot/dts/exynos5250-snow.dts              |    1 +
-> >  arch/arm/boot/dts/exynos5420-peach-pit.dts         |    1 +
-> >  arch/arm/boot/dts/exynos5420-smdk5420.dts          |    1 +
-> >  arch/arm/boot/dts/exynos5800-peach-pi.dts          |    1 +
-> >  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   23 ++++++++=
-++++++++++++
-> >  include/video/samsung_fimd.h                       |    4 ++++
-> >  9 files changed, 34 insertions(+)
-> >=20
->=20
-> --
-> To unsubscribe from this list: send the line "unsubscribe devicetree"=
- in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
->=20
+- local-timer-stop
+
+I want to be 100% honest here, this might turn out a Linux specific
+thing, or might be not, but I still think it is representative of how HW
+works.
+
+Comments welcome and would be very appreciated on this specific detail.
+
+Thanks,
+Lorenzo
+
