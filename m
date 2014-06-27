@@ -1,169 +1,59 @@
-From: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH v2 2/2] usb: chipidea: Add support for zynq usb host and device controller
-Date: Fri, 27 Jun 2014 16:53:53 +0530
-Message-ID: <fa656d2d-a2a8-4b8d-a29b-e89e4bfced3e@BL2FFO11FD034.protection.gbl>
-References: <1403868233-5123-1-git-send-email-punnaia@xilinx.com>
+From: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCHv5 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
+ code clean
+Date: Fri, 27 Jun 2014 13:26:36 +0200
+Message-ID: <53AD54EC.2050606@gmail.com>
+References: <1403843406-28229-1-git-send-email-cw00.choi@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403868233-5123-1-git-send-email-punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org, gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, kalluripunnaiahchoudary-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1403843406-28229-1-git-send-email-cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Zynq soc uses Chipidea/Synopsys usb IP core(CI13612). This patch adds
-necessary glue to allow the chipidea driver to work on zynq soc.
+Hi Chanwoo,
 
-Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
----
-Changes in v2:
-- modified the commit message for better readability
-- fixed the dev_err message
----
- drivers/usb/chipidea/Makefile       |    1 +
- drivers/usb/chipidea/ci_hdrc_zynq.c |  115 +++++++++++++++++++++++++++++++++++
- 2 files changed, 116 insertions(+), 0 deletions(-)
- create mode 100644 drivers/usb/chipidea/ci_hdrc_zynq.c
+On 27.06.2014 06:30, Chanwoo Choi wrote:
+> Changes from v4:
+> - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
+>   and remove enum variable of ADC version
+> - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
+> - Add reviewed message by Naveen Krishna Chatradhi
+> - Add functions for ADC clock control
+> 
+> Changes from v3:
+> - Add new 'exynos_adc_ops' structure to improve readability according to
+>  Tomasz Figa comment[1]
+>  [1] https://lkml.org/lkml/2014/4/16/238
+> - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
+> - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
+> 
+> Changes from v2:
+> - Check return value of clock function to deal with error exception
+> - Fix minor coding style to improve readability
+> 
+> Changes from v1:
+> - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
+> - Add a patch about DT binding documentation
+> 
+> Chanwoo Choi (4):
+>   iio: adc: exynos_adc: Add exynos_adc_data structure to improve readability
+>   iio: adc: exynos_adc: Control special clock of ADC to support Exynos3250 ADC
+>   iio: devicetree: Add DT binding documentation for Exynos3250 ADC
+>   ARM: dts: Fix wrong compatible string for Exynos3250 ADC
+> 
+>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |  26 +-
+>  arch/arm/boot/dts/exynos3250.dtsi                  |   4 +-
+>  drivers/iio/adc/exynos_adc.c                       | 326 +++++++++++++++------
+>  3 files changed, 268 insertions(+), 88 deletions(-)
+> 
 
-diff --git a/drivers/usb/chipidea/Makefile b/drivers/usb/chipidea/Makefile
-index 2f099c7..b0d6b6f 100644
---- a/drivers/usb/chipidea/Makefile
-+++ b/drivers/usb/chipidea/Makefile
-@@ -12,6 +12,7 @@ ci_hdrc-$(CONFIG_USB_OTG_FSM)		+= otg_fsm.o
- 
- obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_msm.o
- obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zevio.o
-+obj-$(CONFIG_USB_CHIPIDEA)	+= ci_hdrc_zynq.o
- 
- # PCI doesn't provide stubs, need to check
- ifneq ($(CONFIG_PCI),)
-diff --git a/drivers/usb/chipidea/ci_hdrc_zynq.c b/drivers/usb/chipidea/ci_hdrc_zynq.c
-new file mode 100644
-index 0000000..5ef2717
---- /dev/null
-+++ b/drivers/usb/chipidea/ci_hdrc_zynq.c
-@@ -0,0 +1,115 @@
-+/*
-+ * Copyright (C) 2014 Xilinx, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify it under
-+ * the terms of the GNU General Public License version 2 as published by the
-+ * Free Software Foundation; either version 2 of the License, or (at your
-+ * option) any later version.
-+ */
-+
-+#include <linux/clk.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/module.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_runtime.h>
-+#include <linux/usb/chipidea.h>
-+
-+#include "ci.h"
-+
-+#define ZYNQ_USB_DMA_MASK	0xFFFFFFF0
-+
-+struct ci_hdrc_zynq_data {
-+	struct platform_device *ci_pdev;
-+	struct clk *clk;
-+};
-+
-+static struct ci_hdrc_platform_data pdata = {
-+	.name           = "ci_hdrc_zynq",
-+	.capoffset      = DEF_CAPOFFSET,
-+	.flags          = CI_HDRC_REQUIRE_TRANSCEIVER
-+};
-+
-+static int ci_hdrc_zynq_probe(struct platform_device *pdev)
-+{
-+	struct ci_hdrc_zynq_data *data;
-+	int ret;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data) {
-+		dev_err(&pdev->dev, "Failed to allocate ci_hdrc_zynq data!\n");
-+		return -ENOMEM;
-+	}
-+
-+	data->clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(data->clk)) {
-+		dev_err(&pdev->dev,
-+			"Failed to get clock, err=%ld\n", PTR_ERR(data->clk));
-+		return PTR_ERR(data->clk);
-+	}
-+
-+	ret = clk_prepare_enable(data->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to prepare or enable clock, err=%d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = dma_coerce_mask_and_coherent(&pdev->dev, ZYNQ_USB_DMA_MASK);
-+	if (ret)
-+		goto err_clk;
-+
-+	data->ci_pdev = ci_hdrc_add_device(&pdev->dev,
-+				pdev->resource, pdev->num_resources,
-+				&pdata);
-+	if (IS_ERR(data->ci_pdev)) {
-+		ret = PTR_ERR(data->ci_pdev);
-+		dev_err(&pdev->dev,
-+			"Can't register ci_hdrc platform device, err=%d\n",
-+			ret);
-+		goto err_clk;
-+	}
-+
-+	platform_set_drvdata(pdev, data);
-+
-+	pm_runtime_no_callbacks(&pdev->dev);
-+	pm_runtime_enable(&pdev->dev);
-+	return 0;
-+
-+err_clk:
-+	clk_disable_unprepare(data->clk);
-+	return ret;
-+}
-+
-+static int ci_hdrc_zynq_remove(struct platform_device *pdev)
-+{
-+	struct ci_hdrc_zynq_data *data = platform_get_drvdata(pdev);
-+
-+	pm_runtime_disable(&pdev->dev);
-+	ci_hdrc_remove_device(data->ci_pdev);
-+	clk_disable_unprepare(data->clk);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id ci_hdrc_zynq_dt_ids[] = {
-+	{ .compatible = "xlnx,zynq-usb-2.20a" },
-+	{},
-+};
-+
-+static struct platform_driver ci_hdrc_zynq_driver = {
-+	.probe = ci_hdrc_zynq_probe,
-+	.remove = ci_hdrc_zynq_remove,
-+	.driver = {
-+		.name = "zynq_usb",
-+		.owner = THIS_MODULE,
-+		.of_match_table = ci_hdrc_zynq_dt_ids,
-+	 },
-+};
-+
-+module_platform_driver(ci_hdrc_zynq_driver);
-+
-+MODULE_ALIAS("platform:zynq_usb");
-+MODULE_DESCRIPTION("CI HDRC ZYNQ USB binding");
-+MODULE_AUTHOR("Xilinx Inc");
-+MODULE_LICENSE("GPL v2");
--- 
-1.7.4
+For the whole series:
 
+Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
