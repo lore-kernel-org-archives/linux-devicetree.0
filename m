@@ -1,13 +1,13 @@
 From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V3 6/7] ARM: dts: Add FIMD output property for smdk5420
-Date: Fri, 27 Jun 2014 16:48:09 +0530
-Message-ID: <CAEC9eQM63P+cmVe=JXtAF3BQNe4CTD+KE1MK6W_5UoC+JthjTg@mail.gmail.com>
+Subject: Re: [PATCH V3 5/7] ARM: dts: Add FIMD output property for smdk5250
+Date: Fri, 27 Jun 2014 16:48:35 +0530
+Message-ID: <CAEC9eQNEDMKy75rbKcW510AszBOoKhR-Mh7mpNmfiVOK5g8G6g@mail.gmail.com>
 References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
-	<1403863946-15492-7-git-send-email-ajaykumar.rs@samsung.com>
+	<1403863946-15492-6-git-send-email-ajaykumar.rs@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403863946-15492-7-git-send-email-ajaykumar.rs@samsung.com>
+In-Reply-To: <1403863946-15492-6-git-send-email-ajaykumar.rs@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
 To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 Cc: "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Ajay Kumar <ajaykumar.rs@samsung.com>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, InKi Dae <inki.dae@samsung.com>, Sean Paul <seanpaul@google.com>, Jingoo Han <jg1.han@samsung.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>
@@ -16,18 +16,18 @@ List-Id: devicetree@vger.kernel.org
 +DT mailing list
 
 On Fri, Jun 27, 2014 at 3:42 PM, Ajay Kumar <ajaykumar.rs@samsung.com> wrote:
-> Set FIMD output type for smdk5420 as DP.
+> Set FIMD output type for smdk5250 as DP.
 >
 > Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
 > ---
->  arch/arm/boot/dts/exynos5420-smdk5420.dts |    1 +
+>  arch/arm/boot/dts/exynos5250-smdk5250.dts |    1 +
 >  1 file changed, 1 insertion(+)
 >
-> diff --git a/arch/arm/boot/dts/exynos5420-smdk5420.dts b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> index 6052aa9..5f05a19 100644
-> --- a/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> +++ b/arch/arm/boot/dts/exynos5420-smdk5420.dts
-> @@ -120,6 +120,7 @@
+> diff --git a/arch/arm/boot/dts/exynos5250-smdk5250.dts b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> index a794a70..ed28efb 100644
+> --- a/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> +++ b/arch/arm/boot/dts/exynos5250-smdk5250.dts
+> @@ -382,6 +382,7 @@
 >
 >         fimd@14400000 {
 >                 status = "okay";
