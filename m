@@ -1,33 +1,55 @@
-From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v7] iio: add support of the max1027
-Date: Sat, 28 Jun 2014 09:57:18 +0100
-Message-ID: <53AE836E.7010303@kernel.org>
-References: <1402784830-5853-1-git-send-email-tremyfr@yahoo.fr> <53A7EE7F.1060803@gmx.de>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/6] mailbox/omap: add support for parsing dt devices
+Date: Sat, 28 Jun 2014 19:07:09 +0200
+Message-ID: <20140628170709.GB23634@xo-6d-61-c0.localdomain>
+References: <1403660878-56350-1-git-send-email-s-anna@ti.com>
+ <1403660878-56350-3-git-send-email-s-anna@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53A7EE7F.1060803-Mmb7MZpHnFY@public.gmane.org>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403660878-56350-3-git-send-email-s-anna@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 23/06/14 10:08, Hartmut Knaack wrote:
-> Philippe Reynes schrieb:
->> This driver add partial support of the
->> maxim 1027/1029/1031. Differential mode is not
->> supported.
->>
->> It was tested on armadeus apf27 board.
->>
->> Signed-off-by: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
-> Reviewed-by: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
->> ---
-> Not sure if it's too late, already. Looks pretty good to me, no show-stoppers. Though 3 minor issues inline, comments welcome.
-As I hadn't gotten around to pushing this out to the
-actual togreg branch I've added the reviewed-by.
+Hi!
 
-Thanks Hartmut.
+> The non-DT support has to be maintained for now to not break
+> OMAP3 legacy boot, and the legacy-style code will be cleaned
+> up once OMAP3 is also converted to DT-boot only.
 
-J
+> @@ -587,24 +606,157 @@ static int omap_mbox_unregister(struct omap_mbox_device *mdev)
+>  	return 0;
+>  }
+>  
+> +static const struct omap_mbox_device_data omap2_data = {
+> +	.num_users	= 4,
+> +	.num_fifos	= 6,
+> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+> +};
+> +
+> +static const struct omap_mbox_device_data omap3_data = {
+> +	.num_users	= 2,
+> +	.num_fifos	= 2,
+> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
+> +};
+> +
+> +static const struct omap_mbox_device_data am335x_data = {
+> +	.num_users	= 4,
+> +	.num_fifos	= 8,
+> +	.intr_type	= MBOX_INTR_CFG_TYPE2,
+> +};
+
+So you use compatible strings to look up 3 integers. Would it be better to have
+num_users/num_fifos/intr_type directly in the device tree? That should be cleaner
+and more flexible...
+
+If you do that, would it be possible to have share compatible string?
+
+									Pavel
+
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
