@@ -1,38 +1,31 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 0/3] Add R8A7791/Koelsch/Henninger board PCI DT support
-Date: Sat, 28 Jun 2014 04:17:09 +0400
-Message-ID: <53AE0985.9020604@cogentembedded.com>
-References: <201405200148.28683.sergei.shtylyov@cogentembedded.com> <537B9CF0.8020000@cogentembedded.com> <20140627235939.GC27128@verge.net.au>
+From: Alexandre Courbot <gnurou@gmail.com>
+Subject: Re: [PATCH V5 0/3] gpio: Add APM X-Gene SoC platform GPIO driver
+Date: Sat, 28 Jun 2014 12:14:57 +0900
+Message-ID: <CAAVeFuLZNr-bkXM-1S15tpz0da7pnppjNbJ6iOZ-6RzEDBZ_Jg@mail.gmail.com>
+References: <1403823587-23404-1-git-send-email-fkan@apm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140627235939.GC27128@verge.net.au>
-Sender: linux-sh-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>
-Cc: linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org, magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-gpio-owner@vger.kernel.org>
+In-Reply-To: <1403823587-23404-1-git-send-email-fkan@apm.com>
+Sender: linux-gpio-owner@vger.kernel.org
+To: Feng Kan <fkan@apm.com>
+Cc: patches <patches@apm.com>, Linus Walleij <linus.walleij@linaro.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Fri, Jun 27, 2014 at 7:59 AM, Feng Kan <fkan@apm.com> wrote:
+> This patch add the GPIO controller in the APM X-Gene platform. The GPIO
+> controller pins are muxed with the generic flash controller pins on the
+> system.
+>
+> V5 Change:
+>         1. Remove gpio->dev
+>         2. Remove not needed headers.
+>         3. Change to use latest driver.h for gpio.
+>         4. Set chip base to -1
+>         5. Put back label as it is needed sys interface.
 
-On 06/28/2014 03:59 AM, Simon Horman wrote:
+Let's see what Linus has to say, but to me this iteration looks good!
 
->>>     Here's the set of 3 patches against Simon Horman's 'renesas.git' repo,
->>> 'renesas-devel-v3.15-rc5-20140517' tag. Here we add internal PCI support for
->>> the R8A7791-based Koelsch and Henninger boards for the sake of getting USB
->>> EHCI/OHCI working...
+The series,
 
->>     Forgot to mention that it depends on the internal PCI bridge device tree
->> support reposted just before these patches...
-
->>> [1/3] ARM: shmobile: r8a7791: add internal PCI bridge nodes
->>> [2/3] ARM: shmobile: koelsch: enable internal PCI
->>> [3/3] ARM: shmobile: henninger: enable internal PCI
-
-> Thanks, please repost these patches when the device tree support
-
-    Where did you get that old stuff? The current version of this patchset is 
-4, not 2!
-
-WBR, Sergei
-
+Reviewed-by: Alexandre Courbot <acourbot@nvidia.com>
