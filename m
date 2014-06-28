@@ -1,112 +1,33 @@
-From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: mwifiex card reset
-Date: Sat, 28 Jun 2014 10:23:23 +0300
-Message-ID: <20140628072322.GC7410@atomide.com>
-References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
- <20140628052220.GG10407@us.netrek.org>
+From: Jonathan Cameron <jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v7] iio: add support of the max1027
+Date: Sat, 28 Jun 2014 09:57:18 +0100
+Message-ID: <53AE836E.7010303@kernel.org>
+References: <1402784830-5853-1-git-send-email-tremyfr@yahoo.fr> <53A7EE7F.1060803@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20140628052220.GG10407-kJBlkiJxCS/dtAWm4Da02A@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: James Cameron <quozl-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
-Cc: Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Bing Zhao <bzhao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-15; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53A7EE7F.1060803-Mmb7MZpHnFY@public.gmane.org>
+Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>, Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, armadeus-forum-5NWGOfrQmneRv+LV9MX5uipxlwaOVQ5f@public.gmane.org, lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, pmeerw-jW+XmwGofnusTnJN9+BGXg@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-* James Cameron <quozl-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> [140628 08:24]:
-> On Fri, Jun 27, 2014 at 04:39:42PM +0200, Andreas Fenkart wrote:
-> > I have an mwifiex module(sd8787) behind omap_hsmmc(am33xx-soc)
-> > The module is non-removable wired fix to soc. Now the wifi module
-> > needs 2 clocks; one is a sleep clock the other used when not
-> > sleeping.
-> > While the sleep clock is fixed, @32 kHz, the system clock can be
-> > one out of several values, but can be be derived automatically
-> > from the sleep clock. But this requires the clock to be present
-> > when the wifi module comes out of reset.
-> > 
-> > Another problem is software reboot, at initial power on the wifi
-> > card will react to mmc discovery. After a software reset of the
-> > host it will not, because it has already been disvovered and
-> > didn't notice the host rebooted, unless we reset it as well.
-> > While this seems obvious, the problem is that the reset is needed
-> > before the card can be discovered. Which means we cannot move the
-> > reset logic into the mwifiex driver, since that driver has not
-> > yet been selected through vendor/product id.
-> > 
-> 
-> we had same problem with sd8787 and a different system design.  we
-> added reset-gpios property [1] and used it in sdhci-pxav3.c [2] as
-> sdhci_pxav3_toggle_reset_gpio()
-> 
-> 1.
-> 
-> http://code.coreboot.org/p/openfirmware/source/tree/HEAD/cpu/arm/olpc/sdhci.fth#L104
-> 
-> 2.
-> 
-> http://dev.laptop.org/git/olpc-kernel/tree/drivers/mmc/host/sdhci-pxav3.c?h=arm-3.5#n229
-> 
-> > the reset logic:
-> >         gpiod_set_value(card->gpiod_reset, 0);
-> >         clk_enable(card->sleep_clock);
-> >         udelay(1000);
-> >         gpiod_set_value(card->gpiod_reset, 1);
-> > 
-> > The idea so far was to extend the device-tree node of the
-> > mmc slot by some reset leafs;
-> > 
-> > &mmc {
-> >         ti,non-removable;
-> >         ..
-> >         peripheral-clocks = <&clk &clk2 ...>;
-> >         peripheral-reset-gpios = <&gpio0 1 1 &gpio1 2 3 ...>;
-> > }
-> > 
-> > in mmc_add_host, all clocks will be enabled and gpios be pulled
-> > low for 1 msec
-> 
-> we used 5ms.
-> 
-> > Is this a feasible solution?
-> > 
-> > 
-> > Another related issue, is the card reset in mwifiex driver:
-> > 
-> > static void sdio_card_reset_worker(struct work_struct *work)
-> > {
-> >         struct mmc_host *target = reset_host;
-> > 
-> >         pr_err("Resetting card...\n");
-> >         mmc_remove_host(target);
-> >         /* 20ms delay is based on experiment with sdhci controller */
-> >         mdelay(20);
-> >         mmc_add_host(target);
-> > }
-> > static DECLARE_WORK(card_reset_work, sdio_card_reset_worker);
-> > 
-> > There are obviously a lot of problems with this, e.g. custom debugfs
-> > entries created in the driver will be lost. But sometimes this
-> > code might avert disaster in case the command handlers between
-> > driver and firmware lost synchronization
-> > 
-> > How could this be done in a better way?
-> 
-> i'm interested as well.
+On 23/06/14 10:08, Hartmut Knaack wrote:
+> Philippe Reynes schrieb:
+>> This driver add partial support of the
+>> maxim 1027/1029/1031. Differential mode is not
+>> supported.
+>>
+>> It was tested on armadeus apf27 board.
+>>
+>> Signed-off-by: Philippe Reynes <tremyfr-Qt13gs6zZMY@public.gmane.org>
+> Reviewed-by: Hartmut Knaack <knaack.h-Mmb7MZpHnFY@public.gmane.org>
+>> ---
+> Not sure if it's too late, already. Looks pretty good to me, no show-stoppers. Though 3 minor issues inline, comments welcome.
+As I hadn't gotten around to pushing this out to the
+actual togreg branch I've added the reviewed-by.
 
-Wouldn't it be best to have the mwifiex properly handle the
-reset GPIOs and idle status pins?
+Thanks Hartmut.
 
-Those are not part of the SDIO spec AFAIK, and the mmc
-controller should not need to care about those.
-
-Also, at least omaps also have an issue where suspend won't
-work with mwifiex loaded FYI.
-
-Regards,
-
-Tony
---
-To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+J
