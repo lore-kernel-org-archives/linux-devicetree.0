@@ -1,212 +1,74 @@
-From: Magnus Damm <magnus.damm@gmail.com>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car H2
- and M2 xHCI controllers
-Date: Sun, 29 Jun 2014 23:33:52 +0900
-Message-ID: <CANqRtoTfvM95b1kYNXFj9GmOewt2WPb+4UMqKonkDXC8FZq6Sg@mail.gmail.com>
-References: <539AEC8F.4030003@renesas.com>
-	<20140613142525.GE8319@saruman.home>
-	<CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
-	<20140627154021.GH8069@saruman.home>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <20140627154021.GH8069@saruman.home>
-Sender: linux-sh-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: Andre Heider <a.heider@gmail.com>
+Subject: [PATCH 00/13] uio_pruss: add support for devicetree and am33xx
+Date: Sun, 29 Jun 2014 18:21:34 +0200
+Message-ID: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
+Return-path: <linux-omap-owner@vger.kernel.org>
+Sender: linux-omap-owner@vger.kernel.org
+To: linux-omap@vger.kernel.org
+Cc: Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jun 28, 2014 at 12:40 AM, Felipe Balbi <balbi@ti.com> wrote:
-> On Wed, Jun 18, 2014 at 02:15:42PM +0900, Magnus Damm wrote:
->> Hi Felipe,
->>
->> On Fri, Jun 13, 2014 at 11:25 PM, Felipe Balbi <balbi@ti.com> wrote:
->> > Hi,
->> >
->> > On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
->> >> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
->> >> some specific initializations related to the firmware downloading and
->> >> some specific registers. This patch adds the support for this special
->> >> configuration as an xHCI quirk executed during probe and start.
->> >>
->> >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
->> >> ---
->>
->> >> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-rcar.c
->> >> new file mode 100644
->> >> index 0000000..ff0d1b4
->> >> --- /dev/null
->> >> +++ b/drivers/usb/host/xhci-rcar.c
->> >> @@ -0,0 +1,148 @@
->> >> +/*
->> >> + * xHCI host controller driver for R-Car SoCs
->> >> + *
->> >> + * Copyright (C) 2014 Renesas Electronics Corporation
->> >> + *
->> >> + * This program is free software; you can redistribute it and/or
->> >> + * modify it under the terms of the GNU General Public License
->> >> + * version 2 as published by the Free Software Foundation.
->> >> + */
->> >> +
->> >> +#include <linux/firmware.h>
->> >> +#include <linux/module.h>
->> >> +#include <linux/platform_device.h>
->> >> +#include <linux/usb/phy.h>
->> >> +
->> >> +#include "xhci.h"
->> >> +#include "xhci-rcar.h"
->> >> +
->> >> +#define FIRMWARE_NAME                "r8a779x_usb3_v1.dlmem"
->> >> +MODULE_FIRMWARE(FIRMWARE_NAME);
->> >> +
->> >> +/*** Register Offset ***/
->> >> +#define RCAR_USB3_INT_ENA    0x224   /* Interrupt Enable */
->> >> +#define RCAR_USB3_DL_CTRL    0x250   /* FW Download Control & Status */
->> >> +#define RCAR_USB3_FW_DATA0   0x258   /* FW Data0 */
->> >> +
->> >> +#define RCAR_USB3_LCLK               0xa44   /* LCLK Select */
->> >> +#define RCAR_USB3_CONF1              0xa48   /* USB3.0 Configuration1 */
->> >> +#define RCAR_USB3_CONF2              0xa5c   /* USB3.0 Configuration2 */
->> >> +#define RCAR_USB3_CONF3              0xaa8   /* USB3.0 Configuration3 */
->> >> +#define RCAR_USB3_RX_POL     0xab0   /* USB3.0 RX Polarity */
->> >> +#define RCAR_USB3_TX_POL     0xab8   /* USB3.0 TX Polarity */
->> >> +
->> >> +/*** Register Settings ***/
->> >> +/* Interrupt Enable */
->> >> +#define RCAR_USB3_INT_XHC_ENA        0x00000001
->> >> +#define RCAR_USB3_INT_PME_ENA        0x00000002
->> >> +#define RCAR_USB3_INT_HSE_ENA        0x00000004
->> >> +#define RCAR_USB3_INT_ENA_VAL        (RCAR_USB3_INT_XHC_ENA | \
->> >> +                             RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT_HSE_ENA)
->> >> +
->> >> +/* FW Download Control & Status */
->> >> +#define RCAR_USB3_DL_CTRL_ENABLE     0x00000001
->> >> +#define RCAR_USB3_DL_CTRL_FW_SUCCESS 0x00000010
->> >> +#define RCAR_USB3_DL_CTRL_FW_SET_DATA0       0x00000100
->> >> +
->> >> +/* LCLK Select */
->> >> +#define RCAR_USB3_LCLK_ENA_VAL       0x01030001
->> >> +
->> >> +/* USB3.0 Configuration */
->> >> +#define RCAR_USB3_CONF1_VAL  0x00030204
->> >> +#define RCAR_USB3_CONF2_VAL  0x00030300
->> >> +#define RCAR_USB3_CONF3_VAL  0x13802007
->> >> +
->> >> +/* USB3.0 Polarity */
->> >> +#define RCAR_USB3_RX_POL_VAL BIT(21)
->> >> +#define RCAR_USB3_TX_POL_VAL BIT(4)
->> >> +
->> >> +void xhci_rcar_start(struct usb_hcd *hcd)
->> >> +{
->> >> +     u32 temp;
->> >> +
->> >> +     if (hcd->regs != NULL) {
->> >> +             /* Interrupt Enable */
->> >> +             temp = readl(hcd->regs + RCAR_USB3_INT_ENA);
->> >> +             temp |= RCAR_USB3_INT_ENA_VAL;
->> >> +             writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
->> >> +             /* LCLK Select */
->> >> +             writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_LCLK);
->> >> +             /* USB3.0 Configuration */
->> >> +             writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CONF1);
->> >> +             writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CONF2);
->> >> +             writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CONF3);
->> >> +             /* USB3.0 Polarity */
->> >> +             writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX_POL);
->> >> +             writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX_POL);
->> >> +     }
->> >> +}
->> >> +
->> >> +static int xhci_rcar_download_firmware(struct device *dev, void __iomem *regs)
->> >> +{
->> >> +     const struct firmware *fw;
->> >> +     int retval, index, j, time;
->> >> +     int timeout = 10000;
->> >> +     u32 data, val, temp;
->> >> +
->> >> +     /* request R-Car USB3.0 firmware */
->> >> +     retval = request_firmware(&fw, FIRMWARE_NAME, dev);
->> >> +     if (retval)
->> >> +             return retval;
->> >> +
->> >> +     /* download R-Car USB3.0 firmware */
->> >> +     temp = readl(regs + RCAR_USB3_DL_CTRL);
->> >> +     temp |= RCAR_USB3_DL_CTRL_ENABLE;
->> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
->> >> +
->> >> +     for (index = 0; index < fw->size; index += 4) {
->> >> +             /* to avoid reading beyond the end of the buffer */
->> >> +             for (data = 0, j = 3; j >= 0; j--) {
->> >> +                     if ((j + index) < fw->size)
->> >> +                             data |= fw->data[index + j] << (8 * j);
->> >> +             }
->> >> +             writel(data, regs + RCAR_USB3_FW_DATA0);
->> >> +             temp = readl(regs + RCAR_USB3_DL_CTRL);
->> >> +             temp |= RCAR_USB3_DL_CTRL_FW_SET_DATA0;
->> >> +             writel(temp, regs + RCAR_USB3_DL_CTRL);
->> >> +
->> >> +             for (time = 0; time < timeout; time++) {
->> >> +                     val = readl(regs + RCAR_USB3_DL_CTRL);
->> >> +                     if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) == 0)
->> >> +                             break;
->> >> +                     udelay(1);
->> >> +             }
->> >> +             if (time == timeout) {
->> >> +                     retval = -ETIMEDOUT;
->> >> +                     break;
->> >> +             }
->> >> +     }
->> >> +
->> >> +     temp = readl(regs + RCAR_USB3_DL_CTRL);
->> >> +     temp &= ~RCAR_USB3_DL_CTRL_ENABLE;
->> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
->> >> +
->> >> +     for (time = 0; time < timeout; time++) {
->> >> +             val = readl(regs + RCAR_USB3_DL_CTRL);
->> >> +             if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
->> >> +                     retval = 0;
->> >> +                     break;
->> >> +             }
->> >> +             udelay(1);
->> >> +     }
->> >> +     if (time == timeout)
->> >> +             retval = -ETIMEDOUT;
->> >> +
->> >> +     release_firmware(fw);
->> >> +
->> >> +     return retval;
->> >> +}
->> >> +
->> >> +/* This function needs to initialize a "phy" of usb before */
->> >
->> > initializing a PHY looks like something that the PHY layer should do.
->> > Why don't you write a PHY driver and teach xhci-core about PHYs ? Then,
->> > more people would benefit.
->>
->> Could you please clarify what you would like Shimoda-san to do?
->>
->> Like Ben and Shimoda-san mentioned, there is already a PHY driver
->> developed for this SoC. The PHY driver is however shared in various
->> ways. For example, on one particular SoC the same PHY driver is
->> interfacing to a total of 3 different variants of USB controllers
->> where XHCI is one of them. And to make things even more complicated,
->> depending on SoC variant the XHCI hardware may or may not be available
->> - but the PHY portion is more or less the same.
->>
->> Putting the firmware loader in the XHCI driver like this at least
->> keeps it together with the rest of the XHCI stuff and also makes it
->> possible to easily access the XHCI I/O register window for firmware
->> loading. Moving the firmware loading to the PHY driver however
->> complicates the situation when it comes to Kconfig handling of XHCI
->> and PHY driver and also forces the PHY driver to access the XHCI
->> hardware I/O registers for firmware loading...
->
-> But the firmware is being loaded into the PHY registers, no ? In that
-> case, it should sit in the PHY driver.
+Hi,
 
-The firmware is not loaded into the PHY registers. It is loaded into
-what is considered XHCI registers by the documentation.
+this series adds PRUv2 support to uio_pruss through devicetree, makes the
+device usable on am33xx and enables it on beaglebone black.
+Inspired by old patches from Matt Porter found in a downstream tree.
+
+To archieve that this series:
+* adds a flag to omap_hwmod.c to get PRUSS out of hardreset (patch 5 and 6)
+* adds devicetree support to uio_pruss (patch 7 and 9)
+* adds the device to the am33xx dtsi and boneblack dts (patch 12 and 13)
+
+Bits and pieces:
+* some cleanup (patch 1-4)
+* take care of a fact that SRAM on am33xx is not exposed through UIO (patch 8)
+* add runtime pm support to enable clocks (patch 10)
+* allow the driver to be compiled on SOC_AM33XX (patch 11)
+
+This is only tested on beaglebone black (as that's the only hardware of the
+PRUSS enabled families I have) with some basic GPIO and IRQ tests.
+
+Notes:
+* I just got this hardware and I don't know if this UIO PRUSS business is
+  desired. Looking at the userspace driver I'd guess not so much ;), but this
+  interface is there for older generations anyway, and this small series lets
+  me use the device.
+* is the hardreset thing I did there the right thing to do? I think the
+  proper way would be a reset controller (which apparently doesn't yet exist
+  for this SoC?) and let the driver deassert/assert on probe/remove?
+* the platform device path has a clk_enable() / clk_put() calls. Are those
+  now redundant with the introduced pm_runtime_enable() pm_runtime_disable()
+  calls?
 
 Thanks,
+Andre
 
-/ magnus
+Andre Heider (13):
+  uio: uio_pruss: use struct device
+  uio: uio_pruss: use devm_kzalloc()
+  uio: uio_pruss: use devm_ioremap_resource()
+  uio: uio_pruss: use dmam_alloc_coherent()
+  ARM: OMAP2+: hwmod: Introduce a flag to deassert the HW reset line
+  ARM: AM33XX: hwmod: deassert PRUSS' hardreset lines
+  Documentation: devicetree: add bindings for TI PRUSS
+  uio: uio_pruss: make the UIO SRAM memory region optional
+  uio: uio_pruss: add devicetree support
+  uio: uio_pruss: add runtime pm support
+  uio: uio_pruss: enable the driver for am33xx SoCs
+  ARM: dts: am33xx: add the PRUSSv2 device
+  ARM: dts: am335x-boneblack: enable the PRUSSv2 device
+
+ .../devicetree/bindings/misc/ti,pruss.txt          |  19 +++
+ arch/arm/boot/dts/am335x-boneblack.dts             |   4 +
+ arch/arm/boot/dts/am33xx.dtsi                      |   9 ++
+ arch/arm/mach-omap2/omap_hwmod.c                   |   2 +
+ arch/arm/mach-omap2/omap_hwmod.h                   |   2 +
+ .../mach-omap2/omap_hwmod_33xx_43xx_ipblock_data.c |   1 +
+ drivers/uio/Kconfig                                |   4 +-
+ drivers/uio/uio_pruss.c                            | 144 ++++++++++++---------
+ 8 files changed, 123 insertions(+), 62 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/misc/ti,pruss.txt
+
+-- 
+2.0.0
+
