@@ -1,43 +1,45 @@
-From: Guenter Roeck <linux-0h96xk9xTtrk1uMJSBkQmQ@public.gmane.org>
-Subject: Re: [PATCH 1/2] Adds the vendor prefix "epcos" to vendor-prefixes.txt
-Date: Sun, 29 Jun 2014 12:45:48 -0700
-Message-ID: <53B06CEC.9060009@roeck-us.net>
-References: <CAJKbBDDFD294xnqkYq_auW=ppMyPJxigYUF-YAhXZVXw3NN5Xg@mail.gmail.com> <53AD7F8F.7070501@roeck-us.net> <2420621.lSeA9X6AqK@lenovobook>
+From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
+Subject: [PATCH 0/1] ARM: dts: zynq: Prepare Parallella
+Date: Sun, 29 Jun 2014 22:50:20 +0200
+Message-ID: <1404075022-28745-1-git-send-email-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <2420621.lSeA9X6AqK@lenovobook>
-Sender: linux-iio-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Jean Delvare <jdelvare-l3A5Bk7waGM@public.gmane.org>, Naveen Krishna Chatradhi <ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, lm-sensors-GZX6beZjE8VD60Wz+7aTrA@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Cc: Andreas Olofsson <andreas-hhg9azYwhpdWk0Htik3J/w@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2014 10:53 AM, Johannes Pointner wrote:
-> This patch adds the vendor prefix for "epcos" to the vendor-prefixes.
->
-> Signed-off-by: Johannes Pointner <johannes.pointner-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Hello,
 
-Copying devicetree mailing list for Ack.
+This patch adds an initial device tree for the Parallella board.
+UART, SD card, Ethernet are enabled.
+Not yet enabled are HDMI (FPGA, ADV7513), QSPI and 2x USB.
 
-Guenter
+Where I'm a bit unsure is the PHY placement; placement as subnode of th=
+e=20
+GEM corresponds to what was in the downstream 3.12 based device tree. I=
+t=20
+is a separate chip on the board though, whereas GEM is on the SoC.
 
-> ---
->   Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->   1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 46a311e..97c9c06 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -42,6 +42,7 @@ dmo	Data Modul AG
->   ebv	EBV Elektronik
->   edt	Emerging Display Technologies
->   emmicro	EM Microelectronic
-> +epcos	EPCOS AG
->   epfl	Ecole Polytechnique F=E9d=E9rale de Lausanne
->   epson	Seiko Epson Corp.
->   est	ESTeem Wireless Modems
->
+Regards,
+Andreas
+
+Andreas F=C3=A4rber (1):
+  ARM: dts: zynq: Add Parallella device tree
+
+ arch/arm/boot/dts/Makefile            |  4 ++-
+ arch/arm/boot/dts/zynq-parallella.dts | 63 +++++++++++++++++++++++++++=
+++++++++
+ 2 files changed, 66 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/zynq-parallella.dts
+
+--=20
+1.9.3
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
