@@ -1,37 +1,71 @@
-From: Andre Heider <a.heider@gmail.com>
-Subject: [PATCH 11/13] uio: uio_pruss: enable the driver for am33xx SoCs
-Date: Sun, 29 Jun 2014 18:21:45 +0200
-Message-ID: <1404058907-21112-12-git-send-email-a.heider@gmail.com>
-References: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1404058907-21112-1-git-send-email-a.heider@gmail.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: linux-omap@vger.kernel.org
-Cc: Matt Porter <mporter@linaro.org>, "Hans J . Koch" <hjk@hansjkoch.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Paul Walmsley <paul@pwsan.com>, Tony Lindgren <tony@atomide.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: [PATCH 0/4] Migrate PXA27x platforms to clock framework
+Date: Sun, 29 Jun 2014 20:32:20 +0200
+Message-ID: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Andre Heider <a.heider@gmail.com>
----
- drivers/uio/Kconfig | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+As the RFC posted in [1] didn't meet an unrivaled success for
+review, I'm posting this serie for PXA27x transition to clock
+framework.
 
-diff --git a/drivers/uio/Kconfig b/drivers/uio/Kconfig
-index 5a90914..1678387 100644
---- a/drivers/uio/Kconfig
-+++ b/drivers/uio/Kconfig
-@@ -106,10 +106,10 @@ config UIO_NETX
- 
- config UIO_PRUSS
- 	tristate "Texas Instruments PRUSS driver"
--	depends on ARCH_DAVINCI_DA850
-+	depends on ARCH_DAVINCI_DA850 || SOC_AM33XX
- 	select GENERIC_ALLOCATOR
- 	help
--	  PRUSS driver for OMAPL138/DA850/AM18XX devices
-+	  PRUSS driver for OMAPL138/DA850/AM18XX/AM33XX devices
- 	  PRUSS driver requires user space components, examples and user space
- 	  driver is available from below SVN repo - you may use anonymous login
- 
+This transition is needed :
+ - to enable device-tree drivers port, as clocks are needed almost
+   everywhere
+ - to enable the long term multi-platform kernel to support PXA
+
+As I had said before, this serie aims at :
+ - keeping legacy platforms working (ie. without device-tree)
+ - enable PXA27x to work with a device-tree kernel, and hence
+   open the way to drivers conversion
+ - be robust enough to support pxa25x and pxa3xx later inclusion
+   with almost no change to clk-pxa-dt.c.
+
+As this serie is holding the rest of the device-tree drivers
+port, I'd like it to be reviewed, even it's an old unsexy
+platform.
+
+Cheers.
+
+--
+Robert
+
+[1]: http://www.spinics.net/lists/arm-kernel/msg337521.html
+
+Robert Jarzmik (4):
+  clk: add pxa27x clock drivers
+  dts: add devicetree bindings for pxa27x clocks
+  arm: pxa: Transition pxa27x to clk framework
+  clk: dts: document pxa27x clock binding
+
+ .../devicetree/bindings/clock/pxa-clock.txt        |  32 ++
+ arch/arm/Kconfig                                   |   1 +
+ arch/arm/boot/dts/pxa27x.dtsi                      | 134 ++++++++-
+ arch/arm/mach-pxa/Makefile                         |   8 +-
+ arch/arm/mach-pxa/pxa27x.c                         | 190 +-----------
+ drivers/clk/Makefile                               |   1 +
+ drivers/clk/pxa/Makefile                           |   4 +
+ drivers/clk/pxa/clk-pxa-dt.c                       |  76 +++++
+ drivers/clk/pxa/clk-pxa27x.c                       | 324 +++++++++++++++++++++
+ drivers/clk/pxa/clk-pxa2xx.c                       |  74 +++++
+ drivers/clk/pxa/clk-pxa2xx.h                       |  47 +++
+ include/dt-bindings/clock/pxa2xx-clock.h           |  45 +++
+ 12 files changed, 757 insertions(+), 179 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/clock/pxa-clock.txt
+ create mode 100644 drivers/clk/pxa/Makefile
+ create mode 100644 drivers/clk/pxa/clk-pxa-dt.c
+ create mode 100644 drivers/clk/pxa/clk-pxa27x.c
+ create mode 100644 drivers/clk/pxa/clk-pxa2xx.c
+ create mode 100644 drivers/clk/pxa/clk-pxa2xx.h
+ create mode 100644 include/dt-bindings/clock/pxa2xx-clock.h
+
 -- 
-2.0.0
+2.0.0.rc2
 
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
