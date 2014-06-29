@@ -1,118 +1,45 @@
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: Re: mwifiex card reset
-Date: Sun, 29 Jun 2014 11:41:37 +0200
-Message-ID: <CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
-References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
-	<20140628052220.GG10407@us.netrek.org>
-	<20140628072322.GC7410@atomide.com>
+From: Beniamino Galvani <b.galvani-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH 2/5] regulator: act8865: set correct number of regulators
+ in pdata
+Date: Sun, 29 Jun 2014 11:46:43 +0200
+Message-ID: <20140629094642.GA13485@gmail.com>
+References: <1403451105-31929-1-git-send-email-b.galvani@gmail.com>
+ <1403451105-31929-3-git-send-email-b.galvani@gmail.com>
+ <20140627160725.GQ23300@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140628072322.GC7410@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: James Cameron <quozl@laptop.org>, Bing Zhao <bzhao@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org, Daniel Mack <daniel@zonque.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140627160725.GQ23300-GFdadSzt00ze9xe1eoZjHA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wenyou Yang <wenyou.yang-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-2014-06-28 9:23 GMT+02:00 Tony Lindgren <tony@atomide.com>:
-> * James Cameron <quozl@laptop.org> [140628 08:24]:
->> On Fri, Jun 27, 2014 at 04:39:42PM +0200, Andreas Fenkart wrote:
->> > I have an mwifiex module(sd8787) behind omap_hsmmc(am33xx-soc)
->> > The module is non-removable wired fix to soc. Now the wifi module
->> > needs 2 clocks; one is a sleep clock the other used when not
->> > sleeping.
->> > While the sleep clock is fixed, @32 kHz, the system clock can be
->> > one out of several values, but can be be derived automatically
->> > from the sleep clock. But this requires the clock to be present
->> > when the wifi module comes out of reset.
->> >
+On Fri, Jun 27, 2014 at 05:07:25PM +0100, Mark Brown wrote:
+> On Sun, Jun 22, 2014 at 05:31:42PM +0200, Beniamino Galvani wrote:
+> > When platform data is populated from DT all the regulators are
+> > instantiated and the value of num_regulators should be the number of
+> > all available regulators rather than the number of matched ones.
+> 
+> Could you go into more detail on your logic on this one please?  The
+> platform data (and DT configuration) for regulators should be completely
+> optional.
 
-ref 1)
+pdata contains an array of struct act8865_regulator_data and a
+num_regulators field which should hold the number of elements in the
+array, if I understand correctly.
 
->> > Another problem is software reboot, at initial power on the wifi
->> > card will react to mmc discovery. After a software reset of the
->> > host it will not, because it has already been discovered and
->> > didn't notice the host rebooted, unless we reset it as well.
->> > While this seems obvious, the problem is that the reset is needed
->> > before the card can be discovered. Which means we cannot move the
->> > reset logic into the mwifiex driver, since that driver has not
->> > yet been selected through vendor/product id.
->> >
->>
->> we had same problem with sd8787 and a different system design.  we
->> added reset-gpios property [1] and used it in sdhci-pxav3.c [2] as
->> sdhci_pxav3_toggle_reset_gpio()
->>
->> 1.
->>
->> http://code.coreboot.org/p/openfirmware/source/tree/HEAD/cpu/arm/olpc/sdhci.fth#L104
->>
->> 2.
->>
->> http://dev.laptop.org/git/olpc-kernel/tree/drivers/mmc/host/sdhci-pxav3.c?h=arm-3.5#n229
->>
->> > the reset logic:
->> >         gpiod_set_value(card->gpiod_reset, 0);
->> >         clk_enable(card->sleep_clock);
->> >         udelay(1000);
->> >         gpiod_set_value(card->gpiod_reset, 1);
->> >
->> > The idea so far was to extend the device-tree node of the
->> > mmc slot by some reset leafs;
->> >
->> > &mmc {
->> >         ti,non-removable;
->> >         ..
->> >         peripheral-clocks = <&clk &clk2 ...>;
->> >         peripheral-reset-gpios = <&gpio0 1 1 &gpio1 2 3 ...>;
->> > }
->> >
->> > in mmc_add_host, all clocks will be enabled and gpios be pulled
->> > low for 1 msec
->>
->> we used 5ms.
->>
->> > Is this a feasible solution?
->> >
->> >
->> > Another related issue, is the card reset in mwifiex driver:
->> >
->> > static void sdio_card_reset_worker(struct work_struct *work)
->> > {
->> >         struct mmc_host *target = reset_host;
->> >
->> >         pr_err("Resetting card...\n");
->> >         mmc_remove_host(target);
->> >         /* 20ms delay is based on experiment with sdhci controller */
->> >         mdelay(20);
->> >         mmc_add_host(target);
->> > }
->> > static DECLARE_WORK(card_reset_work, sdio_card_reset_worker);
->> >
->> > There are obviously a lot of problems with this, e.g. custom debugfs
->> > entries created in the driver will be lost. But sometimes this
->> > code might avert disaster in case the command handlers between
->> > driver and firmware lost synchronization
->> >
->> > How could this be done in a better way?
->>
->> i'm interested as well.
->
-> Wouldn't it be best to have the mwifiex properly handle the
-> reset GPIOs and idle status pins?
+So in the current code, when populating platform data from DT, there
+is a mismatch between the number of elements that are put in the array
+(ARRAY_SIZE(act8865_matches)) and the value of num_regulators, which
+is set to the number of regulators found in the DT.
 
-doesn't work see ref 1) above
+In case of missing regulator nodes in DT, pdata->regulators will be
+populated with all the regulators but their init_data will be NULL.
 
-> Those are not part of the SDIO spec AFAIK, and the mmc
-> controller should not need to care about those.
->
-> Also, at least omaps also have an issue where suspend won't
-> work with mwifiex loaded FYI.
-
-first command after resume needs to be cmd52, not cmd53 as the
-driver would by default. it's another issue
-
->
-> Regards,
->
-> Tony
+Beniamino
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
