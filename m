@@ -1,49 +1,46 @@
-From: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
-Subject: [PATCH 1/1] iommu/fsl_pamu: Remove unnecessary null test before kfree
-Date: Sun, 29 Jun 2014 10:01:26 +0200
-Message-ID: <1404028886-5060-1-git-send-email-fabf@skynet.be>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] usb: gadget: pxa27x_udc device-tree documentation
+Date: Sun, 29 Jun 2014 11:29:49 +0200
+Message-ID: <87fviooygi.fsf@free.fr>
+References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
+	<1403427899-32154-2-git-send-email-robert.jarzmik@free.fr>
+	<20140625103357.GC14495@leverpostej> <87zjh07okm.fsf@free.fr>
+	<20140626085950.GJ15240@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140626085950.GJ15240@leverpostej> (Mark Rutland's message of
+	"Thu, 26 Jun 2014 09:59:51 +0100")
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb@vger.kernel.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree@vger.kernel.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix checkpatch warning:
-WARNING: kfree(NULL) is safe this check is probably not required
+Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
 
-Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
----
- drivers/iommu/fsl_pamu_domain.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+> On Wed, Jun 25, 2014 at 08:54:01PM +0100, Robert Jarzmik wrote:
+>> > The name of the clock input doesn't make sense.
+>> I don't understand. With [1] does it make any more sense ? If not you'll have to
+>> expand a bit more the "doesn't make sense".
+>
+> My concern is that clock-names is supposed to describe the name of the
+> input clock line from the view of the IP block. "pxa27x-udc" doesn't
+> sound like the name of a clock input line from the view of the UDC
+> block.
+>
+> I assume the clock input line you care about has a more specific name
+> than "pxa27x-udc"?
+Not as far as I know. The technical reference manual call it "udc clock", so
+it's even "less" specific ...
 
-diff --git a/drivers/iommu/fsl_pamu_domain.c b/drivers/iommu/fsl_pamu_domain.c
-index 93072ba..0009dff 100644
---- a/drivers/iommu/fsl_pamu_domain.c
-+++ b/drivers/iommu/fsl_pamu_domain.c
-@@ -1118,8 +1118,7 @@ static int fsl_pamu_set_windows(struct iommu_domain *domain, u32 w_count)
- 	ret = pamu_set_domain_geometry(dma_domain, &domain->geometry,
- 				((w_count > 1) ? w_count : 0));
- 	if (!ret) {
--		if (dma_domain->win_arr)
--			kfree(dma_domain->win_arr);
-+		kfree(dma_domain->win_arr);
- 		dma_domain->win_arr = kzalloc(sizeof(struct dma_window) *
- 							  w_count, GFP_ATOMIC);
- 		if (!dma_domain->win_arr) {
+Marvell engineers have probably the internal schematics and the name of the
+clock, but outsiders like me only have "udc" ...
+
+Cheers.
+
 -- 
-1.8.4.5
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
