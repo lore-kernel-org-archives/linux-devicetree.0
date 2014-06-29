@@ -1,38 +1,49 @@
-From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Subject: [PATCH] pinctrl: pinctrl-imx27.c:  Cleaning up remove a struct that is unused
-Date: Sat, 28 Jun 2014 23:48:40 +0200
-Message-ID: <1403992120-8160-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Grant Likely <grant.likely@linaro.org>
-Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+From: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH 1/1] iommu/fsl_pamu: Remove unnecessary null test before kfree
+Date: Sun, 29 Jun 2014 10:01:26 +0200
+Message-ID: <1404028886-5060-1-git-send-email-fabf@skynet.be>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Removal of a struct that is never used
+Fix checkpatch warning:
+WARNING: kfree(NULL) is safe this check is probably not required
 
-This was found using a static code analysis program called cppcheck
-
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Cc: Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Signed-off-by: Fabian Frederick <fabf-AgBVmzD5pcezQB+pC5nmwQ@public.gmane.org>
 ---
- drivers/pinctrl/pinctrl-imx27.c |    6 ------
- 1 file changed, 6 deletions(-)
+ drivers/iommu/fsl_pamu_domain.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
 
-diff --git a/drivers/pinctrl/pinctrl-imx27.c b/drivers/pinctrl/pinctrl-imx27.c
-index 417c992..27ae7ce 100644
---- a/drivers/pinctrl/pinctrl-imx27.c
-+++ b/drivers/pinctrl/pinctrl-imx27.c
-@@ -440,12 +440,6 @@ static struct of_device_id imx27_pinctrl_of_match[] = {
- 	{ /* sentinel */ }
- };
- 
--struct imx27_pinctrl_private {
--	int num_gpio_childs;
--	struct platform_device **gpio_dev;
--	struct mxc_gpio_platform_data *gpio_pdata;
--};
--
- static int imx27_pinctrl_probe(struct platform_device *pdev)
- {
- 	return imx1_pinctrl_core_probe(pdev, &imx27_pinctrl_info);
+diff --git a/drivers/iommu/fsl_pamu_domain.c b/drivers/iommu/fsl_pamu_domain.c
+index 93072ba..0009dff 100644
+--- a/drivers/iommu/fsl_pamu_domain.c
++++ b/drivers/iommu/fsl_pamu_domain.c
+@@ -1118,8 +1118,7 @@ static int fsl_pamu_set_windows(struct iommu_domain *domain, u32 w_count)
+ 	ret = pamu_set_domain_geometry(dma_domain, &domain->geometry,
+ 				((w_count > 1) ? w_count : 0));
+ 	if (!ret) {
+-		if (dma_domain->win_arr)
+-			kfree(dma_domain->win_arr);
++		kfree(dma_domain->win_arr);
+ 		dma_domain->win_arr = kzalloc(sizeof(struct dma_window) *
+ 							  w_count, GFP_ATOMIC);
+ 		if (!dma_domain->win_arr) {
 -- 
-1.7.10.4
+1.8.4.5
