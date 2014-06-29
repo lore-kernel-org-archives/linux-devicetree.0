@@ -1,48 +1,23 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 2/2] arm: Add back maximum bank limit
-Date: Mon, 30 Jun 2014 00:56:54 +0200
-Message-ID: <53B099B6.1070706@suse.de>
-References: <1404068784-27604-1-git-send-email-lauraa@codeaurora.org> <1404068784-27604-2-git-send-email-lauraa@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1404068784-27604-2-git-send-email-lauraa@codeaurora.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Laura Abbott <lauraa@codeaurora.org>, Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, devicetree@vger.kernel.org
+From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Subject: [PATCH v2] i2c: busses: i2c-pxa.c:  Fix for possible null pointer dereferenc
+Date: Mon, 30 Jun 2014 01:28:35 +0200
+Message-ID: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Laura,
+After discussion with especially Wolfram it was decided to convert the code to use the Managed Device Resource.
+I have now tried to create a patch with Devres, hope it is correct.
+But a code review is probably more relevant than usual.
+I also lack this kind of hardware so preferably should someone do a HW test.
 
-Am 29.06.2014 21:06, schrieb Laura Abbott:
-> Commit 1c2f87c22566cd057bc8cde10c37ae9da1a1bb76
-> (ARM: 8025/1: Get rid of meminfo) dropped the upper bound on
-> the number of memory banks that can be added as there was no
-> technical need in the kernel. It turns out though, some bootloaders
-> (specifically the arndale-octa exynos boards) may pass invalid memory
-> information and rely on the kernel to not parse this data. This is a
-> bug in the bootloader but we still need to work around this.
-> Re-introduce a maximum bank limit per board to prevent invalid banks
-> from being passed to the kernel.
->=20
-> Reported-by: Tushar Behera <trblinux@gmail.com>
-> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
-> ---
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/26561=
-5.html
+Rickard Strandqvist (1):
+  i2c: busses: i2c-pxa.c:  Fix for possible null pointer dereferenc
 
-Tested-by: Andreas F=E4rber <afaerber@suse.de>
+ drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
+ 1 file changed, 16 insertions(+), 21 deletions(-)
 
-[    0.000000] Max banks too low, ignoring memory at 0xfbffffaf
-[    0.000000] Max banks too low, ignoring memory at 0xfffedbff
-[    0.000000] Max banks too low, ignoring memory at 0xffbbffd9
-[    0.000000] Max banks too low, ignoring memory at 0xffefefef
-
-Thanks,
-Andreas
-
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+-- 
+1.7.10.4
