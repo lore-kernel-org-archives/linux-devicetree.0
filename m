@@ -1,70 +1,62 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCHv5 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
- code clean
-Date: Mon, 30 Jun 2014 08:32:41 +0900
-Message-ID: <53B0A219.2000301@samsung.com>
-References: <1403843406-28229-1-git-send-email-cw00.choi@samsung.com>
- <53AD54EC.2050606@gmail.com>
+From: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH] power: ab8500_fg.c: Cleaning up uninitialized variables
+Date: Mon, 30 Jun 2014 01:47:00 +0200
+Message-ID: <CAFo99garLm9G6GBFP1a1ko3FAacukcTXMW1d_K--8ennW73KJw@mail.gmail.com>
+References: <1401653003-10670-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <53AD54EC.2050606-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Tomasz Figa <tomasz.figa-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: jic23-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, ch.naveen-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, sachin.kamat-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-iio-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1401653003-10670-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Eremin-Solenikov <dbaryshkov@gmail.com>, David Woodhouse <dwmw2@infradead.org>, Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Tomasz,
+Hi
 
-On 06/27/2014 08:26 PM, Tomasz Figa wrote:
-> Hi Chanwoo,
-> 
-> On 27.06.2014 06:30, Chanwoo Choi wrote:
->> Changes from v4:
->> - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
->>   and remove enum variable of ADC version
->> - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
->> - Add reviewed message by Naveen Krishna Chatradhi
->> - Add functions for ADC clock control
->>
->> Changes from v3:
->> - Add new 'exynos_adc_ops' structure to improve readability according to
->>  Tomasz Figa comment[1]
->>  [1] https://lkml.org/lkml/2014/4/16/238
->> - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
->> - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
->>
->> Changes from v2:
->> - Check return value of clock function to deal with error exception
->> - Fix minor coding style to improve readability
->>
->> Changes from v1:
->> - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
->> - Add a patch about DT binding documentation
->>
->> Chanwoo Choi (4):
->>   iio: adc: exynos_adc: Add exynos_adc_data structure to improve readability
->>   iio: adc: exynos_adc: Control special clock of ADC to support Exynos3250 ADC
->>   iio: devicetree: Add DT binding documentation for Exynos3250 ADC
->>   ARM: dts: Fix wrong compatible string for Exynos3250 ADC
->>
->>  .../devicetree/bindings/arm/samsung/exynos-adc.txt |  26 +-
->>  arch/arm/boot/dts/exynos3250.dtsi                  |   4 +-
->>  drivers/iio/adc/exynos_adc.c                       | 326 +++++++++++++++------
->>  3 files changed, 268 insertions(+), 88 deletions(-)
->>
-> 
-> For the whole series:
-> 
-> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Can someone please check on this!
 
-Thanks for your review.
+This will cause an error, and is one of the most obvious ones I've found.
+So give it one minute please.
 
-Best Regards,
-Chanwoo Choi
+Kind regards
+Rickard Strandqvist
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+
+2014-06-01 22:03 GMT+02:00 Rickard Strandqvist
+<rickard_strandqvist@spectrumdigital.se>:
+> In this case the wrong variable is used, which has never been initialized.
+> This will lead to a serious error.
+>
+> This was largely found by using a static code analysis program called cppcheck.
+>
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+> ---
+>  drivers/power/ab8500_fg.c |    4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/power/ab8500_fg.c b/drivers/power/ab8500_fg.c
+> index 3cb4178..019e33f 100644
+> --- a/drivers/power/ab8500_fg.c
+> +++ b/drivers/power/ab8500_fg.c
+> @@ -2969,7 +2969,7 @@ static struct device_attribute ab8505_fg_sysfs_psy_attrs[] = {
+>
+>  static int ab8500_fg_sysfs_psy_create_attrs(struct device *dev)
+>  {
+> -       unsigned int i, j;
+> +       unsigned int j;
+>         struct power_supply *psy = dev_get_drvdata(dev);
+>         struct ab8500_fg *di;
+>
+> @@ -2986,7 +2986,7 @@ static int ab8500_fg_sysfs_psy_create_attrs(struct device *dev)
+>  sysfs_psy_create_attrs_failed_ab8505:
+>         dev_err(dev, "Failed creating sysfs psy attrs for ab8505.\n");
+>         while (j--)
+> -               device_remove_file(dev, &ab8505_fg_sysfs_psy_attrs[i]);
+> +               device_remove_file(dev, &ab8505_fg_sysfs_psy_attrs[j]);
+>
+>         return -EIO;
+>  }
+> --
+> 1.7.10.4
+>
