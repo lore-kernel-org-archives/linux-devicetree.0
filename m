@@ -1,73 +1,53 @@
-From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] usb: chipidea: zynq: Add device tree binding information
-Date: Mon, 30 Jun 2014 08:56:00 +0530
-Message-ID: <CAGnW=BZ7_SO3E3q23HSViBksEwp=BPWq5SXTROA3VJuYMBeDWQ@mail.gmail.com>
-References: <6233f866-678d-4a90-a307-debcb848ae76@BN1AFFO11FD023.protection.gbl>
-	<53AD625B.1080002@cogentembedded.com>
+From: punnaiah choudary kalluri <punnaia@xilinx.com>
+Subject: Re: [PATCH v2 2/2] usb: chipidea: Add support for zynq usb host and
+ device controller
+Date: Mon, 30 Jun 2014 09:02:07 +0530
+Message-ID: <CAGnW=BaRNQZhcg-=sY-vUoh8aSdHNeP7HY5VjmjoChbnMGH9cQ@mail.gmail.com>
+References: <1403868233-5123-1-git-send-email-punnaia@xilinx.com>
+	<fa656d2d-a2a8-4b8d-a29b-e89e4bfced3e@BL2FFO11FD034.protection.gbl>
+	<20140627125515.GA6025@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53AD625B.1080002-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
-Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140627125515.GA6025@pengutronix.de>
+Sender: linux-doc-owner@vger.kernel.org
+To: Michael Grzeschik <mgr@pengutronix.de>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Peter Chen <Peter.Chen@freescale.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Kumar Gala <galak@codeaurora.org>, rdunlap@infradead.org, "michal.simek@xilinx.com" <michal.simek@xilinx.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-kernel@lists.infradead.org, linux-usb@vger.kernel.org, Punnaiah Choudary <kpc528@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 27, 2014 at 5:53 PM, Sergei Shtylyov
-<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
-> Hello.
+On Fri, Jun 27, 2014 at 6:25 PM, Michael Grzeschik <mgr@pengutronix.de> wrote:
+> Hi,
 >
+> On Fri, Jun 27, 2014 at 04:53:53PM +0530, Punnaiah Choudary Kalluri wrote:
+>> Zynq soc uses Chipidea/Synopsys usb IP core(CI13612). This patch adds
+>> necessary glue to allow the chipidea driver to work on zynq soc.
+>>
 >
-> On 06/27/2014 03:23 PM, Punnaiah Choudary Kalluri wrote:
+> Did you see the currently discussed patches for the generic chipidea
+> glue?
 >
->> Document device tree binding information as required by
->> the ZYNQ USB controller.
->
->
->> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
->
-> [...]
->
->
->> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
->> b/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
->> new file mode 100644
->> index 0000000..54bb3b4
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
->> @@ -0,0 +1,23 @@
->> +Xilinx Zynq usb controller based on synopsys usb IP(v2.20a)
->
->
->    s/usb/USB/.
+> http://www.spinics.net/lists/linux-usb/msg109576.html
 
-OK
+I have not seen this patch and thanks for pointing this
 
 >
->
->> +
->> +Required properties:
->> +- compatible:   should contain "xlnx,zynq-usb-2.20a"
->> +- clocks:       clock provider specifier
->> +- reg:          offset and length of the register set in the memory map
->> +- interrupt-parent: the phandle for the interrupt controller that
->> services
->> +                    interrupts for this device.
->
->
->    This property has never been required -- it can be inherited from the
-> upper level node.
+> Try to improve that code instead writing another version
+> of this simple gluecode.
 
-OK. i will correct it.
+Sure.  i will check this patch and see if anything to be added for zynq
+in a generic way.
 
 Thanks,
 Punnaiah
 
 >
-> WBR, Sergei
+>
+> Thanks,
+> Michael
 >
 >
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> --
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
