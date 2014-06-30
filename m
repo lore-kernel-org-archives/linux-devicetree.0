@@ -1,54 +1,116 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2 2/3] usb: gadget: pxa27x_udc device-tree documentation
-Date: Mon, 30 Jun 2014 09:49:13 +0100
-Message-ID: <20140630084913.GO7262@leverpostej>
-References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
- <1403427899-32154-2-git-send-email-robert.jarzmik@free.fr>
- <20140625103357.GC14495@leverpostej>
- <87zjh07okm.fsf@free.fr>
- <20140626085950.GJ15240@leverpostej>
- <87fviooygi.fsf@free.fr>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH 2/3] mtd: hisilicon: add a new nand controller driver for hisilicon hip04 Soc
+Date: Mon, 30 Jun 2014 11:00:41 +0200
+Message-ID: <6920327.DpBe6vKVPa@wuerfel>
+References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com> <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <87fviooygi.fsf-GANU6spQydw@public.gmane.org>
-Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: Zhou Wang <wangzhou.bry@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, caizhiyong@huawei.com, wangzhou1@hisilicon.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 29, 2014 at 10:29:49AM +0100, Robert Jarzmik wrote:
-> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
-> 
-> > On Wed, Jun 25, 2014 at 08:54:01PM +0100, Robert Jarzmik wrote:
-> >> > The name of the clock input doesn't make sense.
-> >> I don't understand. With [1] does it make any more sense ? If not you'll have to
-> >> expand a bit more the "doesn't make sense".
-> >
-> > My concern is that clock-names is supposed to describe the name of the
-> > input clock line from the view of the IP block. "pxa27x-udc" doesn't
-> > sound like the name of a clock input line from the view of the UDC
-> > block.
-> >
-> > I assume the clock input line you care about has a more specific name
-> > than "pxa27x-udc"?
-> Not as far as I know. The technical reference manual call it "udc clock", so
-> it's even "less" specific ...
+Overall a very nice driver. I didn't find any real bugs, but a few things
+that could be changed for readability and micro-optimizations:
 
-Not from the point of view of the device. The clock-names are namespaced
-to the particular binding, so they're equally specific.
+On Monday 30 June 2014 16:03:28 Zhou Wang wrote:
 
-Given the above I'd recommend naming the clock "udc" or "udc_clk". That
-doesn't pretend to be overly specific, and matches the TRM.
+> +#define hinfc_read(_host, _reg)	readl(_host->iobase + (_reg))
+> +#define hinfc_write(_host, _value, _reg)\
+> +	writel((_value), _host->iobase + (_reg))
 
-> Marvell engineers have probably the internal schematics and the name of the
-> clock, but outsiders like me only have "udc" ...
+I'd recommend making these inline functions rather than macros.
 
-Sure, not having the full specs is always a pain.
+> +struct hinfc_host {
+> +	struct nand_chip	*chip;
+> +	struct mtd_info		*mtd;
 
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe linux-usb" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+I notice that you allocate the nand_chip and mtd_info together
+with the hinfc_host and then assign these pointers. A preferred
+method is normally to just embed the structures in this case:
+
+struct hinfc_host {
+	struct nand_chip	chip;
+	struct mtd_info		mtd;
+
+so you avoid the pointer overhead, and can go back from these
+two structures to the hinfc_host using container_of().
+
+> +	struct device		*dev;
+> +	void __iomem		*iobase;
+> +	struct completion       cmd_complete;
+> +	unsigned int		offset;
+> +	unsigned int		command;
+> +	int			chipselect;
+> +	unsigned int		addr_cycle;
+> +	unsigned int		addr_value[2];
+> +	unsigned int		cache_addr_value[2];
+> +	char			*buffer;
+> +	dma_addr_t		dma_buffer;
+> +	dma_addr_t		dma_oob;
+> +	int			version;
+> +	unsigned int            ecc_bits;
+> +	unsigned int            irq_status; /* interrupt status */
+> +
+> +	int (*send_cmd_pageprog)(struct hinfc_host *host);
+> +	int (*send_cmd_status)(struct hinfc_host *host);
+> +	int (*send_cmd_readstart)(struct hinfc_host *host);
+> +	int (*send_cmd_erase)(struct hinfc_host *host);
+> +	int (*send_cmd_readid)(struct hinfc_host *host);
+> +	int (*send_cmd_reset)(struct hinfc_host *host, int chipselect);
+> +};
+
+Why do you need function pointers here? The current version of the
+driver you posted always assigns these to the same functions, so
+it would be more efficient to just call those directly.
+
+If you plan to add another variant later that uses a different set
+of functions here, you can add the function pointers then, in a
+separate patch. Also, a common style element is to have a separate
+constant structure with the function pointers:
+
+const struct hinfc_host_ops ops = {
+	.send_cmd_pageprog = hisi_nfc_send_cmd_pageprog,
+	...
+};
+
+if you actually end up needing function pointers. That simplifies
+the code a bit and is slightly more robust to attacks overwriting
+the function pointers.
+
+> +
+> +void wait_controller_finished(struct hinfc_host *host)
+> +{
+> +	unsigned long timeout = jiffies + HINFC504_NFC_TIMEOUT;
+> +	int val;
+> +
+> +	while (time_before(jiffies, timeout)) {
+> +		val = hinfc_read(host, HINFC504_STATUS);
+> +		if (host->command == NAND_CMD_ERASE2) {
+> +			/* nfc is ready */
+> +			while (!(val & HINFC504_READY))	{
+> +				usleep_range(500, 1000);
+> +				val = hinfc_read(host, HINFC504_STATUS);
+> +			}
+> +			return;
+> +		} else {
+> +			if (val & HINFC504_READY)
+> +				return;
+> +		}
+> +	}
+> +
+> +	/* wait cmd timeout */
+> +	dev_err(host->dev, "Wait NAND controller exec cmd timeout.\n");
+> +}
+
+Since the timeout is much bigger than the wait time here, I guess you
+can use a wider range for the usleep_range(), e.g.
+
+	usleep_range(500, 50000);
+
+which is nicer to other tasks. You will normally be woken up much earlier.
+
+	Arnd
