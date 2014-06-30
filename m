@@ -1,85 +1,44 @@
-From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 2/2] ARM: sunxi: Add clocks node to the CPU nodes
-Date: Mon, 30 Jun 2014 12:12:23 +0200
-Message-ID: <1404123143-13041-3-git-send-email-maxime.ripard@free-electrons.com>
-References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404123143-13041-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v6 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Mon, 30 Jun 2014 12:20:14 +0200
+Message-ID: <20140630102014.GA5155@kwain>
+References: <1402914392-6028-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1402914392-6028-2-git-send-email-antoine.tenart@free-electrons.com>
+ <53A9685E.9090501@ti.com>
+ <53A96A1C.5030800@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53A96A1C.5030800@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Varka Bhadram <varkabhadram@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, alexandre.belloni@free-electrons.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lee Jones <lee.jones@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 List-Id: devicetree@vger.kernel.org
 
-Setting the clock will make the topology code work, and will remove the
-following error at boot
+Hello,
 
-[    0.097194] /cpus/cpu@0 missing clock-frequency property
-[    0.103657] /cpus/cpu@1 missing clock-frequency property
-[    0.110698] /cpus/cpu@2 missing clock-frequency property
-[    0.117132] /cpus/cpu@3 missing clock-frequency property
+On Tue, Jun 24, 2014 at 05:37:56PM +0530, Varka Bhadram wrote:
+> On 06/24/2014 05:30 PM, Kishon Vijay Abraham I wrote:
+> >On Monday 16 June 2014 03:56 PM, Antoine T=E9nart wrote:
+> >>+
+> >>+static struct phy *phy_berlin_sata_phy_xlate(struct device *dev,
+> >>+					     struct of_phandle_args *args)
+>=20
+> Indent the function properly like this:
+> static struct phy *phy_berlin_sata_phy_xlate(struct device *dev,
+> 					     struct of_phandle_args *args)
+>=20
+> check with checkpatch.pl script
 
-Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 4 ++++
- arch/arm/boot/dts/sun7i-a20.dtsi | 2 ++
- 2 files changed, 6 insertions(+)
+Already fixed in v7.
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index a9dfa12eb735..905b84add002 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -34,24 +34,28 @@
- 		cpu@0 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			clocks = <&cpu>;
- 			reg = <0>;
- 		};
- 
- 		cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			clocks = <&cpu>;
- 			reg = <1>;
- 		};
- 
- 		cpu@2 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			clocks = <&cpu>;
- 			reg = <2>;
- 		};
- 
- 		cpu@3 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			clocks = <&cpu>;
- 			reg = <3>;
- 		};
- 	};
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 17823759bdc9..1d263b7f02dc 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -35,12 +35,14 @@
- 		cpu@0 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			clocks = <&cpu>;
- 			reg = <0>;
- 		};
- 
- 		cpu@1 {
- 			compatible = "arm,cortex-a7";
- 			device_type = "cpu";
-+			clocks = <&cpu>;
- 			reg = <1>;
- 		};
- 	};
--- 
-2.0.0
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Antoine
+
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
