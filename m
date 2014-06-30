@@ -1,99 +1,51 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
- CPU frequency
-Date: Mon, 30 Jun 2014 15:27:21 +0200
-Message-ID: <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
-References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
- <1404123143-13041-2-git-send-email-maxime.ripard@free-electrons.com>
- <20140630102934.GV32514@n2100.arm.linux.org.uk> <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
- <20140630124919.GC28647@lukather>
+From: Tomasz Figa <t.figa@samsung.com>
+Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
+ tree description
+Date: Mon, 30 Jun 2014 15:48:57 +0200
+Message-ID: <53B16AC9.7090509@samsung.com>
+References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
+ <1402000514-30752-1-git-send-email-dianders@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140630124919.GC28647@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <1402000514-30752-1-git-send-email-dianders@chromium.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Doug Anderson <dianders@chromium.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
+Cc: olof@lixom.net, javier.martinez@collabora.co.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rahul.sharma@samsung.com, shaik.ameer@samsung.com, arun.kk@samsung.com, alim.akhtar@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 June 2014 14:49, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jun 30, 2014 at 12:39:26PM +0200, Vincent Guittot wrote:
->> On 30 June 2014 12:29, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
->> > On Mon, Jun 30, 2014 at 12:12:22PM +0200, Maxime Ripard wrote:
->> >> The Cortex-A7 and Cortex-A15 based SoCs need a clock-frequency property in the
->> >> topology code.
->> >>
->> >> Allow to use a clock to provide the same information.
->> >>
->> >> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->> >
->> > This looks fine to me, but I don't know this code.  Maybe Vincent Guittot
->> > should be on the To: list (added)?
->>
->> Thanks
->
-> Ah, sorry for that.
->
->>
->> >
->> >> ---
->> >>  arch/arm/kernel/topology.c | 25 ++++++++++++++++++-------
->> >>  1 file changed, 18 insertions(+), 7 deletions(-)
->> >>
->> >> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
->> >> index 9d853189028b..268443d88094 100644
->> >> --- a/arch/arm/kernel/topology.c
->> >> +++ b/arch/arm/kernel/topology.c
->> >> @@ -11,6 +11,7 @@
->> >>   * for more details.
->> >>   */
->> >>
->> >> +#include <linux/clk.h>
->> >>  #include <linux/cpu.h>
->> >>  #include <linux/cpumask.h>
->> >>  #include <linux/export.h>
->> >> @@ -100,8 +101,8 @@ static void __init parse_dt_topology(void)
->> >>                                GFP_NOWAIT);
->> >>
->> >>       for_each_possible_cpu(cpu) {
->> >> -             const u32 *rate;
->> >> -             int len;
->> >> +             struct clk *clk;
->> >> +             u32 rate = 0;
->> >>
->> >>               /* too early to use cpu->of_node */
->> >>               cn = of_get_cpu_node(cpu, NULL);
->> >> @@ -117,14 +118,24 @@ static void __init parse_dt_topology(void)
->> >>               if (cpu_eff->compatible == NULL)
->> >>                       continue;
->> >>
->> >> -             rate = of_get_property(cn, "clock-frequency", &len);
->> >> -             if (!rate || len != 4) {
->> >> -                     pr_err("%s missing clock-frequency property\n",
->> >> -                             cn->full_name);
->> >> +             clk = of_clk_get(cn, 0);
->> >> +             if (!IS_ERR(clk))
->> >> +                     rate = clk_get_rate(clk);
->>
->> We need the max frequency as it will be used to weight the different
->> CPUs capacity. How do you ensure that the current clock rate is the
->> max one ?
->
-> Hmm, the clock-frequency attribute in the ePAPR is defined at the
-> current CPU frequency, not the max one.
+On 05.06.2014 22:35, Doug Anderson wrote:
+> The "aclk66_peric" clock is a gate clock with a whole bunch of gates
+> underneath it.  This big gate isn't very useful to include in our
+> clock tree.  If any of the children need to be turned on then the big
+> gate will need to be on anyway.  ...and there are plenty of other "big
+> gates" that aren't described in our clock tree, some of which shut off
+> collections of clocks that have no relationship in the hierarchy so
+> are hard to model.
+> 
+> "aclk66_peric" is causing earlyprintk problems since it gets disabled
+> as part of the boot process, so let's just remove it.
+> 
+> Strangely (and for no good reason) this clock is exported as part of
+> the common clock bindings.  Remove it since there are no in-kernel
+> device trees using it and no reason anyone out of tree should refer to
+> it either.
+> 
+> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> ---
+> Changes in v3:
+> - Now just remove aclk66_peric from the tree as suggested by Tomasz.
+> 
+> Changes in v2:
+> - Use GATE_A and clk_get().  Save the clock for putting later.
+> - Return 0 from exynos5420_clk_late_init().
+> 
+>  drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
+>  include/dt-bindings/clock/exynos5420.h |  1 -
+>  2 files changed, 55 insertions(+), 31 deletions(-)
 
-What means current frequency in device tree when DVFS is involved ?
+Applied as a fix for 3.16.
 
-Vincent
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Best regards,
+Tomasz
