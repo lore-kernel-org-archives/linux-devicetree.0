@@ -1,13 +1,12 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 8/9] ARM: dts: sun4i: Add ir controller nodes
- and pinmux
-Date: Mon, 30 Jun 2014 23:57:58 +0200
-Message-ID: <1404165479-23785-9-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 9/9] ARM: dts: sun4i: Add ir node to various boards
+Date: Mon, 30 Jun 2014 23:57:59 +0200
+Message-ID: <1404165479-23785-10-git-send-email-hdegoede@redhat.com>
 References: <1404165479-23785-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBBV3Y6OQKGQEXFU7TGY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBCN3Y6OQKGQENQUUQ5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 In-Reply-To: <1404165479-23785-1-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,60 +18,90 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
+Tested on a cubieboard and the mini-x.
+
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi | 32 ++++++++++++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
+ arch/arm/boot/dts/sun4i-a10-a1000.dts      |  6 ++++++
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts |  6 ++++++
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts  |  6 ++++++
+ arch/arm/boot/dts/sun4i-a10-mini-xplus.dts | 13 +++++++++++++
+ 4 files changed, 31 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index ae6dd50..ec00030 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -593,6 +593,20 @@
- 				allwinner,drive = <0>;
- 				allwinner,pull = <1>;
+diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+index 55d9510..9e99ade 100644
+--- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
++++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+@@ -88,6 +88,12 @@
  			};
-+
-+			ir0_pins_a: ir0@0 {
-+				allwinner,pins = "PB3","PB4";
-+				allwinner,function = "ir0";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
-+
-+			ir1_pins_a: ir1@0 {
-+				allwinner,pins = "PB22","PB23";
-+				allwinner,function = "ir1";
-+				allwinner,drive = <0>;
-+				allwinner,pull = <0>;
-+			};
- 		};
- 
- 		timer@01c20c00 {
-@@ -621,6 +635,24 @@
- 			status = "disabled";
  		};
  
 +		ir0: ir@01c21800 {
-+			compatible = "allwinner,sun4i-a10-ir";
-+			clocks = <&apb0_gates 6>, <&ir0_clk>;
-+			clock-names = "apb", "ir";
-+			interrupts = <5>;
-+			reg = <0x01c21800 0x40>;
-+			status = "disabled";
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
 +		};
 +
-+		ir1: ir@01c21c00 {
-+			compatible = "allwinner,sun4i-a10-ir";
-+			clocks = <&apb0_gates 7>, <&ir1_clk>;
-+			clock-names = "apb", "ir";
-+			interrupts = <6>;
-+			reg = <0x01c21c00 0x40>;
-+			status = "disabled";
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+index 539b693..3ce56bfb 100644
+--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+@@ -80,6 +80,12 @@
+ 			};
+ 		};
+ 
++		ir0: ir@01c21800 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
 +		};
 +
- 		lradc: lradc@01c22800 {
- 			compatible = "allwinner,sun4i-lradc-keys";
- 			reg = <0x01c22800 0x100>;
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
+index 21df4e3..891ea44 100644
+--- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
++++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
+@@ -87,6 +87,12 @@
+ 			};
+ 		};
+ 
++		ir0: ir@01c21800 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
++		};
++
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
+diff --git a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
+index 387770d..b9ecce6 100644
+--- a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
++++ b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
+@@ -52,6 +52,19 @@
+ 			status = "okay";
+ 		};
+ 
++		pinctrl@01c20800 {
++			ir0_pins_a: ir0@0 {
++				/* The ir receiver is not always populated */
++				allwinner,pull = <1>;
++			};
++		};
++
++		ir0: ir@01c21800 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&ir0_pins_a>;
++			status = "okay";
++		};
++
+ 		uart0: serial@01c28000 {
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart0_pins_a>;
 -- 
 2.0.0
