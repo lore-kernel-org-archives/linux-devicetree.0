@@ -1,65 +1,55 @@
-From: Antoine =?iso-8859-1?Q?T=E9nart?=
-	<antoine.tenart@free-electrons.com>
-Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Mon, 30 Jun 2014 17:44:09 +0200
-Message-ID: <20140630154409.GB29613@kwain>
-References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com>
- <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
- <53AB1CFD.4040500@cogentembedded.com>
- <20140630095940.GB10058@kwain>
- <53B176F1.5060308@gmail.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v5 05/14] clk: Add generic driver for Maxim PMIC clocks
+Date: Mon, 30 Jun 2014 18:00:04 +0200
+Message-ID: <53B18984.7010607@collabora.co.uk>
+References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-6-git-send-email-javier.martinez@collabora.co.uk> <CAKew6eU5X=WxhECtwUUwbXe_fCRU4bD6B7caWiA2dwcBfThd-g@mail.gmail.com> <53B142F1.1050407@collabora.co.uk> <20140630113539.GX32514@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53B176F1.5060308@gmail.com>
-Sender: linux-ide-owner@vger.kernel.org
-To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140630113539.GX32514@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Yadwinder Singh Brar <yadi.brar01@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Mike Turquette <mturquette@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Doug Anderson <dianders@chromium.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Mark Brown <broonie@kernel.org>, Olof Johansson <olof@lixom.net>, Lee Jones <lee.jones@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Daniel Stone <daniels@collabora.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sebastian,
+Hello Russell,
 
-On Mon, Jun 30, 2014 at 04:40:49PM +0200, Sebastian Hesselbarth wrote:
-> On 06/30/2014 11:59 AM, Antoine T=E9nart wrote:
-> >On Wed, Jun 25, 2014 at 11:03:25PM +0400, Sergei Shtylyov wrote:
-> >>On 06/23/2014 05:39 PM, Antoine T=E9nart wrote:
-> >>>+	/* set the controller speed */
-> >>>+	writel(0x31, ctrl_reg + PORT_SCR_CTL);
-> >>
-> >>    Value undocumented? Or is this the SATA SControl register by ch=
-ance?
-> >
-> >Some magic is still there...
->=20
-> I guess Sergei was referring to AHCI spec here. PORT_SCR bits are
-> documented in AHCI spec as:
->=20
-> 7:4 =3D 0x3 Limit speed negotiation to a rate not greater than Gen3
->           communication rate.
->=20
-> 3:0 =3D 0x1 Perform interface communication sequence [...]. This is
->           functionally equivalent to a hard reset [...].
->=20
-> So, the question is: Should we really need to reset controller in the
-> PHY driver or is it already done in AHCI common code? At least we
-> should change the comment to something like
-> /* set Gen3 controller speed and perform hard reset */
+Thanks a lot for your suggestion.
 
-I just checked, the AHCI common code has a function to do the reset:
-ahci_reset_controller(). As of the max speed negociation rate, I did no=
-t
-see it in the common AHCI functions.
+On 06/30/2014 01:35 PM, Russell King - ARM Linux wrote:
+> On Mon, Jun 30, 2014 at 12:58:57PM +0200, Javier Martinez Canillas wrote:
+>> >> +       if (!max_gen->lookup)
+>> >> +               return ERR_PTR(-ENOMEM);
+>> >> +
+>> >> +       max_gen->lookup->con_id = hw->init->name;
+>> > 
+>> > Also IMO,  init->name should be over-written if name is provided in DT,
+>> > otherwise generic "clock-output-names" property will go futile,
+>> > perhaps it should be done before clk_register.
+>> > 
+>> 
+>> Even though Documentation/devicetree/bindings/clock/clock-bindings.txt says that
+>> the "clock-output-names" property is optional I agree with you that will be
+>> better to support it. So I'll add it on the next version as well.
+> 
+> However, remember that con_id is the _DEVICE_ specific connection name,
+> not the _CLOCK_ name.  You will get a NAK from me if you violate this
+> rule.
+> 
 
-The eSATA port on the Berlin2Q works without this line, but it may be a
-good idea to keep the max speed negociation rate.
+Yes I know that con_id is the device specific connection name that is set by the
+consumers using the "clock-names" property. But AFAIU the clk_lookup structs
+added by clockdev_add() are only used by legacy non-DT drivers which don't set
+their clock names and instead is the clock driver the one that set con_id to the
+struct clk_init_data .name field.
 
-Anyway, we can remove the reset part. Nice catch!
+I see that other drivers do the same, is that wrong as well? What value should
+have con_id when registering clkdevs for legacy non-DT drivers?
 
-Antoine
+DT enabled drivers whose devices define their "clock-names" are not affected by
+this since the clock lookup is made by matching OF "clock-names" property + and
+index.
 
---=20
-Antoine T=E9nart, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
+Best regards,
+Javier
