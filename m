@@ -1,136 +1,73 @@
-From: Vincent Yang <vincent.yang.fujitsu@gmail.com>
-Subject: Re: [RFC PATCH v2 4/6] mmc: sdhci: host: add new f_sdh30
-Date: Mon, 30 Jun 2014 10:10:21 +0800
-Message-ID: <CAOEd-H2M7h1=Yd6m2wLJsSV55TtCaKBtXjHmzBiJ51kW-jzTTA@mail.gmail.com>
-References: <1403763812-5495-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<1403763812-5495-5-git-send-email-Vincent.Yang@tw.fujitsu.com>
-	<20140626110351.GN15240@leverpostej>
-	<CAOEd-H3+MwT3DMqMO0XHaZQqYAN0zaQqRMjC_UjyJn5ZwCaMoQ@mail.gmail.com>
-	<20140627101248.GD7262@leverpostej>
+From: punnaiah choudary kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] usb: chipidea: zynq: Add device tree binding information
+Date: Mon, 30 Jun 2014 08:56:00 +0530
+Message-ID: <CAGnW=BZ7_SO3E3q23HSViBksEwp=BPWq5SXTROA3VJuYMBeDWQ@mail.gmail.com>
+References: <6233f866-678d-4a90-a307-debcb848ae76@BN1AFFO11FD023.protection.gbl>
+	<53AD625B.1080002@cogentembedded.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140627101248.GD7262@leverpostej>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "chris@printf.net" <chris@printf.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "anton@enomsg.org" <anton@enomsg.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53AD625B.1080002-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sergei Shtylyov <sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org>
+Cc: Punnaiah Choudary Kalluri <punnaiah.choudary.kalluri-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Chen <Peter.Chen-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org" <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, "michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org" <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Punnaiah Choudary <kpc528-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-06-27 18:12 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
-> On Fri, Jun 27, 2014 at 04:32:21AM +0100, Vincent Yang wrote:
->> 2014-06-26 19:03 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
->> > On Thu, Jun 26, 2014 at 07:23:30AM +0100, Vincent Yang wrote:
->> >> This patch adds new host controller driver for
->> >> Fujitsu SDHCI controller f_sdh30.
->> >>
->> >> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
->> >> ---
->> >>  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
->> >>  drivers/mmc/host/Kconfig                           |   7 +
->> >>  drivers/mmc/host/Makefile                          |   1 +
->> >>  drivers/mmc/host/sdhci_f_sdh30.c                   | 346 +++++++++++++++++++++
->> >>  drivers/mmc/host/sdhci_f_sdh30.h                   |  40 +++
->> >>  5 files changed, 429 insertions(+)
->> >>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
->> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
->> >>
->> >> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->> >> new file mode 100644
->> >> index 0000000..40add438
->> >> --- /dev/null
->> >> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
->> >> @@ -0,0 +1,35 @@
->> >> +* Fujitsu SDHCI controller
->> >> +
->> >> +This file documents differences between the core properties in mmc.txt
->> >> +and the properties used by the sdhci_f_sdh30 driver.
->> >> +
->> >> +Required properties:
->> >> +- compatible: "fujitsu,f_sdh30"
->> >
->> > Please use '-' rather than '_' in compatible strings.
->>
->> Hi Mark,
->> Yes, I'll update it to '-' in next version.
->>
->> >
->> > This seems to be the name of the driver. What is the precise name of the
->> > IP block?
->>
->> The name of the IP block is "F_SDH30".
->> That's why it uses "fujitsu,f_sdh30"
+On Fri, Jun 27, 2014 at 5:53 PM, Sergei Shtylyov
+<sergei.shtylyov-M4DtvfQ/ZS1MRgGoP+s0PdBPR1lH4CV8@public.gmane.org> wrote:
+> Hello.
 >
-> Hmm. I'd still be tempted to use "fujitsu,f-sdh30".
+>
+> On 06/27/2014 03:23 PM, Punnaiah Choudary Kalluri wrote:
+>
+>> Document device tree binding information as required by
+>> the ZYNQ USB controller.
+>
+>
+>> Signed-off-by: Punnaiah Choudary Kalluri <punnaia-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+>
+> [...]
+>
+>
+>> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
+>> b/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
+>> new file mode 100644
+>> index 0000000..54bb3b4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-zynq.txt
+>> @@ -0,0 +1,23 @@
+>> +Xilinx Zynq usb controller based on synopsys usb IP(v2.20a)
+>
+>
+>    s/usb/USB/.
 
-Hi Mark,
-Sure, I'll update it to "fujitsu,f-sdh30" in next version.
+OK
 
 >
->> >
->> > [...]
->> >
->> >> +       if (!of_property_read_u32(pdev->dev.of_node, "vendor-hs200",
->> >> +                                 &priv->vendor_hs200))
->> >> +               dev_info(dev, "Applying vendor-hs200 setting\n");
->> >> +       else
->> >> +               priv->vendor_hs200 = 0;
->> >
->> > This wasn't in the binding document, and a grep for "vendor-hs200" in a
->> > v3.16-rc2 tree found me nothing.
->> >
->> > Please document this.
->>
->> Yes, it is a setting for a vendor specific register.
->> I'll update it in next version.
 >
-> It would be nice to know exactly what this is. We usually shy clear of
-> placing register values in dt. I can wait until the next posting if
-> you're goin to document that.
+>> +
+>> +Required properties:
+>> +- compatible:   should contain "xlnx,zynq-usb-2.20a"
+>> +- clocks:       clock provider specifier
+>> +- reg:          offset and length of the register set in the memory map
+>> +- interrupt-parent: the phandle for the interrupt controller that
+>> services
+>> +                    interrupts for this device.
+>
+>
+>    This property has never been required -- it can be inherited from the
+> upper level node.
 
-I'm thinking about removing this register value in dt.
-I'll update it in next version.
+OK. i will correct it.
+
+Thanks,
+Punnaiah
 
 >
->> >> +       if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width)) {
->> >> +               if (bus_width == 8) {
->> >> +                       dev_info(dev, "Applying 8 bit bus width\n");
->> >> +                       host->mmc->caps |= MMC_CAP_8_BIT_DATA;
->> >> +               }
->> >> +       }
->> >
->> > What if bus-width is not 8, or is not present?
->>
->> In both cases, it will not touch host->mmc->caps at all. Then sdhci_add_host()
->> will handle it and set MMC_CAP_4_BIT_DATA as default:
->>
->> [...]
->> /*
->> * A controller may support 8-bit width, but the board itself
->> * might not have the pins brought out.  Boards that support
->> * 8-bit width must set "mmc->caps |= MMC_CAP_8_BIT_DATA;" in
->> * their platform code before calling sdhci_add_host(), and we
->> * won't assume 8-bit width for hosts without that CAP.
->> */
->> if (!(host->quirks & SDHCI_QUIRK_FORCE_1_BIT_DATA))
->> mmc->caps |= MMC_CAP_4_BIT_DATA;
+> WBR, Sergei
 >
-> Ok, but does it make sense for a dts to have:
 >
->         bus-width = <1>;
->
-> If so, we should presumably do something.
->
-> If not, we should at least print a warning that the dtb doesn't make
-> sense.
-
-I'll print a warning for invalid values in next version.
-Thanks a lot for your review!
-
-
-Best regards,
-Vincent Yang
-
->
-> Cheers,
-> Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
