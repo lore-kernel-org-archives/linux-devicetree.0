@@ -1,111 +1,74 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Mon, 30 Jun 2014 12:27:03 -0500
-Message-ID: <53B19DE7.6080509@ti.com>
-References: <1404148259-17305-1-git-send-email-dmurphy@ti.com> <20140630172115.GE28740@leverpostej>
+From: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCHv5 1/3] ARM: mm: add support for HW coherent systems in
+ PL310 cache
+Date: Mon, 30 Jun 2014 18:32:17 +0100
+Message-ID: <20140630173217.GT28951@arm.com>
+References: <1402585772-10405-1-git-send-email-thomas.petazzoni@free-electrons.com>
+ <1402585772-10405-2-git-send-email-thomas.petazzoni@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140630172115.GE28740@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1402585772-10405-2-git-send-email-thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
+On Thu, Jun 12, 2014 at 04:09:30PM +0100, Thomas Petazzoni wrote:
+> --- a/arch/arm/mm/cache-l2x0.c
+> +++ b/arch/arm/mm/cache-l2x0.c
+> @@ -1069,6 +1069,33 @@ static const struct l2c_init_data of_l2c310_data __initconst = {
+>  };
+>  
+>  /*
+> + * This is a variant of the of_l2c310_data with .sync set to
+> + * NULL. Outer sync operations are not needed when the system is I/O
+> + * coherent, and potentially harmful in certain situations (PCIe/PL310
+> + * deadlock on Armada 375/38x due to hardware I/O coherency). The
+> + * other operations are kept because they are infrequent (therefore do
+> + * not cause the deadlock in practice) and needed for secondary CPU
+> + * boot and other power management activities.
+> + */
+> +static const struct l2c_init_data of_l2c310_coherent_data __initconst = {
+> +	.type = "L2C-310 Coherent",
+> +	.way_size_0 = SZ_8K,
+> +	.num_lock = 8,
+> +	.of_parse = l2c310_of_parse,
+> +	.enable = l2c310_enable,
+> +	.fixup = l2c310_fixup,
+> +	.save  = l2c310_save,
+> +	.outer_cache = {
+> +		.inv_range   = l2c210_inv_range,
+> +		.clean_range = l2c210_clean_range,
+> +		.flush_range = l2c210_flush_range,
+> +		.flush_all   = l2c210_flush_all,
+> +		.disable     = l2c310_disable,
+> +		.resume      = l2c310_resume,
+> +	},
+> +};
+> +
+> +/*
+>   * Note that the end addresses passed to Linux primitives are
+>   * noninclusive, while the hardware cache range operations use
+>   * inclusive start and end addresses.
+> @@ -1487,6 +1514,10 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
+>  
+>  	data = of_match_node(l2x0_ids, np)->data;
+>  
+> +	if (of_device_is_compatible(np, "arm,pl310-cache") &&
+> +	    of_property_read_bool(np, "arm,io-coherent"))
+> +		data = &of_l2c310_coherent_data;
 
-On 06/30/2014 12:21 PM, Mark Rutland wrote:
-> Hi,
->
-> On Mon, Jun 30, 2014 at 06:10:59PM +0100, Dan Murphy wrote:
->> Support the TI TAS2552 Class D amplifier.
->>
->> The TAS2552 is a high efficiency Class-D audio
->> power amplifier with advanced battery current
->> management and an integrated Class-G boost
->> The device constantly measures the
->> current and voltage across the load and provides a
->> digital stream of this information.
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>
->> v2 - Address RFC comments- Added regmap, and snd_soc calls
->> removed debug code, address checkpatch errors -https://patchwork.kernel.org/patch/4378281/
->>
->>  .../devicetree/bindings/sound/tas2552.txt          |   22 +
->>  include/sound/tas2552-plat.h                       |   25 ++
->>  sound/soc/codecs/Kconfig                           |    5 +
->>  sound/soc/codecs/Makefile                          |    2 +
->>  sound/soc/codecs/tas2552.c                         |  462 ++++++++++++++++++++
->>  sound/soc/codecs/tas2552.h                         |   75 ++++
->>  6 files changed, 591 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/sound/tas2552.txt
->>  create mode 100644 include/sound/tas2552-plat.h
->>  create mode 100644 sound/soc/codecs/tas2552.c
->>  create mode 100644 sound/soc/codecs/tas2552.h
->>
->> diff --git a/Documentation/devicetree/bindings/sound/tas2552.txt b/Documentation/devicetree/bindings/sound/tas2552.txt
->> new file mode 100644
->> index 0000000..58e931b
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/sound/tas2552.txt
->> @@ -0,0 +1,22 @@
->> +Texas Instruments - tas2552 Codec module
->> +
->> +The tas2552 serial control bus communicates through I2C protocols
->> +
->> +Required properties:
->> +
->> +- compatible - "string" - One of:
->> +    "ti,tas2552" - TAS2552
-> Drop the "string". The compatible list is a standard property and its
-> type (string list) is well-known.
->
-> You could change "One of:" to "should contain:", which will look less
-> weird with a single entry.
->
->> +- reg - <int> -  I2C slave address
-> Similarly to "string" we can get rid of <int> here. i2c addresses are
-> well-known to be described in a single u32 cell.
->
->> +
->> +Optional properties:
->> +
->> +- power-gpio - gpio pin to enable/disable the device
-> The code below seems to look for "enable-gpio". Searching for
-> "power-gpio" only hits in the line above and the example below. I assume
-> the code is in error?
+I don't have a better way without duplicating the l2c_init_data
+structure since the fixup function does not take a device_node
+pointer. If it did, you could have added the check in l2c310_fixup and
+zeroed the sync pointer there.
 
-No this was PEBKAC I did not update the documentation when I wrote the
-code.
+Anyway, your approach works for me as well:
 
->
->> +
->> +Example:
->> +
->> +tas2552: tas2552@41 {
->> +       compatible = "ti,tas2552";
->> +       reg = <0x41>;
->> +       power-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
->> +};
-> [...]
->
->> +       if (pdata) {
->> +               data->power_gpio = pdata->power_gpio;
->> +       } else if (np) {
->> +               data->power_gpio = of_get_named_gpio(np, "enable-gpio", 0);
-> Usually I see this logic the other way around, looking for DT data first
-> then falling back to platform data if no DT information was present.
->
-> Cheers,
-> Mark.
-
-Thanks for the review.  I will take these changes into v3 after a good code review soak time.
-
-Dan
-
--- 
-------------------
-Dan Murphy
+Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
