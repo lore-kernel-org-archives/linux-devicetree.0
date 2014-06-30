@@ -1,44 +1,47 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH] clk/exynos5250: fix bit number for tv sysmmu clock
-Date: Mon, 30 Jun 2014 15:49:47 +0200
-Message-ID: <53B16AFB.9010107@samsung.com>
-References: <1403156836-24421-1-git-send-email-rahul.sharma@samsung.com>
+From: Vince Bridgers <vbridgers2013@gmail.com>
+Subject: Re: [PATCH net v2 3/3] net: stmmac: Improve mcast/ucast filter for
+ all Synopsys EMAC Configurations
+Date: Mon, 30 Jun 2014 09:01:17 -0500
+Message-ID: <CAOwfj2NGdVGd2iHfbF73U9Jc6VmFQSHfEm7Jevo5WyzYkrDX+A@mail.gmail.com>
+References: <1404092110-18667-1-git-send-email-vbridgers2013@gmail.com>
+	<1404092110-18667-4-git-send-email-vbridgers2013@gmail.com>
+	<4380814.yCFVZiTZxJ@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1403156836-24421-1-git-send-email-rahul.sharma@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mturquette@linaro.org, tomasz.figa@gmail.com, kgene.kim@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <4380814.yCFVZiTZxJ@wuerfel>
+Sender: netdev-owner@vger.kernel.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Giuseppe CAVALLARO <peppe.cavallaro@st.com>, "pawel.moll@arm.com" <pawel.moll@arm.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, "robh+dt@kernel.org" <robh+dt@kernel.org>, Dinh Nguyen <dinguyen@altera.com>, David Miller <davem@davemloft.net>, Vince Bridgers <vbridger@altera.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19.06.2014 07:47, Rahul Sharma wrote:
-> Change bit from 2 to 9 for tv (mixer) sysmmu clock.
-> 
-> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
-> ---
-> Based on Kukjin's for-next branch.
-> 
->  drivers/clk/samsung/clk-exynos5250.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
-> index 1fad4c5..184f642 100644
-> --- a/drivers/clk/samsung/clk-exynos5250.c
-> +++ b/drivers/clk/samsung/clk-exynos5250.c
-> @@ -661,7 +661,7 @@ static struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
->  	GATE(CLK_RTC, "rtc", "div_aclk66", GATE_IP_PERIS, 20, 0, 0),
->  	GATE(CLK_TMU, "tmu", "div_aclk66", GATE_IP_PERIS, 21, 0, 0),
->  	GATE(CLK_SMMU_TV, "smmu_tv", "mout_aclk200_disp1_sub",
-> -			GATE_IP_DISP1, 2, 0, 0),
-> +			GATE_IP_DISP1, 9, 0, 0),
->  	GATE(CLK_SMMU_FIMD1, "smmu_fimd1", "mout_aclk200_disp1_sub",
->  			GATE_IP_DISP1, 8, 0, 0),
->  	GATE(CLK_SMMU_2D, "smmu_2d", "div_aclk200", GATE_IP_ACP, 7, 0, 0),
-> 
+ Hi Arnd,
 
-Applied as a fix for 3.16.
+On Mon, Jun 30, 2014 at 1:46 AM, Arnd Bergmann <arnd@arndb.de> wrote:
+> On Sunday 29 June 2014 20:35:10 Vince Bridgers wrote:
+>> The synopsys EMAC can be configured for different numbers of multicast hash
+>> bins and perfect filter entries at device creation time and there's no way
+>> to query this configuration information at runtime. As a result, a devicetree
+>> parameter is required in order for the driver to program these filters
+>> correctly for a particular device instance. This patch extends the current
+>> driver by providing a different multicast filter programming function if
+>> different than the currently supported 64 multicast hash bins and 32
+>> perfect unicast addresses. This patch is required to correct multicast
+>> filtering for the Altera Cyclone V SOC.
+>>
+>> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+>>
+>
+> No objections to the content of the patch, but it would be better to split
+> it out into two separate patches: one that does the mechanical prototype
+> and formatting changes, and a smaller one that actually introduces the
+> functional change. That would make it much easier to review, and to bisect
+> potential problems when something goes wrong.
+>
+>         Arnd
 
-Best regards,
-Tomasz
+I'll make the suggested change and resubmit. Thank you for the suggestion.
+
+All the best,
+
+Vince
