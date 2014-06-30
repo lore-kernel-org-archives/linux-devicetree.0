@@ -1,8 +1,8 @@
 From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: [PATCH 1/9] ARM: dts: sunxi: Add #interrupt-cells to
- pinctrl nodes
-Date: Mon, 30 Jun 2014 23:57:51 +0200
-Message-ID: <1404165479-23785-2-git-send-email-hdegoede@redhat.com>
+Subject: [PATCH 2/9] ARM: dts: sun4i: Add AXP209 support to
+ various boards
+Date: Mon, 30 Jun 2014 23:57:52 +0200
+Message-ID: <1404165479-23785-3-git-send-email-hdegoede@redhat.com>
 References: <1404165479-23785-1-git-send-email-hdegoede@redhat.com>
 Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
@@ -19,97 +19,205 @@ To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.o
 Cc: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+From: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
 
-The pinctrl device is also an interrupt controller for external
-interrupts. Add the missing #interrupt-cells property.
+At a node for the axp209, and where necessary the i2c controller to the dts
+for various boards. Note the axp209 regulators are omitted as we don't have
+any use for them yet, and on some boards were not sure how exactly they are
+wired up.
 
-Also remove the unused #address-cells property.
+Adding support for just the axp209 without the regulators is still useful, as
+it will give us power-button and poweroff support.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: make the same change for sun4i, sun5i and sun6i]
+Signed-off-by: Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>
+[hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Drop the regulator bits for now]
 Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
 ---
- arch/arm/boot/dts/sun4i-a10.dtsi  | 2 +-
- arch/arm/boot/dts/sun5i-a10s.dtsi | 2 +-
- arch/arm/boot/dts/sun5i-a13.dtsi  | 2 +-
- arch/arm/boot/dts/sun6i-a31.dtsi  | 4 ++--
- arch/arm/boot/dts/sun7i-a20.dtsi  | 2 +-
- 5 files changed, 6 insertions(+), 6 deletions(-)
+ arch/arm/boot/dts/sun4i-a10-a1000.dts          |  9 +++++++++
+ arch/arm/boot/dts/sun4i-a10-cubieboard.dts     |  9 +++++++++
+ arch/arm/boot/dts/sun4i-a10-hackberry.dts      | 15 +++++++++++++++
+ arch/arm/boot/dts/sun4i-a10-inet97fv2.dts      | 21 +++++++++++++++------
+ arch/arm/boot/dts/sun4i-a10-mini-xplus.dts     | 15 +++++++++++++++
+ arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts | 15 +++++++++++++++
+ arch/arm/boot/dts/sun4i-a10-pcduino.dts        |  9 +++++++++
+ 7 files changed, 87 insertions(+), 6 deletions(-)
 
-diff --git a/arch/arm/boot/dts/sun4i-a10.dtsi b/arch/arm/boot/dts/sun4i-a10.dtsi
-index 9a489e2..ae6dd50 100644
---- a/arch/arm/boot/dts/sun4i-a10.dtsi
-+++ b/arch/arm/boot/dts/sun4i-a10.dtsi
-@@ -509,7 +509,7 @@
- 			clocks = <&apb0_gates 5>;
- 			gpio-controller;
- 			interrupt-controller;
--			#address-cells = <1>;
-+			#interrupt-cells = <2>;
- 			#size-cells = <0>;
- 			#gpio-cells = <3>;
- 
-diff --git a/arch/arm/boot/dts/sun5i-a10s.dtsi b/arch/arm/boot/dts/sun5i-a10s.dtsi
-index 25549c1..695a7c6 100644
---- a/arch/arm/boot/dts/sun5i-a10s.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a10s.dtsi
-@@ -422,7 +422,7 @@
- 			clocks = <&apb0_gates 5>;
- 			gpio-controller;
- 			interrupt-controller;
--			#address-cells = <1>;
-+			#interrupt-cells = <2>;
- 			#size-cells = <0>;
- 			#gpio-cells = <3>;
- 
-diff --git a/arch/arm/boot/dts/sun5i-a13.dtsi b/arch/arm/boot/dts/sun5i-a13.dtsi
-index be28b3b..74895e5 100644
---- a/arch/arm/boot/dts/sun5i-a13.dtsi
-+++ b/arch/arm/boot/dts/sun5i-a13.dtsi
-@@ -395,7 +395,7 @@
- 			clocks = <&apb0_gates 5>;
- 			gpio-controller;
- 			interrupt-controller;
--			#address-cells = <1>;
-+			#interrupt-cells = <2>;
- 			#size-cells = <0>;
- 			#gpio-cells = <3>;
- 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index a9dfa12..baf8eff 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -429,7 +429,7 @@
- 			clocks = <&apb1_gates 5>;
- 			gpio-controller;
- 			interrupt-controller;
--			#address-cells = <1>;
-+			#interrupt-cells = <2>;
- 			#size-cells = <0>;
- 			#gpio-cells = <3>;
- 
-@@ -756,7 +756,7 @@
- 			resets = <&apb0_rst 0>;
- 			gpio-controller;
- 			interrupt-controller;
--			#address-cells = <1>;
-+			#interrupt-cells = <2>;
- 			#size-cells = <0>;
- 			#gpio-cells = <3>;
+diff --git a/arch/arm/boot/dts/sun4i-a10-a1000.dts b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+index 0b97c07..55d9510 100644
+--- a/arch/arm/boot/dts/sun4i-a10-a1000.dts
++++ b/arch/arm/boot/dts/sun4i-a10-a1000.dts
+@@ -98,6 +98,15 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c0_pins_a>;
+ 			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
  		};
-diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
-index 7017839..7597ac1 100644
---- a/arch/arm/boot/dts/sun7i-a20.dtsi
-+++ b/arch/arm/boot/dts/sun7i-a20.dtsi
-@@ -586,7 +586,7 @@
- 			clocks = <&apb0_gates 5>;
- 			gpio-controller;
- 			interrupt-controller;
--			#address-cells = <1>;
-+			#interrupt-cells = <2>;
- 			#size-cells = <0>;
- 			#gpio-cells = <3>;
+ 	};
+ 
+diff --git a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+index c200eac..539b693 100644
+--- a/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
++++ b/arch/arm/boot/dts/sun4i-a10-cubieboard.dts
+@@ -90,6 +90,15 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c0_pins_a>;
+ 			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
+ 		};
+ 
+ 		i2c1: i2c@01c2b000 {
+diff --git a/arch/arm/boot/dts/sun4i-a10-hackberry.dts b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
+index 547fadc..21df4e3 100644
+--- a/arch/arm/boot/dts/sun4i-a10-hackberry.dts
++++ b/arch/arm/boot/dts/sun4i-a10-hackberry.dts
+@@ -92,6 +92,21 @@
+ 			pinctrl-0 = <&uart0_pins_a>;
+ 			status = "okay";
+ 		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++		};
+ 	};
+ 
+ 	reg_emac_3v3: emac-3v3 {
+diff --git a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
+index f13723e..6b0c378 100644
+--- a/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
++++ b/arch/arm/boot/dts/sun4i-a10-inet97fv2.dts
+@@ -40,12 +40,6 @@
+ 			status = "okay";
+ 		};
+ 
+-		i2c0: i2c@01c2ac00 {
+-			pinctrl-names = "default";
+-			pinctrl-0 = <&i2c0_pins_a>;
+-			status = "okay";
+-		};
+-
+ 		usbphy: phy@01c13400 {
+ 			usb1_vbus-supply = <&reg_usb1_vbus>;
+ 			usb2_vbus-supply = <&reg_usb2_vbus>;
+@@ -67,6 +61,21 @@
+ 		ohci1: usb@01c1c400 {
+ 			status = "okay";
+ 		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++		};
+ 	};
+ 
+ 	reg_usb1_vbus: usb1-vbus {
+diff --git a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
+index c01cea5..387770d 100644
+--- a/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
++++ b/arch/arm/boot/dts/sun4i-a10-mini-xplus.dts
+@@ -57,6 +57,21 @@
+ 			pinctrl-0 = <&uart0_pins_a>;
+ 			status = "okay";
+ 		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++		};
+ 	};
+ 
+ 	reg_usb1_vbus: usb1-vbus {
+diff --git a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+index d46a7db..d046d56 100644
+--- a/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
++++ b/arch/arm/boot/dts/sun4i-a10-olinuxino-lime.dts
+@@ -91,6 +91,21 @@
+ 			pinctrl-0 = <&uart0_pins_a>;
+ 			status = "okay";
+ 		};
++
++		i2c0: i2c@01c2ac00 {
++			pinctrl-names = "default";
++			pinctrl-0 = <&i2c0_pins_a>;
++			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
++		};
+ 	};
+ 
+ 	leds {
+diff --git a/arch/arm/boot/dts/sun4i-a10-pcduino.dts b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+index fb03bcc..6675bcd 100644
+--- a/arch/arm/boot/dts/sun4i-a10-pcduino.dts
++++ b/arch/arm/boot/dts/sun4i-a10-pcduino.dts
+@@ -76,6 +76,15 @@
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&i2c0_pins_a>;
+ 			status = "okay";
++
++			axp209: pmic@34 {
++				compatible = "x-powers,axp209";
++				reg = <0x34>;
++				interrupts = <0>;
++
++				interrupt-controller;
++				#interrupt-cells = <1>;
++			};
+ 		};
+ 	};
  
 -- 
 2.0.0
