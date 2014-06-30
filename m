@@ -1,66 +1,86 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/6] mailbox/omap: add support for parsing dt devices
-Date: Mon, 30 Jun 2014 20:59:43 +0200
-Message-ID: <20140630185942.GA5410@amd.pavel.ucw.cz>
-References: <1403660878-56350-1-git-send-email-s-anna@ti.com>
- <1403660878-56350-3-git-send-email-s-anna@ti.com>
- <20140628170709.GB23634@xo-6d-61-c0.localdomain>
- <53B18999.2020506@ti.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
+Date: Mon, 30 Jun 2014 15:29:10 -0400
+Message-ID: <20140630192910.GA23978@titan.lakedaemon.net>
+References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-omap-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53B18999.2020506@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Suman Anna <s-anna@ti.com>
-Cc: Tony Lindgren <tony@atomide.com>, Jassi Brar <jaswinder.singh@linaro.org>, Dave Gerlach <d-gerlach@ti.com>, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jassi Brar <jassisinghbrar@gmail.com>, Rob Herring <robh+dt@kernel.org>
+In-Reply-To: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nm@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi!
-
-> >> The non-DT support has to be maintained for now to not break
-> >> OMAP3 legacy boot, and the legacy-style code will be cleaned
-> >> up once OMAP3 is also converted to DT-boot only.
-> > 
-> >> @@ -587,24 +606,157 @@ static int omap_mbox_unregister(struct omap_mbox_device *mdev)
-> >>  	return 0;
-> >>  }
-> >>  
-> >> +static const struct omap_mbox_device_data omap2_data = {
-> >> +	.num_users	= 4,
-> >> +	.num_fifos	= 6,
-> >> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
-> >> +};
-> >> +
-> >> +static const struct omap_mbox_device_data omap3_data = {
-> >> +	.num_users	= 2,
-> >> +	.num_fifos	= 2,
-> >> +	.intr_type	= MBOX_INTR_CFG_TYPE1,
-> >> +};
-> >> +
-> >> +static const struct omap_mbox_device_data am335x_data = {
-> >> +	.num_users	= 4,
-> >> +	.num_fifos	= 8,
-> >> +	.intr_type	= MBOX_INTR_CFG_TYPE2,
-> >> +};
-> > 
-> > So you use compatible strings to look up 3 integers. Would it be better to have
-> > num_users/num_fifos/intr_type directly in the device tree? That should be cleaner
-> > and more flexible...
-> > 
-> > If you do that, would it be possible to have share compatible string?
+On Thu, Jun 26, 2014 at 12:40:18PM +0530, Sricharan R wrote:
+> This series does some cleanups, fixes for handling two interrupts
+> getting mapped twice to same crossbar and provides support for
+> hardwired IRQ and crossbar definitions.
 > 
-> Yeah, I have actually encoded the .num_users and .num_fifos in DT in the
-> previous version [1] with shared compatible strings, but dropped those
-> properties in favour of adding minimal custom properties to DT based on
-> some offline IRC comments. I have no objections either way, but there is
-> really nothing to be gained from minimizing compatible strings.
+> On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
+> 131, 132, 133 are direct wired to hardware blocks bypassing
+> crossbar. This quirky implementation is *NOT* supposed to be the
+> expectation of crossbar hardware usage. This series adds support
+> to represent such hard-wired irqs through DT and avoid generic
+> allocation/programming of crossbar in the driver.
+> 
+> This way of supporting hard-wired irqs was a result of
+> the below discussions.
+> http://www.spinics.net/lists/arm-kernel/msg329946.html
+> 
+> Based on 3.16 rc2 mainline.
+> 
+> All the patches are available here
+>  git@github.com:Sricharanti/sricharan.git crossbar_updates
+> 
+> The fixes series[1] earlier posted is merged in to this.
+> [1] http://www.spinics.net/lists/arm-kernel/msg328273.html
+> 
+> [V2] Merged the above series and rebased on 3.15 mainline
+> 
+> [V3] Modified patch#3 to get irqs-skip properties from DT,
+>      merged path#8 for checkpatch warning to other relevant
+>      patches and fixed comments for other patches.
+> 
+> [V4] Based on 3.16rc2 and fixed Jason's <jason@lakedaemon.net> comments.
+> 
+> Nishanth Menon (14):
+>   irqchip: crossbar: Dont use '0' to mark reserved interrupts
+>   irqchip: crossbar: Check for premapped crossbar before allocating
+>   irqchip: crossbar: Introduce ti,irqs-skip to skip irqs that bypass
+>     crossbar
+>   irqchip: crossbar: Initialise the crossbar with a safe value
+>   irqchip: crossbar: Change allocation logic by reversing search for
+>     free irqs
+>   irqchip: crossbar: Remove IS_ERR_VALUE check
+>   irqchip: crossbar: Fix sparse and checkpatch warnings
+>   irqchip: crossbar: Fix kerneldoc warning
+>   irqchip: crossbar: Return proper error value
+>   irqchip: crossbar: Change the goto naming
+>   irqchip: crossbar: Introduce ti,max-crossbar-sources to identify
+>     valid crossbar mapping
+>   irqchip: crossbar: Introduce centralized check for crossbar write
+>   documentation: dt: omap: crossbar: Add description for interrupt
+>     consumer
+>   irqchip: crossbar: Allow for quirky hardware with direct hardwiring
+>     of GIC
+> 
+> Sricharan R (2):
+>   irqchip: crossbar: Set cb pointer to null in case of error
+>   irqchip: crossbar: Add kerneldoc for crossbar_domain_unmap callback
+> 
+>  .../devicetree/bindings/arm/omap/crossbar.txt      |   36 +++++
+>  drivers/irqchip/irq-crossbar.c                     |  168 +++++++++++++++++---
+>  2 files changed, 179 insertions(+), 25 deletions(-)
 
-Actually, I'd guess best solution would be to do both: have it encoded
-in device tree _and_ have separate compatible string for each version
-(in case there are other differences). You'd still get rid of the
-table...
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+Whole series applied to irqchip/crossbar, I'll give it a day or two in
+-next, then I'll merge it into irqchip/core.
+
+Tony: Right now, it's immutable unless you tell me I applied something
+incorrectly.  Once it goes into irqchip/core, it's immutable no matter
+what you say. ;-)
+
+thx,
+
+Jason.
