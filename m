@@ -1,60 +1,67 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: mwifiex card reset
-Date: Mon, 30 Jun 2014 21:30:09 +0200
-Message-ID: <53B1BAC1.3090902@zonque.org>
-References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com> <20140628052220.GG10407@us.netrek.org> <20140628072322.GC7410@atomide.com> <CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com> <20140630061912.GA2461@atomide.com>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V4 13/16] irqchip: crossbar: Introduce
+ ti,max-crossbar-sources to identify valid crossbar mapping
+Date: Mon, 30 Jun 2014 15:30:09 -0400
+Message-ID: <20140630193009.GB23978@titan.lakedaemon.net>
+References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
+ <1403766634-18543-14-git-send-email-r.sricharan@ti.com>
+ <20140627120035.GB23978@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <20140630061912.GA2461@atomide.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Andreas Fenkart <afenkart@gmail.com>
-Cc: James Cameron <quozl@laptop.org>, Bing Zhao <bzhao@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140627120035.GB23978@titan.lakedaemon.net>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: nm@ti.com, devicetree@vger.kernel.org, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, linux-kernel@vger.kernel.org, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony, everyone,
-
-Thanks Andreas for addressing this issue! So far, we've been using a
-terrible hack in the hsmmc in order to bring the card into a workable
-state, and we're looking for a nicer solution for awhile.
-
-On 06/30/2014 08:19 AM, Tony Lindgren wrote:
-> * Andreas Fenkart <afenkart@gmail.com> [140629 12:43]:
->> 2014-06-28 9:23 GMT+02:00 Tony Lindgren <tony@atomide.com>:
->>> * James Cameron <quozl@laptop.org> [140628 08:24]:
-
->>> Wouldn't it be best to have the mwifiex properly handle the
->>> reset GPIOs and idle status pins?
->>
->> doesn't work see ref 1) above
+On Fri, Jun 27, 2014 at 08:00:35AM -0400, Jason Cooper wrote:
+> On Thu, Jun 26, 2014 at 12:40:31PM +0530, Sricharan R wrote:
+> > From: Nishanth Menon <nm@ti.com>
+> > 
+> > Currently we attempt to map any crossbar value to an IRQ, however,
+> > this is not correct from hardware perspective. There is a max crossbar
+> > event number upto which hardware supports. So describe the same in
+> > device tree using 'ti,max-crossbar-sources' property and use it to
+> > validate requests.
+> > 
+> > Signed-off-by: Nishanth Menon <nm@ti.com>
+> > Signed-off-by: Sricharan R <r.sricharan@ti.com>
+> > Acked-by: Santosh Shilimkar <santosh.shilimkar@ti.com>
+> > ---
+> >  .../devicetree/bindings/arm/omap/crossbar.txt      |    2 ++
+> >  drivers/irqchip/irq-crossbar.c                     |   21 ++++++++++++++++++--
+> >  2 files changed, 21 insertions(+), 2 deletions(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/arm/omap/crossbar.txt b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> > index 5f45c78..6923531 100644
+> > --- a/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> > +++ b/Documentation/devicetree/bindings/arm/omap/crossbar.txt
+> > @@ -10,6 +10,7 @@ Required properties:
+> >  - compatible : Should be "ti,irq-crossbar"
+> >  - reg: Base address and the size of the crossbar registers.
+> >  - ti,max-irqs: Total number of irqs available at the interrupt controller.
+> > +- ti,max-crossbar-sources: Maximum number of crossbar sources that can be routed.
+> >  - ti,reg-size: Size of a individual register in bytes. Every individual
+> >  	    register is assumed to be of same size. Valid sizes are 1, 2, 4.
+> >  - ti,irqs-reserved: List of the reserved irq lines that are not muxed using
+> > @@ -30,6 +31,7 @@ Examples:
+> >  			compatible = "ti,irq-crossbar";
+> >  			reg = <0x4a002a48 0x130>;
+> >  			ti,max-irqs = <160>;
+> > +			ti,max-crossbar-sources = <MAX_SOURCES>;
 > 
-> OK so we can't do much anything at mwifiex probe time on SDIO bus because
-> it won't probe unless the pins are configured.
+> As mentioned in my reply to #15, I can change this to 400 when I apply
+> it, or you can send a new version of #15 using the macro and explaining
+> it's definition.
 > 
-> Maybe we should have a separate mwifiex-power helper module that just
-> manages the reset/idle/regulator pins? Then mwifiex-reset can be always
-> loaded and configure things so mwifiex-sdio can probe properly.
-> 
-> And mwifiex-reset helper can also provide the user space interfaces
-> for the reset/idle/regulator pins.
+> Thinking about it more, it's probably best just to use numbers in the
+> docs.
 
-Yes, a helper might be the best solution. It could even be a generic
-one, that just takes any number of clocks, reset GPIOs and regulators
-and takes care for sequencing them. However, we need to reference that
-helper from the mwifiex driver, for two reasons.
+I just did s/MAX_SOURCES/400/ when I applied this.  We shouldn't be
+polluting the binding docs with implementation details.
 
-a) we need to make sure the reset helper gets to do its job before the
-mwifiex driver scans the SDIO bus, and
+thx,
 
-b) the reset helper needs to be called when the mmc host controller
-wants to do a card reset.
-
-Hence, we'll need some sort of internal API for this, and a phandle in
-dts. I wonder whether that glue logic might be better off living in the
-mmc core, as mwifiex might well be interfaced to other hosts?
-
-
-Thanks,
-Daniel
-
+Jason.
