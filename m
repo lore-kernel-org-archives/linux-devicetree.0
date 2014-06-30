@@ -1,80 +1,67 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 0/4] Migrate PXA27x platforms to clock framework
-Date: Mon, 30 Jun 2014 20:38:49 +0200
-Message-ID: <877g3yp7ie.fsf@free.fr>
-References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
-	<7034630.fvV46PN35C@wuerfel>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH V2 1/2] ASoC: samsung: Add machine driver for Odroid X2/U3
+Date: Mon, 30 Jun 2014 19:46:58 +0100
+Message-ID: <20140630184658.GE23300@sirena.org.uk>
+References: <1403108551-25058-1-git-send-email-s.nawrocki@samsung.com>
+ <1403108551-25058-2-git-send-email-s.nawrocki@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <7034630.fvV46PN35C@wuerfel> (Arnd Bergmann's message of "Mon, 30
-	Jun 2014 08:55:15 +0200")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="hobqzgJMeQ3bIoso"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403108551-25058-2-git-send-email-s.nawrocki@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: devicetree@vger.kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, galak@codeaurora.org, zhen1.chen@samsung.com, kyungmin.park@samsung.com, m.szyprowski@samsung.com, alsa-devel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
 
-> On Sunday 29 June 2014 20:32:20 Robert Jarzmik wrote:
->> As the RFC posted in [1] didn't meet an unrivaled success for
->> review, I'm posting this serie for PXA27x transition to clock
->> framework.
->> 
->> This transition is needed :
->>  - to enable device-tree drivers port, as clocks are needed almost
->>    everywhere
->>  - to enable the long term multi-platform kernel to support PXA
->> 
->> As I had said before, this serie aims at :
->>  - keeping legacy platforms working (ie. without device-tree)
->>  - enable PXA27x to work with a device-tree kernel, and hence
->>    open the way to drivers conversion
->>  - be robust enough to support pxa25x and pxa3xx later inclusion
->>    with almost no change to clk-pxa-dt.c.
->> 
->> As this serie is holding the rest of the device-tree drivers
->> port, I'd like it to be reviewed, even it's an old unsexy
->> platform.
->
-> I have one basic question about this series: if pxa27x gets moved
-> to used the common-clk framework but the others (pxa25x, pxa26x,
-> pxa3xx, pxa93x) don't, does that imply that they become mutually
-> exclusiv at compile-time?
+--hobqzgJMeQ3bIoso
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Unfortunately yes, they become exclusive.
-The reason being that arch/arm/mach-pxa/clock.c defines the function
-"clk_enable()", which of course is also defined by the clock framework.
+On Wed, Jun 18, 2014 at 06:22:30PM +0200, Sylwester Nawrocki wrote:
 
-> If so, do you plan to first complete all of them before merging
-> upstream, or do you intend to have one or more kernel releases
-> that don't allow building a combined kernel for all pxa platforms?
-I intend to have first only pxa27x.
-Then in a second stage pxa27x + pxa25x + pxa3xx.
+> +struct odroidx2_drv_data odroidx2_drvdata = {
+> +	.dapm_widgets		= odroidx2_dapm_widgets,
+> +	.num_dapm_widgets	= ARRAY_SIZE(odroidx2_dapm_widgets),
+> +};
+> +
+> +struct odroidx2_drv_data odroidu3_drvdata = {
+> +	.dapm_widgets		= odroidu3_dapm_widgets,
+> +	.num_dapm_widgets	= ARRAY_SIZE(odroidu3_dapm_widgets),
+> +};
 
-> I don't object to doing the latter, but if that is the plan, you
-> need to make that very clear in the changelog and have all the
-> relevant maintainers agree to that.
-OK, that would be Haojian then, I think he maintains all PXA platforms.
+> +	ret = snd_soc_of_parse_audio_routing(card, "samsung,audio-routing");
+> +	if (ret < 0)
+> +		return ret;
 
-Haojian, are you ok with that ? And BTW, does a combined kernel for PXA
-platforms even exists (mixing pxa3xx and pxa2xx for example) ?
+Given that the widgets don't have any actions defined and the routing is
+all done by DT it might be easier and more flexible to just define all
+the widgets all the time and let them hang there if they're not in use,
+that way you don't need multiple compatible strings.  If you do that
+you're then very close to being able to use simple-card...
 
-> Also (for my understanding) when you say that you plan to do
-> pxa25x and pxa3xx next, does that include pxa26x and pxa93x?
-I don't have the Technical Reference Manuals for these ones so the answer is
-no. And Google wasn't a great friend at providing them.
+--hobqzgJMeQ3bIoso
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-> I assume it does as they are apparently minor revisions of the
-> former, but it's not completely clear from your description.
-My description doesn't mention them, as I have no information about them, nor
-any hardware to test on.
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Cheers.
+iQIcBAEBAgAGBQJTsbCeAAoJELSic+t+oim9bYUP/i+ywW+Yl67NWQKW0fQIDKDW
+oZFdfsjqruHE+0N0snlFM731QEZ6J9nxbHm4ltBdTwNWQZJRB+FqLUMO/tLySn3E
+DT23UOCKdDNveJxLBpa8c+xKNI+Er/DyQSp1ncOcCh9Wxzbj+lAo/31whqT5k/Zo
+xbWV6Uq9V/vVM+KU8lRtJKeTXEXWN85hAnOPxlGor4fEOooR7vwwow7+qPouVz3t
+SXPtL+Z1rlWKiV+nfnuDaqfnK8FUn7r+4jPUA1YBbfnyODHmPlxZyyX2hwloz1P9
+gV+Cz3ZPDETeAkibw3kiimL5PTs1Wh6Gh4/U+VIUCN0rP6488fXPsjfBNqIZLaKh
+poDDuR1tW9s+1THPxv59JuV5yJFtpT87gh0a6bWbeTD3eYsdfEJ7UmqxOxEx8o1j
+goLB5e7IP1pu2QdeVmLAWNfR0sGn+NgOfXqslZXgGAk1jmrC4q/uXinNtjdcK41d
+b80Vo93KMout5k3VJHtSRQmInGPhxudkDfe4i3ziEEd9qiTrJsaGv2NGAUWJxJ9I
+1mespzvc7638qYbu+pT7spHkJ87FiWRp+btfE2jCazN/t+qE2X3k2YiVrXmzN621
+C6hD6GcQUIHBFFJ6eXSgPvX2lK1x+aqD9rLodWvWq5n5dZgjpgyz4ZM7pgvlL5h+
+9E6paQ5aEQ5v7vtxXeuo
+=oZyg
+-----END PGP SIGNATURE-----
 
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+--hobqzgJMeQ3bIoso--
