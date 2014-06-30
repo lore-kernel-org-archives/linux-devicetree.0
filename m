@@ -1,28 +1,59 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCHv2 8/9] ASoC: omap: rx51: Add DT support
-Date: Mon, 30 Jun 2014 12:02:45 +0200
-Message-ID: <20140630100245.GE4934@xo-6d-61-c0.localdomain>
-References: <1398694047-28596-1-git-send-email-sre@kernel.org>
- <1398694047-28596-9-git-send-email-sre@kernel.org>
+From: Andy Whitcroft <apw@canonical.com>
+Subject: Re: [PATCH] checkpatch: Enable whitespace checks for DTS files
+Date: Mon, 30 Jun 2014 11:11:37 +0100
+Message-ID: <20140630101137.GA31222@bark>
+References: <1404122011-11409-1-git-send-email-geert+renesas@glider.be>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1398694047-28596-9-git-send-email-sre@kernel.org>
+In-Reply-To: <1404122011-11409-1-git-send-email-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sebastian Reichel <sre@kernel.org>
-Cc: Sebastian Reichel <sre@ring0.de>, Mark Brown <broonie@kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Liam Girdwood <lgirdwood@gmail.com>, Jarkko Nikula <jarkko.nikula@bitmer.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, alsa-devel@alsa-project.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Joe Perches <joe@perches.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 2014-04-28 16:07:26, Sebastian Reichel wrote:
-> This patch adds device tree support to the Nokia N900 audio driver and
-> adds documentation for the DT binding.
+On Mon, Jun 30, 2014 at 11:53:31AM +0200, Geert Uytterhoeven wrote:
+> When run on *.dtsi or *.dts files, the whitespace checks were skipped,
+> while they are valid for DTS files.  Hence stop skipping them.
 > 
-> Signed-off-by: Sebastian Reichel <sre@kernel.org>
+> I ran checkpatch on all in-tree DTS files, and didn't notice any error or
+> warning messages that are inappropriate for DTS files.
+> 
+> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> ---
+>  scripts/checkpatch.pl | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+> index 010b18ef4ea0..9ae624942a84 100755
+> --- a/scripts/checkpatch.pl
+> +++ b/scripts/checkpatch.pl
+> @@ -2137,7 +2137,7 @@ sub process {
+>  		}
+>  
+>  # check we are in a valid source file if not then ignore this hunk
+> -		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
+> +		next if ($realfile !~ /\.(h|c|s|S|pl|sh|dtsi|dts)$/);
 
-Acked-by: Pavel Machek <pavel@ucw.cz>
+I think it is this one here which lets the white space checks happen for
+your new file types ...
 
-									Pavel
--- 
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+>  #line length limit
+>  		if ($line =~ /^\+/ && $prevrawline !~ /\/\*\*/ &&
+> @@ -2192,7 +2192,7 @@ sub process {
+>  		}
+>  
+>  # check we are in a valid source file C or perl if not then ignore this hunk
+> -		next if ($realfile !~ /\.(h|c|pl)$/);
+> +		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+
+... so I am supprised to see you also changing this one.  Is there a
+check below here you wanted other than those stated in the patch
+commentary?
+
+>  
+>  # at the beginning of a line any tabs must come first and anything
+>  # more than 8 must use tabs.
+
+-apw
