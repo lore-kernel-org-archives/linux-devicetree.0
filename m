@@ -1,55 +1,80 @@
-From: Laura Abbott <lauraa@codeaurora.org>
-Subject: Re: [PATCH 2/2] arm: Add back maximum bank limit
-Date: Mon, 30 Jun 2014 11:03:10 -0700
-Message-ID: <53B1A65E.6050806@codeaurora.org>
-References: <1404068784-27604-1-git-send-email-lauraa@codeaurora.org>	<1404068784-27604-2-git-send-email-lauraa@codeaurora.org> <20140630104350.600EDC40F52@trevor.secretlab.ca>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 0/4] Migrate PXA27x platforms to clock framework
+Date: Mon, 30 Jun 2014 20:38:49 +0200
+Message-ID: <877g3yp7ie.fsf@free.fr>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+	<7034630.fvV46PN35C@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140630104350.600EDC40F52@trevor.secretlab.ca>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Grant Likely <grant.likely@linaro.org>, Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Rob Herring <robherring2@gmail.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, afaerber@suse.de, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7034630.fvV46PN35C@wuerfel> (Arnd Bergmann's message of "Mon, 30
+	Jun 2014 08:55:15 +0200")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 6/30/2014 3:43 AM, Grant Likely wrote:
-> 
-> Instead of splitting early_init_dt_scan(), the call to
-> early_init_dt_scan() could probably be moved after the
-> of_flat_dt_match_machine() call. It's at least worth a try. Looking at
-> the code I don't see anything obvious that requires the
-> early_init_dt_scan() code to run first.
+Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
+
+> On Sunday 29 June 2014 20:32:20 Robert Jarzmik wrote:
+>> As the RFC posted in [1] didn't meet an unrivaled success for
+>> review, I'm posting this serie for PXA27x transition to clock
+>> framework.
+>> 
+>> This transition is needed :
+>>  - to enable device-tree drivers port, as clocks are needed almost
+>>    everywhere
+>>  - to enable the long term multi-platform kernel to support PXA
+>> 
+>> As I had said before, this serie aims at :
+>>  - keeping legacy platforms working (ie. without device-tree)
+>>  - enable PXA27x to work with a device-tree kernel, and hence
+>>    open the way to drivers conversion
+>>  - be robust enough to support pxa25x and pxa3xx later inclusion
+>>    with almost no change to clk-pxa-dt.c.
+>> 
+>> As this serie is holding the rest of the device-tree drivers
+>> port, I'd like it to be reviewed, even it's an old unsexy
+>> platform.
 >
+> I have one basic question about this series: if pxa27x gets moved
+> to used the common-clk framework but the others (pxa25x, pxa26x,
+> pxa3xx, pxa93x) don't, does that imply that they become mutually
+> exclusiv at compile-time?
 
-of_flat_dt_match_machine -> of_flat_dt_match which uses
-initial_boot_params which isn't set until early_init_dt_scan. I had the
-same thought about just rearranging but we still need something to be
-set before doing the scan, hence the split.
- 
-> Once you've got the mdesc pointer, you've could set the limit before
-> doing the full scan. Or, better yet because this is a fix for broken
-> data, you could call a dt_fixup hook on the mdesc. Then exynos is the
-> only platform that needs special treatment. The best thing for exynos to
-> do is fix the buggy data by clearing the bogus entries. Then there's no
-> need to reintroduce early_init_dt_add_memory_arch() for ARM.
-> 
+Unfortunately yes, they become exclusive.
+The reason being that arch/arm/mach-pxa/clock.c defines the function
+"clk_enable()", which of course is also defined by the clock framework.
 
-The fixup hook does sound better. The flow would become
+> If so, do you plan to first complete all of them before merging
+> upstream, or do you intend to have one or more kernel releases
+> that don't allow building a combined kernel for all pxa platforms?
+I intend to have first only pxa27x.
+Then in a second stage pxa27x + pxa25x + pxa3xx.
 
-setup_machine_fdt
-	- early_init_dt_verify
-	- of_flat_dt_match_machine
-	- mdesc->dt_fixup
-	- early_init_dt_scan_all
+> I don't object to doing the latter, but if that is the plan, you
+> need to make that very clear in the changelog and have all the
+> relevant maintainers agree to that.
+OK, that would be Haojian then, I think he maintains all PXA platforms.
 
-I notice that powerpc already has a DT fixup infrastructure but I don't see
-any such thing for ARM. How much of that do you think could and should be
-leveraged for ARM?
+Haojian, are you ok with that ? And BTW, does a combined kernel for PXA
+platforms even exists (mixing pxa3xx and pxa2xx for example) ?
 
-Thanks,
-Laura
+> Also (for my understanding) when you say that you plan to do
+> pxa25x and pxa3xx next, does that include pxa26x and pxa93x?
+I don't have the Technical Reference Manuals for these ones so the answer is
+no. And Google wasn't a great friend at providing them.
+
+> I assume it does as they are apparently minor revisions of the
+> former, but it's not completely clear from your description.
+My description doesn't mention them, as I have no information about them, nor
+any hardware to test on.
+
+Cheers.
 
 -- 
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-hosted by The Linux Foundation
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
