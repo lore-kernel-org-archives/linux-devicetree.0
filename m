@@ -1,93 +1,31 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH 2/3] mtd: hisilicon: add a new nand controller driver for
- hisilicon hip04 Soc
-Date: Mon, 30 Jun 2014 11:00:25 +0100
-Message-ID: <20140630100025.GA7262@leverpostej>
-References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com>
- <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com>
+From: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+Subject: Re: [PATCHv2 5/9] ASoC: omap: rx51: omap_mcbsp_st_add_controls: add
+ id parameter
+Date: Mon, 30 Jun 2014 12:02:28 +0200
+Message-ID: <20140630100228.GB4934@xo-6d-61-c0.localdomain>
+References: <1398694047-28596-1-git-send-email-sre@kernel.org>
+ <1398694047-28596-6-git-send-email-sre@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Zhou Wang <wangzhou.bry@gmail.com>
-Cc: Jussi Kivilinna <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Alexander Shiyan <shc_work@mail.ru>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Joern Engel <joern@logfs.org>, Rob Herring <robh+dt@kernel.org>, Pekon Gupta <pekon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wangzhou1@hisilicon.com" <wangzhou1@hisilicon.com>, Kumar Gala <galak>
+In-Reply-To: <1398694047-28596-6-git-send-email-sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Sebastian Reichel <sre-GFxCN5SEZAc@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Peter Ujfalusi <peter.ujfalusi-l0cyMroinI0@public.gmane.org>, Rob Herring <rob.herring-bsGFqQB8/DxBDgjK7y7TUQ@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Jarkko Nikula <jarkko.nikula-FVTvWyuFUl3QT0dZR+AlfA@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 30, 2014 at 09:03:28AM +0100, Zhou Wang wrote:
-> Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
-> ---
->  drivers/mtd/nand/Kconfig     |    5 +
->  drivers/mtd/nand/Makefile    |    1 +
->  drivers/mtd/nand/hisi_nand.c |  847 ++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 853 insertions(+)
->  create mode 100644 drivers/mtd/nand/hisi_nand.c
+On Mon 2014-04-28 16:07:23, Sebastian Reichel wrote:
+> This is a preparation for DT based booting where the McBSP id
+> is set to -1 for all McBSP instances.
+> 
+> Signed-off-by: Sebastian Reichel <sre-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
-[...]
-
-> +struct hinfc_host {
-> +       struct nand_chip        *chip;
-> +       struct mtd_info         *mtd;
-> +       struct device           *dev;
-> +       void __iomem            *iobase;
-> +       struct completion       cmd_complete;
-> +       unsigned int            offset;
-> +       unsigned int            command;
-> +       int                     chipselect;
-> +       unsigned int            addr_cycle;
-> +       unsigned int            addr_value[2];
-> +       unsigned int            cache_addr_value[2];
-> +       char                    *buffer;
-> +       dma_addr_t              dma_buffer;
-> +       dma_addr_t              dma_oob;
-> +       int                     version;
-> +       unsigned int            ecc_bits;
-> +       unsigned int            irq_status; /* interrupt status */
-> +
-> +       int (*send_cmd_pageprog)(struct hinfc_host *host);
-> +       int (*send_cmd_status)(struct hinfc_host *host);
-> +       int (*send_cmd_readstart)(struct hinfc_host *host);
-> +       int (*send_cmd_erase)(struct hinfc_host *host);
-> +       int (*send_cmd_readid)(struct hinfc_host *host);
-> +       int (*send_cmd_reset)(struct hinfc_host *host, int chipselect);
-> +};
-
-[...]
-
-> +static int hisi_nfc_probe(struct platform_device *pdev)
-> +{
-> +       int ret = 0, irq, buswidth, flag, max_chips = HINFC504_MAX_CHIP;
-> +       struct device *dev = &pdev->dev;
-> +       struct hinfc_host *host;
-> +       struct nand_chip  *chip;
-> +       struct mtd_info   *mtd;
-> +       struct resource   *res;
-> +       struct device_node *np = dev->of_node;
-> +       struct mtd_part_parser_data ppdata;
-> +
-> +       host = devm_kzalloc(dev, sizeof(*host) + sizeof(*chip) + sizeof(*mtd),
-> +                       GFP_KERNEL);
-> +       if (!host)
-> +               return -ENOMEM;
-> +       host->dev = dev;
-> +
-> +       platform_set_drvdata(pdev, host);
-> +       chip = (struct nand_chip *)&host[1];
-> +       mtd  = (struct mtd_info *)&chip[1];
-
-Why not embed the whole struct rather than pointers? Then you can
-allocate just the host and extract pointers to the chip and mtd sub
-structures.
-
-Thanks,
-Mark.
+Acked-by: Pavel Machek <pavel-+ZI9xUNit7I@public.gmane.org>
+-- 
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blog.html
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
