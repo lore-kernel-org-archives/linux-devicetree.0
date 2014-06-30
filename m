@@ -1,75 +1,71 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v3 0/2] arm: dts: add support for am437x sk
-Date: Mon, 30 Jun 2014 11:45:43 -0500
-Message-ID: <20140630164543.GA31442@saruman.home>
-References: <1403547659-24558-1-git-send-email-balbi@ti.com>
-Reply-To: <balbi@ti.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Mon, 30 Jun 2014 20:55:35 +0400
+Message-ID: <53B19687.5050400@cogentembedded.com>
+References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com> <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com> <53AB1CFD.4040500@cogentembedded.com> <20140630095940.GB10058@kwain> <53B176F1.5060308@gmail.com> <20140630154409.GB29613@kwain>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="SUOF0GtieIMvvwua"
-Return-path: <linux-omap-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403547659-24558-1-git-send-email-balbi@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Felipe Balbi <balbi@ti.com>
-Cc: Benoit Cousson <bcousson@baylibre.com>, robh+dt@kernel.org, galak@codeaurora.org, Tony Lindgren <tony@atomide.com>, linux@arm.linux.org.uk, Rajendra Nayak <rnayak@ti.com>, Nishanth Menon <nm@ti.com>, r.sricharan@ti.com, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux OMAP Mailing List <linux-omap@vger.kernel.org>, Linux ARM Kernel Mailing List <linux-arm-kernel@lists.infradead.org>, Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset=ISO-8859-1;
+	format=flowed
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <20140630154409.GB29613@kwain>
+Sender: linux-ide-owner@vger.kernel.org
+To: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
---SUOF0GtieIMvvwua
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hello.
 
-Hi,
+On 06/30/2014 07:44 PM, Antoine T=E9nart wrote:
 
-On Mon, Jun 23, 2014 at 01:20:57PM -0500, Felipe Balbi wrote:
-> Hi,
->=20
-> here's v3 of am437x sk support. Patches tested on top of next-20140617.
->=20
-> Note that this series was tested with the following extra patches:
->=20
-> http://marc.info/?l=3Dlinux-omap&m=3D140299431732700&w=3D2
-> http://marc.info/?l=3Dlinux-omap&m=3D140300146503126&w=3D2
-> http://marc.info/?l=3Dlinux-omap&m=3D140299231232123
-> http://marc.info/?l=3Dlinux-omap&m=3D140310472709968&w=3D2
-> http://marc.info/?l=3Dlinux-omap&m=3D140310471409959&w=3D2
->=20
-> A branch is also available with all these patches at [1].
->=20
-> [1] http://git.kernel.org/cgit/linux/kernel/git/balbi/usb.git/log/?h=3Dam=
-437x-starterkit
->=20
-> Felipe Balbi (2):
->   arm: dts: am4372: let boards access all nodes through phandles
->   arm: dts: add support for AM437x StarterKit
+>>>>> +	/* set the controller speed */
+>>>>> +	writel(0x31, ctrl_reg + PORT_SCR_CTL);
 
-ping on this series, it has been tested by several folks and still no
-updates from anybody in the DT land.
+>>>>     Value undocumented? Or is this the SATA SControl register by c=
+hance?
 
---=20
-balbi
+>>> Some magic is still there...
 
---SUOF0GtieIMvvwua
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+>> I guess Sergei was referring to AHCI spec here.
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+    Actually, even to the SATA specs. :-)
 
-iQIcBAEBAgAGBQJTsZQ3AAoJEIaOsuA1yqRE3oQQAIJLCr/mtQmrjDhoYuRmzOJJ
-ndO3BscqveeEP2MGxNtsI6M+hSn90TlaM99pa8tS64XsxGdI/i3h/kPdSK7sN8K+
-nwKX727p/cgUwk9p+5z8kbM5WirzesepC5D/Zlg8KjnLAmxVpVKnvs9hkdUlFH/E
-oGTaDySIiX3iZixl4TfdVdXO4RUXbdTpW0waGRPPZrd/Z0xaYcQxW5U72/X1m9wO
-RZlou39FqBNFPQ7KNt52BfkasQkYVLh6LP0SL5rg0zPmXHHxa1amiygmYQDHV/Le
-TB+bjUJ1eFppsUfLYwQg3JFUOOFaB1KMuNrfcxbotG2XSwwQLLPsAUC0pPybot5V
-i7Ru7PXHs3KkPi+WmwAfhjiTpO4i3CSQoHCCfxdqtBKWBEUAX/UpFerhdcVdnsX/
-2uKzLYn4ImNi3KQfNI5lM/672E/B3PRcCzehbYR0BwEwltkqBagSPfTcFUT+SP/3
-xVTBs4Tar3Q+N1ZPZ0pZk2sLC61u5W5WhXRtdGi9k6fIOwR5ZogHd8McoDOnSUXq
-wXKgXvg2nq15WwBcTC5B2byuWwIsFjeE3hHTYV3066dTKXLJtf6j2KMO1XpDLGmg
-5ovL9nhg3z5FoLmlLCEaKwoM5Pw5Au4vDlO48V+uFp1WenpNz9CNpEu81OBNLRz5
-smAnqXY7GFYS8SamOhCN
-=Kkmj
------END PGP SIGNATURE-----
+>> PORT_SCR bits are documented in AHCI spec as:
 
---SUOF0GtieIMvvwua--
+>> 7:4 =3D 0x3 Limit speed negotiation to a rate not greater than Gen3
+>>            communication rate.
+
+>> 3:0 =3D 0x1 Perform interface communication sequence [...]. This is
+>>            functionally equivalent to a hard reset [...].
+
+>> So, the question is: Should we really need to reset controller in th=
+e
+>> PHY driver or is it already done in AHCI common code? At least we
+>> should change the comment to something like
+>> /* set Gen3 controller speed and perform hard reset */
+
+> I just checked, the AHCI common code has a function to do the reset:
+> ahci_reset_controller(). As of the max speed negociation rate, I did =
+not
+> see it in the common AHCI functions.
+
+    You've looked in a wrong place -- since SControl is a standard *SAT=
+A*=20
+register, it gets read/written by the libata core. The low-level driver=
+ only=20
+provides scr_{read|write}() methods.
+
+> The eSATA port on the Berlin2Q works without this line, but it may be=
+ a
+> good idea to keep the max speed negociation rate.
+
+    It's usually libata's task to negotiate the SATA speed.
+
+> Anyway, we can remove the reset part. Nice catch!
+
+    Thanks.
+
+> Antoine
+
+WBR, Sergei
+
