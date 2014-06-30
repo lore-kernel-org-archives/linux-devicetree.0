@@ -1,62 +1,136 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCHv5 0/4] iio: adc: exynos_adc: Support Exynos3250 ADC and
- code clean
-Date: Mon, 30 Jun 2014 10:51:39 +0900
-Message-ID: <53B0C2AB.4030201@samsung.com>
-References: <1403843406-28229-1-git-send-email-cw00.choi@samsung.com>
- <53AFFD69.8060702@kernel.org>
+From: Vincent Yang <vincent.yang.fujitsu@gmail.com>
+Subject: Re: [RFC PATCH v2 4/6] mmc: sdhci: host: add new f_sdh30
+Date: Mon, 30 Jun 2014 10:10:21 +0800
+Message-ID: <CAOEd-H2M7h1=Yd6m2wLJsSV55TtCaKBtXjHmzBiJ51kW-jzTTA@mail.gmail.com>
+References: <1403763812-5495-1-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<1403763812-5495-5-git-send-email-Vincent.Yang@tw.fujitsu.com>
+	<20140626110351.GN15240@leverpostej>
+	<CAOEd-H3+MwT3DMqMO0XHaZQqYAN0zaQqRMjC_UjyJn5ZwCaMoQ@mail.gmail.com>
+	<20140627101248.GD7262@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <53AFFD69.8060702@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: kgene.kim@samsung.com
-Cc: Jonathan Cameron <jic23@kernel.org>, ch.naveen@samsung.com, t.figa@samsung.com, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rdunlap@infradead.org, sachin.kamat@linaro.org, kyungmin.park@samsung.com, linux-iio@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140627101248.GD7262@leverpostej>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: "chris@printf.net" <chris@printf.net>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "anton@enomsg.org" <anton@enomsg.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "patches@linaro.org" <patches@linaro.org>, "andy.green@linaro.org" <andy.green@linaro.org>, "jaswinder.singh@linaro.org" <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Dear Kukjin,
+2014-06-27 18:12 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+> On Fri, Jun 27, 2014 at 04:32:21AM +0100, Vincent Yang wrote:
+>> 2014-06-26 19:03 GMT+08:00 Mark Rutland <mark.rutland@arm.com>:
+>> > On Thu, Jun 26, 2014 at 07:23:30AM +0100, Vincent Yang wrote:
+>> >> This patch adds new host controller driver for
+>> >> Fujitsu SDHCI controller f_sdh30.
+>> >>
+>> >> Signed-off-by: Vincent Yang <Vincent.Yang@tw.fujitsu.com>
+>> >> ---
+>> >>  .../devicetree/bindings/mmc/sdhci-fujitsu.txt      |  35 +++
+>> >>  drivers/mmc/host/Kconfig                           |   7 +
+>> >>  drivers/mmc/host/Makefile                          |   1 +
+>> >>  drivers/mmc/host/sdhci_f_sdh30.c                   | 346 +++++++++++++++++++++
+>> >>  drivers/mmc/host/sdhci_f_sdh30.h                   |  40 +++
+>> >>  5 files changed, 429 insertions(+)
+>> >>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.c
+>> >>  create mode 100644 drivers/mmc/host/sdhci_f_sdh30.h
+>> >>
+>> >> diff --git a/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>> >> new file mode 100644
+>> >> index 0000000..40add438
+>> >> --- /dev/null
+>> >> +++ b/Documentation/devicetree/bindings/mmc/sdhci-fujitsu.txt
+>> >> @@ -0,0 +1,35 @@
+>> >> +* Fujitsu SDHCI controller
+>> >> +
+>> >> +This file documents differences between the core properties in mmc.txt
+>> >> +and the properties used by the sdhci_f_sdh30 driver.
+>> >> +
+>> >> +Required properties:
+>> >> +- compatible: "fujitsu,f_sdh30"
+>> >
+>> > Please use '-' rather than '_' in compatible strings.
+>>
+>> Hi Mark,
+>> Yes, I'll update it to '-' in next version.
+>>
+>> >
+>> > This seems to be the name of the driver. What is the precise name of the
+>> > IP block?
+>>
+>> The name of the IP block is "F_SDH30".
+>> That's why it uses "fujitsu,f_sdh30"
+>
+> Hmm. I'd still be tempted to use "fujitsu,f-sdh30".
 
-On 06/29/2014 08:50 PM, Jonathan Cameron wrote:
-> On 27/06/14 05:30, Chanwoo Choi wrote:
->> Changes from v4:
->> - Use 'exynos_adc_data' structure instead of 'exynos_adc_ops' structure
->>    and remove enum variable of ADC version
->> - Fix wrong name of special clock (sclk_tsadc -> sclk_adc)
->> - Add reviewed message by Naveen Krishna Chatradhi
->> - Add functions for ADC clock control
->>
->> Changes from v3:
->> - Add new 'exynos_adc_ops' structure to improve readability according to
->>   Tomasz Figa comment[1]
->>   [1] https://lkml.org/lkml/2014/4/16/238
->> - Add new 'exynos3250-adc-v2' compatible string to support Exynos3250 ADC
->> - Fix wrong compaitlbe string of ADC in Exynos3250 dtsi file
->>
->> Changes from v2:
->> - Check return value of clock function to deal with error exception
->> - Fix minor coding style to improve readability
->>
->> Changes from v1:
->> - Add new "samsung,exynos-adc-v3" compatible to support Exynos3250 ADC
->> - Add a patch about DT binding documentation
->>
->> Chanwoo Choi (4):
->>    iio: adc: exynos_adc: Add exynos_adc_data structure to improve readability
->>    iio: adc: exynos_adc: Control special clock of ADC to support Exynos3250 ADC
->>    iio: devicetree: Add DT binding documentation for Exynos3250 ADC
->>    ARM: dts: Fix wrong compatible string for Exynos3250 ADC
->>
->>   .../devicetree/bindings/arm/samsung/exynos-adc.txt |  26 +-
->>   arch/arm/boot/dts/exynos3250.dtsi                  |   4 +-
->>   drivers/iio/adc/exynos_adc.c                       | 326 +++++++++++++++------
->>   3 files changed, 268 insertions(+), 88 deletions(-)
->>
-> I am happy with this series, but given it touches some exynos bindings, I would
-> like an ack from Kukjin Kim (or according to MAINTAINERS Ben Dooks) before taking it
-> all through IIO.
+Hi Mark,
+Sure, I'll update it to "fujitsu,f-sdh30" in next version.
 
-Could you please review this patchset about exynos dtsi and bindings?
+>
+>> >
+>> > [...]
+>> >
+>> >> +       if (!of_property_read_u32(pdev->dev.of_node, "vendor-hs200",
+>> >> +                                 &priv->vendor_hs200))
+>> >> +               dev_info(dev, "Applying vendor-hs200 setting\n");
+>> >> +       else
+>> >> +               priv->vendor_hs200 = 0;
+>> >
+>> > This wasn't in the binding document, and a grep for "vendor-hs200" in a
+>> > v3.16-rc2 tree found me nothing.
+>> >
+>> > Please document this.
+>>
+>> Yes, it is a setting for a vendor specific register.
+>> I'll update it in next version.
+>
+> It would be nice to know exactly what this is. We usually shy clear of
+> placing register values in dt. I can wait until the next posting if
+> you're goin to document that.
 
-Best Regards,
-Chanwoo Choi
+I'm thinking about removing this register value in dt.
+I'll update it in next version.
+
+>
+>> >> +       if (!of_property_read_u32(pdev->dev.of_node, "bus-width", &bus_width)) {
+>> >> +               if (bus_width == 8) {
+>> >> +                       dev_info(dev, "Applying 8 bit bus width\n");
+>> >> +                       host->mmc->caps |= MMC_CAP_8_BIT_DATA;
+>> >> +               }
+>> >> +       }
+>> >
+>> > What if bus-width is not 8, or is not present?
+>>
+>> In both cases, it will not touch host->mmc->caps at all. Then sdhci_add_host()
+>> will handle it and set MMC_CAP_4_BIT_DATA as default:
+>>
+>> [...]
+>> /*
+>> * A controller may support 8-bit width, but the board itself
+>> * might not have the pins brought out.  Boards that support
+>> * 8-bit width must set "mmc->caps |= MMC_CAP_8_BIT_DATA;" in
+>> * their platform code before calling sdhci_add_host(), and we
+>> * won't assume 8-bit width for hosts without that CAP.
+>> */
+>> if (!(host->quirks & SDHCI_QUIRK_FORCE_1_BIT_DATA))
+>> mmc->caps |= MMC_CAP_4_BIT_DATA;
+>
+> Ok, but does it make sense for a dts to have:
+>
+>         bus-width = <1>;
+>
+> If so, we should presumably do something.
+>
+> If not, we should at least print a warning that the dtb doesn't make
+> sense.
+
+I'll print a warning for invalid values in next version.
+Thanks a lot for your review!
+
+
+Best regards,
+Vincent Yang
+
+>
+> Cheers,
+> Mark.
