@@ -1,77 +1,95 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
- CPU frequency
-Date: Mon, 30 Jun 2014 17:06:16 +0200
-Message-ID: <CAKfTPtDvQJ5i=t8FN0gLQex0yAC4NNgewTnGKdiCeGk7nQwZYg@mail.gmail.com>
-References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
- <1404123143-13041-2-git-send-email-maxime.ripard@free-electrons.com>
- <20140630102934.GV32514@n2100.arm.linux.org.uk> <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
- <20140630124919.GC28647@lukather> <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
- <20140630140146.GD28647@lukather> <CAKfTPtAu+mSVO8dvg_Z6w_nYWndap+FY5VGKeg-0pae_4JqR=A@mail.gmail.com>
- <20140630145847.GE28647@lukather>
+From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+Subject: Re: [PATCH 11/16] ARM: mvebu: dts: Add CA9 MPcore SoC Controller
+ node
+Date: Mon, 30 Jun 2014 17:37:55 +0200
+Message-ID: <20140630173755.32793586@free-electrons.com>
+References: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>
+	<1403875377-940-12-git-send-email-gregory.clement@free-electrons.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140630145847.GE28647@lukather>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <1403875377-940-12-git-send-email-gregory.clement@free-electrons.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@free-electrons.com>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 30 June 2014 16:58, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
-> On Mon, Jun 30, 2014 at 04:48:35PM +0200, Vincent Guittot wrote:
->> On 30 June 2014 16:01, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
->> > On Mon, Jun 30, 2014 at 03:27:21PM +0200, Vincent Guittot wrote:
->> >> >> >> -             rate = of_get_property(cn, "clock-frequency", &len);
->> >> >> >> -             if (!rate || len != 4) {
->> >> >> >> -                     pr_err("%s missing clock-frequency property\n",
->> >> >> >> -                             cn->full_name);
->> >> >> >> +             clk = of_clk_get(cn, 0);
->> >> >> >> +             if (!IS_ERR(clk))
->> >> >> >> +                     rate = clk_get_rate(clk);
->> >> >>
->> >> >> We need the max frequency as it will be used to weight the different
->> >> >> CPUs capacity. How do you ensure that the current clock rate is the
->> >> >> max one ?
->> >> >
->> >> > Hmm, the clock-frequency attribute in the ePAPR is defined at the
->> >> > current CPU frequency, not the max one.
->> >>
->> >> What means current frequency in device tree when DVFS is involved ?
->> >
->> > The ePAPR states that clock-frequency is supposed to be "the current
->> > clock speed of the CPU in Hertz". It's exactly what my patch add.
->> >
->> > Now, you're right, DVFS would be an issue here with clock-frequency,
->> > but this patch actually makes it easier to deal with, since you only
->> > get a reference to a clock, and you can get its rate at any given
->> > time.
->>
->> and what about using clk_round_rate(clk, ULONG_MAX) ?
->
-> Well, the clock itself might generate a frequency higher that what the
-> CPU can run at, so I'm not sure it's a valid assumption.
+Gregory,
 
-yes, you're right
+On Fri, 27 Jun 2014 15:22:52 +0200, Gregory CLEMENT wrote:
+> The CA9 MPcore SoC Control block allows to do some configuration that
+> the SoC could use for a specific use case. In most cases the defaults
+> case is enough. However there is few exception: for cpuidle we need to
+> use the CA9 MPcore Reset Control register.
 
->
->> We will not be dependent of when we parse DT
->
-> You lost me there. clk_round_rate and clk_get_rate are available at
-> the same time in the boot process, aren't they?
+I'd reword this to something like:
 
-yes, but  clk_round_rate(clk, ULONG_MAX) will return the max frequency
-and not the current one. But as you mentioned, it doesn't ensure that
-it's a possible frequency for the core
+"""
+The CA9 MPcore SoC Control block is a set of registers that allows to
+configure certain internal aspects of the core blocks of the SoC
+(Cortex-A9, L2 cache controller, etc.). In most cases, the default
+values are fine so they aren't many reasons to touch those registers,
+but there is one exception: to support cpuidle on Armada 38x, we need
+to modify the value of the CA9 MPcore Reset Control register.
 
->
-> Maxime
->
-> --
-> Maxime Ripard, Free Electrons
-> Embedded Linux, Kernel and Android engineering
-> http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+Therefore, this commit adds a new Device Tree binding for this hardware
+block, and uses this new binding for the Armada 38x Device Tree file.
+
+"""
+
+> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
+> Cc: devicetree@vger.kernel.org
+> ---
+>  .../devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt | 14 ++++++++++++++
+>  arch/arm/boot/dts/armada-38x.dtsi                          |  5 +++++
+>  2 files changed, 19 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+> new file mode 100644
+> index 000000000000..0a2df51ba560
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
+> @@ -0,0 +1,14 @@
+> +Marvell Armada 38x CA9 MPcore SoC Controller
+> +============================================
+> +
+> +Required properties:
+> +
+> +- compatible: Should be "marvell,armada-380-mpcore-soc-ctrl".
+> +
+> +- reg: should be register base and length as documented in the
+
+should be *the* register base and length
+
+> +  datasheet for the CA9 MPcore SoC Control registers
+> +
+> +mpcore-soc-ctrl@20d20 {
+> +	compatible = "marvell,armada-380-mpcore-soc-ctrl";
+> +	reg = <0x20d20 0x6c>;
+> +};
+> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
+> index 689fa1a46728..242d0ecc99f3 100644
+> --- a/arch/arm/boot/dts/armada-38x.dtsi
+> +++ b/arch/arm/boot/dts/armada-38x.dtsi
+> @@ -286,6 +286,11 @@
+>  				reg = <0x20800 0x10>;
+>  			};
+>  
+> +			mpcore-soc-ctrl@20d20 {
+> +				compatible = "marvell,armada-380-mpcore-soc-ctrl";
+> +				reg = <0x20d20 0x6c>;
+> +			};
+> +
+>  			coherency-fabric@21010 {
+>  				compatible = "marvell,armada-380-coherency-fabric";
+>  				reg = <0x21010 0x1c>;
+
+With those fixed:
+
+Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
+-- 
+Thomas Petazzoni, CTO, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
