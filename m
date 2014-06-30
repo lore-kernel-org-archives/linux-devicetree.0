@@ -1,90 +1,44 @@
-From: Ajay kumar <ajaynumb@gmail.com>
-Subject: Re: [PATCH V3 1/7] drm/exynos: Support DP CLKCON register in FIMD driver
-Date: Mon, 30 Jun 2014 14:31:50 +0530
-Message-ID: <CAEC9eQOBsnCG3PT_vEkEBt46erXPK_zZE80E1-ivpbGn+YmVrA@mail.gmail.com>
-References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
-	<1403863946-15492-2-git-send-email-ajaykumar.rs@samsung.com>
-	<53AD53E4.2020706@samsung.com>
-	<CAEC9eQMXEEq_VBiZY+BHUuVWvbi7q4MkbbQ-XkcigtZBdgwO9w@mail.gmail.com>
-	<53AD6734.9080909@samsung.com>
-	<CAEC9eQPY+W_Wni7PLtWkHr0QrHW+G8x_+XWapV5tDiKebn=zpA@mail.gmail.com>
-	<00a501cf9400$9d396950$d7ac3bf0$%han@samsung.com>
-	<53B0F634.7090200@samsung.com>
+From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH resend v3 0/2] mmc: Add SDIO function devicetree
+ subnode parsing
+Date: Mon, 30 Jun 2014 11:07:23 +0200
+Message-ID: <1404119245-5839-1-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53B0F634.7090200@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: InKi Dae <inki.dae@samsung.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, Jingoo Han <jg1.han@samsung.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Sean Paul <seanpaul@google.com>, sunil joshi <joshi@samsung.com>, Prashanth G <prashanth.g@samsung.com>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <linux-sunxi+bncBDRZXY4CYYORBWWRYSOQKGQE45GEWKI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Chris Ball <chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Sascha Hauer <s.hauer-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Inki,
+Hi All,
 
-On Mon, Jun 30, 2014 at 11:01 AM, Andrzej Hajda <a.hajda@samsung.com> wrote:
-> On 06/30/2014 03:14 AM, Jingoo Han wrote:
->> On Friday, June 27, 2014 10:03 PM, Ajay kumar wrote:
->>> On Fri, Jun 27, 2014 at 6:14 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>> On 06/27/2014 01:48 PM, Ajay kumar wrote:
->>>>> On Fri, Jun 27, 2014 at 4:52 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>>> +CC DT
->>>>>>
->>>>>> On 06/27/2014 12:12 PM, Ajay Kumar wrote:
->>>>>>> Add the missing setting for DP CLKCON register.
->>>>>>>
->>>>>>> This register is present on Exynos5 based FIMD controllers,
->>>>>>> and needs to be set if we are using DP.
->>>>>>>
->>>>>>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->>>>>>> ---
->>>>>>>  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
->>>>>>>  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   23 ++++++++++++++++++++
->>>>>>>  include/video/samsung_fimd.h                       |    4 ++++
->>>>>>>  3 files changed, 28 insertions(+)
->> [.....]
->>
->>>>>>>  static const struct of_device_id fimd_driver_dt_match[] = {
->>>>>>> @@ -331,6 +341,10 @@ static void fimd_commit(struct exynos_drm_manager *mgr)
->>>>>>>       if (clkdiv > 1)
->>>>>>>               val |= VIDCON0_CLKVAL_F(clkdiv - 1) | VIDCON0_CLKDIR;
->>>>>>>
->>>>>>> +     if (ctx->driver_data->has_dp_clkcon &&
->>>>>>> +             ctx->exynos_fimd_output_type == EXYNOS_FIMD_OUTPUT_DP)
->>>>>>> +             writel(DP_CLK_ENABLE, ctx->regs + DP_CLKCON);
->>>>>>> +
->>>>>>>       writel(val, ctx->regs + VIDCON0);
->>>> New code should not split VIDCON0 related code.It should be moved few
->>>> lines above or few lines below.
->>> Ok, for better readability.
->>>
->>>> Anyway this code should be rather placed in power related functions of
->>>> dp encoder, as it enables dp. The only question
->>>> is if DP_CLKCON update can be performed after VIDCON0 update. If yes the
->>>> solution of the whole problem
->>> I will check this.
->>>
->>>> seems to be simple:
->>>> - fimd should provide function fimd_set_dp_clk_gate or sth similar,
->>>> - this function should be called in exynos_dp_poweron/exynos_dp_poweroff.
->>>> I hope I have not missed anything this time.
->>> But, it won't look good to export a FIMD function which sets a FIMD register,
->>> and call it in DP driver!
->>> What does Inki/Jingoo have to say about this?
->> I agree with Ajay Kumar's opinion.
->> It doesn't look good to export the function to set FIMD register
->> and call it by DP driver.
->
-> DP_CLKCON HW register shows clearly there is direct hardware dependency
-> between DP and FIMD.
-> Reflecting this dependency in drivers is just a consequence of HW design.
-> Moreover the register gates also clock for MDNIE, this solution can be
-> used there as well.
->
-> Anyway the most important is that we should avoid adding DT bindings for
-> things we can evaluate in drivers.
+Here is a resend of 3 of my submission of Sascha Hauer's
+"mmc: Add SDIO function devicetree subnode parsing" patch.
 
-Which approach do you think is better?
-I shall make the patch for the same!
+Can we please get some movement on these patches, either a review specifying
+why this cannot go upstream, or else queuing it up for next / 3.17 ?
 
-Thanks and regards,
-Ajay Kumar
+Changes since v1:
+- Submit as a stand-alone patch-set, rather then as part of a larger oob irq
+  support patchset crossing multiple subsystems
+- Add a patch to document the already existing practice of using slot subnodes
+- Split of the dt bindings documentation for sdio-func child nodes into its
+  own patch
+- Add a preparation patch, setting slot_no where relevant
+- And finally the "Add SDIO function devicetree subnode parsing" patch itself
+  has been modified to look for the sdio function childnodes under a slot node
+  instead of directly under the host node
+
+Changes since v2:
+- Drop the slot subnodes again, and drop the 2 slot subnodes patches
+
+Regards,
+
+Hans 
