@@ -1,100 +1,54 @@
-From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-Subject: Re: [PATCH v3 1/4] dt: bindings: add bindings for
- Broadcom bcm43xx sdio devices
-Date: Mon, 30 Jun 2014 10:31:21 +0200
-Message-ID: <53B12059.50808@broadcom.com>
-References: <1404051421-24377-1-git-send-email-hdegoede@redhat.com> <1404051421-24377-2-git-send-email-hdegoede@redhat.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v2 2/3] usb: gadget: pxa27x_udc device-tree documentation
+Date: Mon, 30 Jun 2014 09:49:13 +0100
+Message-ID: <20140630084913.GO7262@leverpostej>
+References: <1403427899-32154-1-git-send-email-robert.jarzmik@free.fr>
+ <1403427899-32154-2-git-send-email-robert.jarzmik@free.fr>
+ <20140625103357.GC14495@leverpostej>
+ <87zjh07okm.fsf@free.fr>
+ <20140626085950.GJ15240@leverpostej>
+ <87fviooygi.fsf@free.fr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCKLZOXH5AIBBXOAYSOQKGQEXQXSFKA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1404051421-24377-2-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, "John W. Linville" <linville-2XuSBdqkA4R54TAoqtyWWQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <87fviooygi.fsf-GANU6spQydw@public.gmane.org>
+Sender: linux-usb-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: Felipe Balbi <balbi-l0cyMroinI0@public.gmane.org>, "linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 29-06-14 16:16, Hans de Goede wrote:
-> From: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
+On Sun, Jun 29, 2014 at 10:29:49AM +0100, Robert Jarzmik wrote:
+> Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org> writes:
 > 
-> The Broadcom bcm43xx sdio devices are fullmac devices that may be
-> integrated in ARM platforms. Currently, the brcmfmac driver for
-> these devices support use of platform data. This patch specifies
-> the bindings that allow this platform data to be expressed in the
-> devicetree.
-> 
-> Reviewed-by: Hante Meuleman <meuleman-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Franky (Zhenhui) Lin <frankyl-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Daniel (Deognyoun) Kim <dekim-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Reviewed-by: Pieter-Paul Giesberts <pieterpg-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> Signed-off-by: Arend van Spriel <arend-dY08KVG/lbpWk0Htik3J/w@public.gmane.org>
-> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: drop clk / reg_on gpio handling, as there is no consensus
->  on how to handle this yet]
-> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: move from bindings/staging to bindings]
-> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-> ---
->  .../bindings/net/wireless/brcm,bcm43xx-fmac.txt    | 41 ++++++++++++++++++++++
->  1 file changed, 41 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> new file mode 100644
-> index 0000000..5dbf169
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/wireless/brcm,bcm43xx-fmac.txt
-> @@ -0,0 +1,41 @@
-> +Broadcom BCM43xx Fullmac wireless SDIO devices
-> +
-> +This node provides properties for controlling the Broadcom wireless device. The
-> +node is expected to be specified as a child node to the SDIO controller that
-> +connects the device to the system.
-> +
-> +Required properties:
-> +
-> + - compatible : Should be "brcm,bcm4329-fmac".
-> +
-> +Optional properties:
-> + - brcm,drive-strength : drive strength used for SDIO pins on device in mA
-> +	(default = 6).
-> + - interrupt-parent : the phandle for the interrupt controller to which the
-> +	device interrupts are connected.
-> + - interrupts : specifies attributes for the out-of-band interrupt (host-wake).
-> +	When not specified the device will use in-band SDIO interrupts.
-> + - interrupt-names : name of the out-of-band interrupt, which must be set
-> +	to "host-wake".
-> +
-> +Example:
-> +
-> +mmc3: mmc@01c12000 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&mmc3_pins_a>;
-> +	vmmc-supply = <&reg_vmmc3>;
-> +	bus-width = <4>;
-> +	non-removable;
-> +	status = "okay";
-> +
-> +	brcmf: bcrmf@1 {
-> +		reg = <1>;
+> > On Wed, Jun 25, 2014 at 08:54:01PM +0100, Robert Jarzmik wrote:
+> >> > The name of the clock input doesn't make sense.
+> >> I don't understand. With [1] does it make any more sense ? If not you'll have to
+> >> expand a bit more the "doesn't make sense".
+> >
+> > My concern is that clock-names is supposed to describe the name of the
+> > input clock line from the view of the IP block. "pxa27x-udc" doesn't
+> > sound like the name of a clock input line from the view of the UDC
+> > block.
+> >
+> > I assume the clock input line you care about has a more specific name
+> > than "pxa27x-udc"?
+> Not as far as I know. The technical reference manual call it "udc clock", so
+> it's even "less" specific ...
 
-I guess the reg property is needed to have this node linked to sdio func
-1 dev, right? I would add it to the list of required properties above
-even if this behaviour is already described in a more generic binding.
+Not from the point of view of the device. The clock-names are namespaced
+to the particular binding, so they're equally specific.
 
-Regards,
-Arend
+Given the above I'd recommend naming the clock "udc" or "udc_clk". That
+doesn't pretend to be overly specific, and matches the TRM.
 
-> +		compatible = "brcm,bcm4329-fmac";
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <10 8>; /* PH10 / EINT10 */
-> +		interrupt-names = "host-wake";
-> +	};
-> +};
-> 
+> Marvell engineers have probably the internal schematics and the name of the
+> clock, but outsiders like me only have "udc" ...
+
+Sure, not having the full specs is always a pain.
+
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe linux-usb" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
