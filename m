@@ -1,7 +1,7 @@
 From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the CPU frequency
-Date: Mon, 30 Jun 2014 12:12:22 +0200
-Message-ID: <1404123143-13041-2-git-send-email-maxime.ripard@free-electrons.com>
+Subject: [PATCH v2 2/2] ARM: sunxi: Add clocks node to the CPU nodes
+Date: Mon, 30 Jun 2014 12:12:23 +0200
+Message-ID: <1404123143-13041-3-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1404123143-13041-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
@@ -10,69 +10,72 @@ To: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann 
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-The Cortex-A7 and Cortex-A15 based SoCs need a clock-frequency property in the
-topology code.
+Setting the clock will make the topology code work, and will remove the
+following error at boot
 
-Allow to use a clock to provide the same information.
+[    0.097194] /cpus/cpu@0 missing clock-frequency property
+[    0.103657] /cpus/cpu@1 missing clock-frequency property
+[    0.110698] /cpus/cpu@2 missing clock-frequency property
+[    0.117132] /cpus/cpu@3 missing clock-frequency property
 
 Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/kernel/topology.c | 25 ++++++++++++++++++-------
- 1 file changed, 18 insertions(+), 7 deletions(-)
+ arch/arm/boot/dts/sun6i-a31.dtsi | 4 ++++
+ arch/arm/boot/dts/sun7i-a20.dtsi | 2 ++
+ 2 files changed, 6 insertions(+)
 
-diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
-index 9d853189028b..268443d88094 100644
---- a/arch/arm/kernel/topology.c
-+++ b/arch/arm/kernel/topology.c
-@@ -11,6 +11,7 @@
-  * for more details.
-  */
+diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
+index a9dfa12eb735..905b84add002 100644
+--- a/arch/arm/boot/dts/sun6i-a31.dtsi
++++ b/arch/arm/boot/dts/sun6i-a31.dtsi
+@@ -34,24 +34,28 @@
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			clocks = <&cpu>;
+ 			reg = <0>;
+ 		};
  
-+#include <linux/clk.h>
- #include <linux/cpu.h>
- #include <linux/cpumask.h>
- #include <linux/export.h>
-@@ -100,8 +101,8 @@ static void __init parse_dt_topology(void)
- 				 GFP_NOWAIT);
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			clocks = <&cpu>;
+ 			reg = <1>;
+ 		};
  
- 	for_each_possible_cpu(cpu) {
--		const u32 *rate;
--		int len;
-+		struct clk *clk;
-+		u32 rate = 0;
+ 		cpu@2 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			clocks = <&cpu>;
+ 			reg = <2>;
+ 		};
  
- 		/* too early to use cpu->of_node */
- 		cn = of_get_cpu_node(cpu, NULL);
-@@ -117,14 +118,24 @@ static void __init parse_dt_topology(void)
- 		if (cpu_eff->compatible == NULL)
- 			continue;
+ 		cpu@3 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			clocks = <&cpu>;
+ 			reg = <3>;
+ 		};
+ 	};
+diff --git a/arch/arm/boot/dts/sun7i-a20.dtsi b/arch/arm/boot/dts/sun7i-a20.dtsi
+index 17823759bdc9..1d263b7f02dc 100644
+--- a/arch/arm/boot/dts/sun7i-a20.dtsi
++++ b/arch/arm/boot/dts/sun7i-a20.dtsi
+@@ -35,12 +35,14 @@
+ 		cpu@0 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			clocks = <&cpu>;
+ 			reg = <0>;
+ 		};
  
--		rate = of_get_property(cn, "clock-frequency", &len);
--		if (!rate || len != 4) {
--			pr_err("%s missing clock-frequency property\n",
--				cn->full_name);
-+		clk = of_clk_get(cn, 0);
-+		if (!IS_ERR(clk))
-+			rate = clk_get_rate(clk);
-+		else
-+			of_property_read_u32(cn, "clock-frequency", &rate);
-+
-+		if (!rate) {
-+			pr_err("%s missing clocks or clock-frequency properties\n",
-+			       cn->full_name);
-+			continue;
-+		}
-+
-+		if (!rate) {
-+			pr_err("%s invalid CPU frequency", cn->full_name);
- 			continue;
- 		}
- 
--		capacity = ((be32_to_cpup(rate)) >> 20) * cpu_eff->efficiency;
-+		capacity = ((rate) >> 20) * cpu_eff->efficiency;
- 
- 		/* Save min capacity of the system */
- 		if (capacity < min_capacity)
+ 		cpu@1 {
+ 			compatible = "arm,cortex-a7";
+ 			device_type = "cpu";
++			clocks = <&cpu>;
+ 			reg = <1>;
+ 		};
+ 	};
 -- 
 2.0.0
 
