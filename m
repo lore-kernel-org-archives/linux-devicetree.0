@@ -1,36 +1,58 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH net v2 3/3] net: stmmac: Improve mcast/ucast filter for all Synopsys EMAC Configurations
-Date: Mon, 30 Jun 2014 08:46:24 +0200
-Message-ID: <4380814.yCFVZiTZxJ@wuerfel>
-References: <1404092110-18667-1-git-send-email-vbridgers2013@gmail.com> <1404092110-18667-4-git-send-email-vbridgers2013@gmail.com>
+From: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Subject: Re: [PATCH 0/4] Migrate PXA27x platforms to clock framework
+Date: Mon, 30 Jun 2014 08:55:15 +0200
+Message-ID: <7034630.fvV46PN35C@wuerfel>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1404092110-18667-4-git-send-email-vbridgers2013@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vince Bridgers <vbridgers2013@gmail.com>
-Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org, peppe.cavallaro@st.com, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org, robh+dt@kernel.org, dinguyen@altera.com, davem@davemloft.net, vbridger@altera.com
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404066744-13416-1-git-send-email-robert.jarzmik-GANU6spQydw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Cc: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sunday 29 June 2014 20:35:10 Vince Bridgers wrote:
-> The synopsys EMAC can be configured for different numbers of multicast hash
-> bins and perfect filter entries at device creation time and there's no way
-> to query this configuration information at runtime. As a result, a devicetree
-> parameter is required in order for the driver to program these filters
-> correctly for a particular device instance. This patch extends the current
-> driver by providing a different multicast filter programming function if
-> different than the currently supported 64 multicast hash bins and 32
-> perfect unicast addresses. This patch is required to correct multicast
-> filtering for the Altera Cyclone V SOC.
+On Sunday 29 June 2014 20:32:20 Robert Jarzmik wrote:
+> As the RFC posted in [1] didn't meet an unrivaled success for
+> review, I'm posting this serie for PXA27x transition to clock
+> framework.
 > 
-> Signed-off-by: Vince Bridgers <vbridgers2013@gmail.com>
+> This transition is needed :
+>  - to enable device-tree drivers port, as clocks are needed almost
+>    everywhere
+>  - to enable the long term multi-platform kernel to support PXA
 > 
+> As I had said before, this serie aims at :
+>  - keeping legacy platforms working (ie. without device-tree)
+>  - enable PXA27x to work with a device-tree kernel, and hence
+>    open the way to drivers conversion
+>  - be robust enough to support pxa25x and pxa3xx later inclusion
+>    with almost no change to clk-pxa-dt.c.
+> 
+> As this serie is holding the rest of the device-tree drivers
+> port, I'd like it to be reviewed, even it's an old unsexy
+> platform.
 
-No objections to the content of the patch, but it would be better to split
-it out into two separate patches: one that does the mechanical prototype
-and formatting changes, and a smaller one that actually introduces the
-functional change. That would make it much easier to review, and to bisect
-potential problems when something goes wrong.
+I have one basic question about this series: if pxa27x gets moved
+to used the common-clk framework but the others (pxa25x, pxa26x,
+pxa3xx, pxa93x) don't, does that imply that they become mutually
+exclusiv at compile-time?
+
+If so, do you plan to first complete all of them before merging
+upstream, or do you intend to have one or more kernel releases
+that don't allow building a combined kernel for all pxa platforms?
+I don't object to doing the latter, but if that is the plan, you
+need to make that very clear in the changelog and have all the
+relevant maintainers agree to that.
+
+Also (for my understanding) when you say that you plan to do
+pxa25x and pxa3xx next, does that include pxa26x and pxa93x?
+I assume it does as they are apparently minor revisions of the
+former, but it's not completely clear from your description.
 
 	Arnd
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
