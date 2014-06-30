@@ -1,180 +1,76 @@
-Return-Path: <pantelis.antoniou@konsulko.com>
-Return-Path: <pantelis.antoniou@konsulko.com>
-From: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
-Subject: [PATCH v6 6/9] of: i2c: Export single device registration method
-Date: Sun, 22 Jun 2014 12:41:50 +0300
-Message-Id: <1403430113-15171-7-git-send-email-pantelis.antoniou@konsulko.com>
-In-Reply-To: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
-References: <1403430113-15171-1-git-send-email-pantelis.antoniou@konsulko.com>
-To: Grant Likely <grant.likely@secretlab.ca>
-Cc: Rob Herring <robherring2@gmail.com>, Stephen Warren <swarren@wwwdotorg.org>, Matt Porter <matt.porter@linaro.org>, Koen Kooi <koen@dominion.thruhere.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Alison Chaiken <Alison_Chaiken@mentor.com>, Dinh Nguyen <dinh.linux@gmail.com>, Jan Lubbe <jluebbe@lasnet.de>, Alexander Sverdlin <alexander.sverdlin@nsn.com>, Michael Stickel <ms@mycable.de>, Guenter Roeck <linux@roeck-us.net>, Dirk Behme <dirk.behme@gmail.com>, Alan Tull <delicious.quinoa@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Michael Bohan <mbohan@codeaurora.org>, Ionut Nicu <ioan.nicu.ext@nsn.com>, Michal Simek <monstr@monstr.eu>, Matt Ranostay <mranostay@gmail.com>, Joel Becker <jlbec@evilplan.org>, devicetree@vger.kernel.org, Wolfram Sang <wsa@the-dreams.de>, linux-i2c@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, Pete Popov <pete.popov@konsulko.com>, Dan Malek <dan.malek@konsulko.com>, Georgi Vlaev <georgi.vlaev@konsulko.com>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Pantelis Antoniou <panto@antoniou-consulting.com>
-List-ID: <devicetree@vger.kernel.org>
+From: Alex Elder <elder@linaro.org>
+Subject: [PATCH] devicetree: bindings: document Broadcom CPU enable method
+Date: Mon, 30 Jun 2014 17:09:45 -0500
+Message-ID: <1404166185-4168-1-git-send-email-elder@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+List-Id: devicetree@vger.kernel.org
 
-Dynamically inserting i2c client device nodes requires the use
-of a single device registration method. Rework and export it.
+Broadcom mobile SoCs use a ROM-implemented holding pen for
+controlled boot of secondary cores.  A special register is
+used to communicate to the ROM that a secondary core should
+start executing kernel code.  This enable method is currently
+used for members of the bcm281xx and bcm21664 SoC families.
 
-Signed-off-by: Pantelis Antoniou <pantelis.antoniou@konsulko.com>
+The use of an enable method also allows the SMP operation vector to
+be assigned as a result of device tree content for these SoCs.
+
+Signed-off-by: Alex Elder <elder@linaro.org>
 ---
- drivers/i2c/i2c-core.c | 99 +++++++++++++++++++++++++++-----------------------
- include/linux/i2c.h    | 10 +++++
- 2 files changed, 64 insertions(+), 45 deletions(-)
+Notes:
+  - This patch was previously posted as part of this series:
+	https://lkml.org/lkml/2014/6/16/580
+  - The binding definition is now found in a separate file rather
+    than embedding it in:
+	Documentation/devicetree/bindings/arm/cpus.txt
 
-diff --git a/drivers/i2c/i2c-core.c b/drivers/i2c/i2c-core.c
-index 7c7f4b8..6e47f73 100644
---- a/drivers/i2c/i2c-core.c
-+++ b/drivers/i2c/i2c-core.c
-@@ -50,6 +50,7 @@
- #include <linux/acpi.h>
- #include <linux/jump_label.h>
- #include <asm/uaccess.h>
-+#include <linux/err.h>
- 
- #include "i2c-core.h"
- 
-@@ -997,63 +998,71 @@ static void i2c_scan_static_board_info(struct i2c_adapter *adapter)
- /* OF support code */
- 
- #if IS_ENABLED(CONFIG_OF)
--static void of_i2c_register_devices(struct i2c_adapter *adap)
-+struct i2c_client *
-+of_i2c_register_device(struct i2c_adapter *adap,
-+		struct device_node *node)
- {
--	void *result;
--	struct device_node *node;
-+	struct i2c_client *result;
-+	struct i2c_board_info info = {};
-+	struct dev_archdata dev_ad = {};
-+	const __be32 *addr;
-+	int len;
- 
--	/* Only register child devices if the adapter has a node pointer set */
--	if (!adap->dev.of_node)
--		return;
-+	dev_dbg(&adap->dev, "of_i2c: register %s\n", node->full_name);
- 
--	dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
-+	if (of_modalias_node(node, info.type, sizeof(info.type)) < 0) {
-+		dev_err(&adap->dev, "of_i2c: modalias failure on %s\n",
-+			node->full_name);
-+		return ERR_PTR(-EINVAL);
-+	}
- 
--	for_each_available_child_of_node(adap->dev.of_node, node) {
--		struct i2c_board_info info = {};
--		struct dev_archdata dev_ad = {};
--		const __be32 *addr;
--		int len;
-+	addr = of_get_property(node, "reg", &len);
-+	if (!addr || (len < sizeof(int))) {
-+		dev_err(&adap->dev, "of_i2c: invalid reg on %s\n",
-+			node->full_name);
-+		return ERR_PTR(-EINVAL);
-+	}
- 
--		dev_dbg(&adap->dev, "of_i2c: register %s\n", node->full_name);
-+	info.addr = be32_to_cpup(addr);
-+	if (info.addr > (1 << 10) - 1) {
-+		dev_err(&adap->dev, "of_i2c: invalid addr=%x on %s\n",
-+			info.addr, node->full_name);
-+		return ERR_PTR(-EINVAL);
-+	}
- 
--		if (of_modalias_node(node, info.type, sizeof(info.type)) < 0) {
--			dev_err(&adap->dev, "of_i2c: modalias failure on %s\n",
--				node->full_name);
--			continue;
--		}
-+	info.irq = irq_of_parse_and_map(node, 0);
-+	info.of_node = of_node_get(node);
-+	info.archdata = &dev_ad;
- 
--		addr = of_get_property(node, "reg", &len);
--		if (!addr || (len < sizeof(int))) {
--			dev_err(&adap->dev, "of_i2c: invalid reg on %s\n",
--				node->full_name);
--			continue;
--		}
-+	if (of_get_property(node, "wakeup-source", NULL))
-+		info.flags |= I2C_CLIENT_WAKE;
- 
--		info.addr = be32_to_cpup(addr);
--		if (info.addr > (1 << 10) - 1) {
--			dev_err(&adap->dev, "of_i2c: invalid addr=%x on %s\n",
--				info.addr, node->full_name);
--			continue;
--		}
-+	request_module("%s%s", I2C_MODULE_PREFIX, info.type);
- 
--		info.irq = irq_of_parse_and_map(node, 0);
--		info.of_node = of_node_get(node);
--		info.archdata = &dev_ad;
-+	result = i2c_new_device(adap, &info);
-+	if (result == NULL) {
-+		dev_err(&adap->dev, "of_i2c: Failure registering %s\n",
-+			node->full_name);
-+		of_node_put(node);
-+		irq_dispose_mapping(info.irq);
-+		return ERR_PTR(-EINVAL);
-+	}
-+	return result;
-+}
-+EXPORT_SYMBOL(of_i2c_register_device);
- 
--		if (of_get_property(node, "wakeup-source", NULL))
--			info.flags |= I2C_CLIENT_WAKE;
-+static void of_i2c_register_devices(struct i2c_adapter *adap)
-+{
-+	struct device_node *node;
- 
--		request_module("%s%s", I2C_MODULE_PREFIX, info.type);
-+	/* Only register child devices if the adapter has a node pointer set */
-+	if (!adap->dev.of_node)
-+		return;
- 
--		result = i2c_new_device(adap, &info);
--		if (result == NULL) {
--			dev_err(&adap->dev, "of_i2c: Failure registering %s\n",
--				node->full_name);
--			of_node_put(node);
--			irq_dispose_mapping(info.irq);
--			continue;
--		}
--	}
-+	dev_dbg(&adap->dev, "of_i2c: walking child nodes\n");
+ .../bindings/arm/bcm/brcm,bcm11351-cpu-method      | 36 ++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
+
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
+new file mode 100644
+index 0000000..8240c02
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
+@@ -0,0 +1,36 @@
++Broadcom Kona Family CPU Enable Method
++--------------------------------------
++This binding defines the enable method used for starting secondary
++CPUs in the following Broadcom SoCs:
++  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664
 +
-+	for_each_available_child_of_node(adap->dev.of_node, node)
-+		of_i2c_register_device(adap, node);
- }
- 
- static int of_dev_node_match(struct device *dev, void *data)
-diff --git a/include/linux/i2c.h b/include/linux/i2c.h
-index b556e0a..22a8f44 100644
---- a/include/linux/i2c.h
-+++ b/include/linux/i2c.h
-@@ -558,6 +558,9 @@ static inline int i2c_adapter_id(struct i2c_adapter *adap)
- #endif /* I2C */
- 
- #if IS_ENABLED(CONFIG_OF)
-+struct i2c_client *
-+of_i2c_register_device(struct i2c_adapter *adap, struct device_node *node);
++The enable method is specified by defining the following required
++properties in the "cpus" device tree node:
++  - enable-method = "brcm,bcm11351-cpu-method";
++  - secondary-boot-reg = <...>;
 +
- /* must call put_device() when done with returned i2c_client device */
- extern struct i2c_client *of_find_i2c_device_by_node(struct device_node *node);
- 
-@@ -566,6 +569,13 @@ extern struct i2c_adapter *of_find_i2c_adapter_by_node(struct device_node *node)
- 
- #else
- 
-+static inline struct i2c_client *
-+of_i2c_register_device(struct i2c_adapter *adap,
-+		struct device_node *node)
-+{
-+	return ERR_PTR(-ENODEV);
-+}
++The secondary-boot-reg property is a u32 value that specifies the
++physical address of the register used to request the ROM holding pen
++code release a secondary CPU.  The value written to the register is
++formed by encoding the target CPU id into the low bits of the
++physical start address it should jump to.
 +
- static inline struct i2c_client *of_find_i2c_device_by_node(struct device_node *node)
- {
- 	return NULL;
++Example:
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "brcm,bcm11351-cpu-method";
++		secondary-boot-reg = <0x3500417c>;
++
++		cpu0: cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0>;
++		};
++
++		cpu1: cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <1>;
++		};
++	};
 -- 
-1.7.12
+1.9.1
