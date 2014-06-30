@@ -1,106 +1,83 @@
-From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
- CPU frequency
-Date: Mon, 30 Jun 2014 12:39:26 +0200
-Message-ID: <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
-References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
- <1404123143-13041-2-git-send-email-maxime.ripard@free-electrons.com> <20140630102934.GV32514@n2100.arm.linux.org.uk>
+From: Neil Zhang <zhangwm@marvell.com>
+Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
+Date: Mon, 30 Jun 2014 03:39:15 -0700
+Message-ID: <9034CBD80F070943B59700D7F8149ED90182308172@SC-VEXCH4.marvell.com>
+References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
+ <20140422103642.GF7484@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
+ <20140423170821.GJ5649@arm.com>
+ <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
+ <5360FB07.5030407@arm.com>
+ <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
+ <20140513184503.GF16388@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A087573F@SC-VEXCH4.marvell.com>
+ <537337F3.4080300@arm.com>
+ <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140630102934.GV32514-l+eeeJia6m9vn6HldHNs0ANdhmdF6hFW@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Neil Zhang <zhangwm@marvell.com>, 'Sudeep Holla' <sudeep.holla@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>
+Cc: "'linux@arm.linux.org.uk'" <linux@arm.linux.org.uk>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 30 June 2014 12:29, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org> wrote:
-> On Mon, Jun 30, 2014 at 12:12:22PM +0200, Maxime Ripard wrote:
->> The Cortex-A7 and Cortex-A15 based SoCs need a clock-frequency property in the
->> topology code.
->>
->> Allow to use a clock to provide the same information.
->>
->> Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
->
-> This looks fine to me, but I don't know this code.  Maybe Vincent Guittot
-> should be on the To: list (added)?
-
-Thanks
-
->
->> ---
->>  arch/arm/kernel/topology.c | 25 ++++++++++++++++++-------
->>  1 file changed, 18 insertions(+), 7 deletions(-)
->>
->> diff --git a/arch/arm/kernel/topology.c b/arch/arm/kernel/topology.c
->> index 9d853189028b..268443d88094 100644
->> --- a/arch/arm/kernel/topology.c
->> +++ b/arch/arm/kernel/topology.c
->> @@ -11,6 +11,7 @@
->>   * for more details.
->>   */
->>
->> +#include <linux/clk.h>
->>  #include <linux/cpu.h>
->>  #include <linux/cpumask.h>
->>  #include <linux/export.h>
->> @@ -100,8 +101,8 @@ static void __init parse_dt_topology(void)
->>                                GFP_NOWAIT);
->>
->>       for_each_possible_cpu(cpu) {
->> -             const u32 *rate;
->> -             int len;
->> +             struct clk *clk;
->> +             u32 rate = 0;
->>
->>               /* too early to use cpu->of_node */
->>               cn = of_get_cpu_node(cpu, NULL);
->> @@ -117,14 +118,24 @@ static void __init parse_dt_topology(void)
->>               if (cpu_eff->compatible == NULL)
->>                       continue;
->>
->> -             rate = of_get_property(cn, "clock-frequency", &len);
->> -             if (!rate || len != 4) {
->> -                     pr_err("%s missing clock-frequency property\n",
->> -                             cn->full_name);
->> +             clk = of_clk_get(cn, 0);
->> +             if (!IS_ERR(clk))
->> +                     rate = clk_get_rate(clk);
-
-We need the max frequency as it will be used to weight the different
-CPUs capacity. How do you ensure that the current clock rate is the
-max one ?
-
-Vincent
-
->> +             else
->> +                     of_property_read_u32(cn, "clock-frequency", &rate);
->> +
->> +             if (!rate) {
->> +                     pr_err("%s missing clocks or clock-frequency properties\n",
->> +                            cn->full_name);
->> +                     continue;
->> +             }
->> +
->> +             if (!rate) {
->> +                     pr_err("%s invalid CPU frequency", cn->full_name);
->>                       continue;
->>               }
->>
->> -             capacity = ((be32_to_cpup(rate)) >> 20) * cpu_eff->efficiency;
->> +             capacity = ((rate) >> 20) * cpu_eff->efficiency;
->>
->>               /* Save min capacity of the system */
->>               if (capacity < min_capacity)
->> --
->> 2.0.0
->>
->
-> --
-> FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-> improving, and getting towards what was expected from it.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+U3VkZWVwICYgV2lsbO+8jA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
+IE5laWwgWmhhbmcNCj4gU2VudDogMjAxNOW5tDXmnIgyMeaXpSAxOTo0Nw0KPiBUbzogJ1N1ZGVl
+cCBIb2xsYSc7IFdpbGwgRGVhY29uDQo+IENjOiAnbGludXhAYXJtLmxpbnV4Lm9yZy51ayc7ICds
+aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcnOw0KPiAnbGludXgta2VybmVsQHZn
+ZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZycNCj4gU3ViamVjdDog
+UkU6IFtQQVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBw
+bSBub3RpZmllcg0KPiANCj4gU3VkZWVw77yMDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
+ZS0tLS0tDQo+ID4gRnJvbTogU3VkZWVwIEhvbGxhIFttYWlsdG86c3VkZWVwLmhvbGxhQGFybS5j
+b21dDQo+ID4gU2VudDogMjAxNOW5tDXmnIgxNOaXpSAxNzozMg0KPiA+IFRvOiBOZWlsIFpoYW5n
+OyBXaWxsIERlYWNvbg0KPiA+IENjOiBTdWRlZXAgSG9sbGE7ICdsaW51eEBhcm0ubGludXgub3Jn
+LnVrJzsNCj4gPiAnbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnJzsNCj4gPiAn
+bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
+ZycNCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBBUk06IHBlcmY6IHNhdmUvcmVzdG9yZSBw
+bXUgcmVnaXN0ZXJzIGluIHBtDQo+ID4gbm90aWZpZXINCj4gPg0KPiA+DQo+ID4NCj4gPiBPbiAx
+NC8wNS8xNCAwMzoyOCwgTmVpbCBaaGFuZyB3cm90ZToNCj4gPiA+PiAtLS0tLU9yaWdpbmFsIE1l
+c3NhZ2UtLS0tLQ0KPiA+ID4+IEZyb206IFdpbGwgRGVhY29uIFttYWlsdG86d2lsbC5kZWFjb25A
+YXJtLmNvbV0NCj4gPiA+PiBTZW50OiAyMDE05bm0NeaciDE05pelIDI6NDUNCj4gPiA+PiBUbzog
+TmVpbCBaaGFuZw0KPiA+ID4+IENjOiBTdWRlZXAgSG9sbGE7ICdsaW51eEBhcm0ubGludXgub3Jn
+LnVrJzsNCj4gPiA+PiAnbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnJzsNCj4g
+PiA+PiAnbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2Vy
+bmVsLm9yZycNCj4gPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBBUk06IHBlcmY6IHNhdmUv
+cmVzdG9yZSBwbXUgcmVnaXN0ZXJzIGluIHBtDQo+ID4gPj4gbm90aWZpZXINCj4gPiA+Pg0KPiA+
+ID4+IE9uIE1vbiwgTWF5IDEyLCAyMDE0IGF0IDExOjIyOjA5QU0gKzAxMDAsIE5laWwgWmhhbmcg
+d3JvdGU6DQo+ID4gPj4+Pj4gVGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciBwb3dlciBkb21h
+aW5zIGlzIHVuZGVyIGRpc2N1c3Npb24NCj4gPiA+Pj4+PiBbMV0NCj4gPiA+Pj4+DQo+ID4gPj4+
+PiBUaGFua3MgZm9yIHRoZSBpbmZvcm1hdGlvbi4NCj4gPiA+Pj4+IEJ1dCBpdCBjdXJyZW50bHkg
+Zm9yIGRldmljZSBvbmx5LCBjb3JlIHJlbGF0ZWQgc3R1ZmYgYXJlIG5vdCBzdXBwb3J0ZWQuDQo+
+ID4gPj4+PiBBbmQgaXMgaXQgcmVhbGx5IGdvb2QgdG8gcmVnaXN0ZXIgcG93ZXIgcHJvdmlkZXIg
+Zm9yIGNvcmUgYW5kIGxldA0KPiA+ID4+Pj4gdmZwIC8gcG11IGV0YyB0byBnZXQgaXQ/DQo+ID4g
+Pj4+Pg0KPiA+ID4+Pg0KPiA+ID4+PiBXaGF0J3MgeW91ciBzdWdnZXN0aW9uIGFib3V0IGl0Pw0K
+PiA+ID4+PiBJcyBpdCBPSyB0aGF0IEkgYWRkIGl0IHVuZGVyIHRoZSBQTVUgbm9kZT8NCj4gPiA+
+Pg0KPiA+ID4+IEkgZG9uJ3QgcmVhbGx5IG1pbmQuIEkganVzdCB3YW50IHRvIGF2b2lkIHJlLWlu
+dmVudGluZyB0aGUgd2hlZWwgaW4NCj4gPiA+PiBhIFBNVS1zcGVjaWZpYyB3YXkgYW5kIGhhdmlu
+ZyB0byBtYWludGFpbiB0aGF0IGNvZGUgZm9yZXZlciBiZWNhdXNlDQo+ID4gPj4gaXQgZW5kZWQg
+dXAgaW4gb3VyIERUIGRlc2NyaXB0aW9uLg0KPiA+ID4+DQo+ID4gPj4gV2lsbA0KPiA+ID4NCj4g
+PiA+IEkgd2lsbCBwcmVwYXJlIGFub3RoZXIgcGF0Y2ggdG8gYWRkIERUIGRlc2NyaXB0aW9uIHVu
+ZGVyIFBNVSBzaW5jZQ0KPiA+ID4gdGhlcmUgaXMgbm8gZ2VuZXJpYyBwb3dlciBkb21haW4gc3Vw
+cG9ydCBmb3IgcG0gbm90aWZpZXIgaWYgbm8gb3RoZXINCj4gPiBjb25jZXJucy4NCj4gPiA+IFdl
+IGNhbiBjaGFuZ2UgdGhlIG1hbm5lciBpZiB0aGVyZSBpcyBnZW5lcmljIHBvd2VyIGRvbWFpbiBz
+dXBwb3J0DQo+ID4gPiBmb3INCj4gPiBwbSBub3RpZmllciBsYXRlci4NCj4gPiA+IFRoYW5rcy4N
+Cj4gPg0KPiA+IE5vLCBwbGVhc2UgZG9uJ3QgYWRkIGFueSBEVCBiaW5kaW5ncyBmb3IgcG93ZXIg
+ZG9tYWlucyBzcGVjaWZpYyB0byBQTVUNCj4gPiBub2RlLg0KPiA+IFdlIGNhbid0IGNoYW5nZSB0
+aGUgRFQgYmluZGluZ3Mgb25jZSBhZGRlZC4NCj4gPg0KPiA+IEFzIEkgcG9pbnRlZCBvdXQgdGhl
+IERUIGJpbmRpbmdzIGZvciBnZW5lcmljIHBvd2VyIGRvbWFpbnMgYXJlIHVuZGVyDQo+ID4gZGlz
+Y3Vzc2lvbi4NCj4gPiBTZWUgaWYgeW91IGNhbiByZXVzZSBpdCwgaWYgbm90IGhlbHAgaW4gZXh0
+ZW5kaW5nIGl0IHNvIHRoYXQgaXQgY2FuIGJlIHVzZWQuDQo+ID4NCj4gDQo+IFNvcnJ5IGZvciBy
+ZXBseSBsYXRlci4NCj4gQXMgSSBzYWlkIGJlZm9yZSB0aGUgdW5kZXIgZGlzY3Vzc2VkIGdlbmVy
+aWMgcG93ZXIgZG9tYWluIGlzIG5vdCBzdWl0YWJsZSBmb3INCj4gQ1BVIHBlcmlwaGVyYWxzIHNp
+bmNlIHRoZXkgYXJlIGFsbCBrbm93biBiZWxvbmcgdG8gQ1BVIG9yIGNsdXN0ZXIgcG93ZXINCj4g
+ZG9tYWluLg0KPiBJZiB3ZSB3YW50IHRvIGZvbGxvdyB0aGUgd2F5IHRoZXkgYXJlIGRpc2N1c3Np
+b24sIHdlIG5lZWQgdG8gcmVnaXN0ZXIgY29yZQ0KPiBhbmQgY2x1c3RlciBwb3dlciBwcm92aWRl
+ciwgYW5kIG5lZWQgdmZwL2dpYy9wbXUgZXRjIHRvIHJlcXVpcmUgdGhlbS4NCj4gSXMgaXQgcmVh
+bGx5IHN1aXRhYmxlPw0KPiANCkRvIHlvdSBoYXZlIGFueSBjb21tZW50cz8NCklmIG5vLCBJIHdv
+dWxkIGxpa2UgdG8gcHV0IGl0IHVuZGVyIFBNVSBub2RlLg0KDQo+ID4gUmVnYXJkcywNCj4gPiBT
+dWRlZXANCj4gPg0KPiA+DQo+IA0KPiBCZXN0IFJlZ2FyZHMsDQo+IE5laWwgWmhhbmcNCg0KQmVz
+dCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
