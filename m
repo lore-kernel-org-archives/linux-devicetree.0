@@ -1,688 +1,265 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v2] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Mon, 30 Jun 2014 12:10:59 -0500
-Message-ID: <1404148259-17305-1-git-send-email-dmurphy@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
+ H2 and M2 xHCI controllers
+Date: Mon, 30 Jun 2014 12:16:57 -0500
+Message-ID: <20140630171657.GH31442@saruman.home>
+References: <539AEC8F.4030003@renesas.com>
+ <20140613142525.GE8319@saruman.home>
+ <CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
+ <20140627154021.GH8069@saruman.home>
+ <CANqRtoTfvM95b1kYNXFj9GmOewt2WPb+4UMqKonkDXC8FZq6Sg@mail.gmail.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-sound-owner@vger.kernel.org>
-Sender: linux-sound-owner@vger.kernel.org
-To: linux-sound@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="zhtSGe8h3+lMyY1M"
+Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CANqRtoTfvM95b1kYNXFj9GmOewt2WPb+4UMqKonkDXC8FZq6Sg@mail.gmail.com>
+Sender: linux-sh-owner@vger.kernel.org
+To: Magnus Damm <magnus.damm@gmail.com>
+Cc: Felipe Balbi <balbi@ti.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Support the TI TAS2552 Class D amplifier.
+--zhtSGe8h3+lMyY1M
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-The TAS2552 is a high efficiency Class-D audio
-power amplifier with advanced battery current
-management and an integrated Class-G boost
-The device constantly measures the
-current and voltage across the load and provides a
-digital stream of this information.
+On Sun, Jun 29, 2014 at 11:33:52PM +0900, Magnus Damm wrote:
+> On Sat, Jun 28, 2014 at 12:40 AM, Felipe Balbi <balbi@ti.com> wrote:
+> > On Wed, Jun 18, 2014 at 02:15:42PM +0900, Magnus Damm wrote:
+> >> Hi Felipe,
+> >>
+> >> On Fri, Jun 13, 2014 at 11:25 PM, Felipe Balbi <balbi@ti.com> wrote:
+> >> > Hi,
+> >> >
+> >> > On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
+> >> >> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
+> >> >> some specific initializations related to the firmware downloading a=
+nd
+> >> >> some specific registers. This patch adds the support for this speci=
+al
+> >> >> configuration as an xHCI quirk executed during probe and start.
+> >> >>
+> >> >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+> >> >> ---
+> >>
+> >> >> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-r=
+car.c
+> >> >> new file mode 100644
+> >> >> index 0000000..ff0d1b4
+> >> >> --- /dev/null
+> >> >> +++ b/drivers/usb/host/xhci-rcar.c
+> >> >> @@ -0,0 +1,148 @@
+> >> >> +/*
+> >> >> + * xHCI host controller driver for R-Car SoCs
+> >> >> + *
+> >> >> + * Copyright (C) 2014 Renesas Electronics Corporation
+> >> >> + *
+> >> >> + * This program is free software; you can redistribute it and/or
+> >> >> + * modify it under the terms of the GNU General Public License
+> >> >> + * version 2 as published by the Free Software Foundation.
+> >> >> + */
+> >> >> +
+> >> >> +#include <linux/firmware.h>
+> >> >> +#include <linux/module.h>
+> >> >> +#include <linux/platform_device.h>
+> >> >> +#include <linux/usb/phy.h>
+> >> >> +
+> >> >> +#include "xhci.h"
+> >> >> +#include "xhci-rcar.h"
+> >> >> +
+> >> >> +#define FIRMWARE_NAME                "r8a779x_usb3_v1.dlmem"
+> >> >> +MODULE_FIRMWARE(FIRMWARE_NAME);
+> >> >> +
+> >> >> +/*** Register Offset ***/
+> >> >> +#define RCAR_USB3_INT_ENA    0x224   /* Interrupt Enable */
+> >> >> +#define RCAR_USB3_DL_CTRL    0x250   /* FW Download Control & Stat=
+us */
+> >> >> +#define RCAR_USB3_FW_DATA0   0x258   /* FW Data0 */
+> >> >> +
+> >> >> +#define RCAR_USB3_LCLK               0xa44   /* LCLK Select */
+> >> >> +#define RCAR_USB3_CONF1              0xa48   /* USB3.0 Configurati=
+on1 */
+> >> >> +#define RCAR_USB3_CONF2              0xa5c   /* USB3.0 Configurati=
+on2 */
+> >> >> +#define RCAR_USB3_CONF3              0xaa8   /* USB3.0 Configurati=
+on3 */
+> >> >> +#define RCAR_USB3_RX_POL     0xab0   /* USB3.0 RX Polarity */
+> >> >> +#define RCAR_USB3_TX_POL     0xab8   /* USB3.0 TX Polarity */
+> >> >> +
+> >> >> +/*** Register Settings ***/
+> >> >> +/* Interrupt Enable */
+> >> >> +#define RCAR_USB3_INT_XHC_ENA        0x00000001
+> >> >> +#define RCAR_USB3_INT_PME_ENA        0x00000002
+> >> >> +#define RCAR_USB3_INT_HSE_ENA        0x00000004
+> >> >> +#define RCAR_USB3_INT_ENA_VAL        (RCAR_USB3_INT_XHC_ENA | \
+> >> >> +                             RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT=
+_HSE_ENA)
+> >> >> +
+> >> >> +/* FW Download Control & Status */
+> >> >> +#define RCAR_USB3_DL_CTRL_ENABLE     0x00000001
+> >> >> +#define RCAR_USB3_DL_CTRL_FW_SUCCESS 0x00000010
+> >> >> +#define RCAR_USB3_DL_CTRL_FW_SET_DATA0       0x00000100
+> >> >> +
+> >> >> +/* LCLK Select */
+> >> >> +#define RCAR_USB3_LCLK_ENA_VAL       0x01030001
+> >> >> +
+> >> >> +/* USB3.0 Configuration */
+> >> >> +#define RCAR_USB3_CONF1_VAL  0x00030204
+> >> >> +#define RCAR_USB3_CONF2_VAL  0x00030300
+> >> >> +#define RCAR_USB3_CONF3_VAL  0x13802007
+> >> >> +
+> >> >> +/* USB3.0 Polarity */
+> >> >> +#define RCAR_USB3_RX_POL_VAL BIT(21)
+> >> >> +#define RCAR_USB3_TX_POL_VAL BIT(4)
+> >> >> +
+> >> >> +void xhci_rcar_start(struct usb_hcd *hcd)
+> >> >> +{
+> >> >> +     u32 temp;
+> >> >> +
+> >> >> +     if (hcd->regs !=3D NULL) {
+> >> >> +             /* Interrupt Enable */
+> >> >> +             temp =3D readl(hcd->regs + RCAR_USB3_INT_ENA);
+> >> >> +             temp |=3D RCAR_USB3_INT_ENA_VAL;
+> >> >> +             writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
+> >> >> +             /* LCLK Select */
+> >> >> +             writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_=
+LCLK);
+> >> >> +             /* USB3.0 Configuration */
+> >> >> +             writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CON=
+F1);
+> >> >> +             writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CON=
+F2);
+> >> >> +             writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CON=
+F3);
+> >> >> +             /* USB3.0 Polarity */
+> >> >> +             writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX=
+_POL);
+> >> >> +             writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX=
+_POL);
+> >> >> +     }
+> >> >> +}
+> >> >> +
+> >> >> +static int xhci_rcar_download_firmware(struct device *dev, void __=
+iomem *regs)
+> >> >> +{
+> >> >> +     const struct firmware *fw;
+> >> >> +     int retval, index, j, time;
+> >> >> +     int timeout =3D 10000;
+> >> >> +     u32 data, val, temp;
+> >> >> +
+> >> >> +     /* request R-Car USB3.0 firmware */
+> >> >> +     retval =3D request_firmware(&fw, FIRMWARE_NAME, dev);
+> >> >> +     if (retval)
+> >> >> +             return retval;
+> >> >> +
+> >> >> +     /* download R-Car USB3.0 firmware */
+> >> >> +     temp =3D readl(regs + RCAR_USB3_DL_CTRL);
+> >> >> +     temp |=3D RCAR_USB3_DL_CTRL_ENABLE;
+> >> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
+> >> >> +
+> >> >> +     for (index =3D 0; index < fw->size; index +=3D 4) {
+> >> >> +             /* to avoid reading beyond the end of the buffer */
+> >> >> +             for (data =3D 0, j =3D 3; j >=3D 0; j--) {
+> >> >> +                     if ((j + index) < fw->size)
+> >> >> +                             data |=3D fw->data[index + j] << (8 *=
+ j);
+> >> >> +             }
+> >> >> +             writel(data, regs + RCAR_USB3_FW_DATA0);
+> >> >> +             temp =3D readl(regs + RCAR_USB3_DL_CTRL);
+> >> >> +             temp |=3D RCAR_USB3_DL_CTRL_FW_SET_DATA0;
+> >> >> +             writel(temp, regs + RCAR_USB3_DL_CTRL);
+> >> >> +
+> >> >> +             for (time =3D 0; time < timeout; time++) {
+> >> >> +                     val =3D readl(regs + RCAR_USB3_DL_CTRL);
+> >> >> +                     if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) =
+=3D=3D 0)
+> >> >> +                             break;
+> >> >> +                     udelay(1);
+> >> >> +             }
+> >> >> +             if (time =3D=3D timeout) {
+> >> >> +                     retval =3D -ETIMEDOUT;
+> >> >> +                     break;
+> >> >> +             }
+> >> >> +     }
+> >> >> +
+> >> >> +     temp =3D readl(regs + RCAR_USB3_DL_CTRL);
+> >> >> +     temp &=3D ~RCAR_USB3_DL_CTRL_ENABLE;
+> >> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
+> >> >> +
+> >> >> +     for (time =3D 0; time < timeout; time++) {
+> >> >> +             val =3D readl(regs + RCAR_USB3_DL_CTRL);
+> >> >> +             if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
+> >> >> +                     retval =3D 0;
+> >> >> +                     break;
+> >> >> +             }
+> >> >> +             udelay(1);
+> >> >> +     }
+> >> >> +     if (time =3D=3D timeout)
+> >> >> +             retval =3D -ETIMEDOUT;
+> >> >> +
+> >> >> +     release_firmware(fw);
+> >> >> +
+> >> >> +     return retval;
+> >> >> +}
+> >> >> +
+> >> >> +/* This function needs to initialize a "phy" of usb before */
+> >> >
+> >> > initializing a PHY looks like something that the PHY layer should do.
+> >> > Why don't you write a PHY driver and teach xhci-core about PHYs ? Th=
+en,
+> >> > more people would benefit.
+> >>
+> >> Could you please clarify what you would like Shimoda-san to do?
+> >>
+> >> Like Ben and Shimoda-san mentioned, there is already a PHY driver
+> >> developed for this SoC. The PHY driver is however shared in various
+> >> ways. For example, on one particular SoC the same PHY driver is
+> >> interfacing to a total of 3 different variants of USB controllers
+> >> where XHCI is one of them. And to make things even more complicated,
+> >> depending on SoC variant the XHCI hardware may or may not be available
+> >> - but the PHY portion is more or less the same.
+> >>
+> >> Putting the firmware loader in the XHCI driver like this at least
+> >> keeps it together with the rest of the XHCI stuff and also makes it
+> >> possible to easily access the XHCI I/O register window for firmware
+> >> loading. Moving the firmware loading to the PHY driver however
+> >> complicates the situation when it comes to Kconfig handling of XHCI
+> >> and PHY driver and also forces the PHY driver to access the XHCI
+> >> hardware I/O registers for firmware loading...
+> >
+> > But the firmware is being loaded into the PHY registers, no ? In that
+> > case, it should sit in the PHY driver.
+>=20
+> The firmware is not loaded into the PHY registers. It is loaded into
+> what is considered XHCI registers by the documentation.
 
-Signed-off-by: Dan Murphy <dmurphy@ti.com>
----
+oh, my bad. I misinterpreted. I withdraw my comment then.
 
-v2 - Address RFC comments- Added regmap, and snd_soc calls
-removed debug code, address checkpatch errors -https://patchwork.kernel.org/patch/4378281/
+--=20
+balbi
 
- .../devicetree/bindings/sound/tas2552.txt          |   22 +
- include/sound/tas2552-plat.h                       |   25 ++
- sound/soc/codecs/Kconfig                           |    5 +
- sound/soc/codecs/Makefile                          |    2 +
- sound/soc/codecs/tas2552.c                         |  462 ++++++++++++++++++++
- sound/soc/codecs/tas2552.h                         |   75 ++++
- 6 files changed, 591 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/tas2552.txt
- create mode 100644 include/sound/tas2552-plat.h
- create mode 100644 sound/soc/codecs/tas2552.c
- create mode 100644 sound/soc/codecs/tas2552.h
+--zhtSGe8h3+lMyY1M
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-diff --git a/Documentation/devicetree/bindings/sound/tas2552.txt b/Documentation/devicetree/bindings/sound/tas2552.txt
-new file mode 100644
-index 0000000..58e931b
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/tas2552.txt
-@@ -0,0 +1,22 @@
-+Texas Instruments - tas2552 Codec module
-+
-+The tas2552 serial control bus communicates through I2C protocols
-+
-+Required properties:
-+
-+- compatible - "string" - One of:
-+    "ti,tas2552" - TAS2552
-+
-+- reg - <int> -  I2C slave address
-+
-+Optional properties:
-+
-+- power-gpio - gpio pin to enable/disable the device
-+
-+Example:
-+
-+tas2552: tas2552@41 {
-+	compatible = "ti,tas2552";
-+	reg = <0x41>;
-+	power-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
-+};
-diff --git a/include/sound/tas2552-plat.h b/include/sound/tas2552-plat.h
-new file mode 100644
-index 0000000..c8120f2
---- /dev/null
-+++ b/include/sound/tas2552-plat.h
-@@ -0,0 +1,25 @@
-+/*
-+ * TAS2552 driver platform header
-+ *
-+ * Copyright (C) 2014 Texas Instruments Inc.
-+ *
-+ * Author: Dan Murphy <dmurphy@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#ifndef TAS2552_PLAT_H
-+#define TAS2552_PLAT_H
-+
-+struct tas2552_platform_data {
-+	int power_gpio;
-+};
-+
-+#endif
-diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
-index 0b9571c..cc09261 100644
---- a/sound/soc/codecs/Kconfig
-+++ b/sound/soc/codecs/Kconfig
-@@ -99,6 +99,7 @@ config SND_SOC_ALL_CODECS
- 	select SND_SOC_TLV320AIC32X4 if I2C
- 	select SND_SOC_TLV320AIC3X if I2C
- 	select SND_SOC_TPA6130A2 if I2C
-+	select SND_SOC_TAS2552 if I2C
- 	select SND_SOC_TLV320DAC33 if I2C
- 	select SND_SOC_TWL4030 if TWL4030_CORE
- 	select SND_SOC_TWL6040 if TWL6040_CORE
-@@ -754,4 +755,8 @@ config SND_SOC_TPA6130A2
- 	tristate "Texas Instruments TPA6130A2 headphone amplifier"
- 	depends on I2C
- 
-+config SND_SOC_TAS2552
-+	tristate "Texas Instruments TAS2552 Mono Audio amplifier"
-+	depends on I2C
-+
- endmenu
-diff --git a/sound/soc/codecs/Makefile b/sound/soc/codecs/Makefile
-index 1bd6e1c..33bc7228 100644
---- a/sound/soc/codecs/Makefile
-+++ b/sound/soc/codecs/Makefile
-@@ -162,6 +162,7 @@ snd-soc-wm-hubs-objs := wm_hubs.o
- # Amp
- snd-soc-max9877-objs := max9877.o
- snd-soc-tpa6130a2-objs := tpa6130a2.o
-+snd-soc-tas2552-objs := tas2552.o
- 
- obj-$(CONFIG_SND_SOC_88PM860X)	+= snd-soc-88pm860x.o
- obj-$(CONFIG_SND_SOC_AB8500_CODEC)	+= snd-soc-ab8500-codec.o
-@@ -325,3 +326,4 @@ obj-$(CONFIG_SND_SOC_WM_HUBS)	+= snd-soc-wm-hubs.o
- # Amp
- obj-$(CONFIG_SND_SOC_MAX9877)	+= snd-soc-max9877.o
- obj-$(CONFIG_SND_SOC_TPA6130A2)	+= snd-soc-tpa6130a2.o
-+obj-$(CONFIG_SND_SOC_TAS2552)	+= snd-soc-tas2552.o
-diff --git a/sound/soc/codecs/tas2552.c b/sound/soc/codecs/tas2552.c
-new file mode 100644
-index 0000000..228d5bb
---- /dev/null
-+++ b/sound/soc/codecs/tas2552.c
-@@ -0,0 +1,462 @@
-+/*
-+ * ALSA SoC Texas Instruments TAS2552 Mono Audio Amplifier
-+ *
-+ * Copyright (C) 2014 Texas Instruments Inc.
-+ *
-+ * Author: Dan Murphy <dmurphy@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/errno.h>
-+#include <linux/device.h>
-+#include <linux/i2c.h>
-+#include <linux/gpio.h>
-+#include <linux/of_gpio.h>
-+#include <linux/regmap.h>
-+#include <linux/slab.h>
-+
-+#include <sound/pcm.h>
-+#include <sound/pcm_params.h>
-+#include <sound/soc.h>
-+#include <sound/soc-dapm.h>
-+#include <sound/tlv.h>
-+#include <sound/tas2552-plat.h>
-+
-+#include "tas2552.h"
-+
-+static struct reg_default tas2552_reg_defs[] = {
-+	{TAS2552_CFG_1, 0x16},
-+	{TAS2552_CFG_3, 0x5E},
-+	{TAS2552_DOUT, 0x00},
-+	{TAS2552_OUTPUT_DATA, 0xC8},
-+	{TAS2552_PDM_CFG, 0x02},
-+	{TAS2552_PGA_GAIN, 0x10},
-+	{TAS2552_BOOST_PT_CTRL, 0x0F},
-+	{TAS2552_LIMIT_LVL_CTRL, 0x0C},
-+	{TAS2552_LIMIT_RATE_HYS, 0x20},
-+	{TAS2552_CFG_2, 0xEA},
-+	{TAS2552_SER_CTRL_1, 0x00},
-+	{TAS2552_SER_CTRL_2, 0x00},
-+	{TAS2552_PLL_CTRL_1, 0x10},
-+	{TAS2552_PLL_CTRL_2, 0x00},
-+	{TAS2552_PLL_CTRL_3, 0x00},
-+	{TAS2552_BTIP, 0x8f},
-+	{TAS2552_BTS_CTRL, 0x80},
-+	{TAS2552_LIMIT_RELEASE, 0x05},
-+	{TAS2552_LIMIT_INT_COUNT, 0x00},
-+	{TAS2552_EDGE_RATE_CTRL, 0x40},
-+	{TAS2552_VBAT_DATA, 0x00},
-+};
-+
-+struct tas2552_data {
-+	struct mutex mutex;
-+	struct snd_soc_codec *codec;
-+	struct regmap *regmap;
-+	struct i2c_client *tas2552_client;
-+	unsigned char regs[TAS2552_VBAT_DATA];
-+	int power_gpio;
-+	u8 power_state:1;
-+};
-+
-+static int tas2552_power(struct tas2552_data *data, u8 power)
-+{
-+	int	ret = 0;
-+
-+	BUG_ON(data->tas2552_client == NULL);
-+
-+	mutex_lock(&data->mutex);
-+	if (power == data->power_state)
-+		goto exit;
-+
-+	if (power) {
-+		if (data->power_gpio >= 0)
-+			gpio_set_value(data->power_gpio, 1);
-+
-+		data->power_state = 1;
-+	} else {
-+		if (data->power_gpio >= 0)
-+			gpio_set_value(data->power_gpio, 0);
-+
-+		data->power_state = 0;
-+	}
-+
-+exit:
-+	mutex_unlock(&data->mutex);
-+	return ret;
-+}
-+
-+static void tas2552_sw_shutdown(struct tas2552_data *tas_data, int sw_shutdown)
-+{
-+	u8 cfg1_reg;
-+
-+	if (sw_shutdown)
-+		cfg1_reg |= (sw_shutdown << 1);
-+	else
-+		cfg1_reg &= ~TAS2552_SWS_MASK;
-+
-+	snd_soc_update_bits(tas_data->codec, TAS2552_CFG_1,
-+						 TAS2552_SWS_MASK, cfg1_reg);
-+}
-+
-+static void tas2552_init(struct snd_soc_codec *codec)
-+{
-+	snd_soc_write(codec, TAS2552_CFG_1, 0x16);
-+	snd_soc_write(codec, TAS2552_CFG_3, 0x5E);
-+	snd_soc_write(codec, TAS2552_DOUT, 0x00);
-+	snd_soc_write(codec, TAS2552_OUTPUT_DATA, 0xC8);
-+	snd_soc_write(codec, TAS2552_PDM_CFG, 0x02);
-+	snd_soc_write(codec, TAS2552_PGA_GAIN, 0x10);
-+	snd_soc_write(codec, TAS2552_BOOST_PT_CTRL, 0x0F);
-+	snd_soc_write(codec, TAS2552_LIMIT_LVL_CTRL, 0x0C);
-+	snd_soc_write(codec, TAS2552_LIMIT_RATE_HYS, 0x20);
-+	snd_soc_write(codec, TAS2552_CFG_2, 0xEA);
-+}
-+
-+static int tas2552_hw_params(struct snd_pcm_substream *substream,
-+			     struct snd_pcm_hw_params *params,
-+			     struct snd_soc_dai *dai)
-+{
-+	u8 wclk_reg;
-+	struct snd_soc_codec *codec = dai->codec;
-+
-+	/* Setting DAC clock dividers based on substream sample rate. */
-+	switch (params_rate(params)) {
-+	case 8000:
-+		wclk_reg = TAS2552_8KHZ;
-+		break;
-+	case 11025:
-+		wclk_reg = TAS2552_11_12KHZ;
-+		break;
-+	case 16000:
-+		wclk_reg = TAS2552_16KHZ;
-+		break;
-+	case 32000:
-+		wclk_reg = TAS2552_32KHZ;
-+		break;
-+	case 22050:
-+	case 24000:
-+		wclk_reg = TAS2552_22_24KHZ;
-+		break;
-+	case 44100:
-+	case 48000:
-+		wclk_reg = TAS2552_44_48KHZ;
-+		break;
-+	case 96000:
-+		wclk_reg = TAS2552_88_96KHZ;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_3, TAS2552_WCLK_MASK, wclk_reg);
-+
-+	return 0;
-+}
-+
-+static int tas2552_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
-+{
-+	u8 serial_format;
-+	struct snd_soc_codec *codec = dai->codec;
-+
-+	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-+	case SND_SOC_DAIFMT_CBS_CFS:
-+		serial_format = 0x00;
-+		break;
-+	case SND_SOC_DAIFMT_CBS_CFM:
-+		serial_format = TAS2552_WORD_CLK_MASK;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFS:
-+		serial_format = TAS2552_BIT_CLK_MASK;
-+		break;
-+	case SND_SOC_DAIFMT_CBM_CFM:
-+		serial_format = (TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK);
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	snd_soc_update_bits(codec, TAS2552_SER_CTRL_1,
-+						(TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK),
-+						serial_format);
-+
-+	switch (fmt & SND_SOC_DAIFMT_FORMAT_MASK) {
-+	case SND_SOC_DAIFMT_I2S:
-+		serial_format = 0x0;
-+		break;
-+	case SND_SOC_DAIFMT_DSP_A:
-+		serial_format = TAS2552_DAIFMT_DSP;
-+		break;
-+	case SND_SOC_DAIFMT_RIGHT_J:
-+		serial_format = TAS2552_DAIFMT_RIGHT_J;
-+		break;
-+	case SND_SOC_DAIFMT_LEFT_J:
-+		serial_format = TAS2552_DAIFMT_LEFT_J;
-+		break;
-+
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	snd_soc_update_bits(codec, TAS2552_SER_CTRL_1, TAS2552_DATA_FORMAT_MASK,
-+						serial_format);
-+
-+	return 0;
-+}
-+
-+static int tas2552_set_dai_sysclk(struct snd_soc_dai *dai, int clk_id,
-+				  unsigned int freq, int dir)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+	struct tas2552_data *data = dev_get_drvdata(dai->dev);
-+
-+	/* Fill in the PLL control registers for J & D
-+	 * PLL_CLK = (.5 * freq * J.D) / 2^p
-+	 * Need to fill in J and D here based on incoming freq
-+	 */
-+
-+	tas2552_sw_shutdown(data, 1);
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE, 0);
-+
-+	snd_soc_write(codec, TAS2552_PLL_CTRL_1, 0x10);
-+	snd_soc_write(codec, TAS2552_PLL_CTRL_2, 0x00);
-+	snd_soc_write(codec, TAS2552_PLL_CTRL_3, 0x00);
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_PLL_ENABLE,
-+						TAS2552_PLL_ENABLE);
-+
-+	tas2552_sw_shutdown(data, 0);
-+
-+	return 0;
-+}
-+
-+static int tas2552_mute(struct snd_soc_dai *dai, int mute)
-+{
-+	u8 cfg1_reg;
-+	struct snd_soc_codec *codec = dai->codec;
-+
-+	if (mute)
-+		cfg1_reg |= TAS2552_MUTE_MASK;
-+	else
-+		cfg1_reg &= ~TAS2552_MUTE_MASK;
-+
-+	snd_soc_update_bits(codec, TAS2552_CFG_1, TAS2552_MUTE_MASK, cfg1_reg);
-+
-+	return 0;
-+}
-+
-+static int tas2552_startup(struct snd_pcm_substream *substream,
-+			   struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+
-+	tas2552_sw_shutdown(tas2552, 1);
-+	tas2552_power(tas2552, 1);
-+
-+	/* Turn on Class D amplifier */
-+	snd_soc_update_bits(codec, TAS2552_CFG_2, TAS2552_CLASSD_EN_MASK,
-+						TAS2552_CLASSD_EN);
-+
-+	tas2552_sw_shutdown(tas2552, 0);
-+
-+	return 0;
-+}
-+
-+static void tas2552_shutdown(struct snd_pcm_substream *substream,
-+			   struct snd_soc_dai *dai)
-+{
-+	struct snd_soc_codec *codec = dai->codec;
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+
-+	tas2552_sw_shutdown(tas2552, 1);
-+	tas2552_power(tas2552, 0);
-+}
-+
-+static struct snd_soc_dai_ops tas2552_speaker_dai_ops = {
-+	.hw_params	= tas2552_hw_params,
-+	.set_sysclk	= tas2552_set_dai_sysclk,
-+	.set_fmt	= tas2552_set_dai_fmt,
-+	.startup	= tas2552_startup,
-+	.shutdown	= tas2552_shutdown,
-+	.digital_mute = tas2552_mute,
-+};
-+
-+/* Formats supported by TAS2552 driver. */
-+#define TAS2552_FORMATS (SNDRV_PCM_FMTBIT_S16_LE | SNDRV_PCM_FMTBIT_S20_3LE |\
-+			 SNDRV_PCM_FMTBIT_S24_LE | SNDRV_PCM_FMTBIT_S32_LE)
-+
-+/* TAS2552 dai structure. */
-+static struct snd_soc_dai_driver tas2552_dai[] = {
-+	{
-+		.name = "tas2552-amplifier",
-+		.playback = {
-+			.stream_name = "Speaker",
-+			.channels_min = 2,
-+			.channels_max = 2,
-+			.rates = SNDRV_PCM_RATE_8000_192000,
-+			.formats = TAS2552_FORMATS,
-+		},
-+		.ops = &tas2552_speaker_dai_ops,
-+	},
-+};
-+
-+/*
-+ * DAC digital volumes. From -7 to 24 dB in 1 dB steps
-+ */
-+static DECLARE_TLV_DB_SCALE(dac_tlv, -7, 100, 24);
-+
-+static const struct snd_kcontrol_new tas2552_snd_controls[] = {
-+	SOC_SINGLE_TLV("Speaker Driver Playback Volume",
-+			 TAS2552_PGA_GAIN, 0, 0x1f, 1, dac_tlv),
-+};
-+
-+static int tas2552_codec_probe(struct snd_soc_codec *codec)
-+{
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+
-+	tas2552->codec = codec;
-+	tas2552_power(tas2552, 1);
-+	tas2552_init(codec);
-+
-+	return 0;
-+}
-+
-+static int tas2552_codec_remove(struct snd_soc_codec *codec)
-+{
-+	struct tas2552_data *tas2552 = snd_soc_codec_get_drvdata(codec);
-+
-+	tas2552_power(tas2552, 0);
-+
-+	return 0;
-+};
-+
-+static struct snd_soc_codec_driver soc_codec_dev_tas2552 = {
-+	.probe = tas2552_codec_probe,
-+	.remove = tas2552_codec_remove,
-+	.controls = tas2552_snd_controls,
-+	.num_controls = ARRAY_SIZE(tas2552_snd_controls),
-+};
-+
-+static const struct regmap_config tas2552_regmap_config = {
-+	.reg_bits = 8,
-+	.val_bits = 8,
-+
-+	.max_register = TAS2552_MAX_REG,
-+	.reg_defaults = tas2552_reg_defs,
-+	.num_reg_defaults = ARRAY_SIZE(tas2552_reg_defs),
-+	.cache_type = REGCACHE_RBTREE,
-+};
-+
-+static int tas2552_probe(struct i2c_client *client,
-+			   const struct i2c_device_id *id)
-+{
-+	struct device *dev;
-+	struct tas2552_data *data;
-+	struct tas2552_platform_data *pdata = client->dev.platform_data;
-+	struct device_node *np = client->dev.of_node;
-+	int ret;
-+
-+	dev = &client->dev;
-+	data = devm_kzalloc(&client->dev, sizeof(*data), GFP_KERNEL);
-+	if (data == NULL)
-+		return -ENOMEM;
-+
-+	if (pdata) {
-+		data->power_gpio = pdata->power_gpio;
-+	} else if (np) {
-+		data->power_gpio = of_get_named_gpio(np, "enable-gpio", 0);
-+	} else {
-+		dev_err(dev, "Platform data not set\n");
-+		return -ENODEV;
-+	}
-+
-+	data->regmap = devm_regmap_init_i2c(client, &tas2552_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		ret = PTR_ERR(data->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	data->tas2552_client = client;
-+	data->regmap = devm_regmap_init_i2c(client, &tas2552_regmap_config);
-+	if (IS_ERR(data->regmap)) {
-+		ret = PTR_ERR(data->regmap);
-+		dev_err(&client->dev, "Failed to allocate register map: %d\n",
-+			ret);
-+		return ret;
-+	}
-+
-+	dev_set_drvdata(&client->dev, data);
-+
-+	mutex_init(&data->mutex);
-+
-+	if (data->power_gpio >= 0) {
-+		ret = devm_gpio_request(dev, data->power_gpio, "tas2552 enable");
-+		if (ret < 0) {
-+			dev_err(dev, "Failed to request power GPIO (%d)\n",
-+				data->power_gpio);
-+			goto err_gpio;
-+		}
-+		gpio_direction_output(data->power_gpio, 0);
-+	}
-+
-+	ret = snd_soc_register_codec(&client->dev,
-+				      &soc_codec_dev_tas2552,
-+				      tas2552_dai, ARRAY_SIZE(tas2552_dai));
-+	if (ret < 0)
-+		dev_err(&client->dev, "Failed to register codec: %d\n", ret);
-+
-+	return 0;
-+
-+err_gpio:
-+	data->tas2552_client = NULL;
-+	return ret;
-+}
-+
-+static int tas2552_i2c_remove(struct i2c_client *client)
-+{
-+	snd_soc_unregister_codec(&client->dev);
-+	return 0;
-+}
-+
-+static const struct i2c_device_id tas2552_id[] = {
-+	{ "tas2552-codec", 0 },
-+	{ }
-+};
-+MODULE_DEVICE_TABLE(i2c, tas2552_id);
-+
-+#if IS_ENABLED(CONFIG_OF)
-+static const struct of_device_id tas2552_of_match[] = {
-+	{ .compatible = "ti,tas2552", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, tas2552_of_match);
-+#endif
-+
-+static struct i2c_driver tas2552_i2c_driver = {
-+	.driver = {
-+		.name = "tas2552-codec",
-+		.owner = THIS_MODULE,
-+		.of_match_table = of_match_ptr(tas2552_of_match),
-+	},
-+	.probe = tas2552_probe,
-+	.remove = tas2552_i2c_remove,
-+	.id_table = tas2552_id,
-+};
-+
-+module_i2c_driver(tas2552_i2c_driver);
-+
-+MODULE_AUTHOR("Dan Muprhy <dmurphy@ti.com>");
-+MODULE_DESCRIPTION("TAS2552 Audio amplifier driver");
-+MODULE_LICENSE("GPL");
-diff --git a/sound/soc/codecs/tas2552.h b/sound/soc/codecs/tas2552.h
-new file mode 100644
-index 0000000..174c64d
---- /dev/null
-+++ b/sound/soc/codecs/tas2552.h
-@@ -0,0 +1,75 @@
-+/*
-+ * ALSA SoC Texas Instruments TAS2552 Mono Audio Amplifier
-+ *
-+ * Copyright (C) 2014 Texas Instruments Inc.
-+ *
-+ * Author: Dan Murphy <dmurphy@ti.com>
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful, but
-+ * WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-+ * General Public License for more details.
-+ */
-+
-+#ifndef __TAS2552_H__
-+#define __TAS2552_H__
-+
-+/* Register Address Map */
-+#define TAS2552_DEVICE_STATUS	0x00
-+#define TAS2552_CFG_1			0x01
-+#define TAS2552_CFG_2			0x02
-+#define TAS2552_CFG_3			0x03
-+#define TAS2552_DOUT			0x04
-+#define TAS2552_SER_CTRL_1		0x05
-+#define TAS2552_SER_CTRL_2		0x06
-+#define TAS2552_OUTPUT_DATA		0x07
-+#define TAS2552_PLL_CTRL_1		0x08
-+#define TAS2552_PLL_CTRL_2		0x09
-+#define TAS2552_PLL_CTRL_3		0x0a
-+#define TAS2552_BTIP			0x0b
-+#define TAS2552_BTS_CTRL		0x0c
-+#define TAS2552_LIMIT_LVL_CTRL	0x0d
-+#define TAS2552_LIMIT_RATE_HYS	0x0e
-+#define TAS2552_LIMIT_RELEASE	0x0f
-+#define TAS2552_LIMIT_INT_COUNT	0x10
-+#define TAS2552_PDM_CFG			0x11
-+#define TAS2552_PGA_GAIN		0x12
-+#define TAS2552_EDGE_RATE_CTRL	0x13
-+#define TAS2552_BOOST_PT_CTRL	0x14
-+#define TAS2552_VER_NUM			0x16
-+#define TAS2552_VBAT_DATA		0x19
-+#define TAS2552_MAX_REG			0x20
-+
-+/* CFG1 Register Masks */
-+#define TAS2552_MUTE_MASK		(1 << 2)
-+#define TAS2552_SWS_MASK		(1 << 1)
-+#define TAS2552_WCLK_MASK		0x07
-+#define TAS2552_CLASSD_EN_MASK	(1 << 7)
-+#define TAS2552_CLASSD_EN		0x80
-+
-+#define TAS2552_PLL_ENABLE		(1 << 3)
-+
-+/* CFG3 Register Masks */
-+#define TAS2552_WORD_CLK_MASK		0x80
-+#define TAS2552_BIT_CLK_MASK		0x40
-+#define TAS2552_DATA_FORMAT_MASK	0x0c
-+
-+#define TAS2552_DAIFMT_DSP			0x04
-+#define TAS2552_DAIFMT_RIGHT_J		0x08
-+#define TAS2552_DAIFMT_LEFT_J		0x0c
-+
-+/* WCLK Dividers */
-+#define TAS2552_8KHZ		0x00
-+#define TAS2552_11_12KHZ	0x01
-+#define TAS2552_16KHZ		0x02
-+#define TAS2552_22_24KHZ	0x03
-+#define TAS2552_32KHZ		0x04
-+#define TAS2552_44_48KHZ	0x05
-+#define TAS2552_88_96KHZ	0x06
-+#define TAS2552_176_192KHZ	0x07
-+
-+#endif
--- 
-1.7.9.5
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iQIcBAEBAgAGBQJTsZuJAAoJEIaOsuA1yqREKiAP/jM8TunZqtaNmnwLXEi+ZdlR
+AV7HXPIta+mXYc0LQpErsQV4AeIuy0mrc8AsoaG4OJioT0VFncC3nT6450fVWJD8
+913X5L2u+Ck2/L77n7/6uCDIcmZXEkRneIYQWv1VGAuat1vAqIX3NnNEyoZnSp/v
+3roh0K61kJvWlFcEXo4G5E1rCGq/CGZOXYCjwof7j4C2zRsHZwDt7hsGalxwpsuj
+QHKxVelA0F/F+P3buT6SKLRZFqC+Qtjb/wDiVsvyB+d3eDI5RXHV5hzAdfAFFZbs
+ULBZLneFLIYAD71Z3j2RoLjewCPw7UjM8tSRmuTmt4x6LzOTh1ZvRhEk3QgA6weC
+8bUZwWyfS1Tig5aFZvP6RHHRkcPUp8aT6modNEKiNDo4IXZDxEx9VI9HuL31lqhN
+hUUHVWqhg/2KNfnfdnPf6OcGNTWKq23T5oILJveVg08yNIxXJ4hqU6/slEjMf61u
+lFkaCwGjerhIEvY7IrlSXyl6pLIVtlr+WJ8307HgVufJO2mowyaG6P7oJ8PoYSBS
+l4HdDZAVUYEU2qPye5p6lIST9Vo2OFPYKQ/SqxZ38Uu0Zrf9D8QBBpXv6NyIe4lf
+QqOubeRLbBxPk+wxDVkLJWRKaVqt80lZuxlPME3cxGbzQSKtFwHi6mxBveWqFAHh
+wpi74qHFXVKn+sZXlp+h
+=D4yN
+-----END PGP SIGNATURE-----
+
+--zhtSGe8h3+lMyY1M--
