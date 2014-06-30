@@ -1,129 +1,76 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v5 05/14] clk: Add generic driver for Maxim PMIC clocks
-Date: Mon, 30 Jun 2014 12:58:57 +0200
-Message-ID: <53B142F1.1050407@collabora.co.uk>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>	<1403806546-31122-6-git-send-email-javier.martinez@collabora.co.uk> <CAKew6eU5X=WxhECtwUUwbXe_fCRU4bD6B7caWiA2dwcBfThd-g@mail.gmail.com>
+From: Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>
+Subject: Re: [PATCH] checkpatch: Enable whitespace checks for DTS files
+Date: Mon, 30 Jun 2014 13:18:48 +0200
+Message-ID: <CAMuHMdWFxifapG6yU9yeZO0UqxtXSrAxZQpdBwOv+=X3E1Jh3w@mail.gmail.com>
+References: <1404122011-11409-1-git-send-email-geert+renesas@glider.be>
+	<20140630101137.GA31222@bark>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAKew6eU5X=WxhECtwUUwbXe_fCRU4bD6B7caWiA2dwcBfThd-g@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Yadwinder Singh Brar <yadi.brar01@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140630101137.GA31222@bark>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>
+Cc: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Yadwinder,
+Hi Andy,
 
-Thanks a lot for your feedback.
-
-On 06/30/2014 06:01 AM, Yadwinder Singh Brar wrote:
-> Hi Javier,
-> 
-> On Thu, Jun 26, 2014 at 11:45 PM, Javier Martinez Canillas
-> <javier.martinez@collabora.co.uk> wrote:
->> Maxim Integrated Power Management ICs are very similar with
->> regard to their clock outputs. Most of the clock drivers for
->> these chips are duplicating code and are simpler enough that
->> can be converted to use a generic driver to consolidate code
->> and avoid duplication.
+On Mon, Jun 30, 2014 at 12:11 PM, Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org> wrote:
+> On Mon, Jun 30, 2014 at 11:53:31AM +0200, Geert Uytterhoeven wrote:
+>> When run on *.dtsi or *.dts files, the whitespace checks were skipped,
+>> while they are valid for DTS files.  Hence stop skipping them.
 >>
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> I ran checkpatch on all in-tree DTS files, and didn't notice any error or
+>> warning messages that are inappropriate for DTS files.
+>>
+>> Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 >> ---
+>>  scripts/checkpatch.pl | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
 >>
->> Changes since v4:
->>  - Return recalc 0 if clock isn't enabled in Suggested by Yadwinder Singh Brar.
+>> diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+>> index 010b18ef4ea0..9ae624942a84 100755
+>> --- a/scripts/checkpatch.pl
+>> +++ b/scripts/checkpatch.pl
+>> @@ -2137,7 +2137,7 @@ sub process {
+>>               }
 >>
-> 
-> It seems you didn't implement or posted same patch again :) .
-> 
-
-Yeah, I did implement it but seems I was sleepy when I posted the series since I
-managed to completely screw up the patch-set... More on that below.
-
->> Changes since v3:
->>  - Add current copyright information. Suggested by Krzysztof Kozlowski
->>  - Do a single allocation for struct max_gen_clk. Suggested by Krzysztof Kozlowski
->>  - Add EXPORT_SYMBOL() for exported symbols. Suggested by Krzysztof Kozlowski
+>>  # check we are in a valid source file if not then ignore this hunk
+>> -             next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
+>> +             next if ($realfile !~ /\.(h|c|s|S|pl|sh|dtsi|dts)$/);
+>
+> I think it is this one here which lets the white space checks happen for
+> your new file types ...
+>
+>>  #line length limit
+>>               if ($line =~ /^\+/ && $prevrawline !~ /\/\*\*/ &&
+>> @@ -2192,7 +2192,7 @@ sub process {
+>>               }
 >>
->>  drivers/clk/Kconfig       |   3 +
->>  drivers/clk/Makefile      |   1 +
->>  drivers/clk/clk-max-gen.c | 195 ++++++++++++++++++++++++++++++++++++++++++++++
->>  drivers/clk/clk-max-gen.h |  32 ++++++++
->>  4 files changed, 231 insertions(+)
->>  create mode 100644 drivers/clk/clk-max-gen.c
->>  create mode 100644 drivers/clk/clk-max-gen.h
->>
-> 
-> [ .. ]
-> 
->> +
->> +static unsigned long max_gen_recalc_rate(struct clk_hw *hw,
->> +                                        unsigned long parent_rate)
->> +{
->> +       return 32768;
->> +}
-> 
-> Its still same here.
-> 
+>>  # check we are in a valid source file C or perl if not then ignore this hunk
+>> -             next if ($realfile !~ /\.(h|c|pl)$/);
+>> +             next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+>
+> ... so I am supprised to see you also changing this one.  Is there a
+> check below here you wanted other than those stated in the patch
+> commentary?
 
-Instead of squashing the delta in this patch I did on "[PATCH v4 05/14] clk: Add
-generic driver for Maxim PMIC clocks" [0] so you can look the
-max_gen_recalc_rate() on that patch.
+No, e.g. "check for space before tabs" (the one that triggered me) is below.
 
-I made the same mistake when squashing the mfd changes into the patch adding the
-regulator driver [1] :-(
+>>  # at the beginning of a line any tabs must come first and anything
+>>  # more than 8 must use tabs.
 
-Sorry for the mess... I'll fix that for the next version.
+Gr{oetje,eeting}s,
 
->> +
->> +struct clk_ops max_gen_clk_ops = {
->> +       .prepare        = max_gen_clk_prepare,
->> +       .unprepare      = max_gen_clk_unprepare,
->> +       .is_prepared    = max_gen_clk_is_prepared,
->> +       .recalc_rate    = max_gen_recalc_rate,
->> +};
->> +EXPORT_SYMBOL_GPL(max_gen_clk_ops);
->> +
->> +static struct clk *max_gen_clk_register(struct device *dev,
->> +                                       struct max_gen_clk *max_gen)
->> +{
->> +       struct clk *clk;
->> +       struct clk_hw *hw = &max_gen->hw;
->> +
->> +       clk = clk_register(dev, hw);
->> +       if (IS_ERR(clk))
->> +               return clk;
->> +
->> +       max_gen->lookup = kzalloc(sizeof(struct clk_lookup), GFP_KERNEL);
-> 
-> As I suggested in other patch[1] also, its better to use
-> clkdev_alloc() instead of kzalloc() here.
-> 
+                        Geert
 
-Perfect, I'll do it on the next version.
+--
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org
 
->> +       if (!max_gen->lookup)
->> +               return ERR_PTR(-ENOMEM);
->> +
->> +       max_gen->lookup->con_id = hw->init->name;
-> 
-> Also IMO,  init->name should be over-written if name is provided in DT,
-> otherwise generic "clock-output-names" property will go futile,
-> perhaps it should be done before clk_register.
-> 
-
-Even though Documentation/devicetree/bindings/clock/clock-bindings.txt says that
-the "clock-output-names" property is optional I agree with you that will be
-better to support it. So I'll add it on the next version as well.
-
-> Regards,
-> Yadwinder
-> 
-
-Best regards,
-Javier
-
-[0]: http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg33085.html
-[1]: http://www.mail-archive.com/linux-samsung-soc@vger.kernel.org/msg33168.html
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
