@@ -1,95 +1,82 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH V3 1/7] drm/exynos: Support DP CLKCON register in FIMD
- driver
-Date: Mon, 30 Jun 2014 07:31:32 +0200
-Message-ID: <53B0F634.7090200@samsung.com>
-References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
- <1403863946-15492-2-git-send-email-ajaykumar.rs@samsung.com>
- <53AD53E4.2020706@samsung.com>
- <CAEC9eQMXEEq_VBiZY+BHUuVWvbi7q4MkbbQ-XkcigtZBdgwO9w@mail.gmail.com>
- <53AD6734.9080909@samsung.com>
- <CAEC9eQPY+W_Wni7PLtWkHr0QrHW+G8x_+XWapV5tDiKebn=zpA@mail.gmail.com>
- <00a501cf9400$9d396950$d7ac3bf0$%han@samsung.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [RESEND 2/2] clk: Add driver for Palmas clk32kg and clk32kgaudio
+ clocks
+Date: Mon, 30 Jun 2014 08:56:55 +0300
+Message-ID: <53B0FC27.5040002@ti.com>
+References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>	<1403848871-26519-3-git-send-email-peter.ujfalusi@ti.com> <CABxcv=metB4=eoT=fAh7S-b_mhAvHcJtn2wrV8v8koSyKMxNNw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <00a501cf9400$9d396950$d7ac3bf0$%han@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Jingoo Han <jg1.han@samsung.com>, 'Ajay kumar' <ajaynumb@gmail.com>
-Cc: 'Ajay Kumar' <ajaykumar.rs@samsung.com>, dri-devel@lists.freedesktop.org, linux-samsung-soc@vger.kernel.org, 'InKi Dae' <inki.dae@samsung.com>, 'Sean Paul' <seanpaul@google.com>, 'sunil joshi' <joshi@samsung.com>, 'Prashanth G' <prashanth.g@samsung.com>, "'open list:OPEN FIRMWARE AND...'" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <CABxcv=metB4=eoT=fAh7S-b_mhAvHcJtn2wrV8v8koSyKMxNNw@mail.gmail.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Mike Turquette <mturquette@linaro.org>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, ldewangan@nvidia.com, linux-doc@vger.kernel.org, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/30/2014 03:14 AM, Jingoo Han wrote:
-> On Friday, June 27, 2014 10:03 PM, Ajay kumar wrote:
->> On Fri, Jun 27, 2014 at 6:14 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>> On 06/27/2014 01:48 PM, Ajay kumar wrote:
->>>> On Fri, Jun 27, 2014 at 4:52 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
->>>>> +CC DT
->>>>>
->>>>> On 06/27/2014 12:12 PM, Ajay Kumar wrote:
->>>>>> Add the missing setting for DP CLKCON register.
->>>>>>
->>>>>> This register is present on Exynos5 based FIMD controllers,
->>>>>> and needs to be set if we are using DP.
->>>>>>
->>>>>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
->>>>>> ---
->>>>>>  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
->>>>>>  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   23 ++++++++++++++++++++
->>>>>>  include/video/samsung_fimd.h                       |    4 ++++
->>>>>>  3 files changed, 28 insertions(+)
-> [.....]
->
->>>>>>  static const struct of_device_id fimd_driver_dt_match[] = {
->>>>>> @@ -331,6 +341,10 @@ static void fimd_commit(struct exynos_drm_manager *mgr)
->>>>>>       if (clkdiv > 1)
->>>>>>               val |= VIDCON0_CLKVAL_F(clkdiv - 1) | VIDCON0_CLKDIR;
->>>>>>
->>>>>> +     if (ctx->driver_data->has_dp_clkcon &&
->>>>>> +             ctx->exynos_fimd_output_type == EXYNOS_FIMD_OUTPUT_DP)
->>>>>> +             writel(DP_CLK_ENABLE, ctx->regs + DP_CLKCON);
->>>>>> +
->>>>>>       writel(val, ctx->regs + VIDCON0);
->>> New code should not split VIDCON0 related code.It should be moved few
->>> lines above or few lines below.
->> Ok, for better readability.
+Hi Javier,
+
+On 06/27/2014 09:23 PM, Javier Martinez Canillas wrote:
+> Hello Peter,
+>=20
+> On Fri, Jun 27, 2014 at 8:01 AM, Peter Ujfalusi <peter.ujfalusi@ti.co=
+m> wrote:
+>> Palmas class of devices can provide 32K clock(s) to be used by other=
+ devices
+>> on the board. Depending on the actual device the provided clocks can=
+ be:
+>> CLK32K_KG and CLK32K_KGAUDIO
+>> or only one:
+>> CLK32K_KG (TPS659039 for example)
 >>
->>> Anyway this code should be rather placed in power related functions of
->>> dp encoder, as it enables dp. The only question
->>> is if DP_CLKCON update can be performed after VIDCON0 update. If yes the
->>> solution of the whole problem
->> I will check this.
+>> Use separate compatible flags for the two 32K clock.
+>> A system which needs or have only one of the 32k clock from
+>> Palmas will need to add node(s) for each clock as separate section
+>> in the dts file.
+>> The two compatible property is:
+>> "ti,palmas-clk32kg" for clk32kg clock
+>> "ti,palmas-clk32kgaudio" for clk32kgaudio clock
 >>
->>> seems to be simple:
->>> - fimd should provide function fimd_set_dp_clk_gate or sth similar,
->>> - this function should be called in exynos_dp_poweron/exynos_dp_poweroff.
->>> I hope I have not missed anything this time.
->> But, it won't look good to export a FIMD function which sets a FIMD register,
->> and call it in DP driver!
->> What does Inki/Jingoo have to say about this?
-> I agree with Ajay Kumar's opinion.
-> It doesn't look good to export the function to set FIMD register
-> and call it by DP driver.
+>> Apart from the register control of the clocks - which is done via
+>> the clock API there is a posibility to enable the external sleep
+>> control. In this way the clock can be enabled/disabled on demand by =
+the
+>> user of the clock.
+>>
+>> See the documentation for more details.
+>>
+>> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+>> Reviewed-by: Nishanth Menon <nm@ti.com>
 
-DP_CLKCON HW register shows clearly there is direct hardware dependency
-between DP and FIMD.
-Reflecting this dependency in drivers is just a consequence of HW design.
-Moreover the register gates also clock for MDNIE, this solution can be
-used there as well.
+>> +static unsigned long palmas_clks_recalc_rate(struct clk_hw *hw,
+>> +                                            unsigned long parent_ra=
+te)
+>> +{
+>> +       return 32768;
+>> +}
+>=20
+> I see that other clock drivers using a constant rate return 0 if the
+> clock has not been enabled.
 
-Anyway the most important is that we should avoid adding DT bindings for
-things we can evaluate in drivers.
+and there are examples when similar fixed clock drivers returns only th=
+e clock
+value, like clk-max77686. I can not find clear guidelines neither in th=
+e
+documentation or around the header/c files for this.
+Mike, what is the appropriate way of handling the recalc_rate?
 
-Regards
-Andrzej
-
->
+> So maybe is more correct to have something
+> like the following?
+>=20
+> if (__clk_is_enabled(hw->clk))
+>         return 32768;
+> else
+>         return 0;
+>=20
 > Best regards,
-> Jingoo Han
->> Regards,
->> Ajay
->>
-> [....]
->
->
+> Javier
+>=20
+
+
+--=20
+P=C3=A9ter
