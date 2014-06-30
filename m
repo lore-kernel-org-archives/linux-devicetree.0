@@ -1,86 +1,60 @@
-From: Jason Cooper <jason@lakedaemon.net>
-Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
-Date: Mon, 30 Jun 2014 15:29:10 -0400
-Message-ID: <20140630192910.GA23978@titan.lakedaemon.net>
-References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
+From: Daniel Mack <daniel@zonque.org>
+Subject: Re: mwifiex card reset
+Date: Mon, 30 Jun 2014 21:30:09 +0200
+Message-ID: <53B1BAC1.3090902@zonque.org>
+References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com> <20140628052220.GG10407@us.netrek.org> <20140628072322.GC7410@atomide.com> <CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com> <20140630061912.GA2461@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sricharan R <r.sricharan@ti.com>
-Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nm@ti.com, linux@arm.linux.org.uk, tony@atomide.com, rnayak@ti.com, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <20140630061912.GA2461@atomide.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>, Andreas Fenkart <afenkart@gmail.com>
+Cc: James Cameron <quozl@laptop.org>, Bing Zhao <bzhao@marvell.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jun 26, 2014 at 12:40:18PM +0530, Sricharan R wrote:
-> This series does some cleanups, fixes for handling two interrupts
-> getting mapped twice to same crossbar and provides support for
-> hardwired IRQ and crossbar definitions.
-> 
-> On certain platforms such as DRA7, SPIs 0, 1, 2, 3, 5, 6, 10,
-> 131, 132, 133 are direct wired to hardware blocks bypassing
-> crossbar. This quirky implementation is *NOT* supposed to be the
-> expectation of crossbar hardware usage. This series adds support
-> to represent such hard-wired irqs through DT and avoid generic
-> allocation/programming of crossbar in the driver.
-> 
-> This way of supporting hard-wired irqs was a result of
-> the below discussions.
-> http://www.spinics.net/lists/arm-kernel/msg329946.html
-> 
-> Based on 3.16 rc2 mainline.
-> 
-> All the patches are available here
->  git@github.com:Sricharanti/sricharan.git crossbar_updates
-> 
-> The fixes series[1] earlier posted is merged in to this.
-> [1] http://www.spinics.net/lists/arm-kernel/msg328273.html
-> 
-> [V2] Merged the above series and rebased on 3.15 mainline
-> 
-> [V3] Modified patch#3 to get irqs-skip properties from DT,
->      merged path#8 for checkpatch warning to other relevant
->      patches and fixed comments for other patches.
-> 
-> [V4] Based on 3.16rc2 and fixed Jason's <jason@lakedaemon.net> comments.
-> 
-> Nishanth Menon (14):
->   irqchip: crossbar: Dont use '0' to mark reserved interrupts
->   irqchip: crossbar: Check for premapped crossbar before allocating
->   irqchip: crossbar: Introduce ti,irqs-skip to skip irqs that bypass
->     crossbar
->   irqchip: crossbar: Initialise the crossbar with a safe value
->   irqchip: crossbar: Change allocation logic by reversing search for
->     free irqs
->   irqchip: crossbar: Remove IS_ERR_VALUE check
->   irqchip: crossbar: Fix sparse and checkpatch warnings
->   irqchip: crossbar: Fix kerneldoc warning
->   irqchip: crossbar: Return proper error value
->   irqchip: crossbar: Change the goto naming
->   irqchip: crossbar: Introduce ti,max-crossbar-sources to identify
->     valid crossbar mapping
->   irqchip: crossbar: Introduce centralized check for crossbar write
->   documentation: dt: omap: crossbar: Add description for interrupt
->     consumer
->   irqchip: crossbar: Allow for quirky hardware with direct hardwiring
->     of GIC
-> 
-> Sricharan R (2):
->   irqchip: crossbar: Set cb pointer to null in case of error
->   irqchip: crossbar: Add kerneldoc for crossbar_domain_unmap callback
-> 
->  .../devicetree/bindings/arm/omap/crossbar.txt      |   36 +++++
->  drivers/irqchip/irq-crossbar.c                     |  168 +++++++++++++++++---
->  2 files changed, 179 insertions(+), 25 deletions(-)
+Hi Tony, everyone,
 
-Whole series applied to irqchip/crossbar, I'll give it a day or two in
--next, then I'll merge it into irqchip/core.
+Thanks Andreas for addressing this issue! So far, we've been using a
+terrible hack in the hsmmc in order to bring the card into a workable
+state, and we're looking for a nicer solution for awhile.
 
-Tony: Right now, it's immutable unless you tell me I applied something
-incorrectly.  Once it goes into irqchip/core, it's immutable no matter
-what you say. ;-)
+On 06/30/2014 08:19 AM, Tony Lindgren wrote:
+> * Andreas Fenkart <afenkart@gmail.com> [140629 12:43]:
+>> 2014-06-28 9:23 GMT+02:00 Tony Lindgren <tony@atomide.com>:
+>>> * James Cameron <quozl@laptop.org> [140628 08:24]:
 
-thx,
+>>> Wouldn't it be best to have the mwifiex properly handle the
+>>> reset GPIOs and idle status pins?
+>>
+>> doesn't work see ref 1) above
+> 
+> OK so we can't do much anything at mwifiex probe time on SDIO bus because
+> it won't probe unless the pins are configured.
+> 
+> Maybe we should have a separate mwifiex-power helper module that just
+> manages the reset/idle/regulator pins? Then mwifiex-reset can be always
+> loaded and configure things so mwifiex-sdio can probe properly.
+> 
+> And mwifiex-reset helper can also provide the user space interfaces
+> for the reset/idle/regulator pins.
 
-Jason.
+Yes, a helper might be the best solution. It could even be a generic
+one, that just takes any number of clocks, reset GPIOs and regulators
+and takes care for sequencing them. However, we need to reference that
+helper from the mwifiex driver, for two reasons.
+
+a) we need to make sure the reset helper gets to do its job before the
+mwifiex driver scans the SDIO bus, and
+
+b) the reset helper needs to be called when the mmc host controller
+wants to do a card reset.
+
+Hence, we'll need some sort of internal API for this, and a phandle in
+dts. I wonder whether that glue logic might be better off living in the
+mmc core, as mwifiex might well be interfaced to other hosts?
+
+
+Thanks,
+Daniel
+
