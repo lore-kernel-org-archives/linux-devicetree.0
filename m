@@ -1,64 +1,55 @@
-From: Thomas Petazzoni <thomas.petazzoni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
-Subject: Re: [PATCHv5 1/3] ARM: mm: add support for HW coherent systems in
- PL310 cache
-Date: Mon, 30 Jun 2014 20:50:59 +0200
-Message-ID: <20140630205059.2e7b2278@free-electrons.com>
-References: <1402585772-10405-1-git-send-email-thomas.petazzoni@free-electrons.com>
-	<1402585772-10405-2-git-send-email-thomas.petazzoni@free-electrons.com>
-	<20140630173217.GT28951@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] ASoC: max98090: Add max98091 compatible string
+Date: Mon, 30 Jun 2014 19:51:39 +0100
+Message-ID: <20140630185139.GF23300@sirena.org.uk>
+References: <1403251396-17487-1-git-send-email-tushar.b@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <20140630173217.GT28951-5wv7dgnIgG8@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
-Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Albin Tonnerre <Albin.Tonnerre-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Jason Cooper <jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Sebastian Hesselbarth <sebastian.hesselbarth-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Gregory Clement <gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Tawfik Bayouk <tawfik-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Nadav Haklai <nadavh-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Lior Amsalem <alior-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Ezequiel Garcia <ezequiel.garcia-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OM63UbYQsNeyh2dn"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403251396-17487-1-git-send-email-tushar.b@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <tushar.b@samsung.com>
+Cc: linux-samsung-soc@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, kgene.kim@samsung.com, tiwai@suse.de, lgirdwood@gmail.com, galak@codeaurora.org, ijc+devicetree@hellion.org.uk, mark.rutland@arm.com, pawel.moll@arm.com, robh+dt@kernel.org, trblinux@gmail.com, Wonjoon Lee <woojoo.lee@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Dear Catalin Marinas,
 
-On Mon, 30 Jun 2014 18:32:17 +0100, Catalin Marinas wrote:
+--OM63UbYQsNeyh2dn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> > +/*
-> >   * Note that the end addresses passed to Linux primitives are
-> >   * noninclusive, while the hardware cache range operations use
-> >   * inclusive start and end addresses.
-> > @@ -1487,6 +1514,10 @@ int __init l2x0_of_init(u32 aux_val, u32 aux_mask)
-> >  
-> >  	data = of_match_node(l2x0_ids, np)->data;
-> >  
-> > +	if (of_device_is_compatible(np, "arm,pl310-cache") &&
-> > +	    of_property_read_bool(np, "arm,io-coherent"))
-> > +		data = &of_l2c310_coherent_data;
-> 
-> I don't have a better way without duplicating the l2c_init_data
-> structure since the fixup function does not take a device_node
-> pointer. If it did, you could have added the check in l2c310_fixup and
-> zeroed the sync pointer there.
-> 
-> Anyway, your approach works for me as well:
-> 
-> Acked-by: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>
+On Fri, Jun 20, 2014 at 01:33:15PM +0530, Tushar Behera wrote:
+> From: Wonjoon Lee <woojoo.lee@samsung.com>
+>=20
+> The MAX98091 CODEC is the same as MAX98090 CODEC, but with an extra
+> microphone. Existing driver for MAX98090 CODEC already has support
+> for MAX98091 CODEC. Adding proper compatible string so that MAX98091
+> CODEC can be specified from device tree.
 
-Thanks for the confirmation. Note that it comes a bit too late though:
-the patch is already in 3.16-rc3:
-https://git.kernel.org/cgit/linux/kernel/git/torvalds/linux.git/commit/arch/arm/mm/cache-l2x0.c?id=98ea2dba65932ffc456b6d7b11b8a0624e2f7b95.
+Applied, thanks.
 
-However, I'm interested in hearing your opinion about the I/O coherency
-discussion in !SMP, and especially whether the TTB flags need to be
-consistent with the PMD flags in terms of cache policy and
-shareability. See
-http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/263524.html.
+--OM63UbYQsNeyh2dn
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-Thanks!
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
 
-Thomas
--- 
-Thomas Petazzoni, CTO, Free Electrons
-Embedded Linux, Kernel and Android engineering
-http://free-electrons.com
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+iQIcBAEBAgAGBQJTsbG4AAoJELSic+t+oim9MmcP/RKT93/dRKmZEoSXaeISq6Up
+n+4O0BDxLY+Awb895ctTuP0Nlq5yAx8GMh27mcTL5skUWRcxbNP8GMbFPUduNoVF
+G1F6rsYPCAgr7EoC1EJfMe0LpXXq+sFfw9Zw4knKReTqBxEwAfhyOqcmOiiLf9hD
+ERsT+0mCoGbuk5Wr8egINRtdpFwkSONCyoINRKirw59W/DzehuUF5YDiaoNdcieF
+3d5kYF96cbyIK+nLFhDMQz7xoXuWkM6cJjCRZXqxqyIhLarN6Jkpv22xGXNgn7mJ
+qA1YXH/tuM8DRb5hyKw9HOXdsaiiDzIBmNxbxjIYNfD8XkKGWrAdFNK+tOmNtB+z
+VhjISgq9Te58LzsoftE7t9mwzNdH+JbP9FWiWBpwAf7aP0q3qtbW97EoADM4dfp0
+aThc1okSM5klz/R/2R0LLuoIW+Ps+AKWAWwTrPTuFBSZGTcnMT/kPWGq7KMFHAyF
+tklNAayw1KfH2fQGRF0ICQKnHvmcaCiHgvQYseapBwPE6jiK6I8ZRcNxZVCVx2+p
+yC1y3pU0mn1EJ0KfdLtSmde9HvJZLv1L13ErKZ4/u+ns3r9ejXGEeSvb4AceYMew
+iPk/lkyLtSdGP/Gn2gq7bcPKqrQNTGduIXYAZonhFTu/UF/zQ7GH8aJs8JB+oKlM
+GwRbDYyp0RGjXiagz/AN
+=Fqkg
+-----END PGP SIGNATURE-----
+
+--OM63UbYQsNeyh2dn--
