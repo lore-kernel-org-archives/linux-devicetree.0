@@ -1,160 +1,91 @@
 From: Jingoo Han <jg1.han@samsung.com>
-Subject: Re: [PATCH v2] i2c: busses: i2c-pxa.c:  Fix for possible null pointer
- dereferenc
-Date: Mon, 30 Jun 2014 09:05:16 +0900
-Message-ID: <009301cf93f6$f938a270$eba9e750$%han@samsung.com>
-References: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
- <1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH V3 1/7] drm/exynos: Support DP CLKCON register in FIMD
+ driver
+Date: Mon, 30 Jun 2014 10:14:17 +0900
+Message-ID: <00a501cf9400$9d396950$d7ac3bf0$%han@samsung.com>
+References: <1403863946-15492-1-git-send-email-ajaykumar.rs@samsung.com>
+ <1403863946-15492-2-git-send-email-ajaykumar.rs@samsung.com>
+ <53AD53E4.2020706@samsung.com>
+ <CAEC9eQMXEEq_VBiZY+BHUuVWvbi7q4MkbbQ-XkcigtZBdgwO9w@mail.gmail.com>
+ <53AD6734.9080909@samsung.com>
+ <CAEC9eQPY+W_Wni7PLtWkHr0QrHW+G8x_+XWapV5tDiKebn=zpA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-reply-to: <CAEC9eQPY+W_Wni7PLtWkHr0QrHW+G8x_+XWapV5tDiKebn=zpA@mail.gmail.com>
 Content-language: ko
-Sender: linux-kernel-owner@vger.kernel.org
-To: 'Rickard Strandqvist' <rickard_strandqvist@spectrumdigital.se>
-Cc: 'Wolfram Sang' <wsa@the-dreams.de>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Leilei Shang' <shangll@marvell.com>, 'Peter Korsgaard' <peter@korsgaard.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: 'Ajay kumar' <ajaynumb@gmail.com>, 'Andrzej Hajda' <a.hajda@samsung.com>
+Cc: "'open list:OPEN FIRMWARE AND...'" <devicetree@vger.kernel.org>, linux-samsung-soc@vger.kernel.org, 'Sean Paul' <seanpaul@google.com>, 'sunil joshi' <joshi@samsung.com>, dri-devel@lists.freedesktop.org, 'Prashanth G' <prashanth.g@samsung.com>, 'Ajay Kumar' <ajaykumar.rs@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Monday, June 30, 2014 8:29 AM, Rickard Strandqvist wrote:
-> 
-> Fix for possible null pointer dereferenc, and there is a risk for memory leak in when something
-> unexpected happens and the function returns.
+On Friday, June 27, 2014 10:03 PM, Ajay kumar wrote:
+> On Fri, Jun 27, 2014 at 6:14 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> > On 06/27/2014 01:48 PM, Ajay kumar wrote:
+> >> On Fri, Jun 27, 2014 at 4:52 PM, Andrzej Hajda <a.hajda@samsung.com> wrote:
+> >>> +CC DT
+> >>>
+> >>> On 06/27/2014 12:12 PM, Ajay Kumar wrote:
+> >>>> Add the missing setting for DP CLKCON register.
+> >>>>
+> >>>> This register is present on Exynos5 based FIMD controllers,
+> >>>> and needs to be set if we are using DP.
+> >>>>
+> >>>> Signed-off-by: Ajay Kumar <ajaykumar.rs@samsung.com>
+> >>>> ---
+> >>>>  .../devicetree/bindings/video/samsung-fimd.txt     |    1 +
+> >>>>  drivers/gpu/drm/exynos/exynos_drm_fimd.c           |   23 ++++++++++++++++++++
+> >>>>  include/video/samsung_fimd.h                       |    4 ++++
+> >>>>  3 files changed, 28 insertions(+)
 
-Would you split the patch into two patches?
+[.....]
 
-  [PATCH 1/2] i2c: pxa: Fix for possible null pointer dereference
-  [PATCH 2/2] i2c: pxa: Use devm_* functions
+> >>>>  static const struct of_device_id fimd_driver_dt_match[] = {
+> >>>> @@ -331,6 +341,10 @@ static void fimd_commit(struct exynos_drm_manager *mgr)
+> >>>>       if (clkdiv > 1)
+> >>>>               val |= VIDCON0_CLKVAL_F(clkdiv - 1) | VIDCON0_CLKDIR;
+> >>>>
+> >>>> +     if (ctx->driver_data->has_dp_clkcon &&
+> >>>> +             ctx->exynos_fimd_output_type == EXYNOS_FIMD_OUTPUT_DP)
+> >>>> +             writel(DP_CLK_ENABLE, ctx->regs + DP_CLKCON);
+> >>>> +
+> >>>>       writel(val, ctx->regs + VIDCON0);
+> >
+> > New code should not split VIDCON0 related code.It should be moved few
+> > lines above or few lines below.
+> Ok, for better readability.
+> 
+> > Anyway this code should be rather placed in power related functions of
+> > dp encoder, as it enables dp. The only question
+> > is if DP_CLKCON update can be performed after VIDCON0 update. If yes the
+> > solution of the whole problem
+> I will check this.
+> 
+> > seems to be simple:
+> > - fimd should provide function fimd_set_dp_clk_gate or sth similar,
+> > - this function should be called in exynos_dp_poweron/exynos_dp_poweroff.
+> > I hope I have not missed anything this time.
+> But, it won't look good to export a FIMD function which sets a FIMD register,
+> and call it in DP driver!
+> What does Inki/Jingoo have to say about this?
 
-> 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-> ---
->  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
->  1 file changed, 16 insertions(+), 21 deletions(-)
-> 
-> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-> index be671f7..886877a 100644
-> --- a/drivers/i2c/busses/i2c-pxa.c
-> +++ b/drivers/i2c/busses/i2c-pxa.c
-> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  	struct resource *res = NULL;
->  	int ret, irq;
-> 
-> -	i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
-> +	i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
->  	if (!i2c) {
->  		ret = -ENOMEM;
-> -		goto emalloc;
-> +		goto err_nothing_to_release;
->  	}
-> 
->  	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
-> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  	if (ret > 0)
->  		ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
->  	if (ret < 0)
-> -		goto eclk;
-> +		goto err_nothing_to_release;
-> 
->  	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
->  	irq = platform_get_irq(dev, 0);
->  	if (res == NULL || irq < 0) {
->  		ret = -ENODEV;
-> -		goto eclk;
-> +		goto err_nothing_to_release;
->  	}
-> 
-> -	if (!request_mem_region(res->start, resource_size(res), res->name)) {
-> +	if (!devm_request_mem_region(&dev->dev, res->start,
-> +				resource_size(res), res->name)) {
->  		ret = -ENOMEM;
-> -		goto eclk;
-> +		goto emalloc;
->  	}
-> 
->  	i2c->adap.owner   = THIS_MODULE;
-> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
-> 
->  	strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
-> 
-> -	i2c->clk = clk_get(&dev->dev, NULL);
-> +	i2c->clk = devm_clk_get(&dev->dev, NULL);
->  	if (IS_ERR(i2c->clk)) {
->  		ret = PTR_ERR(i2c->clk);
-> -		goto eclk;
-> +		goto emalloc;
->  	}
-> 
-> -	i2c->reg_base = ioremap(res->start, resource_size(res));
-> -	if (!i2c->reg_base) {
-> +	i2c->reg_base = devm_ioremap(&dev->dev, res->start, resource_size(res));
-> +	if (IS_ERR(i2c->reg_base)) {
-
-Did you check what devm_ioremap() returns?
-It returns 'valid addr value' Or NULL as below.
-So, IS_ERR() should NOT be used.
-
-./lib/devres.c
-
-void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
-                           unsigned long size)
-{
-        void __iomem **ptr, *addr;
-
-        ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
-        if (!ptr)
-                return NULL;
-
-        addr = ioremap(offset, size);
-        if (addr) {
-                *ptr = addr;
-                devres_add(dev, ptr);
-        } else
-                devres_free(ptr);
-
-        return addr;
-}
-EXPORT_SYMBOL(devm_ioremap);
+I agree with Ajay Kumar's opinion.
+It doesn't look good to export the function to set FIMD register
+and call it by DP driver.
 
 Best regards,
 Jingoo Han
-
->  		ret = -EIO;
-> -		goto eremap;
-> +		goto emalloc;
->  	}
 > 
->  	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
-> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  		i2c->adap.algo = &i2c_pxa_pio_algorithm;
->  	} else {
->  		i2c->adap.algo = &i2c_pxa_algorithm;
-> -		ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
-> -				  dev_name(&dev->dev), i2c);
-> +		ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
-> +				 IRQF_SHARED, dev_name(&dev->dev), i2c);
->  		if (ret)
-> -			goto ereqirq;
-> +			goto emalloc;
->  	}
+> Regards,
+> Ajay
 > 
->  	i2c_pxa_reset(i2c);
-> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
->  eadapt:
->  	if (!i2c->use_pio)
->  		free_irq(irq, i2c);
-> -ereqirq:
-> -	clk_disable_unprepare(i2c->clk);
-> -	iounmap(i2c->reg_base);
-> -eremap:
-> -	clk_put(i2c->clk);
-> -eclk:
-> -	kfree(i2c);
->  emalloc:
->  	release_mem_region(res->start, resource_size(res));
-> +err_nothing_to_release:
->  	return ret;
->  }
-> 
-> --
-> 1.7.10.4
+[....]
