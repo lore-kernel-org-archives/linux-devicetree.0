@@ -1,83 +1,212 @@
-From: Neil Zhang <zhangwm@marvell.com>
-Subject: RE: [PATCH v4] ARM: perf: save/restore pmu registers in pm notifier
-Date: Mon, 30 Jun 2014 03:39:15 -0700
-Message-ID: <9034CBD80F070943B59700D7F8149ED90182308172@SC-VEXCH4.marvell.com>
-References: <1398133596-29170-1-git-send-email-zhangwm@marvell.com>
- <20140422103642.GF7484@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3B59B@SC-VEXCH4.marvell.com>
- <20140423170821.GJ5649@arm.com>
- <175CCF5F49938B4D99B2E3EF7F558EBE5507A3C1F1@SC-VEXCH4.marvell.com>
- <5360FB07.5030407@arm.com>
- <6106CAF835F351419ADA79E4836E6EC71B6A53C826@SC-VEXCH4.marvell.com>
- <9034CBD80F070943B59700D7F8149ED9A0875730@SC-VEXCH4.marvell.com>
- <20140513184503.GF16388@arm.com>
- <9034CBD80F070943B59700D7F8149ED9A087573F@SC-VEXCH4.marvell.com>
- <537337F3.4080300@arm.com>
- <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9034CBD80F070943B59700D7F8149ED9A0875776@SC-VEXCH4.marvell.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Zhang <zhangwm@marvell.com>, 'Sudeep Holla' <sudeep.holla@arm.com>, 'Will Deacon' <Will.Deacon@arm.com>
-Cc: "'linux@arm.linux.org.uk'" <linux@arm.linux.org.uk>, "'linux-arm-kernel@lists.infradead.org'" <linux-arm-kernel@lists.infradead.org>, "'linux-kernel@vger.kernel.org'" <linux-kernel@vger.kernel.org>, "'devicetree@vger.kernel.org'" <devicetree@vger.kernel.org>
+From: Grant Likely <grant.likely@linaro.org>
+Subject: Re: [PATCH 2/2] arm: Add back maximum bank limit
+Date: Mon, 30 Jun 2014 11:43:50 +0100
+Message-ID: <20140630104350.600EDC40F52@trevor.secretlab.ca>
+References: <1404068784-27604-1-git-send-email-lauraa@codeaurora.org>
+	<1404068784-27604-2-git-send-email-lauraa@codeaurora.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1404068784-27604-2-git-send-email-lauraa@codeaurora.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Tushar Behera <trblinux@gmail.com>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Rob Herring <robherring2@gmail.com>
+Cc: Laura Abbott <lauraa@codeaurora.org>, linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, afaerber@suse.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-U3VkZWVwICYgV2lsbO+8jA0KDQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206
-IE5laWwgWmhhbmcNCj4gU2VudDogMjAxNOW5tDXmnIgyMeaXpSAxOTo0Nw0KPiBUbzogJ1N1ZGVl
-cCBIb2xsYSc7IFdpbGwgRGVhY29uDQo+IENjOiAnbGludXhAYXJtLmxpbnV4Lm9yZy51ayc7ICds
-aW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcnOw0KPiAnbGludXgta2VybmVsQHZn
-ZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZycNCj4gU3ViamVjdDog
-UkU6IFtQQVRDSCB2NF0gQVJNOiBwZXJmOiBzYXZlL3Jlc3RvcmUgcG11IHJlZ2lzdGVycyBpbiBw
-bSBub3RpZmllcg0KPiANCj4gU3VkZWVw77yMDQo+IA0KPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2Fn
-ZS0tLS0tDQo+ID4gRnJvbTogU3VkZWVwIEhvbGxhIFttYWlsdG86c3VkZWVwLmhvbGxhQGFybS5j
-b21dDQo+ID4gU2VudDogMjAxNOW5tDXmnIgxNOaXpSAxNzozMg0KPiA+IFRvOiBOZWlsIFpoYW5n
-OyBXaWxsIERlYWNvbg0KPiA+IENjOiBTdWRlZXAgSG9sbGE7ICdsaW51eEBhcm0ubGludXgub3Jn
-LnVrJzsNCj4gPiAnbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnJzsNCj4gPiAn
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-ZycNCj4gPiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBBUk06IHBlcmY6IHNhdmUvcmVzdG9yZSBw
-bXUgcmVnaXN0ZXJzIGluIHBtDQo+ID4gbm90aWZpZXINCj4gPg0KPiA+DQo+ID4NCj4gPiBPbiAx
-NC8wNS8xNCAwMzoyOCwgTmVpbCBaaGFuZyB3cm90ZToNCj4gPiA+PiAtLS0tLU9yaWdpbmFsIE1l
-c3NhZ2UtLS0tLQ0KPiA+ID4+IEZyb206IFdpbGwgRGVhY29uIFttYWlsdG86d2lsbC5kZWFjb25A
-YXJtLmNvbV0NCj4gPiA+PiBTZW50OiAyMDE05bm0NeaciDE05pelIDI6NDUNCj4gPiA+PiBUbzog
-TmVpbCBaaGFuZw0KPiA+ID4+IENjOiBTdWRlZXAgSG9sbGE7ICdsaW51eEBhcm0ubGludXgub3Jn
-LnVrJzsNCj4gPiA+PiAnbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnJzsNCj4g
-PiA+PiAnbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZyc7ICdkZXZpY2V0cmVlQHZnZXIua2Vy
-bmVsLm9yZycNCj4gPiA+PiBTdWJqZWN0OiBSZTogW1BBVENIIHY0XSBBUk06IHBlcmY6IHNhdmUv
-cmVzdG9yZSBwbXUgcmVnaXN0ZXJzIGluIHBtDQo+ID4gPj4gbm90aWZpZXINCj4gPiA+Pg0KPiA+
-ID4+IE9uIE1vbiwgTWF5IDEyLCAyMDE0IGF0IDExOjIyOjA5QU0gKzAxMDAsIE5laWwgWmhhbmcg
-d3JvdGU6DQo+ID4gPj4+Pj4gVGhlIGRldmljZSB0cmVlIGJpbmRpbmdzIGZvciBwb3dlciBkb21h
-aW5zIGlzIHVuZGVyIGRpc2N1c3Npb24NCj4gPiA+Pj4+PiBbMV0NCj4gPiA+Pj4+DQo+ID4gPj4+
-PiBUaGFua3MgZm9yIHRoZSBpbmZvcm1hdGlvbi4NCj4gPiA+Pj4+IEJ1dCBpdCBjdXJyZW50bHkg
-Zm9yIGRldmljZSBvbmx5LCBjb3JlIHJlbGF0ZWQgc3R1ZmYgYXJlIG5vdCBzdXBwb3J0ZWQuDQo+
-ID4gPj4+PiBBbmQgaXMgaXQgcmVhbGx5IGdvb2QgdG8gcmVnaXN0ZXIgcG93ZXIgcHJvdmlkZXIg
-Zm9yIGNvcmUgYW5kIGxldA0KPiA+ID4+Pj4gdmZwIC8gcG11IGV0YyB0byBnZXQgaXQ/DQo+ID4g
-Pj4+Pg0KPiA+ID4+Pg0KPiA+ID4+PiBXaGF0J3MgeW91ciBzdWdnZXN0aW9uIGFib3V0IGl0Pw0K
-PiA+ID4+PiBJcyBpdCBPSyB0aGF0IEkgYWRkIGl0IHVuZGVyIHRoZSBQTVUgbm9kZT8NCj4gPiA+
-Pg0KPiA+ID4+IEkgZG9uJ3QgcmVhbGx5IG1pbmQuIEkganVzdCB3YW50IHRvIGF2b2lkIHJlLWlu
-dmVudGluZyB0aGUgd2hlZWwgaW4NCj4gPiA+PiBhIFBNVS1zcGVjaWZpYyB3YXkgYW5kIGhhdmlu
-ZyB0byBtYWludGFpbiB0aGF0IGNvZGUgZm9yZXZlciBiZWNhdXNlDQo+ID4gPj4gaXQgZW5kZWQg
-dXAgaW4gb3VyIERUIGRlc2NyaXB0aW9uLg0KPiA+ID4+DQo+ID4gPj4gV2lsbA0KPiA+ID4NCj4g
-PiA+IEkgd2lsbCBwcmVwYXJlIGFub3RoZXIgcGF0Y2ggdG8gYWRkIERUIGRlc2NyaXB0aW9uIHVu
-ZGVyIFBNVSBzaW5jZQ0KPiA+ID4gdGhlcmUgaXMgbm8gZ2VuZXJpYyBwb3dlciBkb21haW4gc3Vw
-cG9ydCBmb3IgcG0gbm90aWZpZXIgaWYgbm8gb3RoZXINCj4gPiBjb25jZXJucy4NCj4gPiA+IFdl
-IGNhbiBjaGFuZ2UgdGhlIG1hbm5lciBpZiB0aGVyZSBpcyBnZW5lcmljIHBvd2VyIGRvbWFpbiBz
-dXBwb3J0DQo+ID4gPiBmb3INCj4gPiBwbSBub3RpZmllciBsYXRlci4NCj4gPiA+IFRoYW5rcy4N
-Cj4gPg0KPiA+IE5vLCBwbGVhc2UgZG9uJ3QgYWRkIGFueSBEVCBiaW5kaW5ncyBmb3IgcG93ZXIg
-ZG9tYWlucyBzcGVjaWZpYyB0byBQTVUNCj4gPiBub2RlLg0KPiA+IFdlIGNhbid0IGNoYW5nZSB0
-aGUgRFQgYmluZGluZ3Mgb25jZSBhZGRlZC4NCj4gPg0KPiA+IEFzIEkgcG9pbnRlZCBvdXQgdGhl
-IERUIGJpbmRpbmdzIGZvciBnZW5lcmljIHBvd2VyIGRvbWFpbnMgYXJlIHVuZGVyDQo+ID4gZGlz
-Y3Vzc2lvbi4NCj4gPiBTZWUgaWYgeW91IGNhbiByZXVzZSBpdCwgaWYgbm90IGhlbHAgaW4gZXh0
-ZW5kaW5nIGl0IHNvIHRoYXQgaXQgY2FuIGJlIHVzZWQuDQo+ID4NCj4gDQo+IFNvcnJ5IGZvciBy
-ZXBseSBsYXRlci4NCj4gQXMgSSBzYWlkIGJlZm9yZSB0aGUgdW5kZXIgZGlzY3Vzc2VkIGdlbmVy
-aWMgcG93ZXIgZG9tYWluIGlzIG5vdCBzdWl0YWJsZSBmb3INCj4gQ1BVIHBlcmlwaGVyYWxzIHNp
-bmNlIHRoZXkgYXJlIGFsbCBrbm93biBiZWxvbmcgdG8gQ1BVIG9yIGNsdXN0ZXIgcG93ZXINCj4g
-ZG9tYWluLg0KPiBJZiB3ZSB3YW50IHRvIGZvbGxvdyB0aGUgd2F5IHRoZXkgYXJlIGRpc2N1c3Np
-b24sIHdlIG5lZWQgdG8gcmVnaXN0ZXIgY29yZQ0KPiBhbmQgY2x1c3RlciBwb3dlciBwcm92aWRl
-ciwgYW5kIG5lZWQgdmZwL2dpYy9wbXUgZXRjIHRvIHJlcXVpcmUgdGhlbS4NCj4gSXMgaXQgcmVh
-bGx5IHN1aXRhYmxlPw0KPiANCkRvIHlvdSBoYXZlIGFueSBjb21tZW50cz8NCklmIG5vLCBJIHdv
-dWxkIGxpa2UgdG8gcHV0IGl0IHVuZGVyIFBNVSBub2RlLg0KDQo+ID4gUmVnYXJkcywNCj4gPiBT
-dWRlZXANCj4gPg0KPiA+DQo+IA0KPiBCZXN0IFJlZ2FyZHMsDQo+IE5laWwgWmhhbmcNCg0KQmVz
-dCBSZWdhcmRzLA0KTmVpbCBaaGFuZw0K
+On Sun, 29 Jun 2014 12:06:24 -0700, Laura Abbott <lauraa@codeaurora.org> wrote:
+> Commit 1c2f87c22566cd057bc8cde10c37ae9da1a1bb76
+> (ARM: 8025/1: Get rid of meminfo) dropped the upper bound on
+> the number of memory banks that can be added as there was no
+> technical need in the kernel. It turns out though, some bootloaders
+> (specifically the arndale-octa exynos boards) may pass invalid memory
+> information and rely on the kernel to not parse this data. This is a
+> bug in the bootloader but we still need to work around this.
+> Re-introduce a maximum bank limit per board to prevent invalid banks
+> from being passed to the kernel.
+> 
+> Reported-by: Tushar Behera <trblinux@gmail.com>
+> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
+
+Hi Laura,
+
+This is more invasive than I'd like. I think it can be fixed more
+elegantly. Some suggestions below...
+
+> ---
+> http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265615.html
+> 
+> For those who did not see the discussion before
+> ---
+>  arch/arm/include/asm/mach/arch.h | 10 ++++++++--
+>  arch/arm/kernel/atags_parse.c    |  1 +
+>  arch/arm/kernel/devtree.c        |  9 ++++++++-
+>  arch/arm/kernel/setup.c          | 20 ++++++++++++++++++++
+>  arch/arm/mach-exynos/exynos.c    |  1 +
+>  5 files changed, 38 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm/include/asm/mach/arch.h b/arch/arm/include/asm/mach/arch.h
+> index 060a75e..ebcc543 100644
+> --- a/arch/arm/include/asm/mach/arch.h
+> +++ b/arch/arm/include/asm/mach/arch.h
+> @@ -40,6 +40,8 @@ struct machine_desc {
+>  	unsigned int		video_start;	/* start of video RAM	*/
+>  	unsigned int		video_end;	/* end of video RAM	*/
+>  
+> +	unsigned int		bank_limit;	/* maximum number of memory
+> +						 * banks to add */
+>  	unsigned char		reserve_lp0 :1;	/* never has lp0	*/
+>  	unsigned char		reserve_lp1 :1;	/* never has lp1	*/
+>  	unsigned char		reserve_lp2 :1;	/* never has lp2	*/
+> @@ -76,6 +78,8 @@ extern const struct machine_desc __arch_info_begin[], __arch_info_end[];
+>  #define for_each_machine_desc(p)			\
+>  	for (p = __arch_info_begin; p < __arch_info_end; p++)
+>  
+> +extern void set_max_bank_limit(const struct machine_desc *mdesc);
+> +
+>  /*
+>   * Set of macros to define architecture features.  This is built into
+>   * a table by the linker.
+> @@ -85,7 +89,8 @@ static const struct machine_desc __mach_desc_##_type	\
+>   __used							\
+>   __attribute__((__section__(".arch.info.init"))) = {	\
+>  	.nr		= MACH_TYPE_##_type,		\
+> -	.name		= _name,
+> +	.name		= _name,			\
+> +	.bank_limit	= 12,
+
+The hard limit of 12 seems entirely arbitrary. I don't like the idea of
+reintroducing it.  There shouldn't be any need for a default at all.
+Leave it as zero, and the limit will only apply if a value has been set.
+12 seems like an artificial limit. (more below)
+
+>  
+>  #define MACHINE_END				\
+>  };
+> @@ -95,6 +100,7 @@ static const struct machine_desc __mach_desc_##_name	\
+>   __used							\
+>   __attribute__((__section__(".arch.info.init"))) = {	\
+>  	.nr		= ~0,				\
+> -	.name		= _namestr,
+> +	.name		= _namestr,			\
+> +	.bank_limit	= 12,
+>  
+>  #endif
+> diff --git a/arch/arm/kernel/atags_parse.c b/arch/arm/kernel/atags_parse.c
+> index 7807ef5..6b01d20 100644
+> --- a/arch/arm/kernel/atags_parse.c
+> +++ b/arch/arm/kernel/atags_parse.c
+> @@ -204,6 +204,7 @@ setup_machine_tags(phys_addr_t __atags_pointer, unsigned int machine_nr)
+>  		dump_machine_table(); /* does not return */
+>  	}
+>  
+> +	set_max_bank_limit(mdesc);
+
+Is there actually a bug on any atags booting? If this is firmly in the
+realm of firmware workaround then I would drop the change from the atags
+boot path.
+
+>  	if (__atags_pointer)
+>  		tags = phys_to_virt(__atags_pointer);
+>  	else if (mdesc->atag_offset)
+> diff --git a/arch/arm/kernel/devtree.c b/arch/arm/kernel/devtree.c
+> index e94a157..04213ce 100644
+> --- a/arch/arm/kernel/devtree.c
+> +++ b/arch/arm/kernel/devtree.c
+> @@ -27,6 +27,10 @@
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach-types.h>
+>  
+> +void __init early_init_dt_add_memory_arch(u64 base, u64 size)
+> +{
+> +	arm_add_memory(base, size);
+> +}
+>  
+>  #ifdef CONFIG_SMP
+>  extern struct of_cpu_method __cpu_method_of_table[];
+> @@ -212,7 +216,7 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
+>  	mdesc_best = &__mach_desc_GENERIC_DT;
+>  #endif
+>  
+> -	if (!dt_phys || !early_init_dt_scan(phys_to_virt(dt_phys)))
+> +	if (!dt_phys || !early_init_dt_verify(phys_to_virt(dt_phys)))
+>  		return NULL;
+
+Instead of splitting early_init_dt_scan(), the call to
+early_init_dt_scan() could probably be moved after the
+of_flat_dt_match_machine() call. It's at least worth a try. Looking at
+the code I don't see anything obvious that requires the
+early_init_dt_scan() code to run first.
+
+Once you've got the mdesc pointer, you've could set the limit before
+doing the full scan. Or, better yet because this is a fix for broken
+data, you could call a dt_fixup hook on the mdesc. Then exynos is the
+only platform that needs special treatment. The best thing for exynos to
+do is fix the buggy data by clearing the bogus entries. Then there's no
+need to reintroduce early_init_dt_add_memory_arch() for ARM.
+
+>  
+>  	mdesc = of_flat_dt_match_machine(mdesc_best, arch_get_next_mach);
+> @@ -237,6 +241,9 @@ const struct machine_desc * __init setup_machine_fdt(unsigned int dt_phys)
+>  		dump_machine_table(); /* does not return */
+>  	}
+>  
+> +	set_max_bank_limit(mdesc);
+> +	early_init_dt_scan_all();
+> +
+>  	/* Change machine number to match the mdesc we're using */
+>  	__machine_arch_type = mdesc->nr;
+>  
+> diff --git a/arch/arm/kernel/setup.c b/arch/arm/kernel/setup.c
+> index 8a16ee5..bc796e3 100644
+> --- a/arch/arm/kernel/setup.c
+> +++ b/arch/arm/kernel/setup.c
+> @@ -629,11 +629,31 @@ void __init dump_machine_table(void)
+>  		/* can't use cpu_relax() here as it may require MMU setup */;
+>  }
+>  
+> +static unsigned int bank_cnt;
+> +static unsigned int max_cnt;
+> +
+> +void set_max_bank_limit(const struct machine_desc *mdesc)
+> +{
+> +	max_cnt = mdesc->bank_limit;
+> +}
+> +
+>  int __init arm_add_memory(u64 start, u64 size)
+>  {
+>  	u64 aligned_start;
+>  
+>  	/*
+> +	 * Some buggy bootloaders rely on the old meminfo behavior of not adding
+> +	 * more than n banks since anything past that may contain invalid data.
+> +	 */
+> +	if (bank_cnt >= max_cnt) {
+
+if (max_cnt && (bank_cnt >= max_cnt)) {
+
+(But unnecessary if the suggestion to reorganize setup_machine_fdt()
+works).
+
+> +		pr_crit("Max banks too low, ignoring memory at 0x%08llx\n",
+> +			(long long)start);
+> +		return -EINVAL;
+> +	}
+> +
+> +	bank_cnt++;
+> +
+> +	/*
+>  	 * Ensure that start/size are aligned to a page boundary.
+>  	 * Size is appropriately rounded down, start is rounded up.
+>  	 */
+> diff --git a/arch/arm/mach-exynos/exynos.c b/arch/arm/mach-exynos/exynos.c
+> index f38cf7c..91283fd 100644
+> --- a/arch/arm/mach-exynos/exynos.c
+> +++ b/arch/arm/mach-exynos/exynos.c
+> @@ -350,4 +350,5 @@ DT_MACHINE_START(EXYNOS_DT, "SAMSUNG EXYNOS (Flattened Device Tree)")
+>  	.dt_compat	= exynos_dt_compat,
+>  	.restart	= exynos_restart,
+>  	.reserve	= exynos_reserve,
+> +	.bank_limit     = 8,
+>  MACHINE_END
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> hosted by The Linux Foundation
+> 
