@@ -1,76 +1,49 @@
-From: Alex Elder <elder@linaro.org>
-Subject: [PATCH] devicetree: bindings: document Broadcom CPU enable method
-Date: Mon, 30 Jun 2014 17:09:45 -0500
-Message-ID: <1404166185-4168-1-git-send-email-elder@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: mporter@linaro.org, bcm@fixthebug.org, devicetree@vger.kernel.org, grant.likely@linaro.org, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+From: Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>
+Subject: Re: [PATCH v3 02/10] devicetree: Add generic IOMMU device tree
+	bindings
+Date: Mon, 30 Jun 2014 16:24:59 -0600
+Message-ID: <53B1E3BB.1030407@wwwdotorg.org>
+References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com>
+	<1403815790-8548-3-git-send-email-thierry.reding@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1403815790-8548-3-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Allen Martin <amartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Broadcom mobile SoCs use a ROM-implemented holding pen for
-controlled boot of secondary cores.  A special register is
-used to communicate to the ROM that a secondary core should
-start executing kernel code.  This enable method is currently
-used for members of the bcm281xx and bcm21664 SoC families.
+On 06/26/2014 02:49 PM, Thierry Reding wrote:
+> From: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+> 
+> This commit introduces a generic device tree binding for IOMMU devices.
+> Only a very minimal subset is described here, but it is enough to cover
+> the requirements of both the Exynos System MMU and Tegra SMMU as
+> discussed here:
+> 
+>     https://lkml.org/lkml/2014/4/27/346
 
-The use of an enable method also allows the SMP operation vector to
-be assigned as a result of device tree content for these SoCs.
+> diff --git a/Documentation/devicetree/bindings/iommu/iommu.txt b/Documentation/devicetree/bindings/iommu/iommu.txt
 
-Signed-off-by: Alex Elder <elder@linaro.org>
----
-Notes:
-  - This patch was previously posted as part of this series:
-	https://lkml.org/lkml/2014/6/16/580
-  - The binding definition is now found in a separate file rather
-    than embedding it in:
-	Documentation/devicetree/bindings/arm/cpus.txt
+> +When an "iommus" property is specified in a device tree node, the IOMMU will
+> +be used for address translation. If a "dma-ranges" property exists in the
+> +device's parent node it will be ignored. An exception to this rule is if the
+> +referenced IOMMU is disabled, in which case the "dma-ranges" property of the
+> +parent shall take effect.
 
- .../bindings/arm/bcm/brcm,bcm11351-cpu-method      | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
-
-diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
-new file mode 100644
-index 0000000..8240c02
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm11351-cpu-method
-@@ -0,0 +1,36 @@
-+Broadcom Kona Family CPU Enable Method
-+--------------------------------------
-+This binding defines the enable method used for starting secondary
-+CPUs in the following Broadcom SoCs:
-+  BCM11130, BCM11140, BCM11351, BCM28145, BCM28155, BCM21664
-+
-+The enable method is specified by defining the following required
-+properties in the "cpus" device tree node:
-+  - enable-method = "brcm,bcm11351-cpu-method";
-+  - secondary-boot-reg = <...>;
-+
-+The secondary-boot-reg property is a u32 value that specifies the
-+physical address of the register used to request the ROM holding pen
-+code release a secondary CPU.  The value written to the register is
-+formed by encoding the target CPU id into the low bits of the
-+physical start address it should jump to.
-+
-+Example:
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		enable-method = "brcm,bcm11351-cpu-method";
-+		secondary-boot-reg = <0x3500417c>;
-+
-+		cpu0: cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+		};
-+
-+		cpu1: cpu@1 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <1>;
-+		};
-+	};
--- 
-1.9.1
+I wonder how useful that paragraph is. The fact that someone disabled a
+particular IOMMU's node doesn't necessarily mean that the HW can
+actually do that; an IOMMU might always be active in HW and always
+translate accesses by some master. In that case, the fallback to
+dma-ranges wouldn't correlate with what the HW actually does. Perhaps
+all we need is to add a note to that effect here?
