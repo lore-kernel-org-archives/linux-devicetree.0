@@ -1,217 +1,160 @@
-From: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] Adding selftest testdata dynamically into live tree
-Date: Sun, 29 Jun 2014 16:49:03 -0700
-Message-ID: <1404085743-6974-1-git-send-email-gaurav.minocha.os@gmail.com>
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, gaurav.minocha-cmaem7PIVQRC8prJL3GQQw@public.gmane.org, Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+From: Jingoo Han <jg1.han@samsung.com>
+Subject: Re: [PATCH v2] i2c: busses: i2c-pxa.c:  Fix for possible null pointer
+ dereferenc
+Date: Mon, 30 Jun 2014 09:05:16 +0900
+Message-ID: <009301cf93f6$f938a270$eba9e750$%han@samsung.com>
+References: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+ <1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Content-language: ko
+Sender: linux-kernel-owner@vger.kernel.org
+To: 'Rickard Strandqvist' <rickard_strandqvist@spectrumdigital.se>
+Cc: 'Wolfram Sang' <wsa@the-dreams.de>, 'Grant Likely' <grant.likely@linaro.org>, 'Rob Herring' <robh+dt@kernel.org>, 'Leilei Shang' <shangll@marvell.com>, 'Peter Korsgaard' <peter@korsgaard.com>, linux-i2c@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, 'Jingoo Han' <jg1.han@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch attaches selftest's device tree data (required by /drivers/of/selftest.c)
-dynamically into live device tree. First, it links selftest device tree data into the
-kernel image and then iterates over all the nodes and attaches them into the live tree.
+On Monday, June 30, 2014 8:29 AM, Rickard Strandqvist wrote:
+> 
+> Fix for possible null pointer dereferenc, and there is a risk for memory leak in when something
+> unexpected happens and the function returns.
 
-This patch will remove the manual process of addition and removal of selftest device
-tree data into the machine's dts file.
+Would you split the patch into two patches?
 
-Tested successfully with current selftest's testcases.
+  [PATCH 1/2] i2c: pxa: Fix for possible null pointer dereference
+  [PATCH 2/2] i2c: pxa: Use devm_* functions
 
-Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- arch/arm/boot/dts/versatile-pb.dts                 |    2 -
- drivers/of/Kconfig                                 |    3 +-
- drivers/of/Makefile                                |    3 +-
- drivers/of/selftest.c                              |  102 ++++++++++++++++++++
- .../{testcases.dtsi => testcases.dts}              |    1 +
- 5 files changed, 107 insertions(+), 4 deletions(-)
- rename drivers/of/testcase-data/{testcases.dtsi => testcases.dts} (92%)
+> 
+> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+> ---
+>  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
+>  1 file changed, 16 insertions(+), 21 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+> index be671f7..886877a 100644
+> --- a/drivers/i2c/busses/i2c-pxa.c
+> +++ b/drivers/i2c/busses/i2c-pxa.c
+> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>  	struct resource *res = NULL;
+>  	int ret, irq;
+> 
+> -	i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
+> +	i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
+>  	if (!i2c) {
+>  		ret = -ENOMEM;
+> -		goto emalloc;
+> +		goto err_nothing_to_release;
+>  	}
+> 
+>  	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>  	if (ret > 0)
+>  		ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
+>  	if (ret < 0)
+> -		goto eclk;
+> +		goto err_nothing_to_release;
+> 
+>  	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>  	irq = platform_get_irq(dev, 0);
+>  	if (res == NULL || irq < 0) {
+>  		ret = -ENODEV;
+> -		goto eclk;
+> +		goto err_nothing_to_release;
+>  	}
+> 
+> -	if (!request_mem_region(res->start, resource_size(res), res->name)) {
+> +	if (!devm_request_mem_region(&dev->dev, res->start,
+> +				resource_size(res), res->name)) {
+>  		ret = -ENOMEM;
+> -		goto eclk;
+> +		goto emalloc;
+>  	}
+> 
+>  	i2c->adap.owner   = THIS_MODULE;
+> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
+> 
+>  	strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
+> 
+> -	i2c->clk = clk_get(&dev->dev, NULL);
+> +	i2c->clk = devm_clk_get(&dev->dev, NULL);
+>  	if (IS_ERR(i2c->clk)) {
+>  		ret = PTR_ERR(i2c->clk);
+> -		goto eclk;
+> +		goto emalloc;
+>  	}
+> 
+> -	i2c->reg_base = ioremap(res->start, resource_size(res));
+> -	if (!i2c->reg_base) {
+> +	i2c->reg_base = devm_ioremap(&dev->dev, res->start, resource_size(res));
+> +	if (IS_ERR(i2c->reg_base)) {
 
-diff --git a/arch/arm/boot/dts/versatile-pb.dts b/arch/arm/boot/dts/versatile-pb.dts
-index 65f6577..8d39677 100644
---- a/arch/arm/boot/dts/versatile-pb.dts
-+++ b/arch/arm/boot/dts/versatile-pb.dts
-@@ -46,5 +46,3 @@
- 		};
- 	};
- };
--
--#include <testcases.dtsi>
-diff --git a/drivers/of/Kconfig b/drivers/of/Kconfig
-index 2dcb054..4e4f6f3 100644
---- a/drivers/of/Kconfig
-+++ b/drivers/of/Kconfig
-@@ -8,8 +8,9 @@ menu "Device Tree and Open Firmware support"
- 	depends on OF
- 
- config OF_SELFTEST
--	bool "Device Tree Runtime self tests"
-+	tristate "Device Tree Runtime self tests"
- 	depends on OF_IRQ
-+	select OF_DYNAMIC
- 	help
- 	  This option builds in test cases for the device tree infrastructure
- 	  that are executed once at boot time, and the results dumped to the
-diff --git a/drivers/of/Makefile b/drivers/of/Makefile
-index 099b1fb..b9e753b 100644
---- a/drivers/of/Makefile
-+++ b/drivers/of/Makefile
-@@ -5,7 +5,8 @@ obj-$(CONFIG_OF_PROMTREE) += pdt.o
- obj-$(CONFIG_OF_ADDRESS)  += address.o
- obj-$(CONFIG_OF_IRQ)    += irq.o
- obj-$(CONFIG_OF_NET)	+= of_net.o
--obj-$(CONFIG_OF_SELFTEST) += selftest.o
-+obj-$(CONFIG_OF_SELFTEST) += of_selftest.o
-+of_selftest-objs := selftest.o testcase-data/testcases.dtb.o
- obj-$(CONFIG_OF_MDIO)	+= of_mdio.o
- obj-$(CONFIG_OF_PCI)	+= of_pci.o
- obj-$(CONFIG_OF_PCI_IRQ)  += of_pci_irq.o
-diff --git a/drivers/of/selftest.c b/drivers/of/selftest.c
-index 077314e..fa68f91 100644
---- a/drivers/of/selftest.c
-+++ b/drivers/of/selftest.c
-@@ -9,6 +9,7 @@
- #include <linux/errno.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_fdt.h>
- #include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/list.h>
-@@ -21,6 +22,9 @@ static struct selftest_results {
- 	int failed;
- } selftest_results;
- 
-+static void *selftest_data;
-+static struct device_node *selftest_data_node;
-+
- #define selftest(result, fmt, ...) { \
- 	if (!(result)) { \
- 		selftest_results.failed++; \
-@@ -517,9 +521,107 @@ static void __init of_selftest_platform_populate(void)
- 	}
- }
- 
-+/**
-+ *	update_node_properties - adds the properties
-+ *	of np into dup node (present in live tree) and
-+ *	updates parent of children of np to dup.
-+ *
-+ *	@np:	node already present in live tree
-+ *	@dup:	node present in live tree to be updated
-+ */
-+static void update_node_properties(struct device_node *np,
-+					struct device_node *dup)
-+{
-+	struct property *prop;
-+	struct device_node *child;
-+
-+	for_each_property_of_node(np, prop)
-+		of_add_property(dup, prop);
-+
-+	for_each_child_of_node(np, child)
-+		child->parent = dup;
-+}
-+
-+/**
-+ *	attach_node_and_children - attaches nodes
-+ *	and its children to live tree
-+ *
-+ *	@np:	Node to attach to live tree
-+ */
-+static int attach_node_and_children(struct device_node *np)
-+{
-+	struct device_node *next, *root = np, *dup;
-+
-+	if (!np) {
-+		pr_warn("%s: No tree to attach; not running tests\n",
-+			__func__);
-+		return -ENODATA;
-+	}
-+
-+
-+	/* skip root node */
-+	np = np->child;
-+
-+	while (np) {
-+		next = np->allnext;
-+		dup = of_find_node_by_path(np->full_name);
-+		if (dup)
-+			update_node_properties(np, dup);
-+		else {
-+			np->child = NULL;
-+			if (np->parent == root)
-+				np->parent = of_allnodes;
-+			of_attach_node(np);
-+		}
-+		np = next;
-+	}
-+
-+	return 0;
-+}
-+
-+/**
-+ *	selftest_data_init - Reads, copies data from
-+ *	linked tree and attaches it to the live tree
-+ */
-+static int selftest_data_init(void)
-+{
-+	int size;
-+	extern uint8_t __dtb_testcases_begin[];
-+	extern uint8_t __dtb_testcases_end[];
-+
-+	selftest_data = (void *)__dtb_testcases_begin;
-+
-+	if (!selftest_data) {
-+		pr_warn("%s: No testcase data to attach; not running tests\n",
-+			__func__);
-+		return -ENODATA;
-+	}
-+
-+	size = __dtb_testcases_end - __dtb_testcases_begin;
-+
-+	/* creating copy */
-+	selftest_data = kmemdup(selftest_data, size, GFP_KERNEL);
-+	if (!selftest_data) {
-+		pr_warn("%s: Failed to allocate memory for selftest_data; "
-+			"not running tests\n", __func__);
-+		return -ENOMEM;
-+	}
-+	of_fdt_unflatten_tree((unsigned long *)selftest_data,
-+						&selftest_data_node);
-+
-+	/* attach the sub-tree to live tree */
-+	return attach_node_and_children(selftest_data_node);
-+}
-+
- static int __init of_selftest(void)
- {
- 	struct device_node *np;
-+	int res;
-+
-+	/* adding data for selftest */
-+	res = selftest_data_init();
-+	if (res)
-+		return res;
- 
- 	np = of_find_node_by_path("/testcase-data/phandle-tests/consumer-a");
- 	if (!np) {
-diff --git a/drivers/of/testcase-data/testcases.dtsi b/drivers/of/testcase-data/testcases.dts
-similarity index 92%
-rename from drivers/of/testcase-data/testcases.dtsi
-rename to drivers/of/testcase-data/testcases.dts
-index 6d8d980a..8e7568e 100644
---- a/drivers/of/testcase-data/testcases.dtsi
-+++ b/drivers/of/testcase-data/testcases.dts
-@@ -1,3 +1,4 @@
-+/dts-v1/;
- #include "tests-phandle.dtsi"
- #include "tests-interrupts.dtsi"
- #include "tests-match.dtsi"
--- 
-1.7.9.5
+Did you check what devm_ioremap() returns?
+It returns 'valid addr value' Or NULL as below.
+So, IS_ERR() should NOT be used.
 
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+./lib/devres.c
+
+void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+                           unsigned long size)
+{
+        void __iomem **ptr, *addr;
+
+        ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
+        if (!ptr)
+                return NULL;
+
+        addr = ioremap(offset, size);
+        if (addr) {
+                *ptr = addr;
+                devres_add(dev, ptr);
+        } else
+                devres_free(ptr);
+
+        return addr;
+}
+EXPORT_SYMBOL(devm_ioremap);
+
+Best regards,
+Jingoo Han
+
+>  		ret = -EIO;
+> -		goto eremap;
+> +		goto emalloc;
+>  	}
+> 
+>  	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>  		i2c->adap.algo = &i2c_pxa_pio_algorithm;
+>  	} else {
+>  		i2c->adap.algo = &i2c_pxa_algorithm;
+> -		ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
+> -				  dev_name(&dev->dev), i2c);
+> +		ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
+> +				 IRQF_SHARED, dev_name(&dev->dev), i2c);
+>  		if (ret)
+> -			goto ereqirq;
+> +			goto emalloc;
+>  	}
+> 
+>  	i2c_pxa_reset(i2c);
+> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>  eadapt:
+>  	if (!i2c->use_pio)
+>  		free_irq(irq, i2c);
+> -ereqirq:
+> -	clk_disable_unprepare(i2c->clk);
+> -	iounmap(i2c->reg_base);
+> -eremap:
+> -	clk_put(i2c->clk);
+> -eclk:
+> -	kfree(i2c);
+>  emalloc:
+>  	release_mem_region(res->start, resource_size(res));
+> +err_nothing_to_release:
+>  	return ret;
+>  }
+> 
+> --
+> 1.7.10.4
