@@ -1,43 +1,64 @@
-From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Mon, 30 Jun 2014 16:40:49 +0200
-Message-ID: <53B176F1.5060308@gmail.com>
-References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com> <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com> <53AB1CFD.4040500@cogentembedded.com> <20140630095940.GB10058@kwain>
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
+ CPU frequency
+Date: Mon, 30 Jun 2014 16:48:35 +0200
+Message-ID: <CAKfTPtAu+mSVO8dvg_Z6w_nYWndap+FY5VGKeg-0pae_4JqR=A@mail.gmail.com>
+References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1404123143-13041-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20140630102934.GV32514@n2100.arm.linux.org.uk> <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
+ <20140630124919.GC28647@lukather> <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
+ <20140630140146.GD28647@lukather>
 Mime-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=ISO-8859-1
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140630095940.GB10058@kwain>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Cc: tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140630140146.GD28647@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/30/2014 11:59 AM, Antoine T=E9nart wrote:
-> On Wed, Jun 25, 2014 at 11:03:25PM +0400, Sergei Shtylyov wrote:
->> On 06/23/2014 05:39 PM, Antoine T=E9nart wrote:
->>> +	/* set the controller speed */
->>> +	writel(0x31, ctrl_reg + PORT_SCR_CTL);
+On 30 June 2014 16:01, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Jun 30, 2014 at 03:27:21PM +0200, Vincent Guittot wrote:
+>> >> >> -             rate = of_get_property(cn, "clock-frequency", &len);
+>> >> >> -             if (!rate || len != 4) {
+>> >> >> -                     pr_err("%s missing clock-frequency property\n",
+>> >> >> -                             cn->full_name);
+>> >> >> +             clk = of_clk_get(cn, 0);
+>> >> >> +             if (!IS_ERR(clk))
+>> >> >> +                     rate = clk_get_rate(clk);
+>> >>
+>> >> We need the max frequency as it will be used to weight the different
+>> >> CPUs capacity. How do you ensure that the current clock rate is the
+>> >> max one ?
+>> >
+>> > Hmm, the clock-frequency attribute in the ePAPR is defined at the
+>> > current CPU frequency, not the max one.
 >>
->>     Value undocumented? Or is this the SATA SControl register by cha=
-nce?
+>> What means current frequency in device tree when DVFS is involved ?
 >
-> Some magic is still there...
+> The ePAPR states that clock-frequency is supposed to be "the current
+> clock speed of the CPU in Hertz". It's exactly what my patch add.
+>
+> Now, you're right, DVFS would be an issue here with clock-frequency,
+> but this patch actually makes it easier to deal with, since you only
+> get a reference to a clock, and you can get its rate at any given
+> time.
 
-Antoine,
+and what about using clk_round_rate(clk, ULONG_MAX) ?
 
-I guess Sergei was referring to AHCI spec here. PORT_SCR bits are
-documented in AHCI spec as:
+We will not be dependent of when we parse DT
 
-7:4 =3D 0x3 Limit speed negotiation to a rate not greater than Gen3
-           communication rate.
+Vincent
 
-3:0 =3D 0x1 Perform interface communication sequence [...]. This is
-           functionally equivalent to a hard reset [...].
 
-So, the question is: Should we really need to reset controller in the
-PHY driver or is it already done in AHCI common code? At least we
-should change the comment to something like
-/* set Gen3 controller speed and perform hard reset */
-
-Sebastian
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
