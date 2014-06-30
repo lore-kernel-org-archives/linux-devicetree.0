@@ -1,147 +1,163 @@
-From: Dong Aisheng <b29396@freescale.com>
-Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
-Date: Mon, 30 Jun 2014 16:26:38 +0800
-Message-ID: <20140630082622.GB25689@shlinux1.ap.freescale.net>
-References: <1403863246-18822-1-git-send-email-b29396@freescale.com>
- <1403863246-18822-2-git-send-email-b29396@freescale.com>
- <53ADB1E8.1030504@hartkopp.net>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Mon, 30 Jun 2014 11:59:40 +0200
+Message-ID: <20140630095940.GB10058@kwain>
+References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
+ <53AB1CFD.4040500@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Return-path: <linux-can-owner@vger.kernel.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <53ADB1E8.1030504@hartkopp.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: linux-can@vger.kernel.org, netdev@vger.kernel.org, wg@grandegger.com, mkl@pengutronix.de, devicetree@vger.kernel.org
+In-Reply-To: <53AB1CFD.4040500@cogentembedded.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, sebastian.hesselbarth@gmail.com, tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jun 27, 2014 at 08:03:20PM +0200, Oliver Hartkopp wrote:
-> Hello Dong,
-> 
-> some general remarks from my side ...
-> 
-> On 27.06.2014 12:00, Dong Aisheng wrote:
-> >
-> > M_CAN also supports CANFD protocol features like data payload up to 64 bytes
-> > and bitrate switch at runtime, however, this patch still does not add the
-> > support for these features.
-> 
-> What is the reason for not supporting CAN FD?
-> The infrastructure is ready for it since Linux 3.15.
-> 
-> http://www.can-newsletter.org/engineering/standardization/140513_can-fd-linux-tools-and-driver-infrastructure_peak_vw/
-> 
-> For details see my commits for Linux 3.15.
-> 
+Sergei,
 
-Thanks for the information.
-Of course i will add CAN FD support.
-Mainly because the driver is just newly written these days, CAN FD feature
-is still under development. :-)
+On Wed, Jun 25, 2014 at 11:03:25PM +0400, Sergei Shtylyov wrote:
+> On 06/23/2014 05:39 PM, Antoine T=E9nart wrote:
+>=20
+> >The Berlin SoC has a two SATA ports. Add a PHY driver to handle them=
+=2E
+>=20
+> >The mode selection can let us think this PHY can be configured to fi=
+t
+> >other purposes. But there are reasons to think the SATA mode will be
+> >the only one usable: the PHY registers are only accessible indirectl=
+y
+> >through two registers in the SATA range, the PHY seems to be integra=
+ted
+> >and no information tells us the contrary. For these reasons, make th=
+e
+> >driver a SATA PHY driver.
+>=20
+>    I'm not even sure why you want to make it a separate driver if
+> the registers are mapped to SATA controller's range.
 
-> > +  The left cell are all the number of each elements inside the message ram.
-> > +  Please refer to 2.4.1 Message RAM Con.guration in Bosch M_CAN user mannual
->                                          ^^^
-> typo.
-> 
+We discussed this before and decided to move all the PHY related
+functions to a dedicated PHY driver. This allows to have a generic
+ahci_platform driver only using the common functions defined in the
+libahci. And the PHY subsystem is there to handle PHYs, so it's a good
+idea to use it, right?
 
-Got it, thanks.
+> [...]
+>=20
+> >diff --git a/drivers/phy/phy-berlin-sata.c b/drivers/phy/phy-berlin-=
+sata.c
+> >new file mode 100644
+> >index 000000000000..317f62358165
+> >--- /dev/null
+> >+++ b/drivers/phy/phy-berlin-sata.c
+> >@@ -0,0 +1,246 @@
+> [...]
+> +#define HOST_VSA_ADDR		0x0
+> +#define HOST_VSA_DATA		0x4
+> +#define PORT_VSR_ADDR		0x78
+> +#define PORT_VSR_DATA		0x7c
+> +#define PORT_SCR_CTL		0x2c
+>=20
+>    Could you keep this list sorted?
 
-> > +  for each elements definition.
-> > +
-> > +Example:
-> > +canfd1: canfd@020e8000 {
->    ^^^^^^  ^^^^^
-> 
-> There's no reason to name this canfd. The fact that the controller supports
-> CAN FD is provided by priv->ctrlmode_supported and the CAN_CTRLMODE_FD bit.
-> 
+Sure.
 
-Just because mx6sx spec calling it CANFD at many places.
-e.g.
-Interrupts:
-146 CANFD1 CANFD1 interrupt request
-147 CANFD2 CANFD2 interrupt request
-Memory Map:
-020F_0000 020F_3FFF CANFD2 16 KB
-020E_8000 020E_BFFF CANFD1 16 KB
-So i used canfd firstly.
-CCM:
-CANFD
-ips_clk can_clk_root CCGR1[CG15] (canfd_clk_enable)
-m_can_0_cclk can_clk_root CCGR1[CG15] (canfd_clk_enable)
-m_can_0_ips_clk can_clk_root CCGR1[CG15] (canfd_clk_enable)
+>=20
+> [...]
+>=20
+> +struct phy_berlin_desc {
+> +	struct phy	*phy;
+> +	u32		val;
+>=20
+>    Hm, aren't these power down bits? Why not call the field according=
+ly?
 
-> Just write
-> 
-> can1: can@020e8000 {
-> 
+Yes. I'll update.
 
-I'm ok with this style.
-Maybe the following is better:
-m_can1: can@020e8000 {
+>=20
+> [...]
+>=20
+> >+static int phy_berlin_sata_power_on(struct phy *phy)
+> >+{
+> >+	struct phy_berlin_desc *desc =3D phy_get_drvdata(phy);
+> >+	struct phy_berlin_priv *priv =3D to_berlin_sata_phy_priv(desc);
+> >+	void __iomem *ctrl_reg =3D priv->base + 0x60 + (desc->index * 0x80=
+);
+> >+	int ret =3D 0;
+> >+	u32 regval;
+> >+
+> >+	clk_prepare_enable(priv->clk);
+> >+
+> >+	spin_lock(&priv->lock);
+> >+
+> >+	/* Power on PHY */
+> >+	writel(CONTROL_REGISTER, priv->base + HOST_VSA_ADDR);
+> >+	regval =3D readl(priv->base + HOST_VSA_DATA);
+> >+	regval &=3D ~(desc->val);
+>=20
+>    Parens not needed here.
+>=20
+> >+	writel(regval, priv->base + HOST_VSA_DATA);
+> >+
+> >+	/* Configure MBus */
+> >+	writel(MBUS_SIZE_CONTROL, priv->base + HOST_VSA_ADDR);
+> >+	regval =3D readl(priv->base + HOST_VSA_DATA);
+> >+	regval |=3D MBUS_WRITE_REQUEST_SIZE_128 | MBUS_READ_REQUEST_SIZE_1=
+28;
+> >+	writel(regval, priv->base + HOST_VSA_DATA);
+>=20
+>    It probably makes sense to factor these address/data register
+> writes into a separate function like phy_berlin_sata_reg_setbits().
 
-> > +	compatible = "bosch,m_can";
-> > +	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
-> > +	reg-names = "canfd", "message_ram";
->                      ^^^^^
-> dito.
-> 
-How about m_can?
-Since it's IP driver, not depends on how SoC naming it.
+I'm not sure. phy_berlin_sata_reg_setbits() is there for common access,
+but the way to configure MBus and p[ower on the PHY is specific to them=
+=2E
+It would add functions only used once.
 
-> > +	interrupts = <0 114 0x04>;
-> > +	clocks = <&clks IMX6SX_CLK_CANFD>;
->                                    ^^^^^
-> dito.
-> 
+>=20
+> [...]
+> >+	/* set the controller speed */
+> >+	writel(0x31, ctrl_reg + PORT_SCR_CTL);
+>=20
+>    Value undocumented? Or is this the SATA SControl register by chanc=
+e?
 
-Not for this one, because imx6sx spec calling it CANFD in Clock
-chaptor.
-We want to align with our spec since it's arch code.
+Some magic is still there...
 
-> > --- a/drivers/net/can/Kconfig
-> > +++ b/drivers/net/can/Kconfig
-> > @@ -137,6 +137,11 @@ config CAN_XILINXCAN
-> >  	  Xilinx CAN driver. This driver supports both soft AXI CAN IP and
-> >  	  Zynq CANPS IP.
-> >  
-> > +config CAN_M_CAN
-> > +	tristate "Bosch M_CAN devices"
-> > +	---help---
-> > +	  Say Y here if you want to support for Bosch M_CAN controller.
-> > +
-> 
-> source "drivers/net/can/m_can/Kconfig"
-> 
-> >  source "drivers/net/can/mscan/Kconfig"
-> >  
-> >  source "drivers/net/can/sja1000/Kconfig"
-> > diff --git a/drivers/net/can/Makefile b/drivers/net/can/Makefile
-> > index 1697f22..69dee2c 100644
-> > --- a/drivers/net/can/Makefile
-> > +++ b/drivers/net/can/Makefile
-> > @@ -17,6 +17,7 @@ obj-y				+= softing/
-> >  obj-$(CONFIG_CAN_SJA1000)	+= sja1000/
-> >  obj-$(CONFIG_CAN_MSCAN)		+= mscan/
-> >  obj-$(CONFIG_CAN_C_CAN)		+= c_can/
-> > +obj-$(CONFIG_CAN_M_CAN)		+= m_can.o
-> 
-> Please create a new m_can directory and a Kconfig in this directory analogue
-> to the c_can IP core approach.
-> 
+>=20
+> [...]
+>=20
+> >+static int phy_berlin_sata_probe(struct platform_device *pdev)
+> >+{
+> >+	struct device *dev =3D &pdev->dev;
+> >+	struct phy *phy;
+> >+	struct phy_provider *phy_provider;
+> >+	struct phy_berlin_priv *priv;
+> >+	struct resource *res;
+> >+	int i;
+> >+
+> >+	priv =3D devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+> >+	if (!priv)
+> >+		return -ENOMEM;
+> >+
+> >+	res =3D platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> >+	if (!res)
+> >+		return -EINVAL;
+> >+
+> >+	priv->base =3D devm_ioremap(dev, res->start, resource_size(res));
+>=20
+>    Can't you use devm_ioremap_resource()?
 
-Got it, thanks.
+The SATA PHY registers are inside the SATA ones. We can't use
+devm_ioremap_resource() then.
 
-> >  obj-$(CONFIG_CAN_CC770)		+= cc770/
-> >  obj-$(CONFIG_CAN_AT91)		+= at91_can.o
-> >  obj-$(CONFIG_CAN_TI_HECC)	+= ti_hecc.o
-> 
-> Thanks for your contribution,
-> Oliver
-> 
 
-Thanks for the review.
+Antoine
 
-Regards
-Dong Aisheng
+--=20
+Antoine T=E9nart, Free Electrons
+Embedded Linux, Kernel and Android engineering
+http://free-electrons.com
