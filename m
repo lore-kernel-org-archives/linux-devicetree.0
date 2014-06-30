@@ -1,95 +1,65 @@
-From: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
-Subject: Re: [PATCH 11/16] ARM: mvebu: dts: Add CA9 MPcore SoC Controller
- node
-Date: Mon, 30 Jun 2014 17:37:55 +0200
-Message-ID: <20140630173755.32793586@free-electrons.com>
-References: <1403875377-940-1-git-send-email-gregory.clement@free-electrons.com>
-	<1403875377-940-12-git-send-email-gregory.clement@free-electrons.com>
+From: Antoine =?iso-8859-1?Q?T=E9nart?=
+	<antoine.tenart@free-electrons.com>
+Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
+Date: Mon, 30 Jun 2014 17:44:09 +0200
+Message-ID: <20140630154409.GB29613@kwain>
+References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com>
+ <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com>
+ <53AB1CFD.4040500@cogentembedded.com>
+ <20140630095940.GB10058@kwain>
+ <53B176F1.5060308@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1403875377-940-12-git-send-email-gregory.clement@free-electrons.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@free-electrons.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-pm@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Lior Amsalem <alior@marvell.com>, Tawfik Bayouk <tawfik@marvell.com>, devicetree@vger.kernel.org, Nadav Haklai <nadavh@marvell.com>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-ide-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B176F1.5060308@gmail.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: Antoine =?iso-8859-1?Q?T=E9nart?= <antoine.tenart@free-electrons.com>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Gregory,
+Hi Sebastian,
 
-On Fri, 27 Jun 2014 15:22:52 +0200, Gregory CLEMENT wrote:
-> The CA9 MPcore SoC Control block allows to do some configuration that
-> the SoC could use for a specific use case. In most cases the defaults
-> case is enough. However there is few exception: for cpuidle we need to
-> use the CA9 MPcore Reset Control register.
+On Mon, Jun 30, 2014 at 04:40:49PM +0200, Sebastian Hesselbarth wrote:
+> On 06/30/2014 11:59 AM, Antoine T=E9nart wrote:
+> >On Wed, Jun 25, 2014 at 11:03:25PM +0400, Sergei Shtylyov wrote:
+> >>On 06/23/2014 05:39 PM, Antoine T=E9nart wrote:
+> >>>+	/* set the controller speed */
+> >>>+	writel(0x31, ctrl_reg + PORT_SCR_CTL);
+> >>
+> >>    Value undocumented? Or is this the SATA SControl register by ch=
+ance?
+> >
+> >Some magic is still there...
+>=20
+> I guess Sergei was referring to AHCI spec here. PORT_SCR bits are
+> documented in AHCI spec as:
+>=20
+> 7:4 =3D 0x3 Limit speed negotiation to a rate not greater than Gen3
+>           communication rate.
+>=20
+> 3:0 =3D 0x1 Perform interface communication sequence [...]. This is
+>           functionally equivalent to a hard reset [...].
+>=20
+> So, the question is: Should we really need to reset controller in the
+> PHY driver or is it already done in AHCI common code? At least we
+> should change the comment to something like
+> /* set Gen3 controller speed and perform hard reset */
 
-I'd reword this to something like:
+I just checked, the AHCI common code has a function to do the reset:
+ahci_reset_controller(). As of the max speed negociation rate, I did no=
+t
+see it in the common AHCI functions.
 
-"""
-The CA9 MPcore SoC Control block is a set of registers that allows to
-configure certain internal aspects of the core blocks of the SoC
-(Cortex-A9, L2 cache controller, etc.). In most cases, the default
-values are fine so they aren't many reasons to touch those registers,
-but there is one exception: to support cpuidle on Armada 38x, we need
-to modify the value of the CA9 MPcore Reset Control register.
+The eSATA port on the Berlin2Q works without this line, but it may be a
+good idea to keep the max speed negociation rate.
 
-Therefore, this commit adds a new Device Tree binding for this hardware
-block, and uses this new binding for the Armada 38x Device Tree file.
+Anyway, we can remove the reset part. Nice catch!
 
-"""
+Antoine
 
-> Signed-off-by: Gregory CLEMENT <gregory.clement@free-electrons.com>
-> Cc: devicetree@vger.kernel.org
-> ---
->  .../devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt | 14 ++++++++++++++
->  arch/arm/boot/dts/armada-38x.dtsi                          |  5 +++++
->  2 files changed, 19 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-> new file mode 100644
-> index 000000000000..0a2df51ba560
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/armada-380-mpcore-soc-ctrl.txt
-> @@ -0,0 +1,14 @@
-> +Marvell Armada 38x CA9 MPcore SoC Controller
-> +============================================
-> +
-> +Required properties:
-> +
-> +- compatible: Should be "marvell,armada-380-mpcore-soc-ctrl".
-> +
-> +- reg: should be register base and length as documented in the
-
-should be *the* register base and length
-
-> +  datasheet for the CA9 MPcore SoC Control registers
-> +
-> +mpcore-soc-ctrl@20d20 {
-> +	compatible = "marvell,armada-380-mpcore-soc-ctrl";
-> +	reg = <0x20d20 0x6c>;
-> +};
-> diff --git a/arch/arm/boot/dts/armada-38x.dtsi b/arch/arm/boot/dts/armada-38x.dtsi
-> index 689fa1a46728..242d0ecc99f3 100644
-> --- a/arch/arm/boot/dts/armada-38x.dtsi
-> +++ b/arch/arm/boot/dts/armada-38x.dtsi
-> @@ -286,6 +286,11 @@
->  				reg = <0x20800 0x10>;
->  			};
->  
-> +			mpcore-soc-ctrl@20d20 {
-> +				compatible = "marvell,armada-380-mpcore-soc-ctrl";
-> +				reg = <0x20d20 0x6c>;
-> +			};
-> +
->  			coherency-fabric@21010 {
->  				compatible = "marvell,armada-380-coherency-fabric";
->  				reg = <0x21010 0x1c>;
-
-With those fixed:
-
-Reviewed-by: Thomas Petazzoni <thomas.petazzoni@free-electrons.com>
--- 
-Thomas Petazzoni, CTO, Free Electrons
+--=20
+Antoine T=E9nart, Free Electrons
 Embedded Linux, Kernel and Android engineering
 http://free-electrons.com
