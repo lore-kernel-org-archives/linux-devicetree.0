@@ -1,265 +1,102 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v6 1/1] usb: host: xhci-plat: add support for the R-Car
- H2 and M2 xHCI controllers
-Date: Mon, 30 Jun 2014 12:16:57 -0500
-Message-ID: <20140630171657.GH31442@saruman.home>
-References: <539AEC8F.4030003@renesas.com>
- <20140613142525.GE8319@saruman.home>
- <CANqRtoRy=mzosq4F-PF9_HRWK8pV66TmV1u-0cSLELAGtkfbsg@mail.gmail.com>
- <20140627154021.GH8069@saruman.home>
- <CANqRtoTfvM95b1kYNXFj9GmOewt2WPb+4UMqKonkDXC8FZq6Sg@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH v2] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Mon, 30 Jun 2014 18:21:15 +0100
+Message-ID: <20140630172115.GE28740@leverpostej>
+References: <1404148259-17305-1-git-send-email-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="zhtSGe8h3+lMyY1M"
-Return-path: <linux-sh-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-sound-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CANqRtoTfvM95b1kYNXFj9GmOewt2WPb+4UMqKonkDXC8FZq6Sg@mail.gmail.com>
-Sender: linux-sh-owner@vger.kernel.org
-To: Magnus Damm <magnus.damm@gmail.com>
-Cc: Felipe Balbi <balbi@ti.com>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, "mathias.nyman@intel.com" <mathias.nyman@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, SH-Linux <linux-sh@vger.kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+In-Reply-To: <1404148259-17305-1-git-send-email-dmurphy@ti.com>
+Content-Language: en-US
+Sender: linux-sound-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "broonie@kernel.org" <broonie@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---zhtSGe8h3+lMyY1M
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Hi,
 
-On Sun, Jun 29, 2014 at 11:33:52PM +0900, Magnus Damm wrote:
-> On Sat, Jun 28, 2014 at 12:40 AM, Felipe Balbi <balbi@ti.com> wrote:
-> > On Wed, Jun 18, 2014 at 02:15:42PM +0900, Magnus Damm wrote:
-> >> Hi Felipe,
-> >>
-> >> On Fri, Jun 13, 2014 at 11:25 PM, Felipe Balbi <balbi@ti.com> wrote:
-> >> > Hi,
-> >> >
-> >> > On Fri, Jun 13, 2014 at 09:20:31PM +0900, Yoshihiro Shimoda wrote:
-> >> >> The R-Car H2 and M2 SoCs come with an xHCI controller that requires
-> >> >> some specific initializations related to the firmware downloading a=
-nd
-> >> >> some specific registers. This patch adds the support for this speci=
-al
-> >> >> configuration as an xHCI quirk executed during probe and start.
-> >> >>
-> >> >> Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-> >> >> ---
-> >>
-> >> >> diff --git a/drivers/usb/host/xhci-rcar.c b/drivers/usb/host/xhci-r=
-car.c
-> >> >> new file mode 100644
-> >> >> index 0000000..ff0d1b4
-> >> >> --- /dev/null
-> >> >> +++ b/drivers/usb/host/xhci-rcar.c
-> >> >> @@ -0,0 +1,148 @@
-> >> >> +/*
-> >> >> + * xHCI host controller driver for R-Car SoCs
-> >> >> + *
-> >> >> + * Copyright (C) 2014 Renesas Electronics Corporation
-> >> >> + *
-> >> >> + * This program is free software; you can redistribute it and/or
-> >> >> + * modify it under the terms of the GNU General Public License
-> >> >> + * version 2 as published by the Free Software Foundation.
-> >> >> + */
-> >> >> +
-> >> >> +#include <linux/firmware.h>
-> >> >> +#include <linux/module.h>
-> >> >> +#include <linux/platform_device.h>
-> >> >> +#include <linux/usb/phy.h>
-> >> >> +
-> >> >> +#include "xhci.h"
-> >> >> +#include "xhci-rcar.h"
-> >> >> +
-> >> >> +#define FIRMWARE_NAME                "r8a779x_usb3_v1.dlmem"
-> >> >> +MODULE_FIRMWARE(FIRMWARE_NAME);
-> >> >> +
-> >> >> +/*** Register Offset ***/
-> >> >> +#define RCAR_USB3_INT_ENA    0x224   /* Interrupt Enable */
-> >> >> +#define RCAR_USB3_DL_CTRL    0x250   /* FW Download Control & Stat=
-us */
-> >> >> +#define RCAR_USB3_FW_DATA0   0x258   /* FW Data0 */
-> >> >> +
-> >> >> +#define RCAR_USB3_LCLK               0xa44   /* LCLK Select */
-> >> >> +#define RCAR_USB3_CONF1              0xa48   /* USB3.0 Configurati=
-on1 */
-> >> >> +#define RCAR_USB3_CONF2              0xa5c   /* USB3.0 Configurati=
-on2 */
-> >> >> +#define RCAR_USB3_CONF3              0xaa8   /* USB3.0 Configurati=
-on3 */
-> >> >> +#define RCAR_USB3_RX_POL     0xab0   /* USB3.0 RX Polarity */
-> >> >> +#define RCAR_USB3_TX_POL     0xab8   /* USB3.0 TX Polarity */
-> >> >> +
-> >> >> +/*** Register Settings ***/
-> >> >> +/* Interrupt Enable */
-> >> >> +#define RCAR_USB3_INT_XHC_ENA        0x00000001
-> >> >> +#define RCAR_USB3_INT_PME_ENA        0x00000002
-> >> >> +#define RCAR_USB3_INT_HSE_ENA        0x00000004
-> >> >> +#define RCAR_USB3_INT_ENA_VAL        (RCAR_USB3_INT_XHC_ENA | \
-> >> >> +                             RCAR_USB3_INT_PME_ENA | RCAR_USB3_INT=
-_HSE_ENA)
-> >> >> +
-> >> >> +/* FW Download Control & Status */
-> >> >> +#define RCAR_USB3_DL_CTRL_ENABLE     0x00000001
-> >> >> +#define RCAR_USB3_DL_CTRL_FW_SUCCESS 0x00000010
-> >> >> +#define RCAR_USB3_DL_CTRL_FW_SET_DATA0       0x00000100
-> >> >> +
-> >> >> +/* LCLK Select */
-> >> >> +#define RCAR_USB3_LCLK_ENA_VAL       0x01030001
-> >> >> +
-> >> >> +/* USB3.0 Configuration */
-> >> >> +#define RCAR_USB3_CONF1_VAL  0x00030204
-> >> >> +#define RCAR_USB3_CONF2_VAL  0x00030300
-> >> >> +#define RCAR_USB3_CONF3_VAL  0x13802007
-> >> >> +
-> >> >> +/* USB3.0 Polarity */
-> >> >> +#define RCAR_USB3_RX_POL_VAL BIT(21)
-> >> >> +#define RCAR_USB3_TX_POL_VAL BIT(4)
-> >> >> +
-> >> >> +void xhci_rcar_start(struct usb_hcd *hcd)
-> >> >> +{
-> >> >> +     u32 temp;
-> >> >> +
-> >> >> +     if (hcd->regs !=3D NULL) {
-> >> >> +             /* Interrupt Enable */
-> >> >> +             temp =3D readl(hcd->regs + RCAR_USB3_INT_ENA);
-> >> >> +             temp |=3D RCAR_USB3_INT_ENA_VAL;
-> >> >> +             writel(temp, hcd->regs + RCAR_USB3_INT_ENA);
-> >> >> +             /* LCLK Select */
-> >> >> +             writel(RCAR_USB3_LCLK_ENA_VAL, hcd->regs + RCAR_USB3_=
-LCLK);
-> >> >> +             /* USB3.0 Configuration */
-> >> >> +             writel(RCAR_USB3_CONF1_VAL, hcd->regs + RCAR_USB3_CON=
-F1);
-> >> >> +             writel(RCAR_USB3_CONF2_VAL, hcd->regs + RCAR_USB3_CON=
-F2);
-> >> >> +             writel(RCAR_USB3_CONF3_VAL, hcd->regs + RCAR_USB3_CON=
-F3);
-> >> >> +             /* USB3.0 Polarity */
-> >> >> +             writel(RCAR_USB3_RX_POL_VAL, hcd->regs + RCAR_USB3_RX=
-_POL);
-> >> >> +             writel(RCAR_USB3_TX_POL_VAL, hcd->regs + RCAR_USB3_TX=
-_POL);
-> >> >> +     }
-> >> >> +}
-> >> >> +
-> >> >> +static int xhci_rcar_download_firmware(struct device *dev, void __=
-iomem *regs)
-> >> >> +{
-> >> >> +     const struct firmware *fw;
-> >> >> +     int retval, index, j, time;
-> >> >> +     int timeout =3D 10000;
-> >> >> +     u32 data, val, temp;
-> >> >> +
-> >> >> +     /* request R-Car USB3.0 firmware */
-> >> >> +     retval =3D request_firmware(&fw, FIRMWARE_NAME, dev);
-> >> >> +     if (retval)
-> >> >> +             return retval;
-> >> >> +
-> >> >> +     /* download R-Car USB3.0 firmware */
-> >> >> +     temp =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> >> +     temp |=3D RCAR_USB3_DL_CTRL_ENABLE;
-> >> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
-> >> >> +
-> >> >> +     for (index =3D 0; index < fw->size; index +=3D 4) {
-> >> >> +             /* to avoid reading beyond the end of the buffer */
-> >> >> +             for (data =3D 0, j =3D 3; j >=3D 0; j--) {
-> >> >> +                     if ((j + index) < fw->size)
-> >> >> +                             data |=3D fw->data[index + j] << (8 *=
- j);
-> >> >> +             }
-> >> >> +             writel(data, regs + RCAR_USB3_FW_DATA0);
-> >> >> +             temp =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> >> +             temp |=3D RCAR_USB3_DL_CTRL_FW_SET_DATA0;
-> >> >> +             writel(temp, regs + RCAR_USB3_DL_CTRL);
-> >> >> +
-> >> >> +             for (time =3D 0; time < timeout; time++) {
-> >> >> +                     val =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> >> +                     if ((val & RCAR_USB3_DL_CTRL_FW_SET_DATA0) =
-=3D=3D 0)
-> >> >> +                             break;
-> >> >> +                     udelay(1);
-> >> >> +             }
-> >> >> +             if (time =3D=3D timeout) {
-> >> >> +                     retval =3D -ETIMEDOUT;
-> >> >> +                     break;
-> >> >> +             }
-> >> >> +     }
-> >> >> +
-> >> >> +     temp =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> >> +     temp &=3D ~RCAR_USB3_DL_CTRL_ENABLE;
-> >> >> +     writel(temp, regs + RCAR_USB3_DL_CTRL);
-> >> >> +
-> >> >> +     for (time =3D 0; time < timeout; time++) {
-> >> >> +             val =3D readl(regs + RCAR_USB3_DL_CTRL);
-> >> >> +             if (val & RCAR_USB3_DL_CTRL_FW_SUCCESS) {
-> >> >> +                     retval =3D 0;
-> >> >> +                     break;
-> >> >> +             }
-> >> >> +             udelay(1);
-> >> >> +     }
-> >> >> +     if (time =3D=3D timeout)
-> >> >> +             retval =3D -ETIMEDOUT;
-> >> >> +
-> >> >> +     release_firmware(fw);
-> >> >> +
-> >> >> +     return retval;
-> >> >> +}
-> >> >> +
-> >> >> +/* This function needs to initialize a "phy" of usb before */
-> >> >
-> >> > initializing a PHY looks like something that the PHY layer should do.
-> >> > Why don't you write a PHY driver and teach xhci-core about PHYs ? Th=
-en,
-> >> > more people would benefit.
-> >>
-> >> Could you please clarify what you would like Shimoda-san to do?
-> >>
-> >> Like Ben and Shimoda-san mentioned, there is already a PHY driver
-> >> developed for this SoC. The PHY driver is however shared in various
-> >> ways. For example, on one particular SoC the same PHY driver is
-> >> interfacing to a total of 3 different variants of USB controllers
-> >> where XHCI is one of them. And to make things even more complicated,
-> >> depending on SoC variant the XHCI hardware may or may not be available
-> >> - but the PHY portion is more or less the same.
-> >>
-> >> Putting the firmware loader in the XHCI driver like this at least
-> >> keeps it together with the rest of the XHCI stuff and also makes it
-> >> possible to easily access the XHCI I/O register window for firmware
-> >> loading. Moving the firmware loading to the PHY driver however
-> >> complicates the situation when it comes to Kconfig handling of XHCI
-> >> and PHY driver and also forces the PHY driver to access the XHCI
-> >> hardware I/O registers for firmware loading...
-> >
-> > But the firmware is being loaded into the PHY registers, no ? In that
-> > case, it should sit in the PHY driver.
->=20
-> The firmware is not loaded into the PHY registers. It is loaded into
-> what is considered XHCI registers by the documentation.
+On Mon, Jun 30, 2014 at 06:10:59PM +0100, Dan Murphy wrote:
+> Support the TI TAS2552 Class D amplifier.
+> 
+> The TAS2552 is a high efficiency Class-D audio
+> power amplifier with advanced battery current
+> management and an integrated Class-G boost
+> The device constantly measures the
+> current and voltage across the load and provides a
+> digital stream of this information.
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+> 
+> v2 - Address RFC comments- Added regmap, and snd_soc calls
+> removed debug code, address checkpatch errors -https://patchwork.kernel.org/patch/4378281/
+> 
+>  .../devicetree/bindings/sound/tas2552.txt          |   22 +
+>  include/sound/tas2552-plat.h                       |   25 ++
+>  sound/soc/codecs/Kconfig                           |    5 +
+>  sound/soc/codecs/Makefile                          |    2 +
+>  sound/soc/codecs/tas2552.c                         |  462 ++++++++++++++++++++
+>  sound/soc/codecs/tas2552.h                         |   75 ++++
+>  6 files changed, 591 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/tas2552.txt
+>  create mode 100644 include/sound/tas2552-plat.h
+>  create mode 100644 sound/soc/codecs/tas2552.c
+>  create mode 100644 sound/soc/codecs/tas2552.h
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/tas2552.txt b/Documentation/devicetree/bindings/sound/tas2552.txt
+> new file mode 100644
+> index 0000000..58e931b
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/tas2552.txt
+> @@ -0,0 +1,22 @@
+> +Texas Instruments - tas2552 Codec module
+> +
+> +The tas2552 serial control bus communicates through I2C protocols
+> +
+> +Required properties:
+> +
+> +- compatible - "string" - One of:
+> +    "ti,tas2552" - TAS2552
 
-oh, my bad. I misinterpreted. I withdraw my comment then.
+Drop the "string". The compatible list is a standard property and its
+type (string list) is well-known.
 
---=20
-balbi
+You could change "One of:" to "should contain:", which will look less
+weird with a single entry.
 
---zhtSGe8h3+lMyY1M
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+> +- reg - <int> -  I2C slave address
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Similarly to "string" we can get rid of <int> here. i2c addresses are
+well-known to be described in a single u32 cell.
 
-iQIcBAEBAgAGBQJTsZuJAAoJEIaOsuA1yqREKiAP/jM8TunZqtaNmnwLXEi+ZdlR
-AV7HXPIta+mXYc0LQpErsQV4AeIuy0mrc8AsoaG4OJioT0VFncC3nT6450fVWJD8
-913X5L2u+Ck2/L77n7/6uCDIcmZXEkRneIYQWv1VGAuat1vAqIX3NnNEyoZnSp/v
-3roh0K61kJvWlFcEXo4G5E1rCGq/CGZOXYCjwof7j4C2zRsHZwDt7hsGalxwpsuj
-QHKxVelA0F/F+P3buT6SKLRZFqC+Qtjb/wDiVsvyB+d3eDI5RXHV5hzAdfAFFZbs
-ULBZLneFLIYAD71Z3j2RoLjewCPw7UjM8tSRmuTmt4x6LzOTh1ZvRhEk3QgA6weC
-8bUZwWyfS1Tig5aFZvP6RHHRkcPUp8aT6modNEKiNDo4IXZDxEx9VI9HuL31lqhN
-hUUHVWqhg/2KNfnfdnPf6OcGNTWKq23T5oILJveVg08yNIxXJ4hqU6/slEjMf61u
-lFkaCwGjerhIEvY7IrlSXyl6pLIVtlr+WJ8307HgVufJO2mowyaG6P7oJ8PoYSBS
-l4HdDZAVUYEU2qPye5p6lIST9Vo2OFPYKQ/SqxZ38Uu0Zrf9D8QBBpXv6NyIe4lf
-QqOubeRLbBxPk+wxDVkLJWRKaVqt80lZuxlPME3cxGbzQSKtFwHi6mxBveWqFAHh
-wpi74qHFXVKn+sZXlp+h
-=D4yN
------END PGP SIGNATURE-----
+> +
+> +Optional properties:
+> +
+> +- power-gpio - gpio pin to enable/disable the device
 
---zhtSGe8h3+lMyY1M--
+The code below seems to look for "enable-gpio". Searching for
+"power-gpio" only hits in the line above and the example below. I assume
+the code is in error?
+
+> +
+> +Example:
+> +
+> +tas2552: tas2552@41 {
+> +       compatible = "ti,tas2552";
+> +       reg = <0x41>;
+> +       power-gpio = <&gpio4 2 GPIO_ACTIVE_HIGH>;
+> +};
+
+[...]
+
+> +       if (pdata) {
+> +               data->power_gpio = pdata->power_gpio;
+> +       } else if (np) {
+> +               data->power_gpio = of_get_named_gpio(np, "enable-gpio", 0);
+
+Usually I see this logic the other way around, looking for DT data first
+then falling back to platform data if no DT information was present.
+
+Cheers,
+Mark.
