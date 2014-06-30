@@ -1,68 +1,50 @@
-From: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH v2] devicetree: Add generic IOMMU device tree bindings
-Date: Mon, 30 Jun 2014 10:52:20 +0100
-Message-ID: <20140630095220.GA25779@arm.com>
-References: <1400877218-4113-1-git-send-email-thierry.reding@gmail.com>
- <CAL_JsqKumG1PSFoVfeGpLLG+MjXFeF4aUjun=vv1BJpaxk0Byg@mail.gmail.com>
- <4545972.cM7IP1qTXQ@wuerfel>
- <53A4C0C9.2050908@codeaurora.org>
- <20140624091808.GC26013@arm.com>
- <53A9BC18.2090106@codeaurora.org>
- <20140624181150.GB4067@arm.com>
- <53A9EF3A.2070704@codeaurora.org>
- <20140625091858.GG6153@arm.com>
- <53ADEEDF.7060902@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53ADEEDF.7060902-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-tegra-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Olav Haugan <ohaugan-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Joerg Roedel <joro-zLv9SwRftAIdnm+yROfE0A@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Marc Zyngier <Marc.Zyngier-5wv7dgnIgG8@public.gmane.org>, Linux IOMMU <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Dave P Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Hiroshi
+From: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+Subject: [PATCH] checkpatch: Enable whitespace checks for DTS files
+Date: Mon, 30 Jun 2014 11:53:31 +0200
+Message-ID: <1404122011-11409-1-git-send-email-geert+renesas@glider.be>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Andy Whitcroft <apw-Z7WLFzj8eWMS+FvcfC7Uqw@public.gmane.org>, Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Olav,
+When run on *.dtsi or *.dts files, the whitespace checks were skipped,
+while they are valid for DTS files.  Hence stop skipping them.
 
-On Fri, Jun 27, 2014 at 11:23:27PM +0100, Olav Haugan wrote:
-> On 6/25/2014 2:18 AM, Will Deacon wrote:
-> > Why can't it be dynamically detected? Whilst the StreamIDs are fixed in
-> > hardware (from the SMMU architecture perspective), the SMRs are completely
-> > programmable. Why doesn't something like Andreas's proposal work for you?
-> > The idea there was to find the constant bits among the StreamIDs for a
-> > master and create the mask accordingly.
-> > 
-> Lets say I have an IOMMU with 2 masters and 2 SMRn slots with the
-> following stream IDs coming from the masters:
-> 
-> Master 1: 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28
-> Master 2: 0x30
-> 
-> To make this work I would program SMR[0] with StreamID 0x20 and mask 0xF
-> to ignore lower 4 bits. SMR[1] would just be StreamID 0x30 with mask 0x0.
-> 
-> However, I could also have an IOMMU with 2 masters and 9 SMRn slots with
-> the following stream IDs:
-> 
-> Master 1: 0x21, 0x22, 0x23, 0x24, 0x25, 0x26, 0x27, 0x28
-> Master 2: 0x29
-> 
-> Here I would program all SMRn and leave the mask to be 0 for all SMRn's.
-> So how do I detect when to apply a mask or not?
+I ran checkpatch on all in-tree DTS files, and didn't notice any error or
+warning messages that are inappropriate for DTS files.
 
-You would aim to use the smallest number of SMRs per master possible.
-You could probably use:
+Signed-off-by: Geert Uytterhoeven <geert+renesas-gXvu3+zWzMSzQB+pC5nmwQ@public.gmane.org>
+---
+ scripts/checkpatch.pl | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-  Master 1: SMR[0].id == 0x20, SMR[0].mask = 0x07
-            SMR[1].id == 0x28, SMR[1].mask = 0x00
+diff --git a/scripts/checkpatch.pl b/scripts/checkpatch.pl
+index 010b18ef4ea0..9ae624942a84 100755
+--- a/scripts/checkpatch.pl
++++ b/scripts/checkpatch.pl
+@@ -2137,7 +2137,7 @@ sub process {
+ 		}
+ 
+ # check we are in a valid source file if not then ignore this hunk
+-		next if ($realfile !~ /\.(h|c|s|S|pl|sh)$/);
++		next if ($realfile !~ /\.(h|c|s|S|pl|sh|dtsi|dts)$/);
+ 
+ #line length limit
+ 		if ($line =~ /^\+/ && $prevrawline !~ /\/\*\*/ &&
+@@ -2192,7 +2192,7 @@ sub process {
+ 		}
+ 
+ # check we are in a valid source file C or perl if not then ignore this hunk
+-		next if ($realfile !~ /\.(h|c|pl)$/);
++		next if ($realfile !~ /\.(h|c|pl|dtsi|dts)$/);
+ 
+ # at the beginning of a line any tabs must come first and anything
+ # more than 8 must use tabs.
+-- 
+1.9.1
 
-  Master 2: SMR[2].id == 0x29, SMR[2].mask = 0x00
-
-> I am not familiar with Andreas's proposal. Do you have a link?
-
-  http://marc.info/?l=linux-arm-kernel&m=139110598005846&w=2
-
-Note that since Calxeda went under, Andreas is unfortunately no longer
-working on this.
-
-Will
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
