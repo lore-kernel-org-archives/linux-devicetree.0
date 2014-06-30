@@ -1,71 +1,58 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v7 1/7] phy: add a driver for the Berlin SATA PHY
-Date: Mon, 30 Jun 2014 20:55:35 +0400
-Message-ID: <53B19687.5050400@cogentembedded.com>
-References: <1403530783-17180-1-git-send-email-antoine.tenart@free-electrons.com> <1403530783-17180-2-git-send-email-antoine.tenart@free-electrons.com> <53AB1CFD.4040500@cogentembedded.com> <20140630095940.GB10058@kwain> <53B176F1.5060308@gmail.com> <20140630154409.GB29613@kwain>
+From: Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+Subject: [PATCH 0/4] Introduce clk_find_nearest_rate()
+Date: Mon, 30 Jun 2014 09:56:32 -0700
+Message-ID: <1404147396-8041-1-git-send-email-soren.brinkmann@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1;
-	format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-ide-owner@vger.kernel.org>
-In-Reply-To: <20140630154409.GB29613@kwain>
-Sender: linux-ide-owner@vger.kernel.org
-To: =?ISO-8859-1?Q?Antoine_T=E9nart?= <antoine.tenart@free-electrons.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: tj@kernel.org, kishon@ti.com, thomas.petazzoni@free-electrons.com, zmxu@marvell.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-ide@vger.kernel.org, alexandre.belloni@free-electrons.com, jszhang@marvell.com, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "Rafael J. Wysocki" <rjw-LthD3rsA81gm4RdzfppkhA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, cpufreq-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Soren Brinkmann <soren.brinkmann-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+On Zynq I encountered issues due to rounding here and there. Often the
+issue would have been resolved by rounding towards the requested
+frequency. Unfortunately, the CCF does not specify  the behavior of
+clk_round_rate() in terms of rounding, making this proposed API
+call useful for certain use-cases.
 
-On 06/30/2014 07:44 PM, Antoine T=E9nart wrote:
+An RFC of this series has been discussed here:
+https://lkml.org/lkml/2014/5/14/694
 
->>>>> +	/* set the controller speed */
->>>>> +	writel(0x31, ctrl_reg + PORT_SCR_CTL);
+Mike: IIRC, you wanted to fix the return type of __clk_round_rate(). Do
+you have any patches for that already? I couldn't find anything in
+clk-next.
 
->>>>     Value undocumented? Or is this the SATA SControl register by c=
-hance?
+Patch 1 adds the new API call.
+2 and 3 apply the new API.
+And 4 is a minor fixup of the Zynq DT. The frequencies in the Zynq OPPs
+had been specified taking this rounding issues into account, which
+is no longer required with this patchset.
 
->>> Some magic is still there...
+	Thanks,
+	S=C3=B6ren
 
->> I guess Sergei was referring to AHCI spec here.
 
-    Actually, even to the SATA specs. :-)
+Soren Brinkmann (4):
+  clk: Introduce 'clk_find_nearest_rate()'
+  cpufreq: cpu0: Use clk_find_nearest_rate()
+  net: macb: Use clk_find_nearest_rate() API
+  ARM: zynq: dt: Use properly rounded frequencies in OPPs
 
->> PORT_SCR bits are documented in AHCI spec as:
+ arch/arm/boot/dts/zynq-7000.dtsi    |  4 +--
+ drivers/clk/clk.c                   | 57 +++++++++++++++++++++++++++++=
+++++++++
+ drivers/cpufreq/cpufreq-cpu0.c      |  3 +-
+ drivers/net/ethernet/cadence/macb.c |  2 +-
+ include/linux/clk.h                 |  9 ++++++
+ 5 files changed, 71 insertions(+), 4 deletions(-)
 
->> 7:4 =3D 0x3 Limit speed negotiation to a rate not greater than Gen3
->>            communication rate.
+--=20
+2.0.1.1.gfbfc394
 
->> 3:0 =3D 0x1 Perform interface communication sequence [...]. This is
->>            functionally equivalent to a hard reset [...].
-
->> So, the question is: Should we really need to reset controller in th=
-e
->> PHY driver or is it already done in AHCI common code? At least we
->> should change the comment to something like
->> /* set Gen3 controller speed and perform hard reset */
-
-> I just checked, the AHCI common code has a function to do the reset:
-> ahci_reset_controller(). As of the max speed negociation rate, I did =
-not
-> see it in the common AHCI functions.
-
-    You've looked in a wrong place -- since SControl is a standard *SAT=
-A*=20
-register, it gets read/written by the libata core. The low-level driver=
- only=20
-provides scr_{read|write}() methods.
-
-> The eSATA port on the Berlin2Q works without this line, but it may be=
- a
-> good idea to keep the max speed negociation rate.
-
-    It's usually libata's task to negotiate the SATA speed.
-
-> Anyway, we can remove the reset part. Nice catch!
-
-    Thanks.
-
-> Antoine
-
-WBR, Sergei
-
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
