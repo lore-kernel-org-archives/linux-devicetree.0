@@ -1,49 +1,42 @@
 From: Tomasz Figa <t.figa@samsung.com>
-Subject: Re: [PATCH v3] clk: exynos5420: Remove aclk66_peric from the clock
- tree description
-Date: Mon, 30 Jun 2014 15:48:57 +0200
-Message-ID: <53B16AC9.7090509@samsung.com>
-References: <1401467562-5585-1-git-send-email-dianders@chromium.org>
- <1402000514-30752-1-git-send-email-dianders@chromium.org>
+Subject: Re: [PATCH] clk/exynos5250: fix bit number for tv sysmmu clock
+Date: Mon, 30 Jun 2014 15:49:47 +0200
+Message-ID: <53B16AFB.9010107@samsung.com>
+References: <1403156836-24421-1-git-send-email-rahul.sharma@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1402000514-30752-1-git-send-email-dianders@chromium.org>
+In-reply-to: <1403156836-24421-1-git-send-email-rahul.sharma@samsung.com>
 Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>, Mike Turquette <mturquette@linaro.org>, Kukjin Kim <kgene.kim@samsung.com>
-Cc: olof@lixom.net, javier.martinez@collabora.co.uk, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, rahul.sharma@samsung.com, shaik.ameer@samsung.com, arun.kk@samsung.com, alim.akhtar@samsung.com, a.hajda@samsung.com, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Rahul Sharma <rahul.sharma@samsung.com>, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mturquette@linaro.org, tomasz.figa@gmail.com, kgene.kim@samsung.com, joshi@samsung.com, r.sh.open@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On 05.06.2014 22:35, Doug Anderson wrote:
-> The "aclk66_peric" clock is a gate clock with a whole bunch of gates
-> underneath it.  This big gate isn't very useful to include in our
-> clock tree.  If any of the children need to be turned on then the big
-> gate will need to be on anyway.  ...and there are plenty of other "big
-> gates" that aren't described in our clock tree, some of which shut off
-> collections of clocks that have no relationship in the hierarchy so
-> are hard to model.
+On 19.06.2014 07:47, Rahul Sharma wrote:
+> Change bit from 2 to 9 for tv (mixer) sysmmu clock.
 > 
-> "aclk66_peric" is causing earlyprintk problems since it gets disabled
-> as part of the boot process, so let's just remove it.
-> 
-> Strangely (and for no good reason) this clock is exported as part of
-> the common clock bindings.  Remove it since there are no in-kernel
-> device trees using it and no reason anyone out of tree should refer to
-> it either.
-> 
-> Signed-off-by: Doug Anderson <dianders@chromium.org>
+> Signed-off-by: Rahul Sharma <rahul.sharma@samsung.com>
 > ---
-> Changes in v3:
-> - Now just remove aclk66_peric from the tree as suggested by Tomasz.
+> Based on Kukjin's for-next branch.
 > 
-> Changes in v2:
-> - Use GATE_A and clk_get().  Save the clock for putting later.
-> - Return 0 from exynos5420_clk_late_init().
+>  drivers/clk/samsung/clk-exynos5250.c |    2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
->  drivers/clk/samsung/clk-exynos5420.c   | 85 ++++++++++++++++++++++------------
->  include/dt-bindings/clock/exynos5420.h |  1 -
->  2 files changed, 55 insertions(+), 31 deletions(-)
+> diff --git a/drivers/clk/samsung/clk-exynos5250.c b/drivers/clk/samsung/clk-exynos5250.c
+> index 1fad4c5..184f642 100644
+> --- a/drivers/clk/samsung/clk-exynos5250.c
+> +++ b/drivers/clk/samsung/clk-exynos5250.c
+> @@ -661,7 +661,7 @@ static struct samsung_gate_clock exynos5250_gate_clks[] __initdata = {
+>  	GATE(CLK_RTC, "rtc", "div_aclk66", GATE_IP_PERIS, 20, 0, 0),
+>  	GATE(CLK_TMU, "tmu", "div_aclk66", GATE_IP_PERIS, 21, 0, 0),
+>  	GATE(CLK_SMMU_TV, "smmu_tv", "mout_aclk200_disp1_sub",
+> -			GATE_IP_DISP1, 2, 0, 0),
+> +			GATE_IP_DISP1, 9, 0, 0),
+>  	GATE(CLK_SMMU_FIMD1, "smmu_fimd1", "mout_aclk200_disp1_sub",
+>  			GATE_IP_DISP1, 8, 0, 0),
+>  	GATE(CLK_SMMU_2D, "smmu_2d", "div_aclk200", GATE_IP_ACP, 7, 0, 0),
+> 
 
 Applied as a fix for 3.16.
 
