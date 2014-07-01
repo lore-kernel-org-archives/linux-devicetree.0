@@ -1,45 +1,82 @@
-From: Andreas Fenkart <afenkart@gmail.com>
-Subject: Re: mwifiex card reset
-Date: Tue, 1 Jul 2014 10:44:42 +0200
-Message-ID: <CALtMJEDkdvs_meBw-fE2Hnbn-1YZrH9v2KuXyDF6VxjFeNbzgQ@mail.gmail.com>
-References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
-	<20140628052220.GG10407@us.netrek.org>
-	<20140628072322.GC7410@atomide.com>
-	<CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
-	<20140630061912.GA2461@atomide.com>
-	<53B1BAC1.3090902@zonque.org>
-	<477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Bing Zhao <bzhao@marvell.com>
-Cc: Daniel Mack <daniel@zonque.org>, Tony Lindgren <tony@atomide.com>, James Cameron <quozl@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+From: jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Subject: [PATCH 1/2] ASoC: dt-bindings: add rockchip i2s bindings
+Date: Tue,  1 Jul 2014 16:37:39 +0800
+Message-ID: <1404203860-30712-2-git-send-email-xjq@rock-chips.com>
+References: <1404203860-30712-1-git-send-email-xjq@rock-chips.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404203860-30712-1-git-send-email-xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bing,
+From: Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
 
-2014-07-01 8:44 GMT+02:00 Bing Zhao <bzhao@marvell.com>:
-[snip]
->> Yes, a helper might be the best solution. It could even be a generic one, that
->> just takes any number of clocks, reset GPIOs and regulators and takes care
->> for sequencing them. However, we need to reference that helper from the
->> mwifiex driver, for two reasons.
->>
->> a) we need to make sure the reset helper gets to do its job before the
->> mwifiex driver scans the SDIO bus, and
->>
->> b) the reset helper needs to be called when the mmc host controller wants
->> to do a card reset.
->>
->> Hence, we'll need some sort of internal API for this, and a phandle in dts. I
->> wonder whether that glue logic might be better off living in the mmc core, as
->> mwifiex might well be interfaced to other hosts?
->
-> I may have missed something, but doesn't the MMC_POWER_OFF and MMC_POWER_ON|UP handling in controller driver help?
-> Anyway the clocks/GPIOs/regulators are sort of platform dependent. Would it be better putting it in /arch/arm/mach-xxxxx/?
+Add devicetree bindings for i2s controller found on rk3066, rk3188 and rk3288
+processors from rockchip.
 
-what about usb? the mwifiex can also be connected via usb to the host,
-isn't the reset
-logic the same in that case, independent of sdio
+Signed-off-by: Jianqun Xu <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+---
+ .../devicetree/bindings/sound/rockchip-i2s.txt     |   45 ++++++++++++++++++++
+ 1 file changed, 45 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/rockchip-i2s.txt b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+new file mode 100644
+index 0000000..e9ab122
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/rockchip-i2s.txt
+@@ -0,0 +1,45 @@
++* Rockchip I2S controller
++
++The I2S bus (Inter-IC sound bus) is a serial link for digital audio data transfer
++between devices in the system and be invented by Philips Semiconductor.
++
++Required properties:
++
++- compatible : should be one of the following.
++   "rockchip,rk3066-i2s": for rk3066
++   "rockchip,rk3188-i2s", "rockchip,rk3066-i2s" for rk3188
++   "rockchip,rk3288-i2s", "rockchip,rk3066-i2s" for rk3288
++- reg : physical base address of the controller and length of memory mapped
++  region.
++- interrupts : The interrupt number to the cpu. The interrupt specifier format
++  depends on the interrupt controller.
++- #address-cells : should be 1.
++- #size-cells : should be 0.
++- dmas : list of DMA controller phandle and DMA request line ordered pairs.
++- dma-names : identifier string for each DMA request line in the dmas property.
++  These strings correspond 1:1 with the ordered pairs in dmas.
++  Must include the following entries:
++  - rx:
++  - tx:
++- clocks : Handle to internal work clock and master clock output to IO.
++- clock-names :
++  - "i2s_hclk": support AHB bus interface
++  - "i2s_clk": work clock for i2s controller
++
++Example:
++
++aliases {
++	i2s0 = &i2s0;
++}
++
++i2s0: i2s@ff890000 {
++	compatible = "rockchip,rk3066-i2s";
++	reg = <0xff890000 0x10000>;
++	interrupts = <GIC_SPI 85 IRQ_TYPE_LEVEL_HIGH>;
++	#address-cells = <1>;
++	#size-cells = <0>;
++	dmas = <&pdma1 0>, <&pdma1 1>;
++	dma-names = "rx", "tx";
++	clock-names = "i2s_hclk", "i2s_clk";
++	clocks = <&cru HCLK_I2S0>, <&cru SCLK_I2S0>;
++};
+-- 
+1.7.9.5
+
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
