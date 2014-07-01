@@ -1,34 +1,80 @@
-From: Joe Perches <joe@perches.com>
-Subject: Re: [PATCH RFC V2 2/2] net: qualcomm: new Ethernet over SPI driver
- for QCA7000
-Date: Tue, 01 Jul 2014 10:57:45 -0700
-Message-ID: <1404237465.14624.9.camel@joe-AO725>
-References: <1404232609-4314-1-git-send-email-stefan.wahren@i2se.com>
-	 <1404232609-4314-3-git-send-email-stefan.wahren@i2se.com>
-	 <20140701174616.GA10927@leverpostej>
+From: =?utf-8?B?U8O2cmVu?= Brinkmann <soren.brinkmann@xilinx.com>
+Subject: Re: [PATCH v9 3/3] dt-bindings: add mtk-timer bindings
+Date: Tue, 1 Jul 2014 11:00:14 -0700
+Message-ID: <5b2c6b68-6177-47f4-937a-077b4f3c89a4@BN1AFFO11FD048.protection.gbl>
+References: <1403264929-21325-1-git-send-email-matthias.bgg@gmail.com>
+ <1403264929-21325-4-git-send-email-matthias.bgg@gmail.com>
+ <20140620123602.GK30188@leverpostej>
+ <CABuKBeKknz7OEyffKOGK=yk7ZH7fj7Jf9fgPhw2VGbTC-p21qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20140701174616.GA10927@leverpostej>
-Sender: netdev-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, "davem@davemloft.net" <davem@davemloft.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "eric.dumazet@gmail.com" <eric.dumazet@gmail.com>, "dave.taht@gmail.com" <dave.taht@gmail.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CABuKBeKknz7OEyffKOGK=yk7ZH7fj7Jf9fgPhw2VGbTC-p21qw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "andrew@lunn.ch" <andrew@lunn.ch>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "anders.berg@lsi.com" <anders.berg@lsi.com>, "heiko.stuebner@bq.com" <heiko.stuebner@bq.com>, "linux@arm.linux.org.uk" <linux@arm.linux.org.uk>, Pawel Moll <Pawel.Moll@arm.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "florian.vaussard@epfl.ch" <florian.vaussard@epfl.ch>, "sebastian.hesselbarth@gmail.com" <sebastian.hesselbarth@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "jason@lakedaemon.net" <jason@lakedaemon.net>, "arnd@arndb.de" <arnd@arndb.de>, ijc+devicet
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2014-07-01 at 18:46 +0100, Mark Rutland wrote:
-> On Tue, Jul 01, 2014 at 05:36:49PM +0100, Stefan Wahren wrote:
-> > This patch adds the Ethernet over SPI driver for the
-> > Qualcomm QCA7000 HomePlug GreenPHY.
-[]
-> > +               memcpy(qca->net_dev->dev_addr, mac, ETH_ALEN);
-> 
-> I believe that it is preferred to write:
-> 
-> 	ether_addr_copy(qca->net_dev->dev_addr, mac);
-> 
-> I believe checkpatch has a warning for this.
-
-True, but you have to make sure that both args are
-at least __aligned(2) and afaics there's no
-guarantee that's true for mac.
+T24gVHVlLCAyMDE0LTA3LTAxIGF0IDA3OjQ2UE0gKzAyMDAsIE1hdHRoaWFzIEJydWdnZXIgd3Jv
+dGU6Cj4gMjAxNC0wNi0yMCAxNDozNiBHTVQrMDI6MDAgTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxh
+bmRAYXJtLmNvbT46Cj4gPiBPbiBGcmksIEp1biAyMCwgMjAxNCBhdCAxMjo0ODo0OVBNICswMTAw
+LCBNYXR0aGlhcyBCcnVnZ2VyIHdyb3RlOgo+ID4+IEFkZCBiaW5kaW5nIGRvY3VtZW50YXRpb24g
+Zm9yIHRoZSBHZW5lcmFsIFBvcnBvc2UgVGltZXIgZHJpdmVyIG9mCj4gPj4gdGhlIE1lZGlhdGVr
+IFNvQ3MuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBCcnVnZ2VyIDxtYXR0aGlh
+cy5iZ2dAZ21haWwuY29tPgo+ID4+IEFja2VkLWJ5OiBTw7ZyZW4gQnJpbmttYW5uIDxzb3Jlbi5i
+cmlua21hbm5AeGlsaW54LmNvbT4KPiA+PiBBY2tlZC1ieTogUm9iIEhlcnJpbmcgPHJvYmhAa2Vy
+bmVsLm9yZz4KPiA+PiAtLS0KPiA+PiAgLi4uL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10
+aW1lci50eHQgICAgICAgICAgfCAgIDE4ICsrKysrKysrKysrKysrKysrKwo+ID4+ICAxIGZpbGUg
+Y2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKQo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL21lZGlhdGVrLG10ay10aW1lci50eHQK
+PiA+Pgo+ID4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mv
+dGltZXIvbWVkaWF0ZWssbXRrLXRpbWVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy90aW1lci9tZWRpYXRlayxtdGstdGltZXIudHh0Cj4gPj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQKPiA+PiBpbmRleCAwMDAwMDAwLi4xMGI3ZTA5Cj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+
+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9tZWRpYXRlayxt
+dGstdGltZXIudHh0Cj4gPj4gQEAgLTAsMCArMSwxOCBAQAo+ID4+ICtNZWRpYXRlayBNVDY1Nzcs
+IE1UNjU3MiBhbmQgTVQ2NTg5IFRpbWVycwo+ID4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0KPiA+PiArCj4gPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPj4gKy0g
+Y29tcGF0aWJsZTogU2hvdWxkIGJlICJtZWRpYXRlayxtdDY1NzctdGltZXIiCj4gPj4gKy0gcmVn
+OiBTaG91bGQgY29udGFpbiBsb2NhdGlvbiBhbmQgbGVuZ3RoIGZvciB0aW1lcnMgcmVnaXN0ZXIu
+Cj4gPj4gKy0gY2xvY2tzOiBDbG9ja3MgZHJpdmluZyB0aGUgdGltZXIgaGFyZHdhcmUuIFRoaXMg
+bGlzdCBzaG91bGQgaW5jbHVkZSB0d28KPiA+PiArICAgICBjbG9ja3MuIFRoZSBvcmRlciBpcyBz
+eXN0ZW0gY2xvY2sgYW5kIGFzIHNlY29uZCBjbG9jayB0aGUgUlRDIGNsb2NrLgo+ID4+ICsKPiA+
+PiArRXhhbXBsZXM6Cj4gPj4gKwo+ID4+ICsgICAgIHRpbWVyQDEwMDA4MDAwIHsKPiA+PiArICAg
+ICAgICAgICAgIGNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ2NTc3LXRpbWVyIjsKPiA+PiArICAg
+ICAgICAgICAgIHJlZyA9IDwweDEwMDA4MDAwIDB4ODA+Owo+ID4+ICsgICAgICAgICAgICAgaW50
+ZXJydXB0cyA9IDxHSUNfU1BJIDExMyBJUlFfVFlQRV9MRVZFTF9MT1c+Owo+ID4+ICsgICAgICAg
+ICAgICAgY2xvY2tzID0gPCZzeXN0ZW1fY2xrPiwgPCZydGNfY2xrPjsKPiA+PiArICAgICAgICAg
+ICAgIGNsb2NrLW5hbWVzID0gInN5c3RlbS1jbGsiLCAicnRjLWNsayI7Cj4gPgo+ID4gVGhlc2Ug
+bmFtZXMgc2hvdWxkIGJlIG1lbnRpb25lZCBhYm92ZSwgb3IgcmVtb3ZlZC4KPiAKPiBJIGFkZGVk
+IHRoZSBjbG9jay1uYW1lcyB0byBtYWtlIGl0IHRoZSBjbG9jayBvcmRlciBjbGVhcmVyLCBhcyBp
+dCBpcwo+IGRvbmUgaW4gdGhlIGFybSBzcCw4MDQgWzFdLgo+IEJ1dCBJIHRoaW5rIGl0IGlzIGNs
+ZWFyIGVub3VnaCB0aHJvdWdoIHRoZSBwaGFuZGxlIG5hbWVzIGFuZCB0aGUKPiBkZXNjcmlwdGlv
+biBvZiB0aGUgY2xvY2tzIHByb3BlcnR5Lgo+IFNvIEkgd2lsbCBkZWxldGUgdGhlIGNsb2NrLW5h
+bWVzIGluIHRoZSB2MTAgcm91bmQuCgpJIHRoaW5rIEkgb3JpZ2luYWxseSBhZHZvY2F0ZWQgZm9y
+IGFkZGluZyB0aG9zZSBuYW1lcy4gQW5kIG15IGFyZ3VtZW50CndhcyB0aGF0IHRoZSBuYW1lcyBp
+biB0aGUgZHRzIGFyZSBwcm9iYWJseSBub3QgY2xlYXJseSBpZGVudGlmeWluZyB0aGUKdGltZXIg
+SVAncyBjbG9jayBpbnB1dHMgc2luY2UgdGhleSByZWZlciB0byBTT0MgbmFtZXMgZm9yIHRoZSBj
+bG9ja3MuIFdlCmhhZCB0aGlzIGFyZ3VtZW50IGZvciBhIHdoaWxlIG5vdyBhbmQgaXQgZG9lc24n
+dCBzZWVtIHRvIGdldCBiZXR0ZXIKdGhhbiB0aGlzLiBCdXQgdG8gZXhwbGFpbiB3aHkgSSB0cnkg
+dG8gZ2V0IElQIHZzLiBTT0MgY2xvY2sgbmFtZXMgaW4KaGVyZSBpcywgdGhhdCBJIGhhZCBzdWNo
+IGEgY2FzZSB3aXRoIFp5bnEncyBFdGhlcm5ldCBjb3JlLiBUaGF0IElQIGhhcwpxdWl0ZSBhIGZl
+dyBjbG9jayBpbnB1dHMgYW5kIGx1Y2tpbHkgdGhlIG1haW5saW5lIGRyaXZlciBmb3IgdGhhdCBJ
+UAp1c2VkIHRoZSBwcm9wZXIgbmFtZXMgZnJvbSB0aGUgSVAgZGF0YSBzaGVldCBmb3IgdGhlIGNs
+b2NrcyBpbnN0ZWFkCm9mIHRoZSBTT0MgbmFtZXMuIFRoYXQgbWFkZSBpdCByZWxhdGl2ZWx5IGVh
+c3kgdG8gbWF0Y2ggdGhpbmdzIHdpdGggdGhlClp5bnEgaW50ZWdyYXRpb24gb2YgdGhhdCBJUC4g
+SGFkIHRoYXQgZHJpdmVyIHVzZWQgU09DIGNsb2NrIG5hbWVzLAp0aGluZ3Mgd291bGQgaGF2ZSBi
+ZWVuIG1vcmUgZGlmZmljdWx0LgoKCVPDtnJlbgoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
