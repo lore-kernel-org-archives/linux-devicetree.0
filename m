@@ -1,70 +1,51 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH] ARM: shmobile: r8a7790: Fix whitespace errors in pci
- nodes
-Date: Tue, 1 Jul 2014 09:36:35 +0900
-Message-ID: <20140701003634.GA10620@verge.net.au>
-References: <1404121793-11182-1-git-send-email-geert+renesas@glider.be>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sh-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404121793-11182-1-git-send-email-geert+renesas@glider.be>
-Sender: linux-sh-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert+renesas@glider.be>
-Cc: Magnus Damm <magnus.damm@gmail.com>, linux-sh@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.or
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for
+ Exynos3250
+Date: Tue, 01 Jul 2014 09:40:10 +0900
+Message-ID: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org
+Cc: t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 30, 2014 at 11:49:53AM +0200, Geert Uytterhoeven wrote:
-> Remove spaces in between tabs.
-> 
-> Introduced by commit ff4f3eb8b3386208944fe60b85e6cba4d338198e ("ARM:
-> shmobile: r8a7790: add internal PCI bridge nodes").
-> 
-> Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+This patch add TMU (Thermal Management Unit) dt node to monitor the high
+temperature for Exynos3250.
 
-Thanks, I will queue this up.
+Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+---
+This patch has a dependency on following patch [1]:
+ [1] https://lkml.org/lkml/2014/6/30/805
 
-> ---
->  arch/arm/boot/dts/r8a7790.dtsi | 12 ++++++------
->  1 file changed, 6 insertions(+), 6 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/r8a7790.dtsi b/arch/arm/boot/dts/r8a7790.dtsi
-> index bdcb7f08fcc5..d9ddecbb859c 100644
-> --- a/arch/arm/boot/dts/r8a7790.dtsi
-> +++ b/arch/arm/boot/dts/r8a7790.dtsi
-> @@ -946,8 +946,8 @@
->  		ranges = <0x02000000 0 0xee080000 0 0xee080000 0 0x00010000>;
->  		interrupt-map-mask = <0xff00 0 0 0x7>;
->  		interrupt-map = <0x0000 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-> -			      	 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-> -			      	 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
-> +				 0x0800 0 0 1 &gic 0 108 IRQ_TYPE_LEVEL_HIGH
-> +				 0x1000 0 0 2 &gic 0 108 IRQ_TYPE_LEVEL_HIGH>;
->  	};
->  
->  	pci1: pci@ee0b0000 {
-> @@ -966,8 +966,8 @@
->  		ranges = <0x02000000 0 0xee0a0000 0 0xee0a0000 0 0x00010000>;
->  		interrupt-map-mask = <0xff00 0 0 0x7>;
->  		interrupt-map = <0x0000 0 0 1 &gic 0 112 IRQ_TYPE_LEVEL_HIGH
-> -			      	 0x0800 0 0 1 &gic 0 112 IRQ_TYPE_LEVEL_HIGH
-> -			      	 0x1000 0 0 2 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>;
-> +				 0x0800 0 0 1 &gic 0 112 IRQ_TYPE_LEVEL_HIGH
-> +				 0x1000 0 0 2 &gic 0 112 IRQ_TYPE_LEVEL_HIGH>;
->  	};
->  
->  	pci2: pci@ee0d0000 {
-> @@ -986,8 +986,8 @@
->  		ranges = <0x02000000 0 0xee0c0000 0 0xee0c0000 0 0x00010000>;
->  		interrupt-map-mask = <0xff00 0 0 0x7>;
->  		interrupt-map = <0x0000 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-> -			      	 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-> -			      	 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
-> +				 0x0800 0 0 1 &gic 0 113 IRQ_TYPE_LEVEL_HIGH
-> +				 0x1000 0 0 2 &gic 0 113 IRQ_TYPE_LEVEL_HIGH>;
->  	};
->  
->  	pciec: pcie@fe000000 {
-> -- 
-> 1.9.1
-> 
+ arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+index 3660cab..1e566af 100644
+--- a/arch/arm/boot/dts/exynos3250.dtsi
++++ b/arch/arm/boot/dts/exynos3250.dtsi
+@@ -192,6 +192,16 @@
+ 			status = "disabled";
+ 		};
+ 
++		tmu: tmu@100C0000 {
++			compatible = "samsung,exynos3250-tmu";
++			interrupt-parent = <&gic>;
++			reg = <0x100C0000 0x100>;
++			interrupts = <0 216 0>;
++			clocks = <&cmu CLK_TMU_APBIF>;
++			clock-names = "tmu_apbif";
++			status = "disabled";
++		};
++
+ 		gic: interrupt-controller@10481000 {
+ 			compatible = "arm,cortex-a15-gic";
+ 			#interrupt-cells = <3>;
+-- 
+1.8.0
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
