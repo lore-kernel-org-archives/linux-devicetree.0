@@ -1,43 +1,32 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH 0/6] thermal: sti: Add new Thermal driver
-Date: Tue, 01 Jul 2014 10:07:03 +0800
-Message-ID: <1404180423.8366.15.camel@rzhang1-toshiba>
-References: <1401442715-6350-1-git-send-email-lee.jones@linaro.org>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 7/9] ARM: dts: sun7i: Add new ba10-tvbox board
+Date: Tue, 1 Jul 2014 10:16:44 +0800
+Message-ID: <CAGb2v66BO4W5Nrp-9X+20mK+7BObpdmc5x70BC5C7EGEHDcvew@mail.gmail.com>
+References: <1404165479-23785-1-git-send-email-hdegoede@redhat.com> <1404165479-23785-8-git-send-email-hdegoede@redhat.com>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1401442715-6350-1-git-send-email-lee.jones@linaro.org>
-Sender: linux-pm-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, eduardo.valentin@gmail.com, ajitpal.singh@st.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBCMILY6JWQBBBIFUZCOQKGQE4UJVT3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <1404165479-23785-8-git-send-email-hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Eduardo,
+On Tue, Jul 1, 2014 at 5:57 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
+> The ba10 tvbox is an A10 based android tvbox, with 512M RAM, 8G nand flash,
+> rtl8188ctv usb wifi 1 USB-A receptacle hooked up to an EHCI/OHCI controller,
+> 1 USB-A receptacle hooked up to the OTG and 100Mbit ethernet using a
+> rtl8201 phy.
 
-what do you think of this patch set?
+Nitpick on the subject, should be sun4i.
 
-thanks,
-rui
-
-On Fri, 2014-05-30 at 10:38 +0100, Lee Jones wrote:
-> This patchset adds full support for 2 types of Thermal Controllers
-> produced by STMicroelectronics.  One is a more traditional memory
-> mapped variant, the other is controlled solely by system configuration
-> registers.
-> 
->  Documentation/devicetree/bindings/thermal/st-thermal.txt |  42 ++++++++++++++++
->  arch/arm/boot/dts/stih416.dtsi                           |  18 +++++++
->  arch/arm/configs/multi_v7_defconfig                      |   2 +
->  drivers/thermal/Kconfig                                  |   5 ++
->  drivers/thermal/Makefile                                 |   1 +
->  drivers/thermal/st/Kconfig                               |  12 +++++
->  drivers/thermal/st/Makefile                              |   3 ++
->  drivers/thermal/st/st_thermal.c                          | 313 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/thermal/st/st_thermal.h                          | 104 ++++++++++++++++++++++++++++++++++++++
->  drivers/thermal/st/st_thermal_memmap.c                   | 209 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  drivers/thermal/st/st_thermal_syscfg.c                   | 179 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
->  11 files changed, 888 insertions(+)
-> 
-
-
+> The PCB is labelled ba10 hence I've named the board ba10-tvbox. It is used
+> in noname allwinner A10 tv-boxes.
+>
+> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
