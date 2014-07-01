@@ -1,63 +1,50 @@
-From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] Adding selftest testdata dynamically into live tree
-Date: Mon, 30 Jun 2014 23:49:10 -0500
-Message-ID: <CAL_Jsq+AJKE2krv1EfLi5fFzZEVd1HVEiHf6F8zLLPU97jUUwQ@mail.gmail.com>
-References: <1404085743-6974-1-git-send-email-gaurav.minocha.os@gmail.com>
+From: Bing Zhao <bzhao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>
+Subject: RE: mwifiex card reset
+Date: Mon, 30 Jun 2014 23:44:29 -0700
+Message-ID: <477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
+References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
+ <20140628052220.GG10407@us.netrek.org> <20140628072322.GC7410@atomide.com>
+ <CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
+ <20140630061912.GA2461@atomide.com> <53B1BAC1.3090902@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404085743-6974-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gaurav.minocha-cmaem7PIVQRC8prJL3GQQw@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <53B1BAC1.3090902-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: James Cameron <quozl-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jun 29, 2014 at 6:49 PM, Gaurav Minocha
-<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
-> This patch attaches selftest's device tree data (required by /drivers/of/selftest.c)
-> dynamically into live device tree. First, it links selftest device tree data into the
-> kernel image and then iterates over all the nodes and attaches them into the live tree.
->
-> This patch will remove the manual process of addition and removal of selftest device
-> tree data into the machine's dts file.
->
-> Tested successfully with current selftest's testcases.
-
-Perhaps a follow-up patch would be to remove the added nodes. I don't
-think that would be dependent on the overlay support. One comment
-below, otherwise:
-
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-
-
->
-> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-> ---
->  arch/arm/boot/dts/versatile-pb.dts                 |    2 -
->  drivers/of/Kconfig                                 |    3 +-
->  drivers/of/Makefile                                |    3 +-
->  drivers/of/selftest.c                              |  102 ++++++++++++++++++++
->  .../{testcases.dtsi => testcases.dts}              |    1 +
->  5 files changed, 107 insertions(+), 4 deletions(-)
->  rename drivers/of/testcase-data/{testcases.dtsi => testcases.dts} (92%)
-
-[...]
-
-> +/**
-> + *     selftest_data_init - Reads, copies data from
-> + *     linked tree and attaches it to the live tree
-> + */
-> +static int selftest_data_init(void)
-
-This can be __init.
-
-> +{
-> +       int size;
-> +       extern uint8_t __dtb_testcases_begin[];
-> +       extern uint8_t __dtb_testcases_end[];
-> +
-> +       selftest_data = (void *)__dtb_testcases_begin;
+SGkgRGFuaWVsLA0KDQo+ID4gT0sgc28gd2UgY2FuJ3QgZG8gbXVjaCBhbnl0aGluZyBhdCBtd2lm
+aWV4IHByb2JlIHRpbWUgb24gU0RJTyBidXMNCj4gPiBiZWNhdXNlIGl0IHdvbid0IHByb2JlIHVu
+bGVzcyB0aGUgcGlucyBhcmUgY29uZmlndXJlZC4NCj4gPg0KPiA+IE1heWJlIHdlIHNob3VsZCBo
+YXZlIGEgc2VwYXJhdGUgbXdpZmlleC1wb3dlciBoZWxwZXIgbW9kdWxlIHRoYXQganVzdA0KPiA+
+IG1hbmFnZXMgdGhlIHJlc2V0L2lkbGUvcmVndWxhdG9yIHBpbnM/IFRoZW4gbXdpZmlleC1yZXNl
+dCBjYW4gYmUNCj4gPiBhbHdheXMgbG9hZGVkIGFuZCBjb25maWd1cmUgdGhpbmdzIHNvIG13aWZp
+ZXgtc2RpbyBjYW4gcHJvYmUgcHJvcGVybHkuDQo+ID4NCj4gPiBBbmQgbXdpZmlleC1yZXNldCBo
+ZWxwZXIgY2FuIGFsc28gcHJvdmlkZSB0aGUgdXNlciBzcGFjZSBpbnRlcmZhY2VzDQo+ID4gZm9y
+IHRoZSByZXNldC9pZGxlL3JlZ3VsYXRvciBwaW5zLg0KPiANCj4gWWVzLCBhIGhlbHBlciBtaWdo
+dCBiZSB0aGUgYmVzdCBzb2x1dGlvbi4gSXQgY291bGQgZXZlbiBiZSBhIGdlbmVyaWMgb25lLCB0
+aGF0DQo+IGp1c3QgdGFrZXMgYW55IG51bWJlciBvZiBjbG9ja3MsIHJlc2V0IEdQSU9zIGFuZCBy
+ZWd1bGF0b3JzIGFuZCB0YWtlcyBjYXJlDQo+IGZvciBzZXF1ZW5jaW5nIHRoZW0uIEhvd2V2ZXIs
+IHdlIG5lZWQgdG8gcmVmZXJlbmNlIHRoYXQgaGVscGVyIGZyb20gdGhlDQo+IG13aWZpZXggZHJp
+dmVyLCBmb3IgdHdvIHJlYXNvbnMuDQo+IA0KPiBhKSB3ZSBuZWVkIHRvIG1ha2Ugc3VyZSB0aGUg
+cmVzZXQgaGVscGVyIGdldHMgdG8gZG8gaXRzIGpvYiBiZWZvcmUgdGhlDQo+IG13aWZpZXggZHJp
+dmVyIHNjYW5zIHRoZSBTRElPIGJ1cywgYW5kDQo+IA0KPiBiKSB0aGUgcmVzZXQgaGVscGVyIG5l
+ZWRzIHRvIGJlIGNhbGxlZCB3aGVuIHRoZSBtbWMgaG9zdCBjb250cm9sbGVyIHdhbnRzDQo+IHRv
+IGRvIGEgY2FyZCByZXNldC4NCj4gDQo+IEhlbmNlLCB3ZSdsbCBuZWVkIHNvbWUgc29ydCBvZiBp
+bnRlcm5hbCBBUEkgZm9yIHRoaXMsIGFuZCBhIHBoYW5kbGUgaW4gZHRzLiBJDQo+IHdvbmRlciB3
+aGV0aGVyIHRoYXQgZ2x1ZSBsb2dpYyBtaWdodCBiZSBiZXR0ZXIgb2ZmIGxpdmluZyBpbiB0aGUg
+bW1jIGNvcmUsIGFzDQo+IG13aWZpZXggbWlnaHQgd2VsbCBiZSBpbnRlcmZhY2VkIHRvIG90aGVy
+IGhvc3RzPw0KDQpJIG1heSBoYXZlIG1pc3NlZCBzb21ldGhpbmcsIGJ1dCBkb2Vzbid0IHRoZSBN
+TUNfUE9XRVJfT0ZGIGFuZCBNTUNfUE9XRVJfT058VVAgaGFuZGxpbmcgaW4gY29udHJvbGxlciBk
+cml2ZXIgaGVscD8NCkFueXdheSB0aGUgY2xvY2tzL0dQSU9zL3JlZ3VsYXRvcnMgYXJlIHNvcnQg
+b2YgcGxhdGZvcm0gZGVwZW5kZW50LiBXb3VsZCBpdCBiZSBiZXR0ZXIgcHV0dGluZyBpdCBpbiAv
+YXJjaC9hcm0vbWFjaC14eHh4eC8/DQoNClRoYW5rcywNCkJpbmcNCg0KPiANCj4gDQo+IFRoYW5r
+cywNCj4gRGFuaWVsDQoNCg==
 --
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 More majordomo info at  http://vger.kernel.org/majordomo-info.html
