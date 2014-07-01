@@ -1,38 +1,45 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH v2] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Tue, 1 Jul 2014 09:37:49 +0100
-Message-ID: <20140701083749.GH28740@leverpostej>
-References: <1404148259-17305-1-git-send-email-dmurphy@ti.com>
- <20140630172115.GE28740@leverpostej>
- <20140630214342.GI23300@sirena.org.uk>
+From: Andreas Fenkart <afenkart@gmail.com>
+Subject: Re: mwifiex card reset
+Date: Tue, 1 Jul 2014 10:44:42 +0200
+Message-ID: <CALtMJEDkdvs_meBw-fE2Hnbn-1YZrH9v2KuXyDF6VxjFeNbzgQ@mail.gmail.com>
+References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
+	<20140628052220.GG10407@us.netrek.org>
+	<20140628072322.GC7410@atomide.com>
+	<CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
+	<20140630061912.GA2461@atomide.com>
+	<53B1BAC1.3090902@zonque.org>
+	<477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-sound-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140630214342.GI23300@sirena.org.uk>
-Sender: linux-sound-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: Dan Murphy <dmurphy@ti.com>, "linux-sound@vger.kernel.org" <linux-sound@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-mmc-owner@vger.kernel.org>
+In-Reply-To: <477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
+Sender: linux-mmc-owner@vger.kernel.org
+To: Bing Zhao <bzhao@marvell.com>
+Cc: Daniel Mack <daniel@zonque.org>, Tony Lindgren <tony@atomide.com>, James Cameron <quozl@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 30, 2014 at 10:43:42PM +0100, Mark Brown wrote:
-> On Mon, Jun 30, 2014 at 06:21:15PM +0100, Mark Rutland wrote:
-> > On Mon, Jun 30, 2014 at 06:10:59PM +0100, Dan Murphy wrote:
-> 
-> > > +Optional properties:
-> 
-> > > +- power-gpio - gpio pin to enable/disable the device
-> 
-> > The code below seems to look for "enable-gpio". Searching for
-> > "power-gpio" only hits in the line above and the example below. I assume
-> > the code is in error?
-> 
-> It depends what this is for - if it's for an external regulator it
-> should be a regulator binding.  Also all GPIO properties
-> are supposed to be called -gpios because DT conventions.
+Hi Bing,
 
-Sure. I was commenting on the mismatch between "enable" in the code and
-"power" in the documentation rather than the appropriateness of either
-"power-gpios" or "enable-gpios".
+2014-07-01 8:44 GMT+02:00 Bing Zhao <bzhao@marvell.com>:
+[snip]
+>> Yes, a helper might be the best solution. It could even be a generic one, that
+>> just takes any number of clocks, reset GPIOs and regulators and takes care
+>> for sequencing them. However, we need to reference that helper from the
+>> mwifiex driver, for two reasons.
+>>
+>> a) we need to make sure the reset helper gets to do its job before the
+>> mwifiex driver scans the SDIO bus, and
+>>
+>> b) the reset helper needs to be called when the mmc host controller wants
+>> to do a card reset.
+>>
+>> Hence, we'll need some sort of internal API for this, and a phandle in dts. I
+>> wonder whether that glue logic might be better off living in the mmc core, as
+>> mwifiex might well be interfaced to other hosts?
+>
+> I may have missed something, but doesn't the MMC_POWER_OFF and MMC_POWER_ON|UP handling in controller driver help?
+> Anyway the clocks/GPIOs/regulators are sort of platform dependent. Would it be better putting it in /arch/arm/mach-xxxxx/?
 
-Mark.
+what about usb? the mwifiex can also be connected via usb to the host,
+isn't the reset
+logic the same in that case, independent of sdio
