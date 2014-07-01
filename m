@@ -1,137 +1,68 @@
-From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
-Subject: Re: [PATCH v2 04/14] clk: st: Adds Flexgen clock binding
-Date: Tue, 1 Jul 2014 14:11:53 +0200
-Message-ID: <CAG374jAAQw9Zr=hzrwdh7X3o5QkfQ81ZBtG00_gq2Uuh62V9eg@mail.gmail.com>
-References: <1403875511-7710-1-git-send-email-gabriel.fernandez@linaro.org>
-	<1403875511-7710-5-git-send-email-gabriel.fernandez@linaro.org>
-	<20140630092658.GR7262@leverpostej>
+From: Hiroshi Doyu <hdoyu-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+Subject: Re: [RFC 04/10] memory: Add Tegra124 memory controller support
+Date: Tue, 1 Jul 2014 15:14:52 +0300
+Message-ID: <8761jh9sxv.fsf@nvidia.com>
+References: <1403815790-8548-1-git-send-email-thierry.reding@gmail.com>
+	<1403815790-8548-5-git-send-email-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140630092658.GR7262@leverpostej>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "mturquette@linaro.org" <mturquette@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1403815790-8548-5-git-send-email-thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Paul Walmsley <pwalmsley-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>, Dave Martin <Dave.Martin-5wv7dgnIgG8@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Stephen Warren <swarren-3lzwWm7+Weoh9ZMKESR00Q@public.gmane.org>, Grant Grundler <grundler-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Allen Martin <AMartin-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-tegra-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Cho KyongHo <pullip.cho-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org" <iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rhyland Klein <rklein-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review Mark,
 
-I'll rework this documentation to answer all these questions
+Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-Thanks
+> diff --git a/include/dt-bindings/memory/tegra124-mc.h b/include/dt-bindings/memory/tegra124-mc.h
+> new file mode 100644
+> index 000000000000..6b1617ce022f
+> --- /dev/null
+> +++ b/include/dt-bindings/memory/tegra124-mc.h
+> @@ -0,0 +1,30 @@
+> +#ifndef DT_BINDINGS_MEMORY_TEGRA124_MC_H
+> +#define DT_BINDINGS_MEMORY_TEGRA124_MC_H
+> +
+> +#define TEGRA_SWGROUP_DC       0
+> +#define TEGRA_SWGROUP_DCB      1
+> +#define TEGRA_SWGROUP_AFI      2
+> +#define TEGRA_SWGROUP_AVPC     3
+> +#define TEGRA_SWGROUP_HDA      4
+> +#define TEGRA_SWGROUP_HC       5
+> +#define TEGRA_SWGROUP_MSENC    6
+> +#define TEGRA_SWGROUP_PPCS     7
+> +#define TEGRA_SWGROUP_SATA     8
+> +#define TEGRA_SWGROUP_VDE      9
+> +#define TEGRA_SWGROUP_MPCORELP 10
+> +#define TEGRA_SWGROUP_MPCORE   11
+> +#define TEGRA_SWGROUP_ISP2     12
+> +#define TEGRA_SWGROUP_XUSB_HOST        13
+> +#define TEGRA_SWGROUP_XUSB_DEV 14
+> +#define TEGRA_SWGROUP_ISP2B    15
+> +#define TEGRA_SWGROUP_TSEC     16
+> +#define TEGRA_SWGROUP_A9AVP    17
+> +#define TEGRA_SWGROUP_GPU      18
+> +#define TEGRA_SWGROUP_SDMMC1A  19
+> +#define TEGRA_SWGROUP_SDMMC2A  20
+> +#define TEGRA_SWGROUP_SDMMC3A  21
+> +#define TEGRA_SWGROUP_SDMMC4A  22
+> +#define TEGRA_SWGROUP_VIC      23
+> +#define TEGRA_SWGROUP_VI       24
+> +
+> +#endif
 
-Gabriel
-
-On 30 June 2014 11:26, Mark Rutland <mark.rutland@arm.com> wrote:
-> On Fri, Jun 27, 2014 at 02:25:01PM +0100, Gabriel FERNANDEZ wrote:
->> A Flexgen structure is composed by:
->> - a clock cross bar (represented by a mux element)
->> - a pre and final dividers (represented by a divider and gate elements)
->>
->> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
->> Acked-by: Peter Griffin <peter.griffin@linaro.org>
->> ---
->>  .../devicetree/bindings/clock/st/st,clkgen.txt     |  5 +++
->>  .../devicetree/bindings/clock/st/st,flexgen.txt    | 48 ++++++++++++++++++++++
->>  2 files changed, 53 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->>
->> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
->> index 427bad8..78978f1 100644
->> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
->> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
->> @@ -32,6 +32,10 @@ address is common of all subnode.
->>               vcc_node {
->>                       ...
->>               };
->> +
->> +             flexgen_node {
->> +                     ...
->> +             };
->>               ...
->>       };
->>
->> @@ -45,6 +49,7 @@ Each subnode should use the binding discribe in [2]..[7]
->>  [5] Documentation/devicetree/bindings/clock/st,clkgen-prediv.txt
->>  [6] Documentation/devicetree/bindings/clock/st,vcc.txt
->>  [7] Documentation/devicetree/bindings/clock/st,quadfs.txt
->> +[8] Documentation/devicetree/bindings/clock/st,flexgen.txt
->>
->>
->>  Required properties:
->> diff --git a/Documentation/devicetree/bindings/clock/st/st,flexgen.txt b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->> new file mode 100644
->> index 0000000..f2d4333
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/clock/st/st,flexgen.txt
->> @@ -0,0 +1,48 @@
->> +Binding for a type of flexgen structure found on certain
->> +STMicroelectronics consumer electronics SoC devices
->> +
->> +This structure includes:
->> +- a clock cross bar (represented by a mux element)
->> +- a pre and final dividers (represented by a divider and gate elements)
->> +
->> +This binding uses the common clock binding[1].
->> +
->> +[1] Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +Required properties:
->> +- compatible : shall be:
->> +  "st,flexgen"
->
-> That looks very vague. Is this a sub-node of a larger block?
->
-> Might there be a future flexgen revision that looks different?
->
->> +- #clock-cells : from common clock binding; shall be set to 1.
->
-> what does the clock cell represent? Is it just a linear index from 0?
->
->> +- clocks : from common clock binding
->
-> This is a completely useless description.
->
-> Which clock inputs do you expect clocks for? How many? Are they named?
->
->> +
->> +- clock-output-names : From common clock binding. The block has 4
->> +                       clock outputs but not all of them in a specific instance
->> +                       have to be used in the SoC. If a clock name is left as
->> +                       an empty string then no clock will be created for the
->> +                       output associated with that string index. If fewer than
->> +                       4 strings are provided then no clocks will be created
->> +                       for the remaining outputs.
->
-> That's a Linux-internal detail, surely?
->
-> Why do we even do that?
->
-> Mark.
->
->> +
->> +Example:
->> +
->> +     clockgen-d2@x9106000 {
->> +             compatible = "st,clkgen-c32";
->> +             reg = <0x9106000 0x1000>;
->> +
->> +             clk_s_d2_flexgen: clk-s-d2-flexgen {
->> +                     compatible = "st,flexgen";
->> +
->> +                     #clock-cells = <1>;
->> +                     clocks = <&clk_s_d2_quadfs 0>,
->> +                              <&clk_s_d2_quadfs 1>,
->> +                              <&clk_s_d2_quadfs 2>,
->> +                              <&clk_s_d2_quadfs 3>;
->> +
->> +                     clock-output-names = "clk-pix-main-disp",
->> +                                          "clk-pix-pip",
->> +                                          "clk-pix-gdp1",
->> +                                          "clk-pix-gdp2";
->> +             };
->> +     };
->> --
->> 1.9.1
->>
->>
+In the SMMUv8 patch series, I have assigned unique IDs for all those
+HWAs among Tegra SoC generations so that DT can provide which HWAs are
+attached to that SoC. The SMMUv8 driver would be unified among Tegra
+SoCs, then.
