@@ -1,99 +1,103 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 03/14] clk: max77686: Add DT include for MAX77686 PMIC clock
-Date: Tue, 01 Jul 2014 10:30:22 -0700
-Message-ID: <20140701173022.32686.28561@quantum>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
- <1403806546-31122-4-git-send-email-javier.martinez@collabora.co.uk>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH RFC V2 1/2] Documentation: add Device tree bindings for
+ QCA7000
+Date: Tue, 01 Jul 2014 21:33:05 +0400
+Message-ID: <53B2F0D1.6070602@cogentembedded.com>
+References: <1404232609-4314-1-git-send-email-stefan.wahren@i2se.com> <1404232609-4314-2-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403806546-31122-4-git-send-email-javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Alessandro Zummo <a.zummo-BfzFCNDTiLLj+vYz1yj4TQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Olof Johansson <olof-nZhT3qVonbNeoWH0uzbU5w@public.gmane.org>, Sjoerd Simons <sjoerd.simons-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>, Daniel Stone <daniels-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Tomeu Vizoso <tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org>, Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Yadwinder Singh Brar <yadi.brar01-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1404232609-4314-2-git-send-email-stefan.wahren@i2se.com>
+Sender: netdev-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, eric.dumazet@gmail.com, dave.taht@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Javier Martinez Canillas (2014-06-26 11:15:35)
-> This patch adds a dt-binding include for Maxim 77686
-> PMIC clock IDs that can be to be shared between the
-> clk-max77686 clock driver and DeviceTree source files.
-> 
-> Signed-off-by: Javier Martinez Canillas <javier.martinez-ZGY8ohtN/8pPYcu2f3hruQ@public.gmane.org>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Hello.
 
-Looks good to me.
+On 07/01/2014 08:36 PM, Stefan Wahren wrote:
 
-Regards,
-Mike
+> This patch adds the Device tree bindings for the
+> Ethernet over SPI protocol driver of the Qualcomm
+> QCA7000 HomePlug GreenPHY.
 
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 > ---
-> 
-> Changes since v4: None
-> 
-> Changes since v3: None
-> 
->  drivers/clk/clk-max77686.c                 |  7 +------
->  include/dt-bindings/clock/maxim,max77686.h | 23 +++++++++++++++++++++++
->  2 files changed, 24 insertions(+), 6 deletions(-)
->  create mode 100644 include/dt-bindings/clock/maxim,max77686.h
-> 
-> diff --git a/drivers/clk/clk-max77686.c b/drivers/clk/clk-max77686.c
-> index 3d7e8dd..185b611 100644
-> --- a/drivers/clk/clk-max77686.c
-> +++ b/drivers/clk/clk-max77686.c
-> @@ -30,12 +30,7 @@
->  #include <linux/mutex.h>
->  #include <linux/clkdev.h>
->  
-> -enum {
-> -       MAX77686_CLK_AP = 0,
-> -       MAX77686_CLK_CP,
-> -       MAX77686_CLK_PMIC,
-> -       MAX77686_CLKS_NUM,
-> -};
-> +#include <dt-bindings/clock/maxim,max77686.h>
->  
->  struct max77686_clk {
->         struct max77686_dev *iodev;
-> diff --git a/include/dt-bindings/clock/maxim,max77686.h b/include/dt-bindings/clock/maxim,max77686.h
+>   .../devicetree/bindings/net/qca-qca7000-spi.txt    |   47 ++++++++++++++++++++
+>   1 file changed, 47 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+
+> diff --git a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
 > new file mode 100644
-> index 0000000..7b28b09
+> index 0000000..66ff588
 > --- /dev/null
-> +++ b/include/dt-bindings/clock/maxim,max77686.h
-> @@ -0,0 +1,23 @@
-> +/*
-> + * Copyright (C) 2014 Google, Inc
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-> + *
-> + * Device Tree binding constants clocks for the Maxim 77686 PMIC.
-> + */
+> +++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+> @@ -0,0 +1,47 @@
+> +* Qualcomm QCA7000 (Ethernet over SPI protocol)
 > +
-> +#ifndef _DT_BINDINGS_CLOCK_MAXIM_MAX77686_CLOCK_H
-> +#define _DT_BINDINGS_CLOCK_MAXIM_MAX77686_CLOCK_H
+> +Note: The QCA7000 is useable as a SPI device. In this case it must be defined
+> +as a child of a SPI master in the device tree.
 > +
-> +/* Fixed rate clocks. */
+> +Required properties:
+> +- compatible : Should be "qca,qca7000"
+> +- reg : Should specify the SPI chip select
+> +- interrupt-parent : Should specify the pHandle of the source interrupt
+
+    This property is not really required, it could be inherited from an 
+upper-level node.
+
+> +- interrupts : The first cell should specify the index of the source interrupt
+> +  and the second cell should specify the trigger type as rising edge
+> +- spi-cpha : Must be set
+> +- spi-cpol: Must be set
 > +
-> +#define MAX77686_CLK_AP                0
-> +#define MAX77686_CLK_CP                1
-> +#define MAX77686_CLK_PMIC      2
+> +Optional properties:
+> +- spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at.
+> +  Numbers smaller than 1000000 or greater than 16000000 are invalid. Missing
+> +  the property will set the SPI frequency to 8000000 Hertz.
+> +- local-mac-address: 6 bytes, mac address
+
+    s/mac/MAC/.
+
+> +- qca,legacy-mode : Set the SPI data transfer of the QCA7000 to legacy mode.
+> +  In this mode the SPI master must toggle the chip select between each data
+> +  word. In burst mode these gaps aren't necessary, which is faster.
+> +  This setting depends on how the QCA7000 is setup via GPIO pin strapping.
+> +  If the property is missing the driver defaults to burst mode.
 > +
-> +/* Total number of clocks. */
-> +#define MAX77686_CLKS_NUM              (MAX77686_CLK_PMIC + 1)
+> +Example:
 > +
-> +#endif /* _DT_BINDINGS_CLOCK_MAXIM_MAX77686_CLOCK_H */
-> -- 
-> 2.0.0.rc2
-> 
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-kernel" in
-> the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
-> Please read the FAQ at  http://www.tux.org/lkml/
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> +/* Freescale i.MX28 SPI master*/
+> +ssp2: ssp@80014000 {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	compatible = "fsl,imx28-spi";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi2_pins_a>;
+> +	status = "okay";
+> +
+> +	qca7000@0 {
+
+    According to the ePAPR standard [1]:
+
+The name of a node should be somewhat generic, reflecting the function of the 
+device and not its precise programming model. If appropriate, the name should 
+be one of the following choices:
+[...]
+  - ethernet;
+
+> +		compatible = "qca,qca7000";
+> +		interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
+> +		interrupts = <25 0x1>;            /* Index: 25, rising edge */
+> +		reg = <0x0>;
+> +		spi-cpha;                         /* SPI mode: CPHA=1 */
+> +		spi-cpol;                         /* SPI mode: CPOL=1 */
+> +		spi-max-frequency = <8000000>;    /* freq: 8 MHz */
+> +		local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+> +	};
+> +};
+
+[1] http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
+
+WBR, Sergei
