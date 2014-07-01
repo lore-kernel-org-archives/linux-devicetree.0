@@ -1,69 +1,47 @@
-From: Grant Likely <grant.likely@linaro.org>
-Subject: Re: [PATCH 2/2] arm: Add back maximum bank limit
-Date: Tue, 1 Jul 2014 11:57:36 +0100
-Message-ID: <CACxGe6sKVjAaQL+6jRGAd8fJxBByF-THJ6A-ygY43LdVA7YKMQ@mail.gmail.com>
-References: <1404068784-27604-1-git-send-email-lauraa@codeaurora.org>
- <1404068784-27604-2-git-send-email-lauraa@codeaurora.org>
- <20140630104350.600EDC40F52@trevor.secretlab.ca>
- <53B1A65E.6050806@codeaurora.org>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
+Date: Tue, 01 Jul 2014 17:29:33 +0530
+Message-ID: <53B2A2A5.4070203@gmail.com>
+References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>	<CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>	<7hpphwlgn0.fsf@paris.lan>	<CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>	<7h8uojk61a.fsf@paris.lan>	<53ACE724.7090606@gmail.com>	<CAGa+x86COQz+cYtrXWrP-sjFGz-gi2tf6GEvLiKYoQwg1zMivQ@mail.gmail.com> <CAGa+x87LHiYGb03=GRcZisK1=TyakW1htd1E2vOQ6ijZKw8syg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=ISO-8859-1
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <53B1A65E.6050806@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Laura Abbott <lauraa@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, =?ISO-8859-1?Q?Andreas_F=E4rber?= <afaerber@suse.de>, Tushar Behera <trblinux@gmail.com>, "linaro-kernel@lists.linaro.org" <linaro-kernel@lists.linaro.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <CAGa+x87LHiYGb03=GRcZisK1=TyakW1htd1E2vOQ6ijZKw8syg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Kevin Hilman <khilman@linaro.org>
+Cc: Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene.kim@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jun 30, 2014 at 7:03 PM, Laura Abbott <lauraa@codeaurora.org> wrote:
-> On 6/30/2014 3:43 AM, Grant Likely wrote:
+On 06/27/2014 08:18 PM, Kevin Hilman wrote:
+> On Fri, Jun 27, 2014 at 7:18 AM, Kevin Hilman <khilman@linaro.org> wrote:
+>> On Thu, Jun 26, 2014 at 8:38 PM, Tushar Behera <trblinux@gmail.com> wrote:
 >>
->> Instead of splitting early_init_dt_scan(), the call to
->> early_init_dt_scan() could probably be moved after the
->> of_flat_dt_match_machine() call. It's at least worth a try. Looking at
->> the code I don't see anything obvious that requires the
->> early_init_dt_scan() code to run first.
+>>> Would you please provide me the environment setting of your u-boot?
+>>> U-boot environment on my board has been over-written, I would like to
+>>> set it same as yours and try to reproduce the issue at my end. With only
+>>> 'sound init', I don't seem to hit this issue anymore.
 >>
->
-> of_flat_dt_match_machine -> of_flat_dt_match which uses
-> initial_boot_params which isn't set until early_init_dt_scan. I had the
-> same thought about just rearranging but we still need something to be
-> set before doing the scan, hence the split.
+>> Attached is a full boot log using v3.16-rc2 with my patch adding
+>> CLK_IGNORE_UNUSED to mau_epll and Doug's aclk66_peric patch.  In the
+>> boot log, you'll see the output of 'printenv' inside u-boot where the
+>> environment is dumped.
+> 
+> Oops, I sent you a boot log for the octa board.  Here's the one for
+> peach-pi with the same kernel (built with upstream exynos_defconfig)
+> 
+> Kevin
+> 
 
-Fair enough.
+The u-boot version is a little different on my Peach-Pi as compared to
+the market release version. Not sure if that is making any difference.
 
->> Once you've got the mdesc pointer, you've could set the limit before
->> doing the full scan. Or, better yet because this is a fix for broken
->> data, you could call a dt_fixup hook on the mdesc. Then exynos is the
->> only platform that needs special treatment. The best thing for exynos to
->> do is fix the buggy data by clearing the bogus entries. Then there's no
->> need to reintroduce early_init_dt_add_memory_arch() for ARM.
->>
->
-> The fixup hook does sound better. The flow would become
->
-> setup_machine_fdt
->         - early_init_dt_verify
->         - of_flat_dt_match_machine
->         - mdesc->dt_fixup
->         - early_init_dt_scan_all
->
-> I notice that powerpc already has a DT fixup infrastructure but I don't see
-> any such thing for ARM. How much of that do you think could and should be
-> leveraged for ARM?
+Peach # version
 
-Not much. The PowerPC fixup infrastructure is based on having an
-OpenFirmware implementation and the fixups are performed by executing
-Forth commands in OFW before flattening the tree and killing OFW
-context. For ARM, any DT fixup hooks should directly use libfdt calls.
+U-Boot 2013.04 (Feb 13 2014 - 16:35:03) for Peach
+armv7a-cros-linux-gnueabi-gcc.real (4.8.1_cos_gg_feea904_4.8.1-r66)
+4.8.x-google 20130905 (prerelease)
+GNU ld (binutils-2.22_cos_gg_2) 2.22
 
-g.
+-- 
+Tushar Behera
