@@ -1,199 +1,58 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: Re: [PATCH v2] i2c: busses: i2c-pxa.c: Fix for possible null pointer dereferenc
-Date: Tue, 1 Jul 2014 20:25:54 +0200
-Message-ID: <CAFo99gY2qEEqwJgu-NQryAe2=o5AsDjL+SFaau6BA7CBMH8Xkg@mail.gmail.com>
-References: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-	<1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-	<009301cf93f6$f938a270$eba9e750$%han@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <009301cf93f6$f938a270$eba9e750$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: [PATCH v8 0/9] Support for creating generic PCI host bridges from DT
+Date: Tue,  1 Jul 2014 19:43:25 +0100
+Message-ID: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
+Cc: LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-2014-06-30 2:05 GMT+02:00 Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
-> On Monday, June 30, 2014 8:29 AM, Rickard Strandqvist wrote:
->>
->> Fix for possible null pointer dereferenc, and there is a risk for memory leak in when something
->> unexpected happens and the function returns.
->
-> Would you split the patch into two patches?
->
->   [PATCH 1/2] i2c: pxa: Fix for possible null pointer dereference
->   [PATCH 2/2] i2c: pxa: Use devm_* functions
->
->>
->> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
->> ---
->>  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
->>  1 file changed, 16 insertions(+), 21 deletions(-)
->>
->> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
->> index be671f7..886877a 100644
->> --- a/drivers/i2c/busses/i2c-pxa.c
->> +++ b/drivers/i2c/busses/i2c-pxa.c
->> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>       struct resource *res = NULL;
->>       int ret, irq;
->>
->> -     i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
->> +     i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
->>       if (!i2c) {
->>               ret = -ENOMEM;
->> -             goto emalloc;
->> +             goto err_nothing_to_release;
->>       }
->>
->>       /* Default adapter num to device id; i2c_pxa_probe_dt can override. */
->> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>       if (ret > 0)
->>               ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
->>       if (ret < 0)
->> -             goto eclk;
->> +             goto err_nothing_to_release;
->>
->>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
->>       irq = platform_get_irq(dev, 0);
->>       if (res == NULL || irq < 0) {
->>               ret = -ENODEV;
->> -             goto eclk;
->> +             goto err_nothing_to_release;
->>       }
->>
->> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
->> +     if (!devm_request_mem_region(&dev->dev, res->start,
->> +                             resource_size(res), res->name)) {
->>               ret = -ENOMEM;
->> -             goto eclk;
->> +             goto emalloc;
->>       }
->>
->>       i2c->adap.owner   = THIS_MODULE;
->> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>
->>       strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
->>
->> -     i2c->clk = clk_get(&dev->dev, NULL);
->> +     i2c->clk = devm_clk_get(&dev->dev, NULL);
->>       if (IS_ERR(i2c->clk)) {
->>               ret = PTR_ERR(i2c->clk);
->> -             goto eclk;
->> +             goto emalloc;
->>       }
->>
->> -     i2c->reg_base = ioremap(res->start, resource_size(res));
->> -     if (!i2c->reg_base) {
->> +     i2c->reg_base = devm_ioremap(&dev->dev, res->start, resource_size(res));
->> +     if (IS_ERR(i2c->reg_base)) {
->
-> Did you check what devm_ioremap() returns?
-> It returns 'valid addr value' Or NULL as below.
-> So, IS_ERR() should NOT be used.
->
-> ./lib/devres.c
->
-> void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
->                            unsigned long size)
-> {
->         void __iomem **ptr, *addr;
->
->         ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
->         if (!ptr)
->                 return NULL;
->
->         addr = ioremap(offset, size);
->         if (addr) {
->                 *ptr = addr;
->                 devres_add(dev, ptr);
->         } else
->                 devres_free(ptr);
->
->         return addr;
-> }
-> EXPORT_SYMBOL(devm_ioremap);
->
-> Best regards,
-> Jingoo Han
->
->>               ret = -EIO;
->> -             goto eremap;
->> +             goto emalloc;
->>       }
->>
->>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
->> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
->>       } else {
->>               i2c->adap.algo = &i2c_pxa_algorithm;
->> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
->> -                               dev_name(&dev->dev), i2c);
->> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
->> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
->>               if (ret)
->> -                     goto ereqirq;
->> +                     goto emalloc;
->>       }
->>
->>       i2c_pxa_reset(i2c);
->> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
->>  eadapt:
->>       if (!i2c->use_pio)
->>               free_irq(irq, i2c);
->> -ereqirq:
->> -     clk_disable_unprepare(i2c->clk);
->> -     iounmap(i2c->reg_base);
->> -eremap:
->> -     clk_put(i2c->clk);
->> -eclk:
->> -     kfree(i2c);
->>  emalloc:
->>       release_mem_region(res->start, resource_size(res));
->> +err_nothing_to_release:
->>       return ret;
->>  }
->>
->> --
->> 1.7.10.4
->
+This is my resurected attempt at adding support for generic PCI host
+bridge controllers that make use of device tree information to
+configure themselves. I've tagged it as v8 although the patches
+have now been reshuffled in order to ease adoption so referring to
+the older versions might be a bit of a hoop jumping exercise.
+
+Changes from v7:
+  - Reordered the patches so that fixes and non-controversial patches
+    from v7 can be accepted more easily. If agreed I can split the
+    series again into patches that can be upstreamed easily and ones
+    that still need discussion.
+  - Moved the of_create_host_bridge() function to drivers/of/of_pci.c
+    to better reflect its target use.
+  - Added the function to remap the bus I/O resources that used to be
+    provided in my arm64 patch series and (re)named it pci_remap_iospace()
+  - Removed error code checking from parsing and mapping of IRQ from DT
+    in recognition that some PCI devices will not have legacy IRQ mappings.
+
+v7 thread here with all the historic information: https://lkml.org/lkml/2014/3/14/279
+
+Best regards,
+Liviu
 
 
-Hi
+Liviu Dudau (9):
+  Fix ioport_map() for !CONFIG_GENERIC_IOMAP cases.
+  pci: Export find_pci_host_bridge() function.
+  pci: Introduce pci_register_io_range() helper function.
+  pci: OF: Fix the conversion of IO ranges into IO resources.
+  pci: Create pci_host_bridge before its associated bus in pci_create_root_bus.
+  pci: Introduce a domain number for pci_host_bridge.
+  pci: of: Parse and map the IRQ when adding the PCI device.
+  pci: Add support for creating a generic host_bridge from device tree
+  pci: Remap I/O bus resources into CPU space with pci_remap_iospace()
 
-Excuse my late reply.
+ drivers/of/address.c       | 108 ++++++++++++++++++++++++++++++++++++
+ drivers/of/of_pci.c        | 135 +++++++++++++++++++++++++++++++++++++++++++++
+ drivers/pci/host-bridge.c  |  21 ++++++-
+ drivers/pci/pci.c          |  37 +++++++++++++
+ drivers/pci/probe.c        |  68 ++++++++++++++++-------
+ include/asm-generic/io.h   |   2 +-
+ include/linux/of_address.h |  14 +----
+ include/linux/of_pci.h     |  10 ++++
+ include/linux/pci.h        |  15 +++++
+ 9 files changed, 376 insertions(+), 34 deletions(-)
 
-
-1)  A fix of the original error I made in my original patch.
-But it was completely different from this solution, you have trouble
-seeing it as something reasonable to do.
-
-My original patch:
-
- eclk:
-        kfree(i2c);
- emalloc:
--       release_mem_region(res->start, resource_size(res));
-+       if(res)
-+               release_mem_region(res->start, resource_size(res));
-        return ret;
- }
-
-2) Wolfram Sang helped me with a patch example from commit 9b2b98a3b4de
-It hade this code below. I thought that it seem a little strange, but
-I trust Wolfram.
-
--       dev->virtbase = ioremap(adev->res.start, resource_size(&adev->res));
--       if (!dev->virtbase) {
-+       dev->virtbase = devm_ioremap(&adev->dev, adev->res.start,
-+                               resource_size(&adev->res));
-+       if (IS_ERR(dev->virtbase)) {
-                ret = -ENOMEM;
--               goto err_no_ioremap;
-+               goto err_no_mem;
-        }
-
-
-Kind regards
-Rickard Strandqvist
+-- 
+2.0.0
