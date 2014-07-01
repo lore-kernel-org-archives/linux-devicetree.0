@@ -1,61 +1,199 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH RFC V2 2/2] net: qualcomm: new Ethernet over SPI driver
- for QCA7000
-Date: Tue, 1 Jul 2014 19:16:01 +0100
-Message-ID: <20140701181601.GA11399@leverpostej>
-References: <1404232609-4314-1-git-send-email-stefan.wahren@i2se.com>
- <1404232609-4314-3-git-send-email-stefan.wahren@i2se.com>
- <20140701174616.GA10927@leverpostej>
- <1404237465.14624.9.camel@joe-AO725>
+From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+Subject: Re: [PATCH v2] i2c: busses: i2c-pxa.c: Fix for possible null pointer dereferenc
+Date: Tue, 1 Jul 2014 20:25:54 +0200
+Message-ID: <CAFo99gY2qEEqwJgu-NQryAe2=o5AsDjL+SFaau6BA7CBMH8Xkg@mail.gmail.com>
+References: <1404084516-901-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<1404084516-901-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
+	<009301cf93f6$f938a270$eba9e750$%han@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404237465.14624.9.camel@joe-AO725>
-Content-Language: en-US
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Joe Perches <joe-6d6DIl74uiNBDgjK7y7TUQ@public.gmane.org>
-Cc: Stefan Wahren <stefan.wahren-eS4NqCHxEME@public.gmane.org>, "davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, "robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org" <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, "ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org" <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, "galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org" <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <f.fainelli-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <eric.dumazet-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "dave.taht-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org" <dave.taht-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <netdev-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <009301cf93f6$f938a270$eba9e750$%han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 01, 2014 at 06:57:45PM +0100, Joe Perches wrote:
-> On Tue, 2014-07-01 at 18:46 +0100, Mark Rutland wrote:
-> > On Tue, Jul 01, 2014 at 05:36:49PM +0100, Stefan Wahren wrote:
-> > > This patch adds the Ethernet over SPI driver for the
-> > > Qualcomm QCA7000 HomePlug GreenPHY.
-> []
-> > > +               memcpy(qca->net_dev->dev_addr, mac, ETH_ALEN);
-> > 
-> > I believe that it is preferred to write:
-> > 
-> > 	ether_addr_copy(qca->net_dev->dev_addr, mac);
-> > 
-> > I believe checkpatch has a warning for this.
-> 
-> True, but you have to make sure that both args are
-> at least __aligned(2) and afaics there's no
-> guarantee that's true for mac.
+2014-06-30 2:05 GMT+02:00 Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>:
+> On Monday, June 30, 2014 8:29 AM, Rickard Strandqvist wrote:
+>>
+>> Fix for possible null pointer dereferenc, and there is a risk for memory leak in when something
+>> unexpected happens and the function returns.
+>
+> Would you split the patch into two patches?
+>
+>   [PATCH 1/2] i2c: pxa: Fix for possible null pointer dereference
+>   [PATCH 2/2] i2c: pxa: Use devm_* functions
+>
+>>
+>> Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+>> ---
+>>  drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
+>>  1 file changed, 16 insertions(+), 21 deletions(-)
+>>
+>> diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
+>> index be671f7..886877a 100644
+>> --- a/drivers/i2c/busses/i2c-pxa.c
+>> +++ b/drivers/i2c/busses/i2c-pxa.c
+>> @@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>       struct resource *res = NULL;
+>>       int ret, irq;
+>>
+>> -     i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
+>> +     i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
+>>       if (!i2c) {
+>>               ret = -ENOMEM;
+>> -             goto emalloc;
+>> +             goto err_nothing_to_release;
+>>       }
+>>
+>>       /* Default adapter num to device id; i2c_pxa_probe_dt can override. */
+>> @@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>       if (ret > 0)
+>>               ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
+>>       if (ret < 0)
+>> -             goto eclk;
+>> +             goto err_nothing_to_release;
+>>
+>>       res = platform_get_resource(dev, IORESOURCE_MEM, 0);
+>>       irq = platform_get_irq(dev, 0);
+>>       if (res == NULL || irq < 0) {
+>>               ret = -ENODEV;
+>> -             goto eclk;
+>> +             goto err_nothing_to_release;
+>>       }
+>>
+>> -     if (!request_mem_region(res->start, resource_size(res), res->name)) {
+>> +     if (!devm_request_mem_region(&dev->dev, res->start,
+>> +                             resource_size(res), res->name)) {
+>>               ret = -ENOMEM;
+>> -             goto eclk;
+>> +             goto emalloc;
+>>       }
+>>
+>>       i2c->adap.owner   = THIS_MODULE;
+>> @@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>
+>>       strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
+>>
+>> -     i2c->clk = clk_get(&dev->dev, NULL);
+>> +     i2c->clk = devm_clk_get(&dev->dev, NULL);
+>>       if (IS_ERR(i2c->clk)) {
+>>               ret = PTR_ERR(i2c->clk);
+>> -             goto eclk;
+>> +             goto emalloc;
+>>       }
+>>
+>> -     i2c->reg_base = ioremap(res->start, resource_size(res));
+>> -     if (!i2c->reg_base) {
+>> +     i2c->reg_base = devm_ioremap(&dev->dev, res->start, resource_size(res));
+>> +     if (IS_ERR(i2c->reg_base)) {
+>
+> Did you check what devm_ioremap() returns?
+> It returns 'valid addr value' Or NULL as below.
+> So, IS_ERR() should NOT be used.
+>
+> ./lib/devres.c
+>
+> void __iomem *devm_ioremap(struct device *dev, resource_size_t offset,
+>                            unsigned long size)
+> {
+>         void __iomem **ptr, *addr;
+>
+>         ptr = devres_alloc(devm_ioremap_release, sizeof(*ptr), GFP_KERNEL);
+>         if (!ptr)
+>                 return NULL;
+>
+>         addr = ioremap(offset, size);
+>         if (addr) {
+>                 *ptr = addr;
+>                 devres_add(dev, ptr);
+>         } else
+>                 devres_free(ptr);
+>
+>         return addr;
+> }
+> EXPORT_SYMBOL(devm_ioremap);
+>
+> Best regards,
+> Jingoo Han
+>
+>>               ret = -EIO;
+>> -             goto eremap;
+>> +             goto emalloc;
+>>       }
+>>
+>>       i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
+>> @@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>               i2c->adap.algo = &i2c_pxa_pio_algorithm;
+>>       } else {
+>>               i2c->adap.algo = &i2c_pxa_algorithm;
+>> -             ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
+>> -                               dev_name(&dev->dev), i2c);
+>> +             ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
+>> +                              IRQF_SHARED, dev_name(&dev->dev), i2c);
+>>               if (ret)
+>> -                     goto ereqirq;
+>> +                     goto emalloc;
+>>       }
+>>
+>>       i2c_pxa_reset(i2c);
+>> @@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
+>>  eadapt:
+>>       if (!i2c->use_pio)
+>>               free_irq(irq, i2c);
+>> -ereqirq:
+>> -     clk_disable_unprepare(i2c->clk);
+>> -     iounmap(i2c->reg_base);
+>> -eremap:
+>> -     clk_put(i2c->clk);
+>> -eclk:
+>> -     kfree(i2c);
+>>  emalloc:
+>>       release_mem_region(res->start, resource_size(res));
+>> +err_nothing_to_release:
+>>       return ret;
+>>  }
+>>
+>> --
+>> 1.7.10.4
+>
 
-In this case I think there is, though I deleted the context that would
-make that clearer. Sorry about that.
 
-We acquired mac with:
+Hi
 
-	mac = of_get_mac_address(spi_device->dev.of_node);
+Excuse my late reply.
 
-Where of_get_mac_address returns a property::value pointer.
 
-As far as I can tell, when we unflatten the DT each property::value is
-pointed at the original data in the DTB. Each data stream immediately
-follows a naturally aligned 32-bit FDT_PROP token in the DTB, so all
-value pointers should be aligned to at least 4 bytes.
+1)  A fix of the original error I made in my original patch.
+But it was completely different from this solution, you have trouble
+seeing it as something reasonable to do.
 
-That all said I'm happy to just use memcpy if we're not happy to rely on
-the DTB format, it's not exactly going to be a bottleneck.
+My original patch:
 
-Cheers,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+ eclk:
+        kfree(i2c);
+ emalloc:
+-       release_mem_region(res->start, resource_size(res));
++       if(res)
++               release_mem_region(res->start, resource_size(res));
+        return ret;
+ }
+
+2) Wolfram Sang helped me with a patch example from commit 9b2b98a3b4de
+It hade this code below. I thought that it seem a little strange, but
+I trust Wolfram.
+
+-       dev->virtbase = ioremap(adev->res.start, resource_size(&adev->res));
+-       if (!dev->virtbase) {
++       dev->virtbase = devm_ioremap(&adev->dev, adev->res.start,
++                               resource_size(&adev->res));
++       if (IS_ERR(dev->virtbase)) {
+                ret = -ENOMEM;
+-               goto err_no_ioremap;
++               goto err_no_mem;
+        }
+
+
+Kind regards
+Rickard Strandqvist
