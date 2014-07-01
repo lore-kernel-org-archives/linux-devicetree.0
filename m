@@ -1,186 +1,235 @@
-From: Arend van Spriel <arend@broadcom.com>
-Subject: Re: [RFC 1/2] pwrseq: Add subsystem to handle complex power sequences
-Date: Tue, 1 Jul 2014 18:56:51 +0200
-Message-ID: <53B2E853.5080400@broadcom.com>
-References: <1403183091-27876-1-git-send-email-ulf.hansson@linaro.org>	<1403183091-27876-2-git-send-email-ulf.hansson@linaro.org>	<CAOesGMj6xp_cXZRuqL5HOPX4AeDuCkj69E32xuPVgGk4xABLbQ@mail.gmail.com>	<53A3E256.8090307@redhat.com>	<CAOesGMgRw_=ppC3zhDtuYBUsrnd9wwsu26az=4kMXJDBmNgmjw@mail.gmail.com>	<53A3ED65.80605@redhat.com> <CAPDyKFqi2NH1r=Q13iOu2ruuvaj1xJeoERiy2WJBVbQ2b1tc_A@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/2] ASoC: add driver for Rockchip RK3xxx
+	I2S controller
+Date: Tue, 1 Jul 2014 18:07:47 +0100
+Message-ID: <20140701170747.GA15028@sirena.org.uk>
+References: <1404203860-30712-1-git-send-email-xjq@rock-chips.com>
+ <1404204458-30881-1-git-send-email-xjq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <CAPDyKFqi2NH1r=Q13iOu2ruuvaj1xJeoERiy2WJBVbQ2b1tc_A@mail.gmail.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, Hans de Goede <hdegoede@redhat.com>, Olof Johansson <olof@lixom.net>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linus Walleij <linus.walleij@linaro.org>, Mark Brown <broonie@kernel.org>, Arnd Bergmann <arnd@arndb.de>, Alexandre Courbot <gnurou@gmail.com>, Sascha Hauer <s.hauer@pengutronix.de>, Chris Ball <chris@printf.net>, Chen-Yu Tsai <wens@csie.org>, Russell King <linux@arm.linux.org.uk>, Tomasz Figa <tomasz.figa@gmail.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/mixed; boundary="===============6651556296070768379=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1404204458-30881-1-git-send-email-xjq@rock-chips.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: jianqun <xjq@rock-chips.com>
+Cc: huangtao@rock-chips.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, tiwai@suse.de, linux-kernel@vger.kernel.org, zhangqing@rock-chips.com, lgirdwood@gmail.com, kever.yang@rock-chips.com, zyw@rock-chips.com, robh+dt@kernel.org, kfx@rock-chips.com, grant.likely@linaro.org, cf@rock-chips.com, hj@rock-chips.com, yzq@rock-chips.com, zhenfu.fang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 01-07-14 18:42, Ulf Hansson wrote:
-> On 20 June 2014 10:14, Hans de Goede <hdegoede@redhat.com> wrote:
->> Hi,
->>
->> On 06/20/2014 10:02 AM, Olof Johansson wrote:
->>> On Fri, Jun 20, 2014 at 12:27 AM, Hans de Goede <hdegoede@redhat.com> wrote:
->>>> Hi,
->>>>
->>>> On 06/19/2014 07:18 PM, Olof Johansson wrote:
->>>>> Hi,
->>>>>
->>>>>
->>>>>
->>>>> On Thu, Jun 19, 2014 at 6:04 AM, Ulf Hansson <ulf.hansson@linaro.org> wrote:
->>>>>> The pwrseq subsystem handles complex power sequences, typically useful
->>>>>> for subsystems that makes use of discoverable buses, like for example
->>>>>> MMC and I2C.
->>>>>>
->>>>>> The pwrseq subsystem is dependant on CONFIG_OF to be able to parse a DT
->>>>>> childnode to find out what power sequence method to bind for a device.
->>>>>>
->>>>>> From the DT childnode, the pwrseq DT parser tries to locate a
->>>>>> "power-method" property, which string is matched towards the list of
->>>>>> supported pwrseq methods.
->>>>>>
->>>>>> Each pwrseq method implements it's own power sequence and interfaces
->>>>>> the pwrseq core through a few callback functions.
->>>>>>
->>>>>> To instantiate a pwrseq method, clients shall use the devm_pwrseq_get()
->>>>>> API. If needed, clients can explicity drop the references to a pwrseq
->>>>>> method using devm_pwrseq_put() API.
->>>>>>
->>>>>> Besides instantiation, the pwrseq API provides clients opportunity to
->>>>>> select a certain power state. In this intial version, PWRSEQ_POWER_ON
->>>>>> and PWRSEQ_POWER_OFF are supported. Those are also mandatory for each
->>>>>> pwrseq method to support.
->>>>>>
->>>>>> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
->>>>>> ---
->>>>>>  .../devicetree/bindings/pwrseq/pwrseq.txt          |   48 ++++++
->>>>>>  drivers/Makefile                                   |    2 +-
->>>>>>  drivers/pwrseq/Makefile                            |    2 +
->>>>>>  drivers/pwrseq/core.c                              |  175 ++++++++++++++++++++
->>>>>>  drivers/pwrseq/core.h                              |   37 +++++
->>>>>>  drivers/pwrseq/method.c                            |   38 +++++
->>>>>>  include/linux/pwrseq.h                             |   50 ++++++
->>>>>>  7 files changed, 351 insertions(+), 1 deletion(-)
->>>>>>  create mode 100644 Documentation/devicetree/bindings/pwrseq/pwrseq.txt
->>>>>>  create mode 100644 drivers/pwrseq/Makefile
->>>>>>  create mode 100644 drivers/pwrseq/core.c
->>>>>>  create mode 100644 drivers/pwrseq/core.h
->>>>>>  create mode 100644 drivers/pwrseq/method.c
->>>>>>  create mode 100644 include/linux/pwrseq.h
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pwrseq/pwrseq.txt b/Documentation/devicetree/bindings/pwrseq/pwrseq.txt
->>>>>> new file mode 100644
->>>>>> index 0000000..80848ae
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/pwrseq/pwrseq.txt
->>>>>> @@ -0,0 +1,48 @@
->>>>>> +Power sequence DT bindings
->>>>>> +
->>>>>> +Each power sequence method has a corresponding "power-method" property string.
->>>>>> +This property shall be set in a subnode for a device. That subnode should also
->>>>>> +describe resourses which are specific to that power method.
->>>>>> +
->>>>>> +Do note, power sequences as such isn't encoded through DT. Instead those are
->>>>>> +implemented by each power method.
->>>>>> +
->>>>>> +Required subnode properties:
->>>>>> +- power-method: should contain the string for the power method to bind.
->>>>>> +
->>>>>> +       Supported power methods: None.
->>>>>> +
->>>>>> +Example:
->>>>>> +
->>>>>> +Note, the "clock" power method in this example isn't actually supported, but
->>>>>> +used to visualize how a childnode could be described.
->>>>>> +
->>>>>> +// WLAN SDIO channel
->>>>>> +sdi1_per2@80118000 {
->>>>>> +       compatible = "arm,pl18x", "arm,primecell";
->>>>>> +       reg = <0x80118000 0x1000>;
->>>>>> +       interrupts = <0 50 IRQ_TYPE_LEVEL_HIGH>;
->>>>>> +
->>>>>> +       dmas = <&dma 32 0 0x2>, /* Logical - DevToMem */
->>>>>> +              <&dma 32 0 0x0>; /* Logical - MemToDev */
->>>>>> +       dma-names = "rx", "tx";
->>>>>> +
->>>>>> +       clocks = <&prcc_kclk 2 4>, <&prcc_pclk 2 6>;
->>>>>> +       clock-names = "sdi", "apb_pclk";
->>>>>> +
->>>>>> +       arm,primecell-periphid = <0x10480180>;
->>>>>> +       max-frequency = <100000000>;
->>>>>> +       bus-width = <4>;
->>>>>> +       non-removable;
->>>>>> +       pinctrl-names = "default", "sleep";
->>>>>> +       pinctrl-0 = <&sdi1_default_mode>;
->>>>>> +       pinctrl-1 = <&sdi1_sleep_mode>;
->>>>>> +
->>>>>> +       status = "okay";
->>>>>> +
->>>>>> +       pwrseq: pwrseq1 {
->>>>>> +               power-method = "clock";
->>>>>> +               clocks = <&someclk 1 2>, <&someclk 3 4>;
->>>>>> +               clock-names = "pwrseq1", "pwrseq2";
->>>>>> +       };
->>>>>
->>>>> I am strongly against the subnode approach as a general framework. We
->>>>> don't have a subnode for interrupts, nor for clocks or pinctrl. So why
->>>>> should we have it for the power sequencing?
->>>>>
->>>>> Sure, that fits the linux driver model better, but that's irrelevant
->>>>> w.r.t. describing the hardware.
->>>>
->>>> Actually this is about describing the hardware, when you have e.g. an
->>>> mmc device which needs pwrseq, there will be 2 sets of certain
->>>> resources, ie clocks for the host controller and clocks going directly
->>>> to the mmc device. I think putting those both in the same subnode is
->>>> a BAD idea, so we really do need a subnode to group the pwrseq resources
->>>> together.
->>>
->>> I disagree.
->>>
->>> The clock is the input to the module, and it is what needs to be
->>> enabled for the module to work. It's not the input to some
->>> power-sequence component on the module, or next to the module on the
->>> bus.
->>
->> Right, it is an input to the sdio-module, not to the mmc-host, so its an
->> input to a different piece of hardware (at different ends of the mmc bus),
->> but since the mmc-bus normally is fully discoverable we've no node for the
->> other end of the bus.
->>
->> So from the mmc-host pov, which is the one which needs to bind the pwrseq
->> driver, as that needs to be done before it can probe its bus, this is
->> a different piece of hardware, hence a subnode to the host makes perfect
->> sense.  This is in no way part of the host, so certainly it does not belong
->> inside the hosts subnode.
-> 
-> I fully agree with you Hans here.
-> 
-> If we were to put this information in the host's DT node, that would
-> be a wrong description of the hardware. Currently, I can't think of
-> anything better than a subnode, but I am open to suggestions.
 
-It could also be a property in the mmc-host that references a gpio
-and/or clock for the simple sequences. For the complex sequence it could
-similarly reference to a power-seq node somewhere else in the DT. There
-may not be a functional difference. It just indicates that the power
-sequence is not part of the mmc host, but an optional resource needed
-for bus operation, ie. make sdio device discoverable.
+--===============6651556296070768379==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="OXfL5xGRrasGEqWY"
+Content-Disposition: inline
 
-Regards,
-Arend
 
-> Kind regards
-> Uffe
-> 
->>
->>> It probably makes sense to not use the standard names for the new
->>> resources.
->>
->> I disagree, being able to use standard names is very useful, and actually
->> is a must if we don't want to have to have special versions of devm_get_clk,
->> and all other devm_get_xxx esp. for pwrseq stuff.
->>
->> Regards,
->>
->> Hans
+--OXfL5xGRrasGEqWY
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Tue, Jul 01, 2014 at 04:47:38PM +0800, jianqun wrote:
+
+> --- /dev/null
+> +++ b/sound/soc/rockchip/i2s.h
+> @@ -0,0 +1,222 @@
+> +/*
+> + * i2s.h - ALSA IIS interface for the rockchip SoC
+> + *
+> + * Driver for rockchip iis audio
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License version 2 as
+> + * published by the Free Software Foundation.
+> + */
+> +
+> +#include <linux/version.h>
+
+You should never need to include this.
+
+> +	bool i2s_tx_status;
+> +	bool i2s_rx_status;
+
+Can we have more meaningful names for these please?
+
+> +static inline void i2s_writel(struct rk_i2s_dev *i2s, u32 value,
+> +			      unsigned int offset)
+> +{
+> +	writel_relaxed(value, i2s->regs + offset);
+> +}
+> +
+> +static inline u32 i2s_readl(struct rk_i2s_dev *i2s, unsigned int offset)
+> +{
+> +	return readl_relaxed(i2s->regs + offset);
+> +}
+
+Perhaps use regmap?  The main advantage would be the debug
+infrastructure, though you could also use _update_bits() to reduce the
+amount of time spent locked.
+
+> +	if (need_delay) {
+> +		while (i2s_readl(i2s, I2S_CLR) && try_cnt) {
+> +			udelay(1);
+> +			try_cnt--;
+> +		}
+> +	}
+
+It's not reall a delay but rather a wait for the hardware to be ready I
+guess?  I'd expect to see some kind of message printed if we time out
+without the hardware reporting it's ready - that probably means
+something is going wrong.
+
+> +	case SND_SOC_DAIFMT_I2S:
+> +		tx_ctl &= ~I2S_TXCR_IBM_MASK;
+> +		tx_ctl |= I2S_TXCR_IBM_NORMAL;
+> +		break;
+> +	default:
+> +		ret = -EINVAL;
+> +		goto exit;
+> +	}
+> +
+> +	i2s_writel(i2s, tx_ctl, I2S_TXCR);
+
+It's not a serious problem but it's more normal to defer the writes to
+the end of the function after all the error checking so that if the
+function fails we don't end up writing out part of the configuration.
+
+> +static int rockchip_i2s_set_sysclk(struct snd_soc_dai *cpu_dai,
+> +	int clk_id, unsigned int freq, int dir)
+> +{
+> +	struct rk_i2s_dev *i2s = to_info(cpu_dai);
+> +
+> +	clk_set_rate(i2s->clk, freq);
+
+You should check (or just directly return) the error code here.  It'd
+also be good to define and validate a clock number, even if there's only
+one right now, in order to avoid problems later on.
+
+> +static int rockchip_i2s_set_clkdiv(struct snd_soc_dai *cpu_dai,
+> +	int div_id, int div)
+
+Why are you defining a set_clkdiv() operation?  The code appears to just
+support MCLK and BCLK dividers both of which the driver ought to be able
+to just configure automatically.
+
+> +
+> +static int i2s_runtime_resume(struct device *dev)
+> +{
+> +	struct rk_i2s_dev *i2s = dev_get_drvdata(dev);
+> +
+> +	return clk_prepare_enable(i2s->clk);
+
+Error checking.
+
+> +	/* Try to set the I2S Channel id from dt */
+> +	pdev->id = of_alias_get_id(np, "i2s");
+> +	dev_set_name(&pdev->dev, "%s.%d",
+> +				pdev->dev.driver->name,
+> +				pdev->id);
+
+No, this is seriously broken - a driver should never attempt to change
+its own device name, just use the name that the kernel set.
+
+> +	ret = devm_snd_soc_register_component(&pdev->dev,
+> +				&rockchip_i2s_component,
+> +				&rockchip_i2s_dai[pdev->id], 1);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "Could not register DAI\n");
+> +		goto err_clk_disable;
+> +	}
+> +
+> +	pm_runtime_enable(&pdev->dev);
+
+Error checking and I'd expect this to happen before the device is
+registered - remember that the device may be bound into a sound card
+within the component registration so it has to be able to run normally.
+
+> +	snd_soc_unregister_component(&pdev->dev);
+
+Not neeed with devm_snd_soc_register_component().
+
+> +static const struct of_device_id rockchip_i2s_match[] = {
+> +	{
+> +		.compatible = "rockchip,rk3066-i2s"
+> +	},
+> +};
+> +MODULE_DEVICE_TABLE(of, rockchip_i2s_match);
+
+Needs an empty terminating entry and the binding document listed two
+compatible strings.
+
+> @@ -0,0 +1,64 @@
+> +/* sound/soc/rockchip/pcm.c
+> + *
+> + * ALSA SoC Audio Layer - Rockchip I2S Controller driver
+
+Submit this as a separate patch.
+
+> +static const struct snd_pcm_hardware rockchip_pcm_hardware = {
+> +	.info = SNDRV_PCM_INFO_INTERLEAVED |
+> +			SNDRV_PCM_INFO_BLOCK_TRANSFER |
+> +			SNDRV_PCM_INFO_MMAP |
+> +			SNDRV_PCM_INFO_MMAP_VALID |
+> +			SNDRV_PCM_INFO_PAUSE |
+> +			SNDRV_PCM_INFO_RESUME,
+> +	.formats = SNDRV_PCM_FMTBIT_S24_LE |
+> +			SNDRV_PCM_FMTBIT_S20_3LE |
+> +			SNDRV_PCM_FMTBIT_S16_LE,
+> +	.channels_min = 2,
+> +	.channels_max = 8,
+> +	.buffer_bytes_max = 128*1024,
+> +	.period_bytes_min = 64,
+> +	.period_bytes_max = 2048*4,
+> +	.periods_min = 3,
+> +	.periods_max = 128,
+> +	.fifo_size = 16,
+> +};
+
+The framework is supposed to be able to figure this out automatically
+with current kernels - if there's something not working there we should
+at least understand what and ideally fix it.
+
+> +static const struct snd_dmaengine_pcm_config rockchip_dmaengine_pcm_config = {
+> +	.pcm_hardware = &rockchip_pcm_hardware,
+> +	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+> +	.compat_filter_fn = NULL,
+
+No need to set NULL explicitly.
+
+--OXfL5xGRrasGEqWY
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTsurfAAoJELSic+t+oim9XuIP/0ljuEl/+FtVQNnIsLLOGpiK
+6ptA/SYDPfwtfKMfxoT7ox9OEwFy1KKY9dn8lfEqzOf4P0jXhd+z6zLm/b6ZvQCY
+t5cHQ3JLJLsS08UwYc4wQD4simzih7QbhrHhyUpDSasQTAQLURTyUb87zo7ci1pV
+5k9MFV7hvIuZirohENJoAAgFs5CZthcjxJsevaF61Ws8+FyifikmvKzN5+ia8/mL
+CIpuxicyO+skz7oKyYKYbLO2DxriIoSXDaJtenJZ15+lXYCObVWdRjtMOg71cgWy
+LH6bdzwNbKR4n72bWW9uEPXDeL1IWKZCJwxwJqMch8wzqpLHCjzHc2w11zIrKHuC
+leZOeoBvKCMo/Oesjx7Jm4fdlBbVFhRz8tAPUhEkyu9my6h8vNCkfoC7USR5beZu
+K0uytTF3CQcKduoO55sYKzKWeqplmPkozf+o+aeF/K+pAg5lXIXt/YW5MXJXne3B
+Xaek2hmPUyVJ01Uqy8tNosTe2FOajLVGOEdf3w6uN4VPfI2713yS3hERmKz26Rw0
+8on89gauKUNPSv5nR0/jJgoVYqwjFrTGRV6ACLHZA73pL82sHuKIApzFFw+U3Z7G
+zi6Dw74hK09gpfHZKmWaRGQmpeQafV0v+s+Jxl4+7zRBoZ3nOBHVaLtxasmDPJ7C
+lJLdF/F4jZa7E27LiTyx
+=FP6f
+-----END PGP SIGNATURE-----
+
+--OXfL5xGRrasGEqWY--
+
+--===============6651556296070768379==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============6651556296070768379==--
