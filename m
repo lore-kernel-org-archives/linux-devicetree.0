@@ -1,7 +1,7 @@
 From: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Subject: [PATCH 2/4] ARM: dts: dove: add DT LCD controllers
-Date: Tue,  1 Jul 2014 15:04:29 +0200
-Message-ID: <1404219871-18419-3-git-send-email-sebastian.hesselbarth@gmail.com>
+Subject: [PATCH 3/4] ARM: dts: dove: enable lcd0 on SolidRun CuBox
+Date: Tue,  1 Jul 2014 15:04:30 +0200
+Message-ID: <1404219871-18419-4-git-send-email-sebastian.hesselbarth@gmail.com>
 References: <1404219871-18419-1-git-send-email-sebastian.hesselbarth@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,7 +23,9 @@ List-Id: devicetree@vger.kernel.org
 
 From: Russell King <rmk+kernel@arm.linux.org.uk>
 
-Add the DT fragment for the Marvell Dove LCD controllers.
+This enables lcd0 on SolidRun CuBox which is connected to TDA998x
+HDMI transmitter. Also, set the external video clock connected to
+Si5351 clock generator.
 
 Signed-off-by: Russell King <rmk+kernel@arm.linux.org.uk>
 Signed-off-by: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
@@ -41,33 +43,22 @@ Cc: devicetree@vger.kernel.org
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 ---
- arch/arm/boot/dts/dove.dtsi |   14 ++++++++++++++
- 1 files changed, 14 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/dove-cubox.dts |    6 ++++++
+ 1 files changed, 6 insertions(+), 0 deletions(-)
 
-diff --git a/arch/arm/boot/dts/dove.dtsi b/arch/arm/boot/dts/dove.dtsi
-index 3b891dd..a5441d5 100644
---- a/arch/arm/boot/dts/dove.dtsi
-+++ b/arch/arm/boot/dts/dove.dtsi
-@@ -630,6 +630,20 @@
- 				reg = <0xe8400 0x0c>;
- 				ngpios = <8>;
- 			};
-+
-+			lcd1: lcd-controller@810000 {
-+				compatible = "marvell,dove-lcd";
-+				reg = <0x810000 0x1000>;
-+				interrupts = <46>;
-+				status = "disabled";
-+			};
-+
-+			lcd0: lcd-controller@820000 {
-+				compatible = "marvell,dove-lcd";
-+				reg = <0x820000 0x1000>;
-+				interrupts = <47>;
-+				status = "disabled";
-+			};
- 		};
- 	};
+diff --git a/arch/arm/boot/dts/dove-cubox.dts b/arch/arm/boot/dts/dove-cubox.dts
+index 7a70f4c..303a354 100644
+--- a/arch/arm/boot/dts/dove-cubox.dts
++++ b/arch/arm/boot/dts/dove-cubox.dts
+@@ -134,3 +134,9 @@
+ 	pinctrl-0 = <&pmx_audio1_i2s1_spdifo &pmx_audio1_extclk>;
+ 	pinctrl-names = "default";
  };
++
++&lcd0 {
++	status = "okay";
++	clocks = <&si5351 0>;
++	clock-names = "ext_ref_clk_1";
++};
 -- 
 1.7.2.5
