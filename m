@@ -1,50 +1,34 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: mwifiex card reset
-Date: Tue, 01 Jul 2014 09:52:40 +0200
-Message-ID: <53B268C8.4030703@zonque.org>
-References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com> <20140628052220.GG10407@us.netrek.org> <20140628072322.GC7410@atomide.com> <CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com> <20140630061912.GA2461@atomide.com> <53B1BAC1.3090902@zonque.org> <477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
+Date: Tue, 1 Jul 2014 00:59:30 -0700
+Message-ID: <20140701075930.GN28884@atomide.com>
+References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
+ <20140630192910.GA23978@titan.lakedaemon.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mmc-owner@vger.kernel.org>
-In-Reply-To: <477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
-Sender: linux-mmc-owner@vger.kernel.org
-To: Bing Zhao <bzhao@marvell.com>, Tony Lindgren <tony@atomide.com>, Andreas Fenkart <afenkart@gmail.com>
-Cc: James Cameron <quozl@laptop.org>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140630192910.GA23978@titan.lakedaemon.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jason Cooper <jason@lakedaemon.net>
+Cc: Sricharan R <r.sricharan@ti.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nm@ti.com, linux@arm.linux.org.uk, rnayak@ti.com, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Bing,
-
-On 07/01/2014 08:44 AM, Bing Zhao wrote:
->> Hence, we'll need some sort of internal API for this, and a phandle
->> in dts. I wonder whether that glue logic might be better off living
->> in the mmc core, as mwifiex might well be interfaced to other
->> hosts?
+* Jason Cooper <jason@lakedaemon.net> [140630 12:30]:
 > 
-> I may have missed something, but doesn't the MMC_POWER_OFF and
-> MMC_POWER_ON|UP handling in controller driver help? Anyway the
-> clocks/GPIOs/regulators are sort of platform dependent. Would it be
-> better putting it in /arch/arm/mach-xxxxx/?
+> Whole series applied to irqchip/crossbar, I'll give it a day or two in
+> -next, then I'll merge it into irqchip/core.
+> 
+> Tony: Right now, it's immutable unless you tell me I applied something
+> incorrectly.  Once it goes into irqchip/core, it's immutable no matter
+> what you say. ;-)
 
-Regulators are not platform specific, they never were. For GPIOs and
-clocks, we can simply depend on CONFIG_GPIO_GENERIC and
-CONFIG_COMMON_CLK. I wouldn't even bother to care for anything else.
-This way, we also get a way of referencing the resources in dts through
-phandles for free.
+Thanks, looks good to me. Sricharan and Nishant, can you please
+check that we can now apply the related .dts changes on top of
+Jason's branch at:
 
-What I was talking about above was that conducting the actual reset from
-the helper must be something that either the mmc core or individual host
-implementations can trigger. We need to repeat this action every time
-mwifiex decides to call its reset routine, which is currently
-implemented like this:
+git://git.infradead.org/users/jcooper/linux.git irqchip/crossbar
 
-	mmc_remove_host(target);
-	mdelay(20);
-	mmc_add_host(target);
+Regards,
 
-But I haven't looked into possible ways of implementation yet.
-MMC_POWER_* might well be a suitable thing to hook into.
-
-
-Thanks,
-Daniel
+Tony
