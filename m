@@ -1,7 +1,7 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 01/14] of: Create of_property_match()
-Date: Tue,  1 Jul 2014 22:02:30 +0530
-Message-ID: <9a6bdfa64092dd8ee483570880225e08fcbad810.1404231535.git.viresh.kumar@linaro.org>
+Subject: [PATCH 12/14] cpufreq: cpu0: Extend support beyond CPU0
+Date: Tue,  1 Jul 2014 22:02:41 +0530
+Message-ID: <89da404a3b8f545774f5782d901b8381caf02c07.1404231535.git.viresh.kumar@linaro.org>
 References: <cover.1404231535.git.viresh.kumar@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1404231535.git.viresh.kumar@linaro.org>
@@ -9,93 +9,199 @@ In-Reply-To: <cover.1404231535.git.viresh.kumar@linaro.org>
 References: <cover.1404231535.git.viresh.kumar@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: rjw@rjwysocki.net, shawn.guo@linaro.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, arvind.chauhan@arm.com, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, spk.linux@gmail.com, thomas.ab@samsung.com, nm@ti.com, t.figa@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, Rob Herring <rob.herring@linaro.org>, devicetree@vger.kernel.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, arvind.chauhan@arm.com, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, spk.linux@gmail.com, thomas.ab@samsung.com, nm@ti.com, t.figa@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Create a new routine of_property_match() that will match a property between two
-nodes. If they are exactly same, it returns 1 else 0. If the property isn't
-available in any of the nodes or the API isn't implemented, proper error codes
-would be returned.
+Most of the infrastructure is in place now, with only little left. How to find
+siblings ?
 
-The first user of this routine would be cpufreq-cpu0 driver, which requires to
-match "clock" property between CPU nodes to identify which CPUs share clock
-line. And hence this routine.
+Stephen Boyd suggested to compare "clocks" properties from CPU's DT node and
+siblings should match. This patch adds another routine find_siblings() which
+calls of_clk_shared_by_cpus() to find if CPUs share clock line or not.
 
-Cc: Rob Herring <rob.herring@linaro.org>
+If of_clk_shared_by_cpus() returns error, we fallback to all CPUs sharing clock
+line assumption as existing platforms don't have "clocks" property in all CPU
+nodes and would fail from of_clk_shared_by_cpus().
+
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
 ---
- drivers/of/base.c  | 29 +++++++++++++++++++++++++++++
- include/linux/of.h | 10 ++++++++++
- 2 files changed, 39 insertions(+)
+ .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   | 72 ++++++++++++++++++++--
+ drivers/cpufreq/cpufreq-cpu0.c                     | 35 ++++++++++-
+ 2 files changed, 101 insertions(+), 6 deletions(-)
 
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index b986480..a036c91 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -1490,6 +1490,35 @@ int of_property_count_strings(struct device_node *np, const char *propname)
- }
- EXPORT_SYMBOL_GPL(of_property_count_strings);
+diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+index f055515..4b83c1a 100644
+--- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
++++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+@@ -1,11 +1,11 @@
+-Generic CPU0 cpufreq driver
++Generic cpufreq driver
  
-+/**
-+ * of_property_match - Match 'prop' property between two nodes
-+ * @np1, np2: Nodes to match for property
-+ * @prop_name: property to match
-+ *
-+ * Returns 1 on match, 0 on no match, and error for missing property.
+-It is a generic cpufreq driver for CPU0 frequency management.  It
++It is a generic cpufreq driver for frequency management.  It
+ supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
+-systems which share clock and voltage across all CPUs.
++systems which may or maynot share clock and voltage across all CPUs.
+ 
+ Both required and optional properties listed below must be defined
+-under node /cpus/cpu@0.
++under node /cpus/cpu@x. Where x is the first cpu inside a cluster.
+ 
+ Required properties:
+ - operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
+@@ -19,9 +19,16 @@ Optional properties:
+ - cooling-min-level:
+ - cooling-max-level:
+      Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
++- clocks: If CPU clock is populated from DT, "clocks" property must be copied to
++  every cpu node sharing clock with cpu@x. Generic cpufreq driver compares
++  "clocks" to find siblings, i.e. to see which CPUs share clock/voltages. If
++  only cpu@0 contains "clocks" property it is assumed that all CPUs share clock
++  line.
+ 
+ Examples:
+ 
++1. All CPUs share clock/voltages
++
+ cpus {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+@@ -36,6 +43,8 @@ cpus {
+ 			396000  950000
+ 			198000  850000
+ 		>;
++		clocks = <&clock CLK_ARM_CLK>;
++		clock-names = "cpu";
+ 		clock-latency = <61036>; /* two CLK32 periods */
+ 		#cooling-cells = <2>;
+ 		cooling-min-level = <0>;
+@@ -46,17 +55,72 @@ cpus {
+ 		compatible = "arm,cortex-a9";
+ 		reg = <1>;
+ 		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM_CLK>;
+ 	};
+ 
+ 	cpu@2 {
+ 		compatible = "arm,cortex-a9";
+ 		reg = <2>;
+ 		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM_CLK>;
+ 	};
+ 
+ 	cpu@3 {
+ 		compatible = "arm,cortex-a9";
+ 		reg = <3>;
+ 		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM_CLK>;
++	};
++};
++
++
++2. All CPUs inside a cluster share clock/voltages, there are multiple clusters.
++
++cpus {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	cpu@0 {
++		compatible = "arm,cortex-a15";
++		reg = <0>;
++		next-level-cache = <&L2>;
++		operating-points = <
++			/* kHz    uV */
++			792000  1100000
++			396000  950000
++			198000  850000
++		>;
++		clocks = <&clock CLK_ARM1_CLK>;
++		clock-names = "cpu";
++		clock-latency = <61036>; /* two CLK32 periods */
++	};
++
++	cpu@1 {
++		compatible = "arm,cortex-a15";
++		reg = <1>;
++		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM1_CLK>;
++	};
++
++	cpu@100 {
++		compatible = "arm,cortex-a7";
++		reg = <100>;
++		next-level-cache = <&L2>;
++		operating-points = <
++			/* kHz    uV */
++			792000  950000
++			396000  750000
++			198000  450000
++		>;
++		clocks = <&clock CLK_ARM2_CLK>;
++		clock-names = "cpu";
++		clock-latency = <61036>; /* two CLK32 periods */
++	};
++
++	cpu@101 {
++		compatible = "arm,cortex-a7";
++		reg = <101>;
++		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM2_CLK>;
+ 	};
+ };
+diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
+index 44633f6..b3f2bf0 100644
+--- a/drivers/cpufreq/cpufreq-cpu0.c
++++ b/drivers/cpufreq/cpufreq-cpu0.c
+@@ -177,6 +177,30 @@ try_again:
+ 	return ret;
+ }
+ 
++/*
++ * Sets all CPUs as sibling if any cpu doesn't have a "clocks" property,
++ * Otherwise it matches "clocks" property to find siblings.
 + */
-+int of_property_match(const struct device_node *np1,
-+		      const struct device_node *np2, const char *prop_name)
++static void find_siblings(struct cpufreq_policy *policy)
 +{
-+	const __be32 *prop1, *prop2;
-+	int size1, size2;
++	int cpu, ret;
 +
-+	/* Retrieve property from both nodes */
-+	prop1 = of_get_property(np1, prop_name, &size1);
-+	if (!prop1)
-+		return -ENOENT;
++	for_each_possible_cpu(cpu) {
++		if (cpu == policy->cpu)
++			continue;
 +
-+	prop2 = of_get_property(np2, prop_name, &size2);
-+	if (!prop2)
-+		return -ENOENT;
++		ret = of_clk_shared_by_cpus(policy->cpu, cpu);
 +
-+	if (size1 != size2)
-+		return 0;
-+
-+	return !memcmp(prop1, prop2, size1);
++		/* Error while parsing nodes, fallback to set-all */
++		if (ret < 0) {
++			cpumask_setall(policy->cpus);
++			return;
++		} else if (ret == 1) {
++			cpumask_set_cpu(cpu, policy->cpus);
++		}
++	}
 +}
-+EXPORT_SYMBOL_GPL(of_property_match);
 +
- void of_print_phandle_args(const char *msg, const struct of_phandle_args *args)
+ static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
  {
- 	int i;
-diff --git a/include/linux/of.h b/include/linux/of.h
-index 196b34c..4e9cf5a 100644
---- a/include/linux/of.h
-+++ b/include/linux/of.h
-@@ -275,6 +275,9 @@ extern int of_property_match_string(struct device_node *np,
- 				    const char *string);
- extern int of_property_count_strings(struct device_node *np,
- 				     const char *propname);
-+extern int of_property_match(const struct device_node *np1,
-+			     const struct device_node *np2,
-+			     const char *prop_name);
- extern int of_device_is_compatible(const struct device_node *device,
- 				   const char *);
- extern int of_device_is_available(const struct device_node *device);
-@@ -498,6 +501,13 @@ static inline int of_property_count_strings(struct device_node *np,
- 	return -ENOSYS;
- }
+ 	struct cpufreq_frequency_table *freq_table;
+@@ -266,9 +290,16 @@ static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
+ 	policy->driver_data = priv;
  
-+static inline int of_property_match(const struct device_node *np1,
-+				    const struct device_node *np2,
-+				    const char *prop_name)
-+{
-+	return -ENOSYS;
-+}
+ 	policy->clk = cpu_clk;
+-	ret = cpufreq_generic_init(policy, freq_table, transition_latency);
+-	if (ret)
 +
- static inline const void *of_get_property(const struct device_node *node,
- 				const char *name,
- 				int *lenp)
++	find_siblings(policy);
++	ret = cpufreq_table_validate_and_show(policy, freq_table);
++	if (ret) {
++		dev_err(cpu_dev, "%s: invalid frequency table: %d\n", __func__,
++			ret);
+ 		goto out_cooling_unregister;
++	}
++
++	policy->cpuinfo.transition_latency = transition_latency;
+ 
+ 	return 0;
+ 
 -- 
 2.0.0.rc2
