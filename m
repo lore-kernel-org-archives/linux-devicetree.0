@@ -1,200 +1,82 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH] rcar_can: add device tree support
-Date: Wed, 02 Jul 2014 00:50:45 +0200
-Message-ID: <53B33B45.1060205@pengutronix.de>
-References: <201407020227.04235.sergei.shtylyov@cogentembedded.com>
+From: Chanwoo Choi <cw00.choi@samsung.com>
+Subject: Re: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for
+ Exynos3250
+Date: Wed, 02 Jul 2014 08:52:15 +0900
+Message-ID: <53B349AF.4080606@samsung.com>
+References: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
+ <CAK5sBcFJMK-y+MZPXCufKEmp=v1nFJHstvNTczsQ3ez3SUPbKw@mail.gmail.com>
+ <53B23362.7080103@samsung.com>
+ <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="Jux4XWldmuaXqkRp0m2Hwquw5cnrSP1Ei"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <201407020227.04235.sergei.shtylyov@cogentembedded.com>
-Sender: linux-can-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org
-Cc: linux-sh@vger.kernel.org, vksavl@gmail.com, rdunlap@infradead.org, linux-doc@vger.kernel.org, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-reply-to: <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Sachin Kamat <spk.linux@gmail.com>
+Cc: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---Jux4XWldmuaXqkRp0m2Hwquw5cnrSP1Ei
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
+On 07/01/2014 01:10 PM, Sachin Kamat wrote:
+> Hi Chanwoo,
+> 
+> On Tue, Jul 1, 2014 at 9:34 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>> Hi Sachin,
+>>
+>> On 07/01/2014 12:33 PM, Sachin Kamat wrote:
+>>> Hi Chanwoo,
+>>>
+>>> On Tue, Jul 1, 2014 at 6:10 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
+>>>> This patch add TMU (Thermal Management Unit) dt node to monitor the high
+>>>> temperature for Exynos3250.
+>>>>
+>>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
+>>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
+>>>> ---
+>>>> This patch has a dependency on following patch [1]:
+>>>>  [1] https://lkml.org/lkml/2014/6/30/805
+>>>>
+>>>>  arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
+>>>>  1 file changed, 10 insertions(+)
+>>>>
+>>>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+>>>> index 3660cab..1e566af 100644
+>>>> --- a/arch/arm/boot/dts/exynos3250.dtsi
+>>>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+>>>> @@ -192,6 +192,16 @@
+>>>>                         status = "disabled";
+>>>>                 };
+>>>>
+>>>> +               tmu: tmu@100C0000 {
+>>>> +                       compatible = "samsung,exynos3250-tmu";
+>>>> +                       interrupt-parent = <&gic>;
+>>>> +                       reg = <0x100C0000 0x100>;
+>>>> +                       interrupts = <0 216 0>;
+>>>> +                       clocks = <&cmu CLK_TMU_APBIF>;
+>>>> +                       clock-names = "tmu_apbif";
+>>>> +                       status = "disabled";
+>>>
+>>> I don't think there would be any board specific properties needed. Hence
+>>> leave the status as enabled (by deleting the above line).
+>>>
+>>
+>> I think that if specific board need TMU feature, dts file for specific board
+>> should include tmu dt node with 'okay' status. The specific board based on
+>> Exynos3250 might not need TMU feature.
+> 
+> The status field in DT node is not meant for stating the build configuration but
+> represents the readiness of the hardware for usage on the platform. If
+> a particular
+> board does not need this feature it needs to be disabled in the build
+> config and only
+> for any special requirements disable it in board file.
 
-On 07/02/2014 12:27 AM, Sergei Shtylyov wrote:
-> Add support of the device tree probing for the Renesas R-Car CAN contro=
-llers
-> documenting the device tree bindings as necessary.
+TMU (Thermal Management Unit) needs specific regulator for TMU power as following:
+The regulator for TMU is dependent on board.
 
-Please put the DT documentation into a separate patch, make it the first
-one. When reposting, please put the device tree mailing list on Cc.
+For exmaple: in board dts file including tmu dt
 
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->=20
-> ---
-> The patch is against the Dave Miller's 'net-next.git' repo ('linux-can-=
-next.git'
-> repo still doesn't have the R-Car CAN driver for some reason).
-
-Should be fixed now :)
-
->=20
->  Documentation/devicetree/bindings/net/can/rcar_can.txt |   40 ++++++++=
-+++++++++
->  drivers/net/can/rcar_can.c                             |   28 ++++++++=
-+--
->  2 files changed, 63 insertions(+), 5 deletions(-)
->=20
-> Index: net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- /dev/null
-> +++ net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> @@ -0,0 +1,40 @@
-> +Renesas R-Car CAN controller Device Tree Bindings
-> +-------------------------------------------------
-> +
-> +Required properties:
-> +- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A=
-7778 SoC.
-> +	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 So=
-C.
-> +	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 So=
-C.
-> +	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 So=
-C.
-
-AFAIK we usually specify the first SoC with this core as the only
-compatible.
-
-> +- reg: physical base address and size of the R-Car CAN register map.
-> +- interrupts: interrupt specifier for the sole interrupt.
-> +- clocks: phandle and clock specifier for the R-Car CAN clock input.
-> +- pinctrl-0: pin control group to be used for this controller.
-> +- pinctrl-names: must be "default".
-> +
-> +Optional properties:
-> +- clock-select: R-Car CAN Clock Source Select. Valid values are:
-> +		<0x0> (default) : Peripheral clock (clkp1)
-> +		<0x1> : Peripheral clock (clkp2)
-> +		<0x3> : Externally input clock
-> +
-> +Example
-> +-------
-> +
-> +SoC common .dtsi file:
-> +
-> +	can0: can@e6e80000 {
-> +		compatible =3D "renesas,can-r8a7791";
-> +		reg =3D <0 0xe6e80000 0 0x1000>;
-> +		interrupts =3D <0 186 IRQ_TYPE_LEVEL_HIGH>;
-> +		clocks =3D <&mstp9_clks R8A7791_CLK_RCAN0>;
-> +		status =3D "disabled";
-> +	};
-> +
-> +Board specific .dts file:
-> +
-> +&can0 {
-> +	pinctrl-0 =3D <&can0_pins>;
-> +	pinctrl-names =3D "default";
-> +	status =3D "okay";
-> +};
-> Index: net-next/drivers/net/can/rcar_can.c
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> --- net-next.orig/drivers/net/can/rcar_can.c
-> +++ net-next/drivers/net/can/rcar_can.c
-> @@ -20,6 +20,7 @@
->  #include <linux/can/dev.h>
->  #include <linux/clk.h>
->  #include <linux/can/platform/rcar_can.h>
-> +#include <linux/of.h>
-> =20
->  #define RCAR_CAN_DRV_NAME	"rcar_can"
-> =20
-> @@ -722,13 +723,20 @@ static int rcar_can_probe(struct platfor
->  	struct net_device *ndev;
->  	struct resource *mem;
->  	void __iomem *addr;
-> +	u32 clock_select =3D 0;
->  	int err =3D -ENODEV;
->  	int irq;
-> =20
-> -	pdata =3D dev_get_platdata(&pdev->dev);
-> -	if (!pdata) {
-> -		dev_err(&pdev->dev, "No platform data provided!\n");
-> -		goto fail;
-> +	if (!pdev->dev.of_node) {
-
-nitpick: please make it positive logic.
-
-> +		pdata =3D dev_get_platdata(&pdev->dev);
-> +		if (!pdata) {
-> +			dev_err(&pdev->dev, "No platform data provided!\n");
-> +			goto fail;
-> +		}
-> +		clock_select =3D pdata->clock_select;
-> +	} else {
-> +		of_property_read_u32(pdev->dev.of_node, "clock-select",
-> +				     &clock_select);
->  	}
-> =20
->  	irq =3D platform_get_irq(pdev, 0);
-> @@ -765,7 +773,7 @@ static int rcar_can_probe(struct platfor
->  	ndev->flags |=3D IFF_ECHO;
->  	priv->ndev =3D ndev;
->  	priv->regs =3D addr;
-> -	priv->clock_select =3D pdata->clock_select;
-> +	priv->clock_select =3D clock_select;
->  	priv->can.clock.freq =3D clk_get_rate(priv->clk);
->  	priv->can.bittiming_const =3D &rcar_can_bittiming_const;
->  	priv->can.do_set_mode =3D rcar_can_do_set_mode;
-> @@ -858,10 +866,20 @@ static int __maybe_unused rcar_can_resum
-> =20
->  static SIMPLE_DEV_PM_OPS(rcar_can_pm_ops, rcar_can_suspend, rcar_can_r=
-esume);
-> =20
-> +static const struct of_device_id rcar_can_of_table[] __maybe_unused =3D=
- {
-> +	{ .compatible =3D "renesas,can-r8a7778" },
-> +	{ .compatible =3D "renesas,can-r8a7779" },
-> +	{ .compatible =3D "renesas,can-r8a7790" },
-> +	{ .compatible =3D "renesas,can-r8a7791" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, rcar_can_of_table);
-> +
->  static struct platform_driver rcar_can_driver =3D {
->  	.driver =3D {
->  		.name =3D RCAR_CAN_DRV_NAME,
->  		.owner =3D THIS_MODULE,
-> +		.of_match_table =3D of_match_ptr(rcar_can_of_table),
->  		.pm =3D &rcar_can_pm_ops,
->  	},
->  	.probe =3D rcar_can_probe,
->=20
-
-Marc
-
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---Jux4XWldmuaXqkRp0m2Hwquw5cnrSP1Ei
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
-
-iEYEARECAAYFAlOzO0UACgkQjTAFq1RaXHNc5ACcDvlJPiXfzmtee7wqICQVLf39
-i0MAn1zrarh5I6OiLo1D0RVgCEuvck5Z
-=Il/0
------END PGP SIGNATURE-----
-
---Jux4XWldmuaXqkRp0m2Hwquw5cnrSP1Ei--
+	&tmu {
+		vtmu-supply = <&ldo7_reg>;
+		status = "okay";
+	};
