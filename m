@@ -1,39 +1,148 @@
-From: Sricharan R <r.sricharan@ti.com>
-Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
-Date: Tue, 1 Jul 2014 15:06:36 +0530
-Message-ID: <53B28124.40509@ti.com>
-References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com> <20140630192910.GA23978@titan.lakedaemon.net> <20140701075930.GN28884@atomide.com>
+From: Lars-Peter Clausen <lars-Qo5EllUWu/uELgA04lAiVw@public.gmane.org>
+Subject: Re: [alsa-devel] [PATCH 2/2] ASoC: add driver for Rockchip RK3xxx
+ I2S controller
+Date: Tue, 01 Jul 2014 11:51:37 +0200
+Message-ID: <53B284A9.6050608@metafoo.de>
+References: <1404203860-30712-1-git-send-email-xjq@rock-chips.com> <1404204458-30881-1-git-send-email-xjq@rock-chips.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140701075930.GN28884@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nm@ti.com, linux@arm.linux.org.uk, rnayak@ti.com, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404204458-30881-1-git-send-email-xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Tony,
+On 07/01/2014 10:47 AM, jianqun wrote:
+[...]
+> new file mode 100644
+> index 0000000..946b60c
+> --- /dev/null
+> +++ b/sound/soc/rockchip/Kconfig
+> @@ -0,0 +1,16 @@
+> +config SND_SOC_ROCKCHIP
+> +	tristate "ASoC support for Rockchip"
+> +	depends on SND_SOC && ARCH_ROCKCHIP
 
-On Tuesday 01 July 2014 01:29 PM, Tony Lindgren wrote:
-> * Jason Cooper <jason@lakedaemon.net> [140630 12:30]:
->>
->> Whole series applied to irqchip/crossbar, I'll give it a day or two in
->> -next, then I'll merge it into irqchip/core.
->>
->> Tony: Right now, it's immutable unless you tell me I applied something
->> incorrectly.  Once it goes into irqchip/core, it's immutable no matter
->> what you say. ;-)
-> 
-> Thanks, looks good to me. Sricharan and Nishant, can you please
-> check that we can now apply the related .dts changes on top of
-> Jason's branch at:
-> 
-> git://git.infradead.org/users/jcooper/linux.git irqchip/crossbar
-> 
+No need for SND_SOC this is implicit for all drivers in sound/soc/. Also 
+allow the driver to be select when COMPILE_TEST is selected.
 
-I applied the dts patches on top of this and it worked fine for
-me on dra72 evm
+> +	select SND_SOC_GENERIC_DMAENGINE_PCM
+> +	select SND_ROCKCHIP_PCM
+> +	select SND_ROCKCHIP_I2S
+> +	help
+> +	  Say Y or M if you want to add support for codecs attached to
+> +	  the Rockchip SoCs' Audio interfaces. You will also need to
+> +	  select the audio interfaces to support below.
+> +
+[...]
+> +#include <linux/init.h>
+> +#include <linux/module.h>
+> +#include <linux/interrupt.h>
+> +#include <linux/device.h>
+> +#include <linux/delay.h>
+> +#include <linux/clk.h>
+> +#include <linux/version.h>
+> +#include <linux/of.h>
+> +#include <linux/of_gpio.h>
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/regmap.h>
+> +#include <linux/slab.h>
+> +#include <linux/io.h>
+> +#include <linux/spinlock.h>
+> +#include <linux/workqueue.h>
+> +#include <asm/dma.h>
+> +#include <sound/core.h>
+> +#include <sound/pcm.h>
+> +#include <sound/pcm_params.h>
+> +#include <sound/initval.h>
+> +#include <sound/soc.h>
+> +#include <sound/dmaengine_pcm.h>
 
-Regards,
- Sricharan
+Are you sure that you need all of these includes?
+
+> +
+[...]
+> +static struct snd_soc_dai_ops rockchip_i2s_dai_ops = {
+const
+> +	.trigger = rockchip_i2s_trigger,
+> +	.hw_params = rockchip_i2s_hw_params,
+> +	.set_fmt = rockchip_i2s_set_fmt,
+> +	.set_clkdiv = rockchip_i2s_set_clkdiv,
+> +	.set_sysclk = rockchip_i2s_set_sysclk,
+> +};
+[...]
+> +static int rockchip_i2s_probe(struct platform_device *pdev)
+> +{
+[...]
+> +	/* Try to set the I2S Channel id from dt */
+> +	pdev->id = of_alias_get_id(np, "i2s");
+> +	dev_set_name(&pdev->dev, "%s.%d",
+> +				pdev->dev.driver->name,
+> +				pdev->id);
+
+A device should not change its id or name.
+
+> +
+> +	i2s->dev = &pdev->dev;
+> +	dev_set_drvdata(&pdev->dev, i2s);
+> +
+> +	ret = devm_snd_soc_register_component(&pdev->dev,
+> +				&rockchip_i2s_component,
+> +				&rockchip_i2s_dai[pdev->id], 1);
+
+If those are two instances of the same I2S core just use one 
+snd_soc_dai_driver struct. There is no need for the driver to know or care 
+about how many instances of the core the system has.
+
+[...]
+> +
+> +static const struct snd_pcm_hardware rockchip_pcm_hardware = {
+> +	.info = SNDRV_PCM_INFO_INTERLEAVED |
+> +			SNDRV_PCM_INFO_BLOCK_TRANSFER |
+> +			SNDRV_PCM_INFO_MMAP |
+> +			SNDRV_PCM_INFO_MMAP_VALID |
+> +			SNDRV_PCM_INFO_PAUSE |
+> +			SNDRV_PCM_INFO_RESUME,
+> +	.formats = SNDRV_PCM_FMTBIT_S24_LE |
+> +			SNDRV_PCM_FMTBIT_S20_3LE |
+> +			SNDRV_PCM_FMTBIT_S16_LE,
+> +	.channels_min = 2,
+> +	.channels_max = 8,
+> +	.buffer_bytes_max = 128*1024,
+> +	.period_bytes_min = 64,
+> +	.period_bytes_max = 2048*4,
+> +	.periods_min = 3,
+> +	.periods_max = 128,
+> +	.fifo_size = 16,
+> +};
+> +
+> +static const struct snd_dmaengine_pcm_config rockchip_dmaengine_pcm_config = {
+> +	.pcm_hardware = &rockchip_pcm_hardware,
+> +	.prepare_slave_config = snd_dmaengine_pcm_prepare_slave_config,
+> +	.compat_filter_fn = NULL,
+> +	.prealloc_buffer_size = PAGE_SIZE * 8,
+> +};
+> +
+> +int rockchip_pcm_platform_register(struct device *dev)
+> +{
+> +	return snd_dmaengine_pcm_register(dev, &rockchip_dmaengine_pcm_config,
+> +			SND_DMAENGINE_PCM_FLAG_COMPAT|
+> +			SND_DMAENGINE_PCM_FLAG_NO_RESIDUE);
+
+We should try to avoid adding new users of the generic dmaengine pcm driver 
+that manually specify a snd_pcm_hardware struct. We now have the 
+infrastructure to autodiscover the capabilities of the DMA via the dmaengine 
+API.
+
+New drivers really should just do snd_dmaengine_pcm_register(dev, NULL, 0);
+
+- Lars
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
