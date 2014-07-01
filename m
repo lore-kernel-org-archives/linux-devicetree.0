@@ -1,97 +1,74 @@
-From: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH 6/9] ARM: dts: sun7i: Add board support for
- LinkSprite pcDuino V3
-Date: Tue, 01 Jul 2014 09:30:18 +0200
-Message-ID: <53B2638A.3060206@redhat.com>
-References: <1404165479-23785-1-git-send-email-hdegoede@redhat.com> <1404165479-23785-7-git-send-email-hdegoede@redhat.com> <CAGb2v65mDnuwveUiTKU2J3b3jbNzRLvPjS+wXNEj2MRtDN4Q2w@mail.gmail.com> <53B25F60.2050704@redhat.com> <CAGb2v64KMxXQ7QaRcsWxHbCLNJtWkh5sxj82C-y9GyNW7R+M_Q@mail.gmail.com>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Tony Lindgren <tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: mwifiex card reset
+Date: Tue, 1 Jul 2014 10:41:02 +0300
+Message-ID: <20140701074101.GA8806@atomide.com>
+References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
+ <20140628052220.GG10407@us.netrek.org>
+ <20140628072322.GC7410@atomide.com>
+ <CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
+ <20140630061912.GA2461@atomide.com>
+ <53B1BAC1.3090902@zonque.org>
+ <477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
+ <20140701065721.GM24891@us.netrek.org>
+ <477F20668A386D41ADCC57781B1F70430FE5F3754E@SC-VEXCH1.marvell.com>
+ <20140701070349.GN24891@us.netrek.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDRZXY4CYYORBF6HZGOQKGQELW7UPDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <CAGb2v64KMxXQ7QaRcsWxHbCLNJtWkh5sxj82C-y9GyNW7R+M_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Carlo Caione <carlo-KA+7E9HrN00dnm+yROfE0A@public.gmane.org>, Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140701070349.GN24891-kJBlkiJxCS/dtAWm4Da02A@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: James Cameron <quozl-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>
+Cc: Bing Zhao <bzhao-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Daniel Mack <daniel-cYrQPVfZoowdnm+yROfE0A@public.gmane.org>, Andreas Fenkart <afenkart-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Ulf Hansson <ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-mmc <linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 07/01/2014 09:21 AM, Chen-Yu Tsai wrote:
-> On Tue, Jul 1, 2014 at 3:12 PM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->> Hi,
->>
->> On 07/01/2014 04:22 AM, Chen-Yu Tsai wrote:
->>> On Tue, Jul 1, 2014 at 5:57 AM, Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org> wrote:
->>>> From: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
->>>>
->>>> The LinkSprite pcDuino V3 is an A20 based development board featuring
->>>> arduino compatible io headers, 1G RAM, 4G nand, sata, rtl8188cus usb wifi
->>>> and 100 Mbit ethernet using an ip101a phy:
->>>>
->>>> http://www.pcduino.com/pcduino-v3/
->>>>
->>>> Signed-off-by: Zoltan HERPAI <wigyori-1V5s5g7wVVk@public.gmane.org>
->>>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Various cleanups, correct led pins]
->>>> [hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org: Add axp209, ir and gpio-keys nodes]
->>>> Signed-off-by: Hans de Goede <hdegoede-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
->>>>
->>>> --
->>>>
->>>> Changes since v2:
->>>>  - update MMC entry to comply with upstream
->>>>  - unify the 4 patches into one
->>>>
->>>> Changes since v1:
->>>>  - fix cosmetic issues
->>>>  - fix i2c entry
->>>>  - remove unnecessary input bindings include
->>>>  - add MMC support
->>>> ---
->>>>  arch/arm/boot/dts/Makefile               |   3 +-
->>>>  arch/arm/boot/dts/sun7i-a20-pcduino3.dts | 173 +++++++++++++++++++++++++++++++
->>>>  2 files changed, 175 insertions(+), 1 deletion(-)
->>>>  create mode 100644 arch/arm/boot/dts/sun7i-a20-pcduino3.dts
->>>>
->>>> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
->>>> index ed0de8b..fdc590e 100644
->>>> --- a/arch/arm/boot/dts/Makefile
->>>> +++ b/arch/arm/boot/dts/Makefile
->>>> @@ -380,7 +380,8 @@ dtb-$(CONFIG_MACH_SUN7I) += \
->>>>         sun7i-a20-cubieboard2.dtb \
->>>>         sun7i-a20-cubietruck.dtb \
->>>>         sun7i-a20-i12-tvbox.dtb \
->>>> -       sun7i-a20-olinuxino-micro.dtb
->>>> +       sun7i-a20-olinuxino-micro.dtb \
->>>> +       sun7i-a20-pcduino3.dtb
->>>
->>> You may need to rebase onto my sun8i ippo-q8h dts patch.
->>>
->>>   https://patchwork.kernel.org/patch/4389951/
->>>
->>> There's a likely conflict in the Makefile here.
->>
->> Has that one already been accepted by Maxime ? I'm fine rebasing patches
->> on top of accepted stuff, but rebasing on pending stuff is not really
->> useful IMHO.
+* James Cameron <quozl-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org> [140701 10:05]:
+> On Tue, Jul 01, 2014 at 12:02:25AM -0700, Bing Zhao wrote:
+> > Hi James,
+> > 
+> > > On Mon, Jun 30, 2014 at 11:44:29PM -0700, Bing Zhao wrote:
+> > > > I may have missed something, but doesn't the MMC_POWER_OFF and
+> > > > MMC_POWER_ON|UP handling in controller driver help?
+> > > > Anyway the clocks/GPIOs/regulators are sort of platform dependent.
+> > > > Would it be better putting it in /arch/arm/mach-xxxxx/?
+> > > 
+> > > Wouldn't device tree for mmc be better?
+> > 
+> > Yes, device tree is better for defining clocks/GPIO/regulators, etc.
+> > But I guess the reset logic (making use of these definitions) cannot
+> > be device tree?
 > 
-> Maxime replied stating he applied it. See the lower part of the patchwork
-> page.
-> 
-> AFAIK he's accepted my initial sun8i patches and CIR DT patches this cycle.
+> I think the reset logic can exist, but does nothing unless the device
+> tree definitions are present.
 
-Ok, I'm not seeing anything for 3.17 here though:
-https://github.com/mripard/linux/
+It might be possible to support the SDIO card specific
+clocks/GPIOs/regulators the MMC bus driver. But that may not
+work well in the long run as those pins are not connected to
+the MMC bus at all. If we wanted to explore adding card
+specific features to the MMC bus, I guess we should have:
 
-Maxime, can you push a sunxi/dt-for-3.17 with what you currently have there?
+- Card reset-gpios
 
-Then I'll rebase this series on top, fix the commit msg thingie Chen pointed
-out and send a v2.
+- Card specific regulators on the card controlled by
+  a GPIO
+
+- External card specific regulators
+
+- Card specific idle status pin (no idea what these pins
+  do on some of the mwifiex cards though?)
+
+And then these would have to be configured to get the
+SDIO card to probe. And they should be controllable also
+from user space to reset a card or to power it off.
+
+Then if we get a device that muxes two different SDIO cards
+on the same bus, then what do we do? They may both have
+their own regulators and reset GPIO pins.
 
 Regards,
 
-Hans
+Tony
+--
+To unsubscribe from this list: send the line "unsubscribe linux-wireless" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
