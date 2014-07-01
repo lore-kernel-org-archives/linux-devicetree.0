@@ -1,207 +1,88 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: [PATCH 12/14] cpufreq: cpu0: Extend support beyond CPU0
-Date: Tue,  1 Jul 2014 22:02:41 +0530
-Message-ID: <89da404a3b8f545774f5782d901b8381caf02c07.1404231535.git.viresh.kumar@linaro.org>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1404231535.git.viresh.kumar@linaro.org>
-In-Reply-To: <cover.1404231535.git.viresh.kumar@linaro.org>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: rjw@rjwysocki.net, shawn.guo@linaro.org
-Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, arvind.chauhan@arm.com, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, spk.linux@gmail.com, thomas.ab@samsung.com, nm@ti.com, t.figa@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH RFC V2 0/2] add Qualcomm QCA7000 ethernet driver
+Date: Tue,  1 Jul 2014 18:36:47 +0200
+Message-ID: <1404232609-4314-1-git-send-email-stefan.wahren@i2se.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, eric.dumazet@gmail.com, dave.taht@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Most of the infrastructure is in place now, with only little left. How to find
-siblings ?
+This patch series adds support for the Qualcomm QCA7000 Homeplug GreenPHY.
+The QCA7000 is serial-to-powerline bridge with two interfaces: UART and SPI.
+These patches handles only the last one, with an Ethernet over SPI protocol
+driver.
 
-Stephen Boyd suggested to compare "clocks" properties from CPU's DT node and
-siblings should match. This patch adds another routine find_siblings() which
-calls of_clk_shared_by_cpus() to find if CPUs share clock line or not.
+This driver based on the Qualcomm code [1], but contains a lot of changes
+since last year:
 
-If of_clk_shared_by_cpus() returns error, we fallback to all CPUs sharing clock
-line assumption as existing platforms don't have "clocks" property in all CPU
-nodes and would fail from of_clk_shared_by_cpus().
+* devictree support
+* DebugFS support
+* ethtool support
+* better error handling
+* performance improvements
+* code cleanup
+* some bugfixes
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
----
- .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   | 72 ++++++++++++++++++++--
- drivers/cpufreq/cpufreq-cpu0.c                     | 35 ++++++++++-
- 2 files changed, 101 insertions(+), 6 deletions(-)
+For more details look at our git repository [2].
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-index f055515..4b83c1a 100644
---- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-+++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
-@@ -1,11 +1,11 @@
--Generic CPU0 cpufreq driver
-+Generic cpufreq driver
- 
--It is a generic cpufreq driver for CPU0 frequency management.  It
-+It is a generic cpufreq driver for frequency management.  It
- supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
--systems which share clock and voltage across all CPUs.
-+systems which may or maynot share clock and voltage across all CPUs.
- 
- Both required and optional properties listed below must be defined
--under node /cpus/cpu@0.
-+under node /cpus/cpu@x. Where x is the first cpu inside a cluster.
- 
- Required properties:
- - operating-points: Refer to Documentation/devicetree/bindings/power/opp.txt
-@@ -19,9 +19,16 @@ Optional properties:
- - cooling-min-level:
- - cooling-max-level:
-      Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
-+- clocks: If CPU clock is populated from DT, "clocks" property must be copied to
-+  every cpu node sharing clock with cpu@x. Generic cpufreq driver compares
-+  "clocks" to find siblings, i.e. to see which CPUs share clock/voltages. If
-+  only cpu@0 contains "clocks" property it is assumed that all CPUs share clock
-+  line.
- 
- Examples:
- 
-+1. All CPUs share clock/voltages
-+
- cpus {
- 	#address-cells = <1>;
- 	#size-cells = <0>;
-@@ -36,6 +43,8 @@ cpus {
- 			396000  950000
- 			198000  850000
- 		>;
-+		clocks = <&clock CLK_ARM_CLK>;
-+		clock-names = "cpu";
- 		clock-latency = <61036>; /* two CLK32 periods */
- 		#cooling-cells = <2>;
- 		cooling-min-level = <0>;
-@@ -46,17 +55,72 @@ cpus {
- 		compatible = "arm,cortex-a9";
- 		reg = <1>;
- 		next-level-cache = <&L2>;
-+		clocks = <&clock CLK_ARM_CLK>;
- 	};
- 
- 	cpu@2 {
- 		compatible = "arm,cortex-a9";
- 		reg = <2>;
- 		next-level-cache = <&L2>;
-+		clocks = <&clock CLK_ARM_CLK>;
- 	};
- 
- 	cpu@3 {
- 		compatible = "arm,cortex-a9";
- 		reg = <3>;
- 		next-level-cache = <&L2>;
-+		clocks = <&clock CLK_ARM_CLK>;
-+	};
-+};
-+
-+
-+2. All CPUs inside a cluster share clock/voltages, there are multiple clusters.
-+
-+cpus {
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+
-+	cpu@0 {
-+		compatible = "arm,cortex-a15";
-+		reg = <0>;
-+		next-level-cache = <&L2>;
-+		operating-points = <
-+			/* kHz    uV */
-+			792000  1100000
-+			396000  950000
-+			198000  850000
-+		>;
-+		clocks = <&clock CLK_ARM1_CLK>;
-+		clock-names = "cpu";
-+		clock-latency = <61036>; /* two CLK32 periods */
-+	};
-+
-+	cpu@1 {
-+		compatible = "arm,cortex-a15";
-+		reg = <1>;
-+		next-level-cache = <&L2>;
-+		clocks = <&clock CLK_ARM1_CLK>;
-+	};
-+
-+	cpu@100 {
-+		compatible = "arm,cortex-a7";
-+		reg = <100>;
-+		next-level-cache = <&L2>;
-+		operating-points = <
-+			/* kHz    uV */
-+			792000  950000
-+			396000  750000
-+			198000  450000
-+		>;
-+		clocks = <&clock CLK_ARM2_CLK>;
-+		clock-names = "cpu";
-+		clock-latency = <61036>; /* two CLK32 periods */
-+	};
-+
-+	cpu@101 {
-+		compatible = "arm,cortex-a7";
-+		reg = <101>;
-+		next-level-cache = <&L2>;
-+		clocks = <&clock CLK_ARM2_CLK>;
- 	};
- };
-diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
-index 44633f6..b3f2bf0 100644
---- a/drivers/cpufreq/cpufreq-cpu0.c
-+++ b/drivers/cpufreq/cpufreq-cpu0.c
-@@ -177,6 +177,30 @@ try_again:
- 	return ret;
- }
- 
-+/*
-+ * Sets all CPUs as sibling if any cpu doesn't have a "clocks" property,
-+ * Otherwise it matches "clocks" property to find siblings.
-+ */
-+static void find_siblings(struct cpufreq_policy *policy)
-+{
-+	int cpu, ret;
-+
-+	for_each_possible_cpu(cpu) {
-+		if (cpu == policy->cpu)
-+			continue;
-+
-+		ret = of_clk_shared_by_cpus(policy->cpu, cpu);
-+
-+		/* Error while parsing nodes, fallback to set-all */
-+		if (ret < 0) {
-+			cpumask_setall(policy->cpus);
-+			return;
-+		} else if (ret == 1) {
-+			cpumask_set_cpu(cpu, policy->cpus);
-+		}
-+	}
-+}
-+
- static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
- {
- 	struct cpufreq_frequency_table *freq_table;
-@@ -266,9 +290,16 @@ static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
- 	policy->driver_data = priv;
- 
- 	policy->clk = cpu_clk;
--	ret = cpufreq_generic_init(policy, freq_table, transition_latency);
--	if (ret)
-+
-+	find_siblings(policy);
-+	ret = cpufreq_table_validate_and_show(policy, freq_table);
-+	if (ret) {
-+		dev_err(cpu_dev, "%s: invalid frequency table: %d\n", __func__,
-+			ret);
- 		goto out_cooling_unregister;
-+	}
-+
-+	policy->cpuinfo.transition_latency = transition_latency;
- 
- 	return 0;
- 
+The code has been tested only on Freescale i.MX28 boards, but should work
+on other platforms.
+
+Any comments about the code are welcome.
+
+[1] - https://github.com/IoE/qca7000
+[2] - https://github.com/I2SE/qca7000/tree/linux-mainline
+
+Changes in V2:
+- replace in DT the SPI intr GPIO with pure interrupt
+- make legacy mode a boolean DT property and remove it as module parameter
+- make burst length a module parameter instead of DT property
+- make pluggable a module parameter instead of DT property
+- improve DT documentation
+- replace debugFS register dump with ethtool function
+- replace debugFS stats with ethtool function
+- implement function to get ring parameter via ethtool
+- implement function to set TX ring count via ethtool
+- fix TX ring state in debugFS
+- optimize tx ring flush
+- add byte limit for TX ring to avoid bufferbloat
+- fix TX queue full and write buffer miss counter
+- fix SPI clk speed module parameter
+- fix possible packet loss
+- fix possible race during transmit
+
+Stefan Wahren (2):
+  This patch adds the Device tree bindings for the Ethernet over SPI   
+     protocol driver of the Qualcomm QCA7000 HomePlug GreenPHY.
+  This patch adds the Ethernet over SPI driver for the Qualcomm QCA7000
+        HomePlug GreenPHY.
+
+ .../devicetree/bindings/net/qca-qca7000-spi.txt    |   47 +
+ drivers/net/ethernet/Kconfig                       |    1 +
+ drivers/net/ethernet/Makefile                      |    1 +
+ drivers/net/ethernet/qualcomm/Kconfig              |   30 +
+ drivers/net/ethernet/qualcomm/Makefile             |    6 +
+ drivers/net/ethernet/qualcomm/qca_7k.c             |  149 +++
+ drivers/net/ethernet/qualcomm/qca_7k.h             |   72 ++
+ drivers/net/ethernet/qualcomm/qca_debug.c          |  311 ++++++
+ drivers/net/ethernet/qualcomm/qca_debug.h          |   34 +
+ drivers/net/ethernet/qualcomm/qca_framing.c        |  155 +++
+ drivers/net/ethernet/qualcomm/qca_framing.h        |  134 +++
+ drivers/net/ethernet/qualcomm/qca_spi.c            | 1001 ++++++++++++++++++++
+ drivers/net/ethernet/qualcomm/qca_spi.h            |  114 +++
+ 13 files changed, 2055 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+ create mode 100644 drivers/net/ethernet/qualcomm/Kconfig
+ create mode 100644 drivers/net/ethernet/qualcomm/Makefile
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_7k.c
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_7k.h
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_debug.c
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_debug.h
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_framing.c
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_framing.h
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_spi.c
+ create mode 100644 drivers/net/ethernet/qualcomm/qca_spi.h
+
 -- 
-2.0.0.rc2
+1.7.10.4
