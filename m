@@ -1,47 +1,378 @@
-From: Tushar Behera <trblinux@gmail.com>
-Subject: Re: [PATCH 2/3] ARM: dts: Update the parent for Audss clocks in Exynos5420
-Date: Tue, 01 Jul 2014 17:29:33 +0530
-Message-ID: <53B2A2A5.4070203@gmail.com>
-References: <1402464739-19044-1-git-send-email-tushar.b@samsung.com>	<1402464739-19044-3-git-send-email-tushar.b@samsung.com>	<CAD=FV=W5yh58fYTwRZxmZt=BORcZMSRV0oRe12yA74Q5h2S4YQ@mail.gmail.com>	<7hpphwlgn0.fsf@paris.lan>	<CAC5m3Bzey-YoPLmjAq4YNPQ13rojtVFWAbnhX6-ZFtYZwEdMWg@mail.gmail.com>	<7h8uojk61a.fsf@paris.lan>	<53ACE724.7090606@gmail.com>	<CAGa+x86COQz+cYtrXWrP-sjFGz-gi2tf6GEvLiKYoQwg1zMivQ@mail.gmail.com> <CAGa+x87LHiYGb03=GRcZisK1=TyakW1htd1E2vOQ6ijZKw8syg@mail.gmail.com>
+From: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+Subject: Re: [PATCH v2 01/14] clk: st: Update ST clock binding documentation
+Date: Tue, 1 Jul 2014 14:11:26 +0200
+Message-ID: <CAG374jAEBhKsjqhp+csbzPq3nzBXjfp-etZTC+46hN_wBZXSsw@mail.gmail.com>
+References: <1403875511-7710-1-git-send-email-gabriel.fernandez@linaro.org>
+	<1403875511-7710-2-git-send-email-gabriel.fernandez@linaro.org>
+	<20140630092322.GQ7262@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <CAGa+x87LHiYGb03=GRcZisK1=TyakW1htd1E2vOQ6ijZKw8syg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Kevin Hilman <khilman@linaro.org>
-Cc: Doug Anderson <dianders@google.com>, Kukjin Kim <kgene.kim@samsung.com>, Kukjin Kim <kgene.kim@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Mike Turquette <mturquette@linaro.org>, Tomasz Figa <t.figa@samsung.com>, Russell King <linux@arm.linux.org.uk>, Kumar Gala <galak@codeaurora.org>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Mark Rutland <mark.rutland@arm.com>, Pawel Moll <pawel.moll@arm.com>, Rob Herring <robh+dt@kernel.org>, Shaik Ameer Basha <shaik.ameer@samsung.com>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140630092322.GQ7262@leverpostej>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Gabriel FERNANDEZ <gabriel.fernandez@st.com>, "mturquette@linaro.org" <mturquette@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "kernel@stlinux.com" <kernel@stlinux.com>, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 06/27/2014 08:18 PM, Kevin Hilman wrote:
-> On Fri, Jun 27, 2014 at 7:18 AM, Kevin Hilman <khilman@linaro.org> wrote:
->> On Thu, Jun 26, 2014 at 8:38 PM, Tushar Behera <trblinux@gmail.com> wrote:
+Hi Mark,
+yes i agree.
+
+Thanks.
+
+Gabriel
+
+On 30 June 2014 11:23, Mark Rutland <mark.rutland@arm.com> wrote:
+> On Fri, Jun 27, 2014 at 02:24:58PM +0100, Gabriel FERNANDEZ wrote:
+>> This patch adds new compatibilities to support STiH407 SoC.
+>
+> This doesn't seem to match the patch, which seems to relabel nodes,
+> rename nodes, change clock-output-names, _and_ adds some new compatible
+> strings.
+>
+> Therefore this commit message is completely inappropriate for the patch.
+> It doesn't match the diff and it doesn't tell me why you are making the
+> changes below.
+>
+> NAK until that is fixed.
+>
+> Mark.
+>
 >>
->>> Would you please provide me the environment setting of your u-boot?
->>> U-boot environment on my board has been over-written, I would like to
->>> set it same as yours and try to reproduce the issue at my end. With only
->>> 'sound init', I don't seem to hit this issue anymore.
+>> Signed-off-by: Gabriel Fernandez <gabriel.fernandez@linaro.org>
+>> Acked-by: Peter Griffin <peter.griffin@linaro.org>
+>> ---
+>>  .../bindings/clock/st/st,clkgen-divmux.txt         | 28 +++++------
+>>  .../devicetree/bindings/clock/st/st,clkgen-mux.txt |  6 +--
+>>  .../devicetree/bindings/clock/st/st,clkgen-pll.txt | 17 ++++---
+>>  .../bindings/clock/st/st,clkgen-prediv.txt         |  8 ++--
+>>  .../devicetree/bindings/clock/st/st,clkgen-vcc.txt | 34 ++++++++------
+>>  .../devicetree/bindings/clock/st/st,clkgen.txt     | 54 +++++++++++++---------
+>>  .../devicetree/bindings/clock/st/st,quadfs.txt     | 15 +++---
+>>  7 files changed, 94 insertions(+), 68 deletions(-)
 >>
->> Attached is a full boot log using v3.16-rc2 with my patch adding
->> CLK_IGNORE_UNUSED to mau_epll and Doug's aclk66_peric patch.  In the
->> boot log, you'll see the output of 'printenv' inside u-boot where the
->> environment is dumped.
-> 
-> Oops, I sent you a boot log for the octa board.  Here's the one for
-> peach-pi with the same kernel (built with upstream exynos_defconfig)
-> 
-> Kevin
-> 
-
-The u-boot version is a little different on my Peach-Pi as compared to
-the market release version. Not sure if that is making any difference.
-
-Peach # version
-
-U-Boot 2013.04 (Feb 13 2014 - 16:35:03) for Peach
-armv7a-cros-linux-gnueabi-gcc.real (4.8.1_cos_gg_feea904_4.8.1-r66)
-4.8.x-google 20130905 (prerelease)
-GNU ld (binutils-2.22_cos_gg_2) 2.22
-
--- 
-Tushar Behera
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
+>> index ae56315..6247652 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-divmux.txt
+>> @@ -24,26 +24,26 @@ Required properties:
+>>
+>>  Example:
+>>
+>> -     clockgenA@fd345000 {
+>> +     clockgen-a@fd345000 {
+>>               reg = <0xfd345000 0xb50>;
+>>
+>> -             CLK_M_A1_DIV1: CLK_M_A1_DIV1 {
+>> +             clk_m_a1_div1: clk-m-a1-div1 {
+>>                       #clock-cells = <1>;
+>>                       compatible = "st,clkgena-divmux-c32-odf1",
+>>                                    "st,clkgena-divmux";
+>>
+>> -                     clocks = <&CLK_M_A1_OSC_PREDIV>,
+>> -                              <&CLK_M_A1_PLL0 1>, /* PLL0 PHI1 */
+>> -                              <&CLK_M_A1_PLL1 1>; /* PLL1 PHI1 */
+>> -
+>> -                     clock-output-names = "CLK_M_RX_ICN_TS",
+>> -                                          "CLK_M_RX_ICN_VDP_0",
+>> -                                          "", /* Unused */
+>> -                                          "CLK_M_PRV_T1_BUS",
+>> -                                          "CLK_M_ICN_REG_12",
+>> -                                          "CLK_M_ICN_REG_10",
+>> -                                          "", /* Unused */
+>> -                                          "CLK_M_ICN_ST231";
+>> +                     clocks = <&clk_m_a1_osc_prediv>,
+>> +                              <&clk_m_a1_pll0 1>, /* PLL0 PHI1 */
+>> +                              <&clk_m_a1_pll1 1>; /* PLL1 PHI1 */
+>> +
+>> +                     clock-output-names = "clk-m-rx-icn-ts",
+>> +                                          "clk-m-rx-icn-vdp-0",
+>> +                                          "", /* unused */
+>> +                                          "clk-m-prv-t1-bus",
+>> +                                          "clk-m-icn-reg-12",
+>> +                                          "clk-m-icn-reg-10",
+>> +                                          "", /* unused */
+>> +                                          "clk-m-icn-st231";
+>>               };
+>>       };
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>> index 943e080..f1fa91c 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-mux.txt
+>> @@ -17,7 +17,7 @@ Required properties:
+>>       "st,stih416-clkgenf-vcc-sd",    "st,clkgen-mux"
+>>       "st,stih415-clkgen-a9-mux",     "st,clkgen-mux"
+>>       "st,stih416-clkgen-a9-mux",     "st,clkgen-mux"
+>> -
+>> +     "st,stih407-clkgen-a9-mux",     "st,clkgen-mux"
+>>
+>>  - #clock-cells : from common clock binding; shall be set to 0.
+>>
+>> @@ -27,10 +27,10 @@ Required properties:
+>>
+>>  Example:
+>>
+>> -     CLK_M_HVA: CLK_M_HVA {
+>> +     clk_m_hva: clk-m-hva@fd690868 {
+>>               #clock-cells = <0>;
+>>               compatible = "st,stih416-clkgenf-vcc-hva", "st,clkgen-mux";
+>>               reg = <0xfd690868 4>;
+>>
+>> -             clocks = <&CLOCKGEN_F 1>, <&CLK_M_A1_DIV0 3>;
+>> +             clocks = <&clockgen_f 1>, <&clk_m_a1_div0 3>;
+>>       };
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>> index 81eb385..efb51cf 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-pll.txt
+>> @@ -19,11 +19,14 @@ Required properties:
+>>       "st,stih415-plls-c32-ddr",      "st,clkgen-plls-c32"
+>>       "st,stih416-plls-c32-a9",       "st,clkgen-plls-c32"
+>>       "st,stih416-plls-c32-ddr",      "st,clkgen-plls-c32"
+>> +     "st,stih407-plls-c32-a0",       "st,clkgen-plls-c32"
+>> +     "st,stih407-plls-c32-a9",       "st,clkgen-plls-c32"
+>> +     "st,stih407-plls-c32-c0_0",     "st,clkgen-plls-c32"
+>> +     "st,stih407-plls-c32-c0_1",     "st,clkgen-plls-c32"
+>>
+>>       "st,stih415-gpu-pll-c32",       "st,clkgengpu-pll-c32"
+>>       "st,stih416-gpu-pll-c32",       "st,clkgengpu-pll-c32"
+>>
+>> -
+>>  - #clock-cells : From common clock binding; shall be set to 1.
+>>
+>>  - clocks : From common clock binding
+>> @@ -32,17 +35,17 @@ Required properties:
+>>
+>>  Example:
+>>
+>> -     clockgenA@fee62000 {
+>> +     clockgen-a@fee62000 {
+>>               reg = <0xfee62000 0xb48>;
+>>
+>> -             CLK_S_A0_PLL: CLK_S_A0_PLL {
+>> +             clk_s_a0_pll: clk-s-a0-pll {
+>>                       #clock-cells = <1>;
+>>                       compatible = "st,clkgena-plls-c65";
+>>
+>> -                     clocks = <&CLK_SYSIN>;
+>> +                     clocks = <&clk_sysin>;
+>>
+>> -                     clock-output-names = "CLK_S_A0_PLL0_HS",
+>> -                                          "CLK_S_A0_PLL0_LS",
+>> -                                          "CLK_S_A0_PLL1";
+>> +                     clock-output-names = "clk-s-a0-pll0-hs",
+>> +                                          "clk-s-a0-pll0-ls",
+>> +                                          "clk-s-a0-pll1";
+>>               };
+>>       };
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
+>> index 566c9d7..604766c 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-prediv.txt
+>> @@ -20,17 +20,17 @@ Required properties:
+>>
+>>  Example:
+>>
+>> -     clockgenA@fd345000 {
+>> +     clockgen-a@fd345000 {
+>>               reg = <0xfd345000 0xb50>;
+>>
+>> -             CLK_M_A2_OSC_PREDIV: CLK_M_A2_OSC_PREDIV {
+>> +             clk_m_a2_osc_prediv: clk-m-a2-osc-prediv {
+>>                       #clock-cells = <0>;
+>>                       compatible = "st,clkgena-prediv-c32",
+>>                                    "st,clkgena-prediv";
+>>
+>> -                     clocks = <&CLK_SYSIN>;
+>> +                     clocks = <&clk_sysin>;
+>>
+>> -                     clock-output-names = "CLK_M_A2_OSC_PREDIV";
+>> +                     clock-output-names = "clk-m-a2-osc-prediv";
+>>               };
+>>       };
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
+>> index 4e3ff28..109b3ed 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen-vcc.txt
+>> @@ -32,22 +32,30 @@ Required properties:
+>>
+>>  Example:
+>>
+>> -     CLOCKGEN_C_VCC: CLOCKGEN_C_VCC {
+>> +     clockgen_c_vcc: clockgen-c-vcc@0xfe8308ac {
+>>               #clock-cells = <1>;
+>>               compatible = "st,stih416-clkgenc", "st,clkgen-vcc";
+>>               reg = <0xfe8308ac 12>;
+>>
+>> -             clocks = <&CLK_S_VCC_HD>, <&CLOCKGEN_C 1>,
+>> -                     <&CLK_S_TMDS_FROMPHY>, <&CLOCKGEN_C 2>;
+>> -
+>> -             clock-output-names  =
+>> -                     "CLK_S_PIX_HDMI",  "CLK_S_PIX_DVO",
+>> -                     "CLK_S_OUT_DVO",   "CLK_S_PIX_HD",
+>> -                     "CLK_S_HDDAC",     "CLK_S_DENC",
+>> -                     "CLK_S_SDDAC",     "CLK_S_PIX_MAIN",
+>> -                     "CLK_S_PIX_AUX",   "CLK_S_STFE_FRC_0",
+>> -                     "CLK_S_REF_MCRU",  "CLK_S_SLAVE_MCRU",
+>> -                     "CLK_S_TMDS_HDMI", "CLK_S_HDMI_REJECT_PLL",
+>> -                     "CLK_S_THSENS";
+>> +             clocks = <&clk_s_vcc_hd>,
+>> +                      <&clockgen_c 1>,
+>> +                      <&clk_s_tmds_fromphy>,
+>> +                      <&clockgen_c 2>;
+>> +
+>> +             clock-output-names  = "clk-s-pix-hdmi",
+>> +                                   "clk-s-pix-dvo",
+>> +                                   "clk-s-out-dvo",
+>> +                                   "clk-s-pix-hd",
+>> +                                   "clk-s-hddac",
+>> +                                   "clk-s-denc",
+>> +                                   "clk-s-sddac",
+>> +                                   "clk-s-pix-main",
+>> +                                   "clk-s-pix-aux",
+>> +                                   "clk-s-stfe-frc-0",
+>> +                                   "clk-s-ref-mcru",
+>> +                                   "clk-s-slave-mcru",
+>> +                                   "clk-s-tmds-hdmi",
+>> +                                   "clk-s-hdmi-reject-pll",
+>> +                                   "clk-s-thsens";
+>>       };
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+>> index 49ec5ae..427bad8 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,clkgen.txt
+>> @@ -24,60 +24,72 @@ address is common of all subnode.
+>>               quadfs_node {
+>>                       ...
+>>               };
+>> +
+>> +             mux_node {
+>> +                     ...
+>> +             };
+>> +
+>> +             vcc_node {
+>> +                     ...
+>> +             };
+>>               ...
+>>       };
+>>
+>>  This binding uses the common clock binding[1].
+>> -Each subnode should use the binding discribe in [2]..[4]
+>> +Each subnode should use the binding discribe in [2]..[7]
+>>
+>>  [1] Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> -[2] Documentation/devicetree/bindings/clock/st,quadfs.txt
+>> -[3] Documentation/devicetree/bindings/clock/st,quadfs.txt
+>> -[4] Documentation/devicetree/bindings/clock/st,quadfs.txt
+>> +[2] Documentation/devicetree/bindings/clock/st,clkgen-divmux.txt
+>> +[3] Documentation/devicetree/bindings/clock/st,clkgen-mux.txt
+>> +[4] Documentation/devicetree/bindings/clock/st,clkgen-pll.txt
+>> +[5] Documentation/devicetree/bindings/clock/st,clkgen-prediv.txt
+>> +[6] Documentation/devicetree/bindings/clock/st,vcc.txt
+>> +[7] Documentation/devicetree/bindings/clock/st,quadfs.txt
+>> +
+>>
+>>  Required properties:
+>>  - reg : A Base address and length of the register set.
+>>
+>>  Example:
+>>
+>> -     clockgenA@fee62000 {
+>> +     clockgen-a@fee62000 {
+>>
+>>               reg = <0xfee62000 0xb48>;
+>>
+>> -             CLK_S_A0_PLL: CLK_S_A0_PLL {
+>> +             clk_s_a0_pll: clk-s-a0-pll {
+>>                       #clock-cells = <1>;
+>>                       compatible = "st,clkgena-plls-c65";
+>>
+>> -                     clocks = <&CLK_SYSIN>;
+>> +                     clocks = <&clk-sysin>;
+>>
+>> -                     clock-output-names = "CLK_S_A0_PLL0_HS",
+>> -                                          "CLK_S_A0_PLL0_LS",
+>> -                                          "CLK_S_A0_PLL1";
+>> +                     clock-output-names = "clk-s-a0-pll0-hs",
+>> +                                          "clk-s-a0-pll0-ls",
+>> +                                          "clk-s-a0-pll1";
+>>               };
+>>
+>> -             CLK_S_A0_OSC_PREDIV: CLK_S_A0_OSC_PREDIV {
+>> +             clk_s_a0_osc_prediv: clk-s-a0-osc-prediv {
+>>                       #clock-cells = <0>;
+>>                       compatible = "st,clkgena-prediv-c65",
+>>                                    "st,clkgena-prediv";
+>>
+>> -                     clocks = <&CLK_SYSIN>;
+>> +                     clocks = <&clk_sysin>;
+>>
+>> -                     clock-output-names = "CLK_S_A0_OSC_PREDIV";
+>> +                     clock-output-names = "clk-s-a0-osc-prediv";
+>>               };
+>>
+>> -             CLK_S_A0_HS: CLK_S_A0_HS {
+>> +             clk_s_a0_hs: clk-s-a0-hs {
+>>                       #clock-cells = <1>;
+>>                       compatible = "st,clkgena-divmux-c65-hs",
+>>                                    "st,clkgena-divmux";
+>>
+>> -                     clocks = <&CLK_S_A0_OSC_PREDIV>,
+>> -                              <&CLK_S_A0_PLL 0>, /* PLL0 HS */
+>> -                              <&CLK_S_A0_PLL 2>; /* PLL1 */
+>> +                     clocks = <&clk-s_a0_osc_prediv>,
+>> +                              <&clk-s_a0_pll 0>, /* pll0 hs */
+>> +                              <&clk-s_a0_pll 2>; /* pll1 */
+>>
+>> -                     clock-output-names = "CLK_S_FDMA_0",
+>> -                                          "CLK_S_FDMA_1",
+>> -                                          ""; /* CLK_S_JIT_SENSE */
+>> -                                          /* Fourth output unused */
+>> +                     clock-output-names = "clk-s-fdma-0",
+>> +                                          "clk-s-fdma-1",
+>> +                                          ""; /* clk-s-jit-sense */
+>> +                                          /* fourth output unused */
+>>               };
+>>       };
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/st/st,quadfs.txt b/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
+>> index ec86d62..cedeb9c 100644
+>> --- a/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
+>> +++ b/Documentation/devicetree/bindings/clock/st/st,quadfs.txt
+>> @@ -15,6 +15,9 @@ Required properties:
+>>    "st,stih416-quadfs432",    "st,quadfs"
+>>    "st,stih416-quadfs660-E",  "st,quadfs"
+>>    "st,stih416-quadfs660-F",  "st,quadfs"
+>> +  "st,stih407-quadfs660-C",  "st,quadfs"
+>> +  "st,stih407-quadfs660-D",  "st,quadfs"
+>> +
+>>
+>>  - #clock-cells : from common clock binding; shall be set to 1.
+>>
+>> @@ -32,14 +35,14 @@ Required properties:
+>>
+>>  Example:
+>>
+>> -     CLOCKGEN_E: CLOCKGEN_E {
+>> +     clockgen_e: clockgen-e@fd3208bc {
+>>                  #clock-cells = <1>;
+>>                  compatible = "st,stih416-quadfs660-E", "st,quadfs";
+>>                  reg = <0xfd3208bc 0xB0>;
+>>
+>> -                clocks = <&CLK_SYSIN>;
+>> -                clock-output-names = "CLK_M_PIX_MDTP_0",
+>> -                                        "CLK_M_PIX_MDTP_1",
+>> -                                        "CLK_M_PIX_MDTP_2",
+>> -                                        "CLK_M_MPELPC";
+>> +                clocks = <&clk_sysin>;
+>> +                clock-output-names = "clk-m-pix-mdtp-0",
+>> +                                  "clk-m-pix-mdtp-1",
+>> +                                  "clk-m-pix-mdtp-2",
+>> +                                  "clk-m-mpelpc";
+>>          };
+>> --
+>> 1.9.1
+>>
+>>
