@@ -1,43 +1,43 @@
 From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH] thermal: ti-soc-thermal: ti-bandgap.c:  Cleaning up
- wrong address is checked
-Date: Tue, 01 Jul 2014 09:54:24 +0800
-Message-ID: <1404179664.8366.8.camel@rzhang1-toshiba>
-References: <1401744330-25966-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+Subject: Re: [PATCH 0/6] thermal: sti: Add new Thermal driver
+Date: Tue, 01 Jul 2014 10:07:03 +0800
+Message-ID: <1404180423.8366.15.camel@rzhang1-toshiba>
+References: <1401442715-6350-1-git-send-email-lee.jones@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <1401744330-25966-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
+In-Reply-To: <1401442715-6350-1-git-send-email-lee.jones@linaro.org>
 Sender: linux-pm-owner@vger.kernel.org
-To: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
-Cc: Eduardo Valentin <eduardo.valentin@ti.com>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, kernel@stlinux.com, eduardo.valentin@gmail.com, ajitpal.singh@st.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, maxime.coquelin@st.com, patrice.chotard@st.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2014-06-02 at 23:25 +0200, Rickard Strandqvist wrote:
-> Wrong address is checked after memory allocation.
-> 
-> Signed-off-by: Rickard Strandqvist <rickard_strandqvist@spectrumdigital.se>
+Hi, Eduardo,
 
-applied, thanks.
+what do you think of this patch set?
 
--rui
-> ---
->  drivers/thermal/ti-soc-thermal/ti-bandgap.c |    2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+thanks,
+rui
+
+On Fri, 2014-05-30 at 10:38 +0100, Lee Jones wrote:
+> This patchset adds full support for 2 types of Thermal Controllers
+> produced by STMicroelectronics.  One is a more traditional memory
+> mapped variant, the other is controlled solely by system configuration
+> registers.
 > 
-> diff --git a/drivers/thermal/ti-soc-thermal/ti-bandgap.c b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> index 3ab12ee..43c0f83 100644
-> --- a/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> +++ b/drivers/thermal/ti-soc-thermal/ti-bandgap.c
-> @@ -1155,7 +1155,7 @@ static struct ti_bandgap *ti_bandgap_build(struct platform_device *pdev)
->  	/* register shadow for context save and restore */
->  	bgp->regval = devm_kzalloc(&pdev->dev, sizeof(*bgp->regval) *
->  				   bgp->conf->sensor_count, GFP_KERNEL);
-> -	if (!bgp) {
-> +	if (!bgp->regval) {
->  		dev_err(&pdev->dev, "Unable to allocate mem for driver ref\n");
->  		return ERR_PTR(-ENOMEM);
->  	}
+>  Documentation/devicetree/bindings/thermal/st-thermal.txt |  42 ++++++++++++++++
+>  arch/arm/boot/dts/stih416.dtsi                           |  18 +++++++
+>  arch/arm/configs/multi_v7_defconfig                      |   2 +
+>  drivers/thermal/Kconfig                                  |   5 ++
+>  drivers/thermal/Makefile                                 |   1 +
+>  drivers/thermal/st/Kconfig                               |  12 +++++
+>  drivers/thermal/st/Makefile                              |   3 ++
+>  drivers/thermal/st/st_thermal.c                          | 313 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/thermal/st/st_thermal.h                          | 104 ++++++++++++++++++++++++++++++++++++++
+>  drivers/thermal/st/st_thermal_memmap.c                   | 209 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  drivers/thermal/st/st_thermal_syscfg.c                   | 179 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+>  11 files changed, 888 insertions(+)
+> 
 
 
