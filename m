@@ -1,7 +1,8 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v8 2/9] pci: Export find_pci_host_bridge() function.
-Date: Tue,  1 Jul 2014 19:43:27 +0100
-Message-ID: <1404240214-9804-3-git-send-email-Liviu.Dudau@arm.com>
+Subject: [PATCH v8 7/9] pci: of: Parse and map the IRQ when adding the PCI
+ device.
+Date: Tue,  1 Jul 2014 19:43:32 +0100
+Message-ID: <1404240214-9804-8-git-send-email-Liviu.Dudau@arm.com>
 References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,33 +22,35 @@ To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, 
 Cc: Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-This is a useful function and we should make it visible outside the
-generic PCI code. Export it as a GPL symbol.
+Enhance the default implementation of pcibios_add_device() to
+parse and map the IRQ of the device if a DT binding is available.
 
 Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Tested-by: Tanmay Inamdar <tinamdar@apm.com>
 ---
- drivers/pci/host-bridge.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ drivers/pci/pci.c | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-index 0e5f3c9..36c669e 100644
---- a/drivers/pci/host-bridge.c
-+++ b/drivers/pci/host-bridge.c
-@@ -16,12 +16,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
- 	return bus;
- }
- 
--static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
-+struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 63a54a3..8e65dc3 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -17,6 +17,7 @@
+ #include <linux/spinlock.h>
+ #include <linux/string.h>
+ #include <linux/log2.h>
++#include <linux/of_pci.h>
+ #include <linux/pci-aspm.h>
+ #include <linux/pm_wakeup.h>
+ #include <linux/interrupt.h>
+@@ -1453,6 +1454,9 @@ EXPORT_SYMBOL(pcim_pin_device);
+  */
+ int __weak pcibios_add_device(struct pci_dev *dev)
  {
- 	struct pci_bus *root_bus = find_pci_root_bus(bus);
- 
- 	return to_pci_host_bridge(root_bus->bridge);
++#ifdef CONFIG_OF
++	dev->irq = of_irq_parse_and_map_pci(dev, 0, 0);
++#endif
+ 	return 0;
  }
-+EXPORT_SYMBOL_GPL(find_pci_host_bridge);
  
- void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
- 				 void (*release_fn)(struct pci_host_bridge *),
 -- 
 2.0.0
