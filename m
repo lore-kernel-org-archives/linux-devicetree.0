@@ -1,192 +1,55 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v4] phy: Renesas R-Car Gen2 PHY driver
-Date: Tue, 1 Jul 2014 18:41:27 +0530
-Message-ID: <53B2B37F.6080300@ti.com>
-References: <201405240206.04700.sergei.shtylyov@cogentembedded.com> <538F05BC.7000800@ti.com> <538F95A7.8010409@cogentembedded.com> <5396E160.7000707@ti.com> <53AB4A48.5030805@cogentembedded.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 05/36] mtd: nand: omap: Move IRQ handling from GPMC to
+ NAND driver
+Date: Tue, 1 Jul 2014 06:16:19 -0700
+Message-ID: <20140701131618.GQ28884@atomide.com>
+References: <1402477001-31132-6-git-send-email-rogerq@ti.com>
+ <20140613071820.GI17845@atomide.com>
+ <539AAA8C.2070709@ti.com>
+ <20140613075856.GQ17845@atomide.com>
+ <20980858CB6D3A4BAE95CA194937D5E73EAF51DB@DBDE04.ent.ti.com>
+ <539AB4E4.6050408@ti.com>
+ <20140613104610.GS17845@atomide.com>
+ <539AE390.4080504@ti.com>
+ <20140613120839.GV17845@atomide.com>
+ <53B2893E.5020306@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53AB4A48.5030805@cogentembedded.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: rdunlap@infradead.org, linux-doc@vger.kernel.org, linux-sh@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B2893E.5020306@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: Mark Brown <broonie@kernel.org>, "Gupta, Pekon" <pekon@ti.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "kyungmin.park@samsung.com" <kyungmin.park@samsung.com>, "ezequiel.garcia@free-electrons.com" <ezequiel.garcia@free-electrons.com>, "javier@dowhile0.org" <javier@dowhile0.org>, "Nori, Sekhar" <nsekhar@ti.com>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, ivan.khoronzhuk@ti.com, Alexander Shiyan <shc_work@mail.ru>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+* Roger Quadros <rogerq@ti.com> [140701 03:13]:
+> On 06/13/2014 03:08 PM, Tony Lindgren wrote:
+> > * Roger Quadros <rogerq@ti.com> [140613 04:43]:
+> >>
+> >> OK. I agree about using some kind of abstraction instead of direct access.
+> > 
+> > Yes and like we chatted on irc, adding a syscon mapping for for
+> > the NAND specific registers might do the trick here.
+> 
+> After looking at the syscon driver, which relies on regmap, it seems that regmap was designed for slow control busses like I2C/SPI and using it for NAND controller register access will have a significant negative impact on performance. In the NAND case the register writes are used for each NAND command cycle and the reads for ECC checks (every page).
+> 
+> See how much code regmap_read and regmap_mmio_read() translates to for a simple register read i.e. readl().
+> http://lxr.free-electrons.com/source/drivers/base/regmap/regmap.c#L1944
+> http://lxr.free-electrons.com/source/drivers/base/regmap/regmap-mmio.c#L129
+> 
+> So I'm not so sure of using regmap/syscon for NAND controller register access.
 
-On Thursday 26 June 2014 03:46 AM, Sergei Shtylyov wrote:
-> Hello.
-> 
-> On 06/10/2014 02:43 PM, Kishon Vijay Abraham I wrote:
-> 
->    Sorry for delayed reply, I was busy with other things. Now it's time to
-> revisit the infamous USB PHY driver...
-> 
->>>>> This PHY, though formally being a part of Renesas USBHS controller, contains
->>>>> the
->>>>> UGCTRL2 register that controls multiplexing of the USB ports (Renesas calls
->>>>> them
->>>>> channels) to the different USB controllers: channel 0 can be connected to
->>>>> either
->>>>> PCI EHCI/OHCI or USBHS controllers, channel 2 can be connected to PCI
->>>>> EHCI/OHCI
->>>>> or xHCI controllers.
-> 
-.
-.
-<snip>
-.
-.
+OK yes I agree, it's not a good solution for a constant
+register access that's needed for the ECC registers.
+ 
+> Could there be any other abstraction method of sharing the register space between GPMC and NAND driver?
+> I've also added Ivan to the thread, the author of memory/ti-aemif.c driver, to check if he faced any issues with shared register access of the AEMIF/NAND registers.
 
-> 
->>>> IIUC, channel 0 can be configured for either EHCI/OHCI or HS-USB but can't be
->>>> used for both.  And channel 1 can be configured for either PCI EHCI/OHCI or
->>>> xHCI. right?
-> 
->>>     Yes. However that depends on the driver load order: if e.g. xHCI driver is
->>> loaded later than PCI USB drivers,
->>> it will override the channel routing.
-> 
->> So will the PCI USB drivers will be notified of that?
-> 
->    Unfortunately, no. But this is also the case with the other multi-PHY
-> drivers...
+If there's no common framework available for GPMC to implement,
+it's best to just export few functions from gpmc.c for the ECC
+calculations.
 
-IIRC, in the case of other existing multi-phy drivers, all the PHYs can
-co-exist without actually overriding anything that was configured previously.
+Regards,
 
-Anyway it is a good point and it will indeed create problems in cases where the
-PHY is mutually exclusive like in your case where a channel can be configured
-for either EHCI or USB but not both. The other driver where this will be a
-problem is also floating in the list [1].
-
-[1] -> https://lkml.org/lkml/2014/6/30/324
-> 
->>>> So ideally only two sub-nodes should be created for channel '0' and channel
->>>> '1'.
-> 
->>>     Hm, but I need to perform a special PHY power up sequence for the USBHS PHY
->>> itself (corresponding to channel #0, selector #1).
-> 
->>>> You can configure a channel to a particular mode by passing the mode in
->>>> PHY specifier
-> 
->>>     I already have "#phy-cells" prop equal to 2.
-> 
->>>> (The channel should be configured to a particualr mode in xlate).
-> 
->>>     I have even considered using the of_xlate() method at first but then
->>> abandoned that idea for the phy_init() method...
-> 
->> If you want to configure the PHY to a particular mode, xlate should be the best
->> place.
-> 
->    I tried to move the code there from the init() method but then I realized
-> that I need to prepare/enable the USBHS clock before writing to the UGCTRL2
-> register and there's no place I can disable/unprepare this clock if I do the
-> channel routing in the xlate() method. So no, I don't agree here.
-
-enabling clock from init() seems correct to me. We need a better way to avoid
-overriding the PHY to a particular mode.
-> 
->>>> Btw I'm not sure if it is recommended to pass register mask values from dt.
-> 
->>>     Neither am I. I did that because you requested the device tree
->>> representation for each of the sub-PHYs under that part of the driver which
->>> initialized the register masks, so that I thought that you wanted those masks
->>> to be represented in the device tree as well...
-> 
->> No I didn't mean that. Maybe for now we can have a identifier in the sub-node
->> and select mask and value based on that.
-> 
->    Sigh. Yes, having some sort of selecting property in the subnodes is the
-> only way...
-> 
->>> [...]
-.
-.
-<snip>
-.
-.
-
->>>>> +struct rcar_gen2_phy_driver {
->>>>> +    void __iomem *base;
->>>>> +    struct clk *clk;
->>>>> +    spinlock_t lock;
->>>>> +    struct rcar_gen2_phy phys[NUM_USB_CHANNELS][2];
-> 
->>>> This can be created dynamically based on the number of sub-nodes. In this case
-> 
->    Did you mean that I'll need to use linked list here instead of an array?
-
-Nope. I meant something like below.
-
-struct rcar_gen2_phy_driver {
-	.
-	.
-	struct rcar_gen2_phy **phys;
-}
-
-probe()
-{
-	<snip>
-	int i = 0, channel_count;
-	struct rcar_gen2_phy **phys;
-	channel_count = of_get_child_count(np);
-	phys = kzalloc(sizeof(*phys) * channel_count, GFP_KERNEL);
-	for_each_child_of_node(dev->of_node, np) {
-		struct rcar_gen2_phy *phy;
-		.
-		.
-		phy = kzalloc(sizeof(*phy), GFP_KERNEL);
-		.
-		.
-		phy->phy = devm_phy_create(dev, &rcar_gen2_phy_ops, NULL);
-		phys[i++] = phy;
-	}
-	drv->phys = phys;
-	<snip>
-}
-
-Then you can access 'phys' just like how you access an array.
-> 
->>>     Hm, that sounds to me like another complication of the driver with no
->>> apparent win...
-> 
->> dynamic allocation is in no way going to complicate the driver.
-> 
->    Since when the dynamic data allocation is as simple as the statically
-> allocated data? :-O
-> 
->>>> it'll be only rcar_gen2_phy phys[2], one for each channel.
->>>> By this we need not hard code NUM_USB_CHANNELS.
-> 
->>>     I don't quite understand what's up with hard-coding it -- this constant is
->>> dictated by the UGCTRL2 register layout anyway.
-> 
->> right but you don't want to change the driver a whole lot when they change the
->> no of channels in the next version
-> 
->    They have already done so: R8A7790 has 3 USB channels, R8A7791 has only 2.
-> However, the number of controllable channels didn't change.
-
-right.. that's where I'd like to have status = "disabled" for that channel in
-your dt node.
-> 
->> or they use a slightly modified version of
->> this IP in a different SoC. And finding the number of channels dynamically is
->> not complicated anyway IMO.
-> 
->    Sorry, but what you're saying here just doesn't make sense to me. I'd need
-> to modify the driver for the different number of the controllable channels in
-> any case since the UGCTRL2 masks/values have to be hard coded in the driver as
-> you said. If they were read from the device tree, that would have made sense
-> but you seem to be against that...
-
-R8A7790 has 3 USB channels and R8A7791 has only 2. So what should be the
-NUM_CHANNELS in this driver? Modifying the driver _can_ be adding macros for
-registers, bit masks etc.. and maybe appropriately modifying of_device data.
-
-Cheers
-Kishon
+Tony
