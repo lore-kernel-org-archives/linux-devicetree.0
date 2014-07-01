@@ -1,274 +1,651 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v5 07/14] mfd: Add driver for Maxim 77802 Power
- Management IC
-Date: Tue, 1 Jul 2014 16:15:19 +0100
-Message-ID: <20140701151519.GM27971@lee--X1>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
- <1403806546-31122-8-git-send-email-javier.martinez@collabora.co.uk>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403806546-31122-8-git-send-email-javier.martinez@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v4 RESEND] devicetree: bindings: separate CPU enable method descriptions
+Date: Tue,  1 Jul 2014 10:28:36 -0500
+Message-ID: <1404228516-14620-1-git-send-email-elder@linaro.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, rdunlap-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org, gregory.clement-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org, rvaswani-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-doc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 26 Jun 2014, Javier Martinez Canillas wrote:
+The bindings for CPU enable methods are defined in ".../arm/cpus.txt".  As
+additional 32-bit ARM CPUS are converted to use the "enable-method" CPU
+property to imply a particular set of SMP operations to use, the list of these
+methods is likely to become unwieldy.  The current documentation already
+contains several property descriptions that are meaningful only for certain
+enable methods.
 
-> Maxim MAX77802 is a power management chip that contains 10 high
-> efficiency Buck regulators, 32 Low-dropout (LDO) regulators used
-> to power up application processors and peripherals, a 2-channel
-> 32kHz clock outputs, a Real-Time-Clock (RTC) and a I2C interface
-> to program the individual regulators, clocks outputs and the RTC.
->=20
-> This patch adds the core support for MAX77802 PMIC and is based
-> on a driver added by Simon Glass to the Chrome OS kernel 3.8 tree.
->=20
-> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co=
-=2Euk>
-> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> Tested-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
-> ---
->=20
-> Changes since v4:
->  - Use consistent expressions when checking for NULL values.
->    Suggested by Krzysztof Kozlowski.
->  - Remove unused defines. Suggested by Krzysztof Kozlowski.
->  - Explain why IRQ is disabled on suspend. Suggested by Krzysztof Koz=
-lowski.
->=20
-> Changes since v3:
->  - Remove unnecessary OOM error message since the mm subsystem alread=
-y logs it.=20
->=20
-> Changes since v2:
->  - Split the DT binding docs in a separate patch and improve the docu=
-mentation.
->    Suggested by Mark Brown.
->  - Add all the devices in the MFD driver instead of doing in separate=
- patches.
->    Suggested by Mark Brown.
->=20
-> Changes since v1:
->  - Convert max77{686,802} to regmap irq API and get rid of max77{686,=
-802}-irq.c
->    Suggested by Krzysztof Kozlowski.
->  - Don't protect max77802 mfd_cells using Kconfig options since mfd c=
-ore omits
->    devices that don't match. Suggested by Lee Jones.
->  - Change mfd driver to be tristate instead of boolean. Suggested by =
-Mark Brown.
->  - Change binding "voltage-regulators" property to "regulators" to be=
- consistent
->    with other PMIC drivers. Suggested by Mark Brown.
->  - Use regulators node names instead of the deprecated "regulator-com=
-patible"
->    property. Suggested by Mark Brown.
->  - Use the new descriptor-based GPIO interface instead of the depreca=
-ted
->    integer based GPIO one. Suggested by Mark Brown.
->  - Remove the type parameter from i2c_device_id table since was not u=
-sed.
->  - Fix device not found error message and remove unneeded device foun=
-d message.
->=20
->  drivers/mfd/Kconfig                  |  14 ++
->  drivers/mfd/Makefile                 |   1 +
->  drivers/mfd/max77802.c               | 366 +++++++++++++++++++++++++=
-+++++++++
+This patch defines a new Documentation subdirectory whose purpose is to give
+each CPU enable method its own place to define how and when it's used, as
+well as what other properties (optional or required) are associated with
+the method.  The existing enable method documentation is expanded and moved
+from ".../arm/cpus.txt" into new files accordingly.
 
-I don't think this needs it's own, brand new file.  You can just as
-easy slot the enablement into max77686, which I suggest you do.
+Signed-off-by: Alex Elder <elder-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+---
+v4  - Rebased on top of v3.16-rc1.
+    - Added description files for recently-added enable methods:
+        "allwinner,sun6i-a31"
+        "marvell,armada-375-smp"
+        "marvell,armada-380-smp"
+        "marvell,armada-xp-smp"
+        "rockchip,rk3066-smp"
+    - Updated "psci.txt" with a 32-bit ARM example.
+v3  - Got rid of contrived examples.
+    - Identified some compatible CPUs more generically (e.g. using
+      "Any AArch64 CPU") rather than using only specific compatible
+      string values.
+    - Fixed and reworded the "psci" description (without incorporating 
+      "arm/psci.txt").
+    - Now provide a more real example for the "spin-table" method.
+v2  - Rename "arm,psci.txt" to be "psci.txt" and fix its content.
 
->  include/linux/mfd/max77802-private.h | 307 +++++++++++++++++++++++++=
-++++
->  include/linux/mfd/max77802.h         | 121 ++++++++++++
->  5 files changed, 809 insertions(+)
->  create mode 100644 drivers/mfd/max77802.c
->  create mode 100644 include/linux/mfd/max77802-private.h
->  create mode 100644 include/linux/mfd/max77802.h
+ .../bindings/arm/cpu-enable-method/README          | 20 +++++++
+ .../arm/cpu-enable-method/allwinner,sun6i-a31      | 44 +++++++++++++++
+ .../arm/cpu-enable-method/marvell,armada-xp-smp    | 34 +++++++++++
+ .../arm/cpu-enable-method/marvell,armada375-smp    | 31 +++++++++++
+ .../arm/cpu-enable-method/marvell,armada380-smp    | 32 +++++++++++
+ .../bindings/arm/cpu-enable-method/psci.txt        | 65 ++++++++++++++++++++++
+ .../arm/cpu-enable-method/qcom,gcc-msm8660         | 42 ++++++++++++++
+ .../arm/cpu-enable-method/qcom,kpss-acc-v1         | 56 +++++++++++++++++++
+ .../arm/cpu-enable-method/qcom,kpss-acc-v2         | 56 +++++++++++++++++++
+ .../arm/cpu-enable-method/rockchip,rk3066-smp      | 32 +++++++++++
+ .../bindings/arm/cpu-enable-method/spin-table.txt  | 55 ++++++++++++++++++
+ Documentation/devicetree/bindings/arm/cpus.txt     | 29 +---------
+ 12 files changed, 470 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/README
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/allwinner,sun6i-a31
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada-xp-smp
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada375-smp
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada380-smp
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/rockchip,rk3066-smp
+ create mode 100644 Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
 
-[...]
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/README b/Documentation/devicetree/bindings/arm/cpu-enable-method/README
+new file mode 100644
+index 0000000..cc9431e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/README
+@@ -0,0 +1,20 @@
++==========================
++CPU enable-method bindings
++==========================
++
++The device tree describes the layout of CPUs in a machine in a single "cpus"
++node, which in turn contains a number of "cpu" sub-nodes defining properties
++for each cpu.
++
++For multiprocessing configurations, CPU cores can be individually enabled
++and disabled.  The enabling capability is used for SMP startup as well as
++CPU hotplug.  A CPU enable method--normally specified in the device tree
++using an "enable-method" property--defines how cores are enabled.  If all
++CPUs in a machine use the same enable method and related property values,
++these properties should be defined in the "cpus" node, which associates the
++property values with all CPUs.  Alternatively, every "cpu" node can define
++its "enable-method" separately.
++
++Documents in this directory define how each of the CPU enable methods are to
++be used, as well the names and possible values of related properties that
++are required by or affect each enable method.
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/allwinner,sun6i-a31 b/Documentation/devicetree/bindings/arm/cpu-enable-method/allwinner,sun6i-a31
+new file mode 100644
+index 0000000..bbc661e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/allwinner,sun6i-a31
+@@ -0,0 +1,44 @@
++=========================================================
++Secondary CPU enable-method "allwinner,sun6i-a31" binding
++=========================================================
++
++This document describes the "allwinner,sun6i-a31" method for enabling
++CPUs.  This enable method should be used in the "cpus" node, but can
++also be defined in individual "cpu" nodes.
++
++Enable method name:	"allwinner,sun6i-a31"
++Compatible machine:	"sun6i-a31"
++Compatible cpu:		"arm,cortex-a7"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		enable-method = "allwinner,sun6i-a31";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <1>;
++		};
++
++		cpu@2 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <2>;
++		};
++
++		cpu@3 {
++			compatible = "arm,cortex-a7";
++			device_type = "cpu";
++			reg = <3>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada-xp-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada-xp-smp
+new file mode 100644
+index 0000000..4a21b54
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada-xp-smp
+@@ -0,0 +1,34 @@
++===========================================================
++Secondary CPU enable-method "marvell,armada-xp-smp" binding
++===========================================================
++
++This document describes the "marvell,armada-xp-smp" method for enabling
++CPUs.  This enable method should be used in the "cpus" node, but can
++also be defined in individual "cpu" nodes.
++
++Enable method name:	"marvell,armada-xp-smp"
++Compatible machines:	"marvell,armadaxp-mv78230"
++			"marvell,armadaxp-mv78260
++			"marvell,armadaxp-mv78460"
++Compatible cpu:		"marvell,sheeva-v7"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "marvell,armada-xp-smp";
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "marvell,sheeva-v7";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "marvell,sheeva-v7";
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada375-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada375-smp
+new file mode 100644
+index 0000000..a3fa89f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada375-smp
+@@ -0,0 +1,31 @@
++============================================================
++Secondary CPU enable-method "marvell,armada-375-smp" binding
++============================================================
++
++This document describes the "marvell,armada-375-smp" method for enabling
++CPUs.  This enable method should be used in the "cpus" node, but can
++also be defined in individual "cpu" nodes.
++
++Enable method name:	"marvell,armada-375-smp"
++Compatible machine:	"marvell,armada375"
++Compatible cpu:		"arm,cortex-a9"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "marvell,armada-375-smp";
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada380-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada380-smp
+new file mode 100644
+index 0000000..dff225d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/marvell,armada380-smp
+@@ -0,0 +1,32 @@
++===========================================================
++Secondary CPU enable-method "marvell,armada380-smp" binding
++===========================================================
++
++This document describes the "marvell,armada380-smp" method for enabling
++CPUs.  This enable method should be used in the "cpus" node, but can
++also be defined in individual "cpu" nodes.
++
++Enable method name:	"marvell,armada-380-smp"
++Compatible machine:	"marvell,armada380"
++			"marvell,armada385"
++Compatible cpu:		"arm,cortex-a9"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "marvell,armada-380-smp";
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt b/Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt
+new file mode 100644
+index 0000000..c85b888
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/psci.txt
+@@ -0,0 +1,65 @@
++================================
++CPU enable-method "psci" binding
++================================
++
++This document describes the "psci" method for enabling secondary CPUs.
++Unlike most secondary CPU enable methods, this method is not defined
++by properties in CPU-related device tree nodes.  Instead, a "psci"
++node[1] that includes a "cpu_on" property defines how secondary CPUs
++are enabled.
++
++Enable method name:	"psci"
++Compatible cpus:	32- or 64-bit ARM architectures, including
++			Cortex-A7, Cortex-A15, Cortex-A53, Cortex-A57
++			as well as AEM.
++Related properties:	(none)
++
++Example 1:
++
++	psci {
++		compatible = "arm,psci";
++		method = "smc";
++		cpu_on = <0x1>;
++	};
++	cpus {
++		#size-cells = <0>;
++		#address-cells = <2>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a57";
++			reg = <0x0 0x1>;
++		};
++	};
++
++Example 2:
++	psci {
++		compatible      = "arm,psci";
++		method          = "hvc";
++		cpu_on          = <2>;
++	};
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a15";
++			reg = <1>;
++		};
++	};
++
++--
++[1] arm/psci.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+new file mode 100644
+index 0000000..fee9782
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,gcc-msm8660
+@@ -0,0 +1,42 @@
++======================================================
++Secondary CPU enable-method "qcom,gcc-msm8660" binding
++======================================================
++
++This document describes the "qcom,gcc-msm8660" method for enabling
++secondary CPUs.  A "qcom,gcc-msm8660" enable method should only be
++used in the "cpus" node--to apply to all CPUs--but it can also be
++defined in individual CPU nodes.
++
++Note that a node compatible with "qcom,gcc-msm8660" must also be
++present in the device tree, to define a memory range that contains
++registers used to control the secondary core.
++
++Enable method name:	"qcom,gcc-msm8660"
++Compatible cpu:		"qcom,scorpion"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			compatible = "qcom,scorpion";
++			enable-method = "qcom,gcc-msm8660";
++			device_type = "cpu";
++			reg = <0>;
++		};
++
++		cpu@1 {
++			compatible = "qcom,scorpion";
++			enable-method = "qcom,gcc-msm8660";
++			device_type = "cpu";
++			reg = <1>;
++		};
++	};
++
++	gcc: clock-controller@900000 {
++		compatible = "qcom,gcc-msm8660";
++		reg = <0x900000 0x4000>;
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+new file mode 100644
+index 0000000..3f6ce56
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v1
+@@ -0,0 +1,56 @@
++======================================================
++Secondary CPU enable-method "qcom,kpss-acc-v1" binding
++======================================================
++
++This document describes the "qcom,kpss-acc-v1" method for enabling CPUs.
++This enable method can be used in either the "cpus" node or in individual
++"cpu" nodes.  Note that each "cpu" node must have both "qcom,saw" and
++"qcom,acc" properties defined (even if the "enable-method" property was
++defined only in the "cpus" node).
++
++Enable method name:	"qcom,kpss-acc-v1"
++Compatible machine:	"qcom,msm8960"
++Compatible cpu:		"qcom,krait"
++Related properties:
++	- qcom,saw
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the SAW[1] node associated with this CPU.
++
++	- qcom,acc
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the ACC[2] node associated with this CPU.
++
++Example:
++
++/ {
++	compatible = "qcom,msm8960";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v1";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++	};
++};
++
++--
++[1] arm/msm/qcom,saw2.txt
++[2] arm/msm/qcom,kpss-acc.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2 b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+new file mode 100644
+index 0000000..4368d904
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/qcom,kpss-acc-v2
+@@ -0,0 +1,56 @@
++======================================================
++Secondary CPU enable-method "qcom,kpss-acc-v2" binding
++======================================================
++
++This document describes the "qcom,kpss-acc-v2" method for enabling CPUs.
++This enable method can be used in either the "cpus" node or in individual
++"cpu" nodes.  Note that each "cpu" node must have both "qcom,saw" and
++"qcom,acc" properties defined (even if the "enable-method" property was
++defined only in the "cpus" node).
++
++Enable method name:	"qcom,kpss-acc-v2"
++Compatible machine:	"qcom,msm8974"
++Compatible cpu:		"qcom,krait"
++Related properties:
++	- qcom,saw
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the SAW[1] node associated with this CPU.
++
++	- qcom,acc
++		Usage:		required (in each "cpu" node")
++		Value type:	<phandle>
++		Definition:
++			Specifies the ACC[2] node associated with this CPU.
++
++Example:
++
++/ {
++	compatible = "qcom,msm8974";
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		compatible = "qcom,krait";
++		enable-method = "qcom,kpss-acc-v2";
++
++		cpu@0 {
++			device_type = "cpu";
++			reg = <0>;
++			qcom,acc = <&acc0>;
++			qcom,saw = <&saw0>;
++		};
++
++		cpu@1 {
++			device_type = "cpu";
++			reg = <1>;
++			qcom,acc = <&acc1>;
++			qcom,saw = <&saw1>;
++		};
++	};
++};
++
++--
++[1] arm/msm/qcom,saw2.txt
++[2] arm/msm/qcom,kpss-acc.txt
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/rockchip,rk3066-smp b/Documentation/devicetree/bindings/arm/cpu-enable-method/rockchip,rk3066-smp
+new file mode 100644
+index 0000000..617f0c5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/rockchip,rk3066-smp
+@@ -0,0 +1,32 @@
++=========================================================
++Secondary CPU enable-method "rockchip,rk3066-smp" binding
++=========================================================
++
++This document describes the "rockchip,rk3066-smp" method for enabling
++CPUs.  This enable method should be used in the "cpus" node, but can
++also be defined in individual "cpu" nodes.
++
++Enable method name:	"rockchip,rk3066-smp"
++Compatible machine:	"rockchip,rk3066a"
++			"rockchip,rk3188"
++Compatible cpu:		"arm,cortex-a9"
++Related properties:	(none)
++
++Example:
++
++	cpus {
++		#address-cells = <1>;
++		#size-cells = <0>;
++		enable-method = "rockchip,rk3066-smp";
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <0>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,cortex-a9";
++			reg = <1>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt b/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+new file mode 100644
+index 0000000..d579829
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/cpu-enable-method/spin-table.txt
+@@ -0,0 +1,55 @@
++================================================
++Secondary CPU enable-method "spin-table" binding
++================================================
++
++This document describes the "spin-table" method for enabling secondary
++CPUs.  A "spin-table" enable method must be specified only in individual
++"cpu" nodes in the device tree.
++
++Enable method name:	"spin-table"
++Compatible cpus:	Any AArch64 CPU
++Related properties:
++	- cpu-release-addr
++		Usage:		required
++		Value type:	<64-bit value>    (two cells)
++		Definition:
++			A two cell value identifying a 64-bit memory location
++			used by the boot CPU to inform a secondary CPU it
++			should begin its kernel bootstrap.  Memory at this
++			location must initially be zeroed.
++
++Example:
++
++	cpus {
++		#address-cells = <2>;
++		#size-cells = <0>;
++
++		cpu@0 {
++			device_type = "cpu";
++			compatible = "arm,armv8";
++			reg = <0x0 0x0>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x8000fff8>;
++		};
++		cpu@1 {
++			device_type = "cpu";
++			compatible = "arm,armv8";
++			reg = <0x0 0x1>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x8000fff8>;
++		};
++		cpu@2 {
++			device_type = "cpu";
++			compatible = "arm,armv8";
++			reg = <0x0 0x2>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x8000fff8>;
++		};
++		cpu@3 {
++			device_type = "cpu";
++			compatible = "arm,armv8";
++			reg = <0x0 0x3>;
++			enable-method = "spin-table";
++			cpu-release-addr = <0x0 0x8000fff8>;
++		};
++	};
+diff --git a/Documentation/devicetree/bindings/arm/cpus.txt b/Documentation/devicetree/bindings/arm/cpus.txt
+index 1fe72a0..06e18fc 100644
+--- a/Documentation/devicetree/bindings/arm/cpus.txt
++++ b/Documentation/devicetree/bindings/arm/cpus.txt
+@@ -191,30 +191,8 @@ nodes to be present and contain the properties described below.
+ 			    "qcom,kpss-acc-v1"
+ 			    "qcom,kpss-acc-v2"
+ 			    "rockchip,rk3066-smp"
+-
+-	- cpu-release-addr
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "spin-table".
+-		Value type: <prop-encoded-array>
+-		Definition:
+-			# On ARM v8 64-bit systems must be a two cell
+-			  property identifying a 64-bit zero-initialised
+-			  memory location.
+-
+-	- qcom,saw
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "qcom,kpss-acc-v1" or
+-		       "qcom,kpss-acc-v2"
+-		Value type: <phandle>
+-		Definition: Specifies the SAW[1] node associated with this CPU.
+-
+-	- qcom,acc
+-		Usage: required for systems that have an "enable-method"
+-		       property value of "qcom,kpss-acc-v1" or
+-		       "qcom,kpss-acc-v2"
+-		Value type: <phandle>
+-		Definition: Specifies the ACC[2] node associated with this CPU.
+-
++		Details about use of these CPU enable methods is documented
++		elsewhere[1].
+ 
+ Example 1 (dual-cluster big.LITTLE system 32-bit):
+ 
+@@ -409,5 +387,4 @@ cpus {
+ };
+ 
+ --
+-[1] arm/msm/qcom,saw2.txt
+-[2] arm/msm/qcom,kpss-acc.txt
++[1] arm/cpu-enable-method/
+-- 
+1.9.1
 
-> +#ifdef CONFIG_OF
-> +static struct of_device_id max77802_pmic_dt_match[] =3D {
-> +	{.compatible =3D "maxim,max77802", .data =3D NULL},
-
-Space before .compatible.
-
-No need to set .data to NULL, just omit it.
-
-> +	{},
-> +};
-> +
-> +static void max77802_dt_parse_dvs_gpio(struct device *dev,
-> +				       struct max77802_platform_data *pd,
-> +				       struct device_node *np)
-
-No need to overload these parameters by passing np, you can extract it
-from dev.  Same goes for pd if you populate platform_data _before_
-calling this function.
-
-> +{
-> +	int i;
-> +
-> +	/*
-> +	 * NOTE: we don't consider GPIO errors fatal; board may have some l=
-ines
-> +	 * directly pulled high or low and thus doesn't specify them.
-> +	 */
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_dvs); i++)
-> +		pd->buck_gpio_dvs[i] =3D
-> +			devm_gpiod_get_index(dev, "max77802,pmic-buck-dvs", i);
-> +
-> +	for (i =3D 0; i < ARRAY_SIZE(pd->buck_gpio_selb); i++)
-> +		pd->buck_gpio_selb[i] =3D
-> +			devm_gpiod_get_index(dev, "max77802,pmic-buck-selb", i);
-> +}
-> +
-> +static struct max77802_platform_data *max77802_i2c_parse_dt_pdata(st=
-ruct device
-> +								  *dev)
-> +{
-> +	struct device_node *np =3D dev->of_node;
-> +	struct max77802_platform_data *pd;
-> +
-> +	pd =3D devm_kzalloc(dev, sizeof(*pd), GFP_KERNEL);
-> +	if (!pd)
-> +		return NULL;
-> +
-> +	/* Read default index and ignore errors, since default is 0 */
-> +	of_property_read_u32(np, "max77802,pmic-buck-default-dvs-idx",
-> +			     &pd->buck_default_idx);
-> +
-> +	max77802_dt_parse_dvs_gpio(dev, pd, np);
-> +
-> +	dev->platform_data =3D pd;
-> +	return pd;
-> +}
-> +#else
-> +static struct max77802_platform_data *max77802_i2c_parse_dt_pdata(st=
-ruct device
-> +								  *dev)
-> +{
-> +	return 0;
-> +}
-> +#endif
-
-No need for dummy functions.
-
-Use if (IS_ENABLED(CONFIG_OF) && i2c->dev.of_node) instead.
-
-> +static int max77802_i2c_probe(struct i2c_client *i2c,
-> +			      const struct i2c_device_id *id)
-> +{
-> +	struct max77802_dev *max77802 =3D NULL;
-> +	struct max77802_platform_data *pdata =3D dev_get_platdata(&i2c->dev=
-);
-> +	unsigned int data;
-> +	int ret =3D 0;
-> +
-> +	if (i2c->dev.of_node)
-> +		pdata =3D max77802_i2c_parse_dt_pdata(&i2c->dev);
-
-DT should not over-rule platform data.  If the driver supports pdata
-and it's present, it should over-rule DT.
-
-> +	if (!pdata) {
-> +		dev_err(&i2c->dev, "No platform data found.\n");
-> +		return -EIO;
-
--EIO is not the correct error code here.  Either -EINVAL or -ENODEV
-would be better.
-
-> +	}
-> +
-> +	max77802 =3D devm_kzalloc(&i2c->dev, sizeof(struct max77802_dev),
-> +				GFP_KERNEL);
-> +	if (max77802 =3D=3D NULL)
-
-if (!max77802)
-
-> +		return -ENOMEM;
-> +
-> +	i2c_set_clientdata(i2c, max77802);
-> +
-> +	max77802->dev =3D &i2c->dev;
-> +	max77802->i2c =3D i2c;
-> +	max77802->type =3D id->driver_data;
-> +
-> +	max77802->wakeup =3D pdata->wakeup;
-> +	max77802->irq =3D i2c->irq;
-> +
-> +	max77802->regmap =3D devm_regmap_init_i2c(i2c, &max77802_regmap_con=
-fig);
-> +	if (IS_ERR(max77802->regmap)) {
-> +		ret =3D PTR_ERR(max77802->regmap);
-> +		dev_err(max77802->dev, "Failed to allocate register map: %d\n",
-> +			ret);
-> +		return ret;
-> +	}
-> +
-> +	if (regmap_read(max77802->regmap,
-> +			 MAX77802_REG_DEVICE_ID, &data) < 0) {
-> +		dev_err(max77802->dev,
-> +			"device not found on this channel\n");
-> +		return -ENODEV;
-> +	}
-
-The return values for all other calls are first placed into a variable
-and _then_ evaluated.  For consistency can you do the same here
-please?
-
-> +	ret =3D regmap_add_irq_chip(max77802->regmap, max77802->irq,
-> +				  IRQF_TRIGGER_FALLING | IRQF_ONESHOT |
-> +				  IRQF_SHARED, 0, &max77802_irq_chip,
-> +				  &max77802->irq_data);
-> +	if (ret !=3D 0) {
-
-if (ret)
-
-> +		dev_err(&i2c->dev, "failed to add PMIC irq chip: %d\n", ret);
-> +		return ret;
-> +	}
-
-'\n'
-
-[...]
-
-> +static struct i2c_driver max77802_i2c_driver =3D {
-> +	.driver =3D {
-> +		   .name =3D "max77802",
-> +		   .owner =3D THIS_MODULE,
-> +		   .pm =3D &max77802_pm,
-> +		   .of_match_table =3D of_match_ptr(max77802_pmic_dt_match),
-
-This tabbing is off.
-
-> +	},
-> +	.probe =3D max77802_i2c_probe,
-> +	.remove =3D max77802_i2c_remove,
-> +	.id_table =3D max77802_i2c_id,
-> +};
-> +
-> +static int __init max77802_i2c_init(void)
-> +{
-> +	return i2c_add_driver(&max77802_i2c_driver);
-> +}
-> +/* init early so consumer devices can complete system boot */
-> +subsys_initcall(max77802_i2c_init);
-> +
-> +static void __exit max77802_i2c_exit(void)
-> +{
-> +	i2c_del_driver(&max77802_i2c_driver);
-> +}
-> +module_exit(max77802_i2c_exit);
-
---=20
-Lee Jones
-Linaro STMicroelectronics Landing Team Lead
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-=46ollow Linaro: Facebook | Twitter | Blog
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
