@@ -1,41 +1,46 @@
-From: Yuvaraj Cd <yuvaraj.lkml@gmail.com>
-Subject: Re: mwifiex card reset
-Date: Tue, 1 Jul 2014 17:50:08 +0530
-Message-ID: <CA+NduCAuRFTQneJUBiKP2Aeq2HCxe71yxg_iDDStkNvhzRg-Rg@mail.gmail.com>
-References: <CALtMJEBWPM+75wxM2Mp5EX_o6NWtZUJdYRCv6psbvdUn4k295w@mail.gmail.com>
-	<20140628052220.GG10407@us.netrek.org>
-	<20140628072322.GC7410@atomide.com>
-	<CALtMJED5vfgkAhMBXKaDP6u9U9n41c-wziyTxt6e_7XTSxG3oQ@mail.gmail.com>
-	<20140630061912.GA2461@atomide.com>
-	<53B1BAC1.3090902@zonque.org>
-	<477F20668A386D41ADCC57781B1F70430FE5F37540@SC-VEXCH1.marvell.com>
-	<20140701065721.GM24891@us.netrek.org>
+From: Jason Cooper <jason@lakedaemon.net>
+Subject: Re: [PATCH V4 00/16] irqchip: crossbar: Driver fixes
+Date: Tue, 1 Jul 2014 08:23:48 -0400
+Message-ID: <20140701122348.GE23978@titan.lakedaemon.net>
+References: <1403766634-18543-1-git-send-email-r.sricharan@ti.com>
+ <20140630192910.GA23978@titan.lakedaemon.net>
+ <20140701075930.GN28884@atomide.com>
+ <53B28124.40509@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140701065721.GM24891@us.netrek.org>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: James Cameron <quozl@laptop.org>
-Cc: Bing Zhao <bzhao@marvell.com>, Daniel Mack <daniel@zonque.org>, Tony Lindgren <tony@atomide.com>, Andreas Fenkart <afenkart@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Douglas Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, sunil joshi <joshi@samsung.com>, prashanth.g@samsung.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-omap-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B28124.40509@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Sricharan R <r.sricharan@ti.com>
+Cc: Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, nm@ti.com, linux@arm.linux.org.uk, rnayak@ti.com, santosh.shilimkar@ti.com, joe@perches.com, tglx@linutronix.de
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 1, 2014 at 12:27 PM, James Cameron <quozl@laptop.org> wrote:
-> On Mon, Jun 30, 2014 at 11:44:29PM -0700, Bing Zhao wrote:
->> I may have missed something, but doesn't the MMC_POWER_OFF and
->> MMC_POWER_ON|UP handling in controller driver help?
->> Anyway the clocks/GPIOs/regulators are sort of platform
->> dependent. Would it be better putting it in /arch/arm/mach-xxxxx/?
->
-> Wouldn't device tree for mmc be better?
-I have come across same problem.Below is the thread in which more
-discussions happened on this.
- http://patchwork.ozlabs.org/patch/312444/
-I am adding few more those who are interested in this solution.
->
-> --
-> James Cameron
-> http://quozl.linux.org.au/
-> --
-> To unsubscribe from this list: send the line "unsubscribe linux-mmc" in
-> the body of a message to majordomo@vger.kernel.org
-> More majordomo info at  http://vger.kernel.org/majordomo-info.html
+On Tue, Jul 01, 2014 at 03:06:36PM +0530, Sricharan R wrote:
+> Hi Tony,
+> 
+> On Tuesday 01 July 2014 01:29 PM, Tony Lindgren wrote:
+> > * Jason Cooper <jason@lakedaemon.net> [140630 12:30]:
+> >>
+> >> Whole series applied to irqchip/crossbar, I'll give it a day or two in
+> >> -next, then I'll merge it into irqchip/core.
+> >>
+> >> Tony: Right now, it's immutable unless you tell me I applied something
+> >> incorrectly.  Once it goes into irqchip/core, it's immutable no matter
+> >> what you say. ;-)
+> > 
+> > Thanks, looks good to me. Sricharan and Nishant, can you please
+> > check that we can now apply the related .dts changes on top of
+> > Jason's branch at:
+> > 
+> > git://git.infradead.org/users/jcooper/linux.git irqchip/crossbar
+> > 
+> 
+> I applied the dts patches on top of this and it worked fine for
+> me on dra72 evm
+
+Awesome, thanks.  irqchip/crossbar has been merged into irqchip/core.
+
+thx,
+
+Jason.
