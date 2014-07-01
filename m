@@ -1,73 +1,63 @@
-From: Sachin Kamat <spk.linux@gmail.com>
-Subject: Re: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for Exynos3250
-Date: Tue, 1 Jul 2014 09:40:47 +0530
-Message-ID: <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
-References: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
-	<CAK5sBcFJMK-y+MZPXCufKEmp=v1nFJHstvNTczsQ3ez3SUPbKw@mail.gmail.com>
-	<53B23362.7080103@samsung.com>
+From: Rob Herring <robherring2-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: Re: [PATCH] Adding selftest testdata dynamically into live tree
+Date: Mon, 30 Jun 2014 23:49:10 -0500
+Message-ID: <CAL_Jsq+AJKE2krv1EfLi5fFzZEVd1HVEiHf6F8zLLPU97jUUwQ@mail.gmail.com>
+References: <1404085743-6974-1-git-send-email-gaurav.minocha.os@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <53B23362.7080103@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Chanwoo Choi <cw00.choi@samsung.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404085743-6974-1-git-send-email-gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <rob.herring-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, gaurav.minocha-cmaem7PIVQRC8prJL3GQQw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chanwoo,
-
-On Tue, Jul 1, 2014 at 9:34 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
-> Hi Sachin,
+On Sun, Jun 29, 2014 at 6:49 PM, Gaurav Minocha
+<gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> wrote:
+> This patch attaches selftest's device tree data (required by /drivers/of/selftest.c)
+> dynamically into live device tree. First, it links selftest device tree data into the
+> kernel image and then iterates over all the nodes and attaches them into the live tree.
 >
-> On 07/01/2014 12:33 PM, Sachin Kamat wrote:
->> Hi Chanwoo,
->>
->> On Tue, Jul 1, 2014 at 6:10 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->>> This patch add TMU (Thermal Management Unit) dt node to monitor the high
->>> temperature for Exynos3250.
->>>
->>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>> ---
->>> This patch has a dependency on following patch [1]:
->>>  [1] https://lkml.org/lkml/2014/6/30/805
->>>
->>>  arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
->>>  1 file changed, 10 insertions(+)
->>>
->>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->>> index 3660cab..1e566af 100644
->>> --- a/arch/arm/boot/dts/exynos3250.dtsi
->>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->>> @@ -192,6 +192,16 @@
->>>                         status = "disabled";
->>>                 };
->>>
->>> +               tmu: tmu@100C0000 {
->>> +                       compatible = "samsung,exynos3250-tmu";
->>> +                       interrupt-parent = <&gic>;
->>> +                       reg = <0x100C0000 0x100>;
->>> +                       interrupts = <0 216 0>;
->>> +                       clocks = <&cmu CLK_TMU_APBIF>;
->>> +                       clock-names = "tmu_apbif";
->>> +                       status = "disabled";
->>
->> I don't think there would be any board specific properties needed. Hence
->> leave the status as enabled (by deleting the above line).
->>
+> This patch will remove the manual process of addition and removal of selftest device
+> tree data into the machine's dts file.
 >
-> I think that if specific board need TMU feature, dts file for specific board
-> should include tmu dt node with 'okay' status. The specific board based on
-> Exynos3250 might not need TMU feature.
+> Tested successfully with current selftest's testcases.
 
-The status field in DT node is not meant for stating the build configuration but
-represents the readiness of the hardware for usage on the platform. If
-a particular
-board does not need this feature it needs to be disabled in the build
-config and only
-for any special requirements disable it in board file.
+Perhaps a follow-up patch would be to remove the added nodes. I don't
+think that would be dependent on the overlay support. One comment
+below, otherwise:
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 
 
--- 
-Regards,
-Sachin.
+>
+> Signed-off-by: Gaurav Minocha <gaurav.minocha.os-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  arch/arm/boot/dts/versatile-pb.dts                 |    2 -
+>  drivers/of/Kconfig                                 |    3 +-
+>  drivers/of/Makefile                                |    3 +-
+>  drivers/of/selftest.c                              |  102 ++++++++++++++++++++
+>  .../{testcases.dtsi => testcases.dts}              |    1 +
+>  5 files changed, 107 insertions(+), 4 deletions(-)
+>  rename drivers/of/testcase-data/{testcases.dtsi => testcases.dts} (92%)
+
+[...]
+
+> +/**
+> + *     selftest_data_init - Reads, copies data from
+> + *     linked tree and attaches it to the live tree
+> + */
+> +static int selftest_data_init(void)
+
+This can be __init.
+
+> +{
+> +       int size;
+> +       extern uint8_t __dtb_testcases_begin[];
+> +       extern uint8_t __dtb_testcases_end[];
+> +
+> +       selftest_data = (void *)__dtb_testcases_begin;
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
