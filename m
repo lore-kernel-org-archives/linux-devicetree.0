@@ -1,151 +1,82 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: [PATCH v8 6/9] pci: Introduce a domain number for pci_host_bridge.
-Date: Tue,  1 Jul 2014 19:43:31 +0100
-Message-ID: <1404240214-9804-7-git-send-email-Liviu.Dudau@arm.com>
+Subject: [PATCH v8 9/9] pci: Remap I/O bus resources into CPU space with pci_remap_iospace()
+Date: Tue,  1 Jul 2014 19:43:34 +0100
+Message-ID: <1404240214-9804-10-git-send-email-Liviu.Dudau@arm.com>
 References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Cc: Device Tree ML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Make it easier to discover the domain number of a bus by storing
-the number in pci_host_bridge for the root bus. Several architectures
-have their own way of storing this information, so it makes sense
-to try to unify the code. While at this, add a new function that
-creates a root bus in a given domain and make pci_create_root_bus()
-a wrapper around this function.
+Introduce a default implementation for remapping PCI bus I/O resources
+onto the CPU address space. Architectures with special needs may
+provide their own version, but most should be able to use this one.
 
 Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-Tested-by: Tanmay Inamdar <tinamdar@apm.com>
 ---
- drivers/pci/probe.c | 41 +++++++++++++++++++++++++++++++++--------
- include/linux/pci.h |  4 ++++
- 2 files changed, 37 insertions(+), 8 deletions(-)
+ drivers/pci/pci.c   | 33 +++++++++++++++++++++++++++++++++
+ include/linux/pci.h |  3 +++
+ 2 files changed, 36 insertions(+)
 
-diff --git a/drivers/pci/probe.c b/drivers/pci/probe.c
-index 2c92662..abf5e82 100644
---- a/drivers/pci/probe.c
-+++ b/drivers/pci/probe.c
-@@ -1748,8 +1748,9 @@ void __weak pcibios_remove_bus(struct pci_bus *bus)
- {
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 8e65dc3..a90df97 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -2708,6 +2708,39 @@ int pci_request_regions_exclusive(struct pci_dev *pdev, const char *res_name)
  }
+ EXPORT_SYMBOL(pci_request_regions_exclusive);
  
--struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
--		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-+struct pci_bus *pci_create_root_bus_in_domain(struct device *parent,
-+		int domain, int bus, struct pci_ops *ops, void *sysdata,
-+		struct list_head *resources)
- {
- 	int error;
- 	struct pci_host_bridge *bridge;
-@@ -1762,27 +1763,31 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 
- 	bridge = pci_alloc_host_bridge();
- 	if (!bridge)
--		return NULL;
-+		return ERR_PTR(-ENOMEM);
- 
- 	bridge->dev.parent = parent;
- 	bridge->dev.release = pci_release_host_bridge_dev;
-+	bridge->domain_nr = domain;
- 
- 	b = pci_alloc_bus();
--	if (!b)
-+	if (!b) {
-+		error = -ENOMEM;
- 		goto err_out;
-+	}
- 
- 	b->sysdata = sysdata;
- 	b->ops = ops;
- 	b->number = b->busn_res.start = bus;
--	b2 = pci_find_bus(pci_domain_nr(b), bus);
-+	b2 = pci_find_bus(bridge->domain_nr, bus);
- 	if (b2) {
- 		/* If we already got to this bus through a different bridge, ignore it */
- 		dev_dbg(&b2->dev, "bus already known\n");
-+		error = -EEXIST;
- 		goto err_bus_out;
- 	}
- 
- 	bridge->bus = b;
--	dev_set_name(&bridge->dev, "pci%04x:%02x", pci_domain_nr(b), bus);
-+	dev_set_name(&bridge->dev, "pci%04x:%02x", bridge->domain_nr, bus);
- 	error = pcibios_root_bridge_prepare(bridge);
- 	if (error)
- 		goto err_out;
-@@ -1801,7 +1806,7 @@ struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 
- 	b->dev.class = &pcibus_class;
- 	b->dev.parent = b->bridge;
--	dev_set_name(&b->dev, "%04x:%02x", pci_domain_nr(b), bus);
-+	dev_set_name(&b->dev, "%04x:%02x", bridge->domain_nr, bus);
- 	error = device_register(&b->dev);
- 	if (error)
- 		goto class_dev_reg_err;
-@@ -1851,7 +1856,27 @@ err_bus_out:
- 	kfree(b);
- err_out:
- 	kfree(bridge);
--	return NULL;
-+	return ERR_PTR(error);
++/**
++ *	pci_remap_iospace - Remap the memory mapped I/O space
++ *	@res: Resource describing the I/O space
++ *	@phys_addr: physical address where the range will be mapped.
++ *
++ *	Remap the memory mapped I/O space described by the @res
++ *	into the CPU physical address space. Only architectures
++ *	that have memory mapped IO defined (and hence PCI_IOBASE)
++ *	should call this function.
++ */
++int __weak pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr)
++{
++	int err = -ENODEV;
++
++#ifdef PCI_IOBASE
++	if (!(res->flags & IORESOURCE_IO))
++		return -EINVAL;
++
++	if (res->end > IO_SPACE_LIMIT)
++		return -EINVAL;
++
++	err = ioremap_page_range(res->start + (unsigned long)PCI_IOBASE,
++				res->end + 1 + (unsigned long)PCI_IOBASE,
++				phys_addr, __pgprot(PROT_DEVICE_nGnRE));
++#else
++	/* this architecture does not have memory mapped I/O space,
++	   so this function should never be called */
++	WARN_ON(1);
++#endif
++
++	return err;
 +}
 +
-+struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
-+		struct pci_ops *ops, void *sysdata, struct list_head *resources)
-+{
-+	int domain_nr;
-+	struct pci_bus *b = pci_alloc_bus();
-+	if (!b)
-+		return NULL;
-+
-+	b->sysdata = sysdata;
-+	domain_nr = pci_domain_nr(b);
-+	kfree(b);
-+
-+	b = pci_create_root_bus_in_domain(parent, domain_nr, bus,
-+				ops, sysdata, resources);
-+	if (IS_ERR(b))
-+		return NULL;
-+
-+	return b;
- }
- 
- int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int bus_max)
+ static void __pci_set_master(struct pci_dev *dev, bool enable)
+ {
+ 	u16 old_cmd, cmd;
 diff --git a/include/linux/pci.h b/include/linux/pci.h
-index 466bcd1..7e7b939 100644
+index 556dc5f..65fb1fc 100644
 --- a/include/linux/pci.h
 +++ b/include/linux/pci.h
-@@ -401,6 +401,7 @@ struct pci_host_bridge_window {
- struct pci_host_bridge {
- 	struct device dev;
- 	struct pci_bus *bus;		/* root bus */
-+	int domain_nr;
- 	struct list_head windows;	/* pci_host_bridge_windows */
- 	void (*release_fn)(struct pci_host_bridge *);
- 	void *release_data;
-@@ -769,6 +770,9 @@ struct pci_bus *pci_scan_bus(int bus, struct pci_ops *ops, void *sysdata);
- struct pci_bus *pci_create_root_bus(struct device *parent, int bus,
- 				    struct pci_ops *ops, void *sysdata,
- 				    struct list_head *resources);
-+struct pci_bus *pci_create_root_bus_in_domain(struct device *parent,
-+			int domain, int bus, struct pci_ops *ops,
-+			void *sysdata, struct list_head *resources);
- int pci_bus_insert_busn_res(struct pci_bus *b, int bus, int busmax);
- int pci_bus_update_busn_res_end(struct pci_bus *b, int busmax);
- void pci_bus_release_busn_res(struct pci_bus *b);
+@@ -1100,6 +1100,9 @@ int __must_check pci_bus_alloc_resource(struct pci_bus *bus,
+ 						  resource_size_t),
+ 			void *alignf_data);
+ 
++
++int pci_remap_iospace(const struct resource *res, phys_addr_t phys_addr);
++
+ static inline dma_addr_t pci_bus_address(struct pci_dev *pdev, int bar)
+ {
+ 	struct pci_bus_region region;
 -- 
 2.0.0
