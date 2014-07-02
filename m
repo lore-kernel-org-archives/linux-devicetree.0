@@ -1,81 +1,65 @@
-From: Oliver Hartkopp <socketcan@hartkopp.net>
-Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
-Date: Wed, 02 Jul 2014 19:54:03 +0200
-Message-ID: <53B4473B.2050003@hartkopp.net>
-References: <1403863246-18822-1-git-send-email-b29396@freescale.com> <1403863246-18822-2-git-send-email-b29396@freescale.com> <53ADB1E8.1030504@hartkopp.net> <20140630082622.GB25689@shlinux1.ap.freescale.net>
+From: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Wed, 2 Jul 2014 19:02:12 +0100
+Message-ID: <20140702180212.GS32514@n2100.arm.linux.org.uk>
+References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
+ <20140702195154.47d6f6b4@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <20140630082622.GB25689@shlinux1.ap.freescale.net>
-Sender: linux-can-owner@vger.kernel.org
-To: mkl@pengutronix.de
-Cc: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org, wg@grandegger.com, devicetree@vger.kernel.org
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20140702195154.47d6f6b4@armhf>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Marc,
+On Wed, Jul 02, 2014 at 07:51:54PM +0200, Jean-Francois Moine wrote:
+> On Wed, 2 Jul 2014 18:56:28 +0200
+> Andrew Lunn <andrew@lunn.ch> wrote:
+> 
+> > How well will this work with Russell concept of a front end and two
+> > backends? Can you uses your CODEC twice, once with the I2S backend and
+> > a second time with the S/PDIF backend?
+> 
+> Hi Andrew,
+> 
+> The TDA998x CODEC has two functions:
+> - it sets the possible formats and rates when the screen connects and
+> - it sets the audio input port when audio streaming starts.
+> 
+> I tested this CODEC with both DAPM and DPCM. If the audio subsystem
+> asks for streaming on both I2S and S/PDIF, only the last call is served
+> (this depends on the order of the DAI links in the audio card creation
+> table).
+> 
+> As I told to Russell, DPCM just asks for a 'system' DAI (front-end),
+> but it also asks for some additional code in the kirkwood DMA driver
+> because all PCMs are activated on streaming start.
 
-I'm not really familiar with the naming concept in device trees.
+Well, as far as I'm concerned right now, it's for Mark to sort out this
+situation, and tell us what he wants to do with the Kirkwood stuff.  I
+suspect he's keeping quiet because he doesn't care about it.
 
-What is your opinion about the remarks below?
+Given that he's the one with the knowledge of DPCM, and he's the maintainer
+of ASoC, he has the ultimate responsibility for sorting out this and
+giving direction as to how he wants to proceed.
 
-Regards,
-Oliver
+As I understand it though, my solution is the full and proper DPCM solution,
+and I believe that what's currently in mainline is not a DPCM solution.
 
-On 30.06.2014 10:26, Dong Aisheng wrote:
-> On Fri, Jun 27, 2014 at 08:03:20PM +0200, Oliver Hartkopp wrote:
+Mark needs to correct that, because he is one of the few who knows this
+stuff.
 
->>> +  for each elements definition.
->>> +
->>> +Example:
->>> +canfd1: canfd@020e8000 {
->>    ^^^^^^  ^^^^^
->>
->> There's no reason to name this canfd. The fact that the controller supports
->> CAN FD is provided by priv->ctrlmode_supported and the CAN_CTRLMODE_FD bit.
->>
-> 
-> Just because mx6sx spec calling it CANFD at many places.
-> e.g.
-> Interrupts:
-> 146 CANFD1 CANFD1 interrupt request
-> 147 CANFD2 CANFD2 interrupt request
-> Memory Map:
-> 020F_0000 020F_3FFF CANFD2 16 KB
-> 020E_8000 020E_BFFF CANFD1 16 KB
-> So i used canfd firstly.
-> CCM:
-> CANFD
-> ips_clk can_clk_root CCGR1[CG15] (canfd_clk_enable)
-> m_can_0_cclk can_clk_root CCGR1[CG15] (canfd_clk_enable)
-> m_can_0_ips_clk can_clk_root CCGR1[CG15] (canfd_clk_enable)
-> 
->> Just write
->>
->> can1: can@020e8000 {
->>
-> 
-> I'm ok with this style.
-> Maybe the following is better:
-> m_can1: can@020e8000 {
-> 
->>> +	compatible = "bosch,m_can";
->>> +	reg = <0x020e8000 0x4000>, <0x02298000 0x4000>;
->>> +	reg-names = "canfd", "message_ram";
->>                      ^^^^^
->> dito.
->>
-> How about m_can?
-> Since it's IP driver, not depends on how SoC naming it.
-> 
->>> +	interrupts = <0 114 0x04>;
->>> +	clocks = <&clks IMX6SX_CLK_CANFD>;
->>                                    ^^^^^
->> dito.
->>
-> 
-> Not for this one, because imx6sx spec calling it CANFD in Clock
-> chaptor.
-> We want to align with our spec since it's arch code.
-> 
-
+-- 
+FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
+improving, and getting towards what was expected from it.
