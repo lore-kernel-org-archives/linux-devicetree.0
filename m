@@ -1,59 +1,53 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] rcar_can: add device tree support
-Date: Thu, 03 Jul 2014 00:26:07 +0400
-Message-ID: <53B46ADF.9070602@cogentembedded.com>
-References: <201407020227.04235.sergei.shtylyov@cogentembedded.com> <53B33B45.1060205@pengutronix.de> <20140702101437.GC14665@leverpostej>
+From: Rob Clark <robdclark@gmail.com>
+Subject: Re: [RFC] drm/msm: DT support for 8960/8064
+Date: Wed, 2 Jul 2014 16:41:43 -0400
+Message-ID: <CAF6AEGuzQCRB-qQF_6e_bH5OTY44wq5kx00RXvcDcq4BtOU62Q@mail.gmail.com>
+References: <1404241055-3579-1-git-send-email-robdclark@gmail.com>
+	<53B4169C.2030207@codeaurora.org>
+	<CAOesGMhaHwr7hon7H+-gEwELS8ZQicsPDWDEoHR6xkrDk3HU0Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140702101437.GC14665@leverpostej>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>, Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "vksavl@gmail.com" <vksavl@gmail.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+In-Reply-To: <CAOesGMhaHwr7hon7H+-gEwELS8ZQicsPDWDEoHR6xkrDk3HU0Q@mail.gmail.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Olof Johansson <olof@lixom.net>
+Cc: jcrouse@codeaurora.org, DRI mailing list <dri-devel@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello.
-
-On 07/02/2014 02:14 PM, Mark Rutland wrote:
-
->>> Add support of the device tree probing for the Renesas R-Car CAN controllers
->>> documenting the device tree bindings as necessary.
-
-[...]
-
->>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
-[...]
-
->>> Index: net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
->>> ===================================================================
+On Wed, Jul 2, 2014 at 1:12 PM, Olof Johansson <olof@lixom.net> wrote:
+> On Wed, Jul 2, 2014 at 7:26 AM, Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>> On 07/01/2014 12:57 PM, Rob Clark wrote:
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/drm/msm/gpu.txt
+>>> b/Documentation/devicetree/bindings/drm/msm/gpu.txt
+>>> new file mode 100644
+>>> index 0000000..6e33efe
 >>> --- /dev/null
->>> +++ net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
->>> @@ -0,0 +1,40 @@
-[...]
-
->>> +- reg: physical base address and size of the R-Car CAN register map.
->>> +- interrupts: interrupt specifier for the sole interrupt.
->>> +- clocks: phandle and clock specifier for the R-Car CAN clock input.
->>> +- pinctrl-0: pin control group to be used for this controller.
->>> +- pinctrl-names: must be "default".
+>>> +++ b/Documentation/devicetree/bindings/drm/msm/gpu.txt
+>>> @@ -0,0 +1,51 @@
+>>> +Qualcomm adreno/snapdragon GPU
 >>> +
->>> +Optional properties:
->>> +- clock-select: R-Car CAN Clock Source Select. Valid values are:
->>> +		<0x0> (default) : Peripheral clock (clkp1)
->>> +		<0x1> : Peripheral clock (clkp2)
->>> +		<0x3> : Externally input clock
+>>> +Required properties:
+>>> +- compatible: "qcom,adreno-3xx"
+>>
+>>
+>> 3xx won't always be the only game in town. Not that I have a better name,
+>> just pointing out that it has a limited shelf life.
+>
+> Actually, we prefer to avoid "xx" compatible strings. The compatible
+> should be the first actual device that is part of the xx series, and
+> newer IP should claim to be compatible with their own version plus the
+> original one (if they are possible to use with the same exact
+> programming model and only need extra code to deal with extensions).
+>
+> That way you'll also have a way to tell them apart in the driver if
+> you can't derive it out of register contents, etc.
 
-> What's this for, and how does this interact with the single clock listed
-> above?
+well, we could put entire chip-id (including the patch revision) in
+the compatible string.. ie. qcom,adreno-320.2
 
-    That's supposed to select a source for the CAN bus clock. Looking back at 
-the driver, it seems to actually only support the value of 0. That's something 
-we haven't given enough attention to clearly... :-/
+BR,
+-R
 
-> THanks,
-> Mark.
-
-WBR, Sergei
-
+>
+> -Olof
