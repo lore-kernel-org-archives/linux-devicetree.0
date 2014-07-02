@@ -1,58 +1,68 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 2/9] pci: Export find_pci_host_bridge() function.
-Date: Wed, 02 Jul 2014 21:12:05 +0200
-Message-ID: <7101568.8DVJFku5jp@wuerfel>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <1404240214-9804-3-git-send-email-Liviu.Dudau@arm.com> <CACoXjck+aU33=kSy=KCGABNXNR7tj2KndAiBqEDK7wQ_Qei80Q@mail.gmail.com>
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
+Date: Wed, 02 Jul 2014 21:13:07 +0200
+Message-ID: <53B459C3.6070807@pengutronix.de>
+References: <1403863246-18822-1-git-send-email-b29396@freescale.com> <1403863246-18822-2-git-send-email-b29396@freescale.com> <53ADB1E8.1030504@hartkopp.net> <20140630082622.GB25689@shlinux1.ap.freescale.net> <53B4473B.2050003@hartkopp.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACoXjck+aU33=kSy=KCGABNXNR7tj2KndAiBqEDK7wQ_Qei80Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tanmay Inamdar <tinamdar@apm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+ protocol="application/pgp-signature";
+ boundary="OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi"
+Return-path: <linux-can-owner@vger.kernel.org>
+In-Reply-To: <53B4473B.2050003@hartkopp.net>
+Sender: linux-can-owner@vger.kernel.org
+To: Oliver Hartkopp <socketcan@hartkopp.net>
+Cc: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org, wg@grandegger.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 July 2014 11:06:38 Tanmay Inamdar wrote:
-> On Tue, Jul 1, 2014 at 11:43 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
-> > This is a useful function and we should make it visible outside the
-> > generic PCI code. Export it as a GPL symbol.
-> >
-> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
-> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
-> > ---
-> >  drivers/pci/host-bridge.c | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
-> > index 0e5f3c9..36c669e 100644
-> > --- a/drivers/pci/host-bridge.c
-> > +++ b/drivers/pci/host-bridge.c
-> > @@ -16,12 +16,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
-> >         return bus;
-> >  }
-> >
-> > -static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
-> > +struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
-> >  {
-> >         struct pci_bus *root_bus = find_pci_root_bus(bus);
-> >
-> >         return to_pci_host_bridge(root_bus->bridge);
-> >  }
-> > +EXPORT_SYMBOL_GPL(find_pci_host_bridge);
-> 
-> Is there any specific reason behind making this symbol GPL? I think
-> the other functions in this file are just EXPORT_SYMBOL. Ultimately
-> companies which have non gpl Linux modules (nvidia) will face issue
-> using this API.
-> 
-> The same applies to 'of_create_pci_host_bridge'.
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
 
-I think EXPORT_SYMBOL_GPL() is better here. The new symbols are unlikely
-to be used by a peripheral device driver, and PCI host controllers are
-already restricted by EXPORT_SYMBOL_GPL.
+On 07/02/2014 07:54 PM, Oliver Hartkopp wrote:
+> I'm not really familiar with the naming concept in device trees.
+>=20
+> What is your opinion about the remarks below?
 
-nvidia will certainly not do a PCI host controller driver that is not
-upstream or not GPL-compatible.
+The entries in the DT, at least on freescale baords, follow the naming
+scheme of the reference manual. E.g. on the mx25 it's can1 and can2:
 
-	Arnd
+    can1: can@43f88000 { ... }
+    can2: can@43f8c000 { ... }
+
+And on the mx28, its:
+
+    can0: can@80032000 { ... }
+    can1: can@80034000 { ... }
+
+Because the imx25 datasheet uses a "1" based counting scheme, while the
+imx28 uses a "0" based one.
+
+So it's best practise to follow the naming and numbering scheme of the
+hardware reference manual.....and if you have access to the
+documentation of the m_can core, use clock names of the m_can core for
+the clock-names property.
+
+Marc
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
+
+
+--OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+
+iEYEARECAAYFAlO0WcMACgkQjTAFq1RaXHPFFwCaAi6n0t6W6LUxGCTUznVssXmU
+M0IAn3z/Ckj5p/vjkzqQ3BQtHFTGddpl
+=yhAC
+-----END PGP SIGNATURE-----
+
+--OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi--
