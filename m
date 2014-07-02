@@ -1,82 +1,45 @@
-From: Chanwoo Choi <cw00.choi@samsung.com>
-Subject: Re: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for
- Exynos3250
-Date: Wed, 02 Jul 2014 08:52:15 +0900
-Message-ID: <53B349AF.4080606@samsung.com>
-References: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
- <CAK5sBcFJMK-y+MZPXCufKEmp=v1nFJHstvNTczsQ3ez3SUPbKw@mail.gmail.com>
- <53B23362.7080103@samsung.com>
- <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
+From: Huang Tao <huangtao@rock-chips.com>
+Subject: Re: [PATCH 2/2] ASoC: add driver for Rockchip RK3xxx
+	I2S controller
+Date: Wed, 02 Jul 2014 09:01:49 +0800
+Message-ID: <53B359FD.3080809@rock-chips.com>
+References: <1404203860-30712-1-git-send-email-xjq@rock-chips.com>
+ <1404204458-30881-1-git-send-email-xjq@rock-chips.com>
+ <20140701170747.GA15028@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sachin Kamat <spk.linux@gmail.com>
-Cc: Kukjin Kim <kgene.kim@samsung.com>, Tomasz Figa <t.figa@samsung.com>, Ben Dooks <ben-linux@fluff.org>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Kyungmin Park <kyungmin.park@samsung.com>, Russell King <linux@arm.linux.org.uk>, "open list:OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20140701170747.GA15028@sirena.org.uk>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>
+Cc: yzq@rock-chips.com, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, heiko@sntech.de, tiwai@suse.de, linux-kernel@vger.kernel.org, zhangqing@rock-chips.com, lgirdwood@gmail.com, robh+dt@kernel.org, kever.yang@rock-chips.com, zyw@rock-chips.com, jianqun <xjq@rock-chips.com>, kfx@rock-chips.com, grant.likely@linaro.org, cf@rock-chips.com, hj@rock-chips.com, zhenfu.fang@rock-chips.com
 List-Id: devicetree@vger.kernel.org
 
-On 07/01/2014 01:10 PM, Sachin Kamat wrote:
-> Hi Chanwoo,
-> 
-> On Tue, Jul 1, 2014 at 9:34 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->> Hi Sachin,
->>
->> On 07/01/2014 12:33 PM, Sachin Kamat wrote:
->>> Hi Chanwoo,
->>>
->>> On Tue, Jul 1, 2014 at 6:10 AM, Chanwoo Choi <cw00.choi@samsung.com> wrote:
->>>> This patch add TMU (Thermal Management Unit) dt node to monitor the high
->>>> temperature for Exynos3250.
->>>>
->>>> Signed-off-by: Chanwoo Choi <cw00.choi@samsung.com>
->>>> Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
->>>> ---
->>>> This patch has a dependency on following patch [1]:
->>>>  [1] https://lkml.org/lkml/2014/6/30/805
->>>>
->>>>  arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
->>>>  1 file changed, 10 insertions(+)
->>>>
->>>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->>>> index 3660cab..1e566af 100644
->>>> --- a/arch/arm/boot/dts/exynos3250.dtsi
->>>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->>>> @@ -192,6 +192,16 @@
->>>>                         status = "disabled";
->>>>                 };
->>>>
->>>> +               tmu: tmu@100C0000 {
->>>> +                       compatible = "samsung,exynos3250-tmu";
->>>> +                       interrupt-parent = <&gic>;
->>>> +                       reg = <0x100C0000 0x100>;
->>>> +                       interrupts = <0 216 0>;
->>>> +                       clocks = <&cmu CLK_TMU_APBIF>;
->>>> +                       clock-names = "tmu_apbif";
->>>> +                       status = "disabled";
->>>
->>> I don't think there would be any board specific properties needed. Hence
->>> leave the status as enabled (by deleting the above line).
->>>
->>
->> I think that if specific board need TMU feature, dts file for specific board
->> should include tmu dt node with 'okay' status. The specific board based on
->> Exynos3250 might not need TMU feature.
-> 
-> The status field in DT node is not meant for stating the build configuration but
-> represents the readiness of the hardware for usage on the platform. If
-> a particular
-> board does not need this feature it needs to be disabled in the build
-> config and only
-> for any special requirements disable it in board file.
-
-TMU (Thermal Management Unit) needs specific regulator for TMU power as following:
-The regulator for TMU is dependent on board.
-
-For exmaple: in board dts file including tmu dt
-
-	&tmu {
-		vtmu-supply = <&ldo7_reg>;
-		status = "okay";
-	};
+SGksIE1hcms6Cgrkuo4gMjAxNOW5tDA35pyIMDLml6UgMDE6MDcsIE1hcmsgQnJvd24g5YaZ6YGT
+Ogo+PiArc3RhdGljIGlubGluZSB2b2lkIGkyc193cml0ZWwoc3RydWN0IHJrX2kyc19kZXYgKmky
+cywgdTMyIHZhbHVlLAo+PiA+ICsJCQkgICAgICB1bnNpZ25lZCBpbnQgb2Zmc2V0KQo+PiA+ICt7
+Cj4+ID4gKwl3cml0ZWxfcmVsYXhlZCh2YWx1ZSwgaTJzLT5yZWdzICsgb2Zmc2V0KTsKPj4gPiAr
+fQo+PiA+ICsKPj4gPiArc3RhdGljIGlubGluZSB1MzIgaTJzX3JlYWRsKHN0cnVjdCBya19pMnNf
+ZGV2ICppMnMsIHVuc2lnbmVkIGludCBvZmZzZXQpCj4+ID4gK3sKPj4gPiArCXJldHVybiByZWFk
+bF9yZWxheGVkKGkycy0+cmVncyArIG9mZnNldCk7Cj4+ID4gK30KPiBQZXJoYXBzIHVzZSByZWdt
+YXA/ICBUaGUgbWFpbiBhZHZhbnRhZ2Ugd291bGQgYmUgdGhlIGRlYnVnCj4gaW5mcmFzdHJ1Y3R1
+cmUsIHRob3VnaCB5b3UgY291bGQgYWxzbyB1c2UgX3VwZGF0ZV9iaXRzKCkgdG8gcmVkdWNlIHRo
+ZQo+IGFtb3VudCBvZiB0aW1lIHNwZW50IGxvY2tlZC4KPgpBcmUgeW91IHN1cmU/IFRoaXMgaXMg
+YSBJMlMgZHJpdmVyLCB3ZSBjYW4gd3JpdGUgdGhlIHJlZ2lzdGVyIGRpcmVjdGx5LApkbyBub3Qg
+dGhyb3VnaCBJMkMgb3IgU1BJIGJ1cy4KV3JpdGUgYSByZWdpc3RlciBpcyBvbmx5IGEgZmV3IGlu
+c3RydWN0aW9ucyBvbiBBUk0sIGJ1dCB3cml0ZSB0aHJvdWdoCnJlZ21hcCwgaXQgbWF5IHRha2Ug
+YSBsb25nIHBhdGguCkkgdGhpbmsgaXQgd2lsbCBqdXN0IGNvbnN1bWUgQ1BVIHBvd2VyIGFuZCBt
+YWtlIHRoZSB3aG9sZSB0aGluZyBtb3JlCmNvbXBsZXguCkNvdWxkIHlvdSB0ZWxsIG1lIHdoYXQg
+YmVuZWZpdHMgd2UgY2FuIGdldCBpZiB1c2UgcmVnbWFwPyBPciBzb21ldGhpbmcgSQpqdXN0IG1p
+c3Npbmc/CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpB
+bHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5vcmcKaHR0cDov
+L21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2EtZGV2ZWwK
