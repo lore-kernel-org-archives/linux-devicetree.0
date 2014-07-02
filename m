@@ -1,90 +1,83 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v2 2/2] usb: gadget: Add xilinx axi usb2 device support
-Date: Wed, 2 Jul 2014 11:46:30 -0500
-Message-ID: <20140702164629.GI5541@saruman.home>
-References: <20140421160802.GA22794@saruman.home>
- <Pine.LNX.4.44L0.1404211228190.1201-100000@iolanthe.rowland.org>
- <CALHRZur7+MaYXbWOfbvjggPN7_eYAE+th5VNbcLP=ehvm0HGsA@mail.gmail.com>
- <20140422144944.GF5524@saruman.home>
- <CALHRZuoq32qoh70hbb2LtVJNgkwB1j6bvzmYONmxcn3mBnGONQ@mail.gmail.com>
- <20140430165437.GO23679@saruman.home>
- <CALHRZur13jLsszV8m_2q1nnBcd00P+2jO60Bvn48aKeu0f7yNQ@mail.gmail.com>
-Reply-To: <balbi@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/3 v5] spi: s3c64xx: fix broken "cs_gpios" usage in the
+ driver
+Date: Wed, 2 Jul 2014 17:56:51 +0100
+Message-ID: <20140702165651.GK410@sirena.org.uk>
+References: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="N8NGGaQn1mzfvaPg"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="d6d1KVhp94hk3Jrm"
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CALHRZur13jLsszV8m_2q1nnBcd00P+2jO60Bvn48aKeu0f7yNQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: sundeep subbaraya <sundeep.lkml@gmail.com>
-Cc: "balbi@ti.com" <balbi@ti.com>, Alan Stern <stern@rowland.harvard.edu>, Subbaraya Sundeep Bhatta <subbaraya.sundeep.bhatta@xilinx.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <michals@xilinx.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Subbaraya Sundeep Bhatta <sbhatta@xilinx.com>
+In-Reply-To: <1402631992-500-1-git-send-email-ch.naveen@samsung.com>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+Cc: linux-arm-kernel@lists.infradead.org, spi-devel-general@lists.sourceforge.net, linux-samsung-soc@vger.kernel.org, naveenkrishna.ch@gmail.com, grant.likely@secretlab.ca, jaswinder.singh@linaro.org, kgene.kim@samsung.com, cpgs@samsung.com, devicetree@vger.kernel.org, Tomasz Figa <t.figa@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
---N8NGGaQn1mzfvaPg
+
+--d6d1KVhp94hk3Jrm
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-Hi,
+On Fri, Jun 13, 2014 at 09:29:50AM +0530, Naveen Krishna Chatradhi wrote:
 
-On Sun, May 25, 2014 at 11:10:30PM +0530, sundeep subbaraya wrote:
-> Hi Felipe,
->=20
-> Please take a look at below about how this IP works:
->=20
-> IN:
->       req.buf ---> DMA (transfers from ddr to IP buffer, raise DMA
-> done interrupt and set Buffer ready to transfer data to Host)---->Host
-> PC
->   buffer sent interrupt
->=20
-> OUT:
->      Host PC--->buffer ready interrupt--->DMA (transfer from IP buffer
-> to DDR,DMA done interrupt, set Buffer ready to receive next data from
-> Host)-->req.buf
->=20
-> I written logic to call completion in DMA done handler because it
-> works for both IN and OUT eps. But I see significant performance
-> degradation (by copying a file to mass storage gadget). DMA can handle
-> unaligned address too but it has ep max limit (say 512 for bulk).
-> Hence it is SW job to split packets and to drive DMA till req.length
-> completes. I feel polling for a while is faster than switching between
-> interrupt handler back and forth rapidly. Moreover, DMA may or may not
-> be present in IP based on user configuration at design time.
->=20
-> I fixed all other comments expect this one if you do not agree for
-> polling then I may have to create threads and do this stuff. What do
-> you suggest?
+> Hence, spi-s3c64xx.c is broken since "Jun 21 11:26:12 2013" and
+> considering the time with no compliants about the breakage.
 
-Can you resend your driver so we can review again everything you have
-fixed ? I guess you have no other way... polling it is.
+I'm not clear what the breakage is?  Some boards are broken but what's
+the driver issue?
 
-cheers
+>  	if (!spi_get_ctldata(spi)) {
+>  		/* Request gpio only if cs line is asserted by gpio pins */
+> -		if (sdd->cs_gpio) {
+> -			err = gpio_request_one(cs->line, GPIOF_OUT_INIT_HIGH,
+> -					dev_name(&spi->dev));
+> +		if (gpio_is_valid(spi->cs_gpio)) {
+> +			err = gpio_request_one(spi->cs_gpio,
+> +						GPIOF_OUT_INIT_HIGH,
+> +						dev_name(&spi->dev));
+>  			if (err) {
+>  				dev_err(&spi->dev,
+>  					"Failed to get /CS gpio [%d]: %d\n",
+> -					cs->line, err);
+> +					spi->cs_gpio, err);
+>  				goto err_gpio_req;
+>  			}
+> -
+> -			spi->cs_gpio = cs->line;
+> +		} else {
+> +			dev_err(&spi->dev, "chip select gpio is invalid\n");
+> +			return -EINVAL;
+>  		}
 
---=20
-balbi
+This appears to be making it mandatory to specify a GPIO when previously
+it was not mandatory which I believe breaks some SoCs - the native chip
+select has to be used on some devices as there is no pinmux option to
+make it a GPIO (this was why the native chip select support was added).
 
---N8NGGaQn1mzfvaPg
+Also I'd need to check but are you sure that GPIO 0 is not valid?
+
+--d6d1KVhp94hk3Jrm
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
+Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTtDdlAAoJEIaOsuA1yqRE2LIQAJ7ABd5wTSeoPEq+D8BmAYRV
-NKBjosUQ5X4shof7jh5sP2UwH0wHdzXMmIX+qBPxiwUhDLdhUM0yAlHsP3QDXDd0
-XScmrb1xrYE8txH92TxaMYmqSVSiMctPj+6YCOjB1afBRrGfDSAeLpkdeImuz7K3
-2oS3pdlA07I6DnZ/an4ckl1z8dLFYgO4pwoSge4RadEoryp945mZ3/wKctw7SU8c
-7mn6l9MIjsUeYcIzbYwyEvdgUwA/eX/VohTQb+jXIA2aX450bim5xrtNu6L+7xQU
-+3v9LV0ukEOqzeANu81Z6695eU/My/2XwuiObRcXXV47hJuPOjCFVgZhiJD8/FPx
-QUqrV3c8DdBxu6ZDB7gTF2ZjTYHmDZ5ra/hUwCkfD9jdiwbTQtRNCCydl77TwJuD
-ZihK3shkgjRFtoEIYygiD8Q+x6NqWlLD3MFruHIVTK8XAPWw3H8xshKnXKX8bze4
-Ia0smp4JOf/fMdYNW3SnBHD3tNqsvg1863IDwCv+56J7Dovf7ypbV50VTzsmk/Yl
-v+ROvGCzquPO3p8A61P7ZF5VKd2Ep8Hle/L/39udH6DCXhtzd9b4uf9PtEfg2skO
-1/cXQM83GpoHR2nzMwEV/MtoW/Y91oCP3pIu2Vy+MBQqY4Pg02Jcg2q2qeNTYy4X
-df2H/7kwg1MWpwipgFMf
-=Ujk6
+iQIcBAEBAgAGBQJTtDnPAAoJELSic+t+oim9dCwP/0hLN5l2CNp2YeupNQ5L4pGa
+UnIJLuovAICJDzeqh1PrKPlX7iArMZ4G3JPoExDZ8Mr3ng7mK1+8aiIhXfy+ZMre
+H8imblIh5VE1vx83yb6M1oh8uyh4VcUq+xvS6W92KtS+w3VihZDcc3wpfZHO0qEf
+WzaeLXPhzSd6fpfAdueTOwOEX12lFVnpXGcbveeLaqX8whiiI7sd5YphiYoh6N8U
+VYtt1PP443l3JRJy3v4ZW6WOU4lQWRxdUND7mt4klPENe7C8TRW3lvD8mZfbeDq6
+mcvJG0y20tQWrFZKPHcH+JTXugTFCRzPEGulZ20E0xH9G7Rd28SA8co4wnBV0PZ7
+F8HUC03SuXaqzf7zuJq5k1Y6z93plEQ5r/UCAMjIapi1oQwBM3ArYPVALHApXAp9
+eFJCaTbGR0ijXafOTP8Brq7PCNPXTgPuw/7sKDNUY6yIIDREILY/Ka1nUiL73cSu
+mhJ8/Q3RgRDn139gDOL1RYzfKASwrnD/z5NziVmkoOlQO4oC6QSYuCvqw1/2Q6DI
+8e02KNktszNIheIY3u6gxkgnLPwHwz3gFZPw9NVQNKF2U9Qc0Y0gMYoR+SyHhm1q
+gyl6FUzTaLDYALa54Kk1XtGL3Y38UOePlzkU7q1WylgpdIyXAN3hb2ydIQF+pCQT
+h/KGLvsC5cJFo8DtYJj7
+=xynw
 -----END PGP SIGNATURE-----
 
---N8NGGaQn1mzfvaPg--
+--d6d1KVhp94hk3Jrm--
