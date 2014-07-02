@@ -1,50 +1,289 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 3/9] pci: Introduce pci_register_io_range() helper function.
-Date: Wed, 02 Jul 2014 14:38:04 +0200
-Message-ID: <4751391.BGkeOrZGt8@wuerfel>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <1404240214-9804-4-git-send-email-Liviu.Dudau@arm.com>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 1/3] drivers: reset: stih407: Add softreset, powerdown
+ and picophy controllers
+Date: Wed, 2 Jul 2014 13:40:24 +0100
+Message-ID: <20140702124024.GD8809@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1404225047-9495-1-git-send-email-peter.griffin@linaro.org>
+ <1404225047-9495-2-git-send-email-peter.griffin@linaro.org>
+ <20140702084819.GD10311@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404240214-9804-4-git-send-email-Liviu.Dudau@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140702084819.GD10311@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Giuseppe Cavallaro <peppe.cavallaro-qxv4g6HH51o@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Some more detailed comments now
+Hi Lee,
 
-On Tuesday 01 July 2014 19:43:28 Liviu Dudau wrote:
-> +/*
-> + * Record the PCI IO range (expressed as CPU physical address + size).
-> + * Return a negative value if an error has occured, zero otherwise
-> + */
-> +int __weak pci_register_io_range(phys_addr_t addr, resource_size_t size)
-> +{
-> +#ifdef PCI_IOBASE
-> +       struct io_range *res;
+Thanks for reviewing, see my inline comments below
 
-I was confused by the variable naming here: A variable named 'res' is
-normally a 'struct resource'. Maybe better call this 'range'.
+> > This patch adds a softreset, powerdown and picophy reset controllers for
+> > the STiH407 SoC.
+> 
+> s/adds a softreset/adds softreset/
 
-> +       resource_size_t allocated_size = 0;
-> +
-> +       /* check if the range hasn't been previously recorded */
-> +       list_for_each_entry(res, &io_range_list, list) {
-> +               if (addr >= res->start && addr + size <= res->start + size)
-> +                       return 0;
-> +               allocated_size += res->size;
-> +       }
+Fixed in V2
 
-A spin_lock around the list lookup should be sufficient to get around
-the race that Will mentioned.
+> 
+> >  .../bindings/reset/st,sti-picophyreset.txt         |  41 ++++++
+> >  drivers/reset/sti/Kconfig                          |   4 +
+> >  drivers/reset/sti/Makefile                         |   1 +
+> >  drivers/reset/sti/reset-stih407.c                  | 159 +++++++++++++++++++++
+> >  .../dt-bindings/reset-controller/stih407-resets.h  |  60 ++++++++
+> 
+> Documentation is normally split out as a separate patch.
 
-> +       /* range not registed yet, check for available space */
-> +       if (allocated_size + size - 1 > IO_SPACE_LIMIT)
-> +               return -E2BIG;
+Ok will seperate out in v2.
 
-It might be better to limit the size to 64K if it doesn't fit at first.
+> > +Please refer to Documentation/devicetree/bindings/reset/reset.txt
+> > +for common reset controller binding usage.
+> > +
+> > +Required properties:
+> > +- compatible: Should be "st,<chip>-softreset"
+> 
+> You need to list the possible values here in full.
 
+Ok changed in V2
+> 
+> > +- #reset-cells: 1, see below
+> > +
+> > +example:
+> 
+> Nit: s/example/Example
 
-	Arnd
+Changed in V2
+
+> 
+> > +
+> > +	picophyreset: picophyreset-controller {
+> > +		#reset-cells = <1>;
+> > +		compatible = "st,stih407-picophyreset";
+> 
+> Nit: Stick the compatible string at the top.
+
+Changed in V2
+
+> > +
+> > +example:
+> 
+> '\n'
+
+Ok Changed in V2, and I capitialized the 'E' whilst I was there.
+
+> 
+> > +	usb2_picophy0: usbpicophy@0 {
+> > +		resets = <&picophyreset STIH407_PICOPHY0_RESET>;
+> > +	};
+> > +
+> > +Macro definitions for the supported reset channels can be found in:
+> > +include/dt-bindings/reset-controller/stih407-resets.h
+> > diff --git a/drivers/reset/sti/Kconfig b/drivers/reset/sti/Kconfig
+> > index 88d2d03..f8c15a3 100644
+> > --- a/drivers/reset/sti/Kconfig
+> > +++ b/drivers/reset/sti/Kconfig
+> > @@ -12,4 +12,8 @@ config STIH416_RESET
+> >  	bool
+> >  	select STI_RESET_SYSCFG
+> >  
+> > +config STIH407_RESET
+> > +	bool
+> > +	select STI_RESET_SYSCFG
+> > +
+> 
+> No help?
+
+Nope, currently no other platform using reset API has provided help.
+
+> 
+> >  endif
+> > diff --git a/drivers/reset/sti/Makefile b/drivers/reset/sti/Makefile
+> > index be1c976..dc85dfb 100644
+> > --- a/drivers/reset/sti/Makefile
+> > +++ b/drivers/reset/sti/Makefile
+> > @@ -2,3 +2,4 @@ obj-$(CONFIG_STI_RESET_SYSCFG) += reset-syscfg.o
+> >  
+> >  obj-$(CONFIG_STIH415_RESET) += reset-stih415.o
+> >  obj-$(CONFIG_STIH416_RESET) += reset-stih416.o
+> > +obj-$(CONFIG_STIH407_RESET) += reset-stih407.o
+> 
+> Genuine question: how different are these?  Can they be consolidated?
+
+No, the common code is already abstracted into reset-syscfg.c. The SoC specific parts are
+in the reset-stiXYZ files.
+
+> > +#include <linux/module.h>
+> > +#include <linux/of.h>
+> > +#include <linux/of_platform.h>
+> > +#include <linux/platform_device.h>
+> > +
+> > +#include <dt-bindings/reset-controller/stih407-resets.h>
+> > +
+> > +#include "reset-syscfg.h"
+> 
+> May as well squash these up.
+
+Fixed in V2, but alters the style versus the other reset-XYZ files in this 
+directory.
+
+> 
+> > +/*
+> > + * STiH407 Peripheral powerdown definitions.
+> > + */
+> 
+> Should be single line comment.
+
+Fixed in V2.
+> 
+> > +static const char stih407_core[] = "st,stih407-core-syscfg";
+> > +static const char stih407_sbc_reg[] = "st,stih407-sbc-reg-syscfg";
+> > +static const char stih407_lpm[] = "st,stih407-lpm-syscfg";
+> > +
+> > +#define STIH407_PDN_0(_bit) \
+> > +	_SYSCFG_RST_CH(stih407_core, SYSCFG_5000, _bit, SYSSTAT_5500, _bit)
+> > +#define STIH407_PDN_1(_bit) \
+> > +	_SYSCFG_RST_CH(stih407_core, SYSCFG_5001, _bit, SYSSTAT_5501, _bit)
+> > +#define STIH407_PDN_ETH(_bit, _stat) \
+> > +	_SYSCFG_RST_CH(stih407_sbc_reg, SYSCFG_4032, _bit, SYSSTAT_4520, _stat)
+> > +
+> > +/* Powerdown requests control 0 */
+> > +#define SYSCFG_5000	0x0
+> > +#define SYSSTAT_5500	0x7d0
+> 
+> Separate these with a '\n'.
+
+Have fixed in V2
+> 
+> > +/* Powerdown requests control 1 (High Speed Links) */
+> > +#define SYSCFG_5001	0x4
+> > +#define SYSSTAT_5501	0x7d4
+> > +
+> > +/* Ethernet powerdown/status/reset */
+> > +#define	SYSCFG_4032	0x80
+> > +#define	SYSSTAT_4520	0x820
+> > +
+> 
+> What does this '\n' separate? Is it an Ethernet related value, or not?
+
+Fixed in V2, have removed the '\n'
+
+> 
+> > +#define	SYSCFG_4002	0x8
+> 
+> Can you address the formatting for all of the above.  Sometimes tabs
+> are used, other times it's spaces and the padding is also different -
+
+Fixed in V2.
+
+> can you standardise to 3 values post-fixing the '0x' i.e. 0xNNN.
+
+I can change this, but it alters the style versus the other reset-XYZ files
+in this directory.
+
+> 
+> > +static const struct syscfg_reset_channel_data stih407_powerdowns[] = {
+> > +	[STIH407_EMISS_POWERDOWN] = STIH407_PDN_0(1),
+> > +	[STIH407_NAND_POWERDOWN] = STIH407_PDN_0(0),
+> > +	[STIH407_USB3_POWERDOWN] = STIH407_PDN_1(6),
+> > +	[STIH407_USB2_PORT1_POWERDOWN] = STIH407_PDN_1(5),
+> > +	[STIH407_USB2_PORT0_POWERDOWN] = STIH407_PDN_1(4),
+> > +	[STIH407_PCIE1_POWERDOWN] = STIH407_PDN_1(3),
+> > +	[STIH407_PCIE0_POWERDOWN] = STIH407_PDN_1(2),
+> > +	[STIH407_SATA1_POWERDOWN] = STIH407_PDN_1(1),
+> > +	[STIH407_SATA0_POWERDOWN] = STIH407_PDN_1(0),
+> > +	[STIH407_ETH1_POWERDOWN] = STIH407_PDN_ETH(0, 2),
+> > +};
+> 
+> Being a little OCD, I _personally_ like to see the '='s lined up with
+> tabs, but some maintainers don't like that.  Philipp's call I guess.
+
+I will leave this one for the maintainer to decide, as maintaining that sort of
+alignment can be time consuming.
+
+> > +static struct syscfg_reset_controller_data stih407_picophyreset_controller = {
+> > +	.wait_for_ack = false,
+> > +	.nr_channels = ARRAY_SIZE(stih407_picophyresets),
+> > +	.channels = stih407_picophyresets,
+> > +};
+> 
+> I believe these should be const.
+
+Fixed in V2.
+
+> 
+> > +static struct of_device_id stih407_reset_match[] = {
+> > +	{.compatible = "st,stih407-powerdown",
+> > +	 .data = &stih407_powerdown_controller,},
+> > +	{.compatible = "st,stih407-softreset",
+> > +	 .data = &stih407_softreset_controller,},
+> > +	{.compatible = "st,stih407-picophyreset",
+> > +	 .data = &stih407_picophyreset_controller,},
+> 
+> Formatting should be:
+> 
+> 	{
+> 		.compatible = "st,stih407-picophyreset",
+> 	 	.data = &stih407_picophyreset_controller,
+> 	},
+
+Changed in V2, but it alters the style versus other reset-XYZ dfiles in this directory.
+
+> > +	{},
+> > +};
+> > +
+> > +static struct platform_driver stih407_reset_driver = {
+> > +	.probe = syscfg_reset_probe,
+> > +	.driver = {
+> > +		   .name = "reset-stih407",
+> > +		   .owner = THIS_MODULE,
+> 
+> Remove this line, it's done for you as part of
+> platform_driver_register().
+
+Fixed in V2.
+
+> 
+> > +		   .of_match_table = stih407_reset_match,
+> > +		   },
+> 
+> Tabbing is borked.
+
+Fixed in V2
+
+> > +/* Synp GMAC PowerDown */
+> > +#define	STIH407_ETH1_POWERDOWN		2
+> 
+> For consistency, either add a line here, or remove the one 3 up.
+
+Fixed in V2
+> 
+> > +/* Powerdown requests control 1 */
+> > +#define STIH407_USB3_POWERDOWN		3
+> > +#define STIH407_USB2_PORT1_POWERDOWN	4
+> > +#define STIH407_USB2_PORT0_POWERDOWN	5
+> > +#define STIH407_PCIE1_POWERDOWN		6
+> > +#define STIH407_PCIE0_POWERDOWN		7
+> > +#define STIH407_SATA1_POWERDOWN		8
+> > +#define STIH407_SATA0_POWERDOWN		9
+> 
+> Do these all line up in your editor? 
+
+Yes
+> 
+> > +#define	STIH407_KEYSCAN_SOFTRESET	26
+> > +#define	STIH407_USB2_PORT0_SOFTRESET	27
+> > +#define	STIH407_USB2_PORT1_SOFTRESET	28
+> 
+> Again, you have tabs here and spaces elsewhere.
+
+Fixed in V2
+
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
