@@ -1,376 +1,430 @@
-From: Murali Karicheri <m-karicheri2@ti.com>
-Subject: Re: [RESEND: PATCH - v3] phy: Add serdes phy driver for keystone
-Date: Wed, 2 Jul 2014 11:42:44 -0400
-Message-ID: <53B42874.7040908@ti.com>
-References: <1404223042-12845-1-git-send-email-m-karicheri2@ti.com> <53B3CBE4.4030807@ti.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH v3] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Wed, 2 Jul 2014 10:43:23 -0500
+Message-ID: <20140702154323.GD5541@saruman.home>
+References: <1404307852-10456-1-git-send-email-dmurphy@ti.com>
+ <20140702141001.GA5541@saruman.home>
+ <53B41CD6.8090403@ti.com>
+ <20140702150259.GC5541@saruman.home>
+ <53B42591.5080608@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <53B3CBE4.4030807@ti.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="u65IjBhB3TIa72Vp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B42591.5080608@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: balbi@ti.com, linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2014 05:07 AM, Kishon Vijay Abraham I wrote:
-> Hi,
->
-> On Tuesday 01 July 2014 07:27 PM, Murali Karicheri wrote:
->> This phy driver added to support keystone PCI driver. This is
->
-> %s/PCI/PCIe/
+--u65IjBhB3TIa72Vp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Ok.
+Hi,
 
->> a generic phy driver and currently it supports only SerDes
->> for PCI Controller. The hw vendor that provides the phy
->
-> The driver supports only for PCIe or the controller?
+On Wed, Jul 02, 2014 at 10:30:25AM -0500, Dan Murphy wrote:
+> On 07/02/2014 10:03 AM, Felipe Balbi wrote:
+> > Hi,
+> >
+> > On Wed, Jul 02, 2014 at 09:53:10AM -0500, Dan Murphy wrote:
+> >> Felipe
+> >> Thanks for the review
+> >>
+> >> On 07/02/2014 09:10 AM, Felipe Balbi wrote:
+> >>> Hi,
+> >>>
+> >>> On Wed, Jul 02, 2014 at 08:30:52AM -0500, Dan Murphy wrote:
+> >>>> Support the TI TAS2552 Class D amplifier.
+> >>>>
+> >>>> The TAS2552 is a high efficiency Class-D audio
+> >>>> power amplifier with advanced battery current
+> >>>> management and an integrated Class-G boost
+> >>>> The device constantly measures the
+> >>>> current and voltage across the load and provides a
+> >>>> digital stream of this information.
+> >>>>
+> >>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> >>>> ---
+> >>>>
+> >>>> v3 - Updated bindings doc per comments, rearranged probe pdata vs=20
+> >>>> np check - https://patchwork.kernel.org/patch/4453481/
+> >>>>
+> >>>>  .../devicetree/bindings/sound/tas2552.txt          |   22 +
+> >>>>  include/sound/tas2552-plat.h                       |   25 ++
+> >>>>  sound/soc/codecs/Kconfig                           |    5 +
+> >>>>  sound/soc/codecs/Makefile                          |    2 +
+> >>>>  sound/soc/codecs/tas2552.c                         |  463 +++++++++=
++++++++++++
+> >>>>  sound/soc/codecs/tas2552.h                         |   75 ++++
+> >>>>  6 files changed, 592 insertions(+)
+> >>>>  create mode 100644 Documentation/devicetree/bindings/sound/tas2552.=
+txt
+> >>>>  create mode 100644 include/sound/tas2552-plat.h
+> >>>>  create mode 100644 sound/soc/codecs/tas2552.c
+> >>>>  create mode 100644 sound/soc/codecs/tas2552.h
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/sound/tas2552.txt b/D=
+ocumentation/devicetree/bindings/sound/tas2552.txt
+> >>>> new file mode 100644
+> >>>> index 0000000..ada8fd4
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/sound/tas2552.txt
+> >>>> @@ -0,0 +1,22 @@
+> >>>> +Texas Instruments - tas2552 Codec module
+> >>>> +
+> >>>> +The tas2552 serial control bus communicates through I2C protocols
+> >>>> +
+> >>>> +Required properties:
+> >>>> +
+> >>>> +- compatible - One of:
+> >>>> +    "ti,tas2552" - TAS2552
+> >>>> +
+> >>>> +- reg -  I2C slave address
+> >>>> +
+> >>>> +Optional properties:
+> >>>> +
+> >>>> +- power-gpio - gpio pin to enable/disable the device
+> >>>> +
+> >>>> +Example:
+> >>>> +
+> >>>> +tas2552: tas2552@41 {
+> >>>> +	compatible =3D "ti,tas2552";
+> >>>> +	reg =3D <0x41>;
+> >>>> +	enable-gpio =3D <&gpio4 2 GPIO_ACTIVE_HIGH>;
+> >>> you probably want to add:
+> >>>
+> >>> 	pvdd-supply =3D <&pvdd>;
+> >>> 	vbat-supply =3D <&vbat>;
+> >>> 	avdd-supply =3D <&avdd>;
+> >>> 	iovdd-supply =3D <&iovdd>;
+> >>>
+> >>> that way you can make sure to switch your regulators on from the driv=
+er.
+> >>> Since they must be all on, you can just grab them all with
+> >>> regulator_bulk_get() and enable them all with regulator_bulk_enable().
+> >> I could add this but I don't have a use case for this so I did not add
+> >> the code.
+> > actually, you do. Right now you have a device which is powered by
+> > several different sources (fixed or not).
+>=20
+> Does the regulator_enable *gaurantee* that the supplies will be turned on=
+ in
+> the following order?
+>=20
+> 1. VBAT,
+> 2. IOVDD,
+> 3. AVDD.
 
-I meant PCIe. I will fix it.
+you can always regulator_enable() each one in the order you want.
 
->> hw published only registers and their values. So this driver
->> uses these hard coded values to initialize the phy.
->>
->> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
->> CC: Rob Herring<robh+dt@kernel.org>
->> CC: Pawel Moll<pawel.moll@arm.com>
->> CC: Mark Rutland<mark.rutland@arm.com>
->> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
->> CC: Kumar Gala<galak@codeaurora.org>
->> CC: Kishon Vijay Abraham I<kishon@ti.com>
->> CC: Grant Likely<grant.likely@linaro.org>
->> ---
->> Changelog:-
->>   -  Resending with changelog moved out of commit message
->>   -  Added comments to indicate what the register functionality
->>      each register blob is doing.
->>   -  Previous versions were part of the PCI Keystone driver series.
->>      This is now send as a separate patch so that this can be
->>      reviewed indepedently and merged.
->>
->>   .../bindings/phy/phy-serdes-keystone.txt           |   25 +++
->>   drivers/phy/Kconfig                                |    6 +
->>   drivers/phy/Makefile                               |    1 +
->>   drivers/phy/phy-serdes-keystone.c                  |  200 ++++++++++++++++++++
->>   4 files changed, 232 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt
->>   create mode 100644 drivers/phy/phy-serdes-keystone.c
->>
->> diff --git a/Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt b/Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt
->
-> Can we reuse ti-phy.txt for this?
+> >> The supplies I used were always-on so adding the regulators was not
+> >> testable in this patchset.
+> > it _is_ testable. regulator_get()/regulator_enable() still works on
+> > fixed regulators.
+>=20
+> I did not say i used fixed regulators.  I indicated that the regulators
+> were always-on.  So regulator_enable/disable would have no affect.  right?
+>=20
+> I mean you cannot turn off vbat right?
 
-No issues. I will move the content to a section in ti-phy.txt
-"Keystone SerDes Phy"
+It depends. If you're sharing VBAT with the board's power source, then
+yeah, you can't disable it. You would still see
+regulator_enable()/regulator_disable() being called, which serves as
+unit testing.
 
->> new file mode 100644
->> index 0000000..612c7b5
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt
->> @@ -0,0 +1,25 @@
->> +TI Keystone SerDes Phy: DT documentation
->> +=======================================
->> +
->> +Required properties:
->> + - compatible: should be "ti,keystone-serdes-phy";
->> + - reg: base address and length of the SerDes register set
->> + - reg-names: should be "reg_serdes", name of the reg SerDes register set
->> + - #phy-cells: from the generic phy bindings, must be 0;
->> +
->> +Exampel for Keystone PCIE,
->> +
->> +		pcie0_phy: serdes_phy@2320000 {
->> +			#phy-cells =<0>;
->> +			compatible = "ti,keystone-serdes-phy";
->> +			reg =<0x02320000 0x4000>;
->> +			reg-names = "reg_serdes";
->> +		};
->> +
->> +
->> +Then the PHY can be used in PCIe controller node as
->> +
->> +pcie@21800000 {
->> +	phys =<&pcie0_phy>;
->> +	phy-names = "pcie-phy";
->> +};
->> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->> index 16a2f06..54a8471 100644
->> --- a/drivers/phy/Kconfig
->> +++ b/drivers/phy/Kconfig
->> @@ -178,4 +178,10 @@ config PHY_XGENE
->>   	help
->>   	  This option enables support for APM X-Gene SoC multi-purpose PHY.
->>
->> +config PHY_TI_KEYSTONE_SERDES
->> +	bool "TI Keystone SerDes PHY support"
->> +	depends on ARCH_KEYSTONE
->
-> depends on HAS_IOMEM?
+And VBAT, *would* be modeled as a fixed regulator, so all the code paths
+are tested, it's just that there's no gpio (or whatever) to be toggled
+for VBAT.
 
-Why? Driver works without this. When would one use this config option?
+> >>>> @@ -325,3 +326,4 @@ obj-$(CONFIG_SND_SOC_WM_HUBS)	+=3D snd-soc-wm-hu=
+bs.o
+> >>>>  # Amp
+> >>>>  obj-$(CONFIG_SND_SOC_MAX9877)	+=3D snd-soc-max9877.o
+> >>>>  obj-$(CONFIG_SND_SOC_TPA6130A2)	+=3D snd-soc-tpa6130a2.o
+> >>>> +obj-$(CONFIG_SND_SOC_TAS2552)	+=3D snd-soc-tas2552.o
+> >>>> diff --git a/sound/soc/codecs/tas2552.c b/sound/soc/codecs/tas2552.c
+> >>>> new file mode 100644
+> >>>> index 0000000..79b8212
+> >>>> --- /dev/null
+> >>>> +++ b/sound/soc/codecs/tas2552.c
+> >>>> @@ -0,0 +1,463 @@
+> >>>> +/*
+> >>>> + * ALSA SoC Texas Instruments TAS2552 Mono Audio Amplifier
+> >>>> + *
+> >>>> + * Copyright (C) 2014 Texas Instruments Inc.
+> >>>> + *
+> >>>> + * Author: Dan Murphy <dmurphy@ti.com>
+> >>>> + *
+> >>>> + * This program is free software; you can redistribute it and/or
+> >>>> + * modify it under the terms of the GNU General Public License
+> >>>> + * version 2 as published by the Free Software Foundation.
+> >>>> + *
+> >>>> + * This program is distributed in the hope that it will be useful, =
+but
+> >>>> + * WITHOUT ANY WARRANTY; without even the implied warranty of
+> >>>> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> >>>> + * General Public License for more details.
+> >>>> + */
+> >>>> +
+> >>>> +#include <linux/module.h>
+> >>>> +#include <linux/errno.h>
+> >>>> +#include <linux/device.h>
+> >>>> +#include <linux/i2c.h>
+> >>>> +#include <linux/gpio.h>
+> >>>> +#include <linux/of_gpio.h>
+> >>>> +#include <linux/regmap.h>
+> >>>> +#include <linux/slab.h>
+> >>>> +
+> >>>> +#include <sound/pcm.h>
+> >>>> +#include <sound/pcm_params.h>
+> >>>> +#include <sound/soc.h>
+> >>>> +#include <sound/soc-dapm.h>
+> >>>> +#include <sound/tlv.h>
+> >>>> +#include <sound/tas2552-plat.h>
+> >>>> +
+> >>>> +#include "tas2552.h"
+> >>>> +
+> >>>> +static struct reg_default tas2552_reg_defs[] =3D {
+> >>>> +	{TAS2552_CFG_1, 0x16},
+> >>>> +	{TAS2552_CFG_3, 0x5E},
+> >>>> +	{TAS2552_DOUT, 0x00},
+> >>>> +	{TAS2552_OUTPUT_DATA, 0xC8},
+> >>>> +	{TAS2552_PDM_CFG, 0x02},
+> >>>> +	{TAS2552_PGA_GAIN, 0x10},
+> >>>> +	{TAS2552_BOOST_PT_CTRL, 0x0F},
+> >>>> +	{TAS2552_LIMIT_LVL_CTRL, 0x0C},
+> >>>> +	{TAS2552_LIMIT_RATE_HYS, 0x20},
+> >>>> +	{TAS2552_CFG_2, 0xEA},
+> >>>> +	{TAS2552_SER_CTRL_1, 0x00},
+> >>>> +	{TAS2552_SER_CTRL_2, 0x00},
+> >>>> +	{TAS2552_PLL_CTRL_1, 0x10},
+> >>>> +	{TAS2552_PLL_CTRL_2, 0x00},
+> >>>> +	{TAS2552_PLL_CTRL_3, 0x00},
+> >>>> +	{TAS2552_BTIP, 0x8f},
+> >>>> +	{TAS2552_BTS_CTRL, 0x80},
+> >>>> +	{TAS2552_LIMIT_RELEASE, 0x05},
+> >>>> +	{TAS2552_LIMIT_INT_COUNT, 0x00},
+> >>>> +	{TAS2552_EDGE_RATE_CTRL, 0x40},
+> >>>> +	{TAS2552_VBAT_DATA, 0x00},
+> >>>> +};
+> >>>> +
+> >>>> +struct tas2552_data {
+> >>>> +	struct mutex mutex;
+> >>>> +	struct snd_soc_codec *codec;
+> >>>> +	struct regmap *regmap;
+> >>>> +	struct i2c_client *tas2552_client;
+> >>>> +	unsigned char regs[TAS2552_VBAT_DATA];
+> >>>> +	int power_gpio;
+> >>>> +	u8 power_state:1;
+> >>>> +};
+> >>>> +
+> >>>> +static int tas2552_power(struct tas2552_data *data, u8 power)
+> >>>> +{
+> >>>> +	int	ret =3D 0;
+> >>>> +
+> >>>> +	BUG_ON(data->tas2552_client =3D=3D NULL);
+> >>> don't hang the entire machine because of a bug on the amplifier drive=
+r,
+> >>> WARN() should be enough, followed by the return of an error code.
+> >>>
+> >>> In fact, is this really necessary ? It would be a simple bug on the
+> >>> driver to fix.
+> >> Yeah I can remove this.  I was following an older example.
+> >>
+> >>>> +
+> >>>> +	mutex_lock(&data->mutex);
+> >>>> +	if (power =3D=3D data->power_state)
+> >>> Same here. Is this really necessary ? It's simple to guarantee this c=
+ase
+> >>> won't happen in code.
+> >> Yes this LOC is necessary.  It is checking the current state of the ta=
+s2552.
+> > heh, the point is that all your calls to this function can be balanced
+> > easily, so this check becomes pointless, as it will never be true.
+>=20
+> I will remove it.
+>=20
+> >>>> +		goto exit;
+> >>>> +
+> >>>> +	if (power) {
+> >>>> +		if (data->power_gpio >=3D 0)
+> >>>> +			gpio_set_value(data->power_gpio, 1);
+> >>>> +
+> >>>> +		data->power_state =3D 1;
+> >>>> +	} else {
+> >>>> +		if (data->power_gpio >=3D 0)
+> >>>> +			gpio_set_value(data->power_gpio, 0);
+> >>>> +
+> >>>> +		data->power_state =3D 0;
+> >>>> +	}
+> >>>> +
+> >>>> +exit:
+> >>>> +	mutex_unlock(&data->mutex);
+> >>>> +	return ret;
+> >>>> +}
+> >>>> +
+> >>>> +static void tas2552_sw_shutdown(struct tas2552_data *tas_data, int =
+sw_shutdown)
+> >>>> +{
+> >>>> +	u8 cfg1_reg =3D 0x0;
+> >>>> +
+> >>>> +	if (sw_shutdown)
+> >>>> +		cfg1_reg |=3D (sw_shutdown << 1);
+> >>> this line is dangerous. You're using a 32-bit variable to write a sin=
+gle
+> >>> bit on cfg1 register. What if user passes 0xff on sw_shutdown ?
+> >>>
+> >>> I think a better approach would be to:
+> >>>
+> >>> a) first of all, move this sw_shutdown function to
+> >>> runtime_suspend/runtime_resume.
+> >> Yeah that is not the intent of this API.  This API is called when the =
+ALSA layer
+> >> opens/closes the device.  It is not governed by pm calls.
+> > and PM calls are exactly for that. You start with a powered off device,
+> > then when user wants to use it, you power it up. This is exactly what's
+> > you're doing here.
+>=20
+> I will look into it.
+>=20
+> But I am not convinced I need these calls yet.
 
->> +	select GENERIC_PHY
->> +	help
->> +	  This option enables support for TI Keystone SerDes PHY.
->>   endmenu
->> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->> index b4f1d57..a02faaa 100644
->> --- a/drivers/phy/Makefile
->> +++ b/drivers/phy/Makefile
->> @@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
->>   phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
->>   obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
->>   obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
->> +obj-$(CONFIG_PHY_TI_KEYSTONE_SERDES)	+= phy-serdes-keystone.o
->> diff --git a/drivers/phy/phy-serdes-keystone.c b/drivers/phy/phy-serdes-keystone.c
->> new file mode 100644
->> index 0000000..f1a8888
->> --- /dev/null
->> +++ b/drivers/phy/phy-serdes-keystone.c
->
+what your shutdown function is basically a private runtime_pm
+implementation. Look at your usage of it:
 
-> Looking at the other phy drivers, feel this should be named phy-keystone-serdes.c?
+	shutdown(0);
+	do_something_magical();
+	shutdown(1);
 
-Make sense. Will rename. Do you think I need to change the config option 
-to PHY_KEYSTONE_SERDES as well?
+The translation to:
 
+	pm_runtime_get_sync();
+	do_something_magical();
+	pm_runtime_put_sync();
 
->> @@ -0,0 +1,200 @@
->> +/*
->> + * Keystone SerDes Phy driver
->> + *
->> + * Copyright (C) 2013-2014 Texas Instruments, Inc.
->> + *		http://www.ti.com
->> + *
->> + * Author: Murali Karicheri<m-karicheri2@ti.com>
->> + *
->> + * This program is free software; you can redistribute it and/or modify
->> + * it under the terms of the GNU General Public License version 2 as
->> + * published by the Free Software Foundation.
->> + */
->> +
->> +#include<linux/clk.h>
->> +#include<linux/delay.h>
->> +#include<linux/err.h>
->> +#include<linux/io.h>
->> +#include<linux/module.h>
->> +#include<linux/of.h>
->> +#include<linux/of_address.h>
->> +#include<linux/of_platform.h>
->> +#include<linux/phy/phy.h>
->> +#include<linux/platform_device.h>
->> +
->> +#define reg_dump(addr, mask) \
->> +		pr_debug("reg %p has value %x\n", (void *)addr, \
->> +			(readl(addr)&  ~mask))
->> +
->> +/* mask bits point to bits being modified */
->> +#define reg_rmw(addr, value, mask) \
->> +		writel(((readl(addr)&  (~(mask))) | \
->> +			(value&  (mask))), (addr))
->> +struct serdes_config {
->
-> struct ks_serdes_config?
+is really straight forward. You can even move the GPIO enable to
+runtime_resume() and this shutdown(1) to runtime_idle so that it would
+look like:
 
-Ok.
+static int tas2552_runtime_resume(struct device *dev)
+{
+	struct tas2552_data *tas =3D dev_get_drvdata(dev);
+	u8 reg;
 
->> +	u32 reg;
->> +	u32 val;
->> +	u32 mask;
->> +};
->> +
->> +struct phy_serdes_keystone {
->
-> struct ks_serdes_phy?
+	gpio_set_value(tas->enable_gpio, 1);
+	reg |=3D TAS2552_SWS;
+	snd_soc_update_bits(tas_data->codec, TAS2552_CFG_1,
+			TAS2552_SWS_MASK, reg);
 
-Ok.
+	return 0;
+}
 
->> +	struct device *dev;
->> +	void __iomem *base;
->> +};
->> +
->> +static struct serdes_config ks_100mhz_5gbps_serdes[] = {
->> +	/* SerDes Clock and common configuration */
->> +	{0x0000, 0x00000800, 0x0000ff00},
->> +	{0x0060, 0x00041c5c, 0x00ffffff},
->> +	{0x0064, 0x0343c700, 0xffffff00},
->> +	{0x006c, 0x00000012, 0x000000ff},
->> +	{0x0068, 0x00070000, 0x00ff0000},
->> +	{0x0078, 0x0000c000, 0x0000ff00},
->> +
->> +	/* Lane - A Phy configuration */
->> +	{0x0200, 0x00000000, 0x000000ff},
->> +	{0x0204, 0x5e000080, 0xff0000ff},
->> +	{0x0208, 0x00000006, 0x000000ff},
->> +	{0x0210, 0x00000023, 0x000000ff},
->> +	{0x0214, 0x2e003060, 0xff00ffff},
->> +	{0x0218, 0x76000000, 0xff000000},
->> +	{0x022c, 0x00200002, 0x00ff00ff},
->> +	{0x02a0, 0xffee0000, 0xffff0000},
->> +	{0x02a4, 0x0000000f, 0x000000ff},
->> +	{0x0204, 0x5e000000, 0xff000000},
->> +	{0x0208, 0x00000006, 0x000000ff},
->> +	{0x0278, 0x00002000, 0x0000ff00},
->> +	{0x0280, 0x00280028, 0x00ff00ff},
->> +	{0x0284, 0x2d0f0385, 0xffffffff},
->> +	{0x0250, 0xd0000000, 0xff000000},
->> +	{0x0284, 0x00000085, 0x000000ff},
->> +	{0x0294, 0x20000000, 0xff000000},
->> +
->> +	/* Lane - B Phy configuration */
->> +	{0x0400, 0x00000000, 0x000000ff},
->> +	{0x0404, 0x5e000080, 0xff0000ff},
->> +	{0x0408, 0x00000006, 0x000000ff},
->> +	{0x0410, 0x00000023, 0x000000ff},
->> +	{0x0414, 0x2e003060, 0xff00ffff},
->> +	{0x0418, 0x76000000, 0xff000000},
->> +	{0x042c, 0x00200002, 0x00ff00ff},
->> +	{0x04a0, 0xffee0000, 0xffff0000},
->> +	{0x04a4, 0x0000000f, 0x000000ff},
->> +	{0x0404, 0x5e000000, 0xff000000},
->> +	{0x0408, 0x00000006, 0x000000ff},
->> +	{0x0478, 0x00002000, 0x0000ff00},
->> +	{0x0480, 0x00280028, 0x00ff00ff},
->> +	{0x0484, 0x2d0f0385, 0xffffffff},
->> +	{0x0450, 0xd0000000, 0xff000000},
->> +	{0x0494, 0x20000000, 0xff000000},
->> +
->> +	/* Common Lane configurations */
->> +	{0x0a00, 0x00000100, 0x0000ff00},
->> +	{0x0a08, 0x00e12c08, 0x00ffffff},
->> +	{0x0a0c, 0x00000081, 0x000000ff},
->> +	{0x0a18, 0x00e80000, 0x00ff0000},
->> +	{0x0a30, 0x002f2f00, 0x00ffff00},
->> +	{0x0a4c, 0xac820000, 0xffff0000},
->> +	{0x0a54, 0xc0000000, 0xff000000},
->> +	{0x0a58, 0x00001441, 0x0000ffff},
->> +	{0x0a84, 0x00000301, 0x0000ffff},
->> +	{0x0a8c, 0x81030000, 0xffff0000},
->> +	{0x0a90, 0x00006001, 0x0000ffff},
->> +	{0x0a94, 0x01000000, 0xff000000},
->> +	{0x0aa0, 0x81000000, 0xff000000},
->> +	{0x0abc, 0xff000000, 0xff000000},
->> +	{0x0ac0, 0x0000008b, 0x000000ff},
->> +
->> +	/* common clock configuration */
->> +	{0x0000, 0x00000003, 0x000000ff},
->> +
->> +	/* Common Lane configurations */
->> +	{0x0a00, 0x0000009f, 0x000000ff},
->> +	{0x0a44, 0x5f733d00, 0xffffff00},
->> +	{0x0a48, 0x00fdca00, 0x00ffff00},
->> +	{0x0a5c, 0x00000000, 0xffff0000},
->> +	{0x0a60, 0x00008000, 0xffffffff},
->> +	{0x0a64, 0x0c581220, 0xffffffff},
->> +	{0x0a68, 0xe13b0602, 0xffffffff},
->> +	{0x0a6c, 0xb8074cc1, 0xffffffff},
->> +	{0x0a70, 0x3f02e989, 0xffffffff},
->> +	{0x0a74, 0x00000001, 0x000000ff},
->> +	{0x0b14, 0x00370000, 0x00ff0000},
->> +	{0x0b10, 0x37000000, 0xff000000},
->> +	{0x0b14, 0x0000005d, 0x000000ff},
->
-> I'm not particularly happy about merging this sort of configuration :-/
->
+static int tas2552_runtime_suspend(struct device *dev)
+{
+	struct tas2552_data *tas =3D dev_get_drvdata(dev);
 
-I know, but this is what best we can do for now. We are working with the 
-IP owner to clarify if we can use more information on this IP. We will 
-update the driver as things changes in the future.
+	gpio_set_value(tas->enable_gpio, 0);
 
->> +};
->> +
->> +static int ks_serdes_phy_init(struct phy *phy)
->> +{
->> +	struct serdes_config *p;
->> +	struct phy_serdes_keystone *ks_phy = phy_get_drvdata(phy);
->> +
->> +	int i;
->> +
->> +	for (i = 0, p =&ks_100mhz_5gbps_serdes[0];
->> +		i<  ARRAY_SIZE(ks_100mhz_5gbps_serdes);
->> +		i++, p++) {
->> +		reg_rmw((ks_phy->base + p->reg), p->val, p->mask);
->> +		reg_dump((ks_phy->base + p->reg), p->mask);
->> +	}
->> +	msleep(20);
->
-> Why this delay is needed? A small comment would help.
+	return 0;
+}
 
-This is to allow for the PLL to lock. I will check if I can really check 
-if PLL is locked and Lane status is Ok if possible.
+static int tas2552_runtime_idle(struct device *dev)
+{
+	struct tas2552_data *tas =3D dev_get_drvdata(dev);
+	u8 reg;
 
->> +
->> +	return 0;
->> +}
->> +
->> +static struct phy_ops ks_serdes_phy_ops = {
->> +	.init		= ks_serdes_phy_init,
->> +	.owner		= THIS_MODULE,
->> +};
->> +
->> +static int ks_serdes_phy_probe(struct platform_device *pdev)
->> +{
->> +	struct phy_provider *phy_provider;
->> +	struct device *dev =&pdev->dev;
->> +	struct phy_serdes_keystone *ks_phy;
->> +	struct phy *phy;
->> +	struct resource *res;
->> +
->> +	ks_phy = devm_kzalloc(dev, sizeof(*ks_phy), GFP_KERNEL);
->> +	if (!ks_phy)
->> +		return -ENOMEM;
->> +
->> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg_serdes");
->> +	ks_phy->base = devm_ioremap_resource(dev, res);
->> +	if (IS_ERR(ks_phy->base))
->> +		return PTR_ERR(ks_phy->base);
->> +
->> +	ks_phy->dev = dev;
->> +	phy = devm_phy_create(dev,&ks_serdes_phy_ops, NULL);
->> +	if (IS_ERR(phy))
->> +		return PTR_ERR(phy);
->> +
->> +	phy_set_drvdata(phy, ks_phy);
->> +	phy_provider = devm_of_phy_provider_register(ks_phy->dev,
->> +				of_phy_simple_xlate);
->> +
->> +	if (IS_ERR(phy_provider))
->> +		return PTR_ERR(phy_provider);
->> +
->> +	dev_info(dev, "keystone SerDes Phy initialized\n");
->
-> Lets not make the boot noisy, remove this.
+	reg &=3D ~TAS2552_SWS;
+	snd_soc_update_bits(tas_data->codec, TAS2552_CFG_1,
+			TAS2552_SWS_MASK, reg);
+}
 
-Sure
+how to properly use them in this driver and make sure the device is only
+"suspended" on close() is left as an exercise.
 
->> +	return 0;
->> +}
->> +
->> +static const struct of_device_id ks_serdes_phy_of_match[] = {
->> +	{ .compatible = "ti,keystone-serdes-phy" },
->> +	{ },
->> +};
->> +MODULE_DEVICE_TABLE(of, ks_serdes_phy_of_match);
->> +
->> +static struct platform_driver ks_serdes_phy_driver = {
->> +	.probe	= ks_serdes_phy_probe,
->> +	.driver = {
->> +		.of_match_table	= ks_serdes_phy_of_match,
->> +		.name  = "ti,keystone-serdes-phy",
->> +		.owner = THIS_MODULE,
->> +	}
->> +};
->> +module_platform_driver(ks_serdes_phy_driver);
->> +
->> +MODULE_DESCRIPTION("TI Keystone SerDes PHY driver");
->> +MODULE_LICENSE("GPL V2");
->
-> It's *GPL v2*
+> >>> b) to the check as below:
+> >>>
+> >>> 	if (shutdown)
+> >>> 		cfg1_reg |=3D TAS2552_SWS;
+> >>> 	else
+> >>> 		cfg1_reg &=3D ~TAS2552_SWS;
+> >>>
+> >>> then, of course #define TAS2552_SWS (1 << 1) (or BIT(1), even)
+> >> But I will make this change.
+> >>
+> >>>> +	else
+> >>>> +		cfg1_reg &=3D ~TAS2552_SWS_MASK;
+> >>>> +
+> >>>> +	snd_soc_update_bits(tas_data->codec, TAS2552_CFG_1,
+> >>>> +						 TAS2552_SWS_MASK, cfg1_reg);
+> >>>> +}
+> >>>> +
+> >>>> +static void tas2552_init(struct snd_soc_codec *codec)
+> >>>> +{
+> >>>> +	snd_soc_write(codec, TAS2552_CFG_1, 0x16);
+> >>>> +	snd_soc_write(codec, TAS2552_CFG_3, 0x5E);
+> >>>> +	snd_soc_write(codec, TAS2552_DOUT, 0x00);
+> >>>> +	snd_soc_write(codec, TAS2552_OUTPUT_DATA, 0xC8);
+> >>>> +	snd_soc_write(codec, TAS2552_PDM_CFG, 0x02);
+> >>>> +	snd_soc_write(codec, TAS2552_PGA_GAIN, 0x10);
+> >>>> +	snd_soc_write(codec, TAS2552_BOOST_PT_CTRL, 0x0F);
+> >>>> +	snd_soc_write(codec, TAS2552_LIMIT_LVL_CTRL, 0x0C);
+> >>>> +	snd_soc_write(codec, TAS2552_LIMIT_RATE_HYS, 0x20);
+> >>>> +	snd_soc_write(codec, TAS2552_CFG_2, 0xEA);
+> >>> what do all these magic constants mean ? Also, lower case hex numbers
+> >>> are usually preferred.
+> >> I will add comments to what the numbers mean and change to lower case
+> > I would rather see proper bit macros and the driver using them.
+>=20
+> Yeah I started doing that in my initial driver but the bit macros were ge=
+tting
+> a little obsessive.
+>=20
+> >
+> >>> No battery tracking ?  Any plans to add that at a later date ? It's
+> >>> probably not needed to have functional audio, but might have some use
+> >>> cases where you want it.
+> >> The battery tracking was not the scope of the driver.  We just need to
+> >> get the basic driver in place with audio functional and add the
+> >> battery tracking later.
+> > it's a single bit
+>=20
+> I will flip the bit for the default.
+>=20
+> I looked back in my emails and it was the IVsense code I could not develo=
+p not
+> the battery checking.
 
-Ok.
+if you really want to make sure the device *does* track the battery,
+just hook that pin to a lab power supply and slowly dial down the output
+voltage, then look at the gain to see if it is tracking.
 
->
-> Cheers
-> Kishon
+--=20
+balbi
+
+--u65IjBhB3TIa72Vp
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtCibAAoJEIaOsuA1yqREyrMP/2ncWhnIuk7vsjvpFBHCMcL6
+vZqqQ3NjmFGyCE+GJcOekdHx8hjWVnKQbIQ2xsnuowUdy9fvJO/6G/Y9JMzMVxMv
+dXO7TTZsOxSq5gbLnVpq6B2IekwDyLg/VfUBtP3t/dIIW+n7eGbgxMACOl1YdAE6
+ykqH/bBMOl19B33pa4rWiugFCUeqXR/n3Kvh2NscCKmG7FfIpOM4yLAyWuTjNvbM
+4kVJgqJDEuV7Qe3Yl1SEBPIW+YFccltk+lNG391cWp2ACWrXS869zPqVud6s30ee
+GYXcTsSEjpqqpOIVPYYCNWThPrBIUNPvGwdej7SsYdqVR7YkkUPSiiW4RP8IlwUx
+YBbF9y5FAQ+gyjch9sytPZGFZfxcpnu2D5VJ0VK/zQMRnErjIwOSYq1f5ix8gxuY
+KC+nQFvpwtrm+NaPlTxmEBM27dShx+MNgy99pHIu9bekkDNjMisq2qMm08RlHjuw
+xS8nBZnqn4JIgZci+vAc1u1I/kRxSc09TL4lNhD/CUNBhkcDRMdtCNZLKHBqwgJc
+ewX/TUTdgSjv30vGqn81ZKbIbv6ZueGJD4vS3Z0KPZW4cirstiwco88+Rvmix+uQ
+Q16KTatw+6qIttnm0HOFy8foIBBNxenBDZTw6Nd4EsMLRJ5mWBri3v8M7c/wyqw6
+ueoFpytROdrcmIh1O1h8
+=pxxS
+-----END PGP SIGNATURE-----
+
+--u65IjBhB3TIa72Vp--
