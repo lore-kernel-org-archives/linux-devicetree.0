@@ -1,150 +1,59 @@
-From: Suravee Suthikulanit <suravee.suthikulpanit@amd.com>
-Subject: Re: [PATCH 3/3 V2] irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-Date: Wed, 2 Jul 2014 15:04:09 -0500
-Message-ID: <53B465B9.7000407@amd.com>
-References: <1404314544-7762-1-git-send-email-suravee.suthikulpanit@amd.com>
- <20140702163903.GA26903@leverpostej>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH] rcar_can: add device tree support
+Date: Thu, 03 Jul 2014 00:26:07 +0400
+Message-ID: <53B46ADF.9070602@cogentembedded.com>
+References: <201407020227.04235.sergei.shtylyov@cogentembedded.com> <53B33B45.1060205@pengutronix.de> <20140702101437.GC14665@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140702163903.GA26903@leverpostej>
-Sender: linux-pci-owner@vger.kernel.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Marc Zyngier <Marc.Zyngier@arm.com>, "jason@lakedaemon.net" <jason@lakedaemon.net>, Pawel Moll <Pawel.Moll@arm.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "Harish.Kasiviswanathan@amd.com" <Harish.Kasiviswanathan@amd.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <20140702101437.GC14665@leverpostej>
+Sender: linux-doc-owner@vger.kernel.org
+To: Mark Rutland <mark.rutland@arm.com>, Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "vksavl@gmail.com" <vksavl@gmail.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks again for the review. Please see my comments below.
+Hello.
 
-On 7/2/2014 11:39 AM, Mark Rutland wrote:
-> On Wed, Jul 02, 2014 at 04:22:23PM +0100, suravee.suthikulpanit@amd.com wrote:
->> From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
->> diff --git a/Documentation/devicetree/bindings/arm/gic.txt b/Documentation/devicetree/bindings/arm/gic.txt
->> index 5573c08..9e46f7f 100644
->> --- a/Documentation/devicetree/bindings/arm/gic.txt
->> +++ b/Documentation/devicetree/bindings/arm/gic.txt
->> @@ -12,11 +12,13 @@ Main node required properties:
->>
->>   - compatible : should be one of:
->>          "arm,gic-400"
->> +       "arm,gic-400-plus"
->
-> I am not keen on this name.
+On 07/02/2014 02:14 PM, Mark Rutland wrote:
 
-Ok, I'll change it. Any suggestion on name?  I'm not sure what is the 
-"official" product name. I've seen this in some slides from ARM. What 
-about "gic-400-v2m"??.
+>>> Add support of the device tree probing for the Renesas R-Car CAN controllers
+>>> documenting the device tree bindings as necessary.
 
->>          "arm,cortex-a15-gic"
->>          "arm,cortex-a9-gic"
->>          "arm,cortex-a7-gic"
->>          "arm,arm11mp-gic"
->>   - interrupt-controller : Identifies the node as an interrupt controller
->> +
->>   - #interrupt-cells : Specifies the number of cells needed to encode an
->>     interrupt source.  The type shall be a <u32> and the value shall be 3.
->
-> Random (inconsistent) whitespace change?
-It looks to me like there should have been a space here to keep the 
-consistent look, and make it easy to read
+[...]
 
->> @@ -37,9 +39,16 @@ Main node required properties:
->>          the 8 possible cpus attached to the GIC.  A bit set to '1' indicated
->>          the interrupt is wired to that CPU.  Only valid for PPI interrupts.
->>
->> -- reg : Specifies base physical address(s) and size of the GIC registers. The
->> -  first region is the GIC distributor register base and size. The 2nd region is
->> -  the GIC cpu interface register base and size.
->> +- reg : Specifies base physical address(s) and size of the GIC register frames.
->> +
->> +  Region | Description
->> +  Index  |
->> +  -------------------------------------------------------------------
->> +     0   | GIC distributor register base and size
->> +     1   | GIC cpu interface register base and size
->> +     2   | VGIC interface control register base and size (Optional)
->> +     3   | VGIC CPU interface register base and size (Optional)
->> +     4   | GICv2m MSI interface register base and size (Optional)
->
-> As far as I am aware, the MSI interface is completely orthogonal to
-> having a GICH and GICV.
+>>> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-Agree. I'm not doing anything with it. I'm just listing them here since 
-they are also mentioned in the gic.txt
+[...]
 
->
-> We should figure out how we expect to handle that (zero-sized reg
-> entries? reg-names?).
+>>> Index: net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+>>> ===================================================================
+>>> --- /dev/null
+>>> +++ net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+>>> @@ -0,0 +1,40 @@
+[...]
 
-I'm not sure how VGIC stuff handles reg/size = 0.
+>>> +- reg: physical base address and size of the R-Car CAN register map.
+>>> +- interrupts: interrupt specifier for the sole interrupt.
+>>> +- clocks: phandle and clock specifier for the R-Car CAN clock input.
+>>> +- pinctrl-0: pin control group to be used for this controller.
+>>> +- pinctrl-names: must be "default".
+>>> +
+>>> +Optional properties:
+>>> +- clock-select: R-Car CAN Clock Source Select. Valid values are:
+>>> +		<0x0> (default) : Peripheral clock (clkp1)
+>>> +		<0x1> : Peripheral clock (clkp2)
+>>> +		<0x3> : Externally input clock
 
->
->>
->>   Optional
->>   - interrupts   : Interrupt source of the parent interrupt controller on
->> @@ -55,6 +64,10 @@ Optional
->>                    by a crossbar/multiplexer preceding the GIC. The GIC irq
->>                    input line is assigned dynamically when the corresponding
->>                    peripheral's crossbar line is mapped.
->> +
->> +- msi-controller : Identifies the node as an MSI controller.  This requires
->> +  the register region index 4.
->
-> That last clarifying comment is more confusing than helpful.
+> What's this for, and how does this interact with the single clock listed
+> above?
 
-If you are referring to the table, I added that since it was easier to 
-see than scanning the text.
+    That's supposed to select a source for the CAN bus clock. Looking back at 
+the driver, it seems to actually only support the value of 0. That's something 
+we haven't given enough attention to clearly... :-/
 
-> [...]
->
->> +#define GIC_V2M_MIN_SPI                        32
->> +#define GIC_V2M_MAX_SPI                        1024
->
-> GIC interrupt IDs 1020 and above are reserved, no?
->
-> Surely the max ID an SPI can take is 1019?
+> THanks,
+> Mark.
 
-Right, thanks for catching. But the spec says that the SPI ID value must 
-be in the range of 32 to 1020. I guess it was a bit unclear, but 
-definitely not 1024 :)
+WBR, Sergei
 
->> +#define GIC_OF_MSIV2M_RANGE_INDEX      4
->> +
->> +/**
->> + * alloc_msi_irq - Allocate MSIs from avaialbe MSI bitmap.
->> + * @data: Pointer to v2m_data
->> + * @nvec: Number of interrupts to allocate
->> + * @irq: Pointer to the allocated irq
->> + *
->> + * Allocates interrupts only if the contiguous range of MSIs
->> + * with specified nvec are available. Otherwise return the number
->> + * of available interrupts. If none are available, then returns -ENOENT.
->> + */
->
-> This function is overly complicated, and pointlessly so.
->
-> It doesn't achieve anything useful as it returns the size of the _last_
-> contiguous block rather than the _largest_ contiguous block, and the
-> only caller (gicv2m_setup_msi_irq) doesn't even care.
->
-> Simplify this to just return an error code if allocation is impossible.
-
-Actually, I made another mistake in the gicv2m_setup_msi_irq when 
-returning from the alloc_msi_irq().
-
-My understanding is the arch_setup_msi_irqs() is supposed to return the 
-number of available vectors if the requested amount could not be 
-allocated. I notice that the current "drivers/pci/msi.c: 
-arch_setup_msi_irqs()" does not do so, which is okay.
-
-However, We are also working on adding support for multi-MSI support 
-since some of the devices we have are using it, which means we will need 
-to provide a different version of the "arch_setup_msi_irqs()" as the 
-current one does not allow (PCI_CAP_ID_MSI && nvec > 1).
-
-Therefore, I implemented the "alloc_msi_irq" this way to account for 
-future changes.
-
-Thanks,
-
-Suravee
