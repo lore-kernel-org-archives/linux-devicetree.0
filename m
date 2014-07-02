@@ -1,290 +1,109 @@
-From: Jingchang Lu <jingchang.lu@freescale.com>
-Subject: [PATCH 3/5] ARM: dts: Add initial LS1021A TWR board dts support
-Date: Wed, 2 Jul 2014 17:02:50 +0800
-Message-ID: <1404291772-2644-4-git-send-email-jingchang.lu@freescale.com>
-References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
+From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+Subject: Re: [PATCH v5 05/14] clk: Add generic driver for Maxim PMIC clocks
+Date: Wed, 02 Jul 2014 12:13:29 +0200
+Message-ID: <53B3DB49.6020604@collabora.co.uk>
+References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-6-git-send-email-javier.martinez@collabora.co.uk> <CAKew6eU5X=WxhECtwUUwbXe_fCRU4bD6B7caWiA2dwcBfThd-g@mail.gmail.com> <20140701172616.32686.44374@quantum>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawn.guo@linaro.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Chen Lu <B46807@freescale.com>, Chao Fu <B44548@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140701172616.32686.44374@quantum>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Turquette <mturquette@linaro.org>, Yadwinder Singh Brar <yadi.brar01@gmail.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Chen Lu <B46807@freescale.com>
-Signed-off-by: Chao Fu <B44548@freescale.com>
-Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
----
- arch/arm/boot/dts/Makefile        |   3 +-
- arch/arm/boot/dts/ls1021a-twr.dts | 236 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 238 insertions(+), 1 deletion(-)
- create mode 100755 arch/arm/boot/dts/ls1021a-twr.dts
+Hello Mike,
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 0569312..4482cc5 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -236,7 +236,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	vf610-colibri.dtb \
- 	vf610-cosmic.dtb \
- 	vf610-twr.dtb \
--	ls1021a-qds.dtb
-+	ls1021a-qds.dtb \
-+	ls1021a-twr.dtb
- dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
- 	imx23-olinuxino.dtb \
- 	imx23-stmp378x_devb.dtb \
-diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
-new file mode 100755
-index 0000000..16e4d7a
---- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-twr.dts
-@@ -0,0 +1,236 @@
-+/*
-+ * Copyright 2013-2014 Freescale Semiconductor, Inc.
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+
-+/dts-v1/;
-+#include "ls1021a.dtsi"
-+
-+/ {
-+	model = "LS1021A TWR Board";
-+
-+	regulators {
-+		compatible = "simple-bus";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		reg_3p3v: regulator@0 {
-+			compatible = "regulator-fixed";
-+			reg = <0>;
-+			regulator-name = "3P3V";
-+			regulator-min-microvolt = <3300000>;
-+			regulator-max-microvolt = <3300000>;
-+			regulator-always-on;
-+		};
-+	};
-+
-+	sound {
-+		compatible = "fsl,vf610-sgtl5000";
-+		simple-audio-card,name = "FSL-VF610-TWR-BOARD";
-+		simple-audio-card,routing =
-+			"MIC_IN", "Microphone Jack",
-+			"Microphone Jack", "Mic Bias",
-+			"LINE_IN", "Line In Jack",
-+			"Headphone Jack", "HP_OUT",
-+			"Speaker Ext", "LINE_OUT";
-+
-+		simple-audio-card,cpu = <&sai2>;
-+
-+		simple-audio-card,codec = <&codec>;
-+	};
-+};
-+
-+&can0 {
-+	status = "okay";
-+};
-+
-+&can1 {
-+	status = "okay";
-+};
-+
-+&dspi1 {
-+	bus-num = <0>;
-+	status = "okay";
-+
-+	dspiflash: s25fl064k@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl064k";
-+		spi-max-frequency = <16000000>;
-+		spi-cpol;
-+		spi-cpha;
-+		reg = <0>;
-+	};
-+};
-+
-+&duart0 {
-+	status = "okay";
-+};
-+
-+&duart1 {
-+	status = "okay";
-+};
-+
-+&enet0 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&phy2>;
-+	phy-connection-type = "sgmii";
-+	status = "ok";
-+};
-+
-+&enet1 {
-+	tbi-handle = <&tbi1>;
-+	phy-handle = <&phy0>;
-+	phy-connection-type = "sgmii";
-+	status = "ok";
-+};
-+
-+&enet2 {
-+	phy-handle = <&phy1>;
-+	phy-connection-type = "rgmii-id";
-+	status = "ok";
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+
-+	codec: sgtl5000@14 {
-+		compatible = "fsl,sgtl5000";
-+		reg = <0x14>;
-+		VDDA-supply = <&reg_3p3v>;
-+		VDDIO-supply = <&reg_3p3v>;
-+		clocks = <&platform_clk 1>;
-+	};
-+};
-+
-+&ifc {
-+	status = "okay";
-+	#address-cells = <2>;
-+	#size-cells = <1>;
-+	/* NOR, and CPLD on board */
-+	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
-+		0x2 0x0 0x0 0x7fb00000 0x00000100>;
-+
-+		nor@0,0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "cfi-flash";
-+			reg = <0x0 0x0 0x8000000>;
-+			bank-width = <2>;
-+			device-width = <1>;
-+
-+			partition@0 {
-+				/* 128KB for rcw */
-+				reg = <0x00000000 0x0020000>;
-+				label = "NOR bank0 RCW Image";
-+			};
-+
-+			partition@20000 {
-+				/* 1MB for DTB */
-+				reg = <0x00020000 0x00100000>;
-+				label = "NOR DTB Image";
-+			};
-+
-+			partition@120000 {
-+				/* 8 MB for Linux Kernel Image */
-+				reg = <0x00120000 0x00800000>;
-+				label = "NOR Linux Kernel Image";
-+			};
-+
-+			partition@920000 {
-+				/* 56MB for Ramdisk Root File System */
-+				reg = <0x00920000 0x03600000>;
-+				label = "NOR Ramdisk Root File System Image";
-+			};
-+
-+			partition@3f80000 {
-+				/* 512KB for bank4 u-boot Image */
-+				reg = <0x03f80000 0x80000>;
-+				label = "NOR bank4 u-boot Image";
-+			};
-+
-+			partition@4000000 {
-+				/* 128KB for bank4 RCW Image */
-+				reg = <0x04000000 0x20000>;
-+				label = "NOR bank4 RCW Image";
-+			};
-+
-+			partition@4020000 {
-+				/* 63MB JFFS2 ROOT File System Image */
-+				reg = <0x04020000 0x3f00000>;
-+				label = "NOR JFFS2 ROOT File System Image";
-+			};
-+
-+			partition@7f80000 {
-+				/* 512KB for bank0 u-boot Image */
-+				reg = <0x07f80000 0x80000>;
-+				label = "NOR bank0 u-boot Image";
-+			};
-+
-+		};
-+
-+		fpga: board-control@2,0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "fsl,ls1021aqds-fpga", "fsl,fpga-qixis";
-+			reg = <0x2 0x0 0x00000100>;
-+			bank-width = <1>;
-+			device-width = <1>;
-+			ranges = <0 2 0 0x100>;
-+		};
-+
-+};
-+
-+&lpuart0 {
-+	status = "okay";
-+};
-+
-+&mdio0 {
-+	phy0: ethernet-phy@0 {
-+		reg = <0x0>;
-+	};
-+	phy1: ethernet-phy@1 {
-+		reg = <0x1>;
-+	};
-+	phy2: ethernet-phy@2 {
-+		reg = <0x2>;
-+	};
-+	tbi1: tbi-phy@1f {
-+		reg = <0x1f>;
-+		device_type = "tbi-phy";
-+	};
-+};
-+
-+&pwm6 {
-+	status = "okay";
-+};
-+
-+&pwm7 {
-+	status = "okay";
-+};
-+
-+&qspi {
-+	num-cs = <2>;
-+	status = "okay";
-+
-+	qflash0: s25fl128s@0 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl128s";
-+		spi-max-frequency = <20000000>;
-+		reg = <0>;
-+
-+		partition@0 {
-+			label = "s25fl128s-0";
-+			reg = <0x0 0x1000000>;
-+		};
-+	};
-+};
--- 
-1.8.0
+On 07/01/2014 07:26 PM, Mike Turquette wrote:
+> Quoting Yadwinder Singh Brar (2014-06-29 21:01:36)
+>> Hi Javier,
+>> 
+>> On Thu, Jun 26, 2014 at 11:45 PM, Javier Martinez Canillas
+>> <javier.martinez@collabora.co.uk> wrote:
+>> > Maxim Integrated Power Management ICs are very similar with
+>> > regard to their clock outputs. Most of the clock drivers for
+>> > these chips are duplicating code and are simpler enough that
+>> > can be converted to use a generic driver to consolidate code
+>> > and avoid duplication.
+>> >
+>> > Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+>> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+>> > ---
+>> >
+>> > Changes since v4:
+>> >  - Return recalc 0 if clock isn't enabled in Suggested by Yadwinder Singh Brar.
+>> >
+>> 
+>> It seems you didn't implement or posted same patch again :) .
+>> 
+>> > Changes since v3:
+>> >  - Add current copyright information. Suggested by Krzysztof Kozlowski
+>> >  - Do a single allocation for struct max_gen_clk. Suggested by Krzysztof Kozlowski
+>> >  - Add EXPORT_SYMBOL() for exported symbols. Suggested by Krzysztof Kozlowski
+>> >
+>> >  drivers/clk/Kconfig       |   3 +
+>> >  drivers/clk/Makefile      |   1 +
+>> >  drivers/clk/clk-max-gen.c | 195 ++++++++++++++++++++++++++++++++++++++++++++++
+>> >  drivers/clk/clk-max-gen.h |  32 ++++++++
+>> >  4 files changed, 231 insertions(+)
+>> >  create mode 100644 drivers/clk/clk-max-gen.c
+>> >  create mode 100644 drivers/clk/clk-max-gen.h
+>> >
+>> 
+>> [ .. ]
+>> 
+>> > +
+>> > +static unsigned long max_gen_recalc_rate(struct clk_hw *hw,
+>> > +                                        unsigned long parent_rate)
+>> > +{
+>> > +       return 32768;
+>> > +}
+>> 
+>> Its still same here.
+> 
+> Changing this would be a new behavior. I do not know of any other clock
+> drivers that conditionally returns a rate of 0 based on whether or not
+> the clock is gated.
+> 
+
+After Yadwinder feedback I searched for clock drivers that returned 0 when the
+clock was not enabled/prepared and found for example drivers/clk/clk-s2mps11.c:
+
+
+static unsigned long s2mps11_clk_recalc_rate(struct clk_hw *hw,
+                                             unsigned long parent_rate)
+{
+        struct s2mps11_clk *s2mps11 = to_s2mps11_clk(hw);
+        if (s2mps11->enabled)
+                return 32768;
+        else
+                return 0;
+}
+
+> It is also buggy since calls to clk_enable and clk_disable do not invoke
+> .recalc_rate, so the rate of your clock would not be updated from the
+> framework's perspective until some later point where you call
+> clk_set_rate or something.
+>
+
+s2ps11->enabled is set in the driver's clk_ops .prepare and .unprepare function
+handlers and calls to clk_prepare and clk_unprepare also don't seems to invoke
+.recalc_rate so I guess that driver is wrong as well and should just return the
+clock rate unconditionally?
+
+> If your driver needs to know whether or not the clock is enabled then we
+> could introduce a new bool clk_is_enabled(struct clk *clk); to clk.h,
+> but I'd rather not do that. Instead if a driver needs a clock then it
+> calls clk_enable on it without any knowledge about the internal state of
+> the clock enable_count.
+> 
+> Regards,
+> Mike
+>
+
+Thanks a lot for the explanation, I'll revert that change then and return the
+clock rate unconditionally on the next version of the patch-set.
+
+Best regards,
+Javier
