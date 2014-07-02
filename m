@@ -1,71 +1,83 @@
-From: Rongjun Ying <rongjun.ying@csr.com>
-Subject: [PATCH v2 2/2] ASoC: sirf: Add device tree binding for
-	the USP audio device
-Date: Wed, 2 Jul 2014 10:45:42 +0800
-Message-ID: <1404269142-3557-3-git-send-email-rongjun.ying@csr.com>
-References: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
+From: Zhou Wang <wangzhou.bry@gmail.com>
+Subject: Re: [PATCH 3/3] mtd: hisilicon: add device tree binding documentation
+Date: Wed, 02 Jul 2014 10:46:28 +0800
+Message-ID: <53B37284.9060902@gmail.com>
+References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com>
+ <1404115409-20200-4-git-send-email-wangzhou.bry@gmail.com>
+ <20140630095234.GZ7262@leverpostej>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Barry Song <baohua@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Workgroup.linux@csr.com
-Cc: Rongjun Ying <rongjun.ying@csr.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20140630095234.GZ7262@leverpostej>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mark Rutland <mark.rutland@arm.com>
+Cc: Jussi Kivilinna <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Alexander Shiyan <shc_work@mail.ru>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Joern Engel <joern@logfs.org>, Rob Herring <robh+dt@kernel.org>, Pekon Gupta <pekon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wangzhou1@hisilicon.com" <wangzhou1@hisilicon.com>, Kumar Gala <galak>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Rongjun Ying <rongjun.ying@csr.com>
----
- .../devicetree/bindings/sound/sirf-usp.txt         | 27 ++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/sirf-usp.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/sirf-usp.txt b/Documentation/devicetree/bindings/sound/sirf-usp.txt
-new file mode 100644
-index 0000000..02f85b3
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/sirf-usp.txt
-@@ -0,0 +1,27 @@
-+* SiRF SoC USP module
-+
-+Required properties:
-+- compatible: "sirf,prima2-usp-pcm"
-+- reg: Base address and size entries:
-+- dmas: List of DMA controller phandle and DMA request line ordered pairs.
-+- dma-names: Identifier string for each DMA request line in the dmas property.
-+  These strings correspond 1:1 with the ordered pairs in dmas.
-+
-+  One of the DMA channels will be responsible for transmission (should be
-+  named "tx") and one for reception (should be named "rx").
-+
-+- clocks: USP controller clock source
-+- pinctrl-names: Must contain a "default" entry.
-+- pinctrl-NNN: One property must exist for each entry in pinctrl-names.
-+
-+Example:
-+usp0: usp@b0080000 {
-+	compatible = "sirf,prima2-usp-pcm";
-+	reg = <0xb0080000 0x10000>;
-+	clocks = <&clks 28>;
-+	dmas = <&dmac1 1>, <&dmac1 2>;
-+	dma-names = "rx", "tx";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usp0_only_utfs_pins_a>;
-+};
-+
--- 
-1.9.3
-
-
-
-Member of the CSR plc group of companies. CSR plc registered in England and Wales, registered number 4187346, registered office Churchill House, Cambridge Business Park, Cowley Road, Cambridge, CB4 0WZ, United Kingdom
-More information can be found at www.csr.com. Keep up to date with CSR on our technical blog, www.csr.com/blog, CSR people blog, www.csr.com/people, YouTube, www.youtube.com/user/CSRplc, Facebook, www.facebook.com/pages/CSR/191038434253534, or follow us on Twitter at www.twitter.com/CSR_plc.
-New for 2014, you can now access the wide range of products powered by aptX at www.aptx.com.
+T24gMjAxNOW5tDA25pyIMzDml6UgMTc6NTIsIE1hcmsgUnV0bGFuZCB3cm90ZToKPiBPbiBNb24s
+IEp1biAzMCwgMjAxNCBhdCAwOTowMzoyOUFNICswMTAwLCBaaG91IFdhbmcgd3JvdGU6Cj4+IFNp
+Z25lZC1vZmYtYnk6IFpob3UgV2FuZyA8d2FuZ3pob3UuYnJ5QGdtYWlsLmNvbT4KPj4gLS0tCj4+
+ICAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2hpc2ktbmFuZC50eHQgICAgICAgICAgfCAg
+IDM4ICsrKysrKysrKysrKysrKysrKysrCj4+ICAgMSBmaWxlIGNoYW5nZWQsIDM4IGluc2VydGlv
+bnMoKykKPj4gICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL210ZC9oaXNpLW5hbmQudHh0Cj4+Cj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2hpc2ktbmFuZC50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvbXRkL2hpc2ktbmFuZC50eHQKPj4gbmV3IGZpbGUgbW9kZSAxMDA2
+NDQKPj4gaW5kZXggMDAwMDAwMC4uMWNjNjQ3MAo+PiAtLS0gL2Rldi9udWxsCj4+ICsrKyBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tdGQvaGlzaS1uYW5kLnR4dAo+PiBAQCAt
+MCwwICsxLDM4IEBACj4+ICtIaXNpbGljb24gSGlwMDQgU29jIE5BTkQgY29udHJvbGxlciBEVCBi
+aW5kaW5nCj4+ICsKPj4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4+ICstIGNvbXBhdGlibGU6ICAg
+ICAgICAgIFNob3VsZCBiZSAiaGlzaWxpY29uLG5mYzUwNCIuCj4+ICstIHJlZzogICAgICAgICAg
+ICAgICAgIENvbnRhaW4gcmVnaXN0ZXJzIGxvY2F0aW9uIGFuZCBsZW5ndGggZm9yIHJlZyBhbmQg
+ZGF0YS4KPgo+IEknbSBub3Qgc3VyZSBJIGZvbGxvdy4gVGhlIGV4YW1wbGUgYmVsb3cgaGFzIHR3
+byByZWcgZW50cmllcy4gV2hhdCBkb2VzCj4gZWFjaCBlbnRyeSByZXByZXNlbnQsIGFuZCB3aGF0
+IGRvZXMgdGhlIHByZXNlbmNlIG9mIG11bHRpcGxlIGVudHJpZXMKPiBtZWFuPwo+CgpNYXliZSBJ
+IGNvdWxkIG5vdCBleHByZXNzIGl0IGNsZWFybHkgaGVyZS4gVGhlIGZpcnN0IHJlZyBlbnRyeSAK
+cmVwcmVzZW50cyB0aGUgYmFzaWMgYWRkcmVzcyBvZiByZWdpc3RlcnMgb2YgTkFORCBjb250cm9s
+bGVyLCBhbmQgdGhlIApzZWNvbmQgcmVwcmVzZW50cyB0aGUgYmFzaWMgYWRkcmVzcyBvZiBidWZm
+ZXIgb2YgTkFORCBjb250cm9sbGVyLgoKPj4gKy0gaW50ZXJydXB0czogICAgICAgICAgSW50ZXJy
+dXB0IG51bWJlciBmb3IgbmZjLgo+Cj4gSnVzdCB0aGUgb25lPwo+CgpZZXMsIEp1c3Qgb25lIGlu
+dGVycnVwdCBudW1iZXIuIEFuZCB0aGVyZSBpcyBhbiBpbnRlcnJ1cHQgcmVsYXRpdmUgCnJlZ2lz
+dGVyIGluIHRoZSBOQU5EIGNvbnRyb2xsZXIsIHdlIGNhbiBnZXQgaW5mb3JtYXRpb24gYWJvdXQg
+aW50ZXJydXB0IApmcm9tIHRoZSByZWdpc3RlciBhZnRlciBhbiBpbnRlcnJ1cHQgdHJpZ2dlcmVk
+LgoKPj4gKy0gbmFuZC1idXMtd2lkdGg6ICAgICAgU2VlIG5hbmQudHh0Lgo+PiArLSBuYW5kLWVj
+Yy1tb2RlOiAgICAgICBTZWUgbmFuZC50eHQuCj4+ICstIGhpc2ksbmFuZC1lY2MtYml0czogIEVD
+QyBiaXRzIHR5cGUgc3VwcG9ydC4KPj4gKwkJPDA+OiAgIG5vbmUgZWNjCj4+ICsJCTwxPjogICBD
+YW4gY29ycmVjdCAxYml0IHBlciA1MTJieXRlLgo+PiArCQk8Nj46ICAgQ2FuIGNvcnJlY3QgMTZi
+aXRzIHBlciAxSyBieXRlLgo+Cj4gSXMgdGhpcyBhbiBlbnVtZXJhdGlvbiwgb3IgYSBudW1iZXIg
+b2YgYml0cz8KPgoKVGhpcyBpcyBhbiBlbnVtZXJhdGlvbiB3aGljaCBpcyBqdXN0IHJlbGF0aXZl
+IHJlZ2lzdGVyIGNvbmZpZ3VyZSwgc28gd2UgCmNhbiBkaXJlY3RseSB1c2UgaXQgdG8gY29uZmln
+dXJlIHJlbGF0aXZlIHJlZ2lzdGVyIGJpdHMgaW4gZHJpdmVyLgoKPj4gKy0gI2FkZHJlc3MtY2Vs
+bHM6ICAgICAgcGFydGl0aW9uIGFkZHJlc3MuCj4+ICstICNzaXplLWNlbGxzOiAgICAgICAgIHBh
+cnRpdGlvbiBzaXplLgo+Cj4gQXJlIHRoZXNlIG9ubHkgYWxsb3dlZCB0byBiZSAxIGNlbGwsIG9y
+IGNhbiB0aGV5IGJlIG1vcmU/Cj4KPiBUaGFua3MsCj4gTWFyay4KPgoKVGhlc2UgYXJlIG9ubHkg
+YWxsb3dlZCB0byBiZSAxIGNlbGwuIEFkZHJlc3MtY2VsbHMgcmVwcmVzZW50cyBiYXNpYyAKYWRk
+cmVzcyBvZiBhIHBhcnRpdGlvbiwgYW5kIHNpemUtY2VsbHMgcmVwcmVzZW50cyB0aGUgc2l6ZSBv
+ZiBhIHBhcnRpdGlvbi4KCkkgd2lsbCByZXdyaXRlIHRoZSB1bmNsZWFyIHBhcnRzIGFzIHlvdXIg
+Y29tbWVudHMuIFRoYW5rcyBmb3IgeW91ciBjb21tZW50cy4KCi1aaG91IFdhbmcKCj4+ICsKPj4g
+K0ZsYXNoIGNoaXAgbWF5IG9wdGlvbmFsbHkgY29udGFpbiBhZGRpdGlvbmFsIHN1Yi1ub2RlcyBk
+ZXNjcmliaW5nIHBhcnRpdGlvbnMgb2YKPj4gK3RoZSBhZGRyZXNzIHNwYWNlLiBTZWUgcGFydGl0
+aW9uLnR4dCBmb3IgbW9yZSBkZXRhaWwuCj4+ICsKPj4gK0V4YW1wbGU6Cj4+ICsKPj4gKwluYW5k
+OiBuYW5kQDQwMjAwMDAgewo+PiArCQljb21wYXRpYmxlID0gImhpc2lsaWNvbixuZmM1MDQiOwo+
+PiArCQlyZWcgPSA8MHg0MDIwMDAwIDB4MTAwMDA+LCA8MHg1MDAwMDAwIDB4MTAwMD47Cj4+ICsJ
+CWludGVycnVwdHMgPSA8MCAzNzkgND47Cj4+ICsJCW5hbmQtYnVzLXdpZHRoID0gPDg+Owo+PiAr
+CQluYW5kLWVjYy1tb2RlID0gImh3IjsKPj4gKwkJaGlzaSxuYW5kLWVjYy1iaXRzID0gPDE+Owo+
+PiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPj4gKwkJI3NpemUtY2VsbHMgPSA8MT47Cj4+ICsK
+Pj4gKwkJcGFydGl0aW9uQDAgewo+PiArCQkJbGFiZWwgPSAibmFuZF90ZXh0IjsKPj4gKwkJCXJl
+ZyA9IDwweDAwMDAwMDAwIDB4MDA0MDAwMDA+Owo+PiArCQl9Owo+PiArCj4+ICsJCS4uLgo+PiAr
+Cj4+ICsJfTsKPj4gLS0KPj4gMS43LjkuNQo+Pgo+Pgo+Cj4gX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KPiBsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlz
+dAo+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+IGh0dHA6Ly9saXN0cy5p
+bmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo+CgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
