@@ -1,68 +1,71 @@
-From: Marc Kleine-Budde <mkl@pengutronix.de>
-Subject: Re: [PATCH 1/3] can: m_can: add Bosch M_CAN controller support
-Date: Wed, 02 Jul 2014 21:13:07 +0200
-Message-ID: <53B459C3.6070807@pengutronix.de>
-References: <1403863246-18822-1-git-send-email-b29396@freescale.com> <1403863246-18822-2-git-send-email-b29396@freescale.com> <53ADB1E8.1030504@hartkopp.net> <20140630082622.GB25689@shlinux1.ap.freescale.net> <53B4473B.2050003@hartkopp.net>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Wed, 2 Jul 2014 20:37:56 +0100
+Message-ID: <20140702193756.GM410@sirena.org.uk>
+References: <20140702183841.7c964832@armhf>
+ <20140702165628.GO20799@lunn.ch>
+ <20140702195154.47d6f6b4@armhf>
+ <20140702180212.GS32514@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha1;
- protocol="application/pgp-signature";
- boundary="OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi"
-Return-path: <linux-can-owner@vger.kernel.org>
-In-Reply-To: <53B4473B.2050003@hartkopp.net>
-Sender: linux-can-owner@vger.kernel.org
-To: Oliver Hartkopp <socketcan@hartkopp.net>
-Cc: Dong Aisheng <b29396@freescale.com>, linux-can@vger.kernel.org, wg@grandegger.com, devicetree@vger.kernel.org
+	protocol="application/pgp-signature"; boundary="4oQnj4jcM03NhqPN"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20140702180212.GS32514@n2100.arm.linux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Jean-Francois Moine <moinejf@free.fr>, Andrew Lunn <andrew@lunn.ch>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
---OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi
-Content-Type: text/plain; charset=UTF-8
+
+--4oQnj4jcM03NhqPN
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-On 07/02/2014 07:54 PM, Oliver Hartkopp wrote:
-> I'm not really familiar with the naming concept in device trees.
->=20
-> What is your opinion about the remarks below?
+On Wed, Jul 02, 2014 at 07:02:12PM +0100, Russell King - ARM Linux wrote:
 
-The entries in the DT, at least on freescale baords, follow the naming
-scheme of the reference manual. E.g. on the mx25 it's can1 and can2:
+> Well, as far as I'm concerned right now, it's for Mark to sort out this
+> situation, and tell us what he wants to do with the Kirkwood stuff.  I
+> suspect he's keeping quiet because he doesn't care about it.
 
-    can1: can@43f88000 { ... }
-    can2: can@43f8c000 { ... }
+Well, that and the general level of stress around the support for these
+boards in general. =20
 
-And on the mx28, its:
+> Given that he's the one with the knowledge of DPCM, and he's the maintain=
+er
+> of ASoC, he has the ultimate responsibility for sorting out this and
+> giving direction as to how he wants to proceed.
 
-    can0: can@80032000 { ... }
-    can1: can@80034000 { ... }
+> As I understand it though, my solution is the full and proper DPCM soluti=
+on,
+> and I believe that what's currently in mainline is not a DPCM solution.
 
-Because the imx25 datasheet uses a "1" based counting scheme, while the
-imx28 uses a "0" based one.
+That's right, from what I remember your last set of patches looked like
+it was pretty much there in terms of the code for the CPU.  Liam's
+obviously the most in depth expert with DPCM but he's incredibly snowed
+under with work right now.
 
-So it's best practise to follow the naming and numbering scheme of the
-hardware reference manual.....and if you have access to the
-documentation of the m_can core, use clock names of the m_can core for
-the clock-names property.
-
-Marc
---=20
-Pengutronix e.K.                  | Marc Kleine-Budde           |
-Industrial Linux Solutions        | Phone: +49-231-2826-924     |
-Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
-Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
-
-
---OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi
+--4oQnj4jcM03NhqPN
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: OpenPGP digital signature
-Content-Disposition: attachment; filename="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-Comment: Using GnuPG with Icedove - http://www.enigmail.net/
+Version: GnuPG v2
 
-iEYEARECAAYFAlO0WcMACgkQjTAFq1RaXHPFFwCaAi6n0t6W6LUxGCTUznVssXmU
-M0IAn3z/Ckj5p/vjkzqQ3BQtHFTGddpl
-=yhAC
+iQIcBAEBAgAGBQJTtF+RAAoJELSic+t+oim9utwP/jak9ChYQvNwMg96s8eXE9+w
+FugfXEoApjJcCQnsfkfP3x/6xgAKxBpS6JK8dw7VJqpIX76A8XxwavFOz769fyMD
+GcJDRQN8O9tN1q8lX1iP4BWcnb20ITloK7LqZha7C9qkxh3hMprHE3ewHfNATUDC
+TolfsY3mKseGkCS1s6t9fNWbZA5/r4P3uIeXCFFinpPyf4ifebnQzVHtVP6MFj+k
+dKY73UnKbhnnOIE8eKEjMhEAz3TS1PP6QshUtD70vjW/cn6/5xawC+v9cFgzdgE1
+ZvmDup3pTRT91QD0PAxWho52A/na0m/ouKgi4y66gktzJ4+rHy2SIJ2f54Efn6If
+SX0kEO8UCaz0Jt5SKm/UwlvmsmlP8BDFRFV2YRc6qC66ewmFJQDCSJt9iCNTq+/W
+pKgx/D1KfVjWNT5DiN9Itxz0JP5sZRJYVo0UQEcOJeNy3wsacK3xCk0nrIXLYh85
+d84nWmypXdmwbNtL1tka5O0pP9B+SkYDjBhG0LAmDPo7rdbdFi0yUOYBFH1wofXT
+FEvzzb4xVFYOmtK8vq9H1rUGQJdW63AnLR0wVowEkmXx4W9P3YTvk9ovFCSLvp9P
+gY7/AwUz14Ocsy2FBdrldVcrcdTsoIF3hDHpx663/1ewqnk0JfVwH0Ut9FusFi74
+8gUS6slP69bMZLyHguOR
+=Qfcs
 -----END PGP SIGNATURE-----
 
---OOJRHjNdD3dTIER8ffBsrqWl8P4dXjfCi--
+--4oQnj4jcM03NhqPN--
