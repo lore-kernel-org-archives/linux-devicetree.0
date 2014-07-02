@@ -1,853 +1,376 @@
-From: Tomasz Figa <t.figa@samsung.com>
-Subject: [PATCH 5/6] pinctrl: samsung: Allow grouping multiple pinmux/pinconf
- nodes
-Date: Wed, 02 Jul 2014 17:41:03 +0200
-Message-ID: <1404315664-3174-6-git-send-email-t.figa@samsung.com>
-References: <1404315664-3174-1-git-send-email-t.figa@samsung.com>
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-reply-to: <1404315664-3174-1-git-send-email-t.figa@samsung.com>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: linux-samsung-soc@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Kukjin Kim <kgene.kim@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, Doug Anderson <dianders@chromium.org>, Tomasz Figa <t.figa@samsung.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+From: Murali Karicheri <m-karicheri2@ti.com>
+Subject: Re: [RESEND: PATCH - v3] phy: Add serdes phy driver for keystone
+Date: Wed, 2 Jul 2014 11:42:44 -0400
+Message-ID: <53B42874.7040908@ti.com>
+References: <1404223042-12845-1-git-send-email-m-karicheri2@ti.com> <53B3CBE4.4030807@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="ISO-8859-1"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <53B3CBE4.4030807@ti.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-One of remaining limitations of current pinctrl-samsung driver was
-the inability to parse multiple pinmux/pinconf group nodes grouped
-inside a single device tree node. It made defining groups of pins for
-single purpose, but with different parameters very inconvenient.
+On 07/02/2014 05:07 AM, Kishon Vijay Abraham I wrote:
+> Hi,
+>
+> On Tuesday 01 July 2014 07:27 PM, Murali Karicheri wrote:
+>> This phy driver added to support keystone PCI driver. This is
+>
+> %s/PCI/PCIe/
 
-This patch implements Tegra-like support for grouping multiple pinctrl
-groups inside one device tree node, by completely changing the way
-pin groups and functions are parsed from device tree. The code creating
-pinctrl maps from DT nodes has been borrowed from pinctrl-tegra, while
-the initial creation of groups and functions has been completely
-rewritten with following assumptions:
- - each group consists of just one pin and does not depend on data
-   from device tree,
- - each function is represented by a device tree child node of the
-   pin controller, which in turn can contain multiple child nodes
-   for pins that need to have different configuration values.
+Ok.
 
-Device Tree bindings are fully backwards compatible. New functionality
-can be used by defining a new pinctrl group consisting of several child
-nodes, as on following example:
+>> a generic phy driver and currently it supports only SerDes
+>> for PCI Controller. The hw vendor that provides the phy
+>
+> The driver supports only for PCIe or the controller?
 
-	sd4_bus8: sd4-bus-width8 {
-		part-1 {
-			samsung,pins = "gpk0-3", "gpk0-4",
-					"gpk0-5", "gpk0-6";
-			samsung,pin-function = <3>;
-			samsung,pin-pud = <3>;
-			samsung,pin-drv = <3>;
-		};
-		part-2 {
-			samsung,pins = "gpk1-3", "gpk1-4",
-					"gpk1-5", "gpk1-6";
-			samsung,pin-function = <4>;
-			samsung,pin-pud = <4>;
-			samsung,pin-drv = <3>;
-		};
-	};
+I meant PCIe. I will fix it.
 
-Tested on Exynos4210-Trats board and a custom Exynos4212-based one.
+>> hw published only registers and their values. So this driver
+>> uses these hard coded values to initialize the phy.
+>>
+>> Signed-off-by: Murali Karicheri<m-karicheri2@ti.com>
+>> CC: Rob Herring<robh+dt@kernel.org>
+>> CC: Pawel Moll<pawel.moll@arm.com>
+>> CC: Mark Rutland<mark.rutland@arm.com>
+>> CC: Ian Campbell<ijc+devicetree@hellion.org.uk>
+>> CC: Kumar Gala<galak@codeaurora.org>
+>> CC: Kishon Vijay Abraham I<kishon@ti.com>
+>> CC: Grant Likely<grant.likely@linaro.org>
+>> ---
+>> Changelog:-
+>>   -  Resending with changelog moved out of commit message
+>>   -  Added comments to indicate what the register functionality
+>>      each register blob is doing.
+>>   -  Previous versions were part of the PCI Keystone driver series.
+>>      This is now send as a separate patch so that this can be
+>>      reviewed indepedently and merged.
+>>
+>>   .../bindings/phy/phy-serdes-keystone.txt           |   25 +++
+>>   drivers/phy/Kconfig                                |    6 +
+>>   drivers/phy/Makefile                               |    1 +
+>>   drivers/phy/phy-serdes-keystone.c                  |  200 ++++++++++++++++++++
+>>   4 files changed, 232 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt
+>>   create mode 100644 drivers/phy/phy-serdes-keystone.c
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt b/Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt
+>
+> Can we reuse ti-phy.txt for this?
 
-Signed-off-by: Tomasz Figa <t.figa@samsung.com>
-Acked-by: Kyungmin Park <kyungmin.park@samsung.com>
-Reviewed-by: Stephen Warren <swarren@nvidia.com>
-Cc: devicetree@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- .../bindings/pinctrl/samsung-pinctrl.txt           |  23 +-
- drivers/pinctrl/pinctrl-samsung.c                  | 613 ++++++++++++---------
- drivers/pinctrl/pinctrl-samsung.h                  |   1 +
- 3 files changed, 384 insertions(+), 253 deletions(-)
+No issues. I will move the content to a section in ti-phy.txt
+"Keystone SerDes Phy"
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-index 2b32783..464b2bb 100644
---- a/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/samsung-pinctrl.txt
-@@ -44,7 +44,11 @@ Required Properties:
- - Pin mux/config groups as child nodes: The pin mux (selecting pin function
-   mode) and pin config (pull up/down, driver strength) settings are represented
-   as child nodes of the pin-controller node. There should be atleast one
--  child node and there is no limit on the count of these child nodes.
-+  child node and there is no limit on the count of these child nodes. It is
-+  also possible for a child node to consist of several further child nodes
-+  to allow grouping multiple pinctrl groups into one. The format of second
-+  level child nodes is exactly the same as for first level ones and is
-+  described below.
- 
-   The child node should contain a list of pin(s) on which a particular pin
-   function selection or pin configuration (or both) have to applied. This
-@@ -249,6 +253,23 @@ Example 1: A pin-controller node with pin groups.
- 			samsung,pin-pud = <3>;
- 			samsung,pin-drv = <0>;
- 		};
-+
-+		sd4_bus8: sd4-bus-width8 {
-+			part-1 {
-+				samsung,pins = "gpk0-3", "gpk0-4",
-+						"gpk0-5", "gpk0-6";
-+				samsung,pin-function = <3>;
-+				samsung,pin-pud = <3>;
-+				samsung,pin-drv = <3>;
-+			};
-+			part-2 {
-+				samsung,pins = "gpk1-3", "gpk1-4",
-+						"gpk1-5", "gpk1-6";
-+				samsung,pin-function = <4>;
-+				samsung,pin-pud = <4>;
-+				samsung,pin-drv = <3>;
-+			};
-+		};
- 	};
- 
- Example 2: A pin-controller node with external wakeup interrupt controller node.
-diff --git a/drivers/pinctrl/pinctrl-samsung.c b/drivers/pinctrl/pinctrl-samsung.c
-index 6e099d6..caa6dbe 100644
---- a/drivers/pinctrl/pinctrl-samsung.c
-+++ b/drivers/pinctrl/pinctrl-samsung.c
-@@ -40,9 +40,9 @@
- 
- /* list of all possible config options supported */
- static struct pin_config {
--	char		*prop_cfg;
--	unsigned int	cfg_type;
--} pcfgs[] = {
-+	const char *property;
-+	enum pincfg_type param;
-+} cfg_params[] = {
- 	{ "samsung,pin-pud", PINCFG_TYPE_PUD },
- 	{ "samsung,pin-drv", PINCFG_TYPE_DRV },
- 	{ "samsung,pin-con-pdn", PINCFG_TYPE_CON_PDN },
-@@ -59,163 +59,242 @@ static inline struct samsung_pin_bank *gc_to_pin_bank(struct gpio_chip *gc)
- 	return container_of(gc, struct samsung_pin_bank, gpio_chip);
- }
- 
--/* check if the selector is a valid pin group selector */
- static int samsung_get_group_count(struct pinctrl_dev *pctldev)
- {
--	struct samsung_pinctrl_drv_data *drvdata;
-+	struct samsung_pinctrl_drv_data *pmx = pinctrl_dev_get_drvdata(pctldev);
- 
--	drvdata = pinctrl_dev_get_drvdata(pctldev);
--	return drvdata->nr_groups;
-+	return pmx->nr_groups;
- }
- 
--/* return the name of the group selected by the group selector */
- static const char *samsung_get_group_name(struct pinctrl_dev *pctldev,
--						unsigned selector)
-+						unsigned group)
- {
--	struct samsung_pinctrl_drv_data *drvdata;
-+	struct samsung_pinctrl_drv_data *pmx = pinctrl_dev_get_drvdata(pctldev);
- 
--	drvdata = pinctrl_dev_get_drvdata(pctldev);
--	return drvdata->pin_groups[selector].name;
-+	return pmx->pin_groups[group].name;
- }
- 
--/* return the pin numbers associated with the specified group */
- static int samsung_get_group_pins(struct pinctrl_dev *pctldev,
--		unsigned selector, const unsigned **pins, unsigned *num_pins)
-+					unsigned group,
-+					const unsigned **pins,
-+					unsigned *num_pins)
- {
--	struct samsung_pinctrl_drv_data *drvdata;
-+	struct samsung_pinctrl_drv_data *pmx = pinctrl_dev_get_drvdata(pctldev);
-+
-+	*pins = pmx->pin_groups[group].pins;
-+	*num_pins = pmx->pin_groups[group].num_pins;
- 
--	drvdata = pinctrl_dev_get_drvdata(pctldev);
--	*pins = drvdata->pin_groups[selector].pins;
--	*num_pins = drvdata->pin_groups[selector].num_pins;
- 	return 0;
- }
- 
--/* create pinctrl_map entries by parsing device tree nodes */
--static int samsung_dt_node_to_map(struct pinctrl_dev *pctldev,
--			struct device_node *np, struct pinctrl_map **maps,
--			unsigned *nmaps)
-+static int reserve_map(struct device *dev, struct pinctrl_map **map,
-+		       unsigned *reserved_maps, unsigned *num_maps,
-+		       unsigned reserve)
- {
--	struct device *dev = pctldev->dev;
--	struct pinctrl_map *map;
--	unsigned long *cfg = NULL;
--	char *gname, *fname;
--	int cfg_cnt = 0, map_cnt = 0, idx = 0;
--
--	/* count the number of config options specfied in the node */
--	for (idx = 0; idx < ARRAY_SIZE(pcfgs); idx++) {
--		if (of_find_property(np, pcfgs[idx].prop_cfg, NULL))
--			cfg_cnt++;
--	}
-+	unsigned old_num = *reserved_maps;
-+	unsigned new_num = *num_maps + reserve;
-+	struct pinctrl_map *new_map;
- 
--	/*
--	 * Find out the number of map entries to create. All the config options
--	 * can be accomadated into a single config map entry.
--	 */
--	if (cfg_cnt)
--		map_cnt = 1;
--	if (of_find_property(np, "samsung,pin-function", NULL))
--		map_cnt++;
--	if (!map_cnt) {
--		dev_err(dev, "node %s does not have either config or function "
--				"configurations\n", np->name);
--		return -EINVAL;
--	}
-+	if (old_num >= new_num)
-+		return 0;
- 
--	/* Allocate memory for pin-map entries */
--	map = kzalloc(sizeof(*map) * map_cnt, GFP_KERNEL);
--	if (!map) {
--		dev_err(dev, "could not alloc memory for pin-maps\n");
-+	new_map = krealloc(*map, sizeof(*new_map) * new_num, GFP_KERNEL);
-+	if (!new_map) {
-+		dev_err(dev, "krealloc(map) failed\n");
- 		return -ENOMEM;
- 	}
--	*nmaps = 0;
- 
--	/*
--	 * Allocate memory for pin group name. The pin group name is derived
--	 * from the node name from which these map entries are be created.
--	 */
--	gname = kzalloc(strlen(np->name) + GSUFFIX_LEN, GFP_KERNEL);
--	if (!gname) {
--		dev_err(dev, "failed to alloc memory for group name\n");
--		goto free_map;
-+	memset(new_map + old_num, 0, (new_num - old_num) * sizeof(*new_map));
-+
-+	*map = new_map;
-+	*reserved_maps = new_num;
-+
-+	return 0;
-+}
-+
-+static int add_map_mux(struct pinctrl_map **map, unsigned *reserved_maps,
-+		       unsigned *num_maps, const char *group,
-+		       const char *function)
-+{
-+	if (WARN_ON(*num_maps == *reserved_maps))
-+		return -ENOSPC;
-+
-+	(*map)[*num_maps].type = PIN_MAP_TYPE_MUX_GROUP;
-+	(*map)[*num_maps].data.mux.group = group;
-+	(*map)[*num_maps].data.mux.function = function;
-+	(*num_maps)++;
-+
-+	return 0;
-+}
-+
-+static int add_map_configs(struct device *dev, struct pinctrl_map **map,
-+			   unsigned *reserved_maps, unsigned *num_maps,
-+			   const char *group, unsigned long *configs,
-+			   unsigned num_configs)
-+{
-+	unsigned long *dup_configs;
-+
-+	if (WARN_ON(*num_maps == *reserved_maps))
-+		return -ENOSPC;
-+
-+	dup_configs = kmemdup(configs, num_configs * sizeof(*dup_configs),
-+			      GFP_KERNEL);
-+	if (!dup_configs) {
-+		dev_err(dev, "kmemdup(configs) failed\n");
-+		return -ENOMEM;
- 	}
--	sprintf(gname, "%s%s", np->name, GROUP_SUFFIX);
- 
--	/*
--	 * don't have config options? then skip over to creating function
--	 * map entries.
--	 */
--	if (!cfg_cnt)
--		goto skip_cfgs;
--
--	/* Allocate memory for config entries */
--	cfg = kzalloc(sizeof(*cfg) * cfg_cnt, GFP_KERNEL);
--	if (!cfg) {
--		dev_err(dev, "failed to alloc memory for configs\n");
--		goto free_gname;
-+	(*map)[*num_maps].type = PIN_MAP_TYPE_CONFIGS_GROUP;
-+	(*map)[*num_maps].data.configs.group_or_pin = group;
-+	(*map)[*num_maps].data.configs.configs = dup_configs;
-+	(*map)[*num_maps].data.configs.num_configs = num_configs;
-+	(*num_maps)++;
-+
-+	return 0;
-+}
-+
-+static int add_config(struct device *dev, unsigned long **configs,
-+		      unsigned *num_configs, unsigned long config)
-+{
-+	unsigned old_num = *num_configs;
-+	unsigned new_num = old_num + 1;
-+	unsigned long *new_configs;
-+
-+	new_configs = krealloc(*configs, sizeof(*new_configs) * new_num,
-+			       GFP_KERNEL);
-+	if (!new_configs) {
-+		dev_err(dev, "krealloc(configs) failed\n");
-+		return -ENOMEM;
- 	}
- 
--	/* Prepare a list of config settings */
--	for (idx = 0, cfg_cnt = 0; idx < ARRAY_SIZE(pcfgs); idx++) {
--		u32 value;
--		if (!of_property_read_u32(np, pcfgs[idx].prop_cfg, &value))
--			cfg[cfg_cnt++] =
--				PINCFG_PACK(pcfgs[idx].cfg_type, value);
-+	new_configs[old_num] = config;
-+
-+	*configs = new_configs;
-+	*num_configs = new_num;
-+
-+	return 0;
-+}
-+
-+static void samsung_dt_free_map(struct pinctrl_dev *pctldev,
-+				      struct pinctrl_map *map,
-+				      unsigned num_maps)
-+{
-+	int i;
-+
-+	for (i = 0; i < num_maps; i++)
-+		if (map[i].type == PIN_MAP_TYPE_CONFIGS_GROUP)
-+			kfree(map[i].data.configs.configs);
-+
-+	kfree(map);
-+}
-+
-+static int samsung_dt_subnode_to_map(struct samsung_pinctrl_drv_data *drvdata,
-+				     struct device *dev,
-+				     struct device_node *np,
-+				     struct pinctrl_map **map,
-+				     unsigned *reserved_maps,
-+				     unsigned *num_maps)
-+{
-+	int ret, i;
-+	u32 val;
-+	unsigned long config;
-+	unsigned long *configs = NULL;
-+	unsigned num_configs = 0;
-+	unsigned reserve;
-+	struct property *prop;
-+	const char *group;
-+	bool has_func = false;
-+
-+	ret = of_property_read_u32(np, "samsung,pin-function", &val);
-+	if (!ret)
-+		has_func = true;
-+
-+	for (i = 0; i < ARRAY_SIZE(cfg_params); i++) {
-+		ret = of_property_read_u32(np, cfg_params[i].property, &val);
-+		if (!ret) {
-+			config = PINCFG_PACK(cfg_params[i].param, val);
-+			ret = add_config(dev, &configs, &num_configs, config);
-+			if (ret < 0)
-+				goto exit;
-+		/* EINVAL=missing, which is fine since it's optional */
-+		} else if (ret != -EINVAL) {
-+			dev_err(dev, "could not parse property %s\n",
-+				cfg_params[i].property);
-+		}
- 	}
- 
--	/* create the config map entry */
--	map[*nmaps].data.configs.group_or_pin = gname;
--	map[*nmaps].data.configs.configs = cfg;
--	map[*nmaps].data.configs.num_configs = cfg_cnt;
--	map[*nmaps].type = PIN_MAP_TYPE_CONFIGS_GROUP;
--	*nmaps += 1;
--
--skip_cfgs:
--	/* create the function map entry */
--	if (of_find_property(np, "samsung,pin-function", NULL)) {
--		fname = kzalloc(strlen(np->name) + FSUFFIX_LEN,	GFP_KERNEL);
--		if (!fname) {
--			dev_err(dev, "failed to alloc memory for func name\n");
--			goto free_cfg;
-+	reserve = 0;
-+	if (has_func)
-+		reserve++;
-+	if (num_configs)
-+		reserve++;
-+	ret = of_property_count_strings(np, "samsung,pins");
-+	if (ret < 0) {
-+		dev_err(dev, "could not parse property samsung,pins\n");
-+		goto exit;
-+	}
-+	reserve *= ret;
-+
-+	ret = reserve_map(dev, map, reserved_maps, num_maps, reserve);
-+	if (ret < 0)
-+		goto exit;
-+
-+	of_property_for_each_string(np, "samsung,pins", prop, group) {
-+		if (has_func) {
-+			ret = add_map_mux(map, reserved_maps,
-+						num_maps, group, np->full_name);
-+			if (ret < 0)
-+				goto exit;
- 		}
--		sprintf(fname, "%s%s", np->name, FUNCTION_SUFFIX);
- 
--		map[*nmaps].data.mux.group = gname;
--		map[*nmaps].data.mux.function = fname;
--		map[*nmaps].type = PIN_MAP_TYPE_MUX_GROUP;
--		*nmaps += 1;
-+		if (num_configs) {
-+			ret = add_map_configs(dev, map, reserved_maps,
-+					      num_maps, group, configs,
-+					      num_configs);
-+			if (ret < 0)
-+				goto exit;
-+		}
- 	}
- 
--	*maps = map;
--	return 0;
-+	ret = 0;
- 
--free_cfg:
--	kfree(cfg);
--free_gname:
--	kfree(gname);
--free_map:
--	kfree(map);
--	return -ENOMEM;
-+exit:
-+	kfree(configs);
-+	return ret;
- }
- 
--/* free the memory allocated to hold the pin-map table */
--static void samsung_dt_free_map(struct pinctrl_dev *pctldev,
--			     struct pinctrl_map *map, unsigned num_maps)
-+static int samsung_dt_node_to_map(struct pinctrl_dev *pctldev,
-+					struct device_node *np_config,
-+					struct pinctrl_map **map,
-+					unsigned *num_maps)
- {
--	int idx;
--
--	for (idx = 0; idx < num_maps; idx++) {
--		if (map[idx].type == PIN_MAP_TYPE_MUX_GROUP) {
--			kfree(map[idx].data.mux.function);
--			if (!idx)
--				kfree(map[idx].data.mux.group);
--		} else if (map->type == PIN_MAP_TYPE_CONFIGS_GROUP) {
--			kfree(map[idx].data.configs.configs);
--			if (!idx)
--				kfree(map[idx].data.configs.group_or_pin);
-+	struct samsung_pinctrl_drv_data *drvdata;
-+	unsigned reserved_maps;
-+	struct device_node *np;
-+	int ret;
-+
-+	drvdata = pinctrl_dev_get_drvdata(pctldev);
-+
-+	reserved_maps = 0;
-+	*map = NULL;
-+	*num_maps = 0;
-+
-+	if (!of_get_child_count(np_config))
-+		return samsung_dt_subnode_to_map(drvdata, pctldev->dev,
-+							np_config, map,
-+							&reserved_maps,
-+							num_maps);
-+
-+	for_each_child_of_node(np_config, np) {
-+		ret = samsung_dt_subnode_to_map(drvdata, pctldev->dev, np, map,
-+						&reserved_maps, num_maps);
-+		if (ret < 0) {
-+			samsung_dt_free_map(pctldev, *map, *num_maps);
-+			return ret;
- 		}
--	};
-+	}
- 
--	kfree(map);
-+	return 0;
- }
- 
- /* list of pinctrl callbacks for the pinctrl core */
-@@ -286,43 +365,38 @@ static void samsung_pinmux_setup(struct pinctrl_dev *pctldev, unsigned selector,
- 					unsigned group, bool enable)
- {
- 	struct samsung_pinctrl_drv_data *drvdata;
--	const unsigned int *pins;
-+	struct samsung_pin_bank_type *type;
- 	struct samsung_pin_bank *bank;
- 	void __iomem *reg;
--	u32 mask, shift, data, pin_offset, cnt;
-+	u32 mask, shift, data, pin_offset;
- 	unsigned long flags;
-+	const struct samsung_pmx_func *func;
-+	const struct samsung_pin_group *grp;
- 
- 	drvdata = pinctrl_dev_get_drvdata(pctldev);
--	pins = drvdata->pin_groups[group].pins;
-+	func = &drvdata->pmx_functions[selector];
-+	grp = &drvdata->pin_groups[group];
- 
--	/*
--	 * for each pin in the pin group selected, program the correspoding pin
--	 * pin function number in the config register.
--	 */
--	for (cnt = 0; cnt < drvdata->pin_groups[group].num_pins; cnt++) {
--		struct samsung_pin_bank_type *type;
--
--		pin_to_reg_bank(drvdata, pins[cnt] - drvdata->ctrl->base,
--				&reg, &pin_offset, &bank);
--		type = bank->type;
--		mask = (1 << type->fld_width[PINCFG_TYPE_FUNC]) - 1;
--		shift = pin_offset * type->fld_width[PINCFG_TYPE_FUNC];
--		if (shift >= 32) {
--			/* Some banks have two config registers */
--			shift -= 32;
--			reg += 4;
--		}
-+	pin_to_reg_bank(drvdata, grp->pins[0] - drvdata->ctrl->base,
-+			&reg, &pin_offset, &bank);
-+	type = bank->type;
-+	mask = (1 << type->fld_width[PINCFG_TYPE_FUNC]) - 1;
-+	shift = pin_offset * type->fld_width[PINCFG_TYPE_FUNC];
-+	if (shift >= 32) {
-+		/* Some banks have two config registers */
-+		shift -= 32;
-+		reg += 4;
-+	}
- 
--		spin_lock_irqsave(&bank->slock, flags);
-+	spin_lock_irqsave(&bank->slock, flags);
- 
--		data = readl(reg + type->reg_offset[PINCFG_TYPE_FUNC]);
--		data &= ~(mask << shift);
--		if (enable)
--			data |= drvdata->pin_groups[group].func << shift;
--		writel(data, reg + type->reg_offset[PINCFG_TYPE_FUNC]);
-+	data = readl(reg + type->reg_offset[PINCFG_TYPE_FUNC]);
-+	data &= ~(mask << shift);
-+	if (enable)
-+		data |= func->val << shift;
-+	writel(data, reg + type->reg_offset[PINCFG_TYPE_FUNC]);
- 
--		spin_unlock_irqrestore(&bank->slock, flags);
--	}
-+	spin_unlock_irqrestore(&bank->slock, flags);
- }
- 
- /* enable a specified pinmux by writing to registers */
-@@ -567,87 +641,115 @@ static int samsung_gpio_to_irq(struct gpio_chip *gc, unsigned offset)
- 	return (virq) ? : -ENXIO;
- }
- 
--/*
-- * Parse the pin names listed in the 'samsung,pins' property and convert it
-- * into a list of gpio numbers are create a pin group from it.
-- */
--static int samsung_pinctrl_parse_dt_pins(struct platform_device *pdev,
--					 struct device_node *cfg_np,
--					 struct pinctrl_desc *pctl,
--					 unsigned int **pin_list,
--					 unsigned int *npins)
-+static struct samsung_pin_group *samsung_pinctrl_create_groups(
-+				struct device *dev,
-+				struct samsung_pinctrl_drv_data *drvdata,
-+				unsigned int *cnt)
- {
--	struct device *dev = &pdev->dev;
--	struct property *prop;
--	struct pinctrl_pin_desc const *pdesc = pctl->pins;
--	unsigned int idx = 0, cnt;
--	const char *pin_name;
-+	struct pinctrl_desc *ctrldesc = &drvdata->pctl;
-+	struct samsung_pin_group *groups, *grp;
-+	const struct pinctrl_pin_desc *pdesc;
-+	int i;
-+
-+	groups = devm_kzalloc(dev, ctrldesc->npins * sizeof(*groups),
-+				GFP_KERNEL);
-+	if (!groups)
-+		return ERR_PTR(-EINVAL);
-+	grp = groups;
-+
-+	pdesc = ctrldesc->pins;
-+	for (i = 0; i < ctrldesc->npins; ++i, ++pdesc, ++grp) {
-+		grp->name = pdesc->name;
-+		grp->pins = &pdesc->number;
-+		grp->num_pins = 1;
-+	}
-+
-+	*cnt = ctrldesc->npins;
-+	return groups;
-+}
- 
--	*npins = of_property_count_strings(cfg_np, "samsung,pins");
--	if (IS_ERR_VALUE(*npins)) {
--		dev_err(dev, "invalid pin list in %s node", cfg_np->name);
-+static int samsung_pinctrl_create_function(struct device *dev,
-+				struct samsung_pinctrl_drv_data *drvdata,
-+				struct device_node *func_np,
-+				struct samsung_pmx_func *func)
-+{
-+	int npins;
-+	int ret;
-+	int i;
-+
-+	if (of_property_read_u32(func_np, "samsung,pin-function", &func->val))
-+		return 0;
-+
-+	npins = of_property_count_strings(func_np, "samsung,pins");
-+	if (npins < 1) {
-+		dev_err(dev, "invalid pin list in %s node", func_np->name);
- 		return -EINVAL;
- 	}
- 
--	*pin_list = devm_kzalloc(dev, *npins * sizeof(**pin_list), GFP_KERNEL);
--	if (!*pin_list) {
--		dev_err(dev, "failed to allocate memory for pin list\n");
-+	func->name = func_np->full_name;
-+
-+	func->groups = devm_kzalloc(dev, npins * sizeof(char *), GFP_KERNEL);
-+	if (!func->groups)
- 		return -ENOMEM;
--	}
- 
--	of_property_for_each_string(cfg_np, "samsung,pins", prop, pin_name) {
--		for (cnt = 0; cnt < pctl->npins; cnt++) {
--			if (pdesc[cnt].name) {
--				if (!strcmp(pin_name, pdesc[cnt].name)) {
--					(*pin_list)[idx++] = pdesc[cnt].number;
--					break;
--				}
--			}
--		}
--		if (cnt == pctl->npins) {
--			dev_err(dev, "pin %s not valid in %s node\n",
--					pin_name, cfg_np->name);
--			devm_kfree(dev, *pin_list);
--			return -EINVAL;
-+	for (i = 0; i < npins; ++i) {
-+		const char *gname;
-+
-+		ret = of_property_read_string_index(func_np, "samsung,pins",
-+							i, &gname);
-+		if (ret) {
-+			dev_err(dev,
-+				"failed to read pin name %d from %s node\n",
-+				i, func_np->name);
-+			return ret;
- 		}
-+
-+		func->groups[i] = gname;
- 	}
- 
--	return 0;
-+	func->num_groups = npins;
-+	return 1;
- }
- 
--/*
-- * Parse the information about all the available pin groups and pin functions
-- * from device node of the pin-controller. A pin group is formed with all
-- * the pins listed in the "samsung,pins" property.
-- */
--static int samsung_pinctrl_parse_dt(struct platform_device *pdev,
--				    struct samsung_pinctrl_drv_data *drvdata)
-+static struct samsung_pmx_func *samsung_pinctrl_create_functions(
-+				struct device *dev,
-+				struct samsung_pinctrl_drv_data *drvdata,
-+				unsigned int *cnt)
- {
--	struct device *dev = &pdev->dev;
-+	struct samsung_pmx_func *functions, *func;
- 	struct device_node *dev_np = dev->of_node;
- 	struct device_node *cfg_np;
--	struct samsung_pin_group *groups, *grp;
--	struct samsung_pmx_func *functions, *func;
--	unsigned *pin_list;
--	unsigned int npins, grp_cnt, func_idx = 0;
--	char *gname, *fname;
-+	unsigned int func_cnt = 0;
- 	int ret;
- 
--	grp_cnt = of_get_child_count(dev_np);
--	if (!grp_cnt)
--		return -EINVAL;
-+	/*
-+	 * Iterate over all the child nodes of the pin controller node
-+	 * and create pin groups and pin function lists.
-+	 */
-+	for_each_child_of_node(dev_np, cfg_np) {
-+		struct device_node *func_np;
- 
--	groups = devm_kzalloc(dev, grp_cnt * sizeof(*groups), GFP_KERNEL);
--	if (!groups) {
--		dev_err(dev, "failed allocate memory for ping group list\n");
--		return -EINVAL;
-+		if (!of_get_child_count(cfg_np)) {
-+			if (!of_find_property(cfg_np,
-+			    "samsung,pin-function", NULL))
-+				continue;
-+			++func_cnt;
-+			continue;
-+		}
-+
-+		for_each_child_of_node(cfg_np, func_np) {
-+			if (!of_find_property(func_np,
-+			    "samsung,pin-function", NULL))
-+				continue;
-+			++func_cnt;
-+		}
- 	}
--	grp = groups;
- 
--	functions = devm_kzalloc(dev, grp_cnt * sizeof(*functions), GFP_KERNEL);
-+	functions = devm_kzalloc(dev, func_cnt * sizeof(*functions),
-+					GFP_KERNEL);
- 	if (!functions) {
- 		dev_err(dev, "failed to allocate memory for function list\n");
--		return -EINVAL;
-+		return ERR_PTR(-EINVAL);
- 	}
- 	func = functions;
- 
-@@ -655,61 +757,68 @@ static int samsung_pinctrl_parse_dt(struct platform_device *pdev,
- 	 * Iterate over all the child nodes of the pin controller node
- 	 * and create pin groups and pin function lists.
- 	 */
-+	func_cnt = 0;
- 	for_each_child_of_node(dev_np, cfg_np) {
--		u32 function;
--		if (!of_find_property(cfg_np, "samsung,pins", NULL))
-+		struct device_node *func_np;
-+
-+		if (!of_get_child_count(cfg_np)) {
-+			ret = samsung_pinctrl_create_function(dev, drvdata,
-+							cfg_np, func);
-+			if (ret < 0)
-+				return ERR_PTR(ret);
-+			if (ret > 0) {
-+				++func;
-+				++func_cnt;
-+			}
- 			continue;
-+		}
- 
--		ret = samsung_pinctrl_parse_dt_pins(pdev, cfg_np,
--					&drvdata->pctl,	&pin_list, &npins);
--		if (ret)
--			return ret;
--
--		/* derive pin group name from the node name */
--		gname = devm_kzalloc(dev, strlen(cfg_np->name) + GSUFFIX_LEN,
--					GFP_KERNEL);
--		if (!gname) {
--			dev_err(dev, "failed to alloc memory for group name\n");
--			return -ENOMEM;
-+		for_each_child_of_node(cfg_np, func_np) {
-+			ret = samsung_pinctrl_create_function(dev, drvdata,
-+						func_np, func);
-+			if (ret < 0)
-+				return ERR_PTR(ret);
-+			if (ret > 0) {
-+				++func;
-+				++func_cnt;
-+			}
- 		}
--		sprintf(gname, "%s%s", cfg_np->name, GROUP_SUFFIX);
-+	}
- 
--		grp->name = gname;
--		grp->pins = pin_list;
--		grp->num_pins = npins;
--		of_property_read_u32(cfg_np, "samsung,pin-function", &function);
--		grp->func = function;
--		grp++;
-+	*cnt = func_cnt;
-+	return functions;
-+}
- 
--		if (!of_find_property(cfg_np, "samsung,pin-function", NULL))
--			continue;
-+/*
-+ * Parse the information about all the available pin groups and pin functions
-+ * from device node of the pin-controller. A pin group is formed with all
-+ * the pins listed in the "samsung,pins" property.
-+ */
- 
--		/* derive function name from the node name */
--		fname = devm_kzalloc(dev, strlen(cfg_np->name) + FSUFFIX_LEN,
--					GFP_KERNEL);
--		if (!fname) {
--			dev_err(dev, "failed to alloc memory for func name\n");
--			return -ENOMEM;
--		}
--		sprintf(fname, "%s%s", cfg_np->name, FUNCTION_SUFFIX);
--
--		func->name = fname;
--		func->groups = devm_kzalloc(dev, sizeof(char *), GFP_KERNEL);
--		if (!func->groups) {
--			dev_err(dev, "failed to alloc memory for group list "
--					"in pin function");
--			return -ENOMEM;
--		}
--		func->groups[0] = gname;
--		func->num_groups = 1;
--		func++;
--		func_idx++;
-+static int samsung_pinctrl_parse_dt(struct platform_device *pdev,
-+				    struct samsung_pinctrl_drv_data *drvdata)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct samsung_pin_group *groups;
-+	struct samsung_pmx_func *functions;
-+	unsigned int grp_cnt = 0, func_cnt = 0;
-+
-+	groups = samsung_pinctrl_create_groups(dev, drvdata, &grp_cnt);
-+	if (IS_ERR(groups)) {
-+		dev_err(dev, "failed to parse pin groups\n");
-+		return PTR_ERR(groups);
-+	}
-+
-+	functions = samsung_pinctrl_create_functions(dev, drvdata, &func_cnt);
-+	if (IS_ERR(functions)) {
-+		dev_err(dev, "failed to parse pin functions\n");
-+		return PTR_ERR(groups);
- 	}
- 
- 	drvdata->pin_groups = groups;
- 	drvdata->nr_groups = grp_cnt;
- 	drvdata->pmx_functions = functions;
--	drvdata->nr_functions = func_idx;
-+	drvdata->nr_functions = func_cnt;
- 
- 	return 0;
- }
-diff --git a/drivers/pinctrl/pinctrl-samsung.h b/drivers/pinctrl/pinctrl-samsung.h
-index 4d7566a..5cedc9d 100644
---- a/drivers/pinctrl/pinctrl-samsung.h
-+++ b/drivers/pinctrl/pinctrl-samsung.h
-@@ -232,6 +232,7 @@ struct samsung_pmx_func {
- 	const char		*name;
- 	const char		**groups;
- 	u8			num_groups;
-+	u32			val;
- };
- 
- /* list of all exported SoC specific data */
--- 
-1.9.3
+>> new file mode 100644
+>> index 0000000..612c7b5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-serdes-keystone.txt
+>> @@ -0,0 +1,25 @@
+>> +TI Keystone SerDes Phy: DT documentation
+>> +=======================================
+>> +
+>> +Required properties:
+>> + - compatible: should be "ti,keystone-serdes-phy";
+>> + - reg: base address and length of the SerDes register set
+>> + - reg-names: should be "reg_serdes", name of the reg SerDes register set
+>> + - #phy-cells: from the generic phy bindings, must be 0;
+>> +
+>> +Exampel for Keystone PCIE,
+>> +
+>> +		pcie0_phy: serdes_phy@2320000 {
+>> +			#phy-cells =<0>;
+>> +			compatible = "ti,keystone-serdes-phy";
+>> +			reg =<0x02320000 0x4000>;
+>> +			reg-names = "reg_serdes";
+>> +		};
+>> +
+>> +
+>> +Then the PHY can be used in PCIe controller node as
+>> +
+>> +pcie@21800000 {
+>> +	phys =<&pcie0_phy>;
+>> +	phy-names = "pcie-phy";
+>> +};
+>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+>> index 16a2f06..54a8471 100644
+>> --- a/drivers/phy/Kconfig
+>> +++ b/drivers/phy/Kconfig
+>> @@ -178,4 +178,10 @@ config PHY_XGENE
+>>   	help
+>>   	  This option enables support for APM X-Gene SoC multi-purpose PHY.
+>>
+>> +config PHY_TI_KEYSTONE_SERDES
+>> +	bool "TI Keystone SerDes PHY support"
+>> +	depends on ARCH_KEYSTONE
+>
+> depends on HAS_IOMEM?
+
+Why? Driver works without this. When would one use this config option?
+
+>> +	select GENERIC_PHY
+>> +	help
+>> +	  This option enables support for TI Keystone SerDes PHY.
+>>   endmenu
+>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+>> index b4f1d57..a02faaa 100644
+>> --- a/drivers/phy/Makefile
+>> +++ b/drivers/phy/Makefile
+>> @@ -20,3 +20,4 @@ phy-exynos-usb2-$(CONFIG_PHY_EXYNOS4X12_USB2)	+= phy-exynos4x12-usb2.o
+>>   phy-exynos-usb2-$(CONFIG_PHY_EXYNOS5250_USB2)	+= phy-exynos5250-usb2.o
+>>   obj-$(CONFIG_PHY_EXYNOS5_USBDRD)	+= phy-exynos5-usbdrd.o
+>>   obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+>> +obj-$(CONFIG_PHY_TI_KEYSTONE_SERDES)	+= phy-serdes-keystone.o
+>> diff --git a/drivers/phy/phy-serdes-keystone.c b/drivers/phy/phy-serdes-keystone.c
+>> new file mode 100644
+>> index 0000000..f1a8888
+>> --- /dev/null
+>> +++ b/drivers/phy/phy-serdes-keystone.c
+>
+
+> Looking at the other phy drivers, feel this should be named phy-keystone-serdes.c?
+
+Make sense. Will rename. Do you think I need to change the config option 
+to PHY_KEYSTONE_SERDES as well?
+
+
+>> @@ -0,0 +1,200 @@
+>> +/*
+>> + * Keystone SerDes Phy driver
+>> + *
+>> + * Copyright (C) 2013-2014 Texas Instruments, Inc.
+>> + *		http://www.ti.com
+>> + *
+>> + * Author: Murali Karicheri<m-karicheri2@ti.com>
+>> + *
+>> + * This program is free software; you can redistribute it and/or modify
+>> + * it under the terms of the GNU General Public License version 2 as
+>> + * published by the Free Software Foundation.
+>> + */
+>> +
+>> +#include<linux/clk.h>
+>> +#include<linux/delay.h>
+>> +#include<linux/err.h>
+>> +#include<linux/io.h>
+>> +#include<linux/module.h>
+>> +#include<linux/of.h>
+>> +#include<linux/of_address.h>
+>> +#include<linux/of_platform.h>
+>> +#include<linux/phy/phy.h>
+>> +#include<linux/platform_device.h>
+>> +
+>> +#define reg_dump(addr, mask) \
+>> +		pr_debug("reg %p has value %x\n", (void *)addr, \
+>> +			(readl(addr)&  ~mask))
+>> +
+>> +/* mask bits point to bits being modified */
+>> +#define reg_rmw(addr, value, mask) \
+>> +		writel(((readl(addr)&  (~(mask))) | \
+>> +			(value&  (mask))), (addr))
+>> +struct serdes_config {
+>
+> struct ks_serdes_config?
+
+Ok.
+
+>> +	u32 reg;
+>> +	u32 val;
+>> +	u32 mask;
+>> +};
+>> +
+>> +struct phy_serdes_keystone {
+>
+> struct ks_serdes_phy?
+
+Ok.
+
+>> +	struct device *dev;
+>> +	void __iomem *base;
+>> +};
+>> +
+>> +static struct serdes_config ks_100mhz_5gbps_serdes[] = {
+>> +	/* SerDes Clock and common configuration */
+>> +	{0x0000, 0x00000800, 0x0000ff00},
+>> +	{0x0060, 0x00041c5c, 0x00ffffff},
+>> +	{0x0064, 0x0343c700, 0xffffff00},
+>> +	{0x006c, 0x00000012, 0x000000ff},
+>> +	{0x0068, 0x00070000, 0x00ff0000},
+>> +	{0x0078, 0x0000c000, 0x0000ff00},
+>> +
+>> +	/* Lane - A Phy configuration */
+>> +	{0x0200, 0x00000000, 0x000000ff},
+>> +	{0x0204, 0x5e000080, 0xff0000ff},
+>> +	{0x0208, 0x00000006, 0x000000ff},
+>> +	{0x0210, 0x00000023, 0x000000ff},
+>> +	{0x0214, 0x2e003060, 0xff00ffff},
+>> +	{0x0218, 0x76000000, 0xff000000},
+>> +	{0x022c, 0x00200002, 0x00ff00ff},
+>> +	{0x02a0, 0xffee0000, 0xffff0000},
+>> +	{0x02a4, 0x0000000f, 0x000000ff},
+>> +	{0x0204, 0x5e000000, 0xff000000},
+>> +	{0x0208, 0x00000006, 0x000000ff},
+>> +	{0x0278, 0x00002000, 0x0000ff00},
+>> +	{0x0280, 0x00280028, 0x00ff00ff},
+>> +	{0x0284, 0x2d0f0385, 0xffffffff},
+>> +	{0x0250, 0xd0000000, 0xff000000},
+>> +	{0x0284, 0x00000085, 0x000000ff},
+>> +	{0x0294, 0x20000000, 0xff000000},
+>> +
+>> +	/* Lane - B Phy configuration */
+>> +	{0x0400, 0x00000000, 0x000000ff},
+>> +	{0x0404, 0x5e000080, 0xff0000ff},
+>> +	{0x0408, 0x00000006, 0x000000ff},
+>> +	{0x0410, 0x00000023, 0x000000ff},
+>> +	{0x0414, 0x2e003060, 0xff00ffff},
+>> +	{0x0418, 0x76000000, 0xff000000},
+>> +	{0x042c, 0x00200002, 0x00ff00ff},
+>> +	{0x04a0, 0xffee0000, 0xffff0000},
+>> +	{0x04a4, 0x0000000f, 0x000000ff},
+>> +	{0x0404, 0x5e000000, 0xff000000},
+>> +	{0x0408, 0x00000006, 0x000000ff},
+>> +	{0x0478, 0x00002000, 0x0000ff00},
+>> +	{0x0480, 0x00280028, 0x00ff00ff},
+>> +	{0x0484, 0x2d0f0385, 0xffffffff},
+>> +	{0x0450, 0xd0000000, 0xff000000},
+>> +	{0x0494, 0x20000000, 0xff000000},
+>> +
+>> +	/* Common Lane configurations */
+>> +	{0x0a00, 0x00000100, 0x0000ff00},
+>> +	{0x0a08, 0x00e12c08, 0x00ffffff},
+>> +	{0x0a0c, 0x00000081, 0x000000ff},
+>> +	{0x0a18, 0x00e80000, 0x00ff0000},
+>> +	{0x0a30, 0x002f2f00, 0x00ffff00},
+>> +	{0x0a4c, 0xac820000, 0xffff0000},
+>> +	{0x0a54, 0xc0000000, 0xff000000},
+>> +	{0x0a58, 0x00001441, 0x0000ffff},
+>> +	{0x0a84, 0x00000301, 0x0000ffff},
+>> +	{0x0a8c, 0x81030000, 0xffff0000},
+>> +	{0x0a90, 0x00006001, 0x0000ffff},
+>> +	{0x0a94, 0x01000000, 0xff000000},
+>> +	{0x0aa0, 0x81000000, 0xff000000},
+>> +	{0x0abc, 0xff000000, 0xff000000},
+>> +	{0x0ac0, 0x0000008b, 0x000000ff},
+>> +
+>> +	/* common clock configuration */
+>> +	{0x0000, 0x00000003, 0x000000ff},
+>> +
+>> +	/* Common Lane configurations */
+>> +	{0x0a00, 0x0000009f, 0x000000ff},
+>> +	{0x0a44, 0x5f733d00, 0xffffff00},
+>> +	{0x0a48, 0x00fdca00, 0x00ffff00},
+>> +	{0x0a5c, 0x00000000, 0xffff0000},
+>> +	{0x0a60, 0x00008000, 0xffffffff},
+>> +	{0x0a64, 0x0c581220, 0xffffffff},
+>> +	{0x0a68, 0xe13b0602, 0xffffffff},
+>> +	{0x0a6c, 0xb8074cc1, 0xffffffff},
+>> +	{0x0a70, 0x3f02e989, 0xffffffff},
+>> +	{0x0a74, 0x00000001, 0x000000ff},
+>> +	{0x0b14, 0x00370000, 0x00ff0000},
+>> +	{0x0b10, 0x37000000, 0xff000000},
+>> +	{0x0b14, 0x0000005d, 0x000000ff},
+>
+> I'm not particularly happy about merging this sort of configuration :-/
+>
+
+I know, but this is what best we can do for now. We are working with the 
+IP owner to clarify if we can use more information on this IP. We will 
+update the driver as things changes in the future.
+
+>> +};
+>> +
+>> +static int ks_serdes_phy_init(struct phy *phy)
+>> +{
+>> +	struct serdes_config *p;
+>> +	struct phy_serdes_keystone *ks_phy = phy_get_drvdata(phy);
+>> +
+>> +	int i;
+>> +
+>> +	for (i = 0, p =&ks_100mhz_5gbps_serdes[0];
+>> +		i<  ARRAY_SIZE(ks_100mhz_5gbps_serdes);
+>> +		i++, p++) {
+>> +		reg_rmw((ks_phy->base + p->reg), p->val, p->mask);
+>> +		reg_dump((ks_phy->base + p->reg), p->mask);
+>> +	}
+>> +	msleep(20);
+>
+> Why this delay is needed? A small comment would help.
+
+This is to allow for the PLL to lock. I will check if I can really check 
+if PLL is locked and Lane status is Ok if possible.
+
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +static struct phy_ops ks_serdes_phy_ops = {
+>> +	.init		= ks_serdes_phy_init,
+>> +	.owner		= THIS_MODULE,
+>> +};
+>> +
+>> +static int ks_serdes_phy_probe(struct platform_device *pdev)
+>> +{
+>> +	struct phy_provider *phy_provider;
+>> +	struct device *dev =&pdev->dev;
+>> +	struct phy_serdes_keystone *ks_phy;
+>> +	struct phy *phy;
+>> +	struct resource *res;
+>> +
+>> +	ks_phy = devm_kzalloc(dev, sizeof(*ks_phy), GFP_KERNEL);
+>> +	if (!ks_phy)
+>> +		return -ENOMEM;
+>> +
+>> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "reg_serdes");
+>> +	ks_phy->base = devm_ioremap_resource(dev, res);
+>> +	if (IS_ERR(ks_phy->base))
+>> +		return PTR_ERR(ks_phy->base);
+>> +
+>> +	ks_phy->dev = dev;
+>> +	phy = devm_phy_create(dev,&ks_serdes_phy_ops, NULL);
+>> +	if (IS_ERR(phy))
+>> +		return PTR_ERR(phy);
+>> +
+>> +	phy_set_drvdata(phy, ks_phy);
+>> +	phy_provider = devm_of_phy_provider_register(ks_phy->dev,
+>> +				of_phy_simple_xlate);
+>> +
+>> +	if (IS_ERR(phy_provider))
+>> +		return PTR_ERR(phy_provider);
+>> +
+>> +	dev_info(dev, "keystone SerDes Phy initialized\n");
+>
+> Lets not make the boot noisy, remove this.
+
+Sure
+
+>> +	return 0;
+>> +}
+>> +
+>> +static const struct of_device_id ks_serdes_phy_of_match[] = {
+>> +	{ .compatible = "ti,keystone-serdes-phy" },
+>> +	{ },
+>> +};
+>> +MODULE_DEVICE_TABLE(of, ks_serdes_phy_of_match);
+>> +
+>> +static struct platform_driver ks_serdes_phy_driver = {
+>> +	.probe	= ks_serdes_phy_probe,
+>> +	.driver = {
+>> +		.of_match_table	= ks_serdes_phy_of_match,
+>> +		.name  = "ti,keystone-serdes-phy",
+>> +		.owner = THIS_MODULE,
+>> +	}
+>> +};
+>> +module_platform_driver(ks_serdes_phy_driver);
+>> +
+>> +MODULE_DESCRIPTION("TI Keystone SerDes PHY driver");
+>> +MODULE_LICENSE("GPL V2");
+>
+> It's *GPL v2*
+
+Ok.
+
+>
+> Cheers
+> Kishon
