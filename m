@@ -1,49 +1,51 @@
-From: Daniel Mack <daniel@zonque.org>
-Subject: Re: [alsa-devel] [PATCH v3] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Wed, 02 Jul 2014 18:04:15 +0200
-Message-ID: <53B42D7F.60002@zonque.org>
-References: <1404307852-10456-1-git-send-email-dmurphy@ti.com> <53B40D55.6000602@zonque.org> <53B41F0E.90107@ti.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 0/4] Add reset controllers for STiH407 SoC
+Date: Wed, 02 Jul 2014 18:06:34 +0200
+Message-ID: <1404317194.4109.13.camel@paszta.hi.pengutronix.de>
+References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53B41F0E.90107@ti.com>
+In-Reply-To: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, linux-sound@vger.kernel.org
-Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, linux-kernel@vger.kernel.org
+To: Peter Griffin <peter.griffin@linaro.org>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com, lee.jones@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 07/02/2014 05:02 PM, Dan Murphy wrote:
-> On 07/02/2014 08:47 AM, Daniel Mack wrote:
->> Hi Dan,
->>
->> On 07/02/2014 03:30 PM, Dan Murphy wrote:
->>> +	if (np) {
->>> +		data->power_gpio = of_get_named_gpio(np, "enable-gpio", 0);
->>> +	} else if (pdata) {
->>> +		data->power_gpio = pdata->enable_gpio;
->>> +	} else {
->>> +		dev_err(dev, "Platform or dev tree data not set\n");
->>> +		return -ENODEV;
->>> +	}
->> New code for GPIO handling should use the new gpiod interface.
->> See include/linux/gpio/consumer.h, or the sta350 codec driver.
+Hi Peter,
+
+Am Mittwoch, den 02.07.2014, 15:08 +0100 schrieb Peter Griffin:
+> This series adds reset controller support for the STiH407 SoC.
 > 
-> OK good catch.  I will look into it.
+> Changes since v1
+>  - Update copyright to 2014
+>  - Add const qualifier
+>  - Fix various whitespace issues
+>  - Remove THIS_OWNER
+>  - Move DT documentation into separate patch
 > 
-> Does the gpiod interface handle both pdata as well as dt?
-
-Yes, please refer to Documentation/gpio/board.txt.
-
->> For that to work, you also need to rename the property to
->> 'enable-gpios', even though there's only one.
+> Peter Griffin (4):
+>   reset: stih407: Add softreset, powerdown and picophy controllers
+>   reset: sti: Document sti-picophyreset controllers bindings.
+>   ARM: sti: Add STiH407 Kconfig entry to select STIH407_RESET
+>   ARM: sti: Add STiH407 reset controller support.
 > 
-> I am looking for that restriction in the code.  But don't see it.
-> Will dig some more here.
+>  .../bindings/reset/st,sti-picophyreset.txt         |  42 ++++++
+>  arch/arm/boot/dts/stih407.dtsi                     |  16 +++
+>  arch/arm/mach-sti/Kconfig                          |  10 ++
+>  drivers/reset/sti/Kconfig                          |   4 +
+>  drivers/reset/sti/Makefile                         |   1 +
+>  drivers/reset/sti/reset-stih407.c                  | 158 +++++++++++++++++++++
+>  .../dt-bindings/reset-controller/stih407-resets.h  |  61 ++++++++
+>  7 files changed, 292 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/reset/st,sti-picophyreset.txt
+>  create mode 100644 drivers/reset/sti/reset-stih407.c
+>  create mode 100644 include/dt-bindings/reset-controller/stih407-resets.h
 
-Ah, dd34c37aa3 ("gpio: of: Allow -gpio suffix for property names")
-changed that, so both variants are now supported.
+Looks good to me now.
 
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-
-Daniel
+regards
+Philipp
