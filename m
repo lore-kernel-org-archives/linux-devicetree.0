@@ -1,15 +1,16 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 3/3] ARM: STi: STiH407: Add reset controller support.
-Date: Wed, 2 Jul 2014 09:51:02 +0100
-Message-ID: <20140702085102.GF10311@lee--X1>
+Subject: Re: [PATCH 2/3] ARM: sti: Add STiH407 Kconfig entry to select
+ STIH407_RESET
+Date: Wed, 2 Jul 2014 09:54:03 +0100
+Message-ID: <20140702085403.GG10311@lee--X1>
 References: <1404225047-9495-1-git-send-email-peter.griffin@linaro.org>
- <1404225047-9495-4-git-send-email-peter.griffin@linaro.org>
+ <1404225047-9495-3-git-send-email-peter.griffin@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: QUOTED-PRINTABLE
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1404225047-9495-4-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+In-Reply-To: <1404225047-9495-3-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
@@ -17,52 +18,35 @@ List-Id: devicetree@vger.kernel.org
 
 On Tue, 01 Jul 2014, Peter Griffin wrote:
 
-> This patch adds the reset controller DT nodes for the powerdown,
->  softreset and picophy controllers.
->=20
 > Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  arch/arm/boot/dts/stih407.dtsi | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih4=
-07.dtsi
-> index 4f9024f..e8fbb88 100644
-> --- a/arch/arm/boot/dts/stih407.dtsi
-> +++ b/arch/arm/boot/dts/stih407.dtsi
-> @@ -8,6 +8,7 @@
->   */
->  #include "stih407-clock.dtsi"
->  #include "stih407-pinctrl.dtsi"
-> +#include <dt-bindings/reset-controller/stih407-resets.h>
->  / {
->  	#address-cells =3D <1>;
->  	#size-cells =3D <1>;
-> @@ -63,6 +64,21 @@
->  		ranges;
->  		compatible =3D "simple-bus";
+>  arch/arm/mach-sti/Kconfig | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+
+Looks okay, although could probably do with a few words in the commit
+message about what the STiH407 is; yada, yada, yada ...
+
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+
+> diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+> index 878e9ec..8825bc9 100644
+> --- a/arch/arm/mach-sti/Kconfig
+> +++ b/arch/arm/mach-sti/Kconfig
+> @@ -42,4 +42,14 @@ config SOC_STIH416
+>  	  and other digital audio/video applications using Flattened Device
+>  	  Trees.
 > =20
-> +		powerdown: powerdown-controller {
-> +			#reset-cells =3D <1>;
-> +			compatible =3D "st,stih407-powerdown";
-> +		};
+> +config SOC_STIH407
+> +	bool "STiH407 STMicroelectronics Consumer Electronics family"
+> +	default y
+> +	select STIH407_RESET
+> +	help
+> +	  This enables support for STMicroelectronics Digital Consumer
+> +	  Electronics family StiH407 parts, targetted at set-top-box
+> +	  and other digital audio/video applications using Flattened Device
+> +	  Trees.
 > +
-> +		softreset: softreset-controller {
-> +			#reset-cells =3D <1>;
-> +			compatible =3D "st,stih407-softreset";
-> +		};
-> +
-> +		picophyreset: picophyreset-controller {
-> +			#reset-cells =3D <1>;
-> +			compatible =3D "st,stih407-picophyreset";
-> +		};
-> +
-
-I'd always put the compatible string at the very top of the node.
-
->  		syscfg_sbc: sbc-syscfg@9620000 {
->  			compatible =3D "st,stih407-sbc-syscfg", "syscon";
->  			reg =3D <0x9620000 0x1000>;
+>  endif
 
 --=20
 Lee Jones
