@@ -1,97 +1,111 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH] rcar_can: add device tree support
-Date: Thu, 03 Jul 2014 01:43:17 +0400
-Message-ID: <53B47CF5.4010105@cogentembedded.com>
-References: <201407020227.04235.sergei.shtylyov@cogentembedded.com> <53B33B45.1060205@pengutronix.de>
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
+ basic clocks
+Date: Wed, 02 Jul 2014 15:35:52 -0700
+Message-ID: <20140702223552.7440.60829@quantum>
+References: <1403798144-32188-1-git-send-email-wens@csie.org>
+Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-sh-owner@vger.kernel.org>
-In-Reply-To: <53B33B45.1060205@pengutronix.de>
-Sender: linux-sh-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>, netdev@vger.kernel.org, wg@grandegger.com, linux-can@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, grant.likely@linaro.org, devicetree@vger.kernel.org
-Cc: linux-sh@vger.kernel.org, vksavl@gmail.com, rdunlap@infradead.org, linux-doc@vger.kernel.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-sunxi+bncBDO333VC4INBBVUS2KOQKGQECEUJPZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+In-Reply-To: <1403798144-32188-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
+List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <http://groups.google.com/group/linux-sunxi>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
+Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello.
+Quoting Chen-Yu Tsai (2014-06-26 08:55:38)
+> Hi everyone,
+> 
+> This is v4 of the sun8i clock series, which adds basic clock
+> support for the A23 SoC. It is based on my initial sun8i bring
+> up series [1]. This series was split up from the original A23
+> series [2]. Yet to come are more clocks, reset controllers,
+> prcm, pinctrl, and mmc.
 
-On 07/02/2014 02:50 AM, Marc Kleine-Budde wrote:
+Hello Chen-Yu,
 
->> Add support of the device tree probing for the Renesas R-Car CAN controllers
->> documenting the device tree bindings as necessary.
+This series looks good to me.
 
-> Please put the DT documentation into a separate patch, make it the first
+Maxime,
 
-    OK.
+I see that you Acked it already. Are you planning to roll this into a
+pull request later on?
 
-> one. When reposting, please put the device tree mailing list on Cc.
+Regards,
+Mike
 
-    It was among the To: recipients in this posting; I'm using 
-scripts/get_maintainer.pl to find out the people/lists I should send the 
-patches to.
-
->> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-
->> ---
->> The patch is against the Dave Miller's 'net-next.git' repo ('linux-can-next.git'
->> repo still doesn't have the R-Car CAN driver for some reason).
-
-> Should be fixed now :)
-
-    Indeed, thanks.
-
->>   Documentation/devicetree/bindings/net/can/rcar_can.txt |   40 +++++++++++++++++
->>   drivers/net/can/rcar_can.c                             |   28 +++++++++--
->>   2 files changed, 63 insertions(+), 5 deletions(-)
-
->> Index: net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
->> ===================================================================
->> --- /dev/null
->> +++ net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
->> @@ -0,0 +1,40 @@
->> +Renesas R-Car CAN controller Device Tree Bindings
->> +-------------------------------------------------
->> +
->> +Required properties:
->> +- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
->> +	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
->> +	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
->> +	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-
-> AFAIK we usually specify the first SoC with this core as the only
-> compatible.
-
-    The reason we've chosen several SoC specific "compatible" props is that in 
-the SH-Mobile community the maintainers want it this way. There's no version 
-register in the IP blocks and the SoC manuals we have are not considered 
-reliable enough sources of information, so that the compatibility between the 
-different SoCs cannot be reliably established...
-
-[...]
->> Index: net-next/drivers/net/can/rcar_can.c
->> ===================================================================
->> --- net-next.orig/drivers/net/can/rcar_can.c
->> +++ net-next/drivers/net/can/rcar_can.c
-[...]
->> @@ -722,13 +723,20 @@ static int rcar_can_probe(struct platfor
->>   	struct net_device *ndev;
->>   	struct resource *mem;
->>   	void __iomem *addr;
->> +	u32 clock_select = 0;
->>   	int err = -ENODEV;
->>   	int irq;
->>
->> -	pdata = dev_get_platdata(&pdev->dev);
->> -	if (!pdata) {
->> -		dev_err(&pdev->dev, "No platform data provided!\n");
->> -		goto fail;
->> +	if (!pdev->dev.of_node) {
-
-> nitpick: please make it positive logic.
-
-    OK, will do.
-
-> Marc
-
-WBR, Sergei
-
+> 
+> The first patch fixes the reworked clock protection code merged in
+> 3.16-rc1, which unintentionally made clock gates unprotectable.
+> 
+> The second patch moves the remaining "ahb_sdram" clock to the
+> protected clock list, now that it works.
+> 
+> The third patch adds support for factor clocks that have an N factor
+> not starting from 0. This is found on some PLLs in A31/A23.
+> 
+> The fourth patch adds table-based dividers for div clocks, as some
+> clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
+> on sun8i.
+> 
+> The fifth patch adds support for the basic clocks in the A23, just
+> PLL1 for cpus, and the system bus clocks and gates.
+> 
+> The last patch adds the DT nodes for the newly added clocks, and
+> updates clock phandles for existing peripherals, the uarts.
+> 
+> Originally I intended for patch 1 to be merged as a fix for 3.16.
+> However, the only user of the affected code, sun6i's "ahb1_sdram"
+> clock, doesn't seem to result in any runtime issues. So this whole
+> series can go into 3.17.
+> 
+> 
+> Related changes since v3:
+> 
+>   - Dropped fields with default values from sun8i_a23_axi_div_data
+>   - Added Maxime's Acked-by
+>   - Fixed incorrect compatible string for axi clock node
+>   - Updated clock phandles for uarts in dtsi
+> 
+> Related changes since v2:
+> 
+>   - Rewrote factor clocks to support any (0~255) N factor starting value
+> 
+> Related changes since v1:
+> 
+>   - Added "clk: sunxi: Add support for table-based divider clocks"
+>   - Added table-based divider axi clock
+>   - Fixed incorrectly squashed fixups
+> 
+> 
+> Cheers
+> ChenYu
+> 
+> 
+>   [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265211.html
+>   [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259097.html
+> 
+> Chen-Yu Tsai (6):
+>   clk: sunxi: register clock gates with clkdev
+>   clk: sunxi: move "ahb_sdram" to protected clock list
+>   clk: sunxi: Support factor clocks with N factor starting not from 0
+>   clk: sunxi: Add support for table-based divider clocks
+>   clk: sunxi: Add A23 clocks support
+>   ARM: sun8i: Add basic clock nodes to the DTSI
+> 
+>  Documentation/devicetree/bindings/clock/sunxi.txt |   5 +
+>  arch/arm/boot/dts/sun8i-a23.dtsi                  | 125 +++++++++++++++++++++-
+>  drivers/clk/sunxi/clk-factors.c                   |   2 +-
+>  drivers/clk/sunxi/clk-factors.h                   |   1 +
+>  drivers/clk/sunxi/clk-sunxi.c                     | 119 ++++++++++++++++++--
+>  5 files changed, 237 insertions(+), 15 deletions(-)
+> 
+> -- 
+> 2.0.0
+> 
