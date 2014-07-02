@@ -1,7 +1,7 @@
 From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 4/5] ARM: imx: Add initial support for Freescale LS1021A
-Date: Wed, 2 Jul 2014 17:02:51 +0800
-Message-ID: <1404291772-2644-5-git-send-email-jingchang.lu@freescale.com>
+Subject: [PATCH 2/5] ARM: dts: Add initial LS1021A QDS board dts support
+Date: Wed, 2 Jul 2014 17:02:49 +0800
+Message-ID: <1404291772-2644-3-git-send-email-jingchang.lu@freescale.com>
 References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,67 +9,44 @@ Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 In-Reply-To: <1404291772-2644-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 
-The LS1021A SoC is a dual-core Cortex-A7 based processor,
-this add the initial support for it.
-
-Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 ---
- arch/arm/mach-imx/Kconfig        | 17 ++++++++++++++
- arch/arm/mach-imx/Makefile       |  2 ++
- arch/arm/mach-imx/mach-ls1021a.c | 49 ++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 68 insertions(+)
- create mode 100644 arch/arm/mach-imx/mach-ls1021a.c
+ arch/arm/boot/dts/Makefile        |   3 +-
+ arch/arm/boot/dts/ls1021a-qds.dts | 380 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 382 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
 
-diff --git a/arch/arm/mach-imx/Kconfig b/arch/arm/mach-imx/Kconfig
-index bdfe276..7f24892 100644
---- a/arch/arm/mach-imx/Kconfig
-+++ b/arch/arm/mach-imx/Kconfig
-@@ -762,6 +762,23 @@ config SOC_VF610
- 	help
- 	  This enable support for Freescale Vybrid VF610 processor.
- 
-+config FSL_SOC
-+	bool
-+
-+config SOC_LS1021A
-+	bool "Freescale LS1021A support"
-+	select CPU_V7
-+	select ARM_GIC
-+	select CLKSRC_OF
-+	select HAVE_ARM_ARCH_TIMER
-+	select HAVE_SMP
-+	select FSL_SOC
-+	select MIGHT_HAVE_PCI
-+	select PCI_DOMAINS if PCI
-+
-+	help
-+	  This enable support for Freescale LS1021A  processor.
-+
- endif
- 
- source "arch/arm/mach-imx/devices/Kconfig"
-diff --git a/arch/arm/mach-imx/Makefile b/arch/arm/mach-imx/Makefile
-index a364e20..f49cbdb 100644
---- a/arch/arm/mach-imx/Makefile
-+++ b/arch/arm/mach-imx/Makefile
-@@ -114,4 +114,6 @@ obj-$(CONFIG_SOC_IMX53) += mach-imx53.o
- 
- obj-$(CONFIG_SOC_VF610) += clk-vf610.o mach-vf610.o
- 
-+obj-$(CONFIG_SOC_LS1021A) += mach-ls1021a.o
-+
- obj-y += devices/
-diff --git a/arch/arm/mach-imx/mach-ls1021a.c b/arch/arm/mach-imx/mach-ls1021a.c
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index b9e7adc..0569312 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -235,7 +235,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
+ 	imx6sx-sdb.dtb \
+ 	vf610-colibri.dtb \
+ 	vf610-cosmic.dtb \
+-	vf610-twr.dtb
++	vf610-twr.dtb \
++	ls1021a-qds.dtb
+ dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
+ 	imx23-olinuxino.dtb \
+ 	imx23-stmp378x_devb.dtb \
+diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
 new file mode 100644
-index 0000000..d1a9bb9
+index 0000000..586165c
 --- /dev/null
-+++ b/arch/arm/mach-imx/mach-ls1021a.c
-@@ -0,0 +1,49 @@
++++ b/arch/arm/boot/dts/ls1021a-qds.dts
+@@ -0,0 +1,380 @@
 +/*
 + * Copyright 2013-2014 Freescale Semiconductor, Inc.
 + *
@@ -79,46 +56,377 @@ index 0000000..d1a9bb9
 + * (at your option) any later version.
 + */
 +
-+#include <linux/of_platform.h>
-+#include <asm/mach/arch.h>
++/dts-v1/;
++#include "ls1021a.dtsi"
 +
-+#include "common.h"
++/ {
++	model = "LS1021A QDS Board";
 +
-+static const struct of_device_id of_ls1021a_match_table[] = {
-+	{
-+		.compatible =	"simple-bus",
-+	},
-+	{
-+		.compatible     = "fsl,ifc",
-+	},
-+	{
-+		.compatible	= "fsl,fpga-qixis",
-+	},
-+	{
-+		.compatible	= "fsl,qe",
-+	},
-+	{}
++	regulators {
++		compatible = "simple-bus";
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		reg_3p3v: regulator@0 {
++			compatible = "regulator-fixed";
++			reg = <0>;
++			regulator-name = "3P3V";
++			regulator-min-microvolt = <3300000>;
++			regulator-max-microvolt = <3300000>;
++			regulator-always-on;
++		};
++	};
++
++	sound {
++		compatible = "fsl,vf610-sgtl5000";
++		simple-audio-card,name = "FSL-VF610-TWR-BOARD";
++		simple-audio-card,routing =
++			"MIC_IN", "Microphone Jack",
++			"Microphone Jack", "Mic Bias",
++			"LINE_IN", "Line In Jack",
++			"Headphone Jack", "HP_OUT",
++			"Speaker Ext", "LINE_OUT";
++
++		simple-audio-card,cpu = <&sai2>;
++
++		simple-audio-card,codec = <&codec>;
++	};
++
++	soc {
++		leds {
++			compatible = "pwm-leds";
++			led0 {
++				label = "led0";
++				pwms = <&pwm3 0 150000 0>;
++				max-brightness = <100>;
++			};
++			led1 {
++				label = "led1";
++				pwms = <&pwm3 1 150000 0>;
++				max-brightness = <100>;
++			};
++			led2 {
++				label = "led2";
++				pwms = <&pwm3 2 150000 0>;
++				max-brightness = <100>;
++			};
++			led3 {
++				label = "led3";
++				pwms = <&pwm3 3 150000 0>;
++				max-brightness = <100>;
++			};
++			led4 {
++				label = "led4";
++				pwms = <&pwm3 4 150000 0>;
++				max-brightness = <100>;
++			};
++			led5 {
++				label = "led5";
++				pwms = <&pwm3 5 150000 0>;
++				max-brightness = <100>;
++			};
++			led6 {
++				label = "led6";
++				pwms = <&pwm3 6 150000 0>;
++				max-brightness = <100>;
++			};
++			led7 {
++				label = "led7";
++				pwms = <&pwm3 7 150000 0>;
++				max-brightness = <100>;
++			};
++		};
++	};
 +};
 +
-+static void __init ls1021a_init_machine(void)
-+{
-+	mxc_arch_reset_init_dt();
-+	of_platform_populate(NULL, of_ls1021a_match_table, NULL, NULL);
-+}
-+
-+static const char *ls1021a_dt_compat[] __initdata = {
-+	"fsl,ls1021a",
-+	NULL,
++&can0 {
++	status = "okay";
 +};
 +
-+DT_MACHINE_START(LS1021A, "Freescale LS1021A")
-+#ifdef CONFIG_ZONE_DMA
-+	.dma_zone_size	= SZ_128M,
-+#endif
-+	.init_machine   = ls1021a_init_machine,
-+	.dt_compat	= ls1021a_dt_compat,
-+	.restart	= mxc_restart,
-+MACHINE_END
++&can1 {
++	status = "okay";
++};
++
++&dspi0 {
++	bus-num = <0>;
++	status = "okay";
++
++	dspiflash: at45db021d@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "atmel,at45db021d", "atmel,at45", "atmel,dataflash";
++		spi-max-frequency = <16000000>;
++		spi-cpol;
++		spi-cpha;
++		reg = <0>;
++	};
++};
++
++&duart0 {
++	status = "okay";
++};
++
++&duart1 {
++	status = "okay";
++};
++
++&enet0 {
++	tbi-handle = <&tbi0>;
++	phy-handle = <&physgmii1c>;
++	phy-connection-type = "sgmii";
++	status = "okay";
++};
++
++&enet1 {
++	tbi-handle = <&tbi0>;
++	phy-handle = <&physgmii1d>;
++	phy-connection-type = "sgmii";
++	status = "okay";
++};
++
++&enet2 {
++	phy-handle = <&phyrgmii3>;
++	phy-connection-type = "rgmii";
++	status = "okay";
++};
++
++&i2c0 {
++	status = "okay";
++	pca9547@77 {
++		compatible = "philips,pca9547";
++		reg = <0x77>;
++		#address-cells = <1>;
++		#size-cells = <0>;
++
++		i2c@0 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x0>;
++
++			rtc@68 {
++				compatible = "dallas,ds3232";
++				reg = <0x68>;
++				interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
++			};
++		};
++
++		i2c@2 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x2>;
++
++			ina220@40 {
++				compatible = "ti,ina220";
++				reg = <0x40>;
++				shunt-resistor = <1000>;
++			};
++
++			ina220@41 {
++				compatible = "ti,ina220";
++				reg = <0x41>;
++				shunt-resistor = <1000>;
++			};
++		};
++
++		i2c@3 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x3>;
++
++			eeprom@56 {
++				compatible = "at24,24c512";
++				reg = <0x56>;
++			};
++
++			eeprom@57 {
++				compatible = "at24,24c512";
++				reg = <0x57>;
++			};
++
++			adt7461a@4c {
++				compatible = "adt7461a";
++				reg = <0x4c>;
++			};
++		};
++
++		i2c@4 {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			reg = <0x4>;
++
++			codec: sgtl5000@0a {
++				compatible = "fsl,sgtl5000";
++				reg = <0x0a>;
++				VDDA-supply = <&reg_3p3v>;
++				VDDIO-supply = <&reg_3p3v>;
++				clocks = <&platform_clk 1>;
++			};
++		};
++
++	};
++
++};
++
++&ifc {
++	status = "okay";
++	#address-cells = <2>;
++	#size-cells = <1>;
++	/* NOR, NAND Flashes and FPGA on board */
++	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
++		0x2 0x0 0x0 0x7e800000 0x00010000
++		0x3 0x0 0x0 0x7fb00000 0x00000100>;
++
++		nor@0,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "cfi-flash";
++			reg = <0x0 0x0 0x8000000>;
++			bank-width = <2>;
++			device-width = <1>;
++		};
++
++		nand@2,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "fsl,ifc-nand";
++			reg = <0x2 0x0 0x10000>;
++
++			partition@0 {
++				/* This location must not be altered  */
++				/* 1MB for u-boot Bootloader Image */
++				reg = <0x0 0x00100000>;
++				label = "NAND U-Boot Image";
++				read-only;
++			};
++
++			partition@100000 {
++				/* 1MB for DTB Image */
++				reg = <0x00100000 0x00100000>;
++				label = "NAND DTB Image";
++			};
++
++			partition@200000 {
++				/* 10MB for Linux Kernel Image */
++				reg = <0x00200000 0x00a00000>;
++				label = "NAND Linux Kernel Image";
++			};
++
++			partition@c00000 {
++				/* 500MB for Root file System Image */
++				reg = <0x00c00000 0x1f400000>;
++				label = "NAND Compressed RFS Image";
++			};
++		};
++
++		fpga: board-control@3,0 {
++			#address-cells = <1>;
++			#size-cells = <1>;
++			compatible = "fsl,ls1021aqds-fpga", "fsl,fpga-qixis";
++			reg = <0x3 0x0 0x0000100>;
++			bank-width = <1>;
++			device-width = <1>;
++			ranges = <0 3 0 0x100>;
++
++			mdio-mux-emi1 {
++				compatible = "mdio-mux-mmioreg";
++				mdio-parent-bus = <&mdio0>;
++				#address-cells = <1>;
++				#size-cells = <0>;
++				reg = <0x54 1>; /* BRDCFG4 */
++				mux-mask = <0xe0>; /* EMI1[2:0] */
++
++				/* Onboard PHYs */
++				ls1021amdio0: mdio@0 {
++					reg = <0>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					phyrgmii1: ethernet-phy@1 {
++						reg = <0x1>;
++					};
++				};
++				ls1021amdio1: mdio@20 {
++					reg = <0x20>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					phyrgmii2: ethernet-phy@2 {
++						reg = <0x2>;
++					};
++				};
++				ls1021amdio2: mdio@40 {
++					reg = <0x40>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					phyrgmii3: ethernet-phy@3 {
++						reg = <0x3>;
++					};
++				};
++				ls1021amdio3: mdio@60 {
++					reg = <0x60>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					physgmii1c: ethernet-phy@1c {
++						reg = <0x1c>;
++					};
++				};
++				ls1021amdio4: mdio@80 {
++					reg = <0x80>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					physgmii1d: ethernet-phy@1d {
++						reg = <0x1d>;
++					};
++				};
++
++			};
++
++		};
++};
++
++&lpuart0 {
++	status = "okay";
++};
++
++&pwm3 {
++	status = "okay";
++};
++
++&pwm7 {
++	status = "okay";
++};
++
++&qspi {
++	num-cs = <2>;
++	bus-num = <0>;
++	fsl,spi-num-chipselects = <2>;
++	fsl,spi-flash-chipselects = <0>;
++	status = "okay";
++
++	qflash0: s25fl128s@0 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl129p1";
++		spi-max-frequency = <20000000>;
++		reg = <0>;
++
++		partition@0 {
++			label = "s25fl128s-0";
++			reg = <0x0 0x1000000>;
++		};
++	};
++
++	qflash1: s25fl128s@1 {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		compatible = "spansion,s25fl129p1";
++		spi-max-frequency = <20000000>;
++		reg = <1>;
++
++		partition@0x0 {
++			label = "s25fl128s-1";
++			reg = <0x0 0x1000000>;
++		};
++	};
++};
 -- 
 1.8.0
 
