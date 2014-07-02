@@ -1,104 +1,44 @@
-From: Will Deacon <will.deacon@arm.com>
-Subject: Re: [PATCH v8 8/9] pci: Add support for creating a generic
- host_bridge from device tree
-Date: Wed, 2 Jul 2014 18:31:13 +0100
-Message-ID: <20140702173113.GJ24879@arm.com>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
- <1404240214-9804-9-git-send-email-Liviu.Dudau@arm.com>
- <20140702112230.GL18731@arm.com>
- <20140702172355.GQ2173@e106497-lin.cambridge.arm.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Wed, 2 Jul 2014 19:51:54 +0200
+Message-ID: <20140702195154.47d6f6b4@armhf>
+References: <20140702183841.7c964832@armhf>
+	<20140702165628.GO20799@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140702172355.GQ2173@e106497-lin.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140702165628.GO20799@lunn.ch>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 02, 2014 at 06:23:55PM +0100, Liviu Dudau wrote:
-> On Wed, Jul 02, 2014 at 12:22:30PM +0100, Will Deacon wrote:
-> > On Tue, Jul 01, 2014 at 07:43:33PM +0100, Liviu Dudau wrote:
-> > > Several platforms use a rather generic version of parsing
-> > > the device tree to find the host bridge ranges. Move the common code
-> > > into the generic PCI code and use it to create a pci_host_bridge
-> > > structure that can be used by arch code.
-> > > 
-> > > Based on early attempts by Andrew Murray to unify the code.
-> > > Used powerpc and microblaze PCI code as starting point.
-> > 
-> > I just had a quick look at this to see how it differs from the parsing in
-> > pci-host-generic.c and there a few small differences worth discussing.
-
-[...]
-
-> > > +	}
-> > > +
-> > > +	/* Apply architecture specific fixups for the ranges */
-> > > +	return pcibios_fixup_bridge_ranges(resources);
-> > 
-> > I currently mandate at least one non-prefetchable resource in the
-> > device-tree. Should I simply drop this restriction, or do I have to somehow
-> > hook this into the pcibios callback?
-> 
-> Don't think I understand why you need at least one non-prefetcheable resource
-> but if you want to mandate that then the pcibios_fixup_bridge_ranges() would
-> be the place to put that check.
-
-I think it was Arnd's idea at the time:
-
-  http://lists.infradead.org/pipermail/linux-arm-kernel/2014-February/232225.html
-
-and it's probably worth keeping if possible (just to avoid changes to the
-behaviour of the existing driver).
-
-However, that means I already need a host-controller callback via
-pcibios_fixup_bridge_ranges...
-
-> > > +	err = of_pci_parse_bus_range(parent->of_node, bus_range);
-> > > +	if (err) {
-> > > +		dev_info(parent, "No bus range for %s, using default [0-255]\n",
-> > > +			parent->of_node->full_name);
-> > > +		bus_range->start = 0;
-> > > +		bus_range->end = 255;
-> > > +		bus_range->flags = IORESOURCE_BUS;
-> > 
-> > What about bus_range->name?
-> 
-> Don't know! Is anyone using it?
-
-I guess /proc/iomem prints it out? I set it in my current driver, if you
-want to take a look.
-
-> > 
-> > > +	}
-> > > +	busno = bus_range->start;
-> > > +	pci_add_resource(&res, bus_range);
-> > 
-> > I currently truncate the bus range to fit inside the Configuration Space
-> > window I have (in the reg property). How can I continue to do that with this
-> > patch?
-> 
-> Not easily. Unless I add an argument to this function that will allow you to
-> pass in the max number for the bus range, then the code becomes:
-> 
-> +	err = of_pci_parse_bus_range(parent->of_node, bus_range);
-> +	if (err) {
-> +		dev_info(parent, "No bus range for %s, using default [0-%d]\n",
-> +			parent->of_node->full_name, max_range);
-> +		bus_range->start = 0;
-> +		bus_range->end = max_range;
-> +		bus_range->flags = IORESOURCE_BUS;
-> +	} else {
-> +		if (bus_range->end > bus_range->start + max_range) {
-> +			bus_range->end = bus_range->start + max_range;
-> +		}
-> +	}
-> 
-> Or something like that.
-
-Again, take a look at my driver (it's in mainline now) to see how I deal
-with this.
-
-Will
+T24gV2VkLCAyIEp1bCAyMDE0IDE4OjU2OjI4ICswMjAwCkFuZHJldyBMdW5uIDxhbmRyZXdAbHVu
+bi5jaD4gd3JvdGU6Cgo+IEhvdyB3ZWxsIHdpbGwgdGhpcyB3b3JrIHdpdGggUnVzc2VsbCBjb25j
+ZXB0IG9mIGEgZnJvbnQgZW5kIGFuZCB0d28KPiBiYWNrZW5kcz8gQ2FuIHlvdSB1c2VzIHlvdXIg
+Q09ERUMgdHdpY2UsIG9uY2Ugd2l0aCB0aGUgSTJTIGJhY2tlbmQgYW5kCj4gYSBzZWNvbmQgdGlt
+ZSB3aXRoIHRoZSBTL1BESUYgYmFja2VuZD8KCkhpIEFuZHJldywKClRoZSBUREE5OTh4IENPREVD
+IGhhcyB0d28gZnVuY3Rpb25zOgotIGl0IHNldHMgdGhlIHBvc3NpYmxlIGZvcm1hdHMgYW5kIHJh
+dGVzIHdoZW4gdGhlIHNjcmVlbiBjb25uZWN0cyBhbmQKLSBpdCBzZXRzIHRoZSBhdWRpbyBpbnB1
+dCBwb3J0IHdoZW4gYXVkaW8gc3RyZWFtaW5nIHN0YXJ0cy4KCkkgdGVzdGVkIHRoaXMgQ09ERUMg
+d2l0aCBib3RoIERBUE0gYW5kIERQQ00uIElmIHRoZSBhdWRpbyBzdWJzeXN0ZW0KYXNrcyBmb3Ig
+c3RyZWFtaW5nIG9uIGJvdGggSTJTIGFuZCBTL1BESUYsIG9ubHkgdGhlIGxhc3QgY2FsbCBpcyBz
+ZXJ2ZWQKKHRoaXMgZGVwZW5kcyBvbiB0aGUgb3JkZXIgb2YgdGhlIERBSSBsaW5rcyBpbiB0aGUg
+YXVkaW8gY2FyZCBjcmVhdGlvbgp0YWJsZSkuCgpBcyBJIHRvbGQgdG8gUnVzc2VsbCwgRFBDTSBq
+dXN0IGFza3MgZm9yIGEgJ3N5c3RlbScgREFJIChmcm9udC1lbmQpLApidXQgaXQgYWxzbyBhc2tz
+IGZvciBzb21lIGFkZGl0aW9uYWwgY29kZSBpbiB0aGUga2lya3dvb2QgRE1BIGRyaXZlcgpiZWNh
+dXNlIGFsbCBQQ01zIGFyZSBhY3RpdmF0ZWQgb24gc3RyZWFtaW5nIHN0YXJ0LgoKLS0gCktlbiBh
+ciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRhdiEgKioKSmVmCQl8CQlo
+dHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVl
+ZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
