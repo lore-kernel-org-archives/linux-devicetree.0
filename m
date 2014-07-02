@@ -1,35 +1,58 @@
 From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 8/9] pci: Add support for creating a generic host_bridge from device tree
-Date: Wed, 02 Jul 2014 21:09:06 +0200
-Message-ID: <4233600.RyK6LJF6ZK@wuerfel>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <20140702172355.GQ2173@e106497-lin.cambridge.arm.com> <20140702173113.GJ24879@arm.com>
+Subject: Re: [PATCH v8 2/9] pci: Export find_pci_host_bridge() function.
+Date: Wed, 02 Jul 2014 21:12:05 +0200
+Message-ID: <7101568.8DVJFku5jp@wuerfel>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <1404240214-9804-3-git-send-email-Liviu.Dudau@arm.com> <CACoXjck+aU33=kSy=KCGABNXNR7tj2KndAiBqEDK7wQ_Qei80Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7Bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140702173113.GJ24879@arm.com>
+In-Reply-To: <CACoXjck+aU33=kSy=KCGABNXNR7tj2KndAiBqEDK7wQ_Qei80Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Will Deacon <will.deacon@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Tanmay Inamdar <tinamdar@apm.com>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>
+To: Tanmay Inamdar <tinamdar@apm.com>
+Cc: Liviu Dudau <Liviu.Dudau@arm.com>, linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 July 2014 18:31:13 Will Deacon wrote:
-> > > > + err = of_pci_parse_bus_range(parent->of_node, bus_range);
-> > > > + if (err) {
-> > > > +         dev_info(parent, "No bus range for %s, using default [0-255]\n",
-> > > > +                 parent->of_node->full_name);
-> > > > +         bus_range->start = 0;
-> > > > +         bus_range->end = 255;
-> > > > +         bus_range->flags = IORESOURCE_BUS;
-> > > 
-> > > What about bus_range->name?
-> > 
-> > Don't know! Is anyone using it?
+On Wednesday 02 July 2014 11:06:38 Tanmay Inamdar wrote:
+> On Tue, Jul 1, 2014 at 11:43 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> > This is a useful function and we should make it visible outside the
+> > generic PCI code. Export it as a GPL symbol.
+> >
+> > Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> > Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+> > ---
+> >  drivers/pci/host-bridge.c | 3 ++-
+> >  1 file changed, 2 insertions(+), 1 deletion(-)
+> >
+> > diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> > index 0e5f3c9..36c669e 100644
+> > --- a/drivers/pci/host-bridge.c
+> > +++ b/drivers/pci/host-bridge.c
+> > @@ -16,12 +16,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
+> >         return bus;
+> >  }
+> >
+> > -static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+> > +struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+> >  {
+> >         struct pci_bus *root_bus = find_pci_root_bus(bus);
+> >
+> >         return to_pci_host_bridge(root_bus->bridge);
+> >  }
+> > +EXPORT_SYMBOL_GPL(find_pci_host_bridge);
 > 
-> I guess /proc/iomem prints it out? I set it in my current driver, if you
-> want to take a look.
+> Is there any specific reason behind making this symbol GPL? I think
+> the other functions in this file are just EXPORT_SYMBOL. Ultimately
+> companies which have non gpl Linux modules (nvidia) will face issue
+> using this API.
+> 
+> The same applies to 'of_create_pci_host_bridge'.
 
-I don't think the bus resources show up anywhere in procfs. Anyway, it's
-always a good idea to give resources a name, if only for debugging purposes.
+I think EXPORT_SYMBOL_GPL() is better here. The new symbols are unlikely
+to be used by a peripheral device driver, and PCI host controllers are
+already restricted by EXPORT_SYMBOL_GPL.
+
+nvidia will certainly not do a PCI host controller driver that is not
+upstream or not GPL-compatible.
 
 	Arnd
