@@ -1,77 +1,90 @@
-From: Mark Rutland <mark.rutland@arm.com>
-Subject: Re: [PATCH] rcar_can: add device tree support
-Date: Wed, 2 Jul 2014 11:14:37 +0100
-Message-ID: <20140702101437.GC14665@leverpostej>
-References: <201407020227.04235.sergei.shtylyov@cogentembedded.com>
- <53B33B45.1060205@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <53B33B45.1060205@pengutronix.de>
-Sender: netdev-owner@vger.kernel.org
-To: Marc Kleine-Budde <mkl@pengutronix.de>
-Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "vksavl@gmail.com" <vksavl@gmail.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
+From: Suman Tripathi <stripathi@apm.com>
+Subject: [PATCH v5 1/2] libahci: Implement the function ahci_restart_engine to restart the port dma engine.
+Date: Wed,  2 Jul 2014 15:45:07 +0530
+Message-ID: <1404296108-16233-2-git-send-email-stripathi@apm.com>
+References: <1404296108-16233-1-git-send-email-stripathi@apm.com>
+Return-path: <linux-ide-owner@vger.kernel.org>
+In-Reply-To: <1404296108-16233-1-git-send-email-stripathi@apm.com>
+Sender: linux-ide-owner@vger.kernel.org
+To: olof@lixom.net, tj@kernel.org, arnd@arndb.de
+Cc: linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Suman Tripathi <stripathi@apm.com>, Loc Ho <lho@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 01, 2014 at 11:50:45PM +0100, Marc Kleine-Budde wrote:
-> On 07/02/2014 12:27 AM, Sergei Shtylyov wrote:
-> > Add support of the device tree probing for the Renesas R-Car CAN controllers
-> > documenting the device tree bindings as necessary.
-> 
-> Please put the DT documentation into a separate patch, make it the first
-> one. When reposting, please put the device tree mailing list on Cc.
-> 
-> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-> > 
-> > ---
-> > The patch is against the Dave Miller's 'net-next.git' repo ('linux-can-next.git'
-> > repo still doesn't have the R-Car CAN driver for some reason).
-> 
-> Should be fixed now :)
-> 
-> > 
-> >  Documentation/devicetree/bindings/net/can/rcar_can.txt |   40 +++++++++++++++++
-> >  drivers/net/can/rcar_can.c                             |   28 +++++++++--
-> >  2 files changed, 63 insertions(+), 5 deletions(-)
-> > 
-> > Index: net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > ===================================================================
-> > --- /dev/null
-> > +++ net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
-> > @@ -0,0 +1,40 @@
-> > +Renesas R-Car CAN controller Device Tree Bindings
-> > +-------------------------------------------------
-> > +
-> > +Required properties:
-> > +- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
-> > +	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
-> > +	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
-> > +	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
-> 
-> AFAIK we usually specify the first SoC with this core as the only
-> compatible.
+This patch adds an function to restart the port dma engine.
+This patch also exports the function ahci_qc_issue. The subsequent
+patches will make use of them.
 
-Not quite. While the driver only needs to have support for that and
-DTS files should have that string in the compatible list, the other
-strings can be present in the binding and earlier in the compatible list
-to allow us to distinguish the variants later (without requiring changes
-to DTBs).
+Signed-off-by: Loc Ho <lho@apm.com>
+Signed-off-by: Suman Tripathi <stripathi@apm.com>
+---
+ drivers/ata/ahci.h    |  3 ++-
+ drivers/ata/libahci.c | 16 ++++++++++++++--
+ 2 files changed, 16 insertions(+), 3 deletions(-)
 
-> > +- reg: physical base address and size of the R-Car CAN register map.
-> > +- interrupts: interrupt specifier for the sole interrupt.
-> > +- clocks: phandle and clock specifier for the R-Car CAN clock input.
-> > +- pinctrl-0: pin control group to be used for this controller.
-> > +- pinctrl-names: must be "default".
-> > +
-> > +Optional properties:
-> > +- clock-select: R-Car CAN Clock Source Select. Valid values are:
-> > +		<0x0> (default) : Peripheral clock (clkp1)
-> > +		<0x1> : Peripheral clock (clkp2)
-> > +		<0x3> : Externally input clock
+diff --git a/drivers/ata/ahci.h b/drivers/ata/ahci.h
+index af63c75..98e8839 100644
+--- a/drivers/ata/ahci.h
++++ b/drivers/ata/ahci.h
+@@ -369,9 +369,10 @@ int ahci_reset_controller(struct ata_host *host);
+ int ahci_do_softreset(struct ata_link *link, unsigned int *class,
+ 		      int pmp, unsigned long deadline,
+ 		      int (*check_ready)(struct ata_link *link));
+-
++unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
+ int ahci_stop_engine(struct ata_port *ap);
+ void ahci_start_engine(struct ata_port *ap);
++int ahci_restart_engine(struct ata_port *ap);
+ int ahci_check_ready(struct ata_link *link);
+ int ahci_kick_engine(struct ata_port *ap);
+ int ahci_port_resume(struct ata_port *ap);
+diff --git a/drivers/ata/libahci.c b/drivers/ata/libahci.c
+index b986145..1b86cf4 100644
+--- a/drivers/ata/libahci.c
++++ b/drivers/ata/libahci.c
+@@ -68,7 +68,6 @@ static ssize_t ahci_transmit_led_message(struct ata_port *ap, u32 state,
 
-What's this for, and how does this interact with the single clock listed
-above?
+ static int ahci_scr_read(struct ata_link *link, unsigned int sc_reg, u32 *val);
+ static int ahci_scr_write(struct ata_link *link, unsigned int sc_reg, u32 val);
+-static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc);
+ static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc);
+ static int ahci_port_start(struct ata_port *ap);
+ static void ahci_port_stop(struct ata_port *ap);
+@@ -742,6 +741,18 @@ static int ahci_set_lpm(struct ata_link *link, enum ata_lpm_policy policy,
+ 	return 0;
+ }
 
-THanks,
-Mark.
++int ahci_restart_engine(struct ata_port *ap)
++{
++	struct ahci_host_priv *hpriv = ap->host->private_data;
++
++	ahci_stop_engine(ap);
++	ahci_start_fis_rx(ap);
++	hpriv->start_engine(ap);
++
++	return 0;
++}
++EXPORT_SYMBOL_GPL(ahci_restart_engine);
++
+ #ifdef CONFIG_PM
+ static void ahci_power_down(struct ata_port *ap)
+ {
+@@ -1940,7 +1951,7 @@ irqreturn_t ahci_interrupt(int irq, void *dev_instance)
+ }
+ EXPORT_SYMBOL_GPL(ahci_interrupt);
+
+-static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
++unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
+ {
+ 	struct ata_port *ap = qc->ap;
+ 	void __iomem *port_mmio = ahci_port_base(ap);
+@@ -1969,6 +1980,7 @@ static unsigned int ahci_qc_issue(struct ata_queued_cmd *qc)
+
+ 	return 0;
+ }
++EXPORT_SYMBOL_GPL(ahci_qc_issue);
+
+ static bool ahci_qc_fill_rtf(struct ata_queued_cmd *qc)
+ {
+--
+1.8.2.1
+
