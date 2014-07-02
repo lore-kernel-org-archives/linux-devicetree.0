@@ -1,46 +1,36 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v5 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks
- binding
-Date: Wed, 02 Jul 2014 12:17:54 +0200
-Message-ID: <53B3DC52.7040803@collabora.co.uk>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-5-git-send-email-javier.martinez@collabora.co.uk> <20140701172959.32686.9863@quantum>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 3/3] ARM: STi: STiH407: Add reset controller support.
+Date: Wed, 2 Jul 2014 11:19:27 +0100
+Message-ID: <20140702101927.GC8809@griffinp-ThinkPad-X1-Carbon-2nd>
+References: <1404225047-9495-1-git-send-email-peter.griffin@linaro.org>
+ <1404225047-9495-4-git-send-email-peter.griffin@linaro.org>
+ <20140702085102.GF10311@lee--X1>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <20140701172959.32686.9863@quantum>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140702085102.GF10311@lee--X1>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mike,
+Hi Lee,
 
-On 07/01/2014 07:29 PM, Mike Turquette wrote:
-> Quoting Javier Martinez Canillas (2014-06-26 11:15:36)
->> Like most clock drivers, the Maxim 77686 PMIC clock binding
->> follows the convention that the "#clock-cells" property is
->> used to specify the number of cells in a clock provider.
->> 
->> But the binding document is not clear enough that it shall
->> be set to 1 since the PMIC support multiple clocks outputs.
->> 
->> Also, explain that the clocks identifiers are defined in a
->> header file that can be included by Device Tree source with
->> client nodes to avoid using magic numbers.
->> 
->> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> > +		picophyreset: picophyreset-controller {
+> > +			#reset-cells = <1>;
+> > +			compatible = "st,stih407-picophyreset";
+> > +		};
+> > +
 > 
-> Looks good to me.
-> 
-> Regards,
-> Mike
-> 
+> I'd always put the compatible string at the very top of the node.
 
-Thanks a lot, an Acked-by or Reviewed-by tags for this patch and 03/14 will be
-great as well so I can carry those on the next version of the series.
+Thanks for reviewing, have changed in v2.
 
-Best regards,
-Javier
+regards,
+
+Peter.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
