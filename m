@@ -1,109 +1,77 @@
-From: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-Subject: Re: [PATCH v5 05/14] clk: Add generic driver for Maxim PMIC clocks
-Date: Wed, 02 Jul 2014 12:13:29 +0200
-Message-ID: <53B3DB49.6020604@collabora.co.uk>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-6-git-send-email-javier.martinez@collabora.co.uk> <CAKew6eU5X=WxhECtwUUwbXe_fCRU4bD6B7caWiA2dwcBfThd-g@mail.gmail.com> <20140701172616.32686.44374@quantum>
+From: Mark Rutland <mark.rutland@arm.com>
+Subject: Re: [PATCH] rcar_can: add device tree support
+Date: Wed, 2 Jul 2014 11:14:37 +0100
+Message-ID: <20140702101437.GC14665@leverpostej>
+References: <201407020227.04235.sergei.shtylyov@cogentembedded.com>
+ <53B33B45.1060205@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20140701172616.32686.44374@quantum>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>, Yadwinder Singh Brar <yadi.brar01@gmail.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <53B33B45.1060205@pengutronix.de>
+Sender: netdev-owner@vger.kernel.org
+To: Marc Kleine-Budde <mkl@pengutronix.de>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "wg@grandegger.com" <wg@grandegger.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, "ijc+devicetree@hellion.org.uk" <ijc+devicetree@hellion.org.uk>, "galak@codeaurora.org" <galak@codeaurora.org>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, "vksavl@gmail.com" <vksavl@gmail.com>, "rdunlap@infradead.org" <rdunlap@infradead.org>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Mike,
-
-On 07/01/2014 07:26 PM, Mike Turquette wrote:
-> Quoting Yadwinder Singh Brar (2014-06-29 21:01:36)
->> Hi Javier,
->> 
->> On Thu, Jun 26, 2014 at 11:45 PM, Javier Martinez Canillas
->> <javier.martinez@collabora.co.uk> wrote:
->> > Maxim Integrated Power Management ICs are very similar with
->> > regard to their clock outputs. Most of the clock drivers for
->> > these chips are duplicating code and are simpler enough that
->> > can be converted to use a generic driver to consolidate code
->> > and avoid duplication.
->> >
->> > Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
->> > Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
->> > ---
->> >
->> > Changes since v4:
->> >  - Return recalc 0 if clock isn't enabled in Suggested by Yadwinder Singh Brar.
->> >
->> 
->> It seems you didn't implement or posted same patch again :) .
->> 
->> > Changes since v3:
->> >  - Add current copyright information. Suggested by Krzysztof Kozlowski
->> >  - Do a single allocation for struct max_gen_clk. Suggested by Krzysztof Kozlowski
->> >  - Add EXPORT_SYMBOL() for exported symbols. Suggested by Krzysztof Kozlowski
->> >
->> >  drivers/clk/Kconfig       |   3 +
->> >  drivers/clk/Makefile      |   1 +
->> >  drivers/clk/clk-max-gen.c | 195 ++++++++++++++++++++++++++++++++++++++++++++++
->> >  drivers/clk/clk-max-gen.h |  32 ++++++++
->> >  4 files changed, 231 insertions(+)
->> >  create mode 100644 drivers/clk/clk-max-gen.c
->> >  create mode 100644 drivers/clk/clk-max-gen.h
->> >
->> 
->> [ .. ]
->> 
->> > +
->> > +static unsigned long max_gen_recalc_rate(struct clk_hw *hw,
->> > +                                        unsigned long parent_rate)
->> > +{
->> > +       return 32768;
->> > +}
->> 
->> Its still same here.
+On Tue, Jul 01, 2014 at 11:50:45PM +0100, Marc Kleine-Budde wrote:
+> On 07/02/2014 12:27 AM, Sergei Shtylyov wrote:
+> > Add support of the device tree probing for the Renesas R-Car CAN controllers
+> > documenting the device tree bindings as necessary.
 > 
-> Changing this would be a new behavior. I do not know of any other clock
-> drivers that conditionally returns a rate of 0 based on whether or not
-> the clock is gated.
+> Please put the DT documentation into a separate patch, make it the first
+> one. When reposting, please put the device tree mailing list on Cc.
 > 
-
-After Yadwinder feedback I searched for clock drivers that returned 0 when the
-clock was not enabled/prepared and found for example drivers/clk/clk-s2mps11.c:
-
-
-static unsigned long s2mps11_clk_recalc_rate(struct clk_hw *hw,
-                                             unsigned long parent_rate)
-{
-        struct s2mps11_clk *s2mps11 = to_s2mps11_clk(hw);
-        if (s2mps11->enabled)
-                return 32768;
-        else
-                return 0;
-}
-
-> It is also buggy since calls to clk_enable and clk_disable do not invoke
-> .recalc_rate, so the rate of your clock would not be updated from the
-> framework's perspective until some later point where you call
-> clk_set_rate or something.
->
-
-s2ps11->enabled is set in the driver's clk_ops .prepare and .unprepare function
-handlers and calls to clk_prepare and clk_unprepare also don't seems to invoke
-.recalc_rate so I guess that driver is wrong as well and should just return the
-clock rate unconditionally?
-
-> If your driver needs to know whether or not the clock is enabled then we
-> could introduce a new bool clk_is_enabled(struct clk *clk); to clk.h,
-> but I'd rather not do that. Instead if a driver needs a clock then it
-> calls clk_enable on it without any knowledge about the internal state of
-> the clock enable_count.
+> > Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> > 
+> > ---
+> > The patch is against the Dave Miller's 'net-next.git' repo ('linux-can-next.git'
+> > repo still doesn't have the R-Car CAN driver for some reason).
 > 
-> Regards,
-> Mike
->
+> Should be fixed now :)
+> 
+> > 
+> >  Documentation/devicetree/bindings/net/can/rcar_can.txt |   40 +++++++++++++++++
+> >  drivers/net/can/rcar_can.c                             |   28 +++++++++--
+> >  2 files changed, 63 insertions(+), 5 deletions(-)
+> > 
+> > Index: net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > ===================================================================
+> > --- /dev/null
+> > +++ net-next/Documentation/devicetree/bindings/net/can/rcar_can.txt
+> > @@ -0,0 +1,40 @@
+> > +Renesas R-Car CAN controller Device Tree Bindings
+> > +-------------------------------------------------
+> > +
+> > +Required properties:
+> > +- compatible: "renesas,can-r8a7778" if CAN controller is a part of R8A7778 SoC.
+> > +	      "renesas,can-r8a7779" if CAN controller is a part of R8A7779 SoC.
+> > +	      "renesas,can-r8a7790" if CAN controller is a part of R8A7790 SoC.
+> > +	      "renesas,can-r8a7791" if CAN controller is a part of R8A7791 SoC.
+> 
+> AFAIK we usually specify the first SoC with this core as the only
+> compatible.
 
-Thanks a lot for the explanation, I'll revert that change then and return the
-clock rate unconditionally on the next version of the patch-set.
+Not quite. While the driver only needs to have support for that and
+DTS files should have that string in the compatible list, the other
+strings can be present in the binding and earlier in the compatible list
+to allow us to distinguish the variants later (without requiring changes
+to DTBs).
 
-Best regards,
-Javier
+> > +- reg: physical base address and size of the R-Car CAN register map.
+> > +- interrupts: interrupt specifier for the sole interrupt.
+> > +- clocks: phandle and clock specifier for the R-Car CAN clock input.
+> > +- pinctrl-0: pin control group to be used for this controller.
+> > +- pinctrl-names: must be "default".
+> > +
+> > +Optional properties:
+> > +- clock-select: R-Car CAN Clock Source Select. Valid values are:
+> > +		<0x0> (default) : Peripheral clock (clkp1)
+> > +		<0x1> : Peripheral clock (clkp2)
+> > +		<0x3> : Externally input clock
+
+What's this for, and how does this interact with the single clock listed
+above?
+
+THanks,
+Mark.
