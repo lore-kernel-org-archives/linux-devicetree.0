@@ -1,89 +1,141 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 5/5] ARM: imx: Add Freescale LS1021A SMP support
-Date: Wed, 2 Jul 2014 12:30:58 +0100
-Message-ID: <20140702113058.GF14665@leverpostej>
-References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
- <1404291772-2644-6-git-send-email-jingchang.lu@freescale.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH RFC V2 1/2] Documentation: add Device tree bindings for
+ QCA7000
+Date: Wed, 02 Jul 2014 15:51:27 +0400
+Message-ID: <53B3F23F.3030809@cogentembedded.com>
+References: <1404232609-4314-1-git-send-email-stefan.wahren@i2se.com> <1404232609-4314-2-git-send-email-stefan.wahren@i2se.com> <53B2F0D1.6070602@cogentembedded.com> <53B3AE5C.6040005@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1404291772-2644-6-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <53B3AE5C.6040005@i2se.com>
+Sender: netdev-owner@vger.kernel.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, eric.dumazet@gmail.com, dave.taht@gmail.com
+Cc: netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 02, 2014 at 10:02:52AM +0100, Jingchang Lu wrote:
-> From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> 
-> Freescale LS1021A SoC deploys two cortex-A7 processors,
-> this adds bring-up support for the secondary core.
-> 
-> Signed-off-by: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-> ---
->  arch/arm/mach-imx/common.h       |  2 ++
->  arch/arm/mach-imx/headsmp.S      | 11 ++++++++++
->  arch/arm/mach-imx/mach-ls1021a.c |  1 +
->  arch/arm/mach-imx/platsmp.c      | 44 ++++++++++++++++++++++++++++++++++++++++
->  4 files changed, 58 insertions(+)
+Hello.
 
-[...]
+On 07/02/2014 11:01 AM, Stefan Wahren wrote:
 
-> diff --git a/arch/arm/mach-imx/headsmp.S b/arch/arm/mach-imx/headsmp.S
-> index de5047c..fdd93d9 100644
-> --- a/arch/arm/mach-imx/headsmp.S
-> +++ b/arch/arm/mach-imx/headsmp.S
-> @@ -29,3 +29,14 @@ ENTRY(v7_secondary_startup)
->  	set_diag_reg
->  	b	secondary_startup
->  ENDPROC(v7_secondary_startup)
-> +
-> +ENTRY(ls1021a_secondary_startup)
-> +	/* set CNTFREQ of secondary core */
-> +	ldr	r0, =12500000
-> +	mcr 	p15, 0, r0, c14, c0, 0
-> +	/* disable Physical and Virtural Timer */
-> +	mov	r0, #0x0
-> +	mcr	p15, 0, r0, c14, c2, 1
-> +	mcr	p15, 0, r0, c14, c3, 1
-> +	b	secondary_startup
+>>> This patch adds the Device tree bindings for the
+>>> Ethernet over SPI protocol driver of the Qualcomm
+>>> QCA7000 HomePlug GreenPHY.
 
-Urrgh...
+>>> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+>>> ---
+>>>    .../devicetree/bindings/net/qca-qca7000-spi.txt    |   47
+>>> ++++++++++++++++++++
+>>>    1 file changed, 47 insertions(+)
+>>>    create mode 100644
+>>> Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
 
-What about CNTVOFF? That's been a source of problems elsewhere.
+>>> diff --git
+>>> a/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+>>> b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+>>> new file mode 100644
+>>> index 0000000..66ff588
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/net/qca-qca7000-spi.txt
+>>> @@ -0,0 +1,47 @@
+>>> +* Qualcomm QCA7000 (Ethernet over SPI protocol)
+>>> +
+>>> +Note: The QCA7000 is useable as a SPI device. In this case it must
+>>> be defined
+>>> +as a child of a SPI master in the device tree.
+>>> +
+>>> +Required properties:
+>>> +- compatible : Should be "qca,qca7000"
+>>> +- reg : Should specify the SPI chip select
+>>> +- interrupt-parent : Should specify the pHandle of the source interrupt
 
-Is the boot CPU set up correctly?
+>>     This property is not really required, it could be inherited from an
+>> upper-level node.
 
-Is that frequency always going to be correct?
+> should i move this property to the optional properties or drop it from
+> the properties?
 
-[...]
+    Make it optional, please.
 
-> +static void __init ls1021a_smp_init_cpus(void)
-> +{
-> +	int i, ncores;
-> +	/* get number of cores from CP15 L2 controller register(L2CTLR)*/
-> +	asm volatile ("mrc p15, 1, %0, c9, c0, 2" : "=r" (ncores));
-> +
-> +	ncores = ((ncores >> 24) & 0x3) + 1;
-> +	for (i = ncores; i < NR_CPUS; i++)
-> +		set_cpu_possible(i, false);
-> +}
+>>> +- interrupts : The first cell should specify the index of the source
+>>> interrupt
+>>> +  and the second cell should specify the trigger type as rising edge
+>>> +- spi-cpha : Must be set
+>>> +- spi-cpol: Must be set
+>>> +
+>>> +Optional properties:
+>>> +- spi-max-frequency : Maximum frequency of the SPI bus the chip can
+>>> operate at.
+>>> +  Numbers smaller than 1000000 or greater than 16000000 are invalid.
+>>> Missing
+>>> +  the property will set the SPI frequency to 8000000 Hertz.
+>>> +- local-mac-address: 6 bytes, mac address
 
-NAK.
+>>     s/mac/MAC/.
 
-This information is _already_ in the DT. This adds more code to do
-redundant work, and it's broken.
+> I assume that the replacement should apply only to the property
+> description not to the property name.
 
-The physical<->logical CPU ID mapping is arbitrary, so you set arbitrary
-CPUs as being online despite this not necessarily being the case.
+    Yes, of course.
 
-Get rid of this, and rely on the DT being correct. There;s no reason it
-shouldn't be for a new platform.
+>>> +- qca,legacy-mode : Set the SPI data transfer of the QCA7000 to
+>>> legacy mode.
+>>> +  In this mode the SPI master must toggle the chip select between
+>>> each data
+>>> +  word. In burst mode these gaps aren't necessary, which is faster.
+>>> +  This setting depends on how the QCA7000 is setup via GPIO pin
+>>> strapping.
+>>> +  If the property is missing the driver defaults to burst mode.
+>>> +
+>>> +Example:
+>>> +
+>>> +/* Freescale i.MX28 SPI master*/
+>>> +ssp2: ssp@80014000 {
 
-Thanks,
-Mark.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+    The node name should probably be "spi" here.
+
+>>> +    #address-cells = <1>;
+>>> +    #size-cells = <0>;
+>>> +    compatible = "fsl,imx28-spi";
+>>> +    pinctrl-names = "default";
+>>> +    pinctrl-0 = <&spi2_pins_a>;
+>>> +    status = "okay";
+>>> +
+>>> +    qca7000@0 {
+
+>>     According to the ePAPR standard [1]:
+
+>> The name of a node should be somewhat generic, reflecting the function
+>> of the device and not its precise programming model. If appropriate,
+>> the name should be one of the following choices:
+>> [...]
+>>   - ethernet;
+
+> I have doubts about that. I agree that the current node name doesn't fit
+> to ePAPR. The function of a QCA7000 isn't really a ethernet device. Yes,
+> this linux driver implementation handle the QCA7000 as a ethernet
+> device. But the QCA7000 a powerline device according to Homeplug GreenPHY.
+
+> How about using powerline as node name?
+
+    I don't know the differences between Ethernet and PowerLine but looks like 
+they are minimal as you're implementing an Ethernet driver. So I'm still for 
+"ethernet".
+
+>>> +        compatible = "qca,qca7000";
+>>> +        interrupt-parent = <&gpio3>;      /* GPIO Bank 3 */
+>>> +        interrupts = <25 0x1>;            /* Index: 25, rising edge */
+>>> +        reg = <0x0>;
+>>> +        spi-cpha;                         /* SPI mode: CPHA=1 */
+>>> +        spi-cpol;                         /* SPI mode: CPOL=1 */
+>>> +        spi-max-frequency = <8000000>;    /* freq: 8 MHz */
+>>> +        local-mac-address = [ A0 B0 C0 D0 E0 F0 ];
+>>> +    };
+>>> +};
+
+>> [1]
+>> http://www.power.org/resources/downloads/Power_ePAPR_APPROVED_v1.0.pdf
+
+> BR Stefan Wahren
+
+WBR, Sergei
