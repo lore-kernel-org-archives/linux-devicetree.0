@@ -1,48 +1,58 @@
-From: <suravee.suthikulpanit@amd.com>
-Subject: [PATCH 0/3 V2] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
-Date: Wed, 2 Jul 2014 10:21:05 -0500
-Message-ID: <1404314468-7674-1-git-send-email-suravee.suthikulpanit@amd.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v5 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks binding
+Date: Wed, 02 Jul 2014 08:21:09 -0700
+Message-ID: <20140702152109.12768.26689@quantum>
+References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
+ <1403806546-31122-5-git-send-email-javier.martinez@collabora.co.uk>
+ <20140701172959.32686.9863@quantum> <53B3DC52.7040803@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53B3DC52.7040803@collabora.co.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
-Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+Quoting Javier Martinez Canillas (2014-07-02 03:17:54)
+> Hello Mike,
+> 
+> On 07/01/2014 07:29 PM, Mike Turquette wrote:
+> > Quoting Javier Martinez Canillas (2014-06-26 11:15:36)
+> >> Like most clock drivers, the Maxim 77686 PMIC clock binding
+> >> follows the convention that the "#clock-cells" property is
+> >> used to specify the number of cells in a clock provider.
+> >> 
+> >> But the binding document is not clear enough that it shall
+> >> be set to 1 since the PMIC support multiple clocks outputs.
+> >> 
+> >> Also, explain that the clocks identifiers are defined in a
+> >> header file that can be included by Device Tree source with
+> >> client nodes to avoid using magic numbers.
+> >> 
+> >> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> >> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
+> >> Reviewed-by: Doug Anderson <dianders@chromium.org>
+> > 
+> > Looks good to me.
+> > 
+> > Regards,
+> > Mike
+> > 
+> 
+> Thanks a lot, an Acked-by or Reviewed-by tags for this patch and 03/14 will be
+> great as well so I can carry those on the next version of the series.
 
-This patch set introduces support for MSI(-X) in GICv2m specification,
-which is implemented in some variation of GIC400 (e.g. gic-400+).
+Sure you can interpret my "looks good to me" as either an Ack or a
+Reviewed-by, depending on context. In this case feel free to add:
 
-This depends on and has been tested with the V7 of "Add support for PCI in AArch64"
-(https://lkml.org/lkml/2014/3/14/320).
+Reviewed-by: Mike Turquette <mturquette@linaro.org>
 
-Changes in V2:
-Re-architect the code to:
-    * Use irq_chip for gicv2m instead of using the gic_chip (per Marc suggestion).
-    * Remove the overwriting of arch_setup_msi_irq and arch_setup_msi_irqs
-      (per Marc suggestion).
-    * Add devicetree matching for gic-400-plus for v2m stuff instread of
-      re-using gic-400 just to be clear.
-    * Misc fix/clean up per Mark Rutland and Marc Zyngier comments
+Regards,
+Mike
 
-Suravee Suthikulpanit (3):
-  irqchip: gic: Add binding probe for ARM GIC400
-  irqchip: gic: Restructuring ARM GIC code
-  irqchip: gic: Add supports for ARM GICv2m MSI(-X)
-
- Documentation/devicetree/bindings/arm/gic.txt |  19 +-
- drivers/irqchip/Kconfig                       |   6 +
- drivers/irqchip/Makefile                      |   1 +
- drivers/irqchip/irq-gic-v2m.c                 | 248 ++++++++++++++++++++++++++
- drivers/irqchip/irq-gic-v2m.h                 |  13 ++
- drivers/irqchip/irq-gic.c                     |  88 +++++----
- drivers/irqchip/irq-gic.h                     |  60 +++++++
- 7 files changed, 395 insertions(+), 40 deletions(-)
- create mode 100644 drivers/irqchip/irq-gic-v2m.c
- create mode 100644 drivers/irqchip/irq-gic-v2m.h
- create mode 100644 drivers/irqchip/irq-gic.h
-
--- 
-1.9.0
+> 
+> Best regards,
+> Javier
+> 
