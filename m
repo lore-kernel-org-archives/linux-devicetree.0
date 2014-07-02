@@ -1,307 +1,95 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 1/4] reset: stih407: Add softreset,
- powerdown and picophy controllers
-Date: Wed,  2 Jul 2014 15:08:46 +0100
-Message-ID: <1404310129-14667-2-git-send-email-peter.griffin@linaro.org>
-References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
+From: Liviu Dudau <Liviu.Dudau-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH v8 3/9] pci: Introduce pci_register_io_range() helper
+ function.
+Date: Wed, 2 Jul 2014 15:23:03 +0100
+Message-ID: <20140702142303.GJ2173@e106497-lin.cambridge.arm.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+ <8556461.i7qCGvGY5a@wuerfel>
+ <20140701204508.GA19569@bart.dudau.co.uk>
+ <7343032.WUqPgbXNQS@wuerfel>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, devicetree@vger.kernel.org, lee.jones@linaro.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <7343032.WUqPgbXNQS@wuerfel>
+Content-Disposition: inline
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
+Cc: "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Liviu Dudau <liviu-I3yL/QOVVjH10XsdtD+oqA@public.gmane.org>, Sinan Kaya <okaya-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linaro-kernel <linaro-kernel-cunTk1MwBs8s++Sfvej+rw@public.gmane.org>, Benjamin Herrenschmidt <benh-XVmvHMARGAS8U2dJNN8I7kB+6BGkLq7r@public.gmane.org>, Device Tree ML <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pci <linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Will Deacon <Will.Deacon-5wv7dgnIgG8@public.gmane.org>, Grant Likely <grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org>, Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tanmay Inamdar <tinamdar-qTEPVZfXA3Y@public.gmane.org>, Suravee Suthikulanit <suravee.suthikulpanit-5C7GfCeVMHo@public.gmane.org>, Catalin Marinas <Catalin.Marinas-5wv7dgnIgG8@public.gmane.org>, Bjorn Helgaas <bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds softreset, powerdown and picophy reset controllers for
-the STiH407 SoC.
+On Wed, Jul 02, 2014 at 01:30:31PM +0100, Arnd Bergmann wrote:
+> On Tuesday 01 July 2014 21:45:09 Liviu Dudau wrote:
+> > On Tue, Jul 01, 2014 at 09:36:10PM +0200, Arnd Bergmann wrote:
+> > > On Tuesday 01 July 2014 19:43:28 Liviu Dudau wrote:
+> > >=20
+> > > This still conflicts with the other allocator you have in patch 9
+> > > for pci_remap_iospace: nothing guarantees that the mapping is the
+> > > same for both.
+> > >=20
+> > > Also, this is a completely pointless exercise at this moment, bec=
+ause
+> > > nobody cares about the result of pci_address_to_pio on architectu=
+res
+> > > that don't already provide this function. If we ever get a proper
+> > > Open Firmware implementation that wants to put hardcoded PCI devi=
+ces
+> > > into DT, we can add an implementation, but for now this seems ove=
+rkill.
+> > >=20
+> > > The allocator in pci_register_io_range seems reasonable, why not =
+merge
+> > > this function with pci_remap_iospace() as I have asked you multip=
+le
+> > > times before? Just make it return the io_offset so the caller can
+> > > put that into the PCI host resources.
+> >=20
+> > Hi Arnd,
+> >=20
+> > While I agree with you that at some moment the allocators were inco=
+nsistent
+> > wrt each other, for this version I would respectfully disagree on t=
+his.
+> > The allocator in pci_register_io_range() only makes sure that the r=
+anges
+> > are not overlapping, it doesn't do any mapping whatsoever, while
+> > pci_remap_iospace() does only an ioremap_page_range(). The idea is =
+that
+> > you get the offset out of pci_address_to_pio() and apply it to
+> > pci_remap_iospace().
+>=20
+> Ok, got it now, I'm sorry I didn't read this properly at first.
+>=20
+> Your solution looks correct to me, just using different
+> tradeoffs to what I was expecting: You get a working pci_address_to_p=
+io()
+> function, which is probably never needed, but in turn you need to
+> keep the state of each host bridge in a global list.
 
-With this patch three new devices are registered: -
-1. st,stih407-powerdown
-2. st,stih407-softreset
-3. st,stih407-picophyreset
+Just a reminder that with my patchset I *do* start using pci_address_to=
+_pio()
+in order to correctly parse the IO ranges from DT.
 
-All three devices use system configuration registers mapped via regmap to
-perform the reset or powerdown. The powerdown controller also has
-an acknowledgement.
+Best regards,
+Liviu
 
-A separate picophy reset controller manages the different reset channels within
-the picophy, which have a different polarity to the other system softresets.
-Managing these different picophy softreset channels is necessary to correctly
-handle resuming from suspend when USB2 devices are plugged into the USB3 port.
+>=20
+> 	Arnd
+>=20
+>=20
 
-Signed-off-by: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
----
- drivers/reset/sti/Kconfig                          |   4 +
- drivers/reset/sti/Makefile                         |   1 +
- drivers/reset/sti/reset-stih407.c                  | 158 +++++++++++++++++++++
- .../dt-bindings/reset-controller/stih407-resets.h  |  61 ++++++++
- 4 files changed, 224 insertions(+)
- create mode 100644 drivers/reset/sti/reset-stih407.c
- create mode 100644 include/dt-bindings/reset-controller/stih407-resets.h
+--=20
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    =C2=AF\_(=E3=83=84)_/=C2=AF
 
-diff --git a/drivers/reset/sti/Kconfig b/drivers/reset/sti/Kconfig
-index 88d2d03..f8c15a3 100644
---- a/drivers/reset/sti/Kconfig
-+++ b/drivers/reset/sti/Kconfig
-@@ -12,4 +12,8 @@ config STIH416_RESET
- 	bool
- 	select STI_RESET_SYSCFG
- 
-+config STIH407_RESET
-+	bool
-+	select STI_RESET_SYSCFG
-+
- endif
-diff --git a/drivers/reset/sti/Makefile b/drivers/reset/sti/Makefile
-index be1c976..dc85dfb 100644
---- a/drivers/reset/sti/Makefile
-+++ b/drivers/reset/sti/Makefile
-@@ -2,3 +2,4 @@ obj-$(CONFIG_STI_RESET_SYSCFG) += reset-syscfg.o
- 
- obj-$(CONFIG_STIH415_RESET) += reset-stih415.o
- obj-$(CONFIG_STIH416_RESET) += reset-stih416.o
-+obj-$(CONFIG_STIH407_RESET) += reset-stih407.o
-diff --git a/drivers/reset/sti/reset-stih407.c b/drivers/reset/sti/reset-stih407.c
-new file mode 100644
-index 0000000..d83db5d7
---- /dev/null
-+++ b/drivers/reset/sti/reset-stih407.c
-@@ -0,0 +1,158 @@
-+/*
-+ * Copyright (C) 2014 STMicroelectronics (R&D) Limited
-+ * Author: Giuseppe Cavallaro <peppe.cavallaro@st.com>
-+ *
-+ * This program is free software; you can redistribute it and/or modify
-+ * it under the terms of the GNU General Public License as published by
-+ * the Free Software Foundation; either version 2 of the License, or
-+ * (at your option) any later version.
-+ */
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <dt-bindings/reset-controller/stih407-resets.h>
-+#include "reset-syscfg.h"
-+
-+/* STiH407 Peripheral powerdown definitions. */
-+static const char stih407_core[] = "st,stih407-core-syscfg";
-+static const char stih407_sbc_reg[] = "st,stih407-sbc-reg-syscfg";
-+static const char stih407_lpm[] = "st,stih407-lpm-syscfg";
-+
-+#define STIH407_PDN_0(_bit) \
-+	_SYSCFG_RST_CH(stih407_core, SYSCFG_5000, _bit, SYSSTAT_5500, _bit)
-+#define STIH407_PDN_1(_bit) \
-+	_SYSCFG_RST_CH(stih407_core, SYSCFG_5001, _bit, SYSSTAT_5501, _bit)
-+#define STIH407_PDN_ETH(_bit, _stat) \
-+	_SYSCFG_RST_CH(stih407_sbc_reg, SYSCFG_4032, _bit, SYSSTAT_4520, _stat)
-+
-+/* Powerdown requests control 0 */
-+#define SYSCFG_5000	0x0
-+#define SYSSTAT_5500	0x7d0
-+/* Powerdown requests control 1 (High Speed Links) */
-+#define SYSCFG_5001	0x4
-+#define SYSSTAT_5501	0x7d4
-+
-+/* Ethernet powerdown/status/reset */
-+#define SYSCFG_4032	0x80
-+#define SYSSTAT_4520	0x820
-+#define SYSCFG_4002	0x8
-+
-+static const struct syscfg_reset_channel_data stih407_powerdowns[] = {
-+	[STIH407_EMISS_POWERDOWN] = STIH407_PDN_0(1),
-+	[STIH407_NAND_POWERDOWN] = STIH407_PDN_0(0),
-+	[STIH407_USB3_POWERDOWN] = STIH407_PDN_1(6),
-+	[STIH407_USB2_PORT1_POWERDOWN] = STIH407_PDN_1(5),
-+	[STIH407_USB2_PORT0_POWERDOWN] = STIH407_PDN_1(4),
-+	[STIH407_PCIE1_POWERDOWN] = STIH407_PDN_1(3),
-+	[STIH407_PCIE0_POWERDOWN] = STIH407_PDN_1(2),
-+	[STIH407_SATA1_POWERDOWN] = STIH407_PDN_1(1),
-+	[STIH407_SATA0_POWERDOWN] = STIH407_PDN_1(0),
-+	[STIH407_ETH1_POWERDOWN] = STIH407_PDN_ETH(0, 2),
-+};
-+
-+/* Reset Generator control 0/1 */
-+#define SYSCFG_5131	0x20c
-+#define SYSCFG_5132	0x210
-+
-+#define LPM_SYSCFG_1	0x4	/* Softreset IRB & SBC UART */
-+
-+#define STIH407_SRST_CORE(_reg, _bit) \
-+	_SYSCFG_RST_CH_NO_ACK(stih407_core, _reg, _bit)
-+
-+#define STIH407_SRST_SBC(_reg, _bit) \
-+	_SYSCFG_RST_CH_NO_ACK(stih407_sbc_reg, _reg, _bit)
-+
-+#define STIH407_SRST_LPM(_reg, _bit) \
-+	_SYSCFG_RST_CH_NO_ACK(stih407_lpm, _reg, _bit)
-+
-+static const struct syscfg_reset_channel_data stih407_softresets[] = {
-+	[STIH407_ETH1_SOFTRESET] = STIH407_SRST_SBC(SYSCFG_4002, 4),
-+	[STIH407_MMC1_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 3),
-+	[STIH407_USB2_PORT0_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 28),
-+	[STIH407_USB2_PORT1_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 29),
-+	[STIH407_PICOPHY_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 30),
-+	[STIH407_IRB_SOFTRESET] = STIH407_SRST_LPM(LPM_SYSCFG_1, 6),
-+	[STIH407_PCIE0_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 6),
-+	[STIH407_PCIE1_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 15),
-+	[STIH407_SATA0_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 7),
-+	[STIH407_SATA1_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 16),
-+	[STIH407_MIPHY0_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 4),
-+	[STIH407_MIPHY1_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 13),
-+	[STIH407_MIPHY2_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 22),
-+	[STIH407_SATA0_PWR_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 5),
-+	[STIH407_SATA1_PWR_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 14),
-+	[STIH407_DELTA_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 3),
-+	[STIH407_BLITTER_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 10),
-+	[STIH407_HDTVOUT_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 11),
-+	[STIH407_HDQVDP_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 12),
-+	[STIH407_VDP_AUX_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 14),
-+	[STIH407_COMPO_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 15),
-+	[STIH407_HDMI_TX_PHY_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 21),
-+	[STIH407_JPEG_DEC_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 23),
-+	[STIH407_VP8_DEC_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 24),
-+	[STIH407_GPU_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5131, 30),
-+	[STIH407_HVA_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 0),
-+	[STIH407_ERAM_HVA_SOFTRESET] = STIH407_SRST_CORE(SYSCFG_5132, 1),
-+	[STIH407_LPM_SOFTRESET] = STIH407_SRST_SBC(SYSCFG_4002, 2),
-+	[STIH407_KEYSCAN_SOFTRESET] = STIH407_SRST_LPM(LPM_SYSCFG_1, 8),
-+};
-+
-+/* PicoPHY reset/control */
-+#define SYSCFG_5061	0x0f4
-+
-+static const struct syscfg_reset_channel_data stih407_picophyresets[] = {
-+	[STIH407_PICOPHY0_RESET] = STIH407_SRST_CORE(SYSCFG_5061, 5),
-+	[STIH407_PICOPHY1_RESET] = STIH407_SRST_CORE(SYSCFG_5061, 6),
-+	[STIH407_PICOPHY2_RESET] = STIH407_SRST_CORE(SYSCFG_5061, 7),
-+};
-+
-+static const struct syscfg_reset_controller_data stih407_powerdown_controller = {
-+	.wait_for_ack = true,
-+	.nr_channels = ARRAY_SIZE(stih407_powerdowns),
-+	.channels = stih407_powerdowns,
-+};
-+
-+static const struct syscfg_reset_controller_data stih407_softreset_controller = {
-+	.wait_for_ack = false,
-+	.active_low = true,
-+	.nr_channels = ARRAY_SIZE(stih407_softresets),
-+	.channels = stih407_softresets,
-+};
-+
-+static const struct syscfg_reset_controller_data stih407_picophyreset_controller = {
-+	.wait_for_ack = false,
-+	.nr_channels = ARRAY_SIZE(stih407_picophyresets),
-+	.channels = stih407_picophyresets,
-+};
-+
-+static struct of_device_id stih407_reset_match[] = {
-+	{
-+		.compatible = "st,stih407-powerdown",
-+		.data = &stih407_powerdown_controller,
-+	},
-+	{
-+		.compatible = "st,stih407-softreset",
-+		.data = &stih407_softreset_controller,
-+	},
-+	{
-+		.compatible = "st,stih407-picophyreset",
-+		.data = &stih407_picophyreset_controller,
-+	},
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver stih407_reset_driver = {
-+	.probe = syscfg_reset_probe,
-+	.driver = {
-+		.name = "reset-stih407",
-+		.of_match_table = stih407_reset_match,
-+	},
-+};
-+
-+static int __init stih407_reset_init(void)
-+{
-+	return platform_driver_register(&stih407_reset_driver);
-+}
-+
-+arch_initcall(stih407_reset_init);
-diff --git a/include/dt-bindings/reset-controller/stih407-resets.h b/include/dt-bindings/reset-controller/stih407-resets.h
-new file mode 100644
-index 0000000..02d4328
---- /dev/null
-+++ b/include/dt-bindings/reset-controller/stih407-resets.h
-@@ -0,0 +1,61 @@
-+/*
-+ * This header provides constants for the reset controller
-+ * based peripheral powerdown requests on the STMicroelectronics
-+ * STiH407 SoC.
-+ */
-+#ifndef _DT_BINDINGS_RESET_CONTROLLER_STIH407
-+#define _DT_BINDINGS_RESET_CONTROLLER_STIH407
-+
-+/* Powerdown requests control 0 */
-+#define STIH407_EMISS_POWERDOWN		0
-+#define STIH407_NAND_POWERDOWN		1
-+
-+/* Synp GMAC PowerDown */
-+#define STIH407_ETH1_POWERDOWN		2
-+
-+/* Powerdown requests control 1 */
-+#define STIH407_USB3_POWERDOWN		3
-+#define STIH407_USB2_PORT1_POWERDOWN	4
-+#define STIH407_USB2_PORT0_POWERDOWN	5
-+#define STIH407_PCIE1_POWERDOWN		6
-+#define STIH407_PCIE0_POWERDOWN		7
-+#define STIH407_SATA1_POWERDOWN		8
-+#define STIH407_SATA0_POWERDOWN		9
-+
-+/* Reset defines */
-+#define STIH407_ETH1_SOFTRESET		0
-+#define STIH407_MMC1_SOFTRESET		1
-+#define STIH407_PICOPHY_SOFTRESET	2
-+#define STIH407_IRB_SOFTRESET		3
-+#define STIH407_PCIE0_SOFTRESET		4
-+#define STIH407_PCIE1_SOFTRESET		5
-+#define STIH407_SATA0_SOFTRESET		6
-+#define STIH407_SATA1_SOFTRESET		7
-+#define STIH407_MIPHY0_SOFTRESET	8
-+#define STIH407_MIPHY1_SOFTRESET	9
-+#define STIH407_MIPHY2_SOFTRESET	10
-+#define STIH407_SATA0_PWR_SOFTRESET	11
-+#define STIH407_SATA1_PWR_SOFTRESET	12
-+#define STIH407_DELTA_SOFTRESET		13
-+#define STIH407_BLITTER_SOFTRESET	14
-+#define STIH407_HDTVOUT_SOFTRESET	15
-+#define STIH407_HDQVDP_SOFTRESET	16
-+#define STIH407_VDP_AUX_SOFTRESET	17
-+#define STIH407_COMPO_SOFTRESET		18
-+#define STIH407_HDMI_TX_PHY_SOFTRESET	19
-+#define STIH407_JPEG_DEC_SOFTRESET	20
-+#define STIH407_VP8_DEC_SOFTRESET	21
-+#define STIH407_GPU_SOFTRESET		22
-+#define STIH407_HVA_SOFTRESET		23
-+#define STIH407_ERAM_HVA_SOFTRESET	24
-+#define STIH407_LPM_SOFTRESET		25
-+#define STIH407_KEYSCAN_SOFTRESET	26
-+#define STIH407_USB2_PORT0_SOFTRESET	27
-+#define STIH407_USB2_PORT1_SOFTRESET	28
-+
-+/* Picophy reset defines */
-+#define STIH407_PICOPHY0_RESET		0
-+#define STIH407_PICOPHY1_RESET		1
-+#define STIH407_PICOPHY2_RESET		2
-+
-+#endif /* _DT_BINDINGS_RESET_CONTROLLER_STIH407 */
--- 
-1.9.1
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" i=
+n
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
