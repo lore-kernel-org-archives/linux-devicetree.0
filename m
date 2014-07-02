@@ -1,11 +1,14 @@
 From: Marek Szyprowski <m.szyprowski@samsung.com>
-Subject: [PATCH 0/4] CMA & device tree, once again
-Date: Wed, 02 Jul 2014 12:48:48 +0200
-Message-ID: <1404298132-6050-1-git-send-email-m.szyprowski@samsung.com>
+Subject: [PATCH 2/4] drivers: of: initialize and assign reserved memory to
+ newly created devices
+Date: Wed, 02 Jul 2014 12:48:50 +0200
+Message-ID: <1404298132-6050-3-git-send-email-m.szyprowski@samsung.com>
+References: <1404298132-6050-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-reply-to: <1404298132-6050-1-git-send-email-m.szyprowski@samsung.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,97 +22,59 @@ To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-m
 Cc: Mark Rutland <mark.rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "Aneesh Kumar K.V." <aneesh.kumar@linux.v>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Use recently introduced of_reserved_mem_device_init() function to
+automatically assign respective reserved memory region to the newly created
+platform and amba device.
 
-This is one more respin of the patches which add support for creating
-reserved memory regions defined in device tree. The last attempt
-(http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html)
-ended in merging only half of the code, so right now we have complete
-documentation merged and only basic code, which implements a half of it
-is written in the documentation. Although the merged patches allow to
-reserve memory, there is no way of using it for devices and drivers.
+Signed-off-by: Marek Szyprowski <m.szyprowski@samsung.com>
+---
+ drivers/of/platform.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-This situation makes CMA rather useless, as the main architecture (ARM),
-which used it, has been converted from board-file based system
-initialization to device tree. Thus there is no place to use direct
-calls to dma_declare_contiguous() and some new solution, which bases on
-device tree, is urgently needed.
-
-This patch series fixes this issue. It provides two, already widely
-discussed and already present in the kernel, drivers for reserved
-memory: first based on DMA-coherent allocator, second using Contiguous
-Memory Allocator. The first one nicely implements typical 'carved out'
-reserved memory way of allocating contiguous buffers in a kernel-style
-way. The memory is used exclusively by devices assigned to the given
-memory region. The second one allows to reuse reserved memory for
-movable kernel pages (like disk buffers, anonymous memory) and migrates
-it out when device to allocates contiguous memory buffer. Both driver
-provides memory buffers via standard dma-mapping API.
-
-The patches have been rebased on top of latest CMA and mm changes merged
-to akmp kernel tree.
-
-To define a 64MiB CMA region following node is needed:
-
-multimedia_reserved: multimedia_mem_region {
-	compatible = "shared-dma-pool";
-	reusable;
-	size = <0x4000000>;
-	alignment = <0x400000>;
-};
-
-Similarly, one can define 64MiB region with DMA coherent memory:
-
-multimedia_reserved: multimedia_mem_region {
-	compatible = "shared-dma-pool";
-	no-map;
-	size = <0x4000000>;
-	alignment = <0x400000>;
-};
-
-Then the defined region can be assigned to devices:
-
-scaler: scaler@12500000 {
-	memory-region = <&multimedia_reserved>;
-	/* ... */
-};
-codec: codec@12600000 {
-	memory-region = <&multimedia_reserved>;
-	/* ... */
-};
-
-Best regards
-Marek Szyprowski
-Samsung R&D Institute Poland
-
-
-Changes since the version posted in '[PATCH v6 00/11] reserved-memory 
-regions/CMA in devicetree, again' thread 
-http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html:
-- rebased on top of '[PATCH v3 -next 0/9] CMA: generalize CMA reserved
-area management code' patch series on v3.16-rc3
-- improved dma-coherent driver, now it correctly handles assigning more
-than one device to the given memory region
-
-
-Patch summary:
-
-Marek Szyprowski (4):
-  drivers: of: add automated assignment of reserved regions to client
-    devices
-  drivers: of: initialize and assign reserved memory to newly created
-    devices
-  drivers: dma-coherent: add initialization from device tree
-  drivers: dma-contiguous: add initialization from device tree
-
- drivers/base/dma-coherent.c     | 137 ++++++++++++++++++++++++++++++++++------
- drivers/base/dma-contiguous.c   |  67 ++++++++++++++++++++
- drivers/of/of_reserved_mem.c    |  70 ++++++++++++++++++++
- drivers/of/platform.c           |   7 ++
- include/linux/cma.h             |   3 +
- include/linux/of_reserved_mem.h |   7 ++
- mm/cma.c                        |  69 +++++++++++++++-----
- 7 files changed, 324 insertions(+), 36 deletions(-)
-
+diff --git a/drivers/of/platform.c b/drivers/of/platform.c
+index 500436f9be7f..a9055d3da5c2 100644
+--- a/drivers/of/platform.c
++++ b/drivers/of/platform.c
+@@ -21,6 +21,7 @@
+ #include <linux/of_device.h>
+ #include <linux/of_irq.h>
+ #include <linux/of_platform.h>
++#include <linux/of_reserved_mem.h>
+ #include <linux/platform_device.h>
+ 
+ const struct of_device_id of_default_bus_match_table[] = {
+@@ -233,12 +234,15 @@ static struct platform_device *of_platform_device_create_pdata(
+ 	dev->dev.bus = &platform_bus_type;
+ 	dev->dev.platform_data = platform_data;
+ 
++	of_reserved_mem_device_init(&dev->dev);
++
+ 	/* We do not fill the DMA ops for platform devices by default.
+ 	 * This is currently the responsibility of the platform code
+ 	 * to do such, possibly using a device notifier
+ 	 */
+ 
+ 	if (of_device_add(dev) != 0) {
++		of_reserved_mem_device_release(&dev->dev);
+ 		platform_device_put(dev);
+ 		goto err_clear_flag;
+ 	}
+@@ -300,6 +304,8 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 	else
+ 		of_device_make_bus_id(&dev->dev);
+ 
++	of_reserved_mem_device_init(&dev->dev);
++
+ 	/* Allow the HW Peripheral ID to be overridden */
+ 	prop = of_get_property(node, "arm,primecell-periphid", NULL);
+ 	if (prop)
+@@ -326,6 +332,7 @@ static struct amba_device *of_amba_device_create(struct device_node *node,
+ 	return dev;
+ 
+ err_free:
++	of_reserved_mem_device_release(&dev->dev);
+ 	amba_device_put(dev);
+ err_clear_flag:
+ 	of_node_clear_flag(node, OF_POPULATED);
 -- 
 1.9.2
