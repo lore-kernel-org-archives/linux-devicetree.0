@@ -1,85 +1,237 @@
-From: Sachin Kamat <spk.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for Exynos3250
-Date: Wed, 2 Jul 2014 08:39:13 +0530
-Message-ID: <CAK5sBcHrMPweMSxfde0SSDOtRHbf7t7WQZkf0wAZNTc+N2=Wgg@mail.gmail.com>
-References: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
-	<CAK5sBcFJMK-y+MZPXCufKEmp=v1nFJHstvNTczsQ3ez3SUPbKw@mail.gmail.com>
-	<53B23362.7080103@samsung.com>
-	<CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
-	<53B349AF.4080606@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53B349AF.4080606-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: [PATCH V2 Resend 12/14] cpufreq: cpu0: Extend support beyond CPU0
+Date: Wed,  2 Jul 2014 09:33:24 +0530
+Message-ID: <3644ffb33bc8f4f5aac56f553c228361a9934d79.1404273178.git.viresh.kumar@linaro.org>
+References: <e0680f66383f71400f0caa7032620b82c7b3af83.1404273178.git.viresh.kumar@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <e0680f66383f71400f0caa7032620b82c7b3af83.1404273178.git.viresh.kumar@linaro.org>
+In-Reply-To: <89da404a3b8f545774f5782d901b8381caf02c07.1404231535.git.viresh.kumar@linaro.org>
+References: <cover.1404231535.git.viresh.kumar@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: rjw@rjwysocki.net, shawn.guo@linaro.org
+Cc: linaro-kernel@lists.linaro.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, arvind.chauhan@arm.com, sboyd@codeaurora.org, linux-arm-msm@vger.kernel.org, spk.linux@gmail.com, thomas.ab@samsung.com, nm@ti.com, t.figa@samsung.com, Viresh Kumar <viresh.kumar@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 2, 2014 at 5:22 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
-> On 07/01/2014 01:10 PM, Sachin Kamat wrote:
->> Hi Chanwoo,
->>
->> On Tue, Jul 1, 2014 at 9:34 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>> Hi Sachin,
->>>
->>> On 07/01/2014 12:33 PM, Sachin Kamat wrote:
->>>> Hi Chanwoo,
->>>>
->>>> On Tue, Jul 1, 2014 at 6:10 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>> This patch add TMU (Thermal Management Unit) dt node to monitor the high
->>>>> temperature for Exynos3250.
->>>>>
->>>>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>> ---
->>>>> This patch has a dependency on following patch [1]:
->>>>>  [1] https://lkml.org/lkml/2014/6/30/805
->>>>>
->>>>>  arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
->>>>>  1 file changed, 10 insertions(+)
->>>>>
->>>>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->>>>> index 3660cab..1e566af 100644
->>>>> --- a/arch/arm/boot/dts/exynos3250.dtsi
->>>>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->>>>> @@ -192,6 +192,16 @@
->>>>>                         status = "disabled";
->>>>>                 };
->>>>>
->>>>> +               tmu: tmu@100C0000 {
->>>>> +                       compatible = "samsung,exynos3250-tmu";
->>>>> +                       interrupt-parent = <&gic>;
->>>>> +                       reg = <0x100C0000 0x100>;
->>>>> +                       interrupts = <0 216 0>;
->>>>> +                       clocks = <&cmu CLK_TMU_APBIF>;
->>>>> +                       clock-names = "tmu_apbif";
->>>>> +                       status = "disabled";
->>>>
->>>> I don't think there would be any board specific properties needed. Hence
->>>> leave the status as enabled (by deleting the above line).
->>>>
->>>
->>> I think that if specific board need TMU feature, dts file for specific board
->>> should include tmu dt node with 'okay' status. The specific board based on
->>> Exynos3250 might not need TMU feature.
->>
->> The status field in DT node is not meant for stating the build configuration but
->> represents the readiness of the hardware for usage on the platform. If
->> a particular
->> board does not need this feature it needs to be disabled in the build
->> config and only
->> for any special requirements disable it in board file.
->
-> TMU (Thermal Management Unit) needs specific regulator for TMU power as following:
-> The regulator for TMU is dependent on board.
+Most of the infrastructure is in place now, with only little left. How to find
+siblings ?
 
-In this case it makes sense to leave it disabled in dtsi.
+Stephen Boyd suggested to compare "clocks" properties from CPU's DT node and
+siblings should match. This patch adds another routine find_siblings() which
+calls of_property_match() to find if CPUs share clock line or not.
 
+If of_property_match() returns error, we fallback to all CPUs sharing clock line
+assumption as existing platforms don't have "clocks" property in all CPU nodes
+and would fail from of_property_match().
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
+---
+V2 Resend: Use of_property_match() directly instead of of_clk_shared_by_cpus()
+which would be dropped now.
+
+ .../devicetree/bindings/cpufreq/cpufreq-cpu0.txt   | 72 ++++++++++++++++++++--
+ drivers/cpufreq/cpufreq-cpu0.c                     | 62 ++++++++++++++++++-
+ 2 files changed, 128 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+index 366690c..9d65799 100644
+--- a/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
++++ b/Documentation/devicetree/bindings/cpufreq/cpufreq-cpu0.txt
+@@ -1,11 +1,11 @@
+-Generic CPU0 cpufreq driver
++Generic cpufreq driver
+ 
+-It is a generic cpufreq driver for CPU0 frequency management.  It
++It is a generic cpufreq driver for frequency management.  It
+ supports both uniprocessor (UP) and symmetric multiprocessor (SMP)
+-systems which share clock and voltage across all CPUs.
++systems which may or maynot share clock and voltage across all CPUs.
+ 
+ Both required and optional properties listed below must be defined
+-under node /cpus/cpu@0.
++under node /cpus/cpu@x. Where x is the first cpu inside a cluster.
+ 
+ Required properties:
+ - None
+@@ -21,9 +21,16 @@ Optional properties:
+ - cooling-min-level:
+ - cooling-max-level:
+      Please refer to Documentation/devicetree/bindings/thermal/thermal.txt.
++- clocks: If CPU clock is populated from DT, "clocks" property must be copied to
++  every cpu node sharing clock with cpu@x. Generic cpufreq driver compares
++  "clocks" to find siblings, i.e. to see which CPUs share clock/voltages. If
++  only cpu@0 contains "clocks" property it is assumed that all CPUs share clock
++  line.
+ 
+ Examples:
+ 
++1. All CPUs share clock/voltages
++
+ cpus {
+ 	#address-cells = <1>;
+ 	#size-cells = <0>;
+@@ -38,6 +45,8 @@ cpus {
+ 			396000  950000
+ 			198000  850000
+ 		>;
++		clocks = <&clock CLK_ARM_CLK>;
++		clock-names = "cpu";
+ 		clock-latency = <61036>; /* two CLK32 periods */
+ 		#cooling-cells = <2>;
+ 		cooling-min-level = <0>;
+@@ -48,17 +57,72 @@ cpus {
+ 		compatible = "arm,cortex-a9";
+ 		reg = <1>;
+ 		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM_CLK>;
+ 	};
+ 
+ 	cpu@2 {
+ 		compatible = "arm,cortex-a9";
+ 		reg = <2>;
+ 		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM_CLK>;
+ 	};
+ 
+ 	cpu@3 {
+ 		compatible = "arm,cortex-a9";
+ 		reg = <3>;
+ 		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM_CLK>;
++	};
++};
++
++
++2. All CPUs inside a cluster share clock/voltages, there are multiple clusters.
++
++cpus {
++	#address-cells = <1>;
++	#size-cells = <0>;
++
++	cpu@0 {
++		compatible = "arm,cortex-a15";
++		reg = <0>;
++		next-level-cache = <&L2>;
++		operating-points = <
++			/* kHz    uV */
++			792000  1100000
++			396000  950000
++			198000  850000
++		>;
++		clocks = <&clock CLK_ARM1_CLK>;
++		clock-names = "cpu";
++		clock-latency = <61036>; /* two CLK32 periods */
++	};
++
++	cpu@1 {
++		compatible = "arm,cortex-a15";
++		reg = <1>;
++		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM1_CLK>;
++	};
++
++	cpu@100 {
++		compatible = "arm,cortex-a7";
++		reg = <100>;
++		next-level-cache = <&L2>;
++		operating-points = <
++			/* kHz    uV */
++			792000  950000
++			396000  750000
++			198000  450000
++		>;
++		clocks = <&clock CLK_ARM2_CLK>;
++		clock-names = "cpu";
++		clock-latency = <61036>; /* two CLK32 periods */
++	};
++
++	cpu@101 {
++		compatible = "arm,cortex-a7";
++		reg = <101>;
++		next-level-cache = <&L2>;
++		clocks = <&clock CLK_ARM2_CLK>;
+ 	};
+ };
+diff --git a/drivers/cpufreq/cpufreq-cpu0.c b/drivers/cpufreq/cpufreq-cpu0.c
+index 44633f6..0f2fe76 100644
+--- a/drivers/cpufreq/cpufreq-cpu0.c
++++ b/drivers/cpufreq/cpufreq-cpu0.c
+@@ -177,6 +177,57 @@ try_again:
+ 	return ret;
+ }
+ 
++/*
++ * Sets all CPUs as sibling if any cpu doesn't have a "clocks" property,
++ * Otherwise it matches "clocks" property to find siblings.
++ */
++static void find_siblings(struct cpufreq_policy *policy)
++{
++	struct private_data *priv = policy->driver_data;
++	struct device *cpu1_dev = priv->cpu_dev, *cpu2_dev;
++	struct device_node *np1, *np2;
++	int cpu, ret, set_all = 1;
++
++	np1 = of_node_get(cpu1_dev->of_node);
++
++	for_each_possible_cpu(cpu) {
++		if (cpu == policy->cpu)
++			continue;
++
++		cpu2_dev = get_cpu_device(cpu);
++		if (!cpu2_dev) {
++			dev_err(cpu1_dev, "%s: failed to cpu_dev for cpu%d\n",
++				__func__, cpu);
++			goto out_set_all;
++		}
++
++		np2 = of_node_get(cpu2_dev->of_node);
++		if (!np2) {
++			dev_err(cpu1_dev, "failed to find cpu%d node\n", cpu);
++			goto out_set_all;
++		}
++
++		ret = of_property_match(np1, np2, "clocks");
++		of_node_put(np2);
++
++		/* Error while parsing nodes, fallback to set-all */
++		if (ret < 0)
++			goto out_set_all;
++		else if (ret == 1)
++			cpumask_set_cpu(cpu, policy->cpus);
++	}
++
++	/* All processors don't share clock and voltage */
++	set_all = 0;
++
++out_set_all:
++	/* All processors share clock and voltage */
++	if (set_all)
++		cpumask_setall(policy->cpus);
++
++	of_node_put(np1);
++}
++
+ static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
+ {
+ 	struct cpufreq_frequency_table *freq_table;
+@@ -266,9 +317,16 @@ static int cpu0_cpufreq_init(struct cpufreq_policy *policy)
+ 	policy->driver_data = priv;
+ 
+ 	policy->clk = cpu_clk;
+-	ret = cpufreq_generic_init(policy, freq_table, transition_latency);
+-	if (ret)
++
++	find_siblings(policy);
++	ret = cpufreq_table_validate_and_show(policy, freq_table);
++	if (ret) {
++		dev_err(cpu_dev, "%s: invalid frequency table: %d\n", __func__,
++			ret);
+ 		goto out_cooling_unregister;
++	}
++
++	policy->cpuinfo.transition_latency = transition_latency;
+ 
+ 	return 0;
+ 
 -- 
-Regards,
-Sachin.
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+2.0.0.rc2
