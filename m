@@ -1,86 +1,93 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v4] clk: qcom: Add support for IPQ8064's global clock
- controller (GCC)
-Date: Tue, 01 Jul 2014 21:20:57 -0700
-Message-ID: <20140702042057.23338.96243@quantum>
-References: <1403034411-13781-1-git-send-email-galak@codeaurora.org>
- <6639D384-040E-498A-8C0B-B3FAF47692ED@codeaurora.org>
+From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for
+ Exynos3250
+Date: Wed, 02 Jul 2014 13:27:55 +0900
+Message-ID: <53B38A4B.4020407@samsung.com>
+References: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
+ <CAK5sBcFJMK-y+MZPXCufKEmp=v1nFJHstvNTczsQ3ez3SUPbKw@mail.gmail.com>
+ <53B23362.7080103@samsung.com>
+ <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
+ <53B349AF.4080606@samsung.com>
+ <CAK5sBcHrMPweMSxfde0SSDOtRHbf7t7WQZkf0wAZNTc+N2=Wgg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6639D384-040E-498A-8C0B-B3FAF47692ED@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kumar Gala <galak@codeaurora.org>
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-reply-to: <CAK5sBcHrMPweMSxfde0SSDOtRHbf7t7WQZkf0wAZNTc+N2=Wgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Sachin Kamat <spk.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Kumar Gala (2014-06-30 09:08:33)
-> 
-> On Jun 17, 2014, at 2:46 PM, Kumar Gala <galak@codeaurora.org> wrote:
-> 
-> > Add a driver for the global clock controller found on IPQ8064 based
-> > platforms. This should allow most non-multimedia device drivers to probe
-> > and control their clocks.
-> > 
-> > This is currently missing clocks for USB HSIC and networking devices.
-> > 
-> > Signed-off-by: Kumar Gala <galak@codeaurora.org>
-> > Signed-off-by: Andy Gross <agross@codeaurora.org>
-> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
-> > ---
-> > v4:
-> > * Fix usb utmi freq clk table
-> > * Fix numbering issue in dt-bindings/clock/qcom,gcc-ipq806x.h
-> > 
-> > v3:
-> > * Based on APQ8084 clk patches
-> > * Added USB3 and SATA clks
-> > * Minor clean ups (made hex numbers lowercase)
-> > 
-> > v2:
-> > * dropped audio clock from commit message
-> > * changed Kconfig symbol to IPQ_GCC_806X
-> > * Fixed PXO/CXO clk freq to 25Mhz
-> > 
-> > .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
-> > drivers/clk/qcom/Kconfig                           |    8 +
-> > drivers/clk/qcom/Makefile                          |    1 +
-> > drivers/clk/qcom/gcc-ipq806x.c                     | 2424 ++++++++++++++++++++
-> > include/dt-bindings/clock/qcom,gcc-ipq806x.h       |  293 +++
-> > include/dt-bindings/reset/qcom,gcc-ipq806x.h       |  132 ++
-> > 6 files changed, 2859 insertions(+)
-> > create mode 100644 drivers/clk/qcom/gcc-ipq806x.c
-> > create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq806x.h
-> > create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq806x.h
-> 
-> Mike,
-> 
-> Any update on pulling this in?
+Hi Sachin,
 
-Looks good to me.
-
-What's the story on getting a pull request for qcom clock stuff in the
-future? For more mature clock drivers it is nice for a clock maintainer
-(maybe Stephen in this case, based on patch count in drivers/clk/qcom?)
-to batch up everything. It also helps lazy maintainers like me not have
-to review every line of code for the non-controversial stuff.
-
-Regards,
-Mike
-
+On 07/02/2014 12:09 PM, Sachin Kamat wrote:
+> On Wed, Jul 2, 2014 at 5:22 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>> On 07/01/2014 01:10 PM, Sachin Kamat wrote:
+>>> Hi Chanwoo,
+>>>
+>>> On Tue, Jul 1, 2014 at 9:34 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>> Hi Sachin,
+>>>>
+>>>> On 07/01/2014 12:33 PM, Sachin Kamat wrote:
+>>>>> Hi Chanwoo,
+>>>>>
+>>>>> On Tue, Jul 1, 2014 at 6:10 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
+>>>>>> This patch add TMU (Thermal Management Unit) dt node to monitor the high
+>>>>>> temperature for Exynos3250.
+>>>>>>
+>>>>>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+>>>>>> ---
+>>>>>> This patch has a dependency on following patch [1]:
+>>>>>>  [1] https://lkml.org/lkml/2014/6/30/805
+>>>>>>
+>>>>>>  arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
+>>>>>>  1 file changed, 10 insertions(+)
+>>>>>>
+>>>>>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
+>>>>>> index 3660cab..1e566af 100644
+>>>>>> --- a/arch/arm/boot/dts/exynos3250.dtsi
+>>>>>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
+>>>>>> @@ -192,6 +192,16 @@
+>>>>>>                         status = "disabled";
+>>>>>>                 };
+>>>>>>
+>>>>>> +               tmu: tmu@100C0000 {
+>>>>>> +                       compatible = "samsung,exynos3250-tmu";
+>>>>>> +                       interrupt-parent = <&gic>;
+>>>>>> +                       reg = <0x100C0000 0x100>;
+>>>>>> +                       interrupts = <0 216 0>;
+>>>>>> +                       clocks = <&cmu CLK_TMU_APBIF>;
+>>>>>> +                       clock-names = "tmu_apbif";
+>>>>>> +                       status = "disabled";
+>>>>>
+>>>>> I don't think there would be any board specific properties needed. Hence
+>>>>> leave the status as enabled (by deleting the above line).
+>>>>>
+>>>>
+>>>> I think that if specific board need TMU feature, dts file for specific board
+>>>> should include tmu dt node with 'okay' status. The specific board based on
+>>>> Exynos3250 might not need TMU feature.
+>>>
+>>> The status field in DT node is not meant for stating the build configuration but
+>>> represents the readiness of the hardware for usage on the platform. If
+>>> a particular
+>>> board does not need this feature it needs to be disabled in the build
+>>> config and only
+>>> for any special requirements disable it in board file.
+>>
+>> TMU (Thermal Management Unit) needs specific regulator for TMU power as following:
+>> The regulator for TMU is dependent on board.
 > 
-> - k
+> In this case it makes sense to leave it disabled in dtsi.
 > 
-> -- 
-> Employee of Qualcomm Innovation Center, Inc.
-> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
-> 
+
+Thanks for your review.
+
+Best Regards,
+Chanwoo Choi
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
