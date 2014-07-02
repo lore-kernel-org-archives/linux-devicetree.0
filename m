@@ -1,65 +1,56 @@
-From: Russell King - ARM Linux <linux@arm.linux.org.uk>
-Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Wed, 2 Jul 2014 19:02:12 +0100
-Message-ID: <20140702180212.GS32514@n2100.arm.linux.org.uk>
-References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
- <20140702195154.47d6f6b4@armhf>
+From: Tanmay Inamdar <tinamdar@apm.com>
+Subject: Re: [PATCH v8 2/9] pci: Export find_pci_host_bridge() function.
+Date: Wed, 2 Jul 2014 11:06:38 -0700
+Message-ID: <CACoXjck+aU33=kSy=KCGABNXNR7tj2KndAiBqEDK7wQ_Qei80Q@mail.gmail.com>
+References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com>
+	<1404240214-9804-3-git-send-email-Liviu.Dudau@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20140702195154.47d6f6b4@armhf>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1404240214-9804-3-git-send-email-Liviu.Dudau@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Liviu Dudau <Liviu.Dudau@arm.com>
+Cc: linux-pci <linux-pci@vger.kernel.org>, Bjorn Helgaas <bhelgaas@google.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Will Deacon <Will.Deacon@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Arnd Bergmann <arnd@arndb.de>, linaro-kernel <linaro-kernel@lists.linaro.org>, Grant Likely <grant.likely@secretlab.ca>, Sinan Kaya <okaya@codeaurora.org>, Jingoo Han <jg1.han@samsung.com>, Kukjin Kim <kgene.kim@samsung.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, LKML <linux-kernel@vger.kernel.org>, Device Tree ML <devicetree@vger.kernel.org>, LAKML <linux-arm-kernel@lists.infradead.org>, patches <patches@apm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 02, 2014 at 07:51:54PM +0200, Jean-Francois Moine wrote:
-> On Wed, 2 Jul 2014 18:56:28 +0200
-> Andrew Lunn <andrew@lunn.ch> wrote:
-> 
-> > How well will this work with Russell concept of a front end and two
-> > backends? Can you uses your CODEC twice, once with the I2S backend and
-> > a second time with the S/PDIF backend?
-> 
-> Hi Andrew,
-> 
-> The TDA998x CODEC has two functions:
-> - it sets the possible formats and rates when the screen connects and
-> - it sets the audio input port when audio streaming starts.
-> 
-> I tested this CODEC with both DAPM and DPCM. If the audio subsystem
-> asks for streaming on both I2S and S/PDIF, only the last call is served
-> (this depends on the order of the DAI links in the audio card creation
-> table).
-> 
-> As I told to Russell, DPCM just asks for a 'system' DAI (front-end),
-> but it also asks for some additional code in the kirkwood DMA driver
-> because all PCMs are activated on streaming start.
+Hi,
 
-Well, as far as I'm concerned right now, it's for Mark to sort out this
-situation, and tell us what he wants to do with the Kirkwood stuff.  I
-suspect he's keeping quiet because he doesn't care about it.
+On Tue, Jul 1, 2014 at 11:43 AM, Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+> This is a useful function and we should make it visible outside the
+> generic PCI code. Export it as a GPL symbol.
+>
+> Signed-off-by: Liviu Dudau <Liviu.Dudau@arm.com>
+> Tested-by: Tanmay Inamdar <tinamdar@apm.com>
+> ---
+>  drivers/pci/host-bridge.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+>
+> diff --git a/drivers/pci/host-bridge.c b/drivers/pci/host-bridge.c
+> index 0e5f3c9..36c669e 100644
+> --- a/drivers/pci/host-bridge.c
+> +++ b/drivers/pci/host-bridge.c
+> @@ -16,12 +16,13 @@ static struct pci_bus *find_pci_root_bus(struct pci_bus *bus)
+>         return bus;
+>  }
+>
+> -static struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+> +struct pci_host_bridge *find_pci_host_bridge(struct pci_bus *bus)
+>  {
+>         struct pci_bus *root_bus = find_pci_root_bus(bus);
+>
+>         return to_pci_host_bridge(root_bus->bridge);
+>  }
+> +EXPORT_SYMBOL_GPL(find_pci_host_bridge);
 
-Given that he's the one with the knowledge of DPCM, and he's the maintainer
-of ASoC, he has the ultimate responsibility for sorting out this and
-giving direction as to how he wants to proceed.
+Is there any specific reason behind making this symbol GPL? I think
+the other functions in this file are just EXPORT_SYMBOL. Ultimately
+companies which have non gpl Linux modules (nvidia) will face issue
+using this API.
 
-As I understand it though, my solution is the full and proper DPCM solution,
-and I believe that what's currently in mainline is not a DPCM solution.
-
-Mark needs to correct that, because he is one of the few who knows this
-stuff.
-
--- 
-FTTC broadband for 0.8mile line: now at 9.7Mbps down 460kbps up... slowly
-improving, and getting towards what was expected from it.
+The same applies to 'of_create_pci_host_bridge'.
+>
+>  void pci_set_host_bridge_release(struct pci_host_bridge *bridge,
+>                                  void (*release_fn)(struct pci_host_bridge *),
+> --
+> 2.0.0
+>
