@@ -1,40 +1,52 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v8 3/9] pci: Introduce pci_register_io_range() helper function.
-Date: Wed, 02 Jul 2014 16:58:58 +0200
-Message-ID: <5997020.x4BWezXjnq@wuerfel>
-References: <1404240214-9804-1-git-send-email-Liviu.Dudau@arm.com> <7343032.WUqPgbXNQS@wuerfel> <20140702142303.GJ2173@e106497-lin.cambridge.arm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [alsa-devel] [PATCH v3] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Wed, 2 Jul 2014 10:02:38 -0500
+Message-ID: <53B41F0E.90107@ti.com>
+References: <1404307852-10456-1-git-send-email-dmurphy@ti.com> <53B40D55.6000602@zonque.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
-Return-path: <linux-pci-owner@vger.kernel.org>
-In-Reply-To: <20140702142303.GJ2173@e106497-lin.cambridge.arm.com>
-Sender: linux-pci-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Liviu Dudau <liviu@dudau.co.uk>, Sinan Kaya <okaya@codeaurora.org>, linaro-kernel <linaro-kernel@lists.linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Device Tree ML <devicetree@vger.kernel.org>, linux-pci <linux-pci@vger.kernel.org>, Jingoo Han <jg1.han@samsung.com>, LKML <linux-kernel@vger.kernel.org>, Will Deacon <Will.Deacon@arm.com>, Grant Likely <grant.likely@secretlab.ca>, Kukjin Kim <kgene.kim@samsung.com>, Tanmay Inamdar <tinamdar@apm.com>, Suravee Suthikulanit <suravee.suthikulpanit@amd.com>, Catalin Marinas <Catalin.Marinas@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <53B40D55.6000602@zonque.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Daniel Mack <daniel@zonque.org>, linux-sound@vger.kernel.org
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wednesday 02 July 2014 15:23:03 Liviu Dudau wrote:
-> > 
-> > Your solution looks correct to me, just using different
-> > tradeoffs to what I was expecting: You get a working pci_address_to_pio()
-> > function, which is probably never needed, but in turn you need to
-> > keep the state of each host bridge in a global list.
-> 
-> Just a reminder that with my patchset I *do* start using pci_address_to_pio()
-> in order to correctly parse the IO ranges from DT.
+Daniel
+Thanks for the review
 
-Yes, what I meant is that it would be easier not to do that. All existing
-drivers expect of_pci_range_to_resource() to return the CPU address for
-an I/O space register, not the Linux I/O port number that we want to 
-pass to the PCI core. This is suboptimal because it's not obvious how
-it works, but it lets us get away without an extra registration step.
-Once all probe functions in PCI host drivers have been changed to the
-of_create_pci_host_bridge, that should not matter any more, because
-there is only one place left that calls it and we only have to get it
-right once.
+On 07/02/2014 08:47 AM, Daniel Mack wrote:
+> Hi Dan,
+>
+> On 07/02/2014 03:30 PM, Dan Murphy wrote:
+>> +	if (np) {
+>> +		data->power_gpio = of_get_named_gpio(np, "enable-gpio", 0);
+>> +	} else if (pdata) {
+>> +		data->power_gpio = pdata->enable_gpio;
+>> +	} else {
+>> +		dev_err(dev, "Platform or dev tree data not set\n");
+>> +		return -ENODEV;
+>> +	}
+> New code for GPIO handling should use the new gpiod interface.
+> See include/linux/gpio/consumer.h, or the sta350 codec driver.
 
-Also, when you change that of_pci_range_to_resource, you also have to 
-audit all callers of that function and ensure they can deal with the new
-behavior.
+OK good catch.  I will look into it.
 
-	Arnd
+Does the gpiod interface handle both pdata as well as dt?
+
+> For that to work, you also need to rename the property to
+> 'enable-gpios', even though there's only one.
+
+I am looking for that restriction in the code.  But don't see it.
+Will dig some more here.
+
+>
+>
+> Daniel
+>
+
+
+-- 
+------------------
+Dan Murphy
