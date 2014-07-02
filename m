@@ -1,40 +1,57 @@
-From: Suman Anna <s-anna@ti.com>
-Subject: Re: [PATCHv5 06/15] hwspinlock/omap: enable module before reading
- SYSSTATUS register
-Date: Wed, 2 Jul 2014 14:38:04 -0500
-Message-ID: <53B45F9C.2040209@ti.com>
-References: <1398904476-26200-1-git-send-email-s-anna@ti.com> <1398904476-26200-7-git-send-email-s-anna@ti.com> <CAK=WgbaKPgLLw-4wCSToE86QrREDB0sK95TLx2y17d71eBPFbg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Wed, 2 Jul 2014 20:42:52 +0100
+Message-ID: <20140702194252.GN410@sirena.org.uk>
+References: <20140702183841.7c964832@armhf>
+ <20140702165628.GO20799@lunn.ch>
+ <20140702195154.47d6f6b4@armhf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="QGBKWVSgmlsIyJ+t"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAK=WgbaKPgLLw-4wCSToE86QrREDB0sK95TLx2y17d71eBPFbg@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20140702195154.47d6f6b4@armhf>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ohad Ben-Cohen <ohad@wizery.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
+To: Jean-Francois Moine <moinejf@free.fr>
+Cc: Andrew Lunn <andrew@lunn.ch>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Ohad,
 
-On 07/01/2014 07:51 AM, Ohad Ben-Cohen wrote:
-> Hi Suman,
-> 
-> On Thu, May 1, 2014 at 3:34 AM, Suman Anna <s-anna@ti.com> wrote:
->> The number of hwspinlocks are determined based on the value read
->> from the IP block's SYSSTATUS register. However, the module may
->> not be enabled and clocked, and the read may result in a bus error.
->>
->> This particular issue is seen rather easily on AM33XX, since the
->> module wakeup is software controlled, and it is disabled out of
->> reset. Make sure the module is enabled and clocked before reading
->> the SYSSTATUS register.
-> 
-> This seems like a valid fix that is independent of this patch series.
-> 
-> Feel free to submit it separately if you want, so we can get it merged.
-> 
+--QGBKWVSgmlsIyJ+t
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-OK, I will submit this patch and Patch 7 separately.
+On Wed, Jul 02, 2014 at 07:51:54PM +0200, Jean-Francois Moine wrote:
 
-regards
-Suman
+> I tested this CODEC with both DAPM and DPCM. If the audio subsystem
+> asks for streaming on both I2S and S/PDIF, only the last call is served
+> (this depends on the order of the DAI links in the audio card creation
+> table).
+
+I'd expect this to return an error for the busy DAI rather than just
+silently ignore it failing to start or (better) implement some control
+to let the user select which of the DAIs is active.
+
+--QGBKWVSgmlsIyJ+t
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTtGC5AAoJELSic+t+oim9tb0QAJt+FzWAKa03Dm0MUFuXQ2DN
+no9KhfaolUNuxddftKE0sacoTgbDZNBMmNQ0HcIc8IbdDOPHscw4VplNB8Iie1JK
+aatHjwpQ98DWVlFAv7PZDp3dhOc/1TkUTwQCJkw6XuUMiodexdDEUn+aGw9Rn2Lu
+pSBZXr3lQ/GnHj/P2L2wqBeuMXB+6jokh6mzi6djQrjCtu0/BeznrOmWEVtagUMM
+nqa0lM+0ek1c4oznGvs9qhSBsBNTUt7YQGns6VMsVTqgnE2/ukIaezM2wbuMUH3n
+unhGNok+CO07nJeFj/TAoHBPZhFsyIQdFJJVFu7q/TdP3dPFGc0yquQt8fuTavZM
+PN9daXR1sUBUHO0LEiKrei0Q7E7tlWTLbIudHFLTduuIkJiry15xDE5XmXvDdH5U
+kdpWpJDBaaocK/c3WGgCQ5/BKuvmUfsfRozCWU5a+PcZ0V2kcMAgi7zWCJte25Uf
+bWlgGLQnh2qMLBKypIAoNMakEx5RThZEOqebJoRH4oOuPirXMiGn2GbvBF+uqa5W
+gP4vw787P/WbJsEq8PTJnNSw0Sk+sQ+q9l2OpJkuxv4gVsFLjNN2Igi77I8XtpQ+
+5HknLAsmKqvMXQRUfAxeTog+y5jFtBrQ4wMxQm6Gbzr9Unq1hXWO83kwcNeGzno/
+aHO3BAG3Q9pHezd5dkyx
+=0sKu
+-----END PGP SIGNATURE-----
+
+--QGBKWVSgmlsIyJ+t--
