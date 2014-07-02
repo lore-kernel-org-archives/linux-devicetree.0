@@ -1,111 +1,25 @@
-From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
- basic clocks
-Date: Wed, 02 Jul 2014 15:35:52 -0700
-Message-ID: <20140702223552.7440.60829@quantum>
-References: <1403798144-32188-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: [PATCH 0/2] Add R8A7791/Henninger board CAN DT support
+Date: Thu, 3 Jul 2014 02:39:14 +0400
+Message-ID: <201407030239.15921.sergei.shtylyov@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBDO333VC4INBBVUS2KOQKGQECEUJPZY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1403798144-32188-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: Text/Plain;
+  charset="iso-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-sh-owner@vger.kernel.org>
+Sender: linux-sh-owner@vger.kernel.org
+To: horms@verge.net.au, linux-sh@vger.kernel.org, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, devicetree@vger.kernel.org
+Cc: magnus.damm@gmail.com, linux@arm.linux.org.uk, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Chen-Yu Tsai (2014-06-26 08:55:38)
-> Hi everyone,
-> 
-> This is v4 of the sun8i clock series, which adds basic clock
-> support for the A23 SoC. It is based on my initial sun8i bring
-> up series [1]. This series was split up from the original A23
-> series [2]. Yet to come are more clocks, reset controllers,
-> prcm, pinctrl, and mmc.
+Hello.
 
-Hello Chen-Yu,
+   Here's the set of 2 patches against Simon Horman's 'renesas.git' repo,
+'renesas-devel-v3.16-rc3-20140701' tag. Here we add the CAN device tree support
+for the R8A7791-based Henninger board. It depends on the PFC CAN support and
+R-Car CAN device tree support patches posted yesterday in order to work.
 
-This series looks good to me.
+[1/2] ARM: shmobile: r8a7791: add CAN DT support
+[2/2] ARM: shmobile: henninger: add CAN0 DT support
 
-Maxime,
-
-I see that you Acked it already. Are you planning to roll this into a
-pull request later on?
-
-Regards,
-Mike
-
-> 
-> The first patch fixes the reworked clock protection code merged in
-> 3.16-rc1, which unintentionally made clock gates unprotectable.
-> 
-> The second patch moves the remaining "ahb_sdram" clock to the
-> protected clock list, now that it works.
-> 
-> The third patch adds support for factor clocks that have an N factor
-> not starting from 0. This is found on some PLLs in A31/A23.
-> 
-> The fourth patch adds table-based dividers for div clocks, as some
-> clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
-> on sun8i.
-> 
-> The fifth patch adds support for the basic clocks in the A23, just
-> PLL1 for cpus, and the system bus clocks and gates.
-> 
-> The last patch adds the DT nodes for the newly added clocks, and
-> updates clock phandles for existing peripherals, the uarts.
-> 
-> Originally I intended for patch 1 to be merged as a fix for 3.16.
-> However, the only user of the affected code, sun6i's "ahb1_sdram"
-> clock, doesn't seem to result in any runtime issues. So this whole
-> series can go into 3.17.
-> 
-> 
-> Related changes since v3:
-> 
->   - Dropped fields with default values from sun8i_a23_axi_div_data
->   - Added Maxime's Acked-by
->   - Fixed incorrect compatible string for axi clock node
->   - Updated clock phandles for uarts in dtsi
-> 
-> Related changes since v2:
-> 
->   - Rewrote factor clocks to support any (0~255) N factor starting value
-> 
-> Related changes since v1:
-> 
->   - Added "clk: sunxi: Add support for table-based divider clocks"
->   - Added table-based divider axi clock
->   - Fixed incorrectly squashed fixups
-> 
-> 
-> Cheers
-> ChenYu
-> 
-> 
->   [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265211.html
->   [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259097.html
-> 
-> Chen-Yu Tsai (6):
->   clk: sunxi: register clock gates with clkdev
->   clk: sunxi: move "ahb_sdram" to protected clock list
->   clk: sunxi: Support factor clocks with N factor starting not from 0
->   clk: sunxi: Add support for table-based divider clocks
->   clk: sunxi: Add A23 clocks support
->   ARM: sun8i: Add basic clock nodes to the DTSI
-> 
->  Documentation/devicetree/bindings/clock/sunxi.txt |   5 +
->  arch/arm/boot/dts/sun8i-a23.dtsi                  | 125 +++++++++++++++++++++-
->  drivers/clk/sunxi/clk-factors.c                   |   2 +-
->  drivers/clk/sunxi/clk-factors.h                   |   1 +
->  drivers/clk/sunxi/clk-sunxi.c                     | 119 ++++++++++++++++++--
->  5 files changed, 237 insertions(+), 15 deletions(-)
-> 
-> -- 
-> 2.0.0
-> 
+WBR, Sergei
