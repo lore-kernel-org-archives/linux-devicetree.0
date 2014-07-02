@@ -1,101 +1,76 @@
-From: Javier Martinez Canillas <javier@dowhile0.org>
-Subject: Re: [RESEND 2/2] clk: Add driver for Palmas clk32kg and clk32kgaudio clocks
-Date: Wed, 2 Jul 2014 11:16:53 +0200
-Message-ID: <CABxcv==Ut40bQg22hWuXmMgHF7b_iLfJuLHrdGds1B3wXb74ug@mail.gmail.com>
-References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
-	<1403848871-26519-3-git-send-email-peter.ujfalusi@ti.com>
-	<CABxcv=metB4=eoT=fAh7S-b_mhAvHcJtn2wrV8v8koSyKMxNNw@mail.gmail.com>
-	<53B0FC27.5040002@ti.com>
-	<20140702043338.23338.31600@quantum>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCH v5 14/14] ARM: dts: Add max77802 to exynos5420-peach-pit
+ and exynos5800-peach-pi
+Date: Wed, 02 Jul 2014 14:50:24 +0530
+Message-ID: <53B3CED8.4020808@gmail.com>
+References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk> <1403806546-31122-15-git-send-email-javier.martinez@collabora.co.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <20140702043338.23338.31600@quantum>
-Sender: linux-doc-owner@vger.kernel.org
-To: Mike Turquette <mturquette@linaro.org>
-Cc: Peter Ujfalusi <peter.ujfalusi@ti.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, Laxman Dewangan <ldewangan@nvidia.com>, linux-doc@vger.kernel.org, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1403806546-31122-15-git-send-email-javier.martinez@collabora.co.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lee Jones <lee.jones@linaro.org>
+Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Mike Turquette <mturquette@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Mike,
+On 06/26/2014 11:45 PM, Javier Martinez Canillas wrote:
+> Peach pit and pi boards uses a Maxim 77802 power management
+> IC to drive regulators and its Real Time Clock. This patch
+> adds support for this chip.
+> 
+> These are the device nodes and pinctrl configuration that
+> are present on the Peach pit DeviceTree source file in the
+> the Chrome OS kernel 3.8 tree.
+> 
+> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
+> Tested-by: Naveen Krishna Chatradhi <ch.naveen@samsung.com>
+> ---
 
-On Wed, Jul 2, 2014 at 6:33 AM, Mike Turquette <mturquette@linaro.org> wrote:
-> Quoting Peter Ujfalusi (2014-06-29 22:56:55)
->> Hi Javier,
->>
->> On 06/27/2014 09:23 PM, Javier Martinez Canillas wrote:
->> > Hello Peter,
->> >
->> > On Fri, Jun 27, 2014 at 8:01 AM, Peter Ujfalusi <peter.ujfalusi@ti.com> wrote:
->> >> Palmas class of devices can provide 32K clock(s) to be used by other devices
->> >> on the board. Depending on the actual device the provided clocks can be:
->> >> CLK32K_KG and CLK32K_KGAUDIO
->> >> or only one:
->> >> CLK32K_KG (TPS659039 for example)
->> >>
->> >> Use separate compatible flags for the two 32K clock.
->> >> A system which needs or have only one of the 32k clock from
->> >> Palmas will need to add node(s) for each clock as separate section
->> >> in the dts file.
->> >> The two compatible property is:
->> >> "ti,palmas-clk32kg" for clk32kg clock
->> >> "ti,palmas-clk32kgaudio" for clk32kgaudio clock
->> >>
->> >> Apart from the register control of the clocks - which is done via
->> >> the clock API there is a posibility to enable the external sleep
->> >> control. In this way the clock can be enabled/disabled on demand by the
->> >> user of the clock.
->> >>
->> >> See the documentation for more details.
->> >>
->> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
->> >> Reviewed-by: Nishanth Menon <nm@ti.com>
->>
->> >> +static unsigned long palmas_clks_recalc_rate(struct clk_hw *hw,
->> >> +                                            unsigned long parent_rate)
->> >> +{
->> >> +       return 32768;
->> >> +}
->> >
->> > I see that other clock drivers using a constant rate return 0 if the
->> > clock has not been enabled.
->>
->> and there are examples when similar fixed clock drivers returns only the clock
->> value, like clk-max77686. I can not find clear guidelines neither in the
->> documentation or around the header/c files for this.
->> Mike, what is the appropriate way of handling the recalc_rate?
->
-> You are right that there are no guidelines stating, "don't do that", but
-> please, "don't do that" ;-)
->
-> clk_enable and clk_set_rate are entirely unrelated operations from the
-> perspective of the Linux clock framework, and mixing these two classes
-> of operations is a recipe for pain.
->
+[ ... ]
 
-Thanks a lot for the clarification. I just asked since when posting a
-clock driver I got feedback that recalc_rate should return 0 if the
-clock was disabled and also saw some drivers doing that, e.g:
-drivers/clk/clk-s2mps11.c
+> +
+> +		regulators {
+> +			buck1_reg: BUCK1 {
+> +				regulator-name = "vdd_mif";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1300000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-ramp-delay = <12500>;
+> +			};
 
->>
->> > So maybe is more correct to have something
->> > like the following?
->> >
->> > if (__clk_is_enabled(hw->clk))
->> >         return 32768;
->> > else
->> >         return 0;
->
-> So what happens here if this is gateable clock and later on we call
-> clk_enable on it? The clocks rate will still be zero since
-> clk_enable/clk_disable do not touch the rate at all.
->
+IMO, adding a blank line between sub-nodes would be better.
 
-Got it, thanks for the explanation.
+> +			buck2_reg: BUCK2 {
+> +				regulator-name = "vdd_arm_real";
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1500000>;
+> +				regulator-always-on;
+> +				regulator-boot-on;
+> +				regulator-ramp-delay = <12500>;
+> +			};
 
-> Regards,
-> Mike
->
+[ ... ]
 
-Best regards,
-Javier
+> +			vqmmc_sdcard: ldo4_reg: LDO4 {
+> +				regulator-name = "vdd_sd";
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <2800000>;
+> +				regulator-always-on;
+> +
+
+Blank line, can be removed.
+
+> +			};
+
+[ ... ]
+> +			ldo23_reg: LDO23 {
+> +				regulator-name = "ld0_23";
+
+ldo_23, 'o' in place of '0'.
+
+Similar comments for peach-pi DTS file.
+
+-- 
+Tushar Behera
