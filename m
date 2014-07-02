@@ -1,52 +1,55 @@
-From: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Subject: [PATCH 2/5] ARM: dts: Add initial LS1021A QDS board dts support
-Date: Wed, 2 Jul 2014 17:02:49 +0800
-Message-ID: <1404291772-2644-3-git-send-email-jingchang.lu@freescale.com>
+From: Jingchang Lu <jingchang.lu@freescale.com>
+Subject: [PATCH 3/5] ARM: dts: Add initial LS1021A TWR board dts support
+Date: Wed, 2 Jul 2014 17:02:50 +0800
+Message-ID: <1404291772-2644-4-git-send-email-jingchang.lu@freescale.com>
 References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404291772-2644-1-git-send-email-jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawn.guo@linaro.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Chen Lu <B46807@freescale.com>, Chao Fu <B44548@freescale.com>, Jingchang Lu <jingchang.lu@freescale.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-
-Signed-off-by: Alison Wang <alison.wang-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Jason Jin <Jason.Jin-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Xiubo Li <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Bhupesh Sharma <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Jaiprakash Singh <b44839-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Signed-off-by: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Signed-off-by: Chen Lu <B46807@freescale.com>
+Signed-off-by: Chao Fu <B44548@freescale.com>
+Signed-off-by: Jingchang Lu <jingchang.lu@freescale.com>
 ---
  arch/arm/boot/dts/Makefile        |   3 +-
- arch/arm/boot/dts/ls1021a-qds.dts | 380 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 382 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/ls1021a-qds.dts
+ arch/arm/boot/dts/ls1021a-twr.dts | 236 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 238 insertions(+), 1 deletion(-)
+ create mode 100755 arch/arm/boot/dts/ls1021a-twr.dts
 
 diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index b9e7adc..0569312 100644
+index 0569312..4482cc5 100644
 --- a/arch/arm/boot/dts/Makefile
 +++ b/arch/arm/boot/dts/Makefile
-@@ -235,7 +235,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
- 	imx6sx-sdb.dtb \
+@@ -236,7 +236,8 @@ dtb-$(CONFIG_ARCH_MXC) += \
  	vf610-colibri.dtb \
  	vf610-cosmic.dtb \
--	vf610-twr.dtb
-+	vf610-twr.dtb \
-+	ls1021a-qds.dtb
+ 	vf610-twr.dtb \
+-	ls1021a-qds.dtb
++	ls1021a-qds.dtb \
++	ls1021a-twr.dtb
  dtb-$(CONFIG_ARCH_MXS) += imx23-evk.dtb \
  	imx23-olinuxino.dtb \
  	imx23-stmp378x_devb.dtb \
-diff --git a/arch/arm/boot/dts/ls1021a-qds.dts b/arch/arm/boot/dts/ls1021a-qds.dts
-new file mode 100644
-index 0000000..586165c
+diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+new file mode 100755
+index 0000000..16e4d7a
 --- /dev/null
-+++ b/arch/arm/boot/dts/ls1021a-qds.dts
-@@ -0,0 +1,380 @@
++++ b/arch/arm/boot/dts/ls1021a-twr.dts
+@@ -0,0 +1,236 @@
 +/*
 + * Copyright 2013-2014 Freescale Semiconductor, Inc.
 + *
@@ -60,7 +63,7 @@ index 0000000..586165c
 +#include "ls1021a.dtsi"
 +
 +/ {
-+	model = "LS1021A QDS Board";
++	model = "LS1021A TWR Board";
 +
 +	regulators {
 +		compatible = "simple-bus";
@@ -91,52 +94,6 @@ index 0000000..586165c
 +
 +		simple-audio-card,codec = <&codec>;
 +	};
-+
-+	soc {
-+		leds {
-+			compatible = "pwm-leds";
-+			led0 {
-+				label = "led0";
-+				pwms = <&pwm3 0 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led1 {
-+				label = "led1";
-+				pwms = <&pwm3 1 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led2 {
-+				label = "led2";
-+				pwms = <&pwm3 2 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led3 {
-+				label = "led3";
-+				pwms = <&pwm3 3 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led4 {
-+				label = "led4";
-+				pwms = <&pwm3 4 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led5 {
-+				label = "led5";
-+				pwms = <&pwm3 5 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led6 {
-+				label = "led6";
-+				pwms = <&pwm3 6 150000 0>;
-+				max-brightness = <100>;
-+			};
-+			led7 {
-+				label = "led7";
-+				pwms = <&pwm3 7 150000 0>;
-+				max-brightness = <100>;
-+			};
-+		};
-+	};
 +};
 +
 +&can0 {
@@ -147,14 +104,14 @@ index 0000000..586165c
 +	status = "okay";
 +};
 +
-+&dspi0 {
++&dspi1 {
 +	bus-num = <0>;
 +	status = "okay";
 +
-+	dspiflash: at45db021d@0 {
++	dspiflash: s25fl064k@0 {
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+		compatible = "atmel,at45db021d", "atmel,at45", "atmel,dataflash";
++		compatible = "spansion,s25fl064k";
 +		spi-max-frequency = <16000000>;
 +		spi-cpol;
 +		spi-cpha;
@@ -171,110 +128,48 @@ index 0000000..586165c
 +};
 +
 +&enet0 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&physgmii1c>;
++	tbi-handle = <&tbi1>;
++	phy-handle = <&phy2>;
 +	phy-connection-type = "sgmii";
-+	status = "okay";
++	status = "ok";
 +};
 +
 +&enet1 {
-+	tbi-handle = <&tbi0>;
-+	phy-handle = <&physgmii1d>;
++	tbi-handle = <&tbi1>;
++	phy-handle = <&phy0>;
 +	phy-connection-type = "sgmii";
-+	status = "okay";
++	status = "ok";
 +};
 +
 +&enet2 {
-+	phy-handle = <&phyrgmii3>;
-+	phy-connection-type = "rgmii";
-+	status = "okay";
++	phy-handle = <&phy1>;
++	phy-connection-type = "rgmii-id";
++	status = "ok";
 +};
 +
 +&i2c0 {
 +	status = "okay";
-+	pca9547@77 {
-+		compatible = "philips,pca9547";
-+		reg = <0x77>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
++};
 +
-+		i2c@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x0>;
++&i2c1 {
++	status = "okay";
 +
-+			rtc@68 {
-+				compatible = "dallas,ds3232";
-+				reg = <0x68>;
-+				interrupts = <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>;
-+			};
-+		};
-+
-+		i2c@2 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x2>;
-+
-+			ina220@40 {
-+				compatible = "ti,ina220";
-+				reg = <0x40>;
-+				shunt-resistor = <1000>;
-+			};
-+
-+			ina220@41 {
-+				compatible = "ti,ina220";
-+				reg = <0x41>;
-+				shunt-resistor = <1000>;
-+			};
-+		};
-+
-+		i2c@3 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x3>;
-+
-+			eeprom@56 {
-+				compatible = "at24,24c512";
-+				reg = <0x56>;
-+			};
-+
-+			eeprom@57 {
-+				compatible = "at24,24c512";
-+				reg = <0x57>;
-+			};
-+
-+			adt7461a@4c {
-+				compatible = "adt7461a";
-+				reg = <0x4c>;
-+			};
-+		};
-+
-+		i2c@4 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0x4>;
-+
-+			codec: sgtl5000@0a {
-+				compatible = "fsl,sgtl5000";
-+				reg = <0x0a>;
-+				VDDA-supply = <&reg_3p3v>;
-+				VDDIO-supply = <&reg_3p3v>;
-+				clocks = <&platform_clk 1>;
-+			};
-+		};
-+
++	codec: sgtl5000@14 {
++		compatible = "fsl,sgtl5000";
++		reg = <0x14>;
++		VDDA-supply = <&reg_3p3v>;
++		VDDIO-supply = <&reg_3p3v>;
++		clocks = <&platform_clk 1>;
 +	};
-+
 +};
 +
 +&ifc {
 +	status = "okay";
 +	#address-cells = <2>;
 +	#size-cells = <1>;
-+	/* NOR, NAND Flashes and FPGA on board */
++	/* NOR, and CPLD on board */
 +	ranges = <0x0 0x0 0x0 0x60000000 0x08000000
-+		0x2 0x0 0x0 0x7e800000 0x00010000
-+		0x3 0x0 0x0 0x7fb00000 0x00000100>;
++		0x2 0x0 0x0 0x7fb00000 0x00000100>;
 +
 +		nor@0,0 {
 +			#address-cells = <1>;
@@ -283,110 +178,90 @@ index 0000000..586165c
 +			reg = <0x0 0x0 0x8000000>;
 +			bank-width = <2>;
 +			device-width = <1>;
-+		};
-+
-+		nand@2,0 {
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			compatible = "fsl,ifc-nand";
-+			reg = <0x2 0x0 0x10000>;
 +
 +			partition@0 {
-+				/* This location must not be altered  */
-+				/* 1MB for u-boot Bootloader Image */
-+				reg = <0x0 0x00100000>;
-+				label = "NAND U-Boot Image";
-+				read-only;
++				/* 128KB for rcw */
++				reg = <0x00000000 0x0020000>;
++				label = "NOR bank0 RCW Image";
 +			};
 +
-+			partition@100000 {
-+				/* 1MB for DTB Image */
-+				reg = <0x00100000 0x00100000>;
-+				label = "NAND DTB Image";
++			partition@20000 {
++				/* 1MB for DTB */
++				reg = <0x00020000 0x00100000>;
++				label = "NOR DTB Image";
 +			};
 +
-+			partition@200000 {
-+				/* 10MB for Linux Kernel Image */
-+				reg = <0x00200000 0x00a00000>;
-+				label = "NAND Linux Kernel Image";
++			partition@120000 {
++				/* 8 MB for Linux Kernel Image */
++				reg = <0x00120000 0x00800000>;
++				label = "NOR Linux Kernel Image";
 +			};
 +
-+			partition@c00000 {
-+				/* 500MB for Root file System Image */
-+				reg = <0x00c00000 0x1f400000>;
-+				label = "NAND Compressed RFS Image";
++			partition@920000 {
++				/* 56MB for Ramdisk Root File System */
++				reg = <0x00920000 0x03600000>;
++				label = "NOR Ramdisk Root File System Image";
 +			};
++
++			partition@3f80000 {
++				/* 512KB for bank4 u-boot Image */
++				reg = <0x03f80000 0x80000>;
++				label = "NOR bank4 u-boot Image";
++			};
++
++			partition@4000000 {
++				/* 128KB for bank4 RCW Image */
++				reg = <0x04000000 0x20000>;
++				label = "NOR bank4 RCW Image";
++			};
++
++			partition@4020000 {
++				/* 63MB JFFS2 ROOT File System Image */
++				reg = <0x04020000 0x3f00000>;
++				label = "NOR JFFS2 ROOT File System Image";
++			};
++
++			partition@7f80000 {
++				/* 512KB for bank0 u-boot Image */
++				reg = <0x07f80000 0x80000>;
++				label = "NOR bank0 u-boot Image";
++			};
++
 +		};
 +
-+		fpga: board-control@3,0 {
++		fpga: board-control@2,0 {
 +			#address-cells = <1>;
 +			#size-cells = <1>;
 +			compatible = "fsl,ls1021aqds-fpga", "fsl,fpga-qixis";
-+			reg = <0x3 0x0 0x0000100>;
++			reg = <0x2 0x0 0x00000100>;
 +			bank-width = <1>;
 +			device-width = <1>;
-+			ranges = <0 3 0 0x100>;
-+
-+			mdio-mux-emi1 {
-+				compatible = "mdio-mux-mmioreg";
-+				mdio-parent-bus = <&mdio0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				reg = <0x54 1>; /* BRDCFG4 */
-+				mux-mask = <0xe0>; /* EMI1[2:0] */
-+
-+				/* Onboard PHYs */
-+				ls1021amdio0: mdio@0 {
-+					reg = <0>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					phyrgmii1: ethernet-phy@1 {
-+						reg = <0x1>;
-+					};
-+				};
-+				ls1021amdio1: mdio@20 {
-+					reg = <0x20>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					phyrgmii2: ethernet-phy@2 {
-+						reg = <0x2>;
-+					};
-+				};
-+				ls1021amdio2: mdio@40 {
-+					reg = <0x40>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					phyrgmii3: ethernet-phy@3 {
-+						reg = <0x3>;
-+					};
-+				};
-+				ls1021amdio3: mdio@60 {
-+					reg = <0x60>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					physgmii1c: ethernet-phy@1c {
-+						reg = <0x1c>;
-+					};
-+				};
-+				ls1021amdio4: mdio@80 {
-+					reg = <0x80>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					physgmii1d: ethernet-phy@1d {
-+						reg = <0x1d>;
-+					};
-+				};
-+
-+			};
-+
++			ranges = <0 2 0 0x100>;
 +		};
++
 +};
 +
 +&lpuart0 {
 +	status = "okay";
 +};
 +
-+&pwm3 {
++&mdio0 {
++	phy0: ethernet-phy@0 {
++		reg = <0x0>;
++	};
++	phy1: ethernet-phy@1 {
++		reg = <0x1>;
++	};
++	phy2: ethernet-phy@2 {
++		reg = <0x2>;
++	};
++	tbi1: tbi-phy@1f {
++		reg = <0x1f>;
++		device_type = "tbi-phy";
++	};
++};
++
++&pwm6 {
 +	status = "okay";
 +};
 +
@@ -396,15 +271,12 @@ index 0000000..586165c
 +
 +&qspi {
 +	num-cs = <2>;
-+	bus-num = <0>;
-+	fsl,spi-num-chipselects = <2>;
-+	fsl,spi-flash-chipselects = <0>;
 +	status = "okay";
 +
 +	qflash0: s25fl128s@0 {
 +		#address-cells = <1>;
 +		#size-cells = <1>;
-+		compatible = "spansion,s25fl129p1";
++		compatible = "spansion,s25fl128s";
 +		spi-max-frequency = <20000000>;
 +		reg = <0>;
 +
@@ -413,24 +285,6 @@ index 0000000..586165c
 +			reg = <0x0 0x1000000>;
 +		};
 +	};
-+
-+	qflash1: s25fl128s@1 {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		compatible = "spansion,s25fl129p1";
-+		spi-max-frequency = <20000000>;
-+		reg = <1>;
-+
-+		partition@0x0 {
-+			label = "s25fl128s-1";
-+			reg = <0x0 0x1000000>;
-+		};
-+	};
 +};
 -- 
 1.8.0
-
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
