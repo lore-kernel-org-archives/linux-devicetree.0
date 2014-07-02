@@ -1,78 +1,79 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [RESEND 0/2] clk: Support for Palmas clk32kg and clk32kgaudio clocks
-Date: Tue, 01 Jul 2014 21:53:20 -0700
-Message-ID: <20140702045320.23338.25@quantum>
-References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
+From: Tushar Behera <trblinux@gmail.com>
+Subject: Re: [PATCHv2 1/3] of: Split early_init_dt_scan into two parts
+Date: Wed, 02 Jul 2014 11:30:33 +0530
+Message-ID: <53B3A001.1090909@gmail.com>
+References: <1404266608-3274-1-git-send-email-lauraa@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Peter Ujfalusi <peter.ujfalusi@ti.com>, grant.likely@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, ldewangan@nvidia.com, linux-doc@vger.kernel.org, nm@ti.com, robh+dt@kernel.org
+Content-Type: text/plain; charset=ISO-8859-1
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-samsung-soc-owner@vger.kernel.org>
+In-Reply-To: <1404266608-3274-1-git-send-email-lauraa@codeaurora.org>
+Sender: linux-samsung-soc-owner@vger.kernel.org
+To: Laura Abbott <lauraa@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, Kevin Hilman <khilman@linaro.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robherring2@gmail.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-kernel@lists.linaro.org, afaerber@suse.de, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Peter Ujfalusi (2014-06-26 23:01:09)
-> Hi Mike,
+On 07/02/2014 07:33 AM, Laura Abbott wrote:
+> Currently, early_init_dt_scan validates the header, sets the
+> boot params, and scans for chosen/memory all in one function.
+> Split this up into two separate functions (validation/setting
+> boot params in one, scanning in another) to allow for
+> additional setup between boot params and scanning the memory.
 > 
-> This is a resend of the v2 version of the palmas clock driver which seamingly
-> missed the 3.16 merge window. I have added Nishanth's Reviewed-by tag to the
-> patches.
-
-Thanks for the resend. Applied to clk-next.
-
-Regards,
-Mike
-
-> 
-> Changes since v1:
-> - binding documentation and driver has been separated based on Nishanth Menon's
->   comment
-> 
-> v2 of the series:
-> https://lkml.org/lkml/2014/5/6/323
-> 
-> v1 of the driver can be found:
-> https://lkml.org/lkml/2014/4/3/104
-> 
-> Palmas class of devices can provide 32K clock(s) to be used by other devices
-> on the board. Depending on the actual device the provided clocks can be:
-> CLK32K_KG and CLK32K_KGAUDIO
-> or only one:
-> CLK32K_KG (TPS659039 for example)
-> 
-> Use separate compatible flags for the two 32K clock.
-> A system which needs or have only one of the 32k clock from
-> Palmas will need to add node(s) for each clock as separate section
-> in the dts file.
-> The two compatible property is:
-> "ti,palmas-clk32kg" for clk32kg clock
-> "ti,palmas-clk32kgaudio" for clk32kgaudio clock
-> 
-> Apart from the register control of the clocks - which is done via
-> the clock API there is a posibility to enable the external sleep
-> control. In this way the clock can be enabled/disabled on demand by the
-> user of the clock.
-> 
-> Regards,
-> Peter
+> Signed-off-by: Laura Abbott <lauraa@codeaurora.org>
 > ---
-> Peter Ujfalusi (2):
->   dt/bindings: Binding documentation for Palmas clk32kg and clk32kgaudio
->     clocks
->   clk: Add driver for Palmas clk32kg and clk32kgaudio clocks
+
+Tested the patchset on top of Linus' tree.
+
+Verified after enabling following debug message.
+--- a/drivers/of/fdt.c
++++ b/drivers/of/fdt.c
+@@ -865,7 +865,7 @@ int __init early_init_dt_scan_memory(unsigned long
+node, const char *uname,
+
+        endp = reg + (l / sizeof(__be32));
+
+-       pr_debug("memory scan node %s, reg size %d, data: %x %x %x %x,\n",
++       pr_err("memory scan node %s, reg size %d, data: %x %x %x %x,\n",
+
+
+Output before:
+memory scan node memory, reg size 96, data: 20 10 30 10,
+
+Output after:
+memory scan node memory, reg size 64, data: 20 10 30 10,
+
+Tested-by: Tushar Behera <trblinux@gmail.com>
+
+One minor nit below ...
+
+>  drivers/of/fdt.c       | 18 +++++++++++++++++-
+>  include/linux/of_fdt.h |  2 ++
+>  2 files changed, 19 insertions(+), 1 deletion(-)
 > 
->  .../bindings/clock/clk-palmas-clk32kg-clocks.txt   |  35 +++
->  drivers/clk/Kconfig                                |   7 +
->  drivers/clk/Makefile                               |   1 +
->  drivers/clk/clk-palmas.c                           | 307 +++++++++++++++++++++
->  include/dt-bindings/mfd/palmas.h                   |  18 ++
->  5 files changed, 368 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/clock/clk-palmas-clk32kg-clocks.txt
->  create mode 100644 drivers/clk/clk-palmas.c
->  create mode 100644 include/dt-bindings/mfd/palmas.h
-> 
-> -- 
-> 2.0.0
-> 
+> diff --git a/drivers/of/fdt.c b/drivers/of/fdt.c
+> index c4cddf0..55bfca9 100644
+> --- a/drivers/of/fdt.c
+> +++ b/drivers/of/fdt.c
+> @@ -922,7 +922,7 @@ int __init __weak early_init_dt_reserve_memory_arch(phys_addr_t base,
+>  }
+>  #endif
+>  
+> -bool __init early_init_dt_scan(void *params)
+> +bool __init early_init_dt_verify(void *params)
+>  {
+>  	if (!params)
+>  		return false;
+> @@ -936,6 +936,12 @@ bool __init early_init_dt_scan(void *params)
+>  		return false;
+>  	}
+>  
+> +	return true;
+> +}
+> +
+> +
+
+Extra blank line here. Can be removed.
+
+-- 
+Tushar Behera
