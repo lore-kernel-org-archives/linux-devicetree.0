@@ -1,58 +1,39 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH v5 04/14] clk: max77686: Improve Maxim 77686 PMIC clocks binding
-Date: Wed, 02 Jul 2014 08:21:09 -0700
-Message-ID: <20140702152109.12768.26689@quantum>
-References: <1403806546-31122-1-git-send-email-javier.martinez@collabora.co.uk>
- <1403806546-31122-5-git-send-email-javier.martinez@collabora.co.uk>
- <20140701172959.32686.9863@quantum> <53B3DC52.7040803@collabora.co.uk>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 1/3 V2] irqchip: gic: Add binding probe for ARM GIC400
+Date: Wed, 2 Jul 2014 10:21:06 -0500
+Message-ID: <1404314468-7674-2-git-send-email-suravee.suthikulpanit@amd.com>
+References: <1404314468-7674-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <53B3DC52.7040803@collabora.co.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Javier Martinez Canillas <javier.martinez@collabora.co.uk>, Lee Jones <lee.jones@linaro.org>
-Cc: Samuel Ortiz <sameo@linux.intel.com>, Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Alessandro Zummo <a.zummo@towertech.it>, Kukjin Kim <kgene.kim@samsung.com>, Doug Anderson <dianders@chromium.org>, Olof Johansson <olof@lixom.net>, Sjoerd Simons <sjoerd.simons@collabora.co.uk>, Daniel Stone <daniels@collabora.com>, Tomeu Vizoso <tomeu.vizoso@collabora.com>, Krzysztof Kozlowski <k.kozlowski@samsung.com>, Yadwinder Singh Brar <yadi.brar01@gmail.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-pci-owner@vger.kernel.org>
+In-Reply-To: <1404314468-7674-1-git-send-email-suravee.suthikulpanit@amd.com>
+Sender: linux-pci-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Javier Martinez Canillas (2014-07-02 03:17:54)
-> Hello Mike,
-> 
-> On 07/01/2014 07:29 PM, Mike Turquette wrote:
-> > Quoting Javier Martinez Canillas (2014-06-26 11:15:36)
-> >> Like most clock drivers, the Maxim 77686 PMIC clock binding
-> >> follows the convention that the "#clock-cells" property is
-> >> used to specify the number of cells in a clock provider.
-> >> 
-> >> But the binding document is not clear enough that it shall
-> >> be set to 1 since the PMIC support multiple clocks outputs.
-> >> 
-> >> Also, explain that the clocks identifiers are defined in a
-> >> header file that can be included by Device Tree source with
-> >> client nodes to avoid using magic numbers.
-> >> 
-> >> Signed-off-by: Javier Martinez Canillas <javier.martinez@collabora.co.uk>
-> >> Reviewed-by: Krzysztof Kozlowski <k.kozlowski@samsung.com>
-> >> Reviewed-by: Doug Anderson <dianders@chromium.org>
-> > 
-> > Looks good to me.
-> > 
-> > Regards,
-> > Mike
-> > 
-> 
-> Thanks a lot, an Acked-by or Reviewed-by tags for this patch and 03/14 will be
-> great as well so I can carry those on the next version of the series.
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-Sure you can interpret my "looks good to me" as either an Ack or a
-Reviewed-by, depending on context. In this case feel free to add:
+Add new Irqchip declaration for GIC400. This was mentioned in
+gic binding documentation, but there is not code to support it.
 
-Reviewed-by: Mike Turquette <mturquette@linaro.org>
+Signed-off-by: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
+---
+ drivers/irqchip/irq-gic.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Regards,
-Mike
-
-> 
-> Best regards,
-> Javier
-> 
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index 7e11c9d..adc86de 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1071,6 +1071,8 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+ 	gic_cnt++;
+ 	return 0;
+ }
++
++IRQCHIP_DECLARE(arm_gic_400, "arm,gic-400", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
+ IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
+-- 
+1.9.0
