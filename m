@@ -1,93 +1,103 @@
-From: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: Add TMU dt node to monitor the temperature for
- Exynos3250
-Date: Wed, 02 Jul 2014 13:27:55 +0900
-Message-ID: <53B38A4B.4020407@samsung.com>
-References: <1404175210-9278-1-git-send-email-cw00.choi@samsung.com>
- <CAK5sBcFJMK-y+MZPXCufKEmp=v1nFJHstvNTczsQ3ez3SUPbKw@mail.gmail.com>
- <53B23362.7080103@samsung.com>
- <CAK5sBcER-rFmqe74b8uS=ZxKnTNGtkE0x6f7zaLphmyuHJz7Yg@mail.gmail.com>
- <53B349AF.4080606@samsung.com>
- <CAK5sBcHrMPweMSxfde0SSDOtRHbf7t7WQZkf0wAZNTc+N2=Wgg@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [RESEND 2/2] clk: Add driver for Palmas clk32kg and clk32kgaudio clocks
+Date: Tue, 01 Jul 2014 21:33:38 -0700
+Message-ID: <20140702043338.23338.31600@quantum>
+References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
+ <1403848871-26519-3-git-send-email-peter.ujfalusi@ti.com>
+ <CABxcv=metB4=eoT=fAh7S-b_mhAvHcJtn2wrV8v8koSyKMxNNw@mail.gmail.com>
+ <53B0FC27.5040002@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <CAK5sBcHrMPweMSxfde0SSDOtRHbf7t7WQZkf0wAZNTc+N2=Wgg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Sachin Kamat <spk.linux-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Kukjin Kim <kgene.kim-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Ben Dooks <ben-linux-elnMNo+KYs3YtjvyW6yDsg@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Russell King <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, "open list:OPEN FIRMWARE AND..." <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, open list <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-samsung-soc <linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: QUOTED-PRINTABLE
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <53B0FC27.5040002@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, Javier Martinez Canillas <javier@dowhile0.org>
+Cc: Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Linux Kernel <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, ldewangan@nvidia.com, linux-doc@vger.kernel.org, Nishanth Menon <nm@ti.com>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sachin,
+Quoting Peter Ujfalusi (2014-06-29 22:56:55)
+> Hi Javier,
+>=20
+> On 06/27/2014 09:23 PM, Javier Martinez Canillas wrote:
+> > Hello Peter,
+> >=20
+> > On Fri, Jun 27, 2014 at 8:01 AM, Peter Ujfalusi <peter.ujfalusi@ti.=
+com> wrote:
+> >> Palmas class of devices can provide 32K clock(s) to be used by oth=
+er devices
+> >> on the board. Depending on the actual device the provided clocks c=
+an be:
+> >> CLK32K_KG and CLK32K_KGAUDIO
+> >> or only one:
+> >> CLK32K_KG (TPS659039 for example)
+> >>
+> >> Use separate compatible flags for the two 32K clock.
+> >> A system which needs or have only one of the 32k clock from
+> >> Palmas will need to add node(s) for each clock as separate section
+> >> in the dts file.
+> >> The two compatible property is:
+> >> "ti,palmas-clk32kg" for clk32kg clock
+> >> "ti,palmas-clk32kgaudio" for clk32kgaudio clock
+> >>
+> >> Apart from the register control of the clocks - which is done via
+> >> the clock API there is a posibility to enable the external sleep
+> >> control. In this way the clock can be enabled/disabled on demand b=
+y the
+> >> user of the clock.
+> >>
+> >> See the documentation for more details.
+> >>
+> >> Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+> >> Reviewed-by: Nishanth Menon <nm@ti.com>
+>=20
+> >> +static unsigned long palmas_clks_recalc_rate(struct clk_hw *hw,
+> >> +                                            unsigned long parent_=
+rate)
+> >> +{
+> >> +       return 32768;
+> >> +}
+> >=20
+> > I see that other clock drivers using a constant rate return 0 if th=
+e
+> > clock has not been enabled.
+>=20
+> and there are examples when similar fixed clock drivers returns only =
+the clock
+> value, like clk-max77686. I can not find clear guidelines neither in =
+the
+> documentation or around the header/c files for this.
+> Mike, what is the appropriate way of handling the recalc_rate?
 
-On 07/02/2014 12:09 PM, Sachin Kamat wrote:
-> On Wed, Jul 2, 2014 at 5:22 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->> On 07/01/2014 01:10 PM, Sachin Kamat wrote:
->>> Hi Chanwoo,
->>>
->>> On Tue, Jul 1, 2014 at 9:34 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>> Hi Sachin,
->>>>
->>>> On 07/01/2014 12:33 PM, Sachin Kamat wrote:
->>>>> Hi Chanwoo,
->>>>>
->>>>> On Tue, Jul 1, 2014 at 6:10 AM, Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org> wrote:
->>>>>> This patch add TMU (Thermal Management Unit) dt node to monitor the high
->>>>>> temperature for Exynos3250.
->>>>>>
->>>>>> Signed-off-by: Chanwoo Choi <cw00.choi-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>> Acked-by: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
->>>>>> ---
->>>>>> This patch has a dependency on following patch [1]:
->>>>>>  [1] https://lkml.org/lkml/2014/6/30/805
->>>>>>
->>>>>>  arch/arm/boot/dts/exynos3250.dtsi | 10 ++++++++++
->>>>>>  1 file changed, 10 insertions(+)
->>>>>>
->>>>>> diff --git a/arch/arm/boot/dts/exynos3250.dtsi b/arch/arm/boot/dts/exynos3250.dtsi
->>>>>> index 3660cab..1e566af 100644
->>>>>> --- a/arch/arm/boot/dts/exynos3250.dtsi
->>>>>> +++ b/arch/arm/boot/dts/exynos3250.dtsi
->>>>>> @@ -192,6 +192,16 @@
->>>>>>                         status = "disabled";
->>>>>>                 };
->>>>>>
->>>>>> +               tmu: tmu@100C0000 {
->>>>>> +                       compatible = "samsung,exynos3250-tmu";
->>>>>> +                       interrupt-parent = <&gic>;
->>>>>> +                       reg = <0x100C0000 0x100>;
->>>>>> +                       interrupts = <0 216 0>;
->>>>>> +                       clocks = <&cmu CLK_TMU_APBIF>;
->>>>>> +                       clock-names = "tmu_apbif";
->>>>>> +                       status = "disabled";
->>>>>
->>>>> I don't think there would be any board specific properties needed. Hence
->>>>> leave the status as enabled (by deleting the above line).
->>>>>
->>>>
->>>> I think that if specific board need TMU feature, dts file for specific board
->>>> should include tmu dt node with 'okay' status. The specific board based on
->>>> Exynos3250 might not need TMU feature.
->>>
->>> The status field in DT node is not meant for stating the build configuration but
->>> represents the readiness of the hardware for usage on the platform. If
->>> a particular
->>> board does not need this feature it needs to be disabled in the build
->>> config and only
->>> for any special requirements disable it in board file.
->>
->> TMU (Thermal Management Unit) needs specific regulator for TMU power as following:
->> The regulator for TMU is dependent on board.
-> 
-> In this case it makes sense to leave it disabled in dtsi.
-> 
+You are right that there are no guidelines stating, "don't do that", bu=
+t
+please, "don't do that" ;-)
 
-Thanks for your review.
+clk_enable and clk_set_rate are entirely unrelated operations from the
+perspective of the Linux clock framework, and mixing these two classes
+of operations is a recipe for pain.
 
-Best Regards,
-Chanwoo Choi
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+>=20
+> > So maybe is more correct to have something
+> > like the following?
+> >=20
+> > if (__clk_is_enabled(hw->clk))
+> >         return 32768;
+> > else
+> >         return 0;
+
+So what happens here if this is gateable clock and later on we call
+clk_enable on it? The clocks rate will still be zero since
+clk_enable/clk_disable do not touch the rate at all.
+
+Regards,
+Mike
+
+> >=20
+> > Best regards,
+> > Javier
+> >=20
+>=20
+>=20
+> --=20
+> P=C3=A9ter
