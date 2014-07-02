@@ -1,84 +1,115 @@
-From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 2/2] ASoC: add driver for Rockchip RK3xxx I2S controller
-Date: Wed, 2 Jul 2014 11:23:10 +0100
-Message-ID: <20140702102310.GC410@sirena.org.uk>
-References: <1404203860-30712-1-git-send-email-xjq@rock-chips.com>
- <1404204458-30881-1-git-send-email-xjq@rock-chips.com>
- <20140701170747.GA15028@sirena.org.uk>
- <53B359FD.3080809@rock-chips.com>
+From: Marek Szyprowski <m.szyprowski@samsung.com>
+Subject: [PATCH 0/4] CMA & device tree, once again
+Date: Wed, 02 Jul 2014 12:48:48 +0200
+Message-ID: <1404298132-6050-1-git-send-email-m.szyprowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="UFHRwCdBEJvubb2X"
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <53B359FD.3080809-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Huang Tao <huangtao-TNX95d0MmH7DzftRWevZcw@public.gmane.org>
-Cc: jianqun <xjq-TNX95d0MmH7DzftRWevZcw@public.gmane.org>, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, perex-/Fr2/VpizcU@public.gmane.org, tiwai-l3A5Bk7waGM@public.gmane.org, grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, zhangqing-TNX95d0MmH7DzftRWevZcw@public.gmane.org, hj-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kever.yang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zyw-TNX95d0MmH7DzftRWevZcw@public.gmane.org, yzq-TNX95d0MmH7DzftRWevZcw@public.gmane.org, zhenfu.fang-TNX95d0MmH7DzftRWevZcw@public.gmane.org, cf-TNX95d0MmH7DzftRWevZcw@public.gmane.org, kfx-TNX95d0MmH7DzftRWevZcw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linaro-mm-sig@lists.linaro.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Jon Medhurst <tixy@linaro.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Tomasz Figa <t.figa@samsung.com>, Will Deacon <will.deacon@arm.com>, Tomasz Figa <tomasz.figa@gmail.com>, Paul Mackerras <paulus@samba.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Arnd Bergmann <arnd@arndb.de>, Josh Cartwright <joshc@codeaurora.org>, Catalin Marinas <catalin.marinas@arm.com>, Grant Likely <grant.likely@linaro.org>, Laura Abbott <lauraa@codeaurora.org>, Ian Campbell <ian.campbell@citrix.com>, Pawel Moll <pawel.moll@arm.com>, Stephen Warren <swarren@wwwdotorg.org>, Sascha Hauer <s.hauer@pengutronix.de>, Michal Nazarewicz <mina86@mina86.com>, Marc <marc.ceeeee@gmail.com>, Nishanth Peethambaran <nishanth.p@gmail.com>, Rob Herring <robh+dt@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, "Aneesh Kumar K.V." <aneesh.kumar@linux.v>
 List-Id: devicetree@vger.kernel.org
 
+Hello,
 
---UFHRwCdBEJvubb2X
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This is one more respin of the patches which add support for creating
+reserved memory regions defined in device tree. The last attempt
+(http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html)
+ended in merging only half of the code, so right now we have complete
+documentation merged and only basic code, which implements a half of it
+is written in the documentation. Although the merged patches allow to
+reserve memory, there is no way of using it for devices and drivers.
 
-On Wed, Jul 02, 2014 at 09:01:49AM +0800, Huang Tao wrote:
-> =E4=BA=8E 2014=E5=B9=B407=E6=9C=8802=E6=97=A5 01:07, Mark Brown =E5=86=99=
-=E9=81=93:
-> >> +static inline void i2s_writel(struct rk_i2s_dev *i2s, u32 value,
-> >> > +			      unsigned int offset)
-> >> > +{
-> >> > +	writel_relaxed(value, i2s->regs + offset);
-> >> > +}
-> >> > +
-> >> > +static inline u32 i2s_readl(struct rk_i2s_dev *i2s, unsigned int of=
-fset)
-> >> > +{
-> >> > +	return readl_relaxed(i2s->regs + offset);
-> >> > +}
-> > Perhaps use regmap?  The main advantage would be the debug
-> > infrastructure, though you could also use _update_bits() to reduce the
-> > amount of time spent locked.
+This situation makes CMA rather useless, as the main architecture (ARM),
+which used it, has been converted from board-file based system
+initialization to device tree. Thus there is no place to use direct
+calls to dma_declare_contiguous() and some new solution, which bases on
+device tree, is urgently needed.
 
-> Are you sure? This is a I2S driver, we can write the register directly,
-> do not through I2C or SPI bus.
-> Write a register is only a few instructions on ARM, but write through
-> regmap, it may take a long path.
-> I think it will just consume CPU power and make the whole thing more
-> complex.
-> Could you tell me what benefits we can get if use regmap? Or something I
-> just missing?
+This patch series fixes this issue. It provides two, already widely
+discussed and already present in the kernel, drivers for reserved
+memory: first based on DMA-coherent allocator, second using Contiguous
+Memory Allocator. The first one nicely implements typical 'carved out'
+reserved memory way of allocating contiguous buffers in a kernel-style
+way. The memory is used exclusively by devices assigned to the given
+memory region. The second one allows to reuse reserved memory for
+movable kernel pages (like disk buffers, anonymous memory) and migrates
+it out when device to allocates contiguous memory buffer. Both driver
+provides memory buffers via standard dma-mapping API.
 
-The main thing is the diagnostic infrastructure, plus the cache if you
-find you need that for suspend and resume (which you didn't implement
-yet) - that's the main reason things use regmap for memory mapped
-registers.  There is some overhead but it's not *that* big.
+The patches have been rebased on top of latest CMA and mm changes merged
+to akmp kernel tree.
 
---UFHRwCdBEJvubb2X
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
+To define a 64MiB CMA region following node is needed:
 
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
+multimedia_reserved: multimedia_mem_region {
+	compatible = "shared-dma-pool";
+	reusable;
+	size = <0x4000000>;
+	alignment = <0x400000>;
+};
 
-iQIcBAEBAgAGBQJTs92LAAoJELSic+t+oim9de0QAIpJDfitV4KZmuWJpXf2qW3r
-StUJ7OzJ1eiE+SXAoFhbJ099e4g3czFMrpukLktYrCqfrASt6/9r5GV8AAJirKQV
-cVZ9StXmo1ZcLw9QPiHHlfaZeU5ZqdKzuFfYufG/d4PNfkz6Vf+hRJ6VVrL4C4ky
-iRsjvJ/MCuolmMJKMgRCL1S8og+MxQCe6kMt8RUz6jxt/5//VtL6WVtMNu2ee+Bx
-VcF2IizQLS7JgBE5UTDVIL4ENMGZy82eGjfTPvgGzZIimnSUIm2zWmMip8nuXg2O
-QO0mvLfwgoE8ZOsPg7wlT3jfOKIFe1C3zsZPNFqaYRnkXTSHXyDZcaCg//7juh6I
-9sj65KDp3USfqcVGuJZCOB/jVy2IJORYxYJfVQNLqLfL5Sv+yilCEJ0iP+uq8RLn
-b4+HUxjNBPIuKBFwxQcAbqQir2PTQZRggGBnNBONMMuDmpQxY8kmMwaq1zy8GxZb
-OQDAipvE1zaxAPhrd3UfEJAnFMVVfaNjGfUNvSAgqgI4h2ax68wVG685vf+6QxLh
-hrH9YjT/qaKlK1Dr3i55s3JJ0vY3KS8Ilzl+0KYHglMBds8sSg3uS6OZTO0uPcqR
-uNZBiQzd97z1Pv2KaIMWqfEhKDk5t168tUn8wfb5bPqV2JcXVseM1Yv6SZVosFIK
-3GQUR0iwthdOuLNuY9Mt
-=mzwd
------END PGP SIGNATURE-----
+Similarly, one can define 64MiB region with DMA coherent memory:
 
---UFHRwCdBEJvubb2X--
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+multimedia_reserved: multimedia_mem_region {
+	compatible = "shared-dma-pool";
+	no-map;
+	size = <0x4000000>;
+	alignment = <0x400000>;
+};
+
+Then the defined region can be assigned to devices:
+
+scaler: scaler@12500000 {
+	memory-region = <&multimedia_reserved>;
+	/* ... */
+};
+codec: codec@12600000 {
+	memory-region = <&multimedia_reserved>;
+	/* ... */
+};
+
+Best regards
+Marek Szyprowski
+Samsung R&D Institute Poland
+
+
+Changes since the version posted in '[PATCH v6 00/11] reserved-memory 
+regions/CMA in devicetree, again' thread 
+http://lists.linaro.org/pipermail/linaro-mm-sig/2014-February/003738.html:
+- rebased on top of '[PATCH v3 -next 0/9] CMA: generalize CMA reserved
+area management code' patch series on v3.16-rc3
+- improved dma-coherent driver, now it correctly handles assigning more
+than one device to the given memory region
+
+
+Patch summary:
+
+Marek Szyprowski (4):
+  drivers: of: add automated assignment of reserved regions to client
+    devices
+  drivers: of: initialize and assign reserved memory to newly created
+    devices
+  drivers: dma-coherent: add initialization from device tree
+  drivers: dma-contiguous: add initialization from device tree
+
+ drivers/base/dma-coherent.c     | 137 ++++++++++++++++++++++++++++++++++------
+ drivers/base/dma-contiguous.c   |  67 ++++++++++++++++++++
+ drivers/of/of_reserved_mem.c    |  70 ++++++++++++++++++++
+ drivers/of/platform.c           |   7 ++
+ include/linux/cma.h             |   3 +
+ include/linux/of_reserved_mem.h |   7 ++
+ mm/cma.c                        |  69 +++++++++++++++-----
+ 7 files changed, 324 insertions(+), 36 deletions(-)
+
+-- 
+1.9.2
