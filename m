@@ -1,128 +1,48 @@
-From: zhangfei <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] phy: add hix5hd2-sata-phy driver
-Date: Wed, 02 Jul 2014 23:19:45 +0800
-Message-ID: <53B42311.5010009@linaro.org>
-References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <1403687648-29082-3-git-send-email-zhangfei.gao@linaro.org> <53B3EC18.5020509@ti.com> <53B3EC62.80202@ti.com>
+From: <suravee.suthikulpanit@amd.com>
+Subject: [PATCH 0/3 V2] irqchip: gic: Introduce ARM GICv2m MSI(-X) support
+Date: Wed, 2 Jul 2014 10:21:05 -0500
+Message-ID: <1404314468-7674-1-git-send-email-suravee.suthikulpanit@amd.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <53B3EC62.80202-l0cyMroinI0@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: marc.zyngier@arm.com, mark.rutland@arm.com, jason@lakedaemon.net
+Cc: pawel.moll@arm.com, Catalin.Marinas@arm.com, Will.Deacon@arm.com, tglx@linutronix.de, Harish.Kasiviswanathan@amd.com, linux-arm-kernel@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, devicetree@vger.kernel.org, Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 List-Id: devicetree@vger.kernel.org
 
+From: Suravee Suthikulpanit <Suravee.Suthikulpanit@amd.com>
 
-Hi, Kishon
+This patch set introduces support for MSI(-X) in GICv2m specification,
+which is implemented in some variation of GIC400 (e.g. gic-400+).
 
-On 07/02/2014 07:26 PM, Kishon Vijay Abraham I wrote:
+This depends on and has been tested with the V7 of "Add support for PCI in AArch64"
+(https://lkml.org/lkml/2014/3/14/320).
 
->>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
->>> index 16a2f06..782953d 100644
->>> --- a/drivers/phy/Kconfig
->>> +++ b/drivers/phy/Kconfig
->>> @@ -109,6 +109,14 @@ config PHY_EXYNOS5250_SATA
->>>   	  SATA 3.0 Gb/s, SATA 6.0 Gb/s speeds. It supports one SATA host
->>>   	  port to accept one SATA device.
->>>
->>> +config PHY_HIX5HD2_SATA
->>> +	tristate "HIX5HD2 SATA PHY Driver"
->>> +	depends on ARCH_HIX5HD2 && OF
->>
->> depends on HAS_IOMEM?
+Changes in V2:
+Re-architect the code to:
+    * Use irq_chip for gicv2m instead of using the gic_chip (per Marc suggestion).
+    * Remove the overwriting of arch_setup_msi_irq and arch_setup_msi_irqs
+      (per Marc suggestion).
+    * Add devicetree matching for gic-400-plus for v2m stuff instread of
+      re-using gic-400 just to be clear.
+    * Misc fix/clean up per Mark Rutland and Marc Zyngier comments
 
-Yes, will add it.
-HAS_IOMEM is select by default and not notice it at all.
->>> +	select GENERIC_PHY
->>> +	select MFD_SYSCON
->>> +	help
->>> +	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
->>> +
->>>   config PHY_SUN4I_USB
->>>   	tristate "Allwinner sunxi SoC USB PHY driver"
->>>   	depends on ARCH_SUNXI && HAS_IOMEM && OF
->>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
->>> index b4f1d57..54f04d0 100644
->>> --- a/drivers/phy/Makefile
->>> +++ b/drivers/phy/Makefile
->>> @@ -12,6 +12,7 @@ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
->>>   obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
->>>   obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
->>>   obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
->>> +obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
->>>   obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
->>>   obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
->>>   phy-exynos-usb2-y			+= phy-samsung-usb2.o
->>> diff --git a/drivers/phy/phy-hix5hd2-sata.c b/drivers/phy/phy-hix5hd2-sata.c
->>> new file mode 100644
->>> index 0000000..6f1e3ea
->>> --- /dev/null
->>> +++ b/drivers/phy/phy-hix5hd2-sata.c
->>> @@ -0,0 +1,192 @@
->>> +/*
->>> + * Copyright (c) 2014 Linaro Ltd.
->>> + * Copyright (c) 2014 Hisilicon Limited.
->>> + *
->>> + * This program is free software; you can redistribute it and/or modify
->>> + * it under the terms of the GNU General Public License as published by
->>> + * the Free Software Foundation; either version 2 of the License, or
->>> + * (at your option) any later version.
->>> + */
->>> +
->>> +#include <linux/module.h>
->>> +#include <linux/mfd/syscon.h>
->>> +#include <linux/regmap.h>
->>> +#include <linux/phy/phy.h>
->>> +#include <linux/io.h>
->>> +#include <linux/platform_device.h>
->>> +#include <linux/delay.h>
->>
->> can this be arranged alphabetically? Helps while adding new header files.
-Sure
+Suravee Suthikulpanit (3):
+  irqchip: gic: Add binding probe for ARM GIC400
+  irqchip: gic: Restructuring ARM GIC code
+  irqchip: gic: Add supports for ARM GICv2m MSI(-X)
 
->>> +static int hix5hd2_sata_phy_probe(struct platform_device *pdev)
->>> +{
->>> +	struct phy_provider *phy_provider;
->>> +	struct device *dev = &pdev->dev;
->>> +	struct resource *res;
->>> +	struct phy *phy;
->>> +	struct hix5hd2_priv *priv;
->>> +
->>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
->>> +	if (!priv)
->>> +		return -ENOMEM;
->>> +
->>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>> +	priv->base = devm_ioremap(dev, res->start, resource_size(res));
->
-> It should be devm_ioremap_resource().
-Since these memory region shared by other device, devm_ioremap_resource 
-will fail, since devm_request_mem_region.
+ Documentation/devicetree/bindings/arm/gic.txt |  19 +-
+ drivers/irqchip/Kconfig                       |   6 +
+ drivers/irqchip/Makefile                      |   1 +
+ drivers/irqchip/irq-gic-v2m.c                 | 248 ++++++++++++++++++++++++++
+ drivers/irqchip/irq-gic-v2m.h                 |  13 ++
+ drivers/irqchip/irq-gic.c                     |  88 +++++----
+ drivers/irqchip/irq-gic.h                     |  60 +++++++
+ 7 files changed, 395 insertions(+), 40 deletions(-)
+ create mode 100644 drivers/irqchip/irq-gic-v2m.c
+ create mode 100644 drivers/irqchip/irq-gic-v2m.h
+ create mode 100644 drivers/irqchip/irq-gic.h
 
->
-> -Kishon
->>> +	if (!priv->base)
->>> +		return -ENOMEM;
->>> +
->>> +	priv->peri_ctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
->>> +						"hisilicon,peripheral-syscon");
->>> +	if (IS_ERR(priv->peri_ctrl))
->>> +		priv->peri_ctrl = NULL;
->>
->> if syscon_regmap_lookup_by_phandle returns EPROBE_DEFER, you have to return
->> EPROBE_DEFER no?
-Sure,
-However, postcore_initcall(syscon_init) is bound to init before 
-module_platform_driver probe, so EPROBE_DEFER will not occur.
-
->>
->> Rest looks fine to me.
->>
->> Thanks
->> Kishon
->>
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+-- 
+1.9.0
