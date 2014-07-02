@@ -1,56 +1,50 @@
-From: Peter Griffin <peter.griffin@linaro.org>
-Subject: [PATCH v2 4/4] ARM: sti: Add STiH407 reset controller support.
-Date: Wed,  2 Jul 2014 15:08:49 +0100
-Message-ID: <1404310129-14667-5-git-send-email-peter.griffin@linaro.org>
+From: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: [PATCH v2 3/4] ARM: sti: Add STiH407 Kconfig entry to select STIH407_RESET
+Date: Wed,  2 Jul 2014 15:08:48 +0100
+Message-ID: <1404310129-14667-4-git-send-email-peter.griffin@linaro.org>
 References: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404310129-14667-1-git-send-email-peter.griffin@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, p.zabel@pengutronix.de, srinivas.kandagatla@gmail.com, maxime.coquelin@st.com, patrice.chotard@st.com
-Cc: peter.griffin@linaro.org, lee.jones@linaro.org, devicetree@vger.kernel.org
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404310129-14667-1-git-send-email-peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org, srinivas.kandagatla-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, maxime.coquelin-qxv4g6HH51o@public.gmane.org, patrice.chotard-qxv4g6HH51o@public.gmane.org
+Cc: peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the reset controller DT nodes for the powerdown,
- softreset and picophy controllers.
+The STiH407 is a STMicroelectronics Digital Consumer electronics
+family, targetted at set-top-box and other audio/video applications.
 
-Signed-off-by: Peter Griffin <peter.griffin@linaro.org>
+This patch selects the reset controller driver for this family which
+is essential to take various IP's on the SoC out of powerdown / reset.
+
+Signed-off-by: Peter Griffin <peter.griffin-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Acked-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 ---
- arch/arm/boot/dts/stih407.dtsi | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
+ arch/arm/mach-sti/Kconfig | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stih407.dtsi b/arch/arm/boot/dts/stih407.dtsi
-index 4f9024f..d2f1aaa 100644
---- a/arch/arm/boot/dts/stih407.dtsi
-+++ b/arch/arm/boot/dts/stih407.dtsi
-@@ -8,6 +8,7 @@
-  */
- #include "stih407-clock.dtsi"
- #include "stih407-pinctrl.dtsi"
-+#include <dt-bindings/reset-controller/stih407-resets.h>
- / {
- 	#address-cells = <1>;
- 	#size-cells = <1>;
-@@ -63,6 +64,21 @@
- 		ranges;
- 		compatible = "simple-bus";
+diff --git a/arch/arm/mach-sti/Kconfig b/arch/arm/mach-sti/Kconfig
+index 878e9ec..8825bc9 100644
+--- a/arch/arm/mach-sti/Kconfig
++++ b/arch/arm/mach-sti/Kconfig
+@@ -42,4 +42,14 @@ config SOC_STIH416
+ 	  and other digital audio/video applications using Flattened Device
+ 	  Trees.
  
-+		powerdown: powerdown-controller {
-+			compatible = "st,stih407-powerdown";
-+			#reset-cells = <1>;
-+		};
++config SOC_STIH407
++	bool "STiH407 STMicroelectronics Consumer Electronics family"
++	default y
++	select STIH407_RESET
++	help
++	  This enables support for STMicroelectronics Digital Consumer
++	  Electronics family StiH407 parts, targetted at set-top-box
++	  and other digital audio/video applications using Flattened Device
++	  Trees.
 +
-+		softreset: softreset-controller {
-+			compatible = "st,stih407-softreset";
-+			#reset-cells = <1>;
-+		};
-+
-+		picophyreset: picophyreset-controller {
-+			compatible = "st,stih407-picophyreset";
-+			#reset-cells = <1>;
-+		};
-+
- 		syscfg_sbc: sbc-syscfg@9620000 {
- 			compatible = "st,stih407-sbc-syscfg", "syscon";
- 			reg = <0x9620000 0x1000>;
+ endif
 -- 
 1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
