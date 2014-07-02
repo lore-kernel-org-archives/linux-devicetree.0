@@ -1,28 +1,54 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Wed, 2 Jul 2014 18:56:28 +0200
-Message-ID: <20140702165628.GO20799@lunn.ch>
-References: <20140702183841.7c964832@armhf>
+From: Olof Johansson <olof@lixom.net>
+Subject: Re: [RFC] drm/msm: DT support for 8960/8064
+Date: Wed, 2 Jul 2014 10:12:28 -0700
+Message-ID: <CAOesGMhaHwr7hon7H+-gEwELS8ZQicsPDWDEoHR6xkrDk3HU0Q@mail.gmail.com>
+References: <1404241055-3579-1-git-send-email-robdclark@gmail.com>
+ <53B4169C.2030207@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20140702183841.7c964832@armhf>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jean-Francois Moine <moinejf@free.fr>
-Cc: Mark Brown <broonie@kernel.org>, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Rob Clark <robdclark@gmail.com>, Dave Airlie <airlied@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <53B4169C.2030207@codeaurora.org>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: jcrouse@codeaurora.org
+Cc: linux-arm-msm <linux-arm-msm@vger.kernel.org>, DRI mailing list <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jul 02, 2014 at 06:38:41PM +0200, Jean-Francois Moine wrote:
-> This patch adds a CODEC function to the NXP TDA998x HDMI transmitter.
-> 
-> The CODEC handles both I2S and S/PDIF inputs and does dynamic input
-> switch in the TDA998x I2C driver on start/stop audio streaming.
+On Wed, Jul 2, 2014 at 7:26 AM, Jordan Crouse <jcrouse@codeaurora.org> wrote:
+> On 07/01/2014 12:57 PM, Rob Clark wrote:
+>>
+>> diff --git a/Documentation/devicetree/bindings/drm/msm/gpu.txt
+>> b/Documentation/devicetree/bindings/drm/msm/gpu.txt
+>> new file mode 100644
+>> index 0000000..6e33efe
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/drm/msm/gpu.txt
+>> @@ -0,0 +1,51 @@
+>> +Qualcomm adreno/snapdragon GPU
+>> +
+>> +Required properties:
+>> +- compatible: "qcom,adreno-3xx"
+>
+>
+> 3xx won't always be the only game in town. Not that I have a better name,
+> just pointing out that it has a limited shelf life.
 
-Hi Jean-Francois
+Actually, we prefer to avoid "xx" compatible strings. The compatible
+should be the first actual device that is part of the xx series, and
+newer IP should claim to be compatible with their own version plus the
+original one (if they are possible to use with the same exact
+programming model and only need extra code to deal with extensions).
 
-How well will this work with Russell concept of a front end and two
-backends? Can you uses your CODEC twice, once with the I2S backend and
-a second time with the S/PDIF backend?
+That way you'll also have a way to tell them apart in the driver if
+you can't derive it out of register contents, etc.
 
-	Andrew
+
+-Olof
