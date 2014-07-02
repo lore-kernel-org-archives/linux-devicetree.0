@@ -1,155 +1,71 @@
-From: Kishon Vijay Abraham I <kishon-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH v2 2/2] phy: add hix5hd2-sata-phy driver
-Date: Wed, 2 Jul 2014 16:55:12 +0530
-Message-ID: <53B3EC18.5020509@ti.com>
-References: <1403687648-29082-1-git-send-email-zhangfei.gao@linaro.org> <1403687648-29082-3-git-send-email-zhangfei.gao@linaro.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH v3 5/7] ARM: DRA7: hwmod: Add SYSCONFIG for usb_otg_ss
+Date: Wed, 2 Jul 2014 14:26:03 +0300
+Message-ID: <53B3EC4B.9080202@ti.com>
+References: <1399283686-6127-1-git-send-email-rogerq@ti.com> <1399283686-6127-6-git-send-email-rogerq@ti.com> <53A173A5.7020509@ti.com> <53A175DC.8080709@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="ISO-8859-1"
 Content-Transfer-Encoding: 7bit
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1403687648-29082-3-git-send-email-zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, arnd-r2nGTMty4D4@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, haifeng.yan-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, jchxue-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53A175DC.8080709@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: "Nori, Sekhar" <nsekhar@ti.com>
+Cc: Rajendra Nayak <rnayak@ti.com>, kishon@ti.com, tony@atomide.com, balbi@ti.com, bcousson@baylibre.com, "Menon, Nishanth" <nm@ti.com>, george.cherian@ti.com, sergei.shtylyov@cogentembedded.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-usb@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Sekhar,
 
-On Wednesday 25 June 2014 02:44 PM, Zhangfei Gao wrote:
-> From: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
+On 06/18/2014 02:19 PM, Rajendra Nayak wrote:
+> On Wednesday 18 June 2014 04:40 PM, Roger Quadros wrote:
+>> + Nishant and Rajendra for review.
+>>
+>> On 05/05/2014 12:54 PM, Roger Quadros wrote:
+>>> Add the sysconfig class bits for the Super Speed USB
+>>> controllers
+>>>
+>>> CC: Paul Walmsley <paul@pwsan.com>
+>>> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > 
-> Add hix5hd2-sata-phy driver on Hisilicon hix5hd2 soc.
+> verified against TRM version vP, looks good to me.
+> Reviewed-by: Rajendra Nayak <rnayak@ti.com>
+
+Could you please give your Tested-by tag for this? Then we can take this into 3.16-rc.
+Thanks.
+
+cheers,
+-roger
+
 > 
-> Signed-off-by: Jiancheng Xue <xuejiancheng-hv44wF8Li93QT0dZR+AlfA@public.gmane.org>
-> Signed-off-by: Zhangfei Gao <zhangfei.gao-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-> ---
->  drivers/phy/Kconfig            |    8 ++
->  drivers/phy/Makefile           |    1 +
->  drivers/phy/phy-hix5hd2-sata.c |  192 ++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 201 insertions(+)
->  create mode 100644 drivers/phy/phy-hix5hd2-sata.c
+>>> ---
+>>>  arch/arm/mach-omap2/omap_hwmod_7xx_data.c | 12 ++++++++++++
+>>>  1 file changed, 12 insertions(+)
+>>>
+>>> diff --git a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> index 810c205..067d322 100644
+>>> --- a/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> +++ b/arch/arm/mach-omap2/omap_hwmod_7xx_data.c
+>>> @@ -1731,8 +1731,20 @@ static struct omap_hwmod dra7xx_uart6_hwmod = {
+>>>   *
+>>>   */
+>>>  
+>>> +static struct omap_hwmod_class_sysconfig dra7xx_usb_otg_ss_sysc = {
+>>> +	.rev_offs	= 0x0000,
+>>> +	.sysc_offs	= 0x0010,
+>>> +	.sysc_flags	= (SYSC_HAS_DMADISABLE | SYSC_HAS_MIDLEMODE |
+>>> +			   SYSC_HAS_SIDLEMODE),
+>>> +	.idlemodes	= (SIDLE_FORCE | SIDLE_NO | SIDLE_SMART |
+>>> +			   SIDLE_SMART_WKUP | MSTANDBY_FORCE | MSTANDBY_NO |
+>>> +			   MSTANDBY_SMART | MSTANDBY_SMART_WKUP),
+>>> +	.sysc_fields	= &omap_hwmod_sysc_type2,
+>>> +};
+>>> +
+>>>  static struct omap_hwmod_class dra7xx_usb_otg_ss_hwmod_class = {
+>>>  	.name	= "usb_otg_ss",
+>>> +	.sysc	= &dra7xx_usb_otg_ss_sysc,
+>>>  };
+>>>  
+>>>  /* usb_otg_ss1 */
+>>>
+>>
 > 
-> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
-> index 16a2f06..782953d 100644
-> --- a/drivers/phy/Kconfig
-> +++ b/drivers/phy/Kconfig
-> @@ -109,6 +109,14 @@ config PHY_EXYNOS5250_SATA
->  	  SATA 3.0 Gb/s, SATA 6.0 Gb/s speeds. It supports one SATA host
->  	  port to accept one SATA device.
->  
-> +config PHY_HIX5HD2_SATA
-> +	tristate "HIX5HD2 SATA PHY Driver"
-> +	depends on ARCH_HIX5HD2 && OF
 
-depends on HAS_IOMEM?
-> +	select GENERIC_PHY
-> +	select MFD_SYSCON
-> +	help
-> +	  Support for SATA PHY on Hisilicon hix5hd2 Soc.
-> +
->  config PHY_SUN4I_USB
->  	tristate "Allwinner sunxi SoC USB PHY driver"
->  	depends on ARCH_SUNXI && HAS_IOMEM && OF
-> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
-> index b4f1d57..54f04d0 100644
-> --- a/drivers/phy/Makefile
-> +++ b/drivers/phy/Makefile
-> @@ -12,6 +12,7 @@ obj-$(CONFIG_OMAP_USB2)			+= phy-omap-usb2.o
->  obj-$(CONFIG_TI_PIPE3)			+= phy-ti-pipe3.o
->  obj-$(CONFIG_TWL4030_USB)		+= phy-twl4030-usb.o
->  obj-$(CONFIG_PHY_EXYNOS5250_SATA)	+= phy-exynos5250-sata.o
-> +obj-$(CONFIG_PHY_HIX5HD2_SATA)		+= phy-hix5hd2-sata.o
->  obj-$(CONFIG_PHY_SUN4I_USB)		+= phy-sun4i-usb.o
->  obj-$(CONFIG_PHY_SAMSUNG_USB2)		+= phy-exynos-usb2.o
->  phy-exynos-usb2-y			+= phy-samsung-usb2.o
-> diff --git a/drivers/phy/phy-hix5hd2-sata.c b/drivers/phy/phy-hix5hd2-sata.c
-> new file mode 100644
-> index 0000000..6f1e3ea
-> --- /dev/null
-> +++ b/drivers/phy/phy-hix5hd2-sata.c
-> @@ -0,0 +1,192 @@
-> +/*
-> + * Copyright (c) 2014 Linaro Ltd.
-> + * Copyright (c) 2014 Hisilicon Limited.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-> +
-> +#include <linux/module.h>
-> +#include <linux/mfd/syscon.h>
-> +#include <linux/regmap.h>
-> +#include <linux/phy/phy.h>
-> +#include <linux/io.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/delay.h>
-
-can this be arranged alphabetically? Helps while adding new header files.
-> +
-> +#define SATA_PHY0_CTLL		0xa0
-> +#define MPLL_MULTIPLIER_SHIFT	1
-> +#define MPLL_MULTIPLIER_MASK	0xfe
-> +#define MPLL_MULTIPLIER_50M	0x3c
-> +#define MPLL_MULTIPLIER_100M	0x1e
-> +#define PHY_RESET		BIT(0)
-> +#define REF_SSP_EN		BIT(9)
-> +#define SSC_EN			BIT(10)
-> +#define REF_USE_PAD		BIT(23)
-> +
-> +#define SATA_PORT_PHYCTL	0x174
-> +#define SPEED_MODE_MASK		0x6f0000
-> +#define HALF_RATE_SHIFT		16
-> +#define PHY_CONFIG_SHIFT	18
-> +#define GEN2_EN_SHIFT		21
-> +#define SPEED_CTRL		BIT(20)
-> +
-> +#define SATA_PORT_PHYCTL1	0x148
-> +#define AMPLITUDE_MASK		0x3ffffe
-> +#define AMPLITUDE_GEN3		0x68
-> +#define AMPLITUDE_GEN3_SHIFT	15
-> +#define AMPLITUDE_GEN2		0x56
-> +#define AMPLITUDE_GEN2_SHIFT	8
-> +#define AMPLITUDE_GEN1		0x56
-> +#define AMPLITUDE_GEN1_SHIFT	1
-> +
-.
-.
-<snip>
-.
-.
-> +
-> +static int hix5hd2_sata_phy_probe(struct platform_device *pdev)
-> +{
-> +	struct phy_provider *phy_provider;
-> +	struct device *dev = &pdev->dev;
-> +	struct resource *res;
-> +	struct phy *phy;
-> +	struct hix5hd2_priv *priv;
-> +
-> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap(dev, res->start, resource_size(res));
-> +	if (!priv->base)
-> +		return -ENOMEM;
-> +
-> +	priv->peri_ctrl = syscon_regmap_lookup_by_phandle(dev->of_node,
-> +						"hisilicon,peripheral-syscon");
-> +	if (IS_ERR(priv->peri_ctrl))
-> +		priv->peri_ctrl = NULL;
-
-if syscon_regmap_lookup_by_phandle returns EPROBE_DEFER, you have to return
-EPROBE_DEFER no?
-
-Rest looks fine to me.
-
-Thanks
-Kishon
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
