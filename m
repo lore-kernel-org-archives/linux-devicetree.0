@@ -1,85 +1,78 @@
-From: =?ISO-8859-15?Q?Andreas_F=E4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH] ARM: dts: Remove outdated usb2 phy entry from exynos5250.dtsi
-Date: Wed, 02 Jul 2014 06:50:16 +0200
-Message-ID: <53B38F88.1040608@suse.de>
-References: <1403881475-2001-1-git-send-email-sjoerd.simons@collabora.co.uk>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [RESEND 0/2] clk: Support for Palmas clk32kg and clk32kgaudio clocks
+Date: Tue, 01 Jul 2014 21:53:20 -0700
+Message-ID: <20140702045320.23338.25@quantum>
+References: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-15
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-samsung-soc-owner@vger.kernel.org>
-In-Reply-To: <1403881475-2001-1-git-send-email-sjoerd.simons@collabora.co.uk>
-Sender: linux-samsung-soc-owner@vger.kernel.org
-To: Sjoerd Simons <sjoerd.simons@collabora.co.uk>, linux-samsung-soc@vger.kernel.org
-Cc: Kukjin Kim <kgene.kim@samsung.com>, "OPEN FIRMWARE AND..." <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-doc-owner@vger.kernel.org>
+In-Reply-To: <1403848871-26519-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-doc-owner@vger.kernel.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>, grant.likely@linaro.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, ldewangan@nvidia.com, linux-doc@vger.kernel.org, nm@ti.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-+ kgene, devicetree
+Quoting Peter Ujfalusi (2014-06-26 23:01:09)
+> Hi Mike,
+> 
+> This is a resend of the v2 version of the palmas clock driver which seamingly
+> missed the 3.16 merge window. I have added Nishanth's Reviewed-by tag to the
+> patches.
 
-Am 27.06.2014 17:04, schrieb Sjoerd Simons:
-> The exynos5250.dtsi has two entries for describing the usb2 phy. One =
-for
-> the newer driver using the generic PHY framework and one for its
-> predecessor. The older node is only referenced by the arndale dts, wh=
-ich
-> seems redundant given starting from dba2f05880c the common dtsi also
-> includes the phy entries.
->=20
-> Signed-off-by: Sjoerd Simons <sjoerd.simons@collabora.co.uk>
-> ---
->  arch/arm/boot/dts/exynos5250-arndale.dts |  4 ----
->  arch/arm/boot/dts/exynos5250.dtsi        | 15 ---------------
->  2 files changed, 19 deletions(-)
->=20
-> diff --git a/arch/arm/boot/dts/exynos5250-arndale.dts b/arch/arm/boot=
-/dts/exynos5250-arndale.dts
-> index d0de1f5..dad8f9b 100644
-> --- a/arch/arm/boot/dts/exynos5250-arndale.dts
-> +++ b/arch/arm/boot/dts/exynos5250-arndale.dts
-> @@ -570,8 +570,4 @@
->  			connect-gpios =3D <&gpd1 7 1>;
->  		};
->  	};
-> -
-> -	usb@12110000 {
-> -		usb-phy =3D <&usb2_phy>;
-> -	};
->  };
-> diff --git a/arch/arm/boot/dts/exynos5250.dtsi b/arch/arm/boot/dts/ex=
-ynos5250.dtsi
-> index 834fb5a..7c545d50 100644
-> --- a/arch/arm/boot/dts/exynos5250.dtsi
-> +++ b/arch/arm/boot/dts/exynos5250.dtsi
-> @@ -600,21 +600,6 @@
->  		};
->  	};
-> =20
-> -	usb2_phy: usbphy@12130000 {
-> -		compatible =3D "samsung,exynos5250-usb2phy";
-> -		reg =3D <0x12130000 0x100>;
-> -		clocks =3D <&clock CLK_FIN_PLL>, <&clock CLK_USB2>;
-> -		clock-names =3D "ext_xtal", "usbhost";
-> -		#address-cells =3D <1>;
-> -		#size-cells =3D <1>;
-> -		ranges;
-> -
-> -		usbphy-sys {
-> -			reg =3D <0x10040704 0x8>,
-> -			      <0x10050230 0x4>;
-> -		};
-> -	};
-> -
->  	usb2_phy_gen: phy@12130000 {
->  		compatible =3D "samsung,exynos5250-usb2-phy";
->  		reg =3D <0x12130000 0x100>;
-
-I've stumbled over the same duplication in the .dtsi, LGTM,
-
-Reviewed-by: Andreas F=E4rber <afaerber@suse.de>
+Thanks for the resend. Applied to clk-next.
 
 Regards,
-Andreas
+Mike
 
---=20
-SUSE LINUX Products GmbH, Maxfeldstr. 5, 90409 N=FCrnberg, Germany
-GF: Jeff Hawn, Jennifer Guild, Felix Imend=F6rffer; HRB 16746 AG N=FCrn=
-berg
+> 
+> Changes since v1:
+> - binding documentation and driver has been separated based on Nishanth Menon's
+>   comment
+> 
+> v2 of the series:
+> https://lkml.org/lkml/2014/5/6/323
+> 
+> v1 of the driver can be found:
+> https://lkml.org/lkml/2014/4/3/104
+> 
+> Palmas class of devices can provide 32K clock(s) to be used by other devices
+> on the board. Depending on the actual device the provided clocks can be:
+> CLK32K_KG and CLK32K_KGAUDIO
+> or only one:
+> CLK32K_KG (TPS659039 for example)
+> 
+> Use separate compatible flags for the two 32K clock.
+> A system which needs or have only one of the 32k clock from
+> Palmas will need to add node(s) for each clock as separate section
+> in the dts file.
+> The two compatible property is:
+> "ti,palmas-clk32kg" for clk32kg clock
+> "ti,palmas-clk32kgaudio" for clk32kgaudio clock
+> 
+> Apart from the register control of the clocks - which is done via
+> the clock API there is a posibility to enable the external sleep
+> control. In this way the clock can be enabled/disabled on demand by the
+> user of the clock.
+> 
+> Regards,
+> Peter
+> ---
+> Peter Ujfalusi (2):
+>   dt/bindings: Binding documentation for Palmas clk32kg and clk32kgaudio
+>     clocks
+>   clk: Add driver for Palmas clk32kg and clk32kgaudio clocks
+> 
+>  .../bindings/clock/clk-palmas-clk32kg-clocks.txt   |  35 +++
+>  drivers/clk/Kconfig                                |   7 +
+>  drivers/clk/Makefile                               |   1 +
+>  drivers/clk/clk-palmas.c                           | 307 +++++++++++++++++++++
+>  include/dt-bindings/mfd/palmas.h                   |  18 ++
+>  5 files changed, 368 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/clk-palmas-clk32kg-clocks.txt
+>  create mode 100644 drivers/clk/clk-palmas.c
+>  create mode 100644 include/dt-bindings/mfd/palmas.h
+> 
+> -- 
+> 2.0.0
+> 
