@@ -1,279 +1,66 @@
 From: Zhou Wang <wangzhou.bry@gmail.com>
 Subject: Re: [PATCH 2/3] mtd: hisilicon: add a new nand controller driver
  for hisilicon hip04 Soc
-Date: Wed, 02 Jul 2014 10:09:43 +0800
-Message-ID: <53B369E7.7050202@gmail.com>
-References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com> <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com> <53B131AF.2040501@ti.com>
+Date: Wed, 02 Jul 2014 10:12:21 +0800
+Message-ID: <53B36A85.2010104@gmail.com>
+References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com>
+ <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com>
+ <6920327.DpBe6vKVPa@wuerfel>
+ <C3050A4DBA34F345975765E43127F10F2C15561F@SZXEMA512-MBX.china.huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8;
-	format=flowed
-Content-Transfer-Encoding: QUOTED-PRINTABLE
-Return-path: <linux-doc-owner@vger.kernel.org>
-In-Reply-To: <53B131AF.2040501@ti.com>
-Sender: linux-doc-owner@vger.kernel.org
-To: Ivan Khoronzhuk <ivan.khoronzhuk@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Russell King <linux@arm.linux.org.uk>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Grant Likely <grant.likely@linaro.org>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Pekon Gupta <pekon@ti.com>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, Alexander Shiyan <shc_work@mail.ru>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, Joern Engel <joern@logfs.org>, Randy Dunlap <rdunlap@infradead.org>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, wangzhou1@hisilicon.com, caizhiyong@huawei.com
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <C3050A4DBA34F345975765E43127F10F2C15561F@SZXEMA512-MBX.china.huawei.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Caizhiyong <caizhiyong@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Jussi Kivilinna <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Pawel Moll <pawel.moll@arm.com>, Alexander Shiyan <shc_work@mail.ru>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, Quyaxin <quyaxin@hisilicon.com>, Grant Likely <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Arnd Bergmann <arnd@arndb.de>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Joern Engel <joern@logfs.org>, Rob Herring <robh+dt@kernel.org>, Pekon Gupta <pekon@ti.com>, "Wanli (welly)" <welly.wan@hisilicon.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2014=E5=B9=B406=E6=9C=8830=E6=97=A5 17:45, Ivan Khoronzhuk wrote:
->
-> On 06/30/2014 11:03 AM, Zhou Wang wrote:
->> Signed-off-by: Zhou Wang <wangzhou.bry@gmail.com>
->> ---
->>   drivers/mtd/nand/Kconfig     |    5 +
->>   drivers/mtd/nand/Makefile    |    1 +
->>   drivers/mtd/nand/hisi_nand.c |  847
->> ++++++++++++++++++++++++++++++++++++++++++
->>   3 files changed, 853 insertions(+)
->>   create mode 100644 drivers/mtd/nand/hisi_nand.c
->>
->> diff --git a/drivers/mtd/nand/Kconfig b/drivers/mtd/nand/Kconfig
->> index 90ff447..253f8c8 100644
->> --- a/drivers/mtd/nand/Kconfig
->> +++ b/drivers/mtd/nand/Kconfig
->> @@ -510,4 +510,9 @@ config MTD_NAND_XWAY
->>         Enables support for NAND Flash chips on Lantiq XWAY SoCs. NA=
-ND
->> is attached
->>         to the External Bus Unit (EBU).
->> +config MTD_NAND_HISI
->> +    tristate "Support for NAND controller on Hisilicon SoC"
->> +    help
->> +      Enables support for NAND controller on Hisilicon SoC.
->> +
->>   endif # MTD_NAND
->> diff --git a/drivers/mtd/nand/Makefile b/drivers/mtd/nand/Makefile
->> index 542b568..d0881cf 100644
->> --- a/drivers/mtd/nand/Makefile
->> +++ b/drivers/mtd/nand/Makefile
->> @@ -49,5 +49,6 @@ obj-$(CONFIG_MTD_NAND_JZ4740)        +=3D jz4740_n=
-and.o
->>   obj-$(CONFIG_MTD_NAND_GPMI_NAND)    +=3D gpmi-nand/
->>   obj-$(CONFIG_MTD_NAND_XWAY)        +=3D xway_nand.o
->>   obj-$(CONFIG_MTD_NAND_BCM47XXNFLASH)    +=3D bcm47xxnflash/
->> +obj-$(CONFIG_MTD_NAND_HISI)            +=3D hisi_nand.o
->>   nand-objs :=3D nand_base.o nand_bbt.o
->> diff --git a/drivers/mtd/nand/hisi_nand.c b/drivers/mtd/nand/hisi_na=
-nd.c
->> new file mode 100644
->> index 0000000..fbcb065
->> --- /dev/null
->> +++ b/drivers/mtd/nand/hisi_nand.c
->> @@ -0,0 +1,847 @@
->> +/*
->> + * Hisilicon NAND Flash controller driver
->> + *
->> + * Copyright =C2=A9 2012-2014 HiSilicon Technologies Co., Ltd.
->> + *              http://www.hisilicon.com
->> + *
->> + * Author: Zhou Wang <wangzhou.bry@gmail.com>
->> + * The initial developer of the original code is Zhiyong Cai
->> + * <caizhiyong@huawei.com>
->> + *
->> + * This program is free software; you can redistribute it and/or mo=
-dify
->> + * it under the terms of the GNU General Public License as publishe=
-d by
->> + * the Free Software Foundation; either version 2 of the License, o=
-r
->> + * (at your option) any later version.
->> + *
->> + * This program is distributed in the hope that it will be useful,
->> + * but WITHOUT ANY WARRANTY; without even the implied warranty of
->> + * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
->> + * GNU General Public License for more details.
->> + */
->> +#include <linux/of.h>
->> +#include <linux/of_mtd.h>
->> +#include <linux/mtd/mtd.h>
->> +#include <linux/sizes.h>
->> +#include <linux/clk.h>
->> +#include <linux/slab.h>
->> +#include <linux/module.h>
->> +#include <linux/delay.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/mtd/nand.h>
->> +#include <linux/dma-mapping.h>
->> +#include <linux/platform_device.h>
->> +#include <linux/mtd/partitions.h>
->> +
->> +#define HINFC504_MAX_CHIP                               (4)
->> +#define HINFC504_W_LATCH                                (5)
->> +#define HINFC504_R_LATCH                                (7)
->> +#define HINFC504_RW_LATCH                               (3)
->> +
->> +#define HINFC504_NFC_TIMEOUT                (2 * HZ)
->> +#define HINFC504_NFC_DMA_TIMEOUT            (5 * HZ)
->> +#define HINFC504_CHIP_DELAY                (25)
->> +
->> +#define HINFC504_REG_BASE_ADDRESS_LEN            (0x100)
->> +#define HINFC504_BUFFER_BASE_ADDRESS_LEN        (2048 + 128)
->> +
->> +#define HINFC504_ADDR_CYCLE_MASK            0x4
->> +
->> +#define HINFC504_CON                    0x00
->> +#define HINFC504_CON_OP_MODE_NORMAL            (1U << 0)
->> +#define HINFC504_CON_PAGEISZE_SHIFT            (1)
->> +#define HINFC504_CON_PAGESIZE_MASK            (0x07)
->> +#define HINFC504_CON_BUS_WIDTH                (1U << 4)
->> +#define HINFC504_CON_READY_BUSY_SEL            (1U << 8)
->> +#define HINFC504_CON_ECCTYPE_SHIFT            (9)
->> +#define HINFC504_CON_ECCTYPE_MASK            (0x07)
->> +
->> +#define HINFC504_PWIDTH                    0x04
->> +#define SET_HINFC504_PWIDTH(_w_lcnt, _r_lcnt, _rw_hcnt) \
->> +    ((_w_lcnt) | (((_r_lcnt) & 0x0F) << 4) | (((_rw_hcnt) & 0x0F) <=
-< 8))
->> +
->> +#define HINFC504_CMD                    0x0C
->> +#define HINFC504_ADDRL                    0x10
->> +#define HINFC504_ADDRH                    0x14
->> +#define HINFC504_DATA_NUM                0x18
->> +
->> +#define HINFC504_OP                    0x1C
->> +#define HINFC504_OP_READ_DATA_EN            (1U << 1)
->> +#define HINFC504_OP_WAIT_READY_EN            (1U << 2)
->> +#define HINFC504_OP_CMD2_EN                (1U << 3)
->> +#define HINFC504_OP_WRITE_DATA_EN            (1U << 4)
->> +#define HINFC504_OP_ADDR_EN                (1U << 5)
->> +#define HINFC504_OP_CMD1_EN                (1U << 6)
->> +#define HINFC504_OP_NF_CS_SHIFT                (7)
->> +#define HINFC504_OP_NF_CS_MASK                (3)
->> +#define HINFC504_OP_ADDR_CYCLE_SHIFT            (9)
->> +#define HINFC504_OP_ADDR_CYCLE_MASK            (7)
->> +
->> +#define HINFC504_STATUS                    0x20
->> +#define HINFC504_READY                    (1U << 0)
->> +
->> +#define HINFC504_INTEN                    0x24
->> +#define HINFC504_INTEN_DMA                (1U << 9)
->> +#define HINFC504_INTEN_UE                (1U << 6)
->> +#define HINFC504_INTEN_CE                (1U << 5)
->> +
->> +#define HINFC504_INTS                    0x28
->> +#define HINFC504_INTS_DMA                (1U << 9)
->> +#define HINFC504_INTS_UE                (1U << 6)
->> +#define HINFC504_INTS_CE                (1U << 5)
->> +
->> +#define HINFC504_INTCLR                    0x2C
->> +#define HINFC504_INTCLR_DMA                (1U << 9)
->> +#define HINFC504_INTCLR_UE                (1U << 6)
->> +#define HINFC504_INTCLR_CE                (1U << 5)
->> +
->> +#define HINFC504_ECC_STATUS                             0x5C
->> +#define HINFC504_ECC_1_BIT_SHIFT                        16
->> +#define HINFC504_ECC_16_BIT_SHIFT                       12
->> +
->> +#define HINFC504_DMA_CTRL                0x60
->> +#define HINFC504_DMA_CTRL_DMA_START            (1U << 0)
->> +#define HINFC504_DMA_CTRL_WE                (1U << 1)
->> +#define HINFC504_DMA_CTRL_DATA_AREA_EN            (1U << 2)
->> +#define HINFC504_DMA_CTRL_OOB_AREA_EN            (1U << 3)
->> +#define HINFC504_DMA_CTRL_BURST4_EN            (1U << 4)
->> +#define HINFC504_DMA_CTRL_BURST8_EN            (1U << 5)
->> +#define HINFC504_DMA_CTRL_BURST16_EN            (1U << 6)
->> +#define HINFC504_DMA_CTRL_ADDR_NUM_SHIFT        (7)
->> +#define HINFC504_DMA_CTRL_ADDR_NUM_MASK            (1)
->> +#define HINFC504_DMA_CTRL_CS_SHIFT            (8)
->> +#define HINFC504_DMA_CTRL_CS_MASK            (0x03)
->> +
->> +#define HINFC504_DMA_ADDR_DATA                0x64
->> +#define HINFC504_DMA_ADDR_OOB                0x68
->> +
->> +#define HINFC504_DMA_LEN                0x6C
->> +#define HINFC504_DMA_LEN_OOB_SHIFT            (16)
->> +#define HINFC504_DMA_LEN_OOB_MASK            (0xFFF)
->> +
->> +#define HINFC504_DMA_PARA                0x70
->> +#define HINFC504_DMA_PARA_DATA_RW_EN            (1U << 0)
->> +#define HINFC504_DMA_PARA_OOB_RW_EN            (1U << 1)
->> +#define HINFC504_DMA_PARA_DATA_EDC_EN            (1U << 2)
->> +#define HINFC504_DMA_PARA_OOB_EDC_EN            (1U << 3)
->> +#define HINFC504_DMA_PARA_DATA_ECC_EN            (1U << 4)
->> +#define HINFC504_DMA_PARA_OOB_ECC_EN            (1U << 5)
->> +
->> +#define HINFC_VERSION                                   0x74
->> +#define HINFC504_LOG_READ_ADDR                0x7C
->> +#define HINFC504_LOG_READ_LEN                0x80
->> +
->> +#define HINFC504_NANDINFO_LEN                0x10
->> +
->> +#define hinfc_read(_host, _reg)    readl(_host->iobase + (_reg))
->> +#define hinfc_write(_host, _value, _reg)\
->> +    writel((_value), _host->iobase + (_reg))
->> +
->> +struct hinfc_host {
->> +    struct nand_chip    *chip;
->> +    struct mtd_info        *mtd;
->> +    struct device        *dev;
->> +    void __iomem        *iobase;
->> +    struct completion       cmd_complete;
->> +    unsigned int        offset;
->> +    unsigned int        command;
->> +    int            chipselect;
->> +    unsigned int        addr_cycle;
->> +    unsigned int        addr_value[2];
->> +    unsigned int        cache_addr_value[2];
->> +    char            *buffer;
->> +    dma_addr_t        dma_buffer;
->> +    dma_addr_t        dma_oob;
->> +    int            version;
->> +    unsigned int            ecc_bits;
->> +    unsigned int            irq_status; /* interrupt status */
->> +
->> +    int (*send_cmd_pageprog)(struct hinfc_host *host);
->> +    int (*send_cmd_status)(struct hinfc_host *host);
->> +    int (*send_cmd_readstart)(struct hinfc_host *host);
->> +    int (*send_cmd_erase)(struct hinfc_host *host);
->> +    int (*send_cmd_readid)(struct hinfc_host *host);
->> +    int (*send_cmd_reset)(struct hinfc_host *host, int chipselect);
->> +};
->> +
->> +void wait_controller_finished(struct hinfc_host *host)
->> +{
->> +    unsigned long timeout =3D jiffies + HINFC504_NFC_TIMEOUT;
->> +    int val;
->> +
->> +    while (time_before(jiffies, timeout)) {
->> +        val =3D hinfc_read(host, HINFC504_STATUS);
->> +        if (host->command =3D=3D NAND_CMD_ERASE2) {
->> +            /* nfc is ready */
->> +            while (!(val & HINFC504_READY))    {
->> +                usleep_range(500, 1000);
->> +                val =3D hinfc_read(host, HINFC504_STATUS);
->> +            }
->> +            return;
->> +        } else {
->> +            if (val & HINFC504_READY)
->> +                return;
->> +        }
->> +    }
->> +
->> +    /* wait cmd timeout */
->> +    dev_err(host->dev, "Wait NAND controller exec cmd timeout.\n");
->> +}
->> +
->> +static void hisi_nfc_dma_transfer(struct hinfc_host *host, int tode=
-v)
->> +{
->> +    struct mtd_info    *mtd =3D host->mtd;
->> +    struct nand_chip *chip =3D mtd->priv;
->> +    unsigned long val;
->> +    int ret;
->> +
->> +    hinfc_write(host, host->dma_buffer, HINFC504_DMA_ADDR_DATA);
->> +    hinfc_write(host, host->dma_oob, HINFC504_DMA_ADDR_OOB);
->> +
->> +    if (chip->ecc.mode =3D=3D NAND_ECC_NONE) {
->> +        hinfc_write(host, ((mtd->oobsize & HINFC504_DMA_LEN_OOB_MAS=
-K)
->> +            << HINFC504_DMA_LEN_OOB_SHIFT), HINFC504_DMA_LEN);
->> +
->> +        hinfc_write(host, HINFC504_DMA_PARA_DATA_RW_EN
->> +            | HINFC504_DMA_PARA_OOB_RW_EN, HINFC504_DMA_PARA);
->> +    } else
->
-> Add {} for else also
-> ./scripts/checkpatch.pl.
->
-ok, I will add them, thanks.
+T24gMjAxNOW5tDA25pyIMzDml6UgMTc6NTksIENhaXpoaXlvbmcgd3JvdGU6Cj4+IC0tLS0tT3Jp
+Z2luYWwgTWVzc2FnZS0tLS0tCj4+IEZyb206IEFybmQgQmVyZ21hbm4gW21haWx0bzphcm5kQGFy
+bmRiLmRlXQo+PiBTZW50OiBNb25kYXksIEp1bmUgMzAsIDIwMTQgNTowMSBQTQo+PiBUbzogbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCj4+IENjOiBaaG91IFdhbmc7IFJvYiBI
+ZXJyaW5nOyBQYXdlbCBNb2xsOyBNYXJrIFJ1dGxhbmQ7IElhbiBDYW1wYmVsbDsgS3VtYXIKPj4g
+R2FsYTsgUnVzc2VsbCBLaW5nOyBEYXZpZCBXb29kaG91c2U7IEJyaWFuIE5vcnJpczsgR3JhbnQg
+TGlrZWx5OyBFemVxdWllbAo+PiBHYXJjaWE7IFBla29uIEd1cHRhOyBBcnRlbSBCaXR5dXRza2l5
+OyBBbGV4YW5kZXIgU2hpeWFuOyBJdmFuIEtob3JvbnpodWs7Cj4+IEp1c3NpIEtpdmlsaW5uYTsg
+Sm9lcm4gRW5nZWw7IFJhbmR5IER1bmxhcDsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7Cj4+
+IGxpbnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1kb2NAdmdlci5rZXJuZWwub3Jn
+Owo+PiBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBDYWl6aGl5b25nOyBXYW5nemhvdSAo
+QikKPj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIG10ZDogaGlzaWxpY29uOiBhZGQgYSBuZXcg
+bmFuZCBjb250cm9sbGVyIGRyaXZlciBmb3IKPj4gaGlzaWxpY29uIGhpcDA0IFNvYwo+Pgo+Pgo+
+Pj4gKwlzdHJ1Y3QgZGV2aWNlCQkqZGV2Owo+Pj4gKwl2b2lkIF9faW9tZW0JCSppb2Jhc2U7Cj4+
+PiArCXN0cnVjdCBjb21wbGV0aW9uICAgICAgIGNtZF9jb21wbGV0ZTsKPj4+ICsJdW5zaWduZWQg
+aW50CQlvZmZzZXQ7Cj4+PiArCXVuc2lnbmVkIGludAkJY29tbWFuZDsKPj4+ICsJaW50CQkJY2hp
+cHNlbGVjdDsKPj4+ICsJdW5zaWduZWQgaW50CQlhZGRyX2N5Y2xlOwo+Pj4gKwl1bnNpZ25lZCBp
+bnQJCWFkZHJfdmFsdWVbMl07Cj4+PiArCXVuc2lnbmVkIGludAkJY2FjaGVfYWRkcl92YWx1ZVsy
+XTsKPj4+ICsJY2hhcgkJCSpidWZmZXI7Cj4+PiArCWRtYV9hZGRyX3QJCWRtYV9idWZmZXI7Cj4+
+PiArCWRtYV9hZGRyX3QJCWRtYV9vb2I7Cj4+PiArCWludAkJCXZlcnNpb247Cj4+PiArCXVuc2ln
+bmVkIGludCAgICAgICAgICAgIGVjY19iaXRzOwo+Pj4gKwl1bnNpZ25lZCBpbnQgICAgICAgICAg
+ICBpcnFfc3RhdHVzOyAvKiBpbnRlcnJ1cHQgc3RhdHVzICovCj4+PiArCj4+PiArCWludCAoKnNl
+bmRfY21kX3BhZ2Vwcm9nKShzdHJ1Y3QgaGluZmNfaG9zdCAqaG9zdCk7Cj4+PiArCWludCAoKnNl
+bmRfY21kX3N0YXR1cykoc3RydWN0IGhpbmZjX2hvc3QgKmhvc3QpOwo+Pj4gKwlpbnQgKCpzZW5k
+X2NtZF9yZWFkc3RhcnQpKHN0cnVjdCBoaW5mY19ob3N0ICpob3N0KTsKPj4+ICsJaW50ICgqc2Vu
+ZF9jbWRfZXJhc2UpKHN0cnVjdCBoaW5mY19ob3N0ICpob3N0KTsKPj4+ICsJaW50ICgqc2VuZF9j
+bWRfcmVhZGlkKShzdHJ1Y3QgaGluZmNfaG9zdCAqaG9zdCk7Cj4+PiArCWludCAoKnNlbmRfY21k
+X3Jlc2V0KShzdHJ1Y3QgaGluZmNfaG9zdCAqaG9zdCwgaW50IGNoaXBzZWxlY3QpOwo+Pj4gK307
+Cj4+Cj4+IFdoeSBkbyB5b3UgbmVlZCBmdW5jdGlvbiBwb2ludGVycyBoZXJlPyBUaGUgY3VycmVu
+dCB2ZXJzaW9uIG9mIHRoZQo+PiBkcml2ZXIgeW91IHBvc3RlZCBhbHdheXMgYXNzaWducyB0aGVz
+ZSB0byB0aGUgc2FtZSBmdW5jdGlvbnMsIHNvCj4+IGl0IHdvdWxkIGJlIG1vcmUgZWZmaWNpZW50
+IHRvIGp1c3QgY2FsbCB0aG9zZSBkaXJlY3RseS4KPj4KPgo+IEkgYWdyZWUgd2l0aCB5b3UuCj4g
+VGhpcyBmZWF0dXJlIHdhcyBvcmlnaW5hbGx5IGRlc2lnbmVkIHRvIHN1cHBvcnQgYSB2YXJpZXR5
+IHZlcnNpb24gb2YgTkFORCBjb250cm9sbGVycy4KPiBCdXQgaW4gZmFjdCwgdGhpcyBmZWF0dXJl
+IGlzIG5vdCB1c2VkIG5vdy4KPgpJIHdpbGwgbW92ZSB0aGVtIG91dCB0aGUgaG9zdCwgdGhhbmtz
+IGZvciB5b3VyIG9waW5pb24hCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
