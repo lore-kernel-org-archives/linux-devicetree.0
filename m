@@ -1,80 +1,47 @@
-From: Zhou Wang <wangzhou.bry@gmail.com>
-Subject: Re: [PATCH 2/3] mtd: hisilicon: add a new nand controller driver
- for hisilicon hip04 Soc
-Date: Wed, 02 Jul 2014 10:15:43 +0800
-Message-ID: <53B36B4F.90505@gmail.com>
-References: <1404115409-20200-1-git-send-email-wangzhou.bry@gmail.com>
- <1404115409-20200-3-git-send-email-wangzhou.bry@gmail.com>
- <20140630100025.GA7262@leverpostej>
+From: Rongjun Ying <rongjun.ying@csr.com>
+Subject: [PATCH v2 0/2] ASoC: add CSR SiRFSoC audio USP
+	interface driver
+Date: Wed, 2 Jul 2014 10:45:40 +0800
+Message-ID: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20140630100025.GA7262@leverpostej>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mark Rutland <mark.rutland@arm.com>
-Cc: Jussi Kivilinna <jussi.kivilinna@iki.fi>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, Artem Bityutskiy <artem.bityutskiy@linux.intel.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, Russell King <linux@arm.linux.org.uk>, Alexander Shiyan <shc_work@mail.ru>, Ezequiel Garcia <ezequiel.garcia@free-electrons.com>, "grant.likely@linaro.org" <grant.likely@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Pawel Moll <Pawel.Moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Joern Engel <joern@logfs.org>, Rob Herring <robh+dt@kernel.org>, Pekon Gupta <pekon@ti.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Randy Dunlap <rdunlap@infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "wangzhou1@hisilicon.com" <wangzhou1@hisilicon.com>, Kumar Gala <galak>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.de>, Barry Song <baohua@kernel.org>, Grant Likely <grant.likely@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Workgroup.linux@csr.com
+Cc: Rongjun Ying <rongjun.ying@csr.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxNOW5tDA25pyIMzDml6UgMTg6MDAsIE1hcmsgUnV0bGFuZCB3cm90ZToKPiBPbiBNb24s
-IEp1biAzMCwgMjAxNCBhdCAwOTowMzoyOEFNICswMTAwLCBaaG91IFdhbmcgd3JvdGU6Cj4+IFNp
-Z25lZC1vZmYtYnk6IFpob3UgV2FuZyA8d2FuZ3pob3UuYnJ5QGdtYWlsLmNvbT4KPj4gLS0tCj4+
-ICAgZHJpdmVycy9tdGQvbmFuZC9LY29uZmlnICAgICB8ICAgIDUgKwo+PiAgIGRyaXZlcnMvbXRk
-L25hbmQvTWFrZWZpbGUgICAgfCAgICAxICsKPj4gICBkcml2ZXJzL210ZC9uYW5kL2hpc2lfbmFu
-ZC5jIHwgIDg0NyArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysKPj4g
-ICAzIGZpbGVzIGNoYW5nZWQsIDg1MyBpbnNlcnRpb25zKCspCj4+ICAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IGRyaXZlcnMvbXRkL25hbmQvaGlzaV9uYW5kLmMKPgo+IFsuLi5dCj4KPj4gK3N0cnVjdCBo
-aW5mY19ob3N0IHsKPj4gKyAgICAgICBzdHJ1Y3QgbmFuZF9jaGlwICAgICAgICAqY2hpcDsKPj4g
-KyAgICAgICBzdHJ1Y3QgbXRkX2luZm8gICAgICAgICAqbXRkOwo+PiArICAgICAgIHN0cnVjdCBk
-ZXZpY2UgICAgICAgICAgICpkZXY7Cj4+ICsgICAgICAgdm9pZCBfX2lvbWVtICAgICAgICAgICAg
-KmlvYmFzZTsKPj4gKyAgICAgICBzdHJ1Y3QgY29tcGxldGlvbiAgICAgICBjbWRfY29tcGxldGU7
-Cj4+ICsgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgb2Zmc2V0Owo+PiArICAgICAgIHVu
-c2lnbmVkIGludCAgICAgICAgICAgIGNvbW1hbmQ7Cj4+ICsgICAgICAgaW50ICAgICAgICAgICAg
-ICAgICAgICAgY2hpcHNlbGVjdDsKPj4gKyAgICAgICB1bnNpZ25lZCBpbnQgICAgICAgICAgICBh
-ZGRyX2N5Y2xlOwo+PiArICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgIGFkZHJfdmFsdWVb
-Ml07Cj4+ICsgICAgICAgdW5zaWduZWQgaW50ICAgICAgICAgICAgY2FjaGVfYWRkcl92YWx1ZVsy
-XTsKPj4gKyAgICAgICBjaGFyICAgICAgICAgICAgICAgICAgICAqYnVmZmVyOwo+PiArICAgICAg
-IGRtYV9hZGRyX3QgICAgICAgICAgICAgIGRtYV9idWZmZXI7Cj4+ICsgICAgICAgZG1hX2FkZHJf
-dCAgICAgICAgICAgICAgZG1hX29vYjsKPj4gKyAgICAgICBpbnQgICAgICAgICAgICAgICAgICAg
-ICB2ZXJzaW9uOwo+PiArICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgIGVjY19iaXRzOwo+
-PiArICAgICAgIHVuc2lnbmVkIGludCAgICAgICAgICAgIGlycV9zdGF0dXM7IC8qIGludGVycnVw
-dCBzdGF0dXMgKi8KPj4gKwo+PiArICAgICAgIGludCAoKnNlbmRfY21kX3BhZ2Vwcm9nKShzdHJ1
-Y3QgaGluZmNfaG9zdCAqaG9zdCk7Cj4+ICsgICAgICAgaW50ICgqc2VuZF9jbWRfc3RhdHVzKShz
-dHJ1Y3QgaGluZmNfaG9zdCAqaG9zdCk7Cj4+ICsgICAgICAgaW50ICgqc2VuZF9jbWRfcmVhZHN0
-YXJ0KShzdHJ1Y3QgaGluZmNfaG9zdCAqaG9zdCk7Cj4+ICsgICAgICAgaW50ICgqc2VuZF9jbWRf
-ZXJhc2UpKHN0cnVjdCBoaW5mY19ob3N0ICpob3N0KTsKPj4gKyAgICAgICBpbnQgKCpzZW5kX2Nt
-ZF9yZWFkaWQpKHN0cnVjdCBoaW5mY19ob3N0ICpob3N0KTsKPj4gKyAgICAgICBpbnQgKCpzZW5k
-X2NtZF9yZXNldCkoc3RydWN0IGhpbmZjX2hvc3QgKmhvc3QsIGludCBjaGlwc2VsZWN0KTsKPj4g
-K307Cj4KPiBbLi4uXQo+Cj4+ICtzdGF0aWMgaW50IGhpc2lfbmZjX3Byb2JlKHN0cnVjdCBwbGF0
-Zm9ybV9kZXZpY2UgKnBkZXYpCj4+ICt7Cj4+ICsgICAgICAgaW50IHJldCA9IDAsIGlycSwgYnVz
-d2lkdGgsIGZsYWcsIG1heF9jaGlwcyA9IEhJTkZDNTA0X01BWF9DSElQOwo+PiArICAgICAgIHN0
-cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7Cj4+ICsgICAgICAgc3RydWN0IGhpbmZjX2hv
-c3QgKmhvc3Q7Cj4+ICsgICAgICAgc3RydWN0IG5hbmRfY2hpcCAgKmNoaXA7Cj4+ICsgICAgICAg
-c3RydWN0IG10ZF9pbmZvICAgKm10ZDsKPj4gKyAgICAgICBzdHJ1Y3QgcmVzb3VyY2UgICAqcmVz
-Owo+PiArICAgICAgIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbnAgPSBkZXYtPm9mX25vZGU7Cj4+ICsg
-ICAgICAgc3RydWN0IG10ZF9wYXJ0X3BhcnNlcl9kYXRhIHBwZGF0YTsKPj4gKwo+PiArICAgICAg
-IGhvc3QgPSBkZXZtX2t6YWxsb2MoZGV2LCBzaXplb2YoKmhvc3QpICsgc2l6ZW9mKCpjaGlwKSAr
-IHNpemVvZigqbXRkKSwKPj4gKyAgICAgICAgICAgICAgICAgICAgICAgR0ZQX0tFUk5FTCk7Cj4+
-ICsgICAgICAgaWYgKCFob3N0KQo+PiArICAgICAgICAgICAgICAgcmV0dXJuIC1FTk9NRU07Cj4+
-ICsgICAgICAgaG9zdC0+ZGV2ID0gZGV2Owo+PiArCj4+ICsgICAgICAgcGxhdGZvcm1fc2V0X2Ry
-dmRhdGEocGRldiwgaG9zdCk7Cj4+ICsgICAgICAgY2hpcCA9IChzdHJ1Y3QgbmFuZF9jaGlwICop
-Jmhvc3RbMV07Cj4+ICsgICAgICAgbXRkICA9IChzdHJ1Y3QgbXRkX2luZm8gKikmY2hpcFsxXTsK
-Pgo+IFdoeSBub3QgZW1iZWQgdGhlIHdob2xlIHN0cnVjdCByYXRoZXIgdGhhbiBwb2ludGVycz8g
-VGhlbiB5b3UgY2FuCj4gYWxsb2NhdGUganVzdCB0aGUgaG9zdCBhbmQgZXh0cmFjdCBwb2ludGVy
-cyB0byB0aGUgY2hpcCBhbmQgbXRkIHN1Ygo+IHN0cnVjdHVyZXMuCj4KPiBUaGFua3MsCj4gTWFy
-ay4KPgoKSSB3aWxsIGNoYW5nZSB0aGlzIGFzIHlvdXIgY29tbWVudCwgdGhhbmtzLgoKPiBfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxpbnV4LWFybS1r
-ZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Cj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0t
-a2VybmVsCj4KCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+This patchset adds the SiRF USP controller driver, this
+driver uses the USP as I2S or DSP_A mode interface.
+
+Rongjun Ying (2):
+  ASoC: sirf: Add audio usp interface driver
+  ASoC: sirf: Add device tree binding for the USP audio device
+
+ .../devicetree/bindings/sound/sirf-usp.txt         |  27 ++
+ sound/soc/sirf/Kconfig                             |   6 +
+ sound/soc/sirf/Makefile                            |   2 +
+ sound/soc/sirf/sirf-usp.c                          | 415 +++++++++++++++++++++
+ sound/soc/sirf/sirf-usp.h                          | 293 +++++++++++++++
+ 5 files changed, 743 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/sirf-usp.txt
+ create mode 100644 sound/soc/sirf/sirf-usp.c
+ create mode 100644 sound/soc/sirf/sirf-usp.h
+
+-- 
+1.9.3
+
+
+
+Member of the CSR plc group of companies. CSR plc registered in England and Wales, registered number 4187346, registered office Churchill House, Cambridge Business Park, Cowley Road, Cambridge, CB4 0WZ, United Kingdom
+More information can be found at www.csr.com. Keep up to date with CSR on our technical blog, www.csr.com/blog, CSR people blog, www.csr.com/people, YouTube, www.youtube.com/user/CSRplc, Facebook, www.facebook.com/pages/CSR/191038434253534, or follow us on Twitter at www.twitter.com/CSR_plc.
+New for 2014, you can now access the wide range of products powered by aptX at www.aptx.com.
