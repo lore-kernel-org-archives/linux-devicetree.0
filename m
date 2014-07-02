@@ -1,54 +1,86 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Wed, 2 Jul 2014 09:42:55 +0530
-Message-ID: <CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH v4] clk: qcom: Add support for IPQ8064's global clock
+ controller (GCC)
+Date: Tue, 01 Jul 2014 21:20:57 -0700
+Message-ID: <20140702042057.23338.96243@quantum>
+References: <1403034411-13781-1-git-send-email-galak@codeaurora.org>
+ <6639D384-040E-498A-8C0B-B3FAF47692ED@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-arm-msm-owner@vger.kernel.org>
-In-Reply-To: <cover.1404231535.git.viresh.kumar@linaro.org>
-Sender: linux-arm-msm-owner@vger.kernel.org
-To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, linux-arm-msm@vger.kernel.org, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, Viresh Kumar <viresh.kumar@linaro.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Mike Turquette <mturquette@linaro.org>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6639D384-040E-498A-8C0B-B3FAF47692ED@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kumar Gala <galak@codeaurora.org>
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, sboyd@codeaurora.org, linux-kernel@vger.kernel.org, agross@codeaurora.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 1 July 2014 22:02, Viresh Kumar <viresh.kumar@linaro.org> wrote:
-> V1: https://lkml.org/lkml/2014/6/25/152
->
-> Stephen Boyd sent few patches some time back around a new cpufreq driver for
-> Qualcomm's Krait SoC: https://lkml.org/lkml/2014/6/24/918.
->
-> Krait couldn't use existing cpufreq-cpu0 driver as it doesn't have support for
-> SoC's with multiple clusters or SoC's which don't share clock line across all
-> CPUs.
->
-> This patchset is all about extending support beyond CPU0. It can be used for
-> platforms like Krait or ARM big LITTLE architecture now.
->
-> First two patches add helper routine for of and clk layer, which would be used
-> by later patches.
->
-> Third one adds space for driver specific data in 'struct cpufreq_policy' and
-> later ones migrate cpufreq-cpu0 to cpufreq-generic, i.e. can be used for SoCs
-> which don't share clock lines across all CPUs.
->
-> @Stephen: I haven't added your Tested-by as there were few modifications since
-> the time you tested it last.
->
-> Pushed here:
-> Rebased over v3.16-rc3:
-> git://git.linaro.org/people/viresh.kumar/linux.git cpufreq/cpu0-krait-v2
+Quoting Kumar Gala (2014-06-30 09:08:33)
+> 
+> On Jun 17, 2014, at 2:46 PM, Kumar Gala <galak@codeaurora.org> wrote:
+> 
+> > Add a driver for the global clock controller found on IPQ8064 based
+> > platforms. This should allow most non-multimedia device drivers to probe
+> > and control their clocks.
+> > 
+> > This is currently missing clocks for USB HSIC and networking devices.
+> > 
+> > Signed-off-by: Kumar Gala <galak@codeaurora.org>
+> > Signed-off-by: Andy Gross <agross@codeaurora.org>
+> > Signed-off-by: Stephen Boyd <sboyd@codeaurora.org>
+> > ---
+> > v4:
+> > * Fix usb utmi freq clk table
+> > * Fix numbering issue in dt-bindings/clock/qcom,gcc-ipq806x.h
+> > 
+> > v3:
+> > * Based on APQ8084 clk patches
+> > * Added USB3 and SATA clks
+> > * Minor clean ups (made hex numbers lowercase)
+> > 
+> > v2:
+> > * dropped audio clock from commit message
+> > * changed Kconfig symbol to IPQ_GCC_806X
+> > * Fixed PXO/CXO clk freq to 25Mhz
+> > 
+> > .../devicetree/bindings/clock/qcom,gcc.txt         |    1 +
+> > drivers/clk/qcom/Kconfig                           |    8 +
+> > drivers/clk/qcom/Makefile                          |    1 +
+> > drivers/clk/qcom/gcc-ipq806x.c                     | 2424 ++++++++++++++++++++
+> > include/dt-bindings/clock/qcom,gcc-ipq806x.h       |  293 +++
+> > include/dt-bindings/reset/qcom,gcc-ipq806x.h       |  132 ++
+> > 6 files changed, 2859 insertions(+)
+> > create mode 100644 drivers/clk/qcom/gcc-ipq806x.c
+> > create mode 100644 include/dt-bindings/clock/qcom,gcc-ipq806x.h
+> > create mode 100644 include/dt-bindings/reset/qcom,gcc-ipq806x.h
+> 
+> Mike,
+> 
+> Any update on pulling this in?
 
-Hi Stephen,
+Looks good to me.
 
-As suggested by you I have updated patch
+What's the story on getting a pull request for qcom clock stuff in the
+future? For more mature clock drivers it is nice for a clock maintainer
+(maybe Stephen in this case, based on patch count in drivers/clk/qcom?)
+to batch up everything. It also helps lazy maintainers like me not have
+to review every line of code for the non-controversial stuff.
 
-7/14: cpufreq: cpu0: OPPs can be populated at runtime
-12/14: cpufreq: cpu0: Extend support beyond CPU0
+Regards,
+Mike
 
-and dropped
-2/14: clk: Create of_clk_shared_by_cpus()
-
-Please see if they look fine and work for you.
-
-git://git.linaro.org/people/viresh.kumar/linux.git cpufreq/cpu0-krait-v3
+> 
+> - k
+> 
+> -- 
+> Employee of Qualcomm Innovation Center, Inc.
+> Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum, hosted by The Linux Foundation
+> 
