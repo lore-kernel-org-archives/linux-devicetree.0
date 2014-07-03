@@ -1,123 +1,92 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] clk: sunxi: fixes, cleanups and A23
- basic clocks
-Date: Thu, 3 Jul 2014 15:37:36 +0800
-Message-ID: <CAGb2v67ceT8X-zmB7ULPg6Kqd8PRpmo0x_Vu9iF4s_6euXg_FQ@mail.gmail.com>
-References: <1403798144-32188-1-git-send-email-wens@csie.org> <20140702223552.7440.60829@quantum>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] ARM: topology: Use a clock if possible to get the
+ CPU frequency
+Date: Thu, 3 Jul 2014 09:51:27 +0200
+Message-ID: <CAKfTPtBonwH0PoEkKazUS9bPaR631Vu7p7qZ0AF1whmXq_53wg@mail.gmail.com>
+References: <1404123143-13041-1-git-send-email-maxime.ripard@free-electrons.com>
+ <1404123143-13041-2-git-send-email-maxime.ripard@free-electrons.com>
+ <20140630102934.GV32514@n2100.arm.linux.org.uk> <CAKfTPtC+XcH122AytyZ=x1JVx9THmxCasJLA3Z1e17X_OmH1xA@mail.gmail.com>
+ <20140630124919.GC28647@lukather> <CAKfTPtCgpc1J888hbqxoaF5UfcUoRwcpokme32WHPpsPAAawUQ@mail.gmail.com>
+ <20140630140146.GD28647@lukather> <CAKfTPtAu+mSVO8dvg_Z6w_nYWndap+FY5VGKeg-0pae_4JqR=A@mail.gmail.com>
+ <20140630145847.GE28647@lukather> <CAKfTPtDvQJ5i=t8FN0gLQex0yAC4NNgewTnGKdiCeGk7nQwZYg@mail.gmail.com>
+ <20140703071016.GB31996@lukather>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBVMQ2SOQKGQENNOJSYI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20140702223552.7440.60829@quantum>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=ISO-8859-1
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <20140703071016.GB31996@lukather>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Cc: Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, LAK <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Nicolas Pitre <nico-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 3, 2014 at 6:35 AM, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org> wrote:
-> Quoting Chen-Yu Tsai (2014-06-26 08:55:38)
->> Hi everyone,
+On 3 July 2014 09:10, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+> On Mon, Jun 30, 2014 at 05:06:16PM +0200, Vincent Guittot wrote:
+>> On 30 June 2014 16:58, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> > On Mon, Jun 30, 2014 at 04:48:35PM +0200, Vincent Guittot wrote:
+>> >> On 30 June 2014 16:01, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org> wrote:
+>> >> > On Mon, Jun 30, 2014 at 03:27:21PM +0200, Vincent Guittot wrote:
+>> >> >> >> >> -             rate = of_get_property(cn, "clock-frequency", &len);
+>> >> >> >> >> -             if (!rate || len != 4) {
+>> >> >> >> >> -                     pr_err("%s missing clock-frequency property\n",
+>> >> >> >> >> -                             cn->full_name);
+>> >> >> >> >> +             clk = of_clk_get(cn, 0);
+>> >> >> >> >> +             if (!IS_ERR(clk))
+>> >> >> >> >> +                     rate = clk_get_rate(clk);
+>> >> >> >>
+>> >> >> >> We need the max frequency as it will be used to weight the different
+>> >> >> >> CPUs capacity. How do you ensure that the current clock rate is the
+>> >> >> >> max one ?
+>> >> >> >
+>> >> >> > Hmm, the clock-frequency attribute in the ePAPR is defined at the
+>> >> >> > current CPU frequency, not the max one.
+>> >> >>
+>> >> >> What means current frequency in device tree when DVFS is involved ?
+>> >> >
+>> >> > The ePAPR states that clock-frequency is supposed to be "the current
+>> >> > clock speed of the CPU in Hertz". It's exactly what my patch add.
+>> >> >
+>> >> > Now, you're right, DVFS would be an issue here with clock-frequency,
+>> >> > but this patch actually makes it easier to deal with, since you only
+>> >> > get a reference to a clock, and you can get its rate at any given
+>> >> > time.
+>> >>
+>> >> and what about using clk_round_rate(clk, ULONG_MAX) ?
+>> >
+>> > Well, the clock itself might generate a frequency higher that what the
+>> > CPU can run at, so I'm not sure it's a valid assumption.
 >>
->> This is v4 of the sun8i clock series, which adds basic clock
->> support for the A23 SoC. It is based on my initial sun8i bring
->> up series [1]. This series was split up from the original A23
->> series [2]. Yet to come are more clocks, reset controllers,
->> prcm, pinctrl, and mmc.
+>> yes, you're right
+>>
+>> >
+>> >> We will not be dependent of when we parse DT
+>> >
+>> > You lost me there. clk_round_rate and clk_get_rate are available at
+>> > the same time in the boot process, aren't they?
+>>
+>> yes, but  clk_round_rate(clk, ULONG_MAX) will return the max frequency
+>> and not the current one. But as you mentioned, it doesn't ensure that
+>> it's a possible frequency for the core
 >
-> Hello Chen-Yu,
+> Is this an Acked-by ?
+
+ I still think that using the current rate with clk_get_rate is not a
+good solution.
+
+Could you give us more details about why you nee to use current clock ?
+
+AFAICT, your patch only makes sense for HMP system which don't have
+DVFS, is it your case ?
+
+Vincent
+
 >
-> This series looks good to me.
-
-Thanks. Assuming no one else raises any issues, I consider this
-series merged. I'll send the next sun8i series later today.
-
-The remaining series still have some clock patches, so thanks
-in advance.
-
-
-Cheers
-ChenYu
-
-
-> Maxime,
+> Maxime
 >
-> I see that you Acked it already. Are you planning to roll this into a
-> pull request later on?
->
-> Regards,
-> Mike
->
->>
->> The first patch fixes the reworked clock protection code merged in
->> 3.16-rc1, which unintentionally made clock gates unprotectable.
->>
->> The second patch moves the remaining "ahb_sdram" clock to the
->> protected clock list, now that it works.
->>
->> The third patch adds support for factor clocks that have an N factor
->> not starting from 0. This is found on some PLLs in A31/A23.
->>
->> The fourth patch adds table-based dividers for div clocks, as some
->> clocks, such as apb0 divider on sun4/5/7i, apb1 on sun6/8i and axi
->> on sun8i.
->>
->> The fifth patch adds support for the basic clocks in the A23, just
->> PLL1 for cpus, and the system bus clocks and gates.
->>
->> The last patch adds the DT nodes for the newly added clocks, and
->> updates clock phandles for existing peripherals, the uarts.
->>
->> Originally I intended for patch 1 to be merged as a fix for 3.16.
->> However, the only user of the affected code, sun6i's "ahb1_sdram"
->> clock, doesn't seem to result in any runtime issues. So this whole
->> series can go into 3.17.
->>
->>
->> Related changes since v3:
->>
->>   - Dropped fields with default values from sun8i_a23_axi_div_data
->>   - Added Maxime's Acked-by
->>   - Fixed incorrect compatible string for axi clock node
->>   - Updated clock phandles for uarts in dtsi
->>
->> Related changes since v2:
->>
->>   - Rewrote factor clocks to support any (0~255) N factor starting value
->>
->> Related changes since v1:
->>
->>   - Added "clk: sunxi: Add support for table-based divider clocks"
->>   - Added table-based divider axi clock
->>   - Fixed incorrectly squashed fixups
->>
->>
->> Cheers
->> ChenYu
->>
->>
->>   [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-June/265211.html
->>   [2] http://lists.infradead.org/pipermail/linux-arm-kernel/2014-May/259097.html
->>
->> Chen-Yu Tsai (6):
->>   clk: sunxi: register clock gates with clkdev
->>   clk: sunxi: move "ahb_sdram" to protected clock list
->>   clk: sunxi: Support factor clocks with N factor starting not from 0
->>   clk: sunxi: Add support for table-based divider clocks
->>   clk: sunxi: Add A23 clocks support
->>   ARM: sun8i: Add basic clock nodes to the DTSI
->>
->>  Documentation/devicetree/bindings/clock/sunxi.txt |   5 +
->>  arch/arm/boot/dts/sun8i-a23.dtsi                  | 125 +++++++++++++++++++++-
->>  drivers/clk/sunxi/clk-factors.c                   |   2 +-
->>  drivers/clk/sunxi/clk-factors.h                   |   1 +
->>  drivers/clk/sunxi/clk-sunxi.c                     | 119 ++++++++++++++++++--
->>  5 files changed, 237 insertions(+), 15 deletions(-)
->>
->> --
->> 2.0.0
->>
+> --
+> Maxime Ripard, Free Electrons
+> Embedded Linux, Kernel and Android engineering
+> http://free-electrons.com
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
