@@ -1,70 +1,105 @@
-From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Subject: Re: [PATCH 0/4] Migrate PXA27x platforms to clock framework
-Date: Fri, 04 Jul 2014 00:14:49 +0200
-Message-ID: <87lhsanl7q.fsf@free.fr>
-References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
-	<7034630.fvV46PN35C@wuerfel> <877g3yp7ie.fsf@free.fr>
-	<CAN1soZyu192Y7z-HJHo+3_bddFcf=H0udgJSWez1=Lmrb5wVfg@mail.gmail.com>
+From: Mike Turquette <mturquette@linaro.org>
+Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
+Date: Thu, 03 Jul 2014 15:16:09 -0700
+Message-ID: <20140703221609.11380.6884@quantum>
+References: <cover.1404231535.git.viresh.kumar@linaro.org>
+ <CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
+ <53B4B0B3.9080000@codeaurora.org>
+ <CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <CAN1soZyu192Y7z-HJHo+3_bddFcf=H0udgJSWez1=Lmrb5wVfg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-	(Haojian Zhuang's message of "Thu, 3 Jul 2014 14:21:14 +0800")
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-pm-owner@vger.kernel.org>
+In-Reply-To: <CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
+Sender: linux-pm-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, linux-arm-msm@vger.kernel.org, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
 List-Id: devicetree@vger.kernel.org
 
-Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
+Quoting Viresh Kumar (2014-07-02 19:44:04)
+> On 3 July 2014 06:54, Stephen Boyd <sboyd@codeaurora.org> wrote:
+> > I gave it a spin. It works so you can have my
+> >
+> > Tested-by: Stephen Boyd <sboyd@codeaurora.org>
+> 
+> Thanks, all suggested improvements are made and pushed again with
+> your Tested-by..
+> 
+> > I'm still concerned about the patch where we figure out if the clocks
+> > are shared. I worry about a configuration where there are different
+> > clocks for on/off (i.e. gates) that are per-cpu but they all source from
+> > the same divider or something that is per-cluster. In DT this may be
+> > described as different clock provider outputs for the gates and in the
+> > cpu node we would have different clock specifiers but in reality all the
+> > CPUs in that cluster are affected by the same frequency scaling.
+> 
+> Yeah, this is probably what matches with Rob's doubt. These can
+> actually be different. Good point.
+> 
+> > In this case we'll need to get help from the clock framework to
+> > determine that those gates clocks don't have any .set_rate() callback so
+> > they can't actually change rate independently, and then walk up the tree
+> > to their parents to see if they have a common ancestor that does change
+> > rates. That's where it becomes useful to have a clock framework API for
+> > this, like clk_shares_rate(struct clk *clk, struct clk *peer) or
+> > something that can hide all this from cpufreq. Here's what I think it
+> > would look like (totally untested/uncompiled):
+> >
+> > static struct clk *find_rate_changer(struct clk *clk)
+> > {
+> >
+> >         if (!clk)
+> >                 return NULL;
+> >
+> >         do {
+> >                 /* Rate could change by changing parents */
+> >                 if (clk->num_parents > 1)
+> >                         return clk;
+> >
+> >                 /* Rate could change by calling clk_set_rate() */
+> >                 if (clk->ops->set_rate)
+> >                         return clk;
+> >
+> >                 /*
+> >                  * This is odd, clk_set_rate() doesn't propagate
+> >                  * and this clock can't change rate or parents
+> >                  * so we must be at the root and the clock we
+> >                  * started at can't change rates. Just return the
+> >                  * root so that we can see if the other clock shares
+> >                  * the same root although CPUfreq should never care.
+> >                  */
+> >                 if (!(clk->flags & CLK_SET_RATE_PARENT))
+> >                         return clk;
+> >         } while ((clk = clk->parent))
+> >
+> >         return NULL;
+> > }
+> >
+> > bool clk_shares_rate(struct clk *clk, struct clk *peer)
+> > {
+> >         struct clk *p1, *p2;
+> >
+> >         p1 = find_rate_changer(clk);
+> >         p2 = find_rate_changer(peer)
+> >
+> >         return p1 == p2;
+> > }
+> 
+> I find it much better then doing what I did initially, simply matching clk_get()
+> outputs. Lets see what Mike has to say..
 
->> Haojian, are you ok with that ? And BTW, does a combined kernel for PXA
->> platforms even exists (mixing pxa3xx and pxa2xx for example) ?
->>
->
-> It's acceptable to me that different silicons are queued in different stages.
-> I only request that it won't break the compiler building & bootup.
-OK.
+Sorry for being dense, but I still do not get why trying to dynamically
+discover a shared rate-changeable clock is a better approach than simply
+describing the hardware in DT?
 
->
-> But I think that the pxa clock driver may be shared among all PXA silicons
-> except for the clock table. What's your opinion?
-I don't think so because of the core clocks.
-These ones are specific to each pxa, and so their computation is :
- - pxa25x plays with CCCR and specific L, M and N2 multiplication tables
- - pxa27x plays with CCCR and specific L, M and N2 multiplication tables
- - pxa3xx plays with ASCR, MEMCLKCFG, and AC97 div
+Is adding a property to the CPU binding that describes how the CPUs in a
+cluster expect to use a clock somehow a non-starter? It is certainly a
+win for readability when staring at DT and trying to understand how DVFS
+on that CPU is meant to work (as opposed to hiding that knowledge behind
+a tree walk).
 
-I don't see very well how a clock table could describe that. Do you have
-something specific in mind ?
+Regards,
+Mike
 
->>> Also (for my understanding) when you say that you plan to do
->>> pxa25x and pxa3xx next, does that include pxa26x and pxa93x?
->> I don't have the Technical Reference Manuals for these ones so the answer is
->> no. And Google wasn't a great friend at providing them.
->>
->
-> Converting them into new clock driver may not rely on the reference manual.
-Actually I went through the code and :
- - pxa26x is only a superset of pxa25x with one more clock : pxa26x-gpio
- - pxa93x is the same clock set as pxa3xx, right ?
-So if I convert pxa25x, pxa27x and pxa3xx I'll cover everything, right ?
-
->>> I assume it does as they are apparently minor revisions of the
->>> former, but it's not completely clear from your description.
->> My description doesn't mention them, as I have no information about them, nor
->> any hardware to test on.
->>
->
-> We can request others to help testing in the mailing list.
-That's exactly what will enable pxa25x and pxa3xx. I have them converted in my
-tree, but I don't want to mix these patches in as I can't test them, and testing
-brings in bigger delays.
-
-Cheers.
-
--- 
-Robert
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+> 
+> @Mike: Is this less ugly ? :)
