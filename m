@@ -1,97 +1,74 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH 2/5] regulator: Add DT bindings for tps65218 PMIC
- regulators
-Date: Thu, 3 Jul 2014 09:16:59 -0500
-Message-ID: <20140703141653.GH5814@saruman.home>
-References: <1404395102-21469-1-git-send-email-j-keerthy@ti.com>
- <1404395102-21469-3-git-send-email-j-keerthy@ti.com>
-Reply-To: <balbi@ti.com>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="k9xkV0rc9XGsukaG"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404395102-21469-3-git-send-email-j-keerthy@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Keerthy <j-keerthy@ti.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH 07/18] AT91: DT: Remove the old-style reset probing
+Date: Thu,  3 Jul 2014 16:14:43 +0200
+Message-ID: <1404396906-25194-11-git-send-email-maxime.ripard@free-electrons.com>
+References: <1404396906-25194-1-git-send-email-maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404396906-25194-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---k9xkV0rc9XGsukaG
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Now that the reset code is a driver of its own, just let the usual DT probing
+mecanism do its job, and remove the code entirely in this case.
 
-On Thu, Jul 03, 2014 at 07:14:59PM +0530, Keerthy wrote:
-> Add DT bindings for tps65218 PMIC regulators.
->=20
-> Signed-off-by: Keerthy <j-keerthy@ti.com>
-> ---
->  .../devicetree/bindings/regulator/tps65218.txt     |   21 ++++++++++++++=
-++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/regulator/tps65218.=
-txt
->=20
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65218.txt b/D=
-ocumentation/devicetree/bindings/regulator/tps65218.txt
-> new file mode 100644
-> index 0000000..6272a73
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/regulator/tps65218.txt
-> @@ -0,0 +1,21 @@
-> +TPS65218 family of regulators
-> +
-> +Required properties:
-> +For tps65218 regulators/LDOs
-> +- compatible:
-> +  - "ti,tps65218-dcdc1" for DCDC1=20
-> +  - "ti,tps65218-dcdc2" for DCDC2
-> +  - "ti,tps65218-dcdc3" for DCDC3
-> +  - "ti,tps65218-dcdc4" for DCDC4
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+---
+ arch/arm/mach-at91/setup.c | 29 -----------------------------
+ 1 file changed, 29 deletions(-)
 
-"ti,tps65218-dcdc5" for DCDC5
-"ti,tps65218-dcdc6" for DCDC6
+diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
+index cc520596f23b..71003e40f01c 100644
+--- a/arch/arm/mach-at91/setup.c
++++ b/arch/arm/mach-at91/setup.c
+@@ -354,34 +354,6 @@ void __init at91_ioremap_matrix(u32 base_addr)
+ }
+ 
+ #if defined(CONFIG_OF) && !defined(CONFIG_ARCH_AT91X40)
+-static struct of_device_id rstc_ids[] = {
+-	{ .compatible = "atmel,at91sam9260-rstc", .data = at91sam9_alt_restart },
+-	{ .compatible = "atmel,at91sam9g45-rstc", .data = at91sam9g45_restart },
+-	{ /*sentinel*/ }
+-};
+-
+-static void at91_dt_rstc(void)
+-{
+-	struct device_node *np;
+-	const struct of_device_id *of_id;
+-
+-	np = of_find_matching_node(NULL, rstc_ids);
+-	if (!np)
+-		panic(pr_fmt("unable to find compatible rstc node in dtb\n"));
+-
+-	at91_rstc_base = of_iomap(np, 0);
+-	if (!at91_rstc_base)
+-		panic(pr_fmt("unable to map rstc cpu registers\n"));
+-
+-	of_id = of_match_node(rstc_ids, np);
+-	if (!of_id)
+-		panic(pr_fmt("rtsc no restart function available\n"));
+-
+-	arm_pm_restart = of_id->data;
+-
+-	of_node_put(np);
+-}
+-
+ static struct of_device_id ramc_ids[] = {
+ 	{ .compatible = "atmel,at91rm9200-sdramc", .data = at91rm9200_standby },
+ 	{ .compatible = "atmel,at91sam9260-sdramc", .data = at91sam9_sdram_standby },
+@@ -507,7 +479,6 @@ void __init at91rm9200_dt_initialize(void)
+ 
+ void __init at91_dt_initialize(void)
+ {
+-	at91_dt_rstc();
+ 	at91_dt_ramc();
+ 	at91_dt_shdwc();
+ 
+-- 
+2.0.1
 
-> +  - "ti,tps65218-ldo1" for LDO1
-> +
-> +Optional properties:
-> +- Any optional property defined in bindings/regulator/regulator.txt
-> +
-> +Example:
-> +
-> +	xyz: regulator@0 {
-> +		compatible =3D "ti,tps65218-dcdc1";
-> +		regulator-min-microvolt  =3D <1000000>;
-> +		regulator-max-microvolt  =3D <3000000>;
-> +	};
-> --=20
-> 1.7.9.5
->=20
-
---=20
-balbi
-
---k9xkV0rc9XGsukaG
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTtWXbAAoJEIaOsuA1yqRElJ0QAIqGZiiOxf+7R7DkdtUhqatB
-5TeEHEmJ7hHZtpJip62gqr1B1SMDlDJASFqgbtfKwxBPjj2ti055eMbTq+vkQYvS
-VOyD7wHT1Hxjq47luT3LLbDqBYflH1mwG+DHXHEqmmmDtE5iG9tXQ5FCSH1cFB3x
-c4ute1dpdHS183DH52vmbEyC5I3aGaVFSMP8ZPd6uQPqZdKhmxxBl67YI/CatdT6
-wos5ZkMZqRmMp1YptHJzMBlADc975NLPoh0/sJoLe8OicHF6C4Zqbut1tyaPOWhK
-xoG7pSSV8SIWDt+9QOXEeJ4QBlbz0t4qBpnUJdO8kFjTsMGNRs2tTgQXr+IyAOr/
-ujqUwNyfQ59li9nfmaC7x1ZOI5NTg4iPjLqmn1FPVGkl9rg5tdQnsFVPybqUGH38
-xyAiwAtT4kZbrc7712bUFQfwVIn8FeqmPeEYubMvIBFv2xPdggLfjtW2hXSs2PI4
-VWYYUBIZtucpgOWj1Yjn396TTNt1onMZt0bEAptTQfd9SAg72K1wq0C+wewb80kv
-d4pBJySALNfsF7EE8zikWO1g6bN6TvSltj2pNKTT2cTlKCo8H6UWQx0KY2/ctC8L
-I+AAq1lLdW97Ro5GQsPClAICnub9CWgmC+YltRBopjHJ9hhpa13u01aETl+HkIlM
-+VY6K7AKxu1w7lUAu9pD
-=z7FY
------END PGP SIGNATURE-----
-
---k9xkV0rc9XGsukaG--
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
