@@ -1,140 +1,104 @@
-From: Maxime Ripard <maxime.ripard@free-electrons.com>
-Subject: [PATCH RESEND 17/18] AT91: Remove rstc and shdwnc global base addresses
-Date: Thu,  3 Jul 2014 16:41:32 +0200
-Message-ID: <1404398493-28907-18-git-send-email-maxime.ripard@free-electrons.com>
+From: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Subject: [PATCH RESEND 01/18] power: reset: Add if statement isntead of multiple depends on
+Date: Thu,  3 Jul 2014 16:41:16 +0200
+Message-ID: <1404398493-28907-2-git-send-email-maxime.ripard@free-electrons.com>
 References: <1404398493-28907-1-git-send-email-maxime.ripard@free-electrons.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404398493-28907-1-git-send-email-maxime.ripard@free-electrons.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux@maxim.org.za, Nicolas Ferre <nicolas.ferre@atmel.com>, Jean-Christophe Plagniol-Villard <plagnioj@jcrosoft.com>, dwmw2@infradead.org, dbaryshkov@gmail.com
-Cc: Boris Brezillon <boris@free-electrons.com>, Alexandre Belloni <alexandre.belloni@free-electrons.com>, Thomas Petazzoni <thomas@free-electrons.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@free-electrons.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1404398493-28907-1-git-send-email-maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: linux-PelNFVqkFnVyf+4FbqDuWQ@public.gmane.org, Nicolas Ferre <nicolas.ferre-AIFe0yeh4nAAvxtiuMwx3w@public.gmane.org>, Jean-Christophe Plagniol-Villard <plagnioj-sclMFOaUSTBWk0Htik3J/w@public.gmane.org>, dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org, dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org
+Cc: Boris Brezillon <boris-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Alexandre Belloni <alexandre.belloni-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Thomas Petazzoni <thomas-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Now that there's no user left for the global variables holding the reset and
-shutdown controllers base address, we can remove these variables and their
-associated mapping function.
+All the config option so far are depending on the POWER_RESET symbol
 
-Signed-off-by: Maxime Ripard <maxime.ripard@free-electrons.com>
+Signed-off-by: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>
 ---
- arch/arm/mach-at91/at91sam9260.c |  2 --
- arch/arm/mach-at91/at91sam9261.c |  2 --
- arch/arm/mach-at91/at91sam9263.c |  2 --
- arch/arm/mach-at91/at91sam9g45.c |  2 --
- arch/arm/mach-at91/at91sam9rl.c  |  2 --
- arch/arm/mach-at91/generic.h     |  6 ------
- arch/arm/mach-at91/setup.c       | 18 ------------------
- 7 files changed, 34 deletions(-)
+ drivers/power/reset/Kconfig | 17 +++++++++--------
+ 1 file changed, 9 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/mach-at91/at91sam9260.c b/arch/arm/mach-at91/at91sam9260.c
-index 5fa1986be2aa..16dd13800b1f 100644
---- a/arch/arm/mach-at91/at91sam9260.c
-+++ b/arch/arm/mach-at91/at91sam9260.c
-@@ -339,8 +339,6 @@ static void __init at91sam9260_map_io(void)
+diff --git a/drivers/power/reset/Kconfig b/drivers/power/reset/Kconfig
+index bdcf5173e377..19d546c5edfa 100644
+--- a/drivers/power/reset/Kconfig
++++ b/drivers/power/reset/Kconfig
+@@ -6,15 +6,17 @@ menuconfig POWER_RESET
  
- static void __init at91sam9260_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9260_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9260_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9260_BASE_SDRAMC, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9260_BASE_PIT);
- 	at91sam9_ioremap_smc(0, AT91SAM9260_BASE_SMC);
-diff --git a/arch/arm/mach-at91/at91sam9261.c b/arch/arm/mach-at91/at91sam9261.c
-index 5ccc67235e7a..2c8553e63785 100644
---- a/arch/arm/mach-at91/at91sam9261.c
-+++ b/arch/arm/mach-at91/at91sam9261.c
-@@ -302,8 +302,6 @@ static void __init at91sam9261_map_io(void)
+ 	  Say Y here to enable board reset and power off
  
- static void __init at91sam9261_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9261_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9261_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9261_BASE_SDRAMC, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9261_BASE_PIT);
- 	at91sam9_ioremap_smc(0, AT91SAM9261_BASE_SMC);
-diff --git a/arch/arm/mach-at91/at91sam9263.c b/arch/arm/mach-at91/at91sam9263.c
-index 4d28c3479d4b..63a47c7d7f2b 100644
---- a/arch/arm/mach-at91/at91sam9263.c
-+++ b/arch/arm/mach-at91/at91sam9263.c
-@@ -317,8 +317,6 @@ static void __init at91sam9263_map_io(void)
++if POWER_RESET
++
+ config POWER_RESET_AS3722
+ 	bool "ams AS3722 power-off driver"
+-	depends on MFD_AS3722 && POWER_RESET
++	depends on MFD_AS3722
+ 	help
+ 	  This driver supports turning off board via a ams AS3722 power-off.
  
- static void __init at91sam9263_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9263_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9263_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9263_BASE_SDRAMC0, 512);
- 	at91_ioremap_ramc(1, AT91SAM9263_BASE_SDRAMC1, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9263_BASE_PIT);
-diff --git a/arch/arm/mach-at91/at91sam9g45.c b/arch/arm/mach-at91/at91sam9g45.c
-index 22034c96d488..f0b78923da75 100644
---- a/arch/arm/mach-at91/at91sam9g45.c
-+++ b/arch/arm/mach-at91/at91sam9g45.c
-@@ -367,8 +367,6 @@ static void __init at91sam9g45_map_io(void)
+ config POWER_RESET_AXXIA
+ 	bool "LSI Axxia reset driver"
+-	depends on POWER_RESET && ARCH_AXXIA
++	depends on ARCH_AXXIA
+ 	help
+ 	  This driver supports restart for Axxia SoC.
  
- static void __init at91sam9g45_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9G45_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9G45_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9G45_BASE_DDRSDRC1, 512);
- 	at91_ioremap_ramc(1, AT91SAM9G45_BASE_DDRSDRC0, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9G45_BASE_PIT);
-diff --git a/arch/arm/mach-at91/at91sam9rl.c b/arch/arm/mach-at91/at91sam9rl.c
-index 323a9f90931a..ea9ac0ee0895 100644
---- a/arch/arm/mach-at91/at91sam9rl.c
-+++ b/arch/arm/mach-at91/at91sam9rl.c
-@@ -311,8 +311,6 @@ static void __init at91sam9rl_map_io(void)
+@@ -22,7 +24,7 @@ config POWER_RESET_AXXIA
  
- static void __init at91sam9rl_ioremap_registers(void)
- {
--	at91_ioremap_shdwc(AT91SAM9RL_BASE_SHDWC);
--	at91_ioremap_rstc(AT91SAM9RL_BASE_RSTC);
- 	at91_ioremap_ramc(0, AT91SAM9RL_BASE_SDRAMC, 512);
- 	at91sam926x_ioremap_pit(AT91SAM9RL_BASE_PIT);
- 	at91sam9_ioremap_smc(0, AT91SAM9RL_BASE_SMC);
-diff --git a/arch/arm/mach-at91/generic.h b/arch/arm/mach-at91/generic.h
-index 5d5e55237c41..f42b0490ad98 100644
---- a/arch/arm/mach-at91/generic.h
-+++ b/arch/arm/mach-at91/generic.h
-@@ -64,12 +64,6 @@ extern void at91_irq_resume(void);
- /* idle */
- extern void at91sam9_idle(void);
+ config POWER_RESET_GPIO
+ 	bool "GPIO power-off driver"
+-	depends on OF_GPIO && POWER_RESET
++	depends on OF_GPIO
+ 	help
+ 	  This driver supports turning off your board via a GPIO line.
+ 	  If your board needs a GPIO high/low to power down, say Y and
+@@ -30,13 +32,13 @@ config POWER_RESET_GPIO
  
--/* reset */
--extern void at91_ioremap_rstc(u32 base_addr);
--
--/* shutdown */
--extern void at91_ioremap_shdwc(u32 base_addr);
--
- /* Matrix */
- extern void at91_ioremap_matrix(u32 base_addr);
+ config POWER_RESET_MSM
+ 	bool "Qualcomm MSM power-off driver"
+-	depends on POWER_RESET && ARCH_QCOM
++	depends on ARCH_QCOM
+ 	help
+ 	  Power off and restart support for Qualcomm boards.
  
-diff --git a/arch/arm/mach-at91/setup.c b/arch/arm/mach-at91/setup.c
-index cdd717a4fa30..eb2b922a4adb 100644
---- a/arch/arm/mach-at91/setup.c
-+++ b/arch/arm/mach-at91/setup.c
-@@ -319,24 +319,6 @@ void __init at91_map_io(void)
- 		at91_boot_soc.map_io();
- }
+ config POWER_RESET_QNAP
+ 	bool "QNAP power-off driver"
+-	depends on OF_GPIO && POWER_RESET && PLAT_ORION
++	depends on OF_GPIO && PLAT_ORION
+ 	help
+ 	  This driver supports turning off QNAP NAS devices by sending
+ 	  commands to the microcontroller which controls the main power.
+@@ -54,14 +56,13 @@ config POWER_RESET_RESTART
+ config POWER_RESET_SUN6I
+ 	bool "Allwinner A31 SoC reset driver"
+ 	depends on ARCH_SUNXI
+-	depends on POWER_RESET
+ 	help
+ 	  Reboot support for the Allwinner A31 SoCs.
  
--void __iomem *at91_shdwc_base = NULL;
--
--void __init at91_ioremap_shdwc(u32 base_addr)
--{
--	at91_shdwc_base = ioremap(base_addr, 16);
--	if (!at91_shdwc_base)
--		panic(pr_fmt("Impossible to ioremap at91_shdwc_base\n"));
--}
--
--void __iomem *at91_rstc_base;
--
--void __init at91_ioremap_rstc(u32 base_addr)
--{
--	at91_rstc_base = ioremap(base_addr, 16);
--	if (!at91_rstc_base)
--		panic(pr_fmt("Impossible to ioremap at91_rstc_base\n"));
--}
--
- void __iomem *at91_matrix_base;
- EXPORT_SYMBOL_GPL(at91_matrix_base);
+ config POWER_RESET_VEXPRESS
+ 	bool "ARM Versatile Express power-off and reset driver"
+ 	depends on ARM || ARM64
+-	depends on POWER_RESET && VEXPRESS_CONFIG
++	depends on VEXPRESS_CONFIG
+ 	help
+ 	  Power off and reset support for the ARM Ltd. Versatile
+ 	  Express boards.
+@@ -69,7 +70,6 @@ config POWER_RESET_VEXPRESS
+ config POWER_RESET_XGENE
+ 	bool "APM SoC X-Gene reset driver"
+ 	depends on ARM64
+-	depends on POWER_RESET
+ 	help
+ 	  Reboot support for the APM SoC X-Gene Eval boards.
  
+@@ -80,3 +80,4 @@ config POWER_RESET_KEYSTONE
+ 	help
+ 	  Reboot support for the KEYSTONE SoCs.
+ 
++endif
 -- 
 2.0.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
