@@ -1,102 +1,121 @@
-From: Felipe Balbi <balbi@ti.com>
-Subject: Re: [PATCH v4] ASoC: tas2552: Support TI TAS2552 Amplifier
-Date: Thu, 3 Jul 2014 10:06:22 -0500
-Message-ID: <20140703150621.GQ5814@saruman.home>
-References: <1404398393-21497-1-git-send-email-dmurphy@ti.com>
- <20140703145250.GO5814@saruman.home>
- <53B56F63.8000400@ti.com>
-Reply-To: <balbi@ti.com>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [PATCH 4/5] ARM: imx: Add initial support for Freescale LS1021A
+Date: Thu, 3 Jul 2014 16:12:00 +0100
+Message-ID: <20140703151200.GB22146@leverpostej>
+References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
+ <1404291772-2644-5-git-send-email-jingchang.lu@freescale.com>
+ <20140702112125.GE14665@leverpostej>
+ <cb01fef2c4d44711b04a321fddae33d4@BL2PR03MB467.namprd03.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="ivHc2SZskddb40s2"
-Return-path: <linux-sound-owner@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <53B56F63.8000400@ti.com>
-Sender: linux-sound-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: balbi@ti.com, linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <cb01fef2c4d44711b04a321fddae33d4-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org" <shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
---ivHc2SZskddb40s2
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi,
-
-On Thu, Jul 03, 2014 at 09:57:39AM -0500, Dan Murphy wrote:
-> On 07/03/2014 09:52 AM, Felipe Balbi wrote:
-> > Hi,
+On Thu, Jul 03, 2014 at 11:17:12AM +0100, Jingchang Lu wrote:
+> >-----Original Message-----
+> >From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
+> >Sent: Wednesday, July 02, 2014 7:21 PM
+> >To: Lu Jingchang-B35083
+> >Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
+> >devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Lu Jingchang-B35083
+> >Subject: Re: [PATCH 4/5] ARM: imx: Add initial support for Freescale
+> >LS1021A
 > >
-> > On Thu, Jul 03, 2014 at 09:39:53AM -0500, Dan Murphy wrote:
-> >> +static int tas2552_set_dai_fmt(struct snd_soc_dai *dai, unsigned int =
-fmt)
-> >> +{
-> >> +	u8 serial_format;
-> >> +	struct snd_soc_codec *codec =3D dai->codec;
+> >On Wed, Jul 02, 2014 at 10:02:51AM +0100, Jingchang Lu wrote:
+> >> From: Jingchang Lu <b35083-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+> >>
+> >> diff --git a/arch/arm/mach-imx/mach-ls1021a.c
+> >> b/arch/arm/mach-imx/mach-ls1021a.c
+> >> new file mode 100644
+> >> index 0000000..d1a9bb9
+> >> --- /dev/null
+> >> +++ b/arch/arm/mach-imx/mach-ls1021a.c
+> >> @@ -0,0 +1,49 @@
+> >> +/*
+> >> + * Copyright 2013-2014 Freescale Semiconductor, Inc.
+> >> + *
+> >> + * This program is free software; you can redistribute it and/or
+> >> +modify
+> >> + * it under the terms of the GNU General Public License as published
+> >> +by
+> >> + * the Free Software Foundation; either version 2 of the License, or
+> >> + * (at your option) any later version.
+> >> + */
 > >> +
-> >> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
-> >> +	case SND_SOC_DAIFMT_CBS_CFS:
-> >> +		serial_format =3D 0x00;
-> >> +		break;
-> >> +	case SND_SOC_DAIFMT_CBS_CFM:
-> >> +		serial_format =3D TAS2552_WORD_CLK_MASK;
-> >> +		break;
-> >> +	case SND_SOC_DAIFMT_CBM_CFS:
-> >> +		serial_format =3D TAS2552_BIT_CLK_MASK;
-> >> +		break;
-> >> +	case SND_SOC_DAIFMT_CBM_CFM:
-> >> +		serial_format =3D (TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK);
-> >> +		break;
-> >> +	default:
-> >> +		return -EINVAL;
-> >> +	}
+> >> +#include <linux/of_platform.h>
+> >> +#include <asm/mach/arch.h>
 > >> +
-> >> +	pm_runtime_get_sync(codec->dev);
+> >> +#include "common.h"
 > >> +
-> >> +	snd_soc_update_bits(codec, TAS2552_SER_CTRL_1,
-> >> +			    (TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK),
-> >> +			    serial_format);
+> >> +static const struct of_device_id of_ls1021a_match_table[] = {
+> >> +	{
+> >> +		.compatible =	"simple-bus",
+> >> +	},
+> >> +	{
+> >> +		.compatible     = "fsl,ifc",
+> >> +	},
+> >> +	{
+> >> +		.compatible	= "fsl,fpga-qixis",
+> >> +	},
+> >> +	{
+> >> +		.compatible	= "fsl,qe",
+> >> +	},
+> >> +	{}
+> >> +};
+> >
+> >Are any of thse not always-on (or default-on) MMIO busses?
+> >
+> >Is there any reason for not giving them their own drivers?
+> >
+> Normally these are always-on. The child nodes are handled by different drivers,
+> so to make the devices being added by the of system, they are claimed here.
+> Thanks.
+
+If these are always-on MMIO busses, is there any reason these can't have
+"simple-bus" as a fallback in their compatible lists in the DT? They
+would seemd to be compatible with it given they are in the table
+above...
+
+That way we don't need the table at all, and we can always add drivers
+for them later if we need them...
+
 > >> +
-> >> +	pm_runtime_put(codec->dev);
-> > I have a feeling it's better to just put at the end of the function.
-> > Remember your pm_runtime_put() will issue i2c transfers which can take a
-> > looooooong time ;-)
->=20
-> I thought about that but the next switch case could return if the format
-> mask is invalid which means the runtime calls would not be balanced.
->=20
-> So I decided to wrap the snd_soc calls with the pm_runtime calls to keep =
-it
-> balanced.
+> >> +static void __init ls1021a_init_machine(void) {
+> >> +	mxc_arch_reset_init_dt();
+> >
+> >This looks to only be used to set up a watchdog timer. Is there any reason
+> >this logic can't be moved to the watchdog timer driver?
+> >
+> >> +
+> >> +DT_MACHINE_START(LS1021A, "Freescale LS1021A") #ifdef CONFIG_ZONE_DMA
+> >> +	.dma_zone_size	= SZ_128M,
+> >> +#endif
+> >> +	.init_machine   = ls1021a_init_machine,
+> >> +	.dt_compat	= ls1021a_dt_compat,
+> >> +	.restart	= mxc_restart,
+> >
+> >AFAICT, that jsut uses the WDT for restart. Why can't the watchdog driver
+> >register itself as a restart device?
+> >
+> >That would bring us close to an empty machine descriptor, and enable reuse
+> >of the WDT and those busses.
+> >
+> >Thanks,
+> >Mark.
+> Yes, we use the watchdog timer for restart, just as i.MX and Vybrid, the WDT as a
+> common driver it is still work for watchdog. Thanks.
 
-it looks like you can do both switch statements outside of the
-pm_runtime region and cache results on serial_format and do a single
-write to CTRL_1 register (?). If not, then just use two local variables.
+That doesn't answer the question of why the restart code (and
+registration thereof) can't live in the WDT driver.
 
---=20
-balbi
-
---ivHc2SZskddb40s2
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iQIcBAEBAgAGBQJTtXFsAAoJEIaOsuA1yqRERyoP/A+N2WCYmdSbDwoDNBzbxda7
-Q7BePfLWZwJ5AH7ScQKgcJZ3b98ivNbwHumNjri/H81fmRHfEgJOywruZ13WTgPN
-MN6fgtFKCVXc8AHp1qLUli/7VnBaLbv+lK0vPhkv36RnQ4tHZGG1G+hHm7Z1e7Tm
-urm/FcpXUQmeZKPRHWxCfVECFrb5TXeyQrfItEmgbifckFdxaJA1Y+XJUnC15ihH
-uI3VCq0TsKmDfy48ihbbQlfaeEquPoFguv/wbWV7mHDTp9OPeG/G38Mf/gpPF3Sx
-gF1XDj69NcP2lu3/AzKQyD0ByZ/NlWp46WBsPR791ZkYj5t2rEuGmyex/67SaLQo
-zScv/D0lakd5PyLmCv5AjRZ/1EtqD0ncbXrAxsZ8q7wNDETkhBavLzMRNLI7DjXv
-WsTkqU+h8o/jCtou9dVHeXxsH7fsegna3KFXRE3YXuIYww2fxpXg3hVLbPRbtagF
-ez69YtSppyNLXMJzqqmrUPrA1Y0iFIXMIpwv+Fa9ae/gMlhOX0SZuNYJD8QdxTB8
-PRRcbQDBeUkjcQ/9ghom2B5CP0cpbNSbziNppp/dS1frOOv5Gi+JMv8DHatJ5RrJ
-dPFMIKZT1+qI8NyUp5NX7VacW4g8R5l5cp6ydiNDxyKw4F/47JyRGLw0Qw7rGK4X
-TeFJ1HTWw6wNoWL75zBd
-=xw0x
------END PGP SIGNATURE-----
-
---ivHc2SZskddb40s2--
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
