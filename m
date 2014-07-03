@@ -1,310 +1,53 @@
-From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Subject: Re: [PATCH 1/5] ARM: dts: Add SoC level device tree support for
- LS1021A
-Date: Thu, 3 Jul 2014 11:10:36 +0100
-Message-ID: <20140703101036.GE29837@leverpostej>
-References: <1404291772-2644-1-git-send-email-jingchang.lu@freescale.com>
- <1404291772-2644-2-git-send-email-jingchang.lu@freescale.com>
- <20140702111435.GD14665@leverpostej>
- <c0f6813bc62a41b19790158d761d6652@BL2PR03MB467.namprd03.prod.outlook.com>
+From: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+Subject: [PATCH] devicetree/bindings: Add binding for micron n25q512a memory
+Date: Thu, 3 Jul 2014 15:42:56 +0530
+Message-ID: <1404382376-3115-1-git-send-email-Priyanka.Jain@freescale.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <c0f6813bc62a41b19790158d761d6652-AZ66ij2kwab4MB1ZSnT4iOO6mTEJWrR4XA4E9RH9d+qIuWR1G4zioA@public.gmane.org>
-Content-Language: en-US
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Jingchang Lu <jingchang.lu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
-Cc: Shawn Guo <Shawn.Guo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <nikhil.badola-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <chenhui.zhao-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <suresh.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <shaveta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Adrian Sendroiu <adrian.sendroiu-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Ruchika Gupta <ruchika.gupta-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <bhupesh.sharma-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, Chao Fu <B44548-KZfg59tc24xl57MIdRCFDg@public.gmane.org>, "Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org" <Li.Xiubo-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+To: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linuxppc-dev-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, scottwood-KZfg59tc24xl57MIdRCFDg@public.gmane.org
+Cc: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jul 03, 2014 at 08:58:04AM +0100, Jingchang Lu wrote:
-> >-----Original Message-----
-> >From: Mark Rutland [mailto:mark.rutland-5wv7dgnIgG8@public.gmane.org]
-> >Sent: Wednesday, July 02, 2014 7:15 PM
-> >To: Lu Jingchang-B35083
-> >Cc: shawn.guo-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org; linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org;
-> >devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org; Lu Jingchang-B35083; Badola Nikhil-B46172;
-> >Zhao Chenhui-B35336; Gupta Suresh-B42813; Leekha Shaveta-B20052; Sendroiu
-> >Adrian-B46904; Gupta Ruchika-R66431; Sharma Bhupesh-B45370; Fu Chao-B44548;
-> >Xiubo Li-B47053
-> >Subject: Re: [PATCH 1/5] ARM: dts: Add SoC level device tree support for
-> >LS1021A
-> >
-> >Hi,
-> >
-> >As a general note, there seem to be many nodes for which bindings and
-> >drivers do not yet exist.
-> >
-> >For those nodes which are unusable for reasons other than their status
-> >being "disabled", I would prefer that they were removed. They're useless
-> >now, and might not match the bindings that are eventually decided upon,
-> >which will result in annoying churn and possible breakage.
-> >
-> Thanks for help review these patches, I will revise the node as your comment.
-> The LS1021A shares IP and driver with i.MX, Vybrid and PowerPC, some driver's
-> behavior minor different between them, so patches is needed to make them work
-> well between different platform and architecture. Thus some compatible include
-> undocumented string, could it be added along with the driver support after the
-> platform support is accepted? Thanks.
+-Micron n25q512a memory is supported by m25p80 driver.
+ Add compatible field required to support n25q512a in m25p80.txt
+-Add micron to the vendor-prefixes.txt file
 
-Those nodes in the DT which are useless at the moment should be dropped.
-There's no point having them there.
+Signed-off-by: Priyanka Jain <Priyanka.Jain-KZfg59tc24xl57MIdRCFDg@public.gmane.org>
+---
+ Documentation/devicetree/bindings/mtd/m25p80.txt   |    1 +
+ .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+ 2 files changed, 2 insertions(+), 0 deletions(-)
 
-We can add them when driver support is added, along with documentation.
+diff --git a/Documentation/devicetree/bindings/mtd/m25p80.txt b/Documentation/devicetree/bindings/mtd/m25p80.txt
+index 4611aa8..ce02e81 100644
+--- a/Documentation/devicetree/bindings/mtd/m25p80.txt
++++ b/Documentation/devicetree/bindings/mtd/m25p80.txt
+@@ -7,6 +7,7 @@ Required properties:
+                the DT binding is not Linux-only, but in case of Linux, see the
+                "spi_nor_ids" table in drivers/mtd/spi-nor/spi-nor.c for the list
+                of supported chips.
++               example: "micron,n25q512a"
+ - reg : Chip-Select number
+ - spi-max-frequency : Maximum frequency of the SPI bus the chip can operate at
+ 
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 4d7f375..a44cfee 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -79,6 +79,7 @@ marvell	Marvell Technology Group Ltd.
+ maxim	Maxim Integrated Products
+ micrel	Micrel Inc.
+ microchip	Microchip Technology Inc.
++micron	Micron Technology Inc.
+ mosaixtech	Mosaix Technologies, Inc.
+ moxa	Moxa
+ mpl	MPL AG
+-- 
+1.7.4.1
 
-[...]
 
-> >> +
-> >> +       cpus {
-> >> +               #address-cells = <1>;
-> >> +               #size-cells = <0>;
-> >> +
-> >> +               cpu@0 {
-> >> +                       compatible = "arm,cortex-a7";
-> >> +                       device_type = "cpu";
-> >> +                       reg = <0xf00>;
-> >> +               };
-> >
-> >That reg doesn't match the unit-address, which should be cpu@f00.
-> >
-> >Why is MPIDR.Aff1 == 0xf?
-> The MPIDR value got from the SoC is 80000f00, so to match this the reg is set to x0f00.
-> Thanks.
-
-Ok. Please update the unit-address on the nodes to match.
-
-> >[...]
-> >> +
-> >> +               tzasc: tzasc@1500000 {
-> >> +                       reg = <0x0 0x1500000 0x0 0x10000>;
-> >> +                       interrupts = <GIC_SPI 125 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       status = "disabled";
-> >> +               };
-> >
-> >There's no compatible string and "tzasc" doesn't appear to be handled
-> >magically anywhere, so this can't be probed even without the status
-> >property being "disabled".
-> I will remove this and all other unused node, it is not used currently. Thanks.
-
-Thanks.
-
-> >
-> >
-> >> +
-> >> +               ifc: ifc@1530000 {
-> >> +                       compatible = "fsl,ls1021a-ifc", "fsl,ifc",
-> >> + "simple-bus";
-> >
-> >This doesn't seem to have any children, ranges, #address-cells, or #size-
-> >cells. So why is "simple-bus" in the compatible list?
-> >
-> >As far as I can see this is a flash controller, so "simple-bus" doesn't
-> >make any sense whatsoever (and existing uses, including that in the
-> >binding are a bug).
-> Yes, it is a flash controller, the child nodes, ranges are in the <ls1021a-board>.dts.
-> Here only describe the SoC level device and resource.
-> I will remove the "simple-bus" string, Thanks.
-
-Ok.
-
-> >
-> >> +                       reg = <0x0 0x1530000 0x0 0x10000>;
-> >> +                       interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-> >> +               };
-> >> +
-> >> +               dcfg: dcfg@1ee0000 {
-> >> +                       compatible = "fsl,ls1021a-dcfg";
-> >> +                       reg = <0x0 0x1ee0000 0x0 0x10000>;
-> >> +               };
-> >
-> >Undocumented/unsupported binding.
-> >
-> >What is this?
-> It is the device configuration unit that provides general purpose configuration and status
-> for the device, there isn't a dedicate driver for it, device that has configuration and status
-> register located in this space could operate on it. Currently it is used to set the secondary
-> core start address and release the secondary core from holdoff and startup. Thanks.
-
-Then we should document it.
-
-[...]
-
-> >
-> >> +                       big-endian;
-> >
-> >The binding doesn't mention this. Does the driver support it?
-> >
-> >> +                       amba-base = <0x40000000>;
-> >
-> >The string "amba-base" shows up nowhere in mainline. What is this, and why
-> >is it here?
-> >
-> >[...]
-> >
-> >> +               scfg: scfg@1570000 {
-> >> +                       compatible = "fsl,ls1021a-scfg";
-> >> +                       reg = <0x0 0x1570000 0x0 0x10000>;
-> >> +               };
-> >
-> >Undocumented/unsupported binding.
-> >
-> >What is this?
-> It is the supplemental configuration unit, provides SoC specific configuration and status
-> registers for the device. Some device driver need this space to configure or get status.
-> If this is need document, which location is suitable for its document?
-> Thanks.
-
-Documentation/devicetree/bindings/soc/ ?
-
-> >
-> >[...]
-> >
-> >> +               rcpm: rcpm@1ee2000 {
-> >> +                       compatible = "fsl,ls1021a-rcpm", "fsl,qoriq-
-> >rcpm-2.1";
-> >> +                       reg = <0x0 0x1ee2000 0x0 0x10000>;
-> >> +               };
-> >
-> >Undocumented/unsupported binding (both compatible strings).
-> >
-> >What is this?
-> The Run Control and Power Management (RCPM) module performs all device-level tasks associated with
-> device run control and power management. It will be used by the PM driver currently. Thanks.
-
-As far as I can see this is _not_ used currently; both strings appear
-nowhere in mainline.
-
-Drop the node for now. It can be added alongside the driver and binding.
-
-> >
-> >[...]
-> >
-> >> +               gpio1: gpio@2300000 {
-> >> +                       compatible = "fsl,ls1021a-gpio";
-> >> +                       reg = <0x0 0x2300000 0x0 0x10000>;
-> >> +                       interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       gpio-controller;
-> >> +                       #gpio-cells = <2>;
-> >> +                       interrupt-controller;
-> >> +                       #interrupt-cells = <2>;
-> >> +               };
-> >
-> >Undocumented/unsupported binding.
-> The bind document will be add along with the SoC platform support patch for it. Thanks.
-
-Drop the node for now.
-
-> >
-> >[...]
-> >
-> >> +               lpuart1: serial@2960000 {
-> >> +                       compatible = "fsl,ls1021a-lpuart";
-> >> +                       reg = <0x0 0x2960000 0x0 0x1000>;
-> >> +                       interrupts = <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&platform_clk 1>;
-> >> +                       clock-names = "ipg";
-> >> +                       status = "disabled";
-> >> +               };
-> >
-> >Undocumented/unsupported binding.
-> I will add the bind document for this. Thanks.
-
-Ok.
-
-> >
-> >[...]
-> >
-> >[...]
-> >
-> >> +               wdog0: wdog@2ad0000 {
-> >> +                       compatible = "fsl,ls1021a-wdt", "fsl,imx21-wdt";
-> >> +                       reg = <0x0 0x2ad0000 0x0 0x10000>;
-> >> +                       interrupts = <GIC_SPI 115 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&platform_clk 1>;
-> >> +                       clock-names = "wdog";
-> >> +                       big-endian;
-> >> +               };
-> >
-> >That clock name looks aribitrary, and "fsl,imx21-wdt" isn't documented as
-> >taking a clock.
-> >
-> >What is going on here?
-> The imx2_wdt driver need the clock, the clock name is not used, should it be removed?
-> and maybe the document is omitted, we'll check and add it subsequently. Thanks.
-
-Either document the clock name and make sure it's used consistently, or
-drop it. The latter seems like the easiest approach.
-
-> >
-> >[...]
-> >
-> >> +               can0: can@2a70000 {
-> >> +                       compatible = "fsl,ls1021a-flexcan";
-> >> +                       reg = <0x0 0x2a70000 0x0 0x1000>;
-> >> +                       interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&platform_clk 1>;
-> >> +                       clock-names = "per";
-> >> +                       status = "disabled";
-> >> +               };
-> >
-> >Undocumented/unsupported binding.
-> >
-> >Was this mean to have an existing compatible string in the list?
-> There will be fsl,ls1021a-flexcan support after the platform support is accepted,
-> It is list here just for the SoC level device resource.
-
-Add the node when you add support. Drop it for now.
-
-> >
-> >> +
-> >> +               can1: can@2a80000 {
-> >> +                       compatible = "fsl,ls1021a-flexcan";
-> >> +                       reg = <0x0 0x2a80000 0x0 0x1000>;
-> >> +                       interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&platform_clk 1>;
-> >> +                       clock-names = "per";
-> >> +                       status = "disabled";
-> >> +               };
-> >> +
-> >> +               can2: can@2a90000 {
-> >> +                       compatible = "fsl,ls1021a-flexcan";
-> >> +                       reg = <0x0 0x2a90000 0x0 0x1000>;
-> >> +                       interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&platform_clk 1>;
-> >> +                       clock-names = "per";
-> >> +                       status = "disabled";
-> >> +               };
-> >> +
-> >> +               can3: can@2aa0000 {
-> >> +                       compatible = "fsl,ls1021a-flexcan";
-> >> +                       reg = <0x0 0x2aa0000 0x0 0x1000>;
-> >> +                       interrupts = <GIC_SPI 129 IRQ_TYPE_LEVEL_HIGH>;
-> >> +                       clocks = <&platform_clk 1>;
-> >> +                       clock-names = "per";
-> >> +                       status = "disabled";
-> >> +               };
-> >> +       };
-> >> +
-> >> +       dcsr@20000000 {
-> >> +               #address-cells = <1>;
-> >> +               #size-cells = <1>;
-> >> +               compatible = "fsl,ls1021a-dcsr", "simple-bus";
-> >
-> >Missing a reg entry? Or is the unit-address arbitrary?
-> >
-> >The "fsl,ls1021a-dcsr" string is undocumented/unsupported, as with the
-> >compatible strings of all the child nodes below.
-> >
-> >Thanks,
-> >Mark.
-> It share the drive with PowerPC SoCs, the reg here is not used, only the child node's will
-> be used. Thanks.
-
-Ok. So drop the unit-address.
-
-Thanks,
-Mark.
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
