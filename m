@@ -1,52 +1,58 @@
-From: Stanimir Varbanov <svarbanov@mm-sol.com>
-Subject: [RFC PATCH v2 5/5] dt: rtc: add binding document for qpnp rtc
-Date: Thu,  3 Jul 2014 16:14:03 +0300
-Message-ID: <1404393243-7324-6-git-send-email-svarbanov@mm-sol.com>
-References: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404393243-7324-1-git-send-email-svarbanov@mm-sol.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Rob Herring <rob.herring@calxeda.com>, Kumar Gala <galak@codeaurora.org>, Grant Likely <grant.likely@linaro.org>, Courtney Cavin <courtney.cavin@sonymobile.com>, Lee Jones <lee.jones@linaro.org>, Josh Cartwright <joshc@codeaurora.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Thu, 3 Jul 2014 15:28:26 +0200
+Message-ID: <20140703152826.103c9d6c@armhf>
+References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
+ <20140702195154.47d6f6b4@armhf>
+ <20140702194252.GN410@sirena.org.uk>
+ <20140703074959.7c489912@armhf>
+ <20140703104432.GV410@sirena.org.uk>
+ <20140703133406.2d3e3a1d@armhf>
+ <20140703115924.GY410@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140703115924.GY410@sirena.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding document which describes the qpnp-rtc.
-
-Signed-off-by: Stanimir Varbanov <svarbanov@mm-sol.com>
----
- .../devicetree/bindings/rtc/qcom,rtc-qpnp.txt      |   24 ++++++++++++++++++++
- 1 files changed, 24 insertions(+), 0 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/qcom,rtc-qpnp.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/qcom,rtc-qpnp.txt b/Documentation/devicetree/bindings/rtc/qcom,rtc-qpnp.txt
-new file mode 100644
-index 0000000..a64e194
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/qcom,rtc-qpnp.txt
-@@ -0,0 +1,24 @@
-+Qualcomm RTC QPNP
-+
-+The RTC device supports 32bit RTC module housed inside QPNP PMIC's.
-+The driver utilizes SPMI interface to communicate with the RTC module.
-+RTC device is divided into two sub-peripherals one which controls
-+basic RTC and other for controlling alarm.
-+
-+Required properties :
-+ - compatible:  Should be "qcom,qpnp-rtc".
-+ - reg:         Specify the peripheral id for device. Currently there
-+                are two sub-peripherals - rtc base and alarm base.
-+ - reg-names:   Specify the reg property as strings. Should be "rtc"
-+                and "alarm", defining the rtc and alarm bases.
-+ - interrupts:  Specifies alarm interrupt, only for alarm sub-peripheral.
-+                For more info about interrupt cells see
-+                Documentation/devicetree/bindings/spmi/qcom,spmi-pmic-arb.txt
-+
-+Example:
-+	rtc@6000 {
-+		compatible = "qcom,qpnp-rtc";
-+		reg = <0x6000 0x6100>;
-+		reg-names = "rtc", "alarm";
-+		interrupts = <0x0 0x61 0x1 IRQ_TYPE_EDGE_RISING>;
-+	};
--- 
-1.7.0.4
+T24gVGh1LCAzIEp1bCAyMDE0IDEyOjU5OjI0ICswMTAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
+bmVsLm9yZz4gd3JvdGU6Cgo+ID4gPiBZb3VyIGJvYXJkIGhhcHBlbnMgdG8gb25seSBiZSBhYmxl
+IHRvIHByZXNlbnQgdGhlIHNhbWUgaW5wdXQgb24gYm90aCBJMlMKPiA+ID4gYW5kIFMvUERJRiBi
+dXQgdGhhdCBtaWdodCBub3QgYXBwbHkgdG8gb3RoZXIgYm9hcmRzLCB0aGV5IG1heSBiZSBhYmxl
+IHRvCj4gPiA+IHJvdXRlIGRpZmZlcmVudCBzaWduYWxzIHRvIGVhY2ggd2hpY2ggd291bGQgcHJl
+c2VudCBhIHByYWN0aWNhbCBwcm9ibGVtLiAgCj4gCj4gPiBJZiB0aGVyZSBhcmUgdHdvIGRpZmZl
+cmVudCBzdHJlYW1zcyBvbiBJMlMgYW5kIFMvUERJRiwgYW5kIGlmIHRoZSBhdWRpbwo+ID4gc3Vi
+c3lzdGVtIHdhbnRzIHRvIHJvdXRlIHRoZXNlIHN0cmVhbXMgdG8gdGhlIHNhbWUgY29ubmVjdG9y
+ICh3aWRnZXQKPiA+ICdoZG1pLW91dCcpLCB0aGVuLCBzb21ld2hlcmUsIHRoZXJlIHNob3VsZCBi
+ZSBhIHNvZnR3YXJlIG9yIGEgZGVzaWduCj4gPiBidWcuIE5vPyAgCj4gCj4gWWVzLCB3aGljaCBp
+cyB3aHkgdGhlIGRyaXZlciBzaG91bGRuJ3Qgc2lsZW50bHkgaWdub3JlIHRoZSBzaXR1YXRpb24u
+Cj4gCj4gPiBBbnl3YXksIHRoZSB0ZGE5OTh4IGNhbm5vdCBrbm93IGlmIHRoZSBkb3VibGUgcm91
+dGUgaXMgd2FudGVkIG9yIG5vdC4gIAo+IAo+IEl0IGRvZXNuJ3QgbmVlZCB0byBrbm93LCBpdCBq
+dXN0IG5lZWRzIHRvIGlkZW50aWZ5IHNvbWV0aGluZyBpdCBjYW4ndAo+IHN1cHBvcnQgZWl0aGVy
+IGJ5IHByb3ZpZGluZyBhIHdheSB0byBwaWNrIHdoaWNoIGludGVyZmFjZSBpcyB1c2VkIG9yIGJ5
+Cj4gcmVqZWN0aW5nIHRoZSBzZWNvbmQgaW50ZXJmYWNlLgoKT0suIG5vIHByb2JsZW0sIEkgY2Fu
+IGRvIHRoYXQ6IG9ubHkgdGhlIGZpcnN0IHN0cmVhbSBpcyBzd2l0Y2hlZCBhbmQKdGhlIHNlY29u
+ZCBpcyByZWplY3RlZC4KCkJ1dCwgdGhpcyBtZWFucyB0aGF0IHRoZXJlIHdpbGwgYmUgYSBsb3Qg
+b2YgZXJyb3JzIHdoZW4gRFBDTSB3aWxsIGJlCnVzZWQsIGJlY2F1c2UsIGluIG1vc3QgY2FzZXMg
+Zm9yIHRoZSBDdWJveCAoa2lya3dvb2QgYXVkaW8gKyB0ZGE5OTh4KSwKYm90aCB3YXlzIEkyUyBh
+bmQgUy9QRElGIHdpbGwgYmUgYWN0aXZhdGVkIGF0IHRoZSBzYW1lIHRpbWUgZm9yIGEKc2luZ2xl
+IHN0cmVhbSAoeW91IG1heSBub3RlIHRoYXQgdGhlIHJvdXRlcyBmcm9tIHRoZSBzZWNvbmQgaW5w
+dXQKY2Fubm90IGJlIGJsb2NrZWQgYnkgdGhlIENPREVDIGFmdGVyIGl0IHJlY2VpdmVkIHRoZSBm
+aXJzdCBpbnB1dCwKYmVjYXVzZSB0aGVzZSByb3V0ZXMgaGF2ZSBhbHJlYWR5IGJlZW4gY29tcHV0
+ZWQpLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJfAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRh
+diEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVqZi5mcmVlLmZyLwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
+ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
+YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
