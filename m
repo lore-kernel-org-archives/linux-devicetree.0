@@ -1,85 +1,26 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: [PATCH 2/4] Doc/DT: Add SiI9022 binding documentation
-Date: Thu, 3 Jul 2014 16:39:58 +0300
-Message-ID: <1404394800-18138-3-git-send-email-tomi.valkeinen@ti.com>
-References: <1404394800-18138-1-git-send-email-tomi.valkeinen@ti.com>
+From: Herbert Xu <herbert@gondor.apana.org.au>
+Subject: Re: [PATCH v4 0/3] Add Qualcomm crypto driver
+Date: Thu, 3 Jul 2014 21:42:50 +0800
+Message-ID: <20140703134250.GA14291@gondor.apana.org.au>
+References: <1403713739-3074-1-git-send-email-svarbanov@mm-sol.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-omap-owner@vger.kernel.org>
-In-Reply-To: <1404394800-18138-1-git-send-email-tomi.valkeinen@ti.com>
-Sender: linux-omap-owner@vger.kernel.org
-To: Archit Taneja <archit@ti.com>, linux-omap@vger.kernel.org, linux-fbdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-arm-msm-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1403713739-3074-1-git-send-email-svarbanov@mm-sol.com>
+Sender: linux-arm-msm-owner@vger.kernel.org
+To: Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Rob Herring <rob.herring@calxeda.com>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Randy Dunlap <rdunlap@infradead.org>, "David S. Miller" <davem@davemloft.net>, Grant Likely <grant.likely@linaro.org>, linux-kernel@vger.kernel.org, linux-crypto@vger.kernel.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding documentation for Silicon Image SiI9022 HDMI encoder.
+On Wed, Jun 25, 2014 at 07:28:56PM +0300, Stanimir Varbanov wrote:
+> Here is v4 of the patchset.
+> 
+> Changes since v3:
+> - Fixed trivial typo related to unnecessary semicolon.
 
-Signed-off-by: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org
----
- .../devicetree/bindings/video/sil,sii9022.txt      | 53 ++++++++++++++++++++++
- 1 file changed, 53 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/video/sil,sii9022.txt
-
-diff --git a/Documentation/devicetree/bindings/video/sil,sii9022.txt b/Documentation/devicetree/bindings/video/sil,sii9022.txt
-new file mode 100644
-index 000000000000..0cd926636998
---- /dev/null
-+++ b/Documentation/devicetree/bindings/video/sil,sii9022.txt
-@@ -0,0 +1,53 @@
-+Silicon Image SiI9022 HDMI Encoder
-+==================================
-+
-+Silicon Image SiI9022 is an HDMI encoder that encodes parallel RGB
-+signal to HDMI signal. The SiI9022 is controlled with i2c command, and
-+it has a single reset pin and single interrupt pin.
-+
-+Required properties:
-+- compatible: "sil,sii9022"
-+
-+Optional properties:
-+- reset-gpio: reset gpio
-+- interrupts: interrupt line
-+
-+Required nodes:
-+- Video port 0 for parallel video input
-+- Video port 1 for HDMI output
-+
-+Example
-+-------
-+
-+&i2c2 {
-+	sii9022: sii9022@3b {
-+		compatible = "sil,sii9022";
-+		reg = <0x3b>;
-+
-+		reset-gpio = <&gpio2 1 GPIO_ACTIVE_LOW>;
-+
-+		interrupt-parent = <&gpio1>;
-+		interrupts = <18 IRQ_TYPE_LEVEL_LOW>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+
-+				sii9022_in: endpoint {
-+					remote-endpoint = <&dpi_out>;
-+				};
-+			};
-+
-+			port@1 {
-+				reg = <1>;
-+
-+				sii9022_out: endpoint {
-+					remote-endpoint = <&hdmi_connector_in>;
-+				};
-+			};
-+		};
-+	};
-+};
+All applied.  Thanks!
 -- 
-1.9.1
-
+Email: Herbert Xu <herbert@gondor.apana.org.au>
+Home Page: http://gondor.apana.org.au/~herbert/
+PGP Key: http://gondor.apana.org.au/~herbert/pubkey.txt
