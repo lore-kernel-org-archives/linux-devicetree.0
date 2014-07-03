@@ -1,72 +1,60 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v2 0/2] ASoC: add CSR SiRFSoC audio USP
-	interface driver
-Date: Thu, 3 Jul 2014 17:12:08 +0100
-Message-ID: <20140703161208.GJ410@sirena.org.uk>
-References: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
+From: Jean-Francois Moine <moinejf@free.fr>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Thu, 3 Jul 2014 18:26:00 +0200
+Message-ID: <20140703182600.7a98c5b6@armhf>
+References: <20140702165628.GO20799@lunn.ch> <20140702195154.47d6f6b4@armhf>
+ <20140702194252.GN410@sirena.org.uk>
+ <20140703074959.7c489912@armhf>
+ <20140703104432.GV410@sirena.org.uk>
+ <20140703133406.2d3e3a1d@armhf>
+ <20140703115924.GY410@sirena.org.uk>
+ <20140703152826.103c9d6c@armhf>
+ <20140703134346.GW32514@n2100.arm.linux.org.uk>
+ <20140703172909.60caf2c7@armhf>
+ <20140703154325.GY32514@n2100.arm.linux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8738763226214636031=="
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Rongjun Ying <rongjun.ying@csr.com>
-Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Workgroup.linux@csr.com, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20140703154325.GY32514@n2100.arm.linux.org.uk>
+List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Russell King - ARM Linux <linux@arm.linux.org.uk>
+Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---===============8738763226214636031==
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="4XBiSqiiHCIj6zoM"
-Content-Disposition: inline
-
-
---4XBiSqiiHCIj6zoM
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-On Wed, Jul 02, 2014 at 10:45:40AM +0800, Rongjun Ying wrote:
-> This patchset adds the SiRF USP controller driver, this
-> driver uses the USP as I2S or DSP_A mode interface.
-
-Applied both, thanks.
-
---4XBiSqiiHCIj6zoM
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v2
-
-iQIcBAEBAgAGBQJTtYDVAAoJELSic+t+oim93A8P/0+bY4t28ElyrfsZ0mfvmp3D
-luvKqIXa0hUm3tCUTpr5NNwBv198XUB4P0CC1WMFPIVQYSWQCjF7h4AdYp2dpCQm
-3YFIXB/t4Ub5upxkS6BAT+Q/ZcLlkIqtUg0xHeUxjuIxa8c/OiGiqN47zxjbXj11
-LcPn+/cr0sTTKQFgFs+g9Gy6RArOqx3r7QFyrGmqn5TbytAasdtSzoBDxQy1dojd
-u1HOLXyKaiN4fTH7mG66U9EKD5WGjm7yQ7T8jDjqyDD3/XoYhr/ObdF8kZxnDZpy
-XjxzJmSruCsaLyGnqkNH8PoGCFSTckE5nsZOuBDjt4m4F7y62ULcyEY95pGNAem/
-iCeqyxSkXnNd1m/Yhm1m2q/ekPeSOGdHkpH7SVmRwbeFG1M77Sh3/qDjm9Ls/D6M
-JX+S4l1LNFPcJY4sWOuWRjCU3ocl4N5m88NYESQbNfST/GPStqzXQ/LAz5upv3KZ
-lK9EGTmGSIveKGAGO9zYVpFEMJeb3JNl30EnZVrfpe/w1q5BlrMmUR3zqSZ+6kuI
-IoR5eXEGkPo3DDOysDfE/HU/wVRo8OAHzLdANuyskYovMiCN3s1IiGbEmTErOwsc
-WpaP7E+aXOXzXM/8wiv9vr78jglLcMpMIoJTd9mfsri6cabUXDpPBUcAOG+czj2D
-epy1KMZ8xVPk03FMMxss
-=9Fe3
------END PGP SIGNATURE-----
-
---4XBiSqiiHCIj6zoM--
-
---===============8738763226214636031==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-
---===============8738763226214636031==--
+T24gVGh1LCAzIEp1bCAyMDE0IDE2OjQzOjI1ICswMTAwClJ1c3NlbGwgS2luZyAtIEFSTSBMaW51
+eCA8bGludXhAYXJtLmxpbnV4Lm9yZy51az4gd3JvdGU6Cgo+IFdoYXQgeW91J3JlIGRvaW5nIGlu
+IGtpcmt3b29kLWkycyBpcyBwcm92aWRpbmcgdHdvIHBsYWluIERBSSBsaW5rcywKPiBhbmQgdGhl
+biBpbnNpc3RpbmcgdGhhdCBvbmx5IG9uZSBjYW4gYmUgYWN0aXZlIGFueSBhbnkgb25lIHRpbWUu
+Cj4gCj4gQSBEUENNIHNvbHV0aW9uIHByb3ZpZGVzIGF0IGxlYXN0IG9uZSBmcm9udGVuZCBEQUkg
+bGluayBhbmQgYXQgbGVhc3QKPiBvbmUgYmFja2VuZCBEQUkgbGluay4gIFlvdXIgY29kZSBkb2Vz
+IG5vdCBkbyB0aGlzLgoKWW91IGtub3cgd2h5IEkgZGlkIG5vdCBpbnNlcnQgdGhlIERQQ00gY29k
+ZSBpbiB0aGUga2lya3dvb2QgZHJpdmVyOiBpdApkb2VzIG5vdCB3b3JrLiBCdXQsIGFzIEkgdGVz
+dGVkIGl0IGVuZCAyMDEzLCBJIHN0aWxsIGhhdmUgdGhlIGNvZGUuCkRvIHlvdSB3YW50IEkgcHJv
+cG9zZSBhIHBhdGNoPwoKPiBXaGljaCBiaXQgb2YgIndlIG5lZWQgdG8gc3VwcG9ydCBib3RoIEky
+UyBhbmQgU1BESUYiIGluIG15IHByZXZpb3VzCj4gZW1haWxzIHdhcyBub3QgY2xlYXIuICBXaGlj
+aCBiaXQgb2YgIldlIHNob3VsZCBvbmx5IHN1cHBvcnQgU1BESUYKPiBvbiB0aGUgQ3Vib3giIHdh
+cyBub3QgY2xlYXI/Cj4gCj4gSSAqZnVsbHkqIGFja25vd2xlZGdlIHRoYXQgd2UgbmVlZCB0byBz
+dXBwb3J0IGJvdGgsIGJ1dCBJJ20gcHV0dGluZwo+IGEgX3N0cm9uZ18gcmVjb21tZW5kYXRpb24g
+dG8geW91IF93aXRoXyB0ZWNobmljYWwgcmVhc29ucyB3aHkgd2UKPiBzaG91bGQgX29ubHlfIHN1
+cHBvcnQgU1BESUYgb24gdGhlIEN1Ym94LgoKU29ycnksIEkgc3RpbGwgZG9uJ3Qgc2VlIHdoeSBv
+bmx5IFMvUERJRiBzaG91bGQgYmUgc3VwcG9ydGVkIG9uIHRoZQpDdWJveC4gSSBoYXZlIGJvdGgs
+IGFuZCBib3RoIGFyZSB3b3JraW5nIG9uIEhETUkuIEkgaG9wZSBzb21lb25lIHdpbGwKdGVsbCBt
+ZSBpdCBhbHNvIHdvcmtzIG9uIFMvUERJRjogdGhlcmUgaXMgbm8gcmVhc29uIGl0IGNvdWxkIG5v
+dC4KCkkgZG9uJ3Qgc2VlIHlvdXIgdGVjaG5pY2FsIHJlYXNvbnM6IHlvdSBrbm93IHRoZSBjb25z
+dHJhaW50cyBvZiBlYWNoCnByb3RvY29sIEkyUyBhbmQgUy9QRElGLiBJZiB5b3UgZG9uJ3Qgd2Fu
+dCBJMlMsIGp1c3QgZG9uJ3QgZGVjbGFyZSBpdAppbiB0aGUgRFQgKHNlZSBteSBwcmV2aW91cyBt
+YWlsKS4gWW91IG1heSBhbHNvIG5vdGUgdGhhdCBJIGRpZCBub3QgcHV0CmFueSBjaGFuZ2UgcmVs
+YXRpdmUgdG8gdGhlIEN1Ym94IERUIGluIG15IHBhdGNoLgoKLS0gCktlbiBhciBjJ2hlbnRhw7EJ
+fAkgICAgICAqKiBCcmVpemggaGEgTGludXggYXRhdiEgKioKSmVmCQl8CQlodHRwOi8vbW9pbmVq
+Zi5mcmVlLmZyLwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cDovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
