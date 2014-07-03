@@ -1,50 +1,83 @@
-From: Jean-Francois Moine <moinejf@free.fr>
-Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
-Date: Thu, 3 Jul 2014 13:34:06 +0200
-Message-ID: <20140703133406.2d3e3a1d@armhf>
-References: <20140702183841.7c964832@armhf> <20140702165628.GO20799@lunn.ch>
- <20140702195154.47d6f6b4@armhf>
- <20140702194252.GN410@sirena.org.uk>
- <20140703074959.7c489912@armhf>
- <20140703104432.GV410@sirena.org.uk>
+From: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Subject: Re: [RESEND PATCH 5/5] devicetree: mfd: max14577: Add device tree
+ bindings document
+Date: Thu, 3 Jul 2014 12:32:36 +0100
+Message-ID: <20140703113236.GA28504@leverpostej>
+References: <1404198121-22989-1-git-send-email-k.kozlowski@samsung.com>
+ <1404198121-22989-6-git-send-email-k.kozlowski@samsung.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20140703104432.GV410@sirena.org.uk>
-List-Unsubscribe: <http://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <http://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <http://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Mark Brown <broonie@kernel.org>
-Cc: Andrew Lunn <andrew@lunn.ch>, alsa-devel@alsa-project.org, Russell King - ARM Linux <linux@arm.linux.org.uk>, devicetree@vger.kernel.org, lgirdwood@gmail.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1404198121-22989-6-git-send-email-k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCAzIEp1bCAyMDE0IDExOjQ0OjMyICswMTAwCk1hcmsgQnJvd24gPGJyb29uaWVAa2Vy
-bmVsLm9yZz4gd3JvdGU6Cgo+ID4gPiBJJ2QgZXhwZWN0IHRoaXMgdG8gcmV0dXJuIGFuIGVycm9y
-IGZvciB0aGUgYnVzeSBEQUkgcmF0aGVyIHRoYW4ganVzdAo+ID4gPiBzaWxlbnRseSBpZ25vcmUg
-aXQgZmFpbGluZyB0byBzdGFydCBvciAoYmV0dGVyKSBpbXBsZW1lbnQgc29tZSBjb250cm9sCj4g
-PiA+IHRvIGxldCB0aGUgdXNlciBzZWxlY3Qgd2hpY2ggb2YgdGhlIERBSXMgaXMgYWN0aXZlLiAg
-Cj4gCj4gPiBUaGlzIGlzIG5vdCBhbiBlcnJvci4gSWYgdGhlIGF1ZGlvIHN1YnN5c3RlbSAoRFBD
-TSwgbm90IHRoZSB1c2VyKQo+ID4gY2hvb3NlcyB0byBhY3RpdmF0ZSBib3RoIEkyUyBhbmQgUy9Q
-RElGLCB0aGlzIG1lYW5zIHRoZSBIRE1JIGF1ZGlvIG1heQo+ID4gYmUgdGFrZW4gZWl0aGVyIGZy
-b20gSTJTIG9yIGZyb20gUy9QRElGOiBib3RoIGlucHV0cyBoYXZlIHRoZSByaWdodAo+ID4gZm9y
-bWF0IGFuZCByYXRlLiAgCj4gCj4gWW91ciBib2FyZCBoYXBwZW5zIHRvIG9ubHkgYmUgYWJsZSB0
-byBwcmVzZW50IHRoZSBzYW1lIGlucHV0IG9uIGJvdGggSTJTCj4gYW5kIFMvUERJRiBidXQgdGhh
-dCBtaWdodCBub3QgYXBwbHkgdG8gb3RoZXIgYm9hcmRzLCB0aGV5IG1heSBiZSBhYmxlIHRvCj4g
-cm91dGUgZGlmZmVyZW50IHNpZ25hbHMgdG8gZWFjaCB3aGljaCB3b3VsZCBwcmVzZW50IGEgcHJh
-Y3RpY2FsIHByb2JsZW0uCgpJZiB0aGVyZSBhcmUgdHdvIGRpZmZlcmVudCBzdHJlYW1zcyBvbiBJ
-MlMgYW5kIFMvUERJRiwgYW5kIGlmIHRoZSBhdWRpbwpzdWJzeXN0ZW0gd2FudHMgdG8gcm91dGUg
-dGhlc2Ugc3RyZWFtcyB0byB0aGUgc2FtZSBjb25uZWN0b3IgKHdpZGdldAonaGRtaS1vdXQnKSwg
-dGhlbiwgc29tZXdoZXJlLCB0aGVyZSBzaG91bGQgYmUgYSBzb2Z0d2FyZSBvciBhIGRlc2lnbgpi
-dWcuIE5vPwoKQW55d2F5LCB0aGUgdGRhOTk4eCBjYW5ub3Qga25vdyBpZiB0aGUgZG91YmxlIHJv
-dXRlIGlzIHdhbnRlZCBvciBub3QuCgotLSAKS2VuIGFyIGMnaGVudGHDsQl8CSAgICAgICoqIEJy
-ZWl6aCBoYSBMaW51eCBhdGF2ISAqKgpKZWYJCXwJCWh0dHA6Ly9tb2luZWpmLmZyZWUuZnIvCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwOi8vbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hi,
+
+On Tue, Jul 01, 2014 at 08:02:00AM +0100, Krzysztof Kozlowski wrote:
+> Add document describing device tree bindings for MAX14577 MFD
+> drivers: MFD core, extcon, regulator and charger.
+> 
+> Both MAX14577 and MAX77836 chipsets are documented.
+> 
+> Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+> Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
+> Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/mfd/max14577.txt | 152 +++++++++++++++++++++
+>  1 file changed, 152 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
+> new file mode 100644
+> index 000000000000..b235250a7b41
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
+> @@ -0,0 +1,152 @@
+> +Maxim MAX14577/77836 Multi-Function Device
+> +
+> +MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
+> +Battery Charger and SFOUT LDO output for powering USB devices. It is
+> +interfaced to host controller using I2C.
+> +
+> +MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
+> +
+> +
+> +Required properties:
+> +- compatible : Must be "maxim,max14577" or "maxim,max77836".
+> +- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
+> +- interrupts : IRQ line for the chip.
+> +- interrupt-parent :  The parent interrupt controller.
+> +
+> +
+> +Required nodes:
+> + - charger :
+> +	Node for configuring the charger driver.
+> +	Required properties:
+> +		- compatible : "maxim,max14577-charger"
+> +			or "maxim,max77836-charger"
+> +		- maxim,fast-charge-timer : Timer in hours to trigger the
+> +			INT3/MBCCHGERR interrupt; Valid values:
+> +			- 5, 6 or 7 (hours),
+> +			- 0 to disable.
+
+I'm not sure I follow what this is any why it should be in the DT.
+
+Could you explain what this is used for?
+
+Thanks,
+Mark.
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
