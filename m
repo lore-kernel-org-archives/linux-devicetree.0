@@ -1,92 +1,53 @@
-From: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH 0/4] Migrate PXA27x platforms to clock framework
-Date: Thu, 3 Jul 2014 14:21:14 +0800
-Message-ID: <CAN1soZyu192Y7z-HJHo+3_bddFcf=H0udgJSWez1=Lmrb5wVfg@mail.gmail.com>
-References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
-	<7034630.fvV46PN35C@wuerfel>
-	<877g3yp7ie.fsf@free.fr>
+From: Ohad Ben-Cohen <ohad@wizery.com>
+Subject: Re: [PATCHv5 03/15] hwspinlock/core: maintain a list of registered
+ hwspinlock banks
+Date: Thu, 3 Jul 2014 10:00:18 +0300
+Message-ID: <CAK=WgbYtJ7TGqvjG3VAPPD5tVXx9-jEJU3iKEStUMxOvD1v=LQ@mail.gmail.com>
+References: <1398904476-26200-1-git-send-email-s-anna@ti.com>
+ <1398904476-26200-4-git-send-email-s-anna@ti.com> <CAK=WgbakGbTaYz+4K24aT3vyRkDYwPKCm6XrcJvH667NMMfTTA@mail.gmail.com>
+ <53B47621.6090307@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <877g3yp7ie.fsf-GANU6spQydw@public.gmane.org>
-Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
-Cc: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <53B47621.6090307@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: Suman Anna <s-anna@ti.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Kumar Gala <galak@codeaurora.org>, Tony Lindgren <tony@atomide.com>, Josh Cartwright <joshc@codeaurora.org>, Bjorn Andersson <bjorn@kryo.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-arm <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jul 1, 2014 at 2:38 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
-> Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org> writes:
->
->> On Sunday 29 June 2014 20:32:20 Robert Jarzmik wrote:
->>> As the RFC posted in [1] didn't meet an unrivaled success for
->>> review, I'm posting this serie for PXA27x transition to clock
->>> framework.
->>>
->>> This transition is needed :
->>>  - to enable device-tree drivers port, as clocks are needed almost
->>>    everywhere
->>>  - to enable the long term multi-platform kernel to support PXA
->>>
->>> As I had said before, this serie aims at :
->>>  - keeping legacy platforms working (ie. without device-tree)
->>>  - enable PXA27x to work with a device-tree kernel, and hence
->>>    open the way to drivers conversion
->>>  - be robust enough to support pxa25x and pxa3xx later inclusion
->>>    with almost no change to clk-pxa-dt.c.
->>>
->>> As this serie is holding the rest of the device-tree drivers
->>> port, I'd like it to be reviewed, even it's an old unsexy
->>> platform.
->>
->> I have one basic question about this series: if pxa27x gets moved
->> to used the common-clk framework but the others (pxa25x, pxa26x,
->> pxa3xx, pxa93x) don't, does that imply that they become mutually
->> exclusiv at compile-time?
->
-> Unfortunately yes, they become exclusive.
-> The reason being that arch/arm/mach-pxa/clock.c defines the function
-> "clk_enable()", which of course is also defined by the clock framework.
->
->> If so, do you plan to first complete all of them before merging
->> upstream, or do you intend to have one or more kernel releases
->> that don't allow building a combined kernel for all pxa platforms?
-> I intend to have first only pxa27x.
-> Then in a second stage pxa27x + pxa25x + pxa3xx.
->
->> I don't object to doing the latter, but if that is the plan, you
->> need to make that very clear in the changelog and have all the
->> relevant maintainers agree to that.
-> OK, that would be Haojian then, I think he maintains all PXA platforms.
->
-> Haojian, are you ok with that ? And BTW, does a combined kernel for PXA
-> platforms even exists (mixing pxa3xx and pxa2xx for example) ?
->
+Hi Suman,
 
-It's acceptable to me that different silicons are queued in different stages.
-I only request that it won't break the compiler building & bootup.
-
-But I think that the pxa clock driver may be shared among all PXA silicons
-except for the clock table. What's your opinion?
-
->> Also (for my understanding) when you say that you plan to do
->> pxa25x and pxa3xx next, does that include pxa26x and pxa93x?
-> I don't have the Technical Reference Manuals for these ones so the answer is
-> no. And Google wasn't a great friend at providing them.
+On Thu, Jul 3, 2014 at 12:14 AM, Suman Anna <s-anna@ti.com> wrote:
+>> I'm not sure we need this patch.
 >
-
-Converting them into new clock driver may not rely on the reference manual.
-
->> I assume it does as they are apparently minor revisions of the
->> former, but it's not completely clear from your description.
-> My description doesn't mention them, as I have no information about them, nor
-> any hardware to test on.
+> This patch is needed if we use the controller-phandle + args specifier
+> for requesting hwlocks by a client, as we need to translate
+> controller-phandle to the corresponding hwspinlock_device.
 >
+> Looks like we still don't have a closure on the semantics of how
+> clients have to request a lock in DT. You are suggesting something like
+>     hwlocks = <global_lock1 global_lock2 ...>;
+>
+> whereas this patch is built to support based on comments from
+> DT-maintainers,
+>     hwlocks = <controller-phandle lock-specifier1>, <controller-phandle
+> lock-specifier2>...;
 
-We can request others to help testing in the mailing list.
+I'm actually ok with this suggestion and haven't suggested otherwise.
 
-Regards
-Haojian
---
-To unsubscribe from this list: send the line "unsubscribe devicetree" in
-the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-More majordomo info at  http://vger.kernel.org/majordomo-info.html
+All I propose is that we add the base_id property to the controller
+node (as you have done in the subsequent patches), and then drivers
+will be able to infer the global lock id from the DT data by adding
+the controller's base_id to the lock specifier.
+
+Controllers with non standard lock indexing may use an xlate() method
+if needed but frankly this is fictional right now. We can start
+without this, and add it later when needed, as this doesn't affect the
+DT data.
+
+With the global lock id in hand, drivers could simply use the existing
+hwspin_lock_request_specific API to obtain a specific lock, and then
+we don't need this patch.
+
+Thanks,
+Ohad.
