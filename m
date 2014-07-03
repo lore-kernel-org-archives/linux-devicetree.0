@@ -1,97 +1,70 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH v3 8/9] ARM: sun8i: Add PRCM clock and reset
- controller nodes to the DTSI
-Date: Thu,  3 Jul 2014 22:55:48 +0800
-Message-ID: <1404399349-20237-9-git-send-email-wens@csie.org>
-References: <1404399349-20237-1-git-send-email-wens@csie.org>
-Reply-To: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v4] ASoC: tas2552: Support TI TAS2552 Amplifier
+Date: Thu, 3 Jul 2014 09:57:39 -0500
+Message-ID: <53B56F63.8000400@ti.com>
+References: <1404398393-21497-1-git-send-email-dmurphy@ti.com> <20140703145250.GO5814@saruman.home>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=ISO-8859-1
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBBG62WOQKGQEQH7UMHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-In-Reply-To: <1404399349-20237-1-git-send-email-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <http://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <http://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <http://groups.google.com/group/linux-sunxi>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Subscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <http://groups.google.com/group/linux-sunxi/subscribe>, <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-To: Maxime Ripard <maxime.ripard-wi1+55ScJUtKEb57/3fJTNBPR1lH4CV8@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, Emilio Lopez <emilio-0Z03zUJReD5OxF6Tv1QG9Q@public.gmane.org>, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-serial-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="ISO-8859-1"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20140703145250.GO5814@saruman.home>
+Sender: linux-kernel-owner@vger.kernel.org
+To: balbi@ti.com
+Cc: linux-sound@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, broonie@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-With sun8i PRCM support available, we can add the PRCM clock and
-reset controller nodes to the DTSI. Also update R_UART's clock
-phandle and add it's reset control phandle.
+On 07/03/2014 09:52 AM, Felipe Balbi wrote:
+> Hi,
+>
+> On Thu, Jul 03, 2014 at 09:39:53AM -0500, Dan Murphy wrote:
+>> +static int tas2552_set_dai_fmt(struct snd_soc_dai *dai, unsigned int fmt)
+>> +{
+>> +	u8 serial_format;
+>> +	struct snd_soc_codec *codec = dai->codec;
+>> +
+>> +	switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+>> +	case SND_SOC_DAIFMT_CBS_CFS:
+>> +		serial_format = 0x00;
+>> +		break;
+>> +	case SND_SOC_DAIFMT_CBS_CFM:
+>> +		serial_format = TAS2552_WORD_CLK_MASK;
+>> +		break;
+>> +	case SND_SOC_DAIFMT_CBM_CFS:
+>> +		serial_format = TAS2552_BIT_CLK_MASK;
+>> +		break;
+>> +	case SND_SOC_DAIFMT_CBM_CFM:
+>> +		serial_format = (TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK);
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+>> +
+>> +	pm_runtime_get_sync(codec->dev);
+>> +
+>> +	snd_soc_update_bits(codec, TAS2552_SER_CTRL_1,
+>> +			    (TAS2552_BIT_CLK_MASK | TAS2552_WORD_CLK_MASK),
+>> +			    serial_format);
+>> +
+>> +	pm_runtime_put(codec->dev);
+> I have a feeling it's better to just put at the end of the function.
+> Remember your pm_runtime_put() will issue i2c transfers which can take a
+> looooooong time ;-)
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
----
- arch/arm/boot/dts/sun8i-a23.dtsi | 48 +++++++++++++++++++++++++++++++++++++++-
- 1 file changed, 47 insertions(+), 1 deletion(-)
+I thought about that but the next switch case could return if the format
+mask is invalid which means the runtime calls would not be balanced.
 
-diff --git a/arch/arm/boot/dts/sun8i-a23.dtsi b/arch/arm/boot/dts/sun8i-a23.dtsi
-index 79c4083..e10c708 100644
---- a/arch/arm/boot/dts/sun8i-a23.dtsi
-+++ b/arch/arm/boot/dts/sun8i-a23.dtsi
-@@ -262,13 +262,59 @@
- 			interrupts = <1 9 0xf04>;
- 		};
- 
-+		prcm@01f01400 {
-+			compatible = "allwinner,sun8i-a23-prcm";
-+			reg = <0x01f01400 0x200>;
-+
-+			ar100: ar100_clk {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <0>;
-+				clock-div = <1>;
-+				clock-mult = <1>;
-+				clocks = <&osc24M>;
-+				clock-output-names = "ar100";
-+			};
-+
-+			ahb0: ahb0_clk {
-+				compatible = "fixed-factor-clock";
-+				#clock-cells = <0>;
-+				clock-div = <1>;
-+				clock-mult = <1>;
-+				clocks = <&ar100>;
-+				clock-output-names = "ahb0";
-+			};
-+
-+			apb0: apb0_clk {
-+				compatible = "allwinner,sun8i-a23-apb0-clk";
-+				#clock-cells = <0>;
-+				clocks = <&ahb0>;
-+				clock-output-names = "apb0";
-+			};
-+
-+			apb0_gates: apb0_gates_clk {
-+				compatible = "allwinner,sun8i-a23-apb0-gates-clk";
-+				#clock-cells = <1>;
-+				clocks = <&apb0>;
-+				clock-indices = <0>, <2>, <3>, <4>, <6>;
-+				clock-output-names = "apb0_pio", "apb0_timer",
-+						"apb0_rsb", "apb0_uart",
-+						"apb0_i2c";
-+			};
-+
-+			apb0_rst: apb0_rst {
-+				compatible = "allwinner,sun6i-a31-clock-reset";
-+				#reset-cells = <1>;
-+			};
-+		};
-+
- 		r_uart: serial@01f02800 {
- 			compatible = "snps,dw-apb-uart";
- 			reg = <0x01f02800 0x400>;
- 			interrupts = <0 38 4>;
- 			reg-shift = <2>;
- 			reg-io-width = <4>;
--			clocks = <&osc24M>;
-+			clocks = <&apb0_gates 4>;
-+			resets = <&apb0_rst 4>;
- 			status = "disabled";
- 		};
- 	};
+So I decided to wrap the snd_soc calls with the pm_runtime calls to keep it
+balanced.
+
+Dan
+
+>
+> other than that, looks ok to me:
+>
+> Reviewed-by: Felipe Balbi <balbi@ti.com>
+>
+
+
 -- 
-2.0.1
+------------------
+Dan Murphy
