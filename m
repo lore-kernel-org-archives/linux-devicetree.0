@@ -1,41 +1,109 @@
-From: Tejun Heo <tj@kernel.org>
-Subject: Re: [PATCH v5 1/2] libahci: Implement the function
- ahci_restart_engine to restart the port dma engine.
-Date: Thu, 3 Jul 2014 10:03:35 -0400
-Message-ID: <20140703140335.GD16191@htj.dyndns.org>
-References: <1404296108-16233-1-git-send-email-stripathi@apm.com>
- <1404296108-16233-2-git-send-email-stripathi@apm.com>
+From: Felipe Balbi <balbi@ti.com>
+Subject: Re: [PATCH 1/5] mfd: Add DT bindings for tps65218 PMIC
+Date: Thu, 3 Jul 2014 09:15:29 -0500
+Message-ID: <20140703141529.GG5814@saruman.home>
+References: <1404395102-21469-1-git-send-email-j-keerthy@ti.com>
+ <1404395102-21469-2-git-send-email-j-keerthy@ti.com>
+Reply-To: <balbi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-scsi-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4ndw/alBWmZEhfcZ"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1404296108-16233-2-git-send-email-stripathi@apm.com>
-Sender: linux-scsi-owner@vger.kernel.org
-To: Suman Tripathi <stripathi@apm.com>
-Cc: olof@lixom.net, arnd@arndb.de, linux-scsi@vger.kernel.org, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, ddutile@redhat.com, jcm@redhat.com, patches@apm.com, Loc Ho <lho@apm.com>
+In-Reply-To: <1404395102-21469-2-git-send-email-j-keerthy@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Keerthy <j-keerthy@ti.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, mark.rutland@arm.com, galak@codeaurora.org, robh+dt@kernel.org, linux@arm.linux.org.uk, balbi@ti.com, tony@atomide.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+--4ndw/alBWmZEhfcZ
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On Wed, Jul 02, 2014 at 03:45:07PM +0530, Suman Tripathi wrote:
-> +int ahci_restart_engine(struct ata_port *ap)
-> +{
-> +	struct ahci_host_priv *hpriv = ap->host->private_data;
+Hi,
+
+On Thu, Jul 03, 2014 at 07:14:58PM +0530, Keerthy wrote:
+> Add DT bindings for tps65218 PMIC
+>=20
+> Signed-off-by: Keerthy <j-keerthy@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mfd/tps65218.txt |   57 ++++++++++++++=
+++++++
+>  1 file changed, 57 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mfd/tps65218.txt
+>=20
+> diff --git a/Documentation/devicetree/bindings/mfd/tps65218.txt b/Documen=
+tation/devicetree/bindings/mfd/tps65218.txt
+> new file mode 100644
+> index 0000000..38f48ef
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mfd/tps65218.txt
+> @@ -0,0 +1,57 @@
+> +Texas Instruments TPS65218 family
 > +
-> +	ahci_stop_engine(ap);
-> +	ahci_start_fis_rx(ap);
-> +	hpriv->start_engine(ap);
+> +The TPS65218 are Integrated Power Management Chips.
 > +
-> +	return 0;
-> +}
-> +EXPORT_SYMBOL_GPL(ahci_restart_engine);
+> +Required properties:
+> +- compatible : Must be "ti,tps65218";
+> +  For Integrated power-management used in AM437x based boards
+> +- interrupts : This i2c device has an IRQ line connected to the main SoC
+> +- interrupt-controller : Since the tps65218 supports several interrupts
+> +  internally, it is considered as an interrupt controller cascaded to the
+> +  SoC one.
+> +- #interrupt-cells =3D <2>;
+> +- interrupt-parent : The parent interrupt controller which is gic.
+> +
+> +Optional node:
+> +- TPS65218 PMIC has a number of child nodes. Mainly the regularors and S=
+MPSs.
+> +
+> +Example:
+> +/*
+> + * Integrated Power Management Chip
+> + */
+> +tps65218: tps65218@24 {
+> +	reg =3D <0x24>;
+> +	compatible =3D "ti,tps65218";
+> +	interrupts =3D <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
+> +	interrupt-parent =3D <&gic>;
+> +	interrupt-controller;
+> +	#interrupt-cells =3D <2>;
+> +
+> +	dcdc1: regulator-dcdc1 {
+> +		compatible =3D "ti,tps65218-dcdc1";
+> +		/* VDD_CORE voltage limits min of OPP50 and max of OPP100 */
 
-I don't get this function.  No other ahci needs it and it's not even
-contained libahci proper.  It calls back to the calling low level
-driver.  Why not just expose ahci_start_fis_rx() and implement the
-above in xgene?
+wonder if this comment really makes sense here as boards might have
+another regulator assignment. Likewise fro the other two regulators.
+Also, this device provides 7 regulated outputs according to [1], why
+only provide three here ?
 
-Thanks.
+[1] http://www.ti.com/product/tps65218
 
--- 
-tejun
+--=20
+balbi
+
+--4ndw/alBWmZEhfcZ
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iQIcBAEBAgAGBQJTtWWBAAoJEIaOsuA1yqREEbkQALHEmVoOSdIUH92puCjqBh5M
+iGdYVi4HMQtyBn8R3wJcrpINrSbBUoSAoTx+wJZ2DL40LX3XLzIiDqLtrCdLOd7/
+aV0TlXN4Xa6xaX6h1fvLbjeb+yvsMV1187/MB0xHAns5bHQFGX7G/b1yl5xrL2ma
+eITtCtV4792i1cfXD68hxYROuplCb4dF+rJ9xf2L9NSxUlZpMZXqP+aL17kjG34g
+AAhAL0xlqfaEipWB2CLPWMO5Umwx80vN23C87VFudoJWa+k/arFIDv+1Zfhc1CPT
+GQd6vkWLArAzhu8p/0a4+jsg5oT4wbQzZT6vkmADV47sKoO7neQMdhctwRnuEbDm
+2bbIVvVmVggiyfWJnD2p/qpcJbZFK6IFMYbL0j+269eBF1orc0KUW2rTihJTGGBi
+k3Ir54BUgQ8NVX7Gd7eGXmmGf+Yi6waLQ1RKbfbRzkGCMvg7Nj5AgZeXUaAP0+LF
+wOMb+DbZ30/G6H2LZzn+TW2Wmua0WKHuA29qvSdRviEBTyRSFjpVeOA5B5rfsq7v
+87xwyEBJYNi0PfUiIVR/ct3AfukQVQoB0gv/WTYfO8JHROO0vanJSwKDaEllQgCp
+KefXjFw697RIIopa0+y1vWvTJoW+PtruwSwdd0VCYssQxlhngocIXN2HZ80hlpdf
+cd4f1I6tcxqJntgu4jwD
+=vhW/
+-----END PGP SIGNATURE-----
+
+--4ndw/alBWmZEhfcZ--
