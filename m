@@ -1,53 +1,72 @@
 From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 3/5] regulator: act8865: prepare support for other
- act88xx devices
-Date: Thu, 3 Jul 2014 17:00:27 +0100
-Message-ID: <20140703160027.GI410@sirena.org.uk>
-References: <1403451105-31929-1-git-send-email-b.galvani@gmail.com>
- <1403451105-31929-4-git-send-email-b.galvani@gmail.com>
+Subject: Re: [PATCH v2 0/2] ASoC: add CSR SiRFSoC audio USP
+	interface driver
+Date: Thu, 3 Jul 2014 17:12:08 +0100
+Message-ID: <20140703161208.GJ410@sirena.org.uk>
+References: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-	protocol="application/pgp-signature"; boundary="nbmc0BhO2pdgImje"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1403451105-31929-4-git-send-email-b.galvani@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Beniamino Galvani <b.galvani@gmail.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Wenyou Yang <wenyou.yang@atmel.com>, Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, Heiko Stuebner <heiko@sntech.de>, devicetree@vger.kernel.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============8738763226214636031=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1404269142-3557-1-git-send-email-rongjun.ying@csr.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Rongjun Ying <rongjun.ying@csr.com>
+Cc: devicetree@vger.kernel.org, Barry Song <baohua@kernel.org>, alsa-devel@alsa-project.org, Takashi Iwai <tiwai@suse.de>, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Workgroup.linux@csr.com, Rob Herring <robh+dt@kernel.org>, Grant Likely <grant.likely@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---nbmc0BhO2pdgImje
+--===============8738763226214636031==
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="4XBiSqiiHCIj6zoM"
+Content-Disposition: inline
+
+
+--4XBiSqiiHCIj6zoM
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Sun, Jun 22, 2014 at 05:31:43PM +0200, Beniamino Galvani wrote:
-> This patch prepares support for other devices in the act88xx family of
-> PMUs manufactured by Active-Semi.
+On Wed, Jul 02, 2014 at 10:45:40AM +0800, Rongjun Ying wrote:
+> This patchset adds the SiRF USP controller driver, this
+> driver uses the USP as I2S or DSP_A mode interface.
 
-This doesn't appear to apply against current code, can you please check
-and resend (along with the rest of the series)?
+Applied both, thanks.
 
---nbmc0BhO2pdgImje
+--4XBiSqiiHCIj6zoM
 Content-Type: application/pgp-signature; name="signature.asc"
 Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
 Version: GnuPG v2
 
-iQIcBAEBAgAGBQJTtX4YAAoJELSic+t+oim9B2MP+wQCP1jqzEbsVStm2W4I9hjL
-w3ZllUE9HV1D0OGNHt1UOwqZzkS2H7y2Kqf7MkI9VJ4yHPQDQ7yalUq2EHc2tj8j
-kVF11bSRiiO0IY8TeE8mx9KH1e8iuNmLm50ICloDUgRA+A6mAk+tOwbSG7MWoRq7
-RrHXeR8enXoMBoPNM0SCVM+pkidwp00d6rgWdLkxZe+zMbh/K2ZzA9fGztyfBJmy
-+4tskcJ2HjPDd/PNtec7zvmrNyRoCxgwokveZKk77/Cdk4RGLFaZzVyUNdiCUIsM
-YcKgKoFQIx+yp12HnxgRV3/xfZ96BTvPFOKn6JEgNSL8MelkTIOfBr5L7taab7tW
-HIbDT6D8oRJguqnEOp6W+5nz5v0Mle93C1CvhZVJKvUdYIoYNb551URMtjOnNFRE
-Tbhh2x4OkwxcOsGuowMcGmq5+BsdHG42bcM2xWI8xU7P2//+0dQhmB2Eq2dFaWrg
-5u2YfD7364PgOHUroozMNhshr1Dll5HaROxW1AeNfllPpPtn3YvAQofEZj4g6lwy
-VGhZ7A7ZTUFdK1++XhhY0MxJsLyxqZDir9uqsH7u5LB9p2xISldDpSeF7HQSoGhg
-aH9aKG/anhiNlnyL768nevgfvJEadCkkvkH4jV/YV9wNm5kxCl2NRQTDBCvXNpWp
-GYBlPueXEaQj5Q324Oie
-=6BLX
+iQIcBAEBAgAGBQJTtYDVAAoJELSic+t+oim93A8P/0+bY4t28ElyrfsZ0mfvmp3D
+luvKqIXa0hUm3tCUTpr5NNwBv198XUB4P0CC1WMFPIVQYSWQCjF7h4AdYp2dpCQm
+3YFIXB/t4Ub5upxkS6BAT+Q/ZcLlkIqtUg0xHeUxjuIxa8c/OiGiqN47zxjbXj11
+LcPn+/cr0sTTKQFgFs+g9Gy6RArOqx3r7QFyrGmqn5TbytAasdtSzoBDxQy1dojd
+u1HOLXyKaiN4fTH7mG66U9EKD5WGjm7yQ7T8jDjqyDD3/XoYhr/ObdF8kZxnDZpy
+XjxzJmSruCsaLyGnqkNH8PoGCFSTckE5nsZOuBDjt4m4F7y62ULcyEY95pGNAem/
+iCeqyxSkXnNd1m/Yhm1m2q/ekPeSOGdHkpH7SVmRwbeFG1M77Sh3/qDjm9Ls/D6M
+JX+S4l1LNFPcJY4sWOuWRjCU3ocl4N5m88NYESQbNfST/GPStqzXQ/LAz5upv3KZ
+lK9EGTmGSIveKGAGO9zYVpFEMJeb3JNl30EnZVrfpe/w1q5BlrMmUR3zqSZ+6kuI
+IoR5eXEGkPo3DDOysDfE/HU/wVRo8OAHzLdANuyskYovMiCN3s1IiGbEmTErOwsc
+WpaP7E+aXOXzXM/8wiv9vr78jglLcMpMIoJTd9mfsri6cabUXDpPBUcAOG+czj2D
+epy1KMZ8xVPk03FMMxss
+=9Fe3
 -----END PGP SIGNATURE-----
 
---nbmc0BhO2pdgImje--
+--4XBiSqiiHCIj6zoM--
+
+--===============8738763226214636031==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============8738763226214636031==--
