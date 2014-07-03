@@ -1,39 +1,73 @@
-From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: [PATCH] irqchip: gic: Add support for cortex a7 compatible string
-Date: Thu,  3 Jul 2014 13:58:52 +0200
-Message-ID: <1404388732-28890-1-git-send-email-matthias.bgg@gmail.com>
+From: Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] ASoC: tda998x: add a codec to the HDMI transmitter
+Date: Thu, 3 Jul 2014 12:59:24 +0100
+Message-ID: <20140703115924.GY410@sirena.org.uk>
+References: <20140702183841.7c964832@armhf>
+ <20140702165628.GO20799@lunn.ch>
+ <20140702195154.47d6f6b4@armhf>
+ <20140702194252.GN410@sirena.org.uk>
+ <20140703074959.7c489912@armhf>
+ <20140703104432.GV410@sirena.org.uk>
+ <20140703133406.2d3e3a1d@armhf>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+	protocol="application/pgp-signature"; boundary="j13PAD5Nz8dz2ik7"
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20140703133406.2d3e3a1d@armhf>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+uevicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+To: Jean-Francois Moine <moinejf-GANU6spQydw@public.gmane.org>
+Cc: Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Russell King - ARM Linux <linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Dave Airlie <airlied-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Patch 0a68214b "ARM: DT: Add binding for GIC virtualization extentions (VGIC)" added
-the "arm,cortex-a7-gic" compatible string, but the corresponding IRQCHIP_DECLARE
-was never added to the gic driver.
 
-To let real Cortex-A7 SoCs use it, add the necessary declaration to the device driver.
+--j13PAD5Nz8dz2ik7
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
----
- drivers/irqchip/irq-gic.c |    1 +
- 1 file changed, 1 insertion(+)
+On Thu, Jul 03, 2014 at 01:34:06PM +0200, Jean-Francois Moine wrote:
+> Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
 
-diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
-index c305983..3b66369 100644
---- a/drivers/irqchip/irq-gic.c
-+++ b/drivers/irqchip/irq-gic.c
-@@ -1071,6 +1071,7 @@ gic_of_init(struct device_node *node, struct device_node *parent)
- }
- IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
- IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
-+IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
- IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
- IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
- 
--- 
-1.7.9.5
+> > Your board happens to only be able to present the same input on both I2S
+> > and S/PDIF but that might not apply to other boards, they may be able to
+> > route different signals to each which would present a practical problem.
 
+> If there are two different streamss on I2S and S/PDIF, and if the audio
+> subsystem wants to route these streams to the same connector (widget
+> 'hdmi-out'), then, somewhere, there should be a software or a design
+> bug. No?
+
+Yes, which is why the driver shouldn't silently ignore the situation.
+
+> Anyway, the tda998x cannot know if the double route is wanted or not.
+
+It doesn't need to know, it just needs to identify something it can't
+support either by providing a way to pick which interface is used or by
+rejecting the second interface.
+
+--j13PAD5Nz8dz2ik7
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v2
+
+iQIcBAEBAgAGBQJTtUWZAAoJELSic+t+oim9OE0P/3qYCYKQllHUWyZKuNhKhysO
+wr8H5BbZziQrkByipmYihNw303AqQQ8R2+zxetJE+xEJIDImL82mnCTmJ129wSUN
+MaQixJ7jEWIZL35GfxegRO7c2lHbQCMTALeVMpKUcMAJ08ZnL+9PMgQ/57cs4682
+0d+o2IgkX7IYpt98NdLKuvWz7hV+kU0BDHVpVow0QGnK7rmbDXLEMu0gZ3jnvzix
+uXqXHmZsdWuIlafUQca/gb1va4q10wzNRK4KEckIs80rxbU7qL7OuvbznZLGRPBr
+AHYiVPqt3iNbwExTFQgNQQAghnPgCjKPE7oGzbPgP0wPSk9oDzt7rduvVDvytRq8
+4wkuYn7OVgCFwGL4sOb1QaB8giYZtn7U0nLUMyRh/kM27z29X+zJusX9Eb7Ytldv
+nh/um5EB2fCwLZwX/09pnIHy7/u8t23bpFzwP5hEoFKv+NSIvnCSoQm0Upe1mIeb
+KTh/BHs86MLGKOAHoShlOoCj/JNFYAJbB4MO/fZOHPcUUdW9DlHb1k1ujVvbgMU2
+HIKXoCLnemWfj6CtkPkzREh0It72UcF0gRwlAOq0qAPCF8syyomKH3fO+Qp0xtJo
+KdcC1G3md/i46ZNze/Kx5ux6y6M51udnep6E0Qvd8kHXBqQpRAXkBlCjBqlEA4Lx
+g/MJJYdMxwRCLph9A3nj
+=yWLR
+-----END PGP SIGNATURE-----
+
+--j13PAD5Nz8dz2ik7--
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
 the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
