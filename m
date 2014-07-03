@@ -1,116 +1,169 @@
-From: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Subject: [PATCH v3] i2c: busses: i2c-pxa.c:  Fix for possible null pointer dereferenc
-Date: Thu,  3 Jul 2014 22:19:16 +0200
-Message-ID: <1404418756-10550-2-git-send-email-rickard_strandqvist@spectrumdigital.se>
-References: <1404418756-10550-1-git-send-email-rickard_strandqvist@spectrumdigital.se>
-Return-path: <linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1404418756-10550-1-git-send-email-rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
-Sender: linux-i2c-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Wolfram Sang <wsa-z923LK4zBo2bacvFa/9K2g@public.gmane.org>, Grant Likely <grant.likely-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jingoo Han <jg1.han-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Leilei Shang <shangll-eYqpPyKDWXRBDgjK7y7TUQ@public.gmane.org>, Peter Korsgaard <peter-+2lRwdCCLRT2eFz/2MeuCQ@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Marek Belisko <marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org>
+Subject: [PATCH 1/2] mmc: hsmmc: Add reset gpio configuration option.
+Date: Thu,  3 Jul 2014 22:49:23 +0200
+Message-ID: <1404420564-30245-1-git-send-email-marek@goldelico.com>
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, tony-4v6yS6AI5VpBDgjK7y7TUQ@public.gmane.org, linux-lFZ/pmaqli7XmaaqVzeoHQ@public.gmane.org, balajitk-l0cyMroinI0@public.gmane.org, chris-OsFVWbfNK3isTnJN9+BGXg@public.gmane.org, ulf.hansson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-omap-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-mmc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, hns-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, marek-xXXSsgcRVICgSpxsJD1C4w@public.gmane.org, NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix for possible null pointer dereferenc, and there is a risk for memory leak if something unexpected happens and the function returns.
-It now use Managed Device Resource instead.
+From: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
 
-Signed-off-by: Rickard Strandqvist <rickard_strandqvist-IW2WV5XWFqGZkjO+N0TKoMugMpMbD5Xr@public.gmane.org>
+If a 'gpio_reset' is specified, then hold it low while
+turning the power regulator on.
+This is needed for some wi2wi wireless modules, particularly
+when the regulator is held active by some other client.
+The wi2wi needs to be reset if power isn't actually removed, and
+the gpio can be used to do this.
+
+Signed-off-by: NeilBrown <neilb-l3A5Bk7waGM@public.gmane.org>
 ---
- drivers/i2c/busses/i2c-pxa.c |   37 ++++++++++++++++---------------------
- 1 file changed, 16 insertions(+), 21 deletions(-)
+ arch/arm/mach-omap2/hsmmc.c            |  7 ++++++-
+ arch/arm/mach-omap2/hsmmc.h            |  3 +++
+ drivers/mmc/host/omap_hsmmc.c          | 26 +++++++++++++++++++++++---
+ include/linux/platform_data/mmc-omap.h |  1 +
+ 4 files changed, 33 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/i2c/busses/i2c-pxa.c b/drivers/i2c/busses/i2c-pxa.c
-index be671f7..2edb633 100644
---- a/drivers/i2c/busses/i2c-pxa.c
-+++ b/drivers/i2c/busses/i2c-pxa.c
-@@ -1141,10 +1141,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 	struct resource *res = NULL;
- 	int ret, irq;
+diff --git a/arch/arm/mach-omap2/hsmmc.c b/arch/arm/mach-omap2/hsmmc.c
+index 07d4c7b..046bfdd 100644
+--- a/arch/arm/mach-omap2/hsmmc.c
++++ b/arch/arm/mach-omap2/hsmmc.c
+@@ -172,6 +172,10 @@ static inline void omap_hsmmc_mux(struct omap_mmc_platform_data *mmc_controller,
+ 		(mmc_controller->slots[0].gpio_wp < OMAP_MAX_GPIO_LINES))
+ 		omap_mux_init_gpio(mmc_controller->slots[0].gpio_wp,
+ 					OMAP_PIN_INPUT_PULLUP);
++	if (gpio_is_valid(mmc_controller->slots[0].gpio_reset) &&
++		(mmc_controller->slots[0].gpio_reset < OMAP_MAX_GPIO_LINES))
++		omap_mux_init_gpio(mmc_controller->slots[0].gpio_reset,
++					OMAP_PIN_OUTPUT);
+ 	if (cpu_is_omap34xx()) {
+ 		if (controller_nr == 0) {
+ 			omap_mux_init_signal("sdmmc1_clk",
+@@ -270,6 +274,7 @@ static int __init omap_hsmmc_pdata_init(struct omap2_hsmmc_info *c,
  
--	i2c = kzalloc(sizeof(struct pxa_i2c), GFP_KERNEL);
-+	i2c = devm_kzalloc(&dev->dev, sizeof(struct pxa_i2c), GFP_KERNEL);
- 	if (!i2c) {
- 		ret = -ENOMEM;
--		goto emalloc;
-+		goto err_nothing_to_release;
- 	}
+ 	mmc->slots[0].switch_pin = c->gpio_cd;
+ 	mmc->slots[0].gpio_wp = c->gpio_wp;
++	mmc->slots[0].gpio_reset = c->gpio_reset;
  
- 	/* Default adapter num to device id; i2c_pxa_probe_dt can override. */
-@@ -1154,18 +1154,19 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 	if (ret > 0)
- 		ret = i2c_pxa_probe_pdata(dev, i2c, &i2c_type);
- 	if (ret < 0)
--		goto eclk;
-+		goto err_nothing_to_release;
+ 	mmc->slots[0].remux = c->remux;
+ 	mmc->slots[0].init_card = c->init_card;
+@@ -389,7 +394,7 @@ void omap_hsmmc_late_init(struct omap2_hsmmc_info *c)
+ 			continue;
  
- 	res = platform_get_resource(dev, IORESOURCE_MEM, 0);
- 	irq = platform_get_irq(dev, 0);
- 	if (res == NULL || irq < 0) {
- 		ret = -ENODEV;
--		goto eclk;
-+		goto err_nothing_to_release;
- 	}
+ 		mmc_pdata->slots[0].switch_pin = c->gpio_cd;
+-		mmc_pdata->slots[0].gpio_wp = c->gpio_wp;
++		mmc_pdata->slots[0].gpio_reset = c->gpio_reset;
  
--	if (!request_mem_region(res->start, resource_size(res), res->name)) {
-+	if (!devm_request_mem_region(&dev->dev, res->start,
-+				resource_size(res), res->name)) {
- 		ret = -ENOMEM;
--		goto eclk;
-+		goto emalloc;
- 	}
+ 		res = omap_device_register(pdev);
+ 		if (res)
+diff --git a/arch/arm/mach-omap2/hsmmc.h b/arch/arm/mach-omap2/hsmmc.h
+index 7f2e790..16b2ac5 100644
+--- a/arch/arm/mach-omap2/hsmmc.h
++++ b/arch/arm/mach-omap2/hsmmc.h
+@@ -24,6 +24,9 @@ struct omap2_hsmmc_info {
+ 	bool	deferred;	/* mmc needs a deferred probe */
+ 	int	gpio_cd;	/* or -EINVAL */
+ 	int	gpio_wp;	/* or -EINVAL */
++	int	gpio_reset;	/* or -EINVAL - reset is held low during
++				 * power-on
++				 */
+ 	char	*name;		/* or NULL for default */
+ 	struct platform_device *pdev;	/* mmc controller instance */
+ 	int	ocr_mask;	/* temporary HACK */
+diff --git a/drivers/mmc/host/omap_hsmmc.c b/drivers/mmc/host/omap_hsmmc.c
+index 9656726..4a264fc 100644
+--- a/drivers/mmc/host/omap_hsmmc.c
++++ b/drivers/mmc/host/omap_hsmmc.c
+@@ -300,6 +300,8 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
+ 	if (!host->vcc)
+ 		return 0;
  
- 	i2c->adap.owner   = THIS_MODULE;
-@@ -1176,16 +1177,16 @@ static int i2c_pxa_probe(struct platform_device *dev)
++	if (gpio_is_valid(mmc_slot(host).gpio_reset))
++		gpio_set_value_cansleep(mmc_slot(host).gpio_reset, 0);
+ 	if (mmc_slot(host).before_set_reg)
+ 		mmc_slot(host).before_set_reg(dev, slot, power_on, vdd);
  
- 	strlcpy(i2c->adap.name, "pxa_i2c-i2c", sizeof(i2c->adap.name));
+@@ -365,6 +367,8 @@ static int omap_hsmmc_set_power(struct device *dev, int slot, int power_on,
  
--	i2c->clk = clk_get(&dev->dev, NULL);
-+	i2c->clk = devm_clk_get(&dev->dev, NULL);
- 	if (IS_ERR(i2c->clk)) {
- 		ret = PTR_ERR(i2c->clk);
--		goto eclk;
-+		goto emalloc;
- 	}
+ 	if (mmc_slot(host).after_set_reg)
+ 		mmc_slot(host).after_set_reg(dev, slot, power_on, vdd);
++	if (gpio_is_valid(mmc_slot(host).gpio_reset))
++		gpio_set_value_cansleep(mmc_slot(host).gpio_reset, 1);
  
--	i2c->reg_base = ioremap(res->start, resource_size(res));
--	if (!i2c->reg_base) {
-+	i2c->reg_base = devm_ioremap_resource(&adev->dev, res));
-+	if (IS_ERR(i2c->reg_base)) {
- 		ret = -EIO;
--		goto eremap;
-+		goto emalloc;
- 	}
- 
- 	i2c->reg_ibmr = i2c->reg_base + pxa_reg_layout[i2c_type].ibmr;
-@@ -1227,10 +1228,10 @@ static int i2c_pxa_probe(struct platform_device *dev)
- 		i2c->adap.algo = &i2c_pxa_pio_algorithm;
- 	} else {
- 		i2c->adap.algo = &i2c_pxa_algorithm;
--		ret = request_irq(irq, i2c_pxa_handler, IRQF_SHARED,
--				  dev_name(&dev->dev), i2c);
-+		ret = devm_request_irq(&dev->dev, irq, i2c_pxa_handler,
-+				 IRQF_SHARED, dev_name(&dev->dev), i2c);
- 		if (ret)
--			goto ereqirq;
-+			goto emalloc;
- 	}
- 
- 	i2c_pxa_reset(i2c);
-@@ -1261,15 +1262,9 @@ static int i2c_pxa_probe(struct platform_device *dev)
- eadapt:
- 	if (!i2c->use_pio)
- 		free_irq(irq, i2c);
--ereqirq:
--	clk_disable_unprepare(i2c->clk);
--	iounmap(i2c->reg_base);
--eremap:
--	clk_put(i2c->clk);
--eclk:
--	kfree(i2c);
- emalloc:
- 	release_mem_region(res->start, resource_size(res));
-+err_nothing_to_release:
+ error_set_power:
  	return ret;
- }
+@@ -481,10 +485,22 @@ static int omap_hsmmc_gpio_init(struct omap_mmc_platform_data *pdata)
+ 	} else
+ 		pdata->slots[0].gpio_wp = -EINVAL;
  
+-	return 0;
++	if (gpio_is_valid(pdata->slots[0].gpio_reset)) {
++		ret = gpio_request(pdata->slots[0].gpio_reset, "mmc_reset");
++		if (ret)
++			goto err_free_wp;
++		ret = gpio_direction_output(pdata->slots[0].gpio_reset, 1);
++		if (ret)
++			goto err_free_reset;
++	} else
++		pdata->slots[0].gpio_reset = -EINVAL;
+ 
++	return 0;
++err_free_reset:
++	gpio_free(pdata->slots[0].gpio_reset);
+ err_free_wp:
+-	gpio_free(pdata->slots[0].gpio_wp);
++	if (gpio_is_valid(pdata->slots[0].gpio_wp))
++		gpio_free(pdata->slots[0].gpio_wp);
+ err_free_cd:
+ 	if (gpio_is_valid(pdata->slots[0].switch_pin))
+ err_free_sp:
+@@ -494,6 +510,8 @@ err_free_sp:
+ 
+ static void omap_hsmmc_gpio_free(struct omap_mmc_platform_data *pdata)
+ {
++	if (gpio_is_valid(pdata->slots[0].gpio_reset))
++		gpio_free(pdata->slots[0].gpio_reset);
+ 	if (gpio_is_valid(pdata->slots[0].gpio_wp))
+ 		gpio_free(pdata->slots[0].gpio_wp);
+ 	if (gpio_is_valid(pdata->slots[0].switch_pin))
+@@ -1952,10 +1970,11 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+ 	struct omap_mmc_platform_data *pdata;
+ 	struct device_node *np = dev->of_node;
+ 	u32 bus_width, max_freq;
+-	int cd_gpio, wp_gpio;
++	int cd_gpio, wp_gpio, reset_gpio;
+ 
+ 	cd_gpio = of_get_named_gpio(np, "cd-gpios", 0);
+ 	wp_gpio = of_get_named_gpio(np, "wp-gpios", 0);
++	reset_gpio = of_get_named_gpio(np, "reset-gpios", 0);
+ 	if (cd_gpio == -EPROBE_DEFER || wp_gpio == -EPROBE_DEFER)
+ 		return ERR_PTR(-EPROBE_DEFER);
+ 
+@@ -1970,6 +1989,7 @@ static struct omap_mmc_platform_data *of_get_hsmmc_pdata(struct device *dev)
+ 	pdata->nr_slots = 1;
+ 	pdata->slots[0].switch_pin = cd_gpio;
+ 	pdata->slots[0].gpio_wp = wp_gpio;
++	pdata->slots[0].gpio_reset = reset_gpio;
+ 
+ 	if (of_find_property(np, "ti,non-removable", NULL)) {
+ 		pdata->slots[0].nonremovable = true;
+diff --git a/include/linux/platform_data/mmc-omap.h b/include/linux/platform_data/mmc-omap.h
+index 51e70cf..8f3ee4a 100644
+--- a/include/linux/platform_data/mmc-omap.h
++++ b/include/linux/platform_data/mmc-omap.h
+@@ -116,6 +116,7 @@ struct omap_mmc_platform_data {
+ 
+ 		int switch_pin;			/* gpio (card detect) */
+ 		int gpio_wp;			/* gpio (write protect) */
++		int gpio_reset;			/* gpio (reset) */
+ 
+ 		int (*set_bus_mode)(struct device *dev, int slot, int bus_mode);
+ 		int (*set_power)(struct device *dev, int slot,
 -- 
-1.7.10.4
+1.9.1
+
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
