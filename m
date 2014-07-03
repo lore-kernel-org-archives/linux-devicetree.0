@@ -1,105 +1,104 @@
-From: Mike Turquette <mturquette@linaro.org>
-Subject: Re: [PATCH 00/14] cpufreq: cpu0: Extend support beyond CPU0, V2
-Date: Thu, 03 Jul 2014 15:16:09 -0700
-Message-ID: <20140703221609.11380.6884@quantum>
-References: <cover.1404231535.git.viresh.kumar@linaro.org>
- <CAKohpomRttWnCBGEpR3cVsGYniJSnjWUnvtbg21AiYyrUnDjGw@mail.gmail.com>
- <53B4B0B3.9080000@codeaurora.org>
- <CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
+From: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Subject: Re: [PATCH 1/4] clk: add pxa27x clock drivers
+Date: Fri, 04 Jul 2014 00:28:44 +0200
+Message-ID: <87ha2ynkkj.fsf@free.fr>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+	<1404066744-13416-2-git-send-email-robert.jarzmik@free.fr>
+	<CAN1soZzoiGAz3OicdKbg5Dv2tW3yeinsu2i=M7KX+j1HuMs3Kg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-pm-owner@vger.kernel.org>
-In-Reply-To: <CAKohponRv6+rzJnO4cYFhXn6On1+4-KoxFSA2iU_nz130gvsug@mail.gmail.com>
-Sender: linux-pm-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Lists linaro-kernel <linaro-kernel@lists.linaro.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, Arvind Chauhan <arvind.chauhan@arm.com>, linux-arm-msm@vger.kernel.org, Sachin Kamat <spk.linux@gmail.com>, Thomas P Abraham <thomas.ab@samsung.com>, Shawn Guo <shawn.guo@linaro.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Nishanth Menon <nm@ti.com>, Tomasz Figa <t.figa@samsung.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kukjin Kim <kgene.kim@samsung.com>, Michal Simek <michal.simek@xilinx.com>, Rob Herring <rob.herring@linaro.org>, Santosh Shilimkar <santosh.shilimkar@ti.com>, Simon Horman <horms@verge.net.au>
+Content-Type: text/plain
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAN1soZzoiGAz3OicdKbg5Dv2tW3yeinsu2i=M7KX+j1HuMs3Kg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+	(Haojian Zhuang's message of "Thu, 3 Jul 2014 14:12:11 +0800")
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Viresh Kumar (2014-07-02 19:44:04)
-> On 3 July 2014 06:54, Stephen Boyd <sboyd@codeaurora.org> wrote:
-> > I gave it a spin. It works so you can have my
-> >
-> > Tested-by: Stephen Boyd <sboyd@codeaurora.org>
-> 
-> Thanks, all suggested improvements are made and pushed again with
-> your Tested-by..
-> 
-> > I'm still concerned about the patch where we figure out if the clocks
-> > are shared. I worry about a configuration where there are different
-> > clocks for on/off (i.e. gates) that are per-cpu but they all source from
-> > the same divider or something that is per-cluster. In DT this may be
-> > described as different clock provider outputs for the gates and in the
-> > cpu node we would have different clock specifiers but in reality all the
-> > CPUs in that cluster are affected by the same frequency scaling.
-> 
-> Yeah, this is probably what matches with Rob's doubt. These can
-> actually be different. Good point.
-> 
-> > In this case we'll need to get help from the clock framework to
-> > determine that those gates clocks don't have any .set_rate() callback so
-> > they can't actually change rate independently, and then walk up the tree
-> > to their parents to see if they have a common ancestor that does change
-> > rates. That's where it becomes useful to have a clock framework API for
-> > this, like clk_shares_rate(struct clk *clk, struct clk *peer) or
-> > something that can hide all this from cpufreq. Here's what I think it
-> > would look like (totally untested/uncompiled):
-> >
-> > static struct clk *find_rate_changer(struct clk *clk)
-> > {
-> >
-> >         if (!clk)
-> >                 return NULL;
-> >
-> >         do {
-> >                 /* Rate could change by changing parents */
-> >                 if (clk->num_parents > 1)
-> >                         return clk;
-> >
-> >                 /* Rate could change by calling clk_set_rate() */
-> >                 if (clk->ops->set_rate)
-> >                         return clk;
-> >
-> >                 /*
-> >                  * This is odd, clk_set_rate() doesn't propagate
-> >                  * and this clock can't change rate or parents
-> >                  * so we must be at the root and the clock we
-> >                  * started at can't change rates. Just return the
-> >                  * root so that we can see if the other clock shares
-> >                  * the same root although CPUfreq should never care.
-> >                  */
-> >                 if (!(clk->flags & CLK_SET_RATE_PARENT))
-> >                         return clk;
-> >         } while ((clk = clk->parent))
-> >
-> >         return NULL;
-> > }
-> >
-> > bool clk_shares_rate(struct clk *clk, struct clk *peer)
-> > {
-> >         struct clk *p1, *p2;
-> >
-> >         p1 = find_rate_changer(clk);
-> >         p2 = find_rate_changer(peer)
-> >
-> >         return p1 == p2;
-> > }
-> 
-> I find it much better then doing what I did initially, simply matching clk_get()
-> outputs. Lets see what Mike has to say..
+Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org> writes:
 
-Sorry for being dense, but I still do not get why trying to dynamically
-discover a shared rate-changeable clock is a better approach than simply
-describing the hardware in DT?
+> On Mon, Jun 30, 2014 at 2:32 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+>> +static struct pxa27x_clocks_var_rate pxa27x_var_rate_clocks[] __initdata = {
+>> +       PXA2_VAR_RATE("pxa2xx-fb", true, LCD, &clk_pxa27x_lcd_ops),
+>> +       PXA2_VAR_RATE("pxa27x-camera.0", true, CAMERA, &clk_pxa27x_lcd_ops),
+>> +       PXA2_VAR_RATE("pxa2xx-pcmcia", false, MEMC, &clk_pxa27x_mem_ops),
+>> +};
+>> +
+>
+> It's not good to define a VAR table any more.
+>
+> Now we have the common clock framework. Since these three clocks are
+> used as clock
+> gate. And their clock frequency is controlled by other bits in
+> peripheral controller registers.
+I understand the clock hierarchy part.
 
-Is adding a property to the CPU binding that describes how the CPUs in a
-cluster expect to use a clock somehow a non-starter? It is certainly a
-win for readability when staring at DT and trying to understand how DVFS
-on that CPU is meant to work (as opposed to hiding that knowledge behind
-a tree walk).
+> We can define parent & child clocks in clock tables. I think that you
+> can get a lot of
+> reference in clock drivers, such as exynos, hisilicon, ...
+>
+> Same comment on PXA_FIXED_RATE table.
+That's a bit of work which will be thrown away anyway.
+The goal is :
+ - keep same level of clock functionnality in non-DT builds
+ - have the full clock framework power for DT builds
+ - have non-DT builds removed once everything is ported to device-tree
 
-Regards,
-Mike
+Therefore, I don't want to redefine the full clock hierarchy in non-DT
+builds. That's a lot of work for nothing. This patchset doesn't aim at a full
+clock rework part, it aims at enabling porting all PXA platforms to DT without
+breaking the non-DT part.
 
-> 
-> @Mike: Is this less ugly ? :)
+For DT, we already have this type of clock tree :
+\u@\h:\w\$ cat /sys/kernel/debug/clk/clk_summary 
+   clock                         enable_cnt  prepare_cnt        rate   accuracy
+--------------------------------------------------------------------------------
+ clk_dummy                                1            1           0          0
+    im                                    0            0           0          0
+ osc32_768khz                             1            1       32768          0
+    keypad                                1            1       32768          0
+ osc13mhz                                 3            3    13000000          0
+    lcd                                   0            0    52000000          0
+       camera                             0            0    52000000          0
+    memory                                0            0   104000000          0
+    system bus                            0            0   104000000          0
+    cpu core                              0            0   104000000          0
+    halt-turbo mode                       0            0    52000000          0
+    turbo mode                            0            0   104000000          0
+    run mode                              0            0   104000000          0
+    clk_ostimer                           1            1     3250000          0
+       nssp,ostimer                       1            1     3250000          0
+    clk_13mhz                             2            2    13000000          0
+       ssp1                               0            0    13000000          0
+       pwri2c                             1            1    13000000          0
+       ssp3,hwuart                        0            0    13000000          0
+       ssp2                               0            0    13000000          0
+       pwm 1,3                            0            0    13000000          0
+       pwm 0,2                            1            1    13000000          0
+    pll_312mhz                            3            3   312000000          0
+       clk_14_682mhz                      0            0    12235294          0
+          i2s                             0            0    12235294          0
+       clk_14_857mhz                      1            3    14857142          0
+          btuart                          1            2    14857142          0
+          ffuart                          0            1    14857142          0
+          stuart                          0            1    14857142          0
+       clk_19_5mhz                        0            0    19500000          0
+          memstk                          0            0    19500000          0
+          mmc                             0            0    19500000          0
+       clk_32_842mhz                      1            1    32842105          0
+          i2c                             1            1    32842105          0
+       clk_48mhz                          1            1    48000000          0
+          usim                            0            0    48000000          0
+          msl                             0            0    48000000          0
+          ficp                            0            0    48000000          0
+          usb udc                         1            1    48000000          0
+          usb host,assp                   0            0    48000000          0
+
+Cheers.
+
+-- 
+Robert
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
