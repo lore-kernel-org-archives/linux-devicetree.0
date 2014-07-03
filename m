@@ -1,97 +1,38 @@
-From: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [RESEND PATCH 5/5] devicetree: mfd: max14577: Add device tree
- bindings document
-Date: Thu, 03 Jul 2014 13:44:34 +0200
-Message-ID: <1404387874.21377.8.camel@AMDC1943>
-References: <1404198121-22989-1-git-send-email-k.kozlowski@samsung.com>
- <1404198121-22989-6-git-send-email-k.kozlowski@samsung.com>
- <20140703113236.GA28504@leverpostej>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 7bit
+From: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+Subject: [PATCH] irqchip: gic: Add support for cortex a7 compatible string
+Date: Thu,  3 Jul 2014 13:58:52 +0200
+Message-ID: <1404388732-28890-1-git-send-email-matthias.bgg@gmail.com>
 Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-reply-to: <20140703113236.GA28504@leverpostej>
 Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-To: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: Dmitry Eremin-Solenikov <dbaryshkov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Woodhouse <dwmw2-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, "linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Samuel Ortiz <sameo-VuQAYsv1563Yd54FQh9/CA@public.gmane.org>, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Pawel Moll <Pawel.Moll-5wv7dgnIgG8@public.gmane.org>, Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>, Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Marek Szyprowski <m.szyprowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>, "devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+To: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org, jason-NLaQJdtUoK4Be96aLqz0jA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, pawel.moll-5wv7dgnIgG8@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, ijc+uevicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org, galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, david.vrabel-Sxgqhf6Nn4DQT0dZR+AlfA@public.gmane.org, grant.likely-s3s/WqlpOiPyB63q8FvJNQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On czw, 2014-07-03 at 12:32 +0100, Mark Rutland wrote:
-> Hi,
-> 
-> On Tue, Jul 01, 2014 at 08:02:00AM +0100, Krzysztof Kozlowski wrote:
-> > Add document describing device tree bindings for MAX14577 MFD
-> > drivers: MFD core, extcon, regulator and charger.
-> > 
-> > Both MAX14577 and MAX77836 chipsets are documented.
-> > 
-> > Signed-off-by: Krzysztof Kozlowski <k.kozlowski-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Kyungmin Park <kyungmin.park-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Cc: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> > Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> > Cc: Pawel Moll <pawel.moll-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> > Cc: Ian Campbell <ijc+devicetree-KcIKpvwj1kUDXYZnReoRVg@public.gmane.org>
-> > Cc: Kumar Gala <galak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> > Reviewed-by: Tomasz Figa <t.figa-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org>
-> > ---
-> >  Documentation/devicetree/bindings/mfd/max14577.txt | 152 +++++++++++++++++++++
-> >  1 file changed, 152 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/mfd/max14577.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/mfd/max14577.txt b/Documentation/devicetree/bindings/mfd/max14577.txt
-> > new file mode 100644
-> > index 000000000000..b235250a7b41
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/mfd/max14577.txt
-> > @@ -0,0 +1,152 @@
-> > +Maxim MAX14577/77836 Multi-Function Device
-> > +
-> > +MAX14577 is a Multi-Function Device with Micro-USB Interface Circuit, Li+
-> > +Battery Charger and SFOUT LDO output for powering USB devices. It is
-> > +interfaced to host controller using I2C.
-> > +
-> > +MAX77836 additionally contains PMIC (with two LDO regulators) and Fuel Gauge.
-> > +
-> > +
-> > +Required properties:
-> > +- compatible : Must be "maxim,max14577" or "maxim,max77836".
-> > +- reg : I2C slave address for the max14577 chip (0x25 for max14577/max77836)
-> > +- interrupts : IRQ line for the chip.
-> > +- interrupt-parent :  The parent interrupt controller.
-> > +
-> > +
-> > +Required nodes:
-> > + - charger :
-> > +	Node for configuring the charger driver.
-> > +	Required properties:
-> > +		- compatible : "maxim,max14577-charger"
-> > +			or "maxim,max77836-charger"
-> > +		- maxim,fast-charge-timer : Timer in hours to trigger the
-> > +			INT3/MBCCHGERR interrupt; Valid values:
-> > +			- 5, 6 or 7 (hours),
-> > +			- 0 to disable.
-> 
-> I'm not sure I follow what this is any why it should be in the DT.
-> 
-> Could you explain what this is used for?
+Patch 0a68214b "ARM: DT: Add binding for GIC virtualization extentions (VGIC)" added
+the "arm,cortex-a7-gic" compatible string, but the corresponding IRQCHIP_DECLARE
+was never added to the gic driver.
 
-Hi,
+To let real Cortex-A7 SoCs use it, add the necessary declaration to the device driver.
 
-These are settings for max14577 battery charger. Actually this
-particular setting does not look like board-specific but other (like
-battery voltage) do.
+Signed-off-by: Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+---
+ drivers/irqchip/irq-gic.c |    1 +
+ 1 file changed, 1 insertion(+)
 
-The timer above is used by device to stop charging and to trigger
-interrupt.
-
-Best regards,
-Krzysztof
-
-> 
-> Thanks,
-> Mark.
+diff --git a/drivers/irqchip/irq-gic.c b/drivers/irqchip/irq-gic.c
+index c305983..3b66369 100644
+--- a/drivers/irqchip/irq-gic.c
++++ b/drivers/irqchip/irq-gic.c
+@@ -1071,6 +1071,7 @@ gic_of_init(struct device_node *node, struct device_node *parent)
+ }
+ IRQCHIP_DECLARE(cortex_a15_gic, "arm,cortex-a15-gic", gic_of_init);
+ IRQCHIP_DECLARE(cortex_a9_gic, "arm,cortex-a9-gic", gic_of_init);
++IRQCHIP_DECLARE(cortex_a7_gic, "arm,cortex-a7-gic", gic_of_init);
+ IRQCHIP_DECLARE(msm_8660_qgic, "qcom,msm-8660-qgic", gic_of_init);
+ IRQCHIP_DECLARE(msm_qgic2, "qcom,msm-qgic2", gic_of_init);
+ 
+-- 
+1.7.9.5
 
 --
 To unsubscribe from this list: send the line "unsubscribe devicetree" in
