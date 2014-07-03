@@ -1,79 +1,40 @@
-From: Tobias Klauser <tklauser@distanz.ch>
-Subject: Re: [PATCH RFC V2 2/2] net: qualcomm: new Ethernet over SPI driver
- for QCA7000
-Date: Thu, 3 Jul 2014 11:49:40 +0200
-Message-ID: <20140703094939.GB27655@distanz.ch>
-References: <1404232609-4314-1-git-send-email-stefan.wahren@i2se.com>
- <1404232609-4314-3-git-send-email-stefan.wahren@i2se.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 2/2] ARM: DTS: am335x-evmsk: Enable the McASP FIFO for audio
+Date: Thu, 3 Jul 2014 12:51:23 +0300
+Message-ID: <1404381083-27029-2-git-send-email-peter.ujfalusi@ti.com>
+References: <1404381083-27029-1-git-send-email-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1404232609-4314-3-git-send-email-stefan.wahren@i2se.com>
-Sender: netdev-owner@vger.kernel.org
-To: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: davem@davemloft.net, robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, f.fainelli@gmail.com, eric.dumazet@gmail.com, dave.taht@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-omap-owner@vger.kernel.org>
+In-Reply-To: <1404381083-27029-1-git-send-email-peter.ujfalusi@ti.com>
+Sender: linux-omap-owner@vger.kernel.org
+To: bcousson@baylibre.com, tony@atomide.com
+Cc: linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2014-07-01 at 18:36:49 +0200, Stefan Wahren <stefan.wahren@i2se.com> wrote:
-> This patch adds the Ethernet over SPI driver for the
-> Qualcomm QCA7000 HomePlug GreenPHY.
-> 
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
-> ---
->  drivers/net/ethernet/Kconfig                |    1 +
->  drivers/net/ethernet/Makefile               |    1 +
->  drivers/net/ethernet/qualcomm/Kconfig       |   30 +
->  drivers/net/ethernet/qualcomm/Makefile      |    6 +
->  drivers/net/ethernet/qualcomm/qca_7k.c      |  149 ++++
->  drivers/net/ethernet/qualcomm/qca_7k.h      |   72 ++
->  drivers/net/ethernet/qualcomm/qca_debug.c   |  311 +++++++++
->  drivers/net/ethernet/qualcomm/qca_debug.h   |   34 +
->  drivers/net/ethernet/qualcomm/qca_framing.c |  155 +++++
->  drivers/net/ethernet/qualcomm/qca_framing.h |  134 ++++
->  drivers/net/ethernet/qualcomm/qca_spi.c     | 1001 +++++++++++++++++++++++++++
->  drivers/net/ethernet/qualcomm/qca_spi.h     |  114 +++
->  12 files changed, 2008 insertions(+)
->  create mode 100644 drivers/net/ethernet/qualcomm/Kconfig
->  create mode 100644 drivers/net/ethernet/qualcomm/Makefile
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_7k.c
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_7k.h
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_debug.c
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_debug.h
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_framing.c
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_framing.h
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_spi.c
->  create mode 100644 drivers/net/ethernet/qualcomm/qca_spi.h
+The use of FIFO in McASP can reduce the risk of audio under/overrun and
+lowers the load on the memories since the DMA will operate in bursts.
 
-[...]
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/am335x-evmsk.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-> +static int
-> +qcaspi_netdev_set_mac_address(struct net_device *dev, void *addr)
-> +{
-> +	struct sockaddr *sa = addr;
-> +
-> +	if (netif_running(dev))
-> +		return -EBUSY;
-> +
-> +	if (!is_valid_ether_addr(sa->sa_data))
-> +		return -EADDRNOTAVAIL;
-> +
-> +	memcpy(dev->dev_addr, sa->sa_data, dev->addr_len);
-> +	return 0;
-> +}
-> +
-> +static const struct net_device_ops qcaspi_netdev_ops = {
-> +	.ndo_init = qcaspi_netdev_init,
-> +	.ndo_uninit = qcaspi_netdev_uninit,
-> +	.ndo_open = qcaspi_netdev_open,
-> +	.ndo_stop = qcaspi_netdev_close,
-> +	.ndo_start_xmit = qcaspi_netdev_xmit,
-> +	.ndo_change_mtu = qcaspi_netdev_change_mtu,
-> +	.ndo_set_mac_address = qcaspi_netdev_set_mac_address,
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index ab9a34ce524c..80a3b215e7d6 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -560,8 +560,8 @@
+ 		serial-dir = <  /* 0: INACTIVE, 1: TX, 2: RX */
+ 			0 0 1 2
+ 		>;
+-		tx-num-evt = <1>;
+-		rx-num-evt = <1>;
++		tx-num-evt = <32>;
++		rx-num-evt = <32>;
+ };
+ 
+ &tscadc {
+-- 
+2.0.0
 
-You can use eth_mac_addr here which does the same thing as your
-implementation.
-
-> +	.ndo_tx_timeout = qcaspi_netdev_tx_timeout,
-> +	.ndo_validate_addr = eth_validate_addr,
-> +};
