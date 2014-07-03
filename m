@@ -1,39 +1,194 @@
-From: Marek Belisko <marek@goldelico.com>
-Subject: [PATCH 2/2] Documentation: devicetree: mmc: Document reset-gpio property
-Date: Thu,  3 Jul 2014 22:49:24 +0200
-Message-ID: <1404420564-30245-2-git-send-email-marek@goldelico.com>
-References: <1404420564-30245-1-git-send-email-marek@goldelico.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1404420564-30245-1-git-send-email-marek@goldelico.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, pawel.moll@arm.com, mark.rutland@arm.com, ijc+devicetree@hellion.org.uk, galak@codeaurora.org, tony@atomide.com, linux@arm.linux.org.uk, balajitk@ti.com, chris@printf.net, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mmc@vger.kernel.org, hns@goldelico.com, marek@goldelico.com
+From: Mike Turquette <mturquette-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH 2/4] dts: add devicetree bindings for pxa27x clocks
+Date: Thu, 03 Jul 2014 15:03:28 -0700
+Message-ID: <20140703220328.11380.22037@quantum>
+References: <1404066744-13416-1-git-send-email-robert.jarzmik@free.fr>
+ <1404066744-13416-3-git-send-email-robert.jarzmik@free.fr>
+ <CAN1soZys4k6g5RgPLbreopOxTwDJ+bfPOq8XPwsNpyt5+YURjg@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8BIT
+Return-path: <devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <CAN1soZys4k6g5RgPLbreopOxTwDJ+bfPOq8XPwsNpyt5+YURjg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Sender: devicetree-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Haojian Zhuang <haojian.zhuang-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Eric Miao <eric.y.miao-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, "linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Marek Belisko <marek@goldelico.com>
----
- Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Quoting Haojian Zhuang (2014-07-02 23:14:33)
+> On Mon, Jun 30, 2014 at 2:32 AM, Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org> wrote:
+> > Add the clock tree description for the PXA27x based boards.
+> >
+> > Signed-off-by: Robert Jarzmik <robert.jarzmik-GANU6spQydw@public.gmane.org>
+> > ---
+> >  arch/arm/boot/dts/pxa27x.dtsi            | 134 ++++++++++++++++++++++++++++++-
+> >  include/dt-bindings/clock/pxa2xx-clock.h |  45 +++++++++++
+> >  2 files changed, 178 insertions(+), 1 deletion(-)
+> >  create mode 100644 include/dt-bindings/clock/pxa2xx-clock.h
+> >
+> > diff --git a/arch/arm/boot/dts/pxa27x.dtsi b/arch/arm/boot/dts/pxa27x.dtsi
+> > index a705469..badaa71 100644
+> > --- a/arch/arm/boot/dts/pxa27x.dtsi
+> > +++ b/arch/arm/boot/dts/pxa27x.dtsi
+> > @@ -1,5 +1,6 @@
+> >  /* The pxa3xx skeleton simply augments the 2xx version */
+> > -/include/ "pxa2xx.dtsi"
+> > +#include "pxa2xx.dtsi"
+> > +#include "dt-bindings/clock/pxa2xx-clock.h"
+> >
+> >  / {
+> >         model = "Marvell PXA27x familiy SoC";
+> > @@ -35,4 +36,135 @@
+> >                         #pwm-cells = <1>;
+> >                 };
+> >         };
+> > +
+> > +       clocks {
+> > +              /*
+> > +               * The muxing of external clocks/internal dividers for osc* clock
+> > +               * sources has been hidden under the carpet by now.
+> > +               */
+> > +               #address-cells = <1>;
+> > +               #size-cells = <1>;
+> > +               ranges;
+> > +
+> > +               osc13mhz:osc13mhz {
+> > +                       compatible = "fixed-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clock-frequency = <13000000>;
+> > +               };
+> > +
+> > +               osc32_768khz:osc32_768khz {
+> > +                       compatible = "fixed-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clock-frequency = <32768>;
+> > +               };
+> > +
+> > +               pll_312mhz:pll_312mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&osc13mhz>;
+> > +                       clock-div = <1>;
+> > +                       clock-mult = <24>;
+> > +               };
+> > +
+> > +               clk_48mhz:clk_48mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&pll_312mhz>;
+> > +                       clock-div = <13>;
+> > +                       clock-mult = <2>;
+> > +               };
+> > +
+> > +               clk_32_842mhz:clk_32_842mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&pll_312mhz>;
+> > +                       clock-div = <19>;
+> > +                       clock-mult = <2>;
+> > +               };
+> > +
+> > +               clk_19_5mhz:clk_19_5mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&pll_312mhz>;
+> > +                       clock-div = <32>;
+> > +                       clock-mult = <2>;
+> > +               };
+> > +
+> > +               clk_14_857mhz:clk_14_857mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&pll_312mhz>;
+> > +                       clock-div = <42>;
+> > +                       clock-mult = <2>;
+> > +               };
+> > +
+> > +               clk_14_682mhz:clk_14_682mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&pll_312mhz>;
+> > +                       clock-div = <51>;
+> > +                       clock-mult = <2>;
+> > +               };
+> > +
+> > +               clk_13mhz:clk_13mhz {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&osc13mhz>;
+> > +                       clock-div = <1>;
+> > +                       clock-mult = <1>;
+> > +               };
+> > +
+> > +               clk_dummy:clk_dummy {
+> > +                       compatible = "fixed-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clock-frequency = <0>;
+> > +               };
+> > +
+> > +               clk_ostimer:clk_ostimer {
+> > +                       compatible = "fixed-factor-clock";
+> > +                        #clock-cells = <0>;
+> > +                       clocks = <&osc13mhz>;
+> > +                       clock-div = <4>;
+> > +                       clock-mult = <1>;
+> > +               };
+> > +
+> > +               pxa27x_sysclks:pxa27x_sysclks {
+> > +                       compatible = "marvell,pxa270-core-clocks";
+> > +                       #clock-cells = <1>;
+> > +                       clocks = <&osc13mhz>;
+> > +                       clock-output-names = "run mode", "half-turbo mode",
+> > +                               "turbo mode", "cpu core", "system bus", "memory", "lcd";
+> > +               };
+> > +
+> > +               pxa2xx_clks: pxa2xx_clks@41300004 {
+> > +                       compatible = "marvell,pxa-clocks";
+> > +                       reg = <0x41300004 0x4>;
+> > +                       clocks =
+> > +                               <&clk_13mhz>, <&clk_13mhz>, <&clk_dummy>, <&clk_13mhz>,
+> > +                               <&clk_13mhz>, <&clk_14_857mhz>, <&clk_14_857mhz>, <&clk_14_857mhz>,
+> > +                               <&clk_14_682mhz>, <&clk_ostimer>, <&clk_48mhz>, <&clk_48mhz>,
+> > +                               <&clk_19_5mhz>, <&clk_48mhz>, <&clk_32_842mhz>, <&clk_13mhz>,
+> > +                               <&pxa27x_sysclks 6>, <&clk_48mhz>, <&clk_48mhz>, <&osc32_768khz>,
+> > +                               <&clk_dummy>, <&clk_19_5mhz>, <&pxa27x_sysclks 4>, <&clk_13mhz>,
+> > +                               <&pxa27x_sysclks 6>, <&clk_dummy>;
+> > +                       #clock-cells = <1>;
+> > +                       clock-output-names =
+> > +                               "pwm 0,2", "pwm 1,3", "ac97", "ssp2",
+> > +                               "ssp3,hwuart", "stuart", "ffuart", "btuart",
+> > +                               "i2s", "nssp,ostimer", "usb host,assp", "usb udc",
+> > +                               "mmc", "ficp", "i2c", "pwri2c",
+> > +                               "lcd", "msl", "usim", "keypad",
+> > +                                "im", "memstk", "memc", "ssp1",
+> > +                                "camera", "ac97conf";
+> > +                       clock-indices = <
+> > +                               CKEN_PWM0 CKEN_PWM1 CKEN_AC97 CKEN_SSP2
+> > +                               CKEN_SSP3 CKEN_STUART CKEN_FFUART CKEN_BTUART
+> > +                               CKEN_I2S CKEN_OSTIMER CKEN_USBHOST CKEN_USB
+> > +                               CKEN_MMC CKEN_FICP CKEN_I2C CKEN_PWRI2C
+> > +                               CKEN_LCD CKEN_MSL CKEN_USIM CKEN_KEYPAD
+> > +                               CKEN_IM CKEN_MEMSTK 65 CKEN_SSP1
+> > +                               CKEN_CAMERA CKEN_AC97CONF >;
+> > +               };
+> > +       };
+> > +
+> >  };
+> 
+> Maybe defining these clocks in pxa27x clock driver is better.
 
-diff --git a/Documentation/devicetree/bindings/mmc/mmc.txt b/Documentation/devicetree/bindings/mmc/mmc.txt
-index 431716e..b094bd2 100644
---- a/Documentation/devicetree/bindings/mmc/mmc.txt
-+++ b/Documentation/devicetree/bindings/mmc/mmc.txt
-@@ -21,6 +21,7 @@ Optional properties:
-   below for the case, when a GPIO is used for the CD line
- - wp-inverted: when present, polarity on the WP line is inverted. See the note
-   below for the case, when a GPIO is used for the WP line
-+- reset-gpios: Specify GPIOs which will be hold down when turning power regulator
- - max-frequency: maximum operating clock frequency
- - no-1-8-v: when present, denotes that 1.8v card voltage is not supported on
-   this system, even if the controller claims it is.
-@@ -72,6 +73,7 @@ sdhci@ab000000 {
- 	cd-gpios = <&gpio 69 0>;
- 	cd-inverted;
- 	wp-gpios = <&gpio 70 0>;
-+	reset-gpios = <&gpio 71 0>;
- 	max-frequency = <50000000>;
- 	keep-power-in-suspend;
- 	enable-sdio-wakeup;
--- 
-1.9.1
+Agreed. After a long time trying to figure out the best DT binding for
+clocks it seems that defining the per-clock data in DTS is not the best
+way. The qcom msm and samsung exynos clock bindings and DTS data are
+good examples.
+
+Regards,
+Mike
+
+> 
+> Regards
+> Haojian
+--
+To unsubscribe from this list: send the line "unsubscribe devicetree" in
+the body of a message to majordomo-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+More majordomo info at  http://vger.kernel.org/majordomo-info.html
